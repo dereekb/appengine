@@ -12,8 +12,11 @@ public final class BitAccessor {
 	 * Used for masking a specific byte.
 	 */
 	public static final Long BYTE_MASK = 0xFFL;
+	public static final Long ALL_ONE_BITS = (-1L);
+	public static final Long ALL_ZERO_BITS = 0L;
 
-	public static final Integer BITS_IN_BYTE = 8;
+	public static final Integer BITS_IN_HEX = 4; // 0xF = 1 half-byte
+	public static final Integer BITS_IN_BYTE = 8; // 0xFF = 1 Byte
 	public static final Integer BYTES_IN_LONG = 8;
 	public static final Integer MAX_BIT_INDEX = BYTES_IN_LONG * BITS_IN_BYTE;
 
@@ -114,26 +117,51 @@ public final class BitAccessor {
 	/**
 	 * Reads a byte from the index 0 to 7.
 	 *
-	 * @param index
+	 * @param byteIndex
 	 *            Byte index (0-7) to check.
 	 * @return value of the read byte.
 	 */
-	public long readByteValue(int index) throws IndexOutOfBoundsException {
-		long mask = (BYTE_MASK << BITS_IN_BYTE * index);
+	public long readByteValue(int byteIndex) throws IndexOutOfBoundsException {
+		long mask = (BYTE_MASK << (BITS_IN_BYTE * byteIndex));
 		return this.andValue(mask);
 	}
 
 	/**
 	 * Focuses on the byte value at the specified index.
 	 *
-	 * @param index
+	 * @param byteIndex
 	 *            Byte index (0-7) to check.
 	 * @return Value ranging from 0 to 0xFF.
 	 * @throws IndexOutOfBoundsException
 	 */
-	public long focusByteValue(int index) throws IndexOutOfBoundsException {
-		long value = this.readByteValue(index);
-		return (value >> (BITS_IN_BYTE * index));
+	public long focusByteValue(int byteIndex) throws IndexOutOfBoundsException {
+		long value = this.readByteValue(byteIndex);
+		long focus = (value >> (BITS_IN_BYTE * byteIndex));
+		return focus & makeRightByteMask(1);
+	}
+
+	/**
+	 * Focuses on the value specified by the mask, and shifted by the byte
+	 * index.
+	 *
+	 * For example, if the mask 0xFFFF0000 is applied with a shift of 2, then
+	 * the values at 0xXXXX will be returned as such.
+	 *
+	 * @param mask
+	 *            Value mask to apply to the value.
+	 * @param index
+	 *            The 'start' byte index. Will shift the read value to start at
+	 *            this index.
+	 * @return
+	 * @throws IndexOutOfBoundsException
+	 */
+	public long focusValue(long mask,
+	                       int hexIndex) throws IndexOutOfBoundsException {
+		BitAccessor and = this.and(mask);
+		and.shiftHexRight(hexIndex);
+		// and.maskHexRight(hexIndex); //TODO: Change to independent function.
+		long focusMask = makeRightHexMask(MAX_BIT_INDEX - hexIndex);
+		return and.getValue() & focusMask;
 	}
 
 	// MARK: Shifting
@@ -141,6 +169,13 @@ public final class BitAccessor {
 		this.shiftLeft(1);
 	}
 
+	/**
+	 * Shifts the bits left by the given count.
+	 *
+	 * Bits shifted right are set to 0.
+	 *
+	 * @param count
+	 */
 	public void shiftLeft(int count) {
 		this.value = this.value << count;
 	}
@@ -149,14 +184,25 @@ public final class BitAccessor {
 		this.shiftLeft(BITS_IN_BYTE);
 	}
 
-	public void shiftBytesLeft(int count) {
-		this.shiftLeft(BITS_IN_BYTE * count);
+	public void shiftHexLeft(int hexCount) {
+		this.shiftLeft(BITS_IN_HEX * hexCount);
+	}
+
+	public void shiftBytesLeft(int byteCount) {
+		this.shiftLeft(BITS_IN_BYTE * byteCount);
 	}
 
 	public void shiftRight() {
 		this.shiftRight(1);
 	}
 
+	/**
+	 * Shifts the bits right by the given count.
+	 *
+	 * Bits shifted right are set to 1.
+	 *
+	 * @param count
+	 */
 	public void shiftRight(int count) {
 		this.value = this.value >> count;
 	}
@@ -165,8 +211,85 @@ public final class BitAccessor {
 		this.shiftRight(BITS_IN_BYTE);
 	}
 
-	public void shiftBytesRight(int count) {
-		this.shiftRight(BITS_IN_BYTE * count);
+	public void shiftHexRight(int hexCount) {
+		this.shiftRight(BITS_IN_HEX * hexCount);
+	}
+
+	public void shiftBytesRight(int byteCount) {
+		this.shiftRight(BITS_IN_BYTE * byteCount);
+	}
+
+	// MARK: Masking
+	/**
+	 * Creates a new mask with all bits after (to the left) the index in the ON
+	 * position.
+	 *
+	 * Example: makeLeftBitMask(3) -> 11111000
+	 *
+	 * @param index
+	 */
+	public static long makeLeftBitMask(int index) {
+		return (ALL_ONE_BITS << index);
+	}
+
+	/**
+	 * Creates a new mask with all bits after (to the left) the hex index in the
+	 * ON position.
+	 *
+	 * Example: makeLeftHexMask(3) -> fffff000
+	 *
+	 * @param hexIndex
+	 */
+	public static long makeLeftHexMask(int hexIndex) {
+		return makeLeftBitMask(hexIndex * 4);
+	}
+
+	/**
+	 * Creates a new mask with all bits after (to the left) the byte index in
+	 * the ON position.
+	 *
+	 * Example: makeLeftByteMask(3) -> ff000000
+	 *
+	 * @param byteIndex
+	 */
+	public static long makeLeftByteMask(int byteIndex) {
+		return makeLeftBitMask(byteIndex * BITS_IN_BYTE);
+	}
+
+	/**
+	 * Creates a new mask with all bits after (to the left) the index in the ON
+	 * position.
+	 *
+	 * Example: makeRightBitMask(3) -> 111
+	 *
+	 * @param index
+	 */
+	public static long makeRightBitMask(int index) {
+		return ~makeLeftBitMask(index);
+	}
+
+	/**
+	 * Creates a new mask with all bits after (to the left) the hex index in the
+	 * ON position.
+	 *
+	 * Example: makeRightHexMask(3) -> fff
+	 *
+	 * @param hexIndex
+	 */
+	public static long makeRightHexMask(int hexIndex) {
+		return makeRightBitMask(hexIndex * BITS_IN_HEX);
+	}
+
+	/**
+	 * Creates a new mask with all bits after (to the left) the byte index in
+	 * the ON position.
+	 *
+	 * Example: makeRightMask(3) -> ffffff
+	 *
+	 * @param byteIndex
+	 */
+	public static long makeRightByteMask(int byteIndex) {
+		return makeRightBitMask(byteIndex * BITS_IN_BYTE);
 	}
 
 	//MARK: Logic
