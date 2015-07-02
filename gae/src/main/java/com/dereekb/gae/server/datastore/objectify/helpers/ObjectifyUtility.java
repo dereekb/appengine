@@ -1,0 +1,88 @@
+package com.dereekb.gae.server.datastore.objectify.helpers;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.googlecode.objectify.Key;
+
+public class ObjectifyUtility {
+
+	public static <T extends ObjectifyModel<T>> List<Key<T>> readKeys(Iterable<T> models) {
+		List<Key<T>> values = new ArrayList<Key<T>>();
+
+		if (models != null) {
+			for (T model : models) {
+				Key<T> key = model.getObjectifyKey();
+
+				if (key != null) {
+					values.add(key);
+				}
+			}
+		}
+
+		return values;
+	}
+
+	public static <T extends ObjectifyModel<T>> List<Long> readKeyIdentifiers(Iterable<Key<T>> keys) {
+		List<Long> values = new ArrayList<Long>();
+
+		if (keys != null) {
+			for (Key<T> key : keys) {
+				Long value = key.getId();
+
+				if (value != null) {
+					values.add(value);
+				}
+			}
+		}
+
+		return values;
+	}
+
+	public static <T extends ObjectifyModel<T>> Long readKeyIdentifier(Key<T> key) {
+		Long identifier = null;
+
+		if (key != null) {
+			identifier = key.getId();
+		}
+
+		return identifier;
+	}
+
+	/**
+	 * Creates a new key.
+	 *
+	 * @param type
+	 * @param identifier
+	 * @return New key for the identifier. Returns null if no identifier is
+	 *         passed.
+	 */
+	public static <T extends ObjectifyModel<T>> Key<T> createKey(Class<T> type,
+	                                                             Long identifier) {
+		Key<T> key = null;
+
+		if (identifier != null) {
+			key = Key.create(type, identifier);
+		}
+
+		return key;
+	}
+
+	public static <T extends ObjectifyModel<T>> Set<Key<T>> createKeySet(Class<T> type,
+	                                                                     Iterable<Long> identifiers) {
+		Set<Key<T>> keys = new HashSet<Key<T>>();
+
+		if (identifiers != null) {
+			for (Long identifier : identifiers) {
+				Key<T> key = Key.create(type, identifier);
+				keys.add(key);
+			}
+		}
+
+		return keys;
+	}
+
+}

@@ -1,0 +1,107 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Cruds -->
+	<bean id="geoPlaceCrudService" lazy-init="true"
+		class="com.dereekb.gae.model.crud.services.CrudServiceImpl"
+		scope="singleton">
+		<constructor-arg index="0" ref="geoPlaceCreateFunctionFactory" />
+		<constructor-arg index="1" ref="geoPlaceReadFunctionFactory" />
+		<constructor-arg index="2" ref="geoPlaceUpdateFunctionFactory" />
+		<constructor-arg index="3" ref="geoPlaceDeleteFunctionFactory" />
+	</bean>
+
+	<alias name="geoPlaceCrudService" alias="geoPlaceCreateService" />
+	<alias name="geoPlaceCrudService" alias="geoPlaceReadService" />
+	<alias name="geoPlaceCrudService" alias="geoPlaceUpdateService" />
+	<alias name="geoPlaceCrudService" alias="geoPlaceDeleteService" />
+
+	<!-- Function -->
+	<bean id="geoPlaceSynchronousFunctionSaveDelegate"
+		class="com.dereekb.gae.model.crud.function.utility.saver.SetterStagedFunctionSaveDelegate"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0"
+			ref="geoPlaceSynchronousConfiguredSetter" />
+	</bean>
+
+	<bean id="geoPlaceAsynchronousFunctionSaveDelegate"
+		class="com.dereekb.gae.model.crud.function.utility.saver.SetterStagedFunctionSaveDelegate"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="geoPlaceAsyncConfiguredSetter" />
+	</bean>
+
+	<!-- Create -->
+	<bean id="geoPlaceCreateFunctionDelegate" lazy-init="true"
+		class="com.dereekb.gae.model.crud.function.delegate.impl.CreateFunctionDelegateImpl">
+		<constructor-arg index="0" ref="geoPlaceFactory" />
+		<constructor-arg index="1"
+			ref="geoPlaceUpdateFunctionDelegate" />
+	</bean>
+
+	<bean id="geoPlaceCreateFunctionFactory" lazy-init="true"
+		class="com.dereekb.gae.model.crud.function.factory.CreateFunctionFactory">
+		<constructor-arg index="0"
+			ref="geoPlaceCreateFunctionDelegate" />
+		<property name="defaultSaveDelegate">
+			<ref bean="geoPlaceSynchronousFunctionSaveDelegate" />
+		</property>
+	</bean>
+
+	<!-- Read -->
+	<bean id="geoPlaceReadFunctionFactory" lazy-init="true"
+		class="com.dereekb.gae.model.crud.function.factory.ReadFunctionFactory">
+		<constructor-arg index="0" ref="geoPlaceRegistry" />
+	</bean>
+
+	<!-- Update -->
+	<bean id="geoPlaceAttributeUpdater"
+		class="com.dereekb.gae.model.geo.place.crud.GeoPlaceAttributeUpdater"
+		lazy-init="true">
+	</bean>
+
+	<bean id="geoPlaceUpdateFunctionDelegate" lazy-init="true"
+		class="com.dereekb.gae.model.geo.place.crud.GeoPlaceAttributeUpdater" />
+
+	<bean id="geoPlaceUpdateFunctionFactory" lazy-init="true"
+		class="com.dereekb.gae.model.crud.function.factory.UpdateFunctionFactory">
+		<constructor-arg index="0"
+			ref="geoPlaceUpdateFunctionDelegate" />
+		<property name="defaultSaveDelegate">
+			<ref bean="geoPlaceAsynchronousFunctionSaveDelegate" />
+		</property>
+	</bean>
+
+	<!-- Delete -->
+	<bean id="geoPlaceDeleteFunctionDelegate"
+		class="com.dereekb.gae.model.crud.extension.delete.ScheduledDeleteFunctionDelegate"
+		lazy-init="true">
+		<constructor-arg index="0"
+			ref="geoPlaceDeleteTaskRequestSender" />
+	</bean>
+
+	<bean id="geoPlaceAsynchronousFunctionDeleteDelegate"
+		class="com.dereekb.gae.model.crud.function.utility.saver.SetterStagedFunctionSaveDelegate"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0"
+			ref="geoPlaceSynchronousConfiguredSetter" />
+		<constructor-arg index="1" value="DELETE" />
+	</bean>
+
+	<bean id="geoPlaceDeleteFunctionFactory" lazy-init="true"
+		class="com.dereekb.gae.model.crud.function.factory.DeleteFunctionFactory">
+		<!-- Schedules the delete --><!-- <constructor-arg index="0" ref="geoPlaceDeleteFunctionDelegate"/> -->
+		<!-- Deletes immediately. -->
+		<property name="defaultSaveDelegate">
+			<ref bean="geoPlaceAsynchronousFunctionDeleteDelegate" />
+		</property>
+	</bean>
+
+</beans>
