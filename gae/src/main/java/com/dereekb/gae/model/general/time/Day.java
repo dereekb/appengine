@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Enum of days.
+ * Enumeration for days of the week.
  *
  * Each day has a bit following ISO 8601 rules. (Monday 1, Tuesday 2, etc...)
  *
