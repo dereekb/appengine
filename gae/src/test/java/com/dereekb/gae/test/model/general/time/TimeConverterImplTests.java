@@ -1,29 +1,61 @@
 package com.dereekb.gae.test.model.general.time;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import com.dereekb.gae.model.general.time.util.TimeConverter;
-import com.dereekb.gae.model.general.time.util.impl.TimeConverterImpl;
+import com.dereekb.gae.model.general.time.Hour;
+import com.dereekb.gae.model.general.time.Time;
+import com.dereekb.gae.model.general.time.TimeAmPm;
+import com.dereekb.gae.model.general.time.util.TimeValueConverter;
+import com.dereekb.gae.model.general.time.util.impl.TimeValueConverterImpl;
 
 
 /**
- * {@link TimeConverter} tests.
+ * {@link TimeValueConverter} tests.
  *
  * @author dereekb
  *
  */
 public class TimeConverterImplTests {
 
-	private final static TimeConverterImpl converter = new TimeConverterImpl();
+	private final static TimeValueConverterImpl valueConverter = new TimeValueConverterImpl();
 
 	@Test
-	public void testConversionToString() {
+	public void testNumberMidnightConversion() {
+		Integer number = 0; // Midnight
 
+		TimeAmPm expectedAmPm = TimeAmPm.AM;
+		Integer expectedVisualHour = 12;
+		Integer expectedDayHour = 0;
+		Integer expectedMinute = 0;
+
+		Time time = valueConverter.timeFromNumber(number);
+		Hour hour = time.getHour();
+
+		TimeAmPm amPm = hour.getAmPm();
+		Assert.assertTrue(amPm.equals(expectedAmPm));
+		Assert.assertTrue(hour.getVisualHour().equals(expectedVisualHour));
+		Assert.assertTrue(hour.getDayHour().equals(expectedDayHour));
+		Assert.assertTrue(time.getMinutes().equals(expectedMinute));
 	}
 
 	@Test
-	public void testConversionFromStriong() {
+	public void testNumberNoonConversion() {
+		Integer number = 12 * Time.MINUTES_IN_HOUR + 30; // Noon
 
+		TimeAmPm expectedAmPm = TimeAmPm.PM;
+		Integer expectedVisualHour = 12;
+		Integer expectedDayHour = 12;
+		Integer expectedMinute = 30;
+
+		Time time = valueConverter.timeFromNumber(number);
+		Hour hour = time.getHour();
+
+		TimeAmPm amPm = hour.getAmPm();
+		Assert.assertTrue(amPm.equals(expectedAmPm));
+		Assert.assertTrue(hour.getVisualHour().equals(expectedVisualHour));
+		Assert.assertTrue(hour.getDayHour().equals(expectedDayHour));
+		Assert.assertTrue(time.getMinutes().equals(expectedMinute));
 	}
 
 }

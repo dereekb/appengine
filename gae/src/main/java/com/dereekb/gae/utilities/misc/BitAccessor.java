@@ -144,13 +144,13 @@ public final class BitAccessor {
 	 * Focuses on the value specified by the mask, and shifted by the byte
 	 * index.
 	 *
-	 * For example, if the mask 0xFFFF0000 is applied with a shift of 2, then
+	 * For example, if the mask 0xFFFF0000 is applied with a shift of 4, then
 	 * the values at 0xXXXX will be returned as such.
 	 *
 	 * @param mask
 	 *            Value mask to apply to the value.
-	 * @param index
-	 *            The 'start' byte index. Will shift the read value to start at
+	 * @param hexIndex
+	 *            The 'start' hex index. Will shift the read value to start at
 	 *            this index.
 	 * @return
 	 * @throws IndexOutOfBoundsException

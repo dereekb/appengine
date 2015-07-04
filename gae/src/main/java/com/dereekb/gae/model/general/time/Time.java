@@ -8,6 +8,9 @@ package com.dereekb.gae.model.general.time;
  */
 public interface Time {
 
+	public final static Integer MINUTES_IN_HOUR = 60;
+	public final static Integer MAX_TIME = 60 * 60 * 24; // Minutes in the day
+
 	/**
 	 * Returns the hours for this time.
 	 *

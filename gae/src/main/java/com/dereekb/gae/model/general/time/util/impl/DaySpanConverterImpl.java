@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.general.time.util.impl;
 
 import com.dereekb.gae.model.general.time.DaySpan;
+import com.dereekb.gae.model.general.time.impl.DaySpanBitImpl;
 import com.dereekb.gae.model.general.time.util.DaySpanConverter;
 
 /**
@@ -14,14 +15,13 @@ public class DaySpanConverterImpl
 
 	@Override
 	public Integer daysToNumber(DaySpan span) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		DaySpanBitImpl days = new DaySpanBitImpl(span);
+		return days.getDaysNumber();
 	}
 
 	@Override
 	public DaySpan daysFromNumber(Integer number) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return new DaySpanBitImpl(number);
 	}
 
 }

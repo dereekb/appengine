@@ -4,7 +4,7 @@ import com.dereekb.gae.model.general.time.Hour;
 import com.dereekb.gae.model.general.time.TimeAmPm;
 
 /**
- * {@link Hour} implementation.
+ * Default {@link Hour} implementation.
  *
  * @author dereekb
  *
@@ -12,11 +12,7 @@ import com.dereekb.gae.model.general.time.TimeAmPm;
 public class HourImpl
         implements Hour {
 
-	private static final Integer MIDNIGHT = 0;
-	private static final Integer NOON = 12;
-	private static final Integer MAX_HOUR = 23;
-
-	private Integer hour;
+	private Integer dayHour;
 
 	public HourImpl(Integer hour) {
 		this.setHour(hour);
@@ -28,12 +24,23 @@ public class HourImpl
 
 	@Override
 	public TimeAmPm getAmPm() {
-		return TimeAmPm.withBoolean(this.hour >= 12);
+		return TimeAmPm.withBoolean(this.dayHour < 12);
     }
 
 	@Override
-	public Integer getHour() {
-		return this.hour % 12;
+	public Integer getVisualHour() {
+		Integer visualHour = (this.dayHour % 12);
+
+		if (visualHour == 0) {
+			visualHour = 12;
+		}
+
+		return visualHour;
+	}
+
+	@Override
+	public Integer getDayHour() {
+		return this.dayHour;
 	}
 
 	public void setHour(Integer hour,
@@ -48,7 +55,7 @@ public class HourImpl
 			hour += 12;
 		}
 
-		this.hour = hour;
+		this.dayHour = hour;
 	}
 
 	public void setHour(Integer hour) {
@@ -56,12 +63,12 @@ public class HourImpl
 			throw new IllegalArgumentException("Valid hour ranges from 0-23.");
 		}
 
-		this.hour = hour;
+		this.dayHour = hour;
 	}
 
 	@Override
 	public String toString() {
-		return "HourImpl [hour=" + this.hour + "]";
+		return "HourImpl [hour=" + this.dayHour + "]";
 	}
 
 }

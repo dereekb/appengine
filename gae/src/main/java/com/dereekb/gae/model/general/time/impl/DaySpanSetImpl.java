@@ -12,16 +12,16 @@ import com.dereekb.gae.model.general.time.DaySpan;
  * @author dereekb
  *
  */
-public class DaySpanImpl
+public class DaySpanSetImpl
         implements DaySpan {
 
 	private Set<Day> days;
 
-	public DaySpanImpl() {
+	public DaySpanSetImpl() {
 		this.days = new HashSet<Day>();
 	}
 
-	public DaySpanImpl(Set<Day> days) {
+	public DaySpanSetImpl(Set<Day> days) {
 		this.setDays(days);
 	}
 
@@ -56,7 +56,7 @@ public class DaySpanImpl
 
 	@Override
 	public String toString() {
-		return "DaySpanImpl [days=" + this.days + "]";
+		return "DaySpanSetImpl [days=" + this.days + "]";
 	}
 
 }

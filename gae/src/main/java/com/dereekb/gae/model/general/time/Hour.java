@@ -8,16 +8,29 @@ package com.dereekb.gae.model.general.time;
  */
 public interface Hour {
 
+	public static final Integer MIDNIGHT = 0;
+	public static final Integer NOON = 12;
+	public static final Integer MAX_HOUR = 23;
+
 	/**
 	 * @return {@link TimeAmPm} for the hour. Never null.
 	 */
 	public TimeAmPm getAmPm();
 
 	/**
-	 * Returns the hour for this time. Ranges from 1-12.
+	 * Returns the "visual" hour number for this time. Ranges from 1-12.
+	 *
+	 * For example, 12AM = Midnight = 0 from {@link #getDayHour()};
 	 *
 	 * @return {@link Integer} between 1-12.
 	 */
-	public Integer getHour();
+	public Integer getVisualHour();
+
+	/**
+	 * Returns the hour of the day. Ranges from 0-23.
+	 *
+	 * @return {@link Integer} between 0-23.
+	 */
+	public Integer getDayHour();
 
 }

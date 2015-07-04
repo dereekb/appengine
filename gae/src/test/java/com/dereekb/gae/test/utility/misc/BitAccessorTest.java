@@ -108,7 +108,7 @@ public class BitAccessorTest {
 	}
 
 	@Test
-	public void testRawValueReading() {
+	public void testFocusValue() {
 		Long initialValue = BitAccessor.ALL_ONE_BITS;
 		BitAccessor accessor = new BitAccessor(initialValue);
 
@@ -119,6 +119,24 @@ public class BitAccessorTest {
 
 		//System.out.println("Value: " + value + " " + Long.toHexString(value));
 		//System.out.println("Expected: " + expected + " " + Long.toHexString(expected));
+
+		Assert.assertTrue(value.equals(expected));
+	}
+
+	@Test
+	public void testFocusSmallValue() {
+		Long initialValue = 0xD01111L;
+		BitAccessor accessor = new BitAccessor(initialValue);
+
+		Long mask = 0xFF0000L;
+		Long expected = 0xD0L;
+
+		Long value = accessor.focusValue(mask, 4);
+
+		/*
+		System.out.println("Value: " + value + " " + Long.toHexString(value));
+		System.out.println("Expected: " + expected + " " + Long.toHexString(expected));
+		 */
 
 		Assert.assertTrue(value.equals(expected));
 	}
