@@ -5,24 +5,24 @@ import java.util.Set;
 
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.DaySpan;
-import com.dereekb.gae.utilities.misc.BitAccessor;
+import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
 /**
- * {@link DaySpan} implementation using {@link BitAccessor}.
+ * {@link DaySpan} implementation using {@link LongBitContainer}.
  *
  * @author dereekb
  */
 public class DaySpanBitImpl
         implements DaySpan {
 
-	private BitAccessor accessor;
+	private LongBitContainer container;
 
 	public DaySpanBitImpl() {
-		this.accessor = new BitAccessor();
+		this.container = new LongBitContainer();
 	}
 
 	public DaySpanBitImpl(Integer value) {
-		this.accessor = new BitAccessor(value);
+		this.container = new LongBitContainer(value);
 	}
 
 	public DaySpanBitImpl(DaySpan span) throws IllegalArgumentException {
@@ -30,12 +30,12 @@ public class DaySpanBitImpl
 			throw new IllegalArgumentException("DaySpan cannot be null.");
 		}
 
-		this.accessor = new BitAccessor();
+		this.container = new LongBitContainer();
 		this.setDays(span.getDays());
 	}
 
 	public Integer getDaysNumber() {
-		return this.accessor.getIntegerValue();
+		return this.container.getIntegerBits();
 	}
 
 	// DaySpan
@@ -54,7 +54,7 @@ public class DaySpanBitImpl
 
 	@Override
 	public void setDays(Set<Day> days) {
-		this.accessor.setValue(0);
+		this.container.setValue(0L);
 
 		for (Day day : days) {
 			this.add(day);
@@ -63,17 +63,17 @@ public class DaySpanBitImpl
 
 	@Override
 	public void add(Day day) {
-		this.accessor.writeBit(true, day.bit);
+		this.container.setBit(true, day.bit);
 	}
 
 	@Override
 	public void remove(Day day) {
-		this.accessor.writeBit(false, day.bit);
+		this.container.setBit(false, day.bit);
 	}
 
 	@Override
 	public boolean contains(Day day) {
-		return this.accessor.readBit(day.bit);
+		return this.container.getBit(day.bit);
 	}
 
 }

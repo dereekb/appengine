@@ -9,7 +9,8 @@ import com.dereekb.gae.model.general.time.impl.WeekTimeImpl;
 import com.dereekb.gae.model.general.time.util.DaySpanConverter;
 import com.dereekb.gae.model.general.time.util.TimeValueConverter;
 import com.dereekb.gae.model.general.time.util.WeekTimeConverter;
-import com.dereekb.gae.utilities.misc.BitAccessor;
+import com.dereekb.gae.utilities.misc.bit.BitIndex;
+import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
 /**
  * {@link WeekTimeConverter} implementation.
@@ -19,13 +20,13 @@ import com.dereekb.gae.utilities.misc.BitAccessor;
 public class WeekTimeConverterImpl
         implements WeekTimeConverter {
 
-	private final static Integer DAYS_HEX_INDEX = 6;
+	private final static Integer DAYS_BIT_INDEX = BitIndex.hexIndex(6);
 	private final static Integer DAYS_HEX_MASK = 0xFF000000;
 
-	private final static Integer START_TIME_HEX_INDEX = 3;
+	private final static Integer START_TIME_BIT_INDEX = BitIndex.hexIndex(3);
 	private final static Integer START_TIME_HEX_MASK = 0x00FFF000;
 
-	private final static Integer END_TIME_HEX_INDEX = 0;
+	private final static Integer END_TIME_BIT_INDEX = 0;
 	private final static Integer END_TIME_HEX_MASK = 0x00000FFF;
 
 	private final static TimeValueConverter timeConverter = new TimeValueConverterImpl();
@@ -42,29 +43,28 @@ public class WeekTimeConverterImpl
 		Integer startTimeNumber = timeConverter.timeToNumber(startTime);
 		Integer endTimeNumber = timeConverter.timeToNumber(endTime);
 
-		BitAccessor accessor = new BitAccessor();
+		LongBitContainer container = new LongBitContainer();
 
 		// Days
-		accessor = accessor.or(dayTimeNumber.longValue());
-		accessor.shiftBytesLeft(2);
+		container.applyOr(LongBitContainer.bitsFromInteger(dayTimeNumber));
 
 		// Start
-		accessor = accessor.or(startTimeNumber.longValue());
-		accessor.shiftBytesLeft(3);
+		container.bitShiftLeft(BitIndex.hexIndex(3));
+		container.applyOr(LongBitContainer.bitsFromInteger(startTimeNumber));
 
 		// End
-		accessor = accessor.or(endTimeNumber.longValue());
-		accessor.shiftBytesLeft(3);
+		container.bitShiftLeft(BitIndex.hexIndex(3));
+		container.applyOr(LongBitContainer.bitsFromInteger(endTimeNumber));
 
-		return accessor.getIntegerValue();
+		return container.getIntegerBits();
 	}
 
 	@Override
 	public WeekTime weekTimeFromNumber(Integer number) {
-		BitAccessor accessor = new BitAccessor(number);
-		Long daysValue = accessor.focusValue(DAYS_HEX_MASK, DAYS_HEX_INDEX);
-		Long startValue = accessor.focusValue(START_TIME_HEX_MASK, START_TIME_HEX_INDEX);
-		Long endValue = accessor.focusValue(END_TIME_HEX_MASK, END_TIME_HEX_INDEX);
+		LongBitContainer container = new LongBitContainer(number);
+		Long daysValue = container.focusBits(DAYS_HEX_MASK, DAYS_BIT_INDEX);
+		Long startValue = container.focusBits(START_TIME_HEX_MASK, START_TIME_BIT_INDEX);
+		Long endValue = container.focusBits(END_TIME_HEX_MASK, END_TIME_BIT_INDEX);
 
 		DaySpan daySpan = daysSpanConverter.daysFromNumber(daysValue.intValue());
 		Time startTime = timeConverter.timeFromNumber(startValue.intValue());

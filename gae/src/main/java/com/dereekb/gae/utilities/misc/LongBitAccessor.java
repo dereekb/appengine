@@ -1,12 +1,15 @@
 package com.dereekb.gae.utilities.misc;
 
+import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
+
 /**
  * Used for accessing and changing bits in a {@link long} value.
  *
  * @author dereekb
- *
+ * @deprecated Replaced by {@link LongBitContainer}
  */
-public final class BitAccessor {
+@Deprecated
+public final class LongBitAccessor {
 
 	/**
 	 * Used for masking a specific byte.
@@ -22,15 +25,15 @@ public final class BitAccessor {
 
 	private Long value;
 
-	public BitAccessor() {
+	public LongBitAccessor() {
 		this.value = 0L;
 	}
 
-	public BitAccessor(Integer value) {
+	public LongBitAccessor(Integer value) {
 		this.setValue(value);
 	}
 
-	public BitAccessor(Long value) {
+	public LongBitAccessor(Long value) {
 		this.setValue(value);
 	}
 
@@ -58,11 +61,30 @@ public final class BitAccessor {
 		}
 	}
 
+	/**
+	 * Sets the value to match the passed {@link Integer} value.
+	 *
+	 * @param value
+	 * @see #setBits(Integer) if you want to just set the bit ordering.
+	 */
 	public void setValue(Integer value) {
 		if (value == null) {
 			this.value = 0L;
 		} else {
 			this.value = value.longValue();
+		}
+	}
+
+	/**
+	 * Sets the value using bits from the passed integer.
+	 *
+	 * @param value
+	 */
+	public void setBits(Integer value) {
+		if (value == null) {
+			this.value = 0L;
+		} else {
+			this.value = value.longValue() & 0xFFFFFFFFL;
 		}
 	}
 
@@ -107,8 +129,11 @@ public final class BitAccessor {
 	 */
 	public void writeValue(long value,
 	                       int index) throws IndexOutOfBoundsException {
-		BitAccessor accessor = new BitAccessor(value);
+		LongBitAccessor accessor = new LongBitAccessor(value);
 		accessor.shiftBytesLeft(index);
+
+		// TODO: This won't work for cases where the "starting" value is already
+		// 1. It just performs an OR, instead of writing a blank slate.
 
 		this.value = this.orValue(accessor.value);
 	}
@@ -157,7 +182,7 @@ public final class BitAccessor {
 	 */
 	public long focusValue(long mask,
 	                       int hexIndex) throws IndexOutOfBoundsException {
-		BitAccessor and = this.and(mask);
+		LongBitAccessor and = this.and(mask);
 		and.shiftHexRight(hexIndex);
 		// and.maskHexRight(hexIndex); //TODO: Change to independent function.
 		long focusMask = makeRightHexMask(MAX_BIT_INDEX - hexIndex);
@@ -220,6 +245,10 @@ public final class BitAccessor {
 	}
 
 	// MARK: Masking
+	public void addIntegerMask() {
+
+	}
+
 	/**
 	 * Creates a new mask with all bits after (to the left) the index in the ON
 	 * position.
@@ -297,32 +326,32 @@ public final class BitAccessor {
 		return this.value & value;
 	}
 
-	public BitAccessor and(long value) {
-		return new BitAccessor(this.andValue(value));
+	public LongBitAccessor and(long value) {
+		return new LongBitAccessor(this.andValue(value));
 	}
 
 	public long orValue(long value) {
 		return this.value | value;
 	}
 
-	public BitAccessor or(long value) {
-		return new BitAccessor(this.orValue(value));
+	public LongBitAccessor or(long value) {
+		return new LongBitAccessor(this.orValue(value));
 	}
 
 	public long xorValue(long value) {
 		return this.value ^ value;
 	}
 
-	public BitAccessor xor(long value) {
-		return new BitAccessor(this.xorValue(value));
+	public LongBitAccessor xor(long value) {
+		return new LongBitAccessor(this.xorValue(value));
 	}
 
 	public long notValue(long value) {
 		return ~this.value;
 	}
 
-	public BitAccessor not(long value) {
-		return new BitAccessor(this.notValue(value));
+	public LongBitAccessor not(long value) {
+		return new LongBitAccessor(this.notValue(value));
 	}
 
 	// MARK: Strings
@@ -347,7 +376,7 @@ public final class BitAccessor {
 
 	@Override
 	public String toString() {
-		return "BitAccessor [value=" + this.value + "]";
+		return "LongBitAccessor [value=" + this.value + "]";
 	}
 
 }
