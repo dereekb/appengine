@@ -3,12 +3,12 @@ package com.dereekb.gae.model.general.people;
 import java.io.Serializable;
 
 /**
- * Represents a website with a specified {@link WebsiteType}.
+ * Represents a website with a specified {@link WebsiteAddressType}.
  *
  * @author dereekb
  *
  */
-public class Website
+public class WebsiteAddress
         implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -17,9 +17,9 @@ public class Website
 
 	private String data;
 
-	public Website() {}
+	public WebsiteAddress() {}
 
-	public Website(WebsiteType type, String data) {
+	public WebsiteAddress(WebsiteAddressType type, String data) {
 		this.setType(type);
 		this.data = data;
 	}
@@ -32,11 +32,11 @@ public class Website
 		this.typeId = typeId;
 	}
 
-	public WebsiteType getType() {
-		return WebsiteType.typeForId(this.typeId);
+	public WebsiteAddressType getType() {
+		return WebsiteAddressType.typeForId(this.typeId);
 	}
 
-	public void setType(WebsiteType type) {
+	public void setType(WebsiteAddressType type) {
 		this.typeId = type.getId();
 	}
 
@@ -50,7 +50,7 @@ public class Website
 
 	@Override
 	public String toString() {
-		return "Website [typeId=" + this.typeId + ", data=" + this.data + "]";
+		return "WebsiteAddress [typeId=" + this.typeId + ", data=" + this.data + "]";
 	}
 
 }

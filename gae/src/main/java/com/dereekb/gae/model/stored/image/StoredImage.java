@@ -1,9 +1,12 @@
 package com.dereekb.gae.model.stored.image;
 
+import java.util.Set;
+
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobInfoType;
+import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
@@ -22,6 +25,7 @@ import com.googlecode.objectify.condition.IfZero;
  * Is an {@link StoredBlobInfoType} for a {@link StoredBlob}.
  *
  * @author dereekb
+ *
  */
 @Cache
 @Entity
@@ -72,7 +76,13 @@ public final class StoredImage extends SearchableDatabaseModel
 	 * (Optional) {@link GeoPlace} entry that places this image into the world.
 	 */
 	@IgnoreSave(IfNull.class)
-	private Key<GeoPlace> place;
+	private Key<GeoPlace> geoPlace;
+
+	/**
+	 * Set of all {@link StoredImageSet} this image is a part of.
+	 */
+	@IgnoreSave(IfEmpty.class)
+	private Set<Key<StoredImageSet>> imageSets;
 
 	public StoredImage() {}
 
@@ -112,16 +122,20 @@ public final class StoredImage extends SearchableDatabaseModel
 		this.tags = tags;
 	}
 
-	public Integer getTypeId() {
-		return this.type;
-	}
-
 	public StoredImageType getType() {
 		return StoredImageType.typeForId(this.type);
 	}
 
 	public void setType(StoredImageType type) {
 		this.type = type.getType();
+	}
+
+	public Integer getTypeId() {
+		return this.type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public Key<StoredBlob> getBlob() {
@@ -147,22 +161,20 @@ public final class StoredImage extends SearchableDatabaseModel
 		return id;
 	}
 
-	public Key<GeoPlace> getPlace() {
-		return this.place;
+	public Key<GeoPlace> getGeoPlace() {
+		return this.geoPlace;
 	}
 
-	public Long getPlaceId() {
-		Long id = null;
-
-		if (this.place != null) {
-			id = this.place.getId();
-		}
-
-		return id;
+	public void setGeoPlace(Key<GeoPlace> geoPlace) {
+		this.geoPlace = geoPlace;
 	}
 
-	public void setPlace(Key<GeoPlace> point) {
-		this.place = point;
+	public Set<Key<StoredImageSet>> getImageSets() {
+		return this.imageSets;
+	}
+
+	public void setImageSets(Set<Key<StoredImageSet>> imageSets) {
+		this.imageSets = imageSets;
 	}
 
 	// Unique Model
@@ -186,7 +198,8 @@ public final class StoredImage extends SearchableDatabaseModel
 	@Override
 	public String toString() {
 		return "StoredImage [identifier=" + this.identifier + ", name=" + this.name + ", summary=" + this.summary
-		        + ", tags=" + this.tags + ", type=" + this.type + ", blob=" + this.blob + ", point=" + this.place + "]";
+		        + ", tags=" + this.tags + ", type=" + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace
+		        + ", imageSets=" + this.imageSets + "]";
 	}
 
 }

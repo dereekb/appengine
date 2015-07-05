@@ -1,11 +1,11 @@
 package com.dereekb.gae.model.general.people;
 
 /**
- * Describes the information of a of {@link Contact}.
+ * Describes the information of a of {@link ContactAddress}.
  *
  * @author dereekb
  */
-public enum ContactType {
+public enum ContactAddressType {
 
 	/**
 	 * A phone number.
@@ -23,7 +23,7 @@ public enum ContactType {
 
 	private final Integer type;
 
-	private ContactType(Integer type) {
+	private ContactAddressType(Integer type) {
 		this.type = type;
 	}
 
@@ -31,8 +31,8 @@ public enum ContactType {
 		return this.type;
 	}
 
-	public static ContactType typeForId(Integer typeId) {
-		ContactType type;
+	public static ContactAddressType typeForId(Integer typeId) {
+		ContactAddressType type;
 
 		switch (typeId) {
 			case 0:

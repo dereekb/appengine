@@ -1,8 +1,6 @@
 package com.dereekb.gae.model.general.time;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,8 +26,6 @@ public enum Day {
 
 	SUNDAY(7);
 
-	public static final List<Day> ALL_DAYS = Day.getAllDays();
-
 	public final int bit;
 
 	private Day(int bit) {
@@ -54,19 +50,5 @@ public enum Day {
 
 		return dayStrings;
 	}
-
-	private static List<Day> getAllDays() {
-		List<Day> days = new ArrayList<Day>();
-
-		days.add(Day.MONDAY);
-		days.add(Day.TUESDAY);
-		days.add(Day.WEDNESDAY);
-		days.add(Day.THURSDAY);
-		days.add(Day.FRIDAY);
-		days.add(Day.SATURDAY);
-		days.add(Day.SUNDAY);
-
-		return days;
-    }
 
 }

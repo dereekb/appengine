@@ -7,6 +7,7 @@ import java.util.List;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
  * {@link DirectionalConverter} for converting a {@link StoredImage} to
@@ -42,7 +43,7 @@ public class StoredImageDataBuilder
 		data.setType(image.getTypeId());
 
 		data.setBlobId(image.getBlobId());
-		data.setPlaceId(image.getPlaceId());
+		data.setPlaceId(ObjectifyKeyUtility.idFromKey(image.getGeoPlace()));
 
 		return data;
 	}

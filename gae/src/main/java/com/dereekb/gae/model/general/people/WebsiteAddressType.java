@@ -1,11 +1,11 @@
 package com.dereekb.gae.model.general.people;
 
 /**
- * Type information for {@link Website}.
+ * Type information for {@link WebsiteAddress}.
  *
  * @author dereekb
  */
-public enum WebsiteType {
+public enum WebsiteAddressType {
 
 	/**
 	 * A basic website.
@@ -22,7 +22,7 @@ public enum WebsiteType {
 	 *
 	 * Is the same as website, except may be handle differently by a parser.
 	 *
-	 * Data is formatted as a URL, or as a Website/URL combination that is
+	 * Data is formatted as a URL, or as a WebsiteAddress/URL combination that is
 	 * separated by spaces.
 	 *
 	 * Facebook http://www.facebook.com
@@ -69,7 +69,7 @@ public enum WebsiteType {
 
 	private final Integer type;
 
-	private WebsiteType(Integer type) {
+	private WebsiteAddressType(Integer type) {
 		this.type = type;
 	}
 
@@ -77,8 +77,8 @@ public enum WebsiteType {
 		return this.type;
 	}
 
-	public static WebsiteType typeForId(Integer typeId) {
-		WebsiteType type;
+	public static WebsiteAddressType typeForId(Integer typeId) {
+		WebsiteAddressType type;
 
 		switch (typeId) {
 			case 0:

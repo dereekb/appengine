@@ -2,19 +2,19 @@ package com.dereekb.gae.model.general.people;
 
 
 /**
- * Contact information.
+ * ContactAddress information.
  *
  * @author dereekb
  */
-public final class Contact {
+public final class ContactAddress {
 
 	private Integer typeId;
 
 	private String info;
 
-	public Contact() {}
+	public ContactAddress() {}
 
-	public Contact(ContactType type, String info) {
+	public ContactAddress(ContactAddressType type, String info) {
 		this.setType(type);
 		this.info = info;
 	}
@@ -27,11 +27,11 @@ public final class Contact {
 		this.typeId = typeId;
 	}
 
-	public ContactType getType() {
-		return ContactType.typeForId(this.typeId);
+	public ContactAddressType getType() {
+		return ContactAddressType.typeForId(this.typeId);
 	}
 
-	public void setType(ContactType type) {
+	public void setType(ContactAddressType type) {
 		this.typeId = type.getId();
 	}
 
@@ -45,7 +45,7 @@ public final class Contact {
 
 	@Override
 	public String toString() {
-		return "Contact [typeId=" + this.typeId + ", info=" + this.info + "]";
+		return "ContactAddress [typeId=" + this.typeId + ", info=" + this.info + "]";
 	}
 
 }

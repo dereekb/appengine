@@ -43,7 +43,7 @@ public class DaySpanBitImpl
 	public Set<Day> getDays() {
 		Set<Day> days = new HashSet<Day>();
 
-		for (Day day : Day.ALL_DAYS) {
+		for (Day day : Day.values()) {
 			if (this.contains(day)) {
 				days.add(day);
 			}
