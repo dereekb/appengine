@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.general.people;
+package com.dereekb.gae.model.general.people.contact;
 
 /**
  * Describes the information of a of {@link ContactAddress}.
@@ -17,7 +17,7 @@ public enum ContactAddressType {
 	PHONE(0),
 
 	/**
-	 * An email address.
+	 * An email address, formatted as "{@code email@domain.com}".
 	 */
 	EMAIL(1);
 

@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.general.people;
+package com.dereekb.gae.model.general.people.website;
 
 import java.io.Serializable;
 
