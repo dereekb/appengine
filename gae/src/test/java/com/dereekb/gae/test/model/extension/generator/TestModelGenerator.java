@@ -20,7 +20,6 @@ public interface TestModelGenerator<T extends UniqueModel>
 	 *
 	 * The model is saved to the configured datastore.
 	 *
-	 * @param identifier
 	 * @return Generated model. Never null.
 	 */
 	@Override
@@ -30,11 +29,22 @@ public interface TestModelGenerator<T extends UniqueModel>
 	 * Generates new models with random identifiers. The model is saved to the
 	 * configured datastore.
 	 *
-	 * @param identifiers
+	 * @param count
+	 * @return Generated models. Never null.
+	 */
+	public List<T> generate(int count);
+
+	/**
+	 * Generates new models with random identifiers. The model is saved to the
+	 * configured datastore. Uses a seed.
+	 *
+	 * @param count
+	 * @param seed
 	 * @return Generated models. Never null.
 	 */
 	@Override
-	public List<T> generate(int count);
+	public List<T> generate(int count,
+	                        Long seed);
 
 	/**
 	 * Generates a single model with the passed identifier.

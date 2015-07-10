@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.stored.blob.dto;
 
+import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
+import com.dereekb.gae.model.extension.links.descriptor.DescriptorImpl;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.server.datastore.models.dto.DatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,9 +21,7 @@ public final class StoredBlobData extends DatabaseModelData {
 
 	private String download;
 
-	private String infoType;
-
-	private String infoIdentifier;
+	private DescriptorImpl descriptor;
 
 	public String getDownload() {
 		return this.download;
@@ -31,26 +31,17 @@ public final class StoredBlobData extends DatabaseModelData {
 		this.download = download;
 	}
 
-	public String getInfoType() {
-		return this.infoType;
+	public DescriptorImpl getDescriptor() {
+		return this.descriptor;
 	}
 
-	public void setInfoType(String infoType) {
-		this.infoType = infoType;
-	}
-
-	public String getInfoIdentifier() {
-		return this.infoIdentifier;
-	}
-
-	public void setInfoIdentifier(String infoIdentifier) {
-		this.infoIdentifier = infoIdentifier;
+	public void setDescriptor(Descriptor descriptor) {
+		this.descriptor = DescriptorImpl.withValue(descriptor);
 	}
 
 	@Override
 	public String toString() {
-		return "StoredBlobData [download=" + this.download + ", infoType=" + this.infoType + ", infoIdentifier="
-		        + this.infoIdentifier + ", identifier=" + this.identifier + ", created=" + this.created + "]";
+		return "StoredBlobData [download=" + this.download + ", descriptor=" + this.descriptor + "]";
 	}
 
 }

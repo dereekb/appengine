@@ -50,11 +50,7 @@ public final class GeoPlaceDataReader extends AbstractDirectionalConverter<GeoPl
 			geoPlace.setParent(parentKey);
 		}
 
-		String infoType = input.getInfoType();
-		String infoIdentifier = input.getInfoIdentifier();
-
-		geoPlace.setInfoType(infoType);
-		geoPlace.setInfoIdentifier(infoIdentifier);
+		geoPlace.setDescriptor(input.getDescriptor());
 
 		// Data
 		Point point = input.getPoint();

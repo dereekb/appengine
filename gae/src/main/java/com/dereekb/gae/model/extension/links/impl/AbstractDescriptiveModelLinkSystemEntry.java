@@ -4,36 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
-import com.dereekb.gae.model.extension.links.UniqueDescriptivelyLinkedModel;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
-import com.dereekb.gae.model.extension.links.components.impl.link.DescriptiveModelLinkImpl;
-import com.dereekb.gae.model.extension.links.components.impl.link.DescriptiveModelLinkInfo;
+import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkImpl;
+import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
+import com.dereekb.gae.model.extension.links.descriptor.UniqueDescribedModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
-public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDescriptivelyLinkedModel> extends AbstractModelLinkSystemEntry<T> {
+public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDescribedModel> extends AbstractModelLinkSystemEntry<T> {
 
-	protected List<DescriptiveModelLinkInfo> descriptiveLinkInfo;
+	protected List<DescribedModelLinkInfo> descriptiveLinkInfo;
 
 	public AbstractDescriptiveModelLinkSystemEntry(String modelType, ReadService<T> service, ConfiguredSetter<T> setter) {
 		super(modelType, service, setter);
-		this.descriptiveLinkInfo = new ArrayList<DescriptiveModelLinkInfo>();
+		this.descriptiveLinkInfo = new ArrayList<DescribedModelLinkInfo>();
 	}
 
 	public AbstractDescriptiveModelLinkSystemEntry(String modelType,
 	        ReadService<T> service,
 	        ConfiguredSetter<T> setter,
-	        List<DescriptiveModelLinkInfo> info) {
+	        List<DescribedModelLinkInfo> info) {
 		super(modelType, service, setter);
 		this.descriptiveLinkInfo = info;
 	}
 
-	public List<DescriptiveModelLinkInfo> getDescriptiveLinkInfo() {
+	public List<DescribedModelLinkInfo> getDescriptiveLinkInfo() {
 		return this.descriptiveLinkInfo;
 	}
 
-	public void setDescriptiveLinkInfo(List<DescriptiveModelLinkInfo> descriptiveLinkInfo) {
+	public void setDescriptiveLinkInfo(List<DescribedModelLinkInfo> descriptiveLinkInfo) {
 		this.descriptiveLinkInfo = descriptiveLinkInfo;
 	}
 
@@ -49,9 +49,9 @@ public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDe
 		List<Link> links = new ArrayList<Link>();
 		ModelKey key = model.getModelKey();
 
-		for (DescriptiveModelLinkInfo info : this.descriptiveLinkInfo) {
+		for (DescribedModelLinkInfo info : this.descriptiveLinkInfo) {
 			LinkInfoImpl linkInfo = info.toLinkInfo(key);
-			DescriptiveModelLinkImpl link = new DescriptiveModelLinkImpl(linkInfo, model);
+			DescribedModelLinkImpl link = new DescribedModelLinkImpl(linkInfo, model);
 			links.add(link);
 		}
 

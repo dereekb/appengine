@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.geo.place.dto;
 
+import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
+import com.dereekb.gae.model.extension.links.descriptor.DescriptorImpl;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.geo.place.GeoPlace;
@@ -26,9 +28,7 @@ public class GeoPlaceData extends DatabaseModelData {
 
 	private Long parent;
 
-	private String infoType;
-
-	private String infoIdentifier;
+	private DescriptorImpl descriptor;
 
 	public GeoPlaceData() {}
 
@@ -56,27 +56,18 @@ public class GeoPlaceData extends DatabaseModelData {
 		this.parent = parent;
 	}
 
-	public String getInfoType() {
-		return this.infoType;
+	public DescriptorImpl getDescriptor() {
+		return this.descriptor;
 	}
 
-	public void setInfoType(String infoType) {
-		this.infoType = infoType;
-	}
-
-	public String getInfoIdentifier() {
-		return this.infoIdentifier;
-	}
-
-	public void setInfoIdentifier(String infoIdentifier) {
-		this.infoIdentifier = infoIdentifier;
+	public void setDescriptor(Descriptor descriptor) {
+		this.descriptor = DescriptorImpl.withValue(descriptor);
 	}
 
 	@Override
 	public String toString() {
 		return "GeoPlaceData [point=" + this.point + ", region=" + this.region + ", parent=" + this.parent
-		        + ", infoType=" + this.infoType + ", infoIdentifier=" + this.infoIdentifier + ", identifier="
-		        + this.identifier + ", created=" + this.created + "]";
+		        + ", descriptor=" + this.descriptor + "]";
 	}
 
 }

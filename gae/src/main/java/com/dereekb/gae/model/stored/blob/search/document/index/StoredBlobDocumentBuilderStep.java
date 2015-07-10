@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.stored.blob.search.document.index;
 
+import java.util.Date;
+
 import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
@@ -21,18 +23,27 @@ public final class StoredBlobDocumentBuilderStep<T>
 	public void updateBuilder(StoredBlob model,
 	                          Builder builder) {
 
-		// Created Date
-		Field.Builder creationField = SearchDocumentBuilderUtility.dateField("date", model.getDate());
-		builder.addField(creationField);
+		Long identifier = model.getIdentifier();
+		Date date = model.getDate();
 
-		// Info Type Atom
-		Field.Builder infoType = SearchDocumentBuilderUtility.atomField("infoType", model.getInfoType());
-		builder.addField(infoType);
+		String descriptorType = model.getDescriptorType();
+		String descriptorId = model.getDescriptorId();
 
-		// Info Identifier Atom
-		Field.Builder infoIdentifier = SearchDocumentBuilderUtility.atomField("infoId",
-		        model.getInfoIdentifier());
-		builder.addField(infoIdentifier);
+		// Place Identifier
+		Field.Builder identifierField = SearchDocumentBuilderUtility.atomField("id", identifier.toString());
+		builder.addField(identifierField);
+
+		// Creation Date
+		Field.Builder dateField = SearchDocumentBuilderUtility.dateField("date", date);
+		builder.addField(dateField);
+
+		// Descriptor Info
+		Field.Builder descriptorField = SearchDocumentBuilderUtility.atomField("descriptorType", descriptorType);
+		builder.addField(descriptorField);
+
+		// Info Type Id
+		Field.Builder descriptorIdField = SearchDocumentBuilderUtility.atomField("descriptorId", descriptorId);
+		builder.addField(descriptorIdField);
 
 	}
 

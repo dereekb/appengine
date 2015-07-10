@@ -44,8 +44,7 @@ public final class StoredBlobDataBuilder
 		String download = this.downloadBuilder.downloadLinkForStoredBlob(blob);
 		data.setDownload(download);
 
-		data.setInfoType(blob.getInfoType());
-		data.setInfoIdentifier(blob.getInfoIdentifier());
+		data.setDescriptor(blob.getDescriptor());
 
 		return data;
 	}

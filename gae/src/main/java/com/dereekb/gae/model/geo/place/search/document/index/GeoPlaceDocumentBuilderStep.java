@@ -28,8 +28,8 @@ public final class GeoPlaceDocumentBuilderStep
 		Point point = model.getPoint();
 		boolean isRegion = model.isRegion();
 
-		String infoType = model.getInfoType();
-		String infoTypeId = model.getInfoIdentifier();
+		String descriptorType = model.getDescriptorType();
+		String descriptorId = model.getDescriptorId();
 
 		// Place Identifier
 		Field.Builder identifierField = SearchDocumentBuilderUtility.atomField("id", identifier.toString());
@@ -47,13 +47,13 @@ public final class GeoPlaceDocumentBuilderStep
 		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField("isRegion", isRegion);
 		builder.addField(isRegionField);
 
-		// Info Type
-		Field.Builder typeField = SearchDocumentBuilderUtility.atomField("infoType", infoType);
-		builder.addField(typeField);
+		// Descriptor Info
+		Field.Builder descriptorField = SearchDocumentBuilderUtility.atomField("descriptorType", descriptorType);
+		builder.addField(descriptorField);
 
 		// Info Type Id
-		Field.Builder typeIdField = SearchDocumentBuilderUtility.atomField("infoTypeId", infoTypeId);
-		builder.addField(typeIdField);
+		Field.Builder descriptorIdField = SearchDocumentBuilderUtility.atomField("descriptorId", descriptorId);
+		builder.addField(descriptorIdField);
 
 	}
 

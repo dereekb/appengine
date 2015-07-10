@@ -20,6 +20,11 @@ public final class StringLongModelKeyConverter
         implements BidirectionalConverter<String, ModelKey>, DirectionalConverter<String, ModelKey>,
         SingleDirectionalConverter<String, ModelKey> {
 
+	/**
+	 * Statically available {@link StringLongModelKeyConverter} instance.
+	 */
+	public static final StringLongModelKeyConverter CONVERTER = new StringLongModelKeyConverter();
+
 	// Bidirectional Converter
 	@Override
 	public List<ModelKey> convertTo(Collection<String> input) throws ConversionFailureException {

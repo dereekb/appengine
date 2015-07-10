@@ -20,43 +20,79 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 
 	private Generator<ModelKey> keyGenerator;
 
-	public AbstractModelGenerator() {}
-
 	public AbstractModelGenerator(Generator<ModelKey> keyGenerator) {
-		this.keyGenerator = keyGenerator;
+		this.setKeyGenerator(keyGenerator);
 	}
 
 	public Generator<ModelKey> getKeyGenerator() {
 		return this.keyGenerator;
 	}
 
-	public void setKeyGenerator(Generator<ModelKey> keyGenerator) {
+	public void setKeyGenerator(Generator<ModelKey> keyGenerator) throws IllegalArgumentException {
+		if (keyGenerator == null) {
+			throw new IllegalArgumentException("Key Generator cannot be null.");
+		}
+
 		this.keyGenerator = keyGenerator;
 	}
 
+	// MARK: Key Generation
 	protected ModelKey generateKey() {
-		ModelKey key = null;
-
-		if (this.keyGenerator != null) {
-			key = this.keyGenerator.generate();
-		}
-
-		return key;
+		return this.generateKey(null);
 	}
 
+	protected ModelKey generateKey(Long seed) {
+		return this.keyGenerator.generate(seed);
+	}
+
+	protected List<ModelKey> generateKeys(int count,
+	                                      Long seed) {
+		return this.keyGenerator.generate(count, seed);
+	}
+
+	// MARK: Generation
 	@Override
     public T generate() {
 		return this.generateModel();
 	}
 
+	/**
+	 * By default will call {@link #generateModel(ModelKey)} using the seed as a
+	 * key, unless seed is null.
+	 */
+	@Override
+	public T generate(Long seed) {
+		ModelKey key = this.generateKey(seed);
+		return this.generateModel(key, seed);
+	}
+
+	@Override
+	public List<T> generate(int count,
+	                        Long seed) {
+		List<ModelKey> keys = this.generateKeys(count, seed);
+		return this.generateModels(keys);
+	}
+
+	// ModelGenerator
 	public T generateModel() {
 		ModelKey key = this.generateKey();
 		return this.generateModel(key);
 	}
 
-	// ModelGenerator
 	@Override
-	public abstract T generateModel(ModelKey key);
+	public T generateModel(ModelKey key) {
+		Long seed = null;
+
+		if (key != null) {
+			Integer hash = key.hashCode();
+			seed = hash.longValue();
+		}
+
+		return this.generateModel(key, seed);
+	}
+
+	public abstract T generateModel(ModelKey key,
+	                                Long seed);
 
 	@Override
 	public List<T> generateModels(Iterable<ModelKey> keys) {

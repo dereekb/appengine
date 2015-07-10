@@ -35,8 +35,21 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
     }
 
 	@Override
-    public List<T> generate(int count) {
-		List<T> models = this.generator.generate(count);
+	public T generate(Long seed) {
+		T model = this.generator.generate(seed);
+		this.setter.save(model, false);
+		return model;
+	}
+
+	@Override
+	public List<T> generate(int count) {
+		return this.generate(count, null);
+	}
+
+	@Override
+	public List<T> generate(int count,
+	                        Long seed) {
+		List<T> models = this.generator.generate(count, seed);
 		this.setter.save(models, false);
 		return models;
     }

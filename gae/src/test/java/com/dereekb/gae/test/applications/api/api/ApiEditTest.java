@@ -86,7 +86,7 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 	// Tests
 	@Test
 	public void testCreateFunction() {
-		List<I> modelData = this.modelDataGenerator.generate(5);
+		List<I> modelData = this.modelDataGenerator.generate(5, null);
 
 		ApiCreateRequest<I> request = new ApiCreateRequest<I>();
 		request.setData(modelData);

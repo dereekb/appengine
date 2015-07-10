@@ -6,7 +6,7 @@ import java.util.List;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
-import com.dereekb.gae.model.extension.links.components.impl.link.DescriptiveModelLinkInfo;
+import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
@@ -30,7 +30,7 @@ public class GeoPlaceLinkDelegate extends AbstractDescriptiveModelLinkSystemEntr
 
 	public GeoPlaceLinkDelegate(ReadService<GeoPlace> service,
 	        ConfiguredSetter<GeoPlace> setter,
-	        List<DescriptiveModelLinkInfo> info) {
+	        List<DescribedModelLinkInfo> info) {
 	    super(GEO_PLACE_LINK_TYPE, service, setter, info);
     }
 

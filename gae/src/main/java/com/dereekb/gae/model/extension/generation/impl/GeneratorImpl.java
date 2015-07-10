@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**
- * {@link Generator} implementation that uses a {@link Factory}.
+ * {@link Generator} implementation that wraps a {@link Factory}.
  *
  * @author dereekb
  *
@@ -36,7 +36,13 @@ public class GeneratorImpl<T>
 	}
 
 	@Override
-	public List<T> generate(int count) {
+	public T generate(Long seed) {
+		return this.factory.make();
+	}
+
+	@Override
+	public List<T> generate(int count,
+	                        Long seed) {
 		List<T> models = new ArrayList<T>();
 
 		for (int i = 0; i < count; i += 1) {

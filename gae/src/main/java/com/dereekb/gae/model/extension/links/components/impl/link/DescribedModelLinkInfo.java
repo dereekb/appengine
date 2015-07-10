@@ -5,16 +5,16 @@ import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * Used by {@link DescriptiveModelLinkInfo} to create reverse info types.
+ * Used by {@link DescribedModelLinkInfo} to create reverse info types.
  *
  * @author dereekb
  */
-public class DescriptiveModelLinkInfo {
+public class DescribedModelLinkInfo {
 
 	private String linkName;
 	private LinkTarget linkTarget;
 
-	public DescriptiveModelLinkInfo(String linkName, LinkTarget linkTarget) {
+	public DescribedModelLinkInfo(String linkName, LinkTarget linkTarget) {
 		this.setLinkName(linkName);
 		this.setLinkTarget(linkTarget);
 	}

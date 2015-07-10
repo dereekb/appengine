@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.DescriptivelyLinkedModel;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkData;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
@@ -12,12 +11,15 @@ import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.Relation;
 import com.dereekb.gae.model.extension.links.components.exception.UnreleasedDescriptiveLinkException;
 import com.dereekb.gae.model.extension.links.components.impl.LinkDataImpl;
+import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
+import com.dereekb.gae.model.extension.links.descriptor.DescriptorImpl;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * {@link Link} implementation for a {@link DescriptivelyLinkedModel}.
+ * {@link Link} implementation for a {@link DescribedModel}.
  *
- * Because {@link DescriptivelyLinkedModel} may have different linking types,
+ * Because {@link DescribedModel} may have different linking types,
  * there are different restrictions in place.
  *
  * For once, a relation can only be changed to a similar info type, or must be
@@ -25,22 +27,22 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @author dereekb
  */
-public class DescriptiveModelLinkImpl
+public class DescribedModelLinkImpl
         implements Link {
 
 	private LinkInfo linkInfo;
-	private DescriptivelyLinkedModel model;
+	private DescribedModel model;
 
-	public DescriptiveModelLinkImpl(LinkInfo linkInfo, DescriptivelyLinkedModel model) {
+	public DescribedModelLinkImpl(LinkInfo linkInfo, DescribedModel model) {
 		this.model = model;
 		this.linkInfo = linkInfo;
 	}
 
-	public DescriptivelyLinkedModel getModel() {
+	public DescribedModel getModel() {
 		return this.model;
 	}
 
-	public void setModel(DescriptivelyLinkedModel model) {
+	public void setModel(DescribedModel model) {
 		this.model = model;
 	}
 
@@ -72,14 +74,19 @@ public class DescriptiveModelLinkImpl
 	public void addRelation(Relation change) throws UnreleasedDescriptiveLinkException {
 		LinkTarget target = this.getLinkTarget();
 		String targetType = target.getTargetType();
-		String currentType = this.model.getInfoType();
 
-		if (currentType == null || currentType.equals(targetType)) {
-			ModelKey key = change.getRelationKeys().get(0).getModelKey();
-			String stringId = key.keyAsString();
+		Descriptor descriptor = this.model.getDescriptor();
 
-			this.model.setInfoType(targetType);
-			this.model.setInfoIdentifier(stringId);
+		if (descriptor != null) {
+			String currentType = descriptor.getDescriptorType();
+
+			if (currentType == null || currentType.equals(targetType)) {
+				ModelKey key = change.getRelationKeys().get(0).getModelKey();
+				String stringId = key.keyAsString();
+
+				descriptor = new DescriptorImpl(targetType, stringId);
+				this.model.setDescriptor(descriptor);
+			}
 		} else {
 			throw new UnreleasedDescriptiveLinkException();
 		}
@@ -87,9 +94,11 @@ public class DescriptiveModelLinkImpl
 
 	@Override
 	public void removeRelation(Relation change) {
-		String currentStringId = this.model.getInfoIdentifier();
+		Descriptor descriptor = this.model.getDescriptor();
 
-		if (currentStringId != null) {
+		if (descriptor != null) {
+			String currentStringId = descriptor.getDescriptorId();
+
 			List<ModelKey> keys = change.getRelationKeys();
 			List<String> stringKeys = ModelKey.keysAsStrings(keys);
 			Set<String> keysSet = new HashSet<String>(stringKeys);
@@ -102,16 +111,26 @@ public class DescriptiveModelLinkImpl
 
 	@Override
 	public LinkData getLinkData() {
-		String currentStringId = this.model.getInfoIdentifier();
-		ModelKey key = ModelKey.convert(currentStringId);
+		Descriptor descriptor = this.model.getDescriptor();
+		ModelKey key = null;
+
+		if (descriptor != null) {
+			/*
+			 * TODO: This conversion seems dangerous. Perhaps add a delegate or
+			 * something to make sure the key is converted properly.
+			 */
+
+			String infoId = descriptor.getDescriptorId();
+			key = ModelKey.convert(infoId);
+		}
+
 		LinkDataImpl data = new LinkDataImpl(this.linkInfo, key);
 		return data;
 	}
 
 	@Override
 	public void clearRelations() {
-		this.model.setInfoType(null);
-		this.model.setInfoIdentifier(null);
+		this.model.setDescriptor(null);
 	}
 
 }

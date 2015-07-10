@@ -13,23 +13,14 @@ public abstract class AbstractGenerator<T>
 
 	private static final Integer DEFAULT_GENERATION_AMOUNT = 10;
 
-	protected Random random = new Random();
 	protected Integer generationAmount = DEFAULT_GENERATION_AMOUNT;
 
-	protected Long randomPositiveLong() {
-		return Math.abs(this.random.nextLong());
-	}
-
-	protected Integer randomPositiveInt() {
-		return Math.abs(this.random.nextInt());
-	}
-
 	public Random getRandom() {
-		return this.random;
+		return new Random();
 	}
 
-	public void setRandom(Random random) {
-		this.random = random;
+	public Random getRandom(Long seed) {
+		return new Random(seed);
 	}
 
 	public Integer getGenerationAmount() {
@@ -46,10 +37,20 @@ public abstract class AbstractGenerator<T>
 	}
 
 	@Override
-	public abstract T generate();
+	public T generate() {
+		return this.generate(null);
+	}
 
 	@Override
-    public List<T> generate(int count) {
+	public abstract T generate(Long seed);
+
+	/**
+	 * By default, {@link AbstractGenerator} will call {@link #generate()} the
+	 * number of times specified by the {@code count} parameter.
+	 */
+	@Override
+	public List<T> generate(int count,
+	                        Long seed) {
 		List<T> models = new ArrayList<T>();
 
 		for (int i = 0; i < count; i += 1) {

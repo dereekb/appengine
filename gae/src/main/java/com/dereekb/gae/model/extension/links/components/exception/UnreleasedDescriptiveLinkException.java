@@ -1,9 +1,9 @@
 package com.dereekb.gae.model.extension.links.components.exception;
 
-import com.dereekb.gae.model.extension.links.DescriptivelyLinkedModel;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedModel;
 
 /**
- * Thrown in instances where a {@link DescriptivelyLinkedModel} is unsafely
+ * Thrown in instances where a {@link DescribedModel} is unsafely
  * changed.
  * 
  * @author dereekb

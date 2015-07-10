@@ -16,7 +16,8 @@ public interface ModelGenerator<T extends UniqueModel>
         extends Generator<T> {
 
 	/**
-	 * Generates a single model with the passed key.
+	 * Generates a single model with the passed key. The key may also be used
+	 * for randomization purposes.
 	 *
 	 * @param key
 	 *            Key to attach to the model. Can be null.
@@ -25,7 +26,8 @@ public interface ModelGenerator<T extends UniqueModel>
 	public T generateModel(ModelKey key);
 
 	/**
-	 * Generates new models with the passed keys.
+	 * Generates new models with the passed keys. The keys may also be used for
+	 * randomization purposes.
 	 *
 	 * @param keys
 	 *            Keys to attach to the created models.

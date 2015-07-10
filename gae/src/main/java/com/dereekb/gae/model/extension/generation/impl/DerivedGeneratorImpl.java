@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.utilities.collections.SingleItem;
 
 /**
  * {@link Generator} implementation that uses a {@link DirectionalConverter} to
@@ -48,12 +49,19 @@ public class DerivedGeneratorImpl<I, O>
 	// Generator
 	@Override
 	public O generate() {
-		return this.generate(1).get(0);
+		return this.generate(null);
 	}
 
 	@Override
-	public List<O> generate(int count) {
-		List<I> models = this.generator.generate(count);
+	public O generate(Long seed) {
+		I model = this.generator.generate(seed);
+		return this.converter.convert(SingleItem.withValue(model)).get(0);
+	}
+
+	@Override
+	public List<O> generate(int count,
+	                        Long seed) {
+		List<I> models = this.generator.generate(count, seed);
 		return this.converter.convert(models);
 	}
 

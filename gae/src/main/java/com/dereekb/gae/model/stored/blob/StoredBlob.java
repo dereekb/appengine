@@ -2,7 +2,7 @@ package com.dereekb.gae.model.stored.blob;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.storage.file.Storable;
@@ -12,7 +12,6 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.condition.IfEmpty;
 import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfNotZero;
 import com.googlecode.objectify.condition.IfZero;
@@ -24,10 +23,11 @@ import com.googlecode.objectify.condition.IfZero;
  */
 @Cache
 @Entity
-public final class StoredBlob extends SearchableDatabaseModel
+public final class StoredBlob extends DescribedDatabaseModel
         implements ObjectifyModel<StoredBlob>, Storable {
 
 	private static final long serialVersionUID = 1L;
+
 	private static final String FILE_FORMAT = "%s.%s";
 
 	/**
@@ -50,20 +50,6 @@ public final class StoredBlob extends SearchableDatabaseModel
 	@Index({ IfNotZero.class, IfNotNull.class })
 	@IgnoreSave({ IfZero.class })
 	private Integer typeId = StoredBlobType.DEFAULT_TYPE_ID;
-
-	// Info
-	/**
-	 * (Optional) Info type.
-	 */
-	@Index({ IfNotNull.class })
-	@IgnoreSave({ IfEmpty.class })
-	private String infoType;
-
-	/**
-	 * (Optional) Info type's identifier.
-	 */
-	@IgnoreSave({ IfEmpty.class })
-	private String infoIdentifier;
 
 	public StoredBlob() {}
 
@@ -97,22 +83,6 @@ public final class StoredBlob extends SearchableDatabaseModel
 
 	public void setBlobType(StoredBlobType type) {
 		this.typeId = type.getId();
-	}
-
-	public String getInfoType() {
-		return this.infoType;
-	}
-
-	public void setInfoType(String infoType) {
-		this.infoType = infoType;
-	}
-
-	public String getInfoIdentifier() {
-		return this.infoIdentifier;
-	}
-
-	public void setInfoIdentifier(String infoIdentifier) {
-		this.infoIdentifier = infoIdentifier;
 	}
 
 	// Unique Model
@@ -149,7 +119,7 @@ public final class StoredBlob extends SearchableDatabaseModel
 	@Override
 	public String toString() {
 		return "StoredBlob [identifier=" + this.identifier + ", date=" + this.date + ", typeId=" + this.typeId
-		        + ", infoType=" + this.infoType + ", infoIdentifier=" + this.infoIdentifier + "]";
+		        + ", descriptorType=" + this.descriptorType + ", descriptorId=" + this.descriptorId + "]";
 	}
 
 }
