@@ -3,7 +3,8 @@ package com.dereekb.gae.model.general.people.website;
 import java.io.Serializable;
 
 /**
- * Represents a website with a specified {@link WebsiteAddressType}.
+ * Represents an encoded {@link Website} with a specified
+ * {@link WebsiteAddressType}.
  *
  * @author dereekb
  *

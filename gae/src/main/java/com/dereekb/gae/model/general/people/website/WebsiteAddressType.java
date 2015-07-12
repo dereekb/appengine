@@ -19,7 +19,7 @@ public enum WebsiteAddressType {
 	 * <p>
 	 * {@code THIS IS A EXAMPLE TITLE http://www.example.com}
 	 */
-	WEBSITE(0, "Website"),
+	WEBSITE(0, "Website", null, null),
 
 	/**
 	 * <p>
@@ -35,7 +35,7 @@ public enum WebsiteAddressType {
 	 * <p>
 	 * {@code Facebook http://www.facebook.com}
 	 */
-	SERVICE(1, null),
+	SERVICE(1, "Service", null, null),
 
 	/**
 	 * Facebook Link.
@@ -50,7 +50,7 @@ public enum WebsiteAddressType {
 	 *
 	 * @see <a href="https://www.facebook.com">Facebook</a>
 	 */
-	FACEBOOK(2, "Facebook"),
+	FACEBOOK(2, "Facebook", "Facebook", "https://www.facebook.com"),
 
 	/**
 	 * Twitter Link
@@ -64,28 +64,29 @@ public enum WebsiteAddressType {
 	 *
 	 * @see <a href="https://twitter.com">Twitter</a>
 	 */
-	TWITTER(3, "Twitter"),
+	TWITTER(3, "Twitter", "Twitter", "https://twitter.com/"),
 
 	/**
 	 * Google Plus Link
 	 *
 	 * @see <a href="https://plus.google.com">Google Plus</a>
 	 */
-	GOOGLE(4, "Google Plus"),
+	GOOGLE(4, "Google Plus", "Google Plus", "https://plus.google.com/"),
 
 	/**
 	 * Youtube Video Link
 	 * <p>
-	 * Data is formatted as a link relative to {@code youtu.be} and
-	 * {@code https://www.youtube.com/watch?v=}.
+	 * Data is formatted as an optional title, and a link relative to
+	 * {@code youtu.be} and {@code https://www.youtube.com/watch?v=}.
 	 *
 	 * <p>
-	 * Example: {@code abcdef} ->
-	 * {@code https://www.youtube.com/watch?v=abcdefg}
+	 * Example: {@code Video Title abcdef} {@literal ->}
+	 * {@code https://www.youtube.com/watch?v=abcdefg} with title
+	 * {@code Video Title}
 	 *
 	 * @see <a href="http://www.youtube.com">Youtube</a>
 	 */
-	YOUTUBE_VIDEO(5, "Youtube"),
+	YOUTUBE_VIDEO(5, "Youtube Video", "Youtube", "https://www.youtube.com/watch?v="),
 
 	/**
 	 * Youtube Channel Link
@@ -98,9 +99,9 @@ public enum WebsiteAddressType {
 	 * Example: {@code abcdef} ->
 	 * {@code https://www.youtube.com/channel/abcdefg}
 	 *
-	 * @see <a href="http://www.youtube.com">Youtube</a>
+	 * @see <a href="https://www.youtube.com">Youtube</a>
 	 */
-	YOUTUBE_CHANNEL(6, "Youtube"),
+	YOUTUBE_CHANNEL(6, "Youtube Channel", "Youtube", "https://www.youtube.com/channel/"),
 
 	/**
 	 * Instagram Link
@@ -111,7 +112,7 @@ public enum WebsiteAddressType {
 	 *
 	 * @see <a href="https://www.instagram.com">Instagram</a>
 	 */
-	INSTAGRAM(7, "Instagram"),
+	INSTAGRAM(7, "Instagram", "Instagram", "https://www.instagram.com/"),
 
 	/**
 	 * Pinterest Link
@@ -125,22 +126,34 @@ public enum WebsiteAddressType {
 	 *
 	 * @see <a href="https://www.pinterest.com">Pinterest</a>
 	 */
-	PINTEREST(8, "Pinterest");
+	PINTEREST(8, "Pinterest", "Pinterest", "https://www.pinterest.com/");
 
 	public final Integer id;
+	public final String title;
 	public final String service;
+	public final String base;
 
-	private WebsiteAddressType(Integer type, String title) {
+	private WebsiteAddressType(Integer type, String title, String service, String base) {
 		this.id = type;
-		this.service = title;
+		this.title = title;
+		this.service = service;
+		this.base = base;
 	}
 
 	public Integer getId() {
 		return this.id;
 	}
 
-	public String getService() {
+	public String getTitle() {
+		return this.title;
+	}
+
+    public String getService() {
 		return this.service;
+	}
+
+    public String getBase() {
+		return this.base;
 	}
 
 	public static WebsiteAddressType typeForId(Integer id) {
