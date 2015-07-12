@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
+import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
 
 /**
  * {@link Generator} for {@link String} values made of random {@link Long}
@@ -24,21 +26,17 @@ public class StringLongGenerator extends AbstractGenerator<String> {
 	}
 
 	@Override
-	public String generate(Long seed) {
-		if (seed != null) {
-			Random random = new Random(seed);
-			Long value = random.nextLong();
-			return value.toString();
-		} else {
-			return randomString();
-		}
+	public String generate(GeneratorArg arg) {
+		Random random = arg.getGeneratorRandom();
+		Long value = random.nextLong();
+		return value.toString();
 	}
 
 	@Override
 	public List<String> generate(int count,
-	                             Long seed) {
-		Random random = new Random(seed);
+	                             GeneratorArg arg) {
 		List<String> values = new ArrayList<String>();
+		Random random = GeneratorArgImpl.getArgRandom(arg);
 
 		for (int i = 0; i < count; i += 1) {
 			Long value = random.nextLong();

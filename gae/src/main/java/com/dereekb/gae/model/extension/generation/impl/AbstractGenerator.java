@@ -5,9 +5,17 @@ import java.util.List;
 import java.util.Random;
 
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
+/**
+ * Abstract {@link Generator} used for extending.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ */
 public abstract class AbstractGenerator<T>
         implements Generator<T>, Factory<T> {
 
@@ -31,6 +39,8 @@ public abstract class AbstractGenerator<T>
 		this.generationAmount = generationAmount;
 	}
 
+	public AbstractGenerator() {}
+
 	@Override
     public T make() throws FactoryMakeFailureException {
 		return this.generate();
@@ -38,11 +48,11 @@ public abstract class AbstractGenerator<T>
 
 	@Override
 	public T generate() {
-		return this.generate(null);
+		return this.generate(new GeneratorArgImpl());
 	}
 
 	@Override
-	public abstract T generate(Long seed);
+	public abstract T generate(GeneratorArg arg);
 
 	/**
 	 * By default, {@link AbstractGenerator} will call {@link #generate()} the
@@ -50,11 +60,11 @@ public abstract class AbstractGenerator<T>
 	 */
 	@Override
 	public List<T> generate(int count,
-	                        Long seed) {
+	                        GeneratorArg arg) {
 		List<T> models = new ArrayList<T>();
 
 		for (int i = 0; i < count; i += 1) {
-			T model = this.generate();
+			T model = this.generate(arg);
 			models.add(model);
 		}
 

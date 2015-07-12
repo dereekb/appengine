@@ -2,6 +2,7 @@ package com.dereekb.gae.test.model.extension.generator;
 
 import java.util.List;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.ModelGenerator;
 import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -35,8 +36,8 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
     }
 
 	@Override
-	public T generate(Long seed) {
-		T model = this.generator.generate(seed);
+	public T generate(GeneratorArg arg) {
+		T model = this.generator.generate(arg);
 		this.setter.save(model, false);
 		return model;
 	}
@@ -48,8 +49,8 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 
 	@Override
 	public List<T> generate(int count,
-	                        Long seed) {
-		List<T> models = this.generator.generate(count, seed);
+	                        GeneratorArg arg) {
+		List<T> models = this.generator.generate(count, arg);
 		this.setter.save(models, false);
 		return models;
     }

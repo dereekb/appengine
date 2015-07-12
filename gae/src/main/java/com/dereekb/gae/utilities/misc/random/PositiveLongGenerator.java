@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
+import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
 
 /**
  * {@link Generator} for positive {@link Long} values.
@@ -23,16 +25,16 @@ public class PositiveLongGenerator extends AbstractGenerator<Long> {
 	}
 
 	@Override
-	public Long generate(Long seed) {
-		Random random = new Random(seed);
+	public Long generate(GeneratorArg arg) {
+		Random random = arg.getGeneratorRandom();
 		return random.nextLong();
 	}
 
 	@Override
 	public List<Long> generate(int count,
-	                        Long seed) {
-		Random random = new Random(seed);
+	                           GeneratorArg arg) {
 		List<Long> values = new ArrayList<Long>();
+		Random random = GeneratorArgImpl.getArgRandom(arg);
 
 		for (int i = 0; i < count; i += 1) {
 			Long value = random.nextLong();
@@ -48,6 +50,11 @@ public class PositiveLongGenerator extends AbstractGenerator<Long> {
 
 	public static Integer randomPositiveInt() {
 		return ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
+	}
+
+	@Override
+	public String toString() {
+		return "PositiveLongGenerator []";
 	}
 
 }

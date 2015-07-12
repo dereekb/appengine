@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
 /**
@@ -53,15 +54,15 @@ public class DerivedGeneratorImpl<I, O>
 	}
 
 	@Override
-	public O generate(Long seed) {
-		I model = this.generator.generate(seed);
+	public O generate(GeneratorArg arg) {
+		I model = this.generator.generate(arg);
 		return this.converter.convert(SingleItem.withValue(model)).get(0);
 	}
 
 	@Override
 	public List<O> generate(int count,
-	                        Long seed) {
-		List<I> models = this.generator.generate(count, seed);
+	                        GeneratorArg arg) {
+		List<I> models = this.generator.generate(count, arg);
 		return this.converter.convert(models);
 	}
 

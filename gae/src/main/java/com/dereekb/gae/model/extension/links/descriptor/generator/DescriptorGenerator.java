@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.descriptor.generator;
 
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.DescriptorImpl;
@@ -30,9 +31,9 @@ public class DescriptorGenerator extends AbstractGenerator<Descriptor> {
 	}
 
 	@Override
-	public Descriptor generate(Long seed) {
-		String type = this.typeGenerator.generate(seed);
-		String id = StringLongGenerator.GENERATOR.generate(seed);
+	public Descriptor generate(GeneratorArg arg) {
+		String type = this.typeGenerator.generate(arg);
+		String id = StringLongGenerator.GENERATOR.generate(arg);
 
 		DescriptorImpl descriptor = new DescriptorImpl(type, id);
 		return descriptor;

@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
+import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
 
 /**
  * {@link Generator} implementaiton for {@link Double}.
@@ -66,16 +68,16 @@ public class DoubleGenerator extends AbstractGenerator<Double> {
 	}
 
 	@Override
-	public Double generate(Long seed) {
-		Random random = new Random(seed);
+	public Double generate(GeneratorArg arg) {
+		Random random = arg.getGeneratorRandom();
 		return this.generate(random);
 	}
 
 	@Override
 	public List<Double> generate(int count,
-	                             Long seed) {
-		Random random = new Random(seed);
+	                             GeneratorArg arg) {
 		List<Double> values = new ArrayList<Double>();
+		Random random = GeneratorArgImpl.getArgRandom(arg);
 
 		for (int i = 0; i < count; i += 1) {
 			Double value = this.generate(random);

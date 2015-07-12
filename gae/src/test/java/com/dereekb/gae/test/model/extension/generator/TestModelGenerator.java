@@ -2,6 +2,7 @@ package com.dereekb.gae.test.model.extension.generator;
 
 import java.util.List;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.ModelGenerator;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -44,7 +45,7 @@ public interface TestModelGenerator<T extends UniqueModel>
 	 */
 	@Override
 	public List<T> generate(int count,
-	                        Long seed);
+	                        GeneratorArg arg);
 
 	/**
 	 * Generates a single model with the passed identifier.

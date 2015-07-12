@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.generation.impl.keys;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.misc.random.StringLongGenerator;
@@ -22,8 +23,8 @@ public class StringModelKeyGenerator extends AbstractGenerator<ModelKey> {
 	}
 
 	@Override
-	public ModelKey generate(Long seed) {
-		String key = StringLongGenerator.GENERATOR.generate(seed);
+	public ModelKey generate(GeneratorArg arg) {
+		String key = StringLongGenerator.GENERATOR.generate(arg);
 		return new ModelKey(key);
 	}
 

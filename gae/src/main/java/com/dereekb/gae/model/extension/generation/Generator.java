@@ -21,11 +21,15 @@ public interface Generator<T> {
 	/**
 	 * Generates a new instance.
 	 *
-	 * @param seed
-	 *            Optional randomization seed to use. Can be null.
+	 * @param arg
+	 *            {@link GeneratorArg} to use. Cannot be null. Use
+	 *            {@link #generate()} otherwise if no specific
+	 *            {@link GeneratorArg} is available/necessary.
 	 * @return A new model instance. Never null.
+	 * @throws IllegalArgumentException
+	 *             if {@code arg} is null.
 	 */
-	public T generate(Long seed);
+	public T generate(GeneratorArg arg) throws IllegalArgumentException;
 
 	/**
 	 * Generates new instances.
@@ -33,10 +37,10 @@ public interface Generator<T> {
 	 * @param count
 	 *            Number of instances to create.
 	 * @param seed
-	 *            Optional randomization seed to use. Can be null.
+	 *            Optional {@link GeneratorArg} to use. Can be null.
 	 * @return Number of instances as count specified. Never null.
 	 */
 	public List<T> generate(int count,
-	                        Long seed);
+	                        GeneratorArg arg);
 
 }
