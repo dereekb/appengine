@@ -10,13 +10,13 @@ public final class ContactAddress {
 
 	private Integer typeId;
 
-	private String info;
+	private String data;
 
 	public ContactAddress() {}
 
-	public ContactAddress(ContactAddressType type, String info) {
+	public ContactAddress(ContactAddressType type, String data) {
 		this.setType(type);
-		this.info = info;
+		this.data = data;
 	}
 
 	public Integer getTypeId() {
@@ -35,17 +35,17 @@ public final class ContactAddress {
 		this.typeId = type.getId();
 	}
 
-	public String getInfo() {
-		return this.info;
+	public String getData() {
+		return this.data;
 	}
 
-	public void setInfo(String info) {
-		this.info = info;
+	public void setData(String data) {
+		this.data = data;
 	}
 
 	@Override
 	public String toString() {
-		return "ContactAddress [typeId=" + this.typeId + ", info=" + this.info + "]";
+		return "ContactAddress [typeId=" + this.typeId + ", data=" + this.data + "]";
 	}
 
 }

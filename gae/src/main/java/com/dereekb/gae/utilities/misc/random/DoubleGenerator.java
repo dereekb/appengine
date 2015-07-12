@@ -42,7 +42,7 @@ public class DoubleGenerator extends AbstractGenerator<Double> {
 
 	public void setLeast(Double least) {
 		if (least == null) {
-			least = 0.0d;
+			least = DEFAULT_LEAST_VALUE;
 		}
 
 		this.least = least;
@@ -54,7 +54,7 @@ public class DoubleGenerator extends AbstractGenerator<Double> {
 
 	public void setBound(Double bound) {
 		if (bound == null) {
-			bound = 1.0d;
+			bound = DEFAULT_BOUND_VALUE;
 		}
 
 		this.bound = bound;
@@ -68,7 +68,7 @@ public class DoubleGenerator extends AbstractGenerator<Double> {
 	@Override
 	public Double generate(Long seed) {
 		Random random = new Random(seed);
-		return random.nextDouble() * (this.bound - this.least) + this.least;
+		return this.generate(random);
 	}
 
 	@Override
@@ -78,11 +78,15 @@ public class DoubleGenerator extends AbstractGenerator<Double> {
 		List<Double> values = new ArrayList<Double>();
 
 		for (int i = 0; i < count; i += 1) {
-			Double value = random.nextDouble();
+			Double value = this.generate(random);
 			values.add(value);
 		}
 
 		return values;
+	}
+
+	public Double generate(Random random) {
+		return random.nextDouble() * (this.bound - this.least) + this.least;
 	}
 
 	public static Double randomDouble() {

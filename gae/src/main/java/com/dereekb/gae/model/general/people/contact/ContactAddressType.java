@@ -21,20 +21,20 @@ public enum ContactAddressType {
 	 */
 	EMAIL(1);
 
-	private final Integer type;
+	public final Integer id;
 
-	private ContactAddressType(Integer type) {
-		this.type = type;
+	private ContactAddressType(Integer id) {
+		this.id = id;
 	}
 
 	public Integer getId() {
-		return this.type;
+		return this.id;
 	}
 
-	public static ContactAddressType typeForId(Integer typeId) {
+	public static ContactAddressType typeForId(Integer id) {
 		ContactAddressType type;
 
-		switch (typeId) {
+		switch (id) {
 			case 0:
 				type = PHONE;
 				break;
