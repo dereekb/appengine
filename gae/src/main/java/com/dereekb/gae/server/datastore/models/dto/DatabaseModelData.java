@@ -6,6 +6,7 @@ import java.util.Date;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  */
 @JsonInclude(Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class DatabaseModelData
         implements Serializable, UniqueModel {
 

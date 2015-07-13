@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.stored.image.generator;
 
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractModelGenerator;
 import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
@@ -24,16 +25,16 @@ public final class StoredImageGenerator extends AbstractModelGenerator<StoredIma
 
 	@Override
 	public StoredImage generateModel(ModelKey key,
-	                                 Long seed) {
+	                                 GeneratorArg arg) {
 		StoredImage image = new StoredImage();
-		image.setIdentifier(PositiveLongGenerator.GENERATOR.generate(seed));
+		image.setIdentifier(PositiveLongGenerator.GENERATOR.generate(arg));
 
-		Key<StoredBlob> storedBlob = Key.create(StoredBlob.class, PositiveLongGenerator.GENERATOR.generate(seed));
+		Key<StoredBlob> storedBlob = Key.create(StoredBlob.class, PositiveLongGenerator.GENERATOR.generate(arg));
 		image.setBlob(storedBlob);
 
 		image.setName("Image");
 		image.setSummary("This is a generated image.");
-		image.setSearchIdentifier(StringLongGenerator.GENERATOR.generate(seed));
+		image.setSearchIdentifier(StringLongGenerator.GENERATOR.generate(arg));
 
 		image.setTags("Tag A, Tag B, Tag C");
 		image.setType(StoredImageType.IMAGE);

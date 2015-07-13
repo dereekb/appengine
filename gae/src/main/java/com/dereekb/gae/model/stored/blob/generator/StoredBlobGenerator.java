@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.stored.blob.generator;
 
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractModelGenerator;
 import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
@@ -30,14 +31,14 @@ public final class StoredBlobGenerator extends AbstractModelGenerator<StoredBlob
 
 	@Override
 	public StoredBlob generateModel(ModelKey key,
-	                                Long seed) {
+	                                GeneratorArg arg) {
 		StoredBlob storedBlob = new StoredBlob();
 		storedBlob.setIdentifier(ModelKey.readIdentifier(key));
 
 		// TODO: Complete this generator.
 
 		if (this.descriptorGenerator != null) {
-			storedBlob.setDescriptor(this.descriptorGenerator.generate(seed));
+			storedBlob.setDescriptor(this.descriptorGenerator.generate(arg));
 		}
 
 		return storedBlob;

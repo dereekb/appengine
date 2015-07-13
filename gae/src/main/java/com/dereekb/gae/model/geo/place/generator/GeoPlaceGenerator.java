@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.geo.place.generator;
 
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractModelGenerator;
 import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
@@ -63,20 +64,20 @@ public final class GeoPlaceGenerator extends AbstractModelGenerator<GeoPlace> {
 
 	@Override
 	public GeoPlace generateModel(ModelKey key,
-	                              Long seed) {
+	                              GeneratorArg arg) {
 		GeoPlace geoPlace = new GeoPlace();
 		geoPlace.setIdentifier(ModelKey.readIdentifier(key));
 
 		if (this.pointGenerator != null) {
-			geoPlace.setPoint(this.pointGenerator.generate(seed));
+			geoPlace.setPoint(this.pointGenerator.generate(arg));
 		}
 
 		if (this.regionGenerator != null) {
-			geoPlace.setRegion(this.regionGenerator.generate(seed));
+			geoPlace.setRegion(this.regionGenerator.generate(arg));
 		}
 
 		if (this.descriptorGenerator != null) {
-			geoPlace.setDescriptor(this.descriptorGenerator.generate(seed));
+			geoPlace.setDescriptor(this.descriptorGenerator.generate(arg));
 		}
 
 		return geoPlace;

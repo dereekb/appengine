@@ -48,6 +48,11 @@ public class PositiveLongGenerator extends AbstractGenerator<Long> {
 		return ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
 	}
 
+	/**
+	 * @deprecated Use {@link IntegerGenerator#randomInteger(Integer)}
+	 * @return
+	 */
+	@Deprecated
 	public static Integer randomPositiveInt() {
 		return ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
 	}

@@ -1,11 +1,8 @@
 package com.dereekb.gae.model.stored.blob.dto;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 
 /**
@@ -14,8 +11,7 @@ import com.dereekb.gae.model.stored.blob.StoredBlob;
  *
  * @author dereekb
  */
-public final class StoredBlobDataBuilder
-        implements DirectionalConverter<StoredBlob, StoredBlobData> {
+public final class StoredBlobDataBuilder extends AbstractDirectionalConverter<StoredBlob, StoredBlobData> {
 
 	private final StoredBlobDataDownloadBuilder downloadBuilder;
 
@@ -24,27 +20,16 @@ public final class StoredBlobDataBuilder
 	}
 
 	@Override
-	public List<StoredBlobData> convert(Collection<StoredBlob> input) throws ConversionFailureException {
-		List<StoredBlobData> list = new ArrayList<StoredBlobData>();
-
-		for (StoredBlob blob : input) {
-			StoredBlobData data = this.convert(blob);
-			list.add(data);
-		}
-
-		return list;
-	}
-
-	public StoredBlobData convert(StoredBlob blob) {
+	public StoredBlobData convertSingle(StoredBlob input) throws ConversionFailureException {
 		StoredBlobData data = new StoredBlobData();
 
-		data.setIdentifier(blob.getModelKey());
-		data.setCreated(blob.getDate());
+		data.setIdentifier(input.getModelKey());
+		data.setCreated(input.getDate());
 
-		String download = this.downloadBuilder.downloadLinkForStoredBlob(blob);
+		String download = this.downloadBuilder.downloadLinkForStoredBlob(input);
 		data.setDownload(download);
 
-		data.setDescriptor(blob.getDescriptor());
+		data.setDescriptor(input.getDescriptor());
 
 		return data;
 	}

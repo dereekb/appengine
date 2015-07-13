@@ -12,7 +12,7 @@ import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
 /**
  * {@link Generator} implementaiton for {@link Integer}.
  *
- * Generates {@link Integer} values between the {@link #min} and {@link #max}
+ * Generates {@link Integer} values between the {@link #min} and {@link #bound}
  * values set.
  *
  * @author dereekb
@@ -21,21 +21,23 @@ import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
 public class IntegerGenerator extends AbstractGenerator<Integer> {
 
 	private static final Integer DEFAULT_MIN_VALUE = Integer.MIN_VALUE;
-	private static final Integer DEFAULT_MAX_VALUE = Integer.MAX_VALUE;
+	private static final Integer DEFAULT_BOUND_VALUE = Integer.MAX_VALUE;
 
 	/**
-	 * Lower max value for generated {@link Integer} values.
+	 * Lower bound value for generated {@link Integer} values.
 	 */
 	private Integer min = DEFAULT_MIN_VALUE;
 
 	/**
-	 * Upper max value for generated {@link Integer} values.
+	 * Upper bound value for generated {@link Integer} values.
 	 */
-	private Integer max = DEFAULT_MAX_VALUE;
+	private Integer bound = DEFAULT_BOUND_VALUE;
 
-	public IntegerGenerator(Integer least, Integer bound) {
-		this.min = least;
-		this.max = bound;
+	public IntegerGenerator() {}
+
+	public IntegerGenerator(Integer min, Integer bound) {
+		this.min = min;
+		this.bound = bound;
 	}
 
 	public Integer getMin() {
@@ -50,21 +52,21 @@ public class IntegerGenerator extends AbstractGenerator<Integer> {
 		this.min = least;
 	}
 
-	public Integer getMax() {
-		return this.max;
+	public Integer getBound() {
+		return this.bound;
 	}
 
-	public void setMax(Integer max) {
-		if (max == null) {
-			max = DEFAULT_MAX_VALUE;
+	public void setBound(Integer bound) {
+		if (bound == null) {
+			bound = DEFAULT_BOUND_VALUE;
 		}
 
-		this.max = max;
+		this.bound = bound;
 	}
 
 	@Override
 	public Integer generate() {
-		return randomInteger(this.min, this.max);
+		return randomInteger(this.min, this.bound);
 	}
 
 	@Override
@@ -88,15 +90,15 @@ public class IntegerGenerator extends AbstractGenerator<Integer> {
 	}
 
 	private Integer generate(Random random) {
-		return random.nextInt() * (this.max - this.min) + this.min;
+		return random.nextInt(this.bound - this.min) + this.min;
 	}
 
 	public static Integer randomInteger() {
 		return ThreadLocalRandom.current().nextInt();
 	}
 
-	public static Integer randomInteger(Integer max) {
-		return ThreadLocalRandom.current().nextInt(max);
+	public static Integer randomInteger(Integer bound) {
+		return ThreadLocalRandom.current().nextInt(bound);
 	}
 
 	public static Integer randomInteger(Integer least,
@@ -106,7 +108,7 @@ public class IntegerGenerator extends AbstractGenerator<Integer> {
 
 	@Override
 	public String toString() {
-		return "IntegerGenerator [min=" + this.min + ", max=" + this.max + "]";
+		return "IntegerGenerator [min=" + this.min + ", bound=" + this.bound + "]";
 	}
 
 }
