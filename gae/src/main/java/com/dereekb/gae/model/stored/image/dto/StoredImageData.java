@@ -1,6 +1,9 @@
 package com.dereekb.gae.model.stored.image.dto;
 
-import com.dereekb.gae.server.datastore.models.dto.DatabaseModelData;
+import java.util.List;
+
+import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class StoredImageData extends DatabaseModelData {
+public final class StoredImageData extends SearchableDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,9 +27,11 @@ public final class StoredImageData extends DatabaseModelData {
 
 	private Integer type;
 
-	private Long blobId;
+	private Long blob;
 
-	private Long placeId;
+	private Long geoPlace;
+
+	private List<Long> imageSets;
 
 	public StoredImageData() {}
 
@@ -62,27 +67,42 @@ public final class StoredImageData extends DatabaseModelData {
 		this.type = type;
 	}
 
-	public Long getBlobId() {
-		return this.blobId;
+	public Long getBlob() {
+		return this.blob;
 	}
 
-	public void setBlobId(Long blobId) {
-		this.blobId = blobId;
+	public void setBlob(Long blob) {
+		this.blob = blob;
 	}
 
-	public Long getPlaceId() {
-		return this.placeId;
+	public Long getGeoPlace() {
+		return this.geoPlace;
 	}
 
-	public void setPlaceId(Long placeId) {
-		this.placeId = placeId;
+	public void setGeoPlace(Long geoPlace) {
+		this.geoPlace = geoPlace;
+	}
+
+	public List<Long> getImageSets() {
+		return this.imageSets;
+	}
+
+	public void setImageSets(List<Long> imageSets) {
+		this.imageSets = imageSets;
+	}
+
+	// UniqueModel
+	@Override
+	public ModelKey getModelKey() {
+		return ModelKey.convertNumberString(this.identifier);
 	}
 
 	@Override
-    public String toString() {
-	    return "StoredImageData [name=" + this.name + ", summary=" + this.summary + ", tags=" + this.tags + ", type=" + this.type
- + ", storedBlobId=" + this.blobId + ", geoPointId=" + this.placeId
-		        + ", identifier=" + this.identifier + ", created=" + this.created + "]";
-    }
+	public String toString() {
+		return "StoredImageData [name=" + this.name + ", summary=" + this.summary + ", tags=" + this.tags + ", type="
+		        + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace + ", imageSets=" + this.imageSets
+		        + ", searchIdentifier=" + this.searchIdentifier + ", identifier=" + this.identifier + ", created="
+		        + this.created + "]";
+	}
 
 }

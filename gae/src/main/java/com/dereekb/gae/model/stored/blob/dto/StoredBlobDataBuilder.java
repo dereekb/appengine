@@ -23,12 +23,16 @@ public final class StoredBlobDataBuilder extends AbstractDirectionalConverter<St
 	public StoredBlobData convertSingle(StoredBlob input) throws ConversionFailureException {
 		StoredBlobData data = new StoredBlobData();
 
+		// Identifier
 		data.setIdentifier(input.getModelKey());
 		data.setCreated(input.getDate());
+		data.setSearchIdentifier(input.getSearchIdentifier());
 
+		// Download Key
 		String download = this.downloadBuilder.downloadLinkForStoredBlob(input);
 		data.setDownload(download);
 
+		// Links
 		data.setDescriptor(input.getDescriptor());
 
 		return data;

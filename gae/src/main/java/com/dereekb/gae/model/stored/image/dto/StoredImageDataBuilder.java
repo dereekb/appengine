@@ -1,12 +1,10 @@
 package com.dereekb.gae.model.stored.image.dto;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
@@ -15,35 +13,29 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
  *
  * @author dereekb
  */
-public class StoredImageDataBuilder
-        implements DirectionalConverter<StoredImage, StoredImageData> {
-
-	public StoredImageDataBuilder() {}
+public class StoredImageDataBuilder extends AbstractDirectionalConverter<StoredImage, StoredImageData> {
 
 	@Override
-	public List<StoredImageData> convert(Collection<StoredImage> input) throws ConversionFailureException {
-		List<StoredImageData> list = new ArrayList<StoredImageData>();
-
-		for (StoredImage image : input) {
-			StoredImageData data = this.convert(image);
-			list.add(data);
-		}
-
-		return list;
-	}
-
-	public StoredImageData convert(StoredImage image) {
+	public StoredImageData convertSingle(StoredImage input) throws ConversionFailureException {
 		StoredImageData data = new StoredImageData();
 
-		data.setIdentifier(image.getModelKey());
+		// Identifier
+		data.setIdentifier(input.getModelKey());
 
-		data.setName(image.getName());
-		data.setSummary(image.getSummary());
-		data.setTags(image.getTags());
-		data.setType(image.getTypeId());
+		// Info
+		data.setName(input.getName());
+		data.setSummary(input.getSummary());
+		data.setTags(input.getTags());
+		data.setType(input.getTypeId());
 
-		data.setBlobId(image.getBlobId());
-		data.setPlaceId(ObjectifyKeyUtility.idFromKey(image.getGeoPlace()));
+		// Blob
+		data.setBlob(ObjectifyKeyUtility.idFromKey(input.getBlob()));
+
+		// Geo Place
+		data.setGeoPlace(ObjectifyKeyUtility.idFromKey(input.getGeoPlace()));
+
+		// Image Sets
+		data.setImageSets(ObjectifyUtility.readKeyIdentifiers(input.getImageSets()));
 
 		return data;
 	}

@@ -55,6 +55,16 @@ public abstract class DatabaseModelData
 		this.identifier = identifier;
 	}
 
+	public void setIdentifier(Long identifier) {
+		String idString = null;
+
+		if (identifier != null) {
+			idString = identifier.toString();
+		}
+
+		this.identifier = idString;
+	}
+
 	public Long getCreated() {
 		return this.created;
 	}
@@ -74,6 +84,10 @@ public abstract class DatabaseModelData
 	}
 
 	// UniqueModel
+	/**
+	 * Override in super classes to convert to expected type.
+	 */
+	@Deprecated
 	@Override
 	public ModelKey getModelKey() {
 		return ModelKey.convert(this.identifier);

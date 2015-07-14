@@ -234,17 +234,60 @@ public final class ModelKey
 	}
 
 	/**
-	 * Converts a number as a string to a {@link ModelKey}.
+	 * Same as {@link #convert(String)}, except with the {@link ModelKeyType}
+	 * specified.
+	 *
+	 * Will return null if the input identifier is null or empty, or an invalid
+	 * number if the {@code keyType} is set to {@link ModelKeyType#NUMBER} and
+	 * is not a valid number.
+	 *
+	 * @param keyType
+	 *            Target key type.
+	 * @param identifier
+	 *            String identifier
+	 * @return {@link ModelKey} instance if valid, or {@code null}.
+	 */
+	public static ModelKey convert(ModelKeyType keyType,
+	                               String identifier) {
+		ModelKey modelKey = null;
+
+		if (identifier != null && identifier.isEmpty() == false) {
+			switch (keyType) {
+				case NAME:
+					modelKey = new ModelKey(identifier);
+					break;
+				case NUMBER:
+					Long id = new Long(identifier);
+					modelKey = new ModelKey(id);
+					break;
+				default:
+					break;
+			}
+		}
+
+		return modelKey;
+	}
+
+	/**
+	 * Converts a number as a string to a {@link ModelKey}. If the string is
+	 * {@code null}, will return {@code null}.
 	 *
 	 * @param numberString
 	 *            String number to convert.
 	 * @return {@link ModelKey} with a Number identifier.
 	 * @throws NumberFormatException
-	 *             if the input string cannot be converted.
+	 *             if the input string is not {@code null} but cannot be
+	 *             converted with {@link Long#Long(String)}.
 	 */
-	public static ModelKey convertStringNumber(String numberString) throws NumberFormatException {
-		Long id = new Long(numberString);
-		return new ModelKey(id);
+	public static ModelKey convertNumberString(String numberString) throws NumberFormatException {
+		ModelKey key = null;
+
+		if (numberString != null) {
+			Long id = new Long(numberString);
+			key = new ModelKey(id);
+		}
+
+		return key;
 	}
 
 	/**
@@ -262,7 +305,7 @@ public final class ModelKey
 	 *         null, this will return null.
 	 */
 	public static ModelKey convert(String identifier) {
-		ModelKey modelKey;
+		ModelKey modelKey = null;
 
 		if (identifier != null && identifier.isEmpty() == false) {
 			try {
@@ -271,8 +314,6 @@ public final class ModelKey
 			} catch (NumberFormatException e) {
 				modelKey = new ModelKey(identifier);
 			}
-		} else {
-			modelKey = null;
 		}
 
 		return modelKey;

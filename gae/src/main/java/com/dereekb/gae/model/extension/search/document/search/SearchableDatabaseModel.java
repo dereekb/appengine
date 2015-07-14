@@ -15,7 +15,7 @@ public abstract class SearchableDatabaseModel extends DatabaseModel
 
 	private static final long serialVersionUID = 1L;
 
-	private String searchIdentifier;
+	protected String searchIdentifier;
 
 	@Override
 	public String getSearchIdentifier() {

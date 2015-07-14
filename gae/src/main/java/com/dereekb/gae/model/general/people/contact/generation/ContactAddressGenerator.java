@@ -14,7 +14,9 @@ import com.dereekb.gae.utilities.misc.random.IntegerGenerator;
  */
 public class ContactAddressGenerator extends AbstractGenerator<ContactAddress> {
 
-	private static final IntegerGenerator TYPE_GENERATOR = new IntegerGenerator(0, 1);
+	public static final ContactAddressGenerator GENERATOR = new ContactAddressGenerator();
+
+	private static final IntegerGenerator TYPE_GENERATOR = new IntegerGenerator(0, ContactAddressType.values().length);
 
 	@Override
 	public ContactAddress generate(GeneratorArg arg) {
@@ -24,9 +26,11 @@ public class ContactAddressGenerator extends AbstractGenerator<ContactAddress> {
 
 		switch (key) {
 			case 0: // PHONE
+			case 1: // MOBILE PHONE
 				address = this.generatePhone(arg);
+				address.setTypeId(key);
 				break;
-			case 1: // EMAIL
+			case 2: // EMAIL
 			default:
 				address = this.generateEmail(arg);
 				break;

@@ -8,7 +8,7 @@ package com.dereekb.gae.model.general.people.contact;
 public enum ContactAddressType {
 
 	/**
-	 * A phone number.
+	 * A general phone number.
 	 *
 	 * The information should be formatted to follow the E164 standard.
 	 *
@@ -17,9 +17,14 @@ public enum ContactAddressType {
 	PHONE(0),
 
 	/**
+	 * Denotes the number is a cell phone. Format is the same as {@link #PHONE}
+	 */
+	MOBILE_PHONE(1),
+
+	/**
 	 * An email address, formatted as "{@code email@domain.com}".
 	 */
-	EMAIL(1);
+	EMAIL(2);
 
 	public final Integer id;
 
@@ -39,6 +44,9 @@ public enum ContactAddressType {
 				type = PHONE;
 				break;
 			case 1:
+				type = MOBILE_PHONE;
+				break;
+			case 2:
 				type = EMAIL;
 				break;
 			default:

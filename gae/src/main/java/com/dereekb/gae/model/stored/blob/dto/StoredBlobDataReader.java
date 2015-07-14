@@ -24,6 +24,7 @@ public final class StoredBlobDataReader extends AbstractDirectionalConverter<Sto
 		// Identifier
 		String stringIdentifier = input.getIdentifier();
 		blob.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
+		blob.setSearchIdentifier(input.getSearchIdentifier());
 
 		// Date
 		Long created = input.getCreated();

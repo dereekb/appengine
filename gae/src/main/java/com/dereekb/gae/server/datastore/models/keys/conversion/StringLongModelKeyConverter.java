@@ -55,7 +55,7 @@ public final class StringLongModelKeyConverter
 
 		try {
 			for (String string : input) {
-				ModelKey key = ModelKey.convertStringNumber(string);
+				ModelKey key = ModelKey.convertNumberString(string);
 				keys.add(key);
 			}
 		} catch (NumberFormatException e) {
@@ -71,7 +71,7 @@ public final class StringLongModelKeyConverter
 		ModelKey key;
 
 		try {
-			key = ModelKey.convertStringNumber(input);
+			key = ModelKey.convertNumberString(input);
 		} catch (NumberFormatException e) {
 			throw new ConversionFailureException("Could not convert string number.");
 		}

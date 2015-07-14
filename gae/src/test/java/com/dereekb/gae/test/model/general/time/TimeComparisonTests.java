@@ -50,7 +50,7 @@ public class TimeComparisonTests {
 	}
 
 	@Test
-	public void testTimeSpanComparison() {
+	public void testTimeSpanSameStartTimeComparison() {
 		Time timeA = TimeImpl.midnight();
 		Time timeB = TimeImpl.noon();
 		Time timeC = new TimeImpl(2, 30, TimeAmPm.PM);
@@ -59,7 +59,26 @@ public class TimeComparisonTests {
 		TimeSpan b = new TimeSpanImpl(timeA, timeC);
 
 		int abComparison = a.compareTo(b);
-		Assert.assertTrue(abComparison < 0); // A is before/less than B, because
+		Assert.assertTrue(abComparison < 0); // A is before/less than B.
+
+		int aaComparison = a.compareTo(a);
+		Assert.assertTrue(aaComparison == 0); // A is the same as A.
+
+		int baComparison = b.compareTo(a);
+		Assert.assertTrue(baComparison > 0); // B is after/greater than B.
+	}
+
+	@Test
+	public void testTimeSpanDifferentStartTimeComparison() {
+		Time timeA = TimeImpl.midnight();
+		Time timeB = new TimeImpl(1, 30, TimeAmPm.AM);
+		Time timeC = new TimeImpl(2, 30, TimeAmPm.PM);
+
+		TimeSpan a = new TimeSpanImpl(timeA, timeC);
+		TimeSpan b = new TimeSpanImpl(timeB, timeC);
+
+		int abComparison = a.compareTo(b);
+		Assert.assertTrue(abComparison < 0); // A is before/less than B.
 
 		int aaComparison = a.compareTo(a);
 		Assert.assertTrue(aaComparison == 0); // A is the same as A.

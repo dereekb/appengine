@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.stored.image.set;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
@@ -12,6 +13,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfNull;
 
 /**
  * A gallery that contains a set of {@link StoredImage} references.
@@ -51,10 +53,70 @@ public final class StoredImageSet extends SearchableDatabaseModel
 	private String tags;
 
 	/**
+	 * (Optional) Icon for this gallery.
+	 */
+	@IgnoreSave({ IfNull.class })
+	private Key<StoredImage> icon;
+
+	/**
 	 * {@link Image} in this gallery.
 	 */
 	@IgnoreSave({ IfEmpty.class })
-	private Set<Key<StoredImage>> images;
+	private Set<Key<StoredImage>> images = new HashSet<Key<StoredImage>>();
+
+	public StoredImageSet() {}
+
+	public Long getIdentifier() {
+		return this.identifier;
+	}
+
+	public void setIdentifier(Long identifier) {
+		this.identifier = identifier;
+	}
+
+	public String getLabel() {
+		return this.label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getDetail() {
+		return this.detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public String getTags() {
+		return this.tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
+	public Key<StoredImage> getIcon() {
+		return this.icon;
+	}
+
+	public void setIcon(Key<StoredImage> icon) {
+		this.icon = icon;
+	}
+
+	public Set<Key<StoredImage>> getImages() {
+		return this.images;
+	}
+
+	public void setImages(Set<Key<StoredImage>> images) {
+		if (images == null) {
+			images = new HashSet<Key<StoredImage>>();
+		}
+
+		this.images = images;
+	}
 
 	// Unique Model
 	@Override

@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.stored.image;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
@@ -82,7 +83,7 @@ public final class StoredImage extends SearchableDatabaseModel
 	 * Set of all {@link StoredImageSet} this image is a part of.
 	 */
 	@IgnoreSave(IfEmpty.class)
-	private Set<Key<StoredImageSet>> imageSets;
+	private Set<Key<StoredImageSet>> imageSets = new HashSet<Key<StoredImageSet>>();
 
 	public StoredImage() {}
 
@@ -134,7 +135,7 @@ public final class StoredImage extends SearchableDatabaseModel
 		return this.type;
 	}
 
-	public void setType(Integer type) {
+	public void setTypeId(Integer type) {
 		this.type = type;
 	}
 
@@ -174,6 +175,10 @@ public final class StoredImage extends SearchableDatabaseModel
 	}
 
 	public void setImageSets(Set<Key<StoredImageSet>> imageSets) {
+		if (imageSets == null) {
+			imageSets = new HashSet<Key<StoredImageSet>>();
+		}
+
 		this.imageSets = imageSets;
 	}
 
@@ -181,6 +186,10 @@ public final class StoredImage extends SearchableDatabaseModel
 	@Override
 	public ModelKey getModelKey() {
 		return new ModelKey(this.identifier);
+	}
+
+	public void setModelKey(ModelKey key) {
+		this.identifier = ModelKey.readIdentifier(key);
 	}
 
 	// Database Model

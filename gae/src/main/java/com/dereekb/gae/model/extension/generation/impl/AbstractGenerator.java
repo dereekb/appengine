@@ -19,24 +19,12 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 public abstract class AbstractGenerator<T>
         implements Generator<T>, Factory<T> {
 
-	private static final Integer DEFAULT_GENERATION_AMOUNT = 10;
-
-	protected Integer generationAmount = DEFAULT_GENERATION_AMOUNT;
-
 	public Random getRandom() {
 		return new Random();
 	}
 
 	public Random getRandom(Long seed) {
 		return new Random(seed);
-	}
-
-	public Integer getGenerationAmount() {
-		return this.generationAmount;
-	}
-
-	public void setGenerationAmount(Integer generationAmount) {
-		this.generationAmount = generationAmount;
 	}
 
 	public AbstractGenerator() {}

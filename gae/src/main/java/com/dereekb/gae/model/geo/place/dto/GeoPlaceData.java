@@ -4,6 +4,7 @@ import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDataba
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.geo.place.GeoPlace;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -50,6 +51,12 @@ public class GeoPlaceData extends DescribedDatabaseModelData {
 
 	public void setParent(Long parent) {
 		this.parent = parent;
+	}
+
+	// UniqueModel
+	@Override
+	public ModelKey getModelKey() {
+		return ModelKey.convertNumberString(this.identifier);
 	}
 
 	@Override
