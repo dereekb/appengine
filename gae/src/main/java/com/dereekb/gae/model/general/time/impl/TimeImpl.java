@@ -31,6 +31,14 @@ public class TimeImpl
 		this.minutes = minutes;
 	}
 
+	public static TimeImpl noon() {
+		return new TimeImpl(12, 0, TimeAmPm.PM);
+	}
+
+	public static TimeImpl midnight() {
+		return new TimeImpl(12, 0, TimeAmPm.AM);
+	}
+
 	@Override
 	public Hour getHour() {
 		return this.hour;
@@ -49,6 +57,21 @@ public class TimeImpl
 	@Override
     public void setMinutes(Integer minutes) {
 		this.minutes = minutes;
+	}
+
+	// MARK: Comparison
+	@Override
+	public int compareTo(Time o) {
+		int comparison = 0;
+		int hourComparison = this.hour.compareTo(o.getHour());
+
+		if (hourComparison == 0) {
+			comparison = this.minutes.compareTo(o.getMinutes());
+		} else {
+			comparison = hourComparison;
+		}
+
+		return comparison;
 	}
 
 	@Override

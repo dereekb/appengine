@@ -22,6 +22,14 @@ public class HourImpl
 		this.setHour(hour, timeAmPm);
 	}
 
+	public static HourImpl noon() {
+		return new HourImpl(Hour.NOON_HOUR);
+	}
+
+	public static HourImpl midnight() {
+		return new HourImpl(Hour.MIDNIGHT_HOUR);
+	}
+
 	@Override
 	public TimeAmPm getAmPm() {
 		return TimeAmPm.withBoolean(this.dayHour < 12);
@@ -49,7 +57,7 @@ public class HourImpl
 			throw new IllegalArgumentException("Hour cannot be greater than 12.");
 		}
 
-		hour = hour % NOON;
+		hour = hour % NOON_HOUR;
 
 		if (timeAmPm.equals(TimeAmPm.PM)) {
 			hour += 12;
@@ -59,11 +67,16 @@ public class HourImpl
 	}
 
 	public void setHour(Integer hour) {
-		if (hour < MIDNIGHT || hour > MAX_HOUR) {
+		if (hour < MIDNIGHT_HOUR || hour > MAX_HOUR) {
 			throw new IllegalArgumentException("Valid hour ranges from 0-23.");
 		}
 
 		this.dayHour = hour;
+	}
+
+	@Override
+	public int compareTo(Hour o) {
+		return this.getDayHour().compareTo(o.getDayHour());
 	}
 
 	@Override

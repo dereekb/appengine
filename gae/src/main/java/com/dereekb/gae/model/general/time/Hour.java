@@ -6,10 +6,11 @@ package com.dereekb.gae.model.general.time;
  * @author dereekb
  *
  */
-public interface Hour {
+public interface Hour
+        extends Comparable<Hour> {
 
-	public static final Integer MIDNIGHT = 0;
-	public static final Integer NOON = 12;
+	public static final Integer MIDNIGHT_HOUR = 0;
+	public static final Integer NOON_HOUR = 12;
 	public static final Integer MAX_HOUR = 23;
 
 	/**

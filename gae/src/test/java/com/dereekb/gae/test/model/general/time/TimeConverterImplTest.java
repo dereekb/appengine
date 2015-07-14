@@ -16,7 +16,7 @@ import com.dereekb.gae.model.general.time.util.impl.TimeValueConverterImpl;
  * @author dereekb
  *
  */
-public class TimeConverterImplTests {
+public class TimeConverterImplTest {
 
 	private final static TimeValueConverterImpl valueConverter = new TimeValueConverterImpl();
 

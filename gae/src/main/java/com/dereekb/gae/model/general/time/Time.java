@@ -6,7 +6,8 @@ package com.dereekb.gae.model.general.time;
  * @author dereekb
  *
  */
-public interface Time {
+public interface Time
+        extends Comparable<Time> {
 
 	public final static Integer MINUTES_IN_HOUR = 60;
 	public final static Integer MAX_TIME = 60 * 60 * 24; // Minutes in the day

@@ -5,7 +5,8 @@ package com.dereekb.gae.model.general.time;
  *
  * @author dereekb
  */
-public interface TimeSpan {
+public interface TimeSpan
+        extends Comparable<TimeSpan> {
 
 	/**
 	 * Returns the {@link Time} at which this {@link TimeSpan} starts.

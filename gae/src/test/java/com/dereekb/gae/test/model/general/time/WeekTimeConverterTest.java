@@ -17,7 +17,7 @@ import com.dereekb.gae.utilities.misc.bit.BitIndex;
 import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
 
-public class WeekTimeConverterTests {
+public class WeekTimeConverterTest {
 
 	@Test
 	public void testWeekTimeConversion() {

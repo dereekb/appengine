@@ -38,6 +38,10 @@ public class DaySpanBitImpl
 		return this.container.getIntegerBits();
 	}
 
+	public void setIntegerNumber(Integer number) {
+		this.container.setIntegerBits(number);
+	}
+
 	// DaySpan
 	@Override
 	public Set<Day> getDays() {
