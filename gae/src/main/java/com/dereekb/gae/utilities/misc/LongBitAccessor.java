@@ -184,7 +184,7 @@ public final class LongBitAccessor {
 	                       int hexIndex) throws IndexOutOfBoundsException {
 		LongBitAccessor and = this.and(mask);
 		and.shiftHexRight(hexIndex);
-		// and.maskHexRight(hexIndex); //TODO: Change to independent function.
+		// and.maskHexRight(hexIndex); //Change to independent function.
 		long focusMask = makeRightHexMask(MAX_BIT_INDEX - hexIndex);
 		return and.getValue() & focusMask;
 	}

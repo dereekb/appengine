@@ -208,11 +208,6 @@ public class LongBitContainer
 		return value.longValue() & INTEGER_BIT_MASK;
 	}
 
-	public IntegerBitContainerImpl toIntegerContainer() {
-		Integer integerBits = this.getIntegerBits();
-		return new IntegerBitContainerImpl(integerBits);
-	}
-
 	@Override
 	public String toString() {
 		return "LongBitContainer [value=" + this.value + "]";

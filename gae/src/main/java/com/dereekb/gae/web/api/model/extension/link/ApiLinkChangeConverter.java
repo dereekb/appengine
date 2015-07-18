@@ -51,7 +51,7 @@ public class ApiLinkChangeConverter {
 
 			List<String> targetKeyValues = inputChange.getTargetKeys();
 
-			// TODO: Replace with a more efficient converter.
+			// TODO: Replace with a SAFE, and efficient converter.
 			List<ModelKey> targetKeys = ModelKey.convert(targetKeyValues);
 			change.setTargetKeys(targetKeys);
 		}

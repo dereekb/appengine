@@ -100,7 +100,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 			Assert.assertNotNull(errors);
 			Assert.assertFalse(errors.isEmpty());
 
-			// TODO: Check further.
+			// TODO: Check response further to make sure they match.
 		} catch (MissingRequiredResourceException e) {
 			Assert.fail();
 		}

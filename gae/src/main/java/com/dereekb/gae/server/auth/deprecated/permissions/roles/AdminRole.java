@@ -3,6 +3,7 @@ package com.dereekb.gae.server.auth.deprecated.permissions.roles;
 import com.dereekb.gae.server.auth.deprecated.permissions.components.PermissionNode;
 import com.dereekb.gae.server.auth.deprecated.permissions.components.PermissionsSet;
 
+@Deprecated
 public class AdminRole extends Role {
 
 	private static final long serialVersionUID = 1L;

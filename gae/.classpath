@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/thevisitcompany/gae/deprecated/|com/dereekb/gae/deprecated/" kind="src" output="target/classes" path="src/main/java">
+	<classpathentry excluding="com/thevisitcompany/gae/deprecated/|com/dereekb/gae/deprecated/|com/dereekb/gae/model/extension/links/deprecated/|com/dereekb/gae/server/auth/deprecated/permissions/" kind="src" output="target/classes" path="src/main/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>

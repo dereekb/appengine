@@ -16,6 +16,8 @@ import com.dereekb.gae.utilities.misc.random.IntegerGenerator;
  */
 public class WebsiteAddressGenerator extends AbstractGenerator<WebsiteAddress> {
 
+	public static final WebsiteAddressGenerator GENERATOR = new WebsiteAddressGenerator();
+
 	private static final IntegerGenerator INTEGER_GENERATOR = new IntegerGenerator(0,
 	        WebsiteAddressType.values().length);
 

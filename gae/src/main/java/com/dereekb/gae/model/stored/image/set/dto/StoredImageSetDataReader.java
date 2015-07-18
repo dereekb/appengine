@@ -45,7 +45,7 @@ public class StoredImageSetDataReader extends AbstractDirectionalConverter<Store
 		Set<Key<StoredImage>> images = IMAGE_KEY_UTIL.setFromIds(input.getImages());
 		set.setImages(images);
 
-		return null;
+		return set;
 	}
 
 }

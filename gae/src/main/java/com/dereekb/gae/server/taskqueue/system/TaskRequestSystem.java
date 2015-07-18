@@ -19,6 +19,6 @@ public interface TaskRequestSystem {
 	        throws SubmitTaskException,
 	            TaskAlreadyExistsException;
 
-	// TODO: Remove requests, for instances that use a unique name.
+	// Later: Remove requests, for instances that use a unique name.
 
 }

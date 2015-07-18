@@ -335,7 +335,10 @@ public final class ModelKey
 	 *         Contains a number id if applicable, or a String id if not null.
 	 * @throws IllegalArgumentException
 	 *             if any of the input identifiers cannot be converted.
+	 * @Deprecated Is dangerous to use. Rely on a specific
+	 *             {@link DirectionalConverter} instead.
 	 */
+	@Deprecated
 	public static List<ModelKey> convert(List<String> identifiers) throws IllegalArgumentException {
 		List<ModelKey> keys = new ArrayList<ModelKey>();
 
@@ -351,7 +354,5 @@ public final class ModelKey
 
 		return keys;
 	}
-
-	// TODO: Add Reading Key Values, etc.
 
 }

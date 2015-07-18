@@ -117,7 +117,8 @@ public class DescribedModelLinkImpl
 		if (descriptor != null) {
 			/*
 			 * TODO: This conversion seems dangerous. Perhaps add a delegate or
-			 * something to make sure the key is converted properly.
+			 * something to make sure the key is converted properly depending on
+			 * the descriptor's type...
 			 */
 
 			String infoId = descriptor.getDescriptorId();

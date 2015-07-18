@@ -41,7 +41,7 @@ public class TaskRequestFunctionObserver<T>
 		try {
 			this.sender.sendTasks(objects);
 		} catch (SubmitTaskException e) {
-			// TODO: Catch if it fails.
+			// TODO: Catch if it fails, and send to delegate?
 		}
 	}
 

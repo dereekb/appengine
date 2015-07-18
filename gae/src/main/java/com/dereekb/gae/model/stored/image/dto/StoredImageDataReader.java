@@ -34,7 +34,6 @@ public class StoredImageDataReader extends AbstractDirectionalConverter<StoredIm
 		// Identifier
 		String stringIdentifier = input.getIdentifier();
 		image.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
-
 		image.setSearchIdentifier(input.getSearchIdentifier());
 
 		// Info
@@ -43,13 +42,9 @@ public class StoredImageDataReader extends AbstractDirectionalConverter<StoredIm
 		image.setTags(input.getTags());
 		image.setTypeId(input.getType());
 
-		// Blob
+		// Links
 		image.setBlob(STORED_BLOB_KEY_UTIL.keyFromId(input.getBlob()));
-
-		// Geo Place
 		image.setGeoPlace(GEO_PLACE_KEY_UTIL.keyFromId(input.getGeoPlace()));
-
-		// Image Sets
 		image.setImageSets(STORED_IMAGE_SET_KEY_UTIL.setFromIds(input.getImageSets()));
 
 		return image;

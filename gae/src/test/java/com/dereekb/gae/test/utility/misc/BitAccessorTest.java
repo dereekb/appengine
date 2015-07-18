@@ -70,7 +70,6 @@ public class BitAccessorTest {
 		// Add another byte to it.
 		accessor = accessor.or(value);
 
-		// TODO: Continue..?
 	}
 
 	@Test
