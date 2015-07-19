@@ -6,9 +6,9 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.links.service.LinkChange;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
-import com.dereekb.gae.model.extension.links.service.impl.LinkChangeImpl;
+import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverter;
 import com.dereekb.gae.web.api.model.extension.link.LinkExtensionController.ApiLinkChange;
@@ -21,9 +21,9 @@ public class ApiLinkChangeConverter {
 		this.keyTypeConverter = keyTypeConverter;
 	}
 
-	public List<LinkChange> convert(String primaryType,
+	public List<LinkSystemChange> convert(String primaryType,
 	                                Collection<ApiLinkChange> input) throws ConversionFailureException {
-		List<LinkChange> changes = new ArrayList<LinkChange>();
+		List<LinkSystemChange> changes = new ArrayList<LinkSystemChange>();
 
 		SingleDirectionalConverter<String, ModelKey> converter;
 
@@ -34,7 +34,7 @@ public class ApiLinkChangeConverter {
 		}
 
 		for (ApiLinkChange inputChange : input) {
-			LinkChangeImpl change = new LinkChangeImpl();
+			LinkSystemChangeImpl change = new LinkSystemChangeImpl();
 
 			String actionString = inputChange.getAction();
 			LinkChangeAction action = LinkChangeAction.withString(actionString);

@@ -11,7 +11,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * {@link Relation} implementation.
  *
  * @author dereekb
- *
  */
 public class RelationImpl
         implements Relation {

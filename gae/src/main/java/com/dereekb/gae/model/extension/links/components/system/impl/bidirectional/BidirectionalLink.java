@@ -7,6 +7,7 @@ import com.dereekb.gae.model.extension.links.components.LinkData;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.Relation;
+import com.dereekb.gae.model.extension.links.components.RelationResult;
 import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
@@ -60,8 +61,21 @@ public final class BidirectionalLink
 		return this.link.getLinkTarget();
 	}
 
+	// MARK: Link
 	@Override
-	public void addRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
+	public LinkData getLinkData() {
+		return this.link.getLinkData();
+	}
+
+	@Override
+	public RelationResult setRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
+		RelationResult results = this.clearRelations();
+		this.addRelation(change);
+		return results;
+	}
+
+	@Override
+	public RelationResult addRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
 		List<Link> reverseLinks = this.loadReverseLinks(change, true);
 		Relation selfRelation = this.getSelfRelation();
 
@@ -69,11 +83,11 @@ public final class BidirectionalLink
 			link.addRelation(selfRelation);
 		}
 
-		this.link.addRelation(change);
+		return this.link.addRelation(change);
 	}
 
 	@Override
-	public void removeRelation(Relation change) throws RelationChangeException {
+	public RelationResult removeRelation(Relation change) throws RelationChangeException {
 		List<Link> reverseLinks = this.loadReverseLinks(change, false);
 		Relation selfRelation = this.getSelfRelation();
 
@@ -81,7 +95,7 @@ public final class BidirectionalLink
 			link.removeRelation(selfRelation);
 		}
 
-		this.link.removeRelation(change);
+		return this.link.removeRelation(change);
 	}
 
 	private Relation getSelfRelation() {
@@ -91,14 +105,9 @@ public final class BidirectionalLink
 	}
 
 	@Override
-	public LinkData getLinkData() {
-		return this.link.getLinkData();
-	}
-
-	@Override
-	public void clearRelations() {
+	public RelationResult clearRelations() {
 		Relation relations = this.link.getLinkData();
-		this.removeRelation(relations);
+		return this.removeRelation(relations);
 	}
 
 	// Internal

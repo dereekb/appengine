@@ -11,7 +11,9 @@ import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelImplDelegate;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImpl;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImplDelegate;
@@ -33,10 +35,48 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
         implements LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>, BidirectionalLinkSystemEntry {
 
+	/**
+	 * Delegate interface for {@link AbstractModelLinkSystemEntry} for
+	 * validating models.
+	 *
+	 * @author dereekb
+	 *
+	 * @param <T>
+	 */
+	public static interface Validator<T> {
+
+		/**
+		 * @see {@link LinkModelSetImplDelegate#validateModels(List, LinkModelSetChange)}
+		 */
+		public void validateModels(List<T> models,
+		                           LinkModelSetChange changes) throws LinkSaveConditionException;
+
+	}
+
+	/**
+	 * Delegate interface for {@link AbstractModelLinkSystemEntry} for reviewing
+	 * model changes.
+	 *
+	 * @author dereekb
+	 *
+	 * @param <T>
+	 */
+	public static interface Reviewer<T> {
+
+		/**
+		 * @see {@link LinkModelSetImplDelegate#reviewModels(List, LinkModelSetChange)}
+		 */
+		public void reviewModels(List<T> models,
+		                         LinkModelSetChange changes);
+	}
+
 	protected String modelType;
 
 	protected ReadService<T> service;
 	protected ConfiguredSetter<T> setter;
+
+	protected Reviewer<T> reviewer;
+	protected Validator<T> validator;
 
 	/**
 	 * Names for the reverse element.
@@ -125,6 +165,22 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	@Override
 	public LinkModelSet makeSet() {
 		return new LinkModelSetImpl<T>(this, this);
+	}
+
+	@Override
+	public void validateModels(List<T> models,
+	                           LinkModelSetChange changes) throws LinkSaveConditionException {
+		if (this.validator != null) {
+			this.validator.validateModels(models, changes);
+		}
+	}
+
+	@Override
+	public void reviewModels(List<T> models,
+	                         LinkModelSetChange changes) {
+		if (this.reviewer != null) {
+			this.reviewer.reviewModels(models, changes);
+		}
 	}
 
 	// BidirectionalLinkSystemEntry

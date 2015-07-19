@@ -10,7 +10,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public interface LinkChange {
+public interface LinkSystemChange {
 
 	/**
 	 * @return {@link LinkChangeAction} to perform.

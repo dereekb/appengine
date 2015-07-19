@@ -1,12 +1,15 @@
 package com.dereekb.gae.test.model.extension.link.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.Link;
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollectionImpl;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
@@ -32,7 +35,6 @@ public class SomeLinkModelDelegate extends AbstractTestLinkSystemDelegate<SomeLi
 
 	@Override
 	public Map<String, Link> buildLinks(final SomeLinkModel model) {
-
 		Map<String, Link> links = new HashMap<String, Link>();
 
 		String differentLinkModelLinkName = SomeLinkModel.DIFFERENT_MODEL_LINKS_NAME;
@@ -50,6 +52,16 @@ public class SomeLinkModelDelegate extends AbstractTestLinkSystemDelegate<SomeLi
 		links.put(differentLinkModelLinkName, differentLink);
 
 		return links;
+	}
+
+	@Override
+	public void validateModels(List<SomeLinkModel> models,
+	                           LinkModelSetChange changes) throws LinkSaveConditionException {
+	}
+
+	@Override
+	public void reviewModels(List<SomeLinkModel> models,
+	                         LinkModelSetChange changes) {
 	}
 
 }

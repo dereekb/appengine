@@ -2,18 +2,18 @@ package com.dereekb.gae.model.extension.links.service.impl;
 
 import java.util.Collection;
 
-import com.dereekb.gae.model.extension.links.service.LinkChange;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * {@link LinkChange} implementation.
+ * {@link LinkSystemChange} implementation.
  *
  * @author dereekb
  *
  */
-public class LinkChangeImpl
-        implements LinkChange {
+public class LinkSystemChangeImpl
+        implements LinkSystemChange {
 
 	private LinkChangeAction action;
 
@@ -24,9 +24,9 @@ public class LinkChangeImpl
 
 	private Collection<ModelKey> targetKeys;
 
-	public LinkChangeImpl() {}
+	public LinkSystemChangeImpl() {}
 
-	public LinkChangeImpl(LinkChangeAction action,
+	public LinkSystemChangeImpl(LinkChangeAction action,
 	        String primaryType,
 	        ModelKey primaryKey,
 	        String linkName,

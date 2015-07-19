@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.extension.links.service.LinkChange;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
-import com.dereekb.gae.model.extension.links.service.impl.LinkChangesException;
+import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
@@ -68,14 +68,14 @@ public class LinkExtensionController {
 
 		try {
 			List<ApiLinkChange> submittedChanges = request.getData();
-			List<LinkChange> changes = this.converter.convert(primaryType, submittedChanges);
+			List<LinkSystemChange> changes = this.converter.convert(primaryType, submittedChanges);
 
 			LinkServiceRequest linkServiceRequest = new LinkServiceRequestImpl(changes);
 			this.service.updateLinks(linkServiceRequest);
 
 			response = new ApiResponse(true);
 
-		} catch (LinkChangesException e) {
+		} catch (LinkSystemChangesException e) {
 			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);

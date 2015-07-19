@@ -2,8 +2,11 @@ package com.dereekb.gae.model.extension.links.components.impl.link;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -36,23 +39,63 @@ public class SingleLink
 		return keys;
 	}
 
+	/**
+	 * Sets the new value, ONLY if the current key is {@code null}. Throws a
+	 * {@link RelationChangeException} otherwise.
+	 */
 	@Override
-	public void add(ModelKey key) {
-		this.delegate.setKey(key);
-	}
-
-	@Override
-	public void remove(ModelKey key) {
+	public boolean add(ModelKey key) throws RelationChangeException {
+		boolean redundant = false;
 		ModelKey currentKey = this.delegate.getKey();
 
-		if (currentKey == null || currentKey.equals(key)) {
-			this.clear();
+		if (currentKey == null) {
+			this.delegate.setKey(key);
+		} else if (currentKey.equals(key) == false) {
+			throw new RelationChangeException(currentKey, null, "Must clear this link before setting it.");
+		} else {
+			redundant = true;
+		}
+
+		return redundant;
+	}
+
+	/**
+	 * Removes the current key, ONLY if it matches the current key value.
+	 */
+	@Override
+	public boolean remove(ModelKey key) throws RelationChangeException {
+		boolean redundant = false;
+		ModelKey currentKey = this.delegate.getKey();
+
+		if (currentKey.equals(key)) {
+			this.delegate.setKey(null);
+		} else {
+			redundant = true;
+		}
+
+		return redundant;
+	}
+
+	/**
+	 * Clears the current key value.
+	 */
+	@Override
+	public Set<ModelKey> clear() {
+		ModelKey currentKey = this.delegate.getKey();
+		this.delegate.setKey(null);
+
+		if (currentKey == null) {
+			return Collections.emptySet();
+		} else {
+			Set<ModelKey> changed = new HashSet<ModelKey>(1);
+			changed.add(currentKey);
+			return changed;
 		}
 	}
 
 	@Override
-	public void clear() {
-		this.delegate.setKey(null);
+	public String toString() {
+		return "SingleLink [delegate=" + this.delegate + "]";
 	}
 
 }

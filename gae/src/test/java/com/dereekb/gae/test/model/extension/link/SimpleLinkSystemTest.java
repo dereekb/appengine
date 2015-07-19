@@ -89,7 +89,7 @@ public class SimpleLinkSystemTest {
 		Assert.assertTrue(relationKeys.contains(stringModelKey));
 
 		// Save the changes
-		set.save();
+		set.save(false);
 
 		// Changes are complete.
 

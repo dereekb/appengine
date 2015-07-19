@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelChange;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -35,8 +36,16 @@ public interface LinkModel
 	/**
 	 * Returns all links for the target model.
 	 *
-	 * @return List of all links for this model. Never null.
+	 * @return {@link Collection} of all links for this model. Never null.
 	 */
 	public Collection<Link> getLinks();
+
+	/**
+	 * Returns a {@link LinkModelChange} containing all changes for the target
+	 * model.
+	 *
+	 * @return {@link LinkModelChange} instance. Never {@code null}.
+	 */
+	public LinkModelChange getModelChanges();
 
 }

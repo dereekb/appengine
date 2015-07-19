@@ -14,6 +14,6 @@ public interface LinkServiceRequest {
 	 *
 	 * @return list of link changes to make. Never null.
 	 */
-	public List<LinkChange> getLinkChanges();
+	public List<LinkSystemChange> getLinkChanges();
 
 }

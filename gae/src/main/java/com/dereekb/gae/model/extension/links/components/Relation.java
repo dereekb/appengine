@@ -13,14 +13,17 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public interface Relation {
 
 	/**
-	 * Returns the type specified in the relation.
+	 * Returns the type specified in this {@link Relation}, if available.
 	 *
-	 * @return model type this relation targets. Can be null.
+	 * @return model type this {@link Relation} targets. Can be {@code null}.
 	 */
 	public String getRelationTargetType();
 
 	/**
-	 * @return the collection of keys within this change. Never null.
+	 * {@link List} of {@link ModelKey} values in this {@link Relation}. This
+	 * list cannot be empty.
+	 *
+	 * @return the collection of keys within this change. Never {@code null}.
 	 */
 	public List<ModelKey> getRelationKeys();
 

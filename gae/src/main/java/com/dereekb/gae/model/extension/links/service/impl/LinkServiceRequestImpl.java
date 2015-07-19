@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.links.service.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.model.extension.links.service.LinkChange;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 
 /**
@@ -13,18 +13,18 @@ import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 public class LinkServiceRequestImpl
         implements LinkServiceRequest {
 
-	private List<LinkChange> linkChanges;
+	private List<LinkSystemChange> linkChanges;
 
-	public LinkServiceRequestImpl(List<LinkChange> linkChanges) {
+	public LinkServiceRequestImpl(List<LinkSystemChange> linkChanges) {
 		this.linkChanges = linkChanges;
 	}
 
 	@Override
-	public List<LinkChange> getLinkChanges() {
+	public List<LinkSystemChange> getLinkChanges() {
 		return this.linkChanges;
 	}
 
-	public void setLinkChanges(List<LinkChange> linkChanges) {
+	public void setLinkChanges(List<LinkSystemChange> linkChanges) {
 		this.linkChanges = linkChanges;
 	}
 

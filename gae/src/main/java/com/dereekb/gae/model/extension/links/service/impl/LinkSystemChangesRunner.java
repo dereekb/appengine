@@ -14,18 +14,18 @@ import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.service.LinkChange;
 import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 
 /**
- * Utility class for processing {@link LinkChange} changes.
+ * Utility class for processing {@link LinkSystemChange} changes.
  *
  * @author dereekb
  *
  */
-public class LinkChangesRunner {
+public class LinkSystemChangesRunner {
 
 	private final LinkSystem system;
 	private final Map<String, LinkModelSet> sets = new HashMap<String, LinkModelSet>();
@@ -33,7 +33,7 @@ public class LinkChangesRunner {
 
 	private boolean waitingSave = false;
 
-	public LinkChangesRunner(LinkSystem system) {
+	public LinkSystemChangesRunner(LinkSystem system) {
 		this.system = system;
 	}
 
@@ -46,15 +46,15 @@ public class LinkChangesRunner {
 	}
 
 	// Runner
-	public void runChanges(List<LinkChange> changes) {
+	public void runChanges(List<LinkSystemChange> changes) {
 		if (this.waitingSave) {
 			throw new RuntimeException("Previous changes are still waiting to be saved.");
 		}
 
-		HashMapWithList<String, LinkChange> changeMap = this.divideChanges(changes);
+		HashMapWithList<String, LinkSystemChange> changeMap = this.divideChanges(changes);
 
 		for (String type : changeMap.getKeySet()) {
-			List<LinkChange> changeList = changeMap.getObjects(type);
+			List<LinkSystemChange> changeList = changeMap.getObjects(type);
 
 			LinkChangesRunnerInstance instance = new LinkChangesRunnerInstance(type, changeList);
 			instance.run();
@@ -81,8 +81,8 @@ public class LinkChangesRunner {
 		return this.getFailures().isEmpty() == false;
 	}
 
-	public List<LinkChangeException> getFailures() {
-		List<LinkChangeException> failures = new ArrayList<LinkChangeException>();
+	public List<LinkSystemChangeException> getFailures() {
+		List<LinkSystemChangeException> failures = new ArrayList<LinkSystemChangeException>();
 
 		for (LinkChangesRunnerInstance instance : this.instances.values()) {
 			failures.addAll(instance.failures);
@@ -92,10 +92,10 @@ public class LinkChangesRunner {
 	}
 
 	// Internal
-	private HashMapWithList<String, LinkChange> divideChanges(List<LinkChange> changes) {
-		HashMapWithList<String, LinkChange> map = new HashMapWithList<String, LinkChange>();
+	private HashMapWithList<String, LinkSystemChange> divideChanges(List<LinkSystemChange> changes) {
+		HashMapWithList<String, LinkSystemChange> map = new HashMapWithList<String, LinkSystemChange>();
 
-		for (LinkChange change : changes) {
+		for (LinkSystemChange change : changes) {
 			String type = change.getPrimaryType();
 			map.add(type, change);
 		}
@@ -106,20 +106,20 @@ public class LinkChangesRunner {
 	private class LinkChangesRunnerInstance {
 
 		private final String type;
-		private final List<LinkChange> changes;
+		private final List<LinkSystemChange> changes;
 		private final LinkModelSet linkSet;
 
 		private List<ModelKey> missingKeys = new ArrayList<ModelKey>();
-		private List<LinkChangeException> failures = new ArrayList<LinkChangeException>();
+		private List<LinkSystemChangeException> failures = new ArrayList<LinkSystemChangeException>();
 
-		public LinkChangesRunnerInstance(String type, List<LinkChange> changes) {
+		public LinkChangesRunnerInstance(String type, List<LinkSystemChange> changes) {
 			this.type = type;
 			this.changes = changes;
 			this.linkSet = this.loadSet();
 		}
 
 		public void run() {
-			for (LinkChange change : this.changes) {
+			for (LinkSystemChange change : this.changes) {
 				ModelKey key = change.getPrimaryKey();
 				LinkModel linkModel = this.linkSet.getModelForKey(key);
 
@@ -147,7 +147,7 @@ public class LinkChangesRunner {
 								break;
 						}
 					} catch (RelationChangeException | UnavailableLinkException e) {
-						LinkChangeException failure = new LinkChangeException(change, e);
+						LinkSystemChangeException failure = new LinkSystemChangeException(change, e);
 						this.failures.add(failure);
 					}
 				}
@@ -155,14 +155,14 @@ public class LinkChangesRunner {
 		}
 
 		public void save() {
-			this.linkSet.save();
+			this.linkSet.save(true);
 		}
 
 		private LinkModelSet loadSet() {
-			LinkModelSet linkSet = LinkChangesRunner.this.system.loadSet(this.type);
+			LinkModelSet linkSet = LinkSystemChangesRunner.this.system.loadSet(this.type);
 			List<ModelKey> keys = new ArrayList<ModelKey>();
 
-			for (LinkChange change : this.changes) {
+			for (LinkSystemChange change : this.changes) {
 				ModelKey key = change.getPrimaryKey();
 				keys.add(key);
 			}

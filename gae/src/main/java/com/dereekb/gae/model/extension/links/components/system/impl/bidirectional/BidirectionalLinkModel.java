@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -65,6 +66,11 @@ public final class BidirectionalLinkModel
 		return wrappedLinks;
 	}
 
+	@Override
+	public LinkModelChange getModelChanges() {
+		return this.model.getModelChanges();
+	}
+
 	// BidirectionalLinkDelegate
 	@Override
 	public List<Link> getReverseLinks(LinkInfo info,
@@ -76,16 +82,10 @@ public final class BidirectionalLinkModel
 		if (models.isEmpty() == false) {
 			String reverseLinkName = this.delegate.getReverseLinkName(info);
 
-			/*
-			 * TODO: If no reverse is specified/known, use the target type...
-			 * This might actually be unwanted behavior. Also, if the remote type is known by both parties, then the reverse name should always be available anyways.
-			 */
-
-			/*
 			if (reverseLinkName == null) {
-				reverseLinkName = targetType;
+				throw new UnavailableLinkException("Reverse link for link '" + info.getLinkName() + "' on type '"
+				        + this.getType() + "' is not registered.");
 			}
-			*/
 
 			for (LinkModel model : models) {
 				Link link = model.getLink(reverseLinkName);

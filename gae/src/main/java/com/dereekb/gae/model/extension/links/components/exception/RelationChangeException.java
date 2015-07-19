@@ -17,11 +17,18 @@ public class RelationChangeException extends RuntimeException {
 	private final Relation relation;
 
 	public RelationChangeException(ModelKey primary, Relation relation) {
-		this(primary, relation, null);
+		this.primary = primary;
+		this.relation = relation;
 	}
 
 	public RelationChangeException(ModelKey primary, Relation relation, Throwable cause) {
 		super(cause);
+		this.primary = primary;
+		this.relation = relation;
+	}
+
+	public RelationChangeException(ModelKey primary, Relation relation, String message) {
+		super(message);
 		this.primary = primary;
 		this.relation = relation;
 	}
@@ -32,6 +39,11 @@ public class RelationChangeException extends RuntimeException {
 
 	public Relation getRelation() {
 		return this.relation;
+	}
+
+	@Override
+	public String toString() {
+		return "RelationChangeException [primary=" + this.primary + ", relation=" + this.relation + "]";
 	}
 
 }

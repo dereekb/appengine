@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.service;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.extension.links.service.impl.LinkChangesException;
+import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
 
 /**
  * Atomic services for changing links between objects.
@@ -16,13 +16,13 @@ public interface LinkService {
 	 *
 	 * @param request
 	 *            Request for performing changes.
-	 * @throws LinkChangesException
+	 * @throws LinkSystemChangesException
 	 *             If the changes have failed. If thrown, no changes will be
 	 *             saved.
 	 * @throws AtomicOperationException
 	 *             if any other exceptions occur during the changes. No changes
 	 *             are saved.
 	 */
-	public void updateLinks(LinkServiceRequest request) throws LinkChangesException, AtomicOperationException;
+	public void updateLinks(LinkServiceRequest request) throws LinkSystemChangesException, AtomicOperationException;
 
 }

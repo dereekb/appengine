@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.service.LinkChange;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 
@@ -32,9 +32,9 @@ public class LinkServiceImpl
 	}
 
 	@Override
-	public void updateLinks(LinkServiceRequest request) throws LinkChangesException, AtomicOperationException {
-		List<LinkChange> changes = request.getLinkChanges();
-		LinkChangesRunner runner = new LinkChangesRunner(this.system);
+	public void updateLinks(LinkServiceRequest request) throws LinkSystemChangesException, AtomicOperationException {
+		List<LinkSystemChange> changes = request.getLinkChanges();
+		LinkSystemChangesRunner runner = new LinkSystemChangesRunner(this.system);
 
 		try {
 			runner.runChanges(changes);
@@ -42,12 +42,12 @@ public class LinkServiceImpl
 			throw new AtomicOperationException(e);
 		}
 
-		List<LinkChangeException> failures = runner.getFailures();
+		List<LinkSystemChangeException> failures = runner.getFailures();
 
 		if (failures.isEmpty() == false) {
 			runner.saveChanges();
 		} else {
-			throw new LinkChangesException(failures);
+			throw new LinkSystemChangesException(failures);
 		}
 	}
 
