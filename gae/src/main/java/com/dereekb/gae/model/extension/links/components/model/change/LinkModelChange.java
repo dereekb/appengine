@@ -1,7 +1,9 @@
 package com.dereekb.gae.model.extension.links.components.model.change;
 
+import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 
 /**
@@ -28,7 +30,16 @@ public interface LinkModelChange {
 	 *         set. The returned value is empty if no changes were made to the
 	 *         {@link LinkModel} returned by {{@link #getModel()}.
 	 */
-	public List<LinkChange> getModelChanges();
+	public Collection<LinkChange> getLinkChanges();
+
+	/**
+	 * @param name
+	 *            name of the link to load.
+	 * @return {@link LinkChange} for the target link.
+	 * @throws UnavailableLinkException
+	 *             if the requested link does not exist.
+	 */
+	public LinkChange getChangesForLink(String name) throws UnavailableLinkException;
 
 	/**
 	 * @return {@code true} if changes have been made.

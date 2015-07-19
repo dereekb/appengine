@@ -1,10 +1,8 @@
 package com.dereekb.gae.model.extension.links.components.model.change.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -170,7 +168,7 @@ public class LinkModelLinkWrapper
 
 		// Wrap Links
 		Map<String, Link> wrappedLinks = new HashMap<String, Link>();
-		List<LinkChange> changes = new ArrayList<LinkChange>();
+		Map<String, LinkChange> changes = new HashMap<String, LinkChange>();
 
 		for (Entry<String, Link> entry : links.entrySet()) {
 			String key = entry.getKey();
@@ -178,7 +176,7 @@ public class LinkModelLinkWrapper
 
 			LinkModelLinkWrapper wrappedLink = new LinkModelLinkWrapper(model, link);
 			wrappedLinks.put(key, wrappedLink);
-			changes.add(wrappedLink);
+			changes.put(key, wrappedLink);
 		}
 
 		LinkModelChangeImpl linkChanges = new LinkModelChangeImpl(model, changes);
