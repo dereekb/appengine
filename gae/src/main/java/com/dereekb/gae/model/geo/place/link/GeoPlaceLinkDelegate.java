@@ -10,6 +10,7 @@ import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModel
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
+import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -18,6 +19,12 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyMod
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
+/**
+ * {@link LinkSystemEntry} implementation for {@link GeoPlace}.
+ *
+ * @author dereekb
+ *
+ */
 public class GeoPlaceLinkDelegate extends AbstractDescriptiveModelLinkSystemEntry<GeoPlace> {
 
 	private static final String GEO_PLACE_LINK_TYPE = "GeoPlace";

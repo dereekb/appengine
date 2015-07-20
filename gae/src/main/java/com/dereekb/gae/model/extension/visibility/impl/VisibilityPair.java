@@ -1,5 +1,6 @@
-package com.dereekb.gae.model.extension.visibility;
+package com.dereekb.gae.model.extension.visibility.impl;
 
+import com.dereekb.gae.model.extension.visibility.VisibilityState;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
 

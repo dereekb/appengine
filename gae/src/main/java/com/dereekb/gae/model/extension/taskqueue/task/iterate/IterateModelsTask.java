@@ -66,7 +66,7 @@ public class IterateModelsTask<T>
 	}
 
 	@Override
-	public CustomTask make() throws FactoryMakeFailureException {
+	public IterateModelsTaskInstance make() throws FactoryMakeFailureException {
 		if (this.iteratorFactory == null || this.subtaskFactory == null) {
 			throw new FactoryMakeFailureException("Missing required factory.");
 		}

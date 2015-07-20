@@ -7,6 +7,7 @@ import com.dereekb.gae.server.datastore.models.query.ModelQueryIterator;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -19,7 +20,9 @@ import com.google.appengine.api.datastore.QueryResultIterator;
  *
  * @param <T>
  * @param <K>
+ * @Deprecated replaced by {@link IterableObjectifyQuery}.
  */
+@Deprecated
 public class IterableObjectifyModelQuery<T extends ObjectifyModel<T>>
         implements IterableModelQuery<T> {
 

@@ -11,6 +11,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
  *
  * @param <T>
  */
+@Deprecated
 public interface ObjectifyQueryInitializer<T> {
 
 	/**

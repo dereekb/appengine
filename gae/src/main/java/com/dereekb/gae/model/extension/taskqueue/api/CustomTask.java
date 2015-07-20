@@ -4,7 +4,9 @@ package com.dereekb.gae.model.extension.taskqueue.api;
  * A custom task for the internal Task Queue Controllers.
  *
  * @author dereekb
+ * @deprecated Replaced by {@link Task}
  */
+@Deprecated
 public interface CustomTask {
 
 	/**

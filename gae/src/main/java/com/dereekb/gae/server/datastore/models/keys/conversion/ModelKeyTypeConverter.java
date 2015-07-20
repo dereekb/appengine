@@ -10,15 +10,16 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 /**
- * Converter used for converting keys from string keyed by model name types.
+ * Converter used for converting {@link String} identifiers to their
+ * {@link ModelKey} value safely.
  *
  * @author dereekb
  *
  */
-public class ModelKeyTypeConverter {
+public final class ModelKeyTypeConverter {
 
-	private final static StringLongModelKeyConverter stringLongConverter = new StringLongModelKeyConverter();
-	private final static StringModelKeyConverter stringConverter = new StringModelKeyConverter();
+	private final static StringLongModelKeyConverter LONG_CONVERTER = StringLongModelKeyConverter.CONVERTER;
+	private final static StringModelKeyConverter STRING_CONVERTER = StringModelKeyConverter.CONVERTER;
 
 	private Map<String, ModelKeyType> map;
 
@@ -44,10 +45,10 @@ public class ModelKeyTypeConverter {
 
 		switch (type) {
 			case NAME:
-				converter = stringConverter;
+				converter = STRING_CONVERTER;
 				break;
 			case NUMBER:
-				converter = stringLongConverter;
+				converter = LONG_CONVERTER;
 				break;
 			default:
 				throw new IllegalArgumentException("Invalid type passed.");
@@ -66,10 +67,10 @@ public class ModelKeyTypeConverter {
 
 		switch (type) {
 			case NAME:
-				converter = stringConverter;
+				converter = STRING_CONVERTER;
 				break;
 			case NUMBER:
-				converter = stringLongConverter;
+				converter = LONG_CONVERTER;
 				break;
 			default:
 				throw new IllegalArgumentException("Invalid type passed.");
@@ -96,10 +97,10 @@ public class ModelKeyTypeConverter {
 
 		switch (type) {
 			case NAME:
-				key = stringConverter.convertSingle(value);
+				key = STRING_CONVERTER.convertSingle(value);
 				break;
 			case NUMBER:
-				key = stringLongConverter.convertSingle(value);
+				key = LONG_CONVERTER.convertSingle(value);
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown model type passed.");
@@ -116,10 +117,10 @@ public class ModelKeyTypeConverter {
 
 		switch (type) {
 			case NAME:
-				keys = stringConverter.convert(values);
+				keys = STRING_CONVERTER.convert(values);
 				break;
 			case NUMBER:
-				keys = stringLongConverter.convert(values);
+				keys = LONG_CONVERTER.convert(values);
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown model type passed.");

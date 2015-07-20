@@ -8,17 +8,18 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 
 /**
- * Service that allows updating search indices using ModelKeys.
+ * Service that allows updating search indices using {@link ModelKey} values.
  *
  * @author dereekb
  */
-public interface UniqueKeyDocumentIndexService {
+public interface KeyedDocumentIndexService {
 
 	/**
 	 * Modifies the search index using the input keys.
 	 *
 	 * @param keys
-	 *            Keys of models to be indexed or unindexed.
+	 *            {@link ModelKey} values that identify the models to be indexed
+	 *            or unindexed.
 	 * @param action
 	 *            How to change the search index.
 	 * @return True if all models were changed successfully.

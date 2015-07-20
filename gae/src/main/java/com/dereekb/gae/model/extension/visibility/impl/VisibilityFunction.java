@@ -1,9 +1,11 @@
-package com.dereekb.gae.model.extension.visibility;
+package com.dereekb.gae.model.extension.visibility.impl;
 
 import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.extension.visibility.VisibilityState;
+import com.dereekb.gae.model.extension.visibility.VisibilityStateModifier;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
 

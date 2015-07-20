@@ -21,6 +21,11 @@ public final class StringModelKeyConverter
         implements BidirectionalConverter<String, ModelKey>, DirectionalConverter<String, ModelKey>,
         SingleDirectionalConverter<String, ModelKey> {
 
+	/**
+	 * Statically available {@link StringModelKeyConverter} instance.
+	 */
+	public static final StringModelKeyConverter CONVERTER = new StringModelKeyConverter();
+
 	// Bidirectional Converter
 	@Override
 	public List<ModelKey> convertTo(Collection<String> input) throws ConversionFailureException {
