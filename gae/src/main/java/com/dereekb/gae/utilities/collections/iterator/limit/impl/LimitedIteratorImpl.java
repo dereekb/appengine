@@ -1,6 +1,7 @@
 package com.dereekb.gae.utilities.collections.iterator.limit.impl;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.dereekb.gae.utilities.collections.iterator.limit.LimitedIterator;
 
@@ -52,12 +53,17 @@ public class LimitedIteratorImpl<T>
 	// MARK: Iterator
 	@Override
 	public boolean hasNext() {
-		return this.iterator.hasNext();
+		return (this.index < this.iteratorLimit) && this.iterator.hasNext();
 	}
 
 	@Override
 	public T next() {
-		return this.iterator.next();
+		if (this.index < this.iteratorLimit) {
+			throw new NoSuchElementException("Iterator limit reached.");
+		} else {
+			this.index += 1;
+			return this.iterator.next();
+		}
 	}
 
 	@Override

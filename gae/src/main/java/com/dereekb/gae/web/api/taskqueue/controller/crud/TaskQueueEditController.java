@@ -20,10 +20,18 @@ import com.dereekb.gae.web.api.taskqueue.controller.crud.exception.UnregisteredE
  * @author dereekb
  *
  */
-public class TaskQueueEditController {
+public final class TaskQueueEditController {
 
 	private ModelKeyTypeConverter keyTypeConverter;
 	private Map<String, TaskQueueEditControllerEntry> entries;
+
+	public TaskQueueEditController() {}
+
+	public TaskQueueEditController(ModelKeyTypeConverter keyTypeConverter,
+	        Map<String, TaskQueueEditControllerEntry> entries) {
+		this.keyTypeConverter = keyTypeConverter;
+		this.entries = entries;
+	}
 
 	public ModelKeyTypeConverter getKeyTypeConverter() {
 		return this.keyTypeConverter;

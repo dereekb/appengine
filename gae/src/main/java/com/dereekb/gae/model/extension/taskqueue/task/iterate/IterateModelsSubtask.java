@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
  *
  * @param <T>
  */
+@Deprecated
 public interface IterateModelsSubtask<T> {
 
 	/**

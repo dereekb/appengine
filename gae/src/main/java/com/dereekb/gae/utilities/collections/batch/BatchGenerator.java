@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+//TODO: Rename to BatchGeneratorImpl, and create a BatchGenerator interface.
+
 /**
  * Used for breaking up a collection of items into several lists, or batches.
- * 
+ *
  * @author dereekb
  */
 public class BatchGenerator<T> {
@@ -27,7 +29,7 @@ public class BatchGenerator<T> {
 	}
 
 	public Integer getBatchSize() {
-		return batchSize;
+		return this.batchSize;
 	}
 
 	public void setBatchSize(Integer batchSize) throws NullPointerException, IllegalArgumentException {
@@ -80,4 +82,5 @@ public class BatchGenerator<T> {
 		BatchGenerator<T> generator = new BatchGenerator<T>(count);
 		return generator.createBatchesWithCollection(items);
 	}
+
 }

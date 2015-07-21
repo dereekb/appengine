@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
  * @author dereekb
  *
  */
+@Deprecated
 public interface IterateModelsTaskContinueDelegate {
 
 	/**

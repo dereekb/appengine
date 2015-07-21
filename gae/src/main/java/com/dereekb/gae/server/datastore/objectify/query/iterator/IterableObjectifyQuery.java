@@ -2,6 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.query.iterator;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
@@ -16,7 +17,8 @@ import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 
 /**
- *
+ * {@link IndexedIterable} implementation using a {@link ObjectifyKeyedQuery},
+ * which is used to iterate over models in the database.
  *
  * @author dereekb
  *
@@ -103,6 +105,19 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		return this.indexedIterator();
 	}
 
+	/**
+	 * Function identical to {@link #indexedIterator()} except can safely
+	 * override the {@link #startCursor} value.
+	 *
+	 * @param cursor
+	 *            Optional {@link Cursor} value for the query. Can be
+	 *            {@code null}.
+	 * @return {@link IteratorInstance} with the specified {@link Cursor} value.
+	 */
+	public IteratorInstance iteratorWithCursor(Cursor cursor) {
+		return new IteratorInstance(cursor);
+	}
+
 	// MARK: Instance
 	/**
 	 * Single-use query iteration.
@@ -137,7 +152,12 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		 */
 		private QueryResultIterator<T> iterator;
 
-		private int iteratorLimit;
+		/**
+		 * Whether or not the iterator has finished.
+		 */
+		private boolean finished = false;
+
+		private int iteratorBatchLimit;
 		private final IterableObjectifyQueryInitializer<T> initializer;
 		private final ObjectifyKeyedQuery<T> query;
 
@@ -147,9 +167,14 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		private Map<String, String> parameters;
 
 		private IteratorInstance() {
-			this.iteratorLimit = IterableObjectifyQuery.this.iterateLimit;
+			this(IterableObjectifyQuery.this.startCursor);
+		}
+
+		private IteratorInstance(Cursor startCursor) {
+			this.iteratorBatchLimit = IterableObjectifyQuery.this.iterateLimit;
 			this.initializer = IterableObjectifyQuery.this.initializer;
 			this.query = IterableObjectifyQuery.this.query;
+			this.startCursor = startCursor;
 		}
 
 		public IterableObjectifyQueryInitializer<T> getInitializer() {
@@ -171,7 +196,7 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		// MARK: LimitedIterator
 		@Override
 		public int getIteratorLimit() {
-			return this.iteratorLimit;
+			return this.iteratorBatchLimit;
 		}
 
 		@Override
@@ -183,31 +208,36 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 			ArrayList<Integer> test = new ArrayList<>();
 			test.iterator();
 
-			this.iteratorLimit = iteratorLimit;
+			this.iteratorBatchLimit = iteratorLimit;
 		}
 
 		// MARK: IndexedIterator
 		@Override
-        public boolean hasNext() {
+		public boolean hasNext() {
+			if (this.finished) {
+				return false;
+			}
+
 			QueryResultIterator<T> iterator = this.getIterator();
 			boolean hasNext = iterator.hasNext();
 
 			if (hasNext == false) {
-				if (this.iteratorIndex >= this.iteratorLimit) { // Need to
-																// retrieve next
-												  // iterator
+
+				// Retrieve the next iterator/batch
+				if (this.iteratorIndex >= this.iteratorBatchLimit) {
 					iterator = this.getNextIterator();
 					hasNext = iterator.hasNext();
 					this.iteratorIndex = 0;
 				}
 
+				// If still false, then we're finished.
 				if (hasNext == false) {
 					this.finished();
 				}
 			}
 
 			return hasNext;
-        }
+		}
 
 		/**
 		 * Called when the iterator has finished iterating.
@@ -216,6 +246,7 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		 */
 		private void finished() {
 			this.endCursor = this.iterator.getCursor();
+			this.finished = true;
 		}
 
 		@Override
@@ -225,13 +256,14 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		}
 
 		@Override
-		public T next() {
-			boolean hasNext = this.hasNext();
+		public T next() throws NoSuchElementException {
 			T next = null;
 
-			if (hasNext) {
+			if (this.hasNext()) {
 				next = this.iterator.next();
 				this.iteratorIndex += 1;
+			} else {
+				throw new NoSuchElementException();
 			}
 
 			return next;
@@ -249,7 +281,7 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 
 		private QueryResultIterator<T> continueQuery() {
 			ObjectifyQuery<T> query = this.newQuery();
-			query.setLimit(this.iteratorLimit);
+			query.setLimit(this.iteratorBatchLimit);
 
 			if (this.iteratorCursor != null) {
 				query.setCursor(this.iteratorCursor);
@@ -305,19 +337,19 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		}
 
 		@Override
-        public ModelKey getStartIndex() throws UnavailableIteratorIndexException {
+		public ModelKey getStartIndex() throws UnavailableIteratorIndexException {
 			return IndexUtility.safeConvertCursor(this.getStartCursor());
-        }
+		}
 
 		@Override
-        public ModelKey getCurrentIndex() throws UnavailableIteratorIndexException {
+		public ModelKey getCurrentIndex() throws UnavailableIteratorIndexException {
 			return IndexUtility.safeConvertCursor(this.getCurrentCursor());
-        }
+		}
 
 		@Override
-        public ModelKey getEndIndex() throws UnavailableIteratorIndexException {
+		public ModelKey getEndIndex() throws UnavailableIteratorIndexException {
 			return IndexUtility.safeConvertCursor(this.getEndCursor());
-        }
+		}
 
 	}
 

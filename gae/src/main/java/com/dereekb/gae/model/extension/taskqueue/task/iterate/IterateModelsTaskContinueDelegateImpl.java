@@ -6,6 +6,7 @@ import com.dereekb.gae.server.taskqueue.system.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
 
+@Deprecated
 public class IterateModelsTaskContinueDelegateImpl
         implements IterateModelsTaskContinueDelegate {
 

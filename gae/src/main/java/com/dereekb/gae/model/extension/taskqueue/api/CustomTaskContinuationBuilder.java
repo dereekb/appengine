@@ -16,6 +16,7 @@ import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
  *
  * @author dereekb
  */
+@Deprecated
 public class CustomTaskContinuationBuilder
         implements TaskRequestBuilder<CustomTaskInfo> {
 

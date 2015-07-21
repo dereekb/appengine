@@ -13,6 +13,7 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
  * @param <T>
  *            {@link ObjectifyModel}
  */
+@Deprecated
 public class IterableObjectifyModelQueryFactory<T extends ObjectifyModel<T>>
         implements Factory<IterableObjectifyModelQuery<T>> {
 

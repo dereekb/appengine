@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.taskqueue.api.CustomTask;
 import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
+import com.dereekb.gae.model.extension.taskqueue.iterate.IterateTask;
 import com.dereekb.gae.server.datastore.models.query.IterableModelQuery;
 import com.dereekb.gae.server.datastore.models.query.ModelQueryIterator;
 import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
@@ -20,7 +21,9 @@ import com.google.appengine.api.datastore.Cursor;
  * the models cursor forward.
  *
  * @author dereekb
+ * @deprecated replaced by {@link IterateTask}
  */
+@Deprecated
 public class IterateModelsTask<T>
         implements CustomTask, Factory<CustomTask> {
 
