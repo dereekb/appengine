@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.search.document.DocumentIdentifierRequest;
 import com.dereekb.gae.server.search.document.DocumentQueryBuilder;
-import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
+import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.GetRequest;
@@ -469,8 +469,8 @@ public class DocumentSearchController {
 	 */
 	private static <T> List<List<T>> createDocumentListBatches(List<T> items,
 	                                                           Integer batchSize) {
-		List<List<T>> batches = BatchGenerator.createBatches(items, batchSize);
-		return batches;
+		CollectionPartitioner partitioner = new CollectionPartitioner(batchSize);
+		return partitioner.partitionsWithCollection(items);
 	}
 
 	public static DocumentSearchIndexIterator makeIndexIterator(String indexName) {
@@ -485,6 +485,7 @@ public class DocumentSearchController {
 	 *
 	 * @author dereekb
 	 */
+	// TODO: Move this to it's own type.
 	public static class DocumentSearchIndexIterator {
 
 		private String startId = null;

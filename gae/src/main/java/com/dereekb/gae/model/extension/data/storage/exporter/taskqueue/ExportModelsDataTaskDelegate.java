@@ -4,6 +4,7 @@ import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
 import com.dereekb.gae.server.storage.file.StorageFile;
 
 
+@Deprecated
 public interface ExportModelsDataTaskDelegate {
 
 	/**

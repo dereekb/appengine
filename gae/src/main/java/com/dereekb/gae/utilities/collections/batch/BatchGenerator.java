@@ -6,13 +6,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-//TODO: Rename to BatchGeneratorImpl, and create a BatchGenerator interface.
+import com.dereekb.gae.utilities.collections.batch.impl.BatchImpl;
 
 /**
  * Used for breaking up a collection of items into several lists, or batches.
  *
+ * @deprecated replaced by {@link BatchImpl} and {@link CollectionPartitioner}.
+ *
  * @author dereekb
  */
+@Deprecated
 public class BatchGenerator<T> {
 
 	private static final Integer DEFAULT_BATCH_SIZE = 100;

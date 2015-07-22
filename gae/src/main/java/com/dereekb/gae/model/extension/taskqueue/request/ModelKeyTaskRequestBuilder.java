@@ -12,20 +12,20 @@ import com.dereekb.gae.server.taskqueue.system.TaskParameter;
 import com.dereekb.gae.server.taskqueue.system.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
-import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
+import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
 
 /**
  * Implementation of {@link TaskRequestBuilder} that generates tasks keyed to
  * {@link ModelKey} of the input {@link UniqueModel} instances.
- *
+ * <p>
  * This builder uses a {@link TaskRequest} template to copy from, and appends
  * the request identifiers.
- *
- * This builder also batches
+ * <p>
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
         implements TaskRequestBuilder<T> {
@@ -56,7 +56,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 	/**
 	 * Internally-used batch genereator.
 	 */
-	private final BatchGenerator<ModelKey> batchGenerator = new BatchGenerator<ModelKey>();
+	private final CollectionPartitioner partitioner = new CollectionPartitioner();
 
 	public ModelKeyTaskRequestBuilder() {}
 
@@ -80,12 +80,12 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		this.asIndividualRequests = asIndividualRequests;
 	}
 
-	public Integer getBatchSize() {
-		return this.batchGenerator.getBatchSize();
+	public int getPartitionSize() {
+		return this.partitioner.getPartitionSize();
 	}
 
-	public void setBatchSize(Integer maxBatchSize) {
-		this.batchGenerator.setBatchSize(maxBatchSize);
+	public void setPartitionSize(Integer partitionSize) {
+		this.partitioner.setPartitionSize(partitionSize);
 	}
 
 	public TaskRequest getBaseRequest() {
@@ -116,25 +116,25 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		if (this.asIndividualRequests) {
 			requests = this.buildMultiRequests(input);
 		} else {
-			requests = this.buildRequestBatches(input);
+			requests = this.buildRequestPartitions(input);
 		}
 
 		return requests;
 	}
 
-	public List<TaskRequest> buildRequestBatches(Iterable<ModelKey> input) {
-		List<List<ModelKey>> keyBatches = this.batchGenerator.createBatches(input);
+	public List<TaskRequest> buildRequestPartitions(Iterable<ModelKey> input) {
+		List<List<ModelKey>> keyPartitions = this.partitioner.partitions(input);
 		List<TaskRequest> requests = new ArrayList<TaskRequest>();
 
-		for (List<ModelKey> keyBatch : keyBatches) {
-			TaskRequest request = this.buildRequestForBatch(keyBatch);
+		for (List<ModelKey> keyPartition : keyPartitions) {
+			TaskRequest request = this.buildRequestForPartition(keyPartition);
 			requests.add(request);
 		}
 
 		return requests;
 	}
 
-	public TaskRequest buildRequestForBatch(Iterable<ModelKey> input) {
+	public TaskRequest buildRequestForPartition(Iterable<ModelKey> input) {
 		List<String> keys = ModelKey.keysAsStrings(input);
 		TaskParameterImpl keyParameter = TaskParameterImpl.parametersWithCommaSeparatedValue(this.idParameter, keys);
 		TaskRequestImpl request = this.createNewModelKeyRequest(keyParameter);

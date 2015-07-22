@@ -4,6 +4,7 @@ import com.dereekb.gae.model.extension.data.storage.exporter.Exporter;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
+@Deprecated
 public class ExportModelsDataTaskFactory<T>
         implements Factory<ExportModelsDataTask<T>> {
 

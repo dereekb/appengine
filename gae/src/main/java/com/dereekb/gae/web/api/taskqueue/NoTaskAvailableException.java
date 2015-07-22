@@ -2,6 +2,7 @@ package com.dereekb.gae.web.api.taskqueue;
 
 import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
 
+@Deprecated
 public class NoTaskAvailableException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

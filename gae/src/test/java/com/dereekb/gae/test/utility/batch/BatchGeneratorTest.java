@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.utility;
+package com.dereekb.gae.test.utility.batch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
 
+@Deprecated
 public class BatchGeneratorTest {
 
 	private static final Random random = new Random();

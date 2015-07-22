@@ -16,8 +16,10 @@ import com.dereekb.gae.server.search.DocumentSearchController.DocumentSearchInde
  *
  * TODO: Update to implement {@link IterateModelsSubtask<T>}
  *
+ * @deprecated TODO: Add to new Search Task Queue Controller
  * @author dereekb
  */
+@Deprecated
 public class ClearIndexTaskQueueTask
         implements CustomTask {
 
