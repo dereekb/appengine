@@ -16,13 +16,29 @@ import com.google.common.base.Joiner;
 public class TaskParameterImpl
         implements TaskParameter {
 
-	public final String parameter;
+	public String parameter;
 
-	public final String value;
+	public String value;
 
 	public TaskParameterImpl(String parameter, String value) {
-		this.parameter = parameter;
-		this.value = value;
+		this.setParameter(parameter);
+		this.setValue(value);
+	}
+
+	/**
+	 * Constructor for contructing a {@link TaskParameterImpl} from an
+	 * {@link Object}'s {@link Object#toString()} value.
+	 *
+	 * @param parameter
+	 * @param value
+	 */
+	public TaskParameterImpl(String parameter, Object value) {
+		if (value == null) {
+			throw new IllegalArgumentException("Object value cannot be null.");
+		}
+
+		this.setParameter(parameter);
+		this.setValue(value.toString());
 	}
 
 	@Override
@@ -30,9 +46,25 @@ public class TaskParameterImpl
 		return this.parameter;
 	}
 
+	public void setParameter(String parameter) {
+		if (parameter == null || parameter.isEmpty()) {
+			throw new IllegalArgumentException("Parameter cannot be null or empty.");
+		}
+
+		this.parameter = parameter;
+	}
+
 	@Override
 	public String getValue() {
 		return this.value;
+	}
+
+	public void setValue(String value) {
+		if (value == null || value.isEmpty()) {
+			throw new IllegalArgumentException("Value cannot be null or empty.");
+		}
+
+		this.value = value;
 	}
 
 	/**
@@ -67,7 +99,7 @@ public class TaskParameterImpl
 	 *            List of values for each {@link TaskParameterImpl}
 	 * @return {@link List} of created {@link TaskParameterImpl}.
 	 * @throws IllegalArgumentException
-	 *             if param is null or empty.
+	 *             if parameter is {@code null} or empty.
 	 */
 	public static List<TaskParameterImpl> makeParametersForValues(String param,
 	                                                              Iterable<? extends Object> values)
@@ -84,15 +116,26 @@ public class TaskParameterImpl
 		return pairs;
 	}
 
-	public static List<TaskParameterImpl> makeParametersWithMap(Map<String, ? extends Object> map) {
-
+	/**
+	 * Generates a list of {@link TaskParameterImpl} using the input {@limk Map}
+	 * of {@link Object} values. The map's keys are used as parameter names.
+	 *
+	 * @param map
+	 *            Input map. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             If
+	 *             {@link TaskParameterImpl#TaskParameterImpl(String, Object)}
+	 *             fails.
+	 * @return {@link List} of {@link TaskParameterImpl} values. Never
+	 *         {@code null}.
+	 */
+	public static List<TaskParameterImpl> makeParametersWithMap(Map<String, ? extends Object> map)
+	        throws IllegalArgumentException {
 		List<TaskParameterImpl> pairs = new ArrayList<TaskParameterImpl>();
 
 		for (String parameter : map.keySet()) {
 			Object value = map.get(parameter);
-			String stringValue = value.toString();
-
-			TaskParameterImpl pair = new TaskParameterImpl(parameter, stringValue);
+			TaskParameterImpl pair = new TaskParameterImpl(parameter, value);
 			pairs.add(pair);
 		}
 

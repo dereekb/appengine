@@ -8,6 +8,7 @@ import java.util.Map;
  *
  * @author dereekb
  */
+@Deprecated
 public interface CustomTaskInfo {
 
 	public static final String DEFAULT_TASK_STEP_HEADER = "TQ_TASK_STEP";

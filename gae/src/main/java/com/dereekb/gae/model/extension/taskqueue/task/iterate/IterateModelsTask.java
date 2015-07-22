@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.taskqueue.api.CustomTask;
 import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
-import com.dereekb.gae.model.extension.taskqueue.iterate.IterateTask;
 import com.dereekb.gae.server.datastore.models.query.IterableModelQuery;
 import com.dereekb.gae.server.datastore.models.query.ModelQueryIterator;
 import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.IterateTask;
 import com.google.appengine.api.datastore.Cursor;
 
 /**

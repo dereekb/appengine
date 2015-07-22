@@ -16,6 +16,7 @@ import com.dereekb.gae.server.storage.file.StorageFile;
  *
  * @param <T>
  */
+@Deprecated
 public class ExportModelsDataTask<T>
         implements IterateModelsSubtask<T> {
 

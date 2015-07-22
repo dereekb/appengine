@@ -9,6 +9,7 @@ import java.util.Map;
  *
  * @author dereekb
  */
+@Deprecated
 public class CustomTaskInfoImpl
         implements CustomTaskInfo {
 

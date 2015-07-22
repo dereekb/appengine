@@ -1,9 +1,9 @@
-package com.dereekb.gae.model.extension.taskqueue.iterate.impl;
+package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.request.impl;
 
-import com.dereekb.gae.model.extension.taskqueue.iterate.IterateTaskContinuation;
-import com.dereekb.gae.model.extension.taskqueue.iterate.IterateTaskInput;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
+import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.IterateTaskInput;
+import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.request.IterateTaskContinuation;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
@@ -19,6 +19,7 @@ public class IterateTaskContinuationImpl
 	 * {@link TaskRequestSystem} to submit the task to.
 	 */
 	private TaskRequestSystem system;
+	private IterateTaskRequestBuilder TaskRequestBuilder = new IterateTaskRequestBuilder();
 
 	public IterateTaskContinuationImpl(TaskRequestSystem system) {
 		this.setSystem(system);
@@ -46,8 +47,9 @@ public class IterateTaskContinuationImpl
 
 	private TaskRequest buildRequest(IterateTaskInput input,
 	                                 Cursor cursor) {
-		// TODO Build the continuation task.
-		return null;
+		IterateTaskRequestBuilder.Builder builder = this.TaskRequestBuilder.builder(input);
+		builder.setCursor(cursor);
+		return builder.build();
 	}
 
 }

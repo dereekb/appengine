@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.taskqueue.iterate;
+package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate;
 
 import java.util.Map;
 
@@ -11,6 +11,20 @@ import com.google.appengine.api.datastore.Cursor;
  *
  */
 public interface IterateTaskInput {
+
+	/**
+	 * The current task's name.
+	 *
+	 * @return Task name. Never {@code null}.
+	 */
+	public String getTaskName();
+
+	/**
+	 * The model type.
+	 *
+	 * @return Model type. Never {@code null}.
+	 */
+	public String getModelType();
 
 	/**
 	 * Step of the iteration.

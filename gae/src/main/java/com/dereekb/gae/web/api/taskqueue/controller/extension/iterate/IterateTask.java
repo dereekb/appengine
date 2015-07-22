@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.taskqueue.iterate;
+package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate;
 
 import java.util.Map;
 
@@ -9,11 +9,14 @@ import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.iteration.ConfiguredIterationTask;
 import com.dereekb.gae.utilities.task.iteration.exception.IncompleteTaskIterationException;
+import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.request.IterateTaskContinuation;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
- * Task for iterating over {@link ObjectifyModel} models using a
+ * {@link Task} for iterating over {@link ObjectifyModel} models using a
  * {@link IterableObjectifyQuery}.
+ * <p>
+ * The iterated values are used by a {@link ConfiguredIterationTask} instance.
  *
  * @author dereekb
  *
