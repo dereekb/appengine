@@ -55,7 +55,7 @@ public final class LongModelKeyConverter
 				keys.add(key);
 			}
 		} catch (IllegalArgumentException e) {
-			throw new ConversionFailureException(e.getMessage());
+			throw new ConversionFailureException(e);
 		}
 
 		return keys;
@@ -69,7 +69,7 @@ public final class LongModelKeyConverter
 		try {
 			key = new ModelKey(input);
 		} catch (NumberFormatException e) {
-			throw new ConversionFailureException(e.getMessage());
+			throw new ConversionFailureException(e);
 		}
 
 		return key;

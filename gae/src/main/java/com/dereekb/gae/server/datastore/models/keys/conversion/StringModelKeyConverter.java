@@ -54,9 +54,13 @@ public final class StringModelKeyConverter
 	public List<ModelKey> convert(Collection<String> input) throws ConversionFailureException {
 		List<ModelKey> keys = new ArrayList<ModelKey>();
 
-		for (String string : input) {
-			ModelKey key = new ModelKey(string);
-			keys.add(key);
+		try {
+			for (String string : input) {
+				ModelKey key = new ModelKey(string);
+				keys.add(key);
+			}
+		} catch (IllegalArgumentException e) {
+			throw new ConversionFailureException(e);
 		}
 
 		return keys;
@@ -70,7 +74,7 @@ public final class StringModelKeyConverter
 		try {
 			key = new ModelKey(input);
 		} catch (IllegalArgumentException e) {
-			throw new ConversionFailureException(e.getMessage());
+			throw new ConversionFailureException(e);
 		}
 
 		return key;

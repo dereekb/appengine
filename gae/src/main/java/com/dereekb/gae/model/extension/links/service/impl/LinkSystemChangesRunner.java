@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.Relation;
@@ -17,6 +18,7 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 
 /**
@@ -131,7 +133,10 @@ public class LinkSystemChangesRunner {
 					Link modelLink = linkModel.getLink(targetName);
 					LinkChangeAction action = change.getAction();
 
-					Collection<ModelKey> targetKeys = change.getTargetKeys();
+					Set<String> targetStringKeys = change.getTargetStringKeys();
+					ModelKeyType keyType = modelLink.getLinkTarget().getTargetKeyType();
+					Collection<ModelKey> targetKeys = ModelKey.convert(keyType, targetStringKeys);
+
 					Relation relation = new RelationImpl(targetKeys);
 
 					try {

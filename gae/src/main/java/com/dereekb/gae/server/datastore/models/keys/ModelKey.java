@@ -1,10 +1,14 @@
 package com.dereekb.gae.server.datastore.models.keys;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringLongModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 
 /**
  * Represents a key for a model.
@@ -266,6 +270,36 @@ public final class ModelKey
 		}
 
 		return modelKey;
+	}
+
+	/**
+	 * Convenience function for converting
+	 *
+	 * @param keyType
+	 *            {@link ModelKeyType} of values.
+	 * @param values
+	 *            {@link Collection} of values. Never {@code null}.
+	 * @return {@link List} of {@link ModelKey} values corresponding to the
+	 *         input types. Never {@code null}.
+	 * @throws ConversionFailureException
+	 *             if the conversion fails.
+	 */
+	public static List<ModelKey> convert(ModelKeyType keyType,
+	                                     Collection<String> values) throws ConversionFailureException {
+		List<ModelKey> keys;
+
+		switch (keyType) {
+			case NAME:
+				keys = StringModelKeyConverter.CONVERTER.convert(values);
+				break;
+			case NUMBER:
+				keys = StringLongModelKeyConverter.CONVERTER.convert(values);
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid key type specified.");
+		}
+
+		return keys;
 	}
 
 	/**

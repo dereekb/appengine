@@ -59,7 +59,7 @@ public final class StringLongModelKeyConverter
 				keys.add(key);
 			}
 		} catch (NumberFormatException e) {
-			throw new ConversionFailureException("Could not convert string number.");
+			throw new ConversionFailureException(e);
 		}
 
 		return keys;
@@ -73,7 +73,7 @@ public final class StringLongModelKeyConverter
 		try {
 			key = ModelKey.convertNumberString(input);
 		} catch (NumberFormatException e) {
-			throw new ConversionFailureException("Could not convert string number.");
+			throw new ConversionFailureException(e);
 		}
 
 		return key;
