@@ -50,8 +50,8 @@ public final class StagedFunctionObserverMap<T, W extends StagedFunctionObject<T
 
 	public void notifyObserversOfStage(StagedFunctionStage stage,
 	                                   StagedFunction<T, W> functionHandler) {
-		List<StagedFunctionObserver<T>> observers = this.normal.getObjects(stage);
-		List<StagedFunctionObjectObserver<T, W>> objectObservers = this.objectDependent.getObjects(stage);
+		List<StagedFunctionObserver<T>> observers = this.normal.getElements(stage);
+		List<StagedFunctionObjectObserver<T, W>> objectObservers = this.objectDependent.getElements(stage);
 
 		for (StagedFunctionObserver<T> observer : observers) {
 			observer.functionHandlerCallback(stage, functionHandler);

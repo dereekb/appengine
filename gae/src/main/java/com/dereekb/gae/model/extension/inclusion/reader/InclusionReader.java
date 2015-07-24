@@ -26,7 +26,7 @@ public interface InclusionReader<T> {
 	 *
 	 * @param models
 	 *            Models to analyze.
-	 * @return {@link InclusionReadersetAnalysis} containing the input models.
+	 * @return {@link InclusionReaderSetAnalysis} containing the input models.
 	 * @throws IllegalArgumentException
 	 *             if the models are null or empty.
 	 */

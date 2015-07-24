@@ -11,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public abstract class AbstractReadRequestImpl<T extends UniqueModel>
         implements ReadRequest<T> {

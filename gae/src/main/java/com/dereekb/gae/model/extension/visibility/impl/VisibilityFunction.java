@@ -31,7 +31,7 @@ public final class VisibilityFunction<T> extends FilteredStagedFunction<T, Visib
 		HashMapWithList<VisibilityState, VisibilityPair<T>> map = VisibilityPair.getChangesMap(pairs);
 
 		for (VisibilityState state : map.getKeySet()) {
-			List<VisibilityPair<T>> pairsForState = map.getObjects(state);
+			List<VisibilityPair<T>> pairsForState = map.getElements(state);
 			this.makeChanges(pairsForState, state);
 		}
 	}

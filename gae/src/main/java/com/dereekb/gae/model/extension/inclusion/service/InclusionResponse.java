@@ -20,6 +20,7 @@ public interface InclusionResponse<T> {
 	 *
 	 * @return a map of all related models.
 	 */
+	@Deprecated
 	public Map<String, Collection<? extends UniqueModel>> getRelated();
 
 	/**
@@ -27,6 +28,7 @@ public interface InclusionResponse<T> {
 	 * @return a map containing {@link Collection} instances of keys
 	 *         corresponding to unavailable elements.
 	 */
+	@Deprecated
 	public Map<String, Collection<ModelKey>> getUnavailable();
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public class HashMapWithList<T, U> extends HashMapWithCollection<T, U, List<U>> {
 
 	@Override
-	protected List<U> newCollection() {
+	protected List<U> makeCollection() {
 		return new ArrayList<U>();
 	}
 

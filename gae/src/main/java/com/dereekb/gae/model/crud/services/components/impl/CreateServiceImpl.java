@@ -50,7 +50,7 @@ public class CreateServiceImpl<T extends UniqueModel>
 			function.run();
 
 			HashMapWithList<FilterResult, CreatePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<CreatePair<T>> errorPairs = results.getObjects(FilterResult.FAIL);
+			List<CreatePair<T>> errorPairs = results.getElements(FilterResult.FAIL);
 			List<T> errorTemplates = CreatePair.getKeys(errorPairs);
 
 			if (errorTemplates.size() > 0 && options.isAtomic()) {

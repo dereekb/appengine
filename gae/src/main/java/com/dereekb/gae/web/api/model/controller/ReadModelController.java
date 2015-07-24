@@ -3,6 +3,7 @@ package com.dereekb.gae.web.api.model.controller;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.validation.constraints.Max;
 
@@ -41,12 +42,29 @@ public final class ReadModelController<T extends UniqueModel> {
 		return this.conversionDelegate;
 	}
 
+	/**
+	 * API Entry point for reading a value.
+	 *
+	 * @param ids
+	 *            Identifiers to read. Max of 40. Never {@code null}.
+	 * @param atomic
+	 *            Whether or not to perform an atomic read request. False by
+	 *            default.
+	 * @param getRelated
+	 *            Whether or not to retrieve related values. False by default.
+	 *            If {@code related} is not empty or {@code null}, this value is
+	 *            set to {@code true}.
+	 * @param related
+	 *            Inclusive filter of related elements to load.
+	 * @return {@link ApiResponse}
+	 */
 	@ResponseBody
 	@PreAuthorize("hasPermission(this, 'read')")
 	@RequestMapping(value = "/read", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse read(@Max(40) @RequestParam(required = true) List<String> ids,
 	                              @RequestParam(required = false, defaultValue = "false") boolean atomic,
-	                              @RequestParam(required = false, defaultValue = "false") boolean getRelated) {
+	                              @RequestParam(required = false, defaultValue = "false") boolean getRelated,
+	                              @RequestParam(required = false) Set<String> related) {
 		ApiResponse response = null;
 
 		try {
@@ -57,9 +75,9 @@ public final class ReadModelController<T extends UniqueModel> {
 			ReadResponse<T> readResponse = this.delegate.read(readRequest);
 			response = this.conversionDelegate.convert(readResponse);
 
-			if (getRelated) {
+			if (getRelated || (related != null && related.isEmpty() == false)) {
 				Collection<T> models = readResponse.getModels();
-				Map<String, Object> included = this.delegate.readIncluded(models);
+				Map<String, Object> included = this.delegate.readIncluded(models, related);
 
 				for (String type : included.keySet()) {
 					Object data = included.get(type);

@@ -8,63 +8,112 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-public abstract class HashMapWithCollection<T, U, C extends Collection<U>>
-        implements Iterable<U> {
+/**
+ * Abstract utility class for handling {@link Collection} values within a
+ * {@link Map}.
+ * <p>
+ * A single {@link Collection} instance is managed for each key value.
+ *
+ * @author dereekb
+ *
+ * @param <K>
+ *            key type
+ * @param <T>
+ *            model type
+ * @param <C>
+ *            collection type
+ */
+public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
+        implements Iterable<T> {
 
-	private final Map<T, C> map;
+	private final Map<K, C> map;
 
 	public HashMapWithCollection() {
-		this.map = new HashMap<T, C>();
+		this.map = new HashMap<K, C>();
 	}
 
-	public HashMapWithCollection(HashMapWithCollection<T, U, C> map) {
+	public HashMapWithCollection(HashMapWithCollection<K, T, C> map) {
 		this.map = map.getMapCopy();
 	}
 
-	public HashMapWithCollection(Iterable<MapPairing<T, U>> pairings) {
-		this.map = new HashMap<T, C>();
-		this.addAll(pairings);
+	public HashMapWithCollection(Iterable<MapPairing<K, T>> pairings) {
+		this.map = new HashMap<K, C>();
+		this.addAllPairings(pairings);
 	}
 
-	protected abstract C newCollection();
+	/**
+	 * Generates a new {@link Collection} for the map.
+	 *
+	 * @return new, empty {@link Collection} for the map.
+	 */
+	protected abstract C makeCollection();
 
-	private C getCollectionForKey(T key) {
+	/**
+	 * Returns the values for the {@code key} value specified.
+	 *
+	 * @param key
+	 *            key value. Never {@code null}.
+	 * @return {@link Collection} for the key value. Returns {@code null} if the
+	 *         key value does not exist in this map.
+	 */
+	private C getCollectionForKey(K key) {
 		C collection = this.map.get(key);
 
 		if (collection == null) {
-			collection = this.newCollection();
+			collection = this.makeCollection();
 			this.map.put(key, collection);
 		}
 
 		return collection;
 	}
 
-	private void removeCollectionForKey(T key) {
-		this.map.remove(key);
+	/**
+	 * Removes the values for this key.
+	 *
+	 * @param key
+	 *            key value. Never {@code null}.
+	 * @return {@link Collection} for this key.
+	 */
+	private C removeCollectionForKey(K key) {
+		return this.map.remove(key);
 	}
 
-	public Set<T> getKeySet() {
+	/**
+	 * Returns the {@link Set} of all keys in this map.
+	 *
+	 * @return {@link Set} of all keys. Never {@code null}.
+	 */
+	public Set<K> getKeySet() {
 		return this.map.keySet();
 	}
 
-	public List<U> getObjects(T key) {
+	/**
+	 * Returns all elements for the specified {@code key} value. Returns an
+	 * empty {@link List} if the key does not exist in this map.
+	 *
+	 * @param key
+	 *            key value. Never {@code null}.
+	 * @return {@link List} of values for the input key. Never {@code null}.
+	 */
+	public List<T> getElements(K key) {
 		C collection = this.map.get(key);
-		List<U> objects = null;
+		List<T> objects = null;
 
 		if (collection == null) {
 			objects = Collections.emptyList();
 		} else {
-			objects = new ArrayList<U>(collection);
+			objects = new ArrayList<T>(collection);
 		}
 
 		return objects;
 	}
 
-	public Set<U> getAllObjects() {
+	public Set<T> getAllElements() {
 		Collection<C> collections = this.map.values();
-		Set<U> objects = new HashSet<U>();
+		Set<T> objects = new HashSet<T>();
 
 		for (C collection : collections) {
 			objects.addAll(collection);
@@ -73,88 +122,152 @@ public abstract class HashMapWithCollection<T, U, C extends Collection<U>>
 		return objects;
 	}
 
-	public void add(T key,
-	                U object) {
+	public void add(K key,
+	                T object) {
 		C collection = this.getCollectionForKey(key);
 		collection.add(object);
 	}
 
-	public void addAll(T key,
-	                   Iterable<U> objects) {
+	public void addAll(K key,
+	                   Iterable<T> objects) {
 		C collection = this.getCollectionForKey(key);
 
-		for (U object : objects) {
+		for (T object : objects) {
 			collection.add(object);
 		}
 	}
 
-	public void addAll(T key,
-	                   Collection<U> objects) {
+	public void addAll(K key,
+	                   Collection<T> objects) {
 		C collection = this.getCollectionForKey(key);
 		collection.addAll(objects);
 	}
 
-	public void addAll(Iterable<T> keys,
-	                   U object) {
-		for (T key : keys) {
+	/**
+	 * Adds the specified {@code object} to each of the keys specified.
+	 *
+	 * @param keys
+	 *            {@link Iterable} key values. Never {@code null}.
+	 * @param object
+	 *            Object. Never {@code null}.
+	 */
+	public void addAll(Iterable<K> keys,
+	                   T object) {
+		for (K key : keys) {
 			this.add(key, object);
 		}
 	}
 
-	private void addAll(Iterable<MapPairing<T, U>> pairings) {
-		for (MapPairing<T, U> pairing : pairings) {
-			Iterable<T> keys = pairing.getKeys();
-			U value = pairing.getValue();
+	/**
+	 * Adds all values from the {@link Map}.
+	 *
+	 * @param map
+	 *            {@link Map} containing values. Never {@code null}.
+	 */
+	public void addAll(Map<K, ? extends Collection<T>> map) {
+		for (Entry<K, ? extends Collection<T>> entry : map.entrySet()) {
+			K key = entry.getKey();
+			Collection<T> values = entry.getValue();
+			this.addAll(key, values);
+		}
+	}
+
+	private void addAllPairings(Iterable<MapPairing<K, T>> pairings) {
+		for (MapPairing<K, T> pairing : pairings) {
+			Iterable<K> keys = pairing.getKeys();
+			T value = pairing.getValue();
 			this.addAll(keys, value);
 		}
 	}
 
-	public void remove(T key) {
+	public void remove(K key) {
 		this.removeCollectionForKey(key);
 	}
 
-	public void removeAll(Iterable<T> keys) {
-		for (T key : keys) {
+	public void removeAll(Iterable<K> keys) {
+		for (K key : keys) {
 			this.remove(key);
 		}
 	}
 
-	public void remove(T key,
-	                   U object) {
-		C collection = this.getCollectionForKey(key);
-		collection.remove(object);
-
-		if (collection.isEmpty()) {
-			this.removeCollectionForKey(key);
-		}
-	}
-
-	public void removeAll(T key,
-	                      Iterable<U> objects) {
+	/**
+	 * Removes the input object from this map.
+	 *
+	 * @param key
+	 *            key value. Never {@code null}.
+	 * @param object
+	 *            object to remove from the map. Never {@code null}.
+	 */
+	public void remove(K key,
+	                   T object) {
 		C collection = this.getCollectionForKey(key);
 
-		for (U object : objects) {
+		if (collection != null) {
 			collection.remove(object);
+
+			if (collection.isEmpty()) {
+				this.removeCollectionForKey(key);
+			}
 		}
 	}
 
-	public void removeAll(T key,
-	                      Collection<U> objects) {
+	/**
+	 * @deprecated Used {@code #removeAll(Object, Collection)} where possible.
+	 * @param key
+	 * @param objects
+	 */
+	@Deprecated
+	public void removeAll(K key,
+	                      Iterable<T> objects) {
 		C collection = this.getCollectionForKey(key);
-		collection.removeAll(objects);
+
+		if (collection != null) {
+			for (T object : objects) {
+				collection.remove(object);
+			}
+		}
 	}
 
-	public void merge(HashMapWithCollection<T, U, ?> collection) {
-		Set<T> keys = collection.getKeySet();
+	/**
+	 * Removes all input values from this map under the specified key.
+	 *
+	 * @param key
+	 *            key value. Never {@code null}.
+	 * @param objects
+	 *            objects to remove. Never {@code null}.
+	 */
+	public void removeAll(K key,
+	                      Collection<T> objects) {
+		C collection = this.getCollectionForKey(key);
 
-		for (T key : keys) {
-			List<U> objects = collection.getObjects(key);
+		if (collection != null) {
+			collection.removeAll(objects);
+
+			if (collection.isEmpty()) {
+				this.removeCollectionForKey(key);
+			}
+		}
+	}
+
+	/**
+	 * Inserts all values from the input {@code collection} into this map
+	 * instance.
+	 *
+	 * @param collection
+	 *            {@link HashMapWithCollection} value to merge with. Never
+	 *            {@code null}.
+	 */
+	public void merge(HashMapWithCollection<K, T, ?> collection) {
+		Set<K> keys = collection.getKeySet();
+
+		for (K key : keys) {
+			List<T> objects = collection.getElements(key);
 			this.addAll(key, objects);
 		}
 	}
 
-	public final Map<T, C> getMapCopy() {
-		return new HashMap<T, C>(this.map);
+	public final Map<K, C> getMapCopy() {
+		return new HashMap<K, C>(this.map);
 	}
 
 	public void clear() {
@@ -165,14 +278,15 @@ public abstract class HashMapWithCollection<T, U, C extends Collection<U>>
 		return this.map.isEmpty();
 	}
 
-	public Iterator<U> iterator() {
-		Set<U> allObjects = this.getAllObjects();
+	@Override
+	public Iterator<T> iterator() {
+		Set<T> allObjects = this.getAllElements();
 		return allObjects.iterator();
 	}
 
 	@Override
 	public String toString() {
-		return "HashMapWithCollection [map=" + map + "]";
+		return "HashMapWithCollection [map=" + this.map + "]";
 	}
 
 }

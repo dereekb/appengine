@@ -25,11 +25,11 @@ public class FilterResults<T> extends HashMapWithSet<FilterResult, T> {
 	}
 	
 	public List<T> getPassingObjects() {
-		return this.getObjects(FilterResult.PASS);
+		return this.getElements(FilterResult.PASS);
 	}
 	
 	public List<T> getFailingObjects() {
-		return this.getObjects(FilterResult.FAIL);
+		return this.getElements(FilterResult.FAIL);
 	}
 
 	public void insert(FilterResults<T> results) {

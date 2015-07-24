@@ -59,14 +59,14 @@ public class StagedFunctionFiltersMap<T, W extends StagedFunctionObject<T>> exte
 	                                           Iterable<W> sources) {
 		FilterResults<W> results = null;
 		Iterable<W> passingItems = sources;
-		List<StagedFunctionFilter<T>> filtersList = this.normal.getObjects(stage);
+		List<StagedFunctionFilter<T>> filtersList = this.normal.getElements(stage);
 
 		if (filtersList.isEmpty()) {
 			results = new FilterResults<W>(sources);
 		} else {
 			for (StagedFunctionFilter<T> filter : filtersList) {
 				results = filter.filterObjectsWithDelegate(stage, passingItems, this);
-				passingItems = results.getObjects(FilterResult.PASS);
+				passingItems = results.getElements(FilterResult.PASS);
 			}
 		}
 
@@ -84,14 +84,14 @@ public class StagedFunctionFiltersMap<T, W extends StagedFunctionObject<T>> exte
 	                                            Iterable<W> sources) {
 		FilterResults<W> results = null;
 		Iterable<W> passingItems = sources;
-		List<StagedFunctionObjectFilter<T, W>> filters = this.objectDependent.getObjects(stage);
+		List<StagedFunctionObjectFilter<T, W>> filters = this.objectDependent.getElements(stage);
 
 		if (filters.isEmpty()) {
 			results = new FilterResults<W>(sources);
 		} else {
 			for (StagedFunctionObjectFilter<T, W> filter : filters) {
 				results = filter.filterFunctionObjects(stage, passingItems);
-				passingItems = results.getObjects(FilterResult.PASS);
+				passingItems = results.getElements(FilterResult.PASS);
 			}
 		}
 
