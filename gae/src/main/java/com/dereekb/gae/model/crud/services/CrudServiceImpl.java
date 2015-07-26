@@ -63,7 +63,7 @@ public class CrudServiceImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public ReadResponse<T> read(ReadRequest<T> request) throws AtomicOperationException {
+	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 		return this.readService.read(request);
 	}
 

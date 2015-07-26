@@ -35,7 +35,7 @@ public final class DefaultModelDocumentSearchService<T extends UniqueModel, Q>
 
 		if (keys.isEmpty() == false) {
 			ReadRequestOptions options = new ReadRequestOptions(false);
-			ReadRequest<T> request = new KeyReadRequest<T>(keys, options);
+			ReadRequest request = new KeyReadRequest(keys, options);
 			ReadResponse<T> readResponse = this.readService.read(request);
 			searchResponse.setResponse(readResponse);
 		}

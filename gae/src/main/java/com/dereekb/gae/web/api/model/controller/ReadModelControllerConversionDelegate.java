@@ -9,7 +9,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 public interface ReadModelControllerConversionDelegate<T extends UniqueModel> {
 
-	public ReadRequest<T> convert(List<String> ids);
+	public ReadRequest convert(List<String> ids);
 
 	public ApiResponse convert(ReadResponse<T> response);
 

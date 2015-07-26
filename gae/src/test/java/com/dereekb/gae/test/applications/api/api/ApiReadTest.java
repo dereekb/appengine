@@ -50,7 +50,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		List<String> stringKeys = ModelKey.readStringKeys(models);
 
 		try {
-			ApiResponse response = this.controller.read(stringKeys, true, false);
+			ApiResponse response = this.controller.read(stringKeys, true, false, null);
 
 			ApiResponseData responseData = response.getData();
 			Assert.assertNotNull(responseData);
@@ -71,7 +71,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		stringKeys.add("30000");
 
 		try {
-			this.controller.read(stringKeys, true, false);
+			this.controller.read(stringKeys, true, false, null);
 			Assert.fail();
 		} catch (MissingRequiredResourceException e) {
 			List<String> resources = e.getResources();
@@ -94,7 +94,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		stringKeys.addAll(fakeStringKeys);
 
 		try {
-			ApiResponse response = this.controller.read(stringKeys, false, false);
+			ApiResponse response = this.controller.read(stringKeys, false, false, null);
 
 			List<ApiResponseError> errors = response.getErrors();
 			Assert.assertNotNull(errors);
@@ -105,5 +105,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 			Assert.fail();
 		}
 	}
+
+	// TODO: Test reading related types.
 
 }

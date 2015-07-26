@@ -77,7 +77,7 @@ public class ReadServiceTester<T extends UniqueModel>
 
 		// Options set w/o atomic read
 		ReadRequestOptions options = new ReadRequestOptions(false);
-		ReadRequest<T> request = new KeyReadRequest<T>(key, options);
+		ReadRequest request = new KeyReadRequest(key, options);
 		ReadResponse<T> response = this.readService.read(request);
 
 		// Check we recieved one object back.
@@ -96,7 +96,7 @@ public class ReadServiceTester<T extends UniqueModel>
 	private void testReadingMultiple(List<ModelKey> keys) {
 
 		ReadRequestOptions options = new ReadRequestOptions(false);
-		ReadRequest<T> request = new KeyReadRequest<T>(keys, options);
+		ReadRequest request = new KeyReadRequest(keys, options);
 		ReadResponse<T> response = this.readService.read(request);
 
 		Collection<T> readObjects = response.getModels();
@@ -117,7 +117,7 @@ public class ReadServiceTester<T extends UniqueModel>
 		List<ModelKey> keys = new ArrayList<ModelKey>();
 
 		ReadRequestOptions options = new ReadRequestOptions(false);
-		ReadRequest<T> request = new KeyReadRequest<T>(keys, options);
+		ReadRequest request = new KeyReadRequest(keys, options);
 		ReadResponse<T> response = this.readService.read(request);
 
 		Collection<T> readObjects = response.getModels();
@@ -138,7 +138,7 @@ public class ReadServiceTester<T extends UniqueModel>
 
 		try {
 			ReadRequestOptions options = new ReadRequestOptions(false);
-			ReadRequest<T> request = new KeyReadRequest<T>(keys, options);
+			ReadRequest request = new KeyReadRequest(keys, options);
 			this.readService.read(request);
 			Assert.fail();
 		} catch (NullModelKeyException e) {
@@ -159,7 +159,7 @@ public class ReadServiceTester<T extends UniqueModel>
 		try {
 			// Atomic exception should be raised.
 			ReadRequestOptions options = new ReadRequestOptions(true);
-			ReadRequest<T> request = new KeyReadRequest<T>(keys, options);
+			ReadRequest request = new KeyReadRequest(keys, options);
 			this.readService.read(request);
 
 			Assert.fail();
@@ -173,7 +173,7 @@ public class ReadServiceTester<T extends UniqueModel>
 		try {
 			// Atomic exception should not be raised.
 			ReadRequestOptions options = new ReadRequestOptions(false);
-			ReadRequest<T> request = new KeyReadRequest<T>(keys, options);
+			ReadRequest request = new KeyReadRequest(keys, options);
 			ReadResponse<T> response = this.readService.read(request);
 
 			Collection<ModelKey> unavailable = response.getUnavailable();

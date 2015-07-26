@@ -51,7 +51,7 @@ public class DeleteServiceImpl<T extends UniqueModel>
 
 		// Read Models to delete. Missing models are ignored.
 		ReadRequestOptions readOptions = new ReadRequestOptions(false);
-		KeyReadRequest<T> readRequest = new KeyReadRequest<T>(deleteKeys, readOptions);
+		KeyReadRequest readRequest = new KeyReadRequest(deleteKeys, readOptions);
 
 		ReadResponse<T> readResponse = this.readService.read(readRequest);
 		Collection<T> models = readResponse.getModels();

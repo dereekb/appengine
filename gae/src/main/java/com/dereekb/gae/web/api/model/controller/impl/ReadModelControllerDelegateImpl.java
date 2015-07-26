@@ -53,7 +53,7 @@ public class ReadModelControllerDelegateImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public ReadResponse<T> read(ReadRequest<T> readRequest) {
+	public ReadResponse<T> read(ReadRequest readRequest) {
 		return this.readService.read(readRequest);
 	}
 
@@ -66,14 +66,13 @@ public class ReadModelControllerDelegateImpl<T extends UniqueModel>
 			InclusionRequestImpl<T> request = new InclusionRequestImpl<T>(models, relatedFilter);
 			InclusionResponse<T> response = this.inclusionService.loadRelated(request);
 
-			Map<String, Collection<? extends UniqueModel>> responseMap = response.getRelated();
+			Map<String, Collection<? extends UniqueModel>> responseMap = response.getAllRelated();
 			included = new HashMap<String, Object>();
 
 			for (String type : responseMap.keySet()) {
 				Collection<? extends UniqueModel> related = responseMap.get(type);
 				included.put(type, related);
 			}
-
 		} else {
 			included = Collections.emptyMap();
 		}

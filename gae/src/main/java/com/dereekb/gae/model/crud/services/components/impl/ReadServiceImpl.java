@@ -36,7 +36,7 @@ public class ReadServiceImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public ReadResponse<T> read(ReadRequest<T> request) throws AtomicOperationException {
+	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 		ReadResponse<T> readResponse = null;
 
 		Iterable<ModelKey> keys = request.getModelKeys();

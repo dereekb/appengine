@@ -2,9 +2,10 @@ package com.dereekb.gae.model.extension.inclusion.service;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
+import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavailableException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link InclusionService} response.
@@ -17,18 +18,28 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public interface InclusionResponse<T> {
 
 	/**
+	 * Returns the set of all available related types.
 	 *
-	 * @return a map of all related models.
+	 * @return {@link Set} containing all available types.
 	 */
-	@Deprecated
-	public Map<String, Collection<? extends UniqueModel>> getRelated();
+	public Set<String> getAvailableTypes();
 
 	/**
+	 * Returns a single related type.
 	 *
-	 * @return a map containing {@link Collection} instances of keys
-	 *         corresponding to unavailable elements.
+	 * @param type
+	 *            related type
+	 * @return {@link Collection} of related models. Never {@code null}.
+	 * @throws InclusionTypeUnavailableException
+	 *             thrown if the type was not requested to load.
 	 */
-	@Deprecated
-	public Map<String, Collection<ModelKey>> getUnavailable();
+	public Collection<? extends UniqueModel> getRelated(String type) throws InclusionTypeUnavailableException;
+
+	/**
+	 * Returns a map of all related models, keyed by type.
+	 *
+	 * @return {@link Map} containing all available related models.
+	 */
+	public Map<String, Collection<? extends UniqueModel>> getAllRelated();
 
 }

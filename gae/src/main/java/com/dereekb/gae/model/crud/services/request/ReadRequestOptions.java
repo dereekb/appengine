@@ -1,9 +1,10 @@
 package com.dereekb.gae.model.crud.services.request;
 
-
 /**
- * @see {@link ReadRequest}
+ * Options for a {@link ReadRequest}.
+ *
  * @author dereekb
+ *
  */
 public final class ReadRequestOptions extends AtomicRequestOptions {
 

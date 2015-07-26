@@ -26,7 +26,7 @@ public interface ReadModelControllerDelegate<T extends UniqueModel> {
 	 * @return {@link ReadResponse}. Never {@code null}.
 	 * @throws AtomicOperationException
 	 */
-	public ReadResponse<T> read(ReadRequest<T> readRequest) throws AtomicOperationException;
+	public ReadResponse<T> read(ReadRequest readRequest) throws AtomicOperationException;
 
 	/**
 	 * Retrieves the included values for the model.

@@ -27,6 +27,6 @@ public interface ReadService<T extends UniqueModel> {
 	 *             Occurs when the request specifies "atomic" and not all
 	 *             objects requested can be read.
 	 */
-	public ReadResponse<T> read(ReadRequest<T> request) throws AtomicOperationException;
+	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException;
 
 }

@@ -57,7 +57,7 @@ public class UpdateServiceImpl<T extends UniqueModel>
 
 		//Read Models to update
 		ReadRequestOptions readOptions = new ReadRequestOptions(true);
-		ModelReadRequest<T> readRequest = new ModelReadRequest<T>(updateTemplates, readOptions);
+		ModelReadRequest readRequest = new ModelReadRequest(updateTemplates, readOptions);
 
 		ReadResponse<T> readResponse = this.readService.read(readRequest);
 		Collection<T> models = readResponse.getModels();

@@ -12,7 +12,7 @@ import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavaila
 import com.dereekb.gae.model.extension.inclusion.retriever.InclusionRetriever;
 import com.dereekb.gae.model.extension.inclusion.retriever.InclusionRetrieverInput;
 import com.dereekb.gae.model.extension.inclusion.retriever.InclusionRetrieverOutput;
-import com.dereekb.gae.model.extension.read.AnonymousModelReader;
+import com.dereekb.gae.model.extension.read.anonymous.AnonymousModelReader;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
-import com.dereekb.gae.model.crud.services.request.impl.AbstractReadRequestImpl;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
@@ -21,6 +20,16 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 
 
+/**
+ * {@link ReadModelControllerConversionDelegate} implementation.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ * @param <I>
+ *            api output type
+ */
 public final class ReadModelControllerConversionDelegateImpl<T extends UniqueModel, I>
         implements ReadModelControllerConversionDelegate<T> {
 
@@ -60,7 +69,7 @@ public final class ReadModelControllerConversionDelegateImpl<T extends UniqueMod
 	}
 
 	@Override
-	public ReadRequest<T> convert(List<String> ids) {
+	public ReadRequest convert(List<String> ids) {
 		List<ModelKey> keys = null;
 		ReadRequestOptions options = new ReadRequestOptions();
 
@@ -70,7 +79,7 @@ public final class ReadModelControllerConversionDelegateImpl<T extends UniqueMod
 			throw new RequestArgumentException("data", "Failed to convert identifiers.");
 		}
 
-		AbstractReadRequestImpl<T> request = new KeyReadRequest<T>(keys, options);
+		ReadRequest request = new KeyReadRequest(keys, options);
 		return request;
 	}
 

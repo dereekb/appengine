@@ -130,7 +130,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 
 	@Override
     public ReadResponse<T> readModels(Collection<ModelKey> keys) {
-		ReadRequest<T> request = new KeyReadRequest<T>(keys);
+		ReadRequest request = new KeyReadRequest(keys);
 		request.getOptions().setAtomic(false);
 		return this.service.read(request);
     }

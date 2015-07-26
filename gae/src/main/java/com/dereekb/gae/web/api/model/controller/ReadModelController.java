@@ -68,7 +68,7 @@ public final class ReadModelController<T extends UniqueModel> {
 		ApiResponse response = null;
 
 		try {
-			ReadRequest<T> readRequest = this.conversionDelegate.convert(ids);
+			ReadRequest readRequest = this.conversionDelegate.convert(ids);
 			ReadRequestOptions options = readRequest.getOptions();
 			options.setAtomic(atomic);
 
