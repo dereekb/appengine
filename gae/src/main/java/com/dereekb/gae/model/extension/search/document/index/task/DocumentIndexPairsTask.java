@@ -1,40 +1,63 @@
-package com.dereekb.gae.model.extension.search.document.index;
+package com.dereekb.gae.model.extension.search.document.index.task;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.search.document.index.IndexPair;
 import com.dereekb.gae.model.extension.search.document.index.component.DocumentIndexer;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentBuilder;
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
+import com.dereekb.gae.utilities.task.IterableTask;
+import com.dereekb.gae.utilities.task.Task;
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
- * Staged function used for indexing elements using {@link IndexPair} instances.
+ * {@link Task} for indexing documents.
  *
  * @author dereekb
  *
  * @param <T>
+ *            input model
  */
-public final class DocumentIndexFunction<T extends UniqueSearchModel> extends FilteredStagedFunction<T, IndexPair<T>> {
+public class DocumentIndexPairsTask<T extends UniqueSearchModel>
+        implements IterableTask<IndexPair<T>> {
 
-	private final IndexingDocumentBuilder<T> builder;
-	private final DocumentIndexer<T> indexer;
+	private IndexingDocumentBuilder<T> builder;
+	private DocumentIndexer<T> indexer;
 
-	public DocumentIndexFunction(IndexingDocumentBuilder<T> builder, DocumentIndexer<T> indexer) {
+	public DocumentIndexPairsTask() {}
+
+	public DocumentIndexPairsTask(IndexingDocumentBuilder<T> builder, DocumentIndexer<T> indexer) {
 		this.builder = builder;
 		this.indexer = indexer;
 	}
 
-	@Override
-	protected void doFunction() {
-		Iterable<IndexPair<T>> pairs = this.getWorkingObjects();
-		DocumentIndexFunctionInputSet inputSet = this.makeSet(pairs);
-		inputSet.run();
+	public IndexingDocumentBuilder<T> getBuilder() {
+		return this.builder;
+	}
+
+	public void setBuilder(IndexingDocumentBuilder<T> builder) {
+		this.builder = builder;
 	}
 
 	public DocumentIndexer<T> getIndexer() {
 		return this.indexer;
+	}
+
+	public void setIndexer(DocumentIndexer<T> indexer) {
+		this.indexer = indexer;
+	}
+
+	// MARK: Task
+	@Override
+	public void doTask(Iterable<IndexPair<T>> input) throws FailedTaskException {
+		try {
+			DocumentIndexFunctionInputSet inputSet = this.makeSet(input);
+			inputSet.run();
+		} catch (Exception e) {
+			throw new FailedTaskException(e);
+		}
 	}
 
 	public DocumentIndexFunctionInputSet makeSet(Iterable<IndexPair<T>> pairs) {
@@ -49,7 +72,7 @@ public final class DocumentIndexFunction<T extends UniqueSearchModel> extends Fi
 						update.add(pair);
 					} else {
 						index.add(pair);
-                    }
+					}
 					break;
 				case UNINDEX:
 					if (pair.wasInitiallyIndexed()) {
@@ -64,10 +87,12 @@ public final class DocumentIndexFunction<T extends UniqueSearchModel> extends Fi
 		return new DocumentIndexFunctionInputSet(index, update, unindex);
 	}
 
-	public IndexingDocumentBuilder<T> getBuilder() {
-		return this.builder;
-	}
-
+	/**
+	 * Internal class used for sorting operations on {@link IndexPair} values.
+	 *
+	 * @author dereekb
+	 *
+	 */
 	private class DocumentIndexFunctionInputSet {
 
 		private final List<IndexPair<T>> index;
@@ -101,17 +126,17 @@ public final class DocumentIndexFunction<T extends UniqueSearchModel> extends Fi
 			List<IndexingDocument<T>> documents = new ArrayList<IndexingDocument<T>>();
 
 			for (T model : models) {
-				IndexingDocument<T> document = DocumentIndexFunction.this.builder.buildSearchDocument(model);
+				IndexingDocument<T> document = DocumentIndexPairsTask.this.builder.buildSearchDocument(model);
 				documents.add(document);
 			}
 
-			boolean success = DocumentIndexFunction.this.indexer.indexDocuments(documents);
+			boolean success = DocumentIndexPairsTask.this.indexer.indexDocuments(documents);
 			this.setResultsForPairs(success, pairs);
 		}
 
 		private void unindexElements(Iterable<IndexPair<T>> pairs) {
 			List<T> models = IndexPair.getKeys(pairs);
-			boolean success = DocumentIndexFunction.this.indexer.deleteDocuments(models);
+			boolean success = DocumentIndexPairsTask.this.indexer.deleteDocuments(models);
 			this.setResultsForPairs(success, pairs);
 		}
 

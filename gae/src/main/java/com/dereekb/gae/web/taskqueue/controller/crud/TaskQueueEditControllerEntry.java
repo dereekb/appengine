@@ -13,24 +13,29 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public interface TaskQueueEditControllerEntry {
 
 	/**
-	 * Performs a create task for the specified keys.
+	 * Performs a task for reviewing created models at the specified keys.
 	 *
 	 * @param keys
+	 *            {@link ModelKey} list. Never {@code null}.
 	 */
-	public void create(List<ModelKey> keys);
+	public void reviewCreate(List<ModelKey> keys);
 
 	/**
-	 * Performs an update task for the specified keys.
+	 * Performs a task for reviewing updates made to the models for the
+	 * specified keys.
 	 *
 	 * @param keys
+	 *            {@link ModelKey} list. Never {@code null}.
 	 */
-	public void update(List<ModelKey> keys);
+	public void reviewUpdate(List<ModelKey> keys);
 
 	/**
-	 * Performs a delete task for the specified keys.
-	 * 
+	 * Performs a task to review the delete made to the models for the specified
+	 * keys.
+	 *
 	 * @param keys
+	 *            {@link ModelKey} list. Never {@code null}.
 	 */
-	public void delete(List<ModelKey> keys);
+	public void reviewDelete(List<ModelKey> keys);
 
 }

@@ -53,29 +53,29 @@ public final class TaskQueueEditController {
 
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "{type}/create", method = RequestMethod.PUT, consumes = "application/octet-stream")
-	public void create(@PathVariable("type") String modelType,
-	                   @RequestParam List<String> identifiers) {
+	public void reviewCreate(@PathVariable("type") String modelType,
+	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
-		entry.create(keys);
+		entry.reviewCreate(keys);
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "{type}/update", method = RequestMethod.PUT, consumes = "application/octet-stream")
-	public void update(@PathVariable("type") String modelType,
-	                   @RequestParam List<String> identifiers) {
+	public void reviewUpdate(@PathVariable("type") String modelType,
+	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
-		entry.update(keys);
+		entry.reviewUpdate(keys);
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "{type}/delete", method = RequestMethod.PUT, consumes = "application/octet-stream")
-	public void delete(@PathVariable("type") String modelType,
-	                   @RequestParam List<String> identifiers) {
+	public void reviewDelete(@PathVariable("type") String modelType,
+	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
-		entry.delete(keys);
+		entry.reviewDelete(keys);
 	}
 
 	private TaskQueueEditControllerEntry getEntryForType(String modelType) throws UnregisteredEditTypeException {

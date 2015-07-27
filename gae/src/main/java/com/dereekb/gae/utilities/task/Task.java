@@ -1,12 +1,16 @@
 package com.dereekb.gae.utilities.task;
 
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+
 /**
  * A basic task that takes in input.
+ * <p>
+ * All tasks should be designed to be thread-safe.
  *
  * @author dereekb
  *
  * @param <T>
- *            Task input
+ *            input type
  */
 public interface Task<T> {
 
@@ -15,7 +19,9 @@ public interface Task<T> {
 	 *
 	 * @param input
 	 *            Task input. Never {@code null}.
+	 * @throws FailedTaskException
+	 *             If the task did not complete successfully.
 	 */
-	public void doTask(T input);
+	public void doTask(T input) throws FailedTaskException;
 
 }
