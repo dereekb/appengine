@@ -1,8 +1,9 @@
-package com.dereekb.gae.web.api.taskqueue.controller.extension.search;
+package com.dereekb.gae.web.taskqueue.controller.extension.search;
 
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +23,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConve
  * @author dereekb
  *
  */
-public class TaskQueueSearchController {
+@Controller
+public final class TaskQueueSearchController {
 
 	private ModelKeyTypeConverter keyTypeConverter;
 	private TypedDocumentIndexService service;

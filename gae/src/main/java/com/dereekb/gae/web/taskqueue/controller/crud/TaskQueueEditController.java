@@ -1,9 +1,10 @@
-package com.dereekb.gae.web.api.taskqueue.controller.crud;
+package com.dereekb.gae.web.taskqueue.controller.crud;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverter;
-import com.dereekb.gae.web.api.taskqueue.controller.crud.exception.UnregisteredEditTypeException;
+import com.dereekb.gae.web.taskqueue.controller.crud.exception.UnregisteredEditTypeException;
 
 /**
  * Task Queue controller used for CRUD related changes.
@@ -20,6 +21,7 @@ import com.dereekb.gae.web.api.taskqueue.controller.crud.exception.UnregisteredE
  * @author dereekb
  *
  */
+@Controller
 public final class TaskQueueEditController {
 
 	private ModelKeyTypeConverter keyTypeConverter;

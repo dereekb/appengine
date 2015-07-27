@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.exception;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception;
 
 
 public class UnregisteredIterateTypeException extends RuntimeException {

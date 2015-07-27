@@ -1,6 +1,6 @@
-package com.dereekb.gae.web.api.taskqueue.controller.crud.exception;
+package com.dereekb.gae.web.taskqueue.controller.crud.exception;
 
-import com.dereekb.gae.web.api.taskqueue.controller.crud.TaskQueueEditController;
+import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
 
 /**
  * Thrown by {@link TaskQueueEditController} if a specified type is not

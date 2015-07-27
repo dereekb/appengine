@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.iteration.ConfiguredIterationTask;
 import com.dereekb.gae.utilities.task.iteration.exception.IncompleteTaskIterationException;
-import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.request.IterateTaskContinuation;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.request.IterateTaskContinuation;
 import com.google.appengine.api.datastore.Cursor;
 
 /**

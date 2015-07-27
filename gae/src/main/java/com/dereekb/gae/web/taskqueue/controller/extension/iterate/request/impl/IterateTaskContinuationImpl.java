@@ -1,9 +1,9 @@
-package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.request.impl;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate.request.impl;
 
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
-import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.IterateTaskInput;
-import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.request.IterateTaskContinuation;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.IterateTaskInput;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.request.IterateTaskContinuation;
 import com.google.appengine.api.datastore.Cursor;
 
 /**

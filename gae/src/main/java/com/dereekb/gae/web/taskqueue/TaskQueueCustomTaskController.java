@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.taskqueue;
+package com.dereekb.gae.web.taskqueue;
 
 /**
  * API Controller for submitting custom task queue requests.

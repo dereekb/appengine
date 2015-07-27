@@ -1,6 +1,6 @@
-package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.exception;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception;
 
-import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.TaskQueueIterateControllerEntry;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateControllerEntry;
 
 /**
  * Thrown by {@link TaskQueueIterateControllerEntry} when an unknown task is

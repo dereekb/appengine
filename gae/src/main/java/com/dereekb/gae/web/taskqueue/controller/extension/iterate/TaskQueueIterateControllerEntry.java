@@ -1,6 +1,6 @@
-package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
 
-import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.exception.UnknownIterateTaskException;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnknownIterateTaskException;
 
 /**
  * Delegate for {@link TaskQueueIterateController} for performing an iteration

@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.taskqueue.controller.extension.iterate;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
 
 import java.util.Map;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
-import com.dereekb.gae.web.api.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
