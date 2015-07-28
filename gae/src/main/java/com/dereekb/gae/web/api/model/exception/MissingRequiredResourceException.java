@@ -3,7 +3,7 @@ package com.dereekb.gae.web.api.model.exception;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
  * Thrown when some resources are missing. Resources are described as strings,
@@ -48,13 +48,13 @@ public class MissingRequiredResourceException extends RuntimeException {
 		this.message = message;
 	}
 
-	public ApiResponseError convertToResponse() {
+	public ApiResponseErrorImpl convertToResponse() {
 		return makeApiError(this.resources, this.message);
 	}
 
-	public static ApiResponseError makeApiError(Collection<String> resources,
+	public static ApiResponseErrorImpl makeApiError(Collection<String> resources,
 	                                            String message) {
-		ApiResponseError error = new ApiResponseError();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
 		error.setCode(API_RESPONSE_ERROR_CODE);
 		error.setTitle(API_RESPONSE_ERROR_TITLE);
 		error.setDetail(message);

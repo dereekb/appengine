@@ -1,7 +1,8 @@
-package com.dereekb.gae.model.extension.search.document.search;
+package com.dereekb.gae.model.extension.search.document.search.function;
 
 import java.util.List;
 
+import com.dereekb.gae.model.extension.search.document.search.SearchPair;
 import com.dereekb.gae.model.extension.search.document.search.components.DocumentSearchQueryConverter;
 import com.dereekb.gae.model.extension.search.document.search.components.DocumentSearchResource;
 import com.dereekb.gae.server.search.DocumentSearchController;

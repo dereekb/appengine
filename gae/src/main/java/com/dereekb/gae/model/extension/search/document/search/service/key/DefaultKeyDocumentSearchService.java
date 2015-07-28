@@ -3,8 +3,8 @@ package com.dereekb.gae.model.extension.search.document.search.service.key;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.SearchDocumentUtility;
-import com.dereekb.gae.model.extension.search.document.search.DocumentSearchFunction;
 import com.dereekb.gae.model.extension.search.document.search.SearchPair;
+import com.dereekb.gae.model.extension.search.document.search.function.DocumentSearchFunction;
 import com.dereekb.gae.model.extension.search.document.search.utility.ScoredDocumentKeyReader;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.factory.Factory;

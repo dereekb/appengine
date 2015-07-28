@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Handles exceptions related to the API Requests, such as a request not being
@@ -25,14 +26,14 @@ public class ApiExceptionHandler {
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ApiResponse handleException(HttpMessageNotReadableException exception) {
-		ApiResponse response = new ApiResponse(false);
+	public ApiResponseImpl handleException(HttpMessageNotReadableException exception) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
 
 		Throwable cause = exception.getCause();
 		String causeName = cause.getClass().getName();
 		String causeMessage = cause.getMessage();
 
-		ApiResponseError error = new ApiResponseError();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
 		error.setCode("REQUEST_READ_EXCEPTION");
 		error.setTitle(causeName);
 		error.setDetail(causeMessage);
@@ -50,11 +51,11 @@ public class ApiExceptionHandler {
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(ApiRuntimeException.class)
 	public ApiResponse handleException(ApiRuntimeException e) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponseImpl response = new ApiResponseImpl(false);
 
 		RuntimeException exception = e.getException();
 
-		ApiResponseError error = new ApiResponseError();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
 		error.setCode("SERVER_EXCEPTION");
 		error.setTitle(exception.getClass().getSimpleName());
 		error.setDetail(exception.getMessage());

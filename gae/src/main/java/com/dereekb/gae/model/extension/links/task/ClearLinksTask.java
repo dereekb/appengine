@@ -27,7 +27,7 @@ public class ClearLinksTask
 
 	private String type;
 	private LinkSystem system;
-	private boolean validateSave = true;
+	private boolean validateSave = false;
 
 	public ClearLinksTask() {}
 

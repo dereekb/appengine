@@ -21,8 +21,17 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
+/**
+ * API Controller for reading models from the database.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public final class ReadModelController<T extends UniqueModel> {
 
 	private final ReadModelControllerDelegate<T> delegate;
@@ -65,7 +74,7 @@ public final class ReadModelController<T extends UniqueModel> {
 	                              @RequestParam(required = false, defaultValue = "false") boolean atomic,
 	                              @RequestParam(required = false, defaultValue = "false") boolean getRelated,
 	                              @RequestParam(required = false) Set<String> related) {
-		ApiResponse response = null;
+		ApiResponseImpl response = null;
 
 		try {
 			ReadRequest readRequest = this.conversionDelegate.convert(ids);
@@ -81,7 +90,7 @@ public final class ReadModelController<T extends UniqueModel> {
 
 				for (String type : included.keySet()) {
 					Object data = included.get(type);
-					ApiResponseData responseData = new ApiResponseData(type, data);
+					ApiResponseDataImpl responseData = new ApiResponseDataImpl(type, data);
 					response.addIncluded(responseData);
 				}
 			}

@@ -93,10 +93,10 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 
 		ApiResponse response = this.controller.create(request);
 
-		ApiResponseData responseData = response.getData();
+		ApiResponseData responseData = response.getResponsePrimaryData();
 		Assert.assertNotNull(responseData);
 
-		Object data = responseData.getData();
+		Object data = responseData.getResponseData();
 		Assert.assertNotNull(data);
 
 		@SuppressWarnings("unchecked")
@@ -114,10 +114,10 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 		request.setData(modelData);
 
 		ApiResponse response = this.controller.update(request);
-		ApiResponseData responseData = response.getData();
+		ApiResponseData responseData = response.getResponsePrimaryData();
 		Assert.assertNotNull(responseData);
 
-		Object data = responseData.getData();
+		Object data = responseData.getResponseData();
 		Assert.assertNotNull(data);
 
 		@SuppressWarnings("unchecked")
@@ -136,10 +136,10 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 		request.setData(stringIdentifiers);
 
 		ApiResponse response = this.controller.delete(request);
-		ApiResponseData responseData = response.getData();
+		ApiResponseData responseData = response.getResponsePrimaryData();
 		Assert.assertNotNull(responseData);
 
-		Object data = responseData.getData();
+		Object data = responseData.getResponseData();
 		Assert.assertNotNull(data);
 
 		@SuppressWarnings("unchecked")

@@ -52,7 +52,7 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/create", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/create", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewCreate(@PathVariable("type") String modelType,
 	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
@@ -61,7 +61,7 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/update", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/update", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewUpdate(@PathVariable("type") String modelType,
 	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
@@ -70,7 +70,7 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/delete", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/delete", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewDelete(@PathVariable("type") String modelType,
 	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);

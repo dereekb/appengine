@@ -53,17 +53,17 @@ public final class TaskQueueSearchController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/search/index", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/search/index", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void searchIndex(@PathVariable("type") String modelType,
-	                        @RequestParam List<String> identifiers) {
-		this.changeIndex(modelType, identifiers, IndexAction.INDEX);
+	                        @RequestParam List<String> keys) {
+		this.changeIndex(modelType, keys, IndexAction.INDEX);
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/search/unindex", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/search/unindex", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void searchUnindex(@PathVariable("type") String modelType,
-	                          @RequestParam List<String> identifiers) {
-		this.changeIndex(modelType, identifiers, IndexAction.UNINDEX);
+	                          @RequestParam List<String> keys) {
+		this.changeIndex(modelType, keys, IndexAction.UNINDEX);
 	}
 
 	private void changeIndex(String modelType,
@@ -71,6 +71,12 @@ public final class TaskQueueSearchController {
 	                         IndexAction action) throws UnregisteredSearchTypeException, AtomicOperationException {
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
 		this.service.changeIndexWithKeys(modelType, keys, action);
+	}
+
+	@Override
+	public String toString() {
+		return "TaskQueueSearchController [keyTypeConverter=" + this.keyTypeConverter + ", service=" + this.service
+		        + "]";
 	}
 
 }

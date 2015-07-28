@@ -27,7 +27,8 @@ import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
 import com.dereekb.gae.web.api.model.request.ApiUpdateRequest;
 import com.dereekb.gae.web.api.shared.exception.RequestArgumentException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Default implementation of {@link EditModelControllerConversionDelegate}.
@@ -100,8 +101,8 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		Collection<T> created = response.getCreatedModels();
 		List<I> converted = this.converter.convertTo(created);
 
-		ApiResponse apiResponse = new ApiResponse();
-		ApiResponseData data = new ApiResponseData(this.type, converted);
+		ApiResponseImpl apiResponse = new ApiResponseImpl();
+		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
 
 		apiResponse.setData(data);
 
@@ -114,8 +115,8 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		Collection<T> updated = response.getUpdatedModels();
 		List<I> converted = this.converter.convertTo(updated);
 
-		ApiResponse apiResponse = new ApiResponse();
-		ApiResponseData data = new ApiResponseData(this.type, converted);
+		ApiResponseImpl apiResponse = new ApiResponseImpl();
+		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
 
 		apiResponse.setData(data);
 
@@ -128,8 +129,8 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		Collection<T> deleted = response.getDeletedModels();
 		List<I> converted = this.converter.convertTo(deleted);
 
-		ApiResponse apiResponse = new ApiResponse();
-		ApiResponseData data = new ApiResponseData(this.type, converted);
+		ApiResponseImpl apiResponse = new ApiResponseImpl();
+		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
 
 		apiResponse.setData(data);
 

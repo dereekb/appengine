@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.search.document.search;
 
 import java.util.List;
 
+import com.dereekb.gae.model.extension.search.document.search.function.DocumentSearchFunction;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionObject;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.google.appengine.api.search.ScoredDocument;

@@ -24,6 +24,7 @@ import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureRe
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Controller for accessing a {@link LinkService}.
@@ -85,7 +86,7 @@ public class LinkExtensionController {
 			LinkServiceRequest linkServiceRequest = new LinkServiceRequestImpl(changes);
 			this.service.updateLinks(linkServiceRequest);
 
-			response = new ApiResponse(true);
+			response = new ApiResponseImpl(true);
 		} catch (LinkSystemChangesException e) {
 			throw e;
 		} catch (AtomicOperationException e) {

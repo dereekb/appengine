@@ -52,10 +52,10 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		try {
 			ApiResponse response = this.controller.read(stringKeys, true, false, null);
 
-			ApiResponseData responseData = response.getData();
+			ApiResponseData responseData = response.getResponsePrimaryData();
 			Assert.assertNotNull(responseData);
 
-			Object data = responseData.getData();
+			Object data = responseData.getResponseData();
 			Assert.assertNotNull(data);
 		} catch (Exception e) {
 			Assert.fail();
@@ -96,7 +96,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		try {
 			ApiResponse response = this.controller.read(stringKeys, false, false, null);
 
-			List<ApiResponseError> errors = response.getErrors();
+			List<ApiResponseError> errors = response.getResponseErrors();
 			Assert.assertNotNull(errors);
 			Assert.assertFalse(errors.isEmpty());
 

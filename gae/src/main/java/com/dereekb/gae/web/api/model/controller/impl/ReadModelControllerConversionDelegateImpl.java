@@ -15,9 +15,9 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.model.controller.ReadModelControllerConversionDelegate;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.shared.exception.RequestArgumentException;
-import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
-import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 
 /**
@@ -84,13 +84,13 @@ public final class ReadModelControllerConversionDelegateImpl<T extends UniqueMod
 	}
 
 	@Override
-	public ApiResponse convert(ReadResponse<T> response) {
+	public ApiResponseImpl convert(ReadResponse<T> response) {
 
 		Collection<T> models = response.getModels();
 		List<I> converted = this.converter.convert(models);
 
-		ApiResponse apiResponse = new ApiResponse();
-		ApiResponseData data = new ApiResponseData(this.type, converted);
+		ApiResponseImpl apiResponse = new ApiResponseImpl();
+		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
 
 		apiResponse.setData(data);
 
@@ -102,12 +102,18 @@ public final class ReadModelControllerConversionDelegateImpl<T extends UniqueMod
 			if (missing.size() != 0) {
 				List<String> missingKeys = ModelKey.keysAsStrings(missing);
 				String message = "Some requested models are unavailable.";
-				ApiResponseError error = MissingRequiredResourceException.makeApiError(missingKeys, message);
+				ApiResponseErrorImpl error = MissingRequiredResourceException.makeApiError(missingKeys, message);
 				apiResponse.addError(error);
 			}
 		}
 
 		return apiResponse;
+	}
+
+	@Override
+	public String toString() {
+		return "ReadModelControllerConversionDelegateImpl [type=" + this.type + ", keyReader=" + this.keyReader
+		        + ", converter=" + this.converter + ", appendUnavailable=" + this.appendUnavailable + "]";
 	}
 
 }
