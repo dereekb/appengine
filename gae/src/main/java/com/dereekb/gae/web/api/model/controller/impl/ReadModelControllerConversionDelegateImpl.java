@@ -5,8 +5,9 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
@@ -71,7 +72,7 @@ public final class ReadModelControllerConversionDelegateImpl<T extends UniqueMod
 	@Override
 	public ReadRequest convert(List<String> ids) {
 		List<ModelKey> keys = null;
-		ReadRequestOptions options = new ReadRequestOptions();
+		ReadRequestOptions options = new ReadRequestOptionsImpl();
 
 		try {
 			keys = this.keyReader.convert(ids);

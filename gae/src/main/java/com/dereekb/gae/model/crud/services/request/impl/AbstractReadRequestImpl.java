@@ -1,7 +1,8 @@
 package com.dereekb.gae.model.crud.services.request.impl;
 
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 
 /**
  * Base implementation of {@link ReadRequest} that contains
@@ -25,7 +26,7 @@ public abstract class AbstractReadRequestImpl
 
 	public void setOptions(ReadRequestOptions options) {
 		if (options == null) {
-			options = new ReadRequestOptions();
+			options = new ReadRequestOptionsImpl();
 		}
 
 		this.options = options;

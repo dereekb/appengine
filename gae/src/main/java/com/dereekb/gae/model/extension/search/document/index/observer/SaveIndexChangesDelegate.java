@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.search.document.index.observer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.crud.function.observers.ConditionalSaveObjectsObserverDelegate;
+import com.dereekb.gae.model.crud.deprecated.function.observers.ConditionalSaveObjectsObserverDelegate;
 import com.dereekb.gae.model.extension.search.document.index.IndexPair;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 

@@ -7,9 +7,10 @@ import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.components.UpdateService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.request.impl.ModelReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.model.crud.services.response.impl.UpdateResponseImpl;
@@ -67,7 +68,7 @@ public class UpdateServiceImpl<T extends UniqueModel>
 		Collection<T> updateTemplates = request.getTemplates();
 
 		// Read Models to update
-		ReadRequestOptions readOptions = new ReadRequestOptions(true);
+		ReadRequestOptions readOptions = new ReadRequestOptionsImpl(true);
 		ModelReadRequest readRequest = new ModelReadRequest(updateTemplates, readOptions);
 
 		ReadResponse<T> readResponse = this.readService.read(readRequest);

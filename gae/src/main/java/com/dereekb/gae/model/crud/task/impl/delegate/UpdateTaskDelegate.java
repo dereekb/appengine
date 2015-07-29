@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.task.impl.delegate;
 
-import com.dereekb.gae.model.crud.function.exception.AttributeFailureException;
+import com.dereekb.gae.model.crud.exception.AttributeFailureException;
 import com.dereekb.gae.model.crud.task.impl.UpdatePairTaskImpl;
 
 /**

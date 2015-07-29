@@ -4,8 +4,9 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.search.query.search.service.key.ModelKeyQueryService;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -43,7 +44,7 @@ public final class DefaultModelQueryService<T extends UniqueModel, Q>
 		DefaultModelQueryResponse<T> queryResponse = new DefaultModelQueryResponse<T>(keys);
 
 		if (keys.isEmpty() == false) {
-			ReadRequestOptions options = new ReadRequestOptions(false);
+			ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 			ReadRequest request = new KeyReadRequest(keys, options);
 			ReadResponse<T> readResponse = this.readService.read(request);
 			queryResponse.setResponse(readResponse);

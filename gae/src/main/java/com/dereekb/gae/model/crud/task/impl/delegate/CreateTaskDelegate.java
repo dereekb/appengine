@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.task.impl.delegate;
 
-import com.dereekb.gae.model.crud.function.exception.InvalidTemplateException;
+import com.dereekb.gae.model.crud.exception.InvalidTemplateException;
 import com.dereekb.gae.model.crud.task.impl.CreatePairTaskImpl;
 
 /**

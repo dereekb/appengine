@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.task.impl;
 
-import com.dereekb.gae.model.crud.function.exception.AtomicFunctionException;
+import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.task.IterableTask;

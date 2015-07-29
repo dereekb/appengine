@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.crud.task.impl;
 
-import com.dereekb.gae.model.crud.function.exception.AtomicFunctionException;
-import com.dereekb.gae.model.crud.function.exception.AttributeFailureException;
+import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
+import com.dereekb.gae.model.crud.exception.AttributeFailureException;
 import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.model.crud.task.UpdatePairTask;
 import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;

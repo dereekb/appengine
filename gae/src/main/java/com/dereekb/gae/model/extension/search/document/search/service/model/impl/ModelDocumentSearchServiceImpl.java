@@ -5,8 +5,9 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
 import com.dereekb.gae.model.extension.search.document.search.service.key.KeyDocumentSearchService;
@@ -104,7 +105,7 @@ public final class ModelDocumentSearchServiceImpl<T extends UniqueModel, Q>
 			ReadResponse<T> response;
 
 			if (this.keys.isEmpty() == false) {
-				ReadRequestOptions options = new ReadRequestOptions(false);
+				ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 				ReadRequest request = new KeyReadRequest(this.keys, options);
 				response = ModelDocumentSearchServiceImpl.this.readService.read(request);
 			} else {

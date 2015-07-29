@@ -7,7 +7,7 @@ import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;

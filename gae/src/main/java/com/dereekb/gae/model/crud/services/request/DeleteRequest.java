@@ -2,10 +2,18 @@ package com.dereekb.gae.model.crud.services.request;
 
 import java.util.Collection;
 
+import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
-
+/**
+ * Contains parameters for a delete request.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public interface DeleteRequest<T extends UniqueModel> {
 
 	/**

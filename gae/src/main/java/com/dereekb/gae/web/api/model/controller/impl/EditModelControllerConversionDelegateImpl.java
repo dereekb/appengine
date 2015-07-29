@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
-import com.dereekb.gae.model.crud.services.request.CreateRequestOptions;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
-import com.dereekb.gae.model.crud.services.request.DeleteRequestOptions;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
-import com.dereekb.gae.model.crud.services.request.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.request.impl.CreateRequestImpl;
 import com.dereekb.gae.model.crud.services.request.impl.DeleteRequestImpl;
 import com.dereekb.gae.model.crud.services.request.impl.UpdateRequestImpl;
+import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;

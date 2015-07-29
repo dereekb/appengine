@@ -3,7 +3,8 @@ package com.dereekb.gae.model.crud.services.request.impl;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
-import com.dereekb.gae.model.crud.services.request.CreateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.CreateRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
@@ -13,6 +14,7 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public final class CreateRequestImpl<T extends UniqueModel>
         implements CreateRequest<T> {
@@ -58,7 +60,7 @@ public final class CreateRequestImpl<T extends UniqueModel>
 
 	public void setOptions(CreateRequestOptions options) {
 		if (this.options == null) {
-			options = new CreateRequestOptions();
+			options = new CreateRequestOptionsImpl();
 		}
 
 		this.options = options;

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;

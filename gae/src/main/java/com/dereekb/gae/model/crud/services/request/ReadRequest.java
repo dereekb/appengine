@@ -1,9 +1,10 @@
 package com.dereekb.gae.model.crud.services.request;
 
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * Wrapper for read request parameters.
+ * Contains paramters for a read request.
  *
  * @author dereekb
  */

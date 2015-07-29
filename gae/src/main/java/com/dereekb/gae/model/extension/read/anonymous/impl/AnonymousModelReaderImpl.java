@@ -5,8 +5,9 @@ import java.util.Map;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.read.anonymous.AnonymousModelReader;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -35,7 +36,7 @@ public class AnonymousModelReaderImpl
 	@Override
 	public ReadResponse<? extends UniqueModel> read(String type,
 	                                                Collection<ModelKey> keys) {
-		ReadRequestOptions options = new ReadRequestOptions(false);
+		ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 		ReadRequest request = new KeyReadRequest(keys, options);
 		ReadService<? extends UniqueModel> service = this.entries.get(request);
 		return service.read(request);

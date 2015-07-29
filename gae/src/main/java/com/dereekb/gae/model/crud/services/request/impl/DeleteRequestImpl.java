@@ -3,7 +3,8 @@ package com.dereekb.gae.model.crud.services.request.impl;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
-import com.dereekb.gae.model.crud.services.request.DeleteRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.DeleteRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.SingleItem;
@@ -14,6 +15,7 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public final class DeleteRequestImpl<T extends UniqueModel>
         implements DeleteRequest<T> {
@@ -68,7 +70,7 @@ public final class DeleteRequestImpl<T extends UniqueModel>
 
 	public void setOptions(DeleteRequestOptions options) {
 		if (options == null) {
-			options = new DeleteRequestOptions();
+			options = new DeleteRequestOptionsImpl();
 		}
 
 		this.options = options;

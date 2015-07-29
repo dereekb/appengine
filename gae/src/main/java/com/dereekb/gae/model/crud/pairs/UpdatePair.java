@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.dereekb.gae.model.crud.function.exception.AttributeFailureException;
+import com.dereekb.gae.model.crud.exception.AttributeFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;

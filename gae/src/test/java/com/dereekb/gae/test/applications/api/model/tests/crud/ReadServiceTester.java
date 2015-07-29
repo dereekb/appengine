@@ -9,8 +9,9 @@ import org.junit.Assert;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -76,7 +77,7 @@ public class ReadServiceTester<T extends UniqueModel>
 	private void testReadingSingle(ModelKey key) {
 
 		// Options set w/o atomic read
-		ReadRequestOptions options = new ReadRequestOptions(false);
+		ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 		ReadRequest request = new KeyReadRequest(key, options);
 		ReadResponse<T> response = this.readService.read(request);
 
@@ -95,7 +96,7 @@ public class ReadServiceTester<T extends UniqueModel>
 	 */
 	private void testReadingMultiple(List<ModelKey> keys) {
 
-		ReadRequestOptions options = new ReadRequestOptions(false);
+		ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 		ReadRequest request = new KeyReadRequest(keys, options);
 		ReadResponse<T> response = this.readService.read(request);
 
@@ -116,7 +117,7 @@ public class ReadServiceTester<T extends UniqueModel>
 	private void testReadingNothing() {
 		List<ModelKey> keys = new ArrayList<ModelKey>();
 
-		ReadRequestOptions options = new ReadRequestOptions(false);
+		ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 		ReadRequest request = new KeyReadRequest(keys, options);
 		ReadResponse<T> response = this.readService.read(request);
 
@@ -137,7 +138,7 @@ public class ReadServiceTester<T extends UniqueModel>
 		keys.add(null);
 
 		try {
-			ReadRequestOptions options = new ReadRequestOptions(false);
+			ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 			ReadRequest request = new KeyReadRequest(keys, options);
 			this.readService.read(request);
 			Assert.fail();
@@ -158,7 +159,7 @@ public class ReadServiceTester<T extends UniqueModel>
 		// Request is set to atomic read.
 		try {
 			// Atomic exception should be raised.
-			ReadRequestOptions options = new ReadRequestOptions(true);
+			ReadRequestOptions options = new ReadRequestOptionsImpl(true);
 			ReadRequest request = new KeyReadRequest(keys, options);
 			this.readService.read(request);
 
@@ -172,7 +173,7 @@ public class ReadServiceTester<T extends UniqueModel>
 		// Request is set to not atomic.
 		try {
 			// Atomic exception should not be raised.
-			ReadRequestOptions options = new ReadRequestOptions(false);
+			ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 			ReadRequest request = new KeyReadRequest(keys, options);
 			ReadResponse<T> response = this.readService.read(request);
 

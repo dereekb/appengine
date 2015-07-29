@@ -8,7 +8,7 @@ import com.dereekb.gae.model.crud.services.components.CreateService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
-import com.dereekb.gae.model.crud.services.request.CreateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.impl.CreateResponseImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;

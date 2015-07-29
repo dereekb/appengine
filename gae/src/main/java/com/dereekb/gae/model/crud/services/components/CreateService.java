@@ -7,20 +7,21 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * Service that creates new objects.
- *
+ * <p>
  * Should be a thread-safe implementation.
  *
  * @author dereekb
  *
  * @param <T>
- *            Model type that implements the {@link UniqueModel} interface.
+ *            model type
  */
 public interface CreateService<T extends UniqueModel> {
 
 	/**
-	 * Creates new objects.
+	 * Creates new objects using the input request.
 	 *
 	 * @param request
+	 *            {@link CreateRequest}. Never {@code null}.
 	 * @return {@link CreateResponse} instance.
 	 * @throws AtomicOperationException
 	 *             Occurs when not all objects can be created.

@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.crud.task.impl;
 
-import com.dereekb.gae.model.crud.function.exception.AtomicFunctionException;
-import com.dereekb.gae.model.crud.function.exception.InvalidTemplateException;
+import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
+import com.dereekb.gae.model.crud.exception.InvalidTemplateException;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.model.crud.task.CreatePairTask;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;

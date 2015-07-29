@@ -9,9 +9,10 @@ import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
-import com.dereekb.gae.model.crud.services.request.DeleteRequestOptions;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.DeleteResponseImpl;
@@ -68,7 +69,7 @@ public class DeleteServiceImpl<T extends UniqueModel>
 		DeleteRequestOptions options = request.getOptions();
 
 		// Read Models to delete. Missing models are ignored.
-		ReadRequestOptions readOptions = new ReadRequestOptions(false);
+		ReadRequestOptions readOptions = new ReadRequestOptionsImpl(false);
 		KeyReadRequest readRequest = new KeyReadRequest(deleteKeys, readOptions);
 
 		ReadResponse<T> readResponse = this.readService.read(readRequest);
