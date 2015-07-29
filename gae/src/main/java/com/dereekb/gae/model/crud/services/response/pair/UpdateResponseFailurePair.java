@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.function.exception.AttributeFailureException;
-import com.dereekb.gae.model.crud.function.pairs.UpdatePair;
+import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 

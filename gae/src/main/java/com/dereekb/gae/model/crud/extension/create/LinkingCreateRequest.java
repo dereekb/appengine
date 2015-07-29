@@ -11,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @param <T>
  *            Target model
  */
+@Deprecated
 public interface LinkingCreateRequest<T extends UniqueModel>
         extends CreateRequest<T> {
 

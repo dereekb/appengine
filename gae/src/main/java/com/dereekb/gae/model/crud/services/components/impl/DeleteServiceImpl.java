@@ -3,8 +3,7 @@ package com.dereekb.gae.model.crud.services.components.impl;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.model.crud.function.DeleteFunction;
-import com.dereekb.gae.model.crud.function.pairs.DeletePair;
+import com.dereekb.gae.model.crud.pairs.DeletePair;
 import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
@@ -20,26 +19,45 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
-import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
- * Default implementation of {@link DeleteService} using a {@link Factory} for
- * {@link DeleteFunction}.
+ * Default implementation of {@link DeleteService} using a {@link IterableTask}
+ * with {@link DeletePair} to delete models.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class DeleteServiceImpl<T extends UniqueModel>
         implements DeleteService<T> {
 
-	private final ReadService<T> readService;
-	private final Factory<DeleteFunction<T>> factory;
+	private ReadService<T> readService;
+	private IterableTask<DeletePair<T>> deleteTask;
 
-	public DeleteServiceImpl(ReadService<T> readService, Factory<DeleteFunction<T>> factory) {
+	public DeleteServiceImpl() {}
+
+	public DeleteServiceImpl(ReadService<T> readService, IterableTask<DeletePair<T>> deleteTask) {
 		this.readService = readService;
-		this.factory = factory;
+		this.deleteTask = deleteTask;
+	}
+
+	public ReadService<T> getReadService() {
+		return this.readService;
+	}
+
+	public void setReadService(ReadService<T> readService) {
+		this.readService = readService;
+	}
+
+	public IterableTask<DeletePair<T>> getDeleteTask() {
+		return this.deleteTask;
+	}
+
+	public void setDeleteTask(IterableTask<DeletePair<T>> deleteTask) {
+		this.deleteTask = deleteTask;
 	}
 
 	@Override
@@ -63,19 +81,17 @@ public class DeleteServiceImpl<T extends UniqueModel>
 		}
 
 		List<DeletePair<T>> pairs = DeletePair.deletePairsForModels(models);
-		DeleteFunction<T> function = this.factory.make();
-		function.addObjects(pairs);
 
 		try {
-			function.run(); /*
-							 * Once the function runs, no exceptions should
-							 * occur after the point the delete delegate is
-							 * called, otherwise there is a chance an
-							 * inconsistency can occur.
-							 *
-							 * Some pairs still may be filtered out internally
-							 * as part of the function before being deleted.
-							 */
+			this.deleteTask.doTask(pairs);
+			/*
+			 * Once the function runs, no exceptions should occur after the
+			 * point the delete delegate is called, otherwise there is a chance
+			 * an inconsistency can occur.
+			 *
+			 * Some pairs still may be filtered out internally as part of the
+			 * function before being deleted.
+			 */
 
 			HashMapWithList<FilterResult, DeletePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
 			List<DeletePair<T>> deletedPairs = results.getElements(FilterResult.PASS);
@@ -92,6 +108,11 @@ public class DeleteServiceImpl<T extends UniqueModel>
 		}
 
 		return deleteResponse;
+	}
+
+	@Override
+	public String toString() {
+		return "DeleteServiceImpl [readService=" + this.readService + ", deleteTask=" + this.deleteTask + "]";
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.function.filters.misc;
 
-import com.dereekb.gae.model.crud.function.pairs.DeletePair;
+import com.dereekb.gae.model.crud.pairs.DeletePair;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;

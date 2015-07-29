@@ -3,7 +3,7 @@ package com.dereekb.gae.model.crud.function;
 import java.util.List;
 import java.util.Map;
 
-import com.dereekb.gae.model.crud.function.pairs.ReadPair;
+import com.dereekb.gae.model.crud.pairs.ReadPair;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -18,6 +18,7 @@ import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
  *
  * @param <T>
  */
+@Deprecated
 public class ReadFunction<T extends UniqueModel> extends FilteredStagedFunction<T, ReadPair<T>> {
 
 	private final Getter<T> getter;

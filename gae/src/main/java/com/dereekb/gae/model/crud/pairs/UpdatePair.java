@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.crud.function.pairs;
+package com.dereekb.gae.model.crud.pairs;
 
 import java.util.ArrayList;
 import java.util.Collection;

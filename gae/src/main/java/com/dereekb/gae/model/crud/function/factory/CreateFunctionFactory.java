@@ -2,7 +2,7 @@ package com.dereekb.gae.model.crud.function.factory;
 
 import com.dereekb.gae.model.crud.function.CreateFunction;
 import com.dereekb.gae.model.crud.function.delegate.CreateFunctionDelegate;
-import com.dereekb.gae.model.crud.function.pairs.CreatePair;
+import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedFunctionFactory;
 
@@ -18,6 +18,7 @@ import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedF
  * @param <K>
  *            Key Type
  */
+@Deprecated
 public class CreateFunctionFactory<T extends UniqueModel> extends AbstractFilteredStagedFunctionFactory<CreateFunction<T>, T, CreatePair<T>> {
 
 	private CreateFunctionDelegate<T> delegate;

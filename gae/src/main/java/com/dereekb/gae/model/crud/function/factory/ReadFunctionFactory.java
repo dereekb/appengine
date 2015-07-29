@@ -2,11 +2,12 @@ package com.dereekb.gae.model.crud.function.factory;
 
 import com.dereekb.gae.model.crud.function.ReadFunction;
 import com.dereekb.gae.model.crud.function.observers.ReadFunctionFilterObserver;
-import com.dereekb.gae.model.crud.function.pairs.ReadPair;
+import com.dereekb.gae.model.crud.pairs.ReadPair;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedFunctionFactory;
 
+@Deprecated
 public class ReadFunctionFactory<T extends UniqueModel> extends AbstractFilteredStagedFunctionFactory<ReadFunction<T>, T, ReadPair<T>> {
 
 	private Getter<T> getter;

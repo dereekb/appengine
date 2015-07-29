@@ -1,13 +1,10 @@
-package com.dereekb.gae.model.crud.services;
+package com.dereekb.gae.model.crud.services.impl;
 
-import com.dereekb.gae.model.crud.function.CreateFunction;
-import com.dereekb.gae.model.crud.function.DeleteFunction;
-import com.dereekb.gae.model.crud.function.ReadFunction;
-import com.dereekb.gae.model.crud.function.UpdateFunction;
-import com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl;
-import com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl;
-import com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl;
-import com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl;
+import com.dereekb.gae.model.crud.services.CrudService;
+import com.dereekb.gae.model.crud.services.components.CreateService;
+import com.dereekb.gae.model.crud.services.components.DeleteService;
+import com.dereekb.gae.model.crud.services.components.ReadService;
+import com.dereekb.gae.model.crud.services.components.UpdateService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
@@ -18,7 +15,6 @@ import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.utilities.factory.Factory;
 
 /**
  * {@link CrudService} implementation that uses implementations of the different
@@ -31,32 +27,54 @@ import com.dereekb.gae.utilities.factory.Factory;
 public class CrudServiceImpl<T extends UniqueModel>
         implements CrudService<T> {
 
-	protected final CreateServiceImpl<T> createService;
-	protected final ReadServiceImpl<T> readService;
-	protected final UpdateServiceImpl<T> updateService;
-	protected final DeleteServiceImpl<T> deleteService;
+	private CreateService<T> createService;
+	private ReadService<T> readService;
+	private UpdateService<T> updateService;
+	private DeleteService<T> deleteService;
 
-	public CrudServiceImpl(Factory<CreateFunction<T>> createFactory,
-	        Factory<ReadFunction<T>> readFactory,
-	        Factory<UpdateFunction<T>> updateFactory,
-	        Factory<DeleteFunction<T>> deleteFactory) {
-
-		this.createService = new CreateServiceImpl<T>(createFactory);
-		this.readService = new ReadServiceImpl<T>(readFactory);
-		this.updateService = new UpdateServiceImpl<T>(this.readService, updateFactory);
-		this.deleteService = new DeleteServiceImpl<T>(this.readService, deleteFactory);
-	}
-
-	public CrudServiceImpl(CreateServiceImpl<T> createService,
-	        ReadServiceImpl<T> readService,
-	        UpdateServiceImpl<T> updateService,
-	        DeleteServiceImpl<T> deleteService) {
+	public CrudServiceImpl(CreateService<T> createService,
+	        ReadService<T> readService,
+	        UpdateService<T> updateService,
+	        DeleteService<T> deleteService) {
 		this.createService = createService;
 		this.readService = readService;
 		this.updateService = updateService;
 		this.deleteService = deleteService;
 	}
 
+	public CreateService<T> getCreateService() {
+		return this.createService;
+	}
+
+	public void setCreateService(CreateService<T> createService) {
+		this.createService = createService;
+	}
+
+	public ReadService<T> getReadService() {
+		return this.readService;
+	}
+
+	public void setReadService(ReadService<T> readService) {
+		this.readService = readService;
+	}
+
+	public UpdateService<T> getUpdateService() {
+		return this.updateService;
+	}
+
+	public void setUpdateService(UpdateService<T> updateService) {
+		this.updateService = updateService;
+	}
+
+	public DeleteService<T> getDeleteService() {
+		return this.deleteService;
+	}
+
+	public void setDeleteService(DeleteService<T> deleteService) {
+		this.deleteService = deleteService;
+	}
+
+	// MARK: CrudService
 	@Override
 	public CreateResponse<T> create(CreateRequest<T> request) throws AtomicOperationException {
 		return this.createService.create(request);

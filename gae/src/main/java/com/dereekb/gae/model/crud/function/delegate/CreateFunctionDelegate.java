@@ -8,6 +8,7 @@ import com.dereekb.gae.model.crud.function.exception.InvalidTemplateException;
  *
  * @param <T> Type being created.
  */
+@Deprecated
 public interface CreateFunctionDelegate<T> {
 
 	/**

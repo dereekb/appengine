@@ -14,6 +14,7 @@ import com.dereekb.gae.utilities.filters.FilterResults;
  *
  * @param <T>
  */
+@Deprecated
 public class FilteredDeleteFunctionDelegate<T extends UniqueModel>
         implements DeleteFunctionDelegate<T> {
 

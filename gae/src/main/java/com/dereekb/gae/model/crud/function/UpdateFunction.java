@@ -3,7 +3,7 @@ package com.dereekb.gae.model.crud.function;
 import com.dereekb.gae.model.crud.function.delegate.UpdateFunctionDelegate;
 import com.dereekb.gae.model.crud.function.exception.AtomicFunctionException;
 import com.dereekb.gae.model.crud.function.exception.AttributeFailureException;
-import com.dereekb.gae.model.crud.function.pairs.UpdatePair;
+import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -14,6 +14,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @param <T>
  *            Updated type
  */
+@Deprecated
 public class UpdateFunction<T extends UniqueModel> extends AtomicFunction<T, UpdatePair<T>> {
 
 	private UpdateFunctionDelegate<T> updateDelegate;

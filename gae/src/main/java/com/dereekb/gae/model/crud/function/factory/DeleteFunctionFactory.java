@@ -2,7 +2,7 @@ package com.dereekb.gae.model.crud.function.factory;
 
 import com.dereekb.gae.model.crud.function.DeleteFunction;
 import com.dereekb.gae.model.crud.function.delegate.DeleteFunctionDelegate;
-import com.dereekb.gae.model.crud.function.pairs.DeletePair;
+import com.dereekb.gae.model.crud.pairs.DeletePair;
 import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedFunctionFactory;
 
 /**
@@ -17,6 +17,7 @@ import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedF
  * @param <K>
  *            Key Type
  */
+@Deprecated
 public class DeleteFunctionFactory<T> extends AbstractFilteredStagedFunctionFactory<DeleteFunction<T>, T, DeletePair<T>> {
 
 	private DeleteFunctionDelegate<T> delegate = null;

@@ -11,6 +11,7 @@ import com.dereekb.gae.model.crud.function.exception.CancelDeleteException;
  * @param <T>
  * @see {@link DeleteFunction}
  */
+@Deprecated
 public interface DeleteFunctionDelegate<T> {
 
 	/**

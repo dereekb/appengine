@@ -2,8 +2,7 @@ package com.dereekb.gae.model.crud.services.components.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.model.crud.function.ReadFunction;
-import com.dereekb.gae.model.crud.function.pairs.ReadPair;
+import com.dereekb.gae.model.crud.pairs.ReadPair;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
@@ -15,24 +14,33 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
-import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
- * Default implementation of {@link ReadService} using a {@link Factory} for
- * {@link ReadFunction}.
+ * Default implementation of {@link ReadService} that uses a
+ * {@link IterableTask} with {@link ReadPair} to perform a read.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class ReadServiceImpl<T extends UniqueModel>
         implements ReadService<T> {
 
-	private final Factory<ReadFunction<T>> factory;
+	private IterableTask<ReadPair<T>> readTask;
 
-	public ReadServiceImpl(Factory<ReadFunction<T>> factory) {
-		this.factory = factory;
+	public ReadServiceImpl(IterableTask<ReadPair<T>> readTask) {
+		this.readTask = readTask;
+	}
+
+	public IterableTask<ReadPair<T>> getReadTask() {
+		return this.readTask;
+	}
+
+	public void setReadTask(IterableTask<ReadPair<T>> readTask) {
+		this.readTask = readTask;
 	}
 
 	@Override
@@ -44,11 +52,9 @@ public class ReadServiceImpl<T extends UniqueModel>
 
 		// Execute Function
 		List<ReadPair<T>> pairs = ReadPair.createPairsForKeys(keys);
-		ReadFunction<T> function = this.factory.make();
-		function.addObjects(pairs);
 
 		try {
-			function.run();
+			this.readTask.doTask(pairs);
 
 			HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
 			List<ReadPair<T>> errorPairs = results.getElements(FilterResult.FAIL);

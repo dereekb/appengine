@@ -11,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *
  * @author dereekb
  */
+@Deprecated
 public interface LinkingCreateService<T extends UniqueModel>
         extends CreateService<T> {
 

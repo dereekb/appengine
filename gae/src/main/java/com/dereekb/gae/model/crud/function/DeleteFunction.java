@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import com.dereekb.gae.model.crud.function.delegate.DeleteFunctionDelegate;
 import com.dereekb.gae.model.crud.function.exception.CancelDeleteException;
-import com.dereekb.gae.model.crud.function.pairs.DeletePair;
+import com.dereekb.gae.model.crud.pairs.DeletePair;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
@@ -23,6 +23,7 @@ import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
  * @param <T>
  *            Deleted type.
  */
+@Deprecated
 public class DeleteFunction<T> extends FilteredStagedFunction<T, DeletePair<T>> {
 
 	private DeleteFunctionDelegate<T> deleteDelegate;

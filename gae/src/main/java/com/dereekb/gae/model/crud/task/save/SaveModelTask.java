@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.crud.extension.delete.task;
+package com.dereekb.gae.model.crud.task.save;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.task.impl.MultiTask;
 
 /**
- * {@link Task} for deleting models. Performs all tasks, then deletes the input
+ * {@link Task} for saving models. Performs all tasks, then saves the input
  * using a {@link ConfiguredSetter}.
  *
  * @author dereekb
@@ -17,11 +17,11 @@ import com.dereekb.gae.utilities.task.impl.MultiTask;
  * @param <T>
  *            model type
  */
-public class DeleteModelTask<T extends UniqueModel> extends MultiTask<T> {
+public class SaveModelTask<T extends UniqueModel> extends MultiTask<T> {
 
 	private ConfiguredSetter<T> setter;
 
-	public DeleteModelTask(List<Task<T>> tasks) {
+	public SaveModelTask(List<Task<T>> tasks) {
 		super(tasks);
 	}
 
@@ -37,12 +37,12 @@ public class DeleteModelTask<T extends UniqueModel> extends MultiTask<T> {
 	@Override
 	public void doTask(T input) throws FailedTaskException {
 		super.doTask(input);
-		this.setter.delete(input);
+		this.setter.save(input);
 	}
 
 	@Override
-    public String toString() {
-		return "DeleteModelTask [setter=" + this.setter + ", tasks=" + this.tasks + "]";
-    }
+	public String toString() {
+		return "SaveModelTask [setter=" + this.setter + ", tasks=" + this.tasks + "]";
+	}
 
 }

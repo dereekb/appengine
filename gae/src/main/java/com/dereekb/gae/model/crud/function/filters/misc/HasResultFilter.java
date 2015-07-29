@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.function.filters.misc;
 
-import com.dereekb.gae.model.crud.function.pairs.ReadPair;
+import com.dereekb.gae.model.crud.pairs.ReadPair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.function.staged.filter.AbstractStagedFunctionObjectFilter;

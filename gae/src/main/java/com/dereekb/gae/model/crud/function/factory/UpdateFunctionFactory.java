@@ -2,7 +2,7 @@ package com.dereekb.gae.model.crud.function.factory;
 
 import com.dereekb.gae.model.crud.function.UpdateFunction;
 import com.dereekb.gae.model.crud.function.delegate.UpdateFunctionDelegate;
-import com.dereekb.gae.model.crud.function.pairs.UpdatePair;
+import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedFunctionFactory;
 
@@ -16,6 +16,7 @@ import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedF
  * @param <K>
  *            Key Type
  */
+@Deprecated
 public class UpdateFunctionFactory<T extends UniqueModel> extends AbstractFilteredStagedFunctionFactory<UpdateFunction<T>, T, UpdatePair<T>> {
 
 	private UpdateFunctionDelegate<T> delegate;

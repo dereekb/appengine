@@ -14,6 +14,7 @@ import com.dereekb.gae.server.taskqueue.exception.SubmitTaskException;
  *
  * @param <T>
  */
+@Deprecated
 public class ScheduledDeleteFunctionDelegate<T extends UniqueModel>
         implements DeleteFunctionDelegate<T> {
 

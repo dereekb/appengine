@@ -14,6 +14,7 @@ import com.dereekb.gae.utilities.factory.Factory;
  * @author dereekb
  *
  */
+@Deprecated
 public class CreateFunctionDelegateImpl<T extends UniqueModel>
         implements CreateFunctionDelegate<T> {
 

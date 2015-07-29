@@ -3,7 +3,7 @@ package com.dereekb.gae.model.crud.function;
 import com.dereekb.gae.model.crud.function.delegate.CreateFunctionDelegate;
 import com.dereekb.gae.model.crud.function.exception.AtomicFunctionException;
 import com.dereekb.gae.model.crud.function.exception.InvalidTemplateException;
-import com.dereekb.gae.model.crud.function.pairs.CreatePair;
+import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -15,6 +15,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @param <T>
  *            Created type
  */
+@Deprecated
 public class CreateFunction<T extends UniqueModel> extends AtomicFunction<T, CreatePair<T>> {
 
 	private CreateFunctionDelegate<T> createDelegate;

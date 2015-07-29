@@ -10,6 +10,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @author dereekb
  *
  */
+@Deprecated
 public class CancelDeleteException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

@@ -14,6 +14,7 @@ import com.dereekb.gae.model.crud.function.delegate.CreateFunctionDelegate;
  *
  * @param <T>
  */
+@Deprecated
 public class DirectCreateFunctionDelegate<T>
         implements CreateFunctionDelegate<T> {
 
