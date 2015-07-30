@@ -7,6 +7,7 @@ package com.dereekb.gae.model.crud.deprecated.extension.delete.filter;
  *
  * @param <T>
  */
+@Deprecated
 public interface CanDeleteFilterDelegate<T> {
 
 	public boolean canDelete(T object);

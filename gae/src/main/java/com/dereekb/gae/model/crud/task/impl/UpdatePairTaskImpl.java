@@ -20,6 +20,12 @@ public class UpdatePairTaskImpl<T extends UniqueModel> extends AtomicPairTask<Up
 
 	private UpdateTaskDelegate<T> delegate;
 
+	public UpdatePairTaskImpl() {}
+
+	public UpdatePairTaskImpl(UpdateTaskDelegate<T> delegate) {
+		this.delegate = delegate;
+	}
+
 	public UpdateTaskDelegate<T> getDelegate() {
 		return this.delegate;
 	}

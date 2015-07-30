@@ -49,6 +49,10 @@ public abstract class AbstractGenerator<T>
 	@Override
 	public List<T> generate(int count,
 	                        GeneratorArg arg) {
+		if (arg == null) {
+			arg = new GeneratorArgImpl();
+		}
+
 		List<T> models = new ArrayList<T>();
 
 		for (int i = 0; i < count; i += 1) {

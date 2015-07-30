@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.generation.impl;
 import java.util.Random;
 
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
+import com.dereekb.gae.utilities.misc.random.PositiveLongGenerator;
 
 /**
  * {@link GeneratorArg} implementation.
@@ -17,7 +18,7 @@ public class GeneratorArgImpl
 	private Random random;
 
 	public GeneratorArgImpl() {
-		this.setRandom(null);
+		this(PositiveLongGenerator.randomPositiveLong());
 	}
 
 	public GeneratorArgImpl(Long seed) {
@@ -40,7 +41,7 @@ public class GeneratorArgImpl
 	 */
 	public void setSeed(Long seed) {
 		this.seed = seed;
-		this.generateRandom(seed);
+		this.random = this.generateRandom(seed);
 	}
 
 	public Random getRandom() {

@@ -5,11 +5,12 @@ import com.dereekb.gae.utilities.filters.FilterResult;
 
 /**
  * {@link Filter} that uses a delegate to filter objects that can be deleted.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  */
+@Deprecated
 public class CanDeleteFilter<T> extends AbstractFilter<T> {
 
 	private CanDeleteFilterDelegate<T> delegate;

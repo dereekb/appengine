@@ -49,7 +49,7 @@ public class FilteredDeleteFunctionDelegate<T extends UniqueModel>
 		FilterResults<T> results = this.canDeleteFilter.filterObjects(objects);
 		List<T> failed = results.getFailingObjects();
 
-		if (failed.isEmpty()) {
+		if (!failed.isEmpty()) {
 			this.deleteDelegate.deleteObjects(objects);
 		} else {
 			throw new CancelDeleteException(failed);
