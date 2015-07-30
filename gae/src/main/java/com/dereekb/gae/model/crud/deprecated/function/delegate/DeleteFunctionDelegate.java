@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.crud.deprecated.function.delegate;
 
 import com.dereekb.gae.model.crud.deprecated.function.DeleteFunction;
-import com.dereekb.gae.model.crud.deprecated.function.exception.CancelDeleteException;
+import com.dereekb.gae.model.crud.exception.CancelDeleteException;
 
 /**
  * Delete delegate for type T.

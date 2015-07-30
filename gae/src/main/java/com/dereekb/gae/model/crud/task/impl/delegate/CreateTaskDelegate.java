@@ -1,10 +1,10 @@
 package com.dereekb.gae.model.crud.task.impl.delegate;
 
 import com.dereekb.gae.model.crud.exception.InvalidTemplateException;
-import com.dereekb.gae.model.crud.task.impl.CreatePairTaskImpl;
+import com.dereekb.gae.model.crud.task.impl.CreateTaskImpl;
 
 /**
- * {@link CreatePairTaskImpl} delegate.
+ * {@link CreateTaskImpl} delegate.
  *
  * @author dereekb
  *

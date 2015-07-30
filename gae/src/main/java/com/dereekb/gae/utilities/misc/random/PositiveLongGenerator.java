@@ -27,13 +27,7 @@ public class PositiveLongGenerator extends AbstractGenerator<Long> {
 	@Override
 	public Long generate(GeneratorArg arg) {
 		Random random = arg.getGeneratorRandom();
-		Long value = random.nextLong();
-
-		if (value < 0) {
-			value = value * -1L;
-		}
-
-		return value;
+		return this.nextPositiveLong(random);
 	}
 
 	@Override
@@ -43,11 +37,21 @@ public class PositiveLongGenerator extends AbstractGenerator<Long> {
 		Random random = GeneratorArgImpl.getArgRandom(arg);
 
 		for (int i = 0; i < count; i += 1) {
-			Long value = random.nextLong();
+			Long value = this.nextPositiveLong(random);
 			values.add(value);
 		}
 
 		return values;
+	}
+
+	private Long nextPositiveLong(Random random) {
+		Long value = random.nextLong();
+
+		if (value < 0) {
+			value = value * -1L;
+		}
+
+		return value;
 	}
 
 	public static Long randomPositiveLong() {

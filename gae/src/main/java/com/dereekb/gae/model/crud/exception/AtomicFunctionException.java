@@ -1,10 +1,9 @@
 package com.dereekb.gae.model.crud.exception;
 
-import com.dereekb.gae.model.crud.deprecated.function.AtomicFunction;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Used by {@link AtomicFunction} to capture expected failures/exceptions.
+ * Used by an atomic function to capture expected failures/exceptions.
  *
  * @author dereekb
  *

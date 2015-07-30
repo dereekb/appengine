@@ -3,7 +3,7 @@ package com.dereekb.gae.model.crud.deprecated.extension.delete;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.deprecated.function.delegate.DeleteFunctionDelegate;
-import com.dereekb.gae.model.crud.deprecated.function.exception.CancelDeleteException;
+import com.dereekb.gae.model.crud.exception.CancelDeleteException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;

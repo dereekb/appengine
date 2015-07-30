@@ -11,6 +11,9 @@ import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.impl.CreateResponseImpl;
+import com.dereekb.gae.model.crud.task.CreateTask;
+import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
+import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
@@ -29,17 +32,17 @@ import com.dereekb.gae.utilities.task.IterableTask;
 public class CreateServiceImpl<T extends UniqueModel>
         implements CreateService<T> {
 
-	private IterableTask<CreatePair<T>> createTask;
+	private CreateTask<T> createTask;
 
-	public CreateServiceImpl(IterableTask<CreatePair<T>> createTask) {
+	public CreateServiceImpl(CreateTask<T> createTask) {
 		this.createTask = createTask;
 	}
 
-	public IterableTask<CreatePair<T>> getCreateTask() {
+	public CreateTask<T> getCreateTask() {
 		return this.createTask;
 	}
 
-	public void setCreateTask(IterableTask<CreatePair<T>> createTask) {
+	public void setCreateTask(CreateTask<T> createTask) {
 		this.createTask = createTask;
 	}
 
@@ -53,7 +56,8 @@ public class CreateServiceImpl<T extends UniqueModel>
 		List<CreatePair<T>> pairs = CreatePair.createPairsForModels(templates);
 
 		try {
-			this.createTask.doTask(pairs);
+			CreateTaskConfig config = new CreateTaskConfigImpl(options.isAtomic());
+			this.createTask.doTask(pairs, config);
 
 			HashMapWithList<FilterResult, CreatePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
 			List<CreatePair<T>> errorPairs = results.getElements(FilterResult.FAIL);

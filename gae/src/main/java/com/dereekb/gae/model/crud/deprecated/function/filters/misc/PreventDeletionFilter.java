@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.crud.deprecated.function.filters.misc;
 
 import com.dereekb.gae.model.crud.pairs.DeletePair;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
@@ -15,7 +16,7 @@ import com.dereekb.gae.utilities.function.staged.filter.FallableObjectFilter;
  *            Object type being deleted.
  */
 @Deprecated
-public class PreventDeletionFilter<T> extends FallableObjectFilter<T, DeletePair<T>> {
+public class PreventDeletionFilter<T extends UniqueModel> extends FallableObjectFilter<T, DeletePair<T>> {
 
 	@Override
 	public FilterResults<DeletePair<T>> filterFunctionObjects(StagedFunctionStage stage,

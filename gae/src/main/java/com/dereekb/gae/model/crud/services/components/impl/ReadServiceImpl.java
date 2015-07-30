@@ -10,6 +10,7 @@ import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
+import com.dereekb.gae.model.crud.task.ReadTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
@@ -29,17 +30,17 @@ import com.dereekb.gae.utilities.task.IterableTask;
 public class ReadServiceImpl<T extends UniqueModel>
         implements ReadService<T> {
 
-	private IterableTask<ReadPair<T>> readTask;
+	private ReadTask<T> readTask;
 
-	public ReadServiceImpl(IterableTask<ReadPair<T>> readTask) {
+	public ReadServiceImpl(ReadTask<T> readTask) {
 		this.readTask = readTask;
 	}
 
-	public IterableTask<ReadPair<T>> getReadTask() {
+	public ReadTask<T> getReadTask() {
 		return this.readTask;
 	}
 
-	public void setReadTask(IterableTask<ReadPair<T>> readTask) {
+	public void setReadTask(ReadTask<T> readTask) {
 		this.readTask = readTask;
 	}
 

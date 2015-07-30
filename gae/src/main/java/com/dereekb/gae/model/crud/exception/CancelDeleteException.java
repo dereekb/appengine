@@ -1,16 +1,15 @@
-package com.dereekb.gae.model.crud.deprecated.function.exception;
+package com.dereekb.gae.model.crud.exception;
 
-import com.dereekb.gae.model.crud.deprecated.function.delegate.DeleteFunctionDelegate;
+import com.dereekb.gae.model.crud.task.impl.delegate.DeleteTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Used by {@link DeleteFunctionDelegate} to signify that the delete should be
+ * Used by {@link DeleteTaskDelegate} to signify that the delete should be
  * canceled.
  *
  * @author dereekb
  *
  */
-@Deprecated
 public class CancelDeleteException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

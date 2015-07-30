@@ -16,6 +16,7 @@ import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptio
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.DeleteResponseImpl;
+import com.dereekb.gae.model.crud.task.DeleteTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
@@ -36,11 +37,11 @@ public class DeleteServiceImpl<T extends UniqueModel>
         implements DeleteService<T> {
 
 	private ReadService<T> readService;
-	private IterableTask<DeletePair<T>> deleteTask;
+	private DeleteTask<T> deleteTask;
 
 	public DeleteServiceImpl() {}
 
-	public DeleteServiceImpl(ReadService<T> readService, IterableTask<DeletePair<T>> deleteTask) {
+	public DeleteServiceImpl(ReadService<T> readService, DeleteTask<T> deleteTask) {
 		this.readService = readService;
 		this.deleteTask = deleteTask;
 	}
@@ -53,11 +54,11 @@ public class DeleteServiceImpl<T extends UniqueModel>
 		this.readService = readService;
 	}
 
-	public IterableTask<DeletePair<T>> getDeleteTask() {
+	public DeleteTask<T> getDeleteTask() {
 		return this.deleteTask;
 	}
 
-	public void setDeleteTask(IterableTask<DeletePair<T>> deleteTask) {
+	public void setDeleteTask(DeleteTask<T> deleteTask) {
 		this.deleteTask = deleteTask;
 	}
 

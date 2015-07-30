@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.crud.deprecated.extension.delete;
 
 import com.dereekb.gae.model.crud.deprecated.function.delegate.DeleteFunctionDelegate;
-import com.dereekb.gae.model.crud.deprecated.function.exception.CancelDeleteException;
+import com.dereekb.gae.model.crud.exception.CancelDeleteException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.builder.TaskRequestSender;
 import com.dereekb.gae.server.taskqueue.exception.SubmitTaskException;

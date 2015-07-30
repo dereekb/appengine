@@ -14,7 +14,7 @@ import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
  *
  * @param <T>
  */
-public class CreatePair<T> extends ResultsPair<T, T>
+public class CreatePair<T extends UniqueModel> extends ResultsPair<T, T>
         implements StagedFunctionObject<T> {
 
 	/**

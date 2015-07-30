@@ -10,11 +10,15 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.request.impl.ModelReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.model.crud.services.response.impl.UpdateResponseImpl;
 import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
+import com.dereekb.gae.model.crud.task.UpdateTask;
+import com.dereekb.gae.model.crud.task.config.UpdateTaskConfig;
+import com.dereekb.gae.model.crud.task.config.impl.UpdateTaskConfigImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.filters.FilterResult;
@@ -33,11 +37,11 @@ public class UpdateServiceImpl<T extends UniqueModel>
         implements UpdateService<T> {
 
 	private ReadService<T> readService;
-	private IterableTask<UpdatePair<T>> updateTask;
+	private UpdateTask<T> updateTask;
 
 	public UpdateServiceImpl() {}
 
-	public UpdateServiceImpl(ReadService<T> readService, IterableTask<UpdatePair<T>> updateTask) {
+	public UpdateServiceImpl(ReadService<T> readService, UpdateTask<T> updateTask) {
 		this.readService = readService;
 		this.updateTask = updateTask;
 	}
@@ -50,11 +54,11 @@ public class UpdateServiceImpl<T extends UniqueModel>
 		this.readService = readService;
 	}
 
-	public IterableTask<UpdatePair<T>> getUpdateTask() {
+	public UpdateTask<T> getUpdateTask() {
 		return this.updateTask;
 	}
 
-	public void setUpdateTask(IterableTask<UpdatePair<T>> updateTask) {
+	public void setUpdateTask(UpdateTask<T> updateTask) {
 		this.updateTask = updateTask;
 	}
 
@@ -62,9 +66,7 @@ public class UpdateServiceImpl<T extends UniqueModel>
 	@Override
 	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException {
 		UpdateResponse<T> updateResponse = null;
-		// UpdateRequestOptions options = request.getOptions();
-		// TODO: Later re-enable options.
-
+		UpdateRequestOptions options = request.getOptions();
 		Collection<T> updateTemplates = request.getTemplates();
 
 		// Read Models to update
@@ -78,7 +80,8 @@ public class UpdateServiceImpl<T extends UniqueModel>
 		List<UpdatePair<T>> pairs = UpdatePair.makePairs(models, updateTemplates);
 
 		try {
-			this.updateTask.doTask(pairs);
+			UpdateTaskConfig config = new UpdateTaskConfigImpl(options.isAtomic());
+			this.updateTask.doTask(pairs, config);
 
 			HashMapWithList<FilterResult, UpdatePair<T>> results = UpdatePair.filterSuccessfulPairs(pairs);
 

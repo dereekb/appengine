@@ -1,10 +1,10 @@
 package com.dereekb.gae.model.crud.task.impl.delegate;
 
 import com.dereekb.gae.model.crud.exception.AttributeFailureException;
-import com.dereekb.gae.model.crud.task.impl.UpdatePairTaskImpl;
+import com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl;
 
 /**
- * {@link UpdatePairTaskImpl} delegate.
+ * {@link UpdateTaskImpl} delegate.
  * <p>
  * Is used for updating a target model using an input template.
  *

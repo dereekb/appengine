@@ -71,19 +71,10 @@
 	</bean>
 
 	<!-- Create -->
-	<bean id="geoPlaceCreateTask" class="com.dereekb.gae.utilities.task.impl.MultiIterableTask"
-		lazy-init="true">
-		<constructor-arg index="0">
-			<list>
-				<ref bean="geoPlaceCreatePairTask" />
-				<ref bean="geoPlaceSynchronousSaveTask" />
-			</list>
-		</constructor-arg>
-	</bean>
-
-	<bean id="geoPlaceCreatePairTask" class="com.dereekb.gae.model.crud.task.impl.CreatePairTaskImpl"
+	<bean id="geoPlaceCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
 		lazy-init="true">
 		<constructor-arg index="0" ref="geoPlaceCreateTaskDelegate" />
+		<constructor-arg index="1" ref="geoPlaceSynchronousSaveTask" />
 	</bean>
 
 	<bean id="geoPlaceCreateTaskDelegate"
@@ -95,24 +86,15 @@
 
 	<!-- Read -->
 	<bean id="geoPlaceReadTask" lazy-init="true"
-		class="com.dereekb.gae.model.crud.task.impl.ReadPairTaskImpl">
+		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 	</bean>
 
 	<!-- Update -->
-	<bean id="geoPlaceUpdateTask" class="com.dereekb.gae.utilities.task.impl.MultiIterableTask"
+	<bean id="geoPlaceUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl"
 		lazy-init="true">
-		<constructor-arg index="0">
-			<list value-type="com.dereekb.gae.utilities.task.IterableTask">
-				<ref bean="geoPlaceUpdatePairTask" />
-				<ref bean="geoPlaceAsyncSaveTask" />
-			</list>
-		</constructor-arg>
-	</bean>
-
-	<bean id="geoPlaceUpdatePairTask" lazy-init="true"
-		class="com.dereekb.gae.model.crud.task.impl.UpdatePairTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceAttributeUpdater" />
+		<constructor-arg index="1" ref="geoPlaceAsyncSaveTask" />
 	</bean>
 
 	<bean id="geoPlaceAttributeUpdater"
@@ -121,14 +103,10 @@
 	</bean>
 
 	<!-- Delete -->
-	<bean id="geoPlaceDeleteTask" class="com.dereekb.gae.utilities.task.impl.MultiIterableTask"
+	<bean id="geoPlaceDeleteTask" class="com.dereekb.gae.model.crud.task.impl.DeleteTaskImpl"
 		lazy-init="true">
-		<constructor-arg index="0">
-			<list value-type="com.dereekb.gae.utilities.task.IterableTask">
-				<!-- Direct delete task -->
-				<ref bean="geoPlaceSynchronousDeleteTask" />
-			</list>
-		</constructor-arg>
+		<constructor-arg index="0"
+			ref="geoPlaceSynchronousConfiguredSetter" />
 	</bean>
 
 </beans>
