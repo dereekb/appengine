@@ -32,7 +32,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @param <T>
  *            model type
  */
-public final class ReadModelController<T extends UniqueModel> {
+public abstract class ReadModelController<T extends UniqueModel> {
 
 	private final ReadModelControllerDelegate<T> delegate;
 	private final ReadModelControllerConversionDelegate<T> conversionDelegate;

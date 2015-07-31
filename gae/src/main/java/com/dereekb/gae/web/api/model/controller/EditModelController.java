@@ -3,7 +3,6 @@ package com.dereekb.gae.web.api.model.controller;
 import javax.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,11 +33,10 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  * @param <I>
  *            Model Data Transfer Type
  */
-@Controller
-public final class EditModelController<T extends UniqueModel, I> {
+public abstract class EditModelController<T extends UniqueModel, I> {
 
-	private final EditModelControllerDelegate<T> delegate;
-	private final EditModelControllerConversionDelegate<T, I> conversionDelegate;
+	private EditModelControllerDelegate<T> delegate;
+	private EditModelControllerConversionDelegate<T, I> conversionDelegate;
 
 	public EditModelController(EditModelControllerDelegate<T> delegate,
 	        EditModelControllerConversionDelegate<T, I> conversionDelegate) {
@@ -50,10 +48,19 @@ public final class EditModelController<T extends UniqueModel, I> {
 		return this.delegate;
 	}
 
+	public void setDelegate(EditModelControllerDelegate<T> delegate) {
+		this.delegate = delegate;
+	}
+
 	public EditModelControllerConversionDelegate<T, I> getConversionDelegate() {
 		return this.conversionDelegate;
 	}
 
+	public void setConversionDelegate(EditModelControllerConversionDelegate<T, I> conversionDelegate) {
+		this.conversionDelegate = conversionDelegate;
+	}
+
+	// MARK: API
 	@ResponseBody
 	@PreAuthorize("hasPermission(this, 'create')")
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

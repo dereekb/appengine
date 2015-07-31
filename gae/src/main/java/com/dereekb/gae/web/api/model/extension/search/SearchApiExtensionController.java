@@ -6,12 +6,12 @@ import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
@@ -27,7 +27,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  * @author dereekb
  *
  */
-@Controller
+@RestController
 public class SearchApiExtensionController {
 
 	private ApiSearchDelegate delegate;

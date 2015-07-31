@@ -11,7 +11,7 @@
 
 	<!-- Read Controller -->
 	<bean id="geoPlaceReadController"
-		class="com.dereekb.gae.web.api.model.controller.ReadModelController"
+		class="com.dereekb.gae.web.api.controllers.models.GeoPlaceReadController"
 		scope="singleton" lazy-init="false">
 		<constructor-arg index="0"
 			ref="geoPlaceReadControllerDelegate" />
@@ -35,7 +35,7 @@
 
 	<!-- Edit Controller -->
 	<bean id="geoPlaceEditController"
-		class="com.dereekb.gae.web.api.model.controller.EditModelController"
+		class="com.dereekb.gae.web.api.controllers.models.GeoPlaceEditController"
 		scope="singleton" lazy-init="false">
 		<constructor-arg index="0"
 			ref="geoPlaceEditControllerDelegate" />

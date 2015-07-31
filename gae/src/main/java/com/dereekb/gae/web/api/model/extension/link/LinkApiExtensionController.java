@@ -5,12 +5,12 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.LinkService;
@@ -32,13 +32,13 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @author dereekb
  *
  */
-@Controller
-public class LinkExtensionController {
+@RestController
+public class LinkApiExtensionController {
 
 	private LinkService service;
 	private ApiLinkChangeConverter converter;
 
-	public LinkExtensionController(LinkService service, ApiLinkChangeConverter converter) {
+	public LinkApiExtensionController(LinkService service, ApiLinkChangeConverter converter) {
 		this.service = service;
 		this.converter = converter;
 	}
@@ -51,7 +51,7 @@ public class LinkExtensionController {
 	 * @param service
 	 * @param keyTypeConverter
 	 */
-	public LinkExtensionController(LinkService service, ModelKeyTypeConverter keyTypeConverter) {
+	public LinkApiExtensionController(LinkService service, ModelKeyTypeConverter keyTypeConverter) {
 		this.service = service;
 		this.converter = new ApiLinkChangeConverterImpl(keyTypeConverter);
 	}
@@ -100,7 +100,7 @@ public class LinkExtensionController {
 
 	@Override
 	public String toString() {
-		return "LinkExtensionController [service=" + this.service + ", converter=" + this.converter + "]";
+		return "LinkApiExtensionController [service=" + this.service + ", converter=" + this.converter + "]";
 	}
 
 }

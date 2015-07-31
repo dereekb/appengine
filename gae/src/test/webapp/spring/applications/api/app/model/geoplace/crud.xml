@@ -105,6 +105,7 @@
 	<!-- Delete -->
 	<bean id="geoPlaceDeleteTask" class="com.dereekb.gae.model.crud.task.impl.DeleteTaskImpl"
 		lazy-init="true">
+		<!-- This implementation simply deletes the elements directly. -->
 		<constructor-arg index="0"
 			ref="geoPlaceSynchronousConfiguredSetter" />
 	</bean>
