@@ -18,6 +18,9 @@
 
 	<util:list id="objectifyDatabaseEntities">
 		<ref bean="geoPlaceObjectifyEntry" />
+		<ref bean="storedBlobObjectifyEntry" />
+		<ref bean="storedImageObjectifyEntry" />
+		<ref bean="storedImageSetObjectifyEntry" />
 	</util:list>
 
 </beans>

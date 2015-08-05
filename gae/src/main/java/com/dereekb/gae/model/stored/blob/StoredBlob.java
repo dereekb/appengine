@@ -12,6 +12,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfEmpty;
 import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfNotZero;
 import com.googlecode.objectify.condition.IfZero;
@@ -51,11 +52,28 @@ public final class StoredBlob extends DescribedDatabaseModel
 	@IgnoreSave({ IfZero.class })
 	private Integer typeId = StoredBlobType.DEFAULT_TYPE_ID;
 
+	/**
+	 * The blob's custom filename. Should not include the type ending.
+	 * <p>
+	 * If {{@link #blobName} is {@code null}, the {{@link #getBlobName()} value
+	 * will return this blob's identifier.
+	 */
+	private String blobName;
+
+	/**
+	 * The full folder path.
+	 * <p>
+	 * Should never be {@code null} for {@link StoredBlob} values saved to the
+	 * database.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String folderPath;
+
 	public StoredBlob() {}
 
 	public StoredBlob(Long identifier) {
-	    this.identifier = identifier;
-    }
+		this.identifier = identifier;
+	}
 
 	public Long getIdentifier() {
 		return this.identifier;
@@ -77,12 +95,32 @@ public final class StoredBlob extends DescribedDatabaseModel
 		return this.typeId;
 	}
 
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+
 	public StoredBlobType getBlobType() {
 		return StoredBlobType.typeForId(this.typeId);
 	}
 
 	public void setBlobType(StoredBlobType type) {
 		this.typeId = type.getId();
+	}
+
+	public String getBlobName() {
+		return this.blobName;
+	}
+
+	public void setBlobName(String blobName) {
+		this.blobName = blobName;
+	}
+
+	public String getFolderPath() {
+		return this.folderPath;
+	}
+
+	public void setFolderPath(String folderPath) {
+		this.folderPath = folderPath;
 	}
 
 	// Unique Model
@@ -109,12 +147,12 @@ public final class StoredBlob extends DescribedDatabaseModel
 
 	// Storable
 	@Override
-    public String getFilename() {
+	public String getFilename() {
 		StoredBlobType type = this.getBlobType();
 		String name = this.identifier.toString();
 		String ending = type.getEnding();
 		return String.format(FILE_FORMAT, name, ending);
-    }
+	}
 
 	@Override
 	public String toString() {

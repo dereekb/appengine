@@ -9,33 +9,22 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- IMPORTS -->
-	<!-- Models -->
-	<import resource="geoplace/geoplace.xml" />
-	<import resource="storedblob/storedblob.xml" />
-	<import resource="storedimage/storedimage.xml" />
-	<import resource="storedimageset/storedimageset.xml" />
-
-	<!-- Extensions -->
-	<import resource="extension/link.xml" />
-
-	<!-- SHARED -->
-	<!-- Shared Components -->
-	<bean id="modelKeyTypeConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl"
-		lazy-init="true">
-		<constructor-arg>
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value="NUMBER"></entry>
-				<entry key-ref="storedBlobType" value="NUMBER"></entry>
-				<entry key-ref="storedImageType" value="NUMBER"></entry>
-				<entry key-ref="storedImageSetType" value="NUMBER"></entry>
-			</map>
-		</constructor-arg>
+	<!-- Type -->
+	<bean id="storedImageSetDataBuilder"
+		class="com.dereekb.gae.model.stored.image.set.dto.StoredImageSetDataBuilder"
+		scope="singleton" lazy-init="true">
 	</bean>
 
-	<!-- TODO: Add ModelTypeKeyConverter w/ all types -->
+	<bean id="storedImageSetDataReader"
+		class="com.dereekb.gae.model.stored.image.set.dto.StoredImageSetDataReader"
+		scope="singleton" lazy-init="true">
+	</bean>
 
+	<bean id="storedImageSetDataConverter"
+		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="storedImageSetDataBuilder" />
+		<constructor-arg index="1" ref="storedImageSetDataReader" />
+	</bean>
 
 </beans>

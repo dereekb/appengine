@@ -11,12 +11,12 @@
 
 	<!-- SYSTEM -->
 	<bean id="geoPlaceTaskQueue" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="GeoPoint" />
+		<constructor-arg index="0" value="GeoPlace" />
 	</bean>
 
 	<bean id="geoPlaceTaskQueueResource" class="java.lang.String"
 		scope="singleton">
-		<constructor-arg index="0" value="GeoPoint" />
+		<constructor-arg index="0" value="GeoPlace" />
 	</bean>
 
 	<bean id="geoPlaceTaskRequestConverter" lazy-init="true" scope="singleton"
@@ -36,6 +36,7 @@
 
 	<!-- SCHEDULERS -->
 	<!-- Delete Task -->
+	<!-- TODO Replace this with dedicated type. -->
 	<bean id="geoPlaceDeleteTaskRequestSender" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.taskqueue.builder.TaskRequestSenderImpl">
 		<constructor-arg index="0">

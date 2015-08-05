@@ -9,33 +9,17 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- IMPORTS -->
-	<!-- Models -->
-	<import resource="geoplace/geoplace.xml" />
-	<import resource="storedblob/storedblob.xml" />
-	<import resource="storedimage/storedimage.xml" />
-	<import resource="storedimageset/storedimageset.xml" />
-
-	<!-- Extensions -->
-	<import resource="extension/link.xml" />
-
-	<!-- SHARED -->
-	<!-- Shared Components -->
-	<bean id="modelKeyTypeConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl"
-		lazy-init="true">
-		<constructor-arg>
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value="NUMBER"></entry>
-				<entry key-ref="storedBlobType" value="NUMBER"></entry>
-				<entry key-ref="storedImageType" value="NUMBER"></entry>
-				<entry key-ref="storedImageSetType" value="NUMBER"></entry>
-			</map>
-		</constructor-arg>
+	<!-- Factory -->
+	<bean id="storedImageFactory" lazy-init="true"
+		class="com.dereekb.gae.utilities.factory.BasicFactory">
+		<constructor-arg index="0" type="java.lang.Class"
+			value="com.dereekb.gae.model.stored.image.StoredImage" />
 	</bean>
 
-	<!-- TODO: Add ModelTypeKeyConverter w/ all types -->
-
+	<!-- Generator -->
+	<bean id="storedImageGenerator"
+		class="com.dereekb.gae.model.stored.image.generator.StoredImageGenerator"
+		scope="singleton">
+	</bean>
 
 </beans>

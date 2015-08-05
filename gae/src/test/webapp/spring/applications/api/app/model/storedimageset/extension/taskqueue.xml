@@ -9,33 +9,31 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- IMPORTS -->
-	<!-- Models -->
-	<import resource="geoplace/geoplace.xml" />
-	<import resource="storedblob/storedblob.xml" />
-	<import resource="storedimage/storedimage.xml" />
-	<import resource="storedimageset/storedimageset.xml" />
-
-	<!-- Extensions -->
-	<import resource="extension/link.xml" />
-
-	<!-- SHARED -->
-	<!-- Shared Components -->
-	<bean id="modelKeyTypeConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl"
-		lazy-init="true">
-		<constructor-arg>
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value="NUMBER"></entry>
-				<entry key-ref="storedBlobType" value="NUMBER"></entry>
-				<entry key-ref="storedImageType" value="NUMBER"></entry>
-				<entry key-ref="storedImageSetType" value="NUMBER"></entry>
-			</map>
-		</constructor-arg>
+	<!-- SYSTEM -->
+	<bean id="storedImageSetTaskQueue" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" value="GeoPoint" />
 	</bean>
 
-	<!-- TODO: Add ModelTypeKeyConverter w/ all types -->
+	<bean id="storedImageSetTaskQueueResource" class="java.lang.String"
+		scope="singleton">
+		<constructor-arg index="0" value="GeoPoint" />
+	</bean>
 
+	<bean id="storedImageSetTaskRequestConverter" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.taskqueue.system.TaskRequestConverter">
+		<constructor-arg index="0" ref="storedImageSetTaskQueueResource" />
+	</bean>
+
+	<bean id="storedImageSetTaskRequestSystem" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.taskqueue.system.TaskRequestSystemImpl">
+		<constructor-arg index="0" ref="storedImageSetTaskQueue" />
+		<constructor-arg index="1">
+			<bean factory-bean="taskRequestHashFilterFactory"
+				factory-method="make" />
+		</constructor-arg>
+		<constructor-arg index="2" ref="storedImageSetTaskRequestConverter" />
+	</bean>
+
+	<!-- SCHEDULERS -->
 
 </beans>

@@ -35,6 +35,9 @@
 	<!-- Entries -->
 	<util:list id="linkServiceEntries">
 		<ref bean="geoPlaceLinkSystem" />
+		<ref bean="storedBlobLinkSystem" />
+		<ref bean="storedImageLinkSystem" />
+		<ref bean="storedImageSetLinkSystem" />
 	</util:list>
 
 </beans>

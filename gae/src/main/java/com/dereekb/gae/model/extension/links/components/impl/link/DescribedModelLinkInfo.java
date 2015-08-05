@@ -2,10 +2,12 @@ package com.dereekb.gae.model.extension.links.components.impl.link;
 
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
+import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * Used by {@link DescribedModelLinkInfo} to create reverse info types.
+ * Used by {@link AbstractDescriptiveModelLinkSystemEntry} to create reverse
+ * info types.
  *
  * @author dereekb
  */
