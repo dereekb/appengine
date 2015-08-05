@@ -13,7 +13,7 @@
 	<bean id="geoPlaceType" class="java.lang.String" scope="singleton">
 		<constructor-arg index="0" value="GeoPoint" />
 	</bean>
-
+	
 	<!-- Database -->
 	<bean id="geoPlaceObjectifyEntry"
 		class="com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinitionImpl"
@@ -43,6 +43,7 @@
 	<import resource="test.xml" />
 	<import resource="crud.xml" />
 	<import resource="extension/data.xml" />
+	<import resource="extension/link.xml" />
 	<import resource="extension/generation.xml" />
 	<import resource="extension/taskqueue.xml" />
 

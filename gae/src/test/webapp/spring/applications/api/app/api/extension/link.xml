@@ -9,27 +9,17 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- IMPORTS -->
-	<!-- Models -->
-	<import resource="geoplace/geoplace.xml" />
-
-	<!-- Extensions -->
-	<import resource="extension/link.xml" />
-
-	<!-- SHARED -->
-	<!-- Shared Components -->
-	<bean id="modelKeyTypeConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl"
-		lazy-init="true">
-		<constructor-arg>
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value="NUMBER"></entry>
-			</map>
-		</constructor-arg>
+	<!-- Link -->
+	<bean id="linkExtensionApiController"
+		class="com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController">
+		<constructor-arg index="0" ref="linkService" />
+		<constructor-arg index="1"
+			ref="linkExtensionApiControllerDelegate" />
 	</bean>
 
-	<!-- TODO: Add ModelTypeKeyConverter w/ all types -->
-
+	<bean id="linkExtensionApiControllerDelegate" lazy-init="true"
+		class="com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl">
+		<constructor-arg index="0" ref="modelKeyTypeConverter" />
+	</bean>
 
 </beans>

@@ -66,6 +66,6 @@ public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDe
 	 *         name. Should not include the descriptive info link. Should not
 	 *         return null.
 	 */
-	public abstract List<Link> makeDefinedLinksForModel(T model);
+	public abstract List<Link> makeDefinedLinksForModel(final T model);
 
 }

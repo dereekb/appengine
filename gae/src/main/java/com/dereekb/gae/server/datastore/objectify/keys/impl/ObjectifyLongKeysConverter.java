@@ -1,8 +1,10 @@
 package com.dereekb.gae.server.datastore.objectify.keys.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.keys.IllegalKeyConversionException;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
@@ -17,12 +19,14 @@ import com.googlecode.objectify.Key;
 public final class ObjectifyLongKeysConverter<T> extends ObjecifyLongKeysReader<T>
         implements ObjectifyKeyConverter<T, ModelKey> {
 
-	// TODO: Make implement directional converter.
-
 	private final Class<T> type;
 
 	public ObjectifyLongKeysConverter(Class<T> type) {
 		this.type = type;
+	}
+
+	public static <T> ObjectifyLongKeysConverter<T> withClass(Class<T> type) {
+		return new ObjectifyLongKeysConverter<T>(type);
 	}
 
 	@Override
@@ -46,6 +50,22 @@ public final class ObjectifyLongKeysConverter<T> extends ObjecifyLongKeysReader<
 		} else {
 			return Key.create(this.type, id);
 		}
+	}
+
+	// MARK: BidirectionalConverter
+	@Override
+	public List<ModelKey> convertTo(Collection<Key<T>> input) throws ConversionFailureException {
+		return this.readKeys(input);
+	}
+
+	@Override
+	public List<Key<T>> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+		return this.writeKeys(input);
+	}
+
+	@Override
+	public String toString() {
+		return "ObjectifyLongKeysConverter [type=" + this.type + "]";
 	}
 
 }

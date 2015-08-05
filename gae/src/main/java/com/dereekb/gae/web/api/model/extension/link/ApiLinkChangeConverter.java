@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 
 /**
- * Delegate for {@link LinkApiExtensionController}.
+ * Delegate for {@link LinkExtensionApiController}.
  *
  * @author dereekb
  *

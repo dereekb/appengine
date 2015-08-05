@@ -16,14 +16,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
  * @author dereekb
  *
  */
-public final class ModelKeyTypeConverter {
+public final class ModelKeyTypeConverterImpl {
 
 	private final static StringLongModelKeyConverter LONG_CONVERTER = StringLongModelKeyConverter.CONVERTER;
 	private final static StringModelKeyConverter STRING_CONVERTER = StringModelKeyConverter.CONVERTER;
 
 	private Map<String, ModelKeyType> map;
 
-	public ModelKeyTypeConverter(Map<String, ModelKeyType> map) {
+	public ModelKeyTypeConverterImpl(Map<String, ModelKeyType> map) {
 		this.map = map;
 	}
 
@@ -127,6 +127,11 @@ public final class ModelKeyTypeConverter {
 		}
 
 		return keys;
+	}
+
+	@Override
+	public String toString() {
+		return "ModelKeyTypeConverterImpl [map=" + this.map + "]";
 	}
 
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl;
 import com.dereekb.gae.web.taskqueue.controller.crud.exception.UnregisteredEditTypeException;
 
 /**
@@ -24,22 +24,22 @@ import com.dereekb.gae.web.taskqueue.controller.crud.exception.UnregisteredEditT
 @Controller
 public final class TaskQueueEditController {
 
-	private ModelKeyTypeConverter keyTypeConverter;
+	private ModelKeyTypeConverterImpl keyTypeConverter;
 	private Map<String, TaskQueueEditControllerEntry> entries;
 
 	public TaskQueueEditController() {}
 
-	public TaskQueueEditController(ModelKeyTypeConverter keyTypeConverter,
+	public TaskQueueEditController(ModelKeyTypeConverterImpl keyTypeConverter,
 	        Map<String, TaskQueueEditControllerEntry> entries) {
 		this.keyTypeConverter = keyTypeConverter;
 		this.entries = entries;
 	}
 
-	public ModelKeyTypeConverter getKeyTypeConverter() {
+	public ModelKeyTypeConverterImpl getKeyTypeConverter() {
 		return this.keyTypeConverter;
 	}
 
-	public void setKeyTypeConverter(ModelKeyTypeConverter keyTypeConverter) {
+	public void setKeyTypeConverter(ModelKeyTypeConverterImpl keyTypeConverter) {
 		this.keyTypeConverter = keyTypeConverter;
 	}
 

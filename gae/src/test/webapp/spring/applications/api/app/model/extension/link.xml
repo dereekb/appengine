@@ -9,27 +9,32 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- IMPORTS -->
-	<!-- Models -->
-	<import resource="geoplace/geoplace.xml" />
-
-	<!-- Extensions -->
-	<import resource="extension/link.xml" />
-
-	<!-- SHARED -->
-	<!-- Shared Components -->
-	<bean id="modelKeyTypeConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl"
-		lazy-init="true">
-		<constructor-arg>
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value="NUMBER"></entry>
-			</map>
-		</constructor-arg>
+	<!-- SERVICE -->
+	<!-- Link Service -->
+	<bean id="linkService"
+		class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl">
+		<constructor-arg index="0" ref="linkSystem" />
 	</bean>
 
-	<!-- TODO: Add ModelTypeKeyConverter w/ all types -->
+	<!-- SYSTEM -->
+	<!-- Bidirectional Link System -->
+	<alias alias="linkSystem" name="bidirectionalLinkService" />
 
+	<bean id="bidirectionalLinkService" lazy-init="false"
+		class="com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystem">
+		<constructor-arg index="0" ref="basicLinkSystem" />
+		<constructor-arg index="1" ref="linkServiceEntries" />
+	</bean>
+
+	<!-- Primary System -->
+	<bean id="basicLinkSystem"
+		class="com.dereekb.gae.model.extension.links.components.system.impl.SimpleLinkSystem">
+		<constructor-arg index="0" ref="linkServiceEntries" />
+	</bean>
+
+	<!-- Entries -->
+	<util:list id="linkServiceEntries">
+		<ref bean="geoPlaceLinkSystem" />
+	</util:list>
 
 </beans>

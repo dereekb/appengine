@@ -9,27 +9,24 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- IMPORTS -->
-	<!-- Models -->
-	<import resource="geoplace/geoplace.xml" />
-
-	<!-- Extensions -->
-	<import resource="extension/link.xml" />
-
-	<!-- SHARED -->
-	<!-- Shared Components -->
-	<bean id="modelKeyTypeConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl"
-		lazy-init="true">
-		<constructor-arg>
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value="NUMBER"></entry>
-			</map>
-		</constructor-arg>
+	<bean id="geoPlaceLinkTarget" lazy-init="true"
+		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
+		<constructor-arg index="0" value="GeoPlace" />
+		<constructor-arg index="1" value="NUMBER" />
 	</bean>
 
-	<!-- TODO: Add ModelTypeKeyConverter w/ all types -->
-
+	<bean id="geoPlaceLinkSystem" lazy-init="true"
+		class="com.dereekb.gae.model.geo.place.link.GeoPlaceLinkSystemEntry">
+		<constructor-arg index="0" ref="geoPlaceReadService" />
+		<constructor-arg index="1" ref="geoPlaceAsyncConfiguredSetter" />
+		<constructor-arg index="2">
+			<list
+				value-type="com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo">
+				<!-- TODO: Add directional link types here. -->
+				<!-- <bean> <constructor-arg index="0" value="linkName" /> <constructor-arg 
+					index="1" ref="linkTarget" /> </bean> -->
+			</list>
+		</constructor-arg>
+	</bean>
 
 </beans>

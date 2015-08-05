@@ -1,15 +1,27 @@
 package com.dereekb.gae.server.datastore.objectify.keys.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.IllegalKeyConversionException;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.googlecode.objectify.Key;
 
-public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T> {
+/**
+ * {@link ObjectifyModelKeyUtil} extension that provides additional
+ * functionality, and implements the {@link ObjectifyKeyConverter} interfaces.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
+public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
+        implements ObjectifyKeyConverter<T, ModelKey> {
 
 	private final ObjectifyKeyConverter<T, ModelKey> converter;
 
@@ -64,6 +76,38 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T> {
 		}
 
 		return list;
+	}
+
+	// MARK: ObjectifyKeyConverter
+
+	@Override
+	public ModelKey readKey(Key<T> key) throws IllegalKeyConversionException {
+		return this.converter.readKey(key);
+	}
+
+	@Override
+	public List<ModelKey> readKeys(Iterable<Key<T>> keys) throws IllegalKeyConversionException {
+		return this.converter.readKeys(keys);
+	}
+
+	@Override
+	public Key<T> writeKey(ModelKey element) throws IllegalKeyConversionException {
+		return this.converter.writeKey(element);
+	}
+
+	@Override
+	public List<Key<T>> writeKeys(Iterable<ModelKey> elements) throws IllegalKeyConversionException {
+		return this.converter.writeKeys(elements);
+	}
+
+	@Override
+	public List<ModelKey> convertTo(Collection<Key<T>> input) throws ConversionFailureException {
+		return this.converter.convertTo(input);
+	}
+
+	@Override
+	public List<Key<T>> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+		return this.converter.convertFrom(input);
 	}
 
 	// MARK: Static

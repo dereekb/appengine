@@ -1,8 +1,10 @@
 package com.dereekb.gae.server.datastore.objectify.keys.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.keys.IllegalKeyConversionException;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
@@ -44,6 +46,22 @@ public final class ObjectifyStringKeysConverter<T> extends ObjecifyStringKeysRea
 		} else {
 			return Key.create(this.type, name);
 		}
+	}
+
+	// MARK: BidirectionalConverter
+	@Override
+	public List<ModelKey> convertTo(Collection<Key<T>> input) throws ConversionFailureException {
+		return this.readKeys(input);
+	}
+
+	@Override
+	public List<Key<T>> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+		return this.writeKeys(input);
+	}
+
+	@Override
+	public String toString() {
+		return "ObjectifyStringKeysConverter [type=" + this.type + "]";
 	}
 
 }

@@ -11,7 +11,7 @@ import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChangeConverter;
 
@@ -24,13 +24,14 @@ import com.dereekb.gae.web.api.model.extension.link.ApiLinkChangeConverter;
 public class ApiLinkChangeConverterImpl
         implements ApiLinkChangeConverter {
 
-	private ModelKeyTypeConverter keyTypeConverter;
+	private ModelKeyTypeConverterImpl keyTypeConverter;
 
-	public ApiLinkChangeConverterImpl(ModelKeyTypeConverter keyTypeConverter) {
+	public ApiLinkChangeConverterImpl(ModelKeyTypeConverterImpl keyTypeConverter) {
 		this.keyTypeConverter = keyTypeConverter;
 	}
 
-	public List<LinkSystemChange> convert(String primaryType,
+	@Override
+    public List<LinkSystemChange> convert(String primaryType,
 	                                      Collection<ApiLinkChange> input) throws ConversionFailureException {
 		List<LinkSystemChange> changes = new ArrayList<LinkSystemChange>();
 
@@ -63,6 +64,11 @@ public class ApiLinkChangeConverterImpl
 		}
 
 		return changes;
+	}
+
+	@Override
+	public String toString() {
+		return "ApiLinkChangeConverterImpl [keyTypeConverter=" + this.keyTypeConverter + "]";
 	}
 
 }

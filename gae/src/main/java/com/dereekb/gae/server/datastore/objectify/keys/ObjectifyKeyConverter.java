@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.keys;
 
+import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.googlecode.objectify.Key;
 
@@ -14,6 +15,6 @@ import com.googlecode.objectify.Key;
  *            Conversion type
  */
 public interface ObjectifyKeyConverter<T, K>
-        extends ObjectifyKeyReader<T, K>, ObjectifyKeyWriter<T, K> {
+        extends ObjectifyKeyReader<T, K>, ObjectifyKeyWriter<T, K>, BidirectionalConverter<Key<T>, ModelKey> {
 
 }

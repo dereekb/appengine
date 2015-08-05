@@ -55,21 +55,6 @@
 		<constructor-arg index="0" ref="geoPlaceAsyncConfiguredSetter" />
 	</bean>
 
-	<bean id="geoPlaceSynchronousDeleteTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
-		<constructor-arg index="0"
-			ref="geoPlaceSynchronousConfiguredSetter" />
-		<constructor-arg index="1" value="DELETE" />
-	</bean>
-
-	<bean id="geoPlaceAsyncDeleteTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceAsyncConfiguredSetter" />
-		<constructor-arg index="1" value="DELETE" />
-	</bean>
-
 	<!-- Create -->
 	<bean id="geoPlaceCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
 		lazy-init="true">

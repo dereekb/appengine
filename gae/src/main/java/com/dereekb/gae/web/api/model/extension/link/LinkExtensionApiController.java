@@ -18,7 +18,7 @@ import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
 import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
-import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
@@ -33,25 +33,25 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  *
  */
 @RestController
-public class LinkApiExtensionController {
+public class LinkExtensionApiController {
 
 	private LinkService service;
 	private ApiLinkChangeConverter converter;
 
-	public LinkApiExtensionController(LinkService service, ApiLinkChangeConverter converter) {
+	public LinkExtensionApiController(LinkService service, ApiLinkChangeConverter converter) {
 		this.service = service;
 		this.converter = converter;
 	}
 
 	/**
 	 * Convenience constructor that uses the passed
-	 * {@link ModelKeyTypeConverter} to create a
+	 * {@link ModelKeyTypeConverterImpl} to create a
 	 * {@link ApiLinkChangeConverterImpl} instance for the {@link #converter}.
 	 *
 	 * @param service
 	 * @param keyTypeConverter
 	 */
-	public LinkApiExtensionController(LinkService service, ModelKeyTypeConverter keyTypeConverter) {
+	public LinkExtensionApiController(LinkService service, ModelKeyTypeConverterImpl keyTypeConverter) {
 		this.service = service;
 		this.converter = new ApiLinkChangeConverterImpl(keyTypeConverter);
 	}
@@ -100,7 +100,7 @@ public class LinkApiExtensionController {
 
 	@Override
 	public String toString() {
-		return "LinkApiExtensionController [service=" + this.service + ", converter=" + this.converter + "]";
+		return "LinkExtensionApiController [service=" + this.service + ", converter=" + this.converter + "]";
 	}
 
 }
