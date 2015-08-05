@@ -23,17 +23,17 @@
 	<bean id="bidirectionalLinkService" lazy-init="false"
 		class="com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystem">
 		<constructor-arg index="0" ref="basicLinkSystem" />
-		<constructor-arg index="1" ref="linkServiceEntries" />
+		<constructor-arg index="1" ref="linkSystemEntries" />
 	</bean>
 
 	<!-- Primary System -->
 	<bean id="basicLinkSystem"
 		class="com.dereekb.gae.model.extension.links.components.system.impl.SimpleLinkSystem">
-		<constructor-arg index="0" ref="linkServiceEntries" />
+		<constructor-arg index="0" ref="linkSystemEntries" />
 	</bean>
 
 	<!-- Entries -->
-	<util:list id="linkServiceEntries">
+	<util:list id="linkSystemEntries" scope="singleton">
 		<ref bean="geoPlaceLinkSystem" />
 		<ref bean="storedBlobLinkSystem" />
 		<ref bean="storedImageLinkSystem" />

@@ -59,4 +59,10 @@ public class RelationImpl
 		return this.relationTargetType;
 	}
 
+	@Override
+	public String toString() {
+		return "RelationImpl [relationTargetType=" + this.relationTargetType + ", relationKeys=" + this.relationKeys
+		        + "]";
+	}
+
 }

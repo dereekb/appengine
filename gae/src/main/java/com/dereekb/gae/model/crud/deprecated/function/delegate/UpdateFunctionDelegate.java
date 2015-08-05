@@ -13,7 +13,8 @@ public interface UpdateFunctionDelegate<T> {
 	 * @param target
 	 *            Model to be updated.
 	 * @return True if the update completed successfully.
-	 * @throw UpdateFailureException If the update fails.
+	 * @throws UpdateFailureException
+	 *             If the update fails.
 	 */
 	public void update(T template,
 	                   T target) throws AttributeFailureException;

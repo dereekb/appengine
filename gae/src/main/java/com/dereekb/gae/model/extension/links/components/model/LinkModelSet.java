@@ -67,8 +67,16 @@ public interface LinkModelSet {
 	/**
 	 * Loads an additional model into this set.
 	 *
+	 * @param key
+	 *            Key of the model to load. Never {@code null}.
+	 */
+	public void loadModel(ModelKey key);
+
+	/**
+	 * Loads an additional model into this set.
+	 *
 	 * @param keys
-	 *            Keys of the models to load.
+	 *            Keys of the models to load. Never {@code null}.
 	 */
 	public void loadModels(Collection<ModelKey> keys);
 

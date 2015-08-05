@@ -15,7 +15,7 @@ public interface CreateFunctionDelegate<T> {
 	 * Creates a new object of type <T> from the given source.
 	 *
 	 * @param pair
-	 * @throw BadCreateTemplateException
+	 * @throws BadCreateTemplateException
 	 */
 	public T create(T source) throws InvalidTemplateException;
 

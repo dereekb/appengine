@@ -45,7 +45,7 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 
 		try {
 			modelKey = this.converter.readKey(key);
-		} catch (IllegalKeyConversionException e) {
+		} catch (NullPointerException | IllegalKeyConversionException e) {
 			modelKey = null;
 		}
 
@@ -58,7 +58,7 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 
 		try {
 			key = this.converter.writeKey(modelKey);
-		} catch (IllegalKeyConversionException e) {
+		} catch (NullPointerException | IllegalKeyConversionException e) {
 			key = null;
 		}
 

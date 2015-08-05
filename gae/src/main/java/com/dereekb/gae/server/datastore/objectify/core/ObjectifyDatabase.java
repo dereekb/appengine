@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
@@ -60,6 +61,10 @@ public class ObjectifyDatabase
 		}
 	}
 
+	public Set<Class<?>> getDefinitionTypes() {
+		return this.definitions.keySet();
+	}
+
 	// ObjectifyRegistryFactory
 	@Override
 	public <T extends ObjectifyModel<T>> ObjectifyRegistry<T> makeRegistry(Class<T> type) {
@@ -109,12 +114,12 @@ public class ObjectifyDatabase
 	}
 
 	public <T> Key<T> makeKey(Class<T> type,
-	                                 Long id) throws IllegalArgumentException {
+	                          Long id) throws IllegalArgumentException {
 		return Key.create(type, id);
 	}
 
 	public <T> Key<T> makeKey(Class<T> type,
-	                                 String name) throws IllegalArgumentException {
+	                          String name) throws IllegalArgumentException {
 		return Key.create(type, name);
 	}
 
@@ -145,7 +150,7 @@ public class ObjectifyDatabase
 	 *             Thrown if an invalid name is input.
 	 */
 	public <T> List<Key<T>> makeKeysFromNames(Class<T> type,
-	                                                 Iterable<String> ids) throws IllegalArgumentException {
+	                                          Iterable<String> ids) throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		for (String name : ids) {
@@ -173,7 +178,7 @@ public class ObjectifyDatabase
 	 *             identifier.
 	 */
 	public <T> List<Key<T>> makeKeysFromLongs(Class<T> type,
-	                                                 Iterable<Long> ids) throws IllegalArgumentException {
+	                                          Iterable<Long> ids) throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		if (ids != null) {
@@ -218,13 +223,13 @@ public class ObjectifyDatabase
 
 	// Get
 	public <T> T get(Class<T> type,
-	                        Long id) {
+	                 Long id) {
 		Key<T> key = Key.create(type, id);
 		return this.ofy().load().key(key).now();
 	}
 
 	public <T> T get(Class<T> type,
-	                        String name) {
+	                 String name) {
 		Key<T> key = Key.create(type, name);
 		return this.ofy().load().key(key).now();
 	}
@@ -254,7 +259,7 @@ public class ObjectifyDatabase
 	// Add/Put
 
 	public <T> void put(T entity,
-	                           boolean async) {
+	                    boolean async) {
 		Result<Key<T>> result = this.ofy().save().entity(entity);
 
 		if (async == false) {
@@ -263,7 +268,7 @@ public class ObjectifyDatabase
 	}
 
 	public <T> void put(Iterable<T> entities,
-	                           boolean async) {
+	                    boolean async) {
 		Result<Map<Key<T>, T>> result = this.ofy().save().entities(entities);
 
 		if (async == false) {
@@ -273,7 +278,7 @@ public class ObjectifyDatabase
 
 	// Delete
 	public <T> void delete(T entity,
-	                              boolean async) {
+	                       boolean async) {
 		if (entity != null) {
 			Result<Void> result = this.ofy().delete().entity(entity);
 
@@ -284,7 +289,7 @@ public class ObjectifyDatabase
 	}
 
 	public <T> void delete(Key<T> key,
-	                              boolean async) {
+	                       boolean async) {
 		if (key != null) {
 			Result<Void> result = this.ofy().delete().key(key);
 
@@ -295,7 +300,7 @@ public class ObjectifyDatabase
 	}
 
 	public <T> void delete(Ref<T> ref,
-	                              boolean async) {
+	                       boolean async) {
 		if (ref != null) {
 			Key<T> key = ref.getKey();
 			Result<Void> result = this.ofy().delete().key(key);
@@ -307,7 +312,7 @@ public class ObjectifyDatabase
 	}
 
 	public <T> void delete(Iterable<T> list,
-	                              boolean async) {
+	                       boolean async) {
 		if (list != null) {
 			Result<Void> result = this.ofy().delete().entities(list);
 
@@ -318,7 +323,7 @@ public class ObjectifyDatabase
 	}
 
 	public <T> void deleteWithKeys(Iterable<Key<T>> list,
-	                                      boolean async) {
+	                               boolean async) {
 		if (list != null) {
 			Result<Void> result = this.ofy().delete().keys(list);
 

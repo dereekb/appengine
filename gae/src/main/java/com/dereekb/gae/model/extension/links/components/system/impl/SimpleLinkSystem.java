@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
@@ -51,6 +52,11 @@ public class SimpleLinkSystem
 	}
 
 	// LinkSystem
+	@Override
+	public Set<String> getAvailableSetTypes() {
+		return this.entries.keySet();
+	}
+
 	@Override
 	public LinkModelSet loadSet(String type) throws UnregisteredLinkTypeException {
 		LinkSystemEntry entry = this.getEntry(type);

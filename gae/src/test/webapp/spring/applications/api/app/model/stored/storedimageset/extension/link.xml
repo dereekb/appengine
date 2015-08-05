@@ -16,7 +16,7 @@
 	</bean>
 
 	<bean id="storedImageSetLinkSystem" lazy-init="true"
-		class="com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemEntry">
+		class="com.dereekb.gae.model.stored.image.set.link.StoredImageSetLinkSystemEntry">
 		<constructor-arg index="0" ref="storedImageSetReadService" />
 		<constructor-arg index="1"
 			ref="storedImageSetAsyncConfiguredSetter" />

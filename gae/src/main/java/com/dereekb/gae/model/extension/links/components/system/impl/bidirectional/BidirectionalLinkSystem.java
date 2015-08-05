@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
@@ -58,6 +59,11 @@ public class BidirectionalLinkSystem
 	}
 
 	// LinkSystem
+	@Override
+	public Set<String> getAvailableSetTypes() {
+		return this.system.getAvailableSetTypes();
+	}
+
 	@Override
 	public LinkModelSet loadSet(String type) throws UnregisteredLinkTypeException {
 		LinkModelSet primarySet = this.system.loadSet(type);

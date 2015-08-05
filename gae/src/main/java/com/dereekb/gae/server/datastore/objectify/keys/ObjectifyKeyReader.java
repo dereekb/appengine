@@ -16,8 +16,27 @@ import com.googlecode.objectify.Key;
  */
 public interface ObjectifyKeyReader<T, E> {
 
-	public E readKey(Key<T> key) throws IllegalKeyConversionException;
+	/**
+	 * Converts the input key.
+	 *
+	 * @param key
+	 *            input key.
+	 * @return Converted object. Never {@code null}.
+	 * @throws IllegalKeyConversionException
+	 *             if the input key fails being converted.
+	 * @throws NullPointerException
+	 *             if the input key is {@code null}.
+	 */
+	public E readKey(Key<T> key) throws IllegalKeyConversionException, NullPointerException;
 
+	/**
+	 * Converts the input keys.
+	 *
+	 * @param keys
+	 *            key values. Never {@code null}.
+	 * @return {@link List} of converted objects.
+	 * @throws IllegalKeyConversionException
+	 */
 	public List<E> readKeys(Iterable<Key<T>> keys) throws IllegalKeyConversionException;
 
 }

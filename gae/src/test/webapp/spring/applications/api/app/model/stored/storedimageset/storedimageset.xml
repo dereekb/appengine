@@ -11,7 +11,7 @@
 
 	<!-- Type -->
 	<bean id="storedImageSetType" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="StoredImage" />
+		<constructor-arg index="0" value="StoredImageSet" />
 	</bean>
 	
 	<!-- Database -->

@@ -22,8 +22,9 @@ public interface BidirectionalLinkModelDelegate {
 	 * @param keys
 	 *            {@link ModelKey} of reverse elements.
 	 * @return {@link List} of {@link LinkModel} corresponding to the input
-	 *         keys. If the type is only one-directional, then an empty
-	 *         collection is returned.
+	 *         keys. If the models are unavailable, they will be excluded from
+	 *         the list. Additionally, if the type is only one-directional, an
+	 *         empty collection is returned.
 	 */
 	public List<LinkModel> getReverseLinkModels(LinkInfo info,
 	                                            List<ModelKey> keys);

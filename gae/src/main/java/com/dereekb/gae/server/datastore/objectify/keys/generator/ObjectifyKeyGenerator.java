@@ -8,6 +8,8 @@ import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.utilities.misc.random.PositiveLongGenerator;
+import com.dereekb.gae.utilities.misc.random.StringLongGenerator;
 import com.googlecode.objectify.Key;
 
 /**
@@ -60,8 +62,8 @@ public class ObjectifyKeyGenerator<T> extends AbstractGenerator<Key<T>> {
 
 		@Override
 		public Key<T> generate(GeneratorArg arg) {
-			Long id = arg.getGeneratorRandom().nextLong();
-			Key<T> key = Key.create(ObjectifyKeyGenerator.this.type, id.toString());
+			String name = StringLongGenerator.GENERATOR.generate(arg);
+			Key<T> key = Key.create(ObjectifyKeyGenerator.this.type, name);
 			return key;
 		}
 
@@ -71,7 +73,7 @@ public class ObjectifyKeyGenerator<T> extends AbstractGenerator<Key<T>> {
 
 		@Override
 		public Key<T> generate(GeneratorArg arg) {
-			Long id = arg.getGeneratorRandom().nextLong();
+			Long id = PositiveLongGenerator.GENERATOR.generate(arg);
 			Key<T> key = Key.create(ObjectifyKeyGenerator.this.type, id);
 			return key;
 		}

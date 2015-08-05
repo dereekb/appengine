@@ -77,20 +77,28 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 
 		for (ModelKey key : keys) {
 			LinkModel model = this.loaded.get(key);
-			models.add(model);
+
+			if (model != null) {
+				models.add(model);
+			}
 		}
 
 		return models;
 	}
 
 	@Override
-    public Set<ModelKey> getAvailableModelKeys() {
+	public Set<ModelKey> getAvailableModelKeys() {
 		return this.loadedKeys;
-    }
+	}
 
 	@Override
 	public Set<ModelKey> getMissingModelKeys() {
 		return this.missingKeys;
+	}
+
+	@Override
+	public void loadModel(ModelKey key) {
+		this.waitingKeys.add(key);
 	}
 
 	@Override
@@ -185,8 +193,9 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 
 	@Override
 	public String toString() {
-		return "LinkModelSetImpl [typedLoaded=" + this.typedLoaded + ", allKeys=" + this.allKeys + "]";
+		return "LinkModelSetImpl [typedLoaded=" + this.typedLoaded + ", loaded=" + this.loaded + ", allKeys="
+		        + this.allKeys + ", loadedKeys=" + this.loadedKeys + ", missingKeys=" + this.missingKeys
+		        + ", waitingKeys=" + this.waitingKeys + "]";
     }
-
 
 }

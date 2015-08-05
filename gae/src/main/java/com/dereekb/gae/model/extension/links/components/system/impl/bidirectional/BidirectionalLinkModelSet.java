@@ -122,6 +122,11 @@ public final class BidirectionalLinkModelSet
 	}
 
 	@Override
+	public void loadModel(ModelKey key) {
+		this.primarySet.loadModel(key);
+	}
+
+	@Override
 	public void loadModels(Collection<ModelKey> keys) {
 		this.primarySet.loadModels(keys);
 	}
