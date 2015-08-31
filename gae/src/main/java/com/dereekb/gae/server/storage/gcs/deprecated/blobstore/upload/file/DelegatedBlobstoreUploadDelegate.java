@@ -1,6 +1,6 @@
-package com.dereekb.gae.server.storage.gcs.blobstore.upload.file;
+package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.file;
 
-import com.dereekb.gae.server.storage.gcs.blobstore.upload.UploadedBlobFile;
+import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
 
 public interface DelegatedBlobstoreUploadDelegate<T> {
 

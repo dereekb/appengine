@@ -7,6 +7,7 @@ import com.dereekb.gae.server.storage.upload.function.observers.UploadFunctionDa
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.function.staged.factory.observer.AbstractStagedFunctionObjectObserverFactory;
 
+@Deprecated
 public class UploadFunctionDataObserverFactory<T, U extends UploadedFile> extends AbstractStagedFunctionObjectObserverFactory<UploadFunctionDataObserver<T, U>, T, UploadFunctionPair<T, U>> {
 
 	private UploadFunctionDataObserverDelegate<T, U> delegateSingleton;
@@ -20,18 +21,18 @@ public class UploadFunctionDataObserverFactory<T, U extends UploadedFile> extend
 	public UploadFunctionDataObserver<T, U> generateObserver() {
 		UploadFunctionDataObserver<T, U> observer = new UploadFunctionDataObserver<T, U>();
 
-		if (delegateFactory != null) {
-			UploadFunctionDataObserverDelegate<T, U> delegate = delegateFactory.makeDataObserverDelegate();
+		if (this.delegateFactory != null) {
+			UploadFunctionDataObserverDelegate<T, U> delegate = this.delegateFactory.makeDataObserverDelegate();
 			observer.setDelegate(delegate);
-		} else if (delegateSingleton != null) {
-			observer.setDelegate(delegateSingleton);
+		} else if (this.delegateSingleton != null) {
+			observer.setDelegate(this.delegateSingleton);
 		}
 
 		return observer;
 	}
 
 	public UploadFunctionDataObserverDelegateFactory<T, U> getDelegateFactory() {
-		return delegateFactory;
+		return this.delegateFactory;
 	}
 
 	public void setDelegateFactory(UploadFunctionDataObserverDelegateFactory<T, U> delegateFactory) {
@@ -39,7 +40,7 @@ public class UploadFunctionDataObserverFactory<T, U extends UploadedFile> extend
 	}
 
 	public UploadFunctionDataObserverDelegate<T, U> getDelegateSingleton() {
-		return delegateSingleton;
+		return this.delegateSingleton;
 	}
 
 	public void setDelegateSingleton(UploadFunctionDataObserverDelegate<T, U> delegateSingleton) {

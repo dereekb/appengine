@@ -7,6 +7,7 @@ import com.dereekb.gae.server.storage.upload.function.filters.UploadFunctionData
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.function.staged.factory.filter.AbstractStagedFunctionObjectFilterFactory;
 
+@Deprecated
 public class UploadFunctionDataFilterFactory<T, U extends UploadedFile> extends AbstractStagedFunctionObjectFilterFactory<UploadFunctionDataFilter<T, U>, T, UploadFunctionPair<T, U>> {
 
 	private UploadFunctionDataFilterDelegate<U> delegate;
@@ -19,7 +20,7 @@ public class UploadFunctionDataFilterFactory<T, U extends UploadedFile> extends 
 	public UploadFunctionDataFilter<T, U> generateFilter() {
 		UploadFunctionDataFilter<T, U> filter = new UploadFunctionDataFilter<T, U>();
 
-		if (delegate != null) {
+		if (this.delegate != null) {
 			filter.setDelegate(this.delegate);
 		}
 
@@ -27,7 +28,7 @@ public class UploadFunctionDataFilterFactory<T, U extends UploadedFile> extends 
 	}
 
 	public UploadFunctionDataFilterDelegate<U> getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(UploadFunctionDataFilterDelegate<U> delegate) {

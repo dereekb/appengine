@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.gcs.blobstore.upload;
+package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload;
 
 import java.util.Date;
 

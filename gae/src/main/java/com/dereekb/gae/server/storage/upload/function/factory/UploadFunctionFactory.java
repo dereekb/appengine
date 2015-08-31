@@ -6,6 +6,7 @@ import com.dereekb.gae.server.storage.upload.function.UploadFunctionDelegate;
 import com.dereekb.gae.server.storage.upload.function.UploadFunctionPair;
 import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedFunctionFactory;
 
+@Deprecated
 public class UploadFunctionFactory<T, U extends UploadedFile> extends AbstractFilteredStagedFunctionFactory<UploadFunction<T, U>, T, UploadFunctionPair<T, U>> {
 
 	private UploadFunctionDelegate<T> delegate;
@@ -15,15 +16,15 @@ public class UploadFunctionFactory<T, U extends UploadedFile> extends AbstractFi
 
 		UploadFunction<T, U> function = new UploadFunction<T, U>();
 
-		if (delegate != null) {
-			function.setUploadDelegate(delegate);
+		if (this.delegate != null) {
+			function.setUploadDelegate(this.delegate);
 		}
 
 		return function;
 	}
 
 	public UploadFunctionDelegate<T> getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(UploadFunctionDelegate<T> delegate) {

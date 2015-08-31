@@ -4,12 +4,13 @@ import com.dereekb.gae.server.storage.upload.UploadedFile;
 
 /**
  * A default filter for uploaded files that can check whether or not the StorageFileInfo for that object matches.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  * @param <U>
  */
+@Deprecated
 public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
         implements UploadFunctionDataFilterDelegate<U> {
 
@@ -18,7 +19,8 @@ public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
 	private Long minSize;
 	private Long maxSize;
 
-	public boolean isValidData(U file) {
+	@Override
+    public boolean isValidData(U file) {
 		boolean isValid = true;
 
 		if (isValid && this.contentTypeRegex != null) {
@@ -28,12 +30,12 @@ public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
 
 		if (isValid && this.minSize != null) {
 			Long size = file.getSize();
-			isValid = (size >= minSize);
+			isValid = (size >= this.minSize);
 		}
 
 		if (isValid && this.maxSize != null) {
 			Long size = file.getSize();
-			isValid = (size <= maxSize);
+			isValid = (size <= this.maxSize);
 		}
 
 		if (isValid && this.filenameRegex != null) {
@@ -45,7 +47,7 @@ public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
 	}
 
 	public String getContentTypeRegex() {
-		return contentTypeRegex;
+		return this.contentTypeRegex;
 	}
 
 	public void setContentTypeRegex(String contentTypeRegex) {
@@ -53,7 +55,7 @@ public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
 	}
 
 	public String getFilenameRegex() {
-		return filenameRegex;
+		return this.filenameRegex;
 	}
 
 	public void setFilenameRegex(String filenameRegex) {
@@ -61,7 +63,7 @@ public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
 	}
 
 	public Long getMaxSize() {
-		return maxSize;
+		return this.maxSize;
 	}
 
 	public void setMaxSize(Long maxSize) {
@@ -69,7 +71,7 @@ public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
 	}
 
 	public Long getMinSize() {
-		return minSize;
+		return this.minSize;
 	}
 
 	public void setMinSize(Long minSize) {

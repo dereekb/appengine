@@ -1,11 +1,11 @@
-package com.dereekb.gae.server.storage.gcs.blobstore.upload.file;
+package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.file;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.server.storage.gcs.blobstore.upload.BlobstoreUploadHandlerFunction;
-import com.dereekb.gae.server.storage.gcs.blobstore.upload.BlobstoreUploadedBlobReader;
-import com.dereekb.gae.server.storage.gcs.blobstore.upload.UploadedBlobFile;
+import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.BlobstoreUploadHandlerFunction;
+import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.BlobstoreUploadedBlobReader;
+import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
 
 /**
  * A basic class that uses a delegate to filter and handle the uploaded files.

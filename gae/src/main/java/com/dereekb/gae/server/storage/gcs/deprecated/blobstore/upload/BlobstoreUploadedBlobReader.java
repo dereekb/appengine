@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.gcs.blobstore.upload;
+package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,6 +8,7 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
+@Deprecated
 public class BlobstoreUploadedBlobReader
         implements UploadFunctionDataLoaderDelegate<UploadedBlobFile> {
 
@@ -62,7 +63,7 @@ public class BlobstoreUploadedBlobReader
 	}
 
 	public BlobstoreService getService() {
-		return service;
+		return this.service;
 	}
 
 	public void setService(BlobstoreService service) {
@@ -70,7 +71,7 @@ public class BlobstoreUploadedBlobReader
 	}
 
 	public Long getBufferSize() {
-		return bufferSize;
+		return this.bufferSize;
 	}
 
 	public void setBufferSize(Long bufferSize) {

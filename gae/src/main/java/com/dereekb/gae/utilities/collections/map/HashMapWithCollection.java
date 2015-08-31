@@ -35,11 +35,13 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 		this.map = new HashMap<K, C>();
 	}
 
-	public HashMapWithCollection(HashMapWithCollection<K, T, C> map) {
+	public HashMapWithCollection(HashMapWithCollection<? extends K, ? extends T, C> map) {
+		// TODO: Replace with different internal replication method to allow
+		// this type of constraint.
 		this.map = map.getMapCopy();
 	}
 
-	public HashMapWithCollection(Iterable<MapPairing<K, T>> pairings) {
+	public HashMapWithCollection(Iterable<MapPairing<? extends K, ? extends T>> pairings) {
 		this.map = new HashMap<K, C>();
 		this.addAllPairings(pairings);
 	}
@@ -129,7 +131,7 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	}
 
 	public void addAll(K key,
-	                   Iterable<T> objects) {
+	                   Iterable<? extends T> objects) {
 		C collection = this.getCollectionForKey(key);
 
 		for (T object : objects) {
@@ -138,7 +140,7 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	}
 
 	public void addAll(K key,
-	                   Collection<T> objects) {
+	                   Collection<? extends T> objects) {
 		C collection = this.getCollectionForKey(key);
 		collection.addAll(objects);
 	}
@@ -151,7 +153,7 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	 * @param object
 	 *            Object. Never {@code null}.
 	 */
-	public void addAll(Iterable<K> keys,
+	public void addAll(Iterable<? extends K> keys,
 	                   T object) {
 		for (K key : keys) {
 			this.add(key, object);
@@ -164,17 +166,17 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	 * @param map
 	 *            {@link Map} containing values. Never {@code null}.
 	 */
-	public void addAll(Map<K, ? extends Collection<T>> map) {
-		for (Entry<K, ? extends Collection<T>> entry : map.entrySet()) {
+	public void addAll(Map<? extends K, ? extends Collection<? extends T>> map) {
+		for (Entry<? extends K, ? extends Collection<? extends T>> entry : map.entrySet()) {
 			K key = entry.getKey();
-			Collection<T> values = entry.getValue();
+			Collection<? extends T> values = entry.getValue();
 			this.addAll(key, values);
 		}
 	}
 
-	private void addAllPairings(Iterable<MapPairing<K, T>> pairings) {
-		for (MapPairing<K, T> pairing : pairings) {
-			Iterable<K> keys = pairing.getKeys();
+	private void addAllPairings(Iterable<MapPairing<? extends K, ? extends T>> pairings) {
+		for (MapPairing<? extends K, ? extends T> pairing : pairings) {
+			Iterable<? extends K> keys = pairing.getKeys();
 			T value = pairing.getValue();
 			this.addAll(keys, value);
 		}
@@ -184,7 +186,7 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 		this.removeCollectionForKey(key);
 	}
 
-	public void removeAll(Iterable<K> keys) {
+	public void removeAll(Iterable<? extends K> keys) {
 		for (K key : keys) {
 			this.remove(key);
 		}

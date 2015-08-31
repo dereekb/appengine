@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.gcs.blobstore.upload;
+package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload;
 
 import java.util.Collections;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.dereekb.gae.server.storage.gcs.blobstore.BlobstoreUploadedBlobReader;
+import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.BlobstoreUploadedBlobReader;
 import com.dereekb.gae.server.storage.upload.FileUploadHandler;
 
 /**

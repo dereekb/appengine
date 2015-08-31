@@ -43,7 +43,7 @@
 
 	<bean id="localDatastoreServiceTestConfig"
 		class="com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig"
-		scope="singleton">
+		scope="singleton" init-method="setApplyAllHighRepJobPolicy">
 	</bean>
 
 	<bean id="localSearchServiceTestConfig"

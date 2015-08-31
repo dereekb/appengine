@@ -1,11 +1,11 @@
-package com.dereekb.gae.server.storage.gcs.blobstore.upload.image;
+package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image;
 
 import com.dereekb.gae.server.storage.StorageAccessor;
 import com.dereekb.gae.server.storage.file.StorableFile;
 import com.dereekb.gae.server.storage.file.StorageFileContent;
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor;
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor.ImageEditorInstance;
-import com.dereekb.gae.server.storage.gcs.blobstore.upload.UploadedBlobFile;
+import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
 import com.dereekb.gae.server.storage.upload.function.UploadFunctionPair;
 import com.dereekb.gae.server.storage.upload.function.observers.UploadFunctionDataObserverDelegate;
 import com.google.appengine.api.images.Image;

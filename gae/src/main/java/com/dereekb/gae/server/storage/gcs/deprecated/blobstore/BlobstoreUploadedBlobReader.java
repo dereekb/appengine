@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.gcs.blobstore;
+package com.dereekb.gae.server.storage.gcs.deprecated.blobstore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.dereekb.gae.server.storage.gcs.blobstore.upload.UploadedBlobFile;
+import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
