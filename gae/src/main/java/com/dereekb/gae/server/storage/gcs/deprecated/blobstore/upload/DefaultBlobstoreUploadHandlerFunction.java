@@ -3,8 +3,8 @@ package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.server.storage.upload.function.UploadFunction;
-import com.dereekb.gae.server.storage.upload.function.UploadFunctionPair;
+import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunction;
+import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**

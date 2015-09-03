@@ -5,8 +5,8 @@ import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image.ImageUploadDataHandler;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image.ImageUploadDataHandlerDelegate;
-import com.dereekb.gae.server.storage.upload.function.factory.UploadFunctionDataObserverDelegateFactory;
-import com.dereekb.gae.server.storage.upload.function.observers.UploadFunctionDataObserverDelegate;
+import com.dereekb.gae.server.storage.upload.deprecated.function.factory.UploadFunctionDataObserverDelegateFactory;
+import com.dereekb.gae.server.storage.upload.deprecated.function.observers.UploadFunctionDataObserverDelegate;
 
 public class ImageUploadDataHandlerFactory<T>
         implements UploadFunctionDataObserverDelegateFactory<T, UploadedBlobFile> {

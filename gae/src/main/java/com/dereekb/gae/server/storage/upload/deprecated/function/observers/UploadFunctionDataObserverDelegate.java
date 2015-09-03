@@ -1,7 +1,7 @@
-package com.dereekb.gae.server.storage.upload.function.observers;
+package com.dereekb.gae.server.storage.upload.deprecated.function.observers;
 
 import com.dereekb.gae.server.storage.upload.UploadedFile;
-import com.dereekb.gae.server.storage.upload.function.UploadFunctionPair;
+import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
 
 /**
  * Interface that is called to handle the uploaded data.

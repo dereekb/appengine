@@ -1,26 +1,22 @@
 package com.dereekb.gae.server.storage.upload;
 
 /**
- * Factory for generating URLs for uploading data.
- * 
+ * Used for initializing and creating a url to upload to.
+ *
  * @author dereekb
  *
  */
 public interface FileUploadUrlFactory {
 
 	/**
-	 * Creates a new upload url that forwards to a default url when finished.
-	 * 
-	 * @return Upload URL
+	 * Creates a new URL for uploading to.
+	 *
+	 * @param data
+	 *            {@link String} value containing optional data related to
+	 *            creating an upload.
+	 * @return {@link String} containing a valid URL to upload to. Never
+	 *         {@code null}.
 	 */
-	public String newUploadUrl();
-
-	/**
-	 * Creates a new upload url that forwards to the specified url when finished.
-	 * 
-	 * @param forwardUrl
-	 * @return Upload URL
-	 */
-	public String newUploadUrl(String forwardUrl);
+	public String makeUploadUrl(String data);
 
 }

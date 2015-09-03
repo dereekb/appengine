@@ -1,7 +1,7 @@
-package com.dereekb.gae.server.storage.upload.function.observers;
+package com.dereekb.gae.server.storage.upload.deprecated.function.observers;
 
 import com.dereekb.gae.server.storage.upload.UploadedFile;
-import com.dereekb.gae.server.storage.upload.function.UploadFunctionPair;
+import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
 import com.dereekb.gae.utilities.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.function.staged.observer.StagedFunctionObjectObserver;

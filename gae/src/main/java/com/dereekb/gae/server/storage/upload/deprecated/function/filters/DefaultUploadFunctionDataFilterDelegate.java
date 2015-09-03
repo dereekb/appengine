@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.upload.function.filters;
+package com.dereekb.gae.server.storage.upload.deprecated.function.filters;
 
 import com.dereekb.gae.server.storage.upload.UploadedFile;
 

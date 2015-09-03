@@ -3,7 +3,7 @@ package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import com.dereekb.gae.server.storage.upload.function.observers.UploadFunctionDataLoaderDelegate;
+import com.dereekb.gae.server.storage.upload.deprecated.function.observers.UploadFunctionDataLoaderDelegate;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;

@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.upload.function.observers;
+package com.dereekb.gae.server.storage.upload.deprecated.function.observers;
 
 import com.dereekb.gae.server.storage.upload.UploadedFile;
 

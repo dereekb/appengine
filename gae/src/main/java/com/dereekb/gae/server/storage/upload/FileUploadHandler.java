@@ -1,23 +1,26 @@
 package com.dereekb.gae.server.storage.upload;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
+import com.dereekb.gae.server.storage.upload.exception.FileUploadFailedException;
+
 /**
- * Handles reading uploaded data from an HttpRequest, and returning objects based on how the data was handled.
- * 
+ * Used to handle a {@link HttpServletRequest} containing an uploaded file.
+ *
  * @author dereekb
- * @param <T>
+ *
  */
-public interface FileUploadHandler<T> {
+public interface FileUploadHandler {
 
 	/**
-	 * Reads upload data from the request, then converts it into new objects of type <T>.
-	 * 
+	 * Handles an upload request.
+	 *
 	 * @param request
-	 * @return List of created objects, or an empty list if nothing was created.
+	 *            {@link HttpServletRequest} request. Never {@code null}.
+	 * @return {@link FileUploadeHandlerResult}. Never {@code null}.
+	 * @throws FileUploadFailedException
+	 *             if the upload fails.
 	 */
-	public List<T> upload(HttpServletRequest request);
+	public FileUploadHandlerResult handleUploadRequest(HttpServletRequest request) throws FileUploadFailedException;
 
 }

@@ -27,7 +27,7 @@ public class BlobstoreUploadHandler<T>
 	 * Uploaded blobs are deleted when this function completes or encounters an exception.
 	 */
 	@Override
-	public final List<T> upload(HttpServletRequest request) {
+	public final List<T> handleUploadRequest(HttpServletRequest request) {
 		Map<String, List<UploadedBlobFile>> filesMap = blobReader.uploadedBlobFilesMap(request);
 		List<UploadedBlobFile> files = blobReader.uploadedBlobFilesFromMap(filesMap);
 		List<T> result = null;

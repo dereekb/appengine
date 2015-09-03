@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload;
 
-import com.dereekb.gae.server.storage.upload.FileUploadUrlFactory;
+import com.dereekb.gae.server.storage.upload.deprecated.FileUploadUrlFactory;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.UploadOptions;

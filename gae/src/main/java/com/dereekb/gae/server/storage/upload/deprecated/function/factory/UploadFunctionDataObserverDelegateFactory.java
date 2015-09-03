@@ -1,7 +1,7 @@
-package com.dereekb.gae.server.storage.upload.function.factory;
+package com.dereekb.gae.server.storage.upload.deprecated.function.factory;
 
 import com.dereekb.gae.server.storage.upload.UploadedFile;
-import com.dereekb.gae.server.storage.upload.function.observers.UploadFunctionDataObserverDelegate;
+import com.dereekb.gae.server.storage.upload.deprecated.function.observers.UploadFunctionDataObserverDelegate;
 
 @Deprecated
 public interface UploadFunctionDataObserverDelegateFactory<T, U extends UploadedFile> {

@@ -2,7 +2,7 @@ package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image;
 
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageValidator;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
-import com.dereekb.gae.server.storage.upload.function.filters.UploadFunctionDataFilterDelegate;
+import com.dereekb.gae.server.storage.upload.deprecated.function.filters.UploadFunctionDataFilterDelegate;
 
 /**
  * Handles filtering uploaded images.

@@ -1,9 +1,9 @@
-package com.dereekb.gae.server.storage.upload.function.factory;
+package com.dereekb.gae.server.storage.upload.deprecated.function.factory;
 
 import com.dereekb.gae.server.storage.upload.UploadedFile;
-import com.dereekb.gae.server.storage.upload.function.UploadFunctionPair;
-import com.dereekb.gae.server.storage.upload.function.filters.UploadFunctionDataFilter;
-import com.dereekb.gae.server.storage.upload.function.filters.UploadFunctionDataFilterDelegate;
+import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
+import com.dereekb.gae.server.storage.upload.deprecated.function.filters.UploadFunctionDataFilter;
+import com.dereekb.gae.server.storage.upload.deprecated.function.filters.UploadFunctionDataFilterDelegate;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.function.staged.factory.filter.AbstractStagedFunctionObjectFilterFactory;
 
