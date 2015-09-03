@@ -96,10 +96,10 @@ public class DeleteServiceImpl<T extends UniqueModel>
 			 */
 
 			HashMapWithList<FilterResult, DeletePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<DeletePair<T>> deletedPairs = results.getElements(FilterResult.PASS);
+			List<DeletePair<T>> deletedPairs = results.valuesForKey(FilterResult.PASS);
 			List<T> deletedModels = DeletePair.getKeys(deletedPairs);
 
-			List<DeletePair<T>> filteredPairs = results.getElements(FilterResult.FAIL);
+			List<DeletePair<T>> filteredPairs = results.valuesForKey(FilterResult.FAIL);
 			List<T> filteredModels = DeletePair.getKeys(filteredPairs);
 			List<ModelKey> filteredKeys = ModelKey.readModelKeys(filteredModels);
 

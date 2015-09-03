@@ -55,8 +55,8 @@ public class LinkSystemChangesRunner {
 
 		HashMapWithList<String, LinkSystemChange> changeMap = this.divideChanges(changes);
 
-		for (String type : changeMap.getKeySet()) {
-			List<LinkSystemChange> changeList = changeMap.getElements(type);
+		for (String type : changeMap.keySet()) {
+			List<LinkSystemChange> changeList = changeMap.valuesForKey(type);
 
 			LinkChangesRunnerInstance instance = new LinkChangesRunnerInstance(type, changeList);
 			instance.run();

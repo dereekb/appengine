@@ -25,11 +25,11 @@ public class HashMapWithSet<T, U> extends HashMapWithCollection<T, U, Set<U>> {
 		super();
 	}
 
-	public HashMapWithSet(HashMapWithSet<T, U> setMap) {
-		super(setMap);
+	public HashMapWithSet(HashMapWithCollection<? extends T, ? extends U, ?> map) {
+		super(map);
 	}
 
-	public HashMapWithSet(Collection<MapPairing<T, U>> pairings) {
+	public HashMapWithSet(Collection<MapPairing<? extends T, ? extends U>> pairings) {
 		super(pairings);
 	}
 

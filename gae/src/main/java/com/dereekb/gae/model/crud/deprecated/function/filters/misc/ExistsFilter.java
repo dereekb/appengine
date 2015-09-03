@@ -39,16 +39,16 @@ public class ExistsFilter<W extends StagedFunctionObject<Object>> extends Abstra
 			mapping.addAll(key, object);
 		}
 
-		Set<ModelKey> keys = mapping.getKeySet();
+		Set<ModelKey> keys = mapping.keySet();
 		Set<ModelKey> existing = this.getter.exists(keys);
 
 		for (ModelKey key : existing) {
-			List<W> pass = mapping.getElements(key);
+			List<W> pass = mapping.valuesForKey(key);
 			results.addAll(FilterResult.PASS, pass);
 			mapping.remove(key);
 		}
 
-		Set<W> fail = mapping.getAllElements();
+		Set<W> fail = mapping.valuesSet();
 		results.addAll(FilterResult.FAIL, fail);
 		return results;
 	}

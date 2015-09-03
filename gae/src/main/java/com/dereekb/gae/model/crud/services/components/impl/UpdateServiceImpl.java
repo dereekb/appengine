@@ -85,10 +85,10 @@ public class UpdateServiceImpl<T extends UniqueModel>
 
 			HashMapWithList<FilterResult, UpdatePair<T>> results = UpdatePair.filterSuccessfulPairs(pairs);
 
-			List<UpdatePair<T>> successfulPairs = results.getElements(FilterResult.PASS);
+			List<UpdatePair<T>> successfulPairs = results.valuesForKey(FilterResult.PASS);
 			List<T> updated = UpdatePair.getKeys(successfulPairs);
 
-			List<UpdatePair<T>> errorPairs = results.getElements(FilterResult.FAIL);
+			List<UpdatePair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
 			List<UpdateResponseFailurePair<T>> failurePairs = UpdateResponseFailurePair.createFailurePairs(errorPairs);
 
 			updateResponse = new UpdateResponseImpl<T>(updated, failurePairs);

@@ -58,7 +58,7 @@ public class ReadServiceImpl<T extends UniqueModel>
 			this.readTask.doTask(pairs);
 
 			HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<ReadPair<T>> errorPairs = results.getElements(FilterResult.FAIL);
+			List<ReadPair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
 			List<ModelKey> errorKeys = ReadPair.getKeys(errorPairs);
 
 			if (errorKeys.size() > 0 && options.isAtomic()) {

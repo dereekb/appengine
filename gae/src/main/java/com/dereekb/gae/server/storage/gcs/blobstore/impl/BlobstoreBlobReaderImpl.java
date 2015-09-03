@@ -8,7 +8,7 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 
 /**
- * Used for reading
+ * Used for reading blobs from the Blobstore.
  *
  * @author dereekb
  *
@@ -16,15 +16,32 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 public class BlobstoreBlobReaderImpl
         implements BlobstoreBlobReader {
 
-	private final BlobstoreService service;
+	private BlobstoreService service;
 	private Long bufferSize = 0x800L;
 
 	public BlobstoreBlobReaderImpl(BlobstoreService service) {
+		this.setService(service);
+	}
+
+	public BlobstoreService getService() {
+		return this.service;
+	}
+
+	public void setService(BlobstoreService service) {
 		this.service = service;
 	}
 
+	public Long getBufferSize() {
+		return this.bufferSize;
+	}
+
+	public void setBufferSize(Long bufferSize) {
+		this.bufferSize = bufferSize;
+	}
+
+	// MARK: BlobstoreBlobReader
 	@Override
-	public byte[] readBlobBytes(BlobKey key,
+    public byte[] readBlobBytes(BlobKey blobKey,
 	                            Long size) throws IOException {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -56,20 +73,9 @@ public class BlobstoreBlobReaderImpl
 		return bytes;
 	}
 
-	public BlobstoreService getService() {
-		return this.service;
-	}
-
-	public void setService(BlobstoreService service) {
-		this.service = service;
-	}
-
-	public Long getBufferSize() {
-		return this.bufferSize;
-	}
-
-	public void setBufferSize(Long bufferSize) {
-		this.bufferSize = bufferSize;
+	@Override
+	public String toString() {
+		return "BlobstoreBlobReaderImpl [service=" + this.service + ", bufferSize=" + this.bufferSize + "]";
 	}
 
 }

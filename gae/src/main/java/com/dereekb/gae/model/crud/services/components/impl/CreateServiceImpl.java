@@ -60,7 +60,7 @@ public class CreateServiceImpl<T extends UniqueModel>
 			this.createTask.doTask(pairs, config);
 
 			HashMapWithList<FilterResult, CreatePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<CreatePair<T>> errorPairs = results.getElements(FilterResult.FAIL);
+			List<CreatePair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
 			List<T> errorTemplates = CreatePair.getKeys(errorPairs);
 
 			if (errorTemplates.size() > 0 && options.isAtomic()) {

@@ -32,6 +32,7 @@ public class UploadedBlobFileSet
 
 	private BlobstoreBlobReader reader;
 	private HashMapWithList<String, UploadedBlobFile> uploadedFilesMap;
+	private List<UploadedFile> uploadedFilesList;
 
 	public UploadedBlobFileSet(BlobstoreService blobstoreService, HttpServletRequest request) {
 		this.blobstoreService = blobstoreService;
@@ -85,7 +86,7 @@ public class UploadedBlobFileSet
 		List<BlobKey> keys = new ArrayList<BlobKey>();
 		HashMapWithList<String, UploadedBlobFile> map = this.getFileInfoMap();
 
-		for (UploadedBlobFile file : map.getAllElements()) {
+		for (UploadedBlobFile file : map.valuesSet()) {
 			BlobKey key = file.getBlobKey();
 			keys.add(key);
 		}
@@ -113,7 +114,7 @@ public class UploadedBlobFileSet
 	@Override
 	public Set<String> getUploadedFileNames() {
 		HashMapWithList<String, UploadedBlobFile> map = this.getFileInfoMap();
-		return map.getKeySet();
+		return map.keySet();
 	}
 
 	@Override
@@ -123,8 +124,17 @@ public class UploadedBlobFileSet
 
 	@Override
 	public List<UploadedFile> getAllUploadedFiles() {
-		// TODO Auto-generated method stub
-		return null;
+		if (this.uploadedFilesList == null) {
+			this.uploadedFilesList = this.buildUploadedFilesList();
+		}
+
+		return this.uploadedFilesList;
+	}
+
+	private List<UploadedFile> buildUploadedFilesList() {
+		HashMapWithList<String, UploadedBlobFile> filesMap = this.getFileInfoMap();
+		List<UploadedBlobFile> files = filesMap.valuesList();
+		return new ArrayList<UploadedFile>(files);
 	}
 
 	@Override
@@ -137,5 +147,11 @@ public class UploadedBlobFileSet
 		this.blobstoreService.delete(keysArray);
 	}
 
+	@Override
+	public String toString() {
+		return "UploadedBlobFileSet [blobstoreService=" + this.blobstoreService + ", request=" + this.request
+		        + ", reader=" + this.reader + ", uploadedFilesMap=" + this.uploadedFilesMap + ", uploadedFilesList="
+		        + this.uploadedFilesList + "]";
+	}
 
 }

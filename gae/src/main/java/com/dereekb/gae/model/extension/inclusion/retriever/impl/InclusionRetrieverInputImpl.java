@@ -26,12 +26,12 @@ public class InclusionRetrieverInputImpl
 	// MARK: InclusionRetrieverInput
 	@Override
 	public Set<String> getTargetTypes() {
-		return this.map.getKeySet();
+		return this.map.keySet();
 	}
 
 	@Override
 	public List<ModelKey> getTargetKeysForType(String type) {
-		return this.map.getElements(type);
+		return this.map.valuesForKey(type);
 	}
 
 	@Override

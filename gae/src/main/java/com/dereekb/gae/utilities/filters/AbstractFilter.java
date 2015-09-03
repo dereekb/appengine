@@ -46,7 +46,7 @@ public abstract class AbstractFilter<T>
 	public List<T> filterAndReturnMatchingResult(Iterable<T> objects,
 	                                             FilterResult result) {
 		FilterResults<T> results = this.filterObjects(objects);
-		List<T> filteredObjects = results.getElements(result);
+		List<T> filteredObjects = results.valuesForKey(result);
 		return filteredObjects;
 	}
 

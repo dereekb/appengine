@@ -4,15 +4,28 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.storage.upload.reader.UploadedFileReader;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFileSet;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
-
+/**
+ * {@link UploadedFileReader} implementation for the Blobstore.
+ *
+ * @author dereekb
+ *
+ */
 public class UploadedBlobFileReader
         implements UploadedFileReader {
 
+	// MARK: UploadedFileReader
 	@Override
 	public UploadedFileSet readUploadedFiles(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+		return new UploadedBlobFileSet(blobstoreService, request);
+	}
+
+	@Override
+	public String toString() {
+		return "UploadedBlobFileReader []";
 	}
 
 }
