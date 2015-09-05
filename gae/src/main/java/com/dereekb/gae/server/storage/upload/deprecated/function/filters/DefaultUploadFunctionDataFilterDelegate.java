@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.deprecated.function.filters;
 
-import com.dereekb.gae.server.storage.upload.UploadedFile;
+import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
 
 /**
  * A default filter for uploaded files that can check whether or not the StorageFileInfo for that object matches.

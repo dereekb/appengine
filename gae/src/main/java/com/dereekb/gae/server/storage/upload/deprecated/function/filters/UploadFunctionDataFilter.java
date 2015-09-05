@@ -1,10 +1,11 @@
 package com.dereekb.gae.server.storage.upload.deprecated.function.filters;
 
-import com.dereekb.gae.server.storage.upload.UploadedFile;
+import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
 import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.function.staged.filter.AbstractStagedFunctionObjectFilter;
 
+@Deprecated
 public class UploadFunctionDataFilter<T, U extends UploadedFile> extends AbstractStagedFunctionObjectFilter<T, UploadFunctionPair<T, U>> {
 
 	private UploadFunctionDataFilterDelegate<U> delegate;
@@ -18,7 +19,7 @@ public class UploadFunctionDataFilter<T, U extends UploadedFile> extends Abstrac
 	}
 
 	public UploadFunctionDataFilterDelegate<U> getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(UploadFunctionDataFilterDelegate<U> delegate) {

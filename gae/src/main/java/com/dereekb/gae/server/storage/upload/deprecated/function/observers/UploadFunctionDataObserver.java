@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.deprecated.function.observers;
 
-import com.dereekb.gae.server.storage.upload.UploadedFile;
+import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
 import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
 import com.dereekb.gae.utilities.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
@@ -8,12 +8,13 @@ import com.dereekb.gae.utilities.function.staged.observer.StagedFunctionObjectOb
 
 /**
  * Wraps a UploadFunctionDataObserverDelegate that handles the input data.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  * @param <U>
  */
+@Deprecated
 public class UploadFunctionDataObserver<T, U extends UploadedFile>
         implements StagedFunctionObjectObserver<T, UploadFunctionPair<T, U>> {
 
@@ -27,7 +28,7 @@ public class UploadFunctionDataObserver<T, U extends UploadedFile>
 	}
 
 	public UploadFunctionDataObserverDelegate<T, U> getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(UploadFunctionDataObserverDelegate<T, U> delegate) {

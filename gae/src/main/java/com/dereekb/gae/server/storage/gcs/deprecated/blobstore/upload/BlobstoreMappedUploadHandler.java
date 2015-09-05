@@ -7,20 +7,21 @@ import java.util.Map;
 
 /**
  * Reads the blobs that were uploaded, and converts them to the target model.
- * 
+ *
  * Uses a map to
- * 
+ *
  * All uploaded blobs should be modified or deleted.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class BlobstoreMappedUploadHandler<T> extends BlobstoreUploadHandler<T> {
 
 	private Map<String, BlobstoreUploadHandlerFunction<T>> functionsMap = Collections.emptyMap();
 
 	private boolean hasFunctionForKey(String key) {
-		return functionsMap.containsKey(key);
+		return this.functionsMap.containsKey(key);
 	}
 
 	private List<T> handleUpload(String key,
@@ -31,7 +32,8 @@ public class BlobstoreMappedUploadHandler<T> extends BlobstoreUploadHandler<T> {
 		return result;
 	}
 
-	protected List<T> handleUpload(Map<String, List<UploadedBlobFile>> filesMap,
+	@Override
+    protected List<T> handleUpload(Map<String, List<UploadedBlobFile>> filesMap,
 	                               List<UploadedBlobFile> allFiles) {
 
 		List<T> results = new ArrayList<T>();
@@ -58,7 +60,7 @@ public class BlobstoreMappedUploadHandler<T> extends BlobstoreUploadHandler<T> {
 	}
 
 	public Map<String, BlobstoreUploadHandlerFunction<T>> getFunctionsMap() {
-		return functionsMap;
+		return this.functionsMap;
 	}
 
 	public void setFunctionsMap(Map<String, BlobstoreUploadHandlerFunction<T>> functionsMap) {

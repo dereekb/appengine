@@ -2,15 +2,16 @@ package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.storage.upload.UploadedFile;
+import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.FileInfo;
 
 /**
  * Represents an uploaded blobfile and relevant information.
- * 
+ *
  * @author dereekb
  */
+@Deprecated
 public class UploadedBlobFile
         implements UploadedFile {
 
@@ -29,32 +30,36 @@ public class UploadedBlobFile
 		this.size = info.getSize();
 	}
 
-	public String getContentType() {
-		return contentType;
+	@Override
+    public String getContentType() {
+		return this.contentType;
 	}
 
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
 
-	public String getFilename() {
-		return filename;
+	@Override
+    public String getFilename() {
+		return this.filename;
 	}
 
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
-	public Date getCreationDate() {
-		return creationDate;
+	@Override
+    public Date getCreationDate() {
+		return this.creationDate;
 	}
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
-	public Long getSize() {
-		return size;
+	@Override
+    public Long getSize() {
+		return this.size;
 	}
 
 	public void setSize(Long size) {
@@ -62,12 +67,12 @@ public class UploadedBlobFile
 	}
 
 	public BlobKey getKey() {
-		return key;
+		return this.key;
 	}
 
 	@Override
 	public byte[] getBytes() {
-		return bytes;
+		return this.bytes;
 	}
 
 	@Override
@@ -77,7 +82,7 @@ public class UploadedBlobFile
 
 	@Override
 	public String toString() {
-		return "UploadedBlobFile [key=" + key + ", contentType=" + contentType + ", filename=" + filename
-		        + ", creationDate=" + creationDate + ", size=" + size + "]";
+		return "UploadedBlobFile [key=" + this.key + ", contentType=" + this.contentType + ", filename=" + this.filename
+		        + ", creationDate=" + this.creationDate + ", size=" + this.size + "]";
 	}
 }

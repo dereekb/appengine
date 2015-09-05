@@ -11,10 +11,11 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 
 /**
  * Validates Images
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class ImageValidator {
 
 	private ImagesService service;
@@ -42,31 +43,31 @@ public class ImageValidator {
 		Integer width = image.getWidth();
 		Integer height = image.getHeight();
 
-		if (minWidth != null) {
+		if (this.minWidth != null) {
 			isValid = this.minWidth <= width;
 		}
 
-		if (isValid && minHeight != null) {
+		if (isValid && this.minHeight != null) {
 			isValid = this.minHeight <= height;
 		}
 
-		if (isValid && maxWidth != null) {
+		if (isValid && this.maxWidth != null) {
 			isValid = this.maxWidth >= width;
 		}
 
-		if (isValid && maxHeight != null) {
+		if (isValid && this.maxHeight != null) {
 			isValid = this.maxHeight >= height;
 		}
 
-		if (isValid && aspectRatio != null) {
+		if (isValid && this.aspectRatio != null) {
 			BigDecimal imageRatio = new BigDecimal(((1.0 * width) / height));
 			imageRatio = imageRatio.setScale(4, BigDecimal.ROUND_DOWN);
 
-			boolean validAspect = (aspectRatio.equals(imageRatio));
+			boolean validAspect = (this.aspectRatio.equals(imageRatio));
 			isValid = validAspect;
 		}
 
-		if (isValid && acceptableFormats != null && acceptableFormats.isEmpty() == false) {
+		if (isValid && this.acceptableFormats != null && this.acceptableFormats.isEmpty() == false) {
 			Format format = image.getFormat();
 			isValid = this.acceptableFormats.contains(format);
 		}
@@ -99,7 +100,7 @@ public class ImageValidator {
 	}
 
 	public ImagesService getService() {
-		return service;
+		return this.service;
 	}
 
 	public void setService(ImagesService service) {
@@ -107,7 +108,7 @@ public class ImageValidator {
 	}
 
 	public Integer getMinWidth() {
-		return minWidth;
+		return this.minWidth;
 	}
 
 	public void setMinWidth(Integer minWidth) throws IllegalArgumentException {
@@ -119,7 +120,7 @@ public class ImageValidator {
 	}
 
 	public Integer getMinHeight() {
-		return minHeight;
+		return this.minHeight;
 	}
 
 	public void setMinHeight(Integer minHeight) throws IllegalArgumentException {
@@ -149,7 +150,7 @@ public class ImageValidator {
 	}
 
 	public Integer getMaxWidth() {
-		return maxWidth;
+		return this.maxWidth;
 	}
 
 	public void setMaxWidth(Integer maxWidth) {
@@ -157,7 +158,7 @@ public class ImageValidator {
 	}
 
 	public Integer getMaxHeight() {
-		return maxHeight;
+		return this.maxHeight;
 	}
 
 	public void setMaxHeight(Integer maxHeight) {
@@ -165,7 +166,7 @@ public class ImageValidator {
 	}
 
 	public Double getAspectRatio() {
-		return aspectRatio.doubleValue();
+		return this.aspectRatio.doubleValue();
 	}
 
 	public void setAspectRatio(Double aspectRatio) {

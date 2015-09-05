@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.gcs.blobstore;
+package com.dereekb.gae.server.storage.services.blobstore;
 
 import java.io.IOException;
 

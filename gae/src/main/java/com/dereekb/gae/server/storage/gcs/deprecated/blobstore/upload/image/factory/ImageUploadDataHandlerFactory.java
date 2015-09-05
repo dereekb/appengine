@@ -8,6 +8,7 @@ import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image.Imag
 import com.dereekb.gae.server.storage.upload.deprecated.function.factory.UploadFunctionDataObserverDelegateFactory;
 import com.dereekb.gae.server.storage.upload.deprecated.function.observers.UploadFunctionDataObserverDelegate;
 
+@Deprecated
 public class ImageUploadDataHandlerFactory<T>
         implements UploadFunctionDataObserverDelegateFactory<T, UploadedBlobFile> {
 
@@ -20,23 +21,23 @@ public class ImageUploadDataHandlerFactory<T>
 
 		ImageUploadDataHandler<T> handler = new ImageUploadDataHandler<T>();
 
-		if (editor != null) {
-			handler.setEditor(editor);
+		if (this.editor != null) {
+			handler.setEditor(this.editor);
 		}
 
-		if (delegate != null) {
-			handler.setDelegate(delegate);
+		if (this.delegate != null) {
+			handler.setDelegate(this.delegate);
 		}
 
-		if (accessor != null) {
-			handler.setAccessor(accessor);
+		if (this.accessor != null) {
+			handler.setAccessor(this.accessor);
 		}
 
 		return handler;
 	}
 
 	public ImageEditor getEditor() {
-		return editor;
+		return this.editor;
 	}
 
 	public void setEditor(ImageEditor editor) {
@@ -44,7 +45,7 @@ public class ImageUploadDataHandlerFactory<T>
 	}
 
 	public ImageUploadDataHandlerDelegate<T> getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(ImageUploadDataHandlerDelegate<T> delegate) {
@@ -52,7 +53,7 @@ public class ImageUploadDataHandlerFactory<T>
 	}
 
 	public StorageAccessor getAccessor() {
-		return accessor;
+		return this.accessor;
 	}
 
 	public void setAccessor(StorageAccessor accessor) {

@@ -1,6 +1,7 @@
-package com.dereekb.gae.server.storage.upload.impl;
+package com.dereekb.gae.server.storage.upload.handler.impl.delegate;
 
-import com.dereekb.gae.server.storage.upload.FileUploadHandlerResult;
+import com.dereekb.gae.server.storage.upload.handler.FileUploadHandlerResult;
+import com.dereekb.gae.server.storage.upload.handler.impl.FileUploadHandlerImpl;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFileSet;
 
 /**
@@ -9,7 +10,7 @@ import com.dereekb.gae.server.storage.upload.reader.UploadedFileSet;
  * @author dereekb
  *
  */
-public interface FileUploadHandlerImplDelegate {
+public interface FileUploadHandlerDelegate {
 
 	/**
 	 * Uses the uploaded files.
@@ -20,6 +21,6 @@ public interface FileUploadHandlerImplDelegate {
 	 * @throws RuntimeException
 	 *             if any exceptions occur.
 	 */
-	public FileUploadHandlerResult handleUploadedFiles(UploadedFileSet set) throws RuntimeException;
+	public FileUploadHandlerDelegateResult handleUploadedFiles(UploadedFileSet set) throws RuntimeException;
 
 }

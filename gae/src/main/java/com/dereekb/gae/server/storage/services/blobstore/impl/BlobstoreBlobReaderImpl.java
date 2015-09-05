@@ -1,9 +1,9 @@
-package com.dereekb.gae.server.storage.gcs.blobstore.impl;
+package com.dereekb.gae.server.storage.services.blobstore.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import com.dereekb.gae.server.storage.gcs.blobstore.BlobstoreBlobReader;
+import com.dereekb.gae.server.storage.services.blobstore.BlobstoreBlobReader;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 

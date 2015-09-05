@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.deprecated.function.factory;
 
-import com.dereekb.gae.server.storage.upload.UploadedFile;
+import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
 import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
 import com.dereekb.gae.server.storage.upload.deprecated.function.filters.UploadFunctionDataFilter;
 import com.dereekb.gae.server.storage.upload.deprecated.function.filters.UploadFunctionDataFilterDelegate;

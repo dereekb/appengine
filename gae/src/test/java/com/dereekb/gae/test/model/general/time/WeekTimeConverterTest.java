@@ -41,7 +41,7 @@ public class WeekTimeConverterTest {
 		LongBitContainer validator = new LongBitContainer(weekTimeNumber);
 
 		// Week Time Number
-		System.out.println("Validator: " + validator.getValue() + " , " + Long.toHexString(validator.getValue()));
+		System.out.println("ContentValidator: " + validator.getValue() + " , " + Long.toHexString(validator.getValue()));
 
 		Integer daySpanNumber = daySpan.getDaysNumber();
 		Long daySpanFocus = validator.focusBits(0xFF000000L, BitIndex.hexIndex(6));

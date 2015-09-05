@@ -5,6 +5,7 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.UploadOptions;
 
+@Deprecated
 public class BlobstoreUrlFactory
         implements FileUploadUrlFactory {
 
@@ -64,7 +65,7 @@ public class BlobstoreUrlFactory
 	}
 
 	public String getUploadBucket() {
-		return uploadBucket;
+		return this.uploadBucket;
 	}
 
 	public void setUploadBucket(String uploadBucket) {
@@ -72,7 +73,7 @@ public class BlobstoreUrlFactory
 	}
 
 	public BlobstoreService getBlobstoreService() {
-		return blobstoreService;
+		return this.blobstoreService;
 	}
 
 	public void setBlobstoreService(BlobstoreService blobstoreService) throws NullPointerException {
@@ -84,7 +85,7 @@ public class BlobstoreUrlFactory
 	}
 
 	public Long getMaxBlobSize() {
-		return maxBlobSize;
+		return this.maxBlobSize;
 	}
 
 	public void setMaxBlobSize(Long maxBlobSize) {
@@ -92,7 +93,7 @@ public class BlobstoreUrlFactory
 	}
 
 	public Long getMaxUploadSize() {
-		return maxUploadSize;
+		return this.maxUploadSize;
 	}
 
 	public void setMaxUploadSize(Long maxUploadSize) {
@@ -100,7 +101,7 @@ public class BlobstoreUrlFactory
 	}
 
 	public String getForwardUrl() {
-		return forwardUrl;
+		return this.forwardUrl;
 	}
 
 	public void setForwardUrl(String forwardUrl) {

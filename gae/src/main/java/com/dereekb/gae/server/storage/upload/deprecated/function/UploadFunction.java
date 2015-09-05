@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.deprecated.function;
 
-import com.dereekb.gae.server.storage.upload.UploadedFile;
+import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
 
 /**
@@ -13,6 +13,7 @@ import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
  * @param <U>
  *            UploadedFile Type
  */
+@Deprecated
 public class UploadFunction<T, U extends UploadedFile> extends FilteredStagedFunction<T, UploadFunctionPair<T, U>> {
 
 	private UploadFunctionDelegate<T> uploadDelegate;

@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.upload.impl;
+package com.dereekb.gae.server.storage.services.blobstore.upload;
 
 import com.dereekb.gae.server.storage.upload.FileUploadUrlFactory;
 import com.dereekb.gae.utilities.misc.ByteSizeUtility;

@@ -7,14 +7,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.BlobstoreUploadedBlobReader;
-import com.dereekb.gae.server.storage.upload.FileUploadHandler;
+import com.dereekb.gae.server.storage.upload.handler.FileUploadHandler;
 
 /**
  * Simple upload handler that reads the all blobs that were uploaded, and converts them to the target model using a
  * BlobstoreUploadHandlerFunction.
- * 
+ *
  * @author dereekb
  */
+@Deprecated
 public class BlobstoreUploadHandler<T>
         implements FileUploadHandler<T> {
 
@@ -23,20 +24,20 @@ public class BlobstoreUploadHandler<T>
 
 	/**
 	 * Handles reading uploaded objects by retrieving them from the blobstore.
-	 * 
+	 *
 	 * Uploaded blobs are deleted when this function completes or encounters an exception.
 	 */
 	@Override
 	public final List<T> handleUploadRequest(HttpServletRequest request) {
-		Map<String, List<UploadedBlobFile>> filesMap = blobReader.uploadedBlobFilesMap(request);
-		List<UploadedBlobFile> files = blobReader.uploadedBlobFilesFromMap(filesMap);
+		Map<String, List<UploadedBlobFile>> filesMap = this.blobReader.uploadedBlobFilesMap(request);
+		List<UploadedBlobFile> files = this.blobReader.uploadedBlobFilesFromMap(filesMap);
 		List<T> result = null;
 
 		try {
 			result = this.handleUpload(filesMap, files);
-			blobReader.deleteUploadedFiles(files);
+			this.blobReader.deleteUploadedFiles(files);
 		} catch (Exception e) {
-			blobReader.deleteUploadedFiles(files);
+			this.blobReader.deleteUploadedFiles(files);
 			throw e;
 		}
 
@@ -45,7 +46,7 @@ public class BlobstoreUploadHandler<T>
 
 	/**
 	 * Handles the upload of all files. Both the original filesMap and all files are provided
-	 * 
+	 *
 	 * @param filesMap
 	 * @param allFiles
 	 * @return
@@ -58,7 +59,7 @@ public class BlobstoreUploadHandler<T>
 	}
 
 	public BlobstoreUploadedBlobReader getBlobReader() {
-		return blobReader;
+		return this.blobReader;
 	}
 
 	public void setBlobReader(BlobstoreUploadedBlobReader blobReader) {
@@ -66,7 +67,7 @@ public class BlobstoreUploadHandler<T>
 	}
 
 	public BlobstoreUploadHandlerFunction<T> getFunction() {
-		return uploadFunction;
+		return this.uploadFunction;
 	}
 
 	public void setFunction(BlobstoreUploadHandlerFunction<T> function) {
@@ -74,7 +75,7 @@ public class BlobstoreUploadHandler<T>
 	}
 
 	public BlobstoreUploadHandlerFunction<T> getUploadFunction() {
-		return uploadFunction;
+		return this.uploadFunction;
 	}
 
 	public void setUploadFunction(BlobstoreUploadHandlerFunction<T> uploadFunction) {

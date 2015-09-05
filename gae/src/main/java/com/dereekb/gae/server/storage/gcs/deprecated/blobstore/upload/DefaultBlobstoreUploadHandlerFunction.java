@@ -9,10 +9,11 @@ import com.dereekb.gae.utilities.factory.Factory;
 
 /**
  * Helper class that implements BlobstoreUploadHandlerFunction and runs an UploadFunction using the input files.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class DefaultBlobstoreUploadHandlerFunction<T>
         implements BlobstoreUploadHandlerFunction<T> {
 
@@ -27,7 +28,7 @@ public class DefaultBlobstoreUploadHandlerFunction<T>
 			pairs.add(pair);
 		}
 
-		UploadFunction<T, UploadedBlobFile> uploadFunction = uploadFunctionFactory.make();
+		UploadFunction<T, UploadedBlobFile> uploadFunction = this.uploadFunctionFactory.make();
 		uploadFunction.addObjects(pairs);
 		uploadFunction.run();
 
@@ -36,7 +37,7 @@ public class DefaultBlobstoreUploadHandlerFunction<T>
 	}
 
 	public Factory<UploadFunction<T, UploadedBlobFile>> getUploadFunctionFactory() {
-		return uploadFunctionFactory;
+		return this.uploadFunctionFactory;
 	}
 
 	public void setUploadFunctionFactory(Factory<UploadFunction<T, UploadedBlobFile>> uploadFunctionFactory) {

@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.shared.response.impl;
 
+import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -19,6 +20,10 @@ public class ApiResponseDataImpl
 	private Object data;
 
 	public ApiResponseDataImpl() {}
+
+	public ApiResponseDataImpl(String type) throws IllegalArgumentException {
+		this.setType(type);
+	}
 
 	public ApiResponseDataImpl(String type, Object data) throws IllegalArgumentException {
 		this.setType(type);
