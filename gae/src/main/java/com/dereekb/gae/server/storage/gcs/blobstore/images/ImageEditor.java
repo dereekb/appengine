@@ -12,12 +12,13 @@ import com.google.appengine.api.images.Transform;
 
 /**
  * Helper function for editing images using the GAE Images API.
- * 
+ *
  * Default output settings output images as PNGs at max quality.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class ImageEditor {
 
 	private ImagesService service;
@@ -30,7 +31,7 @@ public class ImageEditor {
 	public ImageEditor(ImagesService service) {
 		this.service = service;
 		this.editorOutputSettings = new OutputSettings(ImagesService.OutputEncoding.PNG);
-		editorOutputSettings.setQuality(100);
+		this.editorOutputSettings.setQuality(100);
 	}
 
 	public class ImageEditorInstance {
@@ -48,13 +49,13 @@ public class ImageEditor {
 		}
 
 		private void initializeOutputSettings() {
-			OutputSettings copy = new OutputSettings(editorOutputSettings.getOutputEncoding());
-			copy.setQuality(editorOutputSettings.getQuality());
+			OutputSettings copy = new OutputSettings(ImageEditor.this.editorOutputSettings.getOutputEncoding());
+			copy.setQuality(ImageEditor.this.editorOutputSettings.getQuality());
 			this.setOutputSettings(copy);
 		}
 
 		public Image getImage() {
-			return image;
+			return this.image;
 		}
 
 		public void setImage(Image image) {
@@ -78,7 +79,7 @@ public class ImageEditor {
 
 		/**
 		 * Resizes the image to fit in a box with the specified width/height, and does not allow stretching.
-		 * 
+		 *
 		 * @param width
 		 * @param height
 		 */
@@ -89,7 +90,7 @@ public class ImageEditor {
 
 		/**
 		 * Resizes the image to fit in a box with the specified width/height.
-		 * 
+		 *
 		 * @param width
 		 * @param height
 		 * @param allowStretch
@@ -103,7 +104,7 @@ public class ImageEditor {
 
 		/**
 		 * Resizes the image to fit in the given box, and crops the most constraining dimension.
-		 * 
+		 *
 		 * @param width
 		 * @param height
 		 * @param xCrop
@@ -119,7 +120,7 @@ public class ImageEditor {
 
 		/**
 		 * Crops the image, with the left and top set to 0.
-		 * 
+		 *
 		 * @param right
 		 *            Normalized (0-1) value of the right side.
 		 * @param bottom
@@ -132,7 +133,7 @@ public class ImageEditor {
 
 		/**
 		 * Crops the image.
-		 * 
+		 *
 		 * @param left
 		 *            Normalized (0-1) value of the left side.
 		 * @param top
@@ -159,20 +160,20 @@ public class ImageEditor {
 		}
 
 		private CompositeTransform createTransformComposite() {
-			CompositeTransform composite = ImagesServiceFactory.makeCompositeTransform(transforms);
+			CompositeTransform composite = ImagesServiceFactory.makeCompositeTransform(this.transforms);
 			return composite;
 		}
 
 		/**
 		 * Applies the transform to the given image.
-		 * 
+		 *
 		 * The the created image becomes the new image for the editor if setImageAfterTransform is true.
-		 * 
+		 *
 		 * @return
 		 */
 		public Image applyTransforms() {
 			CompositeTransform composite = this.createTransformComposite();
-			Image newImage = service.applyTransform(composite, image, this.outputSettings);
+			Image newImage = ImageEditor.this.service.applyTransform(composite, this.image, this.outputSettings);
 
 			if (this.setImageAfterTransform) {
 				this.image = newImage;
@@ -199,7 +200,7 @@ public class ImageEditor {
 		}
 
 		public boolean getClearTransformsOnApply() {
-			return clearTransformsOnApply;
+			return this.clearTransformsOnApply;
 		}
 
 		public void setClearTransformsOnApply(boolean clearTransformsOnApply) {
@@ -207,7 +208,7 @@ public class ImageEditor {
 		}
 
 		public boolean getSetImageAfterTransform() {
-			return setImageAfterTransform;
+			return this.setImageAfterTransform;
 		}
 
 		public void setSetImageAfterTransform(boolean setImageAfterTransform) {
@@ -220,7 +221,7 @@ public class ImageEditor {
 		}
 
 		public OutputSettings getOutputSettings() {
-			return outputSettings;
+			return this.outputSettings;
 		}
 
 		public void setOutputSettings(OutputSettings outputSettings) {
@@ -241,7 +242,7 @@ public class ImageEditor {
 	}
 
 	public ImagesService getService() {
-		return service;
+		return this.service;
 	}
 
 	public void setService(ImagesService service) {
@@ -249,7 +250,7 @@ public class ImageEditor {
 	}
 
 	public OutputSettings getEditorOutputSettings() {
-		return editorOutputSettings;
+		return this.editorOutputSettings;
 	}
 
 	public void setEditorOutputSettings(OutputSettings editorOutputSettings) {
