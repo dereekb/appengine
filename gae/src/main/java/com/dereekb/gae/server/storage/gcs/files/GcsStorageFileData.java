@@ -2,7 +2,7 @@ package com.dereekb.gae.server.storage.gcs.files;
 
 import com.dereekb.gae.server.storage.file.StorableContent;
 import com.dereekb.gae.server.storage.file.StorableFile;
-import com.dereekb.gae.server.storage.file.StorageFileOptions;
+import com.dereekb.gae.server.storage.file.options.StorableFileOptionsImpl;
 import com.google.appengine.tools.cloudstorage.GcsFileMetadata;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
@@ -19,7 +19,7 @@ public class GcsStorageFileData
 	private final GcsFilename gcsFilename;
 	private final byte[] bytes;
 	private final GcsFileMetadata metadata;
-	private StorageFileOptions options;
+	private StorableFileOptionsImpl options;
 
 	public GcsStorageFileData(StorableFile file, GcsFilename gcsFilename, byte[] bytes, GcsFileMetadata metadata) {
 		this.file = file;
@@ -28,7 +28,7 @@ public class GcsStorageFileData
 		this.metadata = metadata;
 	}
 
-	public byte[] getBytes() {
+	public byte[] getFileData() {
 		return bytes;
 	}
 
@@ -62,11 +62,11 @@ public class GcsStorageFileData
 	}
 
 	@Override
-	public StorageFileOptions getOptions() {
+	public StorableFileOptionsImpl getOptions() {
 		return this.options;
 	}
 
-	public void setOptions(StorageFileOptions options) {
+	public void setOptions(StorableFileOptionsImpl options) {
 		this.options = options;
 	}
 }

@@ -1,8 +1,8 @@
 package com.dereekb.gae.server.storage.gcs.files;
 
 import com.dereekb.gae.server.storage.file.StorableContent;
-import com.dereekb.gae.server.storage.file.StorageFileOptions;
-import com.dereekb.gae.server.storage.file.StorageFileOptions.StorageFileVisibility;
+import com.dereekb.gae.server.storage.file.options.StorableFileOptionsImpl;
+import com.dereekb.gae.server.storage.file.options.StorableFileVisibility;
 import com.dereekb.gae.server.storage.gcs.GcsStorageFileSaveRequest;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
@@ -18,11 +18,11 @@ public class GcsStorageFileRequestBuilder {
 	private static final String ALLOW_CACHE_STRING_FORMAT = "public, max-age=%d";
 	private static final String DISALLOW_CACHE_STRING_FORMAT = "private, max-age=0, no-transform";
 
-	private StorageFileOptions defaultOptions;
+	private StorableFileOptionsImpl defaultOptions;
 	private Integer defaultCacheTime = 86400; // 1 day in seconds
 
 	/**
-	 * Whether or not to combine the {@link StorageFileOptions} from the object and the default options.
+	 * Whether or not to combine the {@link StorableFileOptionsImpl} from the object and the default options.
 	 */
 	private boolean combineOptions = false;
 
@@ -38,7 +38,7 @@ public class GcsStorageFileRequestBuilder {
 
 	public GcsFileOptions buildOptions(StorableContent file) {
 		GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
-		StorageFileOptions fileOptions = this.getOptionsForFile(file);
+		StorableFileOptionsImpl fileOptions = this.getOptionsForFile(file);
 
 		String mimeType = file.getContentType();
 		builder = builder.mimeType(mimeType);
@@ -51,8 +51,8 @@ public class GcsStorageFileRequestBuilder {
 		return options;
 	}
 
-	private StorageFileOptions getOptionsForFile(StorableContent file) {
-		StorageFileOptions options = file.getOptions();
+	private StorableFileOptionsImpl getOptionsForFile(StorableContent file) {
+		StorableFileOptionsImpl options = file.getOptions();
 
 		if (options == null) {
 			options = this.defaultOptions;
@@ -65,9 +65,9 @@ public class GcsStorageFileRequestBuilder {
 		return options;
 	}
 
-	private GcsFileOptions.Builder appendOptionsToBuilder(StorageFileOptions options,
+	private GcsFileOptions.Builder appendOptionsToBuilder(StorableFileOptionsImpl options,
 	                                                      GcsFileOptions.Builder builder) {
-		StorageFileVisibility visibility = options.getVisibility();
+		StorableFileVisibility visibility = options.getVisibility();
 		if (visibility != null) {
 			builder = builder.acl(this.stringForVisibility(visibility));
 		}
@@ -80,11 +80,11 @@ public class GcsStorageFileRequestBuilder {
 		return builder;
 	}
 
-	private String stringForVisibility(StorageFileVisibility visibility) {
+	private String stringForVisibility(StorableFileVisibility visibility) {
 		String string = null;
 
 		switch (visibility) {
-			case PRIVATE:
+			case SYSTEM:
 				string = PRIVATE_VISIBILITY;
 				break;
 			case PUBLIC:
@@ -95,7 +95,7 @@ public class GcsStorageFileRequestBuilder {
 		return string;
 	}
 
-	private String stringForCache(StorageFileOptions options) {
+	private String stringForCache(StorableFileOptionsImpl options) {
 		String cacheString = null;
 		boolean cache = options.getCache();
 		Integer time = options.getCacheTime();
@@ -113,11 +113,11 @@ public class GcsStorageFileRequestBuilder {
 		return cacheString;
 	}
 
-	public StorageFileOptions getDefaultOptions() {
-		return defaultOptions;
+	public StorableFileOptionsImpl getDefaultOptions() {
+		return this.defaultOptions;
 	}
 
-	public void setDefaultOptions(StorageFileOptions defaultOptions) {
+	public void setDefaultOptions(StorableFileOptionsImpl defaultOptions) {
 		this.defaultOptions = defaultOptions;
 
 		if (defaultOptions == null) {
@@ -126,7 +126,7 @@ public class GcsStorageFileRequestBuilder {
 	}
 
 	public Integer getDefaultCacheTime() {
-		return defaultCacheTime;
+		return this.defaultCacheTime;
 	}
 
 	public void setDefaultCacheTime(Integer defaultCacheTime) throws NullPointerException {
@@ -138,7 +138,7 @@ public class GcsStorageFileRequestBuilder {
 	}
 
 	public boolean isCombineOptions() {
-		return combineOptions;
+		return this.combineOptions;
 	}
 
 	public void setCombineOptions(boolean combineOptions) throws IllegalArgumentException {

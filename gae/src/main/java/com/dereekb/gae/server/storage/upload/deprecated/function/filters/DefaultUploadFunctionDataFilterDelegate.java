@@ -3,7 +3,7 @@ package com.dereekb.gae.server.storage.upload.deprecated.function.filters;
 import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
 
 /**
- * A default filter for uploaded files that can check whether or not the StorageFileInfo for that object matches.
+ * A default filter for uploaded files that can check whether or not the StorableFileInfo for that object matches.
  *
  * @author dereekb
  *
@@ -29,12 +29,12 @@ public class DefaultUploadFunctionDataFilterDelegate<U extends UploadedFile>
 		}
 
 		if (isValid && this.minSize != null) {
-			Long size = file.getSize();
+			Long size = file.getFileSize();
 			isValid = (size >= this.minSize);
 		}
 
 		if (isValid && this.maxSize != null) {
-			Long size = file.getSize();
+			Long size = file.getFileSize();
 			isValid = (size <= this.maxSize);
 		}
 

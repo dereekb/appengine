@@ -4,18 +4,18 @@ import java.util.Date;
 
 /**
  * Contains meta-data about the given file.
- * 
+ *
  * @author dereekb
  *
  */
-public interface StorageFileInfo {
-
-	public String getContentType();
+public interface StorableFileInfo {
 
 	public String getFilename();
 
+	public String getContentType();
+
 	public Date getCreationDate();
 
-	public Long getSize();
+	public Long getFileSize();
 
 }

@@ -1,4 +1,6 @@
-package com.dereekb.gae.server.storage.file;
+package com.dereekb.gae.server.storage.file.impl;
+
+import com.dereekb.gae.server.storage.file.StorableFile;
 
 /**
  * Basic storage file that implements the {@link StorableFile} interface.
@@ -8,13 +10,13 @@ package com.dereekb.gae.server.storage.file;
  * @author dereekb
  *
  */
-public class StorageFile
+public class StorableFileImpl
         implements StorableFile {
 
 	private final String filename;
 	private final String path;
 
-	public StorageFile(String filename, String path) {
+	public StorableFileImpl(String filename, String path) {
 		this.filename = filename;
 		this.path = path;
 	}

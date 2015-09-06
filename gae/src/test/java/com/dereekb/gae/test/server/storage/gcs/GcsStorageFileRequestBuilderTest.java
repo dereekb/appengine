@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dereekb.gae.server.storage.file.StorageFileContent;
-import com.dereekb.gae.server.storage.file.StorageFileOptions;
-import com.dereekb.gae.server.storage.file.StorageFileOptions.StorageFileVisibility;
+import com.dereekb.gae.server.storage.file.impl.StorableContentImpl;
+import com.dereekb.gae.server.storage.file.options.StorableFileOptionsImpl;
+import com.dereekb.gae.server.storage.file.options.StorableFileOptionsImpl.StorableFileVisibility;
 import com.dereekb.gae.server.storage.gcs.files.GcsStorageFileRequestBuilder;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
@@ -22,14 +22,14 @@ public class GcsStorageFileRequestBuilderTest {
 	@Test
 	public void testDefaults() {
 		GcsStorageFileRequestBuilder builder = new GcsStorageFileRequestBuilder();
-		StorageFileOptions options = new StorageFileOptions();
-		options.setVisibility(StorageFileVisibility.PUBLIC);
+		StorableFileOptionsImpl options = new StorableFileOptionsImpl();
+		options.setVisibility(StorableFileVisibility.PUBLIC);
 
 		options.setCache(true);
 		options.setCacheTime(1);
 		builder.setDefaultOptions(options);
 
-		StorageFileContent content = new StorageFileContent(null, null, "test/test");
+		StorableContentImpl content = new StorableContentImpl(null, null, "test/test");
 		GcsFileOptions builtOptions = builder.buildOptions(content);
 
 		String acl = builtOptions.getAcl();

@@ -2,7 +2,7 @@ package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image;
 
 import com.dereekb.gae.server.storage.StorageAccessor;
 import com.dereekb.gae.server.storage.file.StorableFile;
-import com.dereekb.gae.server.storage.file.StorageFileContent;
+import com.dereekb.gae.server.storage.file.impl.StorableContentImpl;
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor;
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor.ImageEditorInstance;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
@@ -58,7 +58,7 @@ public class ImageUploadDataHandler<T>
 
 		String contentType = file.getContentType();
 		StorableFile storageFile = this.delegate.fileForUploadedImage(model, file);
-		StorageFileContent storageFileData = new StorageFileContent(storageFile, imageData, contentType);
+		StorableContentImpl storageFileData = new StorableContentImpl(storageFile, imageData, contentType);
 		boolean saveSuccess = this.accessor.saveFile(storageFileData);
 		return saveSuccess;
 	}

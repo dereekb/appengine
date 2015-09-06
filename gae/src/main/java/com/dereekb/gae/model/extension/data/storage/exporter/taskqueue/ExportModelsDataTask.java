@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.data.storage.exporter.ExportException;
 import com.dereekb.gae.model.extension.data.storage.exporter.Exporter;
 import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
 import com.dereekb.gae.model.extension.taskqueue.task.iterate.IterateModelsSubtask;
-import com.dereekb.gae.server.storage.file.StorageFile;
+import com.dereekb.gae.server.storage.file.impl.StorableFileImpl;
 
 /**
  * Exporter subtask.
@@ -23,7 +23,7 @@ public class ExportModelsDataTask<T>
 	private final ExportModelsDataTaskDelegate delegate;
 	private final Exporter<T> exporter;
 
-	private StorageFile file;
+	private StorableFileImpl file;
 	private List<T> models = new ArrayList<T>();
 
 	public ExportModelsDataTask(ExportModelsDataTaskDelegate delegate, Exporter<T> exporter) {

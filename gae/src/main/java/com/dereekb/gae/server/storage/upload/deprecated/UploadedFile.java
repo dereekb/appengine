@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.deprecated;
 
-import com.dereekb.gae.server.storage.file.StorageFileInfo;
+import com.dereekb.gae.server.storage.file.StorableFileInfo;
 
 /**
  * Represents an uploaded file that has bytes.
@@ -9,7 +9,7 @@ import com.dereekb.gae.server.storage.file.StorageFileInfo;
  */
 @Deprecated
 public interface UploadedFile
-        extends StorageFileInfo {
+        extends StorableFileInfo {
 
 	public byte[] getBytes();
 

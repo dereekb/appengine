@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.storage.file;
 
 /**
- * A storable object with data of itself attached.
+ * {@link StorableFile} that also contains data.
  * 
  * @author dereekb
  *
@@ -9,6 +9,6 @@ package com.dereekb.gae.server.storage.file;
 public interface StorableData
         extends StorableFile {
 
-	public byte[] getBytes();
+	public byte[] getFileData();
 
 }

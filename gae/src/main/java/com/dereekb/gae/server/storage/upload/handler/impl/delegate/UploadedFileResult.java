@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.storage.upload.handler.impl.delegate;
 
 import com.dereekb.gae.server.storage.upload.reader.UploadedFile;
+import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  * Wraps an {@link UploadedFile} and describes how the file was used.
@@ -15,21 +16,15 @@ public interface UploadedFileResult {
 	 *
 	 * @return {@link UploadedFile}. Never {@code null}.
 	 */
-	public UploadedFile getFile();
+	public UploadedFile getUploadedFile();
 
 	/**
-	 * Returns the created type, if applicable.
+	 * Returns data about the created type, if applicable.
 	 *
-	 * @return {@link String} of the type. {@code null} if nothing was created.
+	 * @return {@link ApiResponseData} describing the object created.
+	 *         {@code null} if nothing was created.
 	 */
-	public String getCreatedType();
-
-	/**
-	 * Returns the created type, if applicable.
-	 *
-	 * @return {@link Object} created. {@code null} if nothing was created.
-	 */
-	public Object getCreatedObject();
+	public ApiResponseData getResponseData();
 
 	/**
 	 * Whether or not the {@link UploadedFile} was used.

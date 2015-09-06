@@ -83,7 +83,7 @@ public class JavaMailSource
 
 						String filename = content.getFilename();
 						String contentType = content.getContentType();
-						byte[] bytes = content.getBytes();
+						byte[] bytes = content.getFileData();
 
 						attachment.setFileName(filename);
 						attachment.setContent(bytes, contentType);

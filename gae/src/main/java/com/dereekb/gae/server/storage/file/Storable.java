@@ -1,9 +1,10 @@
 package com.dereekb.gae.server.storage.file;
 
 /**
- * Interface for items that can be stored.
- * 
+ * Item that can be stored. Contains only a filename,
+ *
  * @author dereekb
+ * @see {@link StorableFile}
  */
 public interface Storable {
 

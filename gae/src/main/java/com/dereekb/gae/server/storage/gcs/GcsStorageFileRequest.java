@@ -5,7 +5,7 @@ import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 
 /**
- * StorageFile wrapper that includes GCS file options and the Gcs bucket name.
+ * StorableFileImpl wrapper that includes GCS file options and the Gcs bucket name.
  * 
  * @author dereekb
  *

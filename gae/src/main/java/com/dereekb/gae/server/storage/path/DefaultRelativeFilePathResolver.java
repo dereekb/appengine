@@ -2,7 +2,7 @@ package com.dereekb.gae.server.storage.path;
 
 import com.dereekb.gae.server.storage.file.Storable;
 import com.dereekb.gae.server.storage.file.StorableFile;
-import com.dereekb.gae.server.storage.file.StorageFile;
+import com.dereekb.gae.server.storage.file.impl.StorableFileImpl;
 import com.dereekb.gae.server.storage.folder.FolderPathResolver;
 import com.dereekb.gae.server.storage.folder.StorableFolder;
 
@@ -38,7 +38,7 @@ public final class DefaultRelativeFilePathResolver<T>
 		StorableFolder folder = this.folderPathResolver.folderForObject(relative);
 		String filename = reference.getFilename();
 		String filePath = this.pathMerger.makePath(folder, reference);
-		return new StorageFile(filename, filePath);
+		return new StorableFileImpl(filename, filePath);
 	}
 
 }

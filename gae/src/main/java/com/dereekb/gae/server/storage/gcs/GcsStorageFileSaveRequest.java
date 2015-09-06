@@ -4,7 +4,7 @@ import com.dereekb.gae.server.storage.file.StorableContent;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
 /**
- * Wrapper/Extension of StorageFileRequest that wraps StorageFileData and contains the bucket and optional GcsOptions.
+ * Wrapper/Extension of StorageFileRequest that wraps StorableDataImpl and contains the bucket and optional GcsOptions.
  * 
  * @author dereekb
  */
@@ -38,7 +38,7 @@ public class GcsStorageFileSaveRequest extends GcsStorageFileRequest {
 	}
 
 	public byte[] getData() {
-		return file.getBytes();
+		return file.getFileData();
 	}
 
 	public StorableContent getFile() {

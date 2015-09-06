@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.storage.services.data.impl;
 
 import com.dereekb.gae.server.storage.services.images.ImageBytesEditor.ImageEditingInstance;
+import com.google.appengine.api.images.Image;
 
 /**
  * {@link ImageBytesModifier} delegate used to perform the transformations.
@@ -11,11 +12,11 @@ import com.dereekb.gae.server.storage.services.images.ImageBytesEditor.ImageEdit
 public interface ImageBytesModifierDelegate {
 
 	/**
-	 * Edits an image using the input {@linl ImageEditingInstance}.
+	 * Edits an image using the input {@link ImageEditingInstance}.
 	 *
 	 * @param instance
 	 *            {@link ImageEditingIstance}. Never {@code null}.
-	 * @return
+	 * @return {@link Image}
 	 */
 	public Image editImage(ImageEditingInstance instance);
 

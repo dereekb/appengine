@@ -58,7 +58,7 @@ public class UploadedBlobFile
 	}
 
 	@Override
-    public Long getSize() {
+    public Long getFileSize() {
 		return this.size;
 	}
 

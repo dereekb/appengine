@@ -98,7 +98,7 @@ public class UploadedBlobFileSet
 	@Override
 	public byte[] readFileBytes(UploadedBlobFile uploadedBlobFile) throws IOException, NoFileDataException {
 		BlobKey key = uploadedBlobFile.getBlobKey();
-		Long size = uploadedBlobFile.getSize();
+		Long size = uploadedBlobFile.getFileSize();
 		byte[] bytes = null;
 
 		if (size != null && size > 0) {

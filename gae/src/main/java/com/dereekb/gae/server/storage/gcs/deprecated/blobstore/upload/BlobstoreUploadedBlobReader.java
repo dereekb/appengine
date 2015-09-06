@@ -18,7 +18,7 @@ public class BlobstoreUploadedBlobReader
 	@Override
 	public byte[] readBytes(UploadedBlobFile file) {
 
-		Long size = file.getSize();
+		Long size = file.getFileSize();
 		byte[] bytes = null;
 
 		if (size != null && size > 0) {
@@ -31,7 +31,7 @@ public class BlobstoreUploadedBlobReader
 	private byte[] readBlobData(UploadedBlobFile file) {
 
 		BlobKey blobKey = file.getKey();
-		Long size = file.getSize();
+		Long size = file.getFileSize();
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
 		Long startIndex = 0L;

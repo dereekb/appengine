@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.server.storage.StorageAccessor;
-import com.dereekb.gae.server.storage.file.StorageFile;
+import com.dereekb.gae.server.storage.file.impl.StorableFileImpl;
 import com.dereekb.gae.utilities.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.function.staged.observer.StagedFunctionObserver;
@@ -23,9 +23,9 @@ public class DeleteFileObserver<T>
 
 		List<T> objects = handler.getFunctionObjects();
 		for (T object : objects) {
-			Collection<StorageFile> files = this.delegate.retrieveFilesToDelete(object);
+			Collection<StorableFileImpl> files = this.delegate.retrieveFilesToDelete(object);
 
-			for (StorageFile file : files) {
+			for (StorableFileImpl file : files) {
 				boolean success = this.accessor.deleteFile(file);
 
 				if (success == false && this.ignoreMissingFiles == false) {
