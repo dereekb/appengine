@@ -8,9 +8,10 @@ import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
 /**
  * Creates an {@link GcsStorageFileSaveRequest} from this request.
- * 
+ *
  * @author dereekb
  */
+@Deprecated
 public class GcsStorageFileRequestBuilder {
 
 	private static final String PUBLIC_VISIBILITY = "public-read";

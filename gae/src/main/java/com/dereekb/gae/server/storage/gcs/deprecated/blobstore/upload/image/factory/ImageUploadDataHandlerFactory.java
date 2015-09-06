@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image.factory;
 
-import com.dereekb.gae.server.storage.StorageAccessor;
+import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image.ImageUploadDataHandler;
@@ -14,7 +14,7 @@ public class ImageUploadDataHandlerFactory<T>
 
 	private ImageEditor editor;
 	private ImageUploadDataHandlerDelegate<T> delegate;
-	private StorageAccessor accessor;
+	private StorageSystem accessor;
 
 	@Override
 	public UploadFunctionDataObserverDelegate<T, UploadedBlobFile> makeDataObserverDelegate() {
@@ -52,11 +52,11 @@ public class ImageUploadDataHandlerFactory<T>
 		this.delegate = delegate;
 	}
 
-	public StorageAccessor getAccessor() {
+	public StorageSystem getAccessor() {
 		return this.accessor;
 	}
 
-	public void setAccessor(StorageAccessor accessor) {
+	public void setAccessor(StorageSystem accessor) {
 		this.accessor = accessor;
 	}
 

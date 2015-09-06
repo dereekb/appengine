@@ -3,7 +3,7 @@ package com.dereekb.gae.server.storage.functions.observers;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.server.storage.StorageAccessor;
+import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.file.impl.StorableFileImpl;
 import com.dereekb.gae.utilities.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
@@ -15,7 +15,7 @@ public class DeleteFileObserver<T>
 
 	private boolean ignoreMissingFiles = true;
 	private DeleteFileObserverDelegate<T> delegate;
-	private StorageAccessor accessor;
+	private StorageSystem accessor;
 
 	@Override
 	public void functionHandlerCallback(StagedFunctionStage stage,
@@ -43,11 +43,11 @@ public class DeleteFileObserver<T>
 		this.ignoreMissingFiles = ignoreMissingFiles;
 	}
 
-	public StorageAccessor getAccessor() {
+	public StorageSystem getAccessor() {
 		return this.accessor;
 	}
 
-	public void setAccessor(StorageAccessor accessor) {
+	public void setAccessor(StorageSystem accessor) {
 		this.accessor = accessor;
 	}
 

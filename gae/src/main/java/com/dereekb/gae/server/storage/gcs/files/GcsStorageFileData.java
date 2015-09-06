@@ -9,9 +9,10 @@ import com.google.appengine.tools.cloudstorage.GcsFilename;
 
 /**
  * Represents a file loaded from the GcsStorageAccessor;
- * 
+ *
  * @author dereekb
  */
+@Deprecated
 public class GcsStorageFileData
         implements StorableContent {
 
@@ -28,30 +29,31 @@ public class GcsStorageFileData
 		this.metadata = metadata;
 	}
 
-	public byte[] getFileData() {
-		return bytes;
+	@Override
+    public byte[] getFileData() {
+		return this.bytes;
 	}
 
 	@Override
 	public String getFilename() {
-		return file.getFilename();
+		return this.file.getFilename();
 	}
 
 	public GcsFilename getGcsFilename() {
-		return gcsFilename;
+		return this.gcsFilename;
 	}
 
 	@Override
 	public String getFilePath() {
-		return file.getFilePath();
+		return this.file.getFilePath();
 	}
 
 	public StorableFile getFile() {
-		return file;
+		return this.file;
 	}
 
 	public GcsFileMetadata getMetadata() {
-		return metadata;
+		return this.metadata;
 	}
 
 	@Override

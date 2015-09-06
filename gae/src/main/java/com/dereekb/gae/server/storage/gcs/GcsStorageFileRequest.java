@@ -6,10 +6,11 @@ import com.google.appengine.tools.cloudstorage.GcsFilename;
 
 /**
  * StorableFileImpl wrapper that includes GCS file options and the Gcs bucket name.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class GcsStorageFileRequest {
 
 	protected GcsFileOptions options = null;
@@ -22,8 +23,8 @@ public class GcsStorageFileRequest {
 	}
 
 	public GcsFilename getGcsFilename() {
-		String path = file.getFilePath();
-		GcsFilename filename = new GcsFilename(bucket, path);
+		String path = this.file.getFilePath();
+		GcsFilename filename = new GcsFilename(this.bucket, path);
 		return filename;
 	}
 
@@ -42,11 +43,11 @@ public class GcsStorageFileRequest {
 	}
 
 	public String getBucket() {
-		return bucket;
+		return this.bucket;
 	}
 
 	public StorableFile getFile() {
-		return file;
+		return this.file;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.storage.file;
 
+import com.dereekb.gae.server.storage.file.options.StorableFileOptions;
 import com.dereekb.gae.server.storage.file.options.StorableFileOptionsImpl;
 
 /**
@@ -20,10 +21,11 @@ public interface StorableContent
 	public String getContentType();
 
 	/**
-	 * {@link StorableFileOptionsImpl}
+	 * Returns the storable options.
 	 *
-	 * @return {@link StorableFileOptionsImpl} if available, or {@code null} if none.
+	 * @return {@link StorableFileOptions} if available, or {@code null} if
+	 *         none.
 	 */
-	public StorableFileOptionsImpl getOptions();
+	public StorableFileOptions getOptions();
 
 }

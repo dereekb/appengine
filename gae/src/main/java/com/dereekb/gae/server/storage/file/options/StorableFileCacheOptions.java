@@ -18,7 +18,7 @@ public interface StorableFileCacheOptions {
 	/**
 	 * Optional cache time.
 	 *
-	 * @return {@link Long} cache time. Can be {@code null}.
+	 * @return {@link Long} cache time. Never {@code null}.
 	 */
 	public Long getMaxCacheTime();
 

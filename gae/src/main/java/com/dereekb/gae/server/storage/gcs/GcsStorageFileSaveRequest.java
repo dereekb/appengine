@@ -5,9 +5,10 @@ import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
 /**
  * Wrapper/Extension of StorageFileRequest that wraps StorableDataImpl and contains the bucket and optional GcsOptions.
- * 
+ *
  * @author dereekb
  */
+@Deprecated
 public class GcsStorageFileSaveRequest extends GcsStorageFileRequest {
 
 	private final StorableContent file;
@@ -29,7 +30,7 @@ public class GcsStorageFileSaveRequest extends GcsStorageFileRequest {
 		if (options == null) {
 			GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
 
-			String mimeType = file.getContentType();
+			String mimeType = this.file.getContentType();
 			builder = builder.mimeType(mimeType);
 			options = builder.build();
 		}
@@ -38,11 +39,12 @@ public class GcsStorageFileSaveRequest extends GcsStorageFileRequest {
 	}
 
 	public byte[] getData() {
-		return file.getFileData();
+		return this.file.getFileData();
 	}
 
-	public StorableContent getFile() {
-		return file;
+	@Override
+    public StorableContent getFile() {
+		return this.file;
 	}
 
 }

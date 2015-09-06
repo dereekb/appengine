@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 
-import com.dereekb.gae.server.storage.StorageAccessor;
+import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.file.StorableContent;
 import com.dereekb.gae.server.storage.file.StorableFile;
 import com.dereekb.gae.server.storage.gcs.files.GcsStorageFileData;
@@ -27,8 +27,9 @@ import com.google.common.io.ByteStreams;
  * @author dereekb
  *
  */
+@Deprecated
 public class GcsStorageAccessor
-        implements StorageAccessor {
+        implements StorageSystem {
 
 	private final int DEFAULT_READ_BUFFER_SIZE = (0x08000); // 512KB buffer
 
@@ -83,7 +84,7 @@ public class GcsStorageAccessor
 	public void setRequestBuilder(GcsStorageFileRequestBuilder requestBuilder) {
 		this.requestBuilder = requestBuilder;
 	}
-	
+
 	public String getBucket() {
 		return this.bucket;
 	}

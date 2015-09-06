@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.data.storage.exporter.ExportException;
 import com.dereekb.gae.model.extension.data.storage.exporter.Exporter;
 import com.dereekb.gae.model.extension.data.storage.importer.ImportException;
 import com.dereekb.gae.model.extension.data.storage.importer.Importer;
-import com.dereekb.gae.server.storage.StorageAccessor;
+import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.file.StorableData;
 import com.dereekb.gae.server.storage.file.impl.StorableContentImpl;
 import com.dereekb.gae.server.storage.file.impl.StorableFileImpl;
@@ -16,7 +16,7 @@ public class DefaultImporterExporter<T>
         implements Exporter<T>, Importer<T> {
 
 	private ModelByteDataConverter<T, ?, ?> converter;
-	private StorageAccessor accessor;
+	private StorageSystem accessor;
 
 	@Override
 	public void exportObjects(Collection<T> objects,
@@ -54,11 +54,11 @@ public class DefaultImporterExporter<T>
 		this.converter = converter;
 	}
 
-	public StorageAccessor getAccessor() {
+	public StorageSystem getAccessor() {
 		return this.accessor;
 	}
 
-	public void setAccessor(StorageAccessor accessor) {
+	public void setAccessor(StorageSystem accessor) {
 		this.accessor = accessor;
 	}
 
