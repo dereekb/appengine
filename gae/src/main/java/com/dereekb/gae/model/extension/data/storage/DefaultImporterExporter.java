@@ -8,9 +8,9 @@ import com.dereekb.gae.model.extension.data.storage.exporter.Exporter;
 import com.dereekb.gae.model.extension.data.storage.importer.ImportException;
 import com.dereekb.gae.model.extension.data.storage.importer.Importer;
 import com.dereekb.gae.server.storage.accessor.StorageSystem;
-import com.dereekb.gae.server.storage.file.StorableData;
-import com.dereekb.gae.server.storage.file.impl.StorableContentImpl;
-import com.dereekb.gae.server.storage.file.impl.StorableFileImpl;
+import com.dereekb.gae.server.storage.object.file.StorableData;
+import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
+import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
 
 public class DefaultImporterExporter<T>
         implements Exporter<T>, Importer<T> {

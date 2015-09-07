@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.deprecated.function;
 
-import com.dereekb.gae.server.storage.file.StorableFileInfo;
+import com.dereekb.gae.server.storage.object.file.StorableFileInfo;
 
 /**
  * Used by an UploadFunction instance for creating items from the stored item.

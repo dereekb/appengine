@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.storage.download;
 
 import com.dereekb.gae.server.storage.exception.MissingFileException;
-import com.dereekb.gae.server.storage.file.StorableFile;
+import com.dereekb.gae.server.storage.object.file.StorableFile;
 
 /**
  * Used for generating download keys/urls for {@link StorableFile} instances.

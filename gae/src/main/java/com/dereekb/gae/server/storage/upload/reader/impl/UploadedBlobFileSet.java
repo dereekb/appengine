@@ -9,8 +9,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.storage.exception.NoFileDataException;
-import com.dereekb.gae.server.storage.services.blobstore.BlobstoreBlobReader;
-import com.dereekb.gae.server.storage.services.blobstore.impl.BlobstoreBlobReaderImpl;
+import com.dereekb.gae.server.storage.services.blobstore.object.blob.BlobstoreBlobReader;
+import com.dereekb.gae.server.storage.services.blobstore.object.blob.impl.BlobstoreBlobReaderImpl;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFile;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFileSet;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;

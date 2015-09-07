@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.reader;
 
-import com.dereekb.gae.server.storage.file.StorableFileInfo;
+import com.dereekb.gae.server.storage.object.file.StorableFileInfo;
 
 public interface UploadedFileInfo
         extends StorableFileInfo {

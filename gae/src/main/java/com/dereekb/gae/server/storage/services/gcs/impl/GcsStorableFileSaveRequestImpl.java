@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.services.gcs.impl;
 
-import com.dereekb.gae.server.storage.file.StorableContent;
+import com.dereekb.gae.server.storage.object.file.StorableContent;
 import com.dereekb.gae.server.storage.services.gcs.GcsStorableFileSaveRequest;
 import com.dereekb.gae.server.storage.services.gcs.GcsStorableFileSaveRequestBuilder;
 import com.dereekb.gae.server.storage.services.gcs.GcsStorageSystem;

@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.storage.services.data;
 
-import com.dereekb.gae.server.storage.file.StorableContent;
-import com.dereekb.gae.server.storage.file.StorableFileInfo;
+import com.dereekb.gae.server.storage.object.file.StorableContent;
+import com.dereekb.gae.server.storage.object.file.StorableFileInfo;
 
 /**
  * Used to copy {@code byte[]} data.

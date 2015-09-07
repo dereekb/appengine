@@ -1,20 +1,21 @@
 package com.dereekb.gae.server.storage.gcs.blobstore.download;
 
-import com.dereekb.gae.server.storage.download.StoredFileDownloadKeyFactory;
-import com.dereekb.gae.server.storage.file.Storable;
-import com.dereekb.gae.server.storage.gcs.blobstore.path.BlobstoreRelativeFilePathResolver;
+import com.dereekb.gae.server.storage.download.StoredFileDownloadKeyService;
+import com.dereekb.gae.server.storage.object.file.Storable;
+import com.dereekb.gae.server.storage.services.blobstore.object.path.BlobstoreRelativeFilePathResolver;
 import com.google.appengine.api.blobstore.BlobKey;
 
 /**
- * Factory that implements the {@link StoredFileDownloadKeyFactory} interface,
+ * Factory that implements the {@link StoredFileDownloadKeyService} interface,
  * and generates key strings for BlobKeys.
  *
  * @author dereekb
  *
  * @param <T>
  */
+@Deprecated
 public final class BlobstoreDownloadKeyFactory<T>
-        implements StoredFileDownloadKeyFactory<T> {
+        implements StoredFileDownloadKeyService<T> {
 
 	private final BlobstoreRelativeFilePathResolver<T> resolver;
 

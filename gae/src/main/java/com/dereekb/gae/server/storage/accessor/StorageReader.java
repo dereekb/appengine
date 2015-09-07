@@ -2,8 +2,8 @@ package com.dereekb.gae.server.storage.accessor;
 
 import java.io.IOException;
 
-import com.dereekb.gae.server.storage.file.StorableContent;
-import com.dereekb.gae.server.storage.file.StorableFile;
+import com.dereekb.gae.server.storage.object.file.StorableContent;
+import com.dereekb.gae.server.storage.object.file.StorableFile;
 
 /**
  * Used to read {@link StorableFile} data.

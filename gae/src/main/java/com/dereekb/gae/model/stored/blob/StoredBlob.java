@@ -5,7 +5,7 @@ import java.util.Date;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.storage.file.Storable;
+import com.dereekb.gae.server.storage.object.file.Storable;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;

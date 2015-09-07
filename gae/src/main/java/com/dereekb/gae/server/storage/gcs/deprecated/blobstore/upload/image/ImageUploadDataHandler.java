@@ -1,21 +1,22 @@
 package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image;
 
 import com.dereekb.gae.server.storage.accessor.StorageSystem;
-import com.dereekb.gae.server.storage.file.StorableFile;
-import com.dereekb.gae.server.storage.file.impl.StorableContentImpl;
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor;
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor.ImageEditorInstance;
 import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
+import com.dereekb.gae.server.storage.object.file.StorableFile;
+import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
 import com.dereekb.gae.server.storage.upload.deprecated.function.UploadFunctionPair;
 import com.dereekb.gae.server.storage.upload.deprecated.function.observers.UploadFunctionDataObserverDelegate;
 import com.google.appengine.api.images.Image;
 
 /**
  * Implements UploadFunctionDataObserverDelegate and handles modifying and saving uploaded images.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class ImageUploadDataHandler<T>
         implements UploadFunctionDataObserverDelegate<T, UploadedBlobFile> {
 
@@ -24,7 +25,7 @@ public class ImageUploadDataHandler<T>
 	private StorageSystem accessor;
 
 	public ImageUploadDataHandler() {
-		editor = new ImageEditor();
+		this.editor = new ImageEditor();
 	}
 
 	public ImageUploadDataHandler(ImageEditor editor,
@@ -36,7 +37,8 @@ public class ImageUploadDataHandler<T>
 		this.accessor = accessor;
 	}
 
-	public void handleUploadedData(Iterable<UploadFunctionPair<T, UploadedBlobFile>> pairs) {
+	@Override
+    public void handleUploadedData(Iterable<UploadFunctionPair<T, UploadedBlobFile>> pairs) {
 
 		for (UploadFunctionPair<T, UploadedBlobFile> pair : pairs) {
 			UploadedBlobFile file = pair.getSource();
@@ -51,8 +53,8 @@ public class ImageUploadDataHandler<T>
 	protected boolean handleImageData(T model,
 	                                  UploadedBlobFile file) {
 		byte[] bytes = file.getBytes();
-		ImageEditorInstance instance = editor.forBytes(bytes);
-		Image finalImage = delegate.modifyUploadedImage(instance);
+		ImageEditorInstance instance = this.editor.forBytes(bytes);
+		Image finalImage = this.delegate.modifyUploadedImage(instance);
 
 		byte[] imageData = finalImage.getImageData();
 
@@ -64,7 +66,7 @@ public class ImageUploadDataHandler<T>
 	}
 
 	public ImageEditor getEditor() {
-		return editor;
+		return this.editor;
 	}
 
 	public void setEditor(ImageEditor editor) {
@@ -72,7 +74,7 @@ public class ImageUploadDataHandler<T>
 	}
 
 	public ImageUploadDataHandlerDelegate<T> getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(ImageUploadDataHandlerDelegate<T> delegate) {
@@ -80,7 +82,7 @@ public class ImageUploadDataHandler<T>
 	}
 
 	public StorageSystem getAccessor() {
-		return accessor;
+		return this.accessor;
 	}
 
 	public void setAccessor(StorageSystem accessor) {

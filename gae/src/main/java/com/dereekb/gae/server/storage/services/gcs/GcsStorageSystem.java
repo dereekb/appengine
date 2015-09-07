@@ -8,9 +8,9 @@ import java.nio.channels.Channels;
 import java.util.Arrays;
 
 import com.dereekb.gae.server.storage.accessor.StorageSystem;
-import com.dereekb.gae.server.storage.file.StorableContent;
-import com.dereekb.gae.server.storage.file.StorableFile;
-import com.dereekb.gae.server.storage.file.options.StorableFileOptions;
+import com.dereekb.gae.server.storage.object.file.StorableContent;
+import com.dereekb.gae.server.storage.object.file.StorableFile;
+import com.dereekb.gae.server.storage.object.file.options.StorableFileOptions;
 import com.dereekb.gae.server.storage.services.gcs.impl.GcsStorableFileRequestImpl;
 import com.dereekb.gae.utilities.misc.ByteSizeUtility;
 import com.google.appengine.tools.cloudstorage.GcsFileMetadata;

@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dereekb.gae.server.storage.file.impl.StorableContentImpl;
-import com.dereekb.gae.server.storage.file.options.StorableFileOptionsImpl;
-import com.dereekb.gae.server.storage.file.options.StorableFileOptionsImpl.StorableFileVisibility;
 import com.dereekb.gae.server.storage.gcs.files.GcsStorageFileRequestBuilder;
+import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
+import com.dereekb.gae.server.storage.object.file.options.StorableFileOptionsImpl;
+import com.dereekb.gae.server.storage.object.file.options.StorableFileOptionsImpl.StorableFileVisibility;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
 /**

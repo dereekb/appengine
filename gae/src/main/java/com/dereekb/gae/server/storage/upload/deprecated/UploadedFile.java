@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.deprecated;
 
-import com.dereekb.gae.server.storage.file.StorableFileInfo;
+import com.dereekb.gae.server.storage.object.file.StorableFileInfo;
 
 /**
  * Represents an uploaded file that has bytes.
