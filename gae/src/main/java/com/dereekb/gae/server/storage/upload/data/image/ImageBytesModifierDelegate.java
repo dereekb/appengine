@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.services.data.impl;
+package com.dereekb.gae.server.storage.upload.data.image;
 
 import com.dereekb.gae.server.storage.services.images.ImageBytesEditor.ImageEditingInstance;
 import com.google.appengine.api.images.Image;

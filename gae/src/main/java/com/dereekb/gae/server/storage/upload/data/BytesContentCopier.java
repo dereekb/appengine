@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.services.data;
+package com.dereekb.gae.server.storage.upload.data;
 
 import com.dereekb.gae.server.storage.object.file.StorableContent;
 import com.dereekb.gae.server.storage.object.file.StorableFileInfo;

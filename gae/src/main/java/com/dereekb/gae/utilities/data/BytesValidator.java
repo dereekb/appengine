@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.services.data;
+package com.dereekb.gae.utilities.data;
 
 import com.dereekb.gae.utilities.validation.ContentValidator;
 
@@ -8,7 +8,7 @@ import com.dereekb.gae.utilities.validation.ContentValidator;
  * @author dereekb
  *
  */
-public interface BytesContentValidator
+public interface BytesValidator
         extends ContentValidator<byte[]> {
 
 }

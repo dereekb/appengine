@@ -1,15 +1,16 @@
 package com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.image;
 
 import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor.ImageEditorInstance;
-import com.dereekb.gae.server.storage.gcs.deprecated.blobstore.upload.UploadedBlobFile;
 import com.dereekb.gae.server.storage.object.file.StorableFile;
+import com.dereekb.gae.server.storage.upload.reader.impl.UploadedBlobFile;
 import com.google.appengine.api.images.Image;
 
+@Deprecated
 public interface ImageUploadDataHandlerDelegate<T> {
 
 	/**
 	 * Modifies the image in the ImageEditorInstance.
-	 * 
+	 *
 	 * @param instance
 	 * @return The modified image, or original image if no modification is necessary.
 	 */

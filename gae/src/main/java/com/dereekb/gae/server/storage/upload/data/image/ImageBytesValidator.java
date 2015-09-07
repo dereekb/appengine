@@ -1,10 +1,10 @@
-package com.dereekb.gae.server.storage.services.data.impl;
+package com.dereekb.gae.server.storage.upload.data.image;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dereekb.gae.server.storage.services.data.BytesContentValidator;
+import com.dereekb.gae.utilities.data.BytesValidator;
 import com.dereekb.gae.utilities.validation.ContentValidationException;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.Image.Format;
@@ -12,13 +12,13 @@ import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 
 /**
- * {@link BytesContentValidator} implementation for validating an image.
+ * {@link BytesValidator} implementation for validating an image.
  *
  * @author dereekb
  *
  */
 public class ImageBytesValidator
-        implements BytesContentValidator {
+        implements BytesValidator {
 
 	private static final int MAX_ALLOWED_WIDTH = ImagesService.MAX_RESIZE_DIMENSIONS;
 	private static final int MAX_ALLOWED_HEIGHT = ImagesService.MAX_RESIZE_DIMENSIONS;
@@ -126,7 +126,7 @@ public class ImageBytesValidator
 		this.acceptableFormats = new HashSet<Format>(acceptableFormats);
 	}
 
-	// MARK: BytesContentValidator
+	// MARK: BytesValidator
 	@Override
 	public void validateContent(byte[] bytes) throws ContentValidationException {
 		Instance instance = new Instance(bytes);

@@ -1,19 +1,19 @@
-package com.dereekb.gae.server.storage.services.data.impl;
+package com.dereekb.gae.server.storage.upload.data.image;
 
 import com.dereekb.gae.server.storage.exception.InvalidFileDataException;
-import com.dereekb.gae.server.storage.services.data.BytesContentModifier;
 import com.dereekb.gae.server.storage.services.images.ImageBytesEditor;
 import com.dereekb.gae.server.storage.services.images.ImageBytesEditor.ImageEditingInstance;
+import com.dereekb.gae.utilities.data.BytesModifier;
 import com.google.appengine.api.images.Image;
 
 /**
- * {@link BytesContentModifier} for modifying {@code byte[]} data for an image.
+ * {@link BytesModifier} for modifying {@code byte[]} data for an image.
  *
  * @author dereekb
  *
  */
 public class ImageBytesModifier
-        implements BytesContentModifier {
+        implements BytesModifier {
 
 	private ImageBytesEditor editor;
 	private ImageBytesModifierDelegate delegate;
@@ -39,7 +39,7 @@ public class ImageBytesModifier
 		this.delegate = delegate;
 	}
 
-	// MARK: BytesContentModifier
+	// MARK: BytesModifier
 	@Override
 	public byte[] modifyBytesContent(byte[] bytes) throws InvalidFileDataException {
 		ImageEditingInstance instance = this.editor.newInstance(bytes);

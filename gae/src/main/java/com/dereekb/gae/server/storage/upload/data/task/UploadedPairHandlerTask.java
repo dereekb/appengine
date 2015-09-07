@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.services.data;
+package com.dereekb.gae.server.storage.upload.data.task;
 
 import java.io.IOException;
 
@@ -9,6 +9,8 @@ import com.dereekb.gae.server.storage.upload.handler.impl.delegate.impl.UploadPa
 import com.dereekb.gae.server.storage.upload.handler.impl.delegate.impl.UploadedFileResultImpl;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFile;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFileInfo;
+import com.dereekb.gae.utilities.data.BytesModifier;
+import com.dereekb.gae.utilities.data.BytesValidator;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.validation.ContentValidationException;
@@ -23,8 +25,8 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 public class UploadedPairHandlerTask
         implements Task<UploadPair> {
 
-	private BytesContentValidator validator;
-	private BytesContentModifier modifier;
+	private BytesValidator validator;
+	private BytesModifier modifier;
 	private UploadedPairHandlerTaskDelegate delegate;
 
 	@Override

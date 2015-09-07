@@ -4,11 +4,12 @@ import com.dereekb.gae.server.storage.exception.MissingFileException;
 import com.dereekb.gae.server.storage.object.file.StorableFile;
 
 /**
- * Used for generating download keys/urls for {@link StorableFile} instances.
+ * Service used for generating download keys/urls for {@link StorableFile}
+ * instances.
  *
  * @author dereekb
  */
-public interface DownloadKeyFactory {
+public interface DownloadKeyService {
 
 	/**
 	 * Generates a new download key for the given item.

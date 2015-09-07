@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.storage.services.data;
+package com.dereekb.gae.utilities.data;
 
 import com.dereekb.gae.server.storage.exception.InvalidFileDataException;
 
@@ -8,7 +8,7 @@ import com.dereekb.gae.server.storage.exception.InvalidFileDataException;
  * @author dereekb
  *
  */
-public interface BytesContentModifier {
+public interface BytesModifier {
 
 	/**
 	 * Modifies the input {@code byte[]} data.

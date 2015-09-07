@@ -6,6 +6,7 @@ import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseMo
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.storage.object.file.Storable;
+import com.dereekb.gae.server.storage.object.file.StorableFile;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -25,7 +26,7 @@ import com.googlecode.objectify.condition.IfZero;
 @Cache
 @Entity
 public final class StoredBlob extends DescribedDatabaseModel
-        implements ObjectifyModel<StoredBlob>, Storable {
+        implements ObjectifyModel<StoredBlob>, Storable, StorableFile {
 
 	private static final long serialVersionUID = 1L;
 
@@ -57,17 +58,19 @@ public final class StoredBlob extends DescribedDatabaseModel
 	 * <p>
 	 * If {{@link #blobName} is {@code null}, the {{@link #getBlobName()} value
 	 * will return this blob's identifier.
+	 * </p>
 	 */
 	private String blobName;
 
 	/**
-	 * The full folder path.
+	 * The full file path.
 	 * <p>
 	 * Should never be {@code null} for {@link StoredBlob} values saved to the
 	 * database.
+	 * </p>
 	 */
 	@IgnoreSave({ IfEmpty.class })
-	private String folderPath;
+	private String filePath;
 
 	public StoredBlob() {}
 
@@ -115,12 +118,13 @@ public final class StoredBlob extends DescribedDatabaseModel
 		this.blobName = blobName;
 	}
 
-	public String getFolderPath() {
-		return this.folderPath;
+	@Override
+	public String getFilePath() {
+		return this.filePath;
 	}
 
-	public void setFolderPath(String folderPath) {
-		this.folderPath = folderPath;
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 
 	// Unique Model
