@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dereekb.gae.server.storage.services.blobstore.object.blob.BlobstoreFileService;
 import com.dereekb.gae.server.storage.services.blobstore.object.blob.BlobstoreKeyService;
-import com.dereekb.gae.server.storage.services.gcs.GcsStorableFile;
+import com.dereekb.gae.server.storage.services.gcs.object.file.GcsStorableFile;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;

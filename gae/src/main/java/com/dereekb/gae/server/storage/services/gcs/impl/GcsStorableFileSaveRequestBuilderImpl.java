@@ -4,8 +4,8 @@ import com.dereekb.gae.server.storage.object.file.StorableContent;
 import com.dereekb.gae.server.storage.object.file.options.StorableFileCacheOptions;
 import com.dereekb.gae.server.storage.object.file.options.StorableFileOptions;
 import com.dereekb.gae.server.storage.object.file.options.StorableFileVisibility;
-import com.dereekb.gae.server.storage.services.gcs.GcsStorableFileSaveRequest;
-import com.dereekb.gae.server.storage.services.gcs.GcsStorableFileSaveRequestBuilder;
+import com.dereekb.gae.server.storage.services.gcs.object.request.GcsStorableFileSaveRequest;
+import com.dereekb.gae.server.storage.services.gcs.object.request.GcsStorableFileSaveRequestBuilder;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions.Builder;
 

@@ -2,7 +2,7 @@ package com.dereekb.gae.server.storage.services.blobstore.object.blob.impl;
 
 import com.dereekb.gae.server.storage.object.file.StorableFile;
 import com.dereekb.gae.server.storage.services.blobstore.object.blob.BlobstoreKeyService;
-import com.dereekb.gae.server.storage.services.gcs.GcsStorableFile;
+import com.dereekb.gae.server.storage.services.gcs.object.file.GcsStorableFile;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;

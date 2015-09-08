@@ -3,6 +3,7 @@ package com.dereekb.gae.model.stored.image;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
@@ -31,7 +32,9 @@ import com.googlecode.objectify.condition.IfZero;
 @Cache
 @Entity
 public final class StoredImage extends SearchableDatabaseModel
-        implements ObjectifyModel<StoredImage>, StoredBlobInfoType {
+        implements ObjectifyModel<StoredImage>, StoredBlobInfoType, Descriptor {
+
+	public static final String DESCRIPTOR_TYPE = "storedImage";
 
 	private static final long serialVersionUID = 1L;
 
@@ -202,6 +205,17 @@ public final class StoredImage extends SearchableDatabaseModel
 	@Override
 	public Key<StoredImage> getObjectifyKey() {
 		return Key.create(StoredImage.class, this.identifier);
+	}
+
+	// Descriptor
+	@Override
+	public String getDescriptorType() {
+		return DESCRIPTOR_TYPE;
+	}
+
+	@Override
+	public String getDescriptorId() {
+		return this.identifier.toString();
 	}
 
 	@Override

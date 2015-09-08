@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.storage.services.gcs.impl;
 
 import com.dereekb.gae.server.storage.object.file.StorableFile;
-import com.dereekb.gae.server.storage.services.gcs.GcsStorableFileRequest;
+import com.dereekb.gae.server.storage.services.gcs.object.request.GcsStorableFileRequest;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 

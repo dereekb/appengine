@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.dereekb.gae.server.storage.services.gcs.GcsStorableFile;
+import com.dereekb.gae.server.storage.services.gcs.object.file.GcsStorableFile;
 import com.google.appengine.api.blobstore.BlobKey;
 
 /**

@@ -1,5 +1,6 @@
-package com.dereekb.gae.server.storage.services.gcs;
+package com.dereekb.gae.server.storage.services.gcs.object.request;
 
+import com.dereekb.gae.server.storage.services.gcs.GcsStorageSystem;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
 /**

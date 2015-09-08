@@ -49,7 +49,7 @@ public class StoredBlobUploadHandlerDelegateImpl<T extends Descriptor>
 
 	@Override
 	public T createDescriptor(StoredBlob blob) throws RuntimeException {
-		return null; // This implementation doesn't work.
+		return null; // This implementation create a descriptor.
 	}
 
 	@Override
