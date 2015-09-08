@@ -8,7 +8,7 @@ package com.dereekb.gae.server.storage.object.folder;
  * @param <T>
  *            object type
  */
-public interface FolderPathResolver<T> {
+public interface StorableFolderResolver<T> {
 
 	/**
 	 * Returns the folder path for the input object.

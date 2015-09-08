@@ -31,7 +31,8 @@ public interface StoredBlobUploadHandlerDelegate<T extends Descriptor> {
 	 *
 	 * @param blob
 	 *            {@link StoredBlob} that was created.
-	 * @return {@link Descriptor} for {@code blob}. Never {@code null}.
+	 * @return {@link Descriptor} for {@code blob}. Returns {@code null} if no
+	 *         descriptor needs to be generated.
 	 * @throws RuntimeException
 	 *             if the {@link Descriptor} cannot be generated.
 	 */

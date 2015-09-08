@@ -9,7 +9,7 @@ import com.dereekb.gae.server.storage.upload.handler.impl.delegate.FileUploadHan
 import com.dereekb.gae.server.storage.upload.handler.impl.delegate.FileUploadHandlerDelegateResult;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFileReader;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFileSet;
-import com.dereekb.gae.utilities.collections.map.CatchMap;
+import com.dereekb.gae.utilities.collections.map.catchmap.CatchMap;
 
 /**
  * {@link FileUploadHandler} implementation.
@@ -23,19 +23,19 @@ import com.dereekb.gae.utilities.collections.map.CatchMap;
 public class FileUploadHandlerImpl
         implements FileUploadHandler {
 
-	private CatchMap<FileUploadHandlerDelegate> delegates;
+	private CatchMap<String, FileUploadHandlerDelegate> delegates;
 	private UploadedFileReader reader;
 
-	public FileUploadHandlerImpl(CatchMap<FileUploadHandlerDelegate> delegates, UploadedFileReader reader) {
+	public FileUploadHandlerImpl(CatchMap<String, FileUploadHandlerDelegate> delegates, UploadedFileReader reader) {
 		this.delegates = delegates;
 		this.reader = reader;
 	}
 
-	public CatchMap<FileUploadHandlerDelegate> getDelegates() {
+	public CatchMap<String, FileUploadHandlerDelegate> getDelegates() {
 		return this.delegates;
 	}
 
-	public void setDelegates(CatchMap<FileUploadHandlerDelegate> delegates) {
+	public void setDelegates(CatchMap<String, FileUploadHandlerDelegate> delegates) {
 		this.delegates = delegates;
 	}
 

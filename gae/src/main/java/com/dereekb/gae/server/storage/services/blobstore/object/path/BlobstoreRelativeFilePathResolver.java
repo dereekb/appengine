@@ -9,7 +9,10 @@ import com.google.appengine.api.blobstore.BlobKey;
  * represented by a {@link Storedable} element.
  *
  * @author dereekb
+ *
+ * @deprecated
  */
+@Deprecated
 public interface BlobstoreRelativeFilePathResolver<T> {
 
 	/**

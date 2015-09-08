@@ -3,38 +3,39 @@ package com.dereekb.gae.server.storage.object.path.impl;
 import com.dereekb.gae.server.storage.object.file.Storable;
 import com.dereekb.gae.server.storage.object.file.StorableFile;
 import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
-import com.dereekb.gae.server.storage.object.folder.FolderPathResolver;
+import com.dereekb.gae.server.storage.object.folder.StorableFolderResolver;
 import com.dereekb.gae.server.storage.object.folder.StorableFolder;
 import com.dereekb.gae.server.storage.object.path.FilePathMerger;
 import com.dereekb.gae.server.storage.object.path.RelativeFilePathResolver;
 
 /**
  * Default implementation of {@link RelativeFilePathResolver} that uses a
- * {@link FolderPathResolver}.
+ * {@link StorableFolderResolver}.
  *
  * @author dereekb
  */
+@Deprecated
 public final class RelativeFilePathResolverImpl<T>
         implements RelativeFilePathResolver<T> {
 
-	private FolderPathResolver<T> folderPathResolver;
+	private StorableFolderResolver<T> folderPathResolver;
 	private FilePathMerger pathMerger;
 
-	public RelativeFilePathResolverImpl(FolderPathResolver<T> folderPathResolver) {
+	public RelativeFilePathResolverImpl(StorableFolderResolver<T> folderPathResolver) {
 		this.folderPathResolver = folderPathResolver;
 		this.pathMerger = new FilePathMergerImpl();
 	}
 
-	public RelativeFilePathResolverImpl(FolderPathResolver<T> folderPathResolver, FilePathMerger pathMerger) {
+	public RelativeFilePathResolverImpl(StorableFolderResolver<T> folderPathResolver, FilePathMerger pathMerger) {
 		this.folderPathResolver = folderPathResolver;
 		this.pathMerger = pathMerger;
 	}
 
-	public FolderPathResolver<T> getFolderPathResolver() {
+	public StorableFolderResolver<T> getFolderPathResolver() {
 		return this.folderPathResolver;
 	}
 
-	public void setFolderPathResolver(FolderPathResolver<T> folderPathResolver) {
+	public void setFolderPathResolver(StorableFolderResolver<T> folderPathResolver) {
 		this.folderPathResolver = folderPathResolver;
 	}
 

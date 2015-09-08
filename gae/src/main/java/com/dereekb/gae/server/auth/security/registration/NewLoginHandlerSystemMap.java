@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 import com.dereekb.gae.server.auth.security.filter.exception.NewLoginAuthenticationException;
-import com.dereekb.gae.utilities.collections.map.CatchMap;
+import com.dereekb.gae.utilities.collections.map.catchmap.CatchMap;
 
 /**
  * Implementation of {@link NewLoginHandler} that contains a map of
@@ -17,8 +17,22 @@ import com.dereekb.gae.utilities.collections.map.CatchMap;
  * @author dereekb
  *
  */
-public class NewLoginHandlerSystemMap extends CatchMap<NewLoginHandler>
+public class NewLoginHandlerSystemMap
         implements NewLoginHandler {
+
+	private CatchMap<String, NewLoginHandler> map;
+
+	public NewLoginHandlerSystemMap(CatchMap<String, NewLoginHandler> map) {
+		this.map = map;
+	}
+
+	public CatchMap<String, NewLoginHandler> getMap() {
+		return this.map;
+	}
+
+	public void setMap(CatchMap<String, NewLoginHandler> map) {
+		this.map = map;
+	}
 
 	@Override
 	public Authentication handleNewLogin(NewLoginAuthenticationException e,
@@ -26,7 +40,7 @@ public class NewLoginHandlerSystemMap extends CatchMap<NewLoginHandler>
 	                                     HttpServletResponse response) throws AuthenticationException {
 
 		String system = e.getLoginSystem();
-		NewLoginHandler handler = this.get(system);
+		NewLoginHandler handler = this.map.get(system);
 
 		if (handler == null) {
 			throw new AuthenticationServiceException("No service registered to handle login for system '" + system
@@ -34,6 +48,11 @@ public class NewLoginHandlerSystemMap extends CatchMap<NewLoginHandler>
 		}
 
 		return handler.handleNewLogin(e, request, response);
+	}
+
+	@Override
+	public String toString() {
+		return "NewLoginHandlerSystemMap [map=" + this.map + "]";
 	}
 
 }

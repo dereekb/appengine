@@ -9,6 +9,7 @@ import com.dereekb.gae.server.storage.object.folder.StorableFolder;
  *
  * @author dereekb
  */
+@Deprecated
 public interface FilePathMerger {
 
 	public String makePath(StorableFolder folder,

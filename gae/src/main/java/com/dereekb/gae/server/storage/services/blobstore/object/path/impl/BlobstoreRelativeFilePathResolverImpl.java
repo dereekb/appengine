@@ -3,13 +3,13 @@ package com.dereekb.gae.server.storage.services.blobstore.object.path.impl;
 import com.dereekb.gae.server.storage.object.file.Storable;
 import com.dereekb.gae.server.storage.object.file.StorableFile;
 import com.dereekb.gae.server.storage.object.path.RelativeFilePathResolver;
-import com.dereekb.gae.server.storage.services.blobstore.object.path.BlobstorePathConverter;
+import com.dereekb.gae.server.storage.services.blobstore.object.path.BlobKeyResolver;
 import com.dereekb.gae.server.storage.services.blobstore.object.path.BlobstoreRelativeFilePathResolver;
 import com.google.appengine.api.blobstore.BlobKey;
 
 /**
  * Default implementation of {@link BlobstoreRelativeFilePathResolver} that uses
- * a {@link RelativeFilePathResolver} and {@link BlobstorePathConverter} to
+ * a {@link RelativeFilePathResolver} and {@link BlobKeyResolver} to
  * generate {@link BlobKey} instances for input.
  *
  * @author dereekb
@@ -17,22 +17,23 @@ import com.google.appengine.api.blobstore.BlobKey;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class BlobstoreRelativeFilePathResolverImpl<T>
         implements BlobstoreRelativeFilePathResolver<T> {
 
-	private BlobstorePathConverter converter;
+	private BlobKeyResolver converter;
 	private RelativeFilePathResolver<T> resolver;
 
-	public BlobstoreRelativeFilePathResolverImpl(BlobstorePathConverter converter, RelativeFilePathResolver<T> resolver) {
+	public BlobstoreRelativeFilePathResolverImpl(BlobKeyResolver converter, RelativeFilePathResolver<T> resolver) {
 		this.converter = converter;
 		this.resolver = resolver;
 	}
 
-	public BlobstorePathConverter getConverter() {
+	public BlobKeyResolver getConverter() {
 		return this.converter;
 	}
 
-	public void setConverter(BlobstorePathConverter converter) {
+	public void setConverter(BlobKeyResolver converter) {
 		this.converter = converter;
 	}
 

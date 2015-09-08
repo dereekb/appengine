@@ -9,6 +9,7 @@ import com.dereekb.gae.server.storage.object.path.FilePathMerger;
  *
  * @author dereekb
  */
+@Deprecated
 public final class FilePathMergerImpl
         implements FilePathMerger {
 

@@ -2,11 +2,11 @@ package com.dereekb.gae.server.storage.object.folder.impl;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.storage.object.folder.FolderPathResolver;
 import com.dereekb.gae.server.storage.object.folder.StorableFolder;
+import com.dereekb.gae.server.storage.object.folder.StorableFolderResolver;
 
 /**
- * Default implementation of {@link FolderPathResolver} for usage with
+ * Default implementation of {@link StorableFolderResolver} for usage with
  * {@link UniqueModel} instances.
  * <p>
  * Folder paths generated are a combination of the {@link ModelKey} on the
@@ -18,8 +18,9 @@ import com.dereekb.gae.server.storage.object.folder.StorableFolder;
  * @param <T>
  *            model type
  */
+@Deprecated
 public final class ModelFolderPathResolver<T extends UniqueModel>
-        implements FolderPathResolver<T> {
+        implements StorableFolderResolver<T> {
 
 	private String format;
 
@@ -39,7 +40,7 @@ public final class ModelFolderPathResolver<T extends UniqueModel>
 		this.format = format;
 	}
 
-	// MARK: FolderPathResolver
+	// MARK: StorableFolderResolver
 	@Override
 	public StorableFolder folderForObject(T object) {
 		ModelKey key = object.getModelKey();
