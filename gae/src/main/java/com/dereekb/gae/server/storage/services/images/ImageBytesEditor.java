@@ -59,14 +59,14 @@ public class ImageBytesEditor {
     }
 
 
-	public ImageEditingInstance newInstance(byte[] bytes) throws InvalidFileDataException {
+	public Instance newInstance(byte[] bytes) throws InvalidFileDataException {
 		Image image = this.buildImageFromBytes(bytes);
-		ImageEditingInstance instance = new ImageEditingInstance(image);
+		Instance instance = new Instance(image);
 		return instance;
 	}
 
-	public ImageEditingInstance newInstance(Image image) {
-		ImageEditingInstance instance = new ImageEditingInstance(image);
+	public Instance newInstance(Image image) {
+		Instance instance = new Instance(image);
 		return instance;
 	}
 
@@ -85,7 +85,7 @@ public class ImageBytesEditor {
 	 *
 	 * @author dereekb
 	 */
-	public class ImageEditingInstance {
+	public class Instance {
 
 		private Image image;
 
@@ -94,7 +94,7 @@ public class ImageBytesEditor {
 		 */
 		private List<Transform> transforms;
 
-		private ImageEditingInstance(Image image) {
+		private Instance(Image image) {
 			this.image = image;
 			this.transforms = new ArrayList<Transform>();
 		}

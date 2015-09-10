@@ -25,6 +25,8 @@ public class GcsStorableFileSaveRequestBuilderImpl
 
 	private StorableFileOptions defaultOptions;
 
+	public GcsStorableFileSaveRequestBuilderImpl() {}
+
 	public GcsStorableFileSaveRequestBuilderImpl(StorableFileOptions defaultOptions) {
 		this.defaultOptions = defaultOptions;
 	}

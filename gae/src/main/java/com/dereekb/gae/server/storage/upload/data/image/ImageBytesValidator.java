@@ -36,6 +36,8 @@ public class ImageBytesValidator
 
 	private Set<Format> acceptableFormats;
 
+	public ImageBytesValidator() {}
+
 	public ImageBytesValidator(Double aspectRatio,
 	        int minWidth,
 	        int minHeight,
@@ -131,6 +133,18 @@ public class ImageBytesValidator
 	public void validateContent(byte[] bytes) throws ContentValidationException {
 		Instance instance = new Instance(bytes);
 		instance.validate();
+	}
+
+	public boolean safeValidateContent(byte[] bytes) {
+		boolean valid = true;
+
+		try {
+			this.validateContent(bytes);
+		} catch (ContentValidationException e) {
+			valid = false;
+		}
+
+		return valid;
 	}
 
 	private class Instance {

@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.storage.upload.data.image;
 
-import com.dereekb.gae.server.storage.services.images.ImageBytesEditor.ImageEditingInstance;
+import com.dereekb.gae.server.storage.services.images.ImageBytesEditor;
 import com.google.appengine.api.images.Image;
 
 /**
@@ -18,6 +18,6 @@ public interface ImageBytesModifierDelegate {
 	 *            {@link ImageEditingIstance}. Never {@code null}.
 	 * @return {@link Image}
 	 */
-	public Image editImage(ImageEditingInstance instance);
+	public Image editImage(ImageBytesEditor.Instance instance);
 
 }

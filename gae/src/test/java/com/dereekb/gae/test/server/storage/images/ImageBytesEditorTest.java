@@ -7,26 +7,25 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor;
-import com.dereekb.gae.server.storage.gcs.blobstore.images.ImageEditor.ImageEditorInstance;
+import com.dereekb.gae.server.storage.services.images.ImageBytesEditor;
 import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerator;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
-public class GcsImageEditorTest {
+public class ImageBytesEditorTest {
 
 	@Autowired
 	protected LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalImagesServiceTestConfig());
 
 	@Before
 	public void setUp() {
-		helper.setUp();
+		this.helper.setUp();
 	}
 
 	@After
 	public void tearDown() {
-		helper.tearDown();
+		this.helper.tearDown();
 	}
 
 	private static final TestImageByteGenerator imageGenerator = new TestImageByteGenerator();
@@ -39,61 +38,61 @@ public class GcsImageEditorTest {
 	}
 
 	@Test
-	public void testImageEditorInstanceCreation() {
+	public void testImageBytesEditorInstanceCreation() {
 
-		ImageEditor editor = new ImageEditor();
+		ImageBytesEditor editor = new ImageBytesEditor();
 		byte[] bytes = imageGenerator.generateBytes();
 
-		ImageEditorInstance forBytes = editor.forBytes(bytes);
-		Assert.assertNotNull(forBytes);
+		ImageBytesEditor.Instance newInstance = editor.newInstance(bytes);
+		Assert.assertNotNull(newInstance);
 
-		Image testImage = forBytes.getImage();
-		ImageEditorInstance forImage = editor.forImage(testImage);
+		Image testImage = newInstance.getImage();
+		ImageBytesEditor.Instance forImage = editor.newInstance(testImage);
 		Assert.assertNotNull(forImage);
 
 	}
 
 	@Test
-	public void testImageEditorFunctions() {
+	public void testImageBytesEditorFunctions() {
 
-		ImageEditor editor = new ImageEditor();
+		ImageBytesEditor editor = new ImageBytesEditor();
 		byte[] bytes = imageGenerator.generateBytes();
 
-		ImageEditorInstance cropTest = editor.forBytes(bytes);
+		ImageBytesEditor.Instance cropTest = editor.newInstance(bytes);
 		Assert.assertNotNull(cropTest);
 
 		cropTest.cropImage(0.5, 0.5);
-		Image cropImage = cropTest.applyTransforms();
+		Image cropImage = cropTest.createEditedImage();
 		Assert.assertNotNull(cropImage);
 
-		ImageEditorInstance rotateTest = editor.forBytes(bytes);
+		ImageBytesEditor.Instance rotateTest = editor.newInstance(bytes);
 		Assert.assertNotNull(rotateTest);
 
 		rotateTest.rotateImage(90);
-		Image rotateImage = rotateTest.applyTransforms();
+		Image rotateImage = rotateTest.createEditedImage();
 		Assert.assertNotNull(rotateImage);
 
-		ImageEditorInstance resizeTest = editor.forBytes(bytes);
+		ImageBytesEditor.Instance resizeTest = editor.newInstance(bytes);
 		Assert.assertNotNull(resizeTest);
 
 		resizeTest.resizeImage(90, 90);
-		Image resizeImage = resizeTest.applyTransforms();
+		Image resizeImage = resizeTest.createEditedImage();
 		Assert.assertNotNull(resizeImage);
 
 	}
 
 	@Test
-	public void testImageEditorMultiTransformFunction() {
+	public void testImageBytesEditorMultiTransformFunction() {
 
-		ImageEditor editor = new ImageEditor();
+		ImageBytesEditor editor = new ImageBytesEditor();
 		byte[] bytes = imageGenerator.generateBytes();
 
-		ImageEditorInstance instance = editor.forBytes(bytes);
+		ImageBytesEditor.Instance instance = editor.newInstance(bytes);
 		instance.cropImage(0.5, 0.5);
 		instance.rotateImage(90);
 		instance.resizeImage(90, 90);
 
-		Image finalImage = instance.applyTransforms();
+		Image finalImage = instance.createEditedImage();
 		Assert.assertNotNull(finalImage);
 	}
 }

@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.storage.object.file;
 
 import com.dereekb.gae.server.storage.object.file.options.StorableFileOptions;
-import com.dereekb.gae.server.storage.object.file.options.StorableFileOptionsImpl;
+import com.dereekb.gae.server.storage.object.file.options.impl.StorableFileOptionsImpl;
 
 /**
  * {@link StorableData} extension that also provides the content type and

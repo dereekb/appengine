@@ -1,32 +1,33 @@
 package com.dereekb.gae.test.server.storage.gcs;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dereekb.gae.server.storage.gcs.files.GcsStorageFileRequestBuilder;
 import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
-import com.dereekb.gae.server.storage.object.file.options.StorableFileOptionsImpl;
-import com.dereekb.gae.server.storage.object.file.options.StorableFileOptionsImpl.StorableFileVisibility;
+import com.dereekb.gae.server.storage.object.file.options.StorableFileVisibility;
+import com.dereekb.gae.server.storage.object.file.options.impl.StorableFileCacheOptionsImpl;
+import com.dereekb.gae.server.storage.object.file.options.impl.StorableFileOptionsImpl;
+import com.dereekb.gae.server.storage.services.gcs.impl.GcsStorableFileSaveRequestBuilderImpl;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 
 /**
  *
  * @author dereekb
- * @deprecated Not sure what this tests.
  */
-@Ignore
-@Deprecated
-public class GcsStorageFileRequestBuilderTest {
+public class StorageFileRequestBuilderTest {
 
 	@Test
 	public void testDefaults() {
-		GcsStorageFileRequestBuilder builder = new GcsStorageFileRequestBuilder();
+		GcsStorableFileSaveRequestBuilderImpl builder = new GcsStorableFileSaveRequestBuilderImpl();
 		StorableFileOptionsImpl options = new StorableFileOptionsImpl();
 		options.setVisibility(StorableFileVisibility.PUBLIC);
 
-		options.setCache(true);
-		options.setCacheTime(1);
+		StorableFileCacheOptionsImpl cacheOptions = new StorableFileCacheOptionsImpl();
+
+		cacheOptions.setCacheable(true);
+		cacheOptions.setMaxCacheTime(1L);
+
+		options.setCacheOptions(cacheOptions);
 		builder.setDefaultOptions(options);
 
 		StorableContentImpl content = new StorableContentImpl(null, null, "test/test");

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.dereekb.gae.server.storage.object.file.StorableContent;
 import com.dereekb.gae.server.storage.object.file.StorableFile;
-import com.dereekb.gae.server.storage.object.file.options.StorableFileOptionsImpl;
+import com.dereekb.gae.server.storage.object.file.options.impl.StorableFileOptionsImpl;
 
 /**
  * {@code StorableContent} implementation.

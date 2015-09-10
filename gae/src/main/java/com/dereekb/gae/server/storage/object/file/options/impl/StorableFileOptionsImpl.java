@@ -1,4 +1,8 @@
-package com.dereekb.gae.server.storage.object.file.options;
+package com.dereekb.gae.server.storage.object.file.options.impl;
+
+import com.dereekb.gae.server.storage.object.file.options.StorableFileCacheOptions;
+import com.dereekb.gae.server.storage.object.file.options.StorableFileOptions;
+import com.dereekb.gae.server.storage.object.file.options.StorableFileVisibility;
 
 /**
  * {@link StorableFileOptions} implementation.
