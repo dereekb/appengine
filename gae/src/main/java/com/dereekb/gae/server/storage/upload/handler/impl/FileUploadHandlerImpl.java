@@ -23,12 +23,12 @@ import com.dereekb.gae.utilities.collections.map.catchmap.CatchMap;
 public class FileUploadHandlerImpl
         implements FileUploadHandler {
 
-	private CatchMap<String, FileUploadHandlerDelegate> delegates;
 	private UploadedFileReader reader;
+	private CatchMap<String, FileUploadHandlerDelegate> delegates;
 
-	public FileUploadHandlerImpl(CatchMap<String, FileUploadHandlerDelegate> delegates, UploadedFileReader reader) {
-		this.delegates = delegates;
+	public FileUploadHandlerImpl(UploadedFileReader reader, CatchMap<String, FileUploadHandlerDelegate> delegates) {
 		this.reader = reader;
+		this.delegates = delegates;
 	}
 
 	public CatchMap<String, FileUploadHandlerDelegate> getDelegates() {

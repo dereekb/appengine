@@ -9,10 +9,28 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<import resource="taskqueue.xml" />
-	<import resource="database.xml" />
-	<import resource="keys.xml" />
-	<import resource="storage.xml" />
-	<import resource="image.xml" />
+	<!-- Storage System -->
+	<alias name="gcsStorageSystem" alias="storageSystem" />
+
+	<bean id="gcsStorageSystem" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.storage.services.gcs.GcsStorageSystem">
+		<constructor-arg index="0" ref="gcsStorageSystemBucket" />
+		<constructor-arg index="1" ref="gcsStorageSystemSaveRequestBuilder" />
+	</bean> 
+	
+	<bean id="gcsStorageSystemBucket" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" value="upload" />
+	</bean>
+	
+	<bean id="gcsStorageSystemSaveRequestBuilder"
+		class="com.dereekb.gae.server.storage.services.gcs.impl.GcsStorableFileSaveRequestBuilderImpl"
+		scope="singleton">
+		<constructor-arg index="0">
+			<bean class="com.dereekb.gae.server.storage.object.file.options.impl.StorableFileOptionsImpl">
+				<constructor-arg index="0" value="PUBLIC"/>
+				<constructor-arg index="1" value="null"/>
+			</bean>
+		</constructor-arg>
+	</bean>
 
 </beans>

@@ -1,0 +1,104 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Upload URL -->
+	<bean id="baseFileUploadUrl" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" value="/api/upload" />
+	</bean>
+
+	<bean id="fileUploadBucket" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" value="upload" />
+	</bean>
+
+	<!-- Link -->
+	<bean id="uploadExtensionApiController" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.web.api.model.extension.upload.UploadApiExtensionController">
+		<constructor-arg index="0" ref="fileUploadUrlFactory" />
+		<constructor-arg index="1" ref="fileUploadHandler" />
+	</bean>
+
+	<bean id="fileUploadUrlFactory" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.storage.services.blobstore.upload.BlobstoreFileUploadUrlFactory">
+		<constructor-arg index="0" ref="baseFileUploadUrl" />
+		<constructor-arg index="1" ref="fileUploadBucket" />
+	</bean>
+
+	<bean id="fileUploadHandler" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.storage.upload.handler.impl.FileUploadHandlerImpl">
+		<constructor-arg index="0" ref="uploadedFileReader" />
+		<constructor-arg index="1" ref="fileUploadHandlerDelegates" />
+	</bean>
+
+	<bean id="uploadedFileReader" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.storage.upload.reader.impl.UploadedBlobFileReader">
+	</bean>
+
+	<!-- File Upload Handler Delegates -->
+	<bean id="fileUploadHandlerDelegates" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.utilities.collections.map.catchmap.impl.CatchMapImpl">
+		<constructor-arg index="0" value="null" />
+		<constructor-arg index="1" value="null" />
+		<constructor-arg index="2">
+
+			<!-- Delegates Map -->
+			<map key-type="java.lang.String">
+
+				<!-- Images -->
+				<entry key="icon" value-ref="iconFileUploadHandler" />
+				<entry key="image" value-ref="imageFileUploadHandler" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<!-- IMAGES -->
+	<!-- Icon -->
+	<bean id="iconFileUploadHandler" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.storage.upload.handler.impl.delegate.impl.FileUploadHandlerDelegateImpl">
+		<constructor-arg index="0">
+			<bean
+				class="com.dereekb.gae.server.storage.upload.data.task.UploadedPairHandlerTask">
+				<constructor-arg index="0" ref="iconImageBytesValidator" />
+				<constructor-arg index="1" value="null" />
+				<constructor-arg index="2" value="iconStoredBlobUploadHandler" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="iconImageBytesValidator"
+		class="com.dereekb.gae.server.storage.upload.data.image.ImageBytesValidator">
+		<constructor-arg index="0" value="1.0" />
+		<constructor-arg index="1" value="256" />
+		<constructor-arg index="2" value="256" />
+		<constructor-arg index="3" value="null" />
+		<constructor-arg index="4" value="null" />
+		<constructor-arg index="5" value="null" />
+	</bean>
+
+	<bean id="iconImageBytesModifier"
+		class="com.dereekb.gae.server.storage.upload.data.image.ImageBytesModifier">
+		<constructor-arg index="0" ref="imageBytesEditor" />
+		<constructor-arg index="1">
+			<!-- TODO: Add Icon modifier. -->
+		</constructor-arg>
+	</bean>
+
+	<bean id="iconStoredBlobUploadHandler"
+		class="com.dereekb.gae.model.stored.blob.storage.StoredBlobUploadHandler">
+		<constructor-arg index="0" value="PNG" />
+		<constructor-arg index="1" ref="storageSystem" />
+		<constructor-arg index="2" ref="storedBlobAsyncConfiguredSetter" />
+		
+		<!-- TODO: Delegate, DownloadKeyService -->
+		<constructor-arg index="3" value="null" />
+		<constructor-arg index="4" value="null" />
+	</bean>
+
+</beans>

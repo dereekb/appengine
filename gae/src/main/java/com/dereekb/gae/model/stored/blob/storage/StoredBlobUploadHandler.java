@@ -35,6 +35,61 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 
 	private DownloadKeyService downloadKeyService;
 
+	public StoredBlobUploadHandler() {}
+
+	public StoredBlobUploadHandler(StoredBlobType blobType,
+	        StorageSystem storageSystem,
+	        ConfiguredSetter<StoredBlob> storedBlobSetter,
+	        StoredBlobUploadHandlerDelegate<T> delegate,
+	        DownloadKeyService downloadKeyService) {
+		this.blobType = blobType;
+		this.storageSystem = storageSystem;
+		this.storedBlobSetter = storedBlobSetter;
+		this.delegate = delegate;
+		this.downloadKeyService = downloadKeyService;
+	}
+
+	public StoredBlobType getBlobType() {
+		return this.blobType;
+	}
+
+	public void setBlobType(StoredBlobType blobType) {
+		this.blobType = blobType;
+	}
+
+	public StorageSystem getStorageSystem() {
+		return this.storageSystem;
+	}
+
+	public void setStorageSystem(StorageSystem storageSystem) {
+		this.storageSystem = storageSystem;
+	}
+
+	public ConfiguredSetter<StoredBlob> getStoredBlobSetter() {
+		return this.storedBlobSetter;
+	}
+
+	public void setStoredBlobSetter(ConfiguredSetter<StoredBlob> storedBlobSetter) {
+		this.storedBlobSetter = storedBlobSetter;
+	}
+
+	public StoredBlobUploadHandlerDelegate<T> getDelegate() {
+		return this.delegate;
+	}
+
+	public void setDelegate(StoredBlobUploadHandlerDelegate<T> delegate) {
+		this.delegate = delegate;
+	}
+
+	public DownloadKeyService getDownloadKeyService() {
+		return this.downloadKeyService;
+	}
+
+	public void setDownloadKeyService(DownloadKeyService downloadKeyService) {
+		this.downloadKeyService = downloadKeyService;
+	}
+
+	// MARK: UploadedPairHandlerTaskDelegate
 	@Override
 	public ApiResponseData useUploadedBytes(byte[] bytes,
 	                                        UploadedFileInfo info) {
@@ -163,8 +218,11 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 
 			uploadData.setSize(this.info.getFileSize());
 
-			String downloadKey = StoredBlobUploadHandler.this.downloadKeyService.makeDownloadKey(this.storedContent);
-			uploadData.setDownloadKey(downloadKey);
+			if (StoredBlobUploadHandler.this.downloadKeyService != null) {
+				String downloadKey = StoredBlobUploadHandler.this.downloadKeyService
+				        .makeDownloadKey(this.storedContent);
+				uploadData.setDownloadKey(downloadKey);
+			}
 
 			ApiResponseDataImpl data = new ApiResponseDataImpl("UploadedStoredBlobData", uploadData);
 			return data;

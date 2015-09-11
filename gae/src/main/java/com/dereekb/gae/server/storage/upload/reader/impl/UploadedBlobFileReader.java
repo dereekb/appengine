@@ -16,6 +16,8 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 public class UploadedBlobFileReader
         implements UploadedFileReader {
 
+	public UploadedBlobFileReader() {}
+
 	// MARK: UploadedFileReader
 	@Override
 	public UploadedFileSet readUploadedFiles(HttpServletRequest request) {

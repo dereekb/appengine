@@ -39,18 +39,28 @@ public class GcsStorageSystem
 	private static final String STORAGE_SYSTEM_NAME = "Google Cloud Storage";
 
 	private GcsService gcsService;
+
 	private String gcsBucket;
+
 	private GcsStorableFileSaveRequestBuilder saveRequestBuilder;
 
 	private int readBufferSize = DEFAULT_READ_BUFFER_SIZE;
 
 	public GcsStorageSystem(String gcsBucket) {
-		this(defaultService(), gcsBucket);
+		this(gcsBucket, null);
     }
 
-	public GcsStorageSystem(GcsService gcsService, String gcsBucket) {
+	public GcsStorageSystem(String gcsBucket,
+	            	        GcsStorableFileSaveRequestBuilder saveRequestBuilder) {
+		this(defaultService(), gcsBucket, saveRequestBuilder);
+	}
+
+	public GcsStorageSystem(GcsService gcsService,
+	        String gcsBucket,
+	        GcsStorableFileSaveRequestBuilder saveRequestBuilder) {
 		this.gcsService = gcsService;
 		this.gcsBucket = gcsBucket;
+		this.saveRequestBuilder = saveRequestBuilder;
 	}
 
 	public static GcsService defaultService() {

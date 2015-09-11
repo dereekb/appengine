@@ -29,6 +29,40 @@ public class UploadedPairHandlerTask
 	private BytesModifier modifier;
 	private UploadedPairHandlerTaskDelegate delegate;
 
+	public UploadedPairHandlerTask() {}
+
+	public UploadedPairHandlerTask(BytesValidator validator,
+	        BytesModifier modifier,
+	        UploadedPairHandlerTaskDelegate delegate) {
+		this.validator = validator;
+		this.modifier = modifier;
+		this.delegate = delegate;
+	}
+
+	public BytesValidator getValidator() {
+		return this.validator;
+	}
+
+	public void setValidator(BytesValidator validator) {
+		this.validator = validator;
+	}
+
+	public BytesModifier getModifier() {
+		return this.modifier;
+	}
+
+	public void setModifier(BytesModifier modifier) {
+		this.modifier = modifier;
+	}
+
+	public UploadedPairHandlerTaskDelegate getDelegate() {
+		return this.delegate;
+	}
+
+	public void setDelegate(UploadedPairHandlerTaskDelegate delegate) {
+		this.delegate = delegate;
+	}
+
 	@Override
 	public void doTask(UploadPair input) throws FailedTaskException {
 		UploadedFile file = input.getSource();

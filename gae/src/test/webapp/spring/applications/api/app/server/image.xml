@@ -9,10 +9,15 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<import resource="taskqueue.xml" />
-	<import resource="database.xml" />
-	<import resource="keys.xml" />
-	<import resource="storage.xml" />
-	<import resource="image.xml" />
+	<!-- Editor -->
+	<bean id="imageBytesEditor" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.storage.services.images.ImageBytesEditor">
+		<constructor-arg index="0">
+			<bean class="com.google.appengine.api.images.OutputSettings">
+				<constructor-arg index="0" value="PNG"/>
+				<property name="quality" value="100"/>
+			</bean>
+		</constructor-arg>
+	</bean>
 
 </beans>

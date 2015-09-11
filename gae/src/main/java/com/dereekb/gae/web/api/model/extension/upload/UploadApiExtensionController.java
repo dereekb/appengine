@@ -28,6 +28,30 @@ public class UploadApiExtensionController {
 	private FileUploadUrlFactory urlFactory;
 	private FileUploadHandler handler;
 
+	public UploadApiExtensionController() {}
+
+	public UploadApiExtensionController(FileUploadUrlFactory urlFactory, FileUploadHandler handler) {
+		this.urlFactory = urlFactory;
+		this.handler = handler;
+	}
+
+	public FileUploadUrlFactory getUrlFactory() {
+		return this.urlFactory;
+	}
+
+	public void setUrlFactory(FileUploadUrlFactory urlFactory) {
+		this.urlFactory = urlFactory;
+	}
+
+	public FileUploadHandler getHandler() {
+		return this.handler;
+	}
+
+	public void setHandler(FileUploadHandler handler) {
+		this.handler = handler;
+	}
+
+	// MARK: API
 	/**
 	 * Creates a new upload url.
 	 *
@@ -66,6 +90,11 @@ public class UploadApiExtensionController {
 	                                     HttpServletRequest request) throws FileUploadFailedException {
 		ApiResponse response = this.handler.handleUploadRequest(type, request);
 		return response;
+	}
+
+	@Override
+	public String toString() {
+		return "UploadApiExtensionController [urlFactory=" + this.urlFactory + ", handler=" + this.handler + "]";
 	}
 
 }
