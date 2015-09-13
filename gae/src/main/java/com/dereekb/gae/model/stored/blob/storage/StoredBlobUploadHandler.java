@@ -27,12 +27,9 @@ public class StoredBlobUploadHandler<T extends Descriptor>
         implements UploadedPairHandlerTaskDelegate {
 
 	private StoredBlobType blobType;
-
 	private StorageSystem storageSystem;
-
 	private ConfiguredSetter<StoredBlob> storedBlobSetter;
 	private StoredBlobUploadHandlerDelegate<T> delegate;
-
 	private DownloadKeyService downloadKeyService;
 
 	public StoredBlobUploadHandler() {}
@@ -224,7 +221,7 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 				uploadData.setDownloadKey(downloadKey);
 			}
 
-			ApiResponseDataImpl data = new ApiResponseDataImpl("UploadedStoredBlobData", uploadData);
+			ApiResponseDataImpl data = new ApiResponseDataImpl("UploadedStoredBlob", uploadData);
 			return data;
 		}
 

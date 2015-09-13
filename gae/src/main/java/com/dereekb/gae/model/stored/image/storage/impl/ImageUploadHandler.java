@@ -12,7 +12,7 @@ import com.googlecode.objectify.Key;
 /**
  * {@link StoredBlobUploadHandlerDelegate} for uploading {@link StoredImage}
  * instances.
- * 
+ *
  * @author dereekb
  *
  */
@@ -23,6 +23,30 @@ public class ImageUploadHandler extends StoredBlobUploadHandlerDelegateImpl<Stor
 
 	public ImageUploadHandler(StorableFilePathResolver<StoredBlob> fileResolver) {
 		super(fileResolver);
+	}
+
+	public ImageUploadHandler(StoredImageType imageType,
+	        Setter<StoredImage> imageSetter,
+	        StorableFilePathResolver<StoredBlob> fileResolver) {
+		super(fileResolver);
+		this.imageType = imageType;
+		this.imageSetter = imageSetter;
+	}
+
+	public StoredImageType getImageType() {
+		return this.imageType;
+	}
+
+	public void setImageType(StoredImageType imageType) {
+		this.imageType = imageType;
+	}
+
+	public Setter<StoredImage> getImageSetter() {
+		return this.imageSetter;
+	}
+
+	public void setImageSetter(Setter<StoredImage> imageSetter) {
+		this.imageSetter = imageSetter;
 	}
 
 	// MARK: StoredBlobUploadedHandlerDelegate

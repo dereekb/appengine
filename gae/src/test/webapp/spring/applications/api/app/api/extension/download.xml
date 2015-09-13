@@ -9,13 +9,9 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- MODELS -->
-	<import resource="model/model.xml" />
-
-	<!-- EXTENSIONs -->
-	<import resource="extension/link.xml" />
-	<import resource="extension/search.xml" />
-	<import resource="extension/upload.xml" />
-	<import resource="extension/download.xml" />
+	<bean id="blobstoreDownloadKeyService"
+		class="com.dereekb.gae.server.storage.services.blobstore.download.BlobstoreDownloadKeyService">
+		<constructor-arg index="0" ref="blobKeyResolver" />
+	</bean>
 
 </beans>

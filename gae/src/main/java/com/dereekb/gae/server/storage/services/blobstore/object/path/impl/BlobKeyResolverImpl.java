@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.storage.services.blobstore.object.path.impl;
 
 import com.dereekb.gae.server.storage.object.file.StorableFile;
+import com.dereekb.gae.server.storage.services.blobstore.object.blob.BlobstoreKeyService;
 import com.dereekb.gae.server.storage.services.blobstore.object.blob.impl.BlobstoreKeyServiceImpl;
 import com.dereekb.gae.server.storage.services.blobstore.object.path.BlobKeyResolver;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -16,22 +17,22 @@ public class BlobKeyResolverImpl
         implements BlobKeyResolver {
 
 	private String gcsBucket;
-	private BlobstoreKeyServiceImpl keyFactory;
+	private BlobstoreKeyService keyFactory;
 
 	public BlobKeyResolverImpl(String gcsBucket) {
-		this(new BlobstoreKeyServiceImpl(), gcsBucket);
+		this(gcsBucket, new BlobstoreKeyServiceImpl());
 	}
 
-	public BlobKeyResolverImpl(BlobstoreKeyServiceImpl keyFactory, String gcsBucket) {
-		this.keyFactory = keyFactory;
+	public BlobKeyResolverImpl(String gcsBucket, BlobstoreKeyService keyFactory) {
 		this.gcsBucket = gcsBucket;
+		this.keyFactory = keyFactory;
 	}
 
-	public BlobstoreKeyServiceImpl getKeyFactory() {
+	public BlobstoreKeyService getKeyFactory() {
 		return this.keyFactory;
 	}
 
-	public void setKeyFactory(BlobstoreKeyServiceImpl keyFactory) {
+	public void setKeyFactory(BlobstoreKeyService keyFactory) {
 		this.keyFactory = keyFactory;
 	}
 

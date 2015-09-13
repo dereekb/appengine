@@ -34,7 +34,7 @@ import com.googlecode.objectify.condition.IfZero;
 public final class StoredImage extends SearchableDatabaseModel
         implements ObjectifyModel<StoredImage>, StoredBlobInfoType, Descriptor {
 
-	public static final String DESCRIPTOR_TYPE = "storedImage";
+	public static final String DESCRIPTOR_TYPE = "StoredImage";
 
 	private static final long serialVersionUID = 1L;
 

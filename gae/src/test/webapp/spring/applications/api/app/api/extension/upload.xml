@@ -66,39 +66,44 @@
 			<bean
 				class="com.dereekb.gae.server.storage.upload.data.task.UploadedPairHandlerTask">
 				<constructor-arg index="0" ref="iconImageBytesValidator" />
-				<constructor-arg index="1" value="null" />
-				<constructor-arg index="2" value="iconStoredBlobUploadHandler" />
+				<constructor-arg index="1" ref="iconStoredBlobUploadHandler" />
 			</bean>
 		</constructor-arg>
 	</bean>
 
-	<bean id="iconImageBytesValidator"
+	<bean id="iconImageBytesValidator" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.storage.upload.data.image.ImageBytesValidator">
 		<constructor-arg index="0" value="1.0" />
 		<constructor-arg index="1" value="256" />
 		<constructor-arg index="2" value="256" />
-		<constructor-arg index="3" value="null" />
-		<constructor-arg index="4" value="null" />
-		<constructor-arg index="5" value="null" />
+		<constructor-arg index="3" value="768" />
+		<constructor-arg index="4" value="768" />
 	</bean>
 
-	<bean id="iconImageBytesModifier"
-		class="com.dereekb.gae.server.storage.upload.data.image.ImageBytesModifier">
-		<constructor-arg index="0" ref="imageBytesEditor" />
-		<constructor-arg index="1">
-			<!-- TODO: Add Icon modifier. -->
-		</constructor-arg>
-	</bean>
-
-	<bean id="iconStoredBlobUploadHandler"
+	<bean id="iconStoredBlobUploadHandler" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.model.stored.blob.storage.StoredBlobUploadHandler">
 		<constructor-arg index="0" value="PNG" />
 		<constructor-arg index="1" ref="storageSystem" />
-		<constructor-arg index="2" ref="storedBlobAsyncConfiguredSetter" />
-		
-		<!-- TODO: Delegate, DownloadKeyService -->
-		<constructor-arg index="3" value="null" />
-		<constructor-arg index="4" value="null" />
+		<constructor-arg index="2"
+			ref="storedBlobAsyncConfiguredSetter" />
+		<constructor-arg index="3"
+			ref="iconStoredBlobUploadHandlerDelegate" />
+		<constructor-arg index="4" ref="blobstoreDownloadKeyService" />
+	</bean>
+
+	<bean id="iconStoredBlobUploadHandlerDelegate" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.model.stored.image.storage.impl.ImageUploadHandler">
+		<constructor-arg index="0" value="ICON" />
+		<constructor-arg index="1"
+			ref="storedImageSynchronousConfiguredSetter" />
+		<constructor-arg index="2"
+			ref="iconStoredBlobFilePathResolver" />
+	</bean>
+
+	<bean id="iconStoredBlobFilePathResolver" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.storage.object.file.impl.StaticStorableFilePathResolverImpl">
+		<constructor-arg index="0" ref="iconBlobFolder" />
 	</bean>
 
 </beans>

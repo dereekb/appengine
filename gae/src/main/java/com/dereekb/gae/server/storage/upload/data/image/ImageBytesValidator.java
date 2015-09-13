@@ -38,6 +38,20 @@ public class ImageBytesValidator
 
 	public ImageBytesValidator() {}
 
+	public ImageBytesValidator(Double aspectRatio, int minWidth, int minHeight) {
+		this.setAspectRatio(aspectRatio);
+		this.setMinWidth(minWidth);
+		this.setMinHeight(minHeight);
+	}
+
+	public ImageBytesValidator(Double aspectRatio,
+	        int minWidth,
+	        int minHeight,
+	        int maxWidth,
+ int maxHeight) {
+		this(aspectRatio, minWidth, minHeight, maxWidth, maxHeight, null);
+	}
+
 	public ImageBytesValidator(Double aspectRatio,
 	        int minWidth,
 	        int minHeight,

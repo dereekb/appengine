@@ -17,7 +17,13 @@ public class StorableFileOptionsImpl
 
 	private StorableFileCacheOptions cacheOptions;
 
-	public StorableFileOptionsImpl() {}
+	public StorableFileOptionsImpl() {
+		this(StorableFileVisibility.PUBLIC);
+	}
+
+	public StorableFileOptionsImpl(StorableFileVisibility visibility) {
+		this.visibility = visibility;
+	}
 
 	public StorableFileOptionsImpl(StorableFileVisibility visibility, StorableFileCacheOptions cacheOptions) {
 		this.visibility = visibility;

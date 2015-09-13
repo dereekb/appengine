@@ -31,6 +31,10 @@ public class UploadedPairHandlerTask
 
 	public UploadedPairHandlerTask() {}
 
+	public UploadedPairHandlerTask(BytesValidator validator, UploadedPairHandlerTaskDelegate delegate) {
+		this(validator, null, delegate);
+	}
+
 	public UploadedPairHandlerTask(BytesValidator validator,
 	        BytesModifier modifier,
 	        UploadedPairHandlerTaskDelegate delegate) {
@@ -129,8 +133,8 @@ public class UploadedPairHandlerTask
 
 	@Override
 	public String toString() {
-		return "UploadedPairHandlerTask [validator=" + this.validator
-		        + ", modifier=" + this.modifier + ", delegate=" + this.delegate + "]";
+		return "UploadedPairHandlerTask [validator=" + this.validator + ", modifier=" + this.modifier + ", delegate="
+		        + this.delegate + "]";
 	}
 
 }

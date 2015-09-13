@@ -15,22 +15,59 @@
 	<bean id="gcsStorageSystem" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.storage.services.gcs.GcsStorageSystem">
 		<constructor-arg index="0" ref="gcsStorageSystemBucket" />
-		<constructor-arg index="1" ref="gcsStorageSystemSaveRequestBuilder" />
-	</bean> 
-	
-	<bean id="gcsStorageSystemBucket" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="upload" />
+		<constructor-arg index="1"
+			ref="gcsStorageSystemSaveRequestBuilder" />
 	</bean>
-	
-	<bean id="gcsStorageSystemSaveRequestBuilder"
+
+	<bean id="gcsStorageSystemBucket" lazy-init="true" class="java.lang.String"
+		scope="singleton">
+		<constructor-arg index="0" value="primary" />
+	</bean>
+
+	<bean id="gcsStorageSystemSaveRequestBuilder" lazy-init="true"
 		class="com.dereekb.gae.server.storage.services.gcs.impl.GcsStorableFileSaveRequestBuilderImpl"
 		scope="singleton">
 		<constructor-arg index="0">
-			<bean class="com.dereekb.gae.server.storage.object.file.options.impl.StorableFileOptionsImpl">
-				<constructor-arg index="0" value="PUBLIC"/>
-				<constructor-arg index="1" value="null"/>
+			<bean
+				class="com.dereekb.gae.server.storage.object.file.options.impl.StorableFileOptionsImpl">
+				<constructor-arg index="0" value="PUBLIC" />
 			</bean>
 		</constructor-arg>
+	</bean>
+
+	<!-- Blobstore -->
+	<bean id="blobKeyResolver" lazy-init="true"
+		class="com.dereekb.gae.server.storage.services.blobstore.object.path.impl.BlobKeyResolverImpl"
+		scope="singleton">
+		<constructor-arg index="0" ref="gcsStorageSystemBucket" />
+		<constructor-arg index="1" ref="blobstoreKeyService" />
+	</bean>
+	
+	<bean id="blobstoreKeyService" lazy-init="true"
+		class="com.dereekb.gae.server.storage.services.blobstore.object.blob.impl.BlobstoreKeyServiceImpl"
+		scope="singleton">
+	</bean>
+	
+	<!-- FOLDERS -->
+	
+	<!-- Blobs -->
+	<bean id="blobBlobFolder" lazy-init="true"
+		class="com.dereekb.gae.server.storage.object.folder.impl.StorableFolderImpl"
+		scope="singleton">
+		<constructor-arg index="0" value="blobs/blob/" />
+	</bean>
+	
+	<!-- Image Blobs -->
+	<bean id="iconBlobFolder" lazy-init="true"
+		class="com.dereekb.gae.server.storage.object.folder.impl.StorableFolderImpl"
+		scope="singleton">
+		<constructor-arg index="0" value="blobs/images/icon/" />
+	</bean>
+	
+	<bean id="imageBlobFolder" lazy-init="true"
+		class="com.dereekb.gae.server.storage.object.folder.impl.StorableFolderImpl"
+		scope="singleton">
+		<constructor-arg index="0" value="blobs/images/image/" />
 	</bean>
 
 </beans>
