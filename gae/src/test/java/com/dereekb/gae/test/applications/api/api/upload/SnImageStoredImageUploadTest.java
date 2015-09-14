@@ -8,23 +8,23 @@ import com.dereekb.gae.test.applications.api.api.upload.util.TestUploadedFileSet
 import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerator;
 
 /**
- * Used for testing the "iconFileUploadHandler" configured in the api.
+ * Used for testing the "snImageFileUploadHandler" configured in the api.
  *
  * @author dereekb
  *
  */
-public class IconStoredImageUploadTest extends AbstractStoredImageUploadTest {
+public class SnImageStoredImageUploadTest extends AbstractStoredImageUploadTest {
 
 	@Override
     @Autowired
-	@Qualifier("iconFileUploadHandler")
+	@Qualifier("snImageFileUploadHandler")
 	public void setUploadHandler(FileUploadHandlerDelegate uploadHandler) {
 		super.setUploadHandler(uploadHandler);
 	}
 
 	@Override
 	public TestUploadedFileSetImpl generateValidTestSet() {
-		TestImageByteGenerator generator = new TestImageByteGenerator(512, 512);
+		TestImageByteGenerator generator = new TestImageByteGenerator(1280, 720);
 		TestUploadedFileSetImpl set = new TestUploadedFileSetImpl();
 
 		set.addItem(generator.generateBytes(), "a", "image/png");
@@ -35,15 +35,15 @@ public class IconStoredImageUploadTest extends AbstractStoredImageUploadTest {
 
 	@Override
 	public TestUploadedFileSetImpl generateInvalidTestSet() {
-		TestImageByteGenerator generator = new TestImageByteGenerator(1024, 1024);
+		TestImageByteGenerator generator = new TestImageByteGenerator(1936, 1089);
 		TestUploadedFileSetImpl set = new TestUploadedFileSetImpl();
 
 		set.addItem(generator.generateBytes(), "tooBig", "image/png");
 
-		generator.setHeight(128);
-		set.addItem(generator.generateBytes(), "notOneToOne", "image/png");
+		generator.setWidth(1264);
+		set.addItem(generator.generateBytes(), "notSixteenToNine", "image/png");
 
-		generator.setWidth(128);
+		generator.setWidth(711);
 		set.addItem(generator.generateBytes(), "tooSmall", "image/png");
 
 		return set;

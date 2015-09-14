@@ -27,6 +27,11 @@ public class ImageBytesEditor {
 		this.outputSettings = defaultOutputSettings();
 	}
 
+	public ImageBytesEditor(OutputSettings outputSettings) {
+		this.service = ImagesServiceFactory.getImagesService();
+		this.outputSettings = outputSettings;
+	}
+
 	public ImageBytesEditor(ImagesService service, OutputSettings outputSettings) {
 		this.service = service;
 		this.outputSettings = outputSettings;

@@ -64,10 +64,10 @@
 		<constructor-arg index="0" value="blobs/images/icon/" />
 	</bean>
 	
-	<bean id="imageBlobFolder" lazy-init="true"
+	<bean id="snImageBlobFolder" lazy-init="true"
 		class="com.dereekb.gae.server.storage.object.folder.impl.StorableFolderImpl"
 		scope="singleton">
-		<constructor-arg index="0" value="blobs/images/image/" />
+		<constructor-arg index="0" value="blobs/images/sn/" />
 	</bean>
 
 </beans>
