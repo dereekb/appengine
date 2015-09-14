@@ -13,11 +13,11 @@ import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerato
  * @author dereekb
  *
  */
-public class SnImageStoredImageUploadTest extends AbstractStoredImageUploadTest {
+public class HdImageStoredImageUploadTest extends AbstractStoredImageUploadTest {
 
 	@Override
     @Autowired
-	@Qualifier("snImageFileUploadHandler")
+	@Qualifier("hdImageFileUploadHandler")
 	public void setUploadHandler(FileUploadHandlerDelegate uploadHandler) {
 		super.setUploadHandler(uploadHandler);
 	}

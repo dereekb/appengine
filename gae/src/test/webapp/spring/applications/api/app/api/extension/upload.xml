@@ -53,7 +53,7 @@
 
 				<!-- Images -->
 				<entry key="icon" value-ref="iconFileUploadHandler" />
-				<entry key="snImage" value-ref="snImageFileUploadHandler" />
+				<entry key="hdImage" value-ref="hdImageFileUploadHandler" />
 				<!-- TODO: Arbitrary Image -->
 			</map>
 		</constructor-arg>
@@ -121,21 +121,21 @@
 	</bean>
 	
 	<!-- 16:9 (sn) Image -->
-	<bean id="snImageFileUploadHandler" lazy-init="true" scope="singleton"
+	<bean id="hdImageFileUploadHandler" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.storage.upload.handler.impl.delegate.impl.FileUploadHandlerDelegateImpl">
 		<constructor-arg index="0">
 			<bean
 				class="com.dereekb.gae.server.storage.upload.data.task.UploadedPairHandlerTask">
 				<!-- Validate bytes sizes -->
-				<constructor-arg index="0" ref="snImageImageBytesValidator" />
+				<constructor-arg index="0" ref="hdImageImageBytesValidator" />
 				<!-- Convert to a JPEG -->
 				<constructor-arg index="1" ref="imageBytesModifierSaveAsJpeg" />
-				<constructor-arg index="2" ref="snImageStoredBlobUploadHandler" />
+				<constructor-arg index="2" ref="hdImageStoredBlobUploadHandler" />
 			</bean>
 		</constructor-arg>
 	</bean>
 
-	<bean id="snImageImageBytesValidator" lazy-init="true" scope="singleton"
+	<bean id="hdImageImageBytesValidator" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.storage.upload.data.image.ImageBytesValidator">
 		
 		<!-- 16:9 Aspect Ratio -->
@@ -151,30 +151,30 @@
 		
 	</bean>
 
-	<bean id="snImageStoredBlobUploadHandler" lazy-init="true" scope="singleton"
+	<bean id="hdImageStoredBlobUploadHandler" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.model.stored.blob.storage.StoredBlobUploadHandler">
 		<constructor-arg index="0" value="JPG" />
 		<constructor-arg index="1" ref="storageSystem" />
 		<constructor-arg index="2"
 			ref="storedBlobAsyncConfiguredSetter" />
 		<constructor-arg index="3"
-			ref="snImageStoredBlobUploadHandlerDelegate" />
+			ref="hdImageStoredBlobUploadHandlerDelegate" />
 		<constructor-arg index="4" ref="blobstoreDownloadKeyService" />
 	</bean>
 
-	<bean id="snImageStoredBlobUploadHandlerDelegate" lazy-init="true"
+	<bean id="hdImageStoredBlobUploadHandlerDelegate" lazy-init="true"
 		scope="singleton"
 		class="com.dereekb.gae.model.stored.image.storage.impl.ImageUploadHandler">
-		<constructor-arg index="0" value="SIXTEEN_NINE" />
+		<constructor-arg index="0" value="HD_IMAGE" />
 		<constructor-arg index="1"
 			ref="storedImageSynchronousConfiguredSetter" />
 		<constructor-arg index="2"
-			ref="snImageStoredBlobFilePathResolver" />
+			ref="hdImageStoredBlobFilePathResolver" />
 	</bean>
 
-	<bean id="snImageStoredBlobFilePathResolver" lazy-init="true" scope="singleton"
+	<bean id="hdImageStoredBlobFilePathResolver" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.storage.object.file.impl.StaticStorableFilePathResolverImpl">
-		<constructor-arg index="0" ref="snImageBlobFolder" />
+		<constructor-arg index="0" ref="hdImageBlobFolder" />
 	</bean>
 
 </beans>
