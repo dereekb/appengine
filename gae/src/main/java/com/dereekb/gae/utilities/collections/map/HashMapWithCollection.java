@@ -261,9 +261,10 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	 *            key value. Never {@code null}.
 	 * @param object
 	 *            object to remove from the map. Never {@code null}.
+	 * @return
 	 */
-	public void remove(K key,
-	                   T object) {
+	public void removeObjectForKey(Object key,
+	                   Object object) {
 		C collection = this.get(key);
 
 		if (collection != null) {

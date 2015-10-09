@@ -83,7 +83,7 @@
 	</bean>
 
 	<bean id="storedImageAttributeUpdater"
-		class="com.dereekb.gae.model.geo.place.crud.GeoPlaceAttributeUpdater"
+		class="com.dereekb.gae.model.stored.image.crud.StoredImageAttributeUpdater"
 		lazy-init="true">
 	</bean>
 

@@ -83,7 +83,7 @@
 	</bean>
 
 	<bean id="storedBlobAttributeUpdater"
-		class="com.dereekb.gae.model.geo.place.crud.GeoPlaceAttributeUpdater"
+		class="com.dereekb.gae.model.stored.blob.crud.StoredBlobAttributeUpdater"
 		lazy-init="true">
 	</bean>
 
