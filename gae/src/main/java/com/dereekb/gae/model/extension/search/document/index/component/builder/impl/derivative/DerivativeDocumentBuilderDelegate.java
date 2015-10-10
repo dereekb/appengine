@@ -1,10 +1,12 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder.derivative;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.impl.derivative;
 
 /**
  * Used for reading the derivative model from the input type.
- * 
+ *
  * @author dereekb
+ *
  * @param <T>
+ *            model type
  */
 public interface DerivativeDocumentBuilderDelegate<T> {
 

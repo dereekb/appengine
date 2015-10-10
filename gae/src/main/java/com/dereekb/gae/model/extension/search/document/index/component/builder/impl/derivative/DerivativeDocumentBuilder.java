@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder.derivative;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.impl.derivative;
 
 import java.util.Dictionary;
 
@@ -16,6 +16,7 @@ import com.google.appengine.api.search.Document.Builder;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public final class DerivativeDocumentBuilder<T extends UniqueSearchModel>
         implements StagedDocumentBuilderStep<T> {

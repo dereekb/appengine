@@ -10,9 +10,24 @@ import java.util.List;
  */
 public interface DocumentChangeSet {
 
+	/**
+	 *
+	 * @return Document Index name.
+	 */
 	public String getIndexName();
 
+	/**
+	 *
+	 * @return {@link List} of {@link DocumentChangeModel} values in this
+	 *         {@link DocumentChangeSet}.
+	 */
 	public List<DocumentChangeModel> getDocumentModels();
+
+	/**
+	 * @return {@code true} if changes are performed successfully, or
+	 *         {@code null} if no changes have been performed yet.
+	 */
+	public boolean getSuccess();
 
 	public void setSuccess(boolean success);
 

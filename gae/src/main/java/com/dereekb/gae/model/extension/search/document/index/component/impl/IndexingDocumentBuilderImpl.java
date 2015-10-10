@@ -1,8 +1,11 @@
-package com.dereekb.gae.model.extension.search.document.index.component;
+package com.dereekb.gae.model.extension.search.document.index.component.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentBuilder;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSet;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.SearchDocumentBuilder;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.Document;
@@ -16,14 +19,15 @@ import com.google.appengine.api.search.Document;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
-public class DefaultIndexingDocumentBuilder<T extends UniqueSearchModel>
+public class IndexingDocumentBuilderImpl<T extends UniqueSearchModel>
         implements IndexingDocumentBuilder<T> {
 
 	private final String index;
 	private final SearchDocumentBuilder<T> builder;
 
-	public DefaultIndexingDocumentBuilder(String index, SearchDocumentBuilder<T> builder) {
+	public IndexingDocumentBuilderImpl(String index, SearchDocumentBuilder<T> builder) {
 		this.index = index;
 		this.builder = builder;
 	}
@@ -44,14 +48,14 @@ public class DefaultIndexingDocumentBuilder<T extends UniqueSearchModel>
 			documents.add(document);
 		}
 
-		IndexingDocumentSet<T> set = new IndexingDocumentSet<T>(this.index, documents);
+		IndexingDocumentSet<T> set = new IndexingDocumentSetImpl<T>(this.index, documents);
 		return set;
 	}
 
 	@Override
 	public IndexingDocument<T> buildSearchDocument(T model) {
 		Document document = this.builder.buildSearchDocument(model);
-		IndexingDocument<T> indexingDocument = new IndexingDocument<T>(document, model);
+		IndexingDocument<T> indexingDocument = new IndexingDocumentImpl<T>(document, model);
 		return indexingDocument;
 	}
 

@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.geo.place.search.document.index;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.derivative.DerivativeDocumentBuilderDelegate;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.derivative.NoDerivativeTypeException;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.derivative.DerivativeDocumentBuilderDelegate;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.derivative.NoDerivativeTypeException;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.GeoPlaceInfoType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;

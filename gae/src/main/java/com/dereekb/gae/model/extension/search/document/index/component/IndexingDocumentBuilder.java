@@ -8,6 +8,7 @@ import com.dereekb.gae.server.search.UniqueSearchModel;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface IndexingDocumentBuilder<T extends UniqueSearchModel> {
 

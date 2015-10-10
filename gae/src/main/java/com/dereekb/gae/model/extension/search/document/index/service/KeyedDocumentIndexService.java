@@ -15,6 +15,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public interface KeyedDocumentIndexService {
 
 	/**
+	 *
+	 * @param action
+	 *            {@link IndexAction}. Never {@code null}.
+	 * @return {@code true} if this service can perform the {@link IndexAction}.
+	 */
+	public boolean canPerformAction(IndexAction action);
+
+	/**
 	 * Modifies the search index using the input keys.
 	 *
 	 * @param keys

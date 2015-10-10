@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder.derivative;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.impl.derivative;
 
 
 /**

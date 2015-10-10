@@ -8,7 +8,7 @@ import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.dto.GeoPlaceData;
 import com.dereekb.gae.server.datastore.Getter;
-import com.dereekb.gae.test.applications.api.api.ApiEditTest;
+import com.dereekb.gae.test.applications.api.api.tests.ApiEditTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.controller.EditModelController;
 

@@ -1,7 +1,10 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.impl;
 
 import java.util.List;
 
+import com.dereekb.gae.model.extension.search.document.index.component.builder.SearchDocumentBuilder;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderInit;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderStep;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.Document;
 
@@ -12,6 +15,7 @@ import com.google.appengine.api.search.Document;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public final class StagedDocumentBuilder<T extends UniqueSearchModel>
         implements SearchDocumentBuilder<T> {

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.test.applications.api.api.ApiReadTest;
+import com.dereekb.gae.test.applications.api.api.tests.ApiReadTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.controller.ReadModelController;
 

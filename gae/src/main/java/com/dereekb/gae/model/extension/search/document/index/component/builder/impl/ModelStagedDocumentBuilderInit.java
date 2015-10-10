@@ -1,6 +1,7 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.impl;
 
 import com.dereekb.gae.model.extension.search.document.SearchableUniqueModel;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderInit;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;
@@ -12,6 +13,9 @@ import com.google.appengine.api.search.Field;
  * set with the model's document ID, identifier, and type.
  *
  * @author dereekb
+ *
+ * @param <T>
+ *            model type
  */
 public final class ModelStagedDocumentBuilderInit<T extends SearchableUniqueModel>
         implements StagedDocumentBuilderInit<T> {

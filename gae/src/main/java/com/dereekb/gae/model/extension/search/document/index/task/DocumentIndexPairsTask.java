@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.IndexPair;
 import com.dereekb.gae.model.extension.search.document.index.component.DocumentIndexer;
-import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentBuilder;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.Task;

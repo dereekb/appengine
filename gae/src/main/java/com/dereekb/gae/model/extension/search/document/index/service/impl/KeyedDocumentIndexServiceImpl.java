@@ -22,12 +22,36 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class KeyedDocumentIndexServiceImpl<T extends SearchableUniqueModel>
         implements KeyedDocumentIndexService {
 
-	private final AtomicReadService<T> readService;
-	private final DocumentIndexService<T> indexingService;
+	private AtomicReadService<T> readService;
+	private DocumentIndexService<T> indexingService;
+
+	public KeyedDocumentIndexServiceImpl() {}
 
 	public KeyedDocumentIndexServiceImpl(AtomicReadService<T> readService, DocumentIndexService<T> indexingService) {
 		this.readService = readService;
 		this.indexingService = indexingService;
+	}
+
+	public AtomicReadService<T> getReadService() {
+		return this.readService;
+	}
+
+	public void setReadService(AtomicReadService<T> readService) {
+		this.readService = readService;
+	}
+
+	public DocumentIndexService<T> getIndexingService() {
+		return this.indexingService;
+	}
+
+	public void setIndexingService(DocumentIndexService<T> indexingService) {
+		this.indexingService = indexingService;
+	}
+
+	// MARK: KeyedDocumentIndexService
+	@Override
+	public boolean canPerformAction(IndexAction action) {
+		return true;
 	}
 
 	@Override
@@ -37,12 +61,10 @@ public class KeyedDocumentIndexServiceImpl<T extends SearchableUniqueModel>
 		return this.indexingService.indexChange(models, action);
 	}
 
-	public AtomicReadService<T> getReadService() {
-		return this.readService;
-	}
-
-    public DocumentIndexService<T> getIndexingService() {
-		return this.indexingService;
+	@Override
+	public String toString() {
+		return "KeyedDocumentIndexServiceImpl [readService=" + this.readService + ", indexingService="
+		        + this.indexingService + "]";
 	}
 
 }

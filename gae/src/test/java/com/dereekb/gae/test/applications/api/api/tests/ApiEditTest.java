@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.api;
+package com.dereekb.gae.test.applications.api.api.tests;
 
 import java.util.List;
 

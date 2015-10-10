@@ -1,28 +1,36 @@
-package com.dereekb.gae.model.extension.search.document.index.component;
+package com.dereekb.gae.model.extension.search.document.index.component.impl;
 
 import java.util.List;
 
+import com.dereekb.gae.model.extension.search.document.index.component.DocumentIndexer;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSet;
 import com.dereekb.gae.server.search.DocumentSearchController;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 
 /**
- * Default implementation of the {@link DocumentIndexer}.
+ * {@link DocumentIndexer} implementation.
  *
  * @author dereekb
  * @param <T>
+ *            model type
  */
-public class DefaultDocumentIndexer<T extends UniqueSearchModel>
+public class DocumentIndexerImpl<T extends UniqueSearchModel>
         implements DocumentIndexer<T> {
 
-	private final String index;
+	private String index;
 
-	public DefaultDocumentIndexer(String index) {
+	public DocumentIndexerImpl(String index) {
 		this.index = index;
 	}
 
 	public String getIndex() {
 		return this.index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
 	}
 
 	@Override
@@ -38,7 +46,7 @@ public class DefaultDocumentIndexer<T extends UniqueSearchModel>
 	private boolean indexDocuments(Iterable<IndexingDocument<T>> documents,
 	                               boolean update) {
 		List<IndexingDocument<T>> docList = IteratorUtility.iterableToList(documents);
-		IndexingDocumentSet<T> docSet = new IndexingDocumentSet<T>(this.index, docList);
+		IndexingDocumentSet<T> docSet = new IndexingDocumentSetImpl<T>(this.index, docList);
 		DocumentSearchController.put(docSet, update);
 		return docSet.getSuccess();
 	}

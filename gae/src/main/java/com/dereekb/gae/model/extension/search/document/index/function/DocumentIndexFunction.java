@@ -13,7 +13,8 @@ import com.dereekb.gae.utilities.task.function.StagedFunctionTask;
  *
  * @param <T>
  *            model type
- * @deprecated use {@link StagedFunctionTask} and factory instead.
+ * @deprecated use {@link StagedFunctionTask} and factory instead. See
+ *             {@link DocumentIndexPairsTask}.
  */
 @Deprecated
 public final class DocumentIndexFunction<T extends UniqueSearchModel> extends FilteredStagedFunction<T, IndexPair<T>> {
