@@ -4,7 +4,7 @@ import com.dereekb.gae.model.extension.search.document.search.service.DocumentSe
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Search service built on top of a {@link DocumentSearchService} used to
+ * Search service built on top of a {@link SearchDocumentService} used to
  * retrieve models.
  *
  * @author dereekb

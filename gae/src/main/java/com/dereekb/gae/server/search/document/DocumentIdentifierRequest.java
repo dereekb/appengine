@@ -2,9 +2,10 @@ package com.dereekb.gae.server.search.document;
 
 /**
  * A simple request that retrieves a document with the given identifier from the specified Search index.
- * 
+ *
  * @author dereekb
  */
+@Deprecated
 public class DocumentIdentifierRequest {
 
 	private final String index;
@@ -20,15 +21,15 @@ public class DocumentIdentifierRequest {
 	}
 
 	public String getIndex() {
-		return index;
+		return this.index;
 	}
 
 	public String getIdentifier() {
-		return identifier;
+		return this.identifier;
 	}
 
 	public boolean isRangeRequest() {
-		return rangeRequest;
+		return this.rangeRequest;
 	}
 
 	public void setRangeRequest(boolean rangeRequest) {
@@ -36,7 +37,7 @@ public class DocumentIdentifierRequest {
 	}
 
 	public boolean isIdentifiersOnlyRequest() {
-		return identifiersOnlyRequest;
+		return this.identifiersOnlyRequest;
 	}
 
 	public void setIdentifiersOnlyRequest(boolean identifiersOnlyRequest) {
@@ -44,7 +45,7 @@ public class DocumentIdentifierRequest {
 	}
 
 	public Integer getLimit() {
-		return limit;
+		return this.limit;
 	}
 
 	public void setLimit(Integer limit) {
