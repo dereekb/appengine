@@ -5,20 +5,31 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.server.search.service.SearchDocumentService;
+import com.dereekb.gae.server.search.service.exception.DocumentPutException;
 import com.dereekb.gae.server.search.service.exception.MissingDocumentException;
 import com.dereekb.gae.server.search.service.request.DocumentMultiReadRequest;
+import com.dereekb.gae.server.search.service.request.DocumentPutRequest;
+import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
 import com.dereekb.gae.server.search.service.request.DocumentRangeReadRequest;
 import com.dereekb.gae.server.search.service.request.SearchDocumentRequest;
 import com.dereekb.gae.server.search.service.response.SearchDocumentReadResponse;
 import com.dereekb.gae.server.search.service.response.impl.SearchDocumentReadResponseImpl;
+import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
 import com.google.appengine.api.search.SearchService;
 import com.google.appengine.api.search.SearchServiceFactory;
 
+/**
+ * {@link SearchDocumentService} implementation.
+ *
+ * @author dereekb
+ *
+ */
 public class SearchDocumentServiceImpl
         implements SearchDocumentService {
 
@@ -29,6 +40,8 @@ public class SearchDocumentServiceImpl
 	private static final Integer API_RETRIEVE_LIMIT_MAXIMUM = 1000;
 
 	private SearchService searchService;
+
+	private Integer documentPutMaximum = API_DOCUMENT_PUT_MAXIMUM;
 
 	public SearchDocumentServiceImpl() {
 		this(SearchServiceFactory.getSearchService());
@@ -44,6 +57,14 @@ public class SearchDocumentServiceImpl
 
 	public void setSearchService(SearchService searchService) {
 		this.searchService = searchService;
+	}
+
+	public Integer getDocumentPutMaximum() {
+		return this.documentPutMaximum;
+	}
+
+	public void setDocumentPutMaximum(Integer documentPutMaximum) {
+		this.documentPutMaximum = documentPutMaximum;
 	}
 
 	// MARK: SearchDocumentReadService
@@ -64,7 +85,6 @@ public class SearchDocumentServiceImpl
 	public SearchDocumentReadResponse readDocuments(DocumentRangeReadRequest request) {
 		Index index = this.getIndex(request);
 		String identifier = request.getStartIdentifier();
-
 		Document document = index.get(identifier);
 
 		SearchDocumentReadResponse response = SearchDocumentReadResponseImpl.responseForDocument(identifier, document);
@@ -91,6 +111,48 @@ public class SearchDocumentServiceImpl
 
 		SearchDocumentReadResponse response = new SearchDocumentReadResponseImpl(results, missing);
 		return response;
+	}
+
+	// MARK: SearchDocumentIndexService
+	@Override
+	public void put(DocumentPutRequest request) throws DocumentPutException {
+		Index index = this.getIndex(request);
+		Collection<DocumentPutRequestModel> models = request.getPutRequestModels();
+
+		try {
+			this.batchAndPut(index, models);
+		} catch (PutException e) {
+			throw new DocumentPutException(e);
+		}
+	}
+
+	private void batchAndPut(Index index,
+	                         Collection<DocumentPutRequestModel> models) throws PutException {
+		CollectionPartitioner partition = new CollectionPartitioner(this.documentPutMaximum);
+		List<List<DocumentPutRequestModel>> batches = partition.partitionsWithCollection(models);
+
+		for (List<DocumentPutRequestModel> batch : batches) {
+			this.putBatch(index, batch);
+		}
+	}
+
+	private void putBatch(Index index,
+	                      List<DocumentPutRequestModel> models) throws PutException {
+		List<Document> documents = new ArrayList<Document>();
+
+		for (DocumentPutRequestModel model : models) {
+			Document document = model.getDocument();
+			documents.add(document);
+		}
+
+		PutResponse response = index.put(documents);
+		List<String> resultIds = response.getIds();
+
+		for (int i = 0; i < models.size(); i += 1) {
+			DocumentPutRequestModel model = models.get(i);
+			String resultId = resultIds.get(i);
+			model.setSearchDocumentIdentifier(resultId);
+		}
 	}
 
 	// MARK: Internal

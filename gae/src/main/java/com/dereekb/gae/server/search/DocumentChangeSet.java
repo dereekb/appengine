@@ -8,6 +8,7 @@ import java.util.List;
  *
  * @author dereekb
  */
+@Deprecated
 public interface DocumentChangeSet {
 
 	/**

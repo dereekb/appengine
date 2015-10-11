@@ -8,6 +8,7 @@ import com.google.appengine.api.search.Document;
  *
  * @author dereekb
  */
+@Deprecated
 public interface DocumentChangeModel {
 
 	/**
