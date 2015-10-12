@@ -8,7 +8,7 @@ import java.util.Collection;
  * @author dereekb
  *
  */
-public interface DocumentMultiReadRequest
+public interface DocumentIdentifierRequest
         extends SearchDocumentRequest {
 
 	/**

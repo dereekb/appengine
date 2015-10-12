@@ -7,20 +7,23 @@ import java.util.List;
 import com.dereekb.gae.server.search.service.SearchDocumentService;
 import com.dereekb.gae.server.search.service.exception.DocumentPutException;
 import com.dereekb.gae.server.search.service.exception.MissingDocumentException;
-import com.dereekb.gae.server.search.service.request.DocumentMultiReadRequest;
+import com.dereekb.gae.server.search.service.request.DocumentIdentifierRequest;
 import com.dereekb.gae.server.search.service.request.DocumentPutRequest;
 import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
+import com.dereekb.gae.server.search.service.request.DocumentQueryRequest;
 import com.dereekb.gae.server.search.service.request.DocumentRangeReadRequest;
 import com.dereekb.gae.server.search.service.request.SearchDocumentRequest;
+import com.dereekb.gae.server.search.service.response.SearchDocumentQueryResponse;
 import com.dereekb.gae.server.search.service.response.SearchDocumentReadResponse;
+import com.dereekb.gae.server.search.service.response.impl.SearchDocumentQueryResponseImpl;
 import com.dereekb.gae.server.search.service.response.impl.SearchDocumentReadResponseImpl;
 import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
+import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.SearchService;
 import com.google.appengine.api.search.SearchServiceFactory;
 
@@ -33,15 +36,16 @@ import com.google.appengine.api.search.SearchServiceFactory;
 public class SearchDocumentServiceImpl
         implements SearchDocumentService {
 
-	private static final Integer DEFAULT_RETRIEVE_LIMIT = 100;
-
 	private static final Integer API_DOCUMENT_PUT_MAXIMUM = 200;
 	private static final Integer API_DOCUMENT_DELETE_MAXIMUM = 200;
 	private static final Integer API_RETRIEVE_LIMIT_MAXIMUM = 1000;
 
 	private SearchService searchService;
 
-	private Integer documentPutMaximum = API_DOCUMENT_PUT_MAXIMUM;
+	private boolean asyncDelete = true;
+
+	private Integer documentDeleteMax = API_DOCUMENT_DELETE_MAXIMUM;
+	private Integer documentPutMax = API_DOCUMENT_PUT_MAXIMUM;
 
 	public SearchDocumentServiceImpl() {
 		this(SearchServiceFactory.getSearchService());
@@ -59,12 +63,28 @@ public class SearchDocumentServiceImpl
 		this.searchService = searchService;
 	}
 
-	public Integer getDocumentPutMaximum() {
-		return this.documentPutMaximum;
+	public boolean isAsyncDelete() {
+		return this.asyncDelete;
 	}
 
-	public void setDocumentPutMaximum(Integer documentPutMaximum) {
-		this.documentPutMaximum = documentPutMaximum;
+	public void setAsyncDelete(boolean asyncDelete) {
+		this.asyncDelete = asyncDelete;
+	}
+
+	public Integer getDocumentDeleteMax() {
+		return this.documentDeleteMax;
+	}
+
+	public void setDocumentDeleteMax(Integer documentDeleteMax) {
+		this.documentDeleteMax = documentDeleteMax;
+	}
+
+	public Integer getDocumentPutMax() {
+		return this.documentPutMax;
+	}
+
+	public void setDocumentPutMax(Integer documentPutMax) {
+		this.documentPutMax = documentPutMax;
 	}
 
 	// MARK: SearchDocumentReadService
@@ -92,7 +112,7 @@ public class SearchDocumentServiceImpl
 	}
 
 	@Override
-	public SearchDocumentReadResponse readDocuments(DocumentMultiReadRequest request) {
+	public SearchDocumentReadResponse readDocuments(DocumentIdentifierRequest request) {
 		Collection<String> identifiers = request.getDocumentIdentifiers();
 		Index index = this.getIndex(request);
 
@@ -128,7 +148,7 @@ public class SearchDocumentServiceImpl
 
 	private void batchAndPut(Index index,
 	                         Collection<DocumentPutRequestModel> models) throws PutException {
-		CollectionPartitioner partition = new CollectionPartitioner(this.documentPutMaximum);
+		CollectionPartitioner partition = new CollectionPartitioner(this.documentPutMax);
 		List<List<DocumentPutRequestModel>> batches = partition.partitionsWithCollection(models);
 
 		for (List<DocumentPutRequestModel> batch : batches) {
@@ -155,6 +175,46 @@ public class SearchDocumentServiceImpl
 		}
 	}
 
+	// MARK: SearchDocumentDeleteService
+	@Override
+	public void deleteDocuments(DocumentIdentifierRequest request) {
+		Index index = this.getIndex(request);
+		Collection<String> identifiers = request.getDocumentIdentifiers();
+
+		try {
+			this.batchAndDelete(index, identifiers);
+		} catch (PutException e) {
+
+		}
+	}
+
+	private void batchAndDelete(Index index,
+	                            Collection<String> identifiers) throws PutException {
+		CollectionPartitioner partition = new CollectionPartitioner(this.documentDeleteMax);
+		List<List<String>> batches = partition.partitionsWithCollection(identifiers);
+
+		for (List<String> batch : batches) {
+			this.deleteBatch(index, batch);
+		}
+	}
+
+	private void deleteBatch(Index index,
+	                         List<String> identifiers) {
+		if (this.asyncDelete) {
+			index.deleteAsync(identifiers);
+		} else {
+			index.delete(identifiers);
+		}
+	}
+
+	// MARK: SearchDocumentQueryService
+	@Override
+	public SearchDocumentQueryResponse queryDocuments(DocumentQueryRequest request) {
+		Index index = this.getIndex(request);
+		Query query = request.getDocumentQuery();
+		return new SearchDocumentQueryResponseImpl(index, query);
+	}
+
 	// MARK: Internal
 	private Index getIndex(SearchDocumentRequest request) {
 		String indexName = request.getIndexName();
@@ -175,30 +235,6 @@ public class SearchDocumentServiceImpl
 	private IndexSpec getIndexSpec(String indexName) {
 		IndexSpec indexSpec = IndexSpec.newBuilder().setName(indexName).build();
 		return indexSpec;
-	}
-
-	private static class PutResultsPair extends ResultsPair<List<Document>, PutResponse> {
-
-		public PutResultsPair(List<Document> batch) {
-			super(batch);
-		}
-
-		public List<String> getIdentifiers() {
-			PutResponse response = this.getResult();
-			List<String> identifiers = response.getIds();
-			return identifiers;
-		}
-
-		public static List<String> readIdentifiersFrom(Iterable<PutResultsPair> results) {
-			List<String> identifiers = new ArrayList<String>();
-
-			for (PutResultsPair result : results) {
-				List<String> resultIds = result.getIdentifiers();
-				identifiers.addAll(resultIds);
-			}
-
-			return identifiers;
-		}
 	}
 
 }

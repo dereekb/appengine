@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.search.service;
 
-
 /**
  * Interface for carrying out searches in the Google App Engine Search API.
  *
@@ -10,6 +9,7 @@ package com.dereekb.gae.server.search.service;
  *      App Engine Search API</a>
  */
 public interface SearchDocumentService
-        extends SearchDocumentIndexService, SearchDocumentDeleteService, SearchDocumentReadService {
+        extends SearchDocumentIndexService, SearchDocumentDeleteService, SearchDocumentReadService,
+        SearchDocumentQueryService {
 
 }

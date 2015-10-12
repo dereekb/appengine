@@ -2,7 +2,7 @@ package com.dereekb.gae.server.search.service.request.impl;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.search.service.request.DocumentMultiReadRequest;
+import com.dereekb.gae.server.search.service.request.DocumentIdentifierRequest;
 
 /**
  * {@link DocuemntMultiReadRequest} implementation.
@@ -10,12 +10,12 @@ import com.dereekb.gae.server.search.service.request.DocumentMultiReadRequest;
  * @author dereekb
  *
  */
-public class DocumentMultiReadRequestImpl extends SearchDocumentRequestImpl
-        implements DocumentMultiReadRequest {
+public class DocumentIdentifierRequestImpl extends SearchDocumentRequestImpl
+        implements DocumentIdentifierRequest {
 
 	private Collection<String> documentIdentifiers;
 
-	public DocumentMultiReadRequestImpl(String indexName, Collection<String> documentIdentifiers)
+	public DocumentIdentifierRequestImpl(String indexName, Collection<String> documentIdentifiers)
 	        throws IllegalArgumentException {
 		super(indexName);
 		this.setDocumentIdentifiers(documentIdentifiers);

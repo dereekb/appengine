@@ -29,6 +29,7 @@ import com.google.appengine.api.search.StatusCode;
  * @author dereekb
  * @see <a href="https://developers.google.com/appengine/docs/java/search/#Java_Overview">Google App Engine Search API</a>
  */
+@Deprecated
 public class DocumentSearchController {
 
 	private static class PutResultsPair extends ResultsPair<List<Document>, PutResponse> {
