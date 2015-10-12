@@ -7,6 +7,9 @@ import java.util.List;
 import com.dereekb.gae.server.search.service.SearchDocumentService;
 import com.dereekb.gae.server.search.service.exception.DocumentPutException;
 import com.dereekb.gae.server.search.service.exception.MissingDocumentException;
+import com.dereekb.gae.server.search.service.iterator.DocumentIterator;
+import com.dereekb.gae.server.search.service.iterator.DocumentIteratorRequest;
+import com.dereekb.gae.server.search.service.iterator.SearchDocumentIteratorService;
 import com.dereekb.gae.server.search.service.request.DocumentIdentifierRequest;
 import com.dereekb.gae.server.search.service.request.DocumentPutRequest;
 import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
@@ -34,7 +37,7 @@ import com.google.appengine.api.search.SearchServiceFactory;
  *
  */
 public class SearchDocumentServiceImpl
-        implements SearchDocumentService {
+        implements SearchDocumentService, SearchDocumentIteratorService {
 
 	private static final Integer API_DOCUMENT_PUT_MAXIMUM = 200;
 	private static final Integer API_DOCUMENT_DELETE_MAXIMUM = 200;
@@ -213,6 +216,13 @@ public class SearchDocumentServiceImpl
 		Index index = this.getIndex(request);
 		Query query = request.getDocumentQuery();
 		return new SearchDocumentQueryResponseImpl(index, query);
+	}
+
+	// MARK: SearchDocumentIteratorService
+	@Override
+	public DocumentIterator makeIndexIterator(DocumentIteratorRequest request) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	// MARK: Internal
