@@ -1,39 +1,41 @@
 package com.dereekb.gae.model.extension.search.document.index.component;
 
 import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.server.search.service.exception.DocumentPutException;
 
 /**
- * Used to index pairs within a specific index.
+ * Used for updating the search index with {@link IndexingDocument} values.
  *
  * @author dereekb
  */
 public interface DocumentIndexer<T extends UniqueSearchModel> {
 
 	/**
-	 * Indexes the documents and updates the IndexingDocumentl with the set
-	 * identifier.
+	 * Indexes the documents.
 	 *
 	 * @param documents
-	 * @return True if successful.
+	 *            Documents to index. Never {@code null}.
 	 */
-	public boolean indexDocuments(Iterable<IndexingDocument<T>> documents);
+	public void indexDocuments(Iterable<IndexingDocument<T>> documents) throws DocumentPutException;
 
 	/**
-	 * Updates the documents. The action does not guarantee the input
-	 * {@link IndexingDocument} instances to be updated. For guarantee, use the
-	 * indexDocuments() function.
+	 * Updates the documents.
+	 * <p>
+	 * All input documents should already be indexed.
 	 *
 	 * @param documents
-	 * @return True if successful.
+	 *            Documents to index. Never {@code null}.
 	 */
-	public boolean updateDocuments(Iterable<IndexingDocument<T>> documents);
+	public void updateDocuments(Iterable<IndexingDocument<T>> documents) throws DocumentPutException;
 
 	/**
 	 * Deletes the search documents for each of the models.
+	 * <p>
+	 * Models are also cleared of their identifiers.
 	 *
 	 * @param models
-	 * @return True if successful.
+	 *            Models to remove from the index. Never {@code null}.
 	 */
-	public boolean deleteDocuments(Iterable<T> models);
+	public void deleteDocuments(Iterable<T> models);
 
 }

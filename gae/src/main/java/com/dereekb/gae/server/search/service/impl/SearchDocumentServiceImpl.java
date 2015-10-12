@@ -10,11 +10,13 @@ import com.dereekb.gae.server.search.service.exception.MissingDocumentException;
 import com.dereekb.gae.server.search.service.iterator.DocumentIterator;
 import com.dereekb.gae.server.search.service.iterator.DocumentIteratorRequest;
 import com.dereekb.gae.server.search.service.iterator.SearchDocumentIteratorService;
+import com.dereekb.gae.server.search.service.iterator.impl.DocumentIteratorImpl;
 import com.dereekb.gae.server.search.service.request.DocumentIdentifierRequest;
 import com.dereekb.gae.server.search.service.request.DocumentPutRequest;
 import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
 import com.dereekb.gae.server.search.service.request.DocumentQueryRequest;
 import com.dereekb.gae.server.search.service.request.DocumentRangeReadRequest;
+import com.dereekb.gae.server.search.service.request.DocumentResultType;
 import com.dereekb.gae.server.search.service.request.SearchDocumentRequest;
 import com.dereekb.gae.server.search.service.response.SearchDocumentQueryResponse;
 import com.dereekb.gae.server.search.service.response.SearchDocumentReadResponse;
@@ -47,6 +49,7 @@ public class SearchDocumentServiceImpl
 
 	private boolean asyncDelete = true;
 
+	private Integer documentIndexBatchSize = API_RETRIEVE_LIMIT_MAXIMUM;
 	private Integer documentDeleteMax = API_DOCUMENT_DELETE_MAXIMUM;
 	private Integer documentPutMax = API_DOCUMENT_PUT_MAXIMUM;
 
@@ -221,8 +224,16 @@ public class SearchDocumentServiceImpl
 	// MARK: SearchDocumentIteratorService
 	@Override
 	public DocumentIterator makeIndexIterator(DocumentIteratorRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		Index index = this.getIndex(request);
+		Integer batchSize = request.getBatchSize();
+
+		if (batchSize == null) {
+			batchSize = this.documentIndexBatchSize;
+		}
+
+		DocumentResultType resultType = request.getResultType();
+		boolean idsOnly = resultType == DocumentResultType.IDENTIFIERS;
+		return new DocumentIteratorImpl(index, batchSize, idsOnly);
 	}
 
 	// MARK: Internal

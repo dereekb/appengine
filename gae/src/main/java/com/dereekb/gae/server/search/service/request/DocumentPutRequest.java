@@ -2,6 +2,8 @@ package com.dereekb.gae.server.search.service.request;
 
 import java.util.Collection;
 
+import com.dereekb.gae.server.search.service.SearchDocumentIndexService;
+
 /**
  * Used for indexing items using a {@link SearchDocumentIndexService}.
  *
@@ -10,6 +12,16 @@ import java.util.Collection;
  */
 public interface DocumentPutRequest
         extends SearchDocumentRequest {
+
+	/**
+	 * Whether or not we are update all the input models.
+	 * <p>
+	 * Updated models are not notified of the identifier their document is saved
+	 * with.
+	 *
+	 * @return {@link true} if updating.
+	 */
+	public boolean isUpdate();
 
 	/**
 	 * Returns all {@link DocumentPutRequestModel} for this request.

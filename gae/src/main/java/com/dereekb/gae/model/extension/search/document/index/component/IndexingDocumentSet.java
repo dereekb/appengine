@@ -1,18 +1,19 @@
 package com.dereekb.gae.model.extension.search.document.index.component;
 
-import com.dereekb.gae.server.search.DocumentChangeSet;
 import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.server.search.service.request.DocumentPutRequest;
+import com.dereekb.gae.server.search.service.request.impl.DocumentPutRequestImpl;
 
 /**
- * Wraps a collection of {@link IndexingDocument} instances with the name of the
- * index.
+ * Extension of {@link DocumentPutRequestImpl} that includes and updates models
+ * when the request is processed.
  *
  * @author dereekb
  *
  * @param <T>
- *            {@link UniqueSearchModel} model.
+ *            model type
  */
 public interface IndexingDocumentSet<T extends UniqueSearchModel>
-        extends DocumentChangeSet {
+        extends DocumentPutRequest {
 
 }

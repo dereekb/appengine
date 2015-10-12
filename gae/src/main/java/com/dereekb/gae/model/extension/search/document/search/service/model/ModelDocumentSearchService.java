@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.search.service.model;
 
-import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchService;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.search.service.SearchDocumentService;
 
 /**
  * Search service built on top of a {@link SearchDocumentService} used to

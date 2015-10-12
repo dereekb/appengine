@@ -5,9 +5,10 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.IndexPair;
 import com.dereekb.gae.model.extension.search.document.index.component.DocumentIndexer;
-import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentBuilder;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentBuilder;
 import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.server.search.service.exception.DocumentPutException;
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
@@ -130,13 +131,28 @@ public class DocumentIndexPairsTask<T extends UniqueSearchModel>
 				documents.add(document);
 			}
 
-			boolean success = DocumentIndexPairsTask.this.indexer.indexDocuments(documents);
+			boolean success = true;
+
+			try {
+				DocumentIndexPairsTask.this.indexer.indexDocuments(documents);
+			} catch (DocumentPutException e) {
+				success = false;
+			}
+
 			this.setResultsForPairs(success, pairs);
 		}
 
 		private void unindexElements(Iterable<IndexPair<T>> pairs) {
 			List<T> models = IndexPair.getKeys(pairs);
-			boolean success = DocumentIndexPairsTask.this.indexer.deleteDocuments(models);
+
+			boolean success = true;
+
+			try {
+				DocumentIndexPairsTask.this.indexer.deleteDocuments(models);
+			} catch (Exception e) {
+				success = false;
+			}
+
 			this.setResultsForPairs(success, pairs);
 		}
 

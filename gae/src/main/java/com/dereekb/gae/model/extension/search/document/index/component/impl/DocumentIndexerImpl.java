@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.component.DocumentIndexer;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
-import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSet;
-import com.dereekb.gae.server.search.DocumentSearchController;
 import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.server.search.service.SearchDocumentIndexService;
+import com.dereekb.gae.server.search.service.SearchDocumentService;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 
 /**
@@ -19,20 +19,54 @@ import com.dereekb.gae.utilities.collections.IteratorUtility;
 public class DocumentIndexerImpl<T extends UniqueSearchModel>
         implements DocumentIndexer<T> {
 
-	private String index;
+	private String indexName;
+	private SearchDocumentService indexService;
 
-	public DocumentIndexerImpl(String index) {
-		this.index = index;
+	public DocumentIndexerImpl(String indexName, SearchDocumentService indexService) {
+		this.indexName = indexName;
+		this.indexService = indexService;
 	}
 
-	public String getIndex() {
-		return this.index;
+	public String getIndexName() {
+		return this.indexName;
 	}
 
-	public void setIndex(String index) {
-		this.index = index;
+	public void setIndexName(String indexName) {
+		this.indexName = indexName;
 	}
 
+	public SearchDocumentIndexService getIndexService() {
+		return this.indexService;
+	}
+
+	public void setIndexService(SearchDocumentService indexService) {
+		this.indexService = indexService;
+	}
+
+	// MARK: DocumentIndexer
+	@Override
+	public void indexDocuments(Iterable<IndexingDocument<T>> documents) {
+		List<IndexingDocument<T>> docList = IteratorUtility.iterableToList(documents);
+		IndexingDocumentSetImpl<T> docSet = new IndexingDocumentSetImpl<T>(this.indexName, docList);
+		docSet.setUpdate(false);
+		this.indexService.put(docSet);
+	}
+
+	@Override
+	public void updateDocuments(Iterable<IndexingDocument<T>> documents) {
+		List<IndexingDocument<T>> docList = IteratorUtility.iterableToList(documents);
+		IndexingDocumentSetImpl<T> docSet = new IndexingDocumentSetImpl<T>(this.indexName, docList);
+		docSet.setUpdate(true);
+		this.indexService.put(docSet);
+	}
+
+	@Override
+	public void deleteDocuments(Iterable<T> models) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
 	@Override
 	public boolean indexDocuments(Iterable<IndexingDocument<T>> documents) {
 		return this.indexDocuments(documents, false);
@@ -45,10 +79,7 @@ public class DocumentIndexerImpl<T extends UniqueSearchModel>
 
 	private boolean indexDocuments(Iterable<IndexingDocument<T>> documents,
 	                               boolean update) {
-		List<IndexingDocument<T>> docList = IteratorUtility.iterableToList(documents);
-		IndexingDocumentSet<T> docSet = new IndexingDocumentSetImpl<T>(this.index, docList);
-		DocumentSearchController.put(docSet, update);
-		return docSet.getSuccess();
+
 	}
 
 	@Override
@@ -61,5 +92,6 @@ public class DocumentIndexerImpl<T extends UniqueSearchModel>
 
 		return true;
 	}
+	*/
 
 }

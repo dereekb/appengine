@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.search.document.index.component;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 
 /**
- * Used for building an indexing document
+ * Used for building an {@link IndexingDocument} for the input model.
  *
  * @author dereekb
  *
@@ -13,7 +13,10 @@ import com.dereekb.gae.server.search.UniqueSearchModel;
 public interface IndexingDocumentBuilder<T extends UniqueSearchModel> {
 
 	/**
-	 * Creates a new {@link IndexingDocument} for the passed model.
+	 *
+	 * @param model
+	 *            input model. Never {@code null}.
+	 * @return {@link IndexingDocument} for the input model. Never {@code null}.
 	 */
 	public IndexingDocument<T> buildSearchDocument(T model);
 

@@ -14,12 +14,22 @@ import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
 public class DocumentPutRequestImpl extends SearchDocumentRequestImpl
         implements DocumentPutRequest {
 
+	private boolean update;
 	private Collection<DocumentPutRequestModel> putRequestModels;
 
 	public DocumentPutRequestImpl(String indexName, Collection<DocumentPutRequestModel> putRequestModels)
 	        throws IllegalArgumentException {
 		super(indexName);
 		this.putRequestModels = putRequestModels;
+	}
+
+	@Override
+	public boolean isUpdate() {
+		return this.update;
+	}
+
+	public void setUpdate(boolean update) {
+		this.update = update;
 	}
 
 	@Override

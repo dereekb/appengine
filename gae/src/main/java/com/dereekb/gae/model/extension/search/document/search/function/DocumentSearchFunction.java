@@ -5,7 +5,6 @@ import java.util.List;
 import com.dereekb.gae.model.extension.search.document.search.SearchPair;
 import com.dereekb.gae.model.extension.search.document.search.components.DocumentSearchQueryConverter;
 import com.dereekb.gae.model.extension.search.document.search.components.DocumentSearchResource;
-import com.dereekb.gae.server.search.DocumentSearchController;
 import com.dereekb.gae.server.search.document.DocumentQueryBuilder;
 import com.dereekb.gae.utilities.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
@@ -20,6 +19,7 @@ import com.google.appengine.api.search.ScoredDocument;
  * @param <Q>
  *            Query type.
  */
+@Deprecated
 public final class DocumentSearchFunction<Q> extends FilteredStagedFunction<Q, SearchPair<Q>>
         implements DocumentSearchResource {
 

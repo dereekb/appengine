@@ -16,12 +16,11 @@ import com.google.appengine.api.search.Document;
 public final class IndexingDocumentImpl<T extends UniqueSearchModel> extends HandlerPair<T, Document>
         implements IndexingDocument<T> {
 
-	private String savedIdentifier;
-
 	public IndexingDocumentImpl(Document document, T model) {
 		super(model, document);
 	}
 
+	// MARK: IndexingDocument
 	@Override
     public T getDocumentModel() {
 		return this.key;
@@ -33,13 +32,13 @@ public final class IndexingDocumentImpl<T extends UniqueSearchModel> extends Han
 	}
 
 	@Override
-    public String getSavedIdentifier() {
-		return this.savedIdentifier;
+	public String getSearchDocumentIdentifier() {
+		return this.key.getSearchIdentifier();
 	}
 
 	@Override
-	public void savedWithId(String identifier) {
-		this.savedIdentifier = identifier;
+	public void setSearchDocumentIdentifier(String identifier) {
+		this.key.setSearchIdentifier(identifier);
 	}
 
 	@Override

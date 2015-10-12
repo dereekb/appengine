@@ -2,72 +2,74 @@ package com.dereekb.gae.model.extension.search.document.index.component.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSet;
-import com.dereekb.gae.server.search.DocumentChangeModel;
 import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
 
 /**
- * Wraps a collection of {@link IndexingDocument} instances with the name of the
- * index.
+ * {@link IndexingDocumentSet} implementation.
  *
  * @author dereekb
  *
  * @param <T>
- *            {@link UniqueSearchModel} model.
+ *            model type
  */
-public final class IndexingDocumentSetImpl<T extends UniqueSearchModel>
+public class IndexingDocumentSetImpl<T extends UniqueSearchModel>
         implements IndexingDocumentSet<T> {
 
-	private boolean success = false;
+	private boolean update = false;
+	private String indexName;
+	private Collection<IndexingDocument<T>> documents;
 
-	private final String index;
-	private final Collection<IndexingDocument<T>> documents;
+	public IndexingDocumentSetImpl() {};
 
-	public IndexingDocumentSetImpl(String index, Collection<IndexingDocument<T>> documents) {
-		this.index = index;
+	public IndexingDocumentSetImpl(String indexName, Collection<IndexingDocument<T>> documents)
+	        throws IllegalArgumentException {
+		this.indexName = indexName;
 		this.documents = documents;
 	}
 
-	public String getIndex() {
-		return this.index;
+	@Override
+	public boolean isUpdate() {
+		return this.update;
+	}
+
+	public void setUpdate(boolean update) {
+		this.update = update;
+	}
+
+	@Override
+	public String getIndexName() {
+		return this.indexName;
+	}
+
+	public void setIndexName(String indexName) throws IllegalArgumentException {
+		if (indexName == null) {
+			throw new IllegalArgumentException("Index cannot be null.");
+		}
+
+		this.indexName = indexName;
 	}
 
 	public Collection<IndexingDocument<T>> getDocuments() {
 		return this.documents;
 	}
 
-	@Override
-	public List<DocumentChangeModel> getDocumentModels() {
-		List<DocumentChangeModel> documents = new ArrayList<DocumentChangeModel>();
-
-		for (IndexingDocument<T> document : this.documents) {
-			documents.add(document);
+	public void setDocuments(Collection<IndexingDocument<T>> documents) throws IllegalArgumentException {
+		if (documents == null) {
+			throw new IllegalArgumentException("Documents cannot be null.");
 		}
 
-		return documents;
+		this.documents = documents;
 	}
 
+	// MARK: IndexingDocumentSet
 	@Override
-	public String getIndexName() {
-		return this.index;
+	public Collection<DocumentPutRequestModel> getPutRequestModels() {
+		return new ArrayList<DocumentPutRequestModel>(this.documents);
 	}
 
-	@Override
-	public boolean getSuccess() {
-		return this.success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-	@Override
-	public String toString() {
-		return "IndexingDocumentSetImpl [success=" + this.success + ", index=" + this.index + ", documents="
-		        + this.documents + "]";
-	}
 
 }

@@ -28,6 +28,12 @@ public class DocumentIteratorImpl
 
 	private GetRequest request;
 
+	public DocumentIteratorImpl(Index index, Integer batchSize, boolean idsOnly) {
+		this.index = index;
+		this.batchSize = batchSize;
+		this.idsOnly = idsOnly;
+	}
+
 	@Override
 	public String getIndexName() {
 		return this.index.getName();
