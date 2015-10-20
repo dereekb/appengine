@@ -7,6 +7,7 @@ import com.dereekb.gae.model.extension.search.document.index.component.IndexingD
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.dereekb.gae.server.search.service.SearchDocumentIndexService;
 import com.dereekb.gae.server.search.service.SearchDocumentService;
+import com.dereekb.gae.server.search.service.request.impl.DocumentIdentifierRequestImpl;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 
 /**
@@ -62,8 +63,9 @@ public class DocumentIndexerImpl<T extends UniqueSearchModel>
 
 	@Override
 	public void deleteDocuments(Iterable<T> models) {
-		// TODO Auto-generated method stub
 
+		DocumentIdentifierRequestImpl request = new DocumentIdentifierRequestImpl(this.indexName, null);
+		this.indexService.deleteDocuments(request);
 	}
 
 	/*

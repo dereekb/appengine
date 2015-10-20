@@ -26,6 +26,15 @@
 	<bean id="geoPlaceDocumentIndexPairsTask"
 		class="com.dereekb.gae.model.extension.search.document.index.task.DocumentIndexPairsTask"
 		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="geoPlaceDocumentIndexPairsTask"/>
+		<constructor-arg index="1" ref="geoPlaceDocumentIndexPairsTask"/>
+	</bean>
+
+	<bean id="geoPlaceDocumentIndexer"
+		class="com.dereekb.gae.model.extension.search.document.index.task.DocumentIndexPairsTask"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="geoPlaceDocumentIndexPairsTask"/>
+		<constructor-arg index="1" ref="geoPlaceDocumentIndexPairsTask"/>
 	</bean>
 
 	<!-- Search -->

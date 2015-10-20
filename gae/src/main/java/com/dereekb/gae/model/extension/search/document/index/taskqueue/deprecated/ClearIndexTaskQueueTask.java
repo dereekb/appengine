@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.document.index.taskqueue;
+package com.dereekb.gae.model.extension.search.document.index.taskqueue.deprecated;
 
 import java.util.List;
 
