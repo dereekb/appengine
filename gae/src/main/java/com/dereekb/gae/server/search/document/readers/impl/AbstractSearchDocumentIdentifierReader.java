@@ -1,10 +1,10 @@
-package com.dereekb.gae.server.search.document.readers;
+package com.dereekb.gae.server.search.document.readers.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.ModelStagedDocumentBuilderInit;
-import com.dereekb.gae.server.search.document.SearchDocumentIdentifierReader;
+import com.dereekb.gae.server.search.document.readers.SearchDocumentIdentifierReader;
 import com.google.appengine.api.search.Document;
 
 public abstract class AbstractSearchDocumentIdentifierReader<K>

@@ -1,5 +1,6 @@
-package com.dereekb.gae.server.search.document;
+package com.dereekb.gae.server.search.document.query.builder.impl;
 
+import com.dereekb.gae.server.search.document.query.DocumentQueryStringSanitizer;
 import com.dereekb.gae.utilities.regex.RegexHelper;
 
 /**

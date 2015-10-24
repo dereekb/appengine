@@ -1,9 +1,9 @@
 package com.dereekb.gae.model.extension.search.document.search.components;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.ModelStagedDocumentBuilderInit;
-import com.dereekb.gae.server.search.document.DocumentQueryBuilder;
-import com.dereekb.gae.server.search.document.fields.DocumentQueryAtomField;
-import com.dereekb.gae.server.search.document.fields.DocumentQueryField;
+import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
+import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryAtomField;
+import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryField;
 
 public final class DocumentSearchQueryFactory<Q extends DocumentSearchQuery>
         implements DocumentSearchQueryConverter<Q> {

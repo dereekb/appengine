@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.search.document;
+package com.dereekb.gae.server.search.document.query;
 
 /**
  * Sanitizes query strings.

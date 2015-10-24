@@ -1,4 +1,5 @@
-package com.dereekb.gae.server.search.document;
+package com.dereekb.gae.server.search.document.query.builder;
+
 
 /**
  * Used for extending an input {@link DocumentQueryBuilder}

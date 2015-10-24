@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.stored.blob.search.document.query;
 
 import com.dereekb.gae.model.extension.search.document.search.components.DocumentSearchQueryConverter;
-import com.dereekb.gae.server.search.document.DocumentQueryBuilder;
-import com.dereekb.gae.server.search.document.fields.DocumentQueryAtomField;
+import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
+import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryAtomField;
 
 /**
  * {@link DocumentSearchQueryConverter} for {@link StoredBlobDocumentQuery}.

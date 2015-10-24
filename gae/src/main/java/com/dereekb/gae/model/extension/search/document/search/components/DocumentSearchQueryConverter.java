@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.components;
 
-import com.dereekb.gae.server.search.document.DocumentQueryBuilder;
+import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
 
 /**
  *

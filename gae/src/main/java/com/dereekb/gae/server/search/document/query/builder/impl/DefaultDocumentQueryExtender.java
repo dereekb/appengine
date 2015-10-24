@@ -1,8 +1,10 @@
-package com.dereekb.gae.server.search.document;
+package com.dereekb.gae.server.search.document.query.builder.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.server.search.document.fields.DocumentQueryLiteralField;
+import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
+import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilderExtender;
+import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryLiteralField;
 
 public class DefaultDocumentQueryExtender
         implements DocumentQueryBuilderExtender {
