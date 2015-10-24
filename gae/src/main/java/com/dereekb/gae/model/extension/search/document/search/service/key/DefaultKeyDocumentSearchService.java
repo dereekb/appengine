@@ -20,6 +20,7 @@ import com.google.appengine.api.search.ScoredDocument;
  * @param <Q>
  *            Query type.
  */
+@Deprecated
 public final class DefaultKeyDocumentSearchService<Q>
         implements KeyDocumentSearchService<Q> {
 

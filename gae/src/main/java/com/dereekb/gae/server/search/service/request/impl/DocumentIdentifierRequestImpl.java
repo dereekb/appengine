@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.dereekb.gae.server.search.service.request.DocumentIdentifierRequest;
 
 /**
- * {@link DocuemntMultiReadRequest} implementation.
+ * {@link DocumentIdentifierRequest} implementation.
  *
  * @author dereekb
  *

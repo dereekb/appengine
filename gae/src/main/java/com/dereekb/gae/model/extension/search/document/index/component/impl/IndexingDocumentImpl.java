@@ -32,12 +32,12 @@ public final class IndexingDocumentImpl<T extends UniqueSearchModel> extends Han
 	}
 
 	@Override
-	public String getSearchDocumentIdentifier() {
+	public String getSearchIdentifier() {
 		return this.key.getSearchIdentifier();
 	}
 
 	@Override
-	public void setSearchDocumentIdentifier(String identifier) {
+	public void setSearchIdentifier(String identifier) {
 		this.key.setSearchIdentifier(identifier);
 	}
 

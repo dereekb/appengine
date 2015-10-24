@@ -9,11 +9,13 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<import resource="taskqueue.xml" />
-	<import resource="database.xml" />
-	<import resource="keys.xml" />
-	<import resource="storage.xml" />
-	<import resource="search.xml" />
-	<import resource="image.xml" />
+	<!-- Search -->
+	<alias name="gcsSearchSystem" alias="searchSystem" />
+
+	<bean id="gcsSearchSystem" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.search.service.impl.GcsSearchServiceImpl">
+		<!-- Disable Async Deletion to prevent issues. -->
+		<property name="asyncDelete" value="false" />
+	</bean>
 
 </beans>

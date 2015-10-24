@@ -38,7 +38,7 @@ import com.google.appengine.api.search.SearchServiceFactory;
  * @author dereekb
  *
  */
-public class SearchDocumentServiceImpl
+public class GcsSearchServiceImpl
         implements SearchDocumentService, SearchDocumentIteratorService {
 
 	private static final Integer API_DOCUMENT_PUT_MAXIMUM = 200;
@@ -53,15 +53,19 @@ public class SearchDocumentServiceImpl
 	private Integer documentDeleteMax = API_DOCUMENT_DELETE_MAXIMUM;
 	private Integer documentPutMax = API_DOCUMENT_PUT_MAXIMUM;
 
-	public SearchDocumentServiceImpl() {
-		this(SearchServiceFactory.getSearchService());
+	public GcsSearchServiceImpl() {
+		this.searchService = null;
 	}
 
-	public SearchDocumentServiceImpl(SearchService searchService) {
+	public GcsSearchServiceImpl(SearchService searchService) {
 		this.searchService = searchService;
 	}
 
 	public SearchService getSearchService() {
+		if (this.searchService == null) {
+			this.searchService = SearchServiceFactory.getSearchService();
+		}
+
 		return this.searchService;
 	}
 
@@ -177,7 +181,7 @@ public class SearchDocumentServiceImpl
 		for (int i = 0; i < models.size(); i += 1) {
 			DocumentPutRequestModel model = models.get(i);
 			String resultId = resultIds.get(i);
-			model.setSearchDocumentIdentifier(resultId);
+			model.setSearchIdentifier(resultId);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.server.search;
+package com.dereekb.gae.test.server.search.deprecated;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

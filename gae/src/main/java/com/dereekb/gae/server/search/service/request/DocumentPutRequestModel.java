@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.search.service.request;
 
+import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.Document;
 
 /**
@@ -11,26 +12,12 @@ import com.google.appengine.api.search.Document;
  * @author dereekb
  *
  */
-public interface DocumentPutRequestModel {
+public interface DocumentPutRequestModel
+        extends UniqueSearchModel {
 
 	/**
 	 * @return {@link Document} to put into the index.
 	 */
 	public Document getDocument();
-
-	/**
-	 * @return {@link String} of the current document identifier. Return
-	 *         {@code null} if the document currently has no
-	 *         document/identifier.
-	 */
-	public String getSearchDocumentIdentifier();
-
-	/**
-	 * Called to link the saved identifier back to the request model.
-	 *
-	 * @param document
-	 *            identifier. Never {@code null}.
-	 */
-	public void setSearchDocumentIdentifier(String identifier);
 
 }
