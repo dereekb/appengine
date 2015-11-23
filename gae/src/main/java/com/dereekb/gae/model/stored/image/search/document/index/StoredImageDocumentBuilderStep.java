@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.stored.image.search.document.index;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDerivativeDocumentBuilderStep;

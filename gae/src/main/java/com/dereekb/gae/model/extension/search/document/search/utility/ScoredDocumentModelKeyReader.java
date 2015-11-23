@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.utility;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.ModelStagedDocumentBuilderInit;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.google.appengine.api.search.Field;
@@ -20,7 +20,7 @@ public class ScoredDocumentModelKeyReader
 	private final ModelKeyType keyType;
 
 	public ScoredDocumentModelKeyReader() {
-		this(ModelStagedDocumentBuilderInit.MODEL_KEY_FIELD_KEY, ModelKeyType.NUMBER);
+		this(ModelStagedDocumentBuilderInitializer.MODEL_KEY_FIELD_KEY, ModelKeyType.NUMBER);
 	}
 
 	public ScoredDocumentModelKeyReader(String fieldKey, ModelKeyType keyType) {

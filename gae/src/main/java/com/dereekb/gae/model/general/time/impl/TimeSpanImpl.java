@@ -15,9 +15,30 @@ public class TimeSpanImpl
 	private Time start;
 	private Time end;
 
-	public TimeSpanImpl(Time start, Time end) {
+	public TimeSpanImpl(Time start, Time end) throws IllegalArgumentException {
 		this.setStartTime(start);
 		this.setEndTime(end);
+	}
+
+	public TimeSpanImpl(TimeSpan input) throws IllegalArgumentException {
+		if (input == null) {
+			throw new IllegalArgumentException("Input TimeSpan cannot be null.");
+		}
+
+		this.setStartTime(input.getStartTime());
+		this.setEndTime(input.getEndTime());
+	}
+
+	public static TimeSpanImpl fromMidnight(Time end) {
+		return new TimeSpanImpl(TimeImpl.midnight(), end);
+	}
+
+	public static TimeSpanImpl toMidnight(Time start) {
+		return new TimeSpanImpl(start, TimeImpl.max());
+	}
+
+	public static TimeSpan allDay() {
+		return new TimeSpanImpl(TimeImpl.midnight(), TimeImpl.max());
 	}
 
 	@Override
@@ -76,6 +97,5 @@ public class TimeSpanImpl
 	public String toString() {
 		return "TimeSpanImpl [start=" + this.start + ", end=" + this.end + "]";
 	}
-
 
 }

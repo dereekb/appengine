@@ -17,6 +17,7 @@ import com.dereekb.gae.utilities.collections.IteratorUtility;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class DocumentIndexerImpl<T extends UniqueSearchModel>
         implements DocumentIndexer<T> {
 

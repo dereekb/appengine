@@ -24,6 +24,8 @@ public class TimeComparisonTests {
 		Time a = TimeImpl.midnight();
 		Time b = TimeImpl.noon();
 
+		Assert.assertTrue(TimeImpl.noon().equals(TimeImpl.noon()));
+
 		int abComparison = a.compareTo(b);
 		Assert.assertTrue(abComparison < 0); // A is before/less than B
 
@@ -32,6 +34,11 @@ public class TimeComparisonTests {
 
 		int baComparison = b.compareTo(a);
 		Assert.assertTrue(baComparison > 0); // B is after/greater than B.
+
+		Assert.assertTrue(TimeImpl.isBefore(a, b));
+		Assert.assertTrue(TimeImpl.isAfter(b, a));
+		Assert.assertTrue(TimeImpl.isAfterOrEqual(a, TimeImpl.midnight()));
+		Assert.assertTrue(TimeImpl.isAfterOrEqual(b, TimeImpl.noon()));
 	}
 
 	@Test

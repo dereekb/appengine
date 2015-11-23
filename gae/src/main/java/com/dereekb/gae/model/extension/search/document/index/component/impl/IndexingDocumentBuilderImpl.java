@@ -6,6 +6,7 @@ import java.util.List;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentBuilder;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSet;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSetBuilder;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.SearchDocumentBuilder;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.Document;
@@ -22,25 +23,52 @@ import com.google.appengine.api.search.Document;
  *            model type
  */
 public class IndexingDocumentBuilderImpl<T extends UniqueSearchModel>
-        implements IndexingDocumentBuilder<T> {
+        implements IndexingDocumentBuilder<T>, IndexingDocumentSetBuilder<T> {
 
-	private final String index;
-	private final SearchDocumentBuilder<T> builder;
+	private String index;
+	private SearchDocumentBuilder<T> builder;
 
 	public IndexingDocumentBuilderImpl(String index, SearchDocumentBuilder<T> builder) {
 		this.index = index;
 		this.builder = builder;
 	}
 
-	public String getIndex() {
+	@Override
+    public String getIndex() {
 		return this.index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
 	}
 
 	public SearchDocumentBuilder<T> getBuilder() {
 		return this.builder;
 	}
 
-	public IndexingDocumentSet<T> buildSearchDocuments(Iterable<T> models) {
+	public void setBuilder(SearchDocumentBuilder<T> builder) {
+		this.builder = builder;
+	}
+
+	// MARK: IndexingDocumentSet
+	@Override
+	public IndexingDocument<T> buildSearchDocument(T model) {
+		Document document = this.builder.buildSearchDocument(model);
+		IndexingDocument<T> indexingDocument = new IndexingDocumentImpl<T>(document, model);
+		return indexingDocument;
+	}
+
+	// MARK: IndexingDocumentSetBuilder
+	@Override
+	public IndexingDocumentSet<T> buildSearchDocuments(Iterable<T> models,
+	                                                   boolean update) {
+		return this.buildSearchDocuments(models, this.index, update);
+	}
+
+	@Override
+	public IndexingDocumentSet<T> buildSearchDocuments(Iterable<T> models,
+	                                                   String index,
+	                                                   boolean update) {
 		List<IndexingDocument<T>> documents = new ArrayList<IndexingDocument<T>>();
 
 		for (T model : models) {
@@ -48,15 +76,9 @@ public class IndexingDocumentBuilderImpl<T extends UniqueSearchModel>
 			documents.add(document);
 		}
 
-		IndexingDocumentSet<T> set = new IndexingDocumentSetImpl<T>(this.index, documents);
+		IndexingDocumentSetImpl<T> set = new IndexingDocumentSetImpl<T>(index, documents);
+		set.setUpdate(update);
 		return set;
-	}
-
-	@Override
-	public IndexingDocument<T> buildSearchDocument(T model) {
-		Document document = this.builder.buildSearchDocument(model);
-		IndexingDocument<T> indexingDocument = new IndexingDocumentImpl<T>(document, model);
-		return indexingDocument;
 	}
 
 }

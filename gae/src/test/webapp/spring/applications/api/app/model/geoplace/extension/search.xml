@@ -9,6 +9,10 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<bean id="geoPlaceSearchIndex" class="java.lang.String" lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="geoPlaceType" />
+	</bean>
+	
 	<!-- Index -->
 	<bean id="geoPlaceKeyedDocumentIndexService"
 		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl"
@@ -20,23 +24,23 @@
 	<bean id="geoPlaceDocumentIndexService"
 		class="com.dereekb.gae.model.extension.search.document.index.service.impl.DocumentIndexServiceImpl"
 		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceDocumentIndexPairsTask"/>
+		<constructor-arg index="0" ref="searchSystem"/>
+		<constructor-arg index="1" ref="geoPlaceIndexingDocumentSetBuilder"/>
 	</bean>
 
-	<bean id="geoPlaceDocumentIndexPairsTask"
-		class="com.dereekb.gae.model.extension.search.document.index.task.DocumentIndexPairsTask"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceDocumentIndexPairsTask"/>
-		<constructor-arg index="1" ref="geoPlaceDocumentIndexPairsTask"/>
-	</bean>
-
-	<bean id="geoPlaceDocumentIndexer"
-		class="com.dereekb.gae.model.extension.search.document.index.task.DocumentIndexPairsTask"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceDocumentIndexPairsTask"/>
-		<constructor-arg index="1" ref="geoPlaceDocumentIndexPairsTask"/>
-	</bean>
 
 	<!-- Search -->
+	<bean id="geoPlaceIndexingDocumentBuilder"
+		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="geoPlaceSearchIndex"/>
+		<constructor-arg index="1" ref="geoPlaceIndexingDocumentBuilder"/>
+	</bean>
+
+	<bean id="geoPlaceSearchDocumentBuilder"
+		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="geoPlaceDocumentIndexPairsTask"/>
+	</bean>
 
 </beans>

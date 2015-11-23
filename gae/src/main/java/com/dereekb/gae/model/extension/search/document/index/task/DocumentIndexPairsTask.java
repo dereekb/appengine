@@ -1,53 +1,55 @@
 package com.dereekb.gae.model.extension.search.document.index.task;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.IndexPair;
-import com.dereekb.gae.model.extension.search.document.index.component.DocumentIndexer;
-import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
-import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentBuilder;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSet;
+import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSetBuilder;
 import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.server.search.service.SearchDocumentService;
 import com.dereekb.gae.server.search.service.exception.DocumentPutException;
+import com.dereekb.gae.server.search.service.request.impl.DocumentModelIdentifierRequestImpl;
 import com.dereekb.gae.utilities.task.IterableTask;
-import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
- * {@link Task} for indexing documents.
+ * {@link IterableTask} for indexing documents using {@link IndexPair} values.
  *
  * @author dereekb
  *
  * @param <T>
  *            input model
  */
+@Deprecated
 public class DocumentIndexPairsTask<T extends UniqueSearchModel>
         implements IterableTask<IndexPair<T>> {
 
-	private IndexingDocumentBuilder<T> builder;
-	private DocumentIndexer<T> indexer;
+	private SearchDocumentService indexService;
+	private IndexingDocumentSetBuilder<T> builder;
 
 	public DocumentIndexPairsTask() {}
 
-	public DocumentIndexPairsTask(IndexingDocumentBuilder<T> builder, DocumentIndexer<T> indexer) {
+	public DocumentIndexPairsTask(SearchDocumentService indexService, IndexingDocumentSetBuilder<T> builder) {
+		this.indexService = indexService;
 		this.builder = builder;
-		this.indexer = indexer;
 	}
 
-	public IndexingDocumentBuilder<T> getBuilder() {
+	public SearchDocumentService getIndexService() {
+		return this.indexService;
+	}
+
+	public void setIndexService(SearchDocumentService indexService) {
+		this.indexService = indexService;
+	}
+
+	public IndexingDocumentSetBuilder<T> getBuilder() {
 		return this.builder;
 	}
 
-	public void setBuilder(IndexingDocumentBuilder<T> builder) {
+	public void setBuilder(IndexingDocumentSetBuilder<T> builder) {
 		this.builder = builder;
-	}
-
-	public DocumentIndexer<T> getIndexer() {
-		return this.indexer;
-	}
-
-	public void setIndexer(DocumentIndexer<T> indexer) {
-		this.indexer = indexer;
 	}
 
 	// MARK: Task
@@ -110,11 +112,11 @@ public class DocumentIndexPairsTask<T extends UniqueSearchModel>
 
 		protected void run() {
 			if (this.index.isEmpty() == false) {
-				this.indexElements(this.index);
+				this.indexElements(this.index, false);
 			}
 
 			if (this.update.isEmpty() == false) {
-				this.indexElements(this.index);
+				this.indexElements(this.index, true);
 			}
 
 			if (this.unindex.isEmpty() == false) {
@@ -122,19 +124,15 @@ public class DocumentIndexPairsTask<T extends UniqueSearchModel>
 			}
 		}
 
-		private void indexElements(Iterable<IndexPair<T>> pairs) {
+		private void indexElements(Iterable<IndexPair<T>> pairs,
+		                           boolean update) {
 			List<T> models = IndexPair.getKeys(pairs);
-			List<IndexingDocument<T>> documents = new ArrayList<IndexingDocument<T>>();
-
-			for (T model : models) {
-				IndexingDocument<T> document = DocumentIndexPairsTask.this.builder.buildSearchDocument(model);
-				documents.add(document);
-			}
+			IndexingDocumentSet<T> set = DocumentIndexPairsTask.this.builder.buildSearchDocuments(models, update);
 
 			boolean success = true;
 
 			try {
-				DocumentIndexPairsTask.this.indexer.indexDocuments(documents);
+				DocumentIndexPairsTask.this.indexService.put(set);
 			} catch (DocumentPutException e) {
 				success = false;
 			}
@@ -142,13 +140,17 @@ public class DocumentIndexPairsTask<T extends UniqueSearchModel>
 			this.setResultsForPairs(success, pairs);
 		}
 
-		private void unindexElements(Iterable<IndexPair<T>> pairs) {
-			List<T> models = IndexPair.getKeys(pairs);
+		private void unindexElements(Collection<IndexPair<T>> pairs) {
+			String index = DocumentIndexPairsTask.this.builder.getIndex();
+
+			Collection<? extends UniqueSearchModel> searchModels = new ArrayList<>(pairs);
+			DocumentModelIdentifierRequestImpl request = new DocumentModelIdentifierRequestImpl(index,
+			        searchModels);
 
 			boolean success = true;
 
 			try {
-				DocumentIndexPairsTask.this.indexer.deleteDocuments(models);
+				DocumentIndexPairsTask.this.indexService.deleteDocuments(request);
 			} catch (Exception e) {
 				success = false;
 			}

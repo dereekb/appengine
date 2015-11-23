@@ -80,6 +80,11 @@ public class HourImpl
 	}
 
 	@Override
+	public boolean equals(Hour hour) {
+		return (this.compareTo(hour) == 0);
+	}
+
+	@Override
 	public String toString() {
 		return "HourImpl [hour=" + this.dayHour + "]";
 	}

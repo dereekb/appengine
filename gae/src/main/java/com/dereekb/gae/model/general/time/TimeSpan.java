@@ -21,7 +21,7 @@ public interface TimeSpan
 	 * @param time
 	 *            New {@link Time} to set.
 	 * @throws IllegalArgumentException
-	 *             Thrown if <code>time</code> is null.
+	 *             Thrown if {@code time} is null.
 	 */
 	public void setStartTime(Time time) throws IllegalArgumentException;
 
@@ -38,7 +38,7 @@ public interface TimeSpan
 	 * @param time
 	 *            New {@link Time} to set.
 	 * @throws IllegalArgumentException
-	 *             Thrown if <code>time</code> is null.
+	 *             Thrown if {@code time} is null.
 	 */
 	public void setEndTime(Time time) throws IllegalArgumentException;
 

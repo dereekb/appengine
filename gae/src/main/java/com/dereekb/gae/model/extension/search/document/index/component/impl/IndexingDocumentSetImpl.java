@@ -71,5 +71,4 @@ public class IndexingDocumentSetImpl<T extends UniqueSearchModel>
 		return new ArrayList<DocumentPutRequestModel>(this.documents);
 	}
 
-
 }

@@ -34,4 +34,12 @@ public interface Hour
 	 */
 	public Integer getDayHour();
 
+	/**
+	 *
+	 * @param hour
+	 *            Input {@link Hour}. Never {@code null}.
+	 * @return {@code true} if equal.
+	 */
+	public boolean equals(Hour hour);
+
 }

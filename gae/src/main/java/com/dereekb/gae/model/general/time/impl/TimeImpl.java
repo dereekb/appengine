@@ -16,6 +16,10 @@ public class TimeImpl
 	private Hour hour;
 	private Integer minutes;
 
+	public TimeImpl(Time time) {
+		this(time.getHour(), time.getMinutes());
+	}
+
 	public TimeImpl(Integer hours, Integer minutes, TimeAmPm timeAmPm) {
 		this.hour = new HourImpl(hours, timeAmPm);
 		this.minutes = minutes;
@@ -37,6 +41,10 @@ public class TimeImpl
 
 	public static TimeImpl midnight() {
 		return new TimeImpl(12, 0, TimeAmPm.AM);
+	}
+
+	public static TimeImpl max() {
+		return new TimeImpl(11, 59, TimeAmPm.PM);
 	}
 
 	@Override
@@ -72,6 +80,53 @@ public class TimeImpl
 		}
 
 		return comparison;
+	}
+
+	public boolean isBefore(Time time) {
+		return TimeImpl.isBefore(this, time);
+	}
+
+	public boolean isAfter(Time time) {
+		return TimeImpl.isAfter(this, time);
+	}
+
+	/**
+	 * Checks if the first time is before the second time.
+	 *
+	 * @param a
+	 * @param b
+	 * @return {@code true} if {@code a} is before {@code b}.
+	 */
+	public static boolean isBefore(Time a,
+	                               Time b) {
+		return a.compareTo(b) < 0;
+	}
+
+	public static boolean isBeforeOrEqual(Time a,
+	                                      Time b) {
+		return (a.equals(b) || isBefore(a, b));
+	}
+
+	/**
+	 * Checks if the first time comes after the second time.
+	 *
+	 * @param a
+	 * @param b
+	 * @return {@code true} if {@code a} is after {@code b}.
+	 */
+	public static boolean isAfter(Time a,
+	                              Time b) {
+		return a.compareTo(b) > 0;
+	}
+
+	public static boolean isAfterOrEqual(Time a,
+	                                     Time b) {
+		return (a.equals(b) || isAfter(a, b));
+	}
+
+	@Override
+	public boolean equals(Time time) {
+		return this.compareTo(time) == 0;
 	}
 
 	@Override

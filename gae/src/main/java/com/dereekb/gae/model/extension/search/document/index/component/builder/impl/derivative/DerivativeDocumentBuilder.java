@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.search.document.index.component.builder.
 
 import java.util.Dictionary;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.Document.Builder;
 
@@ -39,7 +39,7 @@ public final class DerivativeDocumentBuilder<T extends UniqueSearchModel>
 	}
 
 	@Override
-	public void updateBuilder(T model,
+	public void performStep(T model,
 	                          Builder builder) {
 		try {
 			String type = this.delegate.readDerivativeType(model);
@@ -52,7 +52,6 @@ public final class DerivativeDocumentBuilder<T extends UniqueSearchModel>
 		} catch (NoDerivativeTypeException e) {
 
 		}
-
 	}
 
 }

@@ -3,7 +3,7 @@ package com.dereekb.gae.server.search.document.readers.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.ModelStagedDocumentBuilderInit;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.server.search.document.readers.SearchDocumentIdentifierReader;
 import com.google.appengine.api.search.Document;
 
@@ -13,7 +13,7 @@ public abstract class AbstractSearchDocumentIdentifierReader<K>
 	private final String field;
 
 	public AbstractSearchDocumentIdentifierReader() {
-		this(ModelStagedDocumentBuilderInit.MODEL_KEY_FIELD_KEY);
+		this(ModelStagedDocumentBuilderInitializer.MODEL_KEY_FIELD_KEY);
 	}
 
 	public AbstractSearchDocumentIdentifierReader(String field) {

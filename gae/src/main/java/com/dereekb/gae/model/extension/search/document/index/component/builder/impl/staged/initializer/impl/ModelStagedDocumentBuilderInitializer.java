@@ -1,14 +1,14 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder.impl;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.impl;
 
 import com.dereekb.gae.model.extension.search.document.SearchableUniqueModel;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderInit;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.StagedDocumentBuilderInitializer;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;
 import com.google.appengine.api.search.Field;
 
 /**
- * Implementation of {@link StagedDocumentBuilderInit} that takes in a
+ * Implementation of {@link StagedDocumentBuilderInitializer} that takes in a
  * {@link SearchableUniqueModel} and builds a {@link Document.Builder} instance
  * set with the model's document ID, identifier, and type.
  *
@@ -17,8 +17,8 @@ import com.google.appengine.api.search.Field;
  * @param <T>
  *            model type
  */
-public final class ModelStagedDocumentBuilderInit<T extends SearchableUniqueModel>
-        implements StagedDocumentBuilderInit<T> {
+public final class ModelStagedDocumentBuilderInitializer<T extends SearchableUniqueModel>
+        implements StagedDocumentBuilderInitializer<T> {
 
 	/**
 	 * Default model key Document field identifier.
@@ -32,11 +32,11 @@ public final class ModelStagedDocumentBuilderInit<T extends SearchableUniqueMode
 
 	private final String type;
 
-	public ModelStagedDocumentBuilderInit(Class<T> type) {
+	public ModelStagedDocumentBuilderInitializer(Class<T> type) {
 		this(type.getSimpleName());
 	}
 
-	public ModelStagedDocumentBuilderInit(String type) throws IllegalArgumentException {
+	public ModelStagedDocumentBuilderInitializer(String type) throws IllegalArgumentException {
 		if (type == null || type.isEmpty()) {
 			throw new IllegalArgumentException("Type cannot be null or empty.");
 		}

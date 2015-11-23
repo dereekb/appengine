@@ -8,6 +8,7 @@ import com.dereekb.gae.server.search.service.exception.DocumentPutException;
  *
  * @author dereekb
  */
+@Deprecated
 public interface DocumentIndexer<T extends UniqueSearchModel> {
 
 	/**

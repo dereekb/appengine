@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.components;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.ModelStagedDocumentBuilderInit;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
 import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryAtomField;
 import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryField;
@@ -31,7 +31,7 @@ public final class DocumentSearchQueryFactory<Q extends DocumentSearchQuery>
 
 	@Override
     public DocumentQueryBuilder convertQuery(Q query) {
-		DocumentQueryField typeField = new DocumentQueryAtomField(ModelStagedDocumentBuilderInit.MODEL_TYPE_FIELD_KEY,
+		DocumentQueryField typeField = new DocumentQueryAtomField(ModelStagedDocumentBuilderInitializer.MODEL_TYPE_FIELD_KEY,
 		        this.type);
 		DocumentQueryBuilder baseQuery = new DocumentQueryBuilder(typeField);
 
