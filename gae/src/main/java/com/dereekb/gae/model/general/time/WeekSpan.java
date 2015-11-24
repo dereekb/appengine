@@ -15,7 +15,7 @@ public interface WeekSpan {
 	 *            {@link Time}. Never {@code null}.
 	 * @return {@code true} if the week contains that time.
 	 */
-	public boolean contains(Time time);
+	// public boolean contains(Time time);
 
 	/**
 	 * Check if this contains a specific {@link TimeSpan}.
@@ -24,7 +24,7 @@ public interface WeekSpan {
 	 *            {@link TimeSpan}. Never {@code null}.
 	 * @return {@code true} if the week contains the entire timespan.
 	 */
-	public boolean contains(TimeSpan timespan);
+	// public boolean contains(TimeSpan timespan);
 
 	/**
 	 * Check if this contains/matches all times in a {@link WeekTime}.

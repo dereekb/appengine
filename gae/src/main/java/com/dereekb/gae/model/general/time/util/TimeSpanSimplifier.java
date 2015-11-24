@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.general.time.util;
 
+import java.util.List;
+
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeSpan;
 import com.dereekb.gae.model.general.time.util.exception.MergeTimeSpanException;
@@ -86,5 +88,18 @@ public interface TimeSpanSimplifier {
 	 */
 	public boolean isContained(TimeSpan a,
 	                           TimeSpan b);
+
+	/**
+	 * Subtracts one {@link TimeSpan} from another.
+	 *
+	 * @param value
+	 *            {@link TimeSpan}, never {@code null}.
+	 * @param negative
+	 *            {@link TimeSpan}, never {@code null}.
+	 * @return {@link List} of {@link TimeSpan} values resulting from the
+	 *         subtraction.
+	 */
+	public List<TimeSpan> subtract(TimeSpan value,
+	                               TimeSpan negative);
 
 }

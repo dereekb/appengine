@@ -1,5 +1,8 @@
 package com.dereekb.gae.model.general.time.util.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeSpan;
 import com.dereekb.gae.model.general.time.impl.TimeImpl;
@@ -81,8 +84,11 @@ public class TimeSpanSimplifierImpl
 	@Override
 	public boolean isContained(TimeSpan span,
 	                           Time time) {
-		// TODO Auto-generated method stub
-		return false;
+
+		Time start = span.getStartTime();
+		Time end = span.getEndTime();
+
+		return TimeImpl.isBeforeOrEqual(start, time) && TimeImpl.isAfterOrEqual(end, time);
 	}
 
 	@Override
@@ -95,6 +101,57 @@ public class TimeSpanSimplifierImpl
 		Time endB = b.getEndTime();
 
 		return (TimeImpl.isBeforeOrEqual(startA, startB) && TimeImpl.isAfterOrEqual(endA, endB));
+	}
+
+	@Override
+	public List<TimeSpan> subtract(TimeSpan value,
+	                               TimeSpan negative) {
+		List<TimeSpan> result = new ArrayList<TimeSpan>();
+
+		if (this.canMerge(value, negative)) {
+
+			// If the negative value contains the input value, then all has been
+			// removed.
+			if (this.isContained(negative, value) == false) {
+
+				Time startA = value.getStartTime();
+				Time endA = value.getEndTime();
+
+				Time startB = negative.getStartTime();
+				Time endB = negative.getEndTime();
+
+				// If contained, then the value is cut into two parts. They are
+				// not equal.
+				if (this.isContained(value, negative)) {
+					// Don't add points that match each other.
+
+					if (startA.equals(startB) == false) {
+						result.add(new TimeSpanImpl(startA, startB));
+					}
+
+					if (endA.equals(endB) == false) {
+						result.add(new TimeSpanImpl(endA, endB));
+					}
+				} else {
+
+					// If not contained, then the negative value is at one of
+					// the ends.
+
+					if (TimeImpl.isAfter(startA, startB)) {
+						//Head End
+						result.add(new TimeSpanImpl(endB, endA));
+					} else {
+						//Tail End
+						result.add(new TimeSpanImpl(startA, startB));
+					}
+				}
+			}
+
+		} else {
+			result.add(value);
+		}
+
+		return result;
 	}
 
 }

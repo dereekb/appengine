@@ -58,7 +58,23 @@ public class TimeSpanSetImpl
 
 	@Override
 	public void remove(TimeSpan input) {
-		// TODO Auto-generated method stub
+		if (this.timeSpans.isEmpty() == false) {
+			this.timeSpans = this.subtract(input);
+		}
+	}
+
+	private List<TimeSpan> subtract(TimeSpan input) {
+		List<TimeSpan> timeSpans = new ArrayList<TimeSpan>();
+		TimeSpan current = input;
+
+		for (TimeSpan span : this.timeSpans) {
+			List<TimeSpan> subtractions = TIMESPAN_SIMPLIFIER.subtract(span, input);
+			timeSpans.addAll(subtractions);
+		}
+
+		timeSpans.add(current);
+		Collections.sort(timeSpans);
+		return timeSpans;
 	}
 
 	@Override
