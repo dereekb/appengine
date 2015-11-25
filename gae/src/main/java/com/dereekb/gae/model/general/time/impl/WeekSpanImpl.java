@@ -28,14 +28,14 @@ public class WeekSpanImpl
 		TimeSpanSet[] sets = new TimeSpanSet[Day.values().length];
 
 		for (Day day : Day.values()) {
-			sets[day.bit] = new TimeSpanSetImpl();
+			sets[day.bit - 1] = new TimeSpanSetImpl();
 		}
 
 		return sets;
 	}
 
 	private TimeSpanSet getSetForDay(Day day) {
-		return this.sets[day.bit];
+		return this.sets[day.bit - 1];
 	}
 
 	// MARK: WeekSpan

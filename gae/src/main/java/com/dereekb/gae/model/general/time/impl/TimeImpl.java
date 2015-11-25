@@ -1,5 +1,8 @@
 package com.dereekb.gae.model.general.time.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.dereekb.gae.model.general.time.Hour;
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeAmPm;
@@ -45,6 +48,15 @@ public class TimeImpl
 
 	public static TimeImpl max() {
 		return new TimeImpl(11, 59, TimeAmPm.PM);
+	}
+
+	public static TimeImpl now() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		return new TimeImpl(hour, minute);
 	}
 
 	@Override

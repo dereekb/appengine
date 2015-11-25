@@ -2,6 +2,7 @@ package com.dereekb.gae.model.general.time.impl;
 
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeSpan;
+import com.dereekb.gae.model.general.time.util.impl.TimeSpanSimplifierImpl;
 
 /**
  * Default {@link TimeSpan} implementation.
@@ -96,6 +97,16 @@ public class TimeSpanImpl
 	@Override
 	public String toString() {
 		return "TimeSpanImpl [start=" + this.start + ", end=" + this.end + "]";
+	}
+
+	@Override
+	public boolean contains(Time time) {
+		return TimeSpanSimplifierImpl.SIMPLIFIER.isContained(this, time);
+	}
+
+	@Override
+	public boolean contains(TimeSpan timeSpan) {
+		return TimeSpanSimplifierImpl.SIMPLIFIER.isContained(this, timeSpan);
 	}
 
 }

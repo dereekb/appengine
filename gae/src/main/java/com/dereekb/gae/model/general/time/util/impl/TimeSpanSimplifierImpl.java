@@ -20,6 +20,8 @@ import com.dereekb.gae.model.general.time.util.exception.SplitTimeSpanException;
 public class TimeSpanSimplifierImpl
         implements TimeSpanSimplifier {
 
+	public static final TimeSpanSimplifierImpl SIMPLIFIER = new TimeSpanSimplifierImpl();
+
 	/**
 	 * Can split if the {@link Time} in a {@link TimeSpan} goes to the next day.
 	 */
@@ -84,7 +86,6 @@ public class TimeSpanSimplifierImpl
 	@Override
 	public boolean isContained(TimeSpan span,
 	                           Time time) {
-
 		Time start = span.getStartTime();
 		Time end = span.getEndTime();
 
@@ -138,10 +139,10 @@ public class TimeSpanSimplifierImpl
 					// the ends.
 
 					if (TimeImpl.isAfter(startA, startB)) {
-						//Head End
+						// Head End
 						result.add(new TimeSpanImpl(endB, endA));
 					} else {
-						//Tail End
+						// Tail End
 						result.add(new TimeSpanImpl(startA, startB));
 					}
 				}
