@@ -44,6 +44,40 @@ public class WeekSpanImpl
 
 	// MARK: WeekSpan
 	@Override
+	public void add(WeekTime time) {
+		DaySpan daySpan = time.getDaySpan();
+		TimeSpan timeSpan = time.getTimeSpan();
+
+		for (Day day : daySpan.getDays()) {
+			TimeSpanSet set = this.getSetForDay(day);
+			set.add(timeSpan);
+		}
+	}
+
+	public void addAll(List<WeekTime> weekTimes) {
+		for (WeekTime time : weekTimes) {
+			this.add(time);
+		}
+	}
+
+	@Override
+	public void remove(WeekTime time) {
+		DaySpan daySpan = time.getDaySpan();
+		TimeSpan timeSpan = time.getTimeSpan();
+
+		for (Day day : daySpan.getDays()) {
+			TimeSpanSet set = this.getSetForDay(day);
+			set.remove(timeSpan);
+		}
+	}
+
+	public void removeAll(List<WeekTime> weekTimes) {
+		for (WeekTime time : weekTimes) {
+			this.remove(time);
+		}
+	}
+
+	@Override
 	public boolean contains(WeekTime time) {
 		boolean isContained = true;
 
@@ -60,28 +94,6 @@ public class WeekSpanImpl
 		}
 
 		return isContained;
-	}
-
-	@Override
-	public void add(WeekTime time) {
-		DaySpan daySpan = time.getDaySpan();
-		TimeSpan timeSpan = time.getTimeSpan();
-
-		for (Day day : daySpan.getDays()) {
-			TimeSpanSet set = this.getSetForDay(day);
-			set.add(timeSpan);
-		}
-	}
-
-	@Override
-	public void remove(WeekTime time) {
-		DaySpan daySpan = time.getDaySpan();
-		TimeSpan timeSpan = time.getTimeSpan();
-
-		for (Day day : daySpan.getDays()) {
-			TimeSpanSet set = this.getSetForDay(day);
-			set.remove(timeSpan);
-		}
 	}
 
 	// MARK: DayTimeSpanPairSetConvertable

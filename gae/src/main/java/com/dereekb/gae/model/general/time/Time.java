@@ -10,7 +10,7 @@ public interface Time
         extends Comparable<Time> {
 
 	public final static Integer MINUTES_IN_HOUR = 60;
-	public final static Integer MAX_TIME = 60 * 60 * 24; // Minutes in the day
+	public final static Integer MAX_TIME = 24 * 60; // Minutes in the day
 
 	/**
 	 * Returns the hours for this time.

@@ -90,4 +90,9 @@ public class DaySpanBitImpl
 		return this.container.getBit(day.bit);
 	}
 
+	@Override
+	public String toString() {
+		return "DaySpanBitImpl [container=" + this.container + "]";
+	}
+
 }

@@ -108,4 +108,9 @@ public class TimeSpanSetImpl
 		this.timeSpans.clear();
 	}
 
+	@Override
+	public String toString() {
+		return "TimeSpanSetImpl [timeSpans=" + this.timeSpans + "]";
+	}
+
 }
