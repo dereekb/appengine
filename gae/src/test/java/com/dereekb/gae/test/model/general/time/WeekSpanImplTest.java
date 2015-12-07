@@ -1,10 +1,13 @@
 package com.dereekb.gae.test.model.general.time;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.DaySpan;
+import com.dereekb.gae.model.general.time.DayTimeSpanPair;
 import com.dereekb.gae.model.general.time.TimeSpan;
 import com.dereekb.gae.model.general.time.WeekTime;
 import com.dereekb.gae.model.general.time.impl.DaySpanBitImpl;
@@ -38,6 +41,25 @@ public class WeekSpanImplTest {
 
 		impl.remove(b);
 		Assert.assertFalse(impl.contains(b));
+	}
+
+	@Test
+	public void testWeekSpanPairConversion() {
+		WeekSpanImpl impl = new WeekSpanImpl();
+
+		DaySpan aDays = new DaySpanBitImpl(Day.MONDAY);
+		TimeSpan aTimes = new TimeSpanImpl(TimeImpl.midnight(), TimeImpl.noon());
+		WeekTime a = new WeekTimeImpl(aDays, aTimes);
+
+		impl.add(a);
+		Assert.assertTrue(impl.contains(a));
+
+		List<DayTimeSpanPair> weekSpanPairs = impl.toDayTimeSpanPairs();
+		List<DayTimeSpanPair> weekTimePairs = a.toDayTimeSpanPairs();
+
+		Assert.assertTrue(weekSpanPairs.size() == weekTimePairs.size());
+
+
 	}
 
 }

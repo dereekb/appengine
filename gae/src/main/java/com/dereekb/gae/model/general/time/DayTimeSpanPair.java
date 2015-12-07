@@ -7,7 +7,8 @@ package com.dereekb.gae.model.general.time;
  * @author dereekb
  *
  */
-public interface DayTimeSpanPair {
+public interface DayTimeSpanPair
+        extends Comparable<DayTimeSpanPair> {
 
 	public Day getDay();
 

@@ -1,12 +1,14 @@
 package com.dereekb.gae.model.general.time;
 
+
 /**
  * Represents a full week, and all times within that week.
  *
  * @author dereekb
  *
  */
-public interface WeekSpan {
+public interface WeekSpan
+        extends DayTimeSpanPairSetConvertable {
 
 	/**
 	 * Check if this contains a specific {@link Time}.

@@ -1,9 +1,13 @@
 package com.dereekb.gae.model.general.time.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.DaySpan;
+import com.dereekb.gae.model.general.time.DayTimeSpanPair;
 import com.dereekb.gae.model.general.time.TimeSpan;
 import com.dereekb.gae.model.general.time.TimeSpanSet;
 import com.dereekb.gae.model.general.time.WeekSpan;
@@ -78,6 +82,29 @@ public class WeekSpanImpl
 			TimeSpanSet set = this.getSetForDay(day);
 			set.remove(timeSpan);
 		}
+	}
+
+	// MARK: DayTimeSpanPairSetConvertable
+	@Override
+	public List<DayTimeSpanPair> toDayTimeSpanPairs() {
+		List<DayTimeSpanPair> pairs = new ArrayList<DayTimeSpanPair>();
+
+		for (Day day : Day.values()) {
+			TimeSpanSet set = this.getSetForDay(day);
+			List<TimeSpan> timeSpans = set.getTimeSpans();
+
+			if (timeSpans.isEmpty() == false) {
+				List<DayTimeSpanPair> setPairs = DayTimeSpanPairImpl.makePairs(day, timeSpans);
+				pairs.addAll(setPairs);
+			}
+		}
+
+		return pairs;
+	}
+
+	@Override
+	public String toString() {
+		return "WeekSpanImpl [sets=" + Arrays.toString(this.sets) + "]";
 	}
 
 }

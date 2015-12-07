@@ -24,8 +24,9 @@ public class TimeSpanSetImpl
 
 	private List<TimeSpan> timeSpans = new ArrayList<TimeSpan>();
 
-	public List<TimeSpan> getTimeSpans() {
-		return this.timeSpans;
+	@Override
+    public List<TimeSpan> getTimeSpans() {
+		return new ArrayList<TimeSpan>(this.timeSpans);
 	}
 
 	@Override

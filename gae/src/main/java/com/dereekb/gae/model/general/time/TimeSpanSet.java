@@ -1,5 +1,8 @@
 package com.dereekb.gae.model.general.time;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Represents a set of {@link TimeSpan} values for a single day.
  *
@@ -22,6 +25,13 @@ public interface TimeSpanSet {
 	 *            {@link TimeSpan}. Never {@code null}.
 	 */
 	public void remove(TimeSpan input);
+
+	/**
+	 * Returns a {@link List} of {@link TimeSpan} values.
+	 *
+	 * @return {@link Collection} of {@link TimeSpan}. Never {@code null}.
+	 */
+	public List<TimeSpan> getTimeSpans();
 
 	/**
 	 * Returns {@code true} if the {@link Time} is contained in this set.

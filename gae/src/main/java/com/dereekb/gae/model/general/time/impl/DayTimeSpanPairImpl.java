@@ -1,5 +1,8 @@
 package com.dereekb.gae.model.general.time.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.DayTimeSpanPair;
 import com.dereekb.gae.model.general.time.Time;
@@ -20,8 +23,20 @@ public class DayTimeSpanPairImpl
 	public DayTimeSpanPairImpl() {}
 
 	public DayTimeSpanPairImpl(Day day, TimeSpan timeSpan) {
-		this.day = day;
-		this.timeSpan = timeSpan;
+		this.setDay(day);
+		this.setTimeSpan(timeSpan);
+	}
+
+	public static List<DayTimeSpanPair> makePairs(Day day,
+	                                              List<TimeSpan> timeSpans) {
+		List<DayTimeSpanPair> pairs = new ArrayList<DayTimeSpanPair>();
+
+		for (TimeSpan timeSpan : timeSpans) {
+			DayTimeSpanPair pair = new DayTimeSpanPairImpl(day, timeSpan);
+			pairs.add(pair);
+		}
+
+		return pairs;
 	}
 
 	@Override
@@ -57,8 +72,20 @@ public class DayTimeSpanPairImpl
 	}
 
 	@Override
+	public int compareTo(DayTimeSpanPair o) {
+		int comparison = this.day.compareTo(o.getDay());
+
+		if (comparison == 0) {
+			comparison = this.timeSpan.compareTo(o.getTimeSpan());
+		}
+
+		return comparison;
+	}
+
+	@Override
 	public String toString() {
 		return "DayTimeSpanPairImpl [day=" + this.day + ", timeSpan=" + this.timeSpan + "]";
 	}
+
 
 }
