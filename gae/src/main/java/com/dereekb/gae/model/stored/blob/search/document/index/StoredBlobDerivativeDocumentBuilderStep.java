@@ -2,13 +2,13 @@ package com.dereekb.gae.model.stored.blob.search.document.index;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.derivative.DerivativeDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobInfoType;
 import com.dereekb.gae.model.stored.blob.StoredBlobType;
-import com.dereekb.gae.server.datastore.Getter;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.google.appengine.api.search.Document.Builder;
 import com.google.appengine.api.search.Field;
 
@@ -19,20 +19,18 @@ import com.google.appengine.api.search.Field;
  * @author dereekb
  *
  */
-public final class StoredBlobDerivativeDocumentBuilderStep
-        implements DerivativeDocumentBuilderStep<StoredBlobInfoType> {
+public class StoredBlobDerivativeDocumentBuilderStep
+        implements StagedDocumentBuilderStep<StoredBlob> {
 
 	public final static String DEFAULT_FIELD_FORMAT = "SB_%s";
 
-	private final String format;
-	private final Getter<StoredBlob> blobGetter;
+	private String format;
 
-	public StoredBlobDerivativeDocumentBuilderStep(Getter<StoredBlob> blobGetter) {
-		this(blobGetter, DEFAULT_FIELD_FORMAT);
+	public StoredBlobDerivativeDocumentBuilderStep() {
+		this(DEFAULT_FIELD_FORMAT);
 	}
 
-	public StoredBlobDerivativeDocumentBuilderStep(Getter<StoredBlob> blobGetter, String format) {
-		this.blobGetter = blobGetter;
+	public StoredBlobDerivativeDocumentBuilderStep(String format) {
 		this.format = format;
 	}
 
@@ -40,45 +38,43 @@ public final class StoredBlobDerivativeDocumentBuilderStep
 		return this.format;
 	}
 
-	public Getter<StoredBlob> getBlobGetter() {
-		return this.blobGetter;
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 	@Override
-	public void updateBuilder(String identifier,
-	                          Builder builder) {
-
-		ModelKey modelKey = new ModelKey(identifier);
-		StoredBlob blob = this.blobGetter.get(modelKey);
+	public void performStep(StoredBlob model,
+	                        Builder builder) {
 
 		Date date = null;
-		String blobIdString = null;
+		String id = null;
 		String ending = null;
 
-		if (blob != null) {
-			Long blobIdentifier = blob.getIdentifier();
-			blobIdString = blobIdentifier.toString();
+		if (model != null) {
+			Long blobIdentifier = model.getIdentifier();
+			id = blobIdentifier.toString();
+			date = model.getDate();
 
-			date = blob.getDate();
-			StoredBlobType blobType = blob.getBlobType();
+			StoredBlobType blobType = model.getBlobType();
 			ending = blobType.getEnding();
 		}
 
 		// Creation Date
-		String dateFieldFormat = String.format(this.format, "date");
-		Field.Builder dateField = SearchDocumentBuilderUtility.dateField(dateFieldFormat, date);
-		builder.addField(dateField);
+		ModelDocumentBuilderUtility.addDateWithFormat(this.format, date, builder);
 
-		// Blob Identifier
-		String identifierFieldFormat = String.format(this.format, "id");
-		Field.Builder identifierField = SearchDocumentBuilderUtility.atomField(identifierFieldFormat, blobIdString);
-		builder.addField(identifierField);
+		// Identifier
+		ModelDocumentBuilderUtility.addIdWithFormat(this.format, id, builder);
 
 		// Format Field
 		String endingFieldFormat = String.format(this.format, "format");
 		Field.Builder endingTypeField = SearchDocumentBuilderUtility.atomField(endingFieldFormat, ending);
 		builder.addField(endingTypeField);
 
+	}
+
+	@Override
+	public String toString() {
+		return "StoredBlobDerivativeDocumentBuilderStep [format=" + this.format + "]";
 	}
 
 }

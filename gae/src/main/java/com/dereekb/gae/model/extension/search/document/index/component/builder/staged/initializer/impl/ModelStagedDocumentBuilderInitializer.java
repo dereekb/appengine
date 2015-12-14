@@ -1,7 +1,7 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.impl;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl;
 
 import com.dereekb.gae.model.extension.search.document.SearchableUniqueModel;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.StagedDocumentBuilderInitializer;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.StagedDocumentBuilderInitializer;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;

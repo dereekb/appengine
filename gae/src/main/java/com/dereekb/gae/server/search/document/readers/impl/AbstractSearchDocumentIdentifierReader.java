@@ -3,7 +3,7 @@ package com.dereekb.gae.server.search.document.readers.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.server.search.document.readers.SearchDocumentIdentifierReader;
 import com.google.appengine.api.search.Document;
 

@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.components;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
 import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryAtomField;
 import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryField;

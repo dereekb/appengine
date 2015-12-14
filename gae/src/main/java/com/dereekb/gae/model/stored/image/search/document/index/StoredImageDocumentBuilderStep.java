@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.stored.image.search.document.index;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.step.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDerivativeDocumentBuilderStep;
@@ -21,12 +21,12 @@ import com.google.appengine.api.search.Field;
  *
  * @author dereekb
  */
-public final class StoredImageDocumentBuilderStep
+public class StoredImageDocumentBuilderStep
         implements StagedDocumentBuilderStep<StoredImage> {
 
 	@Override
-	public void updateBuilder(StoredImage model,
-	                          Builder builder) {
+	public void performStep(StoredImage model,
+	                        Builder builder) {
 
 		String name = model.getName();
 		Field.Builder nameField = SearchDocumentBuilderUtility.textField("name", name);

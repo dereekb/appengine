@@ -1,10 +1,10 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged;
+package com.dereekb.gae.model.extension.search.document.index.component.builder.staged;
 
 import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.SearchDocumentBuilder;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.initializer.StagedDocumentBuilderInitializer;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.impl.staged.step.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.StagedDocumentBuilderInitializer;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.Document;
 

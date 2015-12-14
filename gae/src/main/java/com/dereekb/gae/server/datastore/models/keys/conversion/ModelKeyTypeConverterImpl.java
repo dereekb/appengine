@@ -90,7 +90,7 @@ public final class ModelKeyTypeConverterImpl {
 	}
 
 	public ModelKey convertKey(String modelType,
-	                           String value) {
+	                           String value) throws IllegalArgumentException {
 
 		ModelKey key = null;
 		ModelKeyType type = this.typeForModelType(modelType);
