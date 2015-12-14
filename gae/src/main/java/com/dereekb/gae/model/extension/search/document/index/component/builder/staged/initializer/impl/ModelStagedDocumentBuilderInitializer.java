@@ -17,7 +17,7 @@ import com.google.appengine.api.search.Field;
  * @param <T>
  *            model type
  */
-public final class ModelStagedDocumentBuilderInitializer<T extends SearchableUniqueModel>
+public class ModelStagedDocumentBuilderInitializer<T extends SearchableUniqueModel>
         implements StagedDocumentBuilderInitializer<T> {
 
 	/**
@@ -30,22 +30,26 @@ public final class ModelStagedDocumentBuilderInitializer<T extends SearchableUni
 	 */
 	public static final String MODEL_TYPE_FIELD_KEY = "M_TYPE";
 
-	private final String type;
+	private String type;
 
 	public ModelStagedDocumentBuilderInitializer(Class<T> type) {
 		this(type.getSimpleName());
 	}
 
 	public ModelStagedDocumentBuilderInitializer(String type) throws IllegalArgumentException {
+		this.setType(type);
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
 		if (type == null || type.isEmpty()) {
 			throw new IllegalArgumentException("Type cannot be null or empty.");
 		}
 
 		this.type = type;
-	}
-
-	public String getType() {
-		return this.type;
 	}
 
 	@Override
@@ -69,6 +73,11 @@ public final class ModelStagedDocumentBuilderInitializer<T extends SearchableUni
 		builder.addField(typeField);
 
 		return builder;
+	}
+
+	@Override
+	public String toString() {
+		return "ModelStagedDocumentBuilderInitializer [type=" + this.type + "]";
 	}
 
 }

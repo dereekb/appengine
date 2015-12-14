@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.model.geoplace;
+package com.dereekb.gae.test.applications.api.model.stored.blob;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,30 +7,30 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder;
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
-import com.dereekb.gae.model.geo.place.GeoPlace;
+import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.google.appengine.api.search.Document;
 
-public class GeoPlaceSearchDocumentTest extends ApiApplicationTestContext {
+public class StoredBlobSearchDocumentTest extends ApiApplicationTestContext {
 
 	@Autowired
-	@Qualifier("geoPlaceTestModelGenerator")
-	private TestModelGenerator<GeoPlace> geoPlaceGenerator;
+	@Qualifier("storedBlobTestModelGenerator")
+	private TestModelGenerator<StoredBlob> storedBlobGenerator;
 
 	@Autowired
-	@Qualifier("geoPlaceDocumentIndexService")
-	private DocumentIndexService<GeoPlace> service;
+	@Qualifier("storedBlobDocumentIndexService")
+	private DocumentIndexService<StoredBlob> service;
 
 	@Autowired
-	@Qualifier("geoPlaceSearchDocumentBuilder")
-	private StagedDocumentBuilder<GeoPlace> builder;
+	@Qualifier("storedBlobSearchDocumentBuilder")
+	private StagedDocumentBuilder<StoredBlob> builder;
 
 	// MARK: Indexing
 	@Test
 	public void testDocumentBuilding() {
-		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
-		Document document = this.builder.buildSearchDocument(geoPlace);
+		StoredBlob storedBlob = this.storedBlobGenerator.generate();
+		Document document = this.builder.buildSearchDocument(storedBlob);
 
 		Assert.assertNotNull(document);
 	}

@@ -35,7 +35,7 @@ public class StagedDocumentBuilder<T extends UniqueSearchModel>
 
 	public void setInitializer(StagedDocumentBuilderInitializer<T> initializer) {
 
-		if (this.initializer == null) {
+		if (initializer == null) {
 			throw new IllegalArgumentException("Initializer cannot be null.");
 		}
 
@@ -43,15 +43,15 @@ public class StagedDocumentBuilder<T extends UniqueSearchModel>
 	}
 
 	public List<StagedDocumentBuilderStep<T>> getSteps() {
-
-		if (this.steps == null) {
-			throw new IllegalArgumentException("Steps cannot be null.");
-		}
-
 		return this.steps;
 	}
 
 	public void setSteps(List<StagedDocumentBuilderStep<T>> steps) {
+
+		if (steps == null) {
+			throw new IllegalArgumentException("Steps cannot be null.");
+		}
+
 		this.steps = steps;
 	}
 

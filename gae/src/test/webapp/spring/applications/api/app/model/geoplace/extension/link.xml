@@ -11,7 +11,7 @@
 
 	<bean id="geoPlaceLinkTarget" lazy-init="true"
 		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
-		<constructor-arg index="0" value="GeoPlace" />
+		<constructor-arg index="0" ref="geoPlaceType" />
 		<constructor-arg index="1" value="NUMBER" />
 	</bean>
 
@@ -21,9 +21,8 @@
 		<constructor-arg index="1" ref="geoPlaceAsyncConfiguredSetter" />
 		<constructor-arg index="2">
 			<list>
-				<bean
-					class="com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo">
-					<constructor-arg index="0" value="StoredImage" />
+				<bean class="com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo">
+					<constructor-arg index="0" ref="storedImageType" />
 					<constructor-arg index="1" ref="storedImageLinkTarget" />
 				</bean>
 			</list>
@@ -33,7 +32,7 @@
 			<map key-type="java.lang.String" value-type="java.lang.String">
 				<!-- Reverse link that references another link in the StoredImage's link 
 					system entry. -->
-				<entry key="StoredImage" value="GeoPlace" />
+				<entry key-ref="storedImageType" value-ref="geoPlaceType" />
 			</map>
 		</property>
 	</bean>

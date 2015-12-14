@@ -61,15 +61,13 @@ public class GeoPlaceDerivativeDocumentBuilderStep
 		}
 
 		// Creation Date
-		ModelDocumentBuilderUtility.addDateWithFormat(this.format, date, builder);
+		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
 		// Identifier
-		ModelDocumentBuilderUtility.addIdWithFormat(this.format, id, builder);
+		ModelDocumentBuilderUtility.addId(this.format, id, builder);
 
 		// Point Field
-		String pointFieldFormat = String.format(this.format, "point");
-		Field.Builder pointField = SearchDocumentBuilderUtility.geoPointField(pointFieldFormat, point);
-		builder.addField(pointField);
+		ModelDocumentBuilderUtility.addPoint(this.format, point, builder);
 
 		// Is Region Field
 		String isRegionFieldFormat = String.format(this.format, "isRegion");

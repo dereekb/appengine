@@ -60,10 +60,10 @@ public class StoredBlobDerivativeDocumentBuilderStep
 		}
 
 		// Creation Date
-		ModelDocumentBuilderUtility.addDateWithFormat(this.format, date, builder);
+		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
 		// Identifier
-		ModelDocumentBuilderUtility.addIdWithFormat(this.format, id, builder);
+		ModelDocumentBuilderUtility.addId(this.format, id, builder);
 
 		// Format Field
 		String endingFieldFormat = String.format(this.format, "format");

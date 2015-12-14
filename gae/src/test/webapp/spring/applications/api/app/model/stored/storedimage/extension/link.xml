@@ -11,7 +11,7 @@
 
 	<bean id="storedImageLinkTarget" lazy-init="true"
 		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
-		<constructor-arg index="0" value="StoredImage" />
+		<constructor-arg index="0" ref="storedImageType" />
 		<constructor-arg index="1" value="NUMBER" />
 	</bean>
 

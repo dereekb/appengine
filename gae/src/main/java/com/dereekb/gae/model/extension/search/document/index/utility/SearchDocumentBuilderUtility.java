@@ -51,14 +51,15 @@ public final class SearchDocumentBuilderUtility {
 
 	public static Field.Builder geoPointField(String name,
 	                                          Point point) {
-		Field.Builder field = null;
+		GeoPoint geoPoint = null;
 
 		if (point != null) {
-			GeoPoint geoPoint = PointConverter.convertToGeopoint(point);
-			field = Field.newBuilder().setName(name).setGeoPoint(geoPoint);
+			geoPoint = PointConverter.convertToGeopoint(point);
+		} else {
+			geoPoint = new GeoPoint(0, 0);
 		}
 
-		return field;
+		return Field.newBuilder().setName(name).setGeoPoint(geoPoint);
 	}
 
 }
