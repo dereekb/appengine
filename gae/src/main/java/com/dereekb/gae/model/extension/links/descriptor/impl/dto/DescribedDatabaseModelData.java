@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.extension.links.descriptor.impl.dto;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
-import com.dereekb.gae.model.extension.links.descriptor.DescriptorImpl;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorImpl;
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -49,7 +49,7 @@
 		<constructor-arg index="1">
 			<list>
 				<bean
-					class="com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDocumentBuilderStep">
+					class="com.dereekb.gae.model.stored.image.search.document.index.StoredImageDocumentBuilderStep">
 				</bean>
 				<bean
 					class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeDocumentBuilderStep">
@@ -62,11 +62,8 @@
 	
 	<!-- Derivative -->
 	<bean id="storedImageDerivativeDocumentBuilderStepDelegate"
-		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl"
+		class="com.dereekb.gae.model.stored.image.search.document.index.StoredImageDerivativeDocumentBuilderStepDelegate"
 		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="storedImageRegistry"/>
-		<constructor-arg index="1">
-		</constructor-arg>
 	</bean>
 
 </beans>

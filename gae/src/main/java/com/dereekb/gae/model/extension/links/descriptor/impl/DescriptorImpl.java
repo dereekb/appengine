@@ -1,4 +1,6 @@
-package com.dereekb.gae.model.extension.links.descriptor;
+package com.dereekb.gae.model.extension.links.descriptor.impl;
+
+import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 
 /**
  * {@link Descriptor} implementation.

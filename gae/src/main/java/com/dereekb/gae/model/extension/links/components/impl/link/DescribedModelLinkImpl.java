@@ -16,8 +16,8 @@ import com.dereekb.gae.model.extension.links.components.exception.UnreleasedDesc
 import com.dereekb.gae.model.extension.links.components.impl.LinkDataImpl;
 import com.dereekb.gae.model.extension.links.components.impl.RelationResultImpl;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
-import com.dereekb.gae.model.extension.links.descriptor.DescriptorImpl;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedModel;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
