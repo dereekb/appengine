@@ -1,42 +1,35 @@
 package com.dereekb.gae.test.applications.api.model.geoplace;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder;
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
 import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.google.appengine.api.search.Document;
 
-public class GeoPlaceSearchDocumentTest extends ApiApplicationTestContext {
+public class GeoPlaceSearchDocumentTest extends ModelSearchDocumentTest<GeoPlace> {
 
+	@Override
 	@Autowired
 	@Qualifier("geoPlaceTestModelGenerator")
-	private TestModelGenerator<GeoPlace> geoPlaceGenerator;
-
-	@Autowired
-	@Qualifier("geoPlaceDocumentIndexService")
-	private DocumentIndexService<GeoPlace> service;
-
-	@Autowired
-	@Qualifier("geoPlaceSearchDocumentBuilder")
-	private StagedDocumentBuilder<GeoPlace> builder;
-
-	// MARK: Indexing
-	@Test
-	public void testDocumentBuilding() {
-		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
-		Document document = this.builder.buildSearchDocument(geoPlace);
-
-		Assert.assertNotNull(document);
+	public void setGenerator(TestModelGenerator<GeoPlace> generator) {
+		super.setGenerator(generator);
 	}
 
-	public void testIndexing() {
+	@Override
+	@Autowired
+	@Qualifier("geoPlaceDocumentIndexService")
+	public void setService(DocumentIndexService<GeoPlace> service) {
+		super.setService(service);
+	}
 
+	@Override
+	@Autowired
+	@Qualifier("geoPlaceSearchDocumentBuilder")
+	public void setBuilder(StagedDocumentBuilder<GeoPlace> builder) {
+		super.setBuilder(builder);
 	}
 
 }

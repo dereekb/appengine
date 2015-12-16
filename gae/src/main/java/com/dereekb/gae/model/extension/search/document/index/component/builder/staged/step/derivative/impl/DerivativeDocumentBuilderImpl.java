@@ -62,7 +62,7 @@ public class DerivativeDocumentBuilderImpl
 		ModelStagedDocumentBuilderStep builderStep = this.builders.get(type);
 
 		if (builderStep == null) {
-			throw new DerivativeUnavailableException("Type builder is not available.");
+			throw new DerivativeUnavailableException("Type builder for type '" + type + "' is not available.");
 		}
 
 		builderStep.performStep(key, builder);

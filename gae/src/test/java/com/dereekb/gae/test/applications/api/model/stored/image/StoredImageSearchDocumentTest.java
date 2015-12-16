@@ -10,11 +10,11 @@ import com.dereekb.gae.model.extension.search.document.index.service.DocumentInd
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.google.appengine.api.search.Document;
 
-public class StoredImageSearchDocumentTest extends ApiApplicationTestContext {
+public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<StoredImage> {
 
 	@Autowired
 	@Qualifier("geoPlaceTestModelGenerator")
@@ -28,17 +28,36 @@ public class StoredImageSearchDocumentTest extends ApiApplicationTestContext {
 	@Qualifier("storedImageTestModelGenerator")
 	private TestModelGenerator<StoredImage> storedImageGenerator;
 
+	@Override
 	@Autowired
 	@Qualifier("storedImageDocumentIndexService")
-	private DocumentIndexService<StoredImage> service;
+	public void setService(DocumentIndexService<StoredImage> service) {
+		super.setService(service);
+	}
 
+	@Override
 	@Autowired
 	@Qualifier("storedImageSearchDocumentBuilder")
-	private StagedDocumentBuilder<StoredImage> builder;
+	public void setBuilder(StagedDocumentBuilder<StoredImage> builder) {
+		super.setBuilder(builder);
+	}
 
 	// MARK: Indexing
-	@Test
+	@Override
+    @Test
 	public void testDocumentBuilding() {
+		StoredImage storedImage = this.make();
+		super.testDocumentBuilding();
+
+		// Test with null GeoPlace
+		storedImage.setGeoPlace(null);
+
+		Document document = this.builder.buildSearchDocument(storedImage);
+		Assert.assertNotNull(document);
+	}
+
+	@Override
+	protected StoredImage make() {
 		StoredImage storedImage = this.storedImageGenerator.generate();
 
 		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
@@ -47,18 +66,7 @@ public class StoredImageSearchDocumentTest extends ApiApplicationTestContext {
 		StoredBlob storedBlob = this.storedBlobGenerator.generate();
 		storedImage.setBlob(storedBlob.getObjectifyKey());
 
-		Document document = this.builder.buildSearchDocument(storedImage);
-		Assert.assertNotNull(document);
-
-		// Test with null GeoPlace
-		storedImage.setGeoPlace(null);
-		document = this.builder.buildSearchDocument(storedImage);
-		Assert.assertNotNull(document);
-
-	}
-
-	public void testIndexing() {
-
+		return storedImage;
 	}
 
 }

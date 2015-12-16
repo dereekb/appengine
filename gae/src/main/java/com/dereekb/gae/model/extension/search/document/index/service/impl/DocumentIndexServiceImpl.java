@@ -136,7 +136,7 @@ public class DocumentIndexServiceImpl<T extends UniqueSearchModel>
 			}
 
 			if (this.update.isEmpty() == false) {
-				this.indexElements(this.index, true);
+				this.indexElements(this.update, true);
 			}
 
 			if (this.unindex.isEmpty() == false) {
