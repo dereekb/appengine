@@ -12,7 +12,7 @@ import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollection
 import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
-import com.dereekb.gae.server.datastore.models.keys.conversion.LongModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl;
 
 
 public class DifferentLinkModelDelegate extends AbstractTestLinkSystemDelegate<DifferentLinkModel> {
@@ -50,7 +50,7 @@ public class DifferentLinkModelDelegate extends AbstractTestLinkSystemDelegate<D
 
 		ModelKeyType someLinkKeyType = ModelKeyType.NUMBER;
 		Set<Long> someLinkKeys = model.getSomeModelLinks();
-		LongModelKeyConverter someLinkTypeConverter = new LongModelKeyConverter();
+		LongModelKeyConverterImpl someLinkTypeConverter = new LongModelKeyConverterImpl();
 
 		LinkInfoImpl someLinkInfo = new LinkInfoImpl(someLinkModelLinkName, model.getModelKey(), someLinkTargetType,
 		        someLinkKeyType);

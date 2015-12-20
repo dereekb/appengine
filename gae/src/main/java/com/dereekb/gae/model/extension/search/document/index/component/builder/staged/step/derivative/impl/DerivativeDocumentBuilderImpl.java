@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.search.document.index.component.builder.s
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeUnavailableException;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.ModelStagedDocumentBuilderStep;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverter;
 import com.google.appengine.api.search.Document;
 
 /**
@@ -19,22 +19,22 @@ import com.google.appengine.api.search.Document;
 public class DerivativeDocumentBuilderImpl
         implements DerivativeDocumentBuilder {
 
-	private ModelKeyTypeConverterImpl keyTypeConverter;
+	private TypeModelKeyConverter keyTypeConverter;
 	private Map<String, ModelStagedDocumentBuilderStep> builders;
 
 	public DerivativeDocumentBuilderImpl() {}
 
-	public DerivativeDocumentBuilderImpl(ModelKeyTypeConverterImpl keyTypeConverter,
+	public DerivativeDocumentBuilderImpl(TypeModelKeyConverter keyTypeConverter,
 	        Map<String, ModelStagedDocumentBuilderStep> builders) {
 		this.keyTypeConverter = keyTypeConverter;
 		this.builders = builders;
 	}
 
-	public ModelKeyTypeConverterImpl getKeyTypeConverter() {
+	public TypeModelKeyConverter getKeyTypeConverter() {
 		return this.keyTypeConverter;
 	}
 
-	public void setKeyTypeConverter(ModelKeyTypeConverterImpl keyTypeConverter) {
+	public void setKeyTypeConverter(TypeModelKeyConverter keyTypeConverter) {
 		this.keyTypeConverter = keyTypeConverter;
 	}
 

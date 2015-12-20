@@ -1,29 +1,27 @@
-package com.dereekb.gae.server.datastore.models.keys.conversion;
+package com.dereekb.gae.server.datastore.models.keys.conversion.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
-import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
-import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 
 /**
- * Used for converting strings to {@link ModelKey} instances with number
- * identifiers.
+ * Converter for building {@link ModelKey} using string names, or converting
+ * between types.
  *
  * @author dereekb
+ *
  */
-public final class StringLongModelKeyConverter
-        implements BidirectionalConverter<String, ModelKey>, DirectionalConverter<String, ModelKey>,
-        SingleDirectionalConverter<String, ModelKey> {
+public class StringModelKeyConverterImpl
+        implements StringModelKeyConverter {
 
 	/**
-	 * Statically available {@link StringLongModelKeyConverter} instance.
+	 * Statically available {@link StringModelKeyConverter} instance.
 	 */
-	public static final StringLongModelKeyConverter CONVERTER = new StringLongModelKeyConverter();
+	public static final StringModelKeyConverter CONVERTER = new StringModelKeyConverterImpl();
 
 	// Bidirectional Converter
 	@Override
@@ -36,13 +34,13 @@ public final class StringLongModelKeyConverter
 		List<String> keys = new ArrayList<String>();
 
 		for (ModelKey modelKey : input) {
-			Long id = modelKey.getId();
+			String name = modelKey.getName();
 
-			if (id == null) {
-				throw new ConversionFailureException("The ModelKey did not have an identifier set.");
+			if (name == null) {
+				throw new ConversionFailureException("The ModelKey did not have a name set.");
 			}
 
-			keys.add(id.toString());
+			keys.add(name);
 		}
 
 		return keys;
@@ -55,10 +53,10 @@ public final class StringLongModelKeyConverter
 
 		try {
 			for (String string : input) {
-				ModelKey key = ModelKey.convertNumberString(string);
+				ModelKey key = new ModelKey(string);
 				keys.add(key);
 			}
-		} catch (NumberFormatException e) {
+		} catch (IllegalArgumentException e) {
 			throw new ConversionFailureException(e);
 		}
 
@@ -71,8 +69,8 @@ public final class StringLongModelKeyConverter
 		ModelKey key;
 
 		try {
-			key = ModelKey.convertNumberString(input);
-		} catch (NumberFormatException e) {
+			key = new ModelKey(input);
+		} catch (IllegalArgumentException e) {
 			throw new ConversionFailureException(e);
 		}
 
@@ -86,8 +84,8 @@ public final class StringLongModelKeyConverter
 	 *
 	 * @param input
 	 *            {@link String} containing the input.
-	 * @return {@link ModelKey} with a {@link Long} identifier, or {@code null}
-	 *         if the input was invalid.
+	 * @return {@link ModelKey} with a {@link String} name, or {@code null} if
+	 *         the input was invalid.
 	 */
 	public ModelKey safeConvert(String input) {
 		ModelKey key = null;

@@ -18,7 +18,7 @@ import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
 import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
-import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverter;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
@@ -45,13 +45,13 @@ public class LinkExtensionApiController {
 
 	/**
 	 * Convenience constructor that uses the passed
-	 * {@link ModelKeyTypeConverterImpl} to create a
+	 * {@link TypeModelKeyConverter} to create a
 	 * {@link ApiLinkChangeConverterImpl} instance for the {@link #converter}.
 	 *
 	 * @param service
 	 * @param keyTypeConverter
 	 */
-	public LinkExtensionApiController(LinkService service, ModelKeyTypeConverterImpl keyTypeConverter) {
+	public LinkExtensionApiController(LinkService service, TypeModelKeyConverter keyTypeConverter) {
 		this.service = service;
 		this.converter = new ApiLinkChangeConverterImpl(keyTypeConverter);
 	}

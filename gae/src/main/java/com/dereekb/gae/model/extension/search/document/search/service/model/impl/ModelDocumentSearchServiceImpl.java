@@ -10,37 +10,46 @@ import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
-import com.dereekb.gae.model.extension.search.document.search.service.key.KeyDocumentSearchService;
+import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequest;
+import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchService;
+import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentRequestConverter;
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchResponse;
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchService;
+import com.dereekb.gae.model.extension.search.document.search.utility.ScoredDocumentKeyReader;
+import com.dereekb.gae.model.extension.search.document.search.utility.SearchDocumentUtility;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.search.service.response.SearchDocumentQueryResponse;
+import com.google.appengine.api.search.ScoredDocument;
 
 /**
- * Default implementation of {@link ModelDocumentSearchService} that uses a
- * {@link KeyDocumentSearchService} and a {@link ReadService}.
+ * {@link ModelDocumentSearchService} implementation.
  *
  * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ * @param <R>
+ *            request type
  */
-public final class ModelDocumentSearchServiceImpl<T extends UniqueModel, Q>
-        implements ModelDocumentSearchService<T, Q> {
+public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
+        implements ModelDocumentSearchService<T, R> {
 
-	private KeyDocumentSearchService<Q> keySearchService;
 	private ReadService<T> readService;
+	private DocumentSearchService searchService;
+	private ModelDocumentRequestConverter<R> converter;
+	private ScoredDocumentKeyReader keyReader;
 
 	public ModelDocumentSearchServiceImpl() {}
 
-	public ModelDocumentSearchServiceImpl(KeyDocumentSearchService<Q> keySearchService, ReadService<T> readService) {
-		this.keySearchService = keySearchService;
+	public ModelDocumentSearchServiceImpl(ReadService<T> readService,
+	        DocumentSearchService searchService,
+	        ModelDocumentRequestConverter<R> converter,
+	        ScoredDocumentKeyReader keyReader) {
 		this.readService = readService;
-	}
-
-	public KeyDocumentSearchService<Q> getKeySearchService() {
-		return this.keySearchService;
-	}
-
-	public void setKeySearchService(KeyDocumentSearchService<Q> keySearchService) {
-		this.keySearchService = keySearchService;
+		this.searchService = searchService;
+		this.converter = converter;
+		this.keyReader = keyReader;
 	}
 
 	public ReadService<T> getReadService() {
@@ -51,17 +60,28 @@ public final class ModelDocumentSearchServiceImpl<T extends UniqueModel, Q>
 		this.readService = readService;
 	}
 
-	@Override
-	public ModelDocumentSearchResponseImpl searchModels(Q query) {
-		List<ModelKey> keys = this.keySearchService.searchKeys(query);
-		ModelDocumentSearchResponseImpl searchResponse = new ModelDocumentSearchResponseImpl(keys);
-		return searchResponse;
+	public DocumentSearchService getSearchService() {
+		return this.searchService;
+	}
+
+	public void setSearchService(DocumentSearchService searchService) {
+		this.searchService = searchService;
+	}
+
+	public ModelDocumentRequestConverter<R> getConverter() {
+		return this.converter;
+	}
+
+	public void setConverter(ModelDocumentRequestConverter<R> converter) {
+		this.converter = converter;
 	}
 
 	@Override
-	public String toString() {
-		return "ModelDocumentSearchServiceImpl [keySearchService=" + this.keySearchService + ", readService="
-		        + this.readService + "]";
+	public ModelDocumentSearchResponse<T> search(R request) {
+		DocumentSearchRequest searchRequest = this.converter.buildSearchRequest(request);
+		SearchDocumentQueryResponse queryResponse = this.searchService.search(searchRequest);
+
+		return new ModelDocumentSearchResponseImpl(queryResponse);
 	}
 
 	/**
@@ -74,47 +94,108 @@ public final class ModelDocumentSearchServiceImpl<T extends UniqueModel, Q>
 	public class ModelDocumentSearchResponseImpl
 	        implements ModelDocumentSearchResponse<T> {
 
-		private final List<ModelKey> keys;
+		private final SearchDocumentQueryResponse response;
 
-		private ReadResponse<T> response = null;
+		private List<ModelKey> keys;
+		private ReadResponse<T> modelReadResponse;
 
-		private ModelDocumentSearchResponseImpl(List<ModelKey> keys) {
-			this.keys = keys;
+		private ModelDocumentSearchResponseImpl(SearchDocumentQueryResponse response) {
+			this.response = response;
 		}
 
-		// MARK: ModelDocumentSearchResponse
-		@Override
-		public List<ModelKey> getKeySearchResults() {
-			return this.keys;
+		public ReadResponse<T> getModelReadResponse() {
+			return this.modelReadResponse;
 		}
 
-		@Override
-		public Collection<T> getModelSearchResults() {
-			return this.getResponse().getModels();
+		public void setModelReadResponse(ReadResponse<T> modelReadResponse) {
+			this.modelReadResponse = modelReadResponse;
 		}
 
-		public ReadResponse<T> getResponse() {
-			if (this.response == null) {
-				this.response = this.loadResponse();
-			}
-
+		public SearchDocumentQueryResponse getResponse() {
 			return this.response;
 		}
 
+		public void setKeys(List<ModelKey> keys) {
+			this.keys = keys;
+		}
+
+		// MARK: Internal
+		private Collection<T> getModels() {
+			ReadResponse<T> response = this.getReadResponse();
+			return response.getModels();
+		}
+
+		private ReadResponse<T> getReadResponse() {
+			if (this.modelReadResponse != null) {
+				this.modelReadResponse = this.loadResponse();
+			}
+
+			return this.modelReadResponse;
+		}
+
 		private ReadResponse<T> loadResponse() {
+			List<ModelKey> keys = this.getKeys();
 			ReadResponse<T> response;
 
-			if (this.keys.isEmpty() == false) {
+			if (keys.isEmpty() == false) {
 				ReadRequestOptions options = new ReadRequestOptionsImpl(false);
-				ReadRequest request = new KeyReadRequest(this.keys, options);
+				ReadRequest request = new KeyReadRequest(keys, options);
 				response = ModelDocumentSearchServiceImpl.this.readService.read(request);
 			} else {
-				response = ReadResponseImpl.unavailable(this.keys);
+				response = ReadResponseImpl.unavailable(keys);
 			}
 
 			return response;
 		}
 
+		private List<ModelKey> getKeys() {
+			if (this.keys != null) {
+				this.keys = this.buildKeys();
+			}
+
+			return this.keys;
+		}
+
+		private List<ModelKey> buildKeys() {
+			Collection<ScoredDocument> documents = this.response.getDocumentResults();
+			List<ModelKey> keys = SearchDocumentUtility.readModelKeys(ModelDocumentSearchServiceImpl.this.keyReader,
+			        documents);
+			return keys;
+		}
+
+		// MARK: SearchDocumentQueryResponse
+		@Override
+		public Collection<ScoredDocument> getDocumentResults() {
+			return this.response.getDocumentResults();
+		}
+
+		@Override
+		public Long getFoundResults() {
+			return this.response.getFoundResults();
+		}
+
+		@Override
+		public Integer getReturnedResults() {
+			return this.response.getReturnedResults();
+		}
+
+		// MARK: ModelDocumentSearchResponse
+		@Override
+		public List<ModelKey> getKeySearchResults() {
+			return this.getKeys();
+		}
+
+		@Override
+		public Collection<T> getModelSearchResults() {
+			return this.getModels();
+		}
+
+	}
+
+	@Override
+	public String toString() {
+		return "ModelDocumentSearchServiceImpl [readService=" + this.readService + ", searchService="
+		        + this.searchService + ", converter=" + this.converter + ", keyReader=" + this.keyReader + "]";
 	}
 
 }

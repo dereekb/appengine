@@ -7,7 +7,7 @@ import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
-import com.dereekb.gae.server.datastore.models.keys.conversion.StringLongModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 

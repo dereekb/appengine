@@ -1,9 +1,9 @@
-package com.dereekb.gae.model.extension.search.document;
+package com.dereekb.gae.model.extension.search.document.search.utility;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.search.document.search.utility.ScoredDocumentKeyReader;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.ScoredDocument;
 
@@ -28,12 +28,12 @@ public final class SearchDocumentUtility {
 		return filteredDocuments;
 	}
 
-	public static <K> List<K> readModelKeys(ScoredDocumentKeyReader<K> reader,
-	                                               List<ScoredDocument> documents) {
-		List<K> keys = new ArrayList<K>();
+	public static List<ModelKey> readModelKeys(ScoredDocumentKeyReader reader,
+	                                           Iterable<ScoredDocument> documents) {
+		List<ModelKey> keys = new ArrayList<ModelKey>();
 
 		for (ScoredDocument document : documents) {
-			K key = reader.readKeyFromDocument(document);
+			ModelKey key = reader.keyFromDocument(document);
 			keys.add(key);
 		}
 

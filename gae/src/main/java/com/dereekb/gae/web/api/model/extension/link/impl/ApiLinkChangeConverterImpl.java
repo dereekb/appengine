@@ -11,7 +11,7 @@ import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverter;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChangeConverter;
 
@@ -24,9 +24,9 @@ import com.dereekb.gae.web.api.model.extension.link.ApiLinkChangeConverter;
 public class ApiLinkChangeConverterImpl
         implements ApiLinkChangeConverter {
 
-	private ModelKeyTypeConverterImpl keyTypeConverter;
+	private TypeModelKeyConverter keyTypeConverter;
 
-	public ApiLinkChangeConverterImpl(ModelKeyTypeConverterImpl keyTypeConverter) {
+	public ApiLinkChangeConverterImpl(TypeModelKeyConverter keyTypeConverter) {
 		this.keyTypeConverter = keyTypeConverter;
 	}
 

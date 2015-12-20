@@ -15,7 +15,7 @@ import com.dereekb.gae.model.extension.search.document.index.IndexAction;
 import com.dereekb.gae.model.extension.search.document.index.service.TypedDocumentIndexService;
 import com.dereekb.gae.model.extension.search.document.index.service.exception.UnregisteredSearchTypeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverter;
 
 /**
  * Task Queue controller for manipulating search indexes.
@@ -26,21 +26,21 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.ModelKeyTypeConve
 @Controller
 public final class TaskQueueSearchController {
 
-	private ModelKeyTypeConverterImpl keyTypeConverter;
+	private TypeModelKeyConverter keyTypeConverter;
 	private TypedDocumentIndexService service;
 
 	public TaskQueueSearchController() {}
 
-	public TaskQueueSearchController(ModelKeyTypeConverterImpl keyTypeConverter, TypedDocumentIndexService service) {
+	public TaskQueueSearchController(TypeModelKeyConverter keyTypeConverter, TypedDocumentIndexService service) {
 		this.keyTypeConverter = keyTypeConverter;
 		this.service = service;
 	}
 
-	public ModelKeyTypeConverterImpl getKeyTypeConverter() {
+	public TypeModelKeyConverter getKeyTypeConverter() {
 		return this.keyTypeConverter;
 	}
 
-	public void setKeyTypeConverter(ModelKeyTypeConverterImpl keyTypeConverter) {
+	public void setKeyTypeConverter(TypeModelKeyConverter keyTypeConverter) {
 		this.keyTypeConverter = keyTypeConverter;
 	}
 

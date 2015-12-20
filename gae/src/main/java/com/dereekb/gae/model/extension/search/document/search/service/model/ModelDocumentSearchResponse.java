@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.search.document.search.service.model;
 import java.util.Collection;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.search.service.response.SearchDocumentQueryResponse;
 
 /**
  * Contains {@link ModelKey} search results and model returns.
@@ -12,7 +13,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @param <T>
  *            model type
  */
-public interface ModelDocumentSearchResponse<T> {
+public interface ModelDocumentSearchResponse<T>
+        extends SearchDocumentQueryResponse {
 
 	/**
 	 * Returns the {@link ModelKey} search results.

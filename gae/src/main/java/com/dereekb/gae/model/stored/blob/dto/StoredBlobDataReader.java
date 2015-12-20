@@ -4,7 +4,7 @@ import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.server.datastore.models.keys.conversion.StringLongModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverter;
 import com.dereekb.gae.utilities.misc.reader.DateLongConverter;
 
 /**

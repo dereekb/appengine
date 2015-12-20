@@ -6,7 +6,7 @@ import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalC
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.server.datastore.models.keys.conversion.StringLongModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.utilities.misc.reader.DateLongConverter;
 

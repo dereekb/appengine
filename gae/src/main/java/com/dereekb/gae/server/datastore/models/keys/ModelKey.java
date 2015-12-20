@@ -7,8 +7,8 @@ import java.util.List;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.models.keys.conversion.StringLongModelKeyConverter;
-import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 
 /**
  * Represents a key for a model.
@@ -290,10 +290,10 @@ public final class ModelKey
 
 		switch (keyType) {
 			case NAME:
-				keys = StringModelKeyConverter.CONVERTER.convert(values);
+				keys = StringModelKeyConverterImpl.CONVERTER.convert(values);
 				break;
 			case NUMBER:
-				keys = StringLongModelKeyConverter.CONVERTER.convert(values);
+				keys = StringLongModelKeyConverterImpl.CONVERTER.convert(values);
 				break;
 			default:
 				throw new IllegalArgumentException("Invalid key type specified.");

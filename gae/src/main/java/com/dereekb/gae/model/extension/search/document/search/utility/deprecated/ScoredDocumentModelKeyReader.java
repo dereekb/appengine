@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.document.search.utility;
+package com.dereekb.gae.model.extension.search.document.search.utility.deprecated;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
