@@ -76,17 +76,8 @@ public class StringLongModelKeyConverterImpl
 		return key;
 	}
 
-	// Support
-	/**
-	 * Safely converts the input value, returning {@code null} if the input
-	 * equals {@code null} or the value cannot be converted.
-	 *
-	 * @param input
-	 *            {@link String} containing the input.
-	 * @return {@link ModelKey} with a {@link Long} identifier, or {@code null}
-	 *         if the input was invalid.
-	 */
-	public ModelKey safeConvert(String input) {
+	@Override
+    public ModelKey safeConvert(String input) {
 		ModelKey key = null;
 
 		if (input != null) {

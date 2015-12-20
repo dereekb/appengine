@@ -15,7 +15,7 @@ import com.dereekb.gae.model.extension.search.document.index.IndexAction;
 import com.dereekb.gae.model.extension.search.document.index.service.TypedDocumentIndexService;
 import com.dereekb.gae.model.extension.search.document.index.service.exception.UnregisteredSearchTypeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 
 /**
  * Task Queue controller for manipulating search indexes.

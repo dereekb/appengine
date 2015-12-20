@@ -15,4 +15,15 @@ public interface StringModelKeyConverter
         extends BidirectionalConverter<String, ModelKey>, DirectionalConverter<String, ModelKey>,
 SingleDirectionalConverter<String, ModelKey> {
 
+	/**
+	 * Safely converts the input value, returning {@code null} if the input
+	 * equals {@code null} or the value cannot be converted.
+	 *
+	 * @param input
+	 *            {@link String} containing the input.
+	 * @return {@link ModelKey} with a {@link Long} identifier, or {@code null}
+	 *         if the input was invalid.
+	 */
+	public ModelKey safeConvert(String input);
+
 }

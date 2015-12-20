@@ -6,7 +6,8 @@ import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalC
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.utilities.misc.reader.DateLongConverter;
 
@@ -19,7 +20,7 @@ import com.dereekb.gae.utilities.misc.reader.DateLongConverter;
 public final class GeoPlaceDataReader extends AbstractDirectionalConverter<GeoPlaceData, GeoPlace> {
 
 	private static final ObjectifyKeyUtility<GeoPlace> GEO_PLACE_KEY_UTIL = ObjectifyKeyUtility.make(GeoPlace.class);
-	private static final StringLongModelKeyConverter KEY_CONVERTER = StringLongModelKeyConverter.CONVERTER;
+	private static final StringModelKeyConverter KEY_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
 
 	@Override
 	public GeoPlace convertSingle(GeoPlaceData input) throws ConversionFailureException {

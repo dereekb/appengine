@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.search.document.index.component.builder.s
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeUnavailableException;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.ModelStagedDocumentBuilderStep;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.google.appengine.api.search.Document;
 
 /**

@@ -11,7 +11,7 @@ import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChangeConverter;
 
@@ -38,7 +38,7 @@ public class ApiLinkChangeConverterImpl
 		SingleDirectionalConverter<String, ModelKey> converter;
 
 		try {
-			converter = this.keyTypeConverter.getSingleConverterForModelType(primaryType);
+			converter = this.keyTypeConverter.getConverterForType(primaryType);
 		} catch (IllegalArgumentException e) {
 			throw new ConversionFailureException(e.getMessage());
 		}

@@ -17,7 +17,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
  * @author dereekb
  *
  */
-public class TypeModelKeyConverter
+public class TypeModelKeyConverterImpl
         implements TypeModelKeyConverter {
 
 	private final static StringModelKeyConverter LONG_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
@@ -25,7 +25,7 @@ public class TypeModelKeyConverter
 
 	private Map<String, ModelKeyType> map;
 
-	public TypeModelKeyConverter(Map<String, ModelKeyType> map) {
+	public TypeModelKeyConverterImpl(Map<String, ModelKeyType> map) {
 		this.map = map;
 	}
 

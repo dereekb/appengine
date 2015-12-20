@@ -7,7 +7,8 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
-import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.googlecode.objectify.Key;
 
@@ -21,7 +22,7 @@ import com.googlecode.objectify.Key;
  */
 public class StoredImageSetDataReader extends AbstractDirectionalConverter<StoredImageSetData, StoredImageSet> {
 
-	private static final StringLongModelKeyConverter KEY_CONVERTER = StringLongModelKeyConverter.CONVERTER;
+	private static final StringModelKeyConverter KEY_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
 	private static final ObjectifyKeyUtility<StoredImage> IMAGE_KEY_UTIL = ObjectifyKeyUtility.make(StoredImage.class);
 
 	@Override

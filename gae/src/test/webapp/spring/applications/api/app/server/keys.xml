@@ -17,11 +17,11 @@
 		lazy-init="true" scope="singleton" />
 
 	<bean id="stringLongModelKeyConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.StringLongModelKeyConverter"
+		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl"
 		lazy-init="true" scope="singleton" />
 
 	<bean id="stringModelKeyConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter"
+		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl"
 		lazy-init="true" scope="singleton" />
 
 </beans>
