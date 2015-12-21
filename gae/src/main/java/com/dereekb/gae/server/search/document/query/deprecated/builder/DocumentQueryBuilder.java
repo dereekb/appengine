@@ -1,6 +1,6 @@
-package com.dereekb.gae.server.search.document.query.builder;
+package com.dereekb.gae.server.search.document.query.deprecated.builder;
 
-import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryField;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryField;
 import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
 

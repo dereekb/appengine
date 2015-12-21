@@ -1,8 +1,8 @@
-package com.dereekb.gae.server.search.document.query.builder;
+package com.dereekb.gae.server.search.document.query.deprecated.builder;
 
 
 /**
- * Used for extending an input {@link DocumentQueryBuilder}
+ * Used for extending an input {@link DocumentQueryBuilderExpression}
  * 
  * @author dereekb
  *

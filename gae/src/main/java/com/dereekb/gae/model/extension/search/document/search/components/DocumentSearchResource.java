@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.search.document.search.components;
 
 import java.util.List;
 
-import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.DocumentQueryBuilder;
 import com.google.appengine.api.search.ScoredDocument;
 
 /**

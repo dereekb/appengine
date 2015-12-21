@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.components;
 
-import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.DocumentQueryBuilder;
 
 /**
  *
@@ -12,7 +12,7 @@ import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder
 public interface DocumentSearchQueryConverter<Q> {
 
 	/**
-	 * Generates a {@link DocumentQueryBuilder} instance from the input query.
+	 * Generates a {@link DocumentQueryBuilderExpression} instance from the input query.
 	 */
 	public DocumentQueryBuilder convertQuery(Q query);
 

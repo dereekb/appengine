@@ -10,14 +10,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dereekb.gae.server.search.document.query.builder.DocumentQueryBuilder;
-import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryDateField;
-import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryField;
-import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryGeoField;
-import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryLiteralField;
-import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryNumberField;
-import com.dereekb.gae.server.search.document.query.builder.fields.DocumentQueryTextField;
-import com.dereekb.gae.server.search.document.query.builder.impl.DefaultDocumentQueryStringSanitizer;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.DocumentQueryBuilder;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryDateField;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryField;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryGeoField;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryLiteralField;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryNumberField;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryTextField;
+import com.dereekb.gae.server.search.document.query.deprecated.builder.impl.DefaultDocumentQueryStringSanitizer;
 import com.google.appengine.api.search.GeoPoint;
 
 @RunWith(JUnit4.class)

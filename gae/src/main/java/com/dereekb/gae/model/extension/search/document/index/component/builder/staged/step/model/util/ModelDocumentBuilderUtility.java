@@ -69,7 +69,6 @@ public class ModelDocumentBuilderUtility {
 		String idName = String.format(format, "descriptorId");
 		Field.Builder descriptorIdField = SearchDocumentBuilderUtility.atomField(idName, descriptorId);
 		builder.addField(descriptorIdField);
-
 	}
 
 	// MARK: Point

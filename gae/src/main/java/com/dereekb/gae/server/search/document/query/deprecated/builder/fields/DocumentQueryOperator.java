@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.search.document.query.builder.fields;
+package com.dereekb.gae.server.search.document.query.deprecated.builder.fields;
 
 public enum DocumentQueryOperator {
 	
