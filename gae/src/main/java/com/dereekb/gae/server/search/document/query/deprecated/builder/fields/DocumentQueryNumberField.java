@@ -3,6 +3,7 @@ package com.dereekb.gae.server.search.document.query.deprecated.builder.fields;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.google.appengine.api.search.Field.FieldType;
 
 public class DocumentQueryNumberField extends DocumentQueryField {
@@ -12,17 +13,17 @@ public class DocumentQueryNumberField extends DocumentQueryField {
 
 	private final Number value;
 	private final String field;
-	private final DocumentQueryOperator operator;
+	private final ExpressionOperator operator;
 
 	public DocumentQueryNumberField(String field, Number value) {
-		this(field, DocumentQueryOperator.Equal, value, false);
+		this(field, ExpressionOperator.Equal, value, false);
 	}
 	
-	public DocumentQueryNumberField(String field, DocumentQueryOperator operator, Number value) {
+	public DocumentQueryNumberField(String field, ExpressionOperator operator, Number value) {
 		this(field, operator, value, false);
 	}
 
-	public DocumentQueryNumberField(String field, DocumentQueryOperator operator, Number value, Boolean not) {
+	public DocumentQueryNumberField(String field, ExpressionOperator operator, Number value, Boolean not) {
 		super(FieldType.ATOM, not);
 		this.value = value;
 		this.field = field;

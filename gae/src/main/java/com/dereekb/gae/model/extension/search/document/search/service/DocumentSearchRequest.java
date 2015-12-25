@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.search.service;
 
+import com.dereekb.gae.server.search.document.query.expression.Expression;
+
 /**
  * Used by {@link DocumentSearchService}.
  *
@@ -14,9 +16,9 @@ public interface DocumentSearchRequest {
 	public String getIndex();
 
 	/**
-	 * @return Query string. Never {@code null}.
+	 * @return {@link Expression}. Never {@code null}.
 	 */
-	public String getQueryExpression();
+	public Expression getExpression();
 
 	/**
 	 * Returns any request options.

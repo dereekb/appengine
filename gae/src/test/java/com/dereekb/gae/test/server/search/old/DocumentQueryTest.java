@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.server.search;
+package com.dereekb.gae.test.server.search.old;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -17,7 +17,7 @@ import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.Do
 import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryLiteralField;
 import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryNumberField;
 import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryTextField;
-import com.dereekb.gae.server.search.document.query.deprecated.builder.impl.DefaultDocumentQueryStringSanitizer;
+import com.dereekb.gae.server.search.document.query.impl.DocumentQueryExpressionSanitizerImpl;
 import com.google.appengine.api.search.GeoPoint;
 
 @RunWith(JUnit4.class)
@@ -207,27 +207,27 @@ public class DocumentQueryTest {
 
 	@Test
 	public void testSanitation() {
-		DefaultDocumentQueryStringSanitizer sanitizer = new DefaultDocumentQueryStringSanitizer();
+		DocumentQueryExpressionSanitizerImpl sanitizer = new DocumentQueryExpressionSanitizerImpl();
 
 		sanitizer.setAllowAnd(true);
 		sanitizer.setAllowComplex(true);
 
 		String complexString = "beverage:wine color:(red OR white) NOT country:france a AND b NOT geopoint(x,y)";
-		String sanitizeNothing = sanitizer.sanitizeQuery(complexString);
+		String sanitizeNothing = sanitizer.sanitizeExpression(complexString);
 		Assert.assertTrue(complexString.equals(sanitizeNothing));
 
 		sanitizer.setAllowFunctions(false);
-		String sanitizeFunctions = sanitizer.sanitizeQuery(complexString);
+		String sanitizeFunctions = sanitizer.sanitizeExpression(complexString);
 		Assert.assertTrue(sanitizeFunctions.equals("beverage:wine color:(red OR white) NOT country:france a AND b"));
 
 		sanitizer.setAllowFunctions(true);
 		String comparisonAString = "model:gibson date < 1965-01-01";
-		String comparisonASanitized = sanitizer.sanitizeQuery(comparisonAString);
+		String comparisonASanitized = sanitizer.sanitizeExpression(comparisonAString);
 		Assert.assertTrue(comparisonAString.equals(comparisonASanitized));
 
 		String comparisonBString = "title:\"Harry Potter\" AND pages<500";
 
-		String comparisonBSanitized = sanitizer.sanitizeQuery(comparisonBString);
+		String comparisonBSanitized = sanitizer.sanitizeExpression(comparisonBString);
 
 		Assert.assertTrue(comparisonBString.equals(comparisonBSanitized));
 
@@ -235,7 +235,7 @@ public class DocumentQueryTest {
 
 		sanitizer.setAllowNot(false);
 
-		String sanitizedNotString = sanitizer.sanitizeQuery(sanitizeNotExpected);
+		String sanitizedNotString = sanitizer.sanitizeExpression(sanitizeNotExpected);
 
 		Assert.assertTrue(sanitizeNotExpected.equals(sanitizedNotString));
 
@@ -243,12 +243,12 @@ public class DocumentQueryTest {
 		sanitizer.setAllowFunctions(false);
 
 		String sanitizeFloatingNot = "a AND b NOT";
-		String sanitizedFloatingNotString = sanitizer.sanitizeQuery(sanitizeFloatingNot);
+		String sanitizedFloatingNotString = sanitizer.sanitizeExpression(sanitizeFloatingNot);
 		Assert.assertTrue(sanitizedFloatingNotString.equals("a AND b"));
 
 		sanitizer.setAllowFunctions(false);
 		String sanitizeNoCommaOrFunctionExpected = "a AND , AND function(c,b)";
-		String sanitizedNoCommaOrFunctionExpectedString = sanitizer.sanitizeQuery(sanitizeNoCommaOrFunctionExpected);
+		String sanitizedNoCommaOrFunctionExpectedString = sanitizer.sanitizeExpression(sanitizeNoCommaOrFunctionExpected);
 		Assert.assertTrue(sanitizedNoCommaOrFunctionExpectedString.equals("a")); // Trims out extra floating ANDs
 	}
 }

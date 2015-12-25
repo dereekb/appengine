@@ -3,7 +3,14 @@ package com.dereekb.gae.server.search.document.query.expression.builder.impl.fie
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.AbstractExpressionBuilderImpl;
 
-
+/**
+ * Wraps an expression in braces.
+ * <p>
+ * Used for creating more complicated expressions to be evaluated in components.
+ *
+ * @author dereekb
+ *
+ */
 public class ExpressionWrap extends AbstractExpressionBuilderImpl {
 
 	private static final String FORMAT = "(%s)";
@@ -40,6 +47,11 @@ public class ExpressionWrap extends AbstractExpressionBuilderImpl {
 	@Override
 	public ExpressionBuilder copyExpression() {
 		return new ExpressionWrap(this.expression);
+	}
+
+	@Override
+	public String toString() {
+		return "ExpressionWrap [expression=" + this.expression + "]";
 	}
 
 }

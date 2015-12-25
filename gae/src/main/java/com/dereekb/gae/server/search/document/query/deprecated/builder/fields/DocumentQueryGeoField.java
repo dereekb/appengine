@@ -3,6 +3,7 @@ package com.dereekb.gae.server.search.document.query.deprecated.builder.fields;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.google.appengine.api.search.Field.FieldType;
 import com.google.appengine.api.search.GeoPoint;
 
@@ -11,7 +12,7 @@ public class DocumentQueryGeoField extends DocumentQueryField {
 	private static final String GEO_FIELD_FORMAT = "%s%s%s";
 	private static final Integer DEFAULT_RADIUS = 1000;	//Default radius in meters.
 
-	private static final DocumentQueryOperator DEFAULT_OPERATOR = DocumentQueryOperator.LessThan;
+	private static final ExpressionOperator DEFAULT_OPERATOR = ExpressionOperator.LessThan;
 	
 	private static class Distance {
 
@@ -47,7 +48,7 @@ public class DocumentQueryGeoField extends DocumentQueryField {
 	private final String field;
 	private final GeoPoint point;
 	private final Integer meterRadius;
-	private final DocumentQueryOperator operator;
+	private final ExpressionOperator operator;
 
 	public DocumentQueryGeoField(String field, GeoPoint point) {
 		this(field, DEFAULT_OPERATOR, point, false);
@@ -57,17 +58,17 @@ public class DocumentQueryGeoField extends DocumentQueryField {
 		this(field, DEFAULT_OPERATOR, point, radius, false);
 	}
 
-	public DocumentQueryGeoField(String field, DocumentQueryOperator operator,
+	public DocumentQueryGeoField(String field, ExpressionOperator operator,
 			GeoPoint point, Integer radius) {
 		this(field, operator, point, radius, false);
 	}
 
-	public DocumentQueryGeoField(String field, DocumentQueryOperator operator,
+	public DocumentQueryGeoField(String field, ExpressionOperator operator,
 			GeoPoint point, boolean not) {
 		this(field, operator, point, DEFAULT_RADIUS, not);
 	}
 
-	public DocumentQueryGeoField(String field, DocumentQueryOperator operator,
+	public DocumentQueryGeoField(String field, ExpressionOperator operator,
 			GeoPoint point, Integer radius, boolean not) {
 		super(FieldType.GEO_POINT, not);
 		this.field = field;

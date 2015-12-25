@@ -1,7 +1,7 @@
-package com.dereekb.gae.server.search.document.query.deprecated.builder.fields;
+package com.dereekb.gae.server.search.document.query.expression;
 
-public enum DocumentQueryOperator {
-	
+public enum ExpressionOperator {
+
 	Equal("="),
 
 	/**
@@ -9,20 +9,26 @@ public enum DocumentQueryOperator {
 	 */
 	GreaterThan(">"),
 	GreaterOrEqualTo(">="),
-	
+
 	/**
 	 * For Geopoint locations, this specifies that the given point is within the given radius.
 	 */
 	LessThan("<"),
 	LessOrEqualTo("<=");
-	
+
 	private final String value;
-	
-	DocumentQueryOperator(String value){
+
+	ExpressionOperator(String value){
 		this.value = value;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return this.value;
 	}
+
+	public boolean isComplex() {
+		return this.equals(Equal) == false;
+	}
+
 }

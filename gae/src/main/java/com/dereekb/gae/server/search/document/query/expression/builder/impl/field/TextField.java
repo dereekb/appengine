@@ -5,8 +5,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.Abst
 
 public class TextField extends AbstractTextField {
 
-	private static final String TEXT_FIELD_FORMAT = "%s: %s%s";
-	private static final String STEM_SYMBOL = "~";
+	private static final String STEMMED_TEXT_FIELD_FORMAT = "%s: ~%s";
 
 	private boolean stemming;
 
@@ -34,7 +33,7 @@ public class TextField extends AbstractTextField {
 		if (this.specificText || this.stemming == false) {
 			queryString = super.getExpressionValue();
 		} else {
-			queryString = String.format(TEXT_FIELD_FORMAT, this.name, STEM_SYMBOL, this.value);
+			queryString = String.format(STEMMED_TEXT_FIELD_FORMAT, this.name, this.value);
 		}
 
 		return queryString;

@@ -1,20 +1,16 @@
-package com.dereekb.gae.server.search.document.query.deprecated.builder.impl;
+package com.dereekb.gae.server.search.document.query.impl;
 
-import com.dereekb.gae.server.search.document.query.deprecated.DocumentQueryStringSanitizer;
+import com.dereekb.gae.server.search.document.query.DocumentQueryExpressionSanitizer;
 import com.dereekb.gae.utilities.regex.RegexHelper;
 
 /**
- * Default sanitizer.
- * 
- * Completely removes all values after NOT or OR if allowNot/Or is set to false.
- * Removes functions/snippets and following whitespace
- * Removes expression objects only.
- * 
+ * {@link DocumentQueryExpressionSanitizer} implementation.
+ *
  * @author dereekb
- * 
+ *
  */
-public class DefaultDocumentQueryStringSanitizer
-        implements DocumentQueryStringSanitizer {
+public class DocumentQueryExpressionSanitizerImpl
+        implements DocumentQueryExpressionSanitizer {
 
 	// Sanitization
 	private boolean santizeString = true;
@@ -35,11 +31,11 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	@Override
-	public String sanitizeQuery(String query) {
+	public String sanitizeExpression(String query) {
 		String sanitized = query;
 
-		if (this.santizeString && allowedRegex != null) {
-			sanitized = sanitized.replaceAll(allowedRegex, "");
+		if (this.santizeString && this.allowedRegex != null) {
+			sanitized = sanitized.replaceAll(this.allowedRegex, "");
 		}
 
 		if (this.allowFunctions == false) {
@@ -77,7 +73,7 @@ public class DefaultDocumentQueryStringSanitizer
 			sanitized = sanitized.replaceAll(regex, "");
 		}
 
-		if (trim) {
+		if (this.trim) {
 			sanitized = sanitized.trim();
 		}
 
@@ -85,7 +81,7 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	public boolean isAllowAnd() {
-		return allowAnd;
+		return this.allowAnd;
 	}
 
 	public void setAllowAnd(boolean allowAnd) {
@@ -93,7 +89,7 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	public boolean isAllowOr() {
-		return allowOr;
+		return this.allowOr;
 	}
 
 	public void setAllowOr(boolean allowOr) {
@@ -101,7 +97,7 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	public boolean isAllowNot() {
-		return allowNot;
+		return this.allowNot;
 	}
 
 	public void setAllowNot(boolean allowNot) {
@@ -109,7 +105,7 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	public boolean isAllowFunctions() {
-		return allowFunctions;
+		return this.allowFunctions;
 	}
 
 	public void setAllowFunctions(boolean allowFunctions) {
@@ -124,7 +120,7 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	public boolean isAllowSnippets() {
-		return allowSnippets;
+		return this.allowSnippets;
 	}
 
 	public void setAllowSnippets(boolean allowSnippets) {
@@ -132,7 +128,7 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	public boolean isSantizeString() {
-		return santizeString;
+		return this.santizeString;
 	}
 
 	public void setSantizeString(boolean santizeString) {
@@ -140,7 +136,7 @@ public class DefaultDocumentQueryStringSanitizer
 	}
 
 	public String getAllowedRegex() {
-		return allowedRegex;
+		return this.allowedRegex;
 	}
 
 	public void setAllowedRegex(String allowedRegex) {
