@@ -60,6 +60,11 @@ public class GeoPlaceDerivativeDocumentBuilderStep
 			date = model.getDate();
 		}
 
+		// Is Region Field
+		String isRegionFieldFormat = String.format(this.format, "isRegion");
+		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField(isRegionFieldFormat, isRegion);
+		builder.addField(isRegionField);
+
 		// Creation Date
 		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
@@ -68,11 +73,6 @@ public class GeoPlaceDerivativeDocumentBuilderStep
 
 		// Point Field
 		ModelDocumentBuilderUtility.addPoint(this.format, point, builder);
-
-		// Is Region Field
-		String isRegionFieldFormat = String.format(this.format, "isRegion");
-		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField(isRegionFieldFormat, isRegion);
-		builder.addField(isRegionField);
 
 	}
 

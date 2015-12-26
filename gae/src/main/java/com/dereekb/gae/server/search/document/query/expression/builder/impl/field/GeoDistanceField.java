@@ -23,8 +23,8 @@ public class GeoDistanceField extends GeoField {
 
     public GeoDistanceField(String name, Point point, Integer radius, ExpressionOperator operator) {
 		super(name, point);
-	    this.radius = radius;
-	    this.operator = operator;
+		this.setRadius(radius);
+		this.setOperator(operator);
     }
 
     public Integer getRadius() {

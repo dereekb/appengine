@@ -1,10 +1,11 @@
-package com.dereekb.gae.model.extension.search.document.search.components;
+package com.dereekb.gae.model.extension.search.document.search.deprecated.components;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.server.search.document.query.deprecated.builder.DocumentQueryBuilder;
 import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryAtomField;
 import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryField;
 
+@Deprecated
 public final class DocumentSearchQueryFactory<Q extends DocumentSearchQuery>
         implements DocumentSearchQueryConverter<Q> {
 

@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.read.anonymous;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.model.extension.read.exception.UnavailableTypeException;
+import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -23,10 +23,10 @@ public interface AnonymousModelReader {
 	 * @param keys
 	 *            keys to read. Never {@code null}.
 	 * @return {@link ReadResponse} containing model results.
-	 * @throws UnavailableTypeException
+	 * @throws UnavailableTypesException
 	 *             If the requested type is unavailable.
 	 */
 	public ReadResponse<? extends UniqueModel> read(String type,
-	                                                Collection<ModelKey> keys) throws UnavailableTypeException;
+	                                                Collection<ModelKey> keys) throws UnavailableTypesException;
 
 }

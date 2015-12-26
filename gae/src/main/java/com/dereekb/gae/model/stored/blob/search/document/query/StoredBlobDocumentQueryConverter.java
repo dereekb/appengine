@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.stored.blob.search.document.query;
 
-import com.dereekb.gae.model.extension.search.document.search.components.DocumentSearchQueryConverter;
+import com.dereekb.gae.model.extension.search.document.search.deprecated.components.DocumentSearchQueryConverter;
 import com.dereekb.gae.server.search.document.query.deprecated.builder.DocumentQueryBuilder;
 import com.dereekb.gae.server.search.document.query.deprecated.builder.fields.DocumentQueryAtomField;
 

@@ -1,7 +1,6 @@
 package com.dereekb.gae.web.api.model.extension.search.impl;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 
@@ -17,19 +16,15 @@ public class ApiSearchReadRequestImpl
 
 	private String query;
 	private Integer limit;
-	private Set<String> searchTypes;
+	private boolean models;
 	private Map<String, String> parameters;
 
 	public ApiSearchReadRequestImpl() {}
 
-	public ApiSearchReadRequestImpl(String query,
-	        Integer limit,
-	        Set<String> searchTypes,
- Map<String, String> parameters)
+	public ApiSearchReadRequestImpl(String query, Integer limit, Map<String, String> parameters)
 	        throws IllegalArgumentException {
 		this.setQuery(query);
 		this.setLimit(limit);
-		this.setSearchTypes(searchTypes);
 		this.setParameters(parameters);
 	}
 
@@ -60,16 +55,12 @@ public class ApiSearchReadRequestImpl
 	}
 
 	@Override
-	public Set<String> getSearchTypes() {
-		return this.searchTypes;
+	public boolean getModels() {
+		return this.models;
 	}
 
-	public void setSearchTypes(Set<String> searchTypes) throws IllegalArgumentException {
-		if (searchTypes != null && searchTypes.isEmpty()) {
-			throw new IllegalArgumentException("Search types cannot be empty. Set null if none specified.");
-		}
-
-		this.searchTypes = searchTypes;
+	public void setModels(boolean models) {
+		this.models = models;
 	}
 
 	@Override
@@ -83,8 +74,8 @@ public class ApiSearchReadRequestImpl
 
 	@Override
 	public String toString() {
-		return "ApiSearchReadRequestImpl [query=" + this.query + ", limit=" + this.limit + ", searchTypes="
-		        + this.searchTypes + ", parameters=" + this.parameters + "]";
+		return "ApiSearchReadRequestImpl [query=" + this.query + ", limit=" + this.limit + ", models=" + this.models
+		        + ", parameters=" + this.parameters + "]";
 	}
 
 }

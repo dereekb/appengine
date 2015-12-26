@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.stored.blob.search.document.query;
 
-import com.dereekb.gae.model.extension.search.document.search.components.AbstractDocumentSearchQuery;
+import com.dereekb.gae.model.extension.search.document.search.deprecated.components.AbstractDocumentSearchQuery;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 
 /**

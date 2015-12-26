@@ -45,7 +45,14 @@ public class ApiResponseImpl
 	 */
 	private List<ApiResponseError> errors = new ArrayList<ApiResponseError>();
 
-	public ApiResponseImpl() {}
+	public ApiResponseImpl() {
+		this(true);
+	}
+
+	public ApiResponseImpl(ApiResponseData data) {
+		this(true);
+		this.setData(data);
+	}
 
 	public ApiResponseImpl(boolean success) {
 		this.success = success;

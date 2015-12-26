@@ -71,10 +71,9 @@ public class SearchApiExtensionController {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 			request.setQuery(query);
 			request.setLimit(limit);
-			request.setSearchTypes(types);
 			request.setParameters(parameters);
 
-			response = this.delegate.searchMultiple(request);
+			response = this.delegate.search(types, request);
 		} catch (LinkSystemChangesException e) {
 			throw e;
 		} catch (AtomicOperationException e) {
@@ -104,18 +103,17 @@ public class SearchApiExtensionController {
 	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/{type}/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchSingle(@PathVariable("type") String type,
-	                                      @RequestParam @NotEmpty String query,
 	                                      @RequestParam(required = false) Integer limit,
 	                                      @RequestParam Map<String, String> parameters) {
 		ApiResponse response = null;
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
-			request.setQuery(query);
+
 			request.setLimit(limit);
 			request.setParameters(parameters);
 
-			response = this.delegate.searchSingle(type, request);
+			response = this.delegate.search(type, request);
 		} catch (LinkSystemChangesException e) {
 			throw e;
 		} catch (AtomicOperationException e) {
@@ -152,7 +150,7 @@ public class SearchApiExtensionController {
 			request.setLimit(limit);
 			request.setParameters(parameters);
 
-			response = this.delegate.querySingle(type, request);
+			response = this.delegate.query(type, request);
 		} catch (LinkSystemChangesException e) {
 			throw e;
 		} catch (AtomicOperationException e) {

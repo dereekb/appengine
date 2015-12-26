@@ -77,6 +77,10 @@ public class DateField extends AbstractField {
 	}
 
 	public void setOperator(ExpressionOperator operator) {
+		if (operator == null) {
+			operator = ExpressionOperator.Equal;
+		}
+
 		this.operator = operator;
 	}
 

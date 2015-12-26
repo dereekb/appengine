@@ -11,6 +11,7 @@ import com.google.appengine.api.search.QueryOptions;
  *
  * @author dereekb
  */
+@Deprecated
 public final class DocumentQueryBuilder {
 
 	private static final int DEFAULT_LIMIT = 20;

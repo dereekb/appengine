@@ -22,6 +22,30 @@ public enum ExpressionOperator {
 		this.value = value;
 	}
 
+	public static ExpressionOperator fromString(String op) {
+		ExpressionOperator operation = null;
+
+		switch (op) {
+			case "=":
+				operation = Equal;
+				break;
+			case ">":
+				operation = GreaterThan;
+				break;
+			case ">=":
+				operation = GreaterOrEqualTo;
+				break;
+			case "<":
+				operation = LessThan;
+				break;
+			case "<=":
+				operation = LessOrEqualTo;
+				break;
+		}
+
+		return operation;
+	}
+
 	@Override
     public String toString() {
 		return this.value;

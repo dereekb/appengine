@@ -1,7 +1,6 @@
 package com.dereekb.gae.web.api.model.extension.search;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Represents a request made to the {@link SearchApiExtensionController} to search
@@ -15,8 +14,8 @@ public interface ApiSearchReadRequest {
 	/**
 	 * Returns the query parameter.
 	 *
-	 * @return the query parameter. Never {@code null} or empty unless
-	 *         {@link getParameters} is to be used primarily.
+	 * @return the query parameter. Never {@code null} or an empty string,
+	 *         unless {@link getParameters} is to be used instead.
 	 */
 	public String getQuery();
 
@@ -28,13 +27,11 @@ public interface ApiSearchReadRequest {
 	public Integer getLimit();
 
 	/**
-	 * Returns the model types to search.
-	 * <p>
-	 * Used for searching multiple values at once.
+	 * Whether or not to return models instead of identifiers.
 	 *
-	 * @return types to search. Never {@code null} or empty.
+	 * @return {@code true} if models should be loaded.
 	 */
-	public Set<String> getSearchTypes();
+	public boolean getModels();
 
 	/**
 	 * Returns any custom parameters.

@@ -1,6 +1,8 @@
 package com.dereekb.gae.web.api.model.extension.search;
 
-import com.dereekb.gae.model.extension.read.exception.UnavailableTypeException;
+import java.util.Set;
+
+import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 /**
@@ -19,22 +21,24 @@ public interface ApiSearchDelegate {
 	 * @param request
 	 *            {@link ApiSearchReadRequest} containing search parameters.
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
-	 * @throws UnavailableTypeException
+	 * @throws UnavailableTypesException
 	 *             if the type is unknown/unavailable.
 	 */
-	public ApiResponse searchSingle(String type,
-	                                ApiSearchReadRequest request) throws UnavailableTypeException;
+	public ApiResponse search(String type,
+	                          ApiSearchReadRequest request) throws UnavailableTypesException;
 
 	/**
 	 * Searches multiple types.
 	 *
+	 * @param types
 	 * @param request
 	 *            {@link ApiSearchReadRequest} containing search parameters.
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
-	 * @throws UnavailableTypeException
+	 * @throws UnavailableTypesException
 	 *             if a specified type is unknown/unavailable.
 	 */
-	public ApiResponse searchMultiple(ApiSearchReadRequest request) throws UnavailableTypeException;
+	public ApiResponse search(Set<String> types,
+	                          ApiSearchReadRequest request) throws UnavailableTypesException;
 
 	/**
 	 * Queries a single type.
@@ -44,11 +48,11 @@ public interface ApiSearchDelegate {
 	 * @param request
 	 *            {@link ApiSearchReadRequest} containing query parameters.
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
-	 * @throws UnavailableTypeException
+	 * @throws UnavailableTypesException
 	 *             if the type is unknown/unavailable.
 	 */
-	public ApiResponse querySingle(String type,
-	                                ApiSearchReadRequest request) throws UnavailableTypeException;
+	public ApiResponse query(String type,
+	                         ApiSearchReadRequest request) throws UnavailableTypesException;
 
 	/**
 	 * Updates the search index.
@@ -56,9 +60,9 @@ public interface ApiSearchDelegate {
 	 * @param request
 	 *            {@link ApiSearchUpdateRequest} instance. Never {@code null}.
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
-	 * @throws UnavailableTypeException
+	 * @throws UnavailableTypesException
 	 *             if a specified type is unknown/unavailable.
 	 */
-	public ApiResponse updateSearchIndex(ApiSearchUpdateRequest request) throws UnavailableTypeException;
+	public ApiResponse updateSearchIndex(ApiSearchUpdateRequest request) throws UnavailableTypesException;
 
 }

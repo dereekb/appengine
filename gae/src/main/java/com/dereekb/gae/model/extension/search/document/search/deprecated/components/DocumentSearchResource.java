@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.document.search.components;
+package com.dereekb.gae.model.extension.search.document.search.deprecated.components;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import com.google.appengine.api.search.ScoredDocument;
  *
  * @author dereekb
  */
+@Deprecated
 public interface DocumentSearchResource {
 
 	public List<ScoredDocument> search(DocumentQueryBuilder builder);

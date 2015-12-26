@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.document.search.components;
+package com.dereekb.gae.model.extension.search.document.search.deprecated.components;
 
 import com.dereekb.gae.server.search.document.query.deprecated.builder.DocumentQueryBuilder;
 
@@ -9,6 +9,7 @@ import com.dereekb.gae.server.search.document.query.deprecated.builder.DocumentQ
  * @param <Q>
  *            Query type.
  */
+@Deprecated
 public interface DocumentSearchQueryConverter<Q> {
 
 	/**

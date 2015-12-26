@@ -1,10 +1,11 @@
-package com.dereekb.gae.model.extension.search.document.search.components;
+package com.dereekb.gae.model.extension.search.document.search.deprecated.components;
 
 /**
  * Abstract implementation of {@link DocumentSearchQuery}.
  *
  * @author dereekb
  */
+@Deprecated
 public abstract class AbstractDocumentSearchQuery
         implements DocumentSearchQuery {
 

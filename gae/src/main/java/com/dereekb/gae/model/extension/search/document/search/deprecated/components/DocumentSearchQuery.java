@@ -1,4 +1,6 @@
-package com.dereekb.gae.model.extension.search.document.search.components;
+package com.dereekb.gae.model.extension.search.document.search.deprecated.components;
+
+import com.dereekb.gae.model.extension.search.document.search.SearchPair;
 
 
 /**
@@ -12,6 +14,7 @@ package com.dereekb.gae.model.extension.search.document.search.components;
  *
  * @param <T>
  */
+@Deprecated
 public interface DocumentSearchQuery {
 
 	/**

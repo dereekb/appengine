@@ -80,7 +80,6 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 	public ModelDocumentSearchResponse<T> search(R request) {
 		DocumentSearchRequest searchRequest = this.converter.buildSearchRequest(request);
 		SearchDocumentQueryResponse queryResponse = this.searchService.search(searchRequest);
-
 		return new ModelDocumentSearchResponseImpl(queryResponse);
 	}
 
