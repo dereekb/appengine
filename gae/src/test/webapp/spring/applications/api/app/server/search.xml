@@ -9,13 +9,31 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Search -->
+	<!-- Base Search System -->
 	<alias name="gcsSearchSystem" alias="searchSystem" />
 
 	<bean id="gcsSearchSystem" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.search.service.impl.GcsSearchServiceImpl">
 		<!-- Disable Async Deletion to prevent issues. -->
 		<property name="asyncDelete" value="false" />
+	</bean>
+	
+	<!-- Document Search Service -->
+	<bean id="documentSearchService" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.model.extension.search.document.search.service.impl.DocumentSearchServiceImpl">
+		<constructor-arg index="0" ref="searchSystem"/>
+	</bean>
+	
+	<bean id="scoredDocumentLongKeyReader" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.model.extension.search.document.search.utility.impl.ScoredDocumentKeyReaderImpl">
+		<constructor-arg index="0" ref="stringLongModelKeyConverter"/>
+	</bean>
+
+	<bean id="scoredDocumentStringKeyReader" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.model.extension.search.document.search.utility.impl.ScoredDocumentKeyReaderImpl">
+		<constructor-arg index="0" ref="stringModelKeyConverter"/>
 	</bean>
 
 	<!-- Search Models -->

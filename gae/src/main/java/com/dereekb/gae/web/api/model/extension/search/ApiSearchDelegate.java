@@ -6,7 +6,7 @@ import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 /**
- * {@link SearchApiExtensionController} delegate.
+ * {@link SearchExtensionApiController} delegate.
  *
  * @author dereekb
  *

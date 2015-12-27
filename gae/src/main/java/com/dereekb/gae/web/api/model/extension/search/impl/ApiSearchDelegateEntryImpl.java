@@ -26,19 +26,19 @@ public class ApiSearchDelegateEntryImpl<T extends SearchableUniqueModel, R>
 
 	private String type;
 
-	private SingleDirectionalConverter<ApiSearchReadRequest, R> requestConverter;
-	private ModelDocumentSearchService<T, R> service;
-
+	private SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder;
 	private DirectionalConverter<T, ? extends Object> resultConverter;
 
+	private ModelDocumentSearchService<T, R> service;
+
 	public ApiSearchDelegateEntryImpl(String type,
-	        SingleDirectionalConverter<ApiSearchReadRequest, R> requestConverter,
-	        ModelDocumentSearchService<T, R> service,
-	        DirectionalConverter<T, ? extends Object> resultConverter) {
-		this.type = type;
-		this.requestConverter = requestConverter;
-		this.service = service;
+	        SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder,
+	        DirectionalConverter<T, ? extends Object> resultConverter,
+	        ModelDocumentSearchService<T, R> service) {
+		this.setType(type);
+		this.requestBuilder = requestBuilder;
 		this.resultConverter = resultConverter;
+		this.service = service;
 	}
 
 	public String getType() {
@@ -49,12 +49,12 @@ public class ApiSearchDelegateEntryImpl<T extends SearchableUniqueModel, R>
 		this.type = type;
 	}
 
-	public SingleDirectionalConverter<ApiSearchReadRequest, R> getRequestConverter() {
-		return this.requestConverter;
+    public SingleDirectionalConverter<ApiSearchReadRequest, R> getRequestBuilder() {
+		return this.requestBuilder;
 	}
 
-	public void setRequestConverter(SingleDirectionalConverter<ApiSearchReadRequest, R> requestConverter) {
-		this.requestConverter = requestConverter;
+	public void setRequestBuilder(SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder) {
+		this.requestBuilder = requestBuilder;
 	}
 
 	public ModelDocumentSearchService<T, R> getService() {
@@ -76,7 +76,7 @@ public class ApiSearchDelegateEntryImpl<T extends SearchableUniqueModel, R>
 	// MARK: ApiSearchDelegateEntry
 	@Override
 	public ApiResponseData search(ApiSearchReadRequest request) {
-		R searchRequest = this.requestConverter.convertSingle(request);
+		R searchRequest = this.requestBuilder.convertSingle(request);
 		ModelDocumentSearchResponse<T> response = this.service.search(searchRequest);
 
 		boolean getModels = request.getModels();

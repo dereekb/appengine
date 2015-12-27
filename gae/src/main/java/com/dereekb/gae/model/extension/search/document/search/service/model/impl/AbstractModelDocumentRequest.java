@@ -1,18 +1,18 @@
 package com.dereekb.gae.model.extension.search.document.search.service.model.impl;
 
 import com.dereekb.gae.model.extension.search.document.search.service.impl.DocumentSearchRequestOptionsImpl;
-import com.dereekb.gae.server.search.document.query.expression.Expression;
+import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 
 
 public abstract class AbstractModelDocumentRequest extends DocumentSearchRequestOptionsImpl {
 
-	private Expression override;
+	private ExpressionBuilder override;
 
-	public Expression getOverride() {
+	public ExpressionBuilder getOverride() {
 		return this.override;
 	}
 
-	public void setOverride(Expression override) {
+	public void setOverride(ExpressionBuilder override) {
 		this.override = override;
 	}
 

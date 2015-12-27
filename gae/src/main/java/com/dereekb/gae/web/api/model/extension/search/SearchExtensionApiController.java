@@ -28,11 +28,11 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  *
  */
 @RestController
-public class SearchApiExtensionController {
+public class SearchExtensionApiController {
 
 	private ApiSearchDelegate delegate;
 
-	public SearchApiExtensionController(ApiSearchDelegate delegate) {
+	public SearchExtensionApiController(ApiSearchDelegate delegate) {
 		this.delegate = delegate;
 	}
 
@@ -189,7 +189,7 @@ public class SearchApiExtensionController {
 
 	@Override
 	public String toString() {
-		return "SearchApiExtensionController [delegate=" + this.delegate + "]";
+		return "SearchExtensionApiController [delegate=" + this.delegate + "]";
 	}
 
 }

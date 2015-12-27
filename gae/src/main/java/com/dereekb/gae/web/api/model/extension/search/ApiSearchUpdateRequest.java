@@ -5,7 +5,7 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * Represents a request made to the {@link SearchApiExtensionController} to update
+ * Represents a request made to the {@link SearchExtensionApiController} to update
  * the index and search models.
  *
  * @author dereekb

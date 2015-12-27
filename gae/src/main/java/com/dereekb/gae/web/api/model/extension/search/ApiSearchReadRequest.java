@@ -3,7 +3,7 @@ package com.dereekb.gae.web.api.model.extension.search;
 import java.util.Map;
 
 /**
- * Represents a request made to the {@link SearchApiExtensionController} to search
+ * Represents a request made to the {@link SearchExtensionApiController} to search
  * for models.
  *
  * @author dereekb

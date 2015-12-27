@@ -57,4 +57,19 @@
 		<constructor-arg index="2" ref="geoPlaceDataConverter" />
 	</bean>
 
+	<!-- Search Component -->
+	<bean id="geoPlaceSearchDelegateEntry" scope="singleton"
+		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
+		<constructor-arg index="0" ref="geoPlaceType" />
+		<constructor-arg index="1" ref="geoPlaceSearchService" />
+		<constructor-arg index="2">
+			<bean id="geoPlaceSearchRequestBuilder" scope="singleton"
+				class="com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequestBuilder">
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="3" ref="geoPlaceSearchResultConverter" />
+	</bean>
+
+	<alias name="geoPlaceDataConverter" alias="geoPlaceSearchResultConverter"/>
+
 </beans>

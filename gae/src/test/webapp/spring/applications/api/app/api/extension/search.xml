@@ -9,4 +9,23 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Search Controller -->
+	<bean id="searchExtensionApiController" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.web.api.model.extension.search.SearchExtensionApiController">
+		<constructor-arg index="0"
+			ref="searchExtensionApiControllerDelegate" />
+	</bean>
+
+	<bean id="searchExtensionApiControllerDelegate" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateImpl">
+		<constructor-arg index="0">
+			<map key-type="java.lang.String">
+				<entry key-ref="geoPlaceType" value-ref="geoPlaceSearchDelegateEntry" />
+				<!-- TODO: Add remaining types. -->
+			</map>
+		</constructor-arg>
+	</bean>
+
+
 </beans>

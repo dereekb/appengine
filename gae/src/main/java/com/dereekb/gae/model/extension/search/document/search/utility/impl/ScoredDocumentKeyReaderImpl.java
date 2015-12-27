@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.utility.impl;
 
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer;
 import com.dereekb.gae.model.extension.search.document.search.utility.ScoredDocumentKeyReader;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
@@ -15,8 +16,14 @@ import com.google.appengine.api.search.ScoredDocument;
 public class ScoredDocumentKeyReaderImpl
         implements ScoredDocumentKeyReader {
 
+	private static final String DEFAULT_ID_FIELD = ModelStagedDocumentBuilderInitializer.MODEL_KEY_FIELD_KEY;
+
 	private String idField;
 	private StringModelKeyConverter converter;
+
+	public ScoredDocumentKeyReaderImpl(StringModelKeyConverter converter) {
+		this(DEFAULT_ID_FIELD, converter);
+	}
 
 	public ScoredDocumentKeyReaderImpl(String idField, StringModelKeyConverter converter) {
 		this.idField = idField;

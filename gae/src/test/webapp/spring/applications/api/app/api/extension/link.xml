@@ -10,14 +10,14 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Link -->
-	<bean id="linkExtensionApiController"
+	<bean id="linkExtensionApiController" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController">
 		<constructor-arg index="0" ref="linkService" />
 		<constructor-arg index="1"
 			ref="linkExtensionApiControllerDelegate" />
 	</bean>
 
-	<bean id="linkExtensionApiControllerDelegate" lazy-init="true"
+	<bean id="linkExtensionApiControllerDelegate" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl">
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 	</bean>

@@ -12,6 +12,12 @@ import com.google.appengine.api.search.Field;
 
 public class ModelDocumentBuilderUtility {
 
+	public static final String ID_FIELD = "id";
+	public static final String DATE_FIELD = "date";
+	public static final String POINT_FIELD = "point";
+	public static final String DESCRIPTOR_TYPE_FIELD = "descriptorType";
+	public static final String DESCRIPTOR_ID_FIELD = "descriptorId";
+
 	// MARK: Id
 	public static void addId(String id,
 	                         Document.Builder builder) {
@@ -21,7 +27,7 @@ public class ModelDocumentBuilderUtility {
 	public static void addId(String format,
 	                         String id,
 	                         Document.Builder builder) {
-		String idName = String.format(format, "id");
+		String idName = String.format(format, ID_FIELD);
 		Field.Builder idField = SearchDocumentBuilderUtility.atomField(idName, id);
 		builder.addField(idField);
 	}
@@ -35,7 +41,7 @@ public class ModelDocumentBuilderUtility {
 	public static void addDate(String format,
 	                           Date date,
 	                           Document.Builder builder) {
-		String dateName = String.format(format, "date");
+		String dateName = String.format(format, DATE_FIELD);
 		Field.Builder dateField = SearchDocumentBuilderUtility.dateField(dateName, date);
 		builder.addField(dateField);
 	}
@@ -61,12 +67,12 @@ public class ModelDocumentBuilderUtility {
 		}
 
 		// Descriptor Info
-		String typeName = String.format(format, "descriptorType");
+		String typeName = String.format(format, DESCRIPTOR_TYPE_FIELD);
 		Field.Builder descriptorField = SearchDocumentBuilderUtility.atomField(typeName, descriptorType);
 		builder.addField(descriptorField);
 
 		// Info Type Id
-		String idName = String.format(format, "descriptorId");
+		String idName = String.format(format, DESCRIPTOR_ID_FIELD);
 		Field.Builder descriptorIdField = SearchDocumentBuilderUtility.atomField(idName, descriptorId);
 		builder.addField(descriptorIdField);
 	}
@@ -80,7 +86,7 @@ public class ModelDocumentBuilderUtility {
 	public static void addPoint(String format,
 	                            Point point,
 	                            Builder builder) {
-		String pointName = String.format(format, "point");
+		String pointName = String.format(format, POINT_FIELD);
 		Field.Builder pointField = SearchDocumentBuilderUtility.geoPointField(pointName, point);
 		builder.addField(pointField);
 	}
