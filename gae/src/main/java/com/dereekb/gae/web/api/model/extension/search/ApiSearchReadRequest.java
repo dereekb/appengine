@@ -27,6 +27,12 @@ public interface ApiSearchReadRequest {
 	public Integer getLimit();
 
 	/**
+	 *
+	 * @return {@link String} of the cursor if available.
+	 */
+	public String getCursor();
+
+	/**
 	 * Whether or not to return models instead of identifiers.
 	 *
 	 * @return {@code true} if models should be loaded.

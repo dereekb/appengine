@@ -14,6 +14,7 @@ import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 public class ApiSearchReadRequestImpl
         implements ApiSearchReadRequest {
 
+	private String cursor;
 	private String query;
 	private Integer limit;
 	private boolean models;
@@ -21,11 +22,39 @@ public class ApiSearchReadRequestImpl
 
 	public ApiSearchReadRequestImpl() {}
 
-	public ApiSearchReadRequestImpl(String query, Integer limit, Map<String, String> parameters)
+	public ApiSearchReadRequestImpl(Map<String, String> parameters, Integer limit) {
+		this.setParameters(parameters);
+		this.setLimit(limit);
+	}
+
+	public ApiSearchReadRequestImpl(String query, Integer limit) {
+		this(query, limit, null, null);
+	}
+
+	public ApiSearchReadRequestImpl(String query, Integer limit, Map<String, String> parameters) {
+		this(query, limit, parameters, null);
+	}
+
+	public ApiSearchReadRequestImpl(String query, Integer limit, Map<String, String> parameters, String cursor)
 	        throws IllegalArgumentException {
+
+		if (query == null || query.isEmpty()) {
+			throw new IllegalArgumentException("Query cannot be null.");
+		}
+
 		this.setQuery(query);
 		this.setLimit(limit);
 		this.setParameters(parameters);
+		this.setCursor(cursor);
+	}
+
+	@Override
+	public String getCursor() {
+		return this.cursor;
+	}
+
+	public void setCursor(String cursor) {
+		this.cursor = cursor;
 	}
 
 	@Override
@@ -33,11 +62,7 @@ public class ApiSearchReadRequestImpl
 		return this.query;
 	}
 
-	public void setQuery(String query) throws IllegalArgumentException {
-		if (query == null || query.isEmpty()) {
-			throw new IllegalArgumentException("Query cannot be null.");
-		}
-
+	public void setQuery(String query) {
 		this.query = query;
 	}
 

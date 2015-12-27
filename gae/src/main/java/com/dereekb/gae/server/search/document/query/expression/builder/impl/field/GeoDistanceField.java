@@ -40,6 +40,10 @@ public class GeoDistanceField extends GeoField {
     }
 
     public void setOperator(ExpressionOperator operator) {
+		if (operator == null) {
+			operator = ExpressionOperator.LessThan;
+		}
+
     	this.operator = operator;
     }
 

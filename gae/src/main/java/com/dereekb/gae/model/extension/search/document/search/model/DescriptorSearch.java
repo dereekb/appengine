@@ -10,8 +10,56 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.fiel
  */
 public class DescriptorSearch {
 
+	private static final String SPLITTER = ",";
+
 	private String type;
 	private String id;
+
+	public DescriptorSearch(String type) {
+		this.setType(type);
+	}
+
+	public DescriptorSearch(String type, String id) {
+		this.setType(type);
+		this.setId(id);
+	}
+
+	/**
+	 * Creates a {@link DescriptorSearch} from the input string.
+	 * <p>
+	 * Format: TYPE(String),ID(String)
+	 *
+	 * @param descriptorString
+	 * @return {@link DescriptorString} or {@code null} if nothing is input.
+	 * @throws IllegalArgumentException
+	 */
+	public static DescriptorSearch fromString(String descriptorString) throws IllegalArgumentException {
+		DescriptorSearch descriptor = null;
+
+		if (descriptorString != null && descriptorString.isEmpty() == false) {
+			try {
+				String[] split = descriptorString.split(SPLITTER);
+
+				String type = null;
+				String id = null;
+
+				switch (split.length) {
+					default:
+					case 2:
+						id = split[1];
+					case 1:
+						type = split[0];
+						break;
+				}
+
+				descriptor = new DescriptorSearch(type, id);
+			} catch (Exception e) {
+				throw new IllegalArgumentException("Could not create descriptor.", e);
+			}
+		}
+
+		return descriptor;
+	}
 
 	public String getType() {
 		return this.type;
