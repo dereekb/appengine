@@ -26,19 +26,19 @@ public class ApiSearchDelegateEntryImpl<T extends SearchableUniqueModel, R>
 
 	private String type;
 
+	private ModelDocumentSearchService<T, R> service;
+
 	private SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder;
 	private DirectionalConverter<T, ? extends Object> resultConverter;
 
-	private ModelDocumentSearchService<T, R> service;
-
 	public ApiSearchDelegateEntryImpl(String type,
+	        ModelDocumentSearchService<T, R> service,
 	        SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder,
-	        DirectionalConverter<T, ? extends Object> resultConverter,
-	        ModelDocumentSearchService<T, R> service) {
+	        DirectionalConverter<T, ? extends Object> resultConverter) {
 		this.setType(type);
+		this.service = service;
 		this.requestBuilder = requestBuilder;
 		this.resultConverter = resultConverter;
-		this.service = service;
 	}
 
 	public String getType() {
@@ -49,7 +49,7 @@ public class ApiSearchDelegateEntryImpl<T extends SearchableUniqueModel, R>
 		this.type = type;
 	}
 
-    public SingleDirectionalConverter<ApiSearchReadRequest, R> getRequestBuilder() {
+	public SingleDirectionalConverter<ApiSearchReadRequest, R> getRequestBuilder() {
 		return this.requestBuilder;
 	}
 

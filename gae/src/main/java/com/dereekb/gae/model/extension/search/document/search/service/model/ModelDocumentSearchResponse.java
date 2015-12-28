@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.search.document.search.service.model;
 import java.util.Collection;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.search.service.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
 
 /**
  * Contains {@link ModelKey} search results and model returns.

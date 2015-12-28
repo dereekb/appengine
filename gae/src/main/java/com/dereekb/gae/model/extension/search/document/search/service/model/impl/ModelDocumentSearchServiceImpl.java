@@ -19,7 +19,7 @@ import com.dereekb.gae.model.extension.search.document.search.utility.ScoredDocu
 import com.dereekb.gae.model.extension.search.document.search.utility.SearchDocumentUtility;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.search.service.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
 import com.google.appengine.api.search.ScoredDocument;
 
 /**

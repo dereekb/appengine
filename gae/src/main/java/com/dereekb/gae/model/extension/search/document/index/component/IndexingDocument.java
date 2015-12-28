@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.index.component;
 
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
+import com.dereekb.gae.server.search.system.request.DocumentPutRequestModel;
 
 /**
  *

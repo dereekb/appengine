@@ -10,11 +10,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.server.search.service.SearchDocumentService;
-import com.dereekb.gae.server.search.service.request.DocumentPutRequest;
-import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
-import com.dereekb.gae.server.search.service.request.impl.DocumentModelIdentifierRequestImpl;
-import com.dereekb.gae.server.search.service.response.SearchDocumentReadResponse;
+import com.dereekb.gae.server.search.system.SearchDocumentSystem;
+import com.dereekb.gae.server.search.system.request.DocumentPutRequest;
+import com.dereekb.gae.server.search.system.request.DocumentPutRequestModel;
+import com.dereekb.gae.server.search.system.request.impl.DocumentModelIdentifierRequestImpl;
+import com.dereekb.gae.server.search.system.response.SearchDocumentReadResponse;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
@@ -29,7 +29,7 @@ public class SearchDocumentServiceTest extends ApiApplicationTestContext {
 
 	@Autowired
 	@Qualifier("searchSystem")
-	private SearchDocumentService service;
+	private SearchDocumentSystem service;
 
 	@Test
 	public void testReadService() {

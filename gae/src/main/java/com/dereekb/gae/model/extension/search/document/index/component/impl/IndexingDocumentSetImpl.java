@@ -6,7 +6,7 @@ import java.util.Collection;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSet;
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.server.search.service.request.DocumentPutRequestModel;
+import com.dereekb.gae.server.search.system.request.DocumentPutRequestModel;
 
 /**
  * {@link IndexingDocumentSet} implementation.

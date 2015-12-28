@@ -75,7 +75,9 @@
 		<constructor-arg index="0" ref="geoPlaceReadService"/>
 		<constructor-arg index="1" ref="documentSearchService"/>
 		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequestConverter"/>
+			<bean class="com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequestConverter">
+				<constructor-arg index="0" ref="geoPlaceSearchIndex"/>
+			</bean>
 		</constructor-arg>
 		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
 	</bean>

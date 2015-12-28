@@ -11,9 +11,9 @@ import com.dereekb.gae.model.extension.search.document.index.component.IndexingD
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSetBuilder;
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.server.search.service.SearchDocumentService;
-import com.dereekb.gae.server.search.service.exception.DocumentPutException;
-import com.dereekb.gae.server.search.service.request.impl.DocumentModelIdentifierRequestImpl;
+import com.dereekb.gae.server.search.system.SearchDocumentSystem;
+import com.dereekb.gae.server.search.system.exception.DocumentPutException;
+import com.dereekb.gae.server.search.system.request.impl.DocumentModelIdentifierRequestImpl;
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
@@ -27,22 +27,22 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 public class DocumentIndexServiceImpl<T extends UniqueSearchModel>
         implements DocumentIndexService<T>, IterableTask<IndexPair<T>> {
 
-	private SearchDocumentService indexService;
+	private SearchDocumentSystem indexService;
 	private IndexingDocumentSetBuilder<T> builder;
 
 	public DocumentIndexServiceImpl() {}
 
-	public DocumentIndexServiceImpl(SearchDocumentService indexService,
+	public DocumentIndexServiceImpl(SearchDocumentSystem indexService,
 	                              IndexingDocumentSetBuilder<T> builder) {
 		this.indexService = indexService;
 		this.builder = builder;
 	}
 
-	public SearchDocumentService getIndexService() {
+	public SearchDocumentSystem getIndexService() {
 		return this.indexService;
 	}
 
-	public void setIndexService(SearchDocumentService indexService) {
+	public void setIndexService(SearchDocumentSystem indexService) {
 		this.indexService = indexService;
 	}
 

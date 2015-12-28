@@ -5,9 +5,9 @@ import java.util.List;
 import com.dereekb.gae.model.extension.search.document.index.component.DocumentIndexer;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.server.search.service.SearchDocumentIndexService;
-import com.dereekb.gae.server.search.service.SearchDocumentService;
-import com.dereekb.gae.server.search.service.request.impl.DocumentIdentifierRequestImpl;
+import com.dereekb.gae.server.search.system.SearchDocumentIndexSystem;
+import com.dereekb.gae.server.search.system.SearchDocumentSystem;
+import com.dereekb.gae.server.search.system.request.impl.DocumentIdentifierRequestImpl;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 
 /**
@@ -22,9 +22,9 @@ public class DocumentIndexerImpl<T extends UniqueSearchModel>
         implements DocumentIndexer<T> {
 
 	private String indexName;
-	private SearchDocumentService indexService;
+	private SearchDocumentSystem indexService;
 
-	public DocumentIndexerImpl(String indexName, SearchDocumentService indexService) {
+	public DocumentIndexerImpl(String indexName, SearchDocumentSystem indexService) {
 		this.indexName = indexName;
 		this.indexService = indexService;
 	}
@@ -37,11 +37,11 @@ public class DocumentIndexerImpl<T extends UniqueSearchModel>
 		this.indexName = indexName;
 	}
 
-	public SearchDocumentIndexService getIndexService() {
+	public SearchDocumentIndexSystem getIndexService() {
 		return this.indexService;
 	}
 
-	public void setIndexService(SearchDocumentService indexService) {
+	public void setIndexService(SearchDocumentSystem indexService) {
 		this.indexService = indexService;
 	}
 

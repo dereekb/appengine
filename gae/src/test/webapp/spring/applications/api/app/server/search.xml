@@ -13,11 +13,11 @@
 	<alias name="gcsSearchSystem" alias="searchSystem" />
 
 	<bean id="gcsSearchSystem" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.server.search.service.impl.GcsSearchServiceImpl">
+		class="com.dereekb.gae.server.search.system.impl.GcsSearchSystemImpl">
 		<!-- Disable Async Deletion to prevent issues. -->
 		<property name="asyncDelete" value="false" />
 	</bean>
-	
+
 	<!-- Document Search Service -->
 	<bean id="documentSearchService" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.model.extension.search.document.search.service.impl.DocumentSearchServiceImpl">

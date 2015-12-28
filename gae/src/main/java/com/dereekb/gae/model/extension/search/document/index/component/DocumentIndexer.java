@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.index.component;
 
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.server.search.service.exception.DocumentPutException;
+import com.dereekb.gae.server.search.system.exception.DocumentPutException;
 
 /**
  * Used for updating the search index with {@link IndexingDocument} values.

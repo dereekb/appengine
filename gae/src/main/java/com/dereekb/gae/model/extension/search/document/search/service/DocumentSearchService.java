@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.service;
 
-import com.dereekb.gae.server.search.service.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
 import com.google.appengine.api.search.ScoredDocument;
 
 /**
