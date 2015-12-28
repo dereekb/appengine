@@ -58,9 +58,13 @@
 	</bean>
 
 	<!-- Search Component -->
+	<bean id="geoPlaceSearchType" factory-bean="geoPlaceType"
+		factory-method="toLowerCase" lazy-init="true" scope="singleton">
+	</bean>
+
 	<bean id="geoPlaceSearchDelegateEntry" scope="singleton"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
-		<constructor-arg index="0" ref="geoPlaceType" />
+		<constructor-arg index="0" ref="geoPlaceSearchType" />
 		<constructor-arg index="1" ref="geoPlaceSearchService" />
 		<constructor-arg index="2">
 			<bean id="geoPlaceSearchRequestBuilder" scope="singleton"

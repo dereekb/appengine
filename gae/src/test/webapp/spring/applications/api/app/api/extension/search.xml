@@ -21,7 +21,7 @@
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateImpl">
 		<constructor-arg index="0">
 			<map key-type="java.lang.String">
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceSearchDelegateEntry" />
+				<entry key-ref="geoPlaceSearchType" value-ref="geoPlaceSearchDelegateEntry" />
 				<!-- TODO: Add remaining types. -->
 			</map>
 		</constructor-arg>

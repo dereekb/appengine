@@ -63,15 +63,18 @@ public class SearchExtensionApiController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchMultiple(@RequestParam @NotEmpty String query,
 	                                        @RequestParam @NotEmpty Set<String> types,
+	                                        @RequestParam Map<String, String> parameters,
 	                                        @RequestParam(required = false) Integer limit,
-	                                        @RequestParam Map<String, String> parameters) {
+	                                        @RequestParam(required = false, defaultValue = "false") Boolean models) {
 		ApiResponse response = null;
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 			request.setQuery(query);
-			request.setLimit(limit);
 			request.setParameters(parameters);
+
+			request.setLimit(limit);
+			request.setModels(models);
 
 			response = this.delegate.search(types, request);
 		} catch (LinkSystemChangesException e) {
@@ -103,14 +106,16 @@ public class SearchExtensionApiController {
 	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/{type}/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchSingle(@PathVariable("type") String type,
+	                                      @RequestParam Map<String, String> parameters,
 	                                      @RequestParam(required = false) Integer limit,
-	                                      @RequestParam Map<String, String> parameters) {
+	                                      @RequestParam(required = false, defaultValue = "false") Boolean models) {
 		ApiResponse response = null;
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 
 			request.setLimit(limit);
+			request.setModels(models);
 			request.setParameters(parameters);
 
 			response = this.delegate.search(type, request);

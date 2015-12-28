@@ -19,9 +19,18 @@
 	</bean>
 
 	<!-- Document Search Service -->
-	<bean id="documentSearchService" lazy-init="true" scope="singleton"
+	<!-- Models Only Search Service-->
+	<bean id="modelDocumentSearchService" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.model.extension.search.document.search.service.impl.DocumentSearchServiceImpl">
 		<constructor-arg index="0" ref="searchSystem"/>
+		<constructor-arg index="1">
+			<!-- Forced the only fields returned to be model identifiers.
+			
+			As a result, don't use this instance if you plan on using the document fields.
+			-->
+			<bean
+				class="com.dereekb.gae.model.extension.search.document.search.service.utility.IdsOnlyQueryOptionsBuilderTask" />
+		</constructor-arg>
 	</bean>
 	
 	<bean id="scoredDocumentLongKeyReader" lazy-init="true"

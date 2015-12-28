@@ -73,7 +73,7 @@
 		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl"
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="geoPlaceReadService"/>
-		<constructor-arg index="1" ref="documentSearchService"/>
+		<constructor-arg index="1" ref="modelDocumentSearchService"/>
 		<constructor-arg index="2">
 			<bean class="com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequestConverter">
 				<constructor-arg index="0" ref="geoPlaceSearchIndex"/>

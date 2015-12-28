@@ -100,4 +100,10 @@ public class DocumentSearchServiceImpl
 		return builder;
 	}
 
+	@Override
+	public String toString() {
+		return "DocumentSearchServiceImpl [service=" + this.service + ", optionsBuilderTask=" + this.optionsBuilderTask
+		        + "]";
+	}
+
 }
