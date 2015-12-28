@@ -4,7 +4,7 @@ import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse
 import com.google.appengine.api.search.ScoredDocument;
 
 /**
- * Search service.
+ * Search indexService.
  *
  * @author dereekb
  */

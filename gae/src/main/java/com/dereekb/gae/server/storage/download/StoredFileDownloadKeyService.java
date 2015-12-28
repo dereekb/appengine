@@ -15,7 +15,7 @@ public interface StoredFileDownloadKeyService<T> {
 	/**
 	 * Generates a new download key for the given item.
 	 *
-	 * The keys themselves may not mean anything by themselves, and do not necessarily explain what service they are
+	 * The keys themselves may not mean anything by themselves, and do not necessarily explain what indexService they are
 	 * for.
 	 *
 	 * @param source

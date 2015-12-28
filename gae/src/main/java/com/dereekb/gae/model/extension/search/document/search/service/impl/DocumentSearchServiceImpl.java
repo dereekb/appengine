@@ -10,6 +10,7 @@ import com.dereekb.gae.utilities.task.Task;
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
+import com.google.appengine.api.search.QueryOptions.Builder;
 
 /**
  * {@link DocumentSearchService} implementation.
@@ -21,15 +22,17 @@ public class DocumentSearchServiceImpl
         implements DocumentSearchService {
 
 	private SearchDocumentQuerySystem service;
-	private Task<QueryOptions.Builder> queryBuilderTask;
+
+	private Task<QueryOptions.Builder> optionsBuilderTask;
 
 	public DocumentSearchServiceImpl(SearchDocumentQuerySystem service) {
 		this.service = service;
 	}
 
-	public DocumentSearchServiceImpl(SearchDocumentQuerySystem service, Task<QueryOptions.Builder> queryBuilderTask) {
+	public DocumentSearchServiceImpl(SearchDocumentQuerySystem service,
+ Task<Builder> optionsBuilderTask) {
 		this.service = service;
-		this.queryBuilderTask = queryBuilderTask;
+		this.optionsBuilderTask = optionsBuilderTask;
 	}
 
 	public SearchDocumentQuerySystem getService() {
@@ -40,12 +43,12 @@ public class DocumentSearchServiceImpl
 		this.service = service;
 	}
 
-	public Task<QueryOptions.Builder> getQueryBuilderTask() {
-		return this.queryBuilderTask;
+	public Task<QueryOptions.Builder> getOptionsBuilderTask() {
+		return this.optionsBuilderTask;
 	}
 
-	public void setQueryBuilderTask(Task<QueryOptions.Builder> queryBuilderTask) {
-		this.queryBuilderTask = queryBuilderTask;
+	public void setOptionsBuilderTask(Task<QueryOptions.Builder> optionsBuilderTask) {
+		this.optionsBuilderTask = optionsBuilderTask;
 	}
 
 	// MARK: DocumentSearchService
@@ -59,7 +62,9 @@ public class DocumentSearchServiceImpl
 		queryBuilder.setOptions(optionsBuilder);
 
 		queryRequest.setIndexName(request.getIndex());
-		queryRequest.setDocumentQuery(queryBuilder);
+
+		String query = request.getExpression().getExpressionValue();
+		queryRequest.setDocumentQuery(queryBuilder.build(query));
 
 		SearchDocumentQueryResponse response = this.service.queryDocuments(queryRequest);
 		return response;
@@ -88,17 +93,11 @@ public class DocumentSearchServiceImpl
 			}
 		}
 
-		if (this.queryBuilderTask != null) {
-			this.queryBuilderTask.doTask(builder);
+		if (this.optionsBuilderTask != null) {
+			this.optionsBuilderTask.doTask(builder);
 		}
 
 		return builder;
-	}
-
-	@Override
-	public String toString() {
-		return "DocumentSearchServiceImpl [service=" + this.service + ", queryBuilderTask=" + this.queryBuilderTask
-		        + "]";
 	}
 
 }

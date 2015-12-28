@@ -15,17 +15,17 @@ import com.google.appengine.api.search.Document;
 public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> extends ApiApplicationTestContext {
 
 	protected TestModelGenerator<T> generator;
-	protected DocumentIndexService<T> service;
+	protected DocumentIndexService<T> indexService;
 	protected StagedDocumentBuilder<T> builder;
 
 	public ModelSearchDocumentTest() {}
 
-	public DocumentIndexService<T> getService() {
-		return this.service;
+	public DocumentIndexService<T> getIndexService() {
+		return this.indexService;
 	}
 
-	public void setService(DocumentIndexService<T> service) {
-		this.service = service;
+	public void setIndexService(DocumentIndexService<T> service) {
+		this.indexService = service;
 	}
 
 	public StagedDocumentBuilder<T> getBuilder() {
@@ -59,11 +59,11 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 
 		Iterable<T> set = SingleItem.withValue(storedImage);
 
-		boolean success = this.service.indexChange(set, IndexAction.INDEX);
+		boolean success = this.indexService.indexChange(set, IndexAction.INDEX);
 		Assert.assertTrue(success);
 		Assert.assertNotNull(storedImage.getSearchIdentifier());
 
-		success = this.service.indexChange(set, IndexAction.UNINDEX);
+		success = this.indexService.indexChange(set, IndexAction.UNINDEX);
 		Assert.assertTrue(success);
 
 		// The implementation should not clear the change.

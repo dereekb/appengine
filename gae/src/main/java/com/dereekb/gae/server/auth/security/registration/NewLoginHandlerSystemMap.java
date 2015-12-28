@@ -43,7 +43,7 @@ public class NewLoginHandlerSystemMap
 		NewLoginHandler handler = this.map.get(system);
 
 		if (handler == null) {
-			throw new AuthenticationServiceException("No service registered to handle login for system '" + system
+			throw new AuthenticationServiceException("No indexService registered to handle login for system '" + system
 			        + "'.");
 		}
 

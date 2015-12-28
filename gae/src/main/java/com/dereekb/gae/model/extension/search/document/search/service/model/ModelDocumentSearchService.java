@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.service.model;
 
+import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequest;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -22,5 +23,14 @@ public interface ModelDocumentSearchService<T extends UniqueModel, R> {
 	 * @return {@link ModelDocumentSearchResponse}. Never {@code null}.
 	 */
 	public ModelDocumentSearchResponse<T> search(R request);
+
+	/**
+	 * Searches for models that match.
+	 *
+	 * @param request
+	 *            {@link DocumentSearchRequest}. Never {@code null}.
+	 * @return {@link ModelDocumentSearchResponse}. Never {@code null}.
+	 */
+	public ModelDocumentSearchResponse<T> search(DocumentSearchRequest request);
 
 }

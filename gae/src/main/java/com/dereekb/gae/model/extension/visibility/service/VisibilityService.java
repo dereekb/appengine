@@ -4,7 +4,7 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.visibility.VisibilityState;
 
 /**
- * Interface that allows changing the visibility of models through this service.
+ * Interface that allows changing the visibility of models through this indexService.
  *
  * @author dereekb
  *

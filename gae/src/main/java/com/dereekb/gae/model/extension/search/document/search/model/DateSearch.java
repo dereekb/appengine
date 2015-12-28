@@ -21,7 +21,7 @@ public class DateSearch {
 	private Date date;
 	private ExpressionOperator operator;
 
-	public DateSearch(Integer date) {
+	public DateSearch(Long date) {
 		this(new Date(date));
 	}
 
@@ -57,7 +57,7 @@ public class DateSearch {
 				String[] split = dateString.split(SPLITTER);
 
 				Boolean not = null;
-				Integer dateInteger = null;
+				Long date = null;
 				ExpressionOperator operator = null;
 
 				switch (split.length) {
@@ -67,11 +67,11 @@ public class DateSearch {
 					case 2:
 						operator = ExpressionOperator.fromString(split[1]);
 					case 1:
-						dateInteger = new Integer(split[0]);
+						date = new Long(split[0]);
 						break;
 				}
 
-				search = new DateSearch(dateInteger);
+				search = new DateSearch(date);
 				search.setOperator(operator);
 				search.setNot(not);
 			} catch (Exception e) {

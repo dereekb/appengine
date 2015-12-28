@@ -12,7 +12,7 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 /**
- * Helper class for using the blobstore service to serve blobs.
+ * Helper class for using the blobstore indexService to serve blobs.
  *
  * @author dereekb
  */

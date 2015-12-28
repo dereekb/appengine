@@ -31,8 +31,8 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 	@Override
 	@Autowired
 	@Qualifier("storedImageDocumentIndexService")
-	public void setService(DocumentIndexService<StoredImage> service) {
-		super.setService(service);
+	public void setIndexService(DocumentIndexService<StoredImage> service) {
+		super.setIndexService(service);
 	}
 
 	@Override

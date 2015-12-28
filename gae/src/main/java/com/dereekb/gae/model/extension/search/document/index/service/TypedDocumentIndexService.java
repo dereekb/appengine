@@ -38,7 +38,7 @@ public interface TypedDocumentIndexService {
 	 *            How to change the search index.
 	 * @return True if all models were changed successfully.
 	 * @throws UnregisteredSearchTypeException
-	 *             When the requested type is not available to this service.
+	 *             When the requested type is not available to this indexService.
 	 * @throws AtomicOperationException
 	 *             Occurs when not all objects requested can be changed.
 	 */

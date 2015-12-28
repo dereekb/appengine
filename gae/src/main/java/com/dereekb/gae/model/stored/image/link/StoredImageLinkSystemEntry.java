@@ -168,7 +168,7 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 		return "StoredImageLinkSystemEntry [blobLinkName=" + this.blobLinkName + ", geoPlaceLinkName="
 		        + this.geoPlaceLinkName + ", imageSetLinkName=" + this.imageSetLinkName + ", blobTarget="
 		        + this.blobTarget + ", geoPlaceTarget=" + this.geoPlaceTarget + ", imageSetTarget="
-		        + this.imageSetTarget + ", modelType=" + this.modelType + ", service=" + this.service + ", setter="
+		        + this.imageSetTarget + ", modelType=" + this.modelType + ", indexService=" + this.service + ", setter="
 		        + this.setter + ", reviewer=" + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames="
 		        + this.reverseLinkNames + "]";
 	}

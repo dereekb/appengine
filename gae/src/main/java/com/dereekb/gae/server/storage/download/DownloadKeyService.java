@@ -15,7 +15,7 @@ public interface DownloadKeyService {
 	 * Generates a new download key for the given item.
 	 * <p>
 	 * The keys themselves may not mean anything by themselves, and do not
-	 * necessarily explain what service they are for.
+	 * necessarily explain what indexService they are for.
 	 * </p>
 	 *
 	 * @param file

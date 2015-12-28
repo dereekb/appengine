@@ -21,8 +21,8 @@ public class StoredBlobSearchDocumentTest extends ModelSearchDocumentTest<Stored
 	@Override
 	@Autowired
 	@Qualifier("storedBlobDocumentIndexService")
-	public void setService(DocumentIndexService<StoredBlob> service) {
-		super.setService(service);
+	public void setIndexService(DocumentIndexService<StoredBlob> service) {
+		super.setIndexService(service);
 	}
 
 	@Override

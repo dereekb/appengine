@@ -75,7 +75,7 @@ public class BlobstoreBlobReaderImpl
 
 	@Override
 	public String toString() {
-		return "BlobstoreBlobReaderImpl [service=" + this.service + ", bufferSize=" + this.bufferSize + "]";
+		return "BlobstoreBlobReaderImpl [indexService=" + this.service + ", bufferSize=" + this.bufferSize + "]";
 	}
 
 }

@@ -69,7 +69,7 @@ public class ReadServiceTester<T extends UniqueModel>
 	}
 
 	/**
-	 * Tests function service by searching with a list containing two of the
+	 * Tests function indexService by searching with a list containing two of the
 	 * input key.
 	 *
 	 * The expected result is a single item.
@@ -111,7 +111,7 @@ public class ReadServiceTester<T extends UniqueModel>
 	}
 
 	/**
-	 * Tests reading nothing. The service should not fail, but also not return
+	 * Tests reading nothing. The indexService should not fail, but also not return
 	 * anything.
 	 */
 	private void testReadingNothing() {

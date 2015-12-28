@@ -48,7 +48,7 @@ public class LinkExtensionApiController {
 	 * {@link TypeModelKeyConverter} to create a
 	 * {@link ApiLinkChangeConverterImpl} instance for the {@link #converter}.
 	 *
-	 * @param service
+	 * @param indexService
 	 * @param keyTypeConverter
 	 */
 	public LinkExtensionApiController(LinkService service, TypeModelKeyConverter keyTypeConverter) {
@@ -100,7 +100,7 @@ public class LinkExtensionApiController {
 
 	@Override
 	public String toString() {
-		return "LinkExtensionApiController [service=" + this.service + ", converter=" + this.converter + "]";
+		return "LinkExtensionApiController [indexService=" + this.service + ", converter=" + this.converter + "]";
 	}
 
 }

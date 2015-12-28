@@ -55,7 +55,7 @@ public class ConversionReadService<T extends UniqueModel, I extends UniqueModel>
 
 	@Override
 	public String toString() {
-		return "ConversionReadService [service=" + this.service + ", converter=" + this.converter + "]";
+		return "ConversionReadService [indexService=" + this.service + ", converter=" + this.converter + "]";
 	}
 
 }

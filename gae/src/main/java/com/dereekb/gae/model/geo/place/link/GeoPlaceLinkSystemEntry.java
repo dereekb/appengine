@@ -97,7 +97,7 @@ public class GeoPlaceLinkSystemEntry extends AbstractDescriptiveModelLinkSystemE
 	@Override
 	public String toString() {
 		return "GeoPlaceLinkSystemEntry [descriptiveLinkInfo=" + this.descriptiveLinkInfo + ", modelType="
-		        + this.modelType + ", service=" + this.service + ", setter=" + this.setter + ", reviewer="
+		        + this.modelType + ", indexService=" + this.service + ", setter=" + this.setter + ", reviewer="
 		        + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames=" + this.reverseLinkNames + "]";
 	}
 

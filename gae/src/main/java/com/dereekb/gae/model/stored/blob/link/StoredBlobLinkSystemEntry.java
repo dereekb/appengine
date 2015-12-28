@@ -43,7 +43,7 @@ public class StoredBlobLinkSystemEntry extends AbstractDescriptiveModelLinkSyste
 	@Override
 	public String toString() {
 		return "StoredBlobLinkSystemEntry [descriptiveLinkInfo=" + this.descriptiveLinkInfo + ", modelType="
-		        + this.modelType + ", service=" + this.service + ", setter=" + this.setter + ", reviewer="
+		        + this.modelType + ", indexService=" + this.service + ", setter=" + this.setter + ", reviewer="
 		        + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames=" + this.reverseLinkNames + "]";
 	}
 

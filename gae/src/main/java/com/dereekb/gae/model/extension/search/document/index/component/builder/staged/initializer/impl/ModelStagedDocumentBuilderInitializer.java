@@ -64,7 +64,7 @@ public class ModelStagedDocumentBuilderInitializer<T extends SearchableUniqueMod
 		}
 
 		// Key Field
-		String key = model.getModelKey().toString();
+		String key = model.getModelKey().keyAsString();
 		Field.Builder keyField = SearchDocumentBuilderUtility.atomField(MODEL_KEY_FIELD_KEY, key);
 		builder.addField(keyField);
 

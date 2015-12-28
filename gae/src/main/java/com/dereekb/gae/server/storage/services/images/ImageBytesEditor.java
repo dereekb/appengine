@@ -236,7 +236,7 @@ public class ImageBytesEditor {
 
 	@Override
 	public String toString() {
-		return "ImageBytesEditor [service=" + this.service + ", outputSettings=" + this.outputSettings + "]";
+		return "ImageBytesEditor [indexService=" + this.service + ", outputSettings=" + this.outputSettings + "]";
 	}
 
 }

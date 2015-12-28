@@ -117,7 +117,7 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	public String toString() {
 		return "StoredImageSetLinkSystemEntry [iconLinkName=" + this.iconLinkName + ", imagesLinkName="
 		        + this.imagesLinkName + ", imagesTarget=" + this.imagesTarget + ", modelType=" + this.modelType
-		        + ", service=" + this.service + ", setter=" + this.setter + ", reviewer=" + this.reviewer
+		        + ", indexService=" + this.service + ", setter=" + this.setter + ", reviewer=" + this.reviewer
 		        + ", validator=" + this.validator + ", reverseLinkNames=" + this.reverseLinkNames + "]";
 	}
 

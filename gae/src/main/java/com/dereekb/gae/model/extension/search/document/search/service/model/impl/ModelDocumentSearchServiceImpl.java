@@ -79,7 +79,12 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 	@Override
 	public ModelDocumentSearchResponse<T> search(R request) {
 		DocumentSearchRequest searchRequest = this.converter.buildSearchRequest(request);
-		SearchDocumentQueryResponse queryResponse = this.searchService.search(searchRequest);
+		return this.search(searchRequest);
+	}
+
+	@Override
+	public ModelDocumentSearchResponse<T> search(DocumentSearchRequest request) {
+		SearchDocumentQueryResponse queryResponse = this.searchService.search(request);
 		return new ModelDocumentSearchResponseImpl(queryResponse);
 	}
 
@@ -125,7 +130,7 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 		}
 
 		private ReadResponse<T> getReadResponse() {
-			if (this.modelReadResponse != null) {
+			if (this.modelReadResponse == null) {
 				this.modelReadResponse = this.loadResponse();
 			}
 
@@ -148,7 +153,7 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 		}
 
 		private List<ModelKey> getKeys() {
-			if (this.keys != null) {
+			if (this.keys == null) {
 				this.keys = this.buildKeys();
 			}
 

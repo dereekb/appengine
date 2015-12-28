@@ -75,7 +75,7 @@ public final class TaskQueueSearchController {
 
 	@Override
 	public String toString() {
-		return "TaskQueueSearchController [keyTypeConverter=" + this.keyTypeConverter + ", service=" + this.service
+		return "TaskQueueSearchController [keyTypeConverter=" + this.keyTypeConverter + ", indexService=" + this.service
 		        + "]";
 	}
 

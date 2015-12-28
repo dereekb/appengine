@@ -54,15 +54,15 @@ public class GeoPlaceSearchRequestConverter extends AbstractModelDocumentRequest
 		ExpressionBuilder builder = new ExpressionStart();
 
 		if (request.getDate() != null) {
-			builder.and(request.getDate().make(this.dateField));
+			builder = builder.and(request.getDate().make(this.dateField));
 		}
 
 		if (request.getDescriptor() != null) {
-			builder.and(request.getDescriptor().make(this.descriptorTypeField, this.descriptorIdField));
+			builder = builder.and(request.getDescriptor().make(this.descriptorTypeField, this.descriptorIdField));
 		}
 
 		if (request.getPoint() != null) {
-			builder.and(request.getPoint().make(this.pointField));
+			builder = builder.and(request.getPoint().make(this.pointField));
 		}
 
 		return builder;

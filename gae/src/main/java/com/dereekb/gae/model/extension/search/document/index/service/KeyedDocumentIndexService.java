@@ -18,7 +18,7 @@ public interface KeyedDocumentIndexService {
 	 *
 	 * @param action
 	 *            {@link IndexAction}. Never {@code null}.
-	 * @return {@code true} if this service can perform the {@link IndexAction}.
+	 * @return {@code true} if this indexService can perform the {@link IndexAction}.
 	 */
 	public boolean canPerformAction(IndexAction action);
 

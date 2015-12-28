@@ -12,7 +12,7 @@ import com.dereekb.gae.server.search.system.request.DocumentPutRequest;
 public interface SearchDocumentIndexSystem {
 
 	/**
-	 * Performs a put on the search service.
+	 * Performs a put on the search indexService.
 	 *
 	 * @param request
 	 *            {@link DocumentPutRequest}. Never {@code null}.
