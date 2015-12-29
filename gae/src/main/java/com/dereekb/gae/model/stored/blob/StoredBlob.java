@@ -99,6 +99,10 @@ public final class StoredBlob extends DescribedDatabaseModel
 	}
 
 	public void setTypeId(Integer typeId) {
+		if (typeId == null) {
+			typeId = StoredBlobType.DEFAULT_TYPE_ID;
+		}
+
 		this.typeId = typeId;
 	}
 

@@ -8,7 +8,6 @@ import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocum
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * Implementation of {@link StagedDocumentBuilderStep} for adding
@@ -26,8 +25,7 @@ public final class GeoPlaceDocumentBuilderStep
 		// Point Field
 		// Is Region Field
 		boolean isRegion = model.isRegion();
-		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField("isRegion", isRegion);
-		builder.addField(isRegionField);
+		SearchDocumentBuilderUtility.addBoolean("isRegion", isRegion, builder);
 
 		// Date
 		Date date = model.getDate();

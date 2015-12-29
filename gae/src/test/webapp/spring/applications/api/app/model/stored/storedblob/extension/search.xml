@@ -28,7 +28,7 @@
 		<constructor-arg index="1" ref="storedBlobIndexingDocumentBuilder"/>
 	</bean>
 
-	<!-- Search -->
+	<!-- Search Indexing -->
 	<bean id="storedBlobIndexingDocumentBuilder"
 		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl"
 		scope="singleton" lazy-init="true">
@@ -55,7 +55,7 @@
 		</constructor-arg>
 	</bean>
 	
-	<!-- Derivative -->
+	<!-- Derivative Indexing -->
 	<bean id="storedBlobDerivativeDocumentBuilderStep"
 		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl"
 		scope="singleton" lazy-init="true">
@@ -66,6 +66,21 @@
 				scope="singleton" lazy-init="true">
 			</bean>
 		</constructor-arg>
+	</bean>
+
+	<!-- Search Services -->
+	<bean id="storedBlobSearchService"
+		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="storedBlobReadService"/>
+		<constructor-arg index="1" ref="modelDocumentSearchService"/>
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchRequestConverter">
+				<constructor-arg index="0" ref="storedBlobSearchIndex"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
 	</bean>
 
 </beans>

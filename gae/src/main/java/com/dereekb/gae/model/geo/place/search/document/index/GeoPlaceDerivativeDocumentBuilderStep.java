@@ -10,7 +10,6 @@ import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.GeoPlaceInfoType;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * {@link DerivativeDocumentBuilderStep} implementation for
@@ -62,8 +61,7 @@ public class GeoPlaceDerivativeDocumentBuilderStep
 
 		// Is Region Field
 		String isRegionFieldFormat = String.format(this.format, "isRegion");
-		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField(isRegionFieldFormat, isRegion);
-		builder.addField(isRegionField);
+		SearchDocumentBuilderUtility.addBoolean(isRegionFieldFormat, isRegion, builder);
 
 		// Creation Date
 		ModelDocumentBuilderUtility.addDate(this.format, date, builder);

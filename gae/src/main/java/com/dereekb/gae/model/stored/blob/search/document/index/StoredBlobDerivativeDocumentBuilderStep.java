@@ -10,7 +10,6 @@ import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobInfoType;
 import com.dereekb.gae.model.stored.blob.StoredBlobType;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * {@link DerivativeDocumentBuilderStep} implementation for
@@ -67,8 +66,7 @@ public class StoredBlobDerivativeDocumentBuilderStep
 
 		// Format Field
 		String endingFieldFormat = String.format(this.format, "format");
-		Field.Builder endingTypeField = SearchDocumentBuilderUtility.atomField(endingFieldFormat, ending);
-		builder.addField(endingTypeField);
+		SearchDocumentBuilderUtility.addAtom(endingFieldFormat, ending, builder);
 
 	}
 
