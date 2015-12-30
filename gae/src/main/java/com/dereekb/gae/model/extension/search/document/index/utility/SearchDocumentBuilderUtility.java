@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.utility.PointConverter;
+import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.BooleanField;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;
@@ -14,10 +15,6 @@ import com.google.appengine.api.search.GeoPoint;
  * @author dereekb
  */
 public final class SearchDocumentBuilderUtility {
-
-	public static String TRUE_ATOM = "true";
-	public static String FALSE_ATOM = "false";
-	public static String NONE_VALUE = "NONE";
 
 	public static void addBoolean(String name,
 	                              boolean value,
@@ -37,7 +34,7 @@ public final class SearchDocumentBuilderUtility {
 	 */
 	public static Field.Builder booleanField(String name,
 	                                         boolean value) {
-		String atom = ((value) ? TRUE_ATOM : FALSE_ATOM);
+		String atom = ((value) ? BooleanField.TRUE_ATOM : BooleanField.FALSE_ATOM);
 		Field.Builder builder = Field.newBuilder().setName(name).setAtom(atom);
 		return builder;
 	}

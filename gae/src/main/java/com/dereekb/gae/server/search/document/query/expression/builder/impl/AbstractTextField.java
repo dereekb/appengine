@@ -14,7 +14,7 @@ public abstract class AbstractTextField extends AbstractField {
 
 	public AbstractTextField(String name, String value, boolean specificText) {
 		super(name);
-		this.value = value;
+		this.setValue(value);
 		this.specificText = specificText;
 	}
 

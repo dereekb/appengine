@@ -61,10 +61,7 @@
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="storedBlobRegistry"/>
 		<constructor-arg index="1">
-			<bean id="storedBlobDerivativeDocumentBuilderStep"
-				class="com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDerivativeDocumentBuilderStep"
-				scope="singleton" lazy-init="true">
-			</bean>
+			<bean class="com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDerivativeDocumentBuilderStep"/>
 		</constructor-arg>
 	</bean>
 

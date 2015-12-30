@@ -21,7 +21,8 @@ import com.google.appengine.api.search.Document.Builder;
 public class StoredBlobDerivativeDocumentBuilderStep
         implements StagedDocumentBuilderStep<StoredBlob> {
 
-	public final static String DEFAULT_FIELD_FORMAT = "SB_%s";
+	public final static String DEFAULT_PREFIX = "SB_";
+	public final static String DEFAULT_FIELD_FORMAT = DEFAULT_PREFIX + "%s";
 
 	private String format;
 
@@ -30,7 +31,7 @@ public class StoredBlobDerivativeDocumentBuilderStep
 	}
 
 	public StoredBlobDerivativeDocumentBuilderStep(String format) {
-		this.format = format;
+		this.setFormat(format);
 	}
 
 	public String getFormat() {
@@ -65,7 +66,7 @@ public class StoredBlobDerivativeDocumentBuilderStep
 		ModelDocumentBuilderUtility.addId(this.format, id, builder);
 
 		// Format Field
-		String endingFieldFormat = String.format(this.format, "format");
+		String endingFieldFormat = String.format(this.format, StoredBlobDocumentBuilderStep.ENDING_FIELD);
 		SearchDocumentBuilderUtility.addAtom(endingFieldFormat, ending, builder);
 
 	}

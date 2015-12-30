@@ -1,5 +1,8 @@
 package com.dereekb.gae.test.applications.api.model.tests.extension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,28 +49,40 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 
 	@Test
 	public void testDocumentBuilding() {
-		T storedImage = this.make();
+		T model = this.make();
 
-		Document document = this.builder.buildSearchDocument(storedImage);
+		Document document = this.builder.buildSearchDocument(model);
 		Assert.assertNotNull(document);
 	}
 
 	@Test
 	public void testIndexing() {
-		T storedImage = this.make();
-		storedImage.setSearchIdentifier(null);
+		T model = this.make();
+		model.setSearchIdentifier(null);
 
-		Iterable<T> set = SingleItem.withValue(storedImage);
+		Iterable<T> set = SingleItem.withValue(model);
 
 		boolean success = this.indexService.indexChange(set, IndexAction.INDEX);
 		Assert.assertTrue(success);
-		Assert.assertNotNull(storedImage.getSearchIdentifier());
+		Assert.assertNotNull(model.getSearchIdentifier());
 
 		success = this.indexService.indexChange(set, IndexAction.UNINDEX);
 		Assert.assertTrue(success);
 
 		// The implementation should not clear the change.
-		Assert.assertNotNull(storedImage.getSearchIdentifier());
+		Assert.assertNotNull(model.getSearchIdentifier());
+	}
+
+	@Test
+	public void testIndexingMultiple() {
+		List<T> models = this.make(10);
+
+		boolean success = this.indexService.indexChange(models, IndexAction.INDEX);
+		Assert.assertTrue(success);
+
+		for (T model : models) {
+			Assert.assertNotNull(model.getSearchIdentifier());
+		}
 	}
 
 	protected T make() {
@@ -76,6 +91,16 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 		}
 
 		return this.generator.generate();
+	}
+
+	protected List<T> make(int limit) {
+		List<T> list = new ArrayList<T>();
+
+		for (int i = 0; i < limit; i += 1) {
+			list.add(this.make());
+		}
+
+		return list;
 	}
 
 }

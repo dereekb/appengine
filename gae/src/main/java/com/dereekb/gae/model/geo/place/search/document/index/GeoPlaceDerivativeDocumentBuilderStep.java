@@ -21,7 +21,8 @@ import com.google.appengine.api.search.Document.Builder;
 public class GeoPlaceDerivativeDocumentBuilderStep
         implements StagedDocumentBuilderStep<GeoPlace> {
 
-	public final static String DEFAULT_FIELD_FORMAT = "GP_%s";
+	public static final String DEFAULT_PREFIX = "GP_";
+	public final static String DEFAULT_FIELD_FORMAT = DEFAULT_PREFIX + "%s";
 
 	private String format;
 

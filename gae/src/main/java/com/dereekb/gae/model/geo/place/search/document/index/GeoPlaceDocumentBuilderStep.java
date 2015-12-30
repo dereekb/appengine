@@ -18,6 +18,8 @@ import com.google.appengine.api.search.Document.Builder;
 public final class GeoPlaceDocumentBuilderStep
         implements StagedDocumentBuilderStep<GeoPlace> {
 
+	public static final String REGION_FIELD = "region";
+
 	@Override
 	public void performStep(GeoPlace model,
 	                        Builder builder) {
@@ -25,7 +27,7 @@ public final class GeoPlaceDocumentBuilderStep
 		// Point Field
 		// Is Region Field
 		boolean isRegion = model.isRegion();
-		SearchDocumentBuilderUtility.addBoolean("isRegion", isRegion, builder);
+		SearchDocumentBuilderUtility.addBoolean(REGION_FIELD, isRegion, builder);
 
 		// Date
 		Date date = model.getDate();

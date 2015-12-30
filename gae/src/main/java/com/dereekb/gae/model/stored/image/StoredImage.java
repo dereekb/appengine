@@ -222,7 +222,7 @@ public final class StoredImage extends SearchableDatabaseModel
 	public String toString() {
 		return "StoredImage [identifier=" + this.identifier + ", name=" + this.name + ", summary=" + this.summary
 		        + ", tags=" + this.tags + ", type=" + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace
-		        + ", imageSets=" + this.imageSets + "]";
+		        + ", imageSets=" + this.imageSets + ", searchIdentifier=" + this.searchIdentifier + "]";
 	}
 
 }

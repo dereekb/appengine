@@ -24,8 +24,6 @@ public class StoredBlobSearchRequestBuilder
 		if (query != null) {
 			request.setOverride(new RawExpression(query));
 		} else {
-			request.setCursor(input.getCursor());
-
 			request.setName(parameters.get("name"));
 			request.setEnding(parameters.get("ending"));
 			request.setType(parameters.get("type"));
@@ -35,6 +33,7 @@ public class StoredBlobSearchRequestBuilder
 		}
 
 		request.setLimit(input.getLimit());
+		request.setCursor(input.getCursor());
 
 		return request;
 	}
