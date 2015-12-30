@@ -8,7 +8,6 @@ import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDerivativeDocumentBuilderStep;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * Implementation of {@link StagedDocumentBuilderStep} for adding
@@ -23,15 +22,17 @@ import com.google.appengine.api.search.Field;
 public class StoredImageSetDocumentBuilderStep
         implements StagedDocumentBuilderStep<StoredImageSet> {
 
+	public static final String LABEL_FIELD = "label";
+	public static final String DETAIL_FIELD = "detail";
+	public static final String TAGS_FIELD = "tags";
+
 	@Override
 	public void performStep(StoredImageSet model,
 	                        Builder builder) {
 
-		// TODO: Complete stored image searching.
-
-		String tags = model.getTags();
-		Field.Builder tagsField = SearchDocumentBuilderUtility.textField("tags", tags);
-		builder.addField(tagsField);
+		SearchDocumentBuilderUtility.addAtom(LABEL_FIELD, model.getLabel(), builder);
+		SearchDocumentBuilderUtility.addText(DETAIL_FIELD, model.getDetail(), builder);
+		SearchDocumentBuilderUtility.addText(TAGS_FIELD, model.getTags(), builder);
 
 	}
 

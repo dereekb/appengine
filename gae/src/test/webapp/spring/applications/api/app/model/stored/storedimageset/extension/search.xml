@@ -28,7 +28,7 @@
 		<constructor-arg index="1" ref="storedImageSetIndexingDocumentBuilder"/>
 	</bean>
 
-	<!-- Search -->
+	<!-- Search Indexing -->
 	<bean id="storedImageSetIndexingDocumentBuilder"
 		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl"
 		scope="singleton" lazy-init="true">
@@ -70,4 +70,19 @@
 	</bean>
 	-->
 
+	<!-- Search Services -->
+	<bean id="storedImageSetSearchService"
+		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="storedImageSetReadService"/>
+		<constructor-arg index="1" ref="modelDocumentSearchService"/>
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchRequestConverter">
+				<constructor-arg index="0" ref="storedImageSetSearchIndex"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
+	</bean>
+	
 </beans>

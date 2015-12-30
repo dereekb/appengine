@@ -67,9 +67,7 @@
 		<constructor-arg index="0" ref="storedBlobSearchType" />
 		<constructor-arg index="1" ref="storedBlobSearchService" />
 		<constructor-arg index="2">
-			<bean id="storedBlobSearchRequestBuilder" scope="singleton"
-				class="com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchRequestBuilder">
-			</bean>
+			<bean class="com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchRequestBuilder"/>
 		</constructor-arg>
 		<constructor-arg index="3" ref="storedBlobSearchResultConverter" />
 	</bean>

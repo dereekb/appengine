@@ -57,4 +57,21 @@
 		<constructor-arg index="2" ref="storedImageSetDataConverter" />
 	</bean>
 
+	<!-- Search Component -->
+	<bean id="storedImageSetSearchType" factory-bean="storedImageSetType"
+		factory-method="toLowerCase" lazy-init="true" scope="singleton">
+	</bean>
+
+	<bean id="storedImageSetSearchDelegateEntry" scope="singleton"
+		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
+		<constructor-arg index="0" ref="storedImageSetSearchType" />
+		<constructor-arg index="1" ref="storedImageSetSearchService" />
+		<constructor-arg index="2">
+			<bean class="com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchRequestBuilder"/>
+		</constructor-arg>
+		<constructor-arg index="3" ref="storedImageSetSearchResultConverter" />
+	</bean>
+
+	<alias name="storedImageSetDataConverter" alias="storedImageSetSearchResultConverter"/>
+
 </beans>

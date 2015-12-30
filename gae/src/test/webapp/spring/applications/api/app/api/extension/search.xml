@@ -24,7 +24,7 @@
 				<entry key-ref="geoPlaceSearchType" value-ref="geoPlaceSearchDelegateEntry" />
 				<entry key-ref="storedBlobSearchType" value-ref="storedBlobSearchDelegateEntry" />
 				<entry key-ref="storedImageSearchType" value-ref="storedImageSearchDelegateEntry" />
-				<!-- TODO: Add remaining types. -->
+				<entry key-ref="storedImageSetSearchType" value-ref="storedImageSetSearchDelegateEntry" />
 			</map>
 		</constructor-arg>
 	</bean>

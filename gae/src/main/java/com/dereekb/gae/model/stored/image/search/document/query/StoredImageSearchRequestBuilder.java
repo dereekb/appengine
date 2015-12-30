@@ -2,16 +2,12 @@ package com.dereekb.gae.model.stored.image.search.document.query;
 
 import java.util.Map;
 
-import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
-import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder;
 import com.dereekb.gae.model.stored.blob.search.document.query.derivative.StoredBlobSearchBuilder;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.RawExpression;
-import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
+import com.dereekb.gae.web.api.model.extension.search.impl.model.AbstractSearchRequestBuilder;
 
 
-public class StoredImageSearchRequestBuilder
-        implements SingleDirectionalConverter<ApiSearchReadRequest, StoredImageSearchRequest> {
+public class StoredImageSearchRequestBuilder extends AbstractSearchRequestBuilder<StoredImageSearchRequest> {
 
 	private GeoPlaceSearchBuilder geoPlaceSearchBuilder;
 	private StoredBlobSearchBuilder storedBlobSearchBuilder;
@@ -22,6 +18,7 @@ public class StoredImageSearchRequestBuilder
 
 	public StoredImageSearchRequestBuilder(GeoPlaceSearchBuilder geoPlaceSearchBuilder,
 	        StoredBlobSearchBuilder storedBlobSearchBuilder) {
+		super(StoredImageSearchRequest.class);
 		this.geoPlaceSearchBuilder = geoPlaceSearchBuilder;
 		this.storedBlobSearchBuilder = storedBlobSearchBuilder;
 	}
@@ -42,31 +39,17 @@ public class StoredImageSearchRequestBuilder
 		this.storedBlobSearchBuilder = storedBlobSearchBuilder;
 	}
 
-	// MARK: Single Directional Converter
 	@Override
-	public StoredImageSearchRequest convertSingle(ApiSearchReadRequest input) throws ConversionFailureException {
+	public void applyParameters(StoredImageSearchRequest request,
+	                            Map<String, String> parameters) {
 
-		StoredImageSearchRequest request = new StoredImageSearchRequest();
+		request.setName(parameters.get("name"));
+		request.setSummary(parameters.get("summary"));
+		request.setType(parameters.get("type"));
+		request.setTags(parameters.get("tags"));
 
-		Map<String, String> parameters = input.getParameters();
-		String query = input.getQuery();
-
-		if (query != null) {
-			request.setOverride(new RawExpression(query));
-		} else {
-			request.setName(parameters.get("name"));
-			request.setSummary(parameters.get("summary"));
-			request.setType(parameters.get("type"));
-			request.setTags(parameters.get("tags"));
-
-			request.setGeoPlaceSearch(this.geoPlaceSearchBuilder.make(parameters));
-			request.setStoredBlobSearch(this.storedBlobSearchBuilder.make(parameters));
-		}
-
-		request.setLimit(input.getLimit());
-		request.setCursor(input.getCursor());
-
-		return request;
+		request.setGeoPlaceSearch(this.geoPlaceSearchBuilder.make(parameters));
+		request.setStoredBlobSearch(this.storedBlobSearchBuilder.make(parameters));
 	}
 
 }
