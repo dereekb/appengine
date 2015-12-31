@@ -25,7 +25,7 @@
 	</bean>
 
 	<bean id="geoPlaceTaskRequestSystem" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.server.taskqueue.system.TaskRequestSystemImpl">
+		class="com.dereekb.gae.server.taskqueue.system.impl.TaskRequestSystemImpl">
 		<constructor-arg index="0" ref="geoPlaceTaskQueue" />
 		<constructor-arg index="1">
 			<bean factory-bean="taskRequestHashFilterFactory"
@@ -38,7 +38,7 @@
 	<!-- Delete Task -->
 	<!-- TODO Replace this with dedicated type. -->
 	<bean id="geoPlaceDeleteTaskRequestSender" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.server.taskqueue.builder.TaskRequestSenderImpl">
+		class="com.dereekb.gae.server.taskqueue.builder.impl.TaskRequestSenderImpl">
 		<constructor-arg index="0">
 			<bean
 				class="com.dereekb.gae.model.extension.taskqueue.request.ModelKeyTaskRequestBuilder">

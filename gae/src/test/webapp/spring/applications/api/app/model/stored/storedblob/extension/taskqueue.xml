@@ -25,7 +25,7 @@
 	</bean>
 
 	<bean id="storedBlobTaskRequestSystem" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.server.taskqueue.system.TaskRequestSystemImpl">
+		class="com.dereekb.gae.server.taskqueue.system.impl.TaskRequestSystemImpl">
 		<constructor-arg index="0" ref="storedBlobTaskQueue" />
 		<constructor-arg index="1">
 			<bean factory-bean="taskRequestHashFilterFactory"
