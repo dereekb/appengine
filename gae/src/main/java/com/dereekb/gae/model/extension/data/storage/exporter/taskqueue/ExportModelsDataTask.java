@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.data.storage.exporter.ExportException;
 import com.dereekb.gae.model.extension.data.storage.exporter.Exporter;
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskInfo;
 import com.dereekb.gae.model.extension.taskqueue.task.iterate.IterateModelsSubtask;
 import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
 

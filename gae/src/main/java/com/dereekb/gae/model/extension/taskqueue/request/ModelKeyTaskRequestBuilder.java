@@ -8,10 +8,11 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.taskqueue.builder.TaskRequestBuilder;
 import com.dereekb.gae.server.taskqueue.builder.TaskRequestCopier;
+import com.dereekb.gae.server.taskqueue.builder.impl.TaskRequestCopierImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskParameter;
-import com.dereekb.gae.server.taskqueue.system.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
 
 /**
@@ -41,7 +42,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 	 * Whether or not individual requests (one for each {@link ModelKey}) should
 	 * be generated, as opposed to batching.
 	 */
-	private boolean asIndividualRequests;
+	private boolean asIndividualRequests = false;
 
 	/**
 	 * The base request to copy.
@@ -51,7 +52,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 	/**
 	 * The {@link TaskRequestCopier} to use for copying for each element.
 	 */
-	private TaskRequestCopier<TaskRequestImpl> copier;
+	private TaskRequestCopier<TaskRequestImpl> copier = TaskRequestCopierImpl.SINGLETON;
 
 	/**
 	 * Internally-used batch genereator.
@@ -122,7 +123,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		return requests;
 	}
 
-	public List<TaskRequest> buildRequestPartitions(Iterable<ModelKey> input) {
+	private List<TaskRequest> buildRequestPartitions(Iterable<ModelKey> input) {
 		List<List<ModelKey>> keyPartitions = this.partitioner.partitions(input);
 		List<TaskRequest> requests = new ArrayList<TaskRequest>();
 
@@ -134,14 +135,14 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		return requests;
 	}
 
-	public TaskRequest buildRequestForPartition(Iterable<ModelKey> input) {
+	private TaskRequest buildRequestForPartition(Iterable<ModelKey> input) {
 		List<String> keys = ModelKey.keysAsStrings(input);
 		TaskParameterImpl keyParameter = TaskParameterImpl.parametersWithCommaSeparatedValue(this.idParameter, keys);
 		TaskRequestImpl request = this.createNewModelKeyRequest(keyParameter);
 		return request;
 	}
 
-	public List<TaskRequest> buildMultiRequests(Iterable<ModelKey> input) {
+	private List<TaskRequest> buildMultiRequests(Iterable<ModelKey> input) {
 		List<String> keys = ModelKey.keysAsStrings(input);
 		List<TaskParameterImpl> keyParameters = TaskParameterImpl.makeParametersForValues(this.idParameter, keys);
 

@@ -1,7 +1,9 @@
-package com.dereekb.gae.server.taskqueue.builder;
+package com.dereekb.gae.server.taskqueue.builder.impl;
 
 import java.util.List;
 
+import com.dereekb.gae.server.taskqueue.builder.TaskRequestBuilder;
+import com.dereekb.gae.server.taskqueue.builder.TaskRequestSender;
 import com.dereekb.gae.server.taskqueue.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;

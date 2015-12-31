@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestTimingType;
+import com.dereekb.gae.server.taskqueue.system.filter.impl.TaskRequestHashBuilderImpl;
 import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
 

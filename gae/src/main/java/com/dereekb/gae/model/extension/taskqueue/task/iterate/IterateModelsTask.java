@@ -3,8 +3,8 @@ package com.dereekb.gae.model.extension.taskqueue.task.iterate;
 import java.util.List;
 import java.util.Map;
 
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTask;
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTask;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskInfo;
 import com.dereekb.gae.server.datastore.models.query.IterableModelQuery;
 import com.dereekb.gae.server.datastore.models.query.ModelQueryIterator;
 import com.dereekb.gae.utilities.collections.batch.BatchGenerator;

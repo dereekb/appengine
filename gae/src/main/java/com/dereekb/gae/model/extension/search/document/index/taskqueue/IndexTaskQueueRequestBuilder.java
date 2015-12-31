@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.index.taskqueue;
 
 import com.dereekb.gae.model.extension.search.document.index.IndexAction;
-import com.dereekb.gae.model.extension.taskqueue.ModelTaskQueueRequestBuilder;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.ModelTaskQueueRequestBuilder;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**

@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.taskqueue.api;
+package com.dereekb.gae.model.extension.taskqueue.deprecated.api;
 
 /**
  * A custom task for the internal Task Queue Controllers.

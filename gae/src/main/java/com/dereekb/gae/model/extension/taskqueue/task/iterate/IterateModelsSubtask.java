@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.taskqueue.task.iterate;
 
 import java.util.List;
 
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskInfo;
 
 /**
  * Single-use subtask run by an {@link IterateModelsTask} instance.

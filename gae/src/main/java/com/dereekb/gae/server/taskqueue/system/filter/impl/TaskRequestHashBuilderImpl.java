@@ -1,9 +1,10 @@
-package com.dereekb.gae.server.taskqueue.system.filter;
+package com.dereekb.gae.server.taskqueue.system.filter.impl;
 
 import java.util.Collection;
 
 import com.dereekb.gae.server.taskqueue.system.TaskParameter;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
+import com.dereekb.gae.server.taskqueue.system.filter.TaskRequestHashBuilder;
 
 /**
  * Special tool used to build hash values for {@link TaskRequest} instances to

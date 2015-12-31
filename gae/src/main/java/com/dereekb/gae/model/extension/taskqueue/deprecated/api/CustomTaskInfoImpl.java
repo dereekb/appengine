@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.taskqueue.api;
+package com.dereekb.gae.model.extension.taskqueue.deprecated.api;
 
 import java.util.Collections;
 import java.util.List;

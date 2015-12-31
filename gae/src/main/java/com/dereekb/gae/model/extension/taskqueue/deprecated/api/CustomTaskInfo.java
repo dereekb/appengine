@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.taskqueue.api;
+package com.dereekb.gae.model.extension.taskqueue.deprecated.api;
 
 import java.util.List;
 import java.util.Map;

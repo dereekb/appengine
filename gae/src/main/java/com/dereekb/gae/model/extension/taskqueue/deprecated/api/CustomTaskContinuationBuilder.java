@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.taskqueue.api;
+package com.dereekb.gae.model.extension.taskqueue.deprecated.api;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,9 +7,9 @@ import java.util.Map;
 
 import com.dereekb.gae.server.taskqueue.builder.TaskRequestBuilder;
 import com.dereekb.gae.server.taskqueue.system.TaskParameter;
-import com.dereekb.gae.server.taskqueue.system.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 
 /**
  * Utility used to create continuations of {@link CustomTaskInfo} tasks.

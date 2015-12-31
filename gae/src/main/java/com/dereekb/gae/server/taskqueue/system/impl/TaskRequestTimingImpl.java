@@ -1,4 +1,7 @@
-package com.dereekb.gae.server.taskqueue.system;
+package com.dereekb.gae.server.taskqueue.system.impl;
+
+import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
+import com.dereekb.gae.server.taskqueue.system.TaskRequestTimingType;
 
 /**
  * {@link TaskRequestTiming} implementation.

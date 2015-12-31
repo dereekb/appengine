@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.taskqueue.task.iterate;
 
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskInfo;
 
 /**
  * Delegate responsible for scheduling the continuation of an iteration.

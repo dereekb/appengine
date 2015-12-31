@@ -1,6 +1,8 @@
-package com.dereekb.gae.server.taskqueue.system;
+package com.dereekb.gae.server.taskqueue.system.impl;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
+import com.dereekb.gae.server.taskqueue.system.TaskRequest;
+import com.dereekb.gae.server.taskqueue.system.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.system.filter.TaskRequestHashFilterFactory;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;

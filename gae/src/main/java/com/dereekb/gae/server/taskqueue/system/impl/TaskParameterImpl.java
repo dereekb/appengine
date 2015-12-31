@@ -1,10 +1,11 @@
-package com.dereekb.gae.server.taskqueue.system;
+package com.dereekb.gae.server.taskqueue.system.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.server.taskqueue.system.TaskParameter;
 import com.google.common.base.Joiner;
 
 /**

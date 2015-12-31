@@ -23,6 +23,7 @@ import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class DeleteTaskImpl<T extends UniqueModel>
         implements DeleteTask<T> {
 

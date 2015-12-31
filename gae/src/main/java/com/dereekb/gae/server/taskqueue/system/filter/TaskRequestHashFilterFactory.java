@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.taskqueue.system.filter;
 
+import com.dereekb.gae.server.taskqueue.system.filter.impl.TaskRequestHashBuilderImpl;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 

@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.server.taskqueue.system.TaskParameter;
-import com.dereekb.gae.server.taskqueue.system.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController;
 import com.google.appengine.api.datastore.Cursor;

@@ -2,8 +2,10 @@ package com.dereekb.gae.web.taskqueue.controller.crud.impl;
 
 import java.util.List;
 
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.task.IterableTask;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditControllerEntry;
 
@@ -14,73 +16,88 @@ import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditControllerEntr
  * @author dereekb
  *
  */
-public class TaskQueueEditControllerEntryImpl
+public class TaskQueueEditControllerEntryImpl<T extends UniqueModel>
         implements TaskQueueEditControllerEntry {
 
-	private IterableTask<ModelKey> reviewCreateTask;
-	private IterableTask<ModelKey> reviewUpdateTask;
-	private IterableTask<ModelKey> reviewDeleteTask;
+	private ModelKeyListAccessorFactory<T> accessorFactory;
+
+	private Task<ModelKeyListAccessor<T>> postCreateTask;
+	private Task<ModelKeyListAccessor<T>> postUpdateTask;
+	private Task<ModelKeyListAccessor<T>> deleteTask;
 
 	public TaskQueueEditControllerEntryImpl() {}
 
-	public TaskQueueEditControllerEntryImpl(IterableTask<ModelKey> reviewCreateTask,
-	        IterableTask<ModelKey> reviewUpdateTask,
-	        IterableTask<ModelKey> reviewDeleteTask) {
-		this.reviewCreateTask = reviewCreateTask;
-		this.reviewUpdateTask = reviewUpdateTask;
-		this.reviewDeleteTask = reviewDeleteTask;
+	public TaskQueueEditControllerEntryImpl(ModelKeyListAccessorFactory<T> accessorFactory) {
+		this.accessorFactory = accessorFactory;
 	}
 
-	public IterableTask<ModelKey> getReviewCreateTask() {
-		return this.reviewCreateTask;
+	public TaskQueueEditControllerEntryImpl(ModelKeyListAccessorFactory<T> accessorFactory,
+	        Task<ModelKeyListAccessor<T>> postCreateTask,
+	        Task<ModelKeyListAccessor<T>> postUpdateTask,
+	        Task<ModelKeyListAccessor<T>> deleteTask) {
+		this.accessorFactory = accessorFactory;
+		this.postCreateTask = postCreateTask;
+		this.postUpdateTask = postUpdateTask;
+		this.deleteTask = deleteTask;
 	}
 
-	public void setReviewCreateTask(IterableTask<ModelKey> reviewCreateTask) {
-		this.reviewCreateTask = reviewCreateTask;
+	public ModelKeyListAccessorFactory<T> getAccessorFactory() {
+		return this.accessorFactory;
 	}
 
-	public IterableTask<ModelKey> getReviewUpdateTask() {
-		return this.reviewUpdateTask;
+	public void setAccessorFactory(ModelKeyListAccessorFactory<T> accessorFactory) {
+		this.accessorFactory = accessorFactory;
 	}
 
-	public void setReviewUpdateTask(IterableTask<ModelKey> reviewUpdateTask) {
-		this.reviewUpdateTask = reviewUpdateTask;
+	public Task<ModelKeyListAccessor<T>> getPostCreateTask() {
+		return this.postCreateTask;
 	}
 
-	public IterableTask<ModelKey> getReviewDeleteTask() {
-		return this.reviewDeleteTask;
+	public void setPostCreateTask(Task<ModelKeyListAccessor<T>> postCreateTask) {
+		this.postCreateTask = postCreateTask;
 	}
 
-	public void setReviewDeleteTask(IterableTask<ModelKey> reviewDeleteTask) {
-		this.reviewDeleteTask = reviewDeleteTask;
+	public Task<ModelKeyListAccessor<T>> getPostUpdateTask() {
+		return this.postUpdateTask;
+	}
+
+	public void setPostUpdateTask(Task<ModelKeyListAccessor<T>> postUpdateTask) {
+		this.postUpdateTask = postUpdateTask;
+	}
+
+	public Task<ModelKeyListAccessor<T>> getDeleteTask() {
+		return this.deleteTask;
+	}
+
+	public void setDeleteTask(Task<ModelKeyListAccessor<T>> deleteTask) {
+		this.deleteTask = deleteTask;
 	}
 
 	// MARK: TaskQueueEditControllerEntry
 	@Override
 	public void reviewCreate(List<ModelKey> keys) {
-		if (this.reviewCreateTask != null) {
-			this.reviewCreateTask.doTask(keys);
+		if (this.postCreateTask != null) {
+			this.postCreateTask.doTask(this.accessorFactory.createAccessor(keys));
 		}
 	}
 
 	@Override
 	public void reviewUpdate(List<ModelKey> keys) {
-		if (this.reviewUpdateTask != null) {
-			this.reviewUpdateTask.doTask(keys);
+		if (this.postUpdateTask != null) {
+			this.postUpdateTask.doTask(this.accessorFactory.createAccessor(keys));
 		}
 	}
 
 	@Override
-	public void reviewDelete(List<ModelKey> keys) {
-		if (this.reviewDeleteTask != null) {
-			this.reviewDeleteTask.doTask(keys);
-		}
+	public void processDelete(List<ModelKey> keys) {
+		this.deleteTask.doTask(this.accessorFactory.createAccessor(keys));
 	}
 
 	@Override
 	public String toString() {
-		return "TaskQueueEditControllerEntryImpl [reviewCreateTask=" + this.reviewCreateTask + ", reviewUpdateTask="
-		        + this.reviewUpdateTask + ", reviewDeleteTask=" + this.reviewDeleteTask + "]";
-	}
+		return "TaskQueueEditControllerEntryImpl [accessorFactory=" + this.accessorFactory + ", postCreateTask="
+		        + this.postCreateTask + ", postUpdateTask=" + this.postUpdateTask + ", deleteTask=" + this.deleteTask
+		        + "]";
+    }
 
 }

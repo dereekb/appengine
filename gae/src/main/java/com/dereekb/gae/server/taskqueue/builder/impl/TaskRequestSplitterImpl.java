@@ -1,14 +1,16 @@
-package com.dereekb.gae.server.taskqueue.builder;
+package com.dereekb.gae.server.taskqueue.builder.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.server.taskqueue.builder.TaskRequestCopier;
+import com.dereekb.gae.server.taskqueue.builder.TaskRequestSplitter;
 import com.dereekb.gae.server.taskqueue.system.TaskParameter;
-import com.dereekb.gae.server.taskqueue.system.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.system.filter.TaskParameterFilter;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 import com.dereekb.gae.utilities.filters.FilterResults;
 
 /**

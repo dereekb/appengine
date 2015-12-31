@@ -1,6 +1,6 @@
 package com.dereekb.gae.web.taskqueue;
 
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskInfo;
 
 @Deprecated
 public class NoTaskAvailableException extends RuntimeException {

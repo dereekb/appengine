@@ -85,7 +85,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		List<T> models = this.modelGenerator.generate(this.genCount);
 		List<ModelKey> keys = ModelKey.readModelKeys(models);
 
-		this.controllerEntry.reviewDelete(keys);
+		this.controllerEntry.processDelete(keys);
 
 		Assert.assertFalse(this.getter.allExist(keys));
 

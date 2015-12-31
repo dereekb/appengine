@@ -70,12 +70,12 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/{type}/delete", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/delete", method = RequestMethod.DELETE, consumes = "application/octet-stream")
 	public void reviewDelete(@PathVariable("type") String modelType,
 	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
-		entry.reviewDelete(keys);
+		entry.processDelete(keys);
 	}
 
 	private TaskQueueEditControllerEntry getEntryForType(String modelType) throws UnregisteredEditTypeException {

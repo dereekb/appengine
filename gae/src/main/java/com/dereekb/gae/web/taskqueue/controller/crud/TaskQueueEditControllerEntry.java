@@ -36,6 +36,6 @@ public interface TaskQueueEditControllerEntry {
 	 * @param keys
 	 *            {@link ModelKey} list. Never {@code null}.
 	 */
-	public void reviewDelete(List<ModelKey> keys);
+	public void processDelete(List<ModelKey> keys);
 
 }

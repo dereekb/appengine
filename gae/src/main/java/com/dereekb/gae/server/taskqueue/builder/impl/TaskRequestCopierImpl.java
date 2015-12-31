@@ -1,14 +1,15 @@
-package com.dereekb.gae.server.taskqueue.builder;
+package com.dereekb.gae.server.taskqueue.builder.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.dereekb.gae.server.taskqueue.builder.TaskRequestCopier;
 import com.dereekb.gae.server.taskqueue.system.TaskParameter;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestTimingImpl;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestTimingType;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestTimingImpl;
 
 
 /**
@@ -20,6 +21,8 @@ import com.dereekb.gae.server.taskqueue.system.TaskRequestTimingType;
  */
 public class TaskRequestCopierImpl
         implements TaskRequestCopier<TaskRequestImpl> {
+
+	public static final TaskRequestCopierImpl SINGLETON = new TaskRequestCopierImpl();
 
 	@Override
 	public TaskRequestImpl fullyCopyRequest(TaskRequest request) {

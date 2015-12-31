@@ -1,7 +1,10 @@
-package com.dereekb.gae.server.taskqueue.system;
+package com.dereekb.gae.server.taskqueue.system.impl;
 
 import java.util.Collection;
 
+import com.dereekb.gae.server.taskqueue.system.TaskParameter;
+import com.dereekb.gae.server.taskqueue.system.TaskRequest;
+import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
@@ -28,27 +31,37 @@ public class TaskRequestImpl
 	public TaskRequestImpl() {}
 
 	public TaskRequestImpl(String url) {
-		this.url = url;
+		this(url, null);
 	}
 
-	public TaskRequestImpl(String url, Collection<TaskParameter> headers, TaskRequestTiming timings) {
-		this.url = url;
-		this.headers = headers;
-		this.timings = timings;
+	public TaskRequestImpl(String url, Method method) {
+		this(url, method, null);
+	}
+
+	public TaskRequestImpl(String url, Method method, TaskRequestTiming timings) {
+		this(url, method, timings, null);
+	}
+
+	public TaskRequestImpl(String url, TaskRequestTiming timings, Collection<TaskParameter> headers) {
+		this(url, Method.PUT, timings, headers);
+	}
+
+	public TaskRequestImpl(String url, Method method, TaskRequestTiming timings, Collection<TaskParameter> headers) {
+		this(null, method, url, timings, headers, null);
 	}
 
 	public TaskRequestImpl(String name,
 	        Method method,
 	        String url,
+	        TaskRequestTiming timings,
 	        Collection<TaskParameter> headers,
-	        Collection<TaskParameter> parameters,
-	        TaskRequestTiming timings) {
-		this.name = name;
-		this.method = method;
-		this.url = url;
-		this.headers = headers;
-		this.parameters = parameters;
-		this.timings = timings;
+	        Collection<TaskParameter> parameters) {
+		this.setName(name);
+		this.setMethod(method);
+		this.setUrl(url);
+		this.setTimings(timings);
+		this.setHeaders(headers);
+		this.setParameters(parameters);
 	}
 
 	@Override
@@ -66,6 +79,10 @@ public class TaskRequestImpl
 	}
 
 	public void setMethod(Method method) {
+		if (method == null) {
+			method = Method.PUT;
+		}
+
 		this.method = method;
 	}
 

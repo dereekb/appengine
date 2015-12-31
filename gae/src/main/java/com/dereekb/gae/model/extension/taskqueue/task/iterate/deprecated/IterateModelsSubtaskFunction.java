@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.taskqueue.task.iterate.deprecated;
 
 import java.util.List;
 
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskInfo;
 import com.dereekb.gae.model.extension.taskqueue.task.iterate.IterateModelsSubtask;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;

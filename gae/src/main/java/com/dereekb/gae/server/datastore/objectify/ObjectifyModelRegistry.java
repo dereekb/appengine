@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAccessorImpl;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelGetter;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelQuery;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelSetter;
@@ -191,6 +193,16 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 	@Override
 	public QueryResultIterator<T> queryIterator(ObjectifyQuery<T> query) {
 		return this.query.queryIterator(query);
+	}
+
+	@Override
+	public ModelKeyListAccessor<T> createAccessor() {
+		return new ModelKeyListAccessorImpl<T>(this);
+	}
+
+	@Override
+	public ModelKeyListAccessor<T> createAccessor(Collection<ModelKey> keys) {
+		return new ModelKeyListAccessorImpl<T>(this, keys);
 	}
 
 }

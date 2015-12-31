@@ -28,14 +28,6 @@ public final class ModelKey
 	private final String name;
 	private final Long id;
 
-	@Deprecated
-	public ModelKey() {
-		this.id = DEFAULT_KEY;
-		this.name = null;
-		this.hashCode = 0;
-		this.type = ModelKeyType.DEFAULT;
-	}
-
 	public ModelKey(String name) throws IllegalArgumentException {
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException("Invalid name key. Must be non-null and not empty.");

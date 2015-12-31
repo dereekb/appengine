@@ -1,10 +1,10 @@
 package com.dereekb.gae.model.extension.taskqueue.task.iterate;
 
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskContinuationBuilder;
-import com.dereekb.gae.model.extension.taskqueue.api.CustomTaskInfo;
-import com.dereekb.gae.server.taskqueue.system.TaskParameterImpl;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestImpl;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskContinuationBuilder;
+import com.dereekb.gae.model.extension.taskqueue.deprecated.api.CustomTaskInfo;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 
 @Deprecated
 public class IterateModelsTaskContinueDelegateImpl
