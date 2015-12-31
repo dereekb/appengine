@@ -10,6 +10,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditControllerEntry;
 
 /**
@@ -27,9 +28,12 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 	private Integer genCount = 2;
 
+	private String modelTaskQueueType;
+
 	private Getter<T> getter;
 	private TestModelGenerator<T> modelGenerator;
-	private TaskQueueEditControllerEntry controllerEntry;
+
+	private TaskQueueEditController controller;
 
     public Integer getGenCount() {
 		return this.genCount;
@@ -37,6 +41,22 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 	public void setGenCount(Integer genCount) {
 		this.genCount = genCount;
+	}
+
+	public String getModelTaskQueueType() {
+		return this.modelTaskQueueType;
+	}
+
+	public void setModelTaskQueueType(String modelTaskQueueType) {
+		this.modelTaskQueueType = modelTaskQueueType;
+	}
+
+	public Getter<T> getGetter() {
+		return this.getter;
+	}
+
+	public void setGetter(Getter<T> getter) {
+		this.getter = getter;
 	}
 
 	public TestModelGenerator<T> getModelGenerator() {
@@ -47,51 +67,60 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		this.modelGenerator = modelGenerator;
 	}
 
-	public TaskQueueEditControllerEntry getControllerEntry() {
-		return this.controllerEntry;
+	public TaskQueueEditController getController() {
+		return this.controller;
 	}
 
-	public void setControllerEntry(TaskQueueEditControllerEntry controllerEntry) {
-		this.controllerEntry = controllerEntry;
+	public void setController(TaskQueueEditController controller) {
+		this.controller = controller;
 	}
+
+	// Make
+	private List<T> create(boolean related) {
+		List<T> models = this.modelGenerator.generate(this.genCount);
+
+		if (related) {
+			for (T model : models) {
+				this.createRelated(model);
+			}
+		}
+
+		return models;
+	}
+
+	protected abstract void createRelated(T model);
 
 	// Tests
 	@Test
 	public void testCreateFunction() {
-		List<T> models = this.modelGenerator.generate(this.genCount);
-		List<ModelKey> keys = ModelKey.readModelKeys(models);
+		List<T> models = this.create(false);
+		List<String> keys = ModelKey.readStringKeys(models);
 
-		this.controllerEntry.reviewCreate(keys);
-
-		this.reviewCreationFunctionResults(models);
+		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 	}
-
-	public abstract void reviewCreationFunctionResults(List<T> models);
 
 	@Test
 	public void testEditFunction() {
-		List<T> models = this.modelGenerator.generate(this.genCount);
-		List<ModelKey> keys = ModelKey.readModelKeys(models);
+		List<T> models = this.create(true);
+		List<String> keys = ModelKey.readStringKeys(models);
 
-		this.controllerEntry.reviewUpdate(keys);
+		// Complete Initializing Models
+		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 
-		this.reviewEditedFunctionResults(models);
+		this.controller.reviewUpdate(this.modelTaskQueueType, keys);
 	}
-
-	public abstract void reviewEditedFunctionResults(List<T> models);
 
 	@Test
 	public void testDeleteFunction() {
-		List<T> models = this.modelGenerator.generate(this.genCount);
-		List<ModelKey> keys = ModelKey.readModelKeys(models);
+		List<T> models = this.create(true);
+		List<String> keys = ModelKey.readStringKeys(models);
 
-		this.controllerEntry.processDelete(keys);
+		// Complete Initializing Models
+		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 
-		Assert.assertFalse(this.getter.allExist(keys));
+		this.controller.processDelete(this.modelTaskQueueType, keys);
 
-		this.reviewDeleteFunctionResults(models);
+		Assert.assertFalse(this.getter.allExist(ModelKey.readModelKeys(models)));
 	}
-
-	public abstract void reviewDeleteFunctionResults(List<T> models);
 
 }

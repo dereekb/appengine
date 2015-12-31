@@ -95,7 +95,6 @@ public class TaskRequestSystemImpl
 
 	@Override
 	public void submitRequests(Collection<TaskRequest> requests) throws SubmitTaskException, TaskAlreadyExistsException {
-
 		Collection<TaskRequest> filtered = this.filter(requests);
 
 		if (filtered.isEmpty() == false) {

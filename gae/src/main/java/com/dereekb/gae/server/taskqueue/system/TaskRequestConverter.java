@@ -19,7 +19,7 @@ public class TaskRequestConverter extends AbstractDirectionalConverter<TaskReque
 	/**
 	 * The base system URL/resource to submit the task to.
 	 */
-	private String resource = null;
+	private String resource;
 
 	/**
 	 * Default method type to submit request as.

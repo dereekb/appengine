@@ -11,6 +11,25 @@
 
 	<bean id="geoPlaceTaskQueueEditControllerEntry" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		<constructor-arg index="0" ref="geoPlaceRegistry"/>
+		<constructor-arg index="1" ref="geoPlaceTaskQueuePostCreateTask"/>
+		<constructor-arg index="2" ref="geoPlaceTaskQueuePostUpdateTask"/>
+		<constructor-arg index="3" ref="geoPlaceTaskQueueProcessDeleteTask"/>
 	</bean>
 	
+	<bean id="geoPlaceTaskQueuePostCreateTask" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+	
+	</bean>
+	
+	<bean id="geoPlaceTaskQueuePostUpdateTask" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+	
+	</bean>
+
+	<bean id="geoPlaceTaskQueueProcessDeleteTask" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+	
+	</bean>
+
 </beans>
