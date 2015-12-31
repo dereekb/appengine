@@ -45,17 +45,23 @@ public class TaskRequestSystemImpl
 	 */
 	public DirectionalConverter<TaskRequest, TaskOptions> taskConverter;
 
-	public TaskRequestSystemImpl(String queue, DirectionalConverter<TaskRequest, TaskOptions> taskConverter) {
-		this.queue = queue;
-		this.taskConverter = taskConverter;
+	public TaskRequestSystemImpl() {}
+
+	public TaskRequestSystemImpl(Filter<TaskRequest> filter) {
+		this(filter, null);
 	}
 
-	public TaskRequestSystemImpl(String queue,
-	        Filter<TaskRequest> filter,
+	public TaskRequestSystemImpl(Filter<TaskRequest> filter,
 	        DirectionalConverter<TaskRequest, TaskOptions> taskConverter) {
-		this.queue = queue;
-		this.filter = filter;
-		this.taskConverter = taskConverter;
+		this(filter, taskConverter, null);
+	}
+
+	public TaskRequestSystemImpl(Filter<TaskRequest> filter,
+	        DirectionalConverter<TaskRequest, TaskOptions> taskConverter,
+	        String queue) {
+		this.setFilter(filter);
+		this.setTaskConverter(taskConverter);
+		this.setQueue(queue);
 	}
 
 	public String getQueue() {
@@ -88,9 +94,7 @@ public class TaskRequestSystemImpl
 	}
 
 	@Override
-	public void submitRequests(Collection<TaskRequest> requests)
-	        throws SubmitTaskException,
-	            TaskAlreadyExistsException {
+	public void submitRequests(Collection<TaskRequest> requests) throws SubmitTaskException, TaskAlreadyExistsException {
 
 		Collection<TaskRequest> filtered = this.filter(requests);
 

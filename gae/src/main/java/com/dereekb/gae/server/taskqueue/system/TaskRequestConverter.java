@@ -26,7 +26,7 @@ public class TaskRequestConverter extends AbstractDirectionalConverter<TaskReque
 	 *
 	 * Is used only if the input request does not have a type specified.
 	 */
-	private Method method = Method.PUT;
+	private Method method;
 
 	/**
 	 * (Optional) Default timings to use if the request does not specify
@@ -35,12 +35,44 @@ public class TaskRequestConverter extends AbstractDirectionalConverter<TaskReque
 	private TaskRequestTiming timings;
 
 	public TaskRequestConverter(String resource) {
-		this.resource = resource;
+		this(resource, null, null);
 	}
 
 	public TaskRequestConverter(String resource, Method method, TaskRequestTiming timings) {
+		this.setResource(resource);
+		this.setMethod(method);
+		this.setTimings(timings);
+	}
+
+	public String getResource() {
+		return this.resource;
+	}
+
+	public void setResource(String resource) {
+		if (resource != null && resource.startsWith("/") == false) {
+			resource = "/" + resource;
+		}
+
 		this.resource = resource;
+	}
+
+	public Method getMethod() {
+		return this.method;
+	}
+
+	public void setMethod(Method method) {
+		if (method == null) {
+			method = Method.PUT;
+		}
+
 		this.method = method;
+	}
+
+	public TaskRequestTiming getTimings() {
+		return this.timings;
+	}
+
+	public void setTimings(TaskRequestTiming timings) {
 		this.timings = timings;
 	}
 

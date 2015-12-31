@@ -91,7 +91,7 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends ModelKeyTaskReque
 	@Override
 	public void setBaseRequest(TaskRequest request) {
 		if (request == null) {
-			request = new TaskRequestImpl("/delete", Method.DELETE);
+			request = new TaskRequestImpl("delete", Method.DELETE);
 		}
 
 		super.setBaseRequest(request);

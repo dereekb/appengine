@@ -10,14 +10,9 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- SYSTEM -->
-	<bean id="geoPlaceTaskQueue" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" ref="geoPlaceType" />
-	</bean>
-
 	<bean id="geoPlaceTaskQueueResource" class="java.lang.String"
-		scope="singleton">
-		<constructor-arg index="0" ref="geoPlaceType" />
-	</bean>
+		scope="singleton" factory-bean="geoPlaceType"
+		factory-method="toLowerCase"/>
 
 	<bean id="geoPlaceTaskRequestConverter" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.taskqueue.system.TaskRequestConverter">
@@ -26,12 +21,11 @@
 
 	<bean id="geoPlaceTaskRequestSystem" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.taskqueue.system.impl.TaskRequestSystemImpl">
-		<constructor-arg index="0" ref="geoPlaceTaskQueue" />
-		<constructor-arg index="1">
+		<constructor-arg index="0">
 			<bean factory-bean="taskRequestHashFilterFactory"
 				factory-method="make" />
 		</constructor-arg>
-		<constructor-arg index="2" ref="geoPlaceTaskRequestConverter" />
+		<constructor-arg index="1" ref="geoPlaceTaskRequestConverter" />
 	</bean>
 
 	<!-- SCHEDULERS -->
