@@ -1,6 +1,7 @@
 package com.dereekb.gae.web.api.shared.request;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiRequest<I> {
 
+	@NotNull
 	@Valid
 	protected I data;
 

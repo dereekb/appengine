@@ -89,7 +89,7 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 
 		ApiResponse response = this.controller.searchMultiple(query, types, parameters, limit, getModels);
 		Assert.assertNotNull(response);
-		Assert.assertNotNull(response.getResponseIncludedData().get(this.searchType));
+		Assert.assertNotNull(response.getResponseIncludedData().get(this.searchType.toLowerCase()));
 	}
 
 	protected List<T> generateIndexedModels() {

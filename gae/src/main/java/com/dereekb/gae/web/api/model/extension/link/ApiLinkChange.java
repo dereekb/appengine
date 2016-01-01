@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.model.extension.link;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.constraints.Max;
@@ -72,6 +74,14 @@ public class ApiLinkChange {
 
 	public void setTargetKeys(Set<String> targetKeys) {
 		this.targetKeys = targetKeys;
+	}
+
+	public void setTargetKeys(Collection<String> targetKeys) {
+		if (targetKeys != null) {
+			this.targetKeys = new HashSet<String>(targetKeys);
+		} else {
+			this.targetKeys = null;
+		}
 	}
 
 	@Override

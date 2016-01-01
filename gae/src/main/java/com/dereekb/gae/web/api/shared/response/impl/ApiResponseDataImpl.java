@@ -39,7 +39,7 @@ public class ApiResponseDataImpl
 			throw new IllegalArgumentException("Response Data Type cannot be null or empty.");
 		}
 
-		this.type = type;
+		this.type = type.toLowerCase();
 	}
 
 	public Object getData() {

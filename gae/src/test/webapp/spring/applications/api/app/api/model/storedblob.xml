@@ -58,9 +58,7 @@
 	</bean>
 
 	<!-- Search Component -->
-	<bean id="storedBlobSearchType" factory-bean="storedBlobType"
-		factory-method="toLowerCase" lazy-init="true" scope="singleton">
-	</bean>
+	<alias name="storedBlobType" alias="storedBlobSearchType"/>
 
 	<bean id="storedBlobSearchDelegateEntry" scope="singleton"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">

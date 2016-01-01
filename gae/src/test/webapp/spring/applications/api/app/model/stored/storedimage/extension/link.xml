@@ -23,6 +23,8 @@
 		<!-- Reverse Links Configuration -->
 		<property name="reverseLinkNames">
 			<map key-type="java.lang.String" value-type="java.lang.String">
+				<!-- Links the "GeoPlace" in a StoredImage's link delegate with the "StoredImage" link in the GeoPlace link delegate -->
+				<entry key-ref="geoPlaceType" value-ref="storedImageType" />
 				<!-- TODO -->
 			</map>
 		</property>

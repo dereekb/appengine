@@ -118,7 +118,7 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 		return "StoredImageSetLinkSystemEntry [iconLinkName=" + this.iconLinkName + ", imagesLinkName="
 		        + this.imagesLinkName + ", imagesTarget=" + this.imagesTarget + ", modelType=" + this.modelType
 		        + ", indexService=" + this.service + ", setter=" + this.setter + ", reviewer=" + this.reviewer
-		        + ", validator=" + this.validator + ", reverseLinkNames=" + this.reverseLinkNames + "]";
+		        + ", validator=" + this.validator + ", reverseLinkNames=" + this.getReverseLinkNames() + "]";
 	}
 
 }

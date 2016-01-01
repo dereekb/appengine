@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 
 /**
  * {@link LinkService} implementation.
@@ -44,7 +44,7 @@ public class LinkServiceImpl
 
 		List<LinkSystemChangeException> failures = runner.getFailures();
 
-		if (failures.isEmpty() == false) {
+		if (failures.isEmpty()) {
 			runner.saveChanges();
 		} else {
 			throw new LinkSystemChangesException(failures);

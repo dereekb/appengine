@@ -10,9 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- SYSTEM -->
-	<bean id="geoPlaceTaskQueueResource" class="java.lang.String"
-		scope="singleton" factory-bean="geoPlaceType"
-		factory-method="toLowerCase"/>
+	<alias name="geoPlaceType" alias="geoPlaceTaskQueueResource"/>
 
 	<bean id="geoPlaceTaskRequestConverter" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.taskqueue.system.TaskRequestConverter">

@@ -11,7 +11,7 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 
 /**
  * {@link Factory} for {@link TaskRequestSystemImpl}.
- * 
+ *
  * @author dereekb
  */
 public class TaskRequestSystemImplFactory
@@ -23,17 +23,21 @@ public class TaskRequestSystemImplFactory
 
 	public TaskRequestSystemImplFactory() {}
 
+	public TaskRequestSystemImplFactory(String resource) {
+		this(null, resource);
+	}
+
 	public TaskRequestSystemImplFactory(String queue, String resource) {
-		this.queue = queue;
-		this.taskConverter = new TaskRequestConverter(resource);
+		this.setQueue(queue);
+		this.setTaskConverterWithResource(resource);
 	}
 
 	public TaskRequestSystemImplFactory(String queue,
 	        Factory<? extends Filter<TaskRequest>> filterFactory,
 	        DirectionalConverter<TaskRequest, TaskOptions> taskConverter) {
-		this.queue = queue;
-		this.filterFactory = filterFactory;
-		this.taskConverter = taskConverter;
+		this.setQueue(queue);
+		this.setFilterFactory(filterFactory);
+		this.setTaskConverter(taskConverter);
 	}
 
 	public String getQueue() {
@@ -56,13 +60,25 @@ public class TaskRequestSystemImplFactory
 		return this.taskConverter;
 	}
 
+	public void setTaskConverterWithResource(String resource) {
+		this.setTaskConverter(new TaskRequestConverter(resource));
+	}
+
 	public void setTaskConverter(DirectionalConverter<TaskRequest, TaskOptions> taskConverter) {
 		this.taskConverter = taskConverter;
 	}
 
 	@Override
 	public TaskRequestSystemImpl make() throws FactoryMakeFailureException {
-		TaskRequestSystemImpl system = new TaskRequestSystemImpl(this.queue, this.taskConverter);
+		TaskRequestSystemImpl system = new TaskRequestSystemImpl();
+
+		if (this.queue != null) {
+			system.setQueue(this.queue);
+		}
+
+		if (this.taskConverter != null) {
+			system.setTaskConverter(this.taskConverter);
+		}
 
 		if (this.filterFactory != null) {
 			Filter<TaskRequest> filter = this.filterFactory.make();

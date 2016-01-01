@@ -61,6 +61,8 @@ public class ApiLinkChangeConverterImpl
 
 			Set<String> targetStringKeys = inputChange.getTargetKeys();
 			change.setTargetStringKeys(targetStringKeys);
+
+			changes.add(change);
 		}
 
 		return changes;

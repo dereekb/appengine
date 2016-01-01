@@ -90,9 +90,12 @@ public final class ModelKey
 		return string;
 	}
 
+	/**
+	 * @see {@link #keyAsString()} for getting the key's string value.
+	 */
 	@Override
 	public String toString() {
-		return "ModelKey [ key= " + this.keyAsString() + "]";
+		return this.keyAsString();
 	}
 
 	@Override

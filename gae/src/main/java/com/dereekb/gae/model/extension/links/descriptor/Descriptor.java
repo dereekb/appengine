@@ -5,11 +5,11 @@ import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedModel;
 /**
  * Used by {@link DescribedModel} types to wrap the descriptive info model's
  * type and identifier.
- *
  * <p>
  * Descriptor types are generally named after the class and starts with a
  * capital letter.
  * </p>
+ * Descriptors are case-sensitive.
  *
  * @author dereekb
  */

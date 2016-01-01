@@ -14,11 +14,12 @@ import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * {@link Link} wrapper for a {@link BidirectionalLinkSystem}.
+ * {@link Link} implementation. Wraps another {@link Link} for a
+ * {@link BidirectionalLinkSystem}.
  *
  * @author dereekb
  */
-public final class BidirectionalLink
+public class BidirectionalLink
         implements Link, LinkInfo {
 
 	private BidirectionalLinkDelegate delegate;
@@ -134,6 +135,11 @@ public final class BidirectionalLink
 		}
 
 		return reverseLinks;
+	}
+
+	@Override
+	public String toString() {
+		return "BidirectionalLink [delegate=" + this.delegate + ", link=" + this.link + "]";
 	}
 
 }

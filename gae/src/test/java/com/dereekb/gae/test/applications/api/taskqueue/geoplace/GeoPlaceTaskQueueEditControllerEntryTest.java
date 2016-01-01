@@ -1,7 +1,5 @@
 package com.dereekb.gae.test.applications.api.taskqueue.geoplace;
 
-import java.util.List;
-
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.TaskQueueEditControllerEntryTest;
 
@@ -9,21 +7,9 @@ import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.TaskQueueEditC
 public class GeoPlaceTaskQueueEditControllerEntryTest extends TaskQueueEditControllerEntryTest<GeoPlace> {
 
 	@Override
-	public void reviewCreationFunctionResults(List<GeoPlace> models) {
-		// TODO Auto-generated method stub
+	protected void createRelated(GeoPlace model) {
 
 	}
 
-	@Override
-	public void reviewEditedFunctionResults(List<GeoPlace> models) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void reviewDeleteFunctionResults(List<GeoPlace> models) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

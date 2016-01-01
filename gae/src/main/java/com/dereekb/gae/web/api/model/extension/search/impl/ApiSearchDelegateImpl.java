@@ -3,6 +3,7 @@ package com.dereekb.gae.web.api.model.extension.search.impl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchDelegate;
@@ -15,6 +16,8 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * {@link ApiSearchDelegate} implementation.
+ * <p>
+ * The entries map is case-insensitive.
  *
  * @author dereekb
  *
@@ -28,12 +31,16 @@ public class ApiSearchDelegateImpl
 		this.setEntries(entries);
 	}
 
-	public Map<String, ApiSearchDelegateEntry> getEntries() {
+	public final Map<String, ApiSearchDelegateEntry> getEntries() {
 		return this.entries;
 	}
 
-	public void setEntries(Map<String, ApiSearchDelegateEntry> entries) {
-		this.entries = entries;
+	public final void setEntries(Map<String, ApiSearchDelegateEntry> entries) {
+		this.entries = new TreeMap<String, ApiSearchDelegateEntry>(String.CASE_INSENSITIVE_ORDER);
+
+		if (entries != null) {
+			this.entries.putAll(entries);
+		}
 	}
 
 	// MARK: Internal

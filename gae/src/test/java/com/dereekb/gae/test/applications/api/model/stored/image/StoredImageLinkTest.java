@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.model.geoplace;
+package com.dereekb.gae.test.applications.api.model.stored.image;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkServiceTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
-public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
+public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
 	@Autowired
 	@Qualifier("geoPlaceType")
@@ -24,7 +24,7 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 
 	@Autowired
 	@Qualifier("storedImageType")
-	private String storedImageLinkName;
+	private String storedImageLinkType;
 
 	@Autowired
 	@Qualifier("geoPlaceTestModelGenerator")
@@ -38,36 +38,15 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 	@Qualifier("storedImageRegistry")
 	private GetterSetter<StoredImage> storedImageGetterSetter;
 
-	public String getGeoPlaceLinkType() {
-		return this.geoPlaceLinkType;
-	}
-
-	public void setGeoPlaceLinkType(String geoPlaceLinkType) {
-		this.geoPlaceLinkType = geoPlaceLinkType;
-	}
-
-	public TestModelGenerator<GeoPlace> getGeoPlaceGenerator() {
-		return this.geoPlaceGenerator;
-	}
-
-	public void setGeoPlaceGenerator(TestModelGenerator<GeoPlace> geoPlaceGenerator) {
-		this.geoPlaceGenerator = geoPlaceGenerator;
-	}
-
-	public TestModelGenerator<StoredImage> getStoredImageGenerator() {
-		return this.storedImageGenerator;
-	}
-
-	public void setStoredImageGenerator(TestModelGenerator<StoredImage> storedImageGenerator) {
-		this.storedImageGenerator = storedImageGenerator;
-	}
-
 	/**
 	 * The geo place cannot be linked to a stored image that already has a
 	 * geoplace.
 	 */
 	@Test
 	public void testLinkingToImageBeforeClearingImage() {
+
+		// TODO: Update.
+
 		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
 		StoredImage storedImage = this.storedImageGenerator.generate();
 
@@ -75,7 +54,7 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 		geoPlaceSet.loadModel(geoPlace.getModelKey());
 
 		LinkModel geoPlaceLinkModel = geoPlaceSet.getModelForKey(geoPlace.getModelKey());
-		Link storedImageLink = geoPlaceLinkModel.getLink(this.storedImageLinkName);
+		Link storedImageLink = geoPlaceLinkModel.getLink(this.storedImageLinkType);
 
 		if (storedImage.getGeoPlace() != null) {
 			try {
@@ -106,7 +85,7 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 		geoPlaceSet.loadModel(geoPlace.getModelKey());
 
 		LinkModel geoPlaceLinkModel = geoPlaceSet.getModelForKey(geoPlace.getModelKey());
-		Link storedImageLink = geoPlaceLinkModel.getLink(this.storedImageLinkName);
+		Link storedImageLink = geoPlaceLinkModel.getLink(this.storedImageLinkType);
 
 		RelationImpl addImage = new RelationImpl(storedImage.getModelKey());
 		storedImageLink.addRelation(addImage);

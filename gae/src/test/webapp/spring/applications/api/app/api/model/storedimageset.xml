@@ -58,9 +58,7 @@
 	</bean>
 
 	<!-- Search Component -->
-	<bean id="storedImageSetSearchType" factory-bean="storedImageSetType"
-		factory-method="toLowerCase" lazy-init="true" scope="singleton">
-	</bean>
+	<alias name="storedImageSetType" alias="storedImageSetSearchType"/>
 
 	<bean id="storedImageSetSearchDelegateEntry" scope="singleton"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">

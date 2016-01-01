@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
@@ -27,10 +28,13 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
 /**
  * Abstract implementation of different {@link LinkSystem} related elements.
+ * <p>
+ * The reverse link names map is case-insensitive.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
         implements LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>, BidirectionalLinkSystemEntry {
@@ -80,20 +84,21 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 
 	/**
 	 * Names for the reverse element.
-	 *
+	 * <p>
 	 * Keyed by this element's link names to the opposite link name.
-	 *
+	 * <p>
 	 * For example, if this has a link named "parent", the value "child" will be
 	 * keyed to "parent".
 	 */
-	protected Map<String, String> reverseLinkNames = new HashMap<String, String>();
+	private Map<String, String> reverseLinkNames;
 
 	public AbstractModelLinkSystemEntry(String modelType,
 	        ReadService<T> service,
 	        ConfiguredSetter<T> setter) {
-		this.modelType = modelType;
-		this.service = service;
-		this.setter = setter;
+		this.setModelType(modelType);
+		this.setService(service);
+		this.setSetter(setter);
+		this.setReverseLinkNames(null);
 	}
 
 	public String getModelType() {
@@ -120,12 +125,16 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 		this.setter = setter;
 	}
 
-	public Map<String, String> getReverseLinkNames() {
+	public final Map<String, String> getReverseLinkNames() {
 		return this.reverseLinkNames;
 	}
 
-	public void setReverseLinkNames(Map<String, String> reverseLinkNames) {
-		this.reverseLinkNames = reverseLinkNames;
+	public final void setReverseLinkNames(Map<String, String> reverseLinkNames) {
+		this.reverseLinkNames = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+
+		if (reverseLinkNames != null) {
+			this.reverseLinkNames.putAll(reverseLinkNames);
+		}
 	}
 
 	@Override
@@ -192,8 +201,8 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 
 	@Override
 	public String getReverseLinkName(LinkInfo info) throws UnknownReverseLinkException {
-		String linkName = info.getLinkName();
 
+		String linkName = info.getLinkName();
 		String reverseLinkName = this.reverseLinkNames.get(linkName);
 
 		if (reverseLinkName == null) {

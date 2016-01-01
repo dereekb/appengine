@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore.models.keys.conversion.impl;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -13,6 +14,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
 /**
  * Converter used for converting {@link String} identifiers to their
  * {@link ModelKey} value safely.
+ * <p>
+ * The map is case-insensitive.
  *
  * @author dereekb
  *
@@ -29,12 +32,16 @@ public class TypeModelKeyConverterImpl
 		this.map = map;
 	}
 
-	public Map<String, ModelKeyType> getMap() {
+	public final Map<String, ModelKeyType> getMap() {
 		return this.map;
 	}
 
-	public void setMap(Map<String, ModelKeyType> map) {
-		this.map = map;
+	public final void setMap(Map<String, ModelKeyType> map) {
+		this.map = new TreeMap<String, ModelKeyType>(String.CASE_INSENSITIVE_ORDER);
+
+		if (map != null) {
+			this.map.putAll(map);
+		}
 	}
 
 	// MARK: Conversions
