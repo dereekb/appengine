@@ -20,7 +20,7 @@ public class ObjectifyDateQueryBuilder<T> extends ObjectifyQueryBuilder<T> {
 
 	public static final String DEFAULT_DATE_FIELD = "date";
 
-	private final String dateField;
+	private String dateField;
 
 	public ObjectifyDateQueryBuilder(Class<T> type) {
 		this(type, DEFAULT_DATE_FIELD);
@@ -29,15 +29,20 @@ public class ObjectifyDateQueryBuilder<T> extends ObjectifyQueryBuilder<T> {
 	public ObjectifyDateQueryBuilder(Class<T> type, String dateField) throws IllegalArgumentException {
 		super(type);
 
-		if (this.dateField == null || this.dateField.isEmpty()) {
+		if (dateField == null || dateField.isEmpty()) {
 			throw new IllegalArgumentException("The date field cannot be empty or null.");
 		}
 
 		this.dateField = dateField;
 	}
 
+
 	public String getDateField() {
 		return this.dateField;
+	}
+
+	public void setDateField(String dateField) {
+		this.dateField = dateField;
 	}
 
 	public ObjectifyQuery<T> recentSearch() {
