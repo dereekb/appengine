@@ -2,7 +2,6 @@ package com.dereekb.gae.model.crud.task.save;
 
 import java.util.List;
 
-import com.dereekb.gae.model.crud.deprecated.function.utility.saver.SetterChangeState;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.dereekb.gae.utilities.task.Task;
