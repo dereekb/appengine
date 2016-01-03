@@ -1,11 +1,10 @@
 package com.dereekb.gae.model.crud.exception;
 
-import com.dereekb.gae.model.crud.task.impl.delegate.DeleteTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Used by {@link DeleteTaskDelegate} to signify that the delete should be
- * canceled.
+ * Exception used to signify that the delete should be canceled due to certain
+ * models.
  *
  * @author dereekb
  *

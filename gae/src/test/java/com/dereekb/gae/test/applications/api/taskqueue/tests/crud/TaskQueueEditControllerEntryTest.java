@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -33,6 +35,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	private Getter<T> getter;
 	private TestModelGenerator<T> modelGenerator;
 
+	@Autowired
+	@Qualifier("taskQueueEditController")
 	private TaskQueueEditController controller;
 
     public Integer getGenCount() {
@@ -76,7 +80,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	}
 
 	// Make
-	private List<T> create(boolean related) {
+	public List<T> create(boolean related) {
 		List<T> models = this.modelGenerator.generate(this.genCount);
 
 		if (related) {
@@ -88,7 +92,14 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		return models;
 	}
 
-	protected abstract void createRelated(T model);
+	/**
+	 * Creates all related models and links them together.
+	 *
+	 * @param model
+	 */
+	protected void createRelated(T model) {
+		// Nothing to create by default.
+	}
 
 	// Tests
 	@Test
@@ -97,6 +108,26 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		List<String> keys = ModelKey.readStringKeys(models);
 
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
+
+		Assert.assertTrue(this.isProperlyInitialized(models));
+	}
+
+	protected final boolean isProperlyInitialized(List<T> models) {
+		boolean success = true;
+
+		for (T model : models) {
+			if (success == false) {
+				break;
+			}
+
+			success = this.isProperlyInitialized(model);
+		}
+
+		return success;
+	}
+
+	protected boolean isProperlyInitialized(T model) {
+		return true;
 	}
 
 	@Test
@@ -107,20 +138,52 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		// Complete Initializing Models
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 
+		Assert.assertTrue(this.isProperlyInitialized(models));
+
 		this.controller.reviewUpdate(this.modelTaskQueueType, keys);
 	}
 
 	@Test
-	public void testDeleteFunction() {
+	public final void testDeleteFunction() {
 		List<T> models = this.create(true);
+		this.testDelete(models);
+	}
+
+	public void testDelete(List<T> models) {
 		List<String> keys = ModelKey.readStringKeys(models);
 
 		// Complete Initializing Models
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 
+		Assert.assertTrue(this.isProperlyInitialized(models));
+
 		this.controller.processDelete(this.modelTaskQueueType, keys);
 
-		Assert.assertFalse(this.getter.allExist(ModelKey.readModelKeys(models)));
+		Assert.assertTrue(this.isProperlyDeleted(models));
+	}
+
+	protected final boolean isProperlyDeleted(List<T> models) {
+		boolean success = (this.getter.allExist(ModelKey.readModelKeys(models)) == false);
+
+		for (T model : models) {
+			if (success == false) {
+				break;
+			}
+
+			success = this.isProperlyDeleted(model);
+		}
+
+		return success;
+	}
+
+	/**
+	 * Checks the model's values to see whether or not it has been properly
+	 * deleted.
+	 * <p>
+	 * Override.
+	 */
+	protected boolean isProperlyDeleted(T model) {
+		return true;
 	}
 
 }
