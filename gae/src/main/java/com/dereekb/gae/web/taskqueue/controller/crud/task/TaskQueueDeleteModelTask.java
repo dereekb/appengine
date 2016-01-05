@@ -1,10 +1,11 @@
 package com.dereekb.gae.web.taskqueue.controller.crud.task;
 
+import java.util.List;
+
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.utility.ConfiguredDeleter;
-import com.dereekb.gae.utilities.task.IterableTask;
+import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
@@ -20,14 +21,13 @@ public class TaskQueueDeleteModelTask<T extends UniqueModel> extends TaskQueueMo
 	private ConfiguredDeleter deleter;
 
 	public TaskQueueDeleteModelTask(ConfiguredDeleter deleter) {
-	    super();
-		this.deleter = deleter;
+		this(deleter, null);
     }
 
-	public TaskQueueDeleteModelTask(IterableTask<ModelKey> keyTask, IterableTask<T> modelTask, ConfiguredDeleter deleter) {
-	    super(keyTask, modelTask);
-		this.deleter = deleter;
-    }
+	public TaskQueueDeleteModelTask(ConfiguredDeleter deleter, List<Task<ModelKeyListAccessor<T>>> tasks) {
+		super(tasks);
+		this.setDeleter(deleter);
+	}
 
 	public ConfiguredDeleter getDeleter() {
 		return this.deleter;
@@ -45,8 +45,7 @@ public class TaskQueueDeleteModelTask<T extends UniqueModel> extends TaskQueueMo
 
 	@Override
 	public String toString() {
-		return "TaskQueueDeleteModelTask [deleter=" + this.deleter + ", keyTask=" + this.keyTask + ", modelTask="
-		        + this.modelTask + "]";
+		return "TaskQueueDeleteModelTask [deleter=" + this.deleter + ", tasks=" + this.tasks + "]";
 	}
 
 }

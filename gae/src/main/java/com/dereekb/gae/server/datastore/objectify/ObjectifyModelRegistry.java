@@ -32,6 +32,7 @@ import com.googlecode.objectify.Key;
 public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
         implements ObjectifyRegistry<T>, ConfiguredSetter<T> {
 
+	protected String modelType;
 	protected final Class<T> type;
 	protected final ObjectifyModelQuery<T> query;
 	protected final ObjectifyModelGetter<T> getter;
@@ -39,11 +40,42 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 	protected final ObjectifyKeyWriter<T, ModelKey> keyWriter;
 
 	public ObjectifyModelRegistry(ObjectifyDatabase database, Class<T> type, ObjectifyKeyWriter<T, ModelKey> keyWriter) {
+		this(null, database, type, keyWriter);
+	}
+
+	public ObjectifyModelRegistry(String modelType,
+	        ObjectifyDatabase database,
+	        Class<T> type,
+	        ObjectifyKeyWriter<T, ModelKey> keyWriter) throws IllegalArgumentException {
+
+		if (type == null) {
+			throw new IllegalArgumentException("Type cannot be null.");
+		}
+
+		if (keyWriter == null) {
+			throw new IllegalArgumentException("Key Writer cannot be null.");
+		}
+
 		this.type = type;
 		this.keyWriter = keyWriter;
+
+		this.setModelType(modelType);
+
 		this.query = new ObjectifyModelQuery<T>(database, type);
 		this.getter = new ObjectifyModelGetter<T>(database, type);
 		this.setter = new ObjectifyModelSetter<T>(database, type);
+	}
+
+	public String getModelType() {
+		return this.modelType;
+	}
+
+	public void setModelType(String modelType) {
+		if (modelType == null) {
+			modelType = this.type.getSimpleName();
+		}
+
+		this.modelType = modelType;
 	}
 
 	@Override
@@ -197,12 +229,12 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 
 	@Override
 	public ModelKeyListAccessor<T> createAccessor() {
-		return new ModelKeyListAccessorImpl<T>(this);
+		return new ModelKeyListAccessorImpl<T>(this.modelType, this);
 	}
 
 	@Override
 	public ModelKeyListAccessor<T> createAccessor(Collection<ModelKey> keys) {
-		return new ModelKeyListAccessorImpl<T>(this, keys);
+		return new ModelKeyListAccessorImpl<T>(this.modelType, this, keys);
 	}
 
 }

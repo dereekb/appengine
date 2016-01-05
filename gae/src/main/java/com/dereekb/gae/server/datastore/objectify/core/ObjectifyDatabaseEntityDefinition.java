@@ -13,7 +13,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 public interface ObjectifyDatabaseEntityDefinition<T> {
 
 	/**
-	 *
 	 * @return the system name of the entity.
 	 */
 	public String getEntityName();

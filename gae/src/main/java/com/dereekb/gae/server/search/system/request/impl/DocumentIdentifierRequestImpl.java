@@ -16,6 +16,10 @@ public class DocumentIdentifierRequestImpl extends SearchDocumentRequestImpl
 
 	private Collection<String> documentIdentifiers;
 
+	public DocumentIdentifierRequestImpl(String indexName) throws IllegalArgumentException {
+		super(indexName);
+	}
+
 	public DocumentIdentifierRequestImpl(String indexName, String documentIdentifier) throws IllegalArgumentException {
 		super(indexName);
 		this.setDocumentIdentifiers(SingleItem.withValue(documentIdentifier));

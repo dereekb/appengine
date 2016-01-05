@@ -74,9 +74,10 @@ public class ObjectifyDatabase
 			throw new UnregisteredEntryTypeException(type);
 		}
 
+		String modelTypeName = entity.getEntityName();
 		ModelKeyType keyType = entity.getEntityKeyType();
 		ObjectifyKeyWriter<T, ModelKey> keyWriter = this.makeKeyWriter(type, keyType);
-		ObjectifyModelRegistry<T> registry = new ObjectifyModelRegistry<T>(this, type, keyWriter);
+		ObjectifyModelRegistry<T> registry = new ObjectifyModelRegistry<T>(modelTypeName, this, type, keyWriter);
 		return registry;
 	}
 

@@ -21,22 +21,34 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 public class ModelKeyListAccessorImpl<T extends UniqueModel>
         implements ModelKeyListAccessor<T> {
 
-	private List<ModelKey> keys;
-
+	private final String modelType;
 	private final Getter<T> getter;
-	private List<T> models;
 
-	public ModelKeyListAccessorImpl(Getter<T> getter, Collection<ModelKey> keys) throws IllegalArgumentException {
-		this(getter);
+	private List<ModelKey> keys;
+	private List<T> models; // lazy
+
+	public ModelKeyListAccessorImpl(String modelType, Getter<T> getter, Collection<ModelKey> keys)
+	        throws IllegalArgumentException {
+		this(modelType, getter);
 		this.setKeys(keys);
 	}
 
-	public ModelKeyListAccessorImpl(Getter<T> getter) throws IllegalArgumentException {
+	public ModelKeyListAccessorImpl(String modelType, Getter<T> getter) throws IllegalArgumentException {
 		if (getter == null) {
 			throw new IllegalArgumentException("Getter cannot be null.");
 		}
 
+		if (modelType == null) {
+			throw new IllegalArgumentException("Model type cannot be null.");
+		}
+
 		this.getter = getter;
+		this.modelType = modelType;
+	}
+
+	@Override
+	public String getModelType() {
+		return this.modelType;
 	}
 
 	@Override
