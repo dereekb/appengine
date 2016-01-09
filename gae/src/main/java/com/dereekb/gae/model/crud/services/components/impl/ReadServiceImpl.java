@@ -1,13 +1,17 @@
 package com.dereekb.gae.model.crud.services.components.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.pairs.ReadPair;
+import com.dereekb.gae.model.crud.services.components.AtomicReadService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
+import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
 import com.dereekb.gae.model.crud.task.ReadTask;
@@ -28,7 +32,7 @@ import com.dereekb.gae.utilities.task.IterableTask;
  *            model type
  */
 public class ReadServiceImpl<T extends UniqueModel>
-        implements ReadService<T> {
+        implements AtomicReadService<T> {
 
 	private ReadTask<T> readTask;
 
@@ -44,6 +48,16 @@ public class ReadServiceImpl<T extends UniqueModel>
 		this.readTask = readTask;
 	}
 
+	// MARK: AtomicReadService
+	@Override
+	public Collection<T> read(Collection<ModelKey> keys) throws AtomicOperationException {
+		ReadRequestOptions options = new ReadRequestOptionsImpl(true);
+		ReadRequest request = new KeyReadRequest(keys, options);
+		ReadResponse<T> response = this.read(request);
+		return response.getModels();
+	}
+
+	// MARK: ReadService
 	@Override
 	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 		ReadResponse<T> readResponse = null;
@@ -75,6 +89,11 @@ public class ReadServiceImpl<T extends UniqueModel>
 		}
 
 		return readResponse;
+	}
+
+	@Override
+	public String toString() {
+		return "ReadServiceImpl [readTask=" + this.readTask + "]";
 	}
 
 }

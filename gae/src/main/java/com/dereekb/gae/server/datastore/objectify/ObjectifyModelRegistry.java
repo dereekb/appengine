@@ -13,6 +13,7 @@ import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelSette
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyWriter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.utility.ConfiguredDeleter;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
@@ -20,9 +21,10 @@ import com.googlecode.objectify.Key;
 /**
  * {@link ObjectifyRegistry} implementation for {@link ObjectifyModel}
  * instances.
- *
- * Also {@link ConfiguredSetter} implementation that saves/deletes
- * asynchronously.
+ * <p>
+ * {@link ConfiguredSetter} implementation that saves/deletes asynchronously.
+ * <p>
+ * {@link ConfiguredDeleter} implementation that deletes asynchronously.
  *
  * @author dereekb
  *
@@ -30,7 +32,7 @@ import com.googlecode.objectify.Key;
  *            Model type
  */
 public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
-        implements ObjectifyRegistry<T>, ConfiguredSetter<T> {
+        implements ObjectifyRegistry<T>, ConfiguredSetter<T>, ConfiguredDeleter {
 
 	protected String modelType;
 	protected final Class<T> type;
@@ -128,6 +130,7 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 		return this.getter.getWithObjectifyKeys(keys);
 	}
 
+	// MARK: ConfiguredSetter
 	@Override
 	public void save(T entity) {
 		this.save(entity, true);
@@ -176,6 +179,17 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 	public void delete(Key<T> entity,
 	                   boolean async) {
 		this.setter.delete(entity, async);
+	}
+
+	@Override
+	public void deleteWithKey(ModelKey key) {
+		this.deleteWithKey(key, true);
+	}
+
+	// MARK: ConfiguredDeleter
+	@Override
+	public void deleteWithKeys(Iterable<ModelKey> keys) {
+		this.deleteWithKeys(keys, true);
 	}
 
 	@Override
@@ -236,5 +250,6 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 	public ModelKeyListAccessor<T> createAccessor(Collection<ModelKey> keys) {
 		return new ModelKeyListAccessorImpl<T>(this.modelType, this, keys);
 	}
+
 
 }

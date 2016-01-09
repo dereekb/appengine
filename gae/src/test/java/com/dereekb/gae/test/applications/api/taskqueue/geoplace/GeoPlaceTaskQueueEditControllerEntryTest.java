@@ -13,6 +13,13 @@ public class GeoPlaceTaskQueueEditControllerEntryTest extends SearchableTaskQueu
 
 	@Override
 	@Autowired
+	@Qualifier("geoPlaceType")
+	public void setModelTaskQueueType(String modelTaskQueueType) {
+		super.setModelTaskQueueType(modelTaskQueueType);
+	}
+
+	@Override
+	@Autowired
 	@Qualifier("geoPlaceSearchIndex")
 	public void setSearchIndex(String searchIndex) {
 		super.setSearchIndex(searchIndex);

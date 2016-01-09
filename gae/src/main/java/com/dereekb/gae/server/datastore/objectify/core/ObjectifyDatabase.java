@@ -258,7 +258,6 @@ public class ObjectifyDatabase
 	}
 
 	// Add/Put
-
 	public <T> void put(T entity,
 	                    boolean async) {
 		Result<Key<T>> result = this.ofy().save().entity(entity);

@@ -25,16 +25,25 @@
 			<map key-type="java.lang.String">
 				<entry key-ref="geoPlaceType" value-ref="geoPlaceKeyedDocumentIndexService" />
 				<entry key-ref="storedBlobType" value-ref="storedBlobKeyedDocumentIndexService" />
-				<entry key-ref="storedImageType" value-ref="storedImageTypeKeyedDocumentIndexService" />
+				<entry key-ref="storedImageType" value-ref="storedImageKeyedDocumentIndexService" />
 				<entry key-ref="storedImageSetType" value-ref="storedImageSetKeyedDocumentIndexService" />
 			</map>
 		</constructor-arg>
 	</bean>
 
-	<bean id="typedDocumentIndexServiceUnindexTask" lazy-init="true" scope="singleton"
+	<!-- Search Index Tasks -->
+	<bean id="typedDocumentIndexServiceIndexTask" lazy-init="true"
+		scope="singleton"
 		class="com.dereekb.gae.model.extension.search.document.index.task.ConfiguredTypedDocumentIndexServiceTask">
-		<constructor-arg index="0" ref="typedDocumentIndexService"/>
-		<constructor-arg index="1" value="UNINDEX"/>
+		<constructor-arg index="0" ref="typedDocumentIndexService" />
+		<constructor-arg index="1" value="INDEX" />
+	</bean>
+
+	<bean id="typedDocumentIndexServiceUnindexTask" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.model.extension.search.document.index.task.ConfiguredTypedDocumentIndexServiceTask">
+		<constructor-arg index="0" ref="typedDocumentIndexService" />
+		<constructor-arg index="1" value="UNINDEX" />
 	</bean>
 
 	<!-- Models Only Search Service -->

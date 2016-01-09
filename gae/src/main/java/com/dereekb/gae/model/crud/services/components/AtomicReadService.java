@@ -15,7 +15,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @param <T>
  *            model type
  */
-public interface AtomicReadService<T extends UniqueModel> {
+public interface AtomicReadService<T extends UniqueModel>
+        extends ReadService<T> {
 
 	/**
 	 * Reads objects for their model keys.

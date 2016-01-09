@@ -22,7 +22,7 @@ public class TaskQueueDeleteModelTask<T extends UniqueModel> extends TaskQueueMo
 
 	public TaskQueueDeleteModelTask(ConfiguredDeleter deleter) {
 		this(deleter, null);
-    }
+	}
 
 	public TaskQueueDeleteModelTask(ConfiguredDeleter deleter, List<Task<ModelKeyListAccessor<T>>> tasks) {
 		super(tasks);
@@ -45,7 +45,7 @@ public class TaskQueueDeleteModelTask<T extends UniqueModel> extends TaskQueueMo
 
 	@Override
 	public String toString() {
-		return "TaskQueueDeleteModelTask [deleter=" + this.deleter + ", tasks=" + this.tasks + "]";
+		return "TaskQueueDeleteModelTask [deleter=" + this.deleter + ", tasks=" + this.getTasks() + "]";
 	}
 
 }

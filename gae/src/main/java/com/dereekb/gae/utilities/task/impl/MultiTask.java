@@ -16,19 +16,23 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 public class MultiTask<T>
         implements Task<T> {
 
-	protected List<Task<T>> tasks;
+	private List<Task<T>> tasks;
 
 	public MultiTask() {}
 
-	public MultiTask(List<Task<T>> tasks) {
-		this.tasks = tasks;
+	public MultiTask(List<Task<T>> tasks) throws IllegalArgumentException {
+		this.setTasks(tasks);
 	}
 
 	public List<Task<T>> getTasks() {
 		return this.tasks;
 	}
 
-	public void setTasks(List<Task<T>> tasks) {
+	public void setTasks(List<Task<T>> tasks) throws IllegalArgumentException {
+		if (tasks == null) {
+			throw new IllegalArgumentException("Tasks cannot be null.");
+		}
+
 		this.tasks = tasks;
 	}
 

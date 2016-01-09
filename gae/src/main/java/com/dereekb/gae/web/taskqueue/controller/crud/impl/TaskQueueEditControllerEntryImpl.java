@@ -28,17 +28,17 @@ public class TaskQueueEditControllerEntryImpl<T extends UniqueModel>
 	public TaskQueueEditControllerEntryImpl() {}
 
 	public TaskQueueEditControllerEntryImpl(ModelKeyListAccessorFactory<T> accessorFactory) {
-		this.accessorFactory = accessorFactory;
+		this.setAccessorFactory(accessorFactory);
 	}
 
 	public TaskQueueEditControllerEntryImpl(ModelKeyListAccessorFactory<T> accessorFactory,
 	        Task<ModelKeyListAccessor<T>> postCreateTask,
 	        Task<ModelKeyListAccessor<T>> postUpdateTask,
 	        Task<ModelKeyListAccessor<T>> deleteTask) {
-		this.accessorFactory = accessorFactory;
-		this.postCreateTask = postCreateTask;
-		this.postUpdateTask = postUpdateTask;
-		this.deleteTask = deleteTask;
+		this.setAccessorFactory(accessorFactory);
+		this.setPostCreateTask(postCreateTask);
+		this.setPostUpdateTask(postUpdateTask);
+		this.setDeleteTask(deleteTask);
 	}
 
 	public ModelKeyListAccessorFactory<T> getAccessorFactory() {

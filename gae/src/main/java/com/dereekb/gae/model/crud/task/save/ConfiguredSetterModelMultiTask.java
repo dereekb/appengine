@@ -72,7 +72,7 @@ public class ConfiguredSetterModelMultiTask<T extends UniqueModel> extends Multi
 
 	@Override
     public String toString() {
-		return "ConfiguredSetterModelMultiTask [setter=" + this.setter + ", tasks=" + this.tasks + "]";
+		return "ConfiguredSetterModelMultiTask [setter=" + this.setter + ", tasks=" + this.getTasks() + "]";
     }
 
 }
