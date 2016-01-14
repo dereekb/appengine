@@ -11,6 +11,38 @@
 
 	<bean id="storedImageTaskQueueEditControllerEntry" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		<constructor-arg index="0" ref="storedImageRegistry"/>
+		<constructor-arg index="1" ref="storedImageTaskQueuePostCreateTask"/>
+		<constructor-arg index="2" ref="storedImageTaskQueuePostUpdateTask"/>
+		<constructor-arg index="3" ref="storedImageTaskQueueProcessDeleteTask"/>
 	</bean>
 	
+	<bean id="storedImageTaskQueuePostCreateTask" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="typedDocumentIndexServiceIndexTask" />
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="storedImageTaskQueuePostUpdateTask" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="typedDocumentIndexServiceIndexTask" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="storedImageTaskQueueProcessDeleteTask" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+		<constructor-arg index="0" ref="storedImageRegistry" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="typedDocumentIndexServiceUnindexTask" />
+			</list>
+		</constructor-arg>
+	</bean>
+
 </beans>
