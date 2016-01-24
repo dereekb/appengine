@@ -28,11 +28,16 @@ public class RelationImpl
 		this.setRelationKeys(keys);
 	}
 
+	// Relation
+	@Override
+	public String getRelationTargetType() {
+		return this.relationTargetType;
+	}
+
 	public void setRelationTargetType(String relationTargetType) {
 		this.relationTargetType = relationTargetType;
 	}
 
-	// Relation
 	@Override
 	public List<ModelKey> getRelationKeys() {
 		return this.relationKeys;
@@ -52,11 +57,6 @@ public class RelationImpl
 		}
 
 		this.relationKeys = new ArrayList<ModelKey>(keys);
-	}
-
-	@Override
-	public String getRelationTargetType() {
-		return this.relationTargetType;
 	}
 
 	@Override

@@ -104,7 +104,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 		ApiResponse response = null;
 
 		try {
-			DeleteRequest<T> deleteRequest = this.conversionDelegate.convert(request);
+			DeleteRequest deleteRequest = this.conversionDelegate.convert(request);
 			DeleteResponse<T> deleteResponse = this.delegate.delete(deleteRequest);
 			response = this.conversionDelegate.convert(deleteResponse);
 		} catch (AtomicOperationException e) {

@@ -3,7 +3,6 @@ package com.dereekb.gae.model.crud.services.request;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -14,7 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @param <T>
  *            model type
  */
-public interface DeleteRequest<T extends UniqueModel> {
+public interface DeleteRequest {
 
 	/**
 	 * @return Returns the keys of models to delete. Never null.

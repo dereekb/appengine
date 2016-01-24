@@ -21,6 +21,7 @@ import com.dereekb.gae.test.runnable.RunnableTest;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class DeleteServiceTester<T extends UniqueModel>
         implements RunnableTest {
@@ -83,7 +84,7 @@ public class DeleteServiceTester<T extends UniqueModel>
 		T target = this.modelGenerator.generate();
 		ModelKey targetKey = target.getModelKey();
 
-		DeleteRequest<T> request = new DeleteRequestImpl<T>(targetKey);
+		DeleteRequest request = new DeleteRequestImpl(targetKey);
 		DeleteResponse<T> response = this.deleteService.delete(request);
 
 		Collection<T> deleted = response.getDeletedModels();
@@ -101,7 +102,7 @@ public class DeleteServiceTester<T extends UniqueModel>
 		List<T> targets = this.modelGenerator.generate(this.genCount);
 		List<ModelKey> targetKeys = ModelKey.readModelKeys(targets);
 
-		DeleteRequest<T> request = new DeleteRequestImpl<T>(targetKeys);
+		DeleteRequest request = new DeleteRequestImpl(targetKeys);
 		DeleteResponse<T> response = this.deleteService.delete(request);
 
 		Collection<T> deleted = response.getDeletedModels();

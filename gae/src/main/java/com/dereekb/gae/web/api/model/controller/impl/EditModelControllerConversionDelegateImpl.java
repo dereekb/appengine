@@ -78,7 +78,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 	}
 
 	@Override
-	public DeleteRequest<T> convert(ApiDeleteRequest request) throws RequestArgumentException {
+	public DeleteRequest convert(ApiDeleteRequest request) throws RequestArgumentException {
 
 		List<String> data = request.getData();
 
@@ -91,7 +91,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 			throw new RequestArgumentException("data", "Failed to convert identifiers from data.");
 		}
 
-		DeleteRequestImpl<T> serviceRequest = new DeleteRequestImpl<T>(keys, options);
+		DeleteRequestImpl serviceRequest = new DeleteRequestImpl(keys, options);
 		return serviceRequest;
 	}
 

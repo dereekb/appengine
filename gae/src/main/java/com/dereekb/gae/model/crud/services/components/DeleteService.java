@@ -31,6 +31,6 @@ public interface DeleteService<T extends UniqueModel> {
 	 *             Does not get called if target models that are unavailable are
 	 *             deemed to be already deleted.
 	 */
-	public abstract DeleteResponse<T> delete(DeleteRequest<T> request) throws AtomicOperationException;
+	public abstract DeleteResponse<T> delete(DeleteRequest request) throws AtomicOperationException;
 
 }

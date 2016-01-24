@@ -91,7 +91,7 @@ public class CrudServiceImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public DeleteResponse<T> delete(DeleteRequest<T> request) throws AtomicOperationException {
+	public DeleteResponse<T> delete(DeleteRequest request) throws AtomicOperationException {
 		return this.deleteService.delete(request);
 	}
 

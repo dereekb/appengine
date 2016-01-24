@@ -47,7 +47,7 @@ public class EditModelControllerDelegateImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public DeleteResponse<T> delete(DeleteRequest<T> request) throws AtomicOperationException {
+	public DeleteResponse<T> delete(DeleteRequest request) throws AtomicOperationException {
 		return this.service.delete(request);
 	}
 

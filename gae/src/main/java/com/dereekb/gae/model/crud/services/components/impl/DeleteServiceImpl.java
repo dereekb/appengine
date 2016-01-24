@@ -7,7 +7,6 @@ import com.dereekb.gae.model.crud.pairs.DeletePair;
 import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
@@ -63,7 +62,7 @@ public class DeleteServiceImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public DeleteResponse<T> delete(DeleteRequest<T> request) throws AtomicOperationException {
+	public DeleteResponse<T> delete(DeleteRequest request) throws AtomicOperationException {
 		DeleteResponse<T> deleteResponse = null;
 
 		Collection<ModelKey> deleteKeys = request.getTargetKeys();
@@ -77,10 +76,6 @@ public class DeleteServiceImpl<T extends UniqueModel>
 		Collection<T> models = readResponse.getModels();
 		Collection<ModelKey> filtered = readResponse.getFiltered();
 		Collection<ModelKey> unavailable = readResponse.getUnavailable();
-
-		if (filtered.isEmpty() == false && options.isAtomic()) {
-			throw new AtomicOperationException(filtered, AtomicOperationExceptionReason.UNAVAILABLE);
-		}
 
 		List<DeletePair<T>> pairs = DeletePair.deletePairsForModels(models);
 
@@ -102,6 +97,7 @@ public class DeleteServiceImpl<T extends UniqueModel>
 			List<DeletePair<T>> filteredPairs = results.valuesForKey(FilterResult.FAIL);
 			List<T> filteredModels = DeletePair.getKeys(filteredPairs);
 			List<ModelKey> filteredKeys = ModelKey.readModelKeys(filteredModels);
+			filteredKeys.addAll(filtered);
 
 			deleteResponse = new DeleteResponseImpl<T>(deletedModels, filteredKeys, unavailable);
 		} catch (Exception e) {

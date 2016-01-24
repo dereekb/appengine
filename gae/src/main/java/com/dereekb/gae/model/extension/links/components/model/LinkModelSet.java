@@ -13,7 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 /**
  * Contains a set of {@link LinkModel} instances read from the
  * {@link LinkSystem}.
- *
+ * <p>
  * This object can also load additional models into it if necessary.
  *
  * @author dereekb

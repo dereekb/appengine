@@ -17,17 +17,17 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  * @param <T>
  *            model type
  */
-public final class DeleteRequestImpl<T extends UniqueModel>
-        implements DeleteRequest<T> {
+public class DeleteRequestImpl
+        implements DeleteRequest {
 
 	private Collection<ModelKey> targetKeys;
 	private DeleteRequestOptions options;
 
-	public DeleteRequestImpl(T target) {
+	public <T extends UniqueModel> DeleteRequestImpl(T target) {
 		this(SingleItem.withValue(target.getModelKey()));
 	}
 
-	public DeleteRequestImpl(T target, DeleteRequestOptions options) {
+	public <T extends UniqueModel> DeleteRequestImpl(T target, DeleteRequestOptions options) {
 		this(SingleItem.withValue(target.getModelKey()), options);
 	}
 
@@ -40,8 +40,7 @@ public final class DeleteRequestImpl<T extends UniqueModel>
 	}
 
 	public DeleteRequestImpl(Collection<ModelKey> targetKeys) {
-		this.targetKeys = targetKeys;
-		this.setOptions(this.options);
+		this(targetKeys, null);
 	}
 
 	public DeleteRequestImpl(Collection<ModelKey> targetKeys, DeleteRequestOptions options) {
