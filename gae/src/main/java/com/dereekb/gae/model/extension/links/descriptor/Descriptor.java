@@ -29,4 +29,13 @@ public interface Descriptor {
 	 */
 	public String getDescriptorId();
 
+	/**
+	 * Checks equality with another descriptor.
+	 *
+	 * @param descriptor
+	 *            {@link Descriptor} instance or {@code null}.
+	 * @return {@code true} if both have the same type and identifier.
+	 */
+	public boolean equals(Descriptor descriptor);
+
 }

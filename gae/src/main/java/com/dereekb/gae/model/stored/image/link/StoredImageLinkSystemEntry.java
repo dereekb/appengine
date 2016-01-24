@@ -3,6 +3,8 @@ package com.dereekb.gae.model.stored.image.link;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.model.crud.services.CrudService;
+import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
@@ -44,9 +46,9 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 	private static final ExtendedObjectifyModelKeyUtil<StoredImageSet> imageSetUtil = ExtendedObjectifyModelKeyUtil
 	        .make(StoredImageSet.class, ModelKeyType.NUMBER);
 
-	private String blobLinkName = "Blob";
-	private String geoPlaceLinkName = "GeoPlace";
-	private String imageSetLinkName = "Images";
+	private String blobLinkName = StoredBlobLinkSystemEntry.STORED_BLOB_LINK_TYPE;
+	private String geoPlaceLinkName = GeoPlaceLinkSystemEntry.GEO_PLACE_LINK_TYPE;
+	private String imageSetLinkName = StoredImageSetLinkSystemEntry.STORED_IMAGE_SET_LINK_TYPE;
 
 	private LinkTarget blobTarget = new LinkTargetImpl(StoredBlobLinkSystemEntry.STORED_BLOB_LINK_TYPE,
 	        ModelKeyType.NUMBER);
@@ -55,8 +57,14 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 	private LinkTarget imageSetTarget = new LinkTargetImpl(StoredImageSetLinkSystemEntry.STORED_IMAGE_SET_LINK_TYPE,
 	        ModelKeyType.NUMBER);
 
-	public StoredImageLinkSystemEntry(ReadService<StoredImage> service, ConfiguredSetter<StoredImage> setter) {
-		super(STORED_IMAGE_LINK_TYPE, service, setter);
+	public StoredImageLinkSystemEntry(CrudService<StoredImage> crudService, ConfiguredSetter<StoredImage> setter) {
+		super(STORED_IMAGE_LINK_TYPE, crudService, crudService, setter);
+	}
+
+	public StoredImageLinkSystemEntry(ReadService<StoredImage> readService,
+	        DeleteService<StoredImage> deleteService,
+	        ConfiguredSetter<StoredImage> setter) {
+		super(STORED_IMAGE_LINK_TYPE, readService, deleteService, setter);
 	}
 
 	public String getStoredBlobLinkName() {
@@ -168,7 +176,7 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 		return "StoredImageLinkSystemEntry [blobLinkName=" + this.blobLinkName + ", geoPlaceLinkName="
 		        + this.geoPlaceLinkName + ", imageSetLinkName=" + this.imageSetLinkName + ", blobTarget="
 		        + this.blobTarget + ", geoPlaceTarget=" + this.geoPlaceTarget + ", imageSetTarget="
-		        + this.imageSetTarget + ", modelType=" + this.modelType + ", indexService=" + this.service + ", setter="
+		        + this.imageSetTarget + ", modelType=" + this.modelType + ", indexService=" + this.readService + ", setter="
 		        + this.setter + ", reviewer=" + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames="
  + this.getReverseLinkNames() + "]";
 	}

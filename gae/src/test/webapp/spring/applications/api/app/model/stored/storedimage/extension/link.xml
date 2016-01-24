@@ -17,17 +17,39 @@
 
 	<bean id="storedImageLinkSystem" lazy-init="true"
 		class="com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemEntry">
-		<constructor-arg index="0" ref="storedImageReadService" />
+		<constructor-arg index="0" ref="storedImageCrudService" />
 		<constructor-arg index="1"
 			ref="storedImageAsyncConfiguredSetter" />
 		<!-- Reverse Links Configuration -->
 		<property name="reverseLinkNames">
 			<map key-type="java.lang.String" value-type="java.lang.String">
-				<!-- Links the "GeoPlace" in a StoredImage's link delegate with the "StoredImage" link in the GeoPlace link delegate -->
-				<entry key-ref="geoPlaceType" value-ref="storedImageType" />
-				<!-- TODO -->
+				<!-- Links the "GeoPlace" link with the "StoredImage" link in the GeoPlace link delegate's config -->
+				<entry key-ref="storedImageStoredBlobLinkName" value-ref="storedImageType" />
+				<entry key-ref="storedImageGeoPlaceLinkName" value-ref="storedImageType" />
+				<entry key-ref="storedImageStoredImageSetLinkName" value-ref="storedImageSetImagesLinkName" />
+			</map>
+		</property>
+		<!-- Delete Links Configuration -->
+		<property name="deleteChangesMap">
+			<map key-type="java.lang.String" value-type="com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType">
+				<entry key-ref="storedImageStoredBlobLinkName" value="DELETE" />
+				<entry key-ref="storedImageGeoPlaceLinkName" value="DELETE" />
+				<entry key-ref="storedImageStoredImageSetLinkName" value="UNLINK" />
 			</map>
 		</property>
 	</bean>
 
+	<!-- Links -->
+	<bean id="storedImageGeoPlaceLinkName" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" ref="geoPlaceType" />
+	</bean>
+	
+	<bean id="storedImageStoredBlobLinkName" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" ref="storedBlobType" />
+	</bean>
+	
+	<bean id="storedImageStoredImageSetLinkName" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" ref="storedImageSetType" />
+	</bean>
+	
 </beans>

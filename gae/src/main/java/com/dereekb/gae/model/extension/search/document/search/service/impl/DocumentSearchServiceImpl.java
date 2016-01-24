@@ -102,7 +102,7 @@ public class DocumentSearchServiceImpl
 
 	@Override
 	public String toString() {
-		return "DocumentSearchServiceImpl [service=" + this.service + ", optionsBuilderTask=" + this.optionsBuilderTask
+		return "DocumentSearchServiceImpl [readService=" + this.service + ", optionsBuilderTask=" + this.optionsBuilderTask
 		        + "]";
 	}
 

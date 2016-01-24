@@ -131,7 +131,7 @@ public class BidirectionalLink
 		List<Link> reverseLinks = this.delegate.getReverseLinks(this, keys);
 
 		if (required && keys.size() != reverseLinks.size()) {
-			throw new UnavailableLinkException("Required reverse links were not available.");
+			throw new UnavailableLinkException("Required reverse links were not available for change: " + change);
 		}
 
 		return reverseLinks;

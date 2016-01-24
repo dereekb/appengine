@@ -3,6 +3,8 @@ package com.dereekb.gae.model.stored.blob.link;
 import java.util.Collections;
 import java.util.List;
 
+import com.dereekb.gae.model.crud.services.CrudService;
+import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
@@ -21,14 +23,23 @@ public class StoredBlobLinkSystemEntry extends AbstractDescriptiveModelLinkSyste
 
 	public static final String STORED_BLOB_LINK_TYPE = "StoredBlob";
 
-	public StoredBlobLinkSystemEntry(ReadService<StoredBlob> service, ConfiguredSetter<StoredBlob> setter) {
-		super(STORED_BLOB_LINK_TYPE, service, setter);
-	}
-
-	public StoredBlobLinkSystemEntry(ReadService<StoredBlob> service,
+	public StoredBlobLinkSystemEntry(CrudService<StoredBlob> crudService,
 	        ConfiguredSetter<StoredBlob> setter,
 	        List<DescribedModelLinkInfo> info) {
-		super(STORED_BLOB_LINK_TYPE, service, setter, info);
+		super(STORED_BLOB_LINK_TYPE, crudService, crudService, setter, info);
+	}
+
+	public StoredBlobLinkSystemEntry(ReadService<StoredBlob> readService,
+	        DeleteService<StoredBlob> deleteService,
+	        ConfiguredSetter<StoredBlob> setter) {
+		super(STORED_BLOB_LINK_TYPE, readService, deleteService, setter);
+	}
+
+	public StoredBlobLinkSystemEntry(ReadService<StoredBlob> readService,
+	        DeleteService<StoredBlob> deleteService,
+	        ConfiguredSetter<StoredBlob> setter,
+	        List<DescribedModelLinkInfo> info) {
+		super(STORED_BLOB_LINK_TYPE, readService, deleteService, setter, info);
 	}
 
 	@Override
@@ -43,7 +54,7 @@ public class StoredBlobLinkSystemEntry extends AbstractDescriptiveModelLinkSyste
 	@Override
 	public String toString() {
 		return "StoredBlobLinkSystemEntry [descriptiveLinkInfo=" + this.descriptiveLinkInfo + ", modelType="
-		        + this.modelType + ", indexService=" + this.service + ", setter=" + this.setter + ", reviewer="
+		        + this.modelType + ", indexService=" + this.readService + ", setter=" + this.setter + ", reviewer="
 		        + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames=" + this.getReverseLinkNames()
 		        + "]";
 	}

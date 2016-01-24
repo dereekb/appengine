@@ -29,7 +29,7 @@ public class SingleLink
 		ModelKey key = this.delegate.getKey();
 		List<ModelKey> keys;
 
-		if (key == null) {
+		if (key != null) {
 			keys = new ArrayList<ModelKey>();
 			keys.add(key);
 		} else {

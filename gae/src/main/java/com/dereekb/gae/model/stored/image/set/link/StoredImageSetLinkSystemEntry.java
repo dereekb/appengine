@@ -3,7 +3,7 @@ package com.dereekb.gae.model.stored.image.set.link;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.crud.services.components.ReadService;
+import com.dereekb.gae.model.crud.services.CrudService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
@@ -35,14 +35,15 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	private static final ExtendedObjectifyModelKeyUtil<StoredImage> imageUtil = ExtendedObjectifyModelKeyUtil.make(
 	        StoredImage.class, ModelKeyType.NUMBER);
 
-	private String iconLinkName = "Icon";
-	private String imagesLinkName = "Images";
+	private String iconLinkName = "icon";
+	private String imagesLinkName = "images";
 
 	private LinkTarget imagesTarget = new LinkTargetImpl(StoredImageLinkSystemEntry.STORED_IMAGE_LINK_TYPE,
 	        ModelKeyType.NUMBER);
 
-	public StoredImageSetLinkSystemEntry(ReadService<StoredImageSet> service, ConfiguredSetter<StoredImageSet> setter) {
-		super(STORED_IMAGE_SET_LINK_TYPE, service, setter);
+	public StoredImageSetLinkSystemEntry(CrudService<StoredImageSet> crudService,
+	        ConfiguredSetter<StoredImageSet> setter) {
+		super(STORED_IMAGE_SET_LINK_TYPE, crudService, crudService, setter);
 	}
 
 	public String getIconLinkName() {
@@ -117,7 +118,7 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	public String toString() {
 		return "StoredImageSetLinkSystemEntry [iconLinkName=" + this.iconLinkName + ", imagesLinkName="
 		        + this.imagesLinkName + ", imagesTarget=" + this.imagesTarget + ", modelType=" + this.modelType
-		        + ", indexService=" + this.service + ", setter=" + this.setter + ", reviewer=" + this.reviewer
+		        + ", indexService=" + this.readService + ", setter=" + this.setter + ", reviewer=" + this.reviewer
 		        + ", validator=" + this.validator + ", reverseLinkNames=" + this.getReverseLinkNames() + "]";
 	}
 

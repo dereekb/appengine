@@ -27,7 +27,7 @@ public interface LinkDeleterServiceEntry {
 	 *
 	 * @return {@link Map}. Never {@code null}.
 	 */
-	public Map<String, LinkDeleterChangeType> getChangesMap();
+	public Map<String, LinkDeleterChangeType> getDeleteChangesMap();
 
 	/**
 	 * Processes a delete on the specified models.

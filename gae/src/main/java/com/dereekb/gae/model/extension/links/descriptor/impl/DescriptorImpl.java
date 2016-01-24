@@ -51,6 +51,45 @@ public class DescriptorImpl
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.descriptorId == null) ? 0 : this.descriptorId.hashCode());
+		result = prime * result + ((this.descriptorType == null) ? 0 : this.descriptorType.hashCode());
+		return result;
+	}
+
+	public boolean equals(Descriptor obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+
+		String descriptorType = this.getDescriptorType();
+		String descriptorId = this.getDescriptorId();
+
+		if (this.descriptorId == null) {
+			if (descriptorId != null) {
+				return false;
+			}
+		} else if (!this.descriptorId.equals(descriptorId)) {
+			return false;
+		}
+
+		if (this.descriptorType == null) {
+			if (descriptorType != null) {
+				return false;
+			}
+		} else if (!this.descriptorType.equals(descriptorType)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		return "DescriptorImpl [descriptorType=" + this.descriptorType + ", descriptorId=" + this.descriptorId + "]";
 	}

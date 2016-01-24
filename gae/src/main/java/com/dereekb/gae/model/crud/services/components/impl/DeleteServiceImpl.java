@@ -9,7 +9,6 @@ import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
-import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
@@ -66,7 +65,7 @@ public class DeleteServiceImpl<T extends UniqueModel>
 		DeleteResponse<T> deleteResponse = null;
 
 		Collection<ModelKey> deleteKeys = request.getTargetKeys();
-		DeleteRequestOptions options = request.getOptions();
+		// DeleteRequestOptions options = request.getOptions();
 
 		// Read Models to delete. Missing models are ignored.
 		ReadRequestOptions readOptions = new ReadRequestOptionsImpl(false);
@@ -101,8 +100,8 @@ public class DeleteServiceImpl<T extends UniqueModel>
 
 			deleteResponse = new DeleteResponseImpl<T>(deletedModels, filteredKeys, unavailable);
 		} catch (Exception e) {
-			List<ModelKey> missing = ModelKey.readModelKeys(models);
-			throw new AtomicOperationException(missing, e);
+			List<ModelKey> failed = ModelKey.readModelKeys(models);
+			throw new AtomicOperationException(failed, e);
 		}
 
 		return deleteResponse;

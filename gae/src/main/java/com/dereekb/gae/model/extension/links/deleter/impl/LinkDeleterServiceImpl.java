@@ -35,6 +35,11 @@ public class LinkDeleterServiceImpl
 	private boolean validateSetChanges = false;
 	private LinkDeleterChangeType defaultChangeType = LinkDeleterChangeType.UNLINK;
 
+	public LinkDeleterServiceImpl(LinkSystem linkSystem, Collection<LinkDeleterServiceEntry> entries) {
+		this.setLinkSystem(linkSystem);
+		this.setEntries(entries);
+	}
+
 	public LinkDeleterServiceImpl(LinkSystem linkSystem, Map<String, LinkDeleterServiceEntry> entries) {
 		this.setLinkSystem(linkSystem);
 		this.setEntries(entries);
@@ -50,6 +55,16 @@ public class LinkDeleterServiceImpl
 
 	public Map<String, LinkDeleterServiceEntry> getEntries() {
 		return this.entries;
+	}
+
+	private void setEntries(Collection<LinkDeleterServiceEntry> entries) {
+		Map<String, LinkDeleterServiceEntry> map = new HashMap<String, LinkDeleterServiceEntry>();
+
+		for (LinkDeleterServiceEntry entry : entries) {
+			map.put(entry.getModelType(), entry);
+		}
+
+		this.setEntries(map);
 	}
 
 	public void setEntries(Map<String, LinkDeleterServiceEntry> entries) {
@@ -105,7 +120,7 @@ public class LinkDeleterServiceImpl
 
 			this.entry = LinkDeleterServiceImpl.this.getEntryForModelType(modelType);
 			this.set = LinkDeleterServiceImpl.this.linkSystem.loadSet(modelType, keys);
-			this.changeMap = this.entry.getChangesMap();
+			this.changeMap = this.entry.getDeleteChangesMap();
 			this.toDelete = new HashMap<String, Set<ModelKey>>();
         }
 

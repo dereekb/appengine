@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystem;
+import com.dereekb.gae.model.extension.links.deleter.LinkDeleterService;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 
@@ -16,6 +17,10 @@ public class AbstractLinkServiceTest extends ApiApplicationTestContext {
 	@Autowired
 	@Qualifier("linkSystem")
 	protected BidirectionalLinkSystem linkSystem;
+
+	@Autowired
+	@Qualifier("linkDeleterService")
+	protected LinkDeleterService linkDeleterService;
 
 	public LinkService getLinkService() {
 		return this.linkService;

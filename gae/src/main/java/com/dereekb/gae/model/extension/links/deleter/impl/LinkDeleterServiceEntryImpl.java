@@ -43,7 +43,7 @@ public class LinkDeleterServiceEntryImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public Map<String, LinkDeleterChangeType> getChangesMap() {
+	public Map<String, LinkDeleterChangeType> getDeleteChangesMap() {
 		return this.changesMap;
 	}
 
@@ -67,7 +67,7 @@ public class LinkDeleterServiceEntryImpl<T extends UniqueModel>
 
 	@Override
 	public String toString() {
-		return "LinkDeleterServiceEntryImpl [modelType=" + this.modelType + ", changesMap=" + this.changesMap
+		return "LinkDeleterServiceEntryImpl [modelType=" + this.modelType + ", deleteChangesMap=" + this.changesMap
 		        + ", deleteService=" + this.deleteService + "]";
 	}
 
