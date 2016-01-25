@@ -131,8 +131,8 @@ public class LinkDeleterServiceImpl
 	            this.deleteLinksForModel(model);
             }
 
-			this.performDeletes();
 			this.set.save(LinkDeleterServiceImpl.this.validateSetChanges);
+			this.performDeletes();
 		}
 
 		private void deleteLinksForModel(LinkModel model) {

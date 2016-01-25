@@ -26,12 +26,11 @@
 
 	<bean id="storedImageSetTaskRequestSystem" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.taskqueue.system.impl.TaskRequestSystemImpl">
-		<constructor-arg index="0" ref="storedImageSetTaskQueue" />
-		<constructor-arg index="1">
+		<constructor-arg index="0">
 			<bean factory-bean="taskRequestHashFilterFactory"
 				factory-method="make" />
 		</constructor-arg>
-		<constructor-arg index="2" ref="storedImageSetTaskRequestConverter" />
+		<constructor-arg index="1" ref="storedImageSetTaskRequestConverter" />
 	</bean>
 
 	<!-- SCHEDULERS -->

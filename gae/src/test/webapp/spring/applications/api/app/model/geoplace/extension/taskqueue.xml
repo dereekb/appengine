@@ -27,22 +27,5 @@
 	</bean>
 
 	<!-- SCHEDULERS -->
-	<!-- Delete Task -->
-	<!-- TODO Replace this with dedicated type. -->
-	<bean id="geoPlaceDeleteTaskRequestSender" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.server.taskqueue.builder.impl.TaskRequestSenderImpl">
-		<constructor-arg index="0">
-			<bean
-				class="com.dereekb.gae.model.extension.taskqueue.request.ModelKeyTaskRequestBuilder">
-				<constructor-arg index="0">
-					<bean
-						class="com.dereekb.gae.server.taskqueue.system.TaskRequestImpl">
-						<constructor-arg index="0" value="delete" />
-					</bean>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
-		<constructor-arg index="1" ref="geoPlaceTaskRequestSystem" />
-	</bean>
 
 </beans>

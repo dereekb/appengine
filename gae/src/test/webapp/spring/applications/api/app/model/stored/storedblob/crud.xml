@@ -88,11 +88,12 @@
 	</bean>
 
 	<!-- Delete -->
-	<bean id="storedBlobDeleteTask" class="com.dereekb.gae.model.crud.task.impl.DeleteTaskImpl"
+	<alias name="storedBlobScheduleDeleteTask" alias="storedBlobDeleteTask"/>
+	
+	<bean id="storedBlobScheduleDeleteTask"
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
 		lazy-init="true">
-		<!-- This implementation simply deletes the elements directly. -->
-		<constructor-arg index="0"
-			ref="storedBlobSynchronousConfiguredSetter" />
+		<constructor-arg index="0" ref="storedBlobTaskRequestSystem"/>
 	</bean>
 
 </beans>

@@ -88,11 +88,12 @@
 	</bean>
 
 	<!-- Delete -->
-	<bean id="storedImageSetDeleteTask" class="com.dereekb.gae.model.crud.task.impl.DeleteTaskImpl"
+	<alias name="storedImageSetScheduleDeleteTask" alias="storedImageSetDeleteTask"/>
+	
+	<bean id="storedImageSetScheduleDeleteTask"
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
 		lazy-init="true">
-		<!-- This implementation simply deletes the elements directly. -->
-		<constructor-arg index="0"
-			ref="storedImageSetSynchronousConfiguredSetter" />
+		<constructor-arg index="0" ref="storedImageSetTaskRequestSystem"/>
 	</bean>
 
 </beans>
