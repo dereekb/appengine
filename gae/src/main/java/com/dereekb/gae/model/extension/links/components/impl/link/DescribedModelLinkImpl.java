@@ -165,6 +165,7 @@ public class DescribedModelLinkImpl
 		// Can only remove if it is the correct type.
 		if (this.canActOnModelDescriptor(descriptor)) {
 			this.model.setDescriptor(null);
+			result = RelationResultImpl.hit(ModelKey.convert(descriptor.getDescriptorId()));
 		} else {
 			String message = "Cannot clear from this link. Must clear type '" + descriptor.getDescriptorType()
 			        + "' first.";

@@ -12,8 +12,10 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelK
 
 /**
  * Represents a key for a model.
- *
- * They key has either a name or number identifier.
+ * <p>
+ * They key has either a name or number identifier. Keys with a
+ * {@link ModelKeyType#NUMBER} identifier will match a key with a
+ * {@link ModelKeyType#NAME} identifier that has the same string.
  *
  * @author dereekb
  */
@@ -28,6 +30,21 @@ public final class ModelKey
 	private final String name;
 	private final Long id;
 
+	public ModelKey(Integer id) throws IllegalArgumentException {
+		this((id != null) ? new Long(id) : null);
+	}
+
+	public ModelKey(Long id) throws IllegalArgumentException {
+		if (id == null || id < 0) {
+			throw new IllegalArgumentException("Invalid number key '" + id + "'. Must be non-null and greater than 0.");
+		}
+
+		this.id = id;
+		this.name = id.toString();
+		this.hashCode = this.name.hashCode();
+		this.type = ModelKeyType.NUMBER;
+	}
+
 	public ModelKey(String name) throws IllegalArgumentException {
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException("Invalid name key. Must be non-null and not empty.");
@@ -37,17 +54,6 @@ public final class ModelKey
 		this.id = null;
 		this.hashCode = name.hashCode();
 		this.type = ModelKeyType.NAME;
-	}
-
-	public ModelKey(Long id) throws IllegalArgumentException {
-		if (id == null || id < 0) {
-			throw new IllegalArgumentException("Invalid number key '" + id + "'. Must be non-null and greater than 0.");
-		}
-
-		this.id = id;
-		this.name = null;
-		this.hashCode = id.hashCode();
-		this.type = ModelKeyType.NUMBER;
 	}
 
 	public ModelKeyType getType() {
@@ -108,22 +114,17 @@ public final class ModelKey
 		if (this == obj) {
 			return true;
 		}
+
 		if (obj == null) {
 			return false;
 		}
+
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
+
 		ModelKey other = (ModelKey) obj;
-		if (this.isSameType(other)) {
-			if (this.type == ModelKeyType.NAME) {
-				return this.name.equals(other.name);
-			} else {
-				return this.id.equals(other.id);
-			}
-		} else {
-			return false;
-		}
+		return this.keyAsString().equals(other.keyAsString());
 	}
 
 	public static List<ModelKey> readModelKeys(Iterable<? extends UniqueModel> models) {
@@ -329,9 +330,10 @@ public final class ModelKey
 	 *
 	 * @param identifier
 	 *            Identifier to convert. Can be null.
-	 * @return A {@link ModelKey} instance with the input key. Contains a number
-	 *         id if applicable, or a String id if not null. If the input is
-	 *         null, this will return null.
+	 * @return A {@link ModelKey} instance with the input key. Contains a
+	 *         {@link ModelKeyType#NUMBER} id if applicable, or a
+	 *         {@link ModelKeyType#NAME} id if not {@code null}. If the input is
+	 *         null, this will return {@code null}.
 	 */
 	public static ModelKey convert(String identifier) {
 		ModelKey modelKey = null;

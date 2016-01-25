@@ -59,30 +59,41 @@ public class DescriptorImpl
 		return result;
 	}
 
-	public boolean equals(Descriptor obj) {
-		if (this == obj) {
+	@Override
+    public boolean equals(Descriptor obj) {
+		return descriptorsAreEqual(this, obj);
+	}
+
+	/**
+	 * Compares two descriptors. Can input {@code null} values.
+	 *
+	 * @param a
+	 *            {@link Descriptor}
+	 * @param b
+	 *            {@link Descriptor}
+	 * @return {@code true} if both descriptors reference the same object.
+	 */
+	public static boolean descriptorsAreEqual(Descriptor a,
+	                                          Descriptor b) {
+		if (a == b) {
 			return true;
 		}
-		if (obj == null) {
+
+		if (a == null || b == null) {
 			return false;
 		}
 
-		String descriptorType = this.getDescriptorType();
-		String descriptorId = this.getDescriptorId();
+		String descriptorAType = a.getDescriptorType();
+		String descriptorAId = a.getDescriptorId();
 
-		if (this.descriptorId == null) {
-			if (descriptorId != null) {
-				return false;
-			}
-		} else if (!this.descriptorId.equals(descriptorId)) {
+		String descriptorBType = b.getDescriptorType();
+		String descriptorBId = b.getDescriptorId();
+
+		if (descriptorAType.equals(descriptorBType) == false) {
 			return false;
 		}
 
-		if (this.descriptorType == null) {
-			if (descriptorType != null) {
-				return false;
-			}
-		} else if (!this.descriptorType.equals(descriptorType)) {
+		if (descriptorAId.equals(descriptorBId) == false) {
 			return false;
 		}
 

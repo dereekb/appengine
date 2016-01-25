@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.links.components.Link;
-import com.dereekb.gae.model.extension.links.components.RelationResult;
 import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
 import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
@@ -14,7 +13,7 @@ import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
-import com.dereekb.gae.server.datastore.GetterSetter;
+import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkServiceTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
@@ -43,6 +42,10 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 	private String storedImageLinkType;
 
 	@Autowired
+	@Qualifier("storedImageSetType")
+	private String storedImageSetLinkType;
+
+	@Autowired
 	@Qualifier("storedBlobType")
 	private String storedBlobLinkType;
 
@@ -59,6 +62,10 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 	private ObjectifyRegistry<StoredImage> storedImageRegistry;
 
 	@Autowired
+	@Qualifier("storedImageSetRegistry")
+	private ObjectifyRegistry<StoredImageSet> storedImageSetRegistry;
+
+	@Autowired
 	@Qualifier("geoPlaceTestModelGenerator")
 	private TestModelGenerator<GeoPlace> geoPlaceGenerator;
 
@@ -67,16 +74,15 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 	private TestModelGenerator<StoredImage> storedImageGenerator;
 
 	@Autowired
+	@Qualifier("storedImageSetTestModelGenerator")
+	private TestModelGenerator<StoredImageSet> storedImageSetGenerator;
+
+	@Autowired
 	@Qualifier("storedBlobTestModelGenerator")
 	private TestModelGenerator<StoredBlob> storedBlobGenerator;
 
-	@Autowired
-	@Qualifier("storedImageRegistry")
-	private GetterSetter<StoredImage> storedImageGetterSetter;
-
 	@Test
 	public void testLinkingToStoredBlob() {
-
 		StoredBlob storedBlob = this.storedBlobGenerator.generate();
 		StoredImage storedImage = this.storedImageGenerator.generate();
 
@@ -88,49 +94,93 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		this.storedImageRegistry.save(storedImage, false);
 
 		// Start Test Linking
-		LinkModelSet storedImageLinkSet = this.linkSystem.loadSet(this.storedImageLinkType);
-		storedImageLinkSet.loadModel(storedImage.getModelKey());
-		LinkModel model = storedImageLinkSet.getModelForKey(storedImage.getModelKey());
-
-		Link storedBlobLink = model.getLink(this.storedImageStoredBlobLinkName);
-
-		Assert.assertNotNull(storedBlobLink);
-
-		RelationImpl setBlob = new RelationImpl(storedBlob.getModelKey());
-		RelationResult result = storedBlobLink.setRelation(setBlob);
-
-		storedImageLinkSet.save(true);
+		this.linkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageStoredBlobLinkName,
+		        storedBlob.getModelKey());
 
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedBlob = this.storedBlobRegistry.get(storedBlob);
 
-		Assert.assertTrue(storedImage.getBlob().equals(storedBlob.getObjectifyKey()));
-		Assert.assertTrue(storedBlob.getDescriptor().equals(storedImage));
+		Assert.assertTrue(storedBlob.getObjectifyKey().equals(storedImage.getBlob()));
+		Assert.assertTrue(storedImage.equals(storedBlob.getDescriptor()));
 
+		// Test Unlinking
+		this.unlinkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageStoredBlobLinkName,
+		        storedBlob.getModelKey());
+
+		storedImage = this.storedImageRegistry.get(storedImage);
+		storedBlob = this.storedBlobRegistry.get(storedBlob);
+
+		Assert.assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getBlob()));
+		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 	}
 
 	@Test
 	public void testLinkingToGeoPlace() {
-
 		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
-		StoredBlob storedBlob = this.storedBlobGenerator.generate();
 		StoredImage storedImage = this.storedImageGenerator.generate();
 
-
-		LinkModelSet geoPlaceSet = this.linkSystem.loadSet(this.geoPlaceLinkType);
-		geoPlaceSet.loadModel(geoPlace.getModelKey());
-
-		LinkModel geoPlaceLinkModel = geoPlaceSet.getModelForKey(geoPlace.getModelKey());
-		Link storedImageLink = geoPlaceLinkModel.getLink(this.storedImageLinkType);
-
-		storedImage.setGeoPlace(geoPlace.getObjectifyKey());
-		geoPlace.setDescriptor(storedImage);
-
+		// Clear any generated links
+		geoPlace.setDescriptor(null);
 		this.geoPlaceRegistry.save(geoPlace, false);
+
+		storedImage.setGeoPlace(null);
 		this.storedImageRegistry.save(storedImage, false);
 
+		// Start Test Linking
+		this.linkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageGeoPlaceLinkName,
+		        geoPlace.getModelKey());
+
+		storedImage = this.storedImageRegistry.get(storedImage);
+		geoPlace = this.geoPlaceRegistry.get(geoPlace);
+
+		Assert.assertTrue(geoPlace.getObjectifyKey().equals(storedImage.getGeoPlace()));
+		Assert.assertTrue(storedImage.equals(geoPlace.getDescriptor()));
+
+		// Test Unlinking
+		this.unlinkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageGeoPlaceLinkName,
+		        geoPlace.getModelKey());
+
+		storedImage = this.storedImageRegistry.get(storedImage);
+		geoPlace = this.geoPlaceRegistry.get(geoPlace);
+
+		Assert.assertFalse(geoPlace.getObjectifyKey().equals(storedImage.getGeoPlace()));
+		Assert.assertFalse(storedImage.equals(geoPlace.getDescriptor()));
 	}
 
+	@Test
+	public void testLinkingToStoredImageSet() {
+		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
+		StoredImage storedImage = this.storedImageGenerator.generate();
+
+		// Clear any generated links
+		storedImageSet.setImages(null);
+		this.storedImageSetRegistry.save(storedImageSet, false);
+
+		storedImage.setImageSets(null);
+		this.storedImageRegistry.save(storedImage, false);
+
+		// Start Test Linking
+		this.linkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageStoredImageSetLinkName,
+		        storedImageSet.getModelKey());
+
+		storedImage = this.storedImageRegistry.get(storedImage);
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+
+		Assert.assertTrue(storedImage.getImageSets().contains(storedImageSet.getObjectifyKey()));
+		Assert.assertTrue(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
+
+		// Test Unlinking
+		this.unlinkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageStoredImageSetLinkName,
+		        storedImageSet.getModelKey());
+
+		storedImage = this.storedImageRegistry.get(storedImage);
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+
+		Assert.assertFalse(storedImage.getImageSets().contains(storedImageSet.getObjectifyKey()));
+		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
+	}
+
+	// MARK: Special Conditions
 	/**
 	 * The geo place cannot be linked to a stored image that already has a
 	 * geoplace.
@@ -172,7 +222,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		StoredImage storedImage = this.storedImageGenerator.generate();
 
 		storedImage.setGeoPlace(null);
-		this.storedImageGetterSetter.save(storedImage, false);
+		this.storedImageRegistry.save(storedImage, false);
 
 		LinkModelSet geoPlaceSet = this.linkSystem.loadSet(this.geoPlaceLinkType);
 		geoPlaceSet.loadModel(geoPlace.getModelKey());
@@ -185,7 +235,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
 		geoPlaceSet.save(true);
 
-		storedImage = this.storedImageGetterSetter.get(storedImage);
+		storedImage = this.storedImageRegistry.get(storedImage);
 
 		Assert.assertTrue(geoPlace.getObjectifyKey().equals(storedImage.getGeoPlace()));
 	}
