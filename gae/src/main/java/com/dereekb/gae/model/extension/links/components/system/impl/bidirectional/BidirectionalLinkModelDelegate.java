@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.links.components.system.impl.bidirection
 import java.util.List;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -30,6 +31,15 @@ public interface BidirectionalLinkModelDelegate {
 	                                            List<ModelKey> keys);
 
 	/**
+	 * Checks whether or not the link described is bidirectional or not.
+	 *
+	 * @param link
+	 *            {@link LinkInfo}. Never {@code null}.
+	 * @return {@code true} if it is bidirectional.
+	 */
+	public boolean isBidirectional(LinkInfo link);
+
+	/**
 	 * Gets the reverse name for a link.
 	 *
 	 * For example, if the requestingLink is "parent", then the function will
@@ -37,8 +47,11 @@ public interface BidirectionalLinkModelDelegate {
 	 *
 	 * @param info
 	 *            {@link LinkInfo} of the requesting link.
-	 * @return Reverse name. Null if the name is unsure.
+	 * @return Reverse name. Never {@code null}.
+	 *
+	 * @throws NoReverseLinksException
+	 *             if there is no reverse link.
 	 */
-	public String getReverseLinkName(LinkInfo info);
+	public String getReverseLinkName(LinkInfo info) throws NoReverseLinksException;
 
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnregisteredLinkTypeException;
@@ -99,7 +100,7 @@ public class BidirectionalLinkSystem
 
 	@Override
 	public String getReverseLinkName(String primaryType,
-	                                 LinkInfo info) {
+	                                 LinkInfo info) throws NoReverseLinksException {
 		BidirectionalLinkSystemEntry entry = this.getEntry(primaryType);
 		return entry.getReverseLinkName(info);
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -28,8 +29,13 @@ public interface BidirectionalLinkDelegate {
 	 * @return {@link List} of links corresponding to the reverse elements. If
 	 *         the requesting link is only one-directional, then an empty list
 	 *         is returned.
+	 * 
+	 * @throws NoReverseLinksException
+	 *             if there are no reverse links for this link.
+	 * @throws UnavailableLinkException
+	 *             if the required links are unavailable.
 	 */
 	public List<Link> getReverseLinks(LinkInfo info,
-	                                  List<ModelKey> keys) throws UnavailableLinkException;
+	                                  List<ModelKey> keys) throws NoReverseLinksException, UnavailableLinkException;
 
 }

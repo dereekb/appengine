@@ -15,13 +15,13 @@ import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelImplDelegate;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImpl;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImplDelegate;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.components.system.exception.UnknownReverseLinkException;
 import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystemEntry;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType;
@@ -248,13 +248,12 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	}
 
 	@Override
-	public String getReverseLinkName(LinkInfo info) throws UnknownReverseLinkException {
-
+	public String getReverseLinkName(LinkInfo info) throws NoReverseLinksException {
 		String linkName = info.getLinkName();
 		String reverseLinkName = this.reverseLinkNames.get(linkName);
 
 		if (reverseLinkName == null) {
-			throw new UnknownReverseLinkException(info);
+			throw new NoReverseLinksException();
 		}
 
 		return reverseLinkName;
