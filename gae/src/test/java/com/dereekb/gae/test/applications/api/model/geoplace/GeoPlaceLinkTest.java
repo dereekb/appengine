@@ -5,14 +5,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.model.extension.links.components.Link;
-import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
-import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
-import com.dereekb.gae.model.extension.links.components.model.LinkModel;
-import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.image.StoredImage;
-import com.dereekb.gae.server.datastore.GetterSetter;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkServiceTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
@@ -23,8 +18,8 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 	private String geoPlaceLinkType;
 
 	@Autowired
-	@Qualifier("storedImageType")
-	private String storedImageLinkName;
+	@Qualifier("geoPlaceParentLinkName")
+	private String geoPlaceParentLinkName;
 
 	@Autowired
 	@Qualifier("geoPlaceTestModelGenerator")
@@ -35,8 +30,12 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 	private TestModelGenerator<StoredImage> storedImageGenerator;
 
 	@Autowired
+	@Qualifier("geoPlaceRegistry")
+	private ObjectifyRegistry<GeoPlace> geoPlaceRegistry;
+
+	@Autowired
 	@Qualifier("storedImageRegistry")
-	private GetterSetter<StoredImage> storedImageGetterSetter;
+	private ObjectifyRegistry<StoredImage> storedImageRegistry;
 
 	public String getGeoPlaceLinkType() {
 		return this.geoPlaceLinkType;
@@ -62,60 +61,29 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 		this.storedImageGenerator = storedImageGenerator;
 	}
 
-	/**
-	 * The geo place cannot be linked to a stored image that already has a
-	 * geoplace.
-	 */
 	@Test
-	public void testLinkingToImageBeforeClearingImage() {
-		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
-		StoredImage storedImage = this.storedImageGenerator.generate();
+	public void testLinkingToParent() {
+		GeoPlace child = this.geoPlaceGenerator.generate();
+		GeoPlace parent = this.geoPlaceGenerator.generate();
 
-		LinkModelSet geoPlaceSet = this.linkSystem.loadSet(this.geoPlaceLinkType);
-		geoPlaceSet.loadModel(geoPlace.getModelKey());
+		// Clear any generated links
+		child.setParent(null);
+		this.geoPlaceRegistry.save(child, false);
 
-		LinkModel geoPlaceLinkModel = geoPlaceSet.getModelForKey(geoPlace.getModelKey());
-		Link storedImageLink = geoPlaceLinkModel.getLink(this.storedImageLinkName);
+		// Start Test Linking
+		this.linkModels(this.geoPlaceLinkType, child, this.geoPlaceParentLinkName, parent);
 
-		if (storedImage.getGeoPlace() != null) {
-			try {
-				RelationImpl addImage = new RelationImpl(storedImage.getModelKey());
-				storedImageLink.addRelation(addImage);
+		child = this.geoPlaceRegistry.get(child);
 
-				// SHould not be allowed if storedImage is set.
-				Assert.fail();
-			} catch (RelationChangeException e) {
+		Assert.assertTrue(parent.getObjectifyKey().equals(child.getParent()));
 
-			}
-		}
-	}
+		// Test Unlinking
+		this.unlinkModels(this.geoPlaceLinkType, child, this.geoPlaceParentLinkName, parent);
 
-	/**
-	 *
-	 */
-	@Test
-	public void testLinkingToImageAfterClearingImage() {
+		child = this.geoPlaceRegistry.get(child);
 
-		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
-		StoredImage storedImage = this.storedImageGenerator.generate();
-
-		storedImage.setGeoPlace(null);
-		this.storedImageGetterSetter.save(storedImage, false);
-
-		LinkModelSet geoPlaceSet = this.linkSystem.loadSet(this.geoPlaceLinkType);
-		geoPlaceSet.loadModel(geoPlace.getModelKey());
-
-		LinkModel geoPlaceLinkModel = geoPlaceSet.getModelForKey(geoPlace.getModelKey());
-		Link storedImageLink = geoPlaceLinkModel.getLink(this.storedImageLinkName);
-
-		RelationImpl addImage = new RelationImpl(storedImage.getModelKey());
-		storedImageLink.addRelation(addImage);
-
-		geoPlaceSet.save(true);
-
-		storedImage = this.storedImageGetterSetter.get(storedImage);
-
-		Assert.assertTrue(geoPlace.getObjectifyKey().equals(storedImage.getGeoPlace()));
+		Assert.assertFalse(parent.getObjectifyKey().equals(child.getParent()));
+		Assert.assertNull(child.getParent());
 	}
 
 }

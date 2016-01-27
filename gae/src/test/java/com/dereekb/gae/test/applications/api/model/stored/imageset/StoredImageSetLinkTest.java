@@ -100,24 +100,38 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 	public void testLinkDeleter() {
 		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
 		StoredImage storedImage = this.storedImageGenerator.generate();
+		List<StoredImage> imagesInSet = this.storedImageGenerator.generate(4);
 
-		// Clear all generated links
+		// Clear any generated links
 		storedImageSet.setIcon(null);
+		storedImageSet.setImages(null);
 		this.storedImageSetRegistry.save(storedImageSet, false);
 
+		for (StoredImage imageInSet : imagesInSet) {
+			imageInSet.setImageSets(null);
+		}
+
+		this.storedImageRegistry.save(imagesInSet, false);
+
 		// Link Together
-		this.linkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetIconLinkName,
-		        storedImage.getModelKey());
+		this.linkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetIconLinkName, storedImage);
+		this.linkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetImagesLinkName, imagesInSet);
 
 		// Delete Links
 		LinkDeleterServiceRequest request = new LinkDeleterServiceRequestImpl(this.storedImageSetLinkType,
 		        storedImageSet.getModelKey());
 		this.linkDeleterService.deleteLinks(request);
 
-		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
-
 		// Check Not Linked. Deletable Items will be deleted via taskqueue most
 		// likely.
+		storedImage = this.storedImageRegistry.get(storedImage);
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+		imagesInSet = this.storedImageRegistry.get(imagesInSet);
+
+		for (StoredImage imageInSet : imagesInSet) {
+			Assert.assertFalse(imageInSet.getImageSets().contains(storedImageSet.getObjectifyKey()));
+		}
+
 		Assert.assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 	}
 
