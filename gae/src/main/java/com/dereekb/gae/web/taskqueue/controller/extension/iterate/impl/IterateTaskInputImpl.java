@@ -2,8 +2,7 @@ package com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl;
 
 import java.util.Map;
 
-import com.dereekb.gae.web.taskqueue.controller.extension.iterate.IterateTaskInput;
-import com.google.appengine.api.datastore.Cursor;
+import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 
 /**
  * {@link IterateTaskInput} implementation.
@@ -16,24 +15,20 @@ public class IterateTaskInputImpl
 
 	private String taskName;
 	private String modelType;
+	private String stepCursor;
 	private Integer iterationStep;
-	private Cursor queryCursor;
 	private Map<String, String> parameters;
-
-	public IterateTaskInputImpl(String taskName, String modelType) {
-		this.setTaskName(taskName);
-		this.setModelType(modelType);
-	}
 
 	public IterateTaskInputImpl(String taskName,
 	        String modelType,
+	        String stepCursor,
 	        Integer iterationStep,
-	        Cursor queryCursor,
 	        Map<String, String> parameters) {
-		this(taskName, modelType);
-		this.iterationStep = iterationStep;
-		this.queryCursor = queryCursor;
-		this.parameters = parameters;
+		this.setTaskName(taskName);
+		this.setModelType(modelType);
+		this.setStepCursor(stepCursor);
+		this.setIterationStep(iterationStep);
+		this.setParameters(parameters);
 	}
 
 	@Override
@@ -64,12 +59,12 @@ public class IterateTaskInputImpl
 	}
 
 	@Override
-	public Cursor getQueryCursor() {
-		return this.queryCursor;
+	public String getStepCursor() {
+		return this.stepCursor;
 	}
 
-	public void setQueryCursor(Cursor queryCursor) {
-		this.queryCursor = queryCursor;
+	public void setStepCursor(String stepCursor) {
+		this.stepCursor = stepCursor;
 	}
 
 	@Override
@@ -84,7 +79,7 @@ public class IterateTaskInputImpl
 	@Override
 	public String toString() {
 		return "IterateTaskInputImpl [taskName=" + this.taskName + ", modelType=" + this.modelType + ", iterationStep="
-		        + this.iterationStep + ", queryCursor=" + this.queryCursor + ", parameters=" + this.parameters + "]";
+		        + this.iterationStep + ", stepCursor=" + this.stepCursor + ", parameters=" + this.parameters + "]";
 	}
 
 }

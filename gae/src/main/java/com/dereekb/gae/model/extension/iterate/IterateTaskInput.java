@@ -1,11 +1,9 @@
-package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
+package com.dereekb.gae.model.extension.iterate;
 
 import java.util.Map;
 
-import com.google.appengine.api.datastore.Cursor;
-
 /**
- * Input for {@link IterateTask} that defines custom parameters,
+ * Input for {@link IterateTaskExecutor} that defines custom parameters,
  *
  * @author dereekb
  *
@@ -34,11 +32,11 @@ public interface IterateTaskInput {
 	public Integer getIterationStep();
 
 	/**
-	 * Returns the query cursor value, if available.
+	 * Web-safe string of the cursor used.
 	 *
 	 * @return Query cursor value. {@code null} if not set.
 	 */
-	public Cursor getQueryCursor();
+	public String getStepCursor();
 
 	/**
 	 * @return Parameters for the request that are used for iteration

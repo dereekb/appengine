@@ -1,16 +1,16 @@
-package com.dereekb.gae.web.taskqueue.controller.extension.iterate.request.impl;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate.old.request.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.server.taskqueue.system.TaskParameter;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
-import com.dereekb.gae.web.taskqueue.controller.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;

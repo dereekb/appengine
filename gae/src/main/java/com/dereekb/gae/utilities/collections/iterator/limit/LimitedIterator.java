@@ -3,11 +3,14 @@ package com.dereekb.gae.utilities.collections.iterator.limit;
 import java.util.Iterator;
 
 /**
- * {@link Iterator} with a set limit. The {@link Iterator} cannot iterate more
- * than the specified amount.
+ * {@link Iterator} with a set limit.
+ * <p>
+ * The {@link Iterator} cannot iterate more than the specified amount.
  *
  * @author dereekb
  *
+ * @param <T>
+ *            model type
  */
 public interface LimitedIterator<T>
         extends Iterator<T> {
@@ -29,6 +32,7 @@ public interface LimitedIterator<T>
 	 *             if the limit is less than 1, or above the maximum allowed for
 	 *             that {@link LimitedIterator}.
 	 */
+	@Deprecated
 	public void setIteratorLimit(int limit) throws IllegalArgumentException;
 
 }

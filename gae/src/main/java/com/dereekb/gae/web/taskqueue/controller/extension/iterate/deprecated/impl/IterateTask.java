@@ -1,7 +1,8 @@
-package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
+package com.dereekb.gae.web.taskqueue.controller.extension.iterate.old.impl;
 
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
 import com.dereekb.gae.utilities.collections.iterator.limit.impl.LimitedIteratorImpl;
@@ -9,7 +10,7 @@ import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.iteration.ConfiguredIterationTask;
 import com.dereekb.gae.utilities.task.iteration.exception.IncompleteTaskIterationException;
-import com.dereekb.gae.web.taskqueue.controller.extension.iterate.request.IterateTaskContinuation;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.deprecated.request.IterateTaskContinuation;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
@@ -23,6 +24,7 @@ import com.google.appengine.api.datastore.Cursor;
  * @param <T>
  *            Model type.
  */
+@Deprecated
 public class IterateTask<T extends ObjectifyModel<T>>
         implements Task<IterateTaskInput> {
 
@@ -41,15 +43,26 @@ public class IterateTask<T extends ObjectifyModel<T>>
 	 */
 	private IterateTaskContinuation continuation;
 
-	/**
-	 * {@link Factory} of the task to perform.
-	 */
-	private Factory<ConfiguredIterationTask<T, IterateTaskInput>> taskFactory;
-
 	public IterateTask() {}
 
 	public IterateTask(IterableObjectifyQuery<T> query) {
 		this.query = query;
+	}
+
+	public IterateTaskContinuation getContinuation() {
+		return this.continuation;
+	}
+
+	public void setContinuation(IterateTaskContinuation continuation) {
+		this.continuation = continuation;
+	}
+
+	public Factory<ConfiguredIterationTask<T, IterateTaskInput>> getTaskFactory() {
+		return this.taskFactory;
+	}
+
+	public void setTaskFactory(Factory<ConfiguredIterationTask<T, IterateTaskInput>> taskFactory) {
+		this.taskFactory = taskFactory;
 	}
 
 	public int getIteratorLimit() {
@@ -93,7 +106,7 @@ public class IterateTask<T extends ObjectifyModel<T>>
 
 			// Initialize Iterator
 			Cursor cursor = this.input.getQueryCursor();
-			IterableObjectifyQuery<T>.IteratorInstance iterator = IterateTask.this.query.iteratorWithCursor(cursor);
+			IterableObjectifyQuery<T>.Instance iterator = IterateTask.this.query.makeIterable(cursor);
 
 			Map<String, String> parameters = this.input.getParameters();
 			iterator.setParameters(parameters);

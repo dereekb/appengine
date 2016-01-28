@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.datastore.objectify.query.iterator;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -9,10 +8,8 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
 import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
-import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterator;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
-import com.dereekb.gae.utilities.collections.iterator.limit.LimitedIterator;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 
@@ -23,17 +20,16 @@ import com.google.appengine.api.datastore.QueryResultIterator;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
-public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
-        implements IndexedIterable<T> {
+public class IterableObjectifyQuery<T extends ObjectifyModel<T>> {
 
 	public static final Integer MAX_LIMIT = 1000;
 
+	private int iterateLimit = MAX_LIMIT;
+
 	private IterableObjectifyQueryInitializer<T> initializer;
 	private ObjectifyKeyedQuery<T> query;
-
-	private int iterateLimit = MAX_LIMIT;
-	private Cursor startCursor;
 
 	public IterableObjectifyQuery(ObjectifyKeyedQuery<T> query) {
 		this.setQuery(query);
@@ -76,46 +72,71 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		this.iterateLimit = iterateLimit;
 	}
 
-	public Cursor getStartCursor() {
-		return this.startCursor;
+	public IterableInstance makeIterable() {
+		return new IterableInstance();
 	}
 
-	public void setStartCursor(Cursor startCursor) {
-		this.startCursor = startCursor;
+	public IterableInstance makeIterable(Cursor cursor) {
+		return new IterableInstance(cursor);
 	}
 
-	// MARK: IndexedIterable
-	@Override
-	public ModelKey getStartIndex() {
-		return IndexUtility.convertCursor(this.startCursor);
+	public IterableInstance makeIterable(Cursor startCursor,
+	                                     Map<String, String> parameters) {
+		return new IterableInstance(startCursor, parameters);
 	}
 
-	@Override
-	public void setStartIndex(ModelKey index) throws InvalidIteratorIndexException {
-		this.startCursor = IndexUtility.convertIndex(index);
-	}
+	// MARK: Internal Classes
+	public class IterableInstance
+	        implements ObjectifyQueryIterable<T> {
 
-	@Override
-	public IteratorInstance indexedIterator() {
-		return new IteratorInstance();
-	}
+		private Cursor startCursor;
+		private Map<String, String> parameters;
 
-	@Override
-	public IteratorInstance iterator() {
-		return this.indexedIterator();
-	}
+		public IterableInstance() {
+			this(null, null);
+		}
 
-	/**
-	 * Function identical to {@link #indexedIterator()} except can safely
-	 * override the {@link #startCursor} value.
-	 *
-	 * @param cursor
-	 *            Optional {@link Cursor} value for the query. Can be
-	 *            {@code null}.
-	 * @return {@link IteratorInstance} with the specified {@link Cursor} value.
-	 */
-	public IteratorInstance iteratorWithCursor(Cursor cursor) {
-		return new IteratorInstance(cursor);
+		public IterableInstance(Cursor startCursor) {
+			this(startCursor, null);
+		}
+
+		public IterableInstance(Cursor startCursor, Map<String, String> parameters) {
+			this.setStartCursor(startCursor);
+			this.setParameters(parameters);
+		}
+
+		public Cursor getStartCursor() {
+			return this.startCursor;
+		}
+
+        public void setStartCursor(Cursor startCursor) {
+        	this.startCursor = startCursor;
+        }
+
+		public Map<String, String> getParameters() {
+			return this.parameters;
+		}
+
+        public void setParameters(Map<String, String> parameters) {
+        	this.parameters = parameters;
+        }
+
+		// MARK: IndexedIterable
+		@Override
+		public ModelKey getStartIndex() {
+			return IndexUtility.convertCursor(this.startCursor);
+		}
+
+		@Override
+		public void setStartIndex(ModelKey index) throws InvalidIteratorIndexException {
+			this.startCursor = IndexUtility.convertIndex(index);
+		}
+
+		@Override
+		public IteratorInstance iterator() {
+			return new IteratorInstance(this.startCursor, this.parameters);
+		}
+
 	}
 
 	// MARK: Instance
@@ -125,7 +146,7 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 	 * @author dereekb
 	 */
 	public class IteratorInstance
-	        implements IndexedIterator<T>, LimitedIterator<T> {
+	        implements ObjectifyQueryIterator<T> {
 
 		/**
 		 * The current index.
@@ -153,6 +174,11 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		private QueryResultIterator<T> iterator;
 
 		/**
+		 * Custom, optional parameters to feed to {@link #initializer}.
+		 */
+		private Map<String, String> parameters;
+
+		/**
 		 * Whether or not the iterator has finished.
 		 */
 		private boolean finished = false;
@@ -161,52 +187,23 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 		private final IterableObjectifyQueryInitializer<T> initializer;
 		private final ObjectifyKeyedQuery<T> query;
 
-		/**
-		 * Custom, optional parameters to feed to {@link #initializer}.
-		 */
-		private Map<String, String> parameters;
-
-		private IteratorInstance() {
-			this(IterableObjectifyQuery.this.startCursor);
-		}
-
-		private IteratorInstance(Cursor startCursor) {
+		private IteratorInstance(Cursor startCursor, Map<String, String> parameters) {
 			this.iteratorBatchLimit = IterableObjectifyQuery.this.iterateLimit;
 			this.initializer = IterableObjectifyQuery.this.initializer;
 			this.query = IterableObjectifyQuery.this.query;
 			this.startCursor = startCursor;
-		}
-
-		public IterableObjectifyQueryInitializer<T> getInitializer() {
-			return this.initializer;
-		}
-
-		public ObjectifyKeyedQuery<T> getQuery() {
-			return this.query;
-		}
-
-		public Map<String, String> getParameters() {
-			return this.parameters;
-		}
-
-		public void setParameters(Map<String, String> parameters) {
 			this.parameters = parameters;
 		}
 
 		// MARK: LimitedIterator
-		@Override
-		public int getIteratorLimit() {
+		public int getIteratorBatchLimit() {
 			return this.iteratorBatchLimit;
 		}
 
-		@Override
-		public void setIteratorLimit(int iteratorLimit) throws IllegalArgumentException {
+		public void setIteratorBatchLimit(int iteratorLimit) throws IllegalArgumentException {
 			if (iteratorLimit < 1 || iteratorLimit > MAX_LIMIT) {
 				throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_LIMIT + ".");
 			}
-
-			ArrayList<Integer> test = new ArrayList<>();
-			test.iterator();
 
 			this.iteratorBatchLimit = iteratorLimit;
 		}
@@ -310,11 +307,14 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 			return iterator;
 		}
 
-		public Cursor getStartCursor() {
+		@Override
+        public Cursor getStartCursor() {
 			return this.startCursor;
 		}
 
-		public Cursor getCurrentCursor() {
+
+		@Override
+        public Cursor getCurrentCursor() {
 			Cursor cursor = null;
 
 			if (this.iterator != null) {
@@ -324,7 +324,8 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 			return cursor;
 		}
 
-		public Cursor getEndCursor() {
+		@Override
+        public Cursor getEndCursor() {
 			Cursor cursor = null;
 
 			if (this.iterator != null) {
@@ -394,6 +395,12 @@ public class IterableObjectifyQuery<T extends ObjectifyModel<T>>
 			return cursor;
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "IterableObjectifyQuery [initializer=" + this.initializer + ", query=" + this.query + ", iterateLimit="
+		        + this.iterateLimit + "]";
 	}
 
 }

@@ -3,12 +3,12 @@ package com.dereekb.gae.web.taskqueue.controller.extension.search;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.search.document.index.IndexAction;
@@ -23,7 +23,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
  * @author dereekb
  *
  */
-@Controller
+@RestController
 public final class TaskQueueSearchController {
 
 	private TypeModelKeyConverter keyTypeConverter;

@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
+import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
 import com.google.appengine.api.datastore.Cursor;
@@ -20,6 +23,7 @@ import com.google.appengine.api.datastore.Cursor;
  * @author dereekb
  *
  */
+@RestController
 public final class TaskQueueIterateController {
 
 	/**
@@ -36,12 +40,22 @@ public final class TaskQueueIterateController {
 	 */
 	public static final String CURSOR_HEADER = "TQ_CURSOR";
 
+	private TaskRequestSystem system;
 	private Map<String, TaskQueueIterateControllerEntry> entries;
 
 	public TaskQueueIterateController() {}
 
-	public TaskQueueIterateController(Map<String, TaskQueueIterateControllerEntry> entries) {
-		this.entries = entries;
+	public TaskQueueIterateController(TaskRequestSystem system, Map<String, TaskQueueIterateControllerEntry> entries) {
+		this.setSystem(system);
+		this.setEntries(entries);
+	}
+
+	public TaskRequestSystem getSystem() {
+		return this.system;
+	}
+
+	public void setSystem(TaskRequestSystem system) {
+		this.system = system;
 	}
 
 	public Map<String, TaskQueueIterateControllerEntry> getEntries() {
@@ -76,18 +90,13 @@ public final class TaskQueueIterateController {
 	public void iterate(@PathVariable("type") String modelType,
 	                    @PathVariable("task") String taskName,
 	                    @RequestHeader(value = TASK_STEP_HEADER, required = false) Integer step,
-	                    @RequestHeader(value = CURSOR_HEADER, required = false) String cursorKey,
+	                    @RequestHeader(value = CURSOR_HEADER, required = false) String cursor,
 	                    @RequestParam Map<String, String> parameters) {
 
 		TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
-		Cursor cursor = null;
-
-		if (cursorKey != null) {
-			cursor = Cursor.fromWebSafeString(cursorKey);
-		}
-
-		IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, step, cursor, parameters);
-		entry.performTask(input);
+		IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, cursor, step, parameters);
+		IterateTaskRequestImpl request = new IterateTaskRequestImpl(input);
+		entry.performTask(request);
 	}
 
 	private TaskQueueIterateControllerEntry getEntryForType(String modelType) throws UnregisteredIterateTypeException {
@@ -103,6 +112,27 @@ public final class TaskQueueIterateController {
 	@Override
 	public String toString() {
 		return "TaskQueueIterateController [entries=" + this.entries + "]";
+	}
+
+	private class IterateTaskRequestImpl
+	        implements IterateTaskRequest {
+
+		private final IterateTaskInput taskInput;
+
+		public IterateTaskRequestImpl(IterateTaskInputImpl taskInput) {
+			this.taskInput = taskInput;
+		}
+
+		@Override
+		public IterateTaskInput getTaskInput() {
+			return this.taskInput;
+		}
+
+		@Override
+		public void scheduleContinuation(Cursor cursor) {
+			// TODO: Build Task Request, submit.
+		}
+
 	}
 
 }

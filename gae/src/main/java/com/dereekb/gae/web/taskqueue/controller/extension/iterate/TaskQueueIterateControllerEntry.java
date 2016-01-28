@@ -14,12 +14,12 @@ public interface TaskQueueIterateControllerEntry {
 	 * Performs the specified task.
 	 *
 	 * @param input
-	 *            {@link IterateTaskInput} instance for this task. Never
+	 *            {@link IterateTaskRequest} instance for this task. Never
 	 *            {@code null}.
 	 * @throws UnknownIterateTaskException
 	 *             thrown if no task is available with the input
 	 *             {@code taskName} value.
 	 */
-	public void performTask(IterateTaskInput input) throws UnknownIterateTaskException;
+	public void performTask(IterateTaskRequest request) throws UnknownIterateTaskException;
 
 }

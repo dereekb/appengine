@@ -16,8 +16,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.exception.Unavailabl
  * @author dereekb
  *
  * @param <T>
- *            Type to iterate.
- * @see {@link IndexedIterable}
+ *            model type
  */
 public interface IndexedIterator<T>
         extends Iterator<T> {

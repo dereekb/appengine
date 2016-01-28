@@ -42,6 +42,7 @@ public interface IndexedIterable<T>
 	 *         {@link IndexedIterator#getStartIndex()} should match the value
 	 *         from {@link #getStartIndex()}, if one has been set.
 	 */
-	public IndexedIterator<T> indexedIterator();
+	@Override
+	public IndexedIterator<T> iterator();
 
 }
