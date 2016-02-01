@@ -1,0 +1,16 @@
+package com.dereekb.gae.utilities.collections.batch;
+
+import java.util.Collection;
+
+/**
+ * Used for generating {@link Batch} instances.
+ *
+ * @author dereekb
+ */
+public interface BatchBuilder {
+
+	public <T> Batch<T> makeBatchWithCollection(Collection<T> collection);
+
+	public <T> Batch<T> makeBatch(Iterable<T> iterable);
+
+}

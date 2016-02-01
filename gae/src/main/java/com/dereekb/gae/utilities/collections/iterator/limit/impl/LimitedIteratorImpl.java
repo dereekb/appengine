@@ -16,7 +16,7 @@ public class LimitedIteratorImpl<T>
 
 	private int index = 0;
 
-	private int iteratorLimit;
+	private final int iteratorLimit;
 	private final Iterator<T> iterator;
 
 	public LimitedIteratorImpl(Iterator<T> iterator, int iteratorLimit) throws IllegalArgumentException {
@@ -24,22 +24,17 @@ public class LimitedIteratorImpl<T>
 			throw new IllegalArgumentException("Input iterator cannot be null.");
 		}
 
-		this.setIteratorLimit(iteratorLimit);
+		if ((iteratorLimit >= this.index) == false) {
+			throw new IllegalArgumentException("The limit must be greater or equal to the current index.");
+		}
+
+		this.iteratorLimit = iteratorLimit;
 		this.iterator = iterator;
 	}
 
 	@Override
 	public int getIteratorLimit() {
 		return this.iteratorLimit;
-	}
-
-	@Override
-	public void setIteratorLimit(int iteratorLimit) throws IllegalArgumentException {
-		if (iteratorLimit < this.index) {
-			throw new IllegalArgumentException("The limit must be greater or equal to the current index.");
-		}
-
-		this.iteratorLimit = iteratorLimit;
 	}
 
 	public int getIndex() {
@@ -50,16 +45,21 @@ public class LimitedIteratorImpl<T>
 		return this.iterator;
 	}
 
+	@Override
+	public boolean hasReachedIteratorLimit() {
+		return this.index >= this.iteratorLimit;
+	}
+
 	// MARK: Iterator
 	@Override
 	public boolean hasNext() {
-		return (this.index < this.iteratorLimit) && this.iterator.hasNext();
+		return this.iterator.hasNext() && (this.hasReachedIteratorLimit() == false);
 	}
 
 	@Override
 	public T next() {
-		if (this.index < this.iteratorLimit) {
-			throw new NoSuchElementException("Iterator limit reached.");
+		if (this.hasReachedIteratorLimit()) {
+			throw new NoSuchElementException("Iterator limit reached. Check ending using hasNext() in the future.");
 		} else {
 			this.index += 1;
 			return this.iterator.next();

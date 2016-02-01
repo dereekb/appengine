@@ -16,12 +16,12 @@ public interface Batch<T>
         extends Iterable<Partition<T>> {
 
 	/**
-	 * Returns the number of items per batches.
+	 * Returns the number of items per partition.
 	 *
 	 * @return {@code int} value containing the maximum number of values in a
 	 *         partition.
 	 */
-	public int getMaxBatchSize();
+	public int getMaxPartitionSize();
 
 	/**
 	 * Returns the number of batches.
@@ -29,14 +29,14 @@ public interface Batch<T>
 	 * @return {@code int} value containing the number of partitions in this
 	 *         batch.
 	 */
-	public int getBatchCount();
+	public int getPartitionCount();
 
 	/**
-	 * Returns the number of elements in this {@link Batch}.
+	 * Returns the total number of elements in this {@link Batch}.
 	 *
 	 * @return {@code int} value containing the number of elements in the batch.
 	 */
-	public int getSize();
+	public int getTotalSize();
 
 	/**
 	 * Returns the batch at the specified index.

@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.collections.batch.impl.BatchImpl;
 /**
  * Used for breaking up a collection of items into several lists, or batches.
  *
- * @deprecated replaced by {@link BatchImpl} and {@link CollectionPartitioner}.
+ * @deprecated replaced by {@link BatchImpl} and {@link PartitionerImpl}.
  *
  * @author dereekb
  */

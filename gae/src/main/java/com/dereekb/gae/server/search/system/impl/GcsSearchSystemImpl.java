@@ -22,7 +22,7 @@ import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse
 import com.dereekb.gae.server.search.system.response.SearchDocumentReadResponse;
 import com.dereekb.gae.server.search.system.response.impl.SearchDocumentQueryResponseImpl;
 import com.dereekb.gae.server.search.system.response.impl.SearchDocumentReadResponseImpl;
-import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
+import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
@@ -158,8 +158,8 @@ public class GcsSearchSystemImpl
 
 	private void batchAndPut(Index index,
 	                         Collection<DocumentPutRequestModel> models) throws PutException {
-		CollectionPartitioner partition = new CollectionPartitioner(this.documentPutMax);
-		List<List<DocumentPutRequestModel>> batches = partition.partitionsWithCollection(models);
+		PartitionerImpl partition = new PartitionerImpl(this.documentPutMax);
+		List<List<DocumentPutRequestModel>> batches = partition.makePartitionsWithCollection(models);
 
 		for (List<DocumentPutRequestModel> batch : batches) {
 			this.putBatch(index, batch);
@@ -200,8 +200,8 @@ public class GcsSearchSystemImpl
 
 	private void batchAndDelete(Index index,
 	                            Collection<String> identifiers) throws PutException {
-		CollectionPartitioner partition = new CollectionPartitioner(this.documentDeleteMax);
-		List<List<String>> batches = partition.partitionsWithCollection(identifiers);
+		PartitionerImpl partition = new PartitionerImpl(this.documentDeleteMax);
+		List<List<String>> batches = partition.makePartitionsWithCollection(identifiers);
 
 		for (List<String> batch : batches) {
 			this.deleteBatch(index, batch);

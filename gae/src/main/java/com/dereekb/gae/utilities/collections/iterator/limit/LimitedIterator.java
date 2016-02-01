@@ -23,16 +23,13 @@ public interface LimitedIterator<T>
 	public int getIteratorLimit();
 
 	/**
-	 * Sets the {@link LimitedIterator}'s iteration limit.
+	 * Checks to see if the iterator limit has been reached.
+	 * <p>
+	 * Can be used in conjunction with {@link #hasNext()} to see if the the
+	 * limit has been reached.
 	 *
-	 * @param limit
-	 *            {@code int} value between 1 and the maximum for the
-	 *            implementation.
-	 * @throws IllegalArgumentException
-	 *             if the limit is less than 1, or above the maximum allowed for
-	 *             that {@link LimitedIterator}.
+	 * @return {@code true} if the iterator limit has been reached.
 	 */
-	@Deprecated
-	public void setIteratorLimit(int limit) throws IllegalArgumentException;
+	public boolean hasReachedIteratorLimit();
 
 }

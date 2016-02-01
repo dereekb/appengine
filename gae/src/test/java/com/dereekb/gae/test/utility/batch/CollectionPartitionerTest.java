@@ -7,10 +7,10 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
+import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 
 /**
- * Unit tests for {@link CollectionPartitioner}.
+ * Unit tests for {@link PartitionerImpl}.
  * 
  * @author dereekb
  *
@@ -25,11 +25,11 @@ public class CollectionPartitionerTest {
 		Integer partitionSize = 10;
 		Integer itemsCount = 100;
 
-		CollectionPartitioner partitioner = new CollectionPartitioner();
+		PartitionerImpl partitioner = new PartitionerImpl();
 		List<Integer> items = this.generateRandomList(itemsCount);
 
 		partitioner.setPartitionSize(partitionSize);
-		List<List<Integer>> partitions = partitioner.partitionsWithCollection(items);
+		List<List<Integer>> partitions = partitioner.makePartitionsWithCollection(items);
 
 		Assert.assertTrue(partitions.size() == (itemsCount / partitionSize));
 
@@ -44,11 +44,11 @@ public class CollectionPartitionerTest {
 		Integer partitionSize = 9;
 		Integer itemsCount = 100;
 
-		CollectionPartitioner partitioner = new CollectionPartitioner();
+		PartitionerImpl partitioner = new PartitionerImpl();
 		List<Integer> items = this.generateRandomList(itemsCount);
 
 		partitioner.setPartitionSize(partitionSize);
-		List<List<Integer>> partitions = partitioner.partitions(items);
+		List<List<Integer>> partitions = partitioner.makePartitions(items);
 
 		Assert.assertTrue(partitions.size() == 12); // 100 / 9 = (11 + 1/9)
 
@@ -61,10 +61,10 @@ public class CollectionPartitionerTest {
 	@Test
 	public void testNullCollectionPartitionGenerator() {
 
-		CollectionPartitioner partitioner = new CollectionPartitioner();
+		PartitionerImpl partitioner = new PartitionerImpl();
 		List<Integer> items = null;
 
-		List<List<Integer>> partitions = partitioner.partitionsWithCollection(items);
+		List<List<Integer>> partitions = partitioner.makePartitionsWithCollection(items);
 
 		Assert.assertNotNull(partitions);
 		Assert.assertTrue(partitions.size() == 0);

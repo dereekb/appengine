@@ -13,7 +13,7 @@ import com.dereekb.gae.server.taskqueue.system.TaskParameter;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
-import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
+import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 
 /**
  * Implementation of {@link TaskRequestBuilder} that generates tasks keyed to
@@ -57,7 +57,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 	/**
 	 * Internally-used batch genereator.
 	 */
-	private final CollectionPartitioner partitioner = new CollectionPartitioner();
+	private final PartitionerImpl partitioner = new PartitionerImpl();
 
 	public ModelKeyTaskRequestBuilder() {}
 
@@ -124,7 +124,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 	}
 
 	private List<TaskRequest> buildRequestPartitions(Iterable<ModelKey> input) {
-		List<List<ModelKey>> keyPartitions = this.partitioner.partitions(input);
+		List<List<ModelKey>> keyPartitions = this.partitioner.makePartitions(input);
 		List<TaskRequest> requests = new ArrayList<TaskRequest>();
 
 		for (List<ModelKey> keyPartition : keyPartitions) {

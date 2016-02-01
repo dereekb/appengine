@@ -8,8 +8,10 @@ import java.util.Collection;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
-public interface Partition<T> {
+public interface Partition<T>
+        extends Iterable<T> {
 
 	/**
 	 * Returns the {@link Batch} this {@link Partition} is a part of.
@@ -24,6 +26,13 @@ public interface Partition<T> {
 	 * @return {@code int} value for the index.
 	 */
 	public int getPartitionIndex();
+
+	/**
+	 * Returns the total number of elements in this partition.
+	 *
+	 * @return {@code int} size of the index.
+	 */
+	public int getPartitionSize();
 
 	/**
 	 * Returns the values in the partition.

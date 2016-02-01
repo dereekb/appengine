@@ -3,7 +3,7 @@ package com.dereekb.gae.utilities.task.iteration.impl;
 import java.util.Iterator;
 import java.util.List;
 
-import com.dereekb.gae.utilities.collections.batch.CollectionPartitioner;
+import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 import com.dereekb.gae.utilities.task.iteration.ConfiguredIterationTask;
 import com.dereekb.gae.utilities.task.iteration.IterationTask;
 import com.dereekb.gae.utilities.task.iteration.exception.IncompleteTaskIterationException;
@@ -12,7 +12,7 @@ import com.dereekb.gae.utilities.task.iteration.exception.IncompleteTaskIteratio
  * {@link IterationTask} implementation that uses a
  * {@link ConfiguredIterationTaskImplDelegate} to use the models.
  * <p>
- * The values are batched together using a {@link CollectionPartitioner} before
+ * The values are batched together using a {@link PartitionerImpl} before
  * being passed to the delegate.
  *
  * @author dereekb
@@ -23,7 +23,7 @@ public class ConfiguredIterationTaskImpl<T, C>
 
 	private C defaultConfiguration;
 
-	private CollectionPartitioner partitioner = new CollectionPartitioner();
+	private PartitionerImpl partitioner = new PartitionerImpl();
 	private ConfiguredIterationTaskImplDelegate<T, C> delegate;
 
 	public ConfiguredIterationTaskImpl(C defaultConfiguration, ConfiguredIterationTaskImplDelegate<T, C> delegate) {
@@ -39,11 +39,11 @@ public class ConfiguredIterationTaskImpl<T, C>
 		this.defaultConfiguration = defaultConfiguration;
 	}
 
-	public CollectionPartitioner getPartitioner() {
+	public PartitionerImpl getPartitioner() {
 		return this.partitioner;
 	}
 
-	public void setPartitioner(CollectionPartitioner partitioner) {
+	public void setPartitioner(PartitionerImpl partitioner) {
 		this.partitioner = partitioner;
 	}
 
