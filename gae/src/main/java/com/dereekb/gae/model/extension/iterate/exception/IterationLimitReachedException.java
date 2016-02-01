@@ -16,6 +16,10 @@ public class IterationLimitReachedException extends RuntimeException {
 
 	private String cursor;
 
+	public IterationLimitReachedException(String cursor) {
+		this.setCursor(cursor);
+	}
+
 	public String getCursor() {
 		return this.cursor;
 	}

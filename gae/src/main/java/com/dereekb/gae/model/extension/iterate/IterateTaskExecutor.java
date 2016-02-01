@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.iterate;
 
 import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedException;
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
  * Executor that wraps a
@@ -19,7 +20,9 @@ public interface IterateTaskExecutor<T> {
 	 *            {@link IterateTaskInput}. Never {@code null}.
 	 * @throws IterationLimitReachedException
 	 *             thrown if the task limit has been reached.
+	 * @throws FailedTaskException
+	 *             thrown if the task fails.
 	 */
-	public void executeTask(IterateTaskInput input) throws IterationLimitReachedException;
+	public void executeTask(IterateTaskInput input) throws IterationLimitReachedException, FailedTaskException;
 
 }

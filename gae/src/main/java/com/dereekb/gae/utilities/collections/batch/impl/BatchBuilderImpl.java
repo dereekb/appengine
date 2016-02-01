@@ -47,20 +47,24 @@ public class BatchBuilderImpl
 	// MARK: Batching
 	@Override
 	public <T> Batch<T> makeBatchWithCollection(Collection<T> collection) {
-		BatchImpl<T> batch = new BatchImpl<T>(this.getPartitionSize());
 		List<List<T>> partitions = this.partitioner.makePartitionsWithCollection(collection);
-
-		for (List<T> partition : partitions) {
-			batch.addPartition(partition);
-		}
-
-		return batch;
+		return this.makeBatch(partitions);
 	}
 
 	@Override
 	public <T> Batch<T> makeBatch(Iterable<T> iterable) {
-		BatchImpl<T> batch = new BatchImpl<T>(this.getPartitionSize());
 		List<List<T>> partitions = this.partitioner.makePartitions(iterable);
+		return this.makeBatch(partitions);
+	}
+
+	@Override
+	public <T> Batch<T> makeBatch(Iterator<T> iterator) {
+		List<List<T>> partitions = this.partitioner.makePartitions(iterator);
+		return this.makeBatch(partitions);
+	}
+
+	private <T> Batch<T> makeBatch(List<List<T>> partitions) {
+		BatchImpl<T> batch = new BatchImpl<T>(this.getPartitionSize());
 
 		for (List<T> partition : partitions) {
 			batch.addPartition(partition);

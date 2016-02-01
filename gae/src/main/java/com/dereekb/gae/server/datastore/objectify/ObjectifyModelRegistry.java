@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.impl.LoadedModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAccessorImpl;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelGetter;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelQuery;
@@ -251,5 +252,9 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 		return new ModelKeyListAccessorImpl<T>(this.modelType, this, keys);
 	}
 
+	@Override
+	public ModelKeyListAccessor<T> createAccessorWithModels(Collection<T> models) {
+		return new LoadedModelKeyListAccessor<T>(this.modelType, models);
+	}
 
 }

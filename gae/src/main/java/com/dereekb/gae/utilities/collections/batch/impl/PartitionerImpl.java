@@ -10,7 +10,7 @@ import com.dereekb.gae.utilities.collections.batch.Partitioner;
 
 /**
  * {@link Partitioner} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -55,9 +55,14 @@ public class PartitionerImpl
 
 	@Override
     public <T> List<List<T>> makePartitions(Iterable<T> elements) {
+		Iterator<T> iterator = elements.iterator();
+		return this.makePartitions(iterator);
+	}
+
+	@Override
+	public <T> List<List<T>> makePartitions(Iterator<T> iterator) {
 		List<List<T>> partitions = new ArrayList<List<T>>();
 
-		Iterator<T> iterator = elements.iterator();
 		while (iterator.hasNext()) {
 			List<T> currentBatch = this.cutPartition(iterator);
 			partitions.add(currentBatch);

@@ -33,11 +33,21 @@ public interface Partitioner {
 	 * Creates partitions of elements using the values within the passed
 	 * {@link Iterable} value.
 	 *
-	 * @param elements
+	 * @param iterable
 	 *            {@link Iterable}. Never {@code null}.
 	 * @return {@link List} containing another list of partitions.
 	 */
 	public <T> List<List<T>> makePartitions(Iterable<T> iterable);
+
+	/**
+	 * Creates partitions of elements using the values within the passed
+	 * {@link Iterator} value.
+	 *
+	 * @param iterator
+	 *            {@link Iterator}. Never {@code null}.
+	 * @return {@link List} containing another list of partitions.
+	 */
+	public <T> List<List<T>> makePartitions(Iterator<T> iterator);
 
 	/**
 	 * Cuts a partition of elements using the input {@link Iterator}.

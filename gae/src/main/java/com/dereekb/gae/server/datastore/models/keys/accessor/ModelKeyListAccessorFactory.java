@@ -12,4 +12,6 @@ public interface ModelKeyListAccessorFactory<T extends UniqueModel> {
 
 	public ModelKeyListAccessor<T> createAccessor(Collection<ModelKey> keys);
 
+	public ModelKeyListAccessor<T> createAccessorWithModels(Collection<T> models);
+
 }
