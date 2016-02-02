@@ -11,9 +11,9 @@ import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedEx
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterator;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.IterableObjectifyQuery;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.batch.Batch;
 import com.dereekb.gae.utilities.collections.batch.BatchBuilder;

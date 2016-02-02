@@ -17,7 +17,6 @@ import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEnt
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyWriter;
 import com.dereekb.gae.server.datastore.objectify.keys.impl.ObjectifyLongKeysConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.impl.ObjectifyStringKeysConverter;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
@@ -27,6 +26,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.Result;
+import com.googlecode.objectify.cmd.Query;
 import com.googlecode.objectify.cmd.QueryKeys;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
@@ -348,31 +348,28 @@ public class ObjectifyDatabase
 	}
 
 	// Query
-
-	public <T> SimpleQuery<T> query(ObjectifyQuery<T> query) {
+	public <T> Query<T> makeQuery(Class<T> type) {
 		Objectify objectify = this.ofy();
-		SimpleQuery<T> finishedQuery = query.executeQuery(objectify);
-		return finishedQuery;
+		Query<T> query = objectify.load().type(type);
+		return query;
 	}
 
-	public <T> List<Key<T>> queryForKeys(ObjectifyQuery<T> query) {
-		SimpleQuery<T> finishedQuery = this.query(query);
-		QueryKeys<T> queryKeys = finishedQuery.keys();
-
+	@Deprecated
+	public <T> List<Key<T>> queryKeys(SimpleQuery<T> query) {
+		QueryKeys<T> queryKeys = query.keys();
 		List<Key<T>> keys = queryKeys.list();
 		return keys;
 	}
 
-	public <T> List<T> queryForEntities(ObjectifyQuery<T> query) {
-		SimpleQuery<T> finishedQuery = this.query(query);
-		List<T> entities = finishedQuery.list();
+	@Deprecated
+	public <T> List<T> queryEntities(SimpleQuery<T> query) {
+		List<T> entities = query.list();
 		return entities;
 	}
 
-	public <T> QueryResultIterator<T> queryForIterable(ObjectifyQuery<T> query) {
-		Objectify objectify = this.ofy();
-		SimpleQuery<T> finishedQuery = query.executeQuery(objectify);
-		QueryResultIterable<T> iterable = finishedQuery.iterable();
+	@Deprecated
+	public <T> QueryResultIterator<T> queryIterable(SimpleQuery<T> query) {
+		QueryResultIterable<T> iterable = query.iterable();
 		return iterable.iterator();
 	}
 

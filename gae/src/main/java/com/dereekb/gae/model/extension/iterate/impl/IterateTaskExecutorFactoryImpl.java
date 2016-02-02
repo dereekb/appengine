@@ -5,6 +5,7 @@ import com.dereekb.gae.model.extension.iterate.IterateTaskExecutorFactory;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
 import com.dereekb.gae.utilities.task.Task;
 
@@ -21,6 +22,10 @@ public class IterateTaskExecutorFactoryImpl<T extends ObjectifyModel<T>>
 
 	private IterableObjectifyQuery<T> query;
 	private ModelKeyListAccessorFactory<T> accessorFactory;
+
+	public IterateTaskExecutorFactoryImpl(ObjectifyRegistry<T> registry) {
+		this(registry, registry);
+	}
 
 	public IterateTaskExecutorFactoryImpl(IterableObjectifyQuery<T> query,
 	        ModelKeyListAccessorFactory<T> accessorFactory) {

@@ -2,12 +2,10 @@ package com.dereekb.gae.server.datastore.objectify.query.builder;
 
 import java.util.List;
 
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyConditionQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilterOperator;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryOrdering;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryOrdering.QueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryConditionOperator;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
@@ -18,8 +16,9 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
  *
  * @param <T>
  */
+@Deprecated
 public class ObjectifyQueryBuilder<T>
-        implements Factory<ObjectifyQuery<T>> {
+        implements Factory<ConfiguredObjectifyQuery<T>> {
 
 	public static final Integer DEFAULT_LIMIT = 20;
 
@@ -48,43 +47,43 @@ public class ObjectifyQueryBuilder<T>
 		this.limit = limit;
 	}
 
-	public ObjectifyQuery<T> fieldEqualsQuery(String field,
+	public ConfiguredObjectifyQuery<T> fieldEqualsQuery(String field,
 	                                          Object value) {
-		return this.fieldQuery(field, ObjectifyQueryFilterOperator.Equal, value, QueryOrdering.Ascending);
+		return this.fieldQuery(field, ObjectifyQueryConditionOperator.Equal, value, QueryOrdering.Ascending);
 	}
 
-	public ObjectifyQuery<T> fieldQuery(String field,
-	                                    ObjectifyQueryFilterOperator operator,
+	public ConfiguredObjectifyQuery<T> fieldQuery(String field,
+	                                    ObjectifyQueryConditionOperator operator,
 	                                    Object value) {
 		return this.fieldQuery(field, operator, value, QueryOrdering.Ascending);
 	}
 
-	public ObjectifyQuery<T> fieldQuery(String field,
-	                                    ObjectifyQueryFilterOperator operator,
+	public ConfiguredObjectifyQuery<T> fieldQuery(String field,
+	                                    ObjectifyQueryConditionOperator operator,
 	                                    Object value,
 	                                    QueryOrdering ordering) {
-		ObjectifyQuery<T> query = this.make();
+		ConfiguredObjectifyQuery<T> query = this.make();
 		List<ObjectifyQueryFilter> filters = query.getQueryFilters();
 
 		ObjectifyConditionQueryFilter fieldFilter = new ObjectifyConditionQueryFilter(field, operator, value);
 		filters.add(fieldFilter);
 
-		ObjectifyQueryOrdering valueOrdering = new ObjectifyQueryOrdering(field, ordering);
+		ObjectifyQueryOrderingImpl valueOrdering = new ObjectifyQueryOrderingImpl(field, ordering);
 		query.setResultsOrdering(valueOrdering);
 
 		return query;
 	}
 
 	public ObjectifyConditionQueryFilter fieldFilter(String field,
-	                                                 ObjectifyQueryFilterOperator operator,
+	                                                 ObjectifyQueryConditionOperator operator,
 	                                                 Object value) {
 		ObjectifyConditionQueryFilter fieldFilter = new ObjectifyConditionQueryFilter(field, operator, value);
 		return fieldFilter;
 	}
 
 	@Override
-	public ObjectifyQuery<T> make() throws FactoryMakeFailureException {
-		ObjectifyQuery<T> query = new ObjectifyQuery<T>(this.type);
+	public ConfiguredObjectifyQuery<T> make() throws FactoryMakeFailureException {
+		ConfiguredObjectifyQuery<T> query = new ConfiguredObjectifyQuery<T>(this.type);
 
 		query.setLimit(this.limit);
 

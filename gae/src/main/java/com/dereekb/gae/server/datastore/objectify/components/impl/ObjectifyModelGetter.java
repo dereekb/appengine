@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.datastore.objectify.components;
+package com.dereekb.gae.server.datastore.objectify.components.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,9 +7,18 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGetter;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.googlecode.objectify.Key;
 
+/**
+ * Objectify implementation of {@link ObjectifyKeyedGetter}.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public class ObjectifyModelGetter<T extends ObjectifyModel<T>> extends ObjectifyModelDatastoreComponent<T>
         implements ObjectifyKeyedGetter<T> {
 

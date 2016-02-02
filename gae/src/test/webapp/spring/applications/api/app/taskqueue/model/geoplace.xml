@@ -9,6 +9,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- CRUDs Controller -->
 	<bean id="geoPlaceTaskQueueEditControllerEntry" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry"/>
@@ -43,6 +44,16 @@
 				<ref bean="typedDocumentIndexServiceUnindexTask" />
 			</list>
 		</constructor-arg>
+	</bean>
+
+	<!-- Iterate Controller -->
+	<bean id="geoPlaceTaskQueueIterateControllerEntry" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
+		<constructor-arg index="0" ref="geoPlaceRegistry"/>
+	</bean>
+	
+	<bean id="geoPlaceIterateTaskExecutorFactory" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl">
 	</bean>
 
 </beans>

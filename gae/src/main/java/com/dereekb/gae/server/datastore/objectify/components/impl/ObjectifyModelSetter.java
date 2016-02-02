@@ -1,7 +1,8 @@
-package com.dereekb.gae.server.datastore.objectify.components;
+package com.dereekb.gae.server.datastore.objectify.components.impl;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModelRegistry;
+import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedSetter;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.googlecode.objectify.Key;
 

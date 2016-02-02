@@ -3,12 +3,12 @@ package com.dereekb.gae.server.datastore.objectify.query.builder;
 import java.util.Date;
 import java.util.List;
 
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyConditionQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilterOperator;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryOrdering;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryOrdering.QueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryConditionOperator;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryOrderingImpl;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryOrderingImpl.QueryOrdering;
 
 /**
  * Extension of {@link ObjectifyQueryBuilder} with components for Querying by a
@@ -45,24 +45,24 @@ public class ObjectifyDateQueryBuilder<T> extends ObjectifyQueryBuilder<T> {
 		this.dateField = dateField;
 	}
 
-	public ObjectifyQuery<T> recentSearch() {
-		return this.dateSearch(ObjectifyQueryFilterOperator.LessOrEqualTo, new Date());
+	public ConfiguredObjectifyQuery<T> recentSearch() {
+		return this.dateSearch(ObjectifyQueryConditionOperator.LessOrEqualTo, new Date());
 	}
 
-	public ObjectifyQuery<T> dateSearch(ObjectifyQueryFilterOperator operator,
+	public ConfiguredObjectifyQuery<T> dateSearch(ObjectifyQueryConditionOperator operator,
 	                                    Date date) {
 		return this.fieldQuery(this.dateField, operator, date, QueryOrdering.Descending);
 	}
 
-	public ObjectifyQuery<T> recentFieldEqualitySearch(String field,
+	public ConfiguredObjectifyQuery<T> recentFieldEqualitySearch(String field,
 	                                                   Object value) {
-		return this.recentFieldSearch(field, ObjectifyQueryFilterOperator.Equal, value, QueryOrdering.Ascending);
+		return this.recentFieldSearch(field, ObjectifyQueryConditionOperator.Equal, value, QueryOrdering.Ascending);
 	}
 
-	public ObjectifyQuery<T> recentFieldEqualitySearch(String field,
+	public ConfiguredObjectifyQuery<T> recentFieldEqualitySearch(String field,
 	                                                   Object value,
 	                                                   QueryOrdering ordering) {
-		return this.recentFieldSearch(field, ObjectifyQueryFilterOperator.Equal, value, ordering);
+		return this.recentFieldSearch(field, ObjectifyQueryConditionOperator.Equal, value, ordering);
 	}
 
 	/**
@@ -84,16 +84,16 @@ public class ObjectifyDateQueryBuilder<T> extends ObjectifyQueryBuilder<T> {
 	 *            datastore-indexes.xml
 	 * @return
 	 */
-	public ObjectifyQuery<T> recentFieldSearch(String field,
-	                                           ObjectifyQueryFilterOperator operator,
+	public ConfiguredObjectifyQuery<T> recentFieldSearch(String field,
+	                                           ObjectifyQueryConditionOperator operator,
 	                                           Object value,
 	                                           QueryOrdering ordering) {
-		ObjectifyQuery<T> query = this.make();
+		ConfiguredObjectifyQuery<T> query = this.make();
 		List<ObjectifyQueryFilter> filters = query.getQueryFilters();
 
 		// First filter need to be the date filter.
 		ObjectifyConditionQueryFilter recentFilter = new ObjectifyConditionQueryFilter(this.dateField,
-		        ObjectifyQueryFilterOperator.LessOrEqualTo, new Date());
+		        ObjectifyQueryConditionOperator.LessOrEqualTo, new Date());
 		filters.add(recentFilter);
 
 		// Add next filter.
@@ -101,7 +101,7 @@ public class ObjectifyDateQueryBuilder<T> extends ObjectifyQueryBuilder<T> {
 		filters.add(fieldFilter);
 
 		// Order by Date
-		ObjectifyQueryOrdering valueOrdering = new ObjectifyQueryOrdering(this.dateField, QueryOrdering.Descending);
+		ObjectifyQueryOrderingImpl valueOrdering = new ObjectifyQueryOrderingImpl(this.dateField, QueryOrdering.Descending);
 
 		// Order then by the input type.
 		if (ordering != null) {

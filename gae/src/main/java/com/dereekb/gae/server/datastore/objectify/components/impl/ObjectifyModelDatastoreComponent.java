@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.datastore.objectify.components;
+package com.dereekb.gae.server.datastore.objectify.components.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +9,15 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.googlecode.objectify.Key;
 
-public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
+/**
+ * Abstract component used by other Objectify components.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
+public abstract class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 
 	protected final ObjectifyDatabase database;
 
@@ -25,6 +33,7 @@ public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 	}
 
 	// Make
+	@Deprecated
 	public Key<T> makeKey(Long id) throws IllegalArgumentException {
 		if (id != null) {
 			return this.database.makeKey(this.type, id);
@@ -41,20 +50,23 @@ public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 		}
 	}
 
+	@Deprecated
 	public List<Key<T>> makeKeysFromLongs(Collection<Long> ids) {
 		return this.database.makeKeysFromLongs(this.type, ids);
 	}
 
+	@Deprecated
 	public List<Key<T>> makeKeysFromNames(Collection<String> ids) {
 		return this.database.makeKeysFromNames(this.type, ids);
 	}
 
+	@Deprecated
 	public List<Key<T>> makeKeysFromModelKeys(Collection<ModelKey> keys) {
 		return this.database.makeKeysFromModelKeys(this.type, keys);
 	}
 
+	@Deprecated
 	public static <T> List<Long> getLongsFromKeys(Collection<Key<T>> keys) {
-
 		List<Long> identifiers = new ArrayList<Long>();
 
 		for (Key<T> key : keys) {
@@ -65,8 +77,8 @@ public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 		return identifiers;
 	}
 
+	@Deprecated
 	public static <T> List<String> getNamesFromKeys(Collection<Key<T>> keys) {
-
 		List<String> names = new ArrayList<String>();
 
 		for (Key<T> key : keys) {
@@ -83,12 +95,11 @@ public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 	 * @param ids
 	 * @return
 	 */
+	@Deprecated
 	public List<Key<T>> makeKeysFromStringIds(Collection<String> ids) {
-
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		if (ids != null) {
-
 			List<Long> longIds = new ArrayList<Long>();
 
 			for (String id : ids) {
@@ -102,8 +113,8 @@ public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 		return keys;
 	}
 
+	@Deprecated
 	public List<Key<T>> makeKeysFromObjectsList(Collection<T> objects) {
-
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		if (objects != null) {
@@ -115,6 +126,7 @@ public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 		return keys;
 	}
 
+	@Deprecated
 	public Key<T> makeKey(String name) {
 		if (name != null) {
 			return this.database.makeKey(this.type, name);
@@ -129,6 +141,7 @@ public class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 	 * @param keys
 	 * @return
 	 */
+	@Deprecated
 	public List<Long> makeLongListFromKeys(Collection<Key<T>> keys) {
 
 		List<Long> ids = new ArrayList<Long>();

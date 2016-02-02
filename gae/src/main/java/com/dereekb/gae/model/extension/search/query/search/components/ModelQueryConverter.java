@@ -1,19 +1,21 @@
 package com.dereekb.gae.model.extension.search.query.search.components;
 
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
 
 /**
- * Used to convert queries into {@link ObjectifyQuery} instances.
+ * Used to convert queries into {@link ConfiguredObjectifyQuery} instances.
  *
  * @author dereekb
  *
  * @param <Q>
+ *            query type
  */
-public interface ModelQueryConverter<T, Q> {
+public interface ModelQueryConverter<T extends ObjectifyModel<T>, Q> {
 
 	/**
-	 * Generates a {@link ObjectifyQuery} instance from the input query.
+	 * Generates a {@link ConfiguredObjectifyQuery} instance from the input query.
 	 */
-	public ObjectifyQuery<T> convertQuery(Q query);
+	public ConfiguredObjectifyQuery<T> convertQuery(Q query);
 
 }

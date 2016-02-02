@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.query.search.components;
 
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
 
 /**
  * Base model query that contains a field for an Objectify query cursor and
@@ -41,7 +41,7 @@ public abstract class BaseModelQuery {
 		this.disabledCache = disabledCache;
 	}
 
-	public void updateObjectifyQuery(ObjectifyQuery<?> query) {
+	public void updateObjectifyQuery(ConfiguredObjectifyQuery<?> query) {
 
 		if (this.limit != null) {
 			query.setLimit(query.getLimit());

@@ -2,18 +2,21 @@ package com.dereekb.gae.server.datastore.objectify;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.LoadedModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAccessorImpl;
-import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelGetter;
-import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelQuery;
-import com.dereekb.gae.server.datastore.objectify.components.ObjectifyModelSetter;
+import com.dereekb.gae.server.datastore.objectify.components.impl.ObjectifyModelGetter;
+import com.dereekb.gae.server.datastore.objectify.components.impl.ObjectifyModelSetter;
+import com.dereekb.gae.server.datastore.objectify.components.query.impl.ObjectifyQueryServiceImpl;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyWriter;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
 import com.dereekb.gae.server.datastore.utility.ConfiguredDeleter;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -37,7 +40,7 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 
 	protected String modelType;
 	protected final Class<T> type;
-	protected final ObjectifyModelQuery<T> query;
+	protected final ObjectifyQueryServiceImpl<T> query;
 	protected final ObjectifyModelGetter<T> getter;
 	protected final ObjectifyModelSetter<T> setter;
 	protected final ObjectifyKeyWriter<T, ModelKey> keyWriter;
@@ -64,7 +67,7 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 
 		this.setModelType(modelType);
 
-		this.query = new ObjectifyModelQuery<T>(database, type);
+		this.query = new ObjectifyQueryServiceImpl<T>(database, type);
 		this.getter = new ObjectifyModelGetter<T>(database, type);
 		this.setter = new ObjectifyModelSetter<T>(database, type);
 	}
@@ -223,26 +226,6 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public ObjectifyQuery<T> defaultQuery() {
-		return this.query.defaultQuery();
-	}
-
-	@Override
-	public List<T> queryEntities(ObjectifyQuery<T> query) {
-		return this.query.queryEntities(query);
-	}
-
-	@Override
-	public List<Key<T>> queryKeys(ObjectifyQuery<T> query) {
-		return this.query.queryKeys(query);
-	}
-
-	@Override
-	public QueryResultIterator<T> queryIterator(ObjectifyQuery<T> query) {
-		return this.query.queryIterator(query);
-	}
-
-	@Override
 	public ModelKeyListAccessor<T> createAccessor() {
 		return new ModelKeyListAccessorImpl<T>(this.modelType, this);
 	}
@@ -255,6 +238,36 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 	@Override
 	public ModelKeyListAccessor<T> createAccessorWithModels(Collection<T> models) {
 		return new LoadedModelKeyListAccessor<T>(this.modelType, models);
+	}
+
+	@Override
+	public IterableObjectifyQuery<T> makeIterableQuery() {
+		return this.query.makeIterableQuery();
+	}
+
+	@Override
+	public QueryResultIterator<T> queryIterator(ConfiguredObjectifyQuery<T> query) {
+		return this.query.queryIterator(query);
+	}
+
+	@Override
+	public List<T> queryModels(ConfiguredObjectifyQuery<T> query) {
+		return this.query.queryModels(query);
+	}
+
+	@Override
+	public List<Key<T>> queryKeys(ConfiguredObjectifyQuery<T> query) {
+		return this.query.queryKeys(query);
+	}
+
+	@Override
+	public ObjectifyQueryBuilder<T> makeQuery() {
+		return this.query.makeQuery();
+	}
+
+	@Override
+	public ObjectifyQueryBuilder<T> makeQuery(Map<String, String> parameters) {
+		return this.query.makeQuery(parameters);
 	}
 
 }

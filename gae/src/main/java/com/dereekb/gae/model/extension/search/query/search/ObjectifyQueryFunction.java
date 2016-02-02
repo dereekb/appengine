@@ -4,9 +4,10 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.search.query.search.components.ModelQueryConverter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedQuery;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyReader;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
 import com.dereekb.gae.utilities.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
 import com.googlecode.objectify.Key;
@@ -17,17 +18,19 @@ import com.googlecode.objectify.Key;
  *
  * @author dereekb
  *
+ * @param <T>
+ *            model type
  * @param <Q>
- *            Query type.
+ *            query type
  */
-public final class ObjectifyQueryFunction<T, Q> extends FilteredStagedFunction<Q, QueryPair<Q>> {
+public class ObjectifyQueryFunction<T extends ObjectifyModel<T>, Q> extends FilteredStagedFunction<Q, QueryPair<Q>> {
 
-	private final ModelQueryConverter<T, Q> converter;
-	private final ObjectifyKeyedQuery<T> objectifyQuery;
-	private final ObjectifyKeyReader<T, ModelKey> keyReader;
+	private ModelQueryConverter<T, Q> converter;
+	private ObjectifyQueryService<T> objectifyQuery;
+	private ObjectifyKeyReader<T, ModelKey> keyReader;
 
 	public ObjectifyQueryFunction(ModelQueryConverter<T, Q> converter,
-	        ObjectifyKeyedQuery<T> objectifyQuery,
+	        ObjectifyQueryService<T> objectifyQuery,
 	        ObjectifyKeyReader<T, ModelKey> keyReader) {
 		this.converter = converter;
 		this.objectifyQuery = objectifyQuery;
@@ -40,7 +43,7 @@ public final class ObjectifyQueryFunction<T, Q> extends FilteredStagedFunction<Q
 
 		for (QueryPair<Q> pair : pairs) {
 			Q query = pair.getQuery();
-			ObjectifyQuery<T> objectifyQuery = this.converter.convertQuery(query);
+			ConfiguredObjectifyQuery<T> objectifyQuery = this.converter.convertQuery(query);
 			List<Key<T>> keys = this.objectifyQuery.queryKeys(objectifyQuery);
 			List<ModelKey> modelKeys = this.keyReader.readKeys(keys);
 			pair.setKeyResults(modelKeys);
@@ -51,7 +54,7 @@ public final class ObjectifyQueryFunction<T, Q> extends FilteredStagedFunction<Q
 		return this.converter;
 	}
 
-	public ObjectifyKeyedQuery<T> getObjectifyQuery() {
+	public ObjectifyQueryService<T> getObjectifyQuery() {
 		return this.objectifyQuery;
 	}
 
