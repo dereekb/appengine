@@ -2,7 +2,7 @@ package com.dereekb.gae.model.stored.blob.search.query;
 
 import com.dereekb.gae.model.extension.search.query.search.components.ModelQueryConverter;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.deprecated.builder.ObjectifyDateQueryBuilder;
 
 /**
@@ -36,12 +36,12 @@ public final class StoredBlobQueryConverter
 	}
 
 	@Override
-	public ConfiguredObjectifyQuery<StoredBlob> convertQuery(StoredBlobQuery query) {
+	public ObjectifyQueryRequest<StoredBlob> convertQuery(StoredBlobQuery query) {
 
 		boolean recent = query.getRecent();
 		String infoType = query.getInfoType();
 
-		ConfiguredObjectifyQuery<StoredBlob> objectifyQuery = null;
+		ObjectifyQueryRequest<StoredBlob> objectifyQuery = null;
 
 		if (recent) {
 			if (infoType != null) {

@@ -8,8 +8,6 @@ package com.dereekb.gae.server.datastore.objectify.query.order;
  */
 public interface ObjectifyQueryOrdering {
 
-	public boolean isKeysOrdering();
-
 	public String getOrderingString();
 
 }

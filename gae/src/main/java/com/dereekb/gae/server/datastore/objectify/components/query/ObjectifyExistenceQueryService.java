@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.components.query;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
@@ -21,9 +21,9 @@ public interface ObjectifyExistenceQueryService<T extends ObjectifyModel<T>> {
 	 * corresponds to that key.
 	 *
 	 * @param keys
-	 *            List of keys to check.
-	 * @return List of keys that have a model representation in the datastore.
+	 *            {@link Collection} of keys to check.
+	 * @return Set of keys that have a model representation in the datastore.
 	 */
-	public List<Key<T>> filterExistingModels(Collection<Key<T>> keys);
+	public Set<Key<T>> filterExistingModels(Collection<Key<T>> keys);
 
 }

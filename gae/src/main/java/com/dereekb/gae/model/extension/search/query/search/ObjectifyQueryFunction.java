@@ -1,16 +1,17 @@
 package com.dereekb.gae.model.extension.search.query.search;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.search.query.search.components.ModelQueryConverter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyReader;
-import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.utilities.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
-import com.googlecode.objectify.Key;
 
 /**
  * {@link StagedFunction} used for retrieving {@link ModelKey} instances from
@@ -23,6 +24,7 @@ import com.googlecode.objectify.Key;
  * @param <Q>
  *            query type
  */
+@Deprecated
 public class ObjectifyQueryFunction<T extends ObjectifyModel<T>, Q> extends FilteredStagedFunction<Q, QueryPair<Q>> {
 
 	private ModelQueryConverter<T, Q> converter;
@@ -43,9 +45,9 @@ public class ObjectifyQueryFunction<T extends ObjectifyModel<T>, Q> extends Filt
 
 		for (QueryPair<Q> pair : pairs) {
 			Q query = pair.getQuery();
-			ConfiguredObjectifyQuery<T> objectifyQuery = this.converter.convertQuery(query);
-			List<Key<T>> keys = this.objectifyQuery.queryKeys(objectifyQuery);
-			List<ModelKey> modelKeys = this.keyReader.readKeys(keys);
+			ObjectifyQueryRequest<T> objectifyQuery = this.converter.convertQuery(query);
+			Set<ModelKey> keys = this.objectifyQuery.query(objectifyQuery).queryModelKeys();
+			List<ModelKey> modelKeys = new ArrayList<ModelKey>(keys);
 			pair.setKeyResults(modelKeys);
 		}
 	}

@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query.impl;
 
-import java.util.Collections;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
@@ -22,7 +23,7 @@ public class ObjectifyKeyInSetFilter<T> implements ObjectifySimpleQueryFilter<T>
 
 	private Set<Key<T>> keys;
 
-	public ObjectifyKeyInSetFilter(Set<Key<T>> keys) {
+	public ObjectifyKeyInSetFilter(Collection<Key<T>> keys) {
 		this.setKeys(keys);
 	}
 
@@ -30,12 +31,12 @@ public class ObjectifyKeyInSetFilter<T> implements ObjectifySimpleQueryFilter<T>
 		return this.keys;
 	}
 
-	public void setKeys(Set<Key<T>> keys) {
-		if (keys == null) {
-			keys = Collections.emptySet();
-		}
+	public void setKeys(Collection<Key<T>> keys) {
+		this.keys = new HashSet<Key<T>>();
 
-		this.keys = keys;
+		if (keys != null) {
+			this.keys.addAll(keys);
+		}
 	}
 
 	// MARK: ObjectifySimpleQueryFilter

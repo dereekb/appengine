@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.components.query;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryBuilderFactory;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilderFactory;
 
 /**
  * Used for performing Objectify queries.
@@ -10,6 +10,6 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryBuilderFac
  */
 public interface ObjectifyQueryService<T extends ObjectifyModel<T>>
         extends ObjectifyIterationQueryService<T>, ObjectifyEntityQueryService<T>, ObjectifyExistenceQueryService<T>,
-        ObjectifyQueryBuilderFactory<T> {
+        ObjectifyQueryRequestBuilderFactory<T> {
 
 }

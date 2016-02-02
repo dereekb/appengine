@@ -6,7 +6,7 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.utilities.task.Task;
 
 /**
@@ -20,24 +20,24 @@ import com.dereekb.gae.utilities.task.Task;
 public class IterateTaskExecutorFactoryImpl<T extends ObjectifyModel<T>>
         implements IterateTaskExecutorFactory<T> {
 
-	private IterableObjectifyQuery<T> query;
+	private ObjectifyQueryIterableFactory<T> query;
 	private ModelKeyListAccessorFactory<T> accessorFactory;
 
 	public IterateTaskExecutorFactoryImpl(ObjectifyRegistry<T> registry) {
-		this(registry, registry);
+		this(registry.makeIterableQueryFactory(), registry);
 	}
 
-	public IterateTaskExecutorFactoryImpl(IterableObjectifyQuery<T> query,
+	public IterateTaskExecutorFactoryImpl(ObjectifyQueryIterableFactory<T> query,
 	        ModelKeyListAccessorFactory<T> accessorFactory) {
 		this.query = query;
 		this.accessorFactory = accessorFactory;
 	}
 
-	public IterableObjectifyQuery<T> getQuery() {
+	public ObjectifyQueryIterableFactory<T> getQuery() {
 		return this.query;
 	}
 
-	public void setQuery(IterableObjectifyQuery<T> query) {
+	public void setQuery(ObjectifyQueryIterableFactory<T> query) {
 		this.query = query;
 	}
 

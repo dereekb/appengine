@@ -12,10 +12,10 @@ import com.google.appengine.api.datastore.Cursor;
  * @param <T>
  *            model type
  */
-public interface ObjectifyQueryBuilder<T extends ObjectifyModel<T>>
-        extends ConfiguredObjectifyQuery<T> {
+public interface ObjectifyQueryRequestBuilder<T extends ObjectifyModel<T>>
+        extends ObjectifyQueryRequest<T> {
 
-	public void setCacheDisabled(boolean disable);
+	public void setAllowCache(boolean allowCache);
 
 	public void setLimit(Integer limit);
 
@@ -30,6 +30,8 @@ public interface ObjectifyQueryBuilder<T extends ObjectifyModel<T>>
 	public void addSimpleQueryFilter(ObjectifySimpleQueryFilter<T> filter);
 
 	public void setSimpleQueryFilters(Iterable<ObjectifySimpleQueryFilter<T>> filters);
+
+	public ObjectifyQueryRequestBuilder<T> copyBuilder();
 
 	public ExecutableObjectifyQuery<T> buildExecutableQuery();
 

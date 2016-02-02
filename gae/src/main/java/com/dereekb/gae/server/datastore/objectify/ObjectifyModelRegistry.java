@@ -14,12 +14,12 @@ import com.dereekb.gae.server.datastore.objectify.components.impl.ObjectifyModel
 import com.dereekb.gae.server.datastore.objectify.components.query.impl.ObjectifyQueryServiceImpl;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyWriter;
-import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryBuilder;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.utility.ConfiguredDeleter;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
-import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
 
 /**
@@ -215,15 +215,6 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 		this.setter.deleteWithObjectifyKeys(entities, async);
 	}
 
-	@Override
-	public Boolean modelsExist(Collection<Key<T>> keys) {
-		return this.query.modelsExist(keys);
-	}
-
-	@Override
-	public List<Key<T>> filterExistingModels(Collection<Key<T>> keys) {
-		return this.query.filterExistingModels(keys);
-	}
 
 	@Override
 	public ModelKeyListAccessor<T> createAccessor() {
@@ -240,34 +231,35 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 		return new LoadedModelKeyListAccessor<T>(this.modelType, models);
 	}
 
+	// MARK: Query
 	@Override
-	public IterableObjectifyQuery<T> makeIterableQuery() {
-		return this.query.makeIterableQuery();
+	public Boolean modelsExist(Collection<Key<T>> keys) {
+		return this.query.modelsExist(keys);
 	}
 
 	@Override
-	public QueryResultIterator<T> queryIterator(ConfiguredObjectifyQuery<T> query) {
-		return this.query.queryIterator(query);
+	public Set<Key<T>> filterExistingModels(Collection<Key<T>> keys) {
+		return this.query.filterExistingModels(keys);
 	}
 
 	@Override
-	public List<T> queryModels(ConfiguredObjectifyQuery<T> query) {
-		return this.query.queryModels(query);
+	public ObjectifyQueryIterableFactory<T> makeIterableQueryFactory() {
+		return this.query.makeIterableQueryFactory();
 	}
 
 	@Override
-	public List<Key<T>> queryKeys(ConfiguredObjectifyQuery<T> query) {
-		return this.query.queryKeys(query);
-	}
-
-	@Override
-	public ObjectifyQueryBuilder<T> makeQuery() {
+	public ObjectifyQueryRequestBuilder<T> makeQuery() {
 		return this.query.makeQuery();
 	}
 
 	@Override
-	public ObjectifyQueryBuilder<T> makeQuery(Map<String, String> parameters) {
+	public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters) {
 		return this.query.makeQuery(parameters);
+	}
+
+	@Override
+	public ObjectifyQueryResponse<T> query(ObjectifyQueryRequest<T> request) {
+		return this.query.query(request);
 	}
 
 }

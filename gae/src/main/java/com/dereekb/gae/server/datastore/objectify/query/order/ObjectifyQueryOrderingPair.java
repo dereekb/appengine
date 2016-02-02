@@ -69,7 +69,6 @@ public class ObjectifyQueryOrderingPair
 		return (this.ordering == ObjectifyQueryResultsOrdering.Descending);
 	}
 
-	@Override
     public boolean isKeysOrdering() {
 		return this.variable.equals(ORDER_BY_KEY_VALUE);
 	}

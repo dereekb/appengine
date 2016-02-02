@@ -81,6 +81,7 @@ public class ObjectifyDatabase
 		return registry;
 	}
 
+	@Deprecated
 	private <T> ObjectifyKeyWriter<T, ModelKey> makeKeyWriter(Class<T> type,
 	                                                          ModelKeyType keyType) {
 		ObjectifyKeyWriter<T, ModelKey> writer = null;
@@ -348,8 +349,9 @@ public class ObjectifyDatabase
 	}
 
 	// Query
-	public <T> Query<T> makeQuery(Class<T> type) {
-		Objectify objectify = this.ofy();
+	public <T> Query<T> makeQuery(Class<T> type,
+	                              boolean cache) {
+		Objectify objectify = this.ofy().cache(cache);
 		Query<T> query = objectify.load().type(type);
 		return query;
 	}

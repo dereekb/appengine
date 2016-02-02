@@ -5,6 +5,7 @@ import java.util.List;
 import com.dereekb.gae.model.extension.search.query.search.ObjectifyQueryFunction;
 import com.dereekb.gae.model.extension.search.query.search.QueryPair;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**
@@ -14,7 +15,8 @@ import com.dereekb.gae.utilities.factory.Factory;
  *
  * @param <Q>
  */
-public final class DefaultModelKeyQueryService<T, Q>
+@Deprecated
+public final class DefaultModelKeyQueryService<T extends ObjectifyModel<T>, Q>
         implements ModelKeyQueryService<Q> {
 
 	private final Factory<ObjectifyQueryFunction<T, Q>> factory;

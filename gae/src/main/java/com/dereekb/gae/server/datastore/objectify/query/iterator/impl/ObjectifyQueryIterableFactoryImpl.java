@@ -6,9 +6,11 @@ import java.util.NoSuchElementException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryBuilder;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.IterableObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilderFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterator;
 import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
@@ -25,52 +27,54 @@ import com.google.appengine.api.datastore.QueryResultIterator;
  * @param <T>
  *            model type
  */
-public class IterableObjectifyQueryImpl<T extends ObjectifyModel<T>>
-        implements IterableObjectifyQuery<T> {
+public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
+        implements ObjectifyQueryIterableFactory<T> {
 
-	public static final Integer MAX_LIMIT = 1000;
+	private int iterateLimit = MAX_ITERATION_LIMIT;
 
-	private int iterateLimit = MAX_LIMIT;
+	private ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory;
 
-	private ObjectifyQueryService<T> queryService;
-
-	public IterableObjectifyQueryImpl(ObjectifyQueryService<T> queryService) {
-		this.setQueryService(queryService);
+	public ObjectifyQueryIterableFactoryImpl(ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory) {
+	    this.queryBuilderFactory = queryBuilderFactory;
 	}
 
-	public ObjectifyQueryService<T> getQueryService() {
-		return this.queryService;
+	public ObjectifyQueryRequestBuilderFactory<T> getQueryBuilderFactory() {
+		return this.queryBuilderFactory;
 	}
 
-	public void setQueryService(ObjectifyQueryService<T> queryService) throws IllegalArgumentException {
-		if (queryService == null) {
-			throw new IllegalArgumentException("Query cannot be null.");
+	public void setQueryBuilderFactory(ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory) {
+		if (queryBuilderFactory == null) {
+			throw new IllegalArgumentException("Query Builder cannot be null.");
 		}
 
-		this.queryService = queryService;
+		this.queryBuilderFactory = queryBuilderFactory;
 	}
+
 
 	public int getIterateLimit() {
 		return this.iterateLimit;
 	}
 
 	public void setIterateLimit(int iterateLimit) throws IllegalArgumentException {
-		if (iterateLimit < 1 || iterateLimit > MAX_LIMIT) {
-			throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_LIMIT + ".");
+		if (iterateLimit < 1 || iterateLimit > MAX_ITERATION_LIMIT) {
+			throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT + ".");
 		}
 
 		this.iterateLimit = iterateLimit;
 	}
 
-	public IterableInstance makeIterable() {
+	@Override
+    public IterableInstance makeIterable() {
 		return new IterableInstance();
 	}
 
-	public IterableInstance makeIterable(Cursor cursor) {
+	@Override
+    public IterableInstance makeIterable(Cursor cursor) {
 		return new IterableInstance(cursor);
 	}
 
-	public IterableInstance makeIterable(Cursor startCursor,
+	@Override
+    public IterableInstance makeIterable(Cursor startCursor,
 	                                     Map<String, String> parameters) {
 		return new IterableInstance(startCursor, parameters);
 	}
@@ -174,11 +178,9 @@ public class IterableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 		private boolean finished = false;
 
 		private int iteratorBatchLimit;
-		private final ObjectifyQueryService<T> query;
 
 		private IteratorInstance(Cursor startCursor, Map<String, String> parameters) {
-			this.iteratorBatchLimit = IterableObjectifyQueryImpl.this.iterateLimit;
-			this.query = IterableObjectifyQueryImpl.this.queryService;
+			this.iteratorBatchLimit = ObjectifyQueryIterableFactoryImpl.this.iterateLimit;
 			this.startCursor = startCursor;
 			this.parameters = parameters;
 		}
@@ -189,8 +191,8 @@ public class IterableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 		}
 
 		public void setIteratorBatchLimit(int iteratorLimit) throws IllegalArgumentException {
-			if (iteratorLimit < 1 || iteratorLimit > MAX_LIMIT) {
-				throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_LIMIT + ".");
+			if (iteratorLimit < 1 || iteratorLimit > MAX_ITERATION_LIMIT) {
+				throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT + ".");
 			}
 
 			this.iteratorBatchLimit = iteratorLimit;
@@ -254,12 +256,12 @@ public class IterableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 			return next;
 		}
 
-		protected ObjectifyQueryBuilder<T> newQuery() {
-			return this.query.makeQuery(this.parameters);
+		protected ObjectifyQueryRequestBuilder<T> newQuery() {
+			return ObjectifyQueryIterableFactoryImpl.this.queryBuilderFactory.makeQuery(this.parameters);
 		}
 
 		private QueryResultIterator<T> continueQuery() {
-			ObjectifyQueryBuilder<T> query = this.newQuery();
+			ObjectifyQueryRequestBuilder<T> query = this.newQuery();
 			query.setLimit(this.iteratorBatchLimit);
 
 			if (this.iteratorCursor != null) {
@@ -268,7 +270,8 @@ public class IterableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 				query.setCursor(this.startCursor);
 			}
 
-			QueryResultIterator<T> iterator = this.query.queryIterator(query);
+			ExecutableObjectifyQuery<T> executable = query.buildExecutableQuery();
+			QueryResultIterator<T> iterator = executable.queryIterator();
 			return iterator;
 		}
 
@@ -381,7 +384,8 @@ public class IterableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 
 	@Override
 	public String toString() {
-		return "IterableObjectifyQueryImpl [iterateLimit=" + this.iterateLimit + ", query=" + this.queryService + "]";
+		return "IterableObjectifyQueryImpl [iterateLimit=" + this.iterateLimit + ", queryBuilderFactory="
+		        + this.queryBuilderFactory + "]";
 	}
 
 }

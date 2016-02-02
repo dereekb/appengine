@@ -13,13 +13,15 @@ import com.google.appengine.api.datastore.Cursor;
  * @param <T>
  *            model type
  */
-public interface IterableObjectifyQuery<T extends ObjectifyModel<T>> {
+public interface ObjectifyQueryIterableFactory<T extends ObjectifyModel<T>> {
+
+	public static final Integer MAX_ITERATION_LIMIT = 1000;
 
 	public ObjectifyQueryIterable<T> makeIterable();
 
 	public ObjectifyQueryIterable<T> makeIterable(Cursor cursor);
 
-	public ObjectifyQueryIterable<T> makeIterable(Cursor startCursor,
+	public ObjectifyQueryIterable<T> makeIterable(Cursor cursor,
 	                                              Map<String, String> parameters);
 
 }

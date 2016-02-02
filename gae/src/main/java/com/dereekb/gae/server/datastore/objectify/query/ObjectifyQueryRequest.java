@@ -14,10 +14,18 @@ import com.google.appengine.api.datastore.Cursor;
  * @param <T>
  *            model type
  */
-public interface ConfiguredObjectifyQuery<T extends ObjectifyModel<T>> {
+public interface ObjectifyQueryRequest<T extends ObjectifyModel<T>> {
 
+	/**
+	 * @return {@link List} of {@link ObjectifyQueryFilter} values. Never
+	 *         {@code null}.
+	 */
 	public List<ObjectifyQueryFilter> getQueryFilters();
 
+	/**
+	 * @return {@link List} of {@link ObjectifySimpleQueryFilter} values. Never
+	 *         {@code null}.
+	 */
 	public List<ObjectifySimpleQueryFilter<T>> getSimpleQueryFilters();
 
 	public Iterable<ObjectifyQueryOrdering> getResultsOrdering();
@@ -26,6 +34,6 @@ public interface ConfiguredObjectifyQuery<T extends ObjectifyModel<T>> {
 
 	public Integer getLimit();
 
-	public boolean cacheIsDisabled();
+	public boolean allowCache();
 
 }

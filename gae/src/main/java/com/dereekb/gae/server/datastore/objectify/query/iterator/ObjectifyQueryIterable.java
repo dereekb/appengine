@@ -12,7 +12,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
  * @param <T>
  *            model type
  *
- * @see {@link IterableObjectifyQuery}
+ * @see {@link ObjectifyQueryIterableFactory}
  */
 public interface ObjectifyQueryIterable<T>
         extends ModelQueryIterable<T>, IndexedIterable<T> {

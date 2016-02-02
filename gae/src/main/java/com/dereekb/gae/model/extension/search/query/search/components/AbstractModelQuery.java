@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.search.query.search.components;
 
-import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 
 /**
  * Base model query that contains a field for an Objectify query cursor and
@@ -9,7 +9,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery
  * @author dereekb
  *
  */
-public abstract class BaseModelQuery {
+public abstract class AbstractModelQuery {
 
 	private Integer limit;
 
@@ -41,7 +41,7 @@ public abstract class BaseModelQuery {
 		this.disabledCache = disabledCache;
 	}
 
-	public void updateObjectifyQuery(ConfiguredObjectifyQuery<?> query) {
+	public void updateObjectifyQuery(ObjectifyQueryRequestBuilder<?> query) {
 
 		if (this.limit != null) {
 			query.setLimit(query.getLimit());
@@ -52,7 +52,7 @@ public abstract class BaseModelQuery {
 		}
 
 		if (this.disabledCache != null) {
-			query.setDisableCache(this.disabledCache);
+			query.setCacheDisabled(this.disabledCache);
 		}
 
 	}

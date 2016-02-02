@@ -10,6 +10,13 @@ import com.googlecode.objectify.cmd.Query;
  */
 public interface ObjectifyQueryFilter {
 
+	/**
+	 * Applies a filter to the query, and returns the result.
+	 *
+	 * @param query
+	 *            {@link Query}. Never {@code null}.
+	 * @return {@link Query}. Never {@code null}.
+	 */
 	public <T> Query<T> filter(Query<T> query);
 
 }

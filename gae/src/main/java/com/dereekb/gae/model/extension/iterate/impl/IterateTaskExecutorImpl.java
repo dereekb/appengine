@@ -11,9 +11,9 @@ import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedEx
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterator;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.IterableObjectifyQuery;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.batch.Batch;
 import com.dereekb.gae.utilities.collections.batch.BatchBuilder;
@@ -35,15 +35,15 @@ import com.google.appengine.api.datastore.Cursor;
 public class IterateTaskExecutorImpl<T extends ObjectifyModel<T>>
         implements IterateTaskExecutor<T> {
 
-	private int iteratorLimit = IterableObjectifyQuery.MAX_LIMIT;
+	private int iteratorLimit = ObjectifyQueryIterableFactory.MAX_ITERATION_LIMIT;
 
-	private IterableObjectifyQuery<T> query;
+	private ObjectifyQueryIterableFactory<T> query;
 	private ModelKeyListAccessorFactory<T> accessorFactory;
 	private Task<ModelKeyListAccessor<T>> task;
 
 	private BatchBuilder batchBuilder;
 
-	public IterateTaskExecutorImpl(IterableObjectifyQuery<T> query,
+	public IterateTaskExecutorImpl(ObjectifyQueryIterableFactory<T> query,
 	        ModelKeyListAccessorFactory<T> accessorFactory,
 	        Task<ModelKeyListAccessor<T>> task) {
 		this.setQuery(query);
@@ -59,11 +59,11 @@ public class IterateTaskExecutorImpl<T extends ObjectifyModel<T>>
 		this.iteratorLimit = iteratorLimit;
 	}
 
-	public IterableObjectifyQuery<T> getQuery() {
+	public ObjectifyQueryIterableFactory<T> getQuery() {
 		return this.query;
 	}
 
-	public void setQuery(IterableObjectifyQuery<T> query) {
+	public void setQuery(ObjectifyQueryIterableFactory<T> query) {
 		this.query = query;
 	}
 
