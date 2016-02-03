@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.storage.services.blobstore.upload;
 
 import com.dereekb.gae.server.storage.upload.FileUploadUrlFactory;
-import com.dereekb.gae.utilities.misc.ByteSizeUtility;
+import com.dereekb.gae.utilities.misc.bit.ByteSizeUtility;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.UploadOptions;

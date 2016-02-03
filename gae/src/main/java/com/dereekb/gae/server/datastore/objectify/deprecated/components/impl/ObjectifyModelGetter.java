@@ -8,7 +8,7 @@ import java.util.Set;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGetter;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.googlecode.objectify.Key;
 
 /**
@@ -19,10 +19,11 @@ import com.googlecode.objectify.Key;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class ObjectifyModelGetter<T extends ObjectifyModel<T>> extends ObjectifyModelDatastoreComponent<T>
         implements ObjectifyKeyedGetter<T> {
 
-	public ObjectifyModelGetter(ObjectifyDatabase database, Class<T> type) {
+	public ObjectifyModelGetter(ObjectifyDatabaseImpl database, Class<T> type) {
 		super(database, type);
 	}
 

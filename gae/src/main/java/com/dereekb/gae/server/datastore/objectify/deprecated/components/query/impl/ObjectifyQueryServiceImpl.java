@@ -9,9 +9,9 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.components.impl.ObjectifyModelDatastoreComponent;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
+import com.dereekb.gae.server.datastore.objectify.deprecated.components.impl.ObjectifyModelDatastoreComponent;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
@@ -36,10 +36,11 @@ import com.googlecode.objectify.cmd.SimpleQuery;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class ObjectifyQueryServiceImpl<T extends ObjectifyModel<T>> extends ObjectifyModelDatastoreComponent<T>
         implements ObjectifyQueryService<T> {
 
-	public ObjectifyQueryServiceImpl(ObjectifyDatabase database, Class<T> type) {
+	public ObjectifyQueryServiceImpl(ObjectifyDatabaseImpl database, Class<T> type) {
 		super(database, type);
 	}
 
@@ -203,6 +204,7 @@ public class ObjectifyQueryServiceImpl<T extends ObjectifyModel<T>> extends Obje
 			List<Key<T>> objectifyKeys = this.queryObjectifyKeys();
 
 			// TODO Convert keys.
+
 			return null;
 		}
 

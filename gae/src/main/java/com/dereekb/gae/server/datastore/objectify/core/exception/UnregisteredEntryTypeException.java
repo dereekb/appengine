@@ -1,10 +1,10 @@
 package com.dereekb.gae.server.datastore.objectify.core.exception;
 
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 
 /**
  * Exception thrown when a requested type has not yet been registered by the
- * {@link ObjectifyDatabase}.
+ * {@link ObjectifyDatabaseImpl}.
  *
  * @author dereekb
  *

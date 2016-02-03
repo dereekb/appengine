@@ -1,23 +1,27 @@
 package com.dereekb.gae.test.server.datastore.objectify;
 
-import java.util.logging.Logger;
-
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntity;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityModifier;
+import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 
-
-public class ObjectifyTestDatabase extends ObjectifyDatabase {
+/**
+ * Extension of {@link ObjectifyDatabaseImpl} used for testing.
+ *
+ * @author dereekb
+ *
+ */
+public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 
 	private Boolean asyncOverride;
-	private Logger logger = Logger.getLogger("ObjectifyTestDatabase");
 
-	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition<?>> entities) {
+	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition> entities) {
 		super(entities);
 	}
 
-	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition<?>> entities, Boolean asyncOverride) {
+	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition> entities, Boolean asyncOverride) {
 		super(entities);
 		this.asyncOverride = asyncOverride;
 	}
@@ -39,53 +43,24 @@ public class ObjectifyTestDatabase extends ObjectifyDatabase {
 		return value;
 	}
 
-	// Add/Put
 	@Override
-	public <T> void put(T entity,
-	                    boolean async) {
-		super.put(entity, this.isAsync(async));
+	public <T extends ObjectifyModel<T>> ObjectifyDatabaseEntity<T> getDatabaseEntity(Class<T> type) {
+		return new TestObjectifyDatabaseEntityImpl<T>(type);
 	}
 
-	@Override
-	public <T> void put(Iterable<T> entities,
-	                    boolean async) {
-		super.put(entities, this.isAsync(async));
-	}
+	private class TestObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>> extends ObjectifyDatabaseEntityImpl<T> {
 
-	// Delete
-	@Override
-	public <T> void delete(T entity,
-	                       boolean async) {
-		this.logger.info("Deleting Entity: " + entity);
-		super.delete(entity, this.isAsync(async));
-	}
+		protected TestObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
+			super(type);
+		}
 
-	@Override
-	public <T> void delete(Key<T> key,
-	                       boolean async) {
-		this.logger.info("Deleting Key: " + key);
-		super.delete(key, this.isAsync(async));
-	}
+		// MARK: ObjectifyDatabaseEntityModifier
+		@Override
+		public ObjectifyDatabaseEntityModifier<T> getModifier(boolean async) {
+			async = ObjectifyTestDatabase.this.isAsync(async);
+			return new ObjectifyDatabaseEntityModifierImpl(async);
+		}
 
-	@Override
-	public <T> void delete(Ref<T> ref,
-	                       boolean async) {
-		this.logger.info("Deleting Ref: " + ref);
-		super.delete(ref, this.isAsync(async));
-	}
-
-	@Override
-	public <T> void delete(Iterable<T> list,
-	                       boolean async) {
-		this.logger.info("Deleting List: " + list);
-		super.delete(list, this.isAsync(async));
-	}
-
-	@Override
-	public <T> void deleteWithKeys(Iterable<Key<T>> list,
-	                               boolean async) {
-		this.logger.info("Deleting List of Keys: " + list);
-		super.deleteWithKeys(list, this.isAsync(async));
 	}
 
 }

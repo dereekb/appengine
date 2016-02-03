@@ -1,7 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.query.impl;
 
 import java.util.List;
-import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
@@ -13,7 +12,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.QueryResultIterator;
+import com.google.appengine.api.datastore.QueryResultIterable;
 import com.googlecode.objectify.Key;
 
 /**
@@ -77,18 +76,23 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public Set<Key<T>> queryObjectifyKeys() {
+	public List<Key<T>> queryObjectifyKeys() {
 		return this.getResponse().queryObjectifyKeys();
 	}
 
 	@Override
-	public Set<ModelKey> queryModelKeys() {
+	public List<ModelKey> queryModelKeys() {
 		return this.getResponse().queryModelKeys();
 	}
 
 	@Override
-	public QueryResultIterator<T> queryIterator() {
-		return this.getResponse().queryIterator();
+	public QueryResultIterable<T> queryModelsIterable() {
+		return this.getResponse().queryModelsIterable();
+	}
+
+	@Override
+	public QueryResultIterable<Key<T>> queryObjectifyKeyIterable() {
+		return this.getResponse().queryObjectifyKeyIterable();
 	}
 
 	// MARK: ObjectifyQueryRequest

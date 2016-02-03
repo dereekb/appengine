@@ -13,6 +13,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class ObjectifyModelKeyUtil<T> {
 

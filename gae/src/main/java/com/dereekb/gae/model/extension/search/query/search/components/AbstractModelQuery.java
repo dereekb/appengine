@@ -15,7 +15,7 @@ public abstract class AbstractModelQuery {
 
 	private String cursor;
 
-	private Boolean disabledCache;
+	private Boolean allowCache;
 
 	public Integer getLimit() {
 		return this.limit;
@@ -33,12 +33,12 @@ public abstract class AbstractModelQuery {
 		this.cursor = cursor;
 	}
 
-	public Boolean getDisabledCache() {
-		return this.disabledCache;
+	public Boolean getAllowCache() {
+		return this.allowCache;
 	}
 
-	public void setDisabledCache(Boolean disabledCache) {
-		this.disabledCache = disabledCache;
+	public void setAllowCache(Boolean allowCache) {
+		this.allowCache = allowCache;
 	}
 
 	public void updateObjectifyQuery(ObjectifyQueryRequestBuilder<?> query) {
@@ -51,8 +51,8 @@ public abstract class AbstractModelQuery {
 			query.setCursor(query.getCursor());
 		}
 
-		if (this.disabledCache != null) {
-			query.setCacheDisabled(this.disabledCache);
+		if (this.allowCache != null) {
+			query.setAllowCache(this.allowCache);
 		}
 
 	}

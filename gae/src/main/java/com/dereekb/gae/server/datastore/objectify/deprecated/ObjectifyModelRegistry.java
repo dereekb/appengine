@@ -12,7 +12,7 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAc
 import com.dereekb.gae.server.datastore.objectify.components.impl.ObjectifyModelGetter;
 import com.dereekb.gae.server.datastore.objectify.components.impl.ObjectifyModelSetter;
 import com.dereekb.gae.server.datastore.objectify.components.query.impl.ObjectifyQueryServiceImpl;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyWriter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
@@ -32,9 +32,12 @@ import com.googlecode.objectify.Key;
  *
  * @author dereekb
  *
+ * @deprecated Replaced by {@link ObjectifyDatabaseImpl}.
+ *
  * @param <T>
  *            Model type
  */
+@Deprecated
 public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
         implements ObjectifyRegistry<T>, ConfiguredSetter<T>, ConfiguredDeleter {
 
@@ -45,12 +48,12 @@ public class ObjectifyModelRegistry<T extends ObjectifyModel<T>>
 	protected final ObjectifyModelSetter<T> setter;
 	protected final ObjectifyKeyWriter<T, ModelKey> keyWriter;
 
-	public ObjectifyModelRegistry(ObjectifyDatabase database, Class<T> type, ObjectifyKeyWriter<T, ModelKey> keyWriter) {
+	public ObjectifyModelRegistry(ObjectifyDatabaseImpl database, Class<T> type, ObjectifyKeyWriter<T, ModelKey> keyWriter) {
 		this(null, database, type, keyWriter);
 	}
 
 	public ObjectifyModelRegistry(String modelType,
-	        ObjectifyDatabase database,
+	        ObjectifyDatabaseImpl database,
 	        Class<T> type,
 	        ObjectifyKeyWriter<T, ModelKey> keyWriter) throws IllegalArgumentException {
 

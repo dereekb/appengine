@@ -16,6 +16,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
 import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
 
 /**
@@ -271,8 +272,8 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 			}
 
 			ExecutableObjectifyQuery<T> executable = query.buildExecutableQuery();
-			QueryResultIterator<T> iterator = executable.queryIterator();
-			return iterator;
+			QueryResultIterable<T> iterable = executable.queryModelsIterable();
+			return iterable.iterator();
 		}
 
 		private QueryResultIterator<T> getNextIterator() {

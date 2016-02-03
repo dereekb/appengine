@@ -1,9 +1,8 @@
 package com.dereekb.gae.server.datastore.objectify.components.impl;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.ObjectifyModelRegistry;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedSetter;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.googlecode.objectify.Key;
 
 /**
@@ -12,10 +11,11 @@ import com.googlecode.objectify.Key;
  * @param <T>
  * @see {@link ObjectifyModelRegistry}
  */
+@Deprecated
 public final class ObjectifyModelSetter<T extends ObjectifyModel<T>> extends ObjectifyModelDatastoreComponent<T>
         implements ObjectifyKeyedSetter<T> {
 
-	public ObjectifyModelSetter(ObjectifyDatabase database, Class<T> type) {
+	public ObjectifyModelSetter(ObjectifyDatabaseImpl database, Class<T> type) {
 		super(database, type);
 	}
 

@@ -15,7 +15,7 @@ import com.dereekb.gae.server.storage.services.gcs.impl.GcsStorableFileRequestIm
 import com.dereekb.gae.server.storage.services.gcs.object.request.GcsStorableFileRequest;
 import com.dereekb.gae.server.storage.services.gcs.object.request.GcsStorableFileSaveRequest;
 import com.dereekb.gae.server.storage.services.gcs.object.request.GcsStorableFileSaveRequestBuilder;
-import com.dereekb.gae.utilities.misc.ByteSizeUtility;
+import com.dereekb.gae.utilities.misc.bit.ByteSizeUtility;
 import com.google.appengine.tools.cloudstorage.GcsFileMetadata;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;

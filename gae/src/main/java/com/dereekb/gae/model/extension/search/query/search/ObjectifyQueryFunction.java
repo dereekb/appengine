@@ -1,8 +1,6 @@
 package com.dereekb.gae.model.extension.search.query.search;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.dereekb.gae.model.extension.search.query.search.components.ModelQueryConverter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -46,8 +44,7 @@ public class ObjectifyQueryFunction<T extends ObjectifyModel<T>, Q> extends Filt
 		for (QueryPair<Q> pair : pairs) {
 			Q query = pair.getQuery();
 			ObjectifyQueryRequest<T> objectifyQuery = this.converter.convertQuery(query);
-			Set<ModelKey> keys = this.objectifyQuery.query(objectifyQuery).queryModelKeys();
-			List<ModelKey> modelKeys = new ArrayList<ModelKey>(keys);
+			List<ModelKey> modelKeys = this.objectifyQuery.query(objectifyQuery).queryModelKeys();
 			pair.setKeyResults(modelKeys);
 		}
 	}

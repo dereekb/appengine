@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.googlecode.objectify.Key;
 
 /**
@@ -17,11 +17,12 @@ import com.googlecode.objectify.Key;
  * @param <T>
  *            model type
  */
+@Deprecated
 public abstract class ObjectifyModelDatastoreComponent<T extends ObjectifyModel<T>> {
 
-	protected final ObjectifyDatabase database;
+	protected final ObjectifyDatabaseImpl database;
 
-	public ObjectifyModelDatastoreComponent(ObjectifyDatabase database, Class<T> type) {
+	public ObjectifyModelDatastoreComponent(ObjectifyDatabaseImpl database, Class<T> type) {
 		this.database = database;
 		this.type = type;
 	}

@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 
 
@@ -17,25 +17,25 @@ public class ObjectifyDatabaseTest extends ApiApplicationTestContext {
 
 	@Autowired
 	@Qualifier("objectifyDatabase")
-	private ObjectifyDatabase database;
+	private ObjectifyDatabaseImpl database;
 
 	@Autowired
 	@Qualifier("objectifyDatabaseEntries")
-	private List<? extends ObjectifyDatabaseEntityDefinition<?>> definitions;
+	private List<? extends ObjectifyDatabaseEntityDefinition> definitions;
 
-	public ObjectifyDatabase getDatabase() {
+	public ObjectifyDatabaseImpl getDatabase() {
 		return this.database;
 	}
 
-	public void setDatabase(ObjectifyDatabase database) {
+	public void setDatabase(ObjectifyDatabaseImpl database) {
 		this.database = database;
 	}
 
-	public List<? extends ObjectifyDatabaseEntityDefinition<?>> getDefinitions() {
+	public List<? extends ObjectifyDatabaseEntityDefinition> getDefinitions() {
 		return this.definitions;
 	}
 
-	public void setDefinitions(List<? extends ObjectifyDatabaseEntityDefinition<?>> definitions) {
+	public void setDefinitions(List<? extends ObjectifyDatabaseEntityDefinition> definitions) {
 		this.definitions = definitions;
 	}
 

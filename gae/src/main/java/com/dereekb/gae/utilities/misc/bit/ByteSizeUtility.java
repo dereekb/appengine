@@ -1,4 +1,4 @@
-package com.dereekb.gae.utilities.misc;
+package com.dereekb.gae.utilities.misc.bit;
 
 /**
  * Utility for calculating byte counts.
