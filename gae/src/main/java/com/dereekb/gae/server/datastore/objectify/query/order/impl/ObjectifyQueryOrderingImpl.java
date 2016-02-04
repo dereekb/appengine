@@ -1,4 +1,7 @@
-package com.dereekb.gae.server.datastore.objectify.query.order;
+package com.dereekb.gae.server.datastore.objectify.query.order.impl;
+
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
 
 
 /**
@@ -8,7 +11,7 @@ package com.dereekb.gae.server.datastore.objectify.query.order;
  *
  * @see ObjectifyQueryOrdering
  */
-public class ObjectifyQueryOrderingPair
+public class ObjectifyQueryOrderingImpl
         implements ObjectifyQueryOrdering {
 
 	public static final String ORDER_BY_KEY_VALUE = "__key__";
@@ -16,21 +19,21 @@ public class ObjectifyQueryOrderingPair
 	private String variable;
 	private ObjectifyQueryResultsOrdering ordering;
 
-	public ObjectifyQueryOrderingPair(ObjectifyQueryResultsOrdering ordering) {
+	public ObjectifyQueryOrderingImpl(ObjectifyQueryResultsOrdering ordering) {
 		this(ORDER_BY_KEY_VALUE, ordering);
 	}
 
-	public ObjectifyQueryOrderingPair(String variable, ObjectifyQueryResultsOrdering ordering) {
+	public ObjectifyQueryOrderingImpl(String variable, ObjectifyQueryResultsOrdering ordering) {
 		this.setVariable(variable);
 		this.setOrdering(ordering);
 	}
 
-	public static ObjectifyQueryOrderingPair orderByKey(ObjectifyQueryResultsOrdering ordering) {
+	public static ObjectifyQueryOrderingImpl orderByKey(ObjectifyQueryResultsOrdering ordering) {
 		if (ordering == null) {
 			ordering = ObjectifyQueryResultsOrdering.Descending;
 		}
 
-		return new ObjectifyQueryOrderingPair(ordering);
+		return new ObjectifyQueryOrderingImpl(ordering);
 	}
 
 	public String getVariable() {

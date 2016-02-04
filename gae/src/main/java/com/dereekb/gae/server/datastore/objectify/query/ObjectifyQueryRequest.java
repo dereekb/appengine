@@ -3,7 +3,7 @@ package com.dereekb.gae.server.datastore.objectify.query;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
@@ -28,7 +28,7 @@ public interface ObjectifyQueryRequest<T extends ObjectifyModel<T>> {
 	 */
 	public List<ObjectifySimpleQueryFilter<T>> getSimpleQueryFilters();
 
-	public Iterable<ObjectifyQueryOrdering> getResultsOrdering();
+	public ObjectifyQueryOrderingChain getResultsOrdering();
 
 	public Cursor getCursor();
 

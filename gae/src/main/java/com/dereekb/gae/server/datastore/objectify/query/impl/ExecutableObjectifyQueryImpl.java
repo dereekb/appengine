@@ -10,7 +10,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.googlecode.objectify.Key;
@@ -107,7 +107,7 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public Iterable<ObjectifyQueryOrdering> getResultsOrdering() {
+	public ObjectifyQueryOrderingChain getResultsOrdering() {
 		return this.request.getResultsOrdering();
 	}
 

@@ -2,6 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.query;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
@@ -21,7 +22,9 @@ public interface ObjectifyQueryRequestBuilder<T extends ObjectifyModel<T>>
 
 	public void setCursor(Cursor cursor);
 
-	public void setResultsOrdering(Iterable<ObjectifyQueryOrdering> ordering);
+	public void setResultsOrdering(ObjectifyQueryOrderingChain orderingChain);
+
+	public void addResultsOrdering(ObjectifyQueryOrdering ordering);
 
 	public void addQueryFilter(ObjectifyQueryFilter filter);
 

@@ -10,6 +10,8 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
+import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingChainImpl;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.google.appengine.api.datastore.Cursor;
 
@@ -30,7 +32,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 
 	private List<ObjectifyQueryFilter> queryFilters;
 	private List<ObjectifySimpleQueryFilter<T>> simpleQueryFilters;
-	private List<ObjectifyQueryOrdering> resultsOrdering;
+	private ObjectifyQueryOrderingChain resultsOrdering;
 
 	private Integer limit = DEFAULT_LIMIT;
 	private Cursor cursor = null;
@@ -99,13 +101,31 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public Iterable<ObjectifyQueryOrdering> getResultsOrdering() {
+	public ObjectifyQueryOrderingChain getResultsOrdering() {
 		return this.resultsOrdering;
 	}
 
+	public void setResultsOrdering(ObjectifyQueryOrdering ordering) {
+		if (ordering == null) {
+			this.resultsOrdering = null;
+		} else {
+			ObjectifyQueryOrderingChain chain = new ObjectifyQueryOrderingChainImpl(ordering);
+			this.setResultsOrdering(chain);
+		}
+	}
+
 	@Override
-	public void setResultsOrdering(Iterable<ObjectifyQueryOrdering> resultsOrdering) {
-		this.resultsOrdering = IteratorUtility.iterableToList(resultsOrdering);
+	public void setResultsOrdering(ObjectifyQueryOrderingChain orderingChain) {
+		this.resultsOrdering = orderingChain;
+	}
+
+	@Override
+	public void addResultsOrdering(ObjectifyQueryOrdering ordering) {
+		if (this.resultsOrdering != null) {
+			this.resultsOrdering.chain(ordering);
+		} else {
+			this.setResultsOrdering(ordering);
+		}
 	}
 
 	@Override
