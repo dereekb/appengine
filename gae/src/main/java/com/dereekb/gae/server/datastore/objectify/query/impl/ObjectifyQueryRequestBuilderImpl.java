@@ -8,12 +8,12 @@ import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyEnti
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingChainImpl;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
-import com.google.appengine.api.datastore.Cursor;
 
 /**
  * {@link ObjectifyQueryRequestBuilder} implementation.
@@ -26,17 +26,13 @@ import com.google.appengine.api.datastore.Cursor;
 public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
         implements ObjectifyQueryRequestBuilder<T> {
 
-	private static final Integer DEFAULT_LIMIT = 20;
-
 	private final ObjectifyEntityQueryService<T> queryService;
 
 	private List<ObjectifyQueryFilter> queryFilters;
 	private List<ObjectifySimpleQueryFilter<T>> simpleQueryFilters;
-	private ObjectifyQueryOrderingChain resultsOrdering;
 
-	private Integer limit = DEFAULT_LIMIT;
-	private Cursor cursor = null;
-	private boolean allowCache = true;
+	private ObjectifyQueryRequestOptions options;
+	private ObjectifyQueryOrderingChain resultsOrdering;
 
 	public ObjectifyQueryRequestBuilderImpl(ObjectifyEntityQueryService<T> queryService) throws IllegalArgumentException {
 		if (queryService == null) {
@@ -101,6 +97,16 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
+	public ObjectifyQueryRequestOptions getOptions() {
+		return this.options;
+	}
+
+	@Override
+	public void setOptions(ObjectifyQueryRequestOptions options) {
+		this.options = options;
+	}
+
+	@Override
 	public ObjectifyQueryOrderingChain getResultsOrdering() {
 		return this.resultsOrdering;
 	}
@@ -128,35 +134,6 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 		}
 	}
 
-	@Override
-	public Integer getLimit() {
-		return this.limit;
-	}
-
-	@Override
-	public void setLimit(Integer limit) {
-		this.limit = limit;
-	}
-
-	@Override
-	public Cursor getCursor() {
-		return this.cursor;
-	}
-
-	@Override
-	public void setCursor(Cursor cursor) {
-		this.cursor = cursor;
-	}
-
-	@Override
-	public boolean allowCache() {
-		return this.allowCache;
-	}
-
-	@Override
-	public void setAllowCache(boolean allowCache) {
-		this.allowCache = allowCache;
-	}
 
 	@Override
 	public ObjectifyQueryRequestBuilder<T> copyBuilder() {
@@ -166,9 +143,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 		builder.setSimpleQueryFilters(this.simpleQueryFilters);
 		builder.setResultsOrdering(this.resultsOrdering);
 
-		builder.setLimit(this.limit);
-		builder.setCursor(this.cursor);
-		builder.setAllowCache(this.allowCache);
+		builder.setOptions(new ObjectifyQueryRequestOptionsImpl(this.options));
 
 		return builder;
 	}
@@ -176,15 +151,14 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	@Override
 	public ExecutableObjectifyQuery<T> buildExecutableQuery() {
 		ObjectifyQueryRequestBuilder<T> copy = this.copyBuilder();
-		return new ExecutableObjectifyQueryImpl<T>(this.queryService, copy);
+		return new ExecutableObjectifyQueryImpl<T>(this.queryService, copy, this.options);
 	}
 
 	@Override
 	public String toString() {
 		return "ObjectifyQueryRequestBuilderImpl [queryService=" + this.queryService + ", queryFilters="
-		        + this.queryFilters + ", simpleQueryFilters=" + this.simpleQueryFilters + ", resultsOrdering="
-		        + this.resultsOrdering + ", limit=" + this.limit + ", cursor=" + this.cursor + ", allowCache="
-		        + this.allowCache + "]";
+		        + this.queryFilters + ", simpleQueryFilters=" + this.simpleQueryFilters + ", options=" + this.options
+		        + ", resultsOrdering=" + this.resultsOrdering + "]";
 	}
 
 }

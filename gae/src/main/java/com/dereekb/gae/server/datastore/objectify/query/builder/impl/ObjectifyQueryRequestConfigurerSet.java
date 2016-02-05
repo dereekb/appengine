@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query.builder.impl;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestConfigurer;
 
 /**
@@ -27,7 +27,7 @@ public class ObjectifyQueryRequestConfigurerSet<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public void configure(ObjectifyQueryRequest<T> request) {
+	public void configure(ObjectifyQueryRequestBuilder<T> request) {
 		for (ObjectifyQueryRequestConfigurer<T> step : this.steps) {
 			step.configure(request);
 		}

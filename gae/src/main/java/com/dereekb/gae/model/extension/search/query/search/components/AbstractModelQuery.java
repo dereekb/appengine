@@ -1,6 +1,8 @@
 package com.dereekb.gae.model.extension.search.query.search.components;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestOptionsImpl;
+import com.google.appengine.api.datastore.Cursor;
 
 /**
  * Base model query that contains a field for an Objectify query cursor and
@@ -42,19 +44,16 @@ public abstract class AbstractModelQuery {
 	}
 
 	public void updateObjectifyQuery(ObjectifyQueryRequestBuilder<?> query) {
+		ObjectifyQueryRequestOptionsImpl options = new ObjectifyQueryRequestOptionsImpl();
 
-		if (this.limit != null) {
-			query.setLimit(query.getLimit());
-		}
+		options.setLimit(this.limit);
+		options.setAllowCache(this.allowCache);
 
 		if (this.cursor != null) {
-			query.setCursor(query.getCursor());
+			options.setCursor(Cursor.fromWebSafeString(this.cursor));
 		}
 
-		if (this.allowCache != null) {
-			query.setAllowCache(this.allowCache);
-		}
-
+		query.setOptions(options);
 	}
 
 }

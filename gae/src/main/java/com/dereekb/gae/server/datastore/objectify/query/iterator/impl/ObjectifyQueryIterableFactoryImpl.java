@@ -9,6 +9,7 @@ import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQuer
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilderFactory;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterator;
@@ -263,14 +264,16 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 
 		private QueryResultIterator<T> continueQuery() {
 			ObjectifyQueryRequestBuilder<T> query = this.newQuery();
-			query.setLimit(this.iteratorBatchLimit);
+			ObjectifyQueryRequestOptionsImpl options = new ObjectifyQueryRequestOptionsImpl();
+			options.setLimit(this.iteratorBatchLimit);
 
 			if (this.iteratorCursor != null) {
-				query.setCursor(this.iteratorCursor);
+				options.setCursor(this.iteratorCursor);
 			} else if (this.startCursor != null) {
-				query.setCursor(this.startCursor);
+				options.setCursor(this.startCursor);
 			}
 
+			query.setOptions(options);
 			ExecutableObjectifyQuery<T> executable = query.buildExecutableQuery();
 			QueryResultIterable<T> iterable = executable.queryModelsIterable();
 			return iterable.iterator();

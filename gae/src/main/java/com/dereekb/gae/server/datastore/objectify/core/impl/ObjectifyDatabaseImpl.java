@@ -29,6 +29,7 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUti
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyKeyInSetFilter;
@@ -461,11 +462,12 @@ public class ObjectifyDatabaseImpl
 			}
 
 			public ObjectifyQueryResponse<T> query() {
-				boolean cache = this.request.allowCache();
+				ObjectifyQueryRequestOptions options = this.request.getOptions();
+
+				boolean cache = options.allowCache();
 				Query<T> query = ObjectifyDatabaseEntityImpl.this.makeQuery(cache);
 
-				query = this.applyLimit(query);
-				query = this.applyCursor(query);
+				query = this.applyOptions(query);
 
 				Query<T> filteredQuery = this.applyFilters(query);
 				filteredQuery = this.applyResultsOrdering(filteredQuery);
@@ -473,6 +475,23 @@ public class ObjectifyDatabaseImpl
 				SimpleQuery<T> simpleQuery = this.applySimpleQueryFilters(filteredQuery);
 				ObjectifyQueryResponse<T> response = new ObjectifyQueryResponseImpl(simpleQuery);
 				return response;
+			}
+
+			private Query<T> applyOptions(Query<T> query) {
+				ObjectifyQueryRequestOptions options = this.request.getOptions();
+
+				Cursor cursor = options.getCursor();
+				Integer limit = options.getLimit();
+
+				if (limit != null) {
+					query = query.limit(limit);
+				}
+
+				if (cursor != null) {
+					query = query.startAt(cursor);
+				}
+
+				return query;
 			}
 
 			private Query<T> applyFilters(Query<T> query) {
@@ -495,25 +514,6 @@ public class ObjectifyDatabaseImpl
 				return filteredQuery;
 			}
 
-			private Query<T> applyLimit(Query<T> query) {
-				Integer limit = this.request.getLimit();
-
-				if (limit != null) {
-					query = query.limit(limit);
-				}
-
-				return query;
-			}
-
-			private Query<T> applyCursor(Query<T> query) {
-				Cursor cursor = this.request.getCursor();
-
-				if (cursor != null) {
-					query = query.startAt(cursor);
-				}
-
-				return query;
-			}
 
 			protected Query<T> applyResultsOrdering(Query<T> query) {
 				Iterable<ObjectifyQueryOrdering> resultsOrdering = this.request.getResultsOrdering();

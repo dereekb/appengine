@@ -8,10 +8,10 @@ import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyEnti
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
-import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.googlecode.objectify.Key;
 
@@ -26,15 +26,19 @@ import com.googlecode.objectify.Key;
 public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
         implements ExecutableObjectifyQuery<T> {
 
-	private ObjectifyEntityQueryService<T> service;
 	private ObjectifyQueryRequest<T> request;
+	private ObjectifyQueryRequestOptions options;
+	private ObjectifyEntityQueryService<T> service;
 
 	private ObjectifyQueryResponse<T> response;
 
-	public ExecutableObjectifyQueryImpl(ObjectifyEntityQueryService<T> service, ObjectifyQueryRequest<T> query)
+	public ExecutableObjectifyQueryImpl(ObjectifyEntityQueryService<T> service,
+	        ObjectifyQueryRequest<T> request,
+	        ObjectifyQueryRequestOptions options)
 	        throws IllegalArgumentException {
 		this.setService(service);
-		this.setRequest(query);
+		this.setRequest(request);
+		this.setOptions(options);
     }
 
 	public ObjectifyEntityQueryService<T> getService() {
@@ -47,6 +51,15 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 		}
 
 		this.service = service;
+	}
+
+	@Override
+	public ObjectifyQueryRequestOptions getOptions() {
+		return this.options;
+	}
+
+	public void setOptions(ObjectifyQueryRequestOptions options) {
+		this.options = options;
 	}
 
 	// MARK: ObjectifyQueryResponse
@@ -112,23 +125,9 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public Cursor getCursor() {
-		return this.request.getCursor();
-	}
-
-	@Override
-	public Integer getLimit() {
-		return this.request.getLimit();
-	}
-
-	@Override
-	public boolean allowCache() {
-		return this.request.allowCache();
-	}
-
-	@Override
 	public String toString() {
-		return "ExecutableObjectifyQueryImpl [service=" + this.service + ", query=" + this.request + "]";
+		return "ExecutableObjectifyQueryImpl [request=" + this.request + ", options=" + this.options + ", service="
+		        + this.service + ", response=" + this.response + "]";
 	}
 
 }

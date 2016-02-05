@@ -2,6 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.query.builder;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 
 /**
  * Used for configuring a {@link ObjectifyQueryRequest}.
@@ -19,6 +20,6 @@ public interface ObjectifyQueryRequestConfigurer<T extends ObjectifyModel<T>> {
 	 * @param request
 	 *            {@link ObjectifyQueryRequest}. Never {@code null}.
 	 */
-	public void configure(ObjectifyQueryRequest<T> request);
+	public void configure(ObjectifyQueryRequestBuilder<T> request);
 
 }

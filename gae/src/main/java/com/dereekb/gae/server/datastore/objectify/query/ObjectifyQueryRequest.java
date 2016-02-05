@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
-import com.google.appengine.api.datastore.Cursor;
 
 /**
  * Utility wrapper for performing queries with Objectify.
@@ -15,6 +14,8 @@ import com.google.appengine.api.datastore.Cursor;
  *            model type
  */
 public interface ObjectifyQueryRequest<T extends ObjectifyModel<T>> {
+
+	public ObjectifyQueryRequestOptions getOptions();
 
 	/**
 	 * @return {@link List} of {@link ObjectifyQueryFilter} values. Never
@@ -29,11 +30,5 @@ public interface ObjectifyQueryRequest<T extends ObjectifyModel<T>> {
 	public List<ObjectifySimpleQueryFilter<T>> getSimpleQueryFilters();
 
 	public ObjectifyQueryOrderingChain getResultsOrdering();
-
-	public Cursor getCursor();
-
-	public Integer getLimit();
-
-	public boolean allowCache();
 
 }
