@@ -26,6 +26,8 @@ public class QueryFieldFilterConfigurer
 
 	private ObjectifyQueryResultsOrdering ordering;
 
+	public QueryFieldFilterConfigurer() {}
+
 	public QueryFieldFilterConfigurer(String field, Object value) {
 		this.setEqualityFilter(field, value);
 	}

@@ -11,7 +11,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
  * @author dereekb
  *
  */
-public final class StoredBlobQueryConverter
+public class StoredBlobQueryConverter
         implements ModelQueryConverter<StoredBlob, StoredBlobQuery> {
 
 	private final static String INFO_TYPE_FIELD = "infoType";
@@ -19,6 +19,7 @@ public final class StoredBlobQueryConverter
 	@Override
 	public ObjectifyQueryRequest<StoredBlob> convertQuery(StoredBlobQuery query) {
 
+		/*
 		boolean recent = query.getRecent();
 		String infoType = query.getInfoType();
 
@@ -35,7 +36,9 @@ public final class StoredBlobQueryConverter
 		}
 
 		query.updateObjectifyQuery(objectifyQuery);
-		return objectifyQuery;
+		*/
+		
+		return null;
 	}
 
 }
