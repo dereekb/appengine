@@ -125,6 +125,8 @@ public class ObjectifyDatabaseImpl
 	protected class ObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>>
 	        implements ObjectifyDatabaseEntity<T>, ObjectifyDatabaseEntityReader<T> {
 
+		private boolean configuredAsync = false;
+
 		private final Class<T> type;
 		private final String modelTypeName;
 		private final ModelKeyType keyType;
@@ -138,6 +140,14 @@ public class ObjectifyDatabaseImpl
 			this.modelTypeName = entity.getEntityName();
 			this.keyType = entity.getEntityKeyType();
 			this.keyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
+		}
+
+		public boolean isConfiguredAsync() {
+			return this.configuredAsync;
+		}
+
+		public void setConfiguredAsync(boolean configuredAsync) {
+			this.configuredAsync = configuredAsync;
 		}
 
 		// MARK: ObjectifyDatabaseEntityReader
@@ -361,6 +371,36 @@ public class ObjectifyDatabaseImpl
 		public void save(Iterable<T> entities,
 		                 boolean async) {
 			this.getModifier(async).put(entities);
+		}
+
+		@Override
+		public void save(T entity) {
+			this.save(entity, this.isConfiguredAsync());
+		}
+
+		@Override
+		public void save(Iterable<T> entities) {
+			this.save(entities, this.isConfiguredAsync());
+		}
+
+		@Override
+		public void delete(T entity) {
+			this.delete(entity, this.isConfiguredAsync());
+		}
+
+		@Override
+		public void delete(Iterable<T> entities) {
+			this.delete(entities, this.isConfiguredAsync());
+		}
+
+		@Override
+		public void deleteWithKey(ModelKey key) {
+			this.deleteWithKey(key, this.isConfiguredAsync());
+		}
+
+		@Override
+		public void deleteWithKeys(Iterable<ModelKey> keys) {
+			this.deleteWithKeys(keys, this.isConfiguredAsync());
 		}
 
 		@Override

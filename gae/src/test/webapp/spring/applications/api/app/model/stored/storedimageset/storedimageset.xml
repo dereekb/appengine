@@ -16,7 +16,7 @@
 	
 	<!-- Database -->
 	<bean id="storedImageSetObjectifyEntry"
-		class="com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinitionImpl"
+		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="storedImageSetType" />
 		<constructor-arg index="1" type="java.lang.Class"

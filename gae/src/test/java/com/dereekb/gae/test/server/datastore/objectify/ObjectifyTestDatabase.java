@@ -48,10 +48,15 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 		return new TestObjectifyDatabaseEntityImpl<T>(type);
 	}
 
-	private class TestObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>> extends ObjectifyDatabaseEntityImpl<T> {
+	protected class TestObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>> extends ObjectifyDatabaseEntityImpl<T> {
 
 		protected TestObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			super(type);
+		}
+
+		@Override
+		public boolean isConfiguredAsync() {
+			return ObjectifyTestDatabase.this.isAsync(super.isConfiguredAsync());
 		}
 
 		// MARK: ObjectifyDatabaseEntityModifier

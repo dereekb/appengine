@@ -54,6 +54,7 @@
 	
 	<bean id="geoPlaceIterateTaskExecutorFactory" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl">
+		<constructor-arg index="0" ref="geoPlaceRegistry"/>
 	</bean>
 
 </beans>

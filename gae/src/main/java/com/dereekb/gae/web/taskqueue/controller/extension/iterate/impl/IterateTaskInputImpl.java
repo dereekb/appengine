@@ -19,6 +19,10 @@ public class IterateTaskInputImpl
 	private Integer iterationStep;
 	private Map<String, String> parameters;
 
+	public IterateTaskInputImpl(String taskName, String modelType, String stepCursor, Map<String, String> parameters) {
+		this(taskName, modelType, stepCursor, 0, parameters);
+	}
+
 	public IterateTaskInputImpl(String taskName,
 	        String modelType,
 	        String stepCursor,

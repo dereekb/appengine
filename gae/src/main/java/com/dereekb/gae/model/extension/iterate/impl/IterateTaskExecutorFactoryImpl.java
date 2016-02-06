@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.iterate.impl;
 
-import com.dereekb.gae.model.extension.iterate.IterateTaskExecutor;
 import com.dereekb.gae.model.extension.iterate.IterateTaskExecutorFactory;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
@@ -51,7 +50,7 @@ public class IterateTaskExecutorFactoryImpl<T extends ObjectifyModel<T>>
 
 	// MARK: IterateTaskExecutorFactory
 	@Override
-	public IterateTaskExecutor<T> makeExecutor(Task<ModelKeyListAccessor<T>> task) {
+	public IterateTaskExecutorImpl<T> makeExecutor(Task<ModelKeyListAccessor<T>> task) {
 		return new IterateTaskExecutorImpl<T>(this.query, this.accessorFactory, task);
 	}
 
