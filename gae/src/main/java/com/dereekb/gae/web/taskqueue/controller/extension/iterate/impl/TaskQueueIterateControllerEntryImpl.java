@@ -5,6 +5,7 @@ import java.util.Map;
 import com.dereekb.gae.model.extension.iterate.IterateTaskExecutor;
 import com.dereekb.gae.model.extension.iterate.IterateTaskExecutorFactory;
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
+import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.utilities.task.Task;
@@ -53,9 +54,13 @@ public class TaskQueueIterateControllerEntryImpl<T extends UniqueModel>
 		String taskName = input.getTaskName();
 		Task<ModelKeyListAccessor<T>> task = this.getTask(taskName);
 
-		// TODO: Wrap with try/catch?
-		IterateTaskExecutor<T> executor = this.executorFactory.makeExecutor(task);
-		executor.executeTask(input);
+		try {
+			IterateTaskExecutor<T> executor = this.executorFactory.makeExecutor(task);
+			executor.executeTask(input);
+		} catch (IterationLimitReachedException e) {
+			String cursor = e.getCursor();
+			request.scheduleContinuation(cursor);
+		}
 	}
 
 	public Task<ModelKeyListAccessor<T>> getTask(String taskName) throws UnknownIterateTaskException {

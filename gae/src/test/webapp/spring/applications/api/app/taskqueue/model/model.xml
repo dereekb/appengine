@@ -30,14 +30,12 @@
 	</bean>
 	
 	<!-- Iterate -->
-	<bean id="taskQueueIterateController" scope="singleton"
-		lazy-init="true"
+	<bean id="taskQueueIterateController" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController">
-		<constructor-arg index="0">
+		<constructor-arg index="0" ref="taskRequestSystem"/>
+		<constructor-arg index="1">
 			<map key-type="java.lang.String">
-				<!--
-					<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueEditControllerEntry"></entry>
-				 -->
+				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueEditControllerEntry"></entry>
 			</map>
 		</constructor-arg>
 	</bean>

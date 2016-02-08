@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.crud.task.impl.delete;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,12 +12,13 @@ import com.dereekb.gae.model.crud.task.DeleteTask;
 import com.dereekb.gae.model.crud.task.config.DeleteTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.DeleteTaskConfigImpl;
 import com.dereekb.gae.model.extension.taskqueue.request.ModelKeyTaskRequestBuilder;
+import com.dereekb.gae.model.extension.taskqueue.request.TypedModelKeyTaskRequestBuilder;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.taskqueue.builder.TaskRequestSender;
-import com.dereekb.gae.server.taskqueue.exception.SubmitTaskException;
-import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
-import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
+import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
+import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
 import com.dereekb.gae.utilities.filters.Filter;
@@ -35,37 +38,40 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *            model type
  * @see {@link TaskQueueEditController}
  */
-public class ScheduleDeleteTask<T extends UniqueModel> extends ModelKeyTaskRequestBuilder<T>
+public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTaskRequestBuilder<T>
         implements DeleteTask<T>, TaskRequestSender<T> {
 
-	private TaskRequestSystem system;
+	private TaskScheduler scheduler;
 	private DeleteTaskConfig defaultConfig;
 	private Filter<T> deleteFilter;
 
-	public ScheduleDeleteTask(TaskRequestSystem system) {
-		this(system, null);
+	public ScheduleDeleteTask(String stringUri, TaskScheduler scheduler) throws URISyntaxException {
+		this(stringUri, scheduler, null);
 	}
 
-	public ScheduleDeleteTask(TaskRequestSystem system, TaskRequest request) {
-		this(system, request, null, null);
+	public ScheduleDeleteTask(String stringUri, TaskScheduler scheduler, TaskRequest request) throws URISyntaxException {
+		this(stringUri, scheduler, request, null, null);
 	}
 
-	public ScheduleDeleteTask(TaskRequestSystem system,
+	public ScheduleDeleteTask(String stringUri,
+	        TaskScheduler scheduler,
 	        TaskRequest request,
 	        DeleteTaskConfig defaultConfig,
-	        Filter<T> deleteFilter) {
+	        Filter<T> deleteFilter) throws URISyntaxException {
+		this.setBaseModelUri(stringUri);
+
+		this.setScheduler(scheduler);
 		this.setBaseRequest(request);
-		this.setSystem(system);
 		this.setDefaultConfig(defaultConfig);
 		this.setDeleteFilter(deleteFilter);
 	}
 
-	public TaskRequestSystem getSystem() {
-		return this.system;
+	public TaskScheduler getScheduler() {
+		return this.scheduler;
 	}
 
-	public void setSystem(TaskRequestSystem system) {
-		this.system = system;
+	public void setScheduler(TaskScheduler scheduler) {
+		this.scheduler = scheduler;
 	}
 
 	public DeleteTaskConfig getDefaultConfig() {
@@ -91,7 +97,11 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends ModelKeyTaskReque
 	@Override
 	public void setBaseRequest(TaskRequest request) {
 		if (request == null) {
-			request = new TaskRequestImpl("delete", Method.DELETE);
+			try {
+				request = new TaskRequestImpl(new URI("delete"), Method.DELETE);
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		super.setBaseRequest(request);
@@ -142,12 +152,12 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends ModelKeyTaskReque
 	@Override
 	public void sendTasks(Iterable<T> input) throws SubmitTaskException {
 		List<TaskRequest> requests = super.buildRequests(input);
-		this.system.submitRequests(requests);
+		this.scheduler.schedule(requests);
 	}
 
 	@Override
 	public String toString() {
-		return "ScheduleDeleteTask [system=" + this.system + ", defaultConfig=" + this.defaultConfig
+		return "ScheduleDeleteTask [scheduler=" + this.scheduler + ", defaultConfig=" + this.defaultConfig
 		        + ", deleteFilter=" + this.deleteFilter + "]";
 	}
 

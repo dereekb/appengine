@@ -93,7 +93,7 @@
 	<bean id="storedBlobScheduleDeleteTask"
 		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
 		lazy-init="true">
-		<constructor-arg index="0" ref="storedBlobTaskRequestSystem"/>
+		<constructor-arg index="0" ref="taskScheduler"/>
 	</bean>
 
 </beans>

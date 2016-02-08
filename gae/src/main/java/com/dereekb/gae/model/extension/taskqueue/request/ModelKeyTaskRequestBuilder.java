@@ -6,13 +6,13 @@ import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.taskqueue.builder.TaskRequestBuilder;
-import com.dereekb.gae.server.taskqueue.builder.TaskRequestCopier;
-import com.dereekb.gae.server.taskqueue.builder.impl.TaskRequestCopierImpl;
-import com.dereekb.gae.server.taskqueue.system.TaskParameter;
-import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
-import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
+import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestBuilder;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestCopier;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl.TaskRequestCopierImpl;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 
 /**
@@ -59,10 +59,10 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 	 */
 	private final PartitionerImpl partitioner = new PartitionerImpl();
 
-	public ModelKeyTaskRequestBuilder() {}
+	protected ModelKeyTaskRequestBuilder() {}
 
 	public ModelKeyTaskRequestBuilder(TaskRequest baseRequest) {
-		this.baseRequest = baseRequest;
+		this.setBaseRequest(baseRequest);
 	}
 
 	public String getIdParameter() {
@@ -105,6 +105,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		this.copier = copier;
 	}
 
+	// MARK: TaskRequestBuilder
 	@Override
 	public List<TaskRequest> buildRequests(Iterable<T> input) {
 		List<ModelKey> keys = ModelKey.readModelKeys(input);
@@ -156,7 +157,7 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		return requests;
 	}
 
-	private TaskRequestImpl createNewModelKeyRequest(TaskParameterImpl keyParameter) {
+	protected TaskRequestImpl createNewModelKeyRequest(TaskParameterImpl keyParameter) {
 		TaskRequestImpl request = this.copier.fullyCopyRequest(this.baseRequest);
 		Collection<TaskParameter> parameters = request.getParameters();
 
@@ -167,6 +168,13 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 
 		request.setParameters(parameters);
 		return request;
+	}
+
+	@Override
+	public String toString() {
+		return "ModelKeyTaskRequestBuilder [idParameter=" + this.idParameter + ", asIndividualRequests="
+		        + this.asIndividualRequests + ", baseRequest=" + this.baseRequest + ", copier=" + this.copier
+		        + ", partitioner=" + this.partitioner + "]";
 	}
 
 }

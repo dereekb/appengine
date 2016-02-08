@@ -46,6 +46,5 @@
 	<import resource="extension/link.xml" />
 	<import resource="extension/search.xml" />
 	<import resource="extension/generation.xml" />
-	<import resource="extension/taskqueue.xml" />
 
 </beans>

@@ -24,6 +24,6 @@ public interface IterateTaskRequest {
 	 * @param cursor
 	 *            {@link Cursor}. Never {@code null}.
 	 */
-	public void scheduleContinuation(Cursor cursor);
+	public void scheduleContinuation(String cursor);
 
 }

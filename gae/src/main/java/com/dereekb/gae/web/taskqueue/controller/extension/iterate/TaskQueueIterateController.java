@@ -1,5 +1,8 @@
 package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -12,10 +15,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
-import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
+import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Task Queue controller used for performing custom tasks over input models.
@@ -40,22 +45,22 @@ public final class TaskQueueIterateController {
 	 */
 	public static final String CURSOR_HEADER = "TQ_CURSOR";
 
-	private TaskRequestSystem system;
+	private TaskScheduler scheduler;
 	private Map<String, TaskQueueIterateControllerEntry> entries;
 
 	public TaskQueueIterateController() {}
 
-	public TaskQueueIterateController(TaskRequestSystem system, Map<String, TaskQueueIterateControllerEntry> entries) {
-		this.setSystem(system);
+	public TaskQueueIterateController(TaskScheduler scheduler, Map<String, TaskQueueIterateControllerEntry> entries) {
+		this.setScheduler(scheduler);
 		this.setEntries(entries);
 	}
 
-	public TaskRequestSystem getSystem() {
-		return this.system;
+    public TaskScheduler getScheduler() {
+		return this.scheduler;
 	}
 
-	public void setSystem(TaskRequestSystem system) {
-		this.system = system;
+	public void setScheduler(TaskScheduler scheduler) {
+		this.scheduler = scheduler;
 	}
 
 	public Map<String, TaskQueueIterateControllerEntry> getEntries() {
@@ -86,7 +91,7 @@ public final class TaskQueueIterateController {
 	 *            All request parameters. Never {@code null}.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/iterate/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "{type}/iterate/{task}", method = RequestMethod.POST, consumes = "application/octet-stream")
 	public void iterate(@PathVariable("type") String modelType,
 	                    @PathVariable("task") String taskName,
 	                    @RequestHeader(value = TASK_STEP_HEADER, required = false) Integer step,
@@ -129,8 +134,42 @@ public final class TaskQueueIterateController {
 		}
 
 		@Override
-		public void scheduleContinuation(Cursor cursor) {
-			// TODO: Build Task Request, submit.
+		public void scheduleContinuation(String cursor) {
+			URI uri = this.getContinutationURI();
+			Collection<TaskParameter> headers = this.getContinuationHeaders();
+			Collection<TaskParameter> parameters = this.getContinuationParameters();
+
+			TaskRequestImpl request = new TaskRequestImpl(uri, Method.POST);
+			request.setHeaders(headers);
+			request.setParameters(parameters);
+
+			TaskQueueIterateController.this.scheduler.schedule(request);
+		}
+
+		private URI getContinutationURI() {
+			String taskName = this.taskInput.getTaskName();
+			String modelType = this.taskInput.getModelType();
+
+			String uriString = String.format("%s/iterate/%s", modelType, taskName);
+			URI uri = null;
+
+			try {
+				uri = new URI(uriString);
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
+
+			return uri;
+		}
+
+		private Collection<TaskParameter> getContinuationHeaders() {
+
+			// TODO: Add headers
+		}
+
+		private Collection<TaskParameter> getContinuationParameters() {
+
+			// TODO: Add parameters
 		}
 
 	}

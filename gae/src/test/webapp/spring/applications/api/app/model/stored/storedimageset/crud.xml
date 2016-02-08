@@ -93,7 +93,7 @@
 	<bean id="storedImageSetScheduleDeleteTask"
 		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
 		lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetTaskRequestSystem"/>
+		<constructor-arg index="0" ref="taskScheduler"/>
 	</bean>
 
 </beans>

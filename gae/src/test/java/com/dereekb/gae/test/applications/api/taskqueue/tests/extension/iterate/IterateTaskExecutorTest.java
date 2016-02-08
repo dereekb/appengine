@@ -26,7 +26,7 @@ import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTa
  */
 public abstract class IterateTaskExecutorTest<T extends ObjectifyModel<T>> extends ApiApplicationTestContext {
 
-	private TestModelGenerator<T> modelGenerator;
+	protected TestModelGenerator<T> modelGenerator;
 	private IterateTaskExecutorFactoryImpl<T> factory;
 
 	public void setModelGenerator(TestModelGenerator<T> generator) {
