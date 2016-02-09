@@ -15,6 +15,10 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 public class GeoPlaceTaskQueueIterateControllerEntryTest extends TaskQueueIterateControllerEntryTest<GeoPlace> {
 
+	@Autowired
+	@Qualifier("geoPlaceClearParentsIterateTaskKey")
+	private String clearParentsIterateKey;
+
 	@Override
 	@Autowired
 	@Qualifier("geoPlaceType")
@@ -44,7 +48,19 @@ public class GeoPlaceTaskQueueIterateControllerEntryTest extends TaskQueueIterat
 	private class UnlinkParentsTest extends TaskQueueIterateTest {
 
 		public UnlinkParentsTest() {
-			super("");
+			super(GeoPlaceTaskQueueIterateControllerEntryTest.this.clearParentsIterateKey);
+		}
+
+		@Override
+		protected List<GeoPlace> generate() {
+			List<GeoPlace> generated = super.generate();
+
+			// Check each model has a parent.
+			for (GeoPlace model : generated) {
+				Assert.assertNotNull(model.getParent());
+			}
+
+			return generated;
 		}
 
 		@Override

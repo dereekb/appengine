@@ -72,7 +72,7 @@ public final class TaskQueueEditController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "/{type}/delete", method = RequestMethod.DELETE, consumes = "application/octet-stream")
 	public void processDelete(@PathVariable("type") String modelType,
-	                         @RequestParam List<String> identifiers) {
+	                          @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
 		entry.processDelete(keys);

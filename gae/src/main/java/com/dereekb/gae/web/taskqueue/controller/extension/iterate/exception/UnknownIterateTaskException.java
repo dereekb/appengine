@@ -17,8 +17,8 @@ public class UnknownIterateTaskException extends RuntimeException {
 		super();
 	}
 
-	public UnknownIterateTaskException(String message) {
-		super(message);
+	public UnknownIterateTaskException(String taskName) {
+		super("Unknown task name '" + taskName + "'.");
 	}
 
 	public UnknownIterateTaskException(Throwable cause) {

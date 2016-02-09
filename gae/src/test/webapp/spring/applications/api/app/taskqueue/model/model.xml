@@ -21,10 +21,10 @@
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueEditControllerEntry"></entry>
-				<entry key-ref="storedBlobType" value-ref="storedBlobTaskQueueEditControllerEntry"></entry>
-				<entry key-ref="storedImageType" value-ref="storedImageTaskQueueEditControllerEntry"></entry>
-				<entry key-ref="storedImageSetType" value-ref="storedImageSetTaskQueueEditControllerEntry"></entry>
+				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueEditControllerEntry"/>
+				<entry key-ref="storedBlobType" value-ref="storedBlobTaskQueueEditControllerEntry"/>
+				<entry key-ref="storedImageType" value-ref="storedImageTaskQueueEditControllerEntry"/>
+				<entry key-ref="storedImageSetType" value-ref="storedImageSetTaskQueueEditControllerEntry"/>
 			</map>
 		</constructor-arg>
 	</bean>
@@ -32,10 +32,10 @@
 	<!-- Iterate -->
 	<bean id="taskQueueIterateController" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController">
-		<constructor-arg index="0" ref="taskRequestSystem"/>
+		<constructor-arg index="0" ref="taskScheduler"/>
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueEditControllerEntry"></entry>
+				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueIterateControllerEntry"/>
 			</map>
 		</constructor-arg>
 	</bean>

@@ -93,7 +93,8 @@
 	<bean id="geoPlaceScheduleDeleteTask"
 		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
 		lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceTaskRequestSystem"/>
+		<constructor-arg index="0" ref="geoPlaceType"/>
+		<constructor-arg index="1" ref="taskScheduler"/>
 	</bean>
 
 </beans>

@@ -2,7 +2,9 @@ package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
+import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
@@ -136,7 +139,7 @@ public final class TaskQueueIterateController {
 		@Override
 		public void scheduleContinuation(String cursor) {
 			URI uri = this.getContinutationURI();
-			Collection<TaskParameter> headers = this.getContinuationHeaders();
+			Collection<TaskParameter> headers = this.getContinuationHeaders(cursor);
 			Collection<TaskParameter> parameters = this.getContinuationParameters();
 
 			TaskRequestImpl request = new TaskRequestImpl(uri, Method.POST);
@@ -162,14 +165,20 @@ public final class TaskQueueIterateController {
 			return uri;
 		}
 
-		private Collection<TaskParameter> getContinuationHeaders() {
+		private Collection<TaskParameter> getContinuationHeaders(String cursor) {
+			Integer step = this.taskInput.getIterationStep() + 1;
 
-			// TODO: Add headers
+			List<TaskParameter> parameters = new ArrayList<TaskParameter>();
+			parameters.add(new TaskParameterImpl(TASK_STEP_HEADER, step));
+			parameters.add(new TaskParameterImpl(CURSOR_HEADER, cursor));
+
+			return parameters;
 		}
 
 		private Collection<TaskParameter> getContinuationParameters() {
-
-			// TODO: Add parameters
+			Map<String, String> parameters = this.taskInput.getParameters();
+			List<TaskParameterImpl> impl = TaskParameterImpl.makeParametersWithMap(parameters);
+			return new ArrayList<TaskParameter>(impl);
 		}
 
 	}

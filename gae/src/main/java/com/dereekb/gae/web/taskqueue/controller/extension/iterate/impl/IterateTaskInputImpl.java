@@ -59,6 +59,10 @@ public class IterateTaskInputImpl
 	}
 
 	public void setIterationStep(Integer iterationStep) {
+		if (iterationStep == null) {
+			iterationStep = 0;
+		}
+
 		this.iterationStep = iterationStep;
 	}
 

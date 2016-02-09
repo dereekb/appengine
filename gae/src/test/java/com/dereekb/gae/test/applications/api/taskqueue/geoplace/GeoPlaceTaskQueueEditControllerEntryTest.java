@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.taskqueue.geoplace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
@@ -37,6 +38,13 @@ public class GeoPlaceTaskQueueEditControllerEntryTest extends SearchableTaskQueu
 	@Qualifier("geoPlaceTestModelGenerator")
 	public void setModelGenerator(TestModelGenerator<GeoPlace> modelGenerator) {
 		super.setModelGenerator(modelGenerator);
+	}
+
+	@Override
+	@Autowired
+	@Qualifier("geoPlaceScheduleDeleteTask")
+	public void setDeleteTask(ScheduleDeleteTask<GeoPlace> deleteTask) {
+		super.setDeleteTask(deleteTask);
 	}
 
 }

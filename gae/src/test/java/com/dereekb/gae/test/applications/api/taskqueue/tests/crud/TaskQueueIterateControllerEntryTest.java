@@ -53,6 +53,10 @@ public abstract class TaskQueueIterateControllerEntryTest<T extends ObjectifyMod
 		}
 
 		public void setTaskName(String taskName) {
+			if (taskName == null || taskName.isEmpty()) {
+				throw new IllegalArgumentException("Taskname unspecified.");
+			}
+
 			this.taskName = taskName;
 		}
 

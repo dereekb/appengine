@@ -45,20 +45,21 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTask
 	private DeleteTaskConfig defaultConfig;
 	private Filter<T> deleteFilter;
 
-	public ScheduleDeleteTask(String stringUri, TaskScheduler scheduler) throws URISyntaxException {
-		this(stringUri, scheduler, null);
+	public ScheduleDeleteTask(String stringModelUri, TaskScheduler scheduler) throws URISyntaxException {
+		this(stringModelUri, scheduler, null);
 	}
 
-	public ScheduleDeleteTask(String stringUri, TaskScheduler scheduler, TaskRequest request) throws URISyntaxException {
-		this(stringUri, scheduler, request, null, null);
+	public ScheduleDeleteTask(String stringModelUri, TaskScheduler scheduler, TaskRequest request)
+	        throws URISyntaxException {
+		this(stringModelUri, scheduler, request, null, null);
 	}
 
-	public ScheduleDeleteTask(String stringUri,
+	public ScheduleDeleteTask(String stringModelUri,
 	        TaskScheduler scheduler,
 	        TaskRequest request,
 	        DeleteTaskConfig defaultConfig,
 	        Filter<T> deleteFilter) throws URISyntaxException {
-		this.setBaseModelUri(stringUri);
+		this.setBaseModelUri(stringModelUri);
 
 		this.setScheduler(scheduler);
 		this.setBaseRequest(request);

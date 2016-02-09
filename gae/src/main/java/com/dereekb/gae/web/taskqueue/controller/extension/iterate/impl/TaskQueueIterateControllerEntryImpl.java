@@ -27,15 +27,21 @@ public class TaskQueueIterateControllerEntryImpl<T extends UniqueModel>
 
 	public TaskQueueIterateControllerEntryImpl() {}
 
-	public TaskQueueIterateControllerEntryImpl(Map<String, Task<ModelKeyListAccessor<T>>> tasks) {
-		this.tasks = tasks;
+	public TaskQueueIterateControllerEntryImpl(IterateTaskExecutorFactory<T> executorFactory,
+	        Map<String, Task<ModelKeyListAccessor<T>>> tasks) throws IllegalArgumentException {
+		this.setExecutorFactory(executorFactory);
+		this.setTasks(tasks);
 	}
 
 	public IterateTaskExecutorFactory<T> getExecutorFactory() {
 		return this.executorFactory;
 	}
 
-	public void setExecutorFactory(IterateTaskExecutorFactory<T> executorFactory) {
+	public void setExecutorFactory(IterateTaskExecutorFactory<T> executorFactory) throws IllegalArgumentException {
+		if (executorFactory == null) {
+			throw new IllegalArgumentException("Executor factory cannot be null.");
+		}
+
 		this.executorFactory = executorFactory;
 	}
 
@@ -43,7 +49,11 @@ public class TaskQueueIterateControllerEntryImpl<T extends UniqueModel>
 		return this.tasks;
 	}
 
-	public void setTasks(Map<String, Task<ModelKeyListAccessor<T>>> tasks) {
+	public void setTasks(Map<String, Task<ModelKeyListAccessor<T>>> tasks) throws IllegalArgumentException {
+		if (tasks == null || tasks.isEmpty()) {
+			throw new IllegalArgumentException("Tasks map cannot be null or empty.");
+		}
+
 		this.tasks = tasks;
 	}
 
@@ -67,10 +77,16 @@ public class TaskQueueIterateControllerEntryImpl<T extends UniqueModel>
 		Task<ModelKeyListAccessor<T>> task = this.tasks.get(taskName);
 
 		if (task == null) {
-			throw new UnknownIterateTaskException();
+			throw new UnknownIterateTaskException(taskName);
 		}
 
 		return task;
+	}
+
+	@Override
+	public String toString() {
+		return "TaskQueueIterateControllerEntryImpl [executorFactory=" + this.executorFactory + ", tasks=" + this.tasks
+		        + "]";
 	}
 
 }

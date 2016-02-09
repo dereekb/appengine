@@ -161,12 +161,12 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		TaskRequestImpl request = this.copier.fullyCopyRequest(this.baseRequest);
 		Collection<TaskParameter> parameters = request.getParameters();
 
-		if (this.baseRequest.getParameters() != null) {
+		if (parameters == null) {
 			parameters = new ArrayList<TaskParameter>();
-			parameters.addAll(request.getParameters());
+			request.setParameters(parameters);
 		}
 
-		request.setParameters(parameters);
+		parameters.add(keyParameter);
 		return request;
 	}
 

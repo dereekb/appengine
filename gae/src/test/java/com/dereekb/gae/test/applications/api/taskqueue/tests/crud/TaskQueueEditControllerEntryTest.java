@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.taskqueue.tests.crud;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
@@ -7,13 +8,17 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditControllerEntry;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Abstract test for a {@link TaskQueueEditControllerEntry}.
@@ -34,6 +39,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 	private Getter<T> getter;
 	private TestModelGenerator<T> modelGenerator;
+	private ScheduleDeleteTask<T> deleteTask;
 
 	@Autowired
 	@Qualifier("taskQueueEditController")
@@ -69,6 +75,14 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 	public void setModelGenerator(TestModelGenerator<T> modelGenerator) {
 		this.modelGenerator = modelGenerator;
+	}
+
+	public ScheduleDeleteTask<T> getDeleteTask() {
+		return this.deleteTask;
+	}
+
+	public void setDeleteTask(ScheduleDeleteTask<T> deleteTask) {
+		this.deleteTask = deleteTask;
 	}
 
 	public TaskQueueEditController getController() {
@@ -160,6 +174,22 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		this.controller.processDelete(this.modelTaskQueueType, keys);
 
 		Assert.assertTrue(this.isProperlyDeleted(models));
+	}
+
+	@Test
+	public void testDeleteScheduling() {
+		List<T> models = this.create(true);
+		List<TaskRequest> requests = this.deleteTask.buildRequests(models);
+
+		Assert.assertNotNull(requests);
+
+		for (TaskRequest request : requests) {
+			Assert.assertTrue(request.getMethod() == Method.DELETE);
+
+			Collection<TaskParameter> parameters = request.getParameters();
+			Assert.assertFalse(parameters.isEmpty());
+		}
+
 	}
 
 	protected final boolean isProperlyDeleted(List<T> models) {

@@ -23,9 +23,9 @@ public class TypedModelKeyTaskRequestBuilder<T extends UniqueModel> extends Mode
 
 	protected TypedModelKeyTaskRequestBuilder() {}
 
-	public TypedModelKeyTaskRequestBuilder(String stringUri, TaskRequest baseRequest) throws URISyntaxException {
+	public TypedModelKeyTaskRequestBuilder(String stringModelUri, TaskRequest baseRequest) throws URISyntaxException {
 		super.setBaseRequest(baseRequest);
-		this.setBaseModelUri(stringUri);
+		this.setBaseModelUri(stringModelUri);
 	}
 
 	public TypedModelKeyTaskRequestBuilder(URI baseModelUri, TaskRequest baseRequest) {
@@ -37,8 +37,8 @@ public class TypedModelKeyTaskRequestBuilder<T extends UniqueModel> extends Mode
 		return this.baseModelUri;
 	}
 
-	public void setBaseModelUri(String stringUri) throws URISyntaxException {
-		URI uri = new URI(stringUri);
+	public void setBaseModelUri(String stringModelUri) throws URISyntaxException {
+		URI uri = new URI(stringModelUri + '/');
 		this.setBaseModelUri(uri);
 	}
 
