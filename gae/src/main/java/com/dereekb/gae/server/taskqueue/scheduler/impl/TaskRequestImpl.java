@@ -1,11 +1,12 @@
 package com.dereekb.gae.server.taskqueue.scheduler.impl;
 
-import java.net.URI;
 import java.util.Collection;
 
 import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
+import com.dereekb.gae.utilities.misc.path.SimplePath;
+import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
@@ -21,7 +22,7 @@ public class TaskRequestImpl
 
 	private Method method;
 
-	private URI uri;
+	private SimplePath path;
 
 	private Collection<TaskParameter> headers;
 
@@ -31,35 +32,35 @@ public class TaskRequestImpl
 
 	public TaskRequestImpl() {}
 
-	public TaskRequestImpl(URI uri) {
-		this(uri, null);
+	public TaskRequestImpl(String path) {
+		this(path, null);
 	}
 
-	public TaskRequestImpl(URI uri, Method method) {
-		this(uri, method, null);
+	public TaskRequestImpl(String path, Method method) {
+		this(path, method, null);
 	}
 
-	public TaskRequestImpl(URI uri, Method method, TaskRequestTiming timings) {
-		this(uri, method, timings, null);
+	public TaskRequestImpl(String path, Method method, TaskRequestTiming timings) {
+		this(path, method, timings, null);
 	}
 
-	public TaskRequestImpl(URI uri, TaskRequestTiming timings, Collection<TaskParameter> headers) {
-		this(uri, Method.PUT, timings, headers);
+	public TaskRequestImpl(String path, TaskRequestTiming timings, Collection<TaskParameter> headers) {
+		this(path, Method.PUT, timings, headers);
 	}
 
-	public TaskRequestImpl(URI uri, Method method, TaskRequestTiming timings, Collection<TaskParameter> headers) {
-		this(null, method, uri, timings, headers, null);
+	public TaskRequestImpl(String path, Method method, TaskRequestTiming timings, Collection<TaskParameter> headers) {
+		this(null, method, path, timings, headers, null);
 	}
 
 	public TaskRequestImpl(String name,
 	        Method method,
-	        URI uri,
+	        String path,
 	        TaskRequestTiming timings,
 	        Collection<TaskParameter> headers,
 	        Collection<TaskParameter> parameters) {
 		this.setName(name);
 		this.setMethod(method);
-		this.setUri(uri);
+		this.setPath(path);
 		this.setTimings(timings);
 		this.setHeaders(headers);
 		this.setParameters(parameters);
@@ -88,16 +89,20 @@ public class TaskRequestImpl
 	}
 
 	@Override
-	public URI getUri() {
-		return this.uri;
+	public SimplePath getPath() {
+		return this.path;
 	}
 
-	public void setUri(URI uri) throws IllegalArgumentException {
-		if (uri == null) {
-			throw new IllegalArgumentException("URI cannot be null.");
+	public void setPath(String path) throws IllegalArgumentException {
+		this.setPath(new SimplePathImpl(path));
+	}
+
+	public void setPath(SimplePath path) throws IllegalArgumentException {
+		if (path == null) {
+			throw new IllegalArgumentException("Path cannot be null.");
 		}
 
-		this.uri = uri;
+		this.path = path;
 	}
 
 	@Override
@@ -144,7 +149,7 @@ public class TaskRequestImpl
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.parameters == null) ? 0 : this.parameters.hashCode());
 		result = prime * result + ((this.timings == null) ? 0 : this.timings.hashCode());
-		result = prime * result + ((this.uri == null) ? 0 : this.uri.hashCode());
+		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
 		return result;
 	}
 
@@ -191,11 +196,11 @@ public class TaskRequestImpl
 		} else if (!this.timings.equals(other.timings)) {
 			return false;
 		}
-		if (this.uri == null) {
-			if (other.uri != null) {
+		if (this.path == null) {
+			if (other.path != null) {
 				return false;
 			}
-		} else if (!this.uri.equals(other.uri)) {
+		} else if (!this.path.equals(other.path)) {
 			return false;
 		}
 		return true;
@@ -203,7 +208,7 @@ public class TaskRequestImpl
 
 	@Override
 	public String toString() {
-		return "TaskRequestImpl [name=" + this.name + ", method=" + this.method + ", uri=" + this.uri + ", headers="
+		return "TaskRequestImpl [name=" + this.name + ", method=" + this.method + ", path=" + this.path + ", headers="
 		        + this.headers + ", parameters=" + this.parameters + ", timings=" + this.timings + "]";
 	}
 

@@ -34,7 +34,7 @@ public class TaskRequestHashBuilderImpl
 	}
 
 	public Integer getUrlHashcode(TaskRequest request) {
-		String url = request.getUri().toString();
+		String url = request.getPath().toString();
 		return ((url == null) ? 0 : url.hashCode());
 	}
 

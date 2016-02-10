@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.crud.task.impl.delete;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
@@ -45,26 +44,17 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTask
 	private DeleteTaskConfig defaultConfig;
 	private Filter<T> deleteFilter;
 
-	public ScheduleDeleteTask(String stringModelUri, TaskScheduler scheduler) throws URISyntaxException {
-		this(stringModelUri, scheduler, null);
+	public ScheduleDeleteTask(String modelResource, TaskScheduler scheduler) throws URISyntaxException {
+		this(modelResource, scheduler, null);
 	}
 
-	public ScheduleDeleteTask(String stringModelUri, TaskScheduler scheduler, TaskRequest request)
+	public ScheduleDeleteTask(String modelResource, TaskScheduler scheduler, TaskRequest baseRequest)
 	        throws URISyntaxException {
-		this(stringModelUri, scheduler, request, null, null);
-	}
-
-	public ScheduleDeleteTask(String stringModelUri,
-	        TaskScheduler scheduler,
-	        TaskRequest request,
-	        DeleteTaskConfig defaultConfig,
-	        Filter<T> deleteFilter) throws URISyntaxException {
-		this.setBaseModelUri(stringModelUri);
+		this.setModelResource(modelResource);
 
 		this.setScheduler(scheduler);
-		this.setBaseRequest(request);
-		this.setDefaultConfig(defaultConfig);
-		this.setDeleteFilter(deleteFilter);
+		this.setBaseRequest(baseRequest);
+		this.setDefaultConfig(null);
 	}
 
 	public TaskScheduler getScheduler() {
@@ -98,11 +88,7 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTask
 	@Override
 	public void setBaseRequest(TaskRequest request) {
 		if (request == null) {
-			try {
-				request = new TaskRequestImpl(new URI("delete"), Method.DELETE);
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
+			request = new TaskRequestImpl("delete", Method.DELETE);
 		}
 
 		super.setBaseRequest(request);

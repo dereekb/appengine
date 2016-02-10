@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.taskqueue.scheduler.utility.converter.impl;
 
-import java.net.URI;
 import java.util.Collection;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
@@ -9,6 +8,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
+import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
@@ -22,9 +22,9 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
         implements TaskRequestConverter {
 
 	/**
-	 * The base system URI/resource to submit the task to.
+	 * The base system SimplePath/resource to submit the task to.
 	 */
-	private URI resource;
+	private SimplePath resource;
 
 	/**
 	 * Default method type to submit request as.
@@ -43,21 +43,21 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 		this(null, null, null);
 	}
 
-	public TaskRequestConverterImpl(URI resource) {
+	public TaskRequestConverterImpl(SimplePath resource) {
 		this(resource, null, null);
 	}
 
-	public TaskRequestConverterImpl(URI resource, Method method, TaskRequestTiming timings) {
+	public TaskRequestConverterImpl(SimplePath resource, Method method, TaskRequestTiming timings) {
 		this.setResource(resource);
 		this.setMethod(method);
 		this.setTimings(timings);
 	}
 
-	public URI getResource() {
+	public SimplePath getResource() {
 		return this.resource;
 	}
 
-	public void setResource(URI resource) {
+	public void setResource(SimplePath resource) {
 		this.resource = resource;
 	}
 
@@ -101,13 +101,13 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 		}
 
 		public String getFullRequestUri() {
-			URI uri = this.request.getUri();
+			SimplePath path = this.request.getPath();
 
 			if (TaskRequestConverterImpl.this.resource != null) {
-				uri = TaskRequestConverterImpl.this.resource.resolve(uri);
+				path = TaskRequestConverterImpl.this.resource.append(path);
 			}
 
-			return uri.toString();
+			return path.toString();
 		}
 
 		public Method getMethod() {

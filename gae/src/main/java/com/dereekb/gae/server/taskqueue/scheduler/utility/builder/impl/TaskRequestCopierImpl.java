@@ -49,7 +49,7 @@ public class TaskRequestCopierImpl
 	public TaskRequestImpl partialCopyRequest(TaskRequest request) {
 		TaskRequestImpl copy = new TaskRequestImpl();
 
-		copy.setUri(request.getUri());
+		copy.setPath(request.getPath());
 		copy.setMethod(request.getMethod());
 
 		TaskRequestTiming timing = copy.getTimings();

@@ -1,12 +1,11 @@
 package com.dereekb.gae.model.extension.taskqueue.request;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
+import com.dereekb.gae.utilities.misc.path.SimplePath;
+import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 
 /**
  * {@link ModelKeyTaskRequestBuilder} extension that will append a relative URL
@@ -19,35 +18,33 @@ import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
  */
 public class TypedModelKeyTaskRequestBuilder<T extends UniqueModel> extends ModelKeyTaskRequestBuilder<T> {
 
-	private URI baseModelUri;
+	private SimplePath modelResource;
 
 	protected TypedModelKeyTaskRequestBuilder() {}
 
-	public TypedModelKeyTaskRequestBuilder(String stringModelUri, TaskRequest baseRequest) throws URISyntaxException {
+	public TypedModelKeyTaskRequestBuilder(String modelResource, TaskRequest baseRequest) {
+		this(new SimplePathImpl(modelResource), baseRequest);
+	}
+
+	public TypedModelKeyTaskRequestBuilder(SimplePath modelResource, TaskRequest baseRequest) {
 		super.setBaseRequest(baseRequest);
-		this.setBaseModelUri(stringModelUri);
+		this.setModelResource(modelResource);
 	}
 
-	public TypedModelKeyTaskRequestBuilder(URI baseModelUri, TaskRequest baseRequest) {
-		super.setBaseRequest(baseRequest);
-		this.setBaseModelUri(baseModelUri);
+	public SimplePath getModelResource() {
+		return this.modelResource;
 	}
 
-	public URI getBaseModelUri() {
-		return this.baseModelUri;
+	public void setModelResource(String modelResource) {
+		this.setModelResource(new SimplePathImpl(modelResource));
 	}
 
-	public void setBaseModelUri(String stringModelUri) throws URISyntaxException {
-		URI uri = new URI(stringModelUri + '/');
-		this.setBaseModelUri(uri);
-	}
-
-	public void setBaseModelUri(URI baseModelUri) {
-		if (baseModelUri == null) {
-			throw new IllegalArgumentException("Model URI cannot be null.");
+	public void setModelResource(SimplePath modelResource) {
+		if (modelResource == null) {
+			throw new IllegalArgumentException("Model SimplePath cannot be null.");
 		}
 
-		this.baseModelUri = baseModelUri;
+		this.modelResource = modelResource;
 	}
 
 	// MARK: TaskRequestBuilder
@@ -55,9 +52,9 @@ public class TypedModelKeyTaskRequestBuilder<T extends UniqueModel> extends Mode
 	protected TaskRequestImpl createNewModelKeyRequest(TaskParameterImpl keyParameter) {
 		TaskRequestImpl request = super.createNewModelKeyRequest(keyParameter);
 
-		URI requestUri = request.getUri();
-		URI fullUri = this.baseModelUri.resolve(requestUri);
-		request.setUri(fullUri);
+		SimplePath path = request.getPath();
+		SimplePath fullPath = this.modelResource.append(path);
+		request.setPath(fullPath);
 
 		return request;
 	}

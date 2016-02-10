@@ -1,8 +1,8 @@
 package com.dereekb.gae.server.taskqueue.scheduler;
 
-import java.net.URI;
 import java.util.Collection;
 
+import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
@@ -30,11 +30,11 @@ public interface TaskRequest {
 	public Method getMethod();
 
 	/**
-	 * Returns relative target URI.
+	 * Returns relative target's path.
 	 *
-	 * @return {@link URI}. Never {@code null}.
+	 * @return {@link SimplePath}. Never {@code null}.
 	 */
-	public URI getUri();
+	public SimplePath getPath();
 
 	/**
 	 * Optional collection of request headers.

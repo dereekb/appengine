@@ -1,7 +1,5 @@
 package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -138,31 +136,21 @@ public final class TaskQueueIterateController {
 
 		@Override
 		public void scheduleContinuation(String cursor) {
-			URI uri = this.getContinutationURI();
+			String path = this.getContinutationPath();
 			Collection<TaskParameter> headers = this.getContinuationHeaders(cursor);
 			Collection<TaskParameter> parameters = this.getContinuationParameters();
 
-			TaskRequestImpl request = new TaskRequestImpl(uri, Method.POST);
+			TaskRequestImpl request = new TaskRequestImpl(path, Method.POST);
 			request.setHeaders(headers);
 			request.setParameters(parameters);
 
 			TaskQueueIterateController.this.scheduler.schedule(request);
 		}
 
-		private URI getContinutationURI() {
+		private String getContinutationPath() {
 			String taskName = this.taskInput.getTaskName();
 			String modelType = this.taskInput.getModelType();
-
-			String uriString = String.format("%s/iterate/%s", modelType, taskName);
-			URI uri = null;
-
-			try {
-				uri = new URI(uriString);
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
-
-			return uri;
+			return String.format("%s/iterate/%s", modelType, taskName);
 		}
 
 		private Collection<TaskParameter> getContinuationHeaders(String cursor) {
