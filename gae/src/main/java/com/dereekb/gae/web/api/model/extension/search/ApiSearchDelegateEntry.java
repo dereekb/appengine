@@ -3,6 +3,12 @@ package com.dereekb.gae.web.api.model.extension.search;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
+/**
+ *
+ * @author dereekb
+ *
+ * @see {@link ApiSearchDelegate}
+ */
 public interface ApiSearchDelegateEntry {
 
 	/**

@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.extension.search.document.search.service.impl;
 
 import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequest;
-import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequestOptions;
 import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchService;
+import com.dereekb.gae.server.search.model.SearchOptions;
 import com.dereekb.gae.server.search.system.SearchDocumentQuerySystem;
 import com.dereekb.gae.server.search.system.request.impl.DocumentQueryRequestImpl;
 import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
@@ -70,7 +70,7 @@ public class DocumentSearchServiceImpl
 		return response;
 	}
 
-	public QueryOptions.Builder buildOptions(DocumentSearchRequestOptions options) {
+	public QueryOptions.Builder buildOptions(SearchOptions options) {
 		QueryOptions.Builder builder = QueryOptions.newBuilder();
 
 		if (options != null) {

@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.stored.blob.search.query;
 
-import com.dereekb.gae.model.extension.search.query.search.components.AbstractModelQuery;
+import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
 
 
 /**
@@ -10,7 +10,7 @@ import com.dereekb.gae.model.extension.search.query.search.components.AbstractMo
  *
  * @author dereekb
  */
-public class StoredBlobQuery extends AbstractModelQuery {
+public class StoredBlobQuery extends SearchOptionsImpl {
 
 	private boolean recent = true;
 

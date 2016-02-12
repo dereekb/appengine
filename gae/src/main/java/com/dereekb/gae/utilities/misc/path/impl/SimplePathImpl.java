@@ -88,7 +88,7 @@ public class SimplePathImpl
 	}
 
 	private String buildPath() {
-		return PathUtility.buildPath(this.pathComponents, this.divider);
+		return PathUtility.buildPath(this.pathComponents, this.divider).toLowerCase();
 	}
 
 	// MARK: Simple Path

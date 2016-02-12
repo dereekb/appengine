@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.search.service;
 
 import com.dereekb.gae.server.search.document.query.expression.Expression;
+import com.dereekb.gae.server.search.model.SearchOptions;
 
 /**
  * Used by {@link DocumentSearchService}.
@@ -25,6 +26,6 @@ public interface DocumentSearchRequest {
 	 *
 	 * @return Options. Can be {@code null}.
 	 */
-	public DocumentSearchRequestOptions getOptions();
+	public SearchOptions getOptions();
 
 }

@@ -30,7 +30,8 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *
  */
 @RestController
-public final class TaskQueueIterateController {
+@RequestMapping("/taskqueue")
+public class TaskQueueIterateController {
 
 	/**
 	 * HTTP header for the step value.

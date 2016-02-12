@@ -520,7 +520,7 @@ public class ObjectifyDatabaseImpl
 			private Query<T> applyOptions(Query<T> query) {
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
-				Cursor cursor = options.getCursor();
+				Cursor cursor = options.getQueryCursor();
 				Integer limit = options.getLimit();
 
 				if (limit != null) {

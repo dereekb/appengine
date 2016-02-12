@@ -24,7 +24,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
  *
  */
 @RestController
-public final class TaskQueueSearchController {
+@RequestMapping("/taskqueue")
+public class TaskQueueSearchController {
 
 	private TypeModelKeyConverter keyTypeConverter;
 	private TypedDocumentIndexService service;

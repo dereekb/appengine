@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.extension.search.document.search.service.impl;
 
 import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequest;
-import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequestOptions;
 import com.dereekb.gae.server.search.document.query.expression.Expression;
+import com.dereekb.gae.server.search.model.SearchOptions;
 
 /**
  * {@link DocumentSearchRequest} implementation.
@@ -15,7 +15,7 @@ public class DocumentSearchRequestImpl
 
 	private String index;
 	private Expression expression;
-	private DocumentSearchRequestOptions options;
+	private SearchOptions options;
 
 	public DocumentSearchRequestImpl() {}
 
@@ -24,7 +24,7 @@ public class DocumentSearchRequestImpl
 		this.setQueryExpression(expression);
 	}
 
-	public DocumentSearchRequestImpl(String index, Expression expression, DocumentSearchRequestOptions options) {
+	public DocumentSearchRequestImpl(String index, Expression expression, SearchOptions options) {
 		this.setIndex(index);
 		this.setQueryExpression(expression);
 		this.setOptions(options);
@@ -49,11 +49,11 @@ public class DocumentSearchRequestImpl
 	}
 
 	@Override
-	public DocumentSearchRequestOptions getOptions() {
+	public SearchOptions getOptions() {
 		return this.options;
 	}
 
-	public void setOptions(DocumentSearchRequestOptions options) {
+	public void setOptions(SearchOptions options) {
 		this.options = options;
 	}
 

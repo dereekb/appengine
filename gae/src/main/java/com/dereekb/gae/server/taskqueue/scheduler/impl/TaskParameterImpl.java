@@ -162,4 +162,9 @@ public class TaskParameterImpl
 		return newParameters;
 	}
 
+	@Override
+	public String toString() {
+		return "TaskParameterImpl [parameter=" + this.parameter + ", value=" + this.value + "]";
+	}
+
 }

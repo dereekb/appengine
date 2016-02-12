@@ -184,6 +184,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		Assert.assertNotNull(requests);
 
 		for (TaskRequest request : requests) {
+			Assert.assertNotNull(request.getPath());
 			Assert.assertTrue(request.getMethod() == Method.DELETE);
 
 			Collection<TaskParameter> parameters = request.getParameters();

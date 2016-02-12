@@ -268,9 +268,9 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 			options.setLimit(this.iteratorBatchLimit);
 
 			if (this.iteratorCursor != null) {
-				options.setCursor(this.iteratorCursor);
+				options.setQueryCursor(this.iteratorCursor);
 			} else if (this.startCursor != null) {
-				options.setCursor(this.startCursor);
+				options.setQueryCursor(this.startCursor);
 			}
 
 			query.setOptions(options);

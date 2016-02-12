@@ -9,6 +9,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
+import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
@@ -24,7 +25,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 	/**
 	 * The base system SimplePath/resource to submit the task to.
 	 */
-	private SimplePath resource;
+	private SimplePath resource = new SimplePathImpl("/taskqueue");
 
 	/**
 	 * Default method type to submit request as.

@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.taskqueue.stored.storedblob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
@@ -37,6 +38,13 @@ public class StoredBlobTaskQueueEditControllerEntryTest extends SearchableTaskQu
 	@Qualifier("storedBlobTestModelGenerator")
 	public void setModelGenerator(TestModelGenerator<StoredBlob> modelGenerator) {
 		super.setModelGenerator(modelGenerator);
+	}
+
+	@Override
+	@Autowired
+	@Qualifier("storedBlobScheduleDeleteTask")
+	public void setDeleteTask(ScheduleDeleteTask<StoredBlob> deleteTask) {
+		super.setDeleteTask(deleteTask);
 	}
 
 }

@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.taskqueue.stored.storedimageset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
@@ -37,6 +38,13 @@ public class StoredImageSetTaskQueueEditControllerEntryTest extends SearchableTa
 	@Qualifier("storedImageSetTestModelGenerator")
 	public void setModelGenerator(TestModelGenerator<StoredImageSet> modelGenerator) {
 		super.setModelGenerator(modelGenerator);
+	}
+
+	@Override
+	@Autowired
+	@Qualifier("storedImageSetScheduleDeleteTask")
+	public void setDeleteTask(ScheduleDeleteTask<StoredImageSet> deleteTask) {
+		super.setDeleteTask(deleteTask);
 	}
 
 }

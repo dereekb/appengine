@@ -1,15 +1,15 @@
 package com.dereekb.gae.model.extension.search.document.search.service.impl;
 
-import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequestOptions;
+import com.dereekb.gae.server.search.model.SearchOptions;
 
 /**
- * {@link DocumentSearchRequestOptions} implementation.
+ * {@link SearchOptions} implementation.
  *
  * @author dereekb
  *
  */
 public class DocumentSearchRequestOptionsImpl
-        implements DocumentSearchRequestOptions {
+        implements SearchOptions {
 
 	private String cursor;
 	private Integer limit;

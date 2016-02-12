@@ -2,6 +2,7 @@ package com.dereekb.gae.web.api.model.extension.search.impl;
 
 import java.util.Map;
 
+import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 
 
@@ -11,12 +12,10 @@ import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
  * @author dereekb
  *
  */
-public class ApiSearchReadRequestImpl
+public class ApiSearchReadRequestImpl extends SearchOptionsImpl
         implements ApiSearchReadRequest {
 
-	private String cursor;
 	private String query;
-	private Integer limit;
 	private boolean models;
 	private Map<String, String> parameters;
 
@@ -49,34 +48,12 @@ public class ApiSearchReadRequestImpl
 	}
 
 	@Override
-	public String getCursor() {
-		return this.cursor;
-	}
-
-	public void setCursor(String cursor) {
-		this.cursor = cursor;
-	}
-
-	@Override
 	public String getQuery() {
 		return this.query;
 	}
 
 	public void setQuery(String query) {
 		this.query = query;
-	}
-
-	@Override
-	public Integer getLimit() {
-		return this.limit;
-	}
-
-	public void setLimit(Integer limit) throws IllegalArgumentException {
-		if (limit != null && limit < 1) {
-			throw new IllegalArgumentException("Must specify a positive, non-zero limit.");
-		}
-
-		this.limit = limit;
 	}
 
 	@Override
