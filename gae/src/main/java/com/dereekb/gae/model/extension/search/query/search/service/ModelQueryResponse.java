@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.extension.search.query.search.service;
 
+import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.googlecode.objectify.Key;
 
@@ -14,10 +14,11 @@ import com.googlecode.objectify.Key;
  * @param <T>
  *            model type
  */
-public interface ModelQueryResponse<T>
-        extends ReadResponse<T> {
+public interface ModelQueryResponse<T> {
 
 	public boolean isKeyOnlyResponse();
+
+	public Collection<T> getModels();
 
 	public List<ModelKey> getResponseKeys();
 

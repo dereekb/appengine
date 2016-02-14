@@ -29,6 +29,7 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUti
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
@@ -131,7 +132,8 @@ public class ObjectifyDatabaseImpl
 		private final String modelTypeName;
 		private final ModelKeyType keyType;
 
-		private final ObjectifyKeyConverter<T, ModelKey> keyConverter;
+		private final ObjectifyKeyConverter<T, ModelKey> objectifyKeyConverter;
+		private final ObjectifyQueryRequestLimitedBuilderInitializer initializer;
 
 		protected ObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			ObjectifyDatabaseEntityDefinition entity = ObjectifyDatabaseImpl.this.getDefinition(type);
@@ -139,7 +141,8 @@ public class ObjectifyDatabaseImpl
 			this.type = type;
 			this.modelTypeName = entity.getEntityName();
 			this.keyType = entity.getEntityKeyType();
-			this.keyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
+			this.objectifyKeyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
+			this.initializer = entity.getQueryInitializer();
 		}
 
 		public boolean isConfiguredAsync() {
@@ -148,6 +151,23 @@ public class ObjectifyDatabaseImpl
 
 		public void setConfiguredAsync(boolean configuredAsync) {
 			this.configuredAsync = configuredAsync;
+		}
+
+		public Class<T> getType() {
+			return this.type;
+		}
+
+		public String getModelTypeName() {
+			return this.modelTypeName;
+		}
+
+		public ModelKeyType getKeyType() {
+			return this.keyType;
+		}
+
+		@Override
+		public ObjectifyKeyConverter<T, ModelKey> getObjectifyKeyConverter() {
+			return this.objectifyKeyConverter;
 		}
 
 		// MARK: ObjectifyDatabaseEntityReader
@@ -300,7 +320,7 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public boolean exists(ModelKey key) {
-			Key<T> objectifyKey = this.keyConverter.writeKey(key);
+			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
 			return this.exists(objectifyKey);
 		}
 
@@ -320,7 +340,7 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public T get(ModelKey key) {
-			Key<T> objectifyKey = this.keyConverter.writeKey(key);
+			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
 			return this.get(objectifyKey);
 		}
 
@@ -345,7 +365,7 @@ public class ObjectifyDatabaseImpl
 		@Override
 		public List<T> getWithKeys(Iterable<ModelKey> keys) {
 			List<ModelKey> modelKeys = IteratorUtility.iterableToList(keys);
-			List<Key<T>> objectifyKeys = this.keyConverter.convertFrom(modelKeys);
+			List<Key<T>> objectifyKeys = this.objectifyKeyConverter.convertFrom(modelKeys);
 			return this.keysGet(objectifyKeys);
 		}
 
@@ -418,7 +438,7 @@ public class ObjectifyDatabaseImpl
 		@Override
 		public void deleteWithKey(ModelKey key,
 		                          boolean async) {
-			Key<T> objectifyKey = this.keyConverter.writeKey(key);
+			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
 			this.getModifier(async).delete(objectifyKey);
 		}
 
@@ -426,7 +446,7 @@ public class ObjectifyDatabaseImpl
 		public void deleteWithKeys(Iterable<ModelKey> keys,
 		                           boolean async) {
 			List<ModelKey> modelKeys = IteratorUtility.iterableToList(keys);
-			List<Key<T>> objectifyKeys = this.keyConverter.convertFrom(modelKeys);
+			List<Key<T>> objectifyKeys = this.objectifyKeyConverter.convertFrom(modelKeys);
 			this.getModifier(async).deleteWithKeys(objectifyKeys);
 		}
 
@@ -466,10 +486,13 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters) {
+			ObjectifyQueryRequestBuilder<T> builder = this.makeQuery();
 
-			// TODO: Use builder initializer delegate
+			if (this.initializer != null && parameters != null) {
+				this.initializer.initalizeBuilder(builder, parameters);
+			}
 
-			return this.makeQuery();
+			return builder;
 		}
 
 		@Override
@@ -554,7 +577,6 @@ public class ObjectifyDatabaseImpl
 				return filteredQuery;
 			}
 
-
 			protected Query<T> applyResultsOrdering(Query<T> query) {
 				Iterable<ObjectifyQueryOrdering> resultsOrdering = this.request.getResultsOrdering();
 
@@ -574,7 +596,6 @@ public class ObjectifyDatabaseImpl
 		 * Internal {@link ObjectifyQueryResponse} implementation.
 		 *
 		 * @author dereekb
-		 *
 		 */
 		private class ObjectifyQueryResponseImpl
 		        implements ObjectifyQueryResponse<T> {
@@ -583,6 +604,12 @@ public class ObjectifyDatabaseImpl
 
 			public ObjectifyQueryResponseImpl(SimpleQuery<T> query) {
 				this.query = query;
+			}
+
+			// MARK: ObjectifyQueryResponse
+			@Override
+			public SimpleQuery<T> getQuery() {
+				return this.query;
 			}
 
 			@Override
@@ -610,7 +637,7 @@ public class ObjectifyDatabaseImpl
 			@Override
 			public List<ModelKey> queryModelKeys() {
 				List<Key<T>> objectifyKeys = this.queryObjectifyKeys();
-				return ObjectifyDatabaseEntityImpl.this.keyConverter.convertTo(objectifyKeys);
+				return ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter.convertTo(objectifyKeys);
 			}
 
 			@Override
@@ -677,6 +704,7 @@ public class ObjectifyDatabaseImpl
 	 * @throws IllegalArgumentException
 	 *             Thrown if an invalid name is input.
 	 */
+	@Deprecated
 	public <T> List<Key<T>> makeKeysFromNames(Class<T> type,
 	                                          Iterable<String> ids) throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
@@ -705,6 +733,7 @@ public class ObjectifyDatabaseImpl
 	 *             Thrown if an invalid identifier is input. Zero is an invalid
 	 *             identifier.
 	 */
+	@Deprecated
 	public <T> List<Key<T>> makeKeysFromLongs(Class<T> type,
 	                                          Iterable<Long> ids) throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
@@ -735,6 +764,7 @@ public class ObjectifyDatabaseImpl
 	 *             Thrown if an invalid identifier is input. Zero is an invalid
 	 *             identifier.
 	 */
+	@Deprecated
 	public <T> List<Key<T>> makeKeysFromModelKeys(Class<T> type,
 	                                              Collection<ModelKey> modelKeys) throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();

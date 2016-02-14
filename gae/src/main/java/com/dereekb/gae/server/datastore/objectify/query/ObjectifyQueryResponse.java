@@ -7,6 +7,7 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
  * Pre-configured Objectify query that can return its results as a
@@ -17,6 +18,13 @@ import com.googlecode.objectify.Key;
  *            model type
  */
 public interface ObjectifyQueryResponse<T extends ObjectifyModel<T>> {
+
+	/**
+	 * Returns the created query.
+	 *
+	 * @return {@link SimpleQuery} used. Never {@code null}.
+	 */
+	public SimpleQuery<T> getQuery();
 
 	/**
 	 * Retrieves models that meet the query parameters.

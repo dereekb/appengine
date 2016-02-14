@@ -14,6 +14,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilt
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
  * {@link ExecutableObjectifyQuery} implementation.
@@ -82,6 +83,11 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 
     	return this.response;
     }
+
+	@Override
+	public SimpleQuery<T> getQuery() {
+		return this.getResponse().getQuery();
+	}
 
 	@Override
 	public List<T> queryModels() {

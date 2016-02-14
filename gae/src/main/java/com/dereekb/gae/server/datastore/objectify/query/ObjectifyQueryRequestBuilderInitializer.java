@@ -12,7 +12,8 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
  * @param <T>
  *            model type
  */
-public interface ObjectifyQueryRequestBuilderInitializer<T extends ObjectifyModel<T>> {
+public interface ObjectifyQueryRequestBuilderInitializer<T extends ObjectifyModel<T>>
+        extends ObjectifyQueryRequestLimitedBuilderInitializer {
 
 	/**
 	 * Initializes the input builder using the provided parameters.

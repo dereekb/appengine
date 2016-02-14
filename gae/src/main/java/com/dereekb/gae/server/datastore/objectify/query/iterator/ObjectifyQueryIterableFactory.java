@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.google.appengine.api.datastore.Cursor;
+import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
  * Used for generating {@link ObjectifyQueryIterable} instances.
@@ -21,7 +22,12 @@ public interface ObjectifyQueryIterableFactory<T extends ObjectifyModel<T>> {
 
 	public ObjectifyQueryIterable<T> makeIterable(Cursor cursor);
 
-	public ObjectifyQueryIterable<T> makeIterable(Cursor cursor,
-	                                              Map<String, String> parameters);
+	public ObjectifyQueryIterable<T> makeIterable(Map<String, String> parameters,
+	                                              Cursor cursor);
+
+	public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query);
+
+	public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query,
+	                                              Cursor cursor);
 
 }

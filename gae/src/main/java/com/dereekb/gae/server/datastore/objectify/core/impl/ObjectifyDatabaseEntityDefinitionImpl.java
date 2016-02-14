@@ -2,6 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.core.impl;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 
 /**
  * Default {@link ObjectifyDatabaseEntityDefinition} implementation.
@@ -15,11 +16,22 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 	private String entityName;
 	private Class<?> entityType;
 	private ModelKeyType entityKeyType;
+	private ObjectifyQueryRequestLimitedBuilderInitializer queryInitializer;
 
 	public ObjectifyDatabaseEntityDefinitionImpl(String entityName, Class<?> entityType, ModelKeyType entityKeyType) {
 		this.setEntityName(entityName);
 		this.setEntityType(entityType);
 		this.setEntityKeyType(entityKeyType);
+	}
+
+	public ObjectifyDatabaseEntityDefinitionImpl(String entityName,
+	        Class<?> entityType,
+	        ModelKeyType entityKeyType,
+	        ObjectifyQueryRequestLimitedBuilderInitializer queryInitializer) {
+		this.entityName = entityName;
+		this.entityType = entityType;
+		this.entityKeyType = entityKeyType;
+		this.queryInitializer = queryInitializer;
 	}
 
 	@Override
@@ -40,13 +52,22 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 		this.entityType = entityType;
 	}
 
-    @Override
+	@Override
 	public ModelKeyType getEntityKeyType() {
 		return this.entityKeyType;
 	}
 
 	public void setEntityKeyType(ModelKeyType entityKeyType) {
 		this.entityKeyType = entityKeyType;
+	}
+
+	@Override
+	public ObjectifyQueryRequestLimitedBuilderInitializer getQueryInitializer() {
+		return this.queryInitializer;
+	}
+
+	public void setQueryInitializer(ObjectifyQueryRequestLimitedBuilderInitializer queryInitializer) {
+		this.queryInitializer = queryInitializer;
 	}
 
 	@Override

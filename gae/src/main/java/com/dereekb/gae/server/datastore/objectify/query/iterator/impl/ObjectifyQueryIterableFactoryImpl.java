@@ -9,7 +9,6 @@ import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQuer
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilderFactory;
-import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterator;
@@ -17,8 +16,8 @@ import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
 import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
+import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
  * {@link IndexedIterable} implementation using a {@link ObjectifyQueryService},
@@ -37,7 +36,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 	private ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory;
 
 	public ObjectifyQueryIterableFactoryImpl(ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory) {
-	    this.queryBuilderFactory = queryBuilderFactory;
+		this.queryBuilderFactory = queryBuilderFactory;
 	}
 
 	public ObjectifyQueryRequestBuilderFactory<T> getQueryBuilderFactory() {
@@ -52,7 +51,6 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 		this.queryBuilderFactory = queryBuilderFactory;
 	}
 
-
 	public int getIterateLimit() {
 		return this.iterateLimit;
 	}
@@ -65,20 +63,32 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 		this.iterateLimit = iterateLimit;
 	}
 
+	// MARK: ObjectifyQueryIterableFactory
 	@Override
-    public IterableInstance makeIterable() {
+	public IterableInstance makeIterable() {
 		return new IterableInstance();
 	}
 
 	@Override
-    public IterableInstance makeIterable(Cursor cursor) {
+	public IterableInstance makeIterable(Cursor cursor) {
 		return new IterableInstance(cursor);
 	}
 
 	@Override
-    public IterableInstance makeIterable(Cursor startCursor,
-	                                     Map<String, String> parameters) {
-		return new IterableInstance(startCursor, parameters);
+	public IterableInstance makeIterable(Map<String, String> parameters,
+	                                     Cursor startCursor) {
+		return new IterableInstance(parameters, startCursor);
+	}
+
+	@Override
+	public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query) {
+		return new IterableInstance(query, null);
+	}
+
+	@Override
+	public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query,
+	                                              Cursor cursor) {
+		return new IterableInstance(query, cursor);
 	}
 
 	// MARK: Internal Classes
@@ -86,36 +96,48 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 	        implements ObjectifyQueryIterable<T> {
 
 		private Cursor startCursor;
+		private SimpleQuery<T> query;
 		private Map<String, String> parameters;
 
-		public IterableInstance() {
-			this(null, null);
-		}
+		public IterableInstance() {}
 
 		public IterableInstance(Cursor startCursor) {
-			this(startCursor, null);
+			this.setStartCursor(startCursor);
 		}
 
-		public IterableInstance(Cursor startCursor, Map<String, String> parameters) {
+		public IterableInstance(SimpleQuery<T> query, Cursor startCursor) {
+			this.setQuery(query);
+			this.setStartCursor(startCursor);
+		}
+
+		public IterableInstance(Map<String, String> parameters, Cursor startCursor) {
 			this.setStartCursor(startCursor);
 			this.setParameters(parameters);
+		}
+
+		public SimpleQuery<T> getQuery() {
+			return this.query;
+		}
+
+		public void setQuery(SimpleQuery<T> query) {
+			this.query = query;
 		}
 
 		public Cursor getStartCursor() {
 			return this.startCursor;
 		}
 
-        public void setStartCursor(Cursor startCursor) {
-        	this.startCursor = startCursor;
-        }
+		public void setStartCursor(Cursor startCursor) {
+			this.startCursor = startCursor;
+		}
 
 		public Map<String, String> getParameters() {
 			return this.parameters;
 		}
 
-        public void setParameters(Map<String, String> parameters) {
-        	this.parameters = parameters;
-        }
+		public void setParameters(Map<String, String> parameters) {
+			this.parameters = parameters;
+		}
 
 		// MARK: IndexedIterable
 		@Override
@@ -130,18 +152,76 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 
 		@Override
 		public IteratorInstance iterator() {
-			return new IteratorInstance(this.startCursor, this.parameters);
+			ConfiguredIteratorInstance instance;
+
+			if (this.query != null) {
+				instance = new ConfiguredIteratorInstance(this.startCursor, this.query);
+			} else {
+				instance = new ConfiguredIteratorInstance(this.startCursor, this.parameters);
+			}
+
+			return instance;
 		}
 
 	}
 
 	// MARK: Instance
+	private class ConfiguredIteratorInstance extends IteratorInstance {
+
+		private SimpleQuery<T> query;
+
+		protected ConfiguredIteratorInstance(Cursor startCursor) {
+			super(startCursor);
+		}
+
+		private ConfiguredIteratorInstance(Cursor startCursor, SimpleQuery<T> query) {
+			super(startCursor);
+			this.setQuery(query);
+		}
+
+		private ConfiguredIteratorInstance(Cursor startCursor, Map<String, String> parameters) {
+			super(startCursor);
+			this.setQuery(parameters);
+		}
+
+		public void setQuery(Map<String, String> parameters) {
+			this.setQuery(this.makeQuery(parameters));
+		}
+
+		public void setQuery(SimpleQuery<T> query) {
+			if (query == null) {
+				query = this.makeQuery(null);
+			}
+
+			this.query = query;
+		}
+
+		protected SimpleQuery<T> makeQuery(Map<String, String> parameters) {
+			ObjectifyQueryRequestBuilder<T> builder = ObjectifyQueryIterableFactoryImpl.this.queryBuilderFactory
+			        .makeQuery(parameters);
+			ExecutableObjectifyQuery<T> query = builder.buildExecutableQuery();
+			return query.getQuery();
+		}
+
+		@Override
+		protected QueryResultIterator<T> continueQuery() {
+			SimpleQuery<T> query = this.query;
+			Cursor iteratorCursor = this.getIteratorCursor();
+
+			query = query.startAt(iteratorCursor);
+			query = query.limit(this.getIteratorBatchLimit());
+
+			return query.iterator();
+		}
+
+	}
+
 	/**
 	 * Single-use query iteration.
 	 *
 	 * @author dereekb
 	 */
-	public class IteratorInstance
+	public abstract class IteratorInstance
 	        implements ObjectifyQueryIterator<T> {
 
 		/**
@@ -170,21 +250,16 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 		private QueryResultIterator<T> iterator;
 
 		/**
-		 * Custom, optional parameters to feed to {@link #initializer}.
-		 */
-		private Map<String, String> parameters;
-
-		/**
 		 * Whether or not the iterator has finished.
 		 */
 		private boolean finished = false;
 
 		private int iteratorBatchLimit;
 
-		private IteratorInstance(Cursor startCursor, Map<String, String> parameters) {
+		private IteratorInstance(Cursor startCursor) {
 			this.iteratorBatchLimit = ObjectifyQueryIterableFactoryImpl.this.iterateLimit;
 			this.startCursor = startCursor;
-			this.parameters = parameters;
+			this.iteratorCursor = this.startCursor;
 		}
 
 		// MARK: LimitedIterator
@@ -194,7 +269,8 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 
 		public void setIteratorBatchLimit(int iteratorLimit) throws IllegalArgumentException {
 			if (iteratorLimit < 1 || iteratorLimit > MAX_ITERATION_LIMIT) {
-				throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT + ".");
+				throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT
+				        + ".");
 			}
 
 			this.iteratorBatchLimit = iteratorLimit;
@@ -258,26 +334,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 			return next;
 		}
 
-		protected ObjectifyQueryRequestBuilder<T> newQuery() {
-			return ObjectifyQueryIterableFactoryImpl.this.queryBuilderFactory.makeQuery(this.parameters);
-		}
-
-		private QueryResultIterator<T> continueQuery() {
-			ObjectifyQueryRequestBuilder<T> query = this.newQuery();
-			ObjectifyQueryRequestOptionsImpl options = new ObjectifyQueryRequestOptionsImpl();
-			options.setLimit(this.iteratorBatchLimit);
-
-			if (this.iteratorCursor != null) {
-				options.setQueryCursor(this.iteratorCursor);
-			} else if (this.startCursor != null) {
-				options.setQueryCursor(this.startCursor);
-			}
-
-			query.setOptions(options);
-			ExecutableObjectifyQuery<T> executable = query.buildExecutableQuery();
-			QueryResultIterable<T> iterable = executable.queryModelsIterable();
-			return iterable.iterator();
-		}
+		protected abstract QueryResultIterator<T> continueQuery();
 
 		private QueryResultIterator<T> getNextIterator() {
 			this.iteratorCursor = this.iterator.getCursor();
@@ -297,13 +354,16 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 		}
 
 		@Override
-        public Cursor getStartCursor() {
+		public Cursor getStartCursor() {
 			return this.startCursor;
 		}
 
+		public Cursor getIteratorCursor() {
+			return this.iteratorCursor;
+		}
 
 		@Override
-        public Cursor getCurrentCursor() {
+		public Cursor getCurrentCursor() {
 			Cursor cursor = null;
 
 			if (this.iterator != null) {
@@ -314,7 +374,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 		}
 
 		@Override
-        public Cursor getEndCursor() {
+		public Cursor getEndCursor() {
 			Cursor cursor = null;
 
 			if (this.iterator != null) {
