@@ -8,7 +8,7 @@ import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResu
 import com.google.common.base.Joiner;
 
 /**
- * Used for encoding and decoding a string for a {@link QueryFieldParameter}.
+ * Used for encoding and decoding a string for a {@link AbstractQueryFieldParameter}.
  *
  * @author dereekb
  *

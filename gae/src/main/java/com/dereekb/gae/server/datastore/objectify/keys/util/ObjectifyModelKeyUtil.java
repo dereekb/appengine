@@ -54,7 +54,49 @@ public class ObjectifyModelKeyUtil<T> {
 		return key;
 	}
 
+	public Key<T> keyFromString(ModelKeyType keyType,
+	                            String string) throws IllegalArgumentException {
+		Key<T> key;
+
+		switch (keyType) {
+			case NAME:
+				key = Key.create(this.type, string);
+				break;
+			case NUMBER:
+				try {
+					Long longId = new Long(string);
+					key = Key.create(this.type, longId);
+				} catch (Exception e) {
+					throw new IllegalArgumentException(e);
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported key type.");
+		}
+
+		return key;
+	}
+
 	// MARK: Static
+	public static <T> String readKeyString(ModelKeyType keyType,
+	                                       Key<T> key) throws IllegalArgumentException {
+		String id;
+
+		switch (keyType) {
+			case NAME:
+				id = key.getName();
+				break;
+			case NUMBER:
+				Long longId = key.getId();
+				id = longId.toString();
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported key type.");
+		}
+
+		return id;
+	}
+
 	public static <T> ObjectifyModelKeyUtil<T> make(Class<T> type) {
 		return new ObjectifyModelKeyUtil<T>(type);
 	}

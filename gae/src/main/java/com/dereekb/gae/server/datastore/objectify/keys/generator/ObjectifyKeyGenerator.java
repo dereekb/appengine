@@ -18,6 +18,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class ObjectifyKeyGenerator<T> extends AbstractGenerator<Key<T>> {
 

@@ -19,26 +19,27 @@ import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQuer
  * @author dereekb
  *
  */
-public abstract class QueryFieldParameter<T>
+public abstract class AbstractQueryFieldParameter<T>
         implements ObjectifyQueryRequestLimitedConfigurer, ConfigurableQueryParameter {
 
 	private String field;
 	private ObjectifyQueryConditionOperator operator;
-	private T value;
+	protected T value;
 
 	private ObjectifyQueryResultsOrdering ordering;
 
-	public QueryFieldParameter() {}
+	public AbstractQueryFieldParameter() {}
 
-	public QueryFieldParameter(String parameterString) throws IllegalArgumentException {
+	public AbstractQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+		this.setField(field);
 		this.setParameterString(parameterString);
 	}
 
-	public QueryFieldParameter(String field, T value) {
+	public AbstractQueryFieldParameter(String field, T value) {
 		this.setEqualityFilter(field, value);
 	}
 
-	public QueryFieldParameter(String field, ObjectifyQueryConditionOperator operator, T value) {
+	public AbstractQueryFieldParameter(String field, ObjectifyQueryConditionOperator operator, T value) {
 		this.setFilter(field, operator, value);
 	}
 
@@ -60,12 +61,12 @@ public abstract class QueryFieldParameter<T>
 		return this.value;
 	}
 
-	public QueryFieldParameter<T> setValue(T value) {
+	public AbstractQueryFieldParameter<T> setValue(T value) {
 		this.value = value;
 		return this;
 	}
 
-	public QueryFieldParameter<T> setOrdering(ObjectifyQueryResultsOrdering ordering) {
+	public AbstractQueryFieldParameter<T> setOrdering(ObjectifyQueryResultsOrdering ordering) {
 		this.ordering = ordering;
 		return this;
 	}
@@ -74,7 +75,7 @@ public abstract class QueryFieldParameter<T>
 		return this.field;
 	}
 
-	public QueryFieldParameter<T> setField(String field) {
+	public AbstractQueryFieldParameter<T> setField(String field) {
 		if (field == null || field.isEmpty()) {
 			throw new IllegalArgumentException("Field cannot be a null or empty string.");
 		}
@@ -84,12 +85,12 @@ public abstract class QueryFieldParameter<T>
 	}
 
 	// Filter
-	public QueryFieldParameter<T> setEqualityFilter(String field,
+	public AbstractQueryFieldParameter<T> setEqualityFilter(String field,
 	                                                T value) {
 		return this.setFilter(field, ObjectifyQueryConditionOperator.Equal, value);
 	}
 
-	public QueryFieldParameter<T> setFilter(String field,
+	public AbstractQueryFieldParameter<T> setFilter(String field,
 	                                        ObjectifyQueryConditionOperator operator,
 	                                        T value) {
 		this.setField(field);
@@ -147,7 +148,7 @@ public abstract class QueryFieldParameter<T>
 
 	@Override
 	public String toString() {
-		return "QueryFieldParameter [field=" + this.field + ", operator=" + this.operator + ", value=" + this.value
+		return "AbstractQueryFieldParameter [field=" + this.field + ", operator=" + this.operator + ", value=" + this.value
 		        + ", ordering=" + this.ordering + "]";
 	}
 
