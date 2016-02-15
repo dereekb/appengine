@@ -3,13 +3,15 @@ package com.dereekb.gae.server.datastore.objectify.query.builder.impl;
 import java.util.Date;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.QueryFieldParameter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryConditionOperator;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
 
 /**
- * {@link QueryFieldFilterConfigurer} extension that allows ordering query
+ * {@link QueryFieldParameter} extension that allows ordering query
  * results by date.
  * <p>
  * Can also provide a date and operator to do two searches.
@@ -17,9 +19,11 @@ import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQuer
  * @author dereekb
  *
  */
-public class QueryRecentDateFilter extends QueryFieldFilterConfigurer {
+public class QueryRecentDateFilter implements ObjectifyQueryRequestLimitedConfigurer {
 
 	public static final String DEFAULT_DATE_FIELD = "date";
+
+	private QueryFieldParameter<?> parameter;
 
 	private String dateField;
 	private ObjectifyQueryResultsOrdering dateOrdering = ObjectifyQueryResultsOrdering.Descending;
@@ -36,10 +40,22 @@ public class QueryRecentDateFilter extends QueryFieldFilterConfigurer {
 		this.setDateField(dateField);
 	}
 
-	public static QueryRecentDateFilter recentFieldEqualitySearch(String field, Object value) {
+	public QueryRecentDateFilter(QueryFieldParameter<?> parameter) {
+		this.parameter = parameter;
+	}
+
+	public static QueryRecentDateFilter recentFieldEqualitySearch(QueryFieldParameter<?> parameter) {
 		QueryRecentDateFilter filter = new QueryRecentDateFilter();
-		filter.setEqualityFilter(field, value);
+		filter.setParameter(parameter);
 		return filter;
+	}
+
+	public QueryFieldParameter<?> getParameter() {
+		return this.parameter;
+	}
+
+	public void setParameter(QueryFieldParameter<?> parameter) {
+		this.parameter = parameter;
 	}
 
 	public String getDateField() {
@@ -81,7 +97,6 @@ public class QueryRecentDateFilter extends QueryFieldFilterConfigurer {
 	// MARK: ObjectifyQueryRequestConfigurer
 	@Override
 	public void configure(ObjectifyQueryRequestLimitedBuilder request) {
-
 		if (this.dateField != null && this.dateOperator != null) {
 			ObjectifyConditionQueryFilter filter = new ObjectifyConditionQueryFilter(this.dateField, this.dateOperator,
 			        this.date);
@@ -94,7 +109,7 @@ public class QueryRecentDateFilter extends QueryFieldFilterConfigurer {
 			}
 		}
 
-		super.configure(request);
+		this.parameter.configure(request);
 	}
 
 }
