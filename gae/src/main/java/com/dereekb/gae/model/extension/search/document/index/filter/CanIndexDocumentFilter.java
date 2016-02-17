@@ -10,12 +10,28 @@ import com.dereekb.gae.utilities.function.staged.filter.StagedFunctionFilterDele
  * Used to filter elements to see if they can be indexed or not.
  *
  * @author dereekb
+ *
+ * @param <T>
+ *            model type
  */
 public class CanIndexDocumentFilter<T>
         implements StagedFunctionFilter<T> {
 
 	private CanIndexDocumentFilterDelegate<T> delegate;
 
+	public CanIndexDocumentFilter(CanIndexDocumentFilterDelegate<T> delegate) {
+		this.delegate = delegate;
+	}
+
+	public CanIndexDocumentFilterDelegate<T> getDelegate() {
+		return this.delegate;
+	}
+
+	public void setDelegate(CanIndexDocumentFilterDelegate<T> delegate) {
+		this.delegate = delegate;
+	}
+
+	// StagedFunctionFilter
 	@Override
 	public <W> FilterResults<W> filterObjectsWithDelegate(StagedFunctionStage stage,
 	                                                      Iterable<W> sources,
@@ -32,14 +48,6 @@ public class CanIndexDocumentFilter<T>
 
 		return results;
 
-	}
-
-	public CanIndexDocumentFilterDelegate<T> getDelegate() {
-		return this.delegate;
-	}
-
-	public void setDelegate(CanIndexDocumentFilterDelegate<T> delegate) {
-		this.delegate = delegate;
 	}
 
 }

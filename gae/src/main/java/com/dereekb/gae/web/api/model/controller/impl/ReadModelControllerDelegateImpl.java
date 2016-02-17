@@ -4,12 +4,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.model.extension.inclusion.service.ConfiguredInclusionService;
 import com.dereekb.gae.model.extension.inclusion.service.InclusionResponse;
+import com.dereekb.gae.model.extension.inclusion.service.InclusionService;
+import com.dereekb.gae.model.extension.inclusion.service.impl.InclusionRequestImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.web.api.model.controller.ReadModelControllerDelegate;
 
@@ -23,13 +25,13 @@ public class ReadModelControllerDelegateImpl<T extends UniqueModel>
         implements ReadModelControllerDelegate<T> {
 
 	private ReadService<T> readService;
-	private ConfiguredInclusionService<T> inclusionService;
+	private InclusionService<T> inclusionService;
 
 	public ReadModelControllerDelegateImpl(ReadService<T> readService) {
 		this(readService, null);
 	}
 
-	public ReadModelControllerDelegateImpl(ReadService<T> readService, ConfiguredInclusionService<T> inclusionService) {
+	public ReadModelControllerDelegateImpl(ReadService<T> readService, InclusionService<T> inclusionService) {
 		this.readService = readService;
 		this.inclusionService = inclusionService;
 	}
@@ -42,34 +44,35 @@ public class ReadModelControllerDelegateImpl<T extends UniqueModel>
 		this.readService = readService;
 	}
 
-	public ConfiguredInclusionService<T> getInclusionService() {
+	public InclusionService<T> getInclusionService() {
 		return this.inclusionService;
 	}
 
-	public void setInclusionService(ConfiguredInclusionService<T> inclusionService) {
+	public void setInclusionService(InclusionService<T> inclusionService) {
 		this.inclusionService = inclusionService;
 	}
 
 	@Override
-	public ReadResponse<T> read(ReadRequest<T> readRequest) {
+	public ReadResponse<T> read(ReadRequest readRequest) {
 		return this.readService.read(readRequest);
 	}
 
 	@Override
-	public Map<String, Object> readIncluded(Collection<T> models) {
+    public Map<String, Object> readIncluded(Collection<T> models,
+	                                        Set<String> relatedFilter) {
 		Map<String, Object> included;
 
-		if (this.inclusionService != null) {
-			InclusionResponse<T> response = this.inclusionService.loadRelated(models);
+		if (this.inclusionService != null && models.isEmpty() == false) {
+			InclusionRequestImpl<T> request = new InclusionRequestImpl<T>(models, relatedFilter);
+			InclusionResponse<T> response = this.inclusionService.loadRelated(request);
 
-			Map<String, Collection<? extends UniqueModel>> responseMap = response.getRelated();
+			Map<String, Collection<? extends UniqueModel>> responseMap = response.getAllRelated();
 			included = new HashMap<String, Object>();
 
 			for (String type : responseMap.keySet()) {
 				Collection<? extends UniqueModel> related = responseMap.get(type);
 				included.put(type, related);
 			}
-
 		} else {
 			included = Collections.emptyMap();
 		}

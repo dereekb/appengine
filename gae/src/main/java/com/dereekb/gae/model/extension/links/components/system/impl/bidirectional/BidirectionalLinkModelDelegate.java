@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.links.components.system.impl.bidirection
 import java.util.List;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -22,11 +23,21 @@ public interface BidirectionalLinkModelDelegate {
 	 * @param keys
 	 *            {@link ModelKey} of reverse elements.
 	 * @return {@link List} of {@link LinkModel} corresponding to the input
-	 *         keys. If the type is only one-directional, then an empty
-	 *         collection is returned.
+	 *         keys. If the models are unavailable, they will be excluded from
+	 *         the list. Additionally, if the type is only one-directional, an
+	 *         empty collection is returned.
 	 */
 	public List<LinkModel> getReverseLinkModels(LinkInfo info,
 	                                            List<ModelKey> keys);
+
+	/**
+	 * Checks whether or not the link described is bidirectional or not.
+	 *
+	 * @param link
+	 *            {@link LinkInfo}. Never {@code null}.
+	 * @return {@code true} if it is bidirectional.
+	 */
+	public boolean isBidirectional(LinkInfo link);
 
 	/**
 	 * Gets the reverse name for a link.
@@ -36,8 +47,11 @@ public interface BidirectionalLinkModelDelegate {
 	 *
 	 * @param info
 	 *            {@link LinkInfo} of the requesting link.
-	 * @return Reverse name. Null if the name is unsure.
+	 * @return Reverse name. Never {@code null}.
+	 *
+	 * @throws NoReverseLinksException
+	 *             if there is no reverse link.
 	 */
-	public String getReverseLinkName(LinkInfo info);
+	public String getReverseLinkName(LinkInfo info) throws NoReverseLinksException;
 
 }

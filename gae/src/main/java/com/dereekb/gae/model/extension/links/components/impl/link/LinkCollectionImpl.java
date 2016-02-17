@@ -29,6 +29,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  * @param <T>
+ *            reference type
  */
 public class LinkCollectionImpl<T>
         implements Link {

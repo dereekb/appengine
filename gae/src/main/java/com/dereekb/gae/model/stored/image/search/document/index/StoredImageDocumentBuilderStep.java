@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.stored.image.search.document.index;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDerivativeDocumentBuilderStep;
@@ -9,7 +9,6 @@ import com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDerivat
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.StoredImageType;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * Implementation of {@link StagedDocumentBuilderStep} for adding
@@ -21,28 +20,29 @@ import com.google.appengine.api.search.Field;
  *
  * @author dereekb
  */
-public final class StoredImageDocumentBuilderStep
+public class StoredImageDocumentBuilderStep
         implements StagedDocumentBuilderStep<StoredImage> {
 
+	public static final String NAME_FIELD = "name";
+	public static final String SUMMARY_FIELD = "summary";
+	public static final String TAGS_FIELD = "tags";
+	public static final String TYPE_FIELD = "type";
+
 	@Override
-	public void updateBuilder(StoredImage model,
-	                          Builder builder) {
+	public void performStep(StoredImage model,
+	                        Builder builder) {
 
 		String name = model.getName();
-		Field.Builder nameField = SearchDocumentBuilderUtility.textField("name", name);
-		builder.addField(nameField);
+		SearchDocumentBuilderUtility.addText(NAME_FIELD, name, builder);
 
 		String summary = model.getSummary();
-		Field.Builder summaryField = SearchDocumentBuilderUtility.textField("summary", summary);
-		builder.addField(summaryField);
+		SearchDocumentBuilderUtility.addText(SUMMARY_FIELD, summary, builder);
 
 		String tags = model.getTags();
-		Field.Builder tagsField = SearchDocumentBuilderUtility.textField("tags", tags);
-		builder.addField(tagsField);
+		SearchDocumentBuilderUtility.addText(TAGS_FIELD, tags, builder);
 
 		StoredImageType type = model.getType();
-		Field.Builder typeField = SearchDocumentBuilderUtility.atomField("type", type.getTypeName());
-		builder.addField(typeField);
+		SearchDocumentBuilderUtility.addAtom(TYPE_FIELD, type.getTypeName(), builder);
 
 	}
 

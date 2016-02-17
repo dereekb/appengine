@@ -4,36 +4,45 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
+import com.dereekb.gae.model.crud.services.request.impl.DeleteRequestImpl;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelImplDelegate;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImpl;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImplDelegate;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.components.system.exception.UnknownReverseLinkException;
 import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystemEntry;
+import com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType;
+import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceEntry;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
 /**
  * Abstract implementation of different {@link LinkSystem} related elements.
+ * <p>
+ * The reverse link names map is case-insensitive.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
-        implements LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>, BidirectionalLinkSystemEntry {
+        implements LinkDeleterServiceEntry, LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>,
+        BidirectionalLinkSystemEntry {
 
 	/**
 	 * Delegate interface for {@link AbstractModelLinkSystemEntry} for
@@ -72,31 +81,47 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 
 	protected String modelType;
 
-	protected ReadService<T> service;
+	protected ReadService<T> readService;
 	protected ConfiguredSetter<T> setter;
 
 	protected Reviewer<T> reviewer;
 	protected Validator<T> validator;
 
+	protected DeleteService<T> deleteService;
+	protected Map<String, LinkDeleterChangeType> deleteChangesMap;
+
 	/**
 	 * Names for the reverse element.
-	 *
+	 * <p>
 	 * Keyed by this element's link names to the opposite link name.
-	 *
+	 * <p>
 	 * For example, if this has a link named "parent", the value "child" will be
 	 * keyed to "parent".
 	 */
-	protected Map<String, String> reverseLinkNames = new HashMap<String, String>();
+	private Map<String, String> reverseLinkNames;
 
 	public AbstractModelLinkSystemEntry(String modelType,
-	        ReadService<T> service,
+	        ReadService<T> readService,
+	        DeleteService<T> deleteService,
 	        ConfiguredSetter<T> setter) {
-		this.modelType = modelType;
-		this.service = service;
-		this.setter = setter;
+		this(modelType, readService, deleteService, setter, null);
 	}
 
-	public String getModelType() {
+	public AbstractModelLinkSystemEntry(String modelType,
+            ReadService<T> readService,
+	        DeleteService<T> deleteService,
+            ConfiguredSetter<T> setter,
+            Map<String, LinkDeleterChangeType> deleteChangesMap) {
+		this.setModelType(modelType);
+		this.setReadService(readService);
+		this.setSetter(setter);
+		this.setDeleteService(deleteService);
+		this.setDeleteChangesMap(deleteChangesMap);
+		this.setReverseLinkNames(null);
+    }
+
+	@Override
+    public String getModelType() {
 		return this.modelType;
 	}
 
@@ -105,11 +130,11 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	}
 
 	public ReadService<T> getService() {
-		return this.service;
+		return this.readService;
 	}
 
-	public void setService(ReadService<T> service) {
-		this.service = service;
+	public void setReadService(ReadService<T> service) {
+		this.readService = service;
 	}
 
 	public ConfiguredSetter<T> getSetter() {
@@ -120,19 +145,23 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 		this.setter = setter;
 	}
 
-	public Map<String, String> getReverseLinkNames() {
+	public final Map<String, String> getReverseLinkNames() {
 		return this.reverseLinkNames;
 	}
 
-	public void setReverseLinkNames(Map<String, String> reverseLinkNames) {
-		this.reverseLinkNames = reverseLinkNames;
+	public final void setReverseLinkNames(Map<String, String> reverseLinkNames) {
+		this.reverseLinkNames = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+
+		if (reverseLinkNames != null) {
+			this.reverseLinkNames.putAll(reverseLinkNames);
+		}
 	}
 
 	@Override
     public ReadResponse<T> readModels(Collection<ModelKey> keys) {
-		ReadRequest<T> request = new KeyReadRequest<T>(keys);
+		ReadRequest request = new KeyReadRequest(keys);
 		request.getOptions().setAtomic(false);
-		return this.service.read(request);
+		return this.readService.read(request);
     }
 
 	@Override
@@ -144,6 +173,34 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
     public String getLinkModelType() {
 		return this.modelType;
     }
+
+	public DeleteService<T> getDeleteService() {
+		return this.deleteService;
+	}
+
+	public void setDeleteService(DeleteService<T> deleteService) {
+		this.deleteService = deleteService;
+	}
+
+	@Override
+	public Map<String, LinkDeleterChangeType> getDeleteChangesMap() {
+		return this.deleteChangesMap;
+	}
+
+	public void setDeleteChangesMap(Map<String, LinkDeleterChangeType> deleteChangesMap) {
+		if (deleteChangesMap == null) {
+			deleteChangesMap = new HashMap<String, LinkDeleterChangeType>();
+		}
+
+		this.deleteChangesMap = deleteChangesMap;
+	}
+
+	// LinkDeleterServiceEntry
+	@Override
+	public void deleteModels(Collection<ModelKey> keys) {
+		DeleteRequestImpl request = new DeleteRequestImpl(keys);
+		this.deleteService.delete(request);
+	}
 
 	// LinkModelImplDelegate
 	@Override
@@ -191,13 +248,12 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	}
 
 	@Override
-	public String getReverseLinkName(LinkInfo info) throws UnknownReverseLinkException {
+	public String getReverseLinkName(LinkInfo info) throws NoReverseLinksException {
 		String linkName = info.getLinkName();
-
 		String reverseLinkName = this.reverseLinkNames.get(linkName);
 
 		if (reverseLinkName == null) {
-			throw new UnknownReverseLinkException(info);
+			throw new NoReverseLinksException();
 		}
 
 		return reverseLinkName;

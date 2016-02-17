@@ -6,7 +6,12 @@ import org.junit.Test;
 import com.dereekb.gae.model.general.time.Hour;
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeAmPm;
+import com.dereekb.gae.model.general.time.TimeSpan;
+import com.dereekb.gae.model.general.time.impl.TimeImpl;
+import com.dereekb.gae.model.general.time.impl.TimeSpanImpl;
+import com.dereekb.gae.model.general.time.util.TimeStringConverter;
 import com.dereekb.gae.model.general.time.util.TimeValueConverter;
+import com.dereekb.gae.model.general.time.util.impl.TimeStringConverterImpl;
 import com.dereekb.gae.model.general.time.util.impl.TimeValueConverterImpl;
 
 
@@ -18,6 +23,7 @@ import com.dereekb.gae.model.general.time.util.impl.TimeValueConverterImpl;
  */
 public class TimeConverterImplTest {
 
+	private final static TimeStringConverter stringConverter = new TimeStringConverterImpl();
 	private final static TimeValueConverterImpl valueConverter = new TimeValueConverterImpl();
 
 	@Test
@@ -56,6 +62,14 @@ public class TimeConverterImplTest {
 		Assert.assertTrue(hour.getVisualHour().equals(expectedVisualHour));
 		Assert.assertTrue(hour.getDayHour().equals(expectedDayHour));
 		Assert.assertTrue(time.getMinutes().equals(expectedMinute));
+	}
+
+	@Test
+	public void testStringConversion() {
+		TimeSpan timeSpan = TimeSpanImpl.toMidnight(TimeImpl.noon());
+		String string = stringConverter.convertToString(timeSpan);
+
+		Assert.assertNotNull(string);
 	}
 
 }

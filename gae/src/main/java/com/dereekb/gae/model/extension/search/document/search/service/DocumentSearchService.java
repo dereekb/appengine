@@ -1,18 +1,23 @@
 package com.dereekb.gae.model.extension.search.document.search.service;
 
-import java.util.List;
-
+import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
 import com.google.appengine.api.search.ScoredDocument;
 
 /**
- * Low-level service for reading {@link ScoredDocument}s using a custom query.
+ * Search indexService.
  *
  * @author dereekb
- *
- * @param <Q>
  */
-public interface DocumentSearchService<Q> {
+public interface DocumentSearchService {
 
-	public List<ScoredDocument> search(Q query);
+	/**
+	 * Searches for documents that match.
+	 *
+	 * @param request
+	 *            {@link DocumentSearchRequest}. Never {@code null}.
+	 * @return {@link SearchDocumentQueryResponse} of {@link ScoredDocument}
+	 *         elements.
+	 */
+	public SearchDocumentQueryResponse search(DocumentSearchRequest request);
 
 }

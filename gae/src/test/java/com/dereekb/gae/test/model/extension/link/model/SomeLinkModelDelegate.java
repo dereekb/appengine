@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSe
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 
 
 public class SomeLinkModelDelegate extends AbstractTestLinkSystemDelegate<SomeLinkModel> {
@@ -41,7 +42,7 @@ public class SomeLinkModelDelegate extends AbstractTestLinkSystemDelegate<SomeLi
 		String differentLinkTargetType = DifferentLinkModel.MODEL_TYPE;
 		ModelKeyType differentLinkKeyType = ModelKeyType.NAME;
 		Set<String> differentLinkKeys = model.getDifferentModelLinks();
-		StringModelKeyConverter differentLinkTypeConverter = new StringModelKeyConverter();
+		StringModelKeyConverter differentLinkTypeConverter = StringModelKeyConverterImpl.CONVERTER;
 
 		LinkInfoImpl differentLinkInfo = new LinkInfoImpl(differentLinkModelLinkName, model.getModelKey(),
 		        differentLinkTargetType, differentLinkKeyType);

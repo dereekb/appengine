@@ -8,8 +8,8 @@ package com.dereekb.gae.model.stored.image;
 public enum StoredImageType {
 
 	/**
-	 * An normal image. <br>
-	 * <br>
+	 * An normal image.
+	 * <p>
 	 * Aspect Ratio: Unspecified <br>
 	 * Min Size: 256x256 <br>
 	 * Max Size: 2048x1536
@@ -17,8 +17,8 @@ public enum StoredImageType {
 	IMAGE(0, "image"),
 
 	/**
-	 * Icon image. <br>
-	 * <br>
+	 * Icon image.
+	 * <p>
 	 *
 	 * Aspect Ratio: 1:1 <br>
 	 * Min: 128x128 <br>
@@ -27,14 +27,14 @@ public enum StoredImageType {
 	ICON(1, "icon"),
 
 	/**
-	 * Image restricted to the 16:9 ratio and is atleast 720p. <br>
-	 * <br>
+	 * Image restricted to the 16:9 ratio and is atleast 720p.
+	 * <p>
 	 *
 	 * Aspect Ratio: 16:9 <br>
 	 * Min: 1280×720 <br>
 	 * Max: 1920×1080
 	 */
-	SIXTEEN_NINE(2, "169");
+	HD_IMAGE(2, "hd");
 
 	private final int type;
 	private final String abbreviation;
@@ -64,7 +64,7 @@ public enum StoredImageType {
 				imageType = StoredImageType.ICON;
 				break;
 			case 2:
-				imageType = StoredImageType.SIXTEEN_NINE;
+				imageType = StoredImageType.HD_IMAGE;
 				break;
 			default:
 				imageType = StoredImageType.IMAGE;
@@ -73,4 +73,5 @@ public enum StoredImageType {
 
 		return imageType;
 	}
+
 }

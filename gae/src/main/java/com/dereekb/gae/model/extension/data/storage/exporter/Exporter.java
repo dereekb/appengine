@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.data.storage.exporter;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.storage.file.StorageFile;
+import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
 
 /**
  * Interface for exporting objects.
@@ -22,6 +22,6 @@ public interface Exporter<T> {
 	 *            Output File
 	 */
 	public void exportObjects(Collection<T> objects,
-	                          StorageFile file) throws ExportException;
+	                          StorableFileImpl file) throws ExportException;
 
 }

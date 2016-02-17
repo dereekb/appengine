@@ -10,12 +10,12 @@ public interface Time
         extends Comparable<Time> {
 
 	public final static Integer MINUTES_IN_HOUR = 60;
-	public final static Integer MAX_TIME = 60 * 60 * 24; // Minutes in the day
+	public final static Integer MAX_TIME = 24 * 60; // Minutes in the day
 
 	/**
 	 * Returns the hours for this time.
 	 *
-	 * @return {@link Hour} instance. Never null.
+	 * @return {@link Hour} instance. Never {@code null}.
 	 */
 	public Hour getHour();
 
@@ -23,16 +23,16 @@ public interface Time
 	 * Sets the new hour value.
 	 *
 	 * @param hour
-	 *            New hour to set it to. Never null.
+	 *            New hour to set it to. Never {@code null}.
 	 * @throws IllegalArgumentException
-	 *             Thrown if <code>hour</code> is null or invalid.
+	 *             Thrown if {@code hour} is {@code null} or invalid.
 	 */
 	public void setHour(Hour hour) throws IllegalArgumentException;
 
 	/**
 	 * Returns the minute for this time. Ranges from 0-59.
 	 *
-	 * @return {@link Integer} between 0-59. Never null.
+	 * @return {@link Integer} between 0-59. Never {@code null}.
 	 */
 	public Integer getMinutes();
 
@@ -42,8 +42,15 @@ public interface Time
 	 * @param minutes
 	 *            {@link Integer} from 0-59.
 	 * @throws IllegalArgumentException
-	 *             Thrown if <code>minute</code> is not between 0-59.
+	 *             Thrown if {@code minute} is not between 0-59.
 	 */
 	public void setMinutes(Integer minutes) throws IllegalArgumentException;
+
+	/**
+	 * @param time
+	 *            {@link Time}. Never {@code null}.
+	 * @return {@link true} if the {@code Time} values are the same.
+	 */
+	public boolean equals(Time time);
 
 }

@@ -15,7 +15,7 @@ public final class ServiceWebsiteImpl
         implements Website {
 
 	/**
-	 * Type of the service. Cannot be changed once set, to avoid accidental data
+	 * Type of the indexService. Cannot be changed once set, to avoid accidental data
 	 * contamination.
 	 */
 	private final WebsiteAddressType type;
@@ -41,7 +41,7 @@ public final class ServiceWebsiteImpl
 	 * Constructor for {@link ServiceWebsiteImpl} with type
 	 * {@link WebsiteAddressType#SERVICE}.
 	 *
-	 * @param service
+	 * @param indexService
 	 * @param urlData
 	 */
 	public ServiceWebsiteImpl(String service, String urlData) throws IllegalArgumentException {
@@ -134,7 +134,7 @@ public final class ServiceWebsiteImpl
 
 	@Override
 	public String toString() {
-		return "ServiceWebsiteImpl [type=" + this.type + ", service=" + this.service + ", title=" + this.title
+		return "ServiceWebsiteImpl [type=" + this.type + ", indexService=" + this.service + ", title=" + this.title
 		        + ", urlData=" + this.urlData + "]";
 	}
 

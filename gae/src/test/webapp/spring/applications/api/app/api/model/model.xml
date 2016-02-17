@@ -9,6 +9,9 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<import resource="geoplace/geoplace.xml" />
+	<import resource="geoplace.xml" />
+	<import resource="storedblob.xml" />
+	<import resource="storedimage.xml" />
+	<import resource="storedimageset.xml" />
 
 </beans>

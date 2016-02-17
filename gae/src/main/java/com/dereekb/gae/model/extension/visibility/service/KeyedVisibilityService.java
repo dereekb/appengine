@@ -5,7 +5,7 @@ import com.dereekb.gae.model.extension.visibility.VisibilityState;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * Interface that allows changing the visibility of models through this service.
+ * Interface that allows changing the visibility of models through this indexService.
  *
  * @author dereekb
  *

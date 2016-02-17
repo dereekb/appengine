@@ -22,8 +22,9 @@ public interface Link
 	public LinkData getLinkData();
 
 	/**
-	 * Adds a new relation to this link. When complete, this link should contain
-	 * the relation.
+	 * Adds a new relation to this link.
+	 * <p>
+	 * When complete, this link should contain the relation.
 	 *
 	 * @param change
 	 *            {@link Relation} to add. Never null.

@@ -1,24 +1,33 @@
 package com.dereekb.gae.model.extension.inclusion.retriever;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * Wraps input for a {@link InclusionRetriever}.
+ * Input for a {@link InclusionRetriever}.
  *
  * @author dereekb
+ *
  */
 public interface InclusionRetrieverInput {
 
 	/**
-	 * Returns a {@link Map} containing {@link Collection} instances of
-	 * {@link ModelKey} elements corresponding to each element.
+	 * Returns all target types requested by this input.
 	 *
-	 * @return a map of keys corresponding to the related elements to load,
-	 *         keyed by string.
+	 * @return {@link Set} containing all requested types. Never {@code null}.
 	 */
-	public Map<String, Collection<ModelKey>> getTargetsMap();
+	public Set<String> getTargetTypes();
+
+	/**
+	 * Returns all keys matching the input target type. The type should be
+	 * included in {@link #getTargetTypes()}.
+	 *
+	 * @param type
+	 *            target type value. Never {@code null}.
+	 * @return {@link Set} containing all requested keys.
+	 */
+	public List<ModelKey> getTargetKeysForType(String type);
 
 }

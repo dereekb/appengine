@@ -1,34 +1,30 @@
 package com.dereekb.gae.web.api.shared.response;
 
+
 /**
- * Wraps response data with a type.
+ * Data that is returned inside an {@link ApiResponse}.
+ * <p>
+ * All data will potentially reach outside sources, so implementations should
+ * keep this in mind.
+ * </p>
  *
  * @author dereekb
+ *
  */
-public final class ApiResponseData {
+public interface ApiResponseData {
 
-	private String type;
-	private Object data;
+	/**
+	 * Returns the type of the response data.
+	 *
+	 * @return {@link String} of the response data's type. Never {@code null}.
+	 */
+	public String getResponseDataType();
 
-	public ApiResponseData(String type, Object data) {
-		this.type = type;
-		this.data = data;
-	}
-
-	public String getType() {
-		return this.type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public Object getData() {
-		return this.data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
+	/**
+	 * Returns API response data ready for serialization.
+	 *
+	 * @return {@link Object} of the response data. Never {@code null}.
+	 */
+	public Object getResponseData();
 
 }

@@ -3,7 +3,8 @@ package com.dereekb.gae.model.crud.services.request.impl;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
-import com.dereekb.gae.model.crud.services.request.UpdateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.UpdateRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
@@ -56,7 +57,7 @@ public final class UpdateRequestImpl<T extends UniqueModel>
 
 	public void setOptions(UpdateRequestOptions options) {
 		if (this.options == null) {
-			options = new UpdateRequestOptions();
+			options = new UpdateRequestOptionsImpl();
 		}
 
 		this.options = options;

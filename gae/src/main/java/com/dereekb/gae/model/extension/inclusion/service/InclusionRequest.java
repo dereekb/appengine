@@ -15,11 +15,12 @@ public interface InclusionRequest<T> {
 
 	/**
 	 * Optional filter of the types that should be retrieved.
+	 * <p>
+	 * This should return a {@code null} {@link Set} instead of an empty one.
 	 *
-	 * @return {@link Set} of elements to retrieve. Null if all types should be
-	 *         retrieved. The {@link InclusionService} may choose to filter out
-	 *         more, so types requested through this filter are not guaranteed
-	 *         to be in the final.
+	 * @return {@link Set} of elements to retrieve. The {@link InclusionService}
+	 *         may choose to filter out more, so types requested through this
+	 *         filter are not guaranteed to be in the final. Never empty.
 	 */
 	public Set<String> getTypeFilter();
 

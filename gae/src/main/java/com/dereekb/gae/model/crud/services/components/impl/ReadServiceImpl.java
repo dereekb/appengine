@@ -1,42 +1,65 @@
 package com.dereekb.gae.model.crud.services.components.impl;
 
+import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.model.crud.function.ReadFunction;
-import com.dereekb.gae.model.crud.function.pairs.ReadPair;
+import com.dereekb.gae.model.crud.pairs.ReadPair;
+import com.dereekb.gae.model.crud.services.components.AtomicReadService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
+import com.dereekb.gae.model.crud.task.ReadTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
-import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
- * Default implementation of {@link ReadService} using a {@link Factory} for
- * {@link ReadFunction}.
+ * Default implementation of {@link ReadService} that uses a
+ * {@link IterableTask} with {@link ReadPair} to perform a read.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class ReadServiceImpl<T extends UniqueModel>
-        implements ReadService<T> {
+        implements AtomicReadService<T> {
 
-	private final Factory<ReadFunction<T>> factory;
+	private ReadTask<T> readTask;
 
-	public ReadServiceImpl(Factory<ReadFunction<T>> factory) {
-		this.factory = factory;
+	public ReadServiceImpl(ReadTask<T> readTask) {
+		this.readTask = readTask;
 	}
 
+	public ReadTask<T> getReadTask() {
+		return this.readTask;
+	}
+
+	public void setReadTask(ReadTask<T> readTask) {
+		this.readTask = readTask;
+	}
+
+	// MARK: AtomicReadService
 	@Override
-	public ReadResponse<T> read(ReadRequest<T> request) throws AtomicOperationException {
+	public Collection<T> read(Collection<ModelKey> keys) throws AtomicOperationException {
+		ReadRequestOptions options = new ReadRequestOptionsImpl(true);
+		ReadRequest request = new KeyReadRequest(keys, options);
+		ReadResponse<T> response = this.read(request);
+		return response.getModels();
+	}
+
+	// MARK: ReadService
+	@Override
+	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 		ReadResponse<T> readResponse = null;
 
 		Iterable<ModelKey> keys = request.getModelKeys();
@@ -44,14 +67,12 @@ public class ReadServiceImpl<T extends UniqueModel>
 
 		// Execute Function
 		List<ReadPair<T>> pairs = ReadPair.createPairsForKeys(keys);
-		ReadFunction<T> function = this.factory.make();
-		function.addObjects(pairs);
 
 		try {
-			function.run();
+			this.readTask.doTask(pairs);
 
 			HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<ReadPair<T>> errorPairs = results.getObjects(FilterResult.FAIL);
+			List<ReadPair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
 			List<ModelKey> errorKeys = ReadPair.getKeys(errorPairs);
 
 			if (errorKeys.size() > 0 && options.isAtomic()) {
@@ -68,6 +89,11 @@ public class ReadServiceImpl<T extends UniqueModel>
 		}
 
 		return readResponse;
+	}
+
+	@Override
+	public String toString() {
+		return "ReadServiceImpl [readTask=" + this.readTask + "]";
 	}
 
 }

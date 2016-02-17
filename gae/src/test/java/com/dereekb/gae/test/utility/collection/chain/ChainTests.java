@@ -5,7 +5,7 @@ import java.util.Iterator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dereekb.gae.utilities.collections.chain.ValuesChain;
+import com.dereekb.gae.utilities.collections.chain.impl.ValuesChain;
 
 public class ChainTests {
 
@@ -23,7 +23,7 @@ public class ChainTests {
 		ValuesChain<String> stringChain = new ValuesChain<String>("a");
 		stringChain.chain("b").chain("c").chain("d").chain("e");
 
-		Iterator<ValuesChain<String>> iterator = stringChain.iterator();
+		Iterator<ValuesChain<String>> iterator = stringChain.chainIterable();
 		ValuesChain<String> first = iterator.next(); // a
 		Assert.assertTrue(first.equals(stringChain));
 
@@ -47,7 +47,7 @@ public class ChainTests {
 		stringChain.chain("b").chain("c").chain("d").chain("e");
 		String temp = "";
 
-		for (ValuesChain<String> string : stringChain) {
+		for (ValuesChain<String> string : stringChain.chainIterable()) {
 			temp += string.getValue();
 		}
 
@@ -59,7 +59,7 @@ public class ChainTests {
 		ValuesChain<String> stringChain = new ValuesChain<String>("a");
 		String temp = "";
 
-		for (ValuesChain<String> string : stringChain) {
+		for (ValuesChain<String> string : stringChain.chainIterable()) {
 			temp += string.getValue();
 		}
 

@@ -9,8 +9,13 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<context:component-scan
+		base-package="com.dereekb.gae.api.controllers.models, com.dereekb.gae.api.model.extension" />
+	<mvc:annotation-driven />
+
 	<import resource="api/api.xml" />
 	<import resource="model/model.xml" />
 	<import resource="server/server.xml" />
+	<import resource="taskqueue/taskqueue.xml" />
 
 </beans>

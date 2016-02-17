@@ -2,12 +2,12 @@ package com.dereekb.gae.model.geo.place.search.document.index;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * Implementation of {@link StagedDocumentBuilderStep} for adding
@@ -18,42 +18,27 @@ import com.google.appengine.api.search.Field;
 public final class GeoPlaceDocumentBuilderStep
         implements StagedDocumentBuilderStep<GeoPlace> {
 
+	public static final String REGION_FIELD = "region";
+
 	@Override
-	public void updateBuilder(GeoPlace model,
-	                          Builder builder) {
-
-		Long identifier = model.getIdentifier();
-		Date date = model.getDate();
-
-		Point point = model.getPoint();
-		boolean isRegion = model.isRegion();
-
-		String descriptorType = model.getDescriptorType();
-		String descriptorId = model.getDescriptorId();
-
-		// Place Identifier
-		Field.Builder identifierField = SearchDocumentBuilderUtility.atomField("id", identifier.toString());
-		builder.addField(identifierField);
-
-		// Creation Date
-		Field.Builder dateField = SearchDocumentBuilderUtility.dateField("date", date);
-		builder.addField(dateField);
+	public void performStep(GeoPlace model,
+	                        Builder builder) {
 
 		// Point Field
-		Field.Builder pointField = SearchDocumentBuilderUtility.geoPointField("point", point);
-		builder.addField(pointField);
-
 		// Is Region Field
-		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField("isRegion", isRegion);
-		builder.addField(isRegionField);
+		boolean isRegion = model.isRegion();
+		SearchDocumentBuilderUtility.addBoolean(REGION_FIELD, isRegion, builder);
 
-		// Descriptor Info
-		Field.Builder descriptorField = SearchDocumentBuilderUtility.atomField("descriptorType", descriptorType);
-		builder.addField(descriptorField);
+		// Date
+		Date date = model.getDate();
+		ModelDocumentBuilderUtility.addDate(date, builder);
 
-		// Info Type Id
-		Field.Builder descriptorIdField = SearchDocumentBuilderUtility.atomField("descriptorId", descriptorId);
-		builder.addField(descriptorIdField);
+		// Point
+		Point point = model.getPoint();
+		ModelDocumentBuilderUtility.addPoint(point, builder);
+
+		// Descriptors
+		ModelDocumentBuilderUtility.addDescriptorInfo(model, builder);
 
 	}
 

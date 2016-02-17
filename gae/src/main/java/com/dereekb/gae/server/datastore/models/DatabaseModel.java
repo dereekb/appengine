@@ -9,9 +9,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * A database model.
  *
  * @author dereekb
- *
- * @param <T>
- * @param <K>
  */
 public abstract class DatabaseModel
         implements UniqueModel, KeyEquality, Serializable {

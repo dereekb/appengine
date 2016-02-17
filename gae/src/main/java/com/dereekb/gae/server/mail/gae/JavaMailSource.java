@@ -18,7 +18,7 @@ import com.dereekb.gae.server.mail.MailRequest;
 import com.dereekb.gae.server.mail.MailSource;
 import com.dereekb.gae.server.mail.exceptions.EmailSendFailureException;
 import com.dereekb.gae.server.mail.pairs.MailRecipient;
-import com.dereekb.gae.server.storage.file.StorableContent;
+import com.dereekb.gae.server.storage.object.file.StorableContent;
 
 /**
  * Uses the JavaMail API to act as a MailSource.
@@ -83,7 +83,7 @@ public class JavaMailSource
 
 						String filename = content.getFilename();
 						String contentType = content.getContentType();
-						byte[] bytes = content.getBytes();
+						byte[] bytes = content.getFileData();
 
 						attachment.setFileName(filename);
 						attachment.setContent(bytes, contentType);

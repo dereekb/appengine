@@ -43,7 +43,8 @@ public class RelationChangeException extends RuntimeException {
 
 	@Override
 	public String toString() {
-		return "RelationChangeException [primary=" + this.primary + ", relation=" + this.relation + "]";
+		return "RelationChangeException [primary=" + this.primary + ", relation=" + this.relation + ", getMessage()="
+		        + this.getMessage() + "]";
 	}
 
 }

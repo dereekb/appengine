@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.dereekb.gae.model.crud.services.request.CreateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 
 /**

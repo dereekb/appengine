@@ -1,19 +1,18 @@
 package com.dereekb.gae.server.datastore.objectify.core;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 
 /**
  * Represents an Objectify Definition for a single type. Used as part of the
- * {@link ObjectifyDatabase} initialization process.
+ * {@link ObjectifyDatabaseImpl} initialization process.
  *
  * @author dereekb
- *
- * @param <T>
  */
-public interface ObjectifyDatabaseEntityDefinition<T> {
+public interface ObjectifyDatabaseEntityDefinition {
 
 	/**
-	 *
 	 * @return the system name of the entity.
 	 */
 	public String getEntityName();
@@ -21,12 +20,20 @@ public interface ObjectifyDatabaseEntityDefinition<T> {
 	/**
 	 * @return the {@link Class} of the entity.
 	 */
-	public Class<T> getEntityType();
+	public Class<?> getEntityType();
 
 	/**
 	 *
 	 * @return the type of key used.
 	 */
 	public ModelKeyType getEntityKeyType();
+
+	/**
+	 * Returns an optional query initializer used for query generation.
+	 *
+	 * @return {@link ObjectifyQueryRequestLimitedBuilderInitializer} instance,
+	 *         or {@code null}.
+	 */
+	public ObjectifyQueryRequestLimitedBuilderInitializer getQueryInitializer();
 
 }

@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.general.time;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,28 +13,59 @@ import java.util.Set;
  */
 public enum Day {
 
-	MONDAY(1),
+	MONDAY(1, "Monday", "Mon"),
 
-	TUESDAY(2),
+	TUESDAY(2, "Tuesday", "Tues"),
 
-	WEDNESDAY(3),
+	WEDNESDAY(3, "Wednesday", "Wed"),
 
-	THURSDAY(4),
+	THURSDAY(4, "Thursday", "Thur"),
 
-	FRIDAY(5),
+	FRIDAY(5, "Friday", "Fri"),
 
-	SATURDAY(6),
+	SATURDAY(6, "Saturday", "Sat"),
 
-	SUNDAY(7);
+	SUNDAY(7, "Sunday", "Sun");
 
 	public final int bit;
+	public final String name;
+	public final String abbreviation;
 
-	private Day(int bit) {
+	private Day(int bit, String name, String abbreviation) {
 		this.bit = bit;
+		this.name = name;
+		this.abbreviation = abbreviation;
 	}
 
 	public int getBit() {
 		return this.bit;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getAbbreviation() {
+		return this.abbreviation;
+	}
+
+	public boolean isToday() {
+		Day today = Day.getToday();
+		return this.equals(today);
+	}
+
+	public static Day getToday() {
+		Calendar calendar = Calendar.getInstance();
+		int bit = calendar.get(Calendar.DAY_OF_WEEK);
+		return Day.dayForBit(bit);
+	}
+
+	public static Day dayForBit(int bit) throws IllegalArgumentException {
+		if (bit <= 0 || bit >= 8) {
+			throw new IllegalArgumentException("Bit must be between 1 and 7");
+		}
+
+		return Day.values()[bit - 1];
 	}
 
 	@Override

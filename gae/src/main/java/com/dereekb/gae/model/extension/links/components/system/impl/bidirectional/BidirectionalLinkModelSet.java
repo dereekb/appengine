@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
 import com.dereekb.gae.model.extension.links.components.exception.LinkSaveException;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
@@ -122,6 +123,11 @@ public final class BidirectionalLinkModelSet
 	}
 
 	@Override
+	public void loadModel(ModelKey key) {
+		this.primarySet.loadModel(key);
+	}
+
+	@Override
 	public void loadModels(Collection<ModelKey> keys) {
 		this.primarySet.loadModels(keys);
 	}
@@ -174,6 +180,19 @@ public final class BidirectionalLinkModelSet
 		}
 
 		return linkModels;
+	}
+
+	@Override
+	public boolean isBidirectional(LinkInfo info) {
+		boolean isBidirectional = true;
+
+		try {
+			isBidirectional = (this.delegate.getReverseLinkName(this.setModelType, info) != null);
+		} catch (NoReverseLinksException e) {
+			isBidirectional = false;
+		}
+
+		return isBidirectional;
 	}
 
 	@Override

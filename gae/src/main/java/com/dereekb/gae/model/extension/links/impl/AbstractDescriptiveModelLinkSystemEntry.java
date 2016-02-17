@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.links.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
@@ -16,16 +17,20 @@ public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDe
 
 	protected List<DescribedModelLinkInfo> descriptiveLinkInfo;
 
-	public AbstractDescriptiveModelLinkSystemEntry(String modelType, ReadService<T> service, ConfiguredSetter<T> setter) {
-		super(modelType, service, setter);
+	public AbstractDescriptiveModelLinkSystemEntry(String modelType,
+	        ReadService<T> readService,
+	        DeleteService<T> deleteService,
+	        ConfiguredSetter<T> setter) {
+		super(modelType, readService, deleteService, setter);
 		this.descriptiveLinkInfo = new ArrayList<DescribedModelLinkInfo>();
 	}
 
 	public AbstractDescriptiveModelLinkSystemEntry(String modelType,
-	        ReadService<T> service,
+	        ReadService<T> readService,
+	        DeleteService<T> deleteService,
 	        ConfiguredSetter<T> setter,
 	        List<DescribedModelLinkInfo> info) {
-		super(modelType, service, setter);
+		super(modelType, readService, deleteService, setter);
 		this.descriptiveLinkInfo = info;
 	}
 
@@ -66,6 +71,6 @@ public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDe
 	 *         name. Should not include the descriptive info link. Should not
 	 *         return null.
 	 */
-	public abstract List<Link> makeDefinedLinksForModel(T model);
+	public abstract List<Link> makeDefinedLinksForModel(final T model);
 
 }

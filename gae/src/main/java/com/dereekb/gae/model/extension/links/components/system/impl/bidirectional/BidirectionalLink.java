@@ -8,17 +8,19 @@ import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.Relation;
 import com.dereekb.gae.model.extension.links.components.RelationResult;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * {@link Link} wrapper for a {@link BidirectionalLinkSystem}.
+ * {@link Link} implementation. Wraps another {@link Link} for a
+ * {@link BidirectionalLinkSystem}.
  *
  * @author dereekb
  */
-public final class BidirectionalLink
+public class BidirectionalLink
         implements Link, LinkInfo {
 
 	private BidirectionalLinkDelegate delegate;
@@ -76,11 +78,15 @@ public final class BidirectionalLink
 
 	@Override
 	public RelationResult addRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
-		List<Link> reverseLinks = this.loadReverseLinks(change, true);
 		Relation selfRelation = this.getSelfRelation();
 
-		for (Link link : reverseLinks) {
-			link.addRelation(selfRelation);
+		try {
+			List<Link> reverseLinks = this.loadReverseLinks(change, true);
+
+			for (Link link : reverseLinks) {
+				link.addRelation(selfRelation);
+			}
+		} catch (NoReverseLinksException e) {
 		}
 
 		return this.link.addRelation(change);
@@ -88,11 +94,15 @@ public final class BidirectionalLink
 
 	@Override
 	public RelationResult removeRelation(Relation change) throws RelationChangeException {
-		List<Link> reverseLinks = this.loadReverseLinks(change, false);
 		Relation selfRelation = this.getSelfRelation();
 
-		for (Link link : reverseLinks) {
-			link.removeRelation(selfRelation);
+		try {
+			List<Link> reverseLinks = this.loadReverseLinks(change, false);
+
+			for (Link link : reverseLinks) {
+				link.removeRelation(selfRelation);
+			}
+		} catch (NoReverseLinksException e) {
 		}
 
 		return this.link.removeRelation(change);
@@ -121,19 +131,26 @@ public final class BidirectionalLink
 	 *            Whether or not all models should be loaded.
 	 * @return {@link List} of {@link Link} available links.
 	 *
+	 * @throws NoReverseLinksException
+	 *             if there are no reverse links for this link.
 	 * @throws UnavailableLinkException
 	 *             if the required links are unavailable.
 	 */
 	private List<Link> loadReverseLinks(Relation change,
-	                                    boolean required) throws UnavailableLinkException {
+	                                    boolean required) throws NoReverseLinksException, UnavailableLinkException {
 		List<ModelKey> keys = change.getRelationKeys();
 		List<Link> reverseLinks = this.delegate.getReverseLinks(this, keys);
 
 		if (required && keys.size() != reverseLinks.size()) {
-			throw new UnavailableLinkException("Required reverse links were not available.");
+			throw new UnavailableLinkException("Required reverse links were not available for change: " + change);
 		}
 
 		return reverseLinks;
+	}
+
+	@Override
+	public String toString() {
+		return "BidirectionalLink [delegate=" + this.delegate + ", link=" + this.link + "]";
 	}
 
 }

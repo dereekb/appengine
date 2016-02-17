@@ -9,6 +9,13 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- MODELS -->
 	<import resource="model/model.xml" />
+
+	<!-- EXTENSIONs -->
+	<import resource="extension/link.xml" />
+	<import resource="extension/search.xml" />
+	<import resource="extension/upload.xml" />
+	<import resource="extension/download.xml" />
 
 </beans>

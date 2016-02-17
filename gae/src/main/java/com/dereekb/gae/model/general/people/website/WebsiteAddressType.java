@@ -23,13 +23,13 @@ public enum WebsiteAddressType {
 
 	/**
 	 * <p>
-	 * A generic service id for website types that are not officially supported
+	 * A generic indexService id for website types that are not officially supported
 	 * by the server.
 	 * <p>
 	 * Is the same as website, except may be handle differently by a parser.<br>
 	 * <p>
 	 * Data is formatted as a URL, or as a WebsiteAddress/URL combination that
-	 * is separated by spaces. The "service" component is for the service
+	 * is separated by spaces. The "indexService" component is for the indexService
 	 * identifier.
 	 *
 	 * <p>

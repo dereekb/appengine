@@ -28,7 +28,7 @@ public interface EditModelControllerConversionDelegate<T extends UniqueModel, I>
 
 	public UpdateRequest<T> convert(ApiUpdateRequest<I> request);
 
-	public DeleteRequest<T> convert(ApiDeleteRequest request);
+	public DeleteRequest convert(ApiDeleteRequest request);
 
 	public ApiResponse convert(CreateResponse<T> response);
 

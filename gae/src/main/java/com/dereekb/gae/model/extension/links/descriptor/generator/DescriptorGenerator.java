@@ -4,7 +4,7 @@ import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
-import com.dereekb.gae.model.extension.links.descriptor.DescriptorImpl;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorImpl;
 import com.dereekb.gae.utilities.misc.random.StringLongGenerator;
 
 /**

@@ -62,7 +62,7 @@ public class WebsiteAddressDecoderImpl
 
 		/**
 		 * Represents the optional info before the primary URL data. Generally a
-		 * title, or service name.
+		 * title, or indexService name.
 		 */
 		public final String info;
 

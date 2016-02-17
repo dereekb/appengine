@@ -8,10 +8,14 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+ 
+	<bean id="taskScheduler" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl">
+		<constructor-arg index="0" ref="taskRequestHashFilter"/>
+	</bean>
 
-	<bean id="taskRequestHashFilterFactory" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.server.taskqueue.system.filter.TaskRequestHashFilterFactory">
-
+	<bean id="taskRequestHashFilter" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.taskqueue.scheduler.utility.filter.TaskRequestHashFilter">
 	</bean>
 
 </beans>

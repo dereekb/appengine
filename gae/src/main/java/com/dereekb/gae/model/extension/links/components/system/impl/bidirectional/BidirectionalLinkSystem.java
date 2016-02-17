@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnregisteredLinkTypeException;
@@ -59,6 +61,11 @@ public class BidirectionalLinkSystem
 
 	// LinkSystem
 	@Override
+	public Set<String> getAvailableSetTypes() {
+		return this.system.getAvailableSetTypes();
+	}
+
+	@Override
 	public LinkModelSet loadSet(String type) throws UnregisteredLinkTypeException {
 		LinkModelSet primarySet = this.system.loadSet(type);
 		return new BidirectionalLinkModelSet(type, this, primarySet);
@@ -93,7 +100,7 @@ public class BidirectionalLinkSystem
 
 	@Override
 	public String getReverseLinkName(String primaryType,
-	                                 LinkInfo info) {
+	                                 LinkInfo info) throws NoReverseLinksException {
 		BidirectionalLinkSystemEntry entry = this.getEntry(primaryType);
 		return entry.getReverseLinkName(info);
 	}

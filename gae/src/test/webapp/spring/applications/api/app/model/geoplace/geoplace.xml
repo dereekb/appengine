@@ -11,12 +11,12 @@
 
 	<!-- Type -->
 	<bean id="geoPlaceType" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="GeoPoint" />
+		<constructor-arg index="0" value="GeoPlace" />
 	</bean>
-
+	
 	<!-- Database -->
 	<bean id="geoPlaceObjectifyEntry"
-		class="com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinitionImpl"
+		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="geoPlaceType" />
 		<constructor-arg index="1" type="java.lang.Class"
@@ -32,6 +32,7 @@
 
 	<!-- Configured Setters -->
 	<alias name="geoPlaceRegistry" alias="geoPlaceAsyncConfiguredSetter" />
+	<alias name="geoPlaceRegistry" alias="geoPlaceAsyncConfiguredDeleter" />
 
 	<bean id="geoPlaceSynchronousConfiguredSetter"
 		class="com.dereekb.gae.server.datastore.utility.ConfiguredSetterImpl">
@@ -43,7 +44,8 @@
 	<import resource="test.xml" />
 	<import resource="crud.xml" />
 	<import resource="extension/data.xml" />
+	<import resource="extension/link.xml" />
 	<import resource="extension/generation.xml" />
-	<import resource="extension/taskqueue.xml" />
+	<import resource="extension/search.xml" />
 
 </beans>

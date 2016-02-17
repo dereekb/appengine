@@ -5,6 +5,12 @@ import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
+/**
+ * {@link LinkInfo} implementation.
+ *
+ * @author dereekb
+ *
+ */
 public class LinkInfoImpl
         implements LinkInfo {
 

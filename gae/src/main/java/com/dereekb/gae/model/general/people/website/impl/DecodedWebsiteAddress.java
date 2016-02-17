@@ -11,7 +11,7 @@ import com.dereekb.gae.model.general.people.website.WebsiteAddressType;
  * @see {@link WebsiteImpl} for editing {@link WebsiteAddress} with website
  *      types.
  * @see {@link ServiceWebsiteImpl} for editing {@link WebsiteAddress} with
- *      service types.
+ *      indexService types.
  */
 public class DecodedWebsiteAddress {
 
@@ -28,7 +28,7 @@ public class DecodedWebsiteAddress {
 	private final String title;
 
 	/**
-	 * The name of the service. i.e. {@code Facebook}.
+	 * The name of the indexService. i.e. {@code Facebook}.
 	 *
 	 * Used by {@link WebsiteAddressType#SERVICE} types for specifying custom
 	 * types.

@@ -13,9 +13,10 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  * @param <T>
- *            Model type that implements the {@link UniqueModel} interface.
+ *            model type
  */
-public interface AtomicReadService<T extends UniqueModel> {
+public interface AtomicReadService<T extends UniqueModel>
+        extends ReadService<T> {
 
 	/**
 	 * Reads objects for their model keys.

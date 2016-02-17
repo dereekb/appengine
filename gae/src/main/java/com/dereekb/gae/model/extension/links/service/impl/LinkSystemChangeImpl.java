@@ -1,9 +1,9 @@
 package com.dereekb.gae.model.extension.links.service.impl;
 
-import java.util.Collection;
+import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -22,7 +22,7 @@ public class LinkSystemChangeImpl
 
 	private String linkName;
 
-	private Collection<ModelKey> targetKeys;
+	private Set<String> targetStringKeys;
 
 	public LinkSystemChangeImpl() {}
 
@@ -30,12 +30,12 @@ public class LinkSystemChangeImpl
 	        String primaryType,
 	        ModelKey primaryKey,
 	        String linkName,
-	        Collection<ModelKey> targetKeys) {
+	        Set<String> targetStringKeys) {
 		this.action = action;
 		this.primaryType = primaryType;
 		this.primaryKey = primaryKey;
 		this.linkName = linkName;
-		this.targetKeys = targetKeys;
+		this.targetStringKeys = targetStringKeys;
 	}
 
 	@Override
@@ -75,12 +75,22 @@ public class LinkSystemChangeImpl
 	}
 
 	@Override
-	public Collection<ModelKey> getTargetKeys() {
-		return this.targetKeys;
+	public Set<String> getTargetStringKeys() {
+		return this.targetStringKeys;
 	}
 
-	public void setTargetKeys(Collection<ModelKey> targetKeys) {
-		this.targetKeys = targetKeys;
+	public void setTargetStringKeys(Set<String> targetStringKeys) {
+		if (targetStringKeys == null || targetStringKeys.isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+
+		this.targetStringKeys = targetStringKeys;
+	}
+
+	@Override
+	public String toString() {
+		return "LinkSystemChangeImpl [action=" + this.action + ", primaryType=" + this.primaryType + ", primaryKey="
+		        + this.primaryKey + ", linkName=" + this.linkName + ", targetStringKeys=" + this.targetStringKeys + "]";
 	}
 
 }

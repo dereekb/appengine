@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.service;
 
-import java.util.Collection;
+import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -8,7 +8,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * Represents a change in the system.
  *
  * @author dereekb
- *
  */
 public interface LinkSystemChange {
 
@@ -26,7 +25,7 @@ public interface LinkSystemChange {
 
 	/**
 	 * The {@link ModelKey} corresponding to the primary model to modify.
-	 *
+	 * <p>
 	 * For example, if we wanted to change a model that had the name "x", this
 	 * would return a {@link ModelKey} with the name "x".
 	 *
@@ -42,10 +41,13 @@ public interface LinkSystemChange {
 	public String getLinkName();
 
 	/**
-	 * The keys to change.
+	 * The set of keys to change, as a {@link String}.
+	 * <p>
+	 * Keys are passed as a {@link String} and are converted later to ensure
+	 * that they are converted to the correct {@link ModelKey}.
 	 *
-	 * @return {@link ModelKey} collection corresponding to target models.
+	 * @return {@link Set} of string keys corresponding to target models.
 	 */
-	public Collection<ModelKey> getTargetKeys();
+	public Set<String> getTargetStringKeys();
 
 }

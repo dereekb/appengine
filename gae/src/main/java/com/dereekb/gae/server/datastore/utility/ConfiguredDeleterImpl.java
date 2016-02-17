@@ -3,7 +3,13 @@ package com.dereekb.gae.server.datastore.utility;
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
-public final class ConfiguredDeleterImpl
+/**
+ * {@link ConfiguredDeleter} implementation.
+ *
+ * @author dereekb
+ *
+ */
+public class ConfiguredDeleterImpl
         implements ConfiguredDeleter {
 
 	private Deleter deleter;
@@ -54,6 +60,11 @@ public final class ConfiguredDeleterImpl
 	public void deleteWithKeys(Iterable<ModelKey> keys,
 	                           boolean async) {
 		this.deleter.deleteWithKeys(keys, async);
+	}
+
+	@Override
+	public String toString() {
+		return "ConfiguredDeleterImpl [deleter=" + this.deleter + ", asynchronous=" + this.asynchronous + "]";
 	}
 
 }

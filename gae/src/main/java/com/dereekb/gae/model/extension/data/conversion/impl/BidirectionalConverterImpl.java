@@ -18,7 +18,7 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
  *            Output type.
  */
 public class BidirectionalConverterImpl<I, O>
-        implements BidirectionalConverter<I, O> {
+        implements BidirectionalConverter<I, O>, DirectionalConverter<I, O> {
 
 	private DirectionalConverter<I, O> outputConversion;
 	private DirectionalConverter<O, I> inputConversion;
@@ -48,6 +48,11 @@ public class BidirectionalConverterImpl<I, O>
 	}
 
 	// BidirectionalConverter
+	@Override
+	public List<O> convert(Collection<I> input) throws ConversionFailureException {
+		return this.convertTo(input);
+	}
+
 	@Override
 	public List<O> convertTo(Collection<I> input) throws ConversionFailureException {
 		return this.outputConversion.convert(input);

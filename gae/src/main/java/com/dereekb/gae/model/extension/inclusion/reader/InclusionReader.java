@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.inclusion.reader;
 
+import java.util.Collection;
+
 /**
  * Used to build a map of models for the
  *
@@ -26,10 +28,10 @@ public interface InclusionReader<T> {
 	 *
 	 * @param models
 	 *            Models to analyze.
-	 * @return {@link InclusionReadersetAnalysis} containing the input models.
+	 * @return {@link InclusionReaderSetAnalysis} containing the input models.
 	 * @throws IllegalArgumentException
 	 *             if the models are null or empty.
 	 */
-	public InclusionReaderSetAnalysis<T> analyzeInclusions(Iterable<T> models) throws IllegalArgumentException;
+	public InclusionReaderSetAnalysis<T> analyzeInclusions(Collection<T> models) throws IllegalArgumentException;
 
 }

@@ -25,6 +25,16 @@ public class DaySpanBitImpl
 		this.container = new LongBitContainer(value);
 	}
 
+	public DaySpanBitImpl(Day day) {
+		this();
+		this.add(day);
+	}
+
+	public DaySpanBitImpl(Set<Day> days) {
+		this();
+		this.setDays(days);
+	}
+
 	public DaySpanBitImpl(DaySpan span) throws IllegalArgumentException {
 		if (span == null) {
 			throw new IllegalArgumentException("DaySpan cannot be null.");
@@ -78,6 +88,11 @@ public class DaySpanBitImpl
 	@Override
 	public boolean contains(Day day) {
 		return this.container.getBit(day.bit);
+	}
+
+	@Override
+	public String toString() {
+		return "DaySpanBitImpl [container=" + this.container + "]";
 	}
 
 }

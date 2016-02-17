@@ -6,30 +6,32 @@ import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 
 /**
- * Map pairing that allows inserting a single object with many keys.
- * 
+ * Pairing that allows inserting a single object with many keys.
+ *
  * @author dereekb
- * 
+ *
+ * @param <K>
+ *            key type
  * @param <T>
- * @param <U>
+ *            model type
  */
-public class MapPairing<T, U> extends HandlerPair<Iterable<T>, U> {
+public class MapPairing<K, T> extends HandlerPair<Iterable<K>, T> {
 
 	@ConstructorProperties({ "key", "object" })
-	public MapPairing(T key, U object) {
+	public MapPairing(K key, T object) {
 		super(SingleItem.withValue(key), object);
 	}
 
 	@ConstructorProperties({ "keys", "object" })
-	public MapPairing(Iterable<T> keys, U object) {
+	public MapPairing(Iterable<K> keys, T object) {
 		super(keys, object);
 	}
 
-	public Iterable<T> getKeys() {
+	public Iterable<K> getKeys() {
 		return this.key;
 	}
 
-	public U getValue() {
+	public T getValue() {
 		return this.object;
 	}
 

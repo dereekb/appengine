@@ -9,6 +9,8 @@ import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.objectify.keys.generator.ObjectifyKeyGenerator;
+import com.googlecode.objectify.Key;
 
 /**
  * Implementation of {@link Generator} for {@link GeoPlace}.
@@ -17,6 +19,10 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  */
 public final class GeoPlaceGenerator extends AbstractModelGenerator<GeoPlace> {
 
+	private static final ObjectifyKeyGenerator<GeoPlace> PARENT_GENERATOR = ObjectifyKeyGenerator
+	        .numberKeyGenerator(GeoPlace.class);
+
+	private Generator<Key<GeoPlace>> parentKeyGenerator = PARENT_GENERATOR;
 	private Generator<Descriptor> descriptorGenerator;
 	private Generator<Point> pointGenerator;
 	private Generator<Region> regionGenerator;
@@ -67,6 +73,10 @@ public final class GeoPlaceGenerator extends AbstractModelGenerator<GeoPlace> {
 	                              GeneratorArg arg) {
 		GeoPlace geoPlace = new GeoPlace();
 		geoPlace.setIdentifier(ModelKey.readIdentifier(key));
+
+		if (this.parentKeyGenerator != null) {
+			geoPlace.setParent(this.parentKeyGenerator.generate(arg));
+		}
 
 		if (this.pointGenerator != null) {
 			geoPlace.setPoint(this.pointGenerator.generate(arg));

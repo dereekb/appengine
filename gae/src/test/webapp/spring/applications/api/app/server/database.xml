@@ -11,13 +11,17 @@
 
 	<!-- Objectify -->
 	<bean id="objectifyDatabase"
-		class="com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase"
+		class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase"
 		scope="singleton" primary="true" lazy-init="false">
 		<constructor-arg index="0" ref="objectifyDatabaseEntities" />
+		<constructor-arg index="1" value="false"/>
 	</bean>
 
 	<util:list id="objectifyDatabaseEntities">
 		<ref bean="geoPlaceObjectifyEntry" />
+		<ref bean="storedBlobObjectifyEntry" />
+		<ref bean="storedImageObjectifyEntry" />
+		<ref bean="storedImageSetObjectifyEntry" />
 	</util:list>
 
 </beans>

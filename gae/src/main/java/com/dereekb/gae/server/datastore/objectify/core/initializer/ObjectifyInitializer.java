@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.core.initializer;
 
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 
 /**
  * Delegate type used to initialize an ObjectifyService singleton.
@@ -10,6 +10,6 @@ import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 @Deprecated
 public interface ObjectifyInitializer {
 
-	public void initializeService(ObjectifyDatabase service);
+	public void initializeService(ObjectifyDatabaseImpl service);
 
 }

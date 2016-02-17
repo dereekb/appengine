@@ -2,15 +2,14 @@ package com.dereekb.gae.model.geo.place.search.document.index;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.derivative.DerivativeDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.GeoPlaceInfoType;
-import com.dereekb.gae.server.datastore.Getter;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * {@link DerivativeDocumentBuilderStep} implementation for
@@ -19,20 +18,19 @@ import com.google.appengine.api.search.Field;
  * @author dereekb
  *
  */
-public final class GeoPlaceDerivativeDocumentBuilderStep
-        implements DerivativeDocumentBuilderStep<GeoPlaceInfoType> {
+public class GeoPlaceDerivativeDocumentBuilderStep
+        implements StagedDocumentBuilderStep<GeoPlace> {
 
-	public final static String DEFAULT_FIELD_FORMAT = "GP_%s";
+	public static final String DEFAULT_PREFIX = "GP_";
+	public final static String DEFAULT_FIELD_FORMAT = DEFAULT_PREFIX + "%s";
 
-	private final String format;
-	private final Getter<GeoPlace> placeGetter;
+	private String format;
 
-	public GeoPlaceDerivativeDocumentBuilderStep(Getter<GeoPlace> placeGetter) {
-		this(placeGetter, DEFAULT_FIELD_FORMAT);
+	public GeoPlaceDerivativeDocumentBuilderStep() {
+		this(DEFAULT_FIELD_FORMAT);
 	}
 
-	public GeoPlaceDerivativeDocumentBuilderStep(Getter<GeoPlace> placeGetter, String format) {
-		this.placeGetter = placeGetter;
+	public GeoPlaceDerivativeDocumentBuilderStep(String format) {
 		this.format = format;
 	}
 
@@ -40,51 +38,46 @@ public final class GeoPlaceDerivativeDocumentBuilderStep
 		return this.format;
 	}
 
-	public Getter<GeoPlace> getPlaceGetter() {
-		return this.placeGetter;
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 	@Override
-	public void updateBuilder(String identifier,
-	                          Builder builder) {
+	public void performStep(GeoPlace model,
+	                        Builder builder) {
 
-		ModelKey modelKey = new ModelKey(identifier);
-		GeoPlace place = this.placeGetter.get(modelKey);
-
-		String placeIdString = null;
+		String id = null;
 		Date date = null;
 		boolean isRegion = false;
 		Point point = null;
 
-		if (place != null) {
-			point = place.getPoint();
-			isRegion = place.isRegion();
+		if (model != null) {
+			Long placeIdentifier = model.getIdentifier();
+			id = placeIdentifier.toString();
 
-			Long placeIdentifier = place.getIdentifier();
-			placeIdString = placeIdentifier.toString();
-			date = place.getDate();
+			point = model.getPoint();
+			isRegion = model.isRegion();
+			date = model.getDate();
 		}
-
-		// Place Identifier
-		String identifierFieldFormat = String.format(this.format, "id");
-		Field.Builder identifierField = SearchDocumentBuilderUtility.atomField(identifierFieldFormat, placeIdString);
-		builder.addField(identifierField);
-
-		// Creation Date
-		String dateFieldFormat = String.format(this.format, "date");
-		Field.Builder dateField = SearchDocumentBuilderUtility.dateField(dateFieldFormat, date);
-		builder.addField(dateField);
-
-		// Point Field
-		String pointFieldFormat = String.format(this.format, "point");
-		Field.Builder pointField = SearchDocumentBuilderUtility.geoPointField(pointFieldFormat, point);
-		builder.addField(pointField);
 
 		// Is Region Field
 		String isRegionFieldFormat = String.format(this.format, "isRegion");
-		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField(isRegionFieldFormat, isRegion);
-		builder.addField(isRegionField);
+		SearchDocumentBuilderUtility.addBoolean(isRegionFieldFormat, isRegion, builder);
 
+		// Creation Date
+		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
+
+		// Identifier
+		ModelDocumentBuilderUtility.addId(this.format, id, builder);
+
+		// Point Field
+		ModelDocumentBuilderUtility.addPoint(this.format, point, builder);
+
+	}
+
+	@Override
+	public String toString() {
+		return "GeoPlaceDerivativeDocumentBuilderStep [format=" + this.format + "]";
 	}
 
 }

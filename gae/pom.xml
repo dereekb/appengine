@@ -6,7 +6,9 @@
 
 	<name>App Engine Base</name>
 	<description>Contains basic reusable Google App Engine Code as a starting point for any project.</description>
-	
+
+	<groupId>com.dereekb.gae</groupId>
+	<artifactId>gae-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<!-- <properties> <appengine.app.version>1-war</appengine.app.version> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
@@ -14,9 +16,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appengine.target.version>1.9.20</appengine.target.version>
-		<spring.target.version>4.1.6.RELEASE</spring.target.version>
-		<spring-security.target.version>4.0.1.RELEASE</spring-security.target.version>
+		<appengine.target.version>1.9.30</appengine.target.version>
+		<spring.target.version>4.2.4.RELEASE</spring.target.version>
+		<spring-security.target.version>4.0.3.RELEASE</spring-security.target.version>
 		<jackson.target.version>2.5.3</jackson.target.version>
 	</properties>
 
@@ -64,7 +66,7 @@
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
-			<version>5.1.5</version>
+			<version>5.1.9</version>
 		</dependency>
 
 		<!-- Jackson -->
@@ -142,8 +144,9 @@
 		</dependency>
 
 		<!-- Test Dependencies -->
-		
-		<!-- Servlet 3.0 API required for Spring 4.1 testing. Is not required on final product, allegedly. -->
+
+		<!-- Servlet 3.0 API required for Spring 4.1 testing. Is not required on 
+			final product, allegedly. -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -169,40 +172,45 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.target.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-testing</artifactId>
 			<version>${appengine.target.version}</version>
-			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-labs</artifactId>
+			<version>${appengine.target.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-stubs</artifactId>
 			<version>${appengine.target.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-local-runtime-shared</artifactId>
+			<artifactId>appengine-tools-sdk</artifactId>
 			<version>${appengine.target.version}</version>
-			<systemPath>/Applications/Spring Tools Suite/sts-3.6.2.RELEASE/plugins/com.google.appengine.eclipse.sdkbundle_1.9.22/appengine-java-sdk-1.9.22/lib/shared/appengine-local-runtime-shared.jar</systemPath>
-			<scope>system</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-local-runtime</artifactId>
-			<version>${appengine.target.version}</version>
-			<systemPath>/Applications/Spring Tools Suite/sts-3.6.2.RELEASE/plugins/com.google.appengine.eclipse.sdkbundle_1.9.22/appengine-java-sdk-1.9.22/lib/impl/appengine-local-runtime.jar</systemPath>
-			<scope>system</scope>
-		</dependency>
+		<!-- <dependency> <groupId>com.google.appengine</groupId> <artifactId>appengine-local-runtime</artifactId> 
+			<version>${appengine.target.version}</version> <systemPath>/Applications/Spring 
+			Tools Suite/sts-3.6.2.RELEASE/plugins/com.google.appengine.eclipse.sdkbundle_1.9.22/appengine-java-sdk-1.9.22/lib/impl/appengine-local-runtime.jar</systemPath> 
+			<scope>system</scope> </dependency> <dependency> <groupId>com.google.appengine</groupId> 
+			<artifactId>appengine-local-runtime-shared</artifactId> <version>${appengine.target.version}</version> 
+			<systemPath>/Applications/Spring Tools Suite/sts-3.6.2.RELEASE/plugins/com.google.appengine.eclipse.sdkbundle_1.9.22/appengine-java-sdk-1.9.22/lib/shared/appengine-local-runtime-shared.jar</systemPath> 
+			<scope>system</scope> </dependency> -->
 
 	</dependencies>
 
 	<build>
+
 
 		<!-- Resources to add to test-jar -->
 		<testResources>
@@ -221,6 +229,13 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<!-- Exclude all deprecated folders. -->
+					<excludes>
+						<exclude>**/deprecated/**</exclude>
+					</excludes>
+					<testExcludes>
+						<testExclude>**/deprecated/**</testExclude>
+					</testExcludes>
 				</configuration>
 			</plugin>
 
@@ -228,6 +243,12 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.6</version>
+				<configuration>
+					<!-- Exclude all deprecated folders. -->
+					<excludes>
+						<exclude>**/deprecated/*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -265,6 +286,4 @@
 		</plugins>
 	</build>
 
-	<groupId>com.dereekb.gae</groupId>
-	<artifactId>gae-core</artifactId>
 </project>

@@ -6,7 +6,8 @@ package com.dereekb.gae.model.general.time;
  * @author dereekb
  *
  */
-public interface WeekTime {
+public interface WeekTime
+        extends DayTimeSpanPairSetConvertable {
 
 	/**
 	 * Returns the {@link DaySpan} for this {@link WeekTime}.

@@ -1,15 +1,21 @@
 package com.dereekb.gae.server.datastore.models.keys;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 
 /**
  * Represents a key for a model.
- *
- * They key has either a name or number identifier.
+ * <p>
+ * They key has either a name or number identifier. Keys with a
+ * {@link ModelKeyType#NUMBER} identifier will match a key with a
+ * {@link ModelKeyType#NAME} identifier that has the same string.
  *
  * @author dereekb
  */
@@ -24,12 +30,19 @@ public final class ModelKey
 	private final String name;
 	private final Long id;
 
-	@Deprecated
-	public ModelKey() {
-		this.id = DEFAULT_KEY;
-		this.name = null;
-		this.hashCode = 0;
-		this.type = ModelKeyType.DEFAULT;
+	public ModelKey(Integer id) throws IllegalArgumentException {
+		this((id != null) ? new Long(id) : null);
+	}
+
+	public ModelKey(Long id) throws IllegalArgumentException {
+		if (id == null || id < 0) {
+			throw new IllegalArgumentException("Invalid number key '" + id + "'. Must be non-null and greater than 0.");
+		}
+
+		this.id = id;
+		this.name = id.toString();
+		this.hashCode = this.name.hashCode();
+		this.type = ModelKeyType.NUMBER;
 	}
 
 	public ModelKey(String name) throws IllegalArgumentException {
@@ -41,17 +54,6 @@ public final class ModelKey
 		this.id = null;
 		this.hashCode = name.hashCode();
 		this.type = ModelKeyType.NAME;
-	}
-
-	public ModelKey(Long id) throws IllegalArgumentException {
-		if (id == null || id < 0) {
-			throw new IllegalArgumentException("Invalid number key. Must be non-null and greater than 0.");
-		}
-
-		this.id = id;
-		this.name = null;
-		this.hashCode = id.hashCode();
-		this.type = ModelKeyType.NUMBER;
 	}
 
 	public ModelKeyType getType() {
@@ -94,9 +96,12 @@ public final class ModelKey
 		return string;
 	}
 
+	/**
+	 * @see {@link #keyAsString()} for getting the key's string value.
+	 */
 	@Override
 	public String toString() {
-		return "ModelKey [ key= " + this.keyAsString() + "]";
+		return this.keyAsString();
 	}
 
 	@Override
@@ -109,22 +114,17 @@ public final class ModelKey
 		if (this == obj) {
 			return true;
 		}
+
 		if (obj == null) {
 			return false;
 		}
+
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
+
 		ModelKey other = (ModelKey) obj;
-		if (this.isSameType(other)) {
-			if (this.type == ModelKeyType.NAME) {
-				return this.name.equals(other.name);
-			} else {
-				return this.id.equals(other.id);
-			}
-		} else {
-			return false;
-		}
+		return this.keyAsString().equals(other.keyAsString());
 	}
 
 	public static List<ModelKey> readModelKeys(Iterable<? extends UniqueModel> models) {
@@ -269,6 +269,36 @@ public final class ModelKey
 	}
 
 	/**
+	 * Convenience function for converting
+	 *
+	 * @param keyType
+	 *            {@link ModelKeyType} of values.
+	 * @param values
+	 *            {@link Collection} of values. Never {@code null}.
+	 * @return {@link List} of {@link ModelKey} values corresponding to the
+	 *         input types. Never {@code null}.
+	 * @throws ConversionFailureException
+	 *             if the conversion fails.
+	 */
+	public static List<ModelKey> convert(ModelKeyType keyType,
+	                                     Collection<String> values) throws ConversionFailureException {
+		List<ModelKey> keys;
+
+		switch (keyType) {
+			case NAME:
+				keys = StringModelKeyConverterImpl.CONVERTER.convert(values);
+				break;
+			case NUMBER:
+				keys = StringLongModelKeyConverterImpl.CONVERTER.convert(values);
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid key type specified.");
+		}
+
+		return keys;
+	}
+
+	/**
 	 * Converts a number as a string to a {@link ModelKey}. If the string is
 	 * {@code null}, will return {@code null}.
 	 *
@@ -300,9 +330,10 @@ public final class ModelKey
 	 *
 	 * @param identifier
 	 *            Identifier to convert. Can be null.
-	 * @return A {@link ModelKey} instance with the input key. Contains a number
-	 *         id if applicable, or a String id if not null. If the input is
-	 *         null, this will return null.
+	 * @return A {@link ModelKey} instance with the input key. Contains a
+	 *         {@link ModelKeyType#NUMBER} id if applicable, or a
+	 *         {@link ModelKeyType#NAME} id if not {@code null}. If the input is
+	 *         null, this will return {@code null}.
 	 */
 	public static ModelKey convert(String identifier) {
 		ModelKey modelKey = null;
