@@ -5,6 +5,6 @@ import java.util.Map;
 public interface ConfigurableQueryParameters
         extends QueryParameters {
 
-	public void setParameters(Map<String, String> parameters);
+	public void setParameters(Map<String, String> parameters) throws IllegalArgumentException;
 
 }

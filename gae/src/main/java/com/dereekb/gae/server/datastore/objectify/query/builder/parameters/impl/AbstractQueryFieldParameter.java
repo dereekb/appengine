@@ -20,7 +20,7 @@ import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQuer
  *
  */
 public abstract class AbstractQueryFieldParameter<T>
-        implements ObjectifyQueryRequestLimitedConfigurer, ConfigurableQueryParameter {
+        implements ConfigurableQueryParameter {
 
 	private String field;
 	private ObjectifyQueryConditionOperator operator;

@@ -80,4 +80,11 @@
 		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
 	</bean>
 
+	<!-- Query Services -->
+	<bean id="storedBlobQueryService"
+		class="com.dereekb.gae.model.extension.search.query.search.service.impl.ModelQueryServiceImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="storedBlobRegistry"/>
+	</bean>
+	
 </beans>

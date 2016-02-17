@@ -2,6 +2,8 @@ package com.dereekb.gae.web.api.model.extension.search;
 
 import java.util.Map;
 
+import com.dereekb.gae.server.search.model.SearchOptions;
+
 /**
  * Represents a request made to the {@link SearchExtensionApiController} to search
  * for models.
@@ -9,7 +11,8 @@ import java.util.Map;
  * @author dereekb
  *
  */
-public interface ApiSearchReadRequest {
+public interface ApiSearchReadRequest
+        extends SearchOptions {
 
 	/**
 	 * Returns the query parameter.
@@ -20,24 +23,11 @@ public interface ApiSearchReadRequest {
 	public String getQuery();
 
 	/**
-	 * Returns the max number of elements to retrieve.
+	 * Whether or not to return keys instead of models
 	 *
-	 * @return the limit. {@link null} if not specified.
+	 * @return {@code true} if only keys should be returned.
 	 */
-	public Integer getLimit();
-
-	/**
-	 *
-	 * @return {@link String} of the cursor if available.
-	 */
-	public String getCursor();
-
-	/**
-	 * Whether or not to return models instead of identifiers.
-	 *
-	 * @return {@code true} if models should be loaded.
-	 */
-	public boolean getModels();
+	public boolean getKeysOnly();
 
 	/**
 	 * Returns any custom parameters.

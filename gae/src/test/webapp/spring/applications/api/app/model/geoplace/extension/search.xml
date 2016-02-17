@@ -78,5 +78,18 @@
 		</constructor-arg>
 		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
 	</bean>
+	
+	<!-- Query Services -->
+	<bean id="geoPlaceQueryService"
+		class="com.dereekb.gae.model.extension.search.query.search.service.impl.ModelQueryServiceImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="geoPlaceRegistry"/>
+		<constructor-arg index="1" ref="geoPlaceQueryInitializer"/>
+	</bean>
+
+	<bean id="geoPlaceQueryInitializer"
+		class="com.dereekb.gae.model.geo.place.search.query.GeoPlaceQueryInitializer"
+		scope="singleton" lazy-init="true">
+	</bean>
 
 </beans>

@@ -18,6 +18,7 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.extension.search.SearchExtensionApiController;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 
 public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends ApiApplicationTestContext {
@@ -67,10 +68,10 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 		this.generateIndexedModels();
 
 		Integer limit = null;
-		Boolean getModels = true;
+		Boolean getKeys = false;
 		Map<String, String> parameters = new HashMap<>();
 
-		ApiResponse response = this.controller.searchSingle(this.searchType, parameters, limit, getModels);
+		ApiResponse response = this.controller.searchSingle(this.searchType, parameters, limit, getKeys);
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getResponsePrimaryData());
 	}
@@ -81,15 +82,43 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 
 		String query = "";
 		Integer limit = null;
-		Boolean getModels = true;
+		Boolean getKeys = false;
 		Map<String, String> parameters = new HashMap<>();
 		Set<String> types = new HashSet<String>();
 
 		types.add(this.searchType);
 
-		ApiResponse response = this.controller.searchMultiple(query, types, parameters, limit, getModels);
+		ApiResponse response = this.controller.searchMultiple(query, types, parameters, limit, getKeys);
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getResponseIncludedData().get(this.searchType.toLowerCase()));
+	}
+
+	@Test
+	public void testQueryingModels() {
+		int count = 10;
+		this.generator.generate(count);
+
+		Integer limit = null;
+		Map<String, String> parameters = null;
+		ApiResponse response = this.controller.querySingle(this.searchType, parameters, limit, false);
+		ApiResponseData data = response.getResponsePrimaryData();
+
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(data);
+	}
+
+	@Test
+	public void testQueryingKeys() {
+		int count = 10;
+		this.generator.generate(count);
+
+		Integer limit = null;
+		Map<String, String> parameters = null;
+		ApiResponse response = this.controller.querySingle(this.searchType, parameters, limit, true);
+		ApiResponseData data = response.getResponsePrimaryData();
+
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(data);
 	}
 
 	protected List<T> generateIndexedModels() {

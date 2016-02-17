@@ -65,7 +65,7 @@ public class SearchExtensionApiController {
 	                                        @RequestParam @NotEmpty Set<String> types,
 	                                        @RequestParam Map<String, String> parameters,
 	                                        @RequestParam(required = false) Integer limit,
-	                                        @RequestParam(required = false, defaultValue = "false") Boolean models) {
+	                                        @RequestParam(required = false, defaultValue = "true") Boolean keysOnly) {
 		ApiResponse response = null;
 
 		try {
@@ -74,11 +74,9 @@ public class SearchExtensionApiController {
 			request.setParameters(parameters);
 
 			request.setLimit(limit);
-			request.setModels(models);
+			request.setKeysOnly(keysOnly);
 
 			response = this.delegate.search(types, request);
-		} catch (LinkSystemChangesException e) {
-			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {
@@ -108,19 +106,17 @@ public class SearchExtensionApiController {
 	public final ApiResponse searchSingle(@PathVariable("type") String type,
 	                                      @RequestParam Map<String, String> parameters,
 	                                      @RequestParam(required = false) Integer limit,
-	                                      @RequestParam(required = false, defaultValue = "false") Boolean models) {
+	                                      @RequestParam(required = false, defaultValue = "true") Boolean keysOnly) {
 		ApiResponse response = null;
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 
 			request.setLimit(limit);
-			request.setModels(models);
+			request.setKeysOnly(keysOnly);
 			request.setParameters(parameters);
 
 			response = this.delegate.search(type, request);
-		} catch (LinkSystemChangesException e) {
-			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {
@@ -146,13 +142,16 @@ public class SearchExtensionApiController {
 	@PreAuthorize("hasPermission(this, 'query')")
 	@RequestMapping(value = "/{type}/query", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse querySingle(@PathVariable("type") String type,
+	                                     @RequestParam Map<String, String> parameters,
 	                                     @RequestParam(required = false) Integer limit,
-	                                     @RequestParam Map<String, String> parameters) {
+	                                     @RequestParam(required = false, defaultValue = "true") Boolean keysOnly) {
 		ApiResponse response = null;
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
+
 			request.setLimit(limit);
+			request.setKeysOnly(keysOnly);
 			request.setParameters(parameters);
 
 			response = this.delegate.query(type, request);
@@ -181,8 +180,6 @@ public class SearchExtensionApiController {
 			request.setTargetKeys(keys);
 
 			response = this.delegate.updateSearchIndex(request);
-		} catch (LinkSystemChangesException e) {
-			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {

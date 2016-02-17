@@ -16,7 +16,7 @@ public class ApiSearchReadRequestImpl extends SearchOptionsImpl
         implements ApiSearchReadRequest {
 
 	private String query;
-	private boolean models;
+	private boolean keysOnly;
 	private Map<String, String> parameters;
 
 	public ApiSearchReadRequestImpl() {}
@@ -57,12 +57,12 @@ public class ApiSearchReadRequestImpl extends SearchOptionsImpl
 	}
 
 	@Override
-	public boolean getModels() {
-		return this.models;
+	public boolean getKeysOnly() {
+		return this.keysOnly;
 	}
 
-	public void setModels(boolean models) {
-		this.models = models;
+	public void setKeysOnly(boolean keysOnly) {
+		this.keysOnly = keysOnly;
 	}
 
 	@Override
@@ -76,8 +76,8 @@ public class ApiSearchReadRequestImpl extends SearchOptionsImpl
 
 	@Override
 	public String toString() {
-		return "ApiSearchReadRequestImpl [query=" + this.query + ", limit=" + this.limit + ", models=" + this.models
-		        + ", parameters=" + this.parameters + "]";
+		return "ApiSearchReadRequestImpl [query=" + this.query + ", keysOnly=" + this.keysOnly + ", parameters="
+		        + this.parameters + "]";
 	}
 
 }

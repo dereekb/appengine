@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.search.model.impl;
 
 import com.dereekb.gae.server.search.model.MutableSearchOptions;
+import com.dereekb.gae.server.search.model.SearchOptions;
 
 
 /**
@@ -21,10 +22,20 @@ public class SearchOptionsImpl
 
 	public SearchOptionsImpl() {}
 
+	public SearchOptionsImpl(SearchOptions options) {
+		this.setOptions(options);
+	}
+
 	public SearchOptionsImpl(String cursor, Integer offset, Integer limit) {
 		this.setCursor(cursor);
 		this.setOffset(offset);
 		this.setLimit(limit);
+	}
+
+	public void setOptions(SearchOptions options) {
+		this.setCursor(options.getCursor());
+		this.setOffset(options.getOffset());
+		this.setLimit(options.getLimit());
 	}
 
 	@Override
@@ -44,7 +55,7 @@ public class SearchOptionsImpl
 
 	@Override
 	public void setOffset(Integer offset) {
-		if (offset != null && offset < 1) {
+		if (offset != null && offset < 0) {
 			throw new IllegalArgumentException("Must specify a positive, non-zero offset.");
 		}
 

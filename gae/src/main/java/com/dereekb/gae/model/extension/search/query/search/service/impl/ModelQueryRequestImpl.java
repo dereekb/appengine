@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.search.query.search.service.impl;
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryRequest;
+import com.dereekb.gae.server.search.model.SearchOptions;
 import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
 
 /**
@@ -20,8 +21,14 @@ public class ModelQueryRequestImpl extends SearchOptionsImpl
 	public ModelQueryRequestImpl() {}
 
 	public ModelQueryRequestImpl(boolean keySearch, Map<String, String> parameters) {
-		this.keySearch = keySearch;
-		this.parameters = parameters;
+		this.setKeySearch(keySearch);
+		this.setParameters(parameters);
+	}
+
+	public ModelQueryRequestImpl(boolean keySearch, SearchOptions options, Map<String, String> parameters) {
+		super(options);
+		this.setKeySearch(keySearch);
+		this.setParameters(parameters);
 	}
 
 	@Override

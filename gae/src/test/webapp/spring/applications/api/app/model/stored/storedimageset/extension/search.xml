@@ -85,4 +85,11 @@
 		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
 	</bean>
 	
+	<!-- Query Services -->
+	<bean id="storedImageSetQueryService"
+		class="com.dereekb.gae.model.extension.search.query.search.service.impl.ModelQueryServiceImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="storedImageSetRegistry"/>
+	</bean>
+	
 </beans>

@@ -63,11 +63,12 @@
 	<bean id="storedBlobSearchDelegateEntry" scope="singleton"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
 		<constructor-arg index="0" ref="storedBlobSearchType" />
-		<constructor-arg index="1" ref="storedBlobSearchService" />
-		<constructor-arg index="2">
+		<constructor-arg index="1" ref="storedBlobQueryService" />
+		<constructor-arg index="2" ref="storedBlobSearchService" />
+		<constructor-arg index="3">
 			<bean class="com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchRequestBuilder"/>
 		</constructor-arg>
-		<constructor-arg index="3" ref="storedBlobSearchResultConverter" />
+		<constructor-arg index="4" ref="storedBlobSearchResultConverter" />
 	</bean>
 
 	<alias name="storedBlobDataConverter" alias="storedBlobSearchResultConverter"/>

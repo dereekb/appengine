@@ -18,6 +18,17 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 	private ModelKeyType keyType;
 	private ObjectifyModelKeyUtil<T> util;
 
+	public ObjectifyKeyFieldParameterBuilder(ModelKeyType keyType, Class<T> type) throws IllegalArgumentException {
+		this.setKeyType(keyType);
+		this.setType(type);
+	}
+
+	public static <T extends ObjectifyModel<T>> ObjectifyKeyFieldParameterBuilder<T> builder(ModelKeyType keyType,
+	                                                                                         Class<T> type)
+	        throws IllegalArgumentException {
+		return new ObjectifyKeyFieldParameterBuilder<T>(keyType, type);
+	}
+
 	public Class<T> getType() {
 		return this.util.getType();
 	}
@@ -42,32 +53,47 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 		this.keyType = keyType;
 	}
 
-	public ObjectifyKeyFieldParameter make(String field,
-	                                       Key<T> value) throws IllegalArgumentException {
-		return new ObjectifyKeyFieldParameter(field, value);
+	public ObjectifyKeyFieldParameter<T> make(String field,
+	                                          Key<T> value) throws IllegalArgumentException {
+		return new ObjectifyKeyFieldParameter<T>(this, field, value);
+	}
+
+	public ObjectifyKeyFieldParameter<T> make(String field,
+	                                          String parameterString) throws IllegalArgumentException {
+		return new ObjectifyKeyFieldParameter<T>(this, field, parameterString);
 	}
 
 	/**
 	 * {@link AbstractQueryFieldParameter} for {@link Key} values.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
-	public class ObjectifyKeyFieldParameter extends AbstractQueryFieldParameter<Key<T>> {
+	public static final class ObjectifyKeyFieldParameter<T extends ObjectifyModel<T>> extends AbstractQueryFieldParameter<Key<T>> {
 
-		private ObjectifyKeyFieldParameter(String field, Key<T> value) throws IllegalArgumentException {
+		private final ObjectifyKeyFieldParameterBuilder<T> builder;
+
+		private ObjectifyKeyFieldParameter(ObjectifyKeyFieldParameterBuilder<T> builder,
+		        String field,
+		        String parameterString) throws IllegalArgumentException {
+			super(field, parameterString);
+			this.builder = builder;
+		}
+
+		private ObjectifyKeyFieldParameter(ObjectifyKeyFieldParameterBuilder<T> builder, String field, Key<T> value)
+		        throws IllegalArgumentException {
 			super(field, value);
+			this.builder = builder;
 		}
 
 		@Override
 		public String getParameterValue() {
-			return ObjectifyModelKeyUtil.readKeyString(ObjectifyKeyFieldParameterBuilder.this.keyType, this.value);
+			return ObjectifyModelKeyUtil.readKeyString(this.builder.keyType, this.value);
 		}
 
 		@Override
 		public void setParameterValue(String value) throws IllegalArgumentException {
-			this.value = ObjectifyKeyFieldParameterBuilder.this.util.keyFromString(
-			        ObjectifyKeyFieldParameterBuilder.this.keyType, value);
+			this.value = this.builder.util.keyFromString(this.builder.keyType, value);
 		}
 
 	}

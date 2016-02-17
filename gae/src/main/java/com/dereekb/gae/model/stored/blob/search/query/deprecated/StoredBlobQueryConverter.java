@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.stored.blob.search.query;
 
-import com.dereekb.gae.model.extension.search.query.search.components.ModelQueryConverter;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 
@@ -37,7 +36,7 @@ public class StoredBlobQueryConverter
 
 		query.updateObjectifyQuery(objectifyQuery);
 		*/
-		
+
 		return null;
 	}
 
