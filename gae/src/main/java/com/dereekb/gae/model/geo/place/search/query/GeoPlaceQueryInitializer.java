@@ -10,6 +10,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLim
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.ConfigurableQueryParameters;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder.ObjectifyKeyFieldParameter;
+import com.googlecode.objectify.Key;
 
 /**
  * {@link ConfigurableQueryParameters} implementation for a
@@ -43,6 +44,18 @@ public class GeoPlaceQueryInitializer
 	        implements ConfigurableQueryParameters {
 
 		private ObjectifyKeyFieldParameter<GeoPlace> parent;
+
+		public ObjectifyKeyFieldParameter<GeoPlace> getParent() {
+			return this.parent;
+		}
+
+		public void setParent(Key<GeoPlace> parent) {
+			if (parent != null) {
+				this.parent = PARENT_BUILDER.make(PARENT_FIELD, parent);
+			} else {
+				this.parent = null;
+			}
+		}
 
 		// MARK: ConfigurableQueryParameters
 		@Override

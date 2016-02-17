@@ -76,14 +76,16 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 		private ObjectifyKeyFieldParameter(ObjectifyKeyFieldParameterBuilder<T> builder,
 		        String field,
 		        String parameterString) throws IllegalArgumentException {
-			super(field, parameterString);
 			this.builder = builder;
+			this.setField(field);
+			this.setParameterString(parameterString);
 		}
 
 		private ObjectifyKeyFieldParameter(ObjectifyKeyFieldParameterBuilder<T> builder, String field, Key<T> value)
 		        throws IllegalArgumentException {
-			super(field, value);
 			this.builder = builder;
+			this.setField(field);
+			this.setValue(value);
 		}
 
 		@Override
