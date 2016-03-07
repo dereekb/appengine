@@ -15,7 +15,7 @@ public interface DescribedModel {
 	/**
 	 * {@link Descriptor} describing the information link for this type.
 	 *
-	 * @return {@link Descriptor} instance. Null if no relation is set.
+	 * @return {@link Descriptor} instance. {@code null} if no relation is set.
 	 */
 	public Descriptor getDescriptor();
 
@@ -23,8 +23,8 @@ public interface DescribedModel {
 	 * Sets the new link/relation for this {@link DescribedModel}.
 	 *
 	 * @param descriptor
-	 *            {@link Descriptor} describing the link information. Pass null
-	 *            to clear the value.
+	 *            {@link Descriptor} describing the link information. Pass
+	 *            {@code null} to clear the value.
 	 */
 	public void setDescriptor(Descriptor descriptor);
 

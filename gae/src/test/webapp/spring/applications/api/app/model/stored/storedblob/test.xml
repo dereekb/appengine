@@ -11,10 +11,11 @@
 
 	<!-- Generator -->
 	<bean id="storedBlobTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.TestModelGeneratorImpl"
+		class="com.dereekb.gae.test.model.stored.StoredBlobTestGenerator"
 		scope="singleton">
 		<constructor-arg index="0" ref="storedBlobRegistry" />
 		<constructor-arg index="1" ref="storedBlobGenerator" />
+		<constructor-arg index="2" ref="storageSystem" />
 	</bean>
 
 	<!-- Data Generator -->
