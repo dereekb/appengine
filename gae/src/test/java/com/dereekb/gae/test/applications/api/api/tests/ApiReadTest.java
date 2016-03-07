@@ -106,6 +106,4 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		}
 	}
 
-	// TODO: Test reading related types.
-
 }
