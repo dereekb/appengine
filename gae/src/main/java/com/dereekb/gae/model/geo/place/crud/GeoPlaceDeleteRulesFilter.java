@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.geo.place.crud;
 
-import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
+import com.dereekb.gae.model.extension.links.descriptor.filter.UniqueDescribedModelFilter;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
@@ -15,13 +15,11 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  */
 public class GeoPlaceDeleteRulesFilter extends AbstractFilter<GeoPlace> {
 
+	private static final UniqueDescribedModelFilter DESCRIBED_FILTER = new UniqueDescribedModelFilter();
+
 	@Override
 	public FilterResult filterObject(GeoPlace object) {
-		Descriptor descriptor = object.getDescriptor();
-
-		boolean descriptorIsNotSet = (descriptor == null);
-
-		return FilterResult.withBoolean(descriptorIsNotSet);
+		return DESCRIBED_FILTER.filterObject(object);
 	}
 
 }

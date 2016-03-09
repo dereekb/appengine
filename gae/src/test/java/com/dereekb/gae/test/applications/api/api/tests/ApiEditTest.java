@@ -27,13 +27,13 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
  */
 public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> extends ApiApplicationTestContext {
 
-	private Integer genCount = 5;
+	protected Integer genCount = 5;
 
-	private Getter<T> getter;
-	private Generator<I> modelDataGenerator;
-	private DirectionalConverter<T, I> converter;
-	private EditModelController<T, I> controller;
-	private TestModelGenerator<T> modelGenerator;
+	protected Getter<T> getter;
+	protected Generator<I> modelDataGenerator;
+	protected DirectionalConverter<T, I> converter;
+	protected EditModelController<T, I> controller;
+	protected TestModelGenerator<T> modelGenerator;
 
 	public Integer getGenCount() {
 		return this.genCount;

@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.stored.blob.crud;
 
-import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
+import com.dereekb.gae.model.extension.links.descriptor.filter.UniqueDescribedModelFilter;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
@@ -16,13 +16,11 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  */
 public class StoredBlobDeleteRulesFilter extends AbstractFilter<StoredBlob> {
 
+	private static final UniqueDescribedModelFilter DESCRIBED_FILTER = new UniqueDescribedModelFilter();
+
 	@Override
 	public FilterResult filterObject(StoredBlob object) {
-		Descriptor descriptor = object.getDescriptor();
-
-		boolean descriptorIsNotSet = (descriptor == null);
-
-		return FilterResult.withBoolean(descriptorIsNotSet);
+		return DESCRIBED_FILTER.filterObject(object);
 	}
 
 }
