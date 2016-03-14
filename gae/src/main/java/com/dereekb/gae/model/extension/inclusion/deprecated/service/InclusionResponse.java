@@ -15,6 +15,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @param <T>
  *            Primary type
  */
+@Deprecated
 public interface InclusionResponse<T> {
 
 	/**

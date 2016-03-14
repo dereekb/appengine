@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.crud.services.components.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
 import com.dereekb.gae.model.crud.task.ReadTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.dereekb.gae.utilities.filters.FilterResult;
@@ -49,6 +51,14 @@ public class ReadServiceImpl<T extends UniqueModel>
 	}
 
 	// MARK: AtomicReadService
+	@Override
+	public T read(ModelKey key) throws AtomicOperationException {
+		Collection<ModelKey> keys = SingleItem.withValue(key);
+		Collection<T> read = this.read(keys);
+		List<T> models = new ArrayList<T>(read);
+		return models.get(0);
+	}
+
 	@Override
 	public Collection<T> read(Collection<ModelKey> keys) throws AtomicOperationException {
 		ReadRequestOptions options = new ReadRequestOptionsImpl(true);

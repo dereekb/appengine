@@ -16,6 +16,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *
  * @param <T>
  */
+@Deprecated
 public interface ReadModelControllerDelegate<T extends UniqueModel> {
 
 	/**
@@ -26,6 +27,7 @@ public interface ReadModelControllerDelegate<T extends UniqueModel> {
 	 * @return {@link ReadResponse}. Never {@code null}.
 	 * @throws AtomicOperationException
 	 */
+	@Deprecated
 	public ReadResponse<T> read(ReadRequest readRequest) throws AtomicOperationException;
 
 	/**
@@ -39,6 +41,7 @@ public interface ReadModelControllerDelegate<T extends UniqueModel> {
 	 *            included models.
 	 * @return
 	 */
+	@Deprecated
 	public Map<String, Object> readIncluded(Collection<T> models,
 	                                        Set<String> relatedFilter);
 

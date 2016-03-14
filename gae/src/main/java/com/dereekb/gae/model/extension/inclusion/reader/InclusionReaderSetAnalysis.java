@@ -9,19 +9,19 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
- * Results returned by {@link InclusionReader}.
+ * Results returned by {@link ModelInclusionReader}.
  *
  * @author dereekb
  *
  */
-public interface InclusionReaderSetAnalysis<T> {
+public interface InclusionReaderSetAnalysis {
 
 	/**
-	 * Returns the models that were analyzed for this result.
+	 * Returns the {@link ModelKey} values that were analyzed for this result.
 	 *
 	 * @return {@link Collection} of analyzed models.
 	 */
-	public Collection<T> getAnalyzedModels();
+	public Collection<ModelKey> getAnalyzedModelKeys();
 
 	/**
 	 * Returns all related types for the model type.

@@ -15,6 +15,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @param <T>
  *            model type
  */
+@Deprecated
 public interface ReadModelControllerConversionDelegate<T extends UniqueModel> {
 
 	public ReadRequest convert(List<String> ids);

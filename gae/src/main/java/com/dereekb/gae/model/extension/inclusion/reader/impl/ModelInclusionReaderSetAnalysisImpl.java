@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavailableException;
 import com.dereekb.gae.model.extension.inclusion.reader.InclusionReaderSetAnalysis;
+import com.dereekb.gae.model.extension.inclusion.reader.ModelInclusionReaderSetAnalysis;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
@@ -18,20 +20,27 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
  * @param <T>
  *            model type
  */
-public class InclusionReaderSetAnalysisImpl<T>
-        implements InclusionReaderSetAnalysis<T> {
+public class ModelInclusionReaderSetAnalysisImpl<T extends UniqueModel>
+        implements ModelInclusionReaderSetAnalysis<T> {
 
 	private final Collection<T> models;
 	private final InclusionReaderSetAnalysisImplDelegate<T> delegate;
 
-	public InclusionReaderSetAnalysisImpl(Collection<T> models, InclusionReaderSetAnalysisImplDelegate<T> delegate) {
+	public ModelInclusionReaderSetAnalysisImpl(Collection<T> models, InclusionReaderSetAnalysisImplDelegate<T> delegate) {
 		this.models = models;
 		this.delegate = delegate;
 	}
 
+	// MARK: ModelInclusionReaderSetAnalysis
 	@Override
 	public Collection<T> getAnalyzedModels() {
 		return this.models;
+	}
+
+	// MARK: InclusionReaderSetAnalysis
+	@Override
+	public Collection<ModelKey> getAnalyzedModelKeys() {
+		return ModelKey.readModelKeys(this.models);
 	}
 
 	@Override

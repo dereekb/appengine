@@ -11,6 +11,7 @@ import java.util.Set;
  * @param <T>
  *            Primary type
  */
+@Deprecated
 public interface InclusionRequest<T> {
 
 	/**

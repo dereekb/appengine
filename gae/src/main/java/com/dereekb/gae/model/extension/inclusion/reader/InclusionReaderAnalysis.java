@@ -7,21 +7,18 @@ import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavaila
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * Single element analysis from a {@link InclusionReader}.
+ * Single element analysis from a {@link ModelInclusionReader} for a model.
  *
  * @author dereekb
- *
- * @param <T>
- *            model type
  */
-public interface InclusionReaderAnalysis<T> {
+public interface InclusionReaderAnalysis {
 
 	/**
-	 * Returns the analyzed model.
+	 * Returns the analyzed model's key.
 	 *
-	 * @return the analyzed model. Never {@code null}.
+	 * @return {@link ModelKey}. Never {@code null}.
 	 */
-	public T getReadModel();
+	public ModelKey getModelKey();
 
 	/**
 	 * Returns all related types for this model type.

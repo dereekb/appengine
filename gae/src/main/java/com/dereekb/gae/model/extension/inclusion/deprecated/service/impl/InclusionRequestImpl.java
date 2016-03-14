@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.inclusion.service.InclusionRequest;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class InclusionRequestImpl<T>
         implements InclusionRequest<T> {
 

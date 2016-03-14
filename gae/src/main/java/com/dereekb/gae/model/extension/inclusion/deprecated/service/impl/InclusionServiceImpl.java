@@ -27,6 +27,7 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class InclusionServiceImpl<T>
         implements InclusionService<T> {
 

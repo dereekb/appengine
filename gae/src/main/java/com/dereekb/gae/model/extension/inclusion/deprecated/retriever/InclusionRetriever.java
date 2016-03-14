@@ -6,6 +6,7 @@ package com.dereekb.gae.model.extension.inclusion.retriever;
  *
  * @author dereekb
  */
+@Deprecated
 public interface InclusionRetriever {
 
 	/**

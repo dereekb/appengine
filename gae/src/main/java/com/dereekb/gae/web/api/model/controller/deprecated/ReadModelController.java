@@ -32,23 +32,32 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @param <T>
  *            model type
  */
+@Deprecated
 public abstract class ReadModelController<T extends UniqueModel> {
 
-	private final ReadModelControllerDelegate<T> delegate;
-	private final ReadModelControllerConversionDelegate<T> conversionDelegate;
+	private ReadModelControllerDelegate<T> delegate;
+	private ReadModelControllerConversionDelegate<T> conversionDelegate;
 
 	public ReadModelController(ReadModelControllerDelegate<T> delegate,
 	        ReadModelControllerConversionDelegate<T> conversionDelegate) {
-		this.delegate = delegate;
-		this.conversionDelegate = conversionDelegate;
+		this.setDelegate(delegate);
+		this.setConversionDelegate(conversionDelegate);
 	}
 
 	public ReadModelControllerDelegate<T> getDelegate() {
 		return this.delegate;
 	}
 
+	public void setDelegate(ReadModelControllerDelegate<T> delegate) {
+		this.delegate = delegate;
+	}
+
 	public ReadModelControllerConversionDelegate<T> getConversionDelegate() {
 		return this.conversionDelegate;
+	}
+
+	public void setConversionDelegate(ReadModelControllerConversionDelegate<T> conversionDelegate) {
+		this.conversionDelegate = conversionDelegate;
 	}
 
 	/**

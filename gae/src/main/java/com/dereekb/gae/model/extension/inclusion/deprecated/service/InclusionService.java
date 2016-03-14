@@ -9,6 +9,7 @@ package com.dereekb.gae.model.extension.inclusion.service;
  * @param <T>
  *            Primary type
  */
+@Deprecated
 public interface InclusionService<T> {
 
 	/**

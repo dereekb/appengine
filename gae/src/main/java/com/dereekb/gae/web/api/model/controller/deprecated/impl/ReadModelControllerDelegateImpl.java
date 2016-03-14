@@ -9,9 +9,6 @@ import java.util.Set;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.model.extension.inclusion.service.InclusionResponse;
-import com.dereekb.gae.model.extension.inclusion.service.InclusionService;
-import com.dereekb.gae.model.extension.inclusion.service.impl.InclusionRequestImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.web.api.model.controller.ReadModelControllerDelegate;
 
@@ -21,6 +18,7 @@ import com.dereekb.gae.web.api.model.controller.ReadModelControllerDelegate;
  * @author dereekb
  *
  */
+@Deprecated
 public class ReadModelControllerDelegateImpl<T extends UniqueModel>
         implements ReadModelControllerDelegate<T> {
 

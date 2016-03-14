@@ -9,6 +9,7 @@ import java.util.Collection;
  * @author dereekb
  *
  */
+@Deprecated
 public interface ConfiguredInclusionService<T> {
 
 	public InclusionResponse<T> loadRelated(Collection<T> models);
