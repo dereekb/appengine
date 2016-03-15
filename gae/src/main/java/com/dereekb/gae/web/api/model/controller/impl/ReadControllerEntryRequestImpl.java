@@ -1,6 +1,6 @@
 package com.dereekb.gae.web.api.model.controller.impl;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -17,11 +17,11 @@ public class ReadControllerEntryRequestImpl
 
 	private String modelType;
 	private boolean atomic;
-	private List<ModelKey> modelKeys;
+	private Collection<ModelKey> modelKeys;
 	private boolean loadRelatedTypes;
 	private Set<String> relatedTypesFilter;
 
-	public ReadControllerEntryRequestImpl(String modelType, boolean atomic, List<ModelKey> modelKeys) {
+	public ReadControllerEntryRequestImpl(String modelType, boolean atomic, Collection<ModelKey> modelKeys) {
 		this.modelType = modelType;
 		this.atomic = atomic;
 		this.modelKeys = modelKeys;
@@ -29,7 +29,7 @@ public class ReadControllerEntryRequestImpl
 
 	public ReadControllerEntryRequestImpl(String modelType,
 	        boolean atomic,
-	        List<ModelKey> modelKeys,
+	        Collection<ModelKey> modelKeys,
 	        boolean loadRelatedTypes,
 	        Set<String> relatedTypesFilter) {
 		this.modelType = modelType;
@@ -58,11 +58,11 @@ public class ReadControllerEntryRequestImpl
 	}
 
 	@Override
-	public List<ModelKey> getModelKeys() {
+	public Collection<ModelKey> getModelKeys() {
 		return this.modelKeys;
 	}
 
-	public void setModelKeys(List<ModelKey> modelKeys) {
+	public void setModelKeys(Collection<ModelKey> modelKeys) {
 		this.modelKeys = modelKeys;
 	}
 

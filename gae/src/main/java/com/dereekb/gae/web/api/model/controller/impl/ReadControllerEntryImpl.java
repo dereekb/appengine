@@ -33,12 +33,16 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 	private ModelInclusionReader<T> inclusionReader;
 	private DirectionalConverter<T, ? extends Object> dtoConverter;
 
+	public ReadControllerEntryImpl(ReadService<T> readService, DirectionalConverter<T, ? extends Object> dtoConverter) {
+		this(readService, dtoConverter, null);
+	}
+
 	public ReadControllerEntryImpl(ReadService<T> readService,
-	        ModelInclusionReader<T> inclusionReader,
-	        DirectionalConverter<T, ? extends Object> dtoConverter) {
-		this.readService = readService;
-		this.inclusionReader = inclusionReader;
-		this.dtoConverter = dtoConverter;
+	        DirectionalConverter<T, ? extends Object> dtoConverter,
+	        ModelInclusionReader<T> inclusionReader) {
+		this.setReadService(readService);
+		this.setDtoConverter(dtoConverter);
+		this.setInclusionReader(inclusionReader);
 	}
 
 	public ReadService<T> getReadService() {
@@ -72,7 +76,7 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 
 		// Read
 		boolean atomic = request.isAtomic();
-		List<ModelKey> keys = request.getModelKeys();
+		Collection<ModelKey> keys = request.getModelKeys();
 		ReadRequest readRequest = new KeyReadRequest(keys, atomic);
 		ReadResponse<T> readResponse = this.readService.read(readRequest);
 
@@ -94,6 +98,12 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 		}
 
 		return response;
+	}
+
+	@Override
+	public String toString() {
+		return "ReadControllerEntryImpl [readService=" + this.readService + ", inclusionReader=" + this.inclusionReader
+		        + ", dtoConverter=" + this.dtoConverter + "]";
 	}
 
 }

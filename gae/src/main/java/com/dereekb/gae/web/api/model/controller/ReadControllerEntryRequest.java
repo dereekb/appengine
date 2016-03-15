@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.model.controller;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public interface ReadControllerEntryRequest {
 	 *
 	 * @return {@link List} of {@link ModelKey} values to load.
 	 */
-	public List<ModelKey> getModelKeys();
+	public Collection<ModelKey> getModelKeys();
 
 	/**
 	 * Whether or not to load related types.
