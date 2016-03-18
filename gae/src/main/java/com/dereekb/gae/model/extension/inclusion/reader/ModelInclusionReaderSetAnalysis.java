@@ -2,13 +2,15 @@ package com.dereekb.gae.model.extension.inclusion.reader;
 
 import java.util.Collection;
 
+import com.dereekb.gae.server.datastore.models.UniqueModel;
+
 /**
  * Results returned by {@link ModelInclusionReader}.
  *
  * @author dereekb
  *
  */
-public interface ModelInclusionReaderSetAnalysis<T>
+public interface ModelInclusionReaderSetAnalysis<T extends UniqueModel>
         extends InclusionReaderSetAnalysis {
 
 	/**

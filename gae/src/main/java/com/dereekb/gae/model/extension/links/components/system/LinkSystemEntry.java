@@ -1,7 +1,6 @@
-package com.dereekb.gae.model.extension.links.components.system.impl;
+package com.dereekb.gae.model.extension.links.components.system;
 
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
-import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 
 /**
  * Entry for a {@link LinkSystem}.

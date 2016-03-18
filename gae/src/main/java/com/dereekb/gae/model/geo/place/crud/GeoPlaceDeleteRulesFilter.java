@@ -15,7 +15,7 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  */
 public class GeoPlaceDeleteRulesFilter extends AbstractFilter<GeoPlace> {
 
-	private static final UniqueDescribedModelFilter DESCRIBED_FILTER = new UniqueDescribedModelFilter();
+	private static final UniqueDescribedModelFilter DESCRIBED_FILTER = new UniqueDescribedModelFilter(false);
 
 	@Override
 	public FilterResult filterObject(GeoPlace object) {

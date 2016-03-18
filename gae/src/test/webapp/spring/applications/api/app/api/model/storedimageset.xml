@@ -10,27 +10,18 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Read Controller -->
-	<bean id="storedImageSetReadController"
-		class="com.dereekb.gae.web.api.controllers.models.StoredImageSetReadController"
+	<bean id="storedImageSetReadControllerEntry"
+		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
 		scope="singleton" lazy-init="false">
-		<constructor-arg index="0"
-			ref="storedImageSetReadControllerDelegate" />
-		<constructor-arg index="1"
-			ref="storedImageSetReadControllerConversionDelegate" />
-	</bean>
-
-	<bean id="storedImageSetReadControllerDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.ReadModelControllerDelegateImpl"
-		scope="singleton">
 		<constructor-arg index="0" ref="storedImageSetReadService" />
+		<constructor-arg index="1" ref="storedImageSetDataConverter" />
+		<constructor-arg index="2" ref="storedImageSetLinkModelInclusionReader" />
 	</bean>
 
-	<bean id="storedImageSetReadControllerConversionDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.ReadModelControllerConversionDelegateImpl"
-		scope="singleton">
-		<constructor-arg index="0" ref="storedImageSetType" />
-		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
-		<constructor-arg index="2" ref="storedImageSetDataBuilder" />
+	<bean id="storedImageSetLinkModelInclusionReader"
+		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
+		scope="singleton" lazy-init="false">
+		<constructor-arg index="0" ref="storedImageSetLinkSystem"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->

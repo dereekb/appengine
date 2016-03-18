@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavailableException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
  * Single element analysis from a {@link ModelInclusionReader} for a model.
@@ -38,5 +39,12 @@ public interface InclusionReaderAnalysis {
 	 *             thrown if the type is unavailable.
 	 */
 	public Collection<ModelKey> getKeysForType(String type) throws InclusionTypeUnavailableException;
+
+	/**
+	 * Returns a map of all types and keys.
+	 *
+	 * @return {@link HashMapWithSet}
+	 */
+	public HashMapWithSet<String, ModelKey> getRelationMap();
 
 }

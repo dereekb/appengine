@@ -14,6 +14,7 @@ import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.components.accessor.LinkAccessor;
 import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
 import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
@@ -22,7 +23,7 @@ import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelImpl
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImpl;
 import com.dereekb.gae.model.extension.links.components.model.impl.LinkModelSetImplDelegate;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
+import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystemEntry;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceEntry;
@@ -41,8 +42,8 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
  *            model type
  */
 public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
-        implements LinkDeleterServiceEntry, LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>,
-        BidirectionalLinkSystemEntry {
+        implements LinkAccessor<T>, LinkDeleterServiceEntry, LinkSystemEntry, LinkModelImplDelegate<T>,
+        LinkModelSetImplDelegate<T>, BidirectionalLinkSystemEntry {
 
 	/**
 	 * Delegate interface for {@link AbstractModelLinkSystemEntry} for
@@ -206,7 +207,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	@Override
 	public Map<String, Link> buildLinks(T model) {
 		Map<String, Link> map = new HashMap<String, Link>();
-		List<Link> links = this.makeLinksForModel(model);
+		List<Link> links = this.getLinks(model);
 
 		for (Link link : links) {
 			String key = link.getLinkName();
@@ -217,7 +218,8 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	}
 
 	// AbstractLinkDelegateImpl
-	public abstract List<Link> makeLinksForModel(T model);
+	@Override
+	public abstract List<Link> getLinks(T model);
 
 	@Override
 	public LinkModelSet makeSet() {

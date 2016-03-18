@@ -107,7 +107,7 @@ public class ReadController {
 			List<ModelKey> modelKeys = this.keyTypeConverter.convertKeys(modelType, ids);
 
 			ReadControllerEntryRequestImpl request = new ReadControllerEntryRequestImpl(modelType, atomic, modelKeys);
-			request.setLoadRelatedTypes(false);
+			request.setLoadRelatedTypes(loadRelated);
 			request.setRelatedTypesFilter(relatedTypes);
 
 			ReadControllerEntryResponse readResponse = this.read(entry, request);

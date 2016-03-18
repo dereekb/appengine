@@ -2,16 +2,17 @@ package com.dereekb.gae.model.extension.inclusion.reader;
 
 import java.util.Collection;
 
+import com.dereekb.gae.server.datastore.models.UniqueModel;
+
 /**
- * Used to build a map of models for the
+ * Used for analyzing and reading related models.
  *
  * @author dereekb
  *
  * @param <T>
  *            primary model
  */
-public interface ModelInclusionReader<T>
-        extends InclusionReader {
+public interface ModelInclusionReader<T extends UniqueModel> {
 
 	/**
 	 * Analyzes the input model.

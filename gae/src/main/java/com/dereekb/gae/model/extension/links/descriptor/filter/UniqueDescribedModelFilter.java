@@ -13,7 +13,11 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  */
 public class UniqueDescribedModelFilter extends AbstractFilter<UniqueDescribedModel> {
 
-	private boolean hasDescriptor = false;
+	private boolean hasDescriptor;
+
+	public UniqueDescribedModelFilter() {
+		this(true);
+	}
 
 	public UniqueDescribedModelFilter(boolean hasDescriptor) {
 		this.hasDescriptor = hasDescriptor;

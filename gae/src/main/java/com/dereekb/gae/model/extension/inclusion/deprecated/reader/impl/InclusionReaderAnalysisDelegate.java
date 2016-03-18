@@ -13,7 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public interface InclusionReaderAnalysisImplDelegate<T> {
+public interface InclusionReaderAnalysisDelegate<T> {
 
 	/**
 	 * Returns all related types for this model type.

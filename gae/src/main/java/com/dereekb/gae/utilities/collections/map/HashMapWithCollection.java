@@ -206,8 +206,8 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 		Set<? extends K> keys = map.keySet();
 
 		for (K key : keys) {
-			map.valuesForKey(key);
-
+			List<? extends T> values = map.valuesForKey(key);
+			this.addAll(key, values);
 		}
     }
 

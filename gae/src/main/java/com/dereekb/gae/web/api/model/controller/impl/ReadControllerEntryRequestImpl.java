@@ -16,8 +16,10 @@ public class ReadControllerEntryRequestImpl
         implements ReadControllerEntryRequest {
 
 	private String modelType;
+
 	private boolean atomic;
 	private Collection<ModelKey> modelKeys;
+
 	private boolean loadRelatedTypes;
 	private Set<String> relatedTypesFilter;
 

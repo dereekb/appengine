@@ -12,7 +12,7 @@ import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollection
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
-import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
+import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemEntry;
@@ -79,7 +79,7 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	}
 
 	@Override
-	public List<Link> makeLinksForModel(final StoredImageSet model) {
+	public List<Link> getLinks(final StoredImageSet model) {
 		List<Link> links = new ArrayList<Link>();
 
 		ModelKey key = model.getModelKey();

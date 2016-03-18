@@ -12,14 +12,7 @@ import com.dereekb.gae.model.extension.links.components.exception.UnavailableLin
  *
  */
 public interface Link
-        extends LinkInfo {
-
-	/**
-	 * Returns a {@link LinkData} instance that describes this link.
-	 *
-	 * @return New {@link Relation} instance. Never null.
-	 */
-	public LinkData getLinkData();
+        extends ReadOnlyLink {
 
 	/**
 	 * Adds a new relation to this link.

@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.web.api.model.controller.ReadModelController;
+import com.dereekb.gae.web.api.model.controller.ReadController;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
@@ -25,15 +27,35 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 
 	private Integer genCount = 5;
 
-	private ReadModelController<T> controller;
+	@Autowired
+	@Qualifier("readController")
+	private ReadController controller;
+
+	private String modelType;
 	private TestModelGenerator<T> modelGenerator;
 
-	public ReadModelController<T> getController() {
+	public Integer getGenCount() {
+		return this.genCount;
+	}
+
+	public void setGenCount(Integer genCount) {
+		this.genCount = genCount;
+	}
+
+	public ReadController getController() {
 		return this.controller;
 	}
 
-	public void setController(ReadModelController<T> controller) {
+	public void setController(ReadController controller) {
 		this.controller = controller;
+	}
+
+	public String getModelType() {
+		return this.modelType;
+	}
+
+	public void setModelType(String modelType) {
+		this.modelType = modelType;
 	}
 
 	public TestModelGenerator<T> getModelGenerator() {
@@ -44,13 +66,14 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		this.modelGenerator = modelGenerator;
 	}
 
+	// MARK: Tests
 	@Test
 	public void testSuccessfulReadRequest() {
 		List<T> models = this.modelGenerator.generate(this.genCount);
 		List<String> stringKeys = ModelKey.readStringKeys(models);
 
 		try {
-			ApiResponse response = this.controller.read(stringKeys, true, false, null);
+			ApiResponse response = this.controller.readModels(this.modelType, stringKeys, true, false, null);
 
 			ApiResponseData responseData = response.getResponsePrimaryData();
 			Assert.assertNotNull(responseData);
@@ -71,7 +94,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		stringKeys.add("30000");
 
 		try {
-			this.controller.read(stringKeys, true, false, null);
+			this.controller.readModels(this.modelType, stringKeys, true, false, null);
 			Assert.fail();
 		} catch (MissingRequiredResourceException e) {
 			List<String> resources = e.getResources();
@@ -94,7 +117,7 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 		stringKeys.addAll(fakeStringKeys);
 
 		try {
-			ApiResponse response = this.controller.read(stringKeys, false, false, null);
+			ApiResponse response = this.controller.readModels(this.modelType, stringKeys, false, false, null);
 
 			List<ApiResponseError> errors = response.getResponseErrors();
 			Assert.assertNotNull(errors);
@@ -102,6 +125,24 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 
 			// TODO: Check response further to make sure they match.
 		} catch (MissingRequiredResourceException e) {
+			Assert.fail();
+		}
+	}
+
+	@Test
+	public void testSuccessfulReadRequestWithRelated() {
+		List<T> models = this.modelGenerator.generate(this.genCount);
+		List<String> stringKeys = ModelKey.readStringKeys(models);
+
+		try {
+			ApiResponse response = this.controller.readModels(this.modelType, stringKeys, true, true, null);
+
+			ApiResponseData responseData = response.getResponsePrimaryData();
+			Assert.assertNotNull(responseData);
+
+			Object data = responseData.getResponseData();
+			Assert.assertNotNull(data);
+		} catch (Exception e) {
 			Assert.fail();
 		}
 	}

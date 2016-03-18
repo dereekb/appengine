@@ -7,7 +7,6 @@ import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavaila
 import com.dereekb.gae.model.extension.inclusion.reader.ModelInclusionReaderAnalysis;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
  * {@link ModelInclusionReaderAnalysis} implementation.
@@ -20,15 +19,21 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 public class ModelInclusionReaderAnalysisImpl<T extends UniqueModel>
         implements ModelInclusionReaderAnalysis<T> {
 
-	private T model;
-	private HashMapWithSet<String, ModelKey> relatedKeys;
+	private final T model;
+	private final InclusionReaderAnalysisDelegate<T> delegate;
 
-	public ModelInclusionReaderAnalysisImpl(T model, HashMapWithSet<String, ModelKey> relatedKeys) {
+	public ModelInclusionReaderAnalysisImpl(T model, InclusionReaderAnalysisDelegate<T> delegate) {
 		this.model = model;
-		this.relatedKeys = relatedKeys;
+		this.delegate = delegate;
 	}
 
 	// MARK: ModelInclusionReaderAnalysis
+	@Override
+	public T getAnalyzedModel() {
+		return this.model;
+	}
+
+	// MARK: InclusionReaderAnalysis
 	@Override
 	public ModelKey getModelKey() {
 		return this.model.getModelKey();
@@ -36,27 +41,17 @@ public class ModelInclusionReaderAnalysisImpl<T extends UniqueModel>
 
 	@Override
 	public Set<String> getRelatedTypes() {
-		return this.relatedKeys.keySet();
+		return this.delegate.getRelatedTypes();
 	}
 
 	@Override
 	public Collection<ModelKey> getKeysForType(String type) throws InclusionTypeUnavailableException {
-		return this.relatedKeys.get(type);
-	}
-
-	@Override
-	public HashMapWithSet<String, ModelKey> getRelationMap() {
-		return this.relatedKeys;
-	}
-
-	@Override
-	public T getAnalyzedModel() {
-		return this.model;
+		return this.delegate.getRelatedKeysForType(type, this.model);
 	}
 
 	@Override
 	public String toString() {
-		return "ModelInclusionReaderAnalysisImpl [model=" + this.model + ", relatedKeys=" + this.relatedKeys + "]";
+		return "ModelInclusionReaderAnalysisImpl [model=" + this.model + ", delegate=" + this.delegate + "]";
 	}
 
 }
