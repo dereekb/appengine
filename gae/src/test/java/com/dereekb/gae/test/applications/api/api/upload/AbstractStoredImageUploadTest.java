@@ -98,7 +98,7 @@ public abstract class AbstractStoredImageUploadTest extends ApiApplicationTestCo
 			StoredImage storedImage = this.storedImageGetter.get(ModelKey.convert(descriptorId));
 
 			Assert.assertNotNull(storedImage);
-			Assert.assertTrue(storedImage.getBlob().equivalent(storedBlob.getObjectifyKey()));
+			Assert.assertTrue(storedImage.getStoredBlob().equivalent(storedBlob.getObjectifyKey()));
 		}
 	}
 

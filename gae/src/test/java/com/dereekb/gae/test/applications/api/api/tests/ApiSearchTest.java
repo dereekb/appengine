@@ -126,9 +126,21 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 	}
 
 	protected List<T> generateIndexedModels(int count) {
-		List<T> models = this.generator.generate(count);
+		List<T> models = this.generate(count);
 		this.indexService.indexChange(models, IndexAction.INDEX);
 		return models;
 	}
+
+	protected List<T> generate(int count) {
+		List<T> models = this.generator.generate(count);
+
+		for (T model : models) {
+			this.createRelated(model);
+		}
+
+		return models;
+	}
+
+	protected void createRelated(T model) {}
 
 }

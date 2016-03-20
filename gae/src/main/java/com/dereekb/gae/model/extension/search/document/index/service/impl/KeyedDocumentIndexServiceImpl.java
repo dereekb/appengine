@@ -55,10 +55,10 @@ public class KeyedDocumentIndexServiceImpl<T extends SearchableUniqueModel>
 	}
 
 	@Override
-	public boolean indexChangeWithKeys(Collection<ModelKey> keys,
+	public void indexChangeWithKeys(Collection<ModelKey> keys,
 	                                   IndexAction action) throws AtomicOperationException {
 		Collection<T> models = this.readService.read(keys);
-		return this.indexingService.indexChange(models, action);
+		this.indexingService.indexChange(models, action);
 	}
 
 	@Override

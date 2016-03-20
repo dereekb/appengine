@@ -34,7 +34,7 @@ public class ImageBytesValidator
 	private int maxWidth = MAX_ALLOWED_WIDTH;
 	private int maxHeight = MAX_ALLOWED_HEIGHT;
 
-	private Set<Format> acceptableFormats;
+	private Set<Format> acceptableFormats = new HashSet<Format>();
 
 	public ImageBytesValidator() {}
 
@@ -133,8 +133,7 @@ public class ImageBytesValidator
 		return copy;
 	}
 
-	public void setAcceptableFormats(Set<Format> acceptableFormats) throws IllegalArgumentException {
-
+	public void setAcceptableFormats(Set<Format> acceptableFormats) {
 		if (acceptableFormats == null) {
 			acceptableFormats = new HashSet<Format>();
 		}

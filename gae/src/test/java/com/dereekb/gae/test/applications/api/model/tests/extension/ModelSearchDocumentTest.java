@@ -62,12 +62,10 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 
 		Iterable<T> set = SingleItem.withValue(model);
 
-		boolean success = this.indexService.indexChange(set, IndexAction.INDEX);
-		Assert.assertTrue(success);
+		this.indexService.indexChange(set, IndexAction.INDEX);
 		Assert.assertNotNull(model.getSearchIdentifier());
 
-		success = this.indexService.indexChange(set, IndexAction.UNINDEX);
-		Assert.assertTrue(success);
+		this.indexService.indexChange(set, IndexAction.UNINDEX);
 
 		// The implementation should not clear the change.
 		Assert.assertNotNull(model.getSearchIdentifier());
@@ -77,8 +75,7 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 	public void testIndexingMultiple() {
 		List<T> models = this.make(10);
 
-		boolean success = this.indexService.indexChange(models, IndexAction.INDEX);
-		Assert.assertTrue(success);
+		this.indexService.indexChange(models, IndexAction.INDEX);
 
 		for (T model : models) {
 			Assert.assertNotNull(model.getSearchIdentifier());

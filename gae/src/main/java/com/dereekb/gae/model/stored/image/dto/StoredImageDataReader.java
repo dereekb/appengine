@@ -44,7 +44,7 @@ public class StoredImageDataReader extends AbstractDirectionalConverter<StoredIm
 		image.setTypeId(input.getType());
 
 		// Links
-		image.setBlob(STORED_BLOB_KEY_UTIL.keyFromId(input.getBlob()));
+		image.setStoredBlob(STORED_BLOB_KEY_UTIL.keyFromId(input.getBlob()));
 		image.setGeoPlace(GEO_PLACE_KEY_UTIL.keyFromId(input.getGeoPlace()));
 		image.setImageSets(STORED_IMAGE_SET_KEY_UTIL.setFromIds(input.getImageSets()));
 

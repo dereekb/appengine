@@ -31,7 +31,7 @@ public class StoredImageDerivativeDocumentBuilderStepDelegate
 			descriptors.add(DescriptorUtility.withKeyId(geoPlace));
 		}
 
-		Key<StoredBlob> storedBlob = model.getBlob();
+		Key<StoredBlob> storedBlob = model.getStoredBlob();
 
 		if (storedBlob != null) {
 			descriptors.add(DescriptorUtility.withKeyId(storedBlob));

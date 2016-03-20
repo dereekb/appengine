@@ -91,7 +91,7 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 		storedImage.setGeoPlace(geoPlace.getObjectifyKey());
 
 		StoredBlob storedBlob = this.storedBlobGenerator.generate();
-		storedImage.setBlob(storedBlob.getObjectifyKey());
+		storedImage.setStoredBlob(storedBlob.getObjectifyKey());
 
 		return storedImage;
 	}

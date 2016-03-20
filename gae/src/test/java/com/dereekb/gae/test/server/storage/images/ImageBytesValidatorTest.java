@@ -72,8 +72,12 @@ public class ImageBytesValidatorTest {
 		acceptableFormats.add(Format.JPEG);
 		validator.setAcceptableFormats(acceptableFormats);
 
-		boolean isValid = validator.safeValidateContent(bytes);
-		Assert.assertFalse(isValid);
+		try {
+			validator.safeValidateContent(bytes);
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+
+		}
 	}
 
 	@Test
@@ -160,14 +164,9 @@ public class ImageBytesValidatorTest {
 		boolean isValid = validator.safeValidateContent(bytes);
 		Assert.assertTrue(isValid);
 
+		// All formats allowed
 		Set<Format> noAcceptableFormats = new HashSet<Format>();
-
-		try {
-			validator.setAcceptableFormats(noAcceptableFormats);
-			Assert.fail();
-		} catch (IllegalArgumentException e) {
-
-		}
+		validator.setAcceptableFormats(noAcceptableFormats);
 
 		Set<Format> jpgOnlyFormats = new HashSet<Format>();
 		jpgOnlyFormats.add(Format.JPEG);

@@ -60,7 +60,7 @@ public final class StoredImageGenerator extends AbstractModelGenerator<StoredIma
 
 		// Stored Blob
 		Key<StoredBlob> storedBlob = STORED_BLOB_GENERATOR.generate(arg);
-		image.setBlob(storedBlob);
+		image.setStoredBlob(storedBlob);
 
 		// Geo Place
 		Key<GeoPlace> geoPlace = GEO_PLACE_GENERATOR.generate(arg);

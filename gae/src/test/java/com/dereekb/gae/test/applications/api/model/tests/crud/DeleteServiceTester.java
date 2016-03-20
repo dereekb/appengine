@@ -23,6 +23,7 @@ import com.dereekb.gae.test.runnable.RunnableTest;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class DeleteServiceTester<T extends UniqueModel>
         implements RunnableTest {
 

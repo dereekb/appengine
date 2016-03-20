@@ -18,7 +18,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
-public class AbstractLinkServiceTest extends ApiApplicationTestContext {
+public abstract class AbstractLinkServiceTest extends ApiApplicationTestContext {
 
 	@Autowired
 	@Qualifier("linkService")

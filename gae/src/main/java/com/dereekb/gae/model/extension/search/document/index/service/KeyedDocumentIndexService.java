@@ -30,11 +30,10 @@ public interface KeyedDocumentIndexService {
 	 *            or unindexed.
 	 * @param action
 	 *            How to change the search index.
-	 * @return True if all models were changed successfully.
 	 * @throws AtomicOperationException
 	 *             Occurs when not all objects requested can be changed.
 	 */
-	public boolean indexChangeWithKeys(Collection<ModelKey> keys,
-	                           IndexAction action) throws AtomicOperationException;
+	public void indexChangeWithKeys(Collection<ModelKey> keys,
+	                                IndexAction action) throws AtomicOperationException;
 
 }

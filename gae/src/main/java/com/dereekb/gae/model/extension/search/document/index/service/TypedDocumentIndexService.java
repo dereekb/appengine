@@ -36,13 +36,13 @@ public interface TypedDocumentIndexService {
 	 *            or unindexed.
 	 * @param action
 	 *            How to change the search index.
-	 * @return True if all models were changed successfully.
 	 * @throws UnregisteredSearchTypeException
-	 *             When the requested type is not available to this indexService.
+	 *             When the requested type is not available to this
+	 *             indexService.
 	 * @throws AtomicOperationException
-	 *             Occurs when not all objects requested can be changed.
+	 *             Occurs when not all objects requested cannot be changed.
 	 */
-	public boolean changeIndexWithKeys(String modelType,
+	public void changeIndexWithKeys(String modelType,
 	                                   Collection<ModelKey> keys,
 	                                   IndexAction action)
 	        throws UnregisteredSearchTypeException,

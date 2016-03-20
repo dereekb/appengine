@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
@@ -29,8 +29,8 @@ public class GeoPlaceTaskQueueEditControllerEntryTest extends SearchableTaskQueu
 	@Override
 	@Autowired
 	@Qualifier("geoPlaceRegistry")
-	public void setGetter(Getter<GeoPlace> getter) {
-		super.setGetter(getter);
+	public void setGetterSetter(GetterSetter<GeoPlace> getter) {
+		super.setGetterSetter(getter);
 	}
 
 	@Override

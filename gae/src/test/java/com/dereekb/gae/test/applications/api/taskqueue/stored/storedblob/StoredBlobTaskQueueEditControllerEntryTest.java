@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.object.file.StorableContent;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
@@ -37,8 +37,8 @@ public class StoredBlobTaskQueueEditControllerEntryTest extends SearchableTaskQu
 	@Override
 	@Autowired
 	@Qualifier("storedBlobRegistry")
-	public void setGetter(Getter<StoredBlob> getter) {
-		super.setGetter(getter);
+	public void setGetterSetter(GetterSetter<StoredBlob> getter) {
+		super.setGetterSetter(getter);
 	}
 
 	@Override

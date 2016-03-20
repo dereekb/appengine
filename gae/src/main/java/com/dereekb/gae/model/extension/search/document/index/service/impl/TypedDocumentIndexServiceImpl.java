@@ -53,21 +53,18 @@ public class TypedDocumentIndexServiceImpl
     }
 
 	@Override
-	public boolean changeIndexWithKeys(String modelType,
+	public void changeIndexWithKeys(String modelType,
 	                                   Collection<ModelKey> keys,
 	                                   IndexAction action)
 	        throws UnregisteredSearchTypeException,
 	            AtomicOperationException {
 		KeyedDocumentIndexService service = this.services.get(modelType);
-		boolean success;
 
 		if (service != null) {
-			success = service.indexChangeWithKeys(keys, action);
+			service.indexChangeWithKeys(keys, action);
 		} else {
 			throw new UnregisteredSearchTypeException();
 		}
-
-		return success;
 	}
 
 	@Override

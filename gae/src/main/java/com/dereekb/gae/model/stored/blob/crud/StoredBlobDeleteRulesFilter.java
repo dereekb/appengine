@@ -16,7 +16,7 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  */
 public class StoredBlobDeleteRulesFilter extends AbstractFilter<StoredBlob> {
 
-	private static final UniqueDescribedModelFilter DESCRIBED_FILTER = new UniqueDescribedModelFilter();
+	private static final UniqueDescribedModelFilter DESCRIBED_FILTER = new UniqueDescribedModelFilter(false);
 
 	@Override
 	public FilterResult filterObject(StoredBlob object) {

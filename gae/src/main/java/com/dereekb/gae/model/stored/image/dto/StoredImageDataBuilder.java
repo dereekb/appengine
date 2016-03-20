@@ -29,7 +29,7 @@ public class StoredImageDataBuilder extends AbstractDirectionalConverter<StoredI
 		data.setType(input.getTypeId());
 
 		// Blob
-		data.setBlob(ObjectifyKeyUtility.idFromKey(input.getBlob()));
+		data.setBlob(ObjectifyKeyUtility.idFromKey(input.getStoredBlob()));
 
 		// Geo Place
 		data.setGeoPlace(ObjectifyKeyUtility.idFromKey(input.getGeoPlace()));

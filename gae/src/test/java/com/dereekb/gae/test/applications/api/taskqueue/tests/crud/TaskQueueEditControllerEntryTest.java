@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
-import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.GetterSetter;
+import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
@@ -37,7 +38,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 	private String modelTaskQueueType;
 
-	private Getter<T> getter;
+	private GetterSetter<T> getterSetter;
 	private TestModelGenerator<T> modelGenerator;
 	private ScheduleDeleteTask<T> deleteTask;
 
@@ -61,12 +62,12 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		this.modelTaskQueueType = modelTaskQueueType;
 	}
 
-	public Getter<T> getGetter() {
-		return this.getter;
+	public GetterSetter<T> getGetterSetter() {
+		return this.getterSetter;
 	}
 
-	public void setGetter(Getter<T> getter) {
-		this.getter = getter;
+	public void setGetterSetter(GetterSetter<T> getterSetter) {
+		this.getterSetter = getterSetter;
 	}
 
 	public TestModelGenerator<T> getModelGenerator() {
@@ -97,13 +98,26 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	public List<T> create(boolean related) {
 		List<T> models = this.modelGenerator.generate(this.genCount);
 
-		if (related) {
-			for (T model : models) {
+		for (T model : models) {
+			if (related) {
 				this.createRelated(model);
+			} else {
+				this.removeRelated(model, this.getterSetter);
 			}
 		}
 
 		return models;
+	}
+
+	/**
+	 * Removes all related components from the model, then saves it.
+	 *
+	 * @param model
+	 * @param setter
+	 */
+	protected void removeRelated(T model,
+	                             Setter<T> setter) {
+
 	}
 
 	/**
@@ -194,7 +208,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	}
 
 	protected final boolean isProperlyDeleted(List<T> models) {
-		boolean success = (this.getter.allExist(ModelKey.readModelKeys(models)) == false);
+		boolean success = (this.getterSetter.allExist(ModelKey.readModelKeys(models)) == false);
 
 		for (T model : models) {
 			if (success == false) {

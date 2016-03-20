@@ -52,7 +52,7 @@ public class GeoPlaceApiSearchTest extends ApiSearchTest<GeoPlace> {
 
 		GeoPlace parent = this.generator.generate();
 		List<GeoPlace> children = this.generator.generate(count);
-		List<GeoPlace> notChildren = this.generator.generate(count);
+		// List<GeoPlace> notChildren = this.generator.generate(count);
 
 		for (GeoPlace child : children) {
 			child.setParent(parent.getObjectifyKey());

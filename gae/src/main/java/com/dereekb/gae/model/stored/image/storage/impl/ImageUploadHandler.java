@@ -66,7 +66,7 @@ public class ImageUploadHandler extends StoredBlobUploadHandlerDelegateImpl<Stor
 		image.setName(filename);
 
 		Key<StoredBlob> storedBlobKey = blob.getObjectifyKey();
-		image.setBlob(storedBlobKey);
+		image.setStoredBlob(storedBlobKey);
 		image.setType(this.imageType);
 
 		return image;

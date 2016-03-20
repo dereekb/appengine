@@ -92,7 +92,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedBlob.setDescriptor(null);
 		this.storedBlobRegistry.save(storedBlob, false);
 
-		storedImage.setBlob(null);
+		storedImage.setStoredBlob(null);
 		this.storedImageRegistry.save(storedImage, false);
 
 		// Start Test Linking
@@ -102,7 +102,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedBlob = this.storedBlobRegistry.get(storedBlob);
 
-		Assert.assertTrue(storedBlob.getObjectifyKey().equals(storedImage.getBlob()));
+		Assert.assertTrue(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
 		Assert.assertTrue(storedImage.equals(storedBlob.getDescriptor()));
 
 		// Test Unlinking
@@ -112,7 +112,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedBlob = this.storedBlobRegistry.get(storedBlob);
 
-		Assert.assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getBlob()));
+		Assert.assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
 		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 	}
 
@@ -199,7 +199,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImageSet.setImages(null);
 		this.storedImageSetRegistry.save(storedImageSet, false);
 
-		storedImage.setBlob(null);
+		storedImage.setStoredBlob(null);
 		storedImage.setGeoPlace(null);
 		storedImage.setImageSets(null);
 		this.storedImageRegistry.save(storedImage, false);
@@ -226,7 +226,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
 		// Check Not Linked. Deletable Items will be deleted via taskqueue most
 		// likely.
-		Assert.assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getBlob()));
+		Assert.assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
 		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 
 		Assert.assertFalse(geoPlace.getObjectifyKey().equals(storedImage.getGeoPlace()));

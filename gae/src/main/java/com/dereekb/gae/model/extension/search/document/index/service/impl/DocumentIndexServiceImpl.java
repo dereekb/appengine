@@ -56,20 +56,16 @@ public class DocumentIndexServiceImpl<T extends UniqueSearchModel>
 
 	// MARK: DocumentIndexService
 	@Override
-	public boolean indexChange(Iterable<T> models,
+	public void indexChange(Iterable<T> models,
 	                           IndexAction action) throws AtomicOperationException {
-
 		List<IndexPair<T>> pairs = IndexPair.makePairs(models, action);
-		boolean success;
 
 		try {
 			this.doTask(pairs);
-			success = true;
 		} catch (FailedTaskException e) {
-			success = false;
+			throw new AtomicOperationException(e);
 		}
 
-		return success;
 	}
 
 	// MARK: Task

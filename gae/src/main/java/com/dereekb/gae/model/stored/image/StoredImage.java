@@ -75,7 +75,7 @@ public final class StoredImage extends SearchableDatabaseModel
 	 *
 	 * Key to the {@link StoredBlob} that this image describes.
 	 */
-	private Key<StoredBlob> blob;
+	private Key<StoredBlob> storedBlob;
 
 	/**
 	 * (Optional) {@link GeoPlace} entry that places this image into the world.
@@ -91,8 +91,8 @@ public final class StoredImage extends SearchableDatabaseModel
 
 	public StoredImage() {}
 
-	public StoredImage(Key<StoredBlob> blob) {
-		this.blob = blob;
+	public StoredImage(Key<StoredBlob> storedBlob) {
+		this.storedBlob = storedBlob;
 	}
 
 	public Long getIdentifier() {
@@ -143,24 +143,24 @@ public final class StoredImage extends SearchableDatabaseModel
 		this.type = type;
 	}
 
-	public Key<StoredBlob> getBlob() {
-		return this.blob;
+	public Key<StoredBlob> getStoredBlob() {
+		return this.storedBlob;
 	}
 
-	public void setBlob(Key<StoredBlob> blob) {
-		this.blob = blob;
+	public void setStoredBlob(Key<StoredBlob> storedBlob) {
+		this.storedBlob = storedBlob;
 	}
 
 	@Override
 	public ModelKey getStoredBlobKey() {
-		return new ModelKey(this.blob.getId());
+		return new ModelKey(this.storedBlob.getId());
 	}
 
 	public Long getBlobId() {
 		Long id = null;
 
-		if (this.blob != null) {
-			id = this.blob.getId();
+		if (this.storedBlob != null) {
+			id = this.storedBlob.getId();
 		}
 
 		return id;
@@ -227,7 +227,8 @@ public final class StoredImage extends SearchableDatabaseModel
 	@Override
 	public String toString() {
 		return "StoredImage [identifier=" + this.identifier + ", name=" + this.name + ", summary=" + this.summary
-		        + ", tags=" + this.tags + ", type=" + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace
+		        + ", tags=" + this.tags + ", type=" + this.type + ", storedBlob=" + this.storedBlob + ", geoPlace="
+		        + this.geoPlace
 		        + ", imageSets=" + this.imageSets + ", searchIdentifier=" + this.searchIdentifier + "]";
 	}
 

@@ -127,14 +127,14 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 
 			@Override
 			public ModelKey getKey() {
-				Key<StoredBlob> key = model.getBlob();
+				Key<StoredBlob> key = model.getStoredBlob();
 				return blobUtil.toModelKey(key);
 			}
 
 			@Override
 			public void setKey(ModelKey modelKey) {
 				Key<StoredBlob> key = blobUtil.fromModelKey(modelKey);
-				model.setBlob(key);
+				model.setStoredBlob(key);
 			}
 
 		}));

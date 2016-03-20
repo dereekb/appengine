@@ -4,13 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
+import com.dereekb.gae.model.geo.place.GeoPlace;
+import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
-import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.GetterSetter;
+import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.googlecode.objectify.Key;
 
 
 public class StoredImageTaskQueueEditControllerEntryTest extends SearchableTaskQueueEditControllerEntryTest<StoredImage> {
+
+	@Autowired
+	@Qualifier("geoPlaceTestModelGenerator")
+	private TestModelGenerator<GeoPlace> geoPlaceGenerator;
+
+	@Autowired
+	@Qualifier("storedBlobTestModelGenerator")
+	private TestModelGenerator<StoredBlob> storedBlobGenerator;
 
 	@Override
 	@Autowired
@@ -29,8 +42,8 @@ public class StoredImageTaskQueueEditControllerEntryTest extends SearchableTaskQ
 	@Override
 	@Autowired
 	@Qualifier("storedImageRegistry")
-	public void setGetter(Getter<StoredImage> getter) {
-		super.setGetter(getter);
+	public void setGetterSetter(GetterSetter<StoredImage> getter) {
+		super.setGetterSetter(getter);
 	}
 
 	@Override
@@ -45,6 +58,30 @@ public class StoredImageTaskQueueEditControllerEntryTest extends SearchableTaskQ
 	@Qualifier("storedImageScheduleDeleteTask")
 	public void setDeleteTask(ScheduleDeleteTask<StoredImage> deleteTask) {
 		super.setDeleteTask(deleteTask);
+	}
+
+	@Override
+	protected void removeRelated(StoredImage model,
+	                             Setter<StoredImage> setter) {
+		model.setGeoPlace(null);
+		model.setStoredBlob(null);
+	}
+
+	@Override
+	protected void createRelated(StoredImage model) {
+		Key<GeoPlace> geoPlaceKey = model.getGeoPlace();
+		Key<StoredBlob> storedBlobKey = model.getStoredBlob();
+
+		if (geoPlaceKey != null) {
+			ModelKey geoPlaceModelKey = new ModelKey(geoPlaceKey.getId());
+			this.geoPlaceGenerator.generateModel(geoPlaceModelKey);
+		}
+
+		if (storedBlobKey != null) {
+			ModelKey storedBlobModelKey = new ModelKey(storedBlobKey.getId());
+			this.storedBlobGenerator.generateModel(storedBlobModelKey);
+		}
+
 	}
 
 }

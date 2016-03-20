@@ -77,7 +77,7 @@ public class CreateServiceTester<T extends UniqueModel>
 	}
 
 	private void testCreatingSingle() {
-		T template = this.modelGenerator.generateModel(null);
+		T template = this.modelGenerator.generate();
 		CreateRequestImpl<T> request = new CreateRequestImpl<T>(template);
 		CreateResponse<T> response = this.createService.create(request);
 
