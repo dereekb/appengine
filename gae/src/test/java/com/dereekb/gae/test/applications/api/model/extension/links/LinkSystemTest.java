@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
+import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 

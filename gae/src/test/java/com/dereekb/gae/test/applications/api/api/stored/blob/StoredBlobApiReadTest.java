@@ -6,15 +6,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.test.applications.api.api.tests.ApiReadTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.web.api.model.controller.ReadModelController;
 
 public class StoredBlobApiReadTest extends ApiReadTest<StoredBlob> {
 
 	@Override
 	@Autowired
-	@Qualifier("storedBlobReadController")
-	public void setController(ReadModelController<StoredBlob> controller) {
-		super.setController(controller);
+	@Qualifier("storedBlobType")
+	public void setModelType(String modelType) {
+		super.setModelType(modelType);
 	}
 
 	@Override

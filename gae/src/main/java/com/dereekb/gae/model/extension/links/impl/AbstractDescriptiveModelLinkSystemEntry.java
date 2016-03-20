@@ -43,7 +43,7 @@ public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDe
 	}
 
 	@Override
-	public final List<Link> makeLinksForModel(T model) {
+	public final List<Link> getLinks(T model) {
 		List<Link> links = new ArrayList<Link>();
 		links.addAll(this.makeDefinedLinksForModel(model));
 		links.addAll(this.makeDescriptiveLinks(model));

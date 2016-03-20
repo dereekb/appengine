@@ -41,8 +41,14 @@
 		<constructor-arg index="1">
 			<list>
 				<ref bean="typedDocumentIndexServiceUnindexTask" />
+				<ref bean="storedBlobDeleteDataTask" />
 			</list>
 		</constructor-arg>
+	</bean>
+	
+	<bean id="storedBlobDeleteDataTask" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.model.stored.blob.storage.impl.StoredBlobDeleteDataTask">
+		<constructor-arg index="0" ref="storageSystem" />
 	</bean>
 
 </beans>

@@ -1,27 +1,25 @@
 package com.dereekb.gae.model.extension.inclusion.reader;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavailableException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
- * Results returned by {@link InclusionReader}.
+ * Results returned by {@link ModelInclusionReader}.
  *
  * @author dereekb
  *
  */
-public interface InclusionReaderSetAnalysis<T> {
+public interface InclusionReaderSetAnalysis {
 
 	/**
-	 * Returns the models that were analyzed for this result.
+	 * Returns the {@link ModelKey} values that were analyzed for this result.
 	 *
 	 * @return {@link Collection} of analyzed models.
 	 */
-	public Collection<T> getAnalyzedModels();
+	public Collection<ModelKey> getModelKeys();
 
 	/**
 	 * Returns all related types for the model type.
@@ -42,12 +40,5 @@ public interface InclusionReaderSetAnalysis<T> {
 	 * @throws InclusionTypeUnavailableException
 	 */
 	public Set<ModelKey> getKeysForType(String type) throws InclusionTypeUnavailableException;
-
-	/**
-	 * Returns all keys for the specified related types.
-	 *
-	 * @return {@link Map} containing all keys for the target types.
-	 */
-	public HashMapWithSet<String, ModelKey> getKeysForTypes(Set<String> types) throws InclusionTypeUnavailableException;
 
 }

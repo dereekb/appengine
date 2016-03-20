@@ -1,18 +1,31 @@
 package com.dereekb.gae.test.applications.api.api.geoplace;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.dto.GeoPlaceData;
 import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.api.tests.ApiEditTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.controller.EditModelController;
+import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
 
 public class GeoPlaceApiEditTest extends ApiEditTest<GeoPlace, GeoPlaceData> {
+
+	@Autowired
+	@Qualifier("geoPlaceRegistry")
+	public ObjectifyRegistry<GeoPlace> geoPlaceRegistry;
 
 	@Override
 	@Autowired
@@ -47,6 +60,41 @@ public class GeoPlaceApiEditTest extends ApiEditTest<GeoPlace, GeoPlaceData> {
 	@Qualifier("geoPlaceTestModelGenerator")
 	public void setModelGenerator(TestModelGenerator<GeoPlace> modelGenerator) {
 		super.setModelGenerator(modelGenerator);
+	}
+
+	@Test
+	public void testDeleteRules() {
+		GeoPlace geoPlace = this.modelGenerator.generate();
+		String stringIdentifier = ModelKey.readStringKey(geoPlace.getModelKey());
+
+		List<String> stringIdentifiers = new ArrayList<String>();
+		stringIdentifiers.add(stringIdentifier);
+
+		geoPlace.setDescriptorId("id");
+		geoPlace.setDescriptorType("type");
+
+		this.geoPlaceRegistry.save(geoPlace, false);
+
+		Assert.assertNotNull(geoPlace.getDescriptor());
+
+		ApiDeleteRequest request = new ApiDeleteRequest(stringIdentifiers);
+
+		try {
+			this.controller.delete(request);
+			Assert.fail();
+		} catch (AtomicOperationException e) {
+			Assert.assertFalse(e.getUnavailableStringKeys().isEmpty());
+			Assert.assertTrue(e.getUnavailableStringKeys().containsAll(stringIdentifiers));
+		}
+
+		geoPlace.setDescriptor(null);
+		this.geoPlaceRegistry.save(geoPlace, false);
+
+		try {
+			this.controller.delete(request);
+		} catch (AtomicOperationException e) {
+			Assert.fail();
+		}
 	}
 
 }

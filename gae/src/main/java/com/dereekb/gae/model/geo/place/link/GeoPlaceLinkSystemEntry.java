@@ -14,7 +14,7 @@ import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModel
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
-import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
+import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;

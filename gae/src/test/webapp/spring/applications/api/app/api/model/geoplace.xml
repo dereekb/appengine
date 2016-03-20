@@ -10,27 +10,18 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Read Controller -->
-	<bean id="geoPlaceReadController"
-		class="com.dereekb.gae.web.api.controllers.models.GeoPlaceReadController"
+	<bean id="geoPlaceReadControllerEntry"
+		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
 		scope="singleton" lazy-init="false">
-		<constructor-arg index="0"
-			ref="geoPlaceReadControllerDelegate" />
-		<constructor-arg index="1"
-			ref="geoPlaceReadControllerConversionDelegate" />
-	</bean>
-
-	<bean id="geoPlaceReadControllerDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.ReadModelControllerDelegateImpl"
-		scope="singleton">
 		<constructor-arg index="0" ref="geoPlaceReadService" />
+		<constructor-arg index="1" ref="geoPlaceDataConverter" />
+		<constructor-arg index="2" ref="geoPlaceLinkModelInclusionReader" />
 	</bean>
-
-	<bean id="geoPlaceReadControllerConversionDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.ReadModelControllerConversionDelegateImpl"
-		scope="singleton">
-		<constructor-arg index="0" ref="geoPlaceType" />
-		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
-		<constructor-arg index="2" ref="geoPlaceDataBuilder" />
+	
+	<bean id="geoPlaceLinkModelInclusionReader"
+		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
+		scope="singleton" lazy-init="false">
+		<constructor-arg index="0" ref="geoPlaceLinkSystem"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->

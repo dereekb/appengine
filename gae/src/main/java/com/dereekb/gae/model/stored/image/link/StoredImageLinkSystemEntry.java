@@ -14,7 +14,7 @@ import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollection
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
-import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
+import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.link.GeoPlaceLinkSystemEntry;
@@ -116,7 +116,7 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 	}
 
 	@Override
-	public List<Link> makeLinksForModel(final StoredImage model) {
+	public List<Link> getLinks(final StoredImage model) {
 		List<Link> links = new ArrayList<Link>();
 
 		ModelKey key = model.getModelKey();

@@ -73,7 +73,7 @@ public class BidirectionalLinkSystemTest {
 		ModelKey loadedModelKey = model.getModelKey();
 		Assert.assertTrue(keyA.equals(loadedModelKey));
 
-		Collection<Link> links = model.getLinks();
+		Collection<? extends Link> links = model.getLinks();
 		Assert.assertTrue(links != null);
 
 		Link differentModelLink = model.getLink(SomeLinkModel.DIFFERENT_MODEL_LINKS_NAME);

@@ -91,7 +91,6 @@ public class LinkDeleterServiceImpl
 	// MARK: LinkDeleterService
 	@Override
 	public void deleteLinks(LinkDeleterServiceRequest request) throws UnregisteredDeleterException {
-
 		Instance instance = new Instance(request);
 		instance.deleteLinks();
 	}
@@ -177,7 +176,7 @@ public class LinkDeleterServiceImpl
 			}
 
 			public void deleteLinks() {
-				Collection<Link> links = this.model.getLinks();
+				Collection<? extends Link> links = this.model.getLinks();
 
 				for (Link link : links) {
 					this.deleteLink(link);

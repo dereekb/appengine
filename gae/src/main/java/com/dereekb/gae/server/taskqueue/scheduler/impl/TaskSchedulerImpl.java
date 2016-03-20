@@ -168,7 +168,7 @@ public class TaskSchedulerImpl
 		public String getContextQueue() {
 			String queue = this.queue;
 
-			if (queue == null) {
+			if (queue == null && this.parent != null) {
 				queue = this.parent.getContextQueue();
 			}
 

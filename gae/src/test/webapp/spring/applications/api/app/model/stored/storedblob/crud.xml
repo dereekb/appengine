@@ -95,6 +95,11 @@
 		lazy-init="true">
 		<constructor-arg index="0" ref="storedBlobType"/>
 		<constructor-arg index="1" ref="taskScheduler"/>
+		<property name="deleteFilter">
+			<bean
+				class="com.dereekb.gae.model.stored.blob.crud.StoredBlobDeleteRulesFilter">
+			</bean>
+		</property>
 	</bean>
 
 </beans>

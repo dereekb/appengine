@@ -9,9 +9,24 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+
 	<import resource="geoplace.xml" />
 	<import resource="storedblob.xml" />
 	<import resource="storedimage.xml" />
 	<import resource="storedimageset.xml" />
+
+	<!-- Read Controller -->
+	<bean id="readController" class="com.dereekb.gae.web.api.model.controller.ReadController"
+		scope="singleton" lazy-init="false">
+		<constructor-arg index="0" ref="modelKeyTypeConverter" />
+		<constructor-arg index="1">
+			<map key-type="java.lang.String">
+				<entry key-ref="geoPlaceType" value-ref="geoPlaceReadControllerEntry"></entry>
+				<entry key-ref="storedBlobType" value-ref="storedBlobReadControllerEntry"></entry>
+				<entry key-ref="storedImageType" value-ref="storedImageReadControllerEntry"></entry>
+				<entry key-ref="storedImageSetType" value-ref="storedImageSetReadControllerEntry"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
 
 </beans>

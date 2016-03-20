@@ -60,7 +60,7 @@ public final class BidirectionalLinkModel
 
 	@Override
 	public Collection<Link> getLinks() {
-		Collection<Link> rawLinks = this.model.getLinks();
+		Collection<? extends Link> rawLinks = this.model.getLinks();
 		List<Link> links = new ArrayList<Link>();
 
 		for (Link link : rawLinks) {

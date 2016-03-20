@@ -72,6 +72,8 @@ public class GeoPlaceApiSearchTest extends ApiSearchTest<GeoPlace> {
 		Assert.assertNotNull(data);
 
 		Object responseData = data.getResponseData();
+
+		@SuppressWarnings("unchecked")
 		List<String> responseKeys = (List<String>) responseData;
 		List<String> expectedKeys = ModelKey.readStringKeys(children);
 

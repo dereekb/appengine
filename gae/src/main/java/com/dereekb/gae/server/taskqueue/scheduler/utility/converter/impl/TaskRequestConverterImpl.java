@@ -108,7 +108,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 				path = TaskRequestConverterImpl.this.resource.append(path);
 			}
 
-			return path.toString();
+			return path.getPath();
 		}
 
 		public Method getMethod() {

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
+import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnregisteredLinkTypeException;
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;

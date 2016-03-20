@@ -8,7 +8,7 @@ import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
-import com.dereekb.gae.model.extension.links.components.system.impl.LinkSystemEntry;
+import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;

@@ -1,11 +1,16 @@
 package com.dereekb.gae.test.model.general.time.legacy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dereekb.gae.model.general.time.Day;
+import com.dereekb.gae.model.general.time.DaySpan;
+import com.dereekb.gae.model.general.time.DayTimeSpanPair;
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeSpan;
 import com.dereekb.gae.model.general.time.WeekSpan;
@@ -31,6 +36,16 @@ public class LegacyTimeSpanConverterTest {
 		Assert.assertNotNull(aWeek);
 		Assert.assertTrue(aSpan.compareTo(aWeek.getTimeSpan()) == 0);
 
+		// Test Days
+		// Monday, Tuesday, Wednesday, Thursday, Sunday
+		LegacyTimeSpan daysTest = new LegacyTimeSpan(158, 0, (Time.MAX_TIME / 2));
+		WeekTime daysWeek = this.converter.convertToWeekTime(daysTest);
+		DaySpan daySpan = daysWeek.getDaySpan();
+		Set<Day> days = daySpan.getDays();
+
+		Day[] expectedDaysArray = new Day[] { Day.MONDAY, Day.TUESDAY, Day.WEDNESDAY, Day.THURSDAY, Day.SUNDAY };
+		Assert.assertTrue(days.containsAll(Arrays.asList(expectedDaysArray)));
+
 	}
 
 	@Test
@@ -49,6 +64,38 @@ public class LegacyTimeSpanConverterTest {
 
 		Assert.assertTrue(week.contains(this.converter.convertToWeekTime(a)));
 		Assert.assertTrue(week.contains(this.converter.convertToWeekTime(b)));
+	}
+
+	/**
+	 * Is not working properly, or expectedly.
+	 *
+	 * http://thevisitapp.com/api/places/read?identifiers=461001
+	 *
+	 * "timespans":[{"daysByte":158,"from":1020,"to":1260},{"daysByte":96,"from"
+	 * :1020,"to":1320}]
+	 */
+	@Test
+	public void testCaseA() {
+
+		List<LegacyTimeSpan> timespans = new ArrayList<LegacyTimeSpan>();
+		Integer openTime = 1020;
+
+		timespans.add(new LegacyTimeSpan(158, openTime, 1260));
+		timespans.add(new LegacyTimeSpan(96, openTime, 1320));
+
+		WeekSpan week = this.converter.convertToWeekSpan(timespans);
+		List<DayTimeSpanPair> dayTimeSpanPairs = week.toDayTimeSpanPairs();
+
+		Assert.assertNotNull(dayTimeSpanPairs);
+		Assert.assertTrue(dayTimeSpanPairs.size() == 7); // Every day of the
+														 // week.
+
+		/*
+		for (DayTimeSpanPair pair : dayTimeSpanPairs) {
+			Assert.assertTrue(pair.getTimeSpan().getStartTime() == new TimeImpl(openTime));
+		}
+		*/
+
 	}
 
 }
