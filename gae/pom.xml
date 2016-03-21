@@ -9,7 +9,7 @@
 
 	<groupId>com.dereekb.gae</groupId>
 	<artifactId>gae-core</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<!-- <properties> <appengine.app.version>1-war</appengine.app.version> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
 		</properties> -->
