@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.model;
 
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
 
@@ -75,6 +76,11 @@ public class DescriptorSearch {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public ExpressionBuilder make() {
+		return this.make(ModelDocumentBuilderUtility.DESCRIPTOR_TYPE_FIELD,
+		        ModelDocumentBuilderUtility.DESCRIPTOR_ID_FIELD);
 	}
 
 	public ExpressionBuilder make(String typeField,

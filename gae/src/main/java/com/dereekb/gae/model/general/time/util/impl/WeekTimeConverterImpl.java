@@ -32,6 +32,8 @@ public class WeekTimeConverterImpl
 	private final static TimeValueConverter timeConverter = new TimeValueConverterImpl();
 	private final static DaySpanConverter daysSpanConverter = new DaySpanConverterImpl();
 
+	public final static WeekTimeConverterImpl CONVERTER = new WeekTimeConverterImpl();
+
 	@Override
 	public Integer weekTimeToNumber(WeekTime weekTime) {
 		DaySpan daySpan = weekTime.getDaySpan();

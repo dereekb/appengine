@@ -13,28 +13,30 @@ import java.util.Set;
  */
 public enum Day {
 
-	MONDAY(1, "Monday", "Mon"),
+	MONDAY(1, "Monday", "Mon", "MON"),
 
-	TUESDAY(2, "Tuesday", "Tues"),
+	TUESDAY(2, "Tuesday", "Tues", "TUE"),
 
-	WEDNESDAY(3, "Wednesday", "Wed"),
+	WEDNESDAY(3, "Wednesday", "Wed", "WED"),
 
-	THURSDAY(4, "Thursday", "Thur"),
+	THURSDAY(4, "Thursday", "Thur", "THU"),
 
-	FRIDAY(5, "Friday", "Fri"),
+	FRIDAY(5, "Friday", "Fri", "FRI"),
 
-	SATURDAY(6, "Saturday", "Sat"),
+	SATURDAY(6, "Saturday", "Sat", "SAT"),
 
-	SUNDAY(7, "Sunday", "Sun");
+	SUNDAY(7, "Sunday", "Sun", "SUN");
 
 	public final int bit;
 	public final String name;
 	public final String abbreviation;
+	public final String key;
 
-	private Day(int bit, String name, String abbreviation) {
+	private Day(int bit, String name, String abbreviation, String key) {
 		this.bit = bit;
 		this.name = name;
 		this.abbreviation = abbreviation;
+		this.key = key;
 	}
 
 	public int getBit() {
@@ -47,6 +49,10 @@ public enum Day {
 
 	public String getAbbreviation() {
 		return this.abbreviation;
+	}
+
+	public String getKey() {
+		return this.key;
 	}
 
 	public boolean isToday() {
@@ -78,6 +84,16 @@ public enum Day {
 
 		for (Day day : days) {
 			dayStrings.add(day.toString());
+		}
+
+		return dayStrings;
+	}
+
+	public static Set<String> getKeyStrings(Iterable<Day> days) {
+		Set<String> dayStrings = new HashSet<String>();
+
+		for (Day day : days) {
+			dayStrings.add(day.key);
 		}
 
 		return dayStrings;

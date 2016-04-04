@@ -11,8 +11,58 @@ import java.util.Map;
  * @author dereekb
  *
  */
-public final class MapReader {
+public class MapReader<T> {
 
+	private static final String DEFAULT_FORMAT = "%s";
+
+	public Map<String, T> map;
+	public String keyFormat;
+
+	public MapReader(Map<String, T> map) throws IllegalArgumentException {
+		this(map, null);
+	}
+
+	public MapReader(Map<String, T> map, String keyFormat) throws IllegalArgumentException {
+		this.setMap(map);
+		this.setKeyFormat(keyFormat);
+	}
+
+	public Map<String, T> getMap() {
+		return this.map;
+	}
+
+	public void setMap(Map<String, T> map) throws IllegalArgumentException {
+		if (map == null) {
+			throw new IllegalArgumentException("Map cannot be null.");
+		}
+
+		this.map = map;
+	}
+
+	public String getKeyFormat() {
+		return this.keyFormat;
+	}
+
+	public void setKeyFormat(String keyFormat) {
+		if (keyFormat == null || keyFormat.isEmpty()) {
+			keyFormat = DEFAULT_FORMAT;
+		}
+
+		this.keyFormat = keyFormat;
+	}
+
+	// MARK: Reader
+	public T get(String key) {
+		key = String.format(this.keyFormat, key);
+		return this.map.get(key);
+	}
+
+	public boolean containsKey(String key) {
+		key = String.format(this.keyFormat, key);
+		return this.map.containsKey(key);
+	}
+
+	// MARK: Static Utilities
 	/**
 	 * Reads the elements from the map. Keys that don't match any element are
 	 * ignored.

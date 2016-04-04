@@ -29,6 +29,30 @@ public class PointRadiusSearch {
 		this.setOperator(operator);
 	}
 
+	public Point getPoint() {
+		return this.point;
+	}
+
+	public void setPoint(Point point) {
+		this.point = point;
+	}
+
+	public Integer getRadius() {
+		return this.radius;
+	}
+
+	public void setRadius(Integer radius) {
+		this.radius = radius;
+	}
+
+	public ExpressionOperator getOperator() {
+		return this.operator;
+	}
+
+	public void setOperator(ExpressionOperator operator) {
+		this.operator = operator;
+	}
+
 	/**
 	 * Creates a {@link PointRadiusSearch} from the input string.
 	 * <p>
@@ -70,30 +94,6 @@ public class PointRadiusSearch {
 		}
 
 		return point;
-	}
-
-	public Point getPoint() {
-		return this.point;
-	}
-
-	public void setPoint(Point point) {
-		this.point = point;
-	}
-
-	public Integer getRadius() {
-		return this.radius;
-	}
-
-	public void setRadius(Integer radius) {
-		this.radius = radius;
-	}
-
-	public ExpressionOperator getOperator() {
-		return this.operator;
-	}
-
-	public void setOperator(ExpressionOperator operator) {
-		this.operator = operator;
 	}
 
 	public ExpressionBuilder make(String field) {

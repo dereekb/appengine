@@ -17,7 +17,7 @@ public class StoredBlobSearchBuilder {
 	public static final String DEFAULT_ENDING_FIELD = StoredBlobDocumentBuilderStep.ENDING_FIELD;
 	public static final String DEFAULT_DATE_FIELD = ModelDocumentBuilderUtility.DATE_FIELD;
 
-	private String prefix = StoredBlobDerivativeDocumentBuilderStep.DEFAULT_PREFIX;
+	private String prefix = StoredBlobDocumentBuilderStep.DERIVATIVE_PREFIX;
 
 	private String idField = DEFAULT_ID_FIELD;
 	private String endingField = DEFAULT_ENDING_FIELD;
@@ -56,7 +56,7 @@ public class StoredBlobSearchBuilder {
 	}
 
 	public StoredBlobSearch make(Map<String, String> parameters) {
-		StoredBlobSearch search = new StoredBlobSearch(this);
+		StoredBlobSearch search = new StoredBlobSearch();
 
 		if (parameters.containsKey(this.idField)) {
 			Long id = new Long(parameters.get(this.idField));
@@ -112,22 +112,14 @@ public class StoredBlobSearchBuilder {
 	 * @author dereekb
 	 * @see {@link StoredBlobDerivativeDocumentBuilderStep}
 	 */
-	public final class StoredBlobSearch
+	public class StoredBlobSearch
 	        implements ExpressionBuilderSource {
 
 		private Long id;
 		private String ending;
 		private DateSearch date;
 
-		private final StoredBlobSearchBuilder builder;
-
-		private StoredBlobSearch(StoredBlobSearchBuilder builder) {
-			if (builder == null) {
-				throw new IllegalArgumentException("Builder is required.");
-			}
-
-			this.builder = builder;
-		}
+		private StoredBlobSearch() {}
 
 		public Long getId() {
 			return this.id;
@@ -159,7 +151,7 @@ public class StoredBlobSearchBuilder {
 
 		@Override
 		public ExpressionBuilder makeExpression() {
-			return this.builder.make(this);
+			return StoredBlobSearchBuilder.this.make(this);
 		}
 
 	}

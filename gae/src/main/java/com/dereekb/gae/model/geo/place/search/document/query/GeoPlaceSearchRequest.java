@@ -1,63 +1,47 @@
 package com.dereekb.gae.model.geo.place.search.document.query;
 
-import com.dereekb.gae.model.extension.search.document.search.model.DateSearch;
 import com.dereekb.gae.model.extension.search.document.search.model.DescriptorSearch;
-import com.dereekb.gae.model.extension.search.document.search.model.PointRadiusSearch;
 import com.dereekb.gae.model.extension.search.document.search.service.model.impl.AbstractModelDocumentRequest;
 import com.dereekb.gae.model.geo.place.GeoPlace;
+import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder;
+import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder.GeoPlaceSearch;
 
 /**
  * Search request for a {@link GeoPlace}.
- * 
+ *
  * @author dereekb
  *
  */
 public class GeoPlaceSearchRequest extends AbstractModelDocumentRequest {
 
-	private Boolean region;
+	public static final GeoPlaceSearchBuilder BUILDER = new GeoPlaceSearchBuilder();
 
-	private DateSearch date;
-	private PointRadiusSearch point;
+	private GeoPlaceSearch search;
 	private DescriptorSearch descriptor;
 
-	public GeoPlaceSearchRequest() {}
+	public GeoPlaceSearchRequest() {
+		this.search = BUILDER.make();
+	}
 
-    public Boolean getRegion() {
-    	return this.region;
-    }
+	public GeoPlaceSearch getSearch() {
+		return this.search;
+	}
 
-    public void setRegion(Boolean region) {
-    	this.region = region;
-    }
+	public void setSearch(GeoPlaceSearch search) {
+		this.search = search;
+	}
 
-    public DateSearch getDate() {
-    	return this.date;
-    }
+	public DescriptorSearch getDescriptor() {
+		return this.descriptor;
+	}
 
-    public void setDate(DateSearch date) {
-    	this.date = date;
-    }
-
-    public PointRadiusSearch getPoint() {
-    	return this.point;
-    }
-
-    public void setPoint(PointRadiusSearch point) {
-    	this.point = point;
-    }
-
-    public DescriptorSearch getDescriptor() {
-    	return this.descriptor;
-    }
-
-    public void setDescriptor(DescriptorSearch descriptor) {
-    	this.descriptor = descriptor;
-    }
+	public void setDescriptor(DescriptorSearch descriptor) {
+		this.descriptor = descriptor;
+	}
 
 	@Override
 	public String toString() {
-		return "GeoPlaceSearchRequest [region=" + this.region + ", date=" + this.date + ", point=" + this.point
-		        + ", descriptor=" + this.descriptor + "]";
+		return "GeoPlaceSearchRequest [search=" + this.search + ", descriptor=" + this.descriptor + "]";
 	}
 
 }

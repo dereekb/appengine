@@ -14,6 +14,8 @@ import com.dereekb.gae.model.general.time.util.TimeValueConverter;
 public class TimeValueConverterImpl
         implements TimeValueConverter {
 
+	public static final TimeValueConverterImpl CONVERTER = new TimeValueConverterImpl();
+
 	// MARK: Number
 	@Override
 	public Integer timeToNumber(Time time) {

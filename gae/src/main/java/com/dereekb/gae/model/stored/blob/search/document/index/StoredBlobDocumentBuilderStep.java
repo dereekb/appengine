@@ -21,28 +21,85 @@ public class StoredBlobDocumentBuilderStep
 	public static final String TYPE_FIELD = "type";
 	public static final String NAME_FIELD = "name";
 
+	public final static String DERIVATIVE_PREFIX = "SB_";
+	public final static String DERIVATIVE_FIELD_FORMAT = DERIVATIVE_PREFIX + "%s";
+
+	private String format;
+	private boolean derivative;
+
+	public StoredBlobDocumentBuilderStep() {
+		this("%s", false);
+	}
+
+	public StoredBlobDocumentBuilderStep(String format, boolean derivative) {
+		this.setFormat(format);
+		this.setDerivative(derivative);
+	}
+
+	public String getFormat() {
+		return this.format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public boolean isDerivative() {
+		return this.derivative;
+	}
+
+	public void setDerivative(boolean derivative) {
+		this.derivative = derivative;
+	}
+
+	// MARK: StagedDocumentBuilderStep
 	@Override
 	public void performStep(StoredBlob model,
 	                        Builder builder) {
 
-		// Type
-		StoredBlobType blobType = model.getBlobType();
-		String fileEnding = blobType.getEnding();
-		String fileType = blobType.getFileType();
+		Date date = null;
+		String id = null;
+		String ending = null;
 
-		SearchDocumentBuilderUtility.addAtom(ENDING_FIELD, fileEnding, builder);
-		SearchDocumentBuilderUtility.addAtom(TYPE_FIELD, fileType, builder);
+		if (model != null) {
+			Long blobIdentifier = model.getIdentifier();
+			id = blobIdentifier.toString();
+			date = model.getDate();
 
-		// BlobName
-		String blobName = model.getBlobName();
-		SearchDocumentBuilderUtility.addAtom(NAME_FIELD, blobName, builder);
+			StoredBlobType blobType = model.getBlobType();
+			ending = blobType.getEnding();
+		}
 
-		// Date
-		Date date = model.getDate();
-		ModelDocumentBuilderUtility.addDate(date, builder);
+		// Creation Date
+		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
-		// Descriptors
-		ModelDocumentBuilderUtility.addDescriptorInfo(model, builder);
+		if (this.derivative) {
+
+			// Identifier
+			ModelDocumentBuilderUtility.addId(this.format, id, builder);
+
+			// Format Field
+			String endingFieldFormat = String.format(this.format, StoredBlobDocumentBuilderStep.ENDING_FIELD);
+			SearchDocumentBuilderUtility.addAtom(endingFieldFormat, ending, builder);
+
+		} else {
+
+			// Type
+			StoredBlobType blobType = model.getBlobType();
+			String fileEnding = blobType.getEnding();
+			String fileType = blobType.getFileType();
+
+			SearchDocumentBuilderUtility.addAtom(ENDING_FIELD, fileEnding, builder);
+			SearchDocumentBuilderUtility.addAtom(TYPE_FIELD, fileType, builder);
+
+			// BlobName
+			String blobName = model.getBlobName();
+			SearchDocumentBuilderUtility.addAtom(NAME_FIELD, blobName, builder);
+
+			// Descriptors
+			ModelDocumentBuilderUtility.addDescriptorInfo(model, builder);
+
+		}
 
 	}
 

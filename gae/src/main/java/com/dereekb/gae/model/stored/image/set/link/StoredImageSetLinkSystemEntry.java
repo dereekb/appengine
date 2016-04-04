@@ -32,12 +32,15 @@ import com.googlecode.objectify.Key;
 public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<StoredImageSet> {
 
 	public static final String STORED_IMAGE_SET_LINK_TYPE = "StoredImageSet";
+
 	private static final ExtendedObjectifyModelKeyUtil<StoredImage> imageUtil = ExtendedObjectifyModelKeyUtil.make(
 	        StoredImage.class, ModelKeyType.NUMBER);
 
 	private String iconLinkName = "icon";
 	private String imagesLinkName = "images";
 
+	private LinkTarget iconTarget = new LinkTargetImpl(StoredImageLinkSystemEntry.STORED_IMAGE_LINK_TYPE,
+	        ModelKeyType.NUMBER);
 	private LinkTarget imagesTarget = new LinkTargetImpl(StoredImageLinkSystemEntry.STORED_IMAGE_LINK_TYPE,
 	        ModelKeyType.NUMBER);
 
@@ -63,11 +66,11 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	}
 
 	public LinkTarget getIconTarget() {
-		return this.imagesTarget;
+		return this.iconTarget;
 	}
 
-	public void setIconTarget(LinkTarget imagesTarget) {
-		this.imagesTarget = imagesTarget;
+	public void setIconTarget(LinkTarget iconTarget) {
+		this.iconTarget = iconTarget;
 	}
 
 	public LinkTarget getImagesTarget() {
@@ -78,6 +81,7 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 		this.imagesTarget = imagesTarget;
 	}
 
+	// MARK: AbstractModelLinkSystemEntry
 	@Override
 	public List<Link> getLinks(final StoredImageSet model) {
 		List<Link> links = new ArrayList<Link>();
@@ -85,7 +89,7 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 		ModelKey key = model.getModelKey();
 
 		// Icon Link
-		LinkInfoImpl iconLinkInfo = new LinkInfoImpl(this.iconLinkName, key, this.imagesTarget);
+		LinkInfoImpl iconLinkInfo = new LinkInfoImpl(this.iconLinkName, key, this.iconTarget);
 		LinkImpl iconLink = new LinkImpl(iconLinkInfo, new SingleLink(new SingleLinkDelegate() {
 
 			@Override
@@ -117,9 +121,10 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	@Override
 	public String toString() {
 		return "StoredImageSetLinkSystemEntry [iconLinkName=" + this.iconLinkName + ", imagesLinkName="
-		        + this.imagesLinkName + ", imagesTarget=" + this.imagesTarget + ", modelType=" + this.modelType
-		        + ", indexService=" + this.readService + ", setter=" + this.setter + ", reviewer=" + this.reviewer
-		        + ", validator=" + this.validator + ", reverseLinkNames=" + this.getReverseLinkNames() + "]";
+		        + this.imagesLinkName + ", iconTarget=" + this.iconTarget + ", imagesTarget=" + this.imagesTarget
+		        + ", modelType=" + this.modelType + ", readService=" + this.readService + ", setter=" + this.setter
+		        + ", reviewer=" + this.reviewer + ", validator=" + this.validator + ", deleteService="
+		        + this.deleteService + ", deleteChangesMap=" + this.deleteChangesMap + "]";
 	}
 
 }

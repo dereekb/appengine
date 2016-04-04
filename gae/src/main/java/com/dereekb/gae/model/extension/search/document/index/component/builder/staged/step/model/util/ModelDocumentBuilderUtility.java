@@ -8,7 +8,6 @@ import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocum
 import com.dereekb.gae.model.general.geo.Point;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 public class ModelDocumentBuilderUtility {
 
@@ -28,8 +27,7 @@ public class ModelDocumentBuilderUtility {
 	                         String id,
 	                         Document.Builder builder) {
 		String idName = String.format(format, ID_FIELD);
-		Field.Builder idField = SearchDocumentBuilderUtility.atomField(idName, id);
-		builder.addField(idField);
+		SearchDocumentBuilderUtility.addAtom(idName, id, builder);
 	}
 
 	// MARK: Date
@@ -41,9 +39,15 @@ public class ModelDocumentBuilderUtility {
 	public static void addDate(String format,
 	                           Date date,
 	                           Document.Builder builder) {
-		String dateName = String.format(format, DATE_FIELD);
-		Field.Builder dateField = SearchDocumentBuilderUtility.dateField(dateName, date);
-		builder.addField(dateField);
+		addDate(format, DATE_FIELD, date, builder);
+	}
+
+	public static void addDate(String format,
+	                           String fieldName,
+	                           Date date,
+	                           Document.Builder builder) {
+		String dateName = String.format(format, fieldName);
+		SearchDocumentBuilderUtility.addDate(dateName, date, builder);
 	}
 
 	// MARK: Descriptor
@@ -68,13 +72,11 @@ public class ModelDocumentBuilderUtility {
 
 		// Descriptor Info
 		String typeName = String.format(format, DESCRIPTOR_TYPE_FIELD);
-		Field.Builder descriptorField = SearchDocumentBuilderUtility.atomField(typeName, descriptorType);
-		builder.addField(descriptorField);
+		SearchDocumentBuilderUtility.addAtom(typeName, descriptorType, builder);
 
 		// Info Type Id
 		String idName = String.format(format, DESCRIPTOR_ID_FIELD);
-		Field.Builder descriptorIdField = SearchDocumentBuilderUtility.atomField(idName, descriptorId);
-		builder.addField(descriptorIdField);
+		SearchDocumentBuilderUtility.addAtom(idName, descriptorId, builder);
 	}
 
 	// MARK: Point
@@ -87,8 +89,7 @@ public class ModelDocumentBuilderUtility {
 	                            Point point,
 	                            Builder builder) {
 		String pointName = String.format(format, POINT_FIELD);
-		Field.Builder pointField = SearchDocumentBuilderUtility.geoPointField(pointName, point);
-		builder.addField(pointField);
+		SearchDocumentBuilderUtility.addGeoPoint(pointName, point, builder);
 	}
 
 }

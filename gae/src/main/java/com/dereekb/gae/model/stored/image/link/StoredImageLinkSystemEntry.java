@@ -143,7 +143,7 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 
 		// GeoPlace Link
 		LinkInfoImpl geoPlaceLinkInfo = new LinkInfoImpl(this.geoPlaceLinkName, key, this.geoPlaceTarget);
-		LinkImpl iconLink = new LinkImpl(geoPlaceLinkInfo, new SingleLink(new SingleLinkDelegate() {
+		LinkImpl geoPlaceLink = new LinkImpl(geoPlaceLinkInfo, new SingleLink(new SingleLinkDelegate() {
 
 			@Override
 			public ModelKey getKey() {
@@ -159,7 +159,7 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 
 		}));
 
-		links.add(iconLink);
+		links.add(geoPlaceLink);
 
 		// ImageSet Links
 		LinkInfoImpl imageSetLinkInfo = new LinkInfoImpl(this.imageSetLinkName, key, this.imageSetTarget);

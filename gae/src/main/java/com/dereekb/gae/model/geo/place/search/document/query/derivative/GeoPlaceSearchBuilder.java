@@ -5,22 +5,36 @@ import java.util.Map;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.search.model.DateSearch;
 import com.dereekb.gae.model.extension.search.document.search.model.PointRadiusSearch;
+import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDerivativeDocumentBuilderStep;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDocumentBuilderStep;
+import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder.GeoPlaceSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilderSource;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.BooleanField;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.ExpressionStart;
+import com.dereekb.gae.utilities.collections.map.MapReader;
+import com.dereekb.gae.utilities.factory.Factory;
+import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
-public class GeoPlaceSearchBuilder {
+/**
+ * Builder for {@link GeoPlaceSearch} elements.
+ * <p>
+ * Used by derivative types of {@link GeoPlace}.
+ *
+ * @author dereekb
+ *
+ */
+public class GeoPlaceSearchBuilder
+        implements Factory<GeoPlaceSearch> {
 
-	public static final String DEFAULT_REGION_FIELD = GeoPlaceDocumentBuilderStep.REGION_FIELD;
 	public static final String DEFAULT_ID_FIELD = ModelDocumentBuilderUtility.ID_FIELD;
 	public static final String DEFAULT_DATE_FIELD = ModelDocumentBuilderUtility.DATE_FIELD;
 	public static final String DEFAULT_POINT_FIELD = ModelDocumentBuilderUtility.POINT_FIELD;
+	public static final String DEFAULT_REGION_FIELD = GeoPlaceDocumentBuilderStep.REGION_FIELD;
 
-	private String prefix = GeoPlaceDerivativeDocumentBuilderStep.DEFAULT_PREFIX;
+	private String prefix = GeoPlaceDocumentBuilderStep.DERIVATIVE_PREFIX;
 
 	private String idField = DEFAULT_ID_FIELD;
 	private String dateField = DEFAULT_DATE_FIELD;
@@ -68,20 +82,21 @@ public class GeoPlaceSearchBuilder {
 	}
 
 	public GeoPlaceSearch make(Map<String, String> parameters) {
-		GeoPlaceSearch search = new GeoPlaceSearch(this);
+		GeoPlaceSearch search = new GeoPlaceSearch();
+		MapReader<String> reader = new MapReader<String>(parameters, this.getFormat());
 
-		if (parameters.containsKey(this.idField)) {
-			Long id = new Long(parameters.get(this.idField));
+		if (reader.containsKey(this.idField)) {
+			Long id = new Long(reader.get(this.idField));
 			search.setId(id);
 		}
 
-		if (parameters.containsKey(this.isRegionField)) {
-			Boolean region = new Boolean(parameters.get(this.isRegionField));
+		if (reader.containsKey(this.isRegionField)) {
+			Boolean region = new Boolean(reader.get(this.isRegionField));
 			search.setRegion(region);
 		}
 
-		search.setPoint(PointRadiusSearch.fromString(parameters.get(this.pointField)));
-		search.setDate(DateSearch.fromString(parameters.get(this.dateField)));
+		search.setPoint(PointRadiusSearch.fromString(reader.get(this.pointField)));
+		search.setDate(DateSearch.fromString(reader.get(this.dateField)));
 
 		if (search.hasValues() == false) {
 			search = null;
@@ -129,35 +144,33 @@ public class GeoPlaceSearchBuilder {
 		return builder;
 	}
 
+	@Override
+	public GeoPlaceSearch make() throws FactoryMakeFailureException {
+		return new GeoPlaceSearch();
+	}
+
 	/**
 	 * Search component for derivative fields.
 	 *
 	 * @author dereekb
 	 * @see {@link GeoPlaceDerivativeDocumentBuilderStep}
 	 */
-	public final class GeoPlaceSearch
+	public class GeoPlaceSearch
 	        implements ExpressionBuilderSource {
 
 		private Boolean region;
+
 		private Long id;
 		private DateSearch date;
 		private PointRadiusSearch point;
 
-		private final GeoPlaceSearchBuilder builder;
-
-		private GeoPlaceSearch(GeoPlaceSearchBuilder builder) {
-			if (builder == null) {
-				throw new IllegalArgumentException("Builder is required.");
-			}
-
-			this.builder = builder;
-		}
+		private GeoPlaceSearch() {}
 
 		public Boolean getRegion() {
 			return this.region;
 		}
 
-		private void setRegion(Boolean region) {
+		public void setRegion(Boolean region) {
 			this.region = region;
 		}
 
@@ -165,7 +178,7 @@ public class GeoPlaceSearchBuilder {
 			return this.id;
 		}
 
-		private void setId(Long id) {
+		public void setId(Long id) {
 			this.id = id;
 		}
 
@@ -173,7 +186,7 @@ public class GeoPlaceSearchBuilder {
 			return this.date;
 		}
 
-		private void setDate(DateSearch date) {
+		public void setDate(DateSearch date) {
 			this.date = date;
 		}
 
@@ -181,20 +194,17 @@ public class GeoPlaceSearchBuilder {
 			return this.point;
 		}
 
-		private void setPoint(PointRadiusSearch point) {
+		public void setPoint(PointRadiusSearch point) {
 			this.point = point;
 		}
 
-		public GeoPlaceSearchBuilder getBuilder() {
-			return this.builder;
-		}
 		public boolean hasValues() {
 			return (this.date != null || this.region != null || this.point != null || this.id != null);
 		}
 
 		@Override
 		public ExpressionBuilder makeExpression() {
-			return this.builder.make(this);
+			return GeoPlaceSearchBuilder.this.make(this);
 		}
 
 	}

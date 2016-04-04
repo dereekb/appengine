@@ -35,6 +35,14 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 		this.converter = converter;
 	}
 
+	public static <T> ExtendedObjectifyModelKeyUtil<T> name(Class<T> type) {
+		return new ExtendedObjectifyModelKeyUtil<T>(type, ModelKeyType.NAME);
+	}
+
+	public static <T> ExtendedObjectifyModelKeyUtil<T> number(Class<T> type) {
+		return new ExtendedObjectifyModelKeyUtil<T>(type, ModelKeyType.NUMBER);
+	}
+
 	public ObjectifyKeyConverter<T, ModelKey> getConverter() {
 		return this.converter;
 	}

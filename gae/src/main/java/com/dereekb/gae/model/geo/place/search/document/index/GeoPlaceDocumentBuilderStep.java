@@ -15,31 +15,91 @@ import com.google.appengine.api.search.Document.Builder;
  *
  * @author dereekb
  */
-public final class GeoPlaceDocumentBuilderStep
+public class GeoPlaceDocumentBuilderStep
         implements StagedDocumentBuilderStep<GeoPlace> {
 
 	public static final String REGION_FIELD = "region";
 
+	public static final String DERIVATIVE_PREFIX = "GP_";
+	public static final String DERIVATIVE_FIELD_FORMAT = DERIVATIVE_PREFIX + "%s";
+
+	private String format;
+	private boolean derivative;
+
+	public GeoPlaceDocumentBuilderStep() {
+		this("%s", false);
+	}
+
+	public GeoPlaceDocumentBuilderStep(String format, boolean derivative) {
+		this.setFormat(format);
+		this.setDerivative(derivative);
+	}
+
+	public static GeoPlaceDocumentBuilderStep derivativeBuilder() {
+		return new GeoPlaceDocumentBuilderStep();
+	}
+
+	public String getFormat() {
+		return this.format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public boolean isDerivative() {
+		return this.derivative;
+	}
+
+	public void setDerivative(boolean derivative) {
+		this.derivative = derivative;
+	}
+
+	// MARK: StagedDocumentBuilderStep
 	@Override
 	public void performStep(GeoPlace model,
 	                        Builder builder) {
 
-		// Point Field
+		boolean isRegion = false;
+		String id = null;
+
+		Date date = null;
+		Point point = null;
+
+		if (model != null) {
+			Long placeIdentifier = model.getIdentifier();
+			id = placeIdentifier.toString();
+
+			point = model.getPoint();
+			isRegion = model.isRegion();
+			date = model.getDate();
+		}
+
 		// Is Region Field
-		boolean isRegion = model.isRegion();
-		SearchDocumentBuilderUtility.addBoolean(REGION_FIELD, isRegion, builder);
+		String isRegionFieldFormat = String.format(this.format, REGION_FIELD);
+		SearchDocumentBuilderUtility.addBoolean(isRegionFieldFormat, isRegion, builder);
 
-		// Date
-		Date date = model.getDate();
-		ModelDocumentBuilderUtility.addDate(date, builder);
+		// Creation Date
+		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
-		// Point
-		Point point = model.getPoint();
-		ModelDocumentBuilderUtility.addPoint(point, builder);
+		// Point Field
+		ModelDocumentBuilderUtility.addPoint(this.format, point, builder);
 
-		// Descriptors
-		ModelDocumentBuilderUtility.addDescriptorInfo(model, builder);
+		if (this.derivative) {
 
+			// Identifier
+			ModelDocumentBuilderUtility.addId(this.format, id, builder);
+		} else {
+
+			// Descriptors
+			ModelDocumentBuilderUtility.addDescriptorInfo(this.format, model, builder);
+		}
+
+	}
+
+	@Override
+	public String toString() {
+		return "GeoPlaceDocumentBuilderStep [format=" + this.format + ", derivative=" + this.derivative + "]";
 	}
 
 }
