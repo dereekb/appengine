@@ -2,8 +2,8 @@ package com.dereekb.gae.model.stored.image.search.document.query;
 
 import java.util.Map;
 
-import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder;
-import com.dereekb.gae.model.stored.blob.search.document.query.derivative.StoredBlobSearchBuilder;
+import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder;
+import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchBuilder;
 import com.dereekb.gae.web.api.model.extension.search.impl.model.AbstractSearchRequestBuilder;
 
 

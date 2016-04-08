@@ -79,8 +79,8 @@ public class StoredBlobDocumentBuilderStep
 			ModelDocumentBuilderUtility.addId(this.format, id, builder);
 
 			// Format Field
-			String endingFieldFormat = String.format(this.format, StoredBlobDocumentBuilderStep.ENDING_FIELD);
-			SearchDocumentBuilderUtility.addAtom(endingFieldFormat, ending, builder);
+			String endingFieldName = String.format(this.format, StoredBlobDocumentBuilderStep.ENDING_FIELD);
+			SearchDocumentBuilderUtility.addAtom(endingFieldName, ending, builder);
 
 		} else {
 
@@ -92,7 +92,7 @@ public class StoredBlobDocumentBuilderStep
 			SearchDocumentBuilderUtility.addAtom(ENDING_FIELD, fileEnding, builder);
 			SearchDocumentBuilderUtility.addAtom(TYPE_FIELD, fileType, builder);
 
-			// BlobName
+			// Name
 			String blobName = model.getBlobName();
 			SearchDocumentBuilderUtility.addAtom(NAME_FIELD, blobName, builder);
 

@@ -1,10 +1,8 @@
 package com.dereekb.gae.model.geo.place.search.document.query;
 
-import com.dereekb.gae.model.extension.search.document.search.model.DescriptorSearch;
-import com.dereekb.gae.model.extension.search.document.search.service.model.impl.AbstractModelDocumentRequest;
+import com.dereekb.gae.model.extension.search.document.search.service.model.impl.AbstractDescribedModelDocumentRequest;
 import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder;
-import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder.GeoPlaceSearch;
+import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder.GeoPlaceSearch;
 
 /**
  * Search request for a {@link GeoPlace}.
@@ -12,12 +10,11 @@ import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlace
  * @author dereekb
  *
  */
-public class GeoPlaceSearchRequest extends AbstractModelDocumentRequest {
+public class GeoPlaceSearchRequest extends AbstractDescribedModelDocumentRequest {
 
 	public static final GeoPlaceSearchBuilder BUILDER = new GeoPlaceSearchBuilder();
 
 	private GeoPlaceSearch search;
-	private DescriptorSearch descriptor;
 
 	public GeoPlaceSearchRequest() {
 		this.search = BUILDER.make();
@@ -27,16 +24,12 @@ public class GeoPlaceSearchRequest extends AbstractModelDocumentRequest {
 		return this.search;
 	}
 
-	public void setSearch(GeoPlaceSearch search) {
+	public void setSearch(GeoPlaceSearch search) throws IllegalArgumentException {
+		if (search == null) {
+			throw new IllegalArgumentException("Search cannot be null.");
+		}
+
 		this.search = search;
-	}
-
-	public DescriptorSearch getDescriptor() {
-		return this.descriptor;
-	}
-
-	public void setDescriptor(DescriptorSearch descriptor) {
-		this.descriptor = descriptor;
 	}
 
 	@Override

@@ -1,14 +1,12 @@
-package com.dereekb.gae.model.geo.place.search.document.query.derivative;
+package com.dereekb.gae.model.geo.place.search.document.query;
 
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.search.model.DateSearch;
 import com.dereekb.gae.model.extension.search.document.search.model.PointRadiusSearch;
-import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDerivativeDocumentBuilderStep;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDocumentBuilderStep;
-import com.dereekb.gae.model.geo.place.search.document.query.derivative.GeoPlaceSearchBuilder.GeoPlaceSearch;
+import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder.GeoPlaceSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilderSource;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
@@ -20,8 +18,6 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
 /**
  * Builder for {@link GeoPlaceSearch} elements.
- * <p>
- * Used by derivative types of {@link GeoPlace}.
  *
  * @author dereekb
  *
@@ -82,7 +78,17 @@ public class GeoPlaceSearchBuilder
 	}
 
 	public GeoPlaceSearch make(Map<String, String> parameters) {
-		GeoPlaceSearch search = new GeoPlaceSearch();
+		GeoPlaceSearch search = new GeoPlaceSearch(parameters);
+
+		if (search.hasValues() == false) {
+			search = null;
+		}
+
+		return search;
+	}
+
+	public void applyParameters(GeoPlaceSearch search,
+	                            Map<String, String> parameters) {
 		MapReader<String> reader = new MapReader<String>(parameters, this.getFormat());
 
 		if (reader.containsKey(this.idField)) {
@@ -97,12 +103,6 @@ public class GeoPlaceSearchBuilder
 
 		search.setPoint(PointRadiusSearch.fromString(reader.get(this.pointField)));
 		search.setDate(DateSearch.fromString(reader.get(this.dateField)));
-
-		if (search.hasValues() == false) {
-			search = null;
-		}
-
-		return search;
 	}
 
 	public String getFormat() {
@@ -149,12 +149,6 @@ public class GeoPlaceSearchBuilder
 		return new GeoPlaceSearch();
 	}
 
-	/**
-	 * Search component for derivative fields.
-	 *
-	 * @author dereekb
-	 * @see {@link GeoPlaceDerivativeDocumentBuilderStep}
-	 */
 	public class GeoPlaceSearch
 	        implements ExpressionBuilderSource {
 
@@ -165,6 +159,14 @@ public class GeoPlaceSearchBuilder
 		private PointRadiusSearch point;
 
 		private GeoPlaceSearch() {}
+
+		public GeoPlaceSearch(Map<String, String> parameters) {
+			this.applyParameters(parameters);
+		}
+
+		public void applyParameters(Map<String, String> parameters) {
+			GeoPlaceSearchBuilder.this.applyParameters(this, parameters);
+		}
 
 		public Boolean getRegion() {
 			return this.region;
@@ -205,6 +207,12 @@ public class GeoPlaceSearchBuilder
 		@Override
 		public ExpressionBuilder makeExpression() {
 			return GeoPlaceSearchBuilder.this.make(this);
+		}
+
+		@Override
+		public String toString() {
+			return "GeoPlaceSearch [region=" + this.region + ", id=" + this.id + ", date=" + this.date + ", point="
+			        + this.point + "]";
 		}
 
 	}
