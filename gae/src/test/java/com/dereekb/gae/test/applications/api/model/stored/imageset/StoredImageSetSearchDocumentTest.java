@@ -2,6 +2,7 @@ package com.dereekb.gae.test.applications.api.model.stored.imageset;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import com.dereekb.gae.model.extension.search.document.search.service.model.Mode
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchService;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
+import com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetDocumentBuilderStep;
 import com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchRequest;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
@@ -83,6 +85,17 @@ public class StoredImageSetSearchDocumentTest extends ModelSearchDocumentTest<St
 		storedImageSet.setIcon(icon.getObjectifyKey());
 
 		return storedImageSet;
+	}
+
+	@Test
+	public void testSearchIndexFields() {
+		StoredImageSet model = this.make();
+		Document document = this.builder.buildSearchDocument(model);
+
+		Set<String> names = document.getFieldNames();
+		Assert.assertTrue(names.contains(StoredImageSetDocumentBuilderStep.LABEL_FIELD));
+		Assert.assertTrue(names.contains(StoredImageSetDocumentBuilderStep.DETAIL_FIELD));
+		Assert.assertTrue(names.contains(StoredImageSetDocumentBuilderStep.TAGS_FIELD));
 	}
 
 }
