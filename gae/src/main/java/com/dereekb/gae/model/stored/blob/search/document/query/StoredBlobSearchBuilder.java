@@ -37,6 +37,12 @@ public class StoredBlobSearchBuilder
 	private String nameField = DEFAULT_NAME_FIELD;
 	private String endingField = DEFAULT_ENDING_FIELD;
 
+	public StoredBlobSearchBuilder() {}
+
+	public StoredBlobSearchBuilder(String prefix) {
+		this.prefix = prefix;
+	}
+
 	public String getPrefix() {
 		return this.prefix;
 	}

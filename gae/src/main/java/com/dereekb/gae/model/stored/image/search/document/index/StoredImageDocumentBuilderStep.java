@@ -13,7 +13,7 @@ import com.google.appengine.api.search.Document.Builder;
 /**
  * Implementation of {@link StagedDocumentBuilderStep} for adding
  * {@link StoredImageDocumentBuilderStep}.
- *
+ * <p>
  * Additional information about the {@link StoredBlob} and {@link GeoPlace}
  * should be added using a {@link StoredBlobDerivativeDocumentBuilderStep} and
  * {@link GeoPlaceDerivativeDocumentBuilderStep}, respectively.

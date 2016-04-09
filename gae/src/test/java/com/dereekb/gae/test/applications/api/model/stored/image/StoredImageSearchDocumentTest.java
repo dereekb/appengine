@@ -2,6 +2,7 @@ package com.dereekb.gae.test.applications.api.model.stored.image;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -94,6 +95,16 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 		storedImage.setStoredBlob(storedBlob.getObjectifyKey());
 
 		return storedImage;
+	}
+
+	@Test
+	public void testSearchIndexFields() {
+		StoredImage model = this.make();
+		Document document = this.builder.buildSearchDocument(model);
+
+		Set<String> names = document.getFieldNames();
+		Assert.assertTrue(names.contains("GP_id")); // GeoPoint ID Field
+		Assert.assertTrue(names.contains("SB_id")); // StoredBlob ID Field
 	}
 
 }

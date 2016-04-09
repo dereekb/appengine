@@ -12,7 +12,7 @@ import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuild
  */
 public class GeoPlaceSearchRequest extends AbstractDescribedModelDocumentRequest {
 
-	public static final GeoPlaceSearchBuilder BUILDER = new GeoPlaceSearchBuilder();
+	public static final GeoPlaceSearchBuilder BUILDER = new GeoPlaceSearchBuilder("");
 
 	private GeoPlaceSearch search;
 

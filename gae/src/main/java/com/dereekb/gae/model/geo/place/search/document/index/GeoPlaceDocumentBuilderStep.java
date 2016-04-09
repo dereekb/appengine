@@ -79,11 +79,11 @@ public class GeoPlaceDocumentBuilderStep
 		String isRegionFieldFormat = String.format(this.format, REGION_FIELD);
 		SearchDocumentBuilderUtility.addBoolean(isRegionFieldFormat, isRegion, builder);
 
-		// Creation Date
-		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
-
 		// Point Field
 		ModelDocumentBuilderUtility.addPoint(this.format, point, builder);
+
+		// Creation Date
+		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
 		if (this.derivative) {
 

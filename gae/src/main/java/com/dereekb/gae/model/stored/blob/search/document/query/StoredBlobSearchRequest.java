@@ -12,7 +12,7 @@ import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchB
  */
 public class StoredBlobSearchRequest extends AbstractDescribedModelDocumentRequest {
 
-	public static final StoredBlobSearchBuilder BUILDER = new StoredBlobSearchBuilder();
+	public static final StoredBlobSearchBuilder BUILDER = new StoredBlobSearchBuilder("");
 
 	private StoredBlobSearch search;
 

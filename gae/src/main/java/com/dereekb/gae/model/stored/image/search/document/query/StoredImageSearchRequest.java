@@ -1,9 +1,8 @@
 package com.dereekb.gae.model.stored.image.search.document.query;
 
 import com.dereekb.gae.model.extension.search.document.search.service.model.impl.AbstractModelDocumentRequest;
-import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder.GeoPlaceSearch;
-import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchBuilder.StoredBlobSearch;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.model.stored.image.search.document.query.StoredImageSearchBuilder.StoredImageSearch;
 
 /**
  * Search request for a {@link StoredImage}.
@@ -13,60 +12,29 @@ import com.dereekb.gae.model.stored.image.StoredImage;
  */
 public class StoredImageSearchRequest extends AbstractModelDocumentRequest {
 
-	private GeoPlaceSearch geoPlaceSearch;
-	private StoredBlobSearch storedBlobSearch;
+	public static final StoredImageSearchBuilder BUILDER = new StoredImageSearchBuilder("");
 
-	private String name;
-	private String summary;
-	private String tags;
-	private String type;
+	private StoredImageSearch search;
 
-	public GeoPlaceSearch getGeoPlaceSearch() {
-		return this.geoPlaceSearch;
+	public StoredImageSearchRequest() {
+		this.search = BUILDER.make();
 	}
 
-	public void setGeoPlaceSearch(GeoPlaceSearch geoPlaceSearch) {
-		this.geoPlaceSearch = geoPlaceSearch;
+	public StoredImageSearch getSearch() {
+		return this.search;
 	}
 
-	public StoredBlobSearch getStoredBlobSearch() {
-		return this.storedBlobSearch;
+	public void setSearch(StoredImageSearch search) throws IllegalArgumentException {
+		if (search == null) {
+			throw new IllegalArgumentException("Search cannot be null.");
+		}
+
+		this.search = search;
 	}
 
-	public void setStoredBlobSearch(StoredBlobSearch storedBlobSearch) {
-		this.storedBlobSearch = storedBlobSearch;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSummary() {
-		return this.summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getTags() {
-		return this.tags;
-	}
-
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
-
-	public String getType() {
-		return this.type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
+	@Override
+	public String toString() {
+		return "StoredImageSearchRequest [search=" + this.search + "]";
 	}
 
 }

@@ -14,6 +14,9 @@ import com.googlecode.objectify.Key;
 /**
  * {@link DerivativeDocumentBuilderStepDelegate} implementation for
  * {@link StoredImage} instances.
+ * <p>
+ * Used for retrieving all the derivative types from a {@link StoredImage}
+ * instance.
  *
  * @author dereekb
  *

@@ -37,6 +37,12 @@ public class GeoPlaceSearchBuilder
 	private String pointField = DEFAULT_POINT_FIELD;
 	private String isRegionField = DEFAULT_REGION_FIELD;
 
+	public GeoPlaceSearchBuilder() {}
+
+	public GeoPlaceSearchBuilder(String prefix) {
+		this.prefix = prefix;
+	}
+
 	public String getPrefix() {
 		return this.prefix;
 	}
