@@ -3,6 +3,7 @@ package com.dereekb.gae.model.stored.blob.search.document.index;
 import java.util.Date;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.AbstractDerivableDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
@@ -14,8 +15,7 @@ import com.google.appengine.api.search.Document.Builder;
  *
  * @author dereekb
  */
-public class StoredBlobDocumentBuilderStep
-        implements StagedDocumentBuilderStep<StoredBlob> {
+public class StoredBlobDocumentBuilderStep extends AbstractDerivableDocumentBuilderStep<StoredBlob> {
 
 	public static final String ENDING_FIELD = "ending";
 	public static final String TYPE_FIELD = "type";
@@ -24,46 +24,36 @@ public class StoredBlobDocumentBuilderStep
 	public final static String DERIVATIVE_PREFIX = "SB_";
 	public final static String DERIVATIVE_FIELD_FORMAT = DERIVATIVE_PREFIX + "%s";
 
-	private String format;
-	private boolean derivative;
-
 	public StoredBlobDocumentBuilderStep() {
-		this("%s", false);
+		super();
 	}
 
-	public StoredBlobDocumentBuilderStep(String format, boolean derivative) {
-		this.setFormat(format);
-		this.setDerivative(derivative);
-	}
-
-	public String getFormat() {
-		return this.format;
-	}
-
-	public void setFormat(String format) {
-		this.format = format;
-	}
-
-	public boolean isDerivative() {
-		return this.derivative;
-	}
-
-	public void setDerivative(boolean derivative) {
-		this.derivative = derivative;
+	public StoredBlobDocumentBuilderStep(String format, boolean inclusionStep) {
+		super(format, inclusionStep);
 	}
 
 	// MARK: StagedDocumentBuilderStep
 	@Override
-	public void performStep(StoredBlob model,
-	                        Builder builder) {
+	protected void performDescribedModelStep(StoredBlob model,
+	                                         Builder builder) {
+		// Name
+		String blobName = model.getBlobName();
+		SearchDocumentBuilderUtility.addAtom(NAME_FIELD, blobName, builder);
 
+		// Type
+		StoredBlobType blobType = model.getBlobType();
+		String fileType = blobType.getFileType();
+		SearchDocumentBuilderUtility.addAtom(TYPE_FIELD, fileType, builder);
+
+	};
+
+	@Override
+	protected void performSharedStep(StoredBlob model,
+	                                 Builder builder) {
 		Date date = null;
-		String id = null;
 		String ending = null;
 
 		if (model != null) {
-			Long blobIdentifier = model.getIdentifier();
-			id = blobIdentifier.toString();
 			date = model.getDate();
 
 			StoredBlobType blobType = model.getBlobType();
@@ -73,33 +63,9 @@ public class StoredBlobDocumentBuilderStep
 		// Creation Date
 		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
-		if (this.derivative) {
-
-			// Identifier
-			ModelDocumentBuilderUtility.addId(this.format, id, builder);
-
-			// Format Field
-			String endingFieldName = String.format(this.format, StoredBlobDocumentBuilderStep.ENDING_FIELD);
-			SearchDocumentBuilderUtility.addAtom(endingFieldName, ending, builder);
-
-		} else {
-
-			// Type
-			StoredBlobType blobType = model.getBlobType();
-			String fileEnding = blobType.getEnding();
-			String fileType = blobType.getFileType();
-
-			SearchDocumentBuilderUtility.addAtom(ENDING_FIELD, fileEnding, builder);
-			SearchDocumentBuilderUtility.addAtom(TYPE_FIELD, fileType, builder);
-
-			// Name
-			String blobName = model.getBlobName();
-			SearchDocumentBuilderUtility.addAtom(NAME_FIELD, blobName, builder);
-
-			// Descriptors
-			ModelDocumentBuilderUtility.addDescriptorInfo(model, builder);
-
-		}
+		// Format Field
+		String endingName = String.format(this.format, ENDING_FIELD);
+		SearchDocumentBuilderUtility.addAtom(endingName, ending, builder);
 
 	}
 

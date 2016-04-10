@@ -102,6 +102,7 @@ public class StoredBlobSearchBuilder
 		return this.prefix + "%s";
 	}
 
+	// MAKE: Make
 	public ExpressionBuilder make(StoredBlobSearch search) {
 		return this.make(search, this.getFormat());
 	}
