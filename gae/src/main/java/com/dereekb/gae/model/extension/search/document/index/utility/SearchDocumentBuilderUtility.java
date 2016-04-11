@@ -16,6 +16,13 @@ import com.google.appengine.api.search.GeoPoint;
  */
 public final class SearchDocumentBuilderUtility {
 
+	public static void addBoolean(String format,
+	                              String name,
+	                              boolean value,
+	                              Document.Builder builder) {
+		addBoolean(String.format(format, name), value, builder);
+	}
+
 	public static void addBoolean(String name,
 	                              boolean value,
 	                              Document.Builder builder) {
@@ -39,6 +46,13 @@ public final class SearchDocumentBuilderUtility {
 		return builder;
 	}
 
+	public static void addText(String format,
+	                           String name,
+	                           String value,
+	                           Document.Builder builder) {
+		addText(String.format(format, name), value, builder);
+	}
+
 	public static void addText(String name,
 	                           String value,
 	                           Document.Builder builder) {
@@ -51,6 +65,12 @@ public final class SearchDocumentBuilderUtility {
 		return Field.newBuilder().setName(name).setText(text);
 	}
 
+	public static void addAtom(String format,
+	                           String name,
+	                           String value,
+	                           Document.Builder builder) {
+		addAtom(String.format(format, name), value, builder);
+	}
 	public static void addAtom(String name,
 	                           String value,
 	                           Document.Builder builder) {
@@ -75,6 +95,13 @@ public final class SearchDocumentBuilderUtility {
 		return Field.newBuilder().setName(name).setAtom(value);
 	}
 
+	public static void addDate(String format,
+	                           String name,
+	                           Date value,
+	                           Document.Builder builder) {
+		addDate(String.format(format, name), value, builder);
+	}
+
 	public static void addDate(String name,
 	                           Date value,
 	                           Document.Builder builder) {
@@ -85,6 +112,13 @@ public final class SearchDocumentBuilderUtility {
 	public static Field.Builder dateField(String name,
 	                                      Date date) {
 		return Field.newBuilder().setName(name).setDate(date);
+	}
+
+	public static void addGeoPoint(String format,
+	                               String name,
+	                               Point point,
+	                               Document.Builder builder) {
+		addGeoPoint(String.format(format, name), point, builder);
 	}
 
 	public static void addGeoPoint(String name,

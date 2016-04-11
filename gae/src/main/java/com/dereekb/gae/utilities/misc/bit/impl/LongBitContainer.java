@@ -36,6 +36,10 @@ public class LongBitContainer
 	}
 
 	// MARK: BitContainer
+	public void clear() {
+		this.setValue(0L);
+	}
+
 	@Override
 	public Integer getBitLength() {
 		return BITS_IN_LONG;
