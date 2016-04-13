@@ -2,8 +2,8 @@ package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl
 
 import java.util.Date;
 
-import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryConditionOperator;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 
 /**
  * {@link AbstractQueryFieldParameter} for a date.
@@ -24,10 +24,10 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	}
 
 	public DateQueryFieldParameter(String field, Date value) {
-		super(field, ObjectifyQueryConditionOperator.LessOrEqualTo, value);
+		super(field, ExpressionOperator.LessOrEqualTo, value);
 	}
 
-	public DateQueryFieldParameter(String field, ObjectifyQueryConditionOperator operator, Date value) {
+	public DateQueryFieldParameter(String field, ExpressionOperator operator, Date value) {
 		super(field, operator, value);
 	}
 
@@ -38,7 +38,7 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	public static DateQueryFieldParameter recentDate(String field) {
 		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
 		parameter.setOrdering(ObjectifyQueryResultsOrdering.Descending);
-		parameter.setOperator(ObjectifyQueryConditionOperator.LessOrEqualTo);
+		parameter.setOperator(ExpressionOperator.LessOrEqualTo);
 		return parameter;
 	}
 

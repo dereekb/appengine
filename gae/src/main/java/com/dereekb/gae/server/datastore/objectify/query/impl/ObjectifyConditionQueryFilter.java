@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.googlecode.objectify.cmd.Query;
 
 /**
@@ -21,7 +22,7 @@ public class ObjectifyConditionQueryFilter
 	}
 
 	public ObjectifyConditionQueryFilter(String field,
-			ObjectifyQueryConditionOperator operator,
+			ExpressionOperator operator,
 			Object value){
 		this.setCondition(field, operator);
 		this.setValue(value);
@@ -40,7 +41,7 @@ public class ObjectifyConditionQueryFilter
 	}
 
 	public void setCondition(String field,
-	                         ObjectifyQueryConditionOperator operator) throws IllegalArgumentException {
+	                         ExpressionOperator operator) throws IllegalArgumentException {
 		if (field == null || operator == null) {
 			throw new IllegalArgumentException("Field and operator cannot be null.");
 		}

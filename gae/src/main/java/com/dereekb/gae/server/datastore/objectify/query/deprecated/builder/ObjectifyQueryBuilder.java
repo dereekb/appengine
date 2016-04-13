@@ -5,7 +5,7 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.objectify.query.ConfiguredObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryConditionOperator;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ExpressionOperator;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
@@ -49,17 +49,17 @@ public class ObjectifyQueryBuilder<T>
 
 	public ConfiguredObjectifyQuery<T> fieldEqualsQuery(String field,
 	                                          Object value) {
-		return this.fieldQuery(field, ObjectifyQueryConditionOperator.Equal, value, QueryOrdering.Ascending);
+		return this.fieldQuery(field, ExpressionOperator.Equal, value, QueryOrdering.Ascending);
 	}
 
 	public ConfiguredObjectifyQuery<T> fieldQuery(String field,
-	                                    ObjectifyQueryConditionOperator operator,
+	                                    ExpressionOperator operator,
 	                                    Object value) {
 		return this.fieldQuery(field, operator, value, QueryOrdering.Ascending);
 	}
 
 	public ConfiguredObjectifyQuery<T> fieldQuery(String field,
-	                                    ObjectifyQueryConditionOperator operator,
+	                                    ExpressionOperator operator,
 	                                    Object value,
 	                                    QueryOrdering ordering) {
 		ConfiguredObjectifyQuery<T> query = this.make();
@@ -75,7 +75,7 @@ public class ObjectifyQueryBuilder<T>
 	}
 
 	public ObjectifyConditionQueryFilter fieldFilter(String field,
-	                                                 ObjectifyQueryConditionOperator operator,
+	                                                 ExpressionOperator operator,
 	                                                 Object value) {
 		ObjectifyConditionQueryFilter fieldFilter = new ObjectifyConditionQueryFilter(field, operator, value);
 		return fieldFilter;

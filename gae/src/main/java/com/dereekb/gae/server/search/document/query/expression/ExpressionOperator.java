@@ -1,5 +1,11 @@
 package com.dereekb.gae.server.search.document.query.expression;
 
+/**
+ * Search/Query Expression Operators
+ *
+ * @author dereekb
+ *
+ */
 public enum ExpressionOperator {
 
 	Equal("="),
@@ -14,7 +20,12 @@ public enum ExpressionOperator {
 	 * For Geopoint locations, this specifies that the given point is within the given radius.
 	 */
 	LessThan("<"),
-	LessOrEqualTo("<=");
+	LessOrEqualTo("<="),
+
+	// Query Only
+	NotEqual("!="),
+	GreaterAndLessThanButNotEqualTo("<>"),
+	In("in");
 
 	private final String value;
 
@@ -41,9 +52,24 @@ public enum ExpressionOperator {
 			case "<=":
 				operation = LessOrEqualTo;
 				break;
+			case "!=":
+				operation = NotEqual;
+				break;
+			case "<>":
+				operation = GreaterAndLessThanButNotEqualTo;
+				break;
+
 		}
 
 		return operation;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
+
+	public String createFilter(String field) {
+		return field + " " + this.value;
 	}
 
 	@Override

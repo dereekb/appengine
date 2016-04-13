@@ -5,10 +5,10 @@ import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRe
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.ConfigurableQueryParameter;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.QueryFieldParameterDencoder.Parameter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryConditionOperator;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 
 /**
  * {@link ObjectifyQueryRequestLimitedConfigurer} implementation that targets a
@@ -23,7 +23,7 @@ public abstract class AbstractQueryFieldParameter<T>
         implements ConfigurableQueryParameter {
 
 	private String field;
-	private ObjectifyQueryConditionOperator operator;
+	private ExpressionOperator operator;
 	protected T value;
 
 	private ObjectifyQueryResultsOrdering ordering;
@@ -39,21 +39,21 @@ public abstract class AbstractQueryFieldParameter<T>
 		this.setEqualityFilter(field, value);
 	}
 
-	public AbstractQueryFieldParameter(String field, ObjectifyQueryConditionOperator operator, T value) {
+	public AbstractQueryFieldParameter(String field, ExpressionOperator operator, T value) {
 		this.setFilter(field, operator, value);
 	}
 
-	public void setComparison(ObjectifyQueryConditionOperator operator,
+	public void setComparison(ExpressionOperator operator,
 	                          T value) {
 		this.setOperator(operator);
 		this.setValue(value);
 	}
 
-	public ObjectifyQueryConditionOperator getOperator() {
+	public ExpressionOperator getOperator() {
 		return this.operator;
 	}
 
-	public void setOperator(ObjectifyQueryConditionOperator operator) {
+	public void setOperator(ExpressionOperator operator) {
 		this.operator = operator;
 	}
 
@@ -87,11 +87,11 @@ public abstract class AbstractQueryFieldParameter<T>
 	// Filter
 	public AbstractQueryFieldParameter<T> setEqualityFilter(String field,
 	                                                T value) {
-		return this.setFilter(field, ObjectifyQueryConditionOperator.Equal, value);
+		return this.setFilter(field, ExpressionOperator.Equal, value);
 	}
 
 	public AbstractQueryFieldParameter<T> setFilter(String field,
-	                                        ObjectifyQueryConditionOperator operator,
+	                                        ExpressionOperator operator,
 	                                        T value) {
 		this.setField(field);
 		this.setOperator(operator);

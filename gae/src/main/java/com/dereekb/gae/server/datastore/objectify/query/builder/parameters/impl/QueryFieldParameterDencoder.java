@@ -3,8 +3,8 @@ package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl
 import java.util.Arrays;
 import java.util.List;
 
-import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryConditionOperator;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.google.common.base.Joiner;
 
 /**
@@ -57,7 +57,7 @@ public class QueryFieldParameterDencoder {
 	public String encodeString(Parameter parameter) {
 		String value = parameter.getValue();
 		ObjectifyQueryResultsOrdering ordering = parameter.getOrdering();
-		ObjectifyQueryConditionOperator operator = parameter.getOperator();
+		ExpressionOperator operator = parameter.getOperator();
 
 		String[] components = new String[] { null, value, null };
 
@@ -78,7 +78,7 @@ public class QueryFieldParameterDencoder {
 
 		private String value;
 		private ObjectifyQueryResultsOrdering ordering;
-		private ObjectifyQueryConditionOperator operator;
+		private ExpressionOperator operator;
 
 		private Decoder(String[] split) {
 			this.split = split;
@@ -108,7 +108,7 @@ public class QueryFieldParameterDencoder {
 			int valueStart;
 
 			try {
-				this.operator = ObjectifyQueryConditionOperator.fromString(this.split[0]);
+				this.operator = ExpressionOperator.fromString(this.split[0]);
 				valueStart = 1;
 			} catch (IllegalArgumentException e) {
 				valueStart = 0; // Was not a condition.
@@ -135,18 +135,18 @@ public class QueryFieldParameterDencoder {
 	public static final class Parameter {
 
 		private String value;
-		private ObjectifyQueryConditionOperator operator;
+		private ExpressionOperator operator;
 		private ObjectifyQueryResultsOrdering ordering;
 
 		public Parameter(String value) {
-			this(value, ObjectifyQueryConditionOperator.Equal);
+			this(value, ExpressionOperator.Equal);
 		}
 
-		public Parameter(String value, ObjectifyQueryConditionOperator operator) {
+		public Parameter(String value, ExpressionOperator operator) {
 			this(value, operator, null);
 		}
 
-		public Parameter(String value, ObjectifyQueryConditionOperator operator, ObjectifyQueryResultsOrdering ordering) {
+		public Parameter(String value, ExpressionOperator operator, ObjectifyQueryResultsOrdering ordering) {
 			this.setValue(value);
 			this.setOperator(operator);
 			this.setOrdering(ordering);
@@ -160,11 +160,11 @@ public class QueryFieldParameterDencoder {
 			this.value = value;
 		}
 
-		public ObjectifyQueryConditionOperator getOperator() {
+		public ExpressionOperator getOperator() {
 			return this.operator;
 		}
 
-		public void setOperator(ObjectifyQueryConditionOperator operator) {
+		public void setOperator(ExpressionOperator operator) {
 			this.operator = operator;
 		}
 
