@@ -88,6 +88,12 @@
 
 		<!-- Spring -->
 		<dependency>
+		 <groupId>org.springframework</groupId>
+		 <artifactId>spring-core</artifactId>
+			<version>${spring.target.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${spring.target.version}</version>
@@ -210,7 +216,6 @@
 	</dependencies>
 
 	<build>
-
 
 		<!-- Resources to add to test-jar -->
 		<testResources>
