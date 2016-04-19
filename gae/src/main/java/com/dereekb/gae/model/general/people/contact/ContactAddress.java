@@ -1,15 +1,13 @@
 package com.dereekb.gae.model.general.people.contact;
 
-
 /**
- * ContactAddress information.
+ * Contact information.
  *
  * @author dereekb
  */
-public final class ContactAddress {
+public class ContactAddress {
 
 	private Integer typeId;
-
 	private String data;
 
 	public ContactAddress() {}

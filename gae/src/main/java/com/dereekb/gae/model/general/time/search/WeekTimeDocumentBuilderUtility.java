@@ -111,6 +111,12 @@ public class WeekTimeDocumentBuilderUtility {
 			this.end = TimeValueConverterImpl.CONVERTER.timeToNumber(end);
 		}
 
+		private String makeDaysString(Set<Day> days) {
+			Joiner joiner = Joiner.on(WeekTimeDocumentBuilderUtility.this.daysSplitter).skipNulls();
+			Set<String> strings = Day.getKeyStrings(days);
+			return joiner.join(strings);
+		}
+
 		public FieldFormatter getFieldNamer() {
 			return this.formatter;
 		}
@@ -133,12 +139,6 @@ public class WeekTimeDocumentBuilderUtility {
 			String endName = this.formatter.endField();
 			SearchDocumentBuilderUtility.addAtom(endName, this.end, builder);
 
-		}
-
-		private String makeDaysString(Set<Day> days) {
-			Joiner joiner = Joiner.on(WeekTimeDocumentBuilderUtility.this.daysSplitter).skipNulls();
-			Set<String> strings = Day.getKeyStrings(days);
-			return joiner.join(strings);
 		}
 
 	}

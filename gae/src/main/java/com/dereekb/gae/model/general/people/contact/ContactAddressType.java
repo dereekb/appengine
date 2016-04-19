@@ -14,26 +14,32 @@ public enum ContactAddressType {
 	 *
 	 * @see {@link http://en.wikipedia.org/wiki/E.164}
 	 */
-	PHONE(0),
+	PHONE(0, "phone"),
 
 	/**
 	 * Denotes the number is a cell phone. Format is the same as {@link #PHONE}
 	 */
-	MOBILE_PHONE(1),
+	MOBILE_PHONE(1, "cell"),
 
 	/**
 	 * An email address, formatted as "{@code email@domain.com}".
 	 */
-	EMAIL(2);
+	EMAIL(2, "email");
 
-	public final Integer id;
+	private final Integer id;
+	private final String type;
 
-	private ContactAddressType(Integer id) {
+	private ContactAddressType(Integer id, String type) {
 		this.id = id;
+		this.type = type;
 	}
 
 	public Integer getId() {
 		return this.id;
+	}
+
+	public String getType() {
+		return this.type;
 	}
 
 	public static ContactAddressType typeForId(Integer id) {
