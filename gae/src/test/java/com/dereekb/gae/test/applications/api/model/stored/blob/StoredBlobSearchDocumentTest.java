@@ -75,8 +75,6 @@ public class StoredBlobSearchDocumentTest extends ModelSearchDocumentTest<Stored
 
 		Set<String> names = document.getFieldNames();
 		Assert.assertTrue(names.contains(ModelDocumentBuilderUtility.DATE_FIELD));
-		Assert.assertTrue(names.contains(StoredBlobDocumentBuilderStep.NAME_FIELD));
-		Assert.assertTrue(names.contains(StoredBlobDocumentBuilderStep.TYPE_FIELD));
 		Assert.assertTrue(names.contains(StoredBlobDocumentBuilderStep.ENDING_FIELD));
 	}
 
