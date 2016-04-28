@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.search.model;
 
+import com.dereekb.gae.model.general.time.search.WeekTimeDocumentBuilderUtility;
 import com.dereekb.gae.model.general.time.search.WeekTimeDocumentBuilderUtility.FieldFormatter;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
@@ -12,6 +13,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.fiel
  *
  * @author dereekb
  *
+ * @see {@link WeekTimeDocumentBuilderUtility}
  */
 public class WeekTimeSearch {
 
@@ -105,7 +107,7 @@ public class WeekTimeSearch {
 
 				point = new WeekTimeSearch(day, open, close);
 			} catch (Exception e) {
-				throw new IllegalArgumentException("Could not create point radius.", e);
+				throw new IllegalArgumentException("Could not create time search.", e);
 			}
 		}
 

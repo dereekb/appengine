@@ -19,6 +19,10 @@ public class TimeImpl
 	private Hour hour;
 	private Integer minutes;
 
+	public TimeImpl() {
+		this(0, 0);
+	}
+
 	public TimeImpl(Time time) {
 		this(time.getHour(), time.getMinutes());
 	}

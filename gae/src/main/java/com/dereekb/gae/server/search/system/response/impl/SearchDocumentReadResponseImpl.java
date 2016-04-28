@@ -44,12 +44,12 @@ public class SearchDocumentReadResponseImpl
 
 	@Override
 	public Document getFirstDocument() {
-		Document document = null;
+		Document document;
 
 		try {
 			document = this.documents.get(0);
 		} catch (IndexOutOfBoundsException e) {
-
+			document = null;
 		}
 
 		return document;

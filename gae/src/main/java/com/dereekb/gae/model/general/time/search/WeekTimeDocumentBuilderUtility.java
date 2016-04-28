@@ -48,7 +48,7 @@ public class WeekTimeDocumentBuilderUtility {
 	public Instance make(Integer encodedHours) {
 		WeekTime weekTime = null;
 
-		if (encodedHours == null) {
+		if (encodedHours != null) {
 			weekTime = WeekTimeConverterImpl.CONVERTER.weekTimeFromNumber(encodedHours);
 		}
 
@@ -97,24 +97,34 @@ public class WeekTimeDocumentBuilderUtility {
 		private Instance() {}
 
 		private Instance(WeekTime weekTime) {
-			DaySpan daySpan = weekTime.getDaySpan();
-			Set<Day> days = daySpan.getDays();
-
-			this.days = this.makeDaysString(days);
-
-			//Time
-			TimeSpan timeSpan = weekTime.getTimeSpan();
-			Time start = timeSpan.getStartTime();
-			Time end = timeSpan.getEndTime();
-
-			this.start = TimeValueConverterImpl.CONVERTER.timeToNumber(start);
-			this.end = TimeValueConverterImpl.CONVERTER.timeToNumber(end);
+			this.setWeekTime(weekTime);
 		}
 
 		private String makeDaysString(Set<Day> days) {
 			Joiner joiner = Joiner.on(WeekTimeDocumentBuilderUtility.this.daysSplitter).skipNulls();
 			Set<String> strings = Day.getKeyStrings(days);
 			return joiner.join(strings);
+		}
+
+		public void setWeekTime(WeekTime weekTime) {
+			if (weekTime != null) {
+				DaySpan daySpan = weekTime.getDaySpan();
+				Set<Day> days = daySpan.getDays();
+
+				this.days = this.makeDaysString(days);
+
+				// Time
+				TimeSpan timeSpan = weekTime.getTimeSpan();
+				Time start = timeSpan.getStartTime();
+				Time end = timeSpan.getEndTime();
+
+				this.start = TimeValueConverterImpl.CONVERTER.timeToNumber(start);
+				this.end = TimeValueConverterImpl.CONVERTER.timeToNumber(end);
+			} else {
+				this.days = null;
+				this.start = null;
+				this.end = null;
+			}
 		}
 
 		public FieldFormatter getFieldNamer() {
