@@ -17,6 +17,11 @@ public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Inte
 		super(field, value);
 	}
 
+	public IntegerQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+		super(field, parameterString);
+	}
+
+	// MARK: AbstractQueryFieldParameters
 	@Override
 	public String getParameterValue() {
 		return this.value.toString();

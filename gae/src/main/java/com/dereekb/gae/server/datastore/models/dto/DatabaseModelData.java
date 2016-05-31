@@ -28,7 +28,7 @@ public abstract class DatabaseModelData
 	protected String identifier;
 
 	/**
-	 * Date (in Long) that the model was created.
+	 * Date that the model was created encoded in a Long.
 	 */
 	protected Long created;
 

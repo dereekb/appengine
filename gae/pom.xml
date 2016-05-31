@@ -11,9 +11,6 @@
 	<artifactId>gae-core</artifactId>
 	<version>1.0.0</version>
 
-	<!-- <properties> <appengine.app.version>1-war</appengine.app.version> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
-		</properties> -->
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<appengine.target.version>1.9.30</appengine.target.version>

@@ -33,4 +33,15 @@ public class QueryFieldParameterTests {
 
 	}
 
+	@Test
+	public void testDecodingShort() {
+		QueryFieldParameterDencoder dencoder = new QueryFieldParameterDencoder();
+
+		Parameter parameter = dencoder.decodeString("=,2");
+
+		Assert.assertTrue(parameter.getValue().equals("2"));
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.Equal);
+
+	}
+
 }

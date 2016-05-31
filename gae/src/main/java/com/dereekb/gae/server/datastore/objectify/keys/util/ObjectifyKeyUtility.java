@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore.objectify.keys.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.googlecode.objectify.Key;
 
 /**
@@ -11,7 +12,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
-public class ObjectifyKeyUtility<T> {
+public class ObjectifyKeyUtility<T> extends ObjectifyUtility {
 
 	private Class<T> type;
 

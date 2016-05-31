@@ -52,13 +52,12 @@ public abstract class AbstractDerivableDocumentBuilderStep<T extends SearchableD
 	@Override
 	protected void performInclusionStep(T model,
 	                                    Builder builder) {
-		String id = null;
+		ModelKey key = null;
 
 		if (model != null) {
-			ModelKey key = model.getModelKey();
-			id = key.toString();
+			key = model.getModelKey();
 		}
 
-		ModelDocumentBuilderUtility.addId(this.format, id, builder);
+		ModelDocumentBuilderUtility.addId(this.format, key, builder);
 	}
 }

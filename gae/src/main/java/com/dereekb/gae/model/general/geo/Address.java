@@ -5,7 +5,7 @@ package com.dereekb.gae.model.general.geo;
  *
  * @author dereekb
  */
-public final class Address {
+public class Address {
 
 	/**
 	 * Address's name.

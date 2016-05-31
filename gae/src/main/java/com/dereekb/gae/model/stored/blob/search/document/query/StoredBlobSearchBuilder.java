@@ -10,7 +10,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.Expressio
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilderSource;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.ExpressionStart;
-import com.dereekb.gae.utilities.collections.map.MapReader;
+import com.dereekb.gae.utilities.collections.map.StringMapReader;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
@@ -87,13 +87,9 @@ public class StoredBlobSearchBuilder
 
 	public void applyParameters(StoredBlobSearch search,
 	                            Map<String, String> parameters) {
-		MapReader<String> reader = new MapReader<String>(parameters, this.getFormat());
+		StringMapReader reader = new StringMapReader(parameters, this.getFormat());
 
-		if (reader.containsKey(this.idField)) {
-			Long id = new Long(reader.get(this.idField));
-			search.setId(id);
-		}
-
+		search.setId(reader.getLong(this.idField));
 		search.setEnding(reader.get(this.endingField));
 		search.setDate(DateSearch.fromString(reader.get(this.dateField)));
 	}

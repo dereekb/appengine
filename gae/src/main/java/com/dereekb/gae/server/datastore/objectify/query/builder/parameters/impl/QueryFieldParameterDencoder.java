@@ -86,7 +86,7 @@ public class QueryFieldParameterDencoder {
 
 		public Parameter decode() {
 			int valueStart = this.decodeOperator();
-			int valueEnd = this.split.length - 1;
+			int valueEnd = this.split.length;
 
 			// Don't try to decode the ordering if there are only two elements
 			// and the operator has been decoded.
@@ -100,7 +100,8 @@ public class QueryFieldParameterDencoder {
 
 		private void buildValue(int start,
 		                        int end) {
-			List<String> components = Arrays.asList(this.split).subList(start, end);
+			List<String> components = Arrays.asList(this.split);
+			components = components.subList(start, end);
 			this.value = Joiner.on(QueryFieldParameterDencoder.this.splitter).join(components);
 		}
 

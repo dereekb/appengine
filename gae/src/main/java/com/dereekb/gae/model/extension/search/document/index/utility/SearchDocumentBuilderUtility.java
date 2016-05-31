@@ -8,6 +8,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.fiel
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;
+import com.googlecode.objectify.Key;
 
 /**
  * Utility for building documents.
@@ -65,17 +66,50 @@ public final class SearchDocumentBuilderUtility {
 		return Field.newBuilder().setName(name).setText(text);
 	}
 
+	public static void addAtom(String name,
+	                           Key<?> key,
+	                           Document.Builder builder) {
+		String value = null;
+
+		if (key != null) {
+			value = key.toString();
+		}
+
+		addAtom(name, value, builder);
+	}
+
+	public static void addAtom(String format,
+	                           String name,
+	                           Key<?> key,
+	                           Document.Builder builder) {
+		String value = null;
+
+		if (key != null) {
+			value = key.toString();
+		}
+
+		addAtom(format, name, value, builder);
+	}
+
 	public static void addAtom(String format,
 	                           String name,
 	                           String value,
 	                           Document.Builder builder) {
 		addAtom(String.format(format, name), value, builder);
 	}
+
 	public static void addAtom(String name,
 	                           String value,
 	                           Document.Builder builder) {
 		Field.Builder field = atomField(name, value);
 		builder.addField(field);
+	}
+
+	public static void addAtom(String format,
+	                           String name,
+	                           Number value,
+	                           Document.Builder builder) {
+		addAtom(String.format(format, name), value, builder);
 	}
 
 	public static void addAtom(String name,
