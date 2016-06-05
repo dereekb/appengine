@@ -60,4 +60,5 @@ public abstract class AbstractDerivableDocumentBuilderStep<T extends SearchableD
 
 		ModelDocumentBuilderUtility.addId(this.format, key, builder);
 	}
+
 }

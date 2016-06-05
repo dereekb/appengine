@@ -26,4 +26,26 @@ public class ListUtility {
 		return list;
 	}
 
+	/**
+	 * Adds the elements from an array to the input list.
+	 *
+	 * @param list
+	 *            {@link List} or {@code null}.
+	 * @param elements
+	 *            Array of elements to add.
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public static <T> List<T> addElements(List<T> list,
+	                                      T[] elements) {
+		if (list == null) {
+			list = new ArrayList<T>();
+		}
+
+		for (T element : elements) {
+			list.add(element);
+		}
+
+		return list;
+	}
+
 }
