@@ -40,6 +40,11 @@ public class ExpressionWrap extends AbstractExpressionBuilderImpl {
     }
 
 	@Override
+	public boolean isEmpty() {
+		return this.expression.isEmpty();
+	}
+
+	@Override
 	public boolean isComplex() {
 		return this.expression.isComplex();
 	}

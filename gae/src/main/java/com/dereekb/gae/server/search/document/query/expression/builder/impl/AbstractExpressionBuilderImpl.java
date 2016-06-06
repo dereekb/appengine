@@ -9,16 +9,33 @@ public abstract class AbstractExpressionBuilderImpl
 
 	@Override
 	public ExpressionBuilder and(ExpressionBuilder expression) {
-		return new AndOperation(this, expression);
+		ExpressionBuilder result = this;
+
+		if (expression.isEmpty() == false) {
+			result = new AndOperation(this, expression);
+		}
+
+		return result;
 	}
 
 	@Override
 	public ExpressionBuilder or(ExpressionBuilder expression) {
-		return new OrOperation(this, expression);
+		ExpressionBuilder result = this;
+
+		if (expression.isEmpty() == false) {
+			result = new OrOperation(this, expression);
+		}
+
+		return result;
 	}
 
 	@Override
 	public abstract ExpressionBuilder copyExpression();
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 
 	// MARK: Two Element Operation
 	static class AndOperation extends TwoElemOperation {
@@ -37,6 +54,11 @@ public abstract class AbstractExpressionBuilderImpl
 		@Override
 		public String getExpressionValue() {
 			return super.buildExpressionValue(FORMAT);
+		}
+
+		@Override
+		public String toString() {
+			return "AndOperation [left=" + this.left + ", right=" + this.right + "]";
 		}
 
 	}
@@ -64,6 +86,11 @@ public abstract class AbstractExpressionBuilderImpl
 			return super.buildExpressionValue(FORMAT);
 		}
 
+		@Override
+		public String toString() {
+			return "OrOperation [left=" + this.left + ", right=" + this.right + "]";
+		}
+
 	}
 
 	static abstract class TwoElemOperation extends AbstractExpressionBuilderImpl {
@@ -83,18 +110,13 @@ public abstract class AbstractExpressionBuilderImpl
 		}
 
 		@Override
+		public boolean isEmpty() {
+			return this.left.isEmpty() && this.right.isEmpty();
+		}
+
+		@Override
 		public boolean isComplex() {
 			return this.left.isComplex() && this.right.isComplex();
-		}
-
-		@Override
-		public ExpressionBuilder and(ExpressionBuilder expression) {
-			throw new UnsupportedOperationException("Cannot chain this type of expression.");
-		}
-
-		@Override
-		public ExpressionBuilder or(ExpressionBuilder expression) {
-			throw new UnsupportedOperationException("Cannot chain this type of expression.");
 		}
 
 	}

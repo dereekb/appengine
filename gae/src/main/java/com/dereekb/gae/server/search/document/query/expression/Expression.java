@@ -5,6 +5,8 @@ public interface Expression {
 
 	public String getExpressionValue();
 
+	public boolean isEmpty();
+
 	public boolean isComplex();
 
 }
