@@ -17,6 +17,6 @@ public interface ObjectifyChild<T extends ObjectifyModel<T>>
 	 *
 	 * @return {@link Key} of parent, or {@code null} if no parent available.
 	 */
-	public Key<T> getParentKey();
+	public Key<T> getParent();
 
 }

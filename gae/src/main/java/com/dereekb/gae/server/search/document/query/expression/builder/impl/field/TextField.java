@@ -28,7 +28,7 @@ public class TextField extends AbstractTextField {
 
 	@Override
 	public String getExpressionValue() {
-		String queryString = "";
+		String queryString;
 
 		if (this.specificText || this.stemming == false) {
 			queryString = super.getExpressionValue();

@@ -1,7 +1,9 @@
 package com.dereekb.gae.utilities.collections.parent.objectify.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.utilities.collections.parent.objectify.ObjectifyChild;
@@ -36,18 +38,22 @@ public class ObjectifyParentReaderImpl<T extends ObjectifyChild<T>>
 	// MARK: ObjectifyParentIterator
 	@Override
 	public List<T> getParentModels(T child) {
-		List<T> list = new ArrayList<T>();
+		Set<T> set = new HashSet<T>();
 
 		T current = child;
 
 		while (current != null) {
-			Key<T> parentKey = child.getParentKey();
+			Key<T> parentKey = current.getParent();
 
 			if (parentKey != null) {
 				T parent = this.registry.get(parentKey);
 
 				if (parent != null) {
-					list.add(parent);
+					if (set.contains(parent)) {
+						break; // Break if a "loop" is detected.
+					} else {
+						set.add(parent);
+					}
 				}
 
 				current = parent;
@@ -56,8 +62,10 @@ public class ObjectifyParentReaderImpl<T extends ObjectifyChild<T>>
 			}
 		}
 
-		return list;
+		return new ArrayList<T>(set);
 	}
+
+	// NOTE: Add functions for detecting parent loops
 
 	@Override
 	public String toString() {

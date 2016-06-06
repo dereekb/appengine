@@ -1,6 +1,7 @@
 package com.dereekb.gae.utilities.collections.list;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,8 +36,8 @@ public class ListUtility {
 	 *            Array of elements to add.
 	 * @return {@link List}. Never {@code null}.
 	 */
-	public static <T> List<T> addElements(List<T> list,
-	                                      T[] elements) {
+	public static <T> Collection<T> addElements(Collection<T> list,
+	                                            T[] elements) {
 		if (list == null) {
 			list = new ArrayList<T>();
 		}

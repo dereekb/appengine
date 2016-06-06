@@ -34,7 +34,9 @@ public abstract class AbstractDerivableDocumentBuilderStep<T extends SearchableD
 
 	/**
 	 * Attaches fields that should be included to only a model's search
-	 * document. Does not need to include the descriptor info.
+	 * document.
+	 * <p>
+	 * Does not need to include the descriptor info.
 	 *
 	 * @param model
 	 *            Model. Never {@code null}.

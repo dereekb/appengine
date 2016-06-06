@@ -5,6 +5,8 @@ import com.dereekb.gae.server.search.document.query.expression.builder.Expressio
 public abstract class AbstractExpressionBuilderImpl
         implements ExpressionBuilder {
 
+	public static final String ARGUMENT_SEPARATOR = ",";
+
 	@Override
 	public ExpressionBuilder and(ExpressionBuilder expression) {
 		return new AndOperation(this, expression);

@@ -20,7 +20,7 @@ public abstract class AbstractIncludableDocumentBuilderStep<T extends UniqueSear
 	protected boolean inclusionStep;
 
 	public AbstractIncludableDocumentBuilderStep() {
-		this("%s", true);
+		this("%s", false);
 	}
 
 	public AbstractIncludableDocumentBuilderStep(String format, boolean inclusionStep) {

@@ -2,15 +2,13 @@ package com.dereekb.gae.utilities.collections.parent.objectify;
 
 import java.util.List;
 
-import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-
 /**
  * Used for loading and iterating up the parent chain.
  *
  * @author dereekb
  *
  */
-public interface ObjectifyParentReader<T extends ObjectifyModel<T>> {
+public interface ObjectifyParentReader<T extends ObjectifyChild<T>> {
 
 	/**
 	 * Iterates through the parent chain and returns all parent models.

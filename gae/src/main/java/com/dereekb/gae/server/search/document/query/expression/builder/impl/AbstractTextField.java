@@ -1,8 +1,9 @@
 package com.dereekb.gae.server.search.document.query.expression.builder.impl;
 
+
 public abstract class AbstractTextField extends AbstractField {
 
-	protected static final String TEXT_FIELD_FORMAT = "%s: %s";
+	protected static final String TEXT_FIELD_FORMAT = "%s: (%s)";
 	protected static final String SPECIFIC_TEXT_FIELD_FORMAT = "%s: \"%s\"";
 
 	protected String value;
@@ -41,15 +42,26 @@ public abstract class AbstractTextField extends AbstractField {
 
 	@Override
 	public String getExpressionValue() {
-		String queryString = "";
+		String queryString;
 
 		if (this.specificText) {
 			queryString = String.format(SPECIFIC_TEXT_FIELD_FORMAT, this.name, this.value);
 		} else {
-			queryString = String.format(TEXT_FIELD_FORMAT, this.name, this.value);
+
+			/*
+			 * Text that is unbounded by quotes will fail to parse correctly if
+			 * it includes a comma.
+			 *
+			 * All punctuation is removed from the value.
+			 */
+			queryString = String.format(TEXT_FIELD_FORMAT, this.name, this.getSanitizedValue());
 		}
 
 		return queryString;
+	}
+
+	public String getSanitizedValue() {
+		return this.value.replaceAll(ARGUMENT_SEPARATOR, "");
 	}
 
 }
