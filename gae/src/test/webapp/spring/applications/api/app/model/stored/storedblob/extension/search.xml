@@ -56,12 +56,12 @@
 	</bean>
 	
 	<!-- Derivative Indexing -->
-	<bean id="storedBlobDerivativeDocumentBuilderStep"
+	<bean id="storedBlobIncludedDocumentBuilderStep"
 		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl"
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="storedBlobRegistry"/>
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDerivativeDocumentBuilderStep"/>
+			<bean class="com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobIncludedDocumentBuilderStep"/>
 		</constructor-arg>
 	</bean>
 

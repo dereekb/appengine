@@ -52,17 +52,17 @@
 					class="com.dereekb.gae.model.stored.image.search.document.index.StoredImageDocumentBuilderStep">
 				</bean>
 				<bean
-					class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeDocumentBuilderStep">
+					class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedDocumentBuilderStep">
 					<constructor-arg index="0" ref="derivativeDocumentBuilder"/>
-					<constructor-arg index="1" ref="storedImageDerivativeDocumentBuilderStepDelegate"/>
+					<constructor-arg index="1" ref="storedImageIncludedDocumentBuilderStepDelegate"/>
 				</bean>
 			</list>
 		</constructor-arg>
 	</bean>
 	
 	<!-- Derivative Indexing -->
-	<bean id="storedImageDerivativeDocumentBuilderStepDelegate"
-		class="com.dereekb.gae.model.stored.image.search.document.index.StoredImageDerivativeDocumentBuilderStepDelegate"
+	<bean id="storedImageIncludedDocumentBuilderStepDelegate"
+		class="com.dereekb.gae.model.stored.image.search.document.index.StoredImageIncludedDocumentBuilderStepDelegate"
 		scope="singleton" lazy-init="true">
 	</bean>
 

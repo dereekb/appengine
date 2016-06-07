@@ -1,7 +1,9 @@
 package com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
-import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.google.appengine.api.search.Document.Builder;
 
 /**
@@ -13,7 +15,7 @@ import com.google.appengine.api.search.Document.Builder;
  * @param <T>
  *            model type
  */
-public abstract class AbstractIncludableDocumentBuilderStep<T extends UniqueSearchModel>
+public abstract class AbstractIncludableDocumentBuilderStep<T extends UniqueModel>
         implements StagedDocumentBuilderStep<T> {
 
 	protected String format;
@@ -94,7 +96,15 @@ public abstract class AbstractIncludableDocumentBuilderStep<T extends UniqueSear
 	 * @param builder
 	 *            {@link Builder}. Never {@code null}.
 	 */
-	protected abstract void performInclusionStep(T model,
-	                                              Builder builder);
+	protected void performInclusionStep(T model,
+	                                    Builder builder) {
+		ModelKey key = null;
+
+		if (model != null) {
+			key = model.getModelKey();
+		}
+
+		ModelDocumentBuilderUtility.addId(this.format, key, builder);
+	}
 
 }

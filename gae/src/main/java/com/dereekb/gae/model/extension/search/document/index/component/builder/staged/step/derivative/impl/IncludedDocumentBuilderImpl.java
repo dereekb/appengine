@@ -3,28 +3,28 @@ package com.dereekb.gae.model.extension.search.document.index.component.builder.
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeDocumentBuilder;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeUnavailableException;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedDocumentBuilder;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedModelUnavailableException;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.ModelStagedDocumentBuilderStep;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.google.appengine.api.search.Document;
 
 /**
- * {@link DerivativeDocumentBuilder} implementation.
+ * {@link IncludedDocumentBuilder} implementation.
  *
  * @author dereekb
  *
  */
-public class DerivativeDocumentBuilderImpl
-        implements DerivativeDocumentBuilder {
+public class IncludedDocumentBuilderImpl
+        implements IncludedDocumentBuilder {
 
 	private TypeModelKeyConverter keyTypeConverter;
 	private Map<String, ModelStagedDocumentBuilderStep> builders;
 
-	public DerivativeDocumentBuilderImpl() {}
+	public IncludedDocumentBuilderImpl() {}
 
-	public DerivativeDocumentBuilderImpl(TypeModelKeyConverter keyTypeConverter,
+	public IncludedDocumentBuilderImpl(TypeModelKeyConverter keyTypeConverter,
 	        Map<String, ModelStagedDocumentBuilderStep> builders) {
 		this.keyTypeConverter = keyTypeConverter;
 		this.builders = builders;
@@ -48,7 +48,7 @@ public class DerivativeDocumentBuilderImpl
 
 	@Override
 	public void applyDerivativeComponent(Descriptor descriptor,
-	                                     Document.Builder builder) throws DerivativeUnavailableException {
+	                                     Document.Builder builder) throws IncludedModelUnavailableException {
 		String type = descriptor.getDescriptorType();
 		String identifier = descriptor.getDescriptorId();
 		ModelKey key;
@@ -56,13 +56,13 @@ public class DerivativeDocumentBuilderImpl
 		try {
 			key = this.keyTypeConverter.convertKey(type, identifier);
 		} catch (IllegalArgumentException e) {
-			throw new DerivativeUnavailableException(e);
+			throw new IncludedModelUnavailableException(e);
 		}
 
 		ModelStagedDocumentBuilderStep builderStep = this.builders.get(type);
 
 		if (builderStep == null) {
-			throw new DerivativeUnavailableException("Type builder for type '" + type + "' is not available.");
+			throw new IncludedModelUnavailableException("Type builder for type '" + type + "' is not available.");
 		}
 
 		builderStep.performStep(key, builder);
@@ -70,7 +70,7 @@ public class DerivativeDocumentBuilderImpl
 
 	@Override
 	public String toString() {
-		return "DerivativeDocumentBuilderImpl [keyTypeConverter=" + this.keyTypeConverter + ", builders="
+		return "IncludedDocumentBuilderImpl [keyTypeConverter=" + this.keyTypeConverter + ", builders="
 		        + this.builders + "]";
 	}
 

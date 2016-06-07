@@ -70,12 +70,12 @@
 
 	<!-- Search Models -->
 	<bean id="derivativeDocumentBuilder" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.impl.DerivativeDocumentBuilderImpl">
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.impl.IncludedDocumentBuilderImpl">
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
-				<entry key-ref="storedBlobType" value-ref="storedBlobDerivativeDocumentBuilderStep" />
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceDerivativeDocumentBuilderStep" />
+				<entry key-ref="storedBlobType" value-ref="storedBlobIncludedDocumentBuilderStep" />
+				<entry key-ref="geoPlaceType" value-ref="geoPlaceIncludedDocumentBuilderStep" />
 			</map>
 		</constructor-arg>
 	</bean>

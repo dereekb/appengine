@@ -3,13 +3,13 @@ package com.dereekb.gae.model.extension.search.document.index.component.builder.
 import java.util.List;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
+import com.dereekb.gae.model.extension.search.document.SearchableUniqueModel;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
-import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.google.appengine.api.search.Document;
 
 /**
  * {@link StagedDocumentBuilderStep} implementation that uses a
- * {@link DerivativeDocumentBuilder} to apply derivative components to the
+ * {@link IncludedDocumentBuilder} to apply derivative components to the
  * document being generated.
  *
  * @author dereekb
@@ -17,33 +17,33 @@ import com.google.appengine.api.search.Document;
  * @param <T>
  *            model type
  */
-public class DerivativeDocumentBuilderStep<T extends UniqueSearchModel>
+public class IncludedDocumentBuilderStep<T extends SearchableUniqueModel>
         implements StagedDocumentBuilderStep<T> {
 
-	private DerivativeDocumentBuilder builder;
-	private DerivativeDocumentBuilderStepDelegate<T> delegate;
+	private IncludedDocumentBuilder builder;
+	private IncludedDocumentBuilderStepDelegate<T> delegate;
 
-	public DerivativeDocumentBuilderStep() {}
+	public IncludedDocumentBuilderStep() {}
 
-	public DerivativeDocumentBuilderStep(DerivativeDocumentBuilder builder,
-	        DerivativeDocumentBuilderStepDelegate<T> delegate) {
+	public IncludedDocumentBuilderStep(IncludedDocumentBuilder builder,
+	        IncludedDocumentBuilderStepDelegate<T> delegate) {
 		this.builder = builder;
 		this.delegate = delegate;
 	}
 
-	public DerivativeDocumentBuilder getBuilder() {
+	public IncludedDocumentBuilder getBuilder() {
 		return this.builder;
 	}
 
-	public void setBuilder(DerivativeDocumentBuilder builder) {
+	public void setBuilder(IncludedDocumentBuilder builder) {
 		this.builder = builder;
 	}
 
-	public DerivativeDocumentBuilderStepDelegate<T> getDelegate() {
+	public IncludedDocumentBuilderStepDelegate<T> getDelegate() {
 		return this.delegate;
 	}
 
-	public void setDelegate(DerivativeDocumentBuilderStepDelegate<T> delegate) {
+	public void setDelegate(IncludedDocumentBuilderStepDelegate<T> delegate) {
 		this.delegate = delegate;
 	}
 
@@ -51,7 +51,7 @@ public class DerivativeDocumentBuilderStep<T extends UniqueSearchModel>
 	@Override
 	public void performStep(T model,
 	                        Document.Builder builder) {
-		List<Descriptor> descriptors = this.delegate.getDerivativeDescriptors(model);
+		List<Descriptor> descriptors = this.delegate.getIncludedModelDescriptors(model);
 
 		for (Descriptor descriptor : descriptors) {
 			this.builder.applyDerivativeComponent(descriptor, builder);
@@ -60,7 +60,7 @@ public class DerivativeDocumentBuilderStep<T extends UniqueSearchModel>
 
 	@Override
 	public String toString() {
-		return "DerivativeDocumentBuilderStep [builder=" + this.builder + ", delegate=" + this.delegate + "]";
+		return "IncludedDocumentBuilderStep [builder=" + this.builder + ", delegate=" + this.delegate + "]";
 	}
 
 }

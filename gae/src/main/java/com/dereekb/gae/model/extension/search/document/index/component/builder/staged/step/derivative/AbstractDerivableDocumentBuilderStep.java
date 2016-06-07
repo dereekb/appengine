@@ -1,8 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative;
 
-import com.dereekb.gae.model.extension.search.document.SearchableDescribedModel;
+import com.dereekb.gae.model.extension.links.descriptor.UniqueDescribedModel;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.google.appengine.api.search.Document.Builder;
 
 /**
@@ -14,7 +13,7 @@ import com.google.appengine.api.search.Document.Builder;
  * @param <T>
  *            model type
  */
-public abstract class AbstractDerivableDocumentBuilderStep<T extends SearchableDescribedModel> extends AbstractIncludableDocumentBuilderStep<T> {
+public abstract class AbstractDerivableDocumentBuilderStep<T extends UniqueDescribedModel> extends AbstractIncludableDocumentBuilderStep<T> {
 
 	public AbstractDerivableDocumentBuilderStep() {
 		super();
@@ -47,20 +46,5 @@ public abstract class AbstractDerivableDocumentBuilderStep<T extends SearchableD
 	                                         Builder builder) {
 		// Nothing by default. Override.
 	};
-
-	/**
-	 * By default will include the model's identifier using the current format.
-	 */
-	@Override
-	protected void performInclusionStep(T model,
-	                                    Builder builder) {
-		ModelKey key = null;
-
-		if (model != null) {
-			key = model.getModelKey();
-		}
-
-		ModelDocumentBuilderUtility.addId(this.format, key, builder);
-	}
 
 }

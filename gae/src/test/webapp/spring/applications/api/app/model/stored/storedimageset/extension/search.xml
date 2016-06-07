@@ -53,9 +53,9 @@
 				</bean>
 				<!--
 				<bean
-					class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeDocumentBuilderStep">
+					class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedDocumentBuilderStep">
 					<constructor-arg index="0" ref="derivativeDocumentBuilder"/>
-					<constructor-arg index="1" ref="storedImageSetDerivativeDocumentBuilderStepDelegate"/>
+					<constructor-arg index="1" ref="storedImageSetIncludedDocumentBuilderStepDelegate"/>
 				</bean>
 				  -->
 			</list>
@@ -64,8 +64,8 @@
 	
 	<!-- Derivative -->
 	<!-- 
-	<bean id="storedImageSetDerivativeDocumentBuilderStepDelegate"
-		class="com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetDerivativeDocumentBuilderStepDelegate"
+	<bean id="storedImageSetIncludedDocumentBuilderStepDelegate"
+		class="com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetIncludedDocumentBuilderStepDelegate"
 		scope="singleton" lazy-init="true">
 	</bean>
 	-->

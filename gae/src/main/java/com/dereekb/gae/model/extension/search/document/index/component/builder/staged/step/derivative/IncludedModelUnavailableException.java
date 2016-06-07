@@ -2,34 +2,34 @@ package com.dereekb.gae.model.extension.search.document.index.component.builder.
 
 
 /**
- * @see {@link DerivativeDocumentBuilderDelegate}
+ * @see {@link IncludedDocumentBuilderDelegate}
  * @author dereekb
  *
  */
-public final class DerivativeUnavailableException extends RuntimeException {
+public final class IncludedModelUnavailableException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public DerivativeUnavailableException() {
+	public IncludedModelUnavailableException() {
 		super();
 	}
 
-	public DerivativeUnavailableException(String message,
+	public IncludedModelUnavailableException(String message,
 	        Throwable cause,
 	        boolean enableSuppression,
 	        boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public DerivativeUnavailableException(String message, Throwable cause) {
+	public IncludedModelUnavailableException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public DerivativeUnavailableException(String message) {
+	public IncludedModelUnavailableException(String message) {
 		super(message);
 	}
 
-	public DerivativeUnavailableException(Throwable cause) {
+	public IncludedModelUnavailableException(Throwable cause) {
 		super(cause);
 	}
 

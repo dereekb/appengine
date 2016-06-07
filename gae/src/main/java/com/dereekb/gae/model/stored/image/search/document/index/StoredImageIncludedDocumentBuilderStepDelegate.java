@@ -5,14 +5,14 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorUtility;
-import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.DerivativeDocumentBuilderStepDelegate;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedDocumentBuilderStepDelegate;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.googlecode.objectify.Key;
 
 /**
- * {@link DerivativeDocumentBuilderStepDelegate} implementation for
+ * {@link IncludedDocumentBuilderStepDelegate} implementation for
  * {@link StoredImage} instances.
  * <p>
  * Used for retrieving all the derivative types from a {@link StoredImage}
@@ -21,11 +21,11 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
-public class StoredImageDerivativeDocumentBuilderStepDelegate
-        implements DerivativeDocumentBuilderStepDelegate<StoredImage> {
+public class StoredImageIncludedDocumentBuilderStepDelegate
+        implements IncludedDocumentBuilderStepDelegate<StoredImage> {
 
 	@Override
-    public List<Descriptor> getDerivativeDescriptors(StoredImage model) {
+    public List<Descriptor> getIncludedModelDescriptors(StoredImage model) {
 		List<Descriptor> descriptors = new ArrayList<Descriptor>();
 
 		Key<GeoPlace> geoPlace = model.getGeoPlace();

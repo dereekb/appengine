@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder;
-import com.dereekb.gae.server.search.UniqueSearchModel;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.google.appengine.api.search.Document;
 
 /**
@@ -12,7 +12,7 @@ import com.google.appengine.api.search.Document;
  * @param <T>
  *            model type
  */
-public interface StagedDocumentBuilderStep<T extends UniqueSearchModel> {
+public interface StagedDocumentBuilderStep<T extends UniqueModel> {
 
 	/**
 	 * Updates the {@link Document.Builder} with the input model.

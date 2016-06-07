@@ -56,12 +56,12 @@
 	</bean>
 	
 	<!-- Derivative Indexing -->
-	<bean id="geoPlaceDerivativeDocumentBuilderStep"
+	<bean id="geoPlaceIncludedDocumentBuilderStep"
 		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl"
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="geoPlaceRegistry"/>
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDerivativeDocumentBuilderStep"/>
+			<bean class="com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceIncludedDocumentBuilderStep"/>
 		</constructor-arg>
 	</bean>
 	
