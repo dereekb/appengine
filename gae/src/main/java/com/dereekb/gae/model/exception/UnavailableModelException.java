@@ -15,6 +15,10 @@ public class UnavailableModelException extends RuntimeException {
 
 	private final ModelKey modelKey;
 
+	public UnavailableModelException(String message) {
+		this(message, null);
+	}
+
 	public UnavailableModelException(ModelKey modelKey) {
 		this.modelKey = modelKey;
 	}

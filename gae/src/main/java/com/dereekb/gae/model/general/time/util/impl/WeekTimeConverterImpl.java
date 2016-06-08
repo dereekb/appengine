@@ -21,13 +21,13 @@ public class WeekTimeConverterImpl
         implements WeekTimeConverter {
 
 	private final static Integer DAYS_BIT_INDEX = BitIndex.hexIndex(6);
-	private final static Integer DAYS_HEX_MASK = 0xFF000000;
+	private final static Long DAYS_HEX_MASK = 0xFF000000L;
 
 	private final static Integer START_TIME_BIT_INDEX = BitIndex.hexIndex(3);
-	private final static Integer START_TIME_HEX_MASK = 0x00FFF000;
+	private final static Long START_TIME_HEX_MASK = 0x00FFF000L;
 
 	private final static Integer END_TIME_BIT_INDEX = 0;
-	private final static Integer END_TIME_HEX_MASK = 0x00000FFF;
+	private final static Long END_TIME_HEX_MASK = 0x00000FFFL;
 
 	private final static TimeValueConverter timeConverter = new TimeValueConverterImpl();
 	private final static DaySpanConverter daysSpanConverter = new DaySpanConverterImpl();
@@ -64,9 +64,9 @@ public class WeekTimeConverterImpl
 	@Override
 	public WeekTime weekTimeFromNumber(Integer number) {
 		LongBitContainer container = new LongBitContainer(number);
-		Long daysValue = container.focusBits(DAYS_HEX_MASK, DAYS_BIT_INDEX);
-		Long startValue = container.focusBits(START_TIME_HEX_MASK, START_TIME_BIT_INDEX);
-		Long endValue = container.focusBits(END_TIME_HEX_MASK, END_TIME_BIT_INDEX);
+		Long daysValue = container.focusBitsWithMask(DAYS_HEX_MASK, DAYS_BIT_INDEX);
+		Long startValue = container.focusBitsWithMask(START_TIME_HEX_MASK, START_TIME_BIT_INDEX);
+		Long endValue = container.focusBitsWithMask(END_TIME_HEX_MASK, END_TIME_BIT_INDEX);
 
 		DaySpan daySpan = daysSpanConverter.daysFromNumber(daysValue.intValue());
 		Time startTime = timeConverter.timeFromNumber(startValue.intValue());

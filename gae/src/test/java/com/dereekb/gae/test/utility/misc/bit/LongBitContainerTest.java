@@ -3,6 +3,7 @@ package com.dereekb.gae.test.utility.misc.bit;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dereekb.gae.utilities.misc.bit.BitIndex;
 import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
 public class LongBitContainerTest {
@@ -49,7 +50,24 @@ public class LongBitContainerTest {
 		Assert.assertTrue(container.makeRightMask(4).equals(0b00001111L));
 
 		System.out.println("Test: " + Long.toHexString(new Integer(-1).longValue()));
+	}
 
+	@Test
+	public void testFocusingOnBits() {
+		LongBitContainer container = new LongBitContainer(0b111000);
+
+		Long focusedBits = container.focusBits(3, 6);
+		Assert.assertTrue(focusedBits == 0b111);
+	}
+
+	@Test
+	public void testFocusingOnBitsWithMask() {
+		LongBitContainer container = new LongBitContainer(0xFF00);
+		Long mask = 0x0F00L;
+		Integer start = BitIndex.hexIndex(2); // F00
+
+		Long focusedBits = container.focusBitsWithMask(mask, start);
+		Assert.assertTrue(focusedBits == 0xF);
 	}
 
 }

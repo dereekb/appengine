@@ -171,12 +171,12 @@ public class LongBitContainer
 	public Long focusBits(int start,
 	                      int end) {
 		long mask = this.makeMask(start, end);
-		return this.focusBits(mask, start);
+		return this.focusBitsWithMask(mask, start);
 	}
 
 	@Override
-	public Long focusBits(Long mask,
-	                      int start) {
+	public Long focusBitsWithMask(Long mask,
+	                              int start) {
 		long value = this.value & mask;
 		return (value >> start);
 	}

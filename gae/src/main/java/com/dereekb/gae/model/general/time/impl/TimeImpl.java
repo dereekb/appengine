@@ -1,7 +1,9 @@
 package com.dereekb.gae.model.general.time.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.dereekb.gae.model.general.time.Hour;
 import com.dereekb.gae.model.general.time.Time;
@@ -138,6 +140,50 @@ public class TimeImpl
 	public static boolean isAfterOrEqual(Time a,
 	                                     Time b) {
 		return (a.equals(b) || isAfter(a, b));
+	}
+
+	public static List<Integer> getMilitaryHoursBetween(Time a,
+	                                                    Time b) {
+		return getMilitaryHoursBetween(a, b, null);
+	}
+
+	/**
+	 * Gets the numbers of the military hours between two {@link Time} values.
+	 *
+	 * @param a
+	 *            {@link Time}. Never {@code null}.
+	 * @param b
+	 *            {@link Time}. Never {@code null}.
+	 * @param threshold
+	 *            {@link Integer} threshold for rounding hours up. {@code null}
+	 *            if no threshold.
+	 * @return {@link List} of integers corresponding to the hours between the
+	 *         times.
+	 */
+	public static List<Integer> getMilitaryHoursBetween(Time a,
+	                                                    Time b,
+	                                                    Integer threshold) {
+		int aHour = a.getHour().getDayHour();
+		int bHour = b.getHour().getDayHour();
+
+		if (threshold != null) {
+			if (a.getMinutes() > threshold) {
+				aHour += 1;
+			}
+
+			if (b.getMinutes() > threshold) {
+				bHour += 1;
+			}
+		}
+
+		List<Integer> hours = new ArrayList<Integer>();
+
+		// Does not include the "b" hour.
+		for (int i = aHour; i < bHour; i += 1) {
+			hours.add(i);
+		}
+
+		return hours;
 	}
 
 	@Override

@@ -52,9 +52,9 @@ public class ModelStagedDocumentBuilderStepImpl<T extends SearchableUniqueModel>
 	                        Builder builder) throws UnavailableModelException {
 		T model = this.getter.get(key);
 
-		if (model != null) {
+		try {
 			this.performStep(model, builder);
-		} else {
+		} catch (UnavailableModelException e) {
 			throw new UnavailableModelException(key);
 		}
 	}
@@ -62,7 +62,7 @@ public class ModelStagedDocumentBuilderStepImpl<T extends SearchableUniqueModel>
 	// MARK: StagedDocumentBuilderStep
 	@Override
 	public void performStep(T model,
-	                        Builder builder) {
+	                        Builder builder) throws UnavailableModelException {
 		this.step.performStep(model, builder);
 	}
 

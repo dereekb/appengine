@@ -57,4 +57,12 @@ public interface TimeSpan
 	 */
 	public boolean contains(TimeSpan timeSpan);
 
+	/**
+	 * Equality comparison between {@link TimeSpan} values.
+	 *
+	 * @param timeSpan
+	 * @return {@code true} if the {@link Time} values are the same.
+	 */
+	public boolean equals(TimeSpan timeSpan);
+
 }

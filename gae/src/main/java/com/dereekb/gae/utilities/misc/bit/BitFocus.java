@@ -40,7 +40,7 @@ public interface BitFocus<T> {
 	 *            Start index.
 	 * @return New value containing the focused bits.
 	 */
-	public T focusBits(T mask,
+	public T focusBitsWithMask(T mask,
 	                   int start);
 
 }

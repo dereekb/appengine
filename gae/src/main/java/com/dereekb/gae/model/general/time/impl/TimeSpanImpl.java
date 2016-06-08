@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.general.time.impl;
 
+import java.util.List;
+
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeSpan;
 import com.dereekb.gae.model.general.time.util.impl.TimeSpanSimplifierImpl;
@@ -70,6 +72,27 @@ public class TimeSpanImpl
 		this.end = time;
 	}
 
+	public static List<Integer> getMilitaryHours(TimeSpan timeSpan) {
+		return TimeImpl.getMilitaryHoursBetween(timeSpan.getStartTime(), timeSpan.getEndTime());
+	}
+
+	/**
+	 * Gets the numbers of the military hours between two {@link Time} values
+	 * within the {@link TimeSpan}.
+	 *
+	 * @param timeSpan
+	 *            {@link TimeSpan}. Never {@code null}.
+	 * @param threshold
+	 *            {@link Integer} threshold for rounding hours up. {@code null}
+	 *            if no threshold.
+	 * @return {@link List} of integers corresponding to the hours between the
+	 *         times in the {@link TimeSpan}.
+	 */
+	public static List<Integer> getMilitaryHours(TimeSpan timeSpan,
+	                                             Integer threshold) {
+		return TimeImpl.getMilitaryHoursBetween(timeSpan.getStartTime(), timeSpan.getEndTime(), threshold);
+	}
+
 	// MARK: Comparable
 	/**
 	 * {@link TimeSpan} is compared by first comparing the starting times.
@@ -95,11 +118,6 @@ public class TimeSpanImpl
 	}
 
 	@Override
-	public String toString() {
-		return "TimeSpanImpl [start=" + this.start + ", end=" + this.end + "]";
-	}
-
-	@Override
 	public boolean contains(Time time) {
 		return TimeSpanSimplifierImpl.SIMPLIFIER.isContained(this, time);
 	}
@@ -107,6 +125,16 @@ public class TimeSpanImpl
 	@Override
 	public boolean contains(TimeSpan timeSpan) {
 		return TimeSpanSimplifierImpl.SIMPLIFIER.isContained(this, timeSpan);
+	}
+
+	@Override
+	public boolean equals(TimeSpan timeSpan) {
+		return this.start.equals(timeSpan.getStartTime()) && this.end.equals(timeSpan.getEndTime());
+	}
+
+	@Override
+	public String toString() {
+		return "TimeSpanImpl [start=" + this.start + ", end=" + this.end + "]";
 	}
 
 }

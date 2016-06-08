@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.general.time;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -18,5 +19,11 @@ public interface DaySpan {
 	public void remove(Day day);
 
 	public boolean contains(Day day);
+
+	public boolean containsAll(Collection<Day> day);
+
+	public boolean equals(DaySpan daySpan);
+
+	public boolean containsAll(DaySpan daySpan);
 
 }

@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.general.time.impl;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -88,6 +89,25 @@ public class DaySpanBitImpl
 	@Override
 	public boolean contains(Day day) {
 		return this.container.getBit(day.bit);
+	}
+
+	@Override
+	public boolean equals(DaySpan daySpan) {
+		Set<Day> comparisonDays = daySpan.getDays();
+		Set<Day> days = this.getDays();
+		return (days.size() == comparisonDays.size() && days.containsAll(comparisonDays));
+	}
+
+	@Override
+	public boolean containsAll(DaySpan daySpan) {
+		Set<Day> comparisonDays = daySpan.getDays();
+		return this.containsAll(comparisonDays);
+	}
+
+	@Override
+	public boolean containsAll(Collection<Day> comparisonDays) {
+		Set<Day> days = this.getDays();
+		return days.containsAll(comparisonDays);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -52,15 +53,16 @@ public abstract class AbstractIncludableDocumentBuilderStep<T extends UniqueMode
 
 	@Override
 	public void performStep(T model,
-	                        Builder builder) throws NullPointerException {
+	                        Builder builder) throws UnavailableModelException {
 		this.performSharedStep(model, builder);
 
 		if (this.inclusionStep) {
 			this.performInclusionStep(model, builder);
-		} else {
+		} else if (model != null) {
 			this.performModelStep(model, builder);
+		} else {
+			throw new UnavailableModelException("Model is required for non-inclusion steps.");
 		}
-
 	}
 
 	/**
