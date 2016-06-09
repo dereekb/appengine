@@ -4,14 +4,13 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.search.model.DateSearch;
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchBuilderImpl;
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchImpl;
 import com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDocumentBuilderStep;
 import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchBuilder.StoredBlobSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
-import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilderSource;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.ExpressionStart;
 import com.dereekb.gae.utilities.collections.map.StringMapReader;
-import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
 /**
@@ -20,8 +19,7 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
  * @author dereekb
  *
  */
-public class StoredBlobSearchBuilder
-        implements Factory<StoredBlobSearch> {
+public class StoredBlobSearchBuilder extends AbstractSearchBuilderImpl<StoredBlobSearch> {
 
 	public static final String DEFAULT_ID_FIELD = ModelDocumentBuilderUtility.ID_FIELD;
 	public static final String DEFAULT_DATE_FIELD = ModelDocumentBuilderUtility.DATE_FIELD;
@@ -29,26 +27,18 @@ public class StoredBlobSearchBuilder
 	public static final String DEFAULT_NAME_FIELD = StoredBlobDocumentBuilderStep.NAME_FIELD;
 	public static final String DEFAULT_ENDING_FIELD = StoredBlobDocumentBuilderStep.ENDING_FIELD;
 
-	private String prefix = StoredBlobDocumentBuilderStep.DERIVATIVE_PREFIX;
-
 	private String idField = DEFAULT_ID_FIELD;
 	private String dateField = DEFAULT_DATE_FIELD;
 	private String typeField = DEFAULT_TYPE_FIELD;
 	private String nameField = DEFAULT_NAME_FIELD;
 	private String endingField = DEFAULT_ENDING_FIELD;
 
-	public StoredBlobSearchBuilder() {}
+	public StoredBlobSearchBuilder() {
+		super(StoredBlobDocumentBuilderStep.DERIVATIVE_PREFIX);
+	}
 
 	public StoredBlobSearchBuilder(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public String getPrefix() {
-		return this.prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+		super(prefix);
 	}
 
 	public String getIdField() {
@@ -75,37 +65,30 @@ public class StoredBlobSearchBuilder
 		this.dateField = dateField;
 	}
 
-	public StoredBlobSearch make(Map<String, String> parameters) {
-		StoredBlobSearch search = new StoredBlobSearch(parameters);
-
-		if (search.hasValues() == false) {
-			search = null;
-		}
-
-		return search;
+	@Override
+	public StoredBlobSearch make() throws FactoryMakeFailureException {
+		return new StoredBlobSearch();
 	}
 
-	public void applyParameters(StoredBlobSearch search,
-	                            Map<String, String> parameters) {
-		StringMapReader reader = new StringMapReader(parameters, this.getFormat());
+	@Override
+	public StoredBlobSearch makeNewSearch(Map<String, String> parameters) {
+		return new StoredBlobSearch(parameters);
+	}
+
+	@Override
+	protected void applyParametersToSearch(StoredBlobSearch search,
+	                                       StringMapReader reader) {
 
 		search.setId(reader.getLong(this.idField));
 		search.setEnding(reader.get(this.endingField));
 		search.setDate(DateSearch.fromString(reader.get(this.dateField)));
 	}
 
-	public String getFormat() {
-		return this.prefix + "%s";
-	}
-
 	// MAKE: Make
-	public ExpressionBuilder make(StoredBlobSearch search) {
-		return this.make(search, this.getFormat());
-	}
-
-	public ExpressionBuilder make(StoredBlobSearch search,
-	                              String format) {
-		ExpressionBuilder builder = new ExpressionStart();
+	@Override
+	public ExpressionBuilder buildExpression(StoredBlobSearch search,
+	                                         String format,
+	                                         ExpressionBuilder builder) {
 
 		Long id = search.getId();
 		if (id != null) {
@@ -140,13 +123,7 @@ public class StoredBlobSearchBuilder
 		return builder;
 	}
 
-	@Override
-	public StoredBlobSearch make() throws FactoryMakeFailureException {
-		return new StoredBlobSearch();
-	}
-
-	public class StoredBlobSearch
-	        implements ExpressionBuilderSource {
+	public class StoredBlobSearch extends AbstractSearchImpl {
 
 		// Both
 		private DateSearch date;
@@ -165,7 +142,8 @@ public class StoredBlobSearchBuilder
 			this.applyParameters(parameters);
 		}
 
-		public void applyParameters(Map<String, String> parameters) {
+		@Override
+        public void applyParameters(Map<String, String> parameters) {
 			StoredBlobSearchBuilder.this.applyParameters(this, parameters);
 		}
 
@@ -207,10 +185,6 @@ public class StoredBlobSearchBuilder
 
 		public void setType(String type) {
 			this.type = type;
-		}
-
-		public boolean hasValues() {
-			return (this.date != null || this.ending != null || this.id != null || this.name != null || this.type != null);
 		}
 
 		@Override

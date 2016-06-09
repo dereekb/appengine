@@ -2,6 +2,8 @@ package com.dereekb.gae.model.stored.image.search.document.query;
 
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchBuilderImpl;
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchImpl;
 import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder;
 import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder.GeoPlaceSearch;
 import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchBuilder;
@@ -9,11 +11,8 @@ import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchB
 import com.dereekb.gae.model.stored.image.search.document.index.StoredImageDocumentBuilderStep;
 import com.dereekb.gae.model.stored.image.search.document.query.StoredImageSearchBuilder.StoredImageSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
-import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilderSource;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.ExpressionStart;
-import com.dereekb.gae.utilities.collections.map.MapReader;
-import com.dereekb.gae.utilities.factory.Factory;
+import com.dereekb.gae.utilities.collections.map.StringMapReader;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
 /**
@@ -22,15 +21,12 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
  * @author dereekb
  *
  */
-public class StoredImageSearchBuilder
-        implements Factory<StoredImageSearch> {
+public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredImageSearch> {
 
 	public static final String DEFAULT_TYPE_FIELD = StoredImageDocumentBuilderStep.TYPE_FIELD;
 	public static final String DEFAULT_NAME_FIELD = StoredImageDocumentBuilderStep.NAME_FIELD;
 	public static final String DEFAULT_TAGS_FIELD = StoredImageDocumentBuilderStep.TAGS_FIELD;
 	public static final String DEFAULT_SUMMARY_FIELD = StoredImageDocumentBuilderStep.SUMMARY_FIELD;
-
-	private String prefix = "";
 
 	private String nameField = DEFAULT_NAME_FIELD;
 	private String tagsField = DEFAULT_TAGS_FIELD;
@@ -40,18 +36,12 @@ public class StoredImageSearchBuilder
 	private GeoPlaceSearchBuilder geoPlaceSearchBuilder = new GeoPlaceSearchBuilder();
 	private StoredBlobSearchBuilder storedBlobSearchBuilder = new StoredBlobSearchBuilder();
 
-	public StoredImageSearchBuilder() {}
+	public StoredImageSearchBuilder() {
+		super(StoredImageDocumentBuilderStep.DERIVATIVE_PREFIX);
+	}
 
 	public StoredImageSearchBuilder(String prefix) {
-		this.setPrefix(prefix);
-	}
-
-	public String getPrefix() {
-		return this.prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+		super(prefix);
 	}
 
 	public String getNameField() {
@@ -86,40 +76,35 @@ public class StoredImageSearchBuilder
 		this.summaryField = summaryField;
 	}
 
-	public StoredImageSearch make(Map<String, String> parameters) {
-		StoredImageSearch search = new StoredImageSearch(parameters);
-
-		if (search.hasValues() == false) {
-			search = null;
-		}
-
-		return search;
+	// MARK: Search
+	@Override
+	public StoredImageSearch make() throws FactoryMakeFailureException {
+		return new StoredImageSearch();
 	}
 
-	public void applyParameters(StoredImageSearch search,
-	                            Map<String, String> parameters) {
-		MapReader<String> reader = new MapReader<String>(parameters, this.getFormat());
+	@Override
+	public StoredImageSearch makeNewSearch(Map<String, String> parameters) {
+		return new StoredImageSearch(parameters);
+	}
+
+	@Override
+	protected void applyParametersToSearch(StoredImageSearch search,
+	                                       StringMapReader reader) {
 
 		search.setName(reader.get(this.nameField));
 		search.setType(reader.get(this.typeField));
 		search.setTags(reader.get(this.tagsField));
 		search.setSummary(reader.get(this.summaryField));
 
-		search.geoPlaceSearch.applyParameters(parameters);
-		search.storedBlobSearch.applyParameters(parameters);
+		search.geoPlaceSearch.applyParameters(reader.getMap());
+		search.storedBlobSearch.applyParameters(reader.getMap());
 	}
 
-	public String getFormat() {
-		return this.prefix + "%s";
-	}
-
-	public ExpressionBuilder make(StoredImageSearch search) {
-		return this.make(search, this.getFormat());
-	}
-
-	public ExpressionBuilder make(StoredImageSearch search,
-	                              String format) {
-		ExpressionBuilder builder = new ExpressionStart();
+	// MAKE: Make
+	@Override
+	public ExpressionBuilder buildExpression(StoredImageSearch search,
+	                                         String format,
+	                                         ExpressionBuilder builder) {
 
 		String name = search.getName();
 		if (name != null) {
@@ -151,13 +136,7 @@ public class StoredImageSearchBuilder
 		return builder;
 	}
 
-	@Override
-	public StoredImageSearch make() throws FactoryMakeFailureException {
-		return new StoredImageSearch();
-	}
-
-	public class StoredImageSearch
-	        implements ExpressionBuilderSource {
+	public class StoredImageSearch extends AbstractSearchImpl {
 
 		private String name;
 		private String summary;
@@ -173,7 +152,8 @@ public class StoredImageSearchBuilder
 			this.applyParameters(parameters);
 		}
 
-		public void applyParameters(Map<String, String> parameters) {
+		@Override
+        public void applyParameters(Map<String, String> parameters) {
 			StoredImageSearchBuilder.this.applyParameters(this, parameters);
 		}
 
@@ -215,11 +195,6 @@ public class StoredImageSearchBuilder
 
 		public StoredBlobSearch getStoredBlobSearch() {
 			return this.storedBlobSearch;
-		}
-
-		public boolean hasValues() {
-			return (this.name != null || this.summary != null || this.tags != null || this.type != null
-			        || this.geoPlaceSearch.hasValues() || this.storedBlobSearch.hasValues());
 		}
 
 		@Override

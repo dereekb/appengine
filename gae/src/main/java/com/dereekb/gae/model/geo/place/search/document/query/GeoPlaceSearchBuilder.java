@@ -5,15 +5,14 @@ import java.util.Map;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.search.model.DateSearch;
 import com.dereekb.gae.model.extension.search.document.search.model.PointRadiusSearch;
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchBuilderImpl;
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchImpl;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDocumentBuilderStep;
 import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder.GeoPlaceSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
-import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilderSource;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.BooleanField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.ExpressionStart;
-import com.dereekb.gae.utilities.collections.map.MapReader;
-import com.dereekb.gae.utilities.factory.Factory;
+import com.dereekb.gae.utilities.collections.map.StringMapReader;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
 /**
@@ -22,33 +21,24 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
  * @author dereekb
  *
  */
-public class GeoPlaceSearchBuilder
-        implements Factory<GeoPlaceSearch> {
+public class GeoPlaceSearchBuilder extends AbstractSearchBuilderImpl<GeoPlaceSearch> {
 
 	public static final String DEFAULT_ID_FIELD = ModelDocumentBuilderUtility.ID_FIELD;
 	public static final String DEFAULT_DATE_FIELD = ModelDocumentBuilderUtility.DATE_FIELD;
 	public static final String DEFAULT_POINT_FIELD = ModelDocumentBuilderUtility.POINT_FIELD;
 	public static final String DEFAULT_REGION_FIELD = GeoPlaceDocumentBuilderStep.REGION_FIELD;
 
-	private String prefix = GeoPlaceDocumentBuilderStep.DERIVATIVE_PREFIX;
-
 	private String idField = DEFAULT_ID_FIELD;
 	private String dateField = DEFAULT_DATE_FIELD;
 	private String pointField = DEFAULT_POINT_FIELD;
 	private String isRegionField = DEFAULT_REGION_FIELD;
 
-	public GeoPlaceSearchBuilder() {}
+	public GeoPlaceSearchBuilder() {
+		super(GeoPlaceDocumentBuilderStep.DERIVATIVE_PREFIX);
+	}
 
 	public GeoPlaceSearchBuilder(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public String getPrefix() {
-		return this.prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+		super(prefix);
 	}
 
 	public String getIdField() {
@@ -83,45 +73,34 @@ public class GeoPlaceSearchBuilder
 		this.isRegionField = isRegionField;
 	}
 
-	public GeoPlaceSearch make(Map<String, String> parameters) {
-		GeoPlaceSearch search = new GeoPlaceSearch(parameters);
-
-		if (search.hasValues() == false) {
-			search = null;
-		}
-
-		return search;
+	// MARK: Search
+	@Override
+	public GeoPlaceSearch make() throws FactoryMakeFailureException {
+		return new GeoPlaceSearch();
 	}
 
-	public void applyParameters(GeoPlaceSearch search,
-	                            Map<String, String> parameters) {
-		MapReader<String> reader = new MapReader<String>(parameters, this.getFormat());
+	@Override
+	public GeoPlaceSearch makeNewSearch(Map<String, String> parameters) {
+		return new GeoPlaceSearch(parameters);
+	}
 
-		if (reader.containsKey(this.idField)) {
-			Long id = new Long(reader.get(this.idField));
-			search.setId(id);
-		}
+	@Override
+	protected void applyParametersToSearch(GeoPlaceSearch search,
+	                                       StringMapReader reader) {
 
-		if (reader.containsKey(this.isRegionField)) {
-			Boolean region = new Boolean(reader.get(this.isRegionField));
-			search.setRegion(region);
-		}
+		search.setId(reader.getLong(this.idField));
+
+		search.setRegion(reader.getBoolean(this.isRegionField));
 
 		search.setPoint(PointRadiusSearch.fromString(reader.get(this.pointField)));
 		search.setDate(DateSearch.fromString(reader.get(this.dateField)));
 	}
 
-	public String getFormat() {
-		return this.prefix + "%s";
-	}
-
-	public ExpressionBuilder make(GeoPlaceSearch search) {
-		return this.make(search, this.getFormat());
-	}
-
-	public ExpressionBuilder make(GeoPlaceSearch search,
-	                              String format) {
-		ExpressionBuilder builder = new ExpressionStart();
+	// MAKE: Make
+	@Override
+	public ExpressionBuilder buildExpression(GeoPlaceSearch search,
+	                                         String format,
+	                                         ExpressionBuilder builder) {
 
 		Long id = search.getId();
 		if (id != null) {
@@ -150,13 +129,7 @@ public class GeoPlaceSearchBuilder
 		return builder;
 	}
 
-	@Override
-	public GeoPlaceSearch make() throws FactoryMakeFailureException {
-		return new GeoPlaceSearch();
-	}
-
-	public class GeoPlaceSearch
-	        implements ExpressionBuilderSource {
+	public class GeoPlaceSearch extends AbstractSearchImpl {
 
 		private Boolean region;
 
@@ -170,7 +143,8 @@ public class GeoPlaceSearchBuilder
 			this.applyParameters(parameters);
 		}
 
-		public void applyParameters(Map<String, String> parameters) {
+		@Override
+        public void applyParameters(Map<String, String> parameters) {
 			GeoPlaceSearchBuilder.this.applyParameters(this, parameters);
 		}
 
@@ -204,10 +178,6 @@ public class GeoPlaceSearchBuilder
 
 		public void setPoint(PointRadiusSearch point) {
 			this.point = point;
-		}
-
-		public boolean hasValues() {
-			return (this.date != null || this.region != null || this.point != null || this.id != null);
 		}
 
 		@Override

@@ -50,4 +50,15 @@ public class StringMapReader extends MapReader<String> {
 		return longValue;
 	}
 
+	public Boolean getBoolean(String key) {
+		String value = this.get(key);
+		Boolean boolValue = null;
+
+		if (value != null) {
+			boolValue = new Boolean(value);
+		}
+
+		return boolValue;
+	}
+
 }
