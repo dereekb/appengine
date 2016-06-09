@@ -2,14 +2,13 @@ package com.dereekb.gae.model.stored.image.set.search.document.query;
 
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchBuilderImpl;
+import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchImpl;
 import com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetDocumentBuilderStep;
 import com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchBuilder.StoredImageSetSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
-import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilderSource;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.ExpressionStart;
-import com.dereekb.gae.utilities.collections.map.MapReader;
-import com.dereekb.gae.utilities.factory.Factory;
+import com.dereekb.gae.utilities.collections.map.StringMapReader;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
 /**
@@ -18,31 +17,22 @@ import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
  * @author dereekb
  *
  */
-public class StoredImageSetSearchBuilder
-        implements Factory<StoredImageSetSearch> {
+public class StoredImageSetSearchBuilder extends AbstractSearchBuilderImpl<StoredImageSetSearch> {
 
 	public static final String DEFAULT_LABEL_FIELD = StoredImageSetDocumentBuilderStep.LABEL_FIELD;
 	public static final String DEFAULT_DETAIL_FIELD = StoredImageSetDocumentBuilderStep.DETAIL_FIELD;
 	public static final String DEFAULT_TAGS_FIELD = StoredImageSetDocumentBuilderStep.TAGS_FIELD;
 
-	private String prefix = "";
-
 	private String labelField = DEFAULT_LABEL_FIELD;
 	private String detailField = DEFAULT_DETAIL_FIELD;
 	private String tagsField = DEFAULT_TAGS_FIELD;
 
-	public StoredImageSetSearchBuilder() {}
+	public StoredImageSetSearchBuilder() {
+		super(StoredImageSetDocumentBuilderStep.DERIVATIVE_PREFIX);
+	}
 
 	public StoredImageSetSearchBuilder(String prefix) {
-		this.setPrefix(prefix);
-	}
-
-	public String getPrefix() {
-		return this.prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+		super(prefix);
 	}
 
     public String getLabelField() {
@@ -69,36 +59,31 @@ public class StoredImageSetSearchBuilder
 		this.tagsField = tagsField;
 	}
 
-	public StoredImageSetSearch make(Map<String, String> parameters) {
-		StoredImageSetSearch search = new StoredImageSetSearch(parameters);
-
-		if (search.hasValues() == false) {
-			search = null;
-		}
-
-		return search;
+	// MARK: Search
+	@Override
+	public StoredImageSetSearch make() throws FactoryMakeFailureException {
+		return new StoredImageSetSearch();
 	}
 
-	public void applyParameters(StoredImageSetSearch search,
-	                            Map<String, String> parameters) {
-		MapReader<String> reader = new MapReader<String>(parameters, this.getFormat());
+	@Override
+	public StoredImageSetSearch makeNewSearch(Map<String, String> parameters) {
+		return new StoredImageSetSearch(parameters);
+	}
+
+	@Override
+	protected void applyParametersToSearch(StoredImageSetSearch search,
+	                                       StringMapReader reader) {
 
 		search.setLabel(reader.get(this.labelField));
 		search.setDetail(reader.get(this.detailField));
 		search.setTags(reader.get(this.tagsField));
 	}
 
-	public String getFormat() {
-		return this.prefix + "%s";
-	}
-
-	public ExpressionBuilder make(StoredImageSetSearch search) {
-		return this.make(search, this.getFormat());
-	}
-
-	public ExpressionBuilder make(StoredImageSetSearch search,
-	                              String format) {
-		ExpressionBuilder builder = new ExpressionStart();
+	// MAKE: Make
+	@Override
+	public ExpressionBuilder buildExpression(StoredImageSetSearch search,
+	                                         String format,
+	                                         ExpressionBuilder builder) {
 
 		String label = search.getLabel();
 		if (label != null) {
@@ -121,13 +106,7 @@ public class StoredImageSetSearchBuilder
 		return builder;
 	}
 
-	@Override
-	public StoredImageSetSearch make() throws FactoryMakeFailureException {
-		return new StoredImageSetSearch();
-	}
-
-	public class StoredImageSetSearch
-	        implements ExpressionBuilderSource {
+	public class StoredImageSetSearch extends AbstractSearchImpl {
 
 		private String label;
 		private String detail;
@@ -139,7 +118,8 @@ public class StoredImageSetSearchBuilder
 			this.applyParameters(parameters);
 		}
 
-		public void applyParameters(Map<String, String> parameters) {
+		@Override
+        public void applyParameters(Map<String, String> parameters) {
 			StoredImageSetSearchBuilder.this.applyParameters(this, parameters);
 		}
 
@@ -167,13 +147,15 @@ public class StoredImageSetSearchBuilder
 			this.tags = tags;
 		}
 
-		public boolean hasValues() {
-			return (this.label != null || this.detail != null || this.tags != null);
-		}
-
 		@Override
 		public ExpressionBuilder makeExpression() {
 			return StoredImageSetSearchBuilder.this.make(this);
+		}
+
+		@Override
+		public String toString() {
+			return "StoredImageSetSearch [label=" + this.label + ", detail=" + this.detail + ", tags=" + this.tags
+			        + "]";
 		}
 
 	}

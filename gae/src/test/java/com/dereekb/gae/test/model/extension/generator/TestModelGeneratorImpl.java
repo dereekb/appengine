@@ -25,10 +25,28 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 	public TestModelGeneratorImpl() {}
 
 	public TestModelGeneratorImpl(Setter<T> setter, ModelGenerator<T> generator) {
+		this.setSetter(setter);
+		this.setGenerator(generator);
+	}
+
+	@Override
+	public Setter<T> getSetter() {
+		return this.setter;
+	}
+
+	public void setSetter(Setter<T> setter) {
 		this.setter = setter;
+	}
+
+	public ModelGenerator<T> getGenerator() {
+		return this.generator;
+	}
+
+	public void setGenerator(ModelGenerator<T> generator) {
 		this.generator = generator;
 	}
 
+	// MARK: TestModelGenerator
 	@Override
     public T generate() {
 		T model = this.generator.generate();

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.ModelGenerator;
+import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -15,6 +16,11 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  */
 public interface TestModelGenerator<T extends UniqueModel>
         extends ModelGenerator<T> {
+
+	/**
+	 * Convenience accessor for the generator's setter.
+	 */
+	public Setter<T> getSetter();
 
 	/**
 	 * Generates a new model with a random identifier.

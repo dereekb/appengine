@@ -1,10 +1,10 @@
 package com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
-import com.dereekb.gae.model.extension.search.document.SearchableUniqueModel;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.ModelStagedDocumentBuilderStep;
 import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.google.appengine.api.search.Document.Builder;
 
@@ -17,7 +17,7 @@ import com.google.appengine.api.search.Document.Builder;
  * @param <T>
  *            model type
  */
-public class ModelStagedDocumentBuilderStepImpl<T extends SearchableUniqueModel>
+public class ModelStagedDocumentBuilderStepImpl<T extends UniqueModel>
         implements ModelStagedDocumentBuilderStep, StagedDocumentBuilderStep<T> {
 
 	private Getter<T> getter;

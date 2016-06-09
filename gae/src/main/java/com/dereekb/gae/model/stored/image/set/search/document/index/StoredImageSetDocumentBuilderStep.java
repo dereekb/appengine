@@ -22,6 +22,9 @@ import com.google.appengine.api.search.Document.Builder;
 public class StoredImageSetDocumentBuilderStep
         implements StagedDocumentBuilderStep<StoredImageSet> {
 
+	public final static String DERIVATIVE_PREFIX = "IS_";
+	public final static String DERIVATIVE_FIELD_FORMAT = DERIVATIVE_PREFIX + "%s";
+
 	public static final String LABEL_FIELD = "label";
 	public static final String DETAIL_FIELD = "detail";
 	public static final String TAGS_FIELD = "tags";

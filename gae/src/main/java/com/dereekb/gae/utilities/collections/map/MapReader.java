@@ -15,8 +15,8 @@ public class MapReader<T> {
 
 	private static final String DEFAULT_FORMAT = "%s";
 
-	public Map<String, T> map;
-	public String keyFormat;
+	private Map<String, T> map;
+	private String keyFormat;
 
 	public MapReader(Map<String, T> map) throws IllegalArgumentException {
 		this(map, null);
