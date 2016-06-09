@@ -1,7 +1,7 @@
-package com.dereekb.gae.model.extension.search.document.search.model;
+package com.dereekb.gae.model.general.time.search.query;
 
-import com.dereekb.gae.model.general.time.search.WeekTimeDocumentBuilderUtility;
-import com.dereekb.gae.model.general.time.search.WeekTimeDocumentBuilderUtility.FieldFormatter;
+import com.dereekb.gae.model.general.time.search.index.WeekTimeDocumentBuilderUtility;
+import com.dereekb.gae.model.general.time.search.index.WeekTimeDocumentBuilderUtility.FieldFormatter;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
@@ -70,16 +70,16 @@ public class WeekTimeSearch {
 	 * <p>
 	 * Format: OPEN?(Integer), CLOSE?(Integer), DAY?(String)
 	 *
-	 * @param pointString
+	 * @param searchString
 	 * @return {@link WeekTimeSearch} or {@code null} if nothing is input.
 	 * @throws IllegalArgumentException
 	 */
-	public static WeekTimeSearch fromString(String pointString) throws IllegalArgumentException {
-		WeekTimeSearch point = null;
+	public static WeekTimeSearch fromString(String searchString) throws IllegalArgumentException {
+		WeekTimeSearch search = null;
 
-		if (pointString != null && pointString.isEmpty() == false) {
+		if (searchString != null && searchString.isEmpty() == false) {
 			try {
-				String[] split = pointString.split(SPLITTER);
+				String[] split = searchString.split(SPLITTER);
 
 				String day = null;
 				Integer open = null;
@@ -105,13 +105,13 @@ public class WeekTimeSearch {
 						break;
 				}
 
-				point = new WeekTimeSearch(day, open, close);
+				search = new WeekTimeSearch(day, open, close);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Could not create time search.", e);
 			}
 		}
 
-		return point;
+		return search;
 	}
 
 	private static class ParsedTimeString {

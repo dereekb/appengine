@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.general.time.search;
+package com.dereekb.gae.model.general.time.search.index;
 
 import java.util.Set;
 
@@ -100,12 +100,6 @@ public class WeekTimeDocumentBuilderUtility {
 			this.setWeekTime(weekTime);
 		}
 
-		private String makeDaysString(Set<Day> days) {
-			Joiner joiner = Joiner.on(WeekTimeDocumentBuilderUtility.this.daysSplitter).skipNulls();
-			Set<String> strings = Day.getKeyStrings(days);
-			return joiner.join(strings);
-		}
-
 		public void setWeekTime(WeekTime weekTime) {
 			if (weekTime != null) {
 				DaySpan daySpan = weekTime.getDaySpan();
@@ -125,6 +119,12 @@ public class WeekTimeDocumentBuilderUtility {
 				this.start = null;
 				this.end = null;
 			}
+		}
+
+		private String makeDaysString(Set<Day> days) {
+			Joiner joiner = Joiner.on(WeekTimeDocumentBuilderUtility.this.daysSplitter).skipNulls();
+			Set<String> strings = Day.getKeyStrings(days);
+			return joiner.join(strings);
 		}
 
 		public FieldFormatter getFieldNamer() {

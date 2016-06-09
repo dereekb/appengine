@@ -167,11 +167,13 @@ public class TimeImpl
 		int bHour = b.getHour().getDayHour();
 
 		if (threshold != null) {
+			// Excludes threshold time.
 			if (a.getMinutes() > threshold) {
 				aHour += 1;
 			}
 
-			if (b.getMinutes() > threshold) {
+			// Includes threshold time.
+			if (b.getMinutes() >= threshold) {
 				bHour += 1;
 			}
 		}

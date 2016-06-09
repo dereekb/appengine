@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.search.model;
 
 import com.dereekb.gae.model.general.people.contact.search.ContactAddressSetDocumentBuilderUtility;
-import com.dereekb.gae.model.general.time.search.WeekTimeDocumentBuilderUtility.FieldFormatter;
+import com.dereekb.gae.model.general.time.search.index.WeekTimeDocumentBuilderUtility.FieldFormatter;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 

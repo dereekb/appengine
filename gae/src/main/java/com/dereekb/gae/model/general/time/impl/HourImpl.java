@@ -14,11 +14,11 @@ public class HourImpl
 
 	private Integer dayHour;
 
-	public HourImpl(Integer hour) {
+	public HourImpl(Integer hour) throws IllegalArgumentException {
 		this.setHour(hour);
 	}
 
-	public HourImpl(Integer hour, TimeAmPm timeAmPm) {
+	public HourImpl(Integer hour, TimeAmPm timeAmPm) throws IllegalArgumentException {
 		this.setHour(hour, timeAmPm);
 	}
 
@@ -66,7 +66,7 @@ public class HourImpl
 		this.dayHour = hour;
 	}
 
-	public void setHour(Integer hour) {
+	public void setHour(Integer hour) throws IllegalArgumentException {
 		if (hour < MIDNIGHT_HOUR || hour > MAX_HOUR) {
 			throw new IllegalArgumentException("Valid hour ranges from 0-23.");
 		}

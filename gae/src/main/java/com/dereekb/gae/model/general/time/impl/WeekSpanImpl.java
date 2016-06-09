@@ -28,6 +28,14 @@ public class WeekSpanImpl
 		this.sets = makeSetList();
 	}
 
+	public WeekSpanImpl(List<WeekTime> weekTimes) {
+		this();
+
+		if (weekTimes != null) {
+			this.addAll(weekTimes);
+		}
+	}
+
 	private static TimeSpanSet[] makeSetList() {
 		TimeSpanSet[] sets = new TimeSpanSet[Day.values().length];
 

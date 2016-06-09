@@ -1,5 +1,8 @@
 package com.dereekb.gae.model.general.time.util.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.dereekb.gae.model.general.time.DaySpan;
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeSpan;
@@ -34,6 +37,17 @@ public class WeekTimeConverterImpl
 
 	public final static WeekTimeConverterImpl CONVERTER = new WeekTimeConverterImpl();
 
+	public List<WeekTime> weekTimesFromNumbers(Iterable<Integer> encodedTimes) {
+		List<WeekTime> weekTimes = new ArrayList<WeekTime>();
+
+		for (Integer encodedTime : encodedTimes) {
+			weekTimes.add(this.weekTimeFromNumber(encodedTime));
+		}
+
+		return weekTimes;
+	}
+
+	// MARK: WeekTimeConverter
 	@Override
 	public Integer weekTimeToNumber(WeekTime weekTime) {
 		DaySpan daySpan = weekTime.getDaySpan();

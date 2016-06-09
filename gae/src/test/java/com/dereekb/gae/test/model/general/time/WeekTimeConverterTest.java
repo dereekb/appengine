@@ -16,7 +16,8 @@ import com.dereekb.gae.model.general.time.impl.HourImpl;
 import com.dereekb.gae.model.general.time.impl.TimeImpl;
 import com.dereekb.gae.model.general.time.impl.TimeSpanImpl;
 import com.dereekb.gae.model.general.time.impl.WeekTimeImpl;
-import com.dereekb.gae.model.general.time.search.WeekTimeSearchTagsConverterImpl;
+import com.dereekb.gae.model.general.time.search.WeekTimeSearchTag;
+import com.dereekb.gae.model.general.time.search.impl.WeekTimeSearchTagsConverterImpl;
 import com.dereekb.gae.model.general.time.util.impl.TimeValueConverterImpl;
 import com.dereekb.gae.model.general.time.util.impl.WeekTimeConverterImpl;
 import com.dereekb.gae.utilities.misc.bit.BitIndex;
@@ -110,7 +111,7 @@ public class WeekTimeConverterTest {
 
 		Set<String> tags = converter.buildTags(weekTime);
 		Assert.assertNotNull(tags);
-		Assert.assertTrue(tags.contains(converter.buildTag(day, new HourImpl(23))));
+		Assert.assertTrue(tags.contains(WeekTimeSearchTag.buildTag(day, new HourImpl(23))));
 
 		// Multiple Days
 		daySpan = new DaySpanBitImpl(0xFF);
