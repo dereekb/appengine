@@ -13,9 +13,9 @@
 
 	<!-- ModelKeys Converters -->
 	<bean id="longModelKeyConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.LongModelKeyConverter"
+		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl"
 		lazy-init="true" scope="singleton" />
-
+		
 	<bean id="stringLongModelKeyConverter"
 		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl"
 		lazy-init="true" scope="singleton" />

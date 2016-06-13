@@ -10,6 +10,7 @@ import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
@@ -25,6 +26,13 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 
 	private CreateTaskDelegate<T> delegate;
 	private IterableTask<T> saveTask;
+
+	private TaskRequestSender<T> reviewTaskSender;
+
+	public CreateTaskImpl(CreateTaskDelegate<T> delegate, IterableTask<T> saveTask, TaskRequestSender<T> sender) {
+		this(delegate, saveTask);
+		this.setReviewTaskSender(sender);
+	}
 
 	public CreateTaskImpl(CreateTaskDelegate<T> delegate, IterableTask<T> saveTask) {
 		super(new CreateTaskConfigImpl());
@@ -48,6 +56,14 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 		this.saveTask = saveTask;
 	}
 
+	public TaskRequestSender<T> getReviewTaskSender() {
+		return this.reviewTaskSender;
+	}
+
+	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) {
+		this.reviewTaskSender = reviewTaskSender;
+	}
+
 	// MARK: Create Task
 	@Override
 	public void doTask(Iterable<CreatePair<T>> input,
@@ -57,6 +73,10 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 		// Retrieve successful pairs
 		List<T> results = CreatePair.getObjects(input);
 		this.saveTask.doTask(results);
+
+		if (this.reviewTaskSender != null) {
+			this.reviewTaskSender.sendTasks(results);
+		}
 	}
 
 	@Override

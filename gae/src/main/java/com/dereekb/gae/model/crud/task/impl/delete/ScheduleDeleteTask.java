@@ -10,15 +10,12 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionRea
 import com.dereekb.gae.model.crud.task.DeleteTask;
 import com.dereekb.gae.model.crud.task.config.DeleteTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.DeleteTaskConfigImpl;
+import com.dereekb.gae.model.crud.task.impl.task.AbstractScheduleReviewTask;
 import com.dereekb.gae.model.extension.taskqueue.request.ModelKeyTaskRequestBuilder;
-import com.dereekb.gae.model.extension.taskqueue.request.TypedModelKeyTaskRequestBuilder;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
-import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
-import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
@@ -37,10 +34,9 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *            model type
  * @see {@link TaskQueueEditController}
  */
-public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTaskRequestBuilder<T>
-        implements DeleteTask<T>, TaskRequestSender<T> {
+public class ScheduleDeleteTask<T extends UniqueModel> extends AbstractScheduleReviewTask<T>
+        implements DeleteTask<T> {
 
-	private TaskScheduler scheduler;
 	private DeleteTaskConfig defaultConfig;
 	private Filter<T> deleteFilter;
 
@@ -50,19 +46,9 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTask
 
 	public ScheduleDeleteTask(String modelResource, TaskScheduler scheduler, TaskRequest baseRequest)
 	        throws URISyntaxException {
-		this.setModelResource(modelResource);
+		super(modelResource, scheduler, baseRequest);
 
-		this.setScheduler(scheduler);
-		this.setBaseRequest(baseRequest);
 		this.setDefaultConfig(null);
-	}
-
-	public TaskScheduler getScheduler() {
-		return this.scheduler;
-	}
-
-	public void setScheduler(TaskScheduler scheduler) {
-		this.scheduler = scheduler;
 	}
 
 	public DeleteTaskConfig getDefaultConfig() {
@@ -85,6 +71,7 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTask
 		this.deleteFilter = deleteFilter;
 	}
 
+	// MARK: TypedModelKeyTaskRequestBuilder
 	@Override
 	public void setBaseRequest(TaskRequest request) {
 		if (request == null) {
@@ -130,22 +117,10 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends TypedModelKeyTask
 		SuccessResultsPair.setResultPairsSuccess(input, true);
 	}
 
-	// MARK: TaskRequestSender
-	@Override
-	public void sendTask(T input) throws SubmitTaskException {
-		this.sendTasks(SingleItem.withValue(input));
-	}
-
-	@Override
-	public void sendTasks(Iterable<T> input) throws SubmitTaskException {
-		List<TaskRequest> requests = super.buildRequests(input);
-		this.scheduler.schedule(requests);
-	}
-
 	@Override
 	public String toString() {
-		return "ScheduleDeleteTask [scheduler=" + this.scheduler + ", defaultConfig=" + this.defaultConfig
-		        + ", deleteFilter=" + this.deleteFilter + "]";
+		return "ScheduleDeleteTask [defaultConfig=" + this.defaultConfig + ", deleteFilter=" + this.deleteFilter
+		        + ", scheduler=" + this.scheduler + "]";
 	}
 
 }

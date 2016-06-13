@@ -66,24 +66,9 @@
 		scope="singleton">
 	</bean>
 
-	<bean id="datastoreIndexesXmlPath" class="java.lang.String"
-		lazy-init="true" scope="singleton">
-		<constructor-arg index="0"
-			value="src/main/webapp/WEB-INF/datastore-indexes.xml" />
-	</bean>
-
-	<bean id="taskQueueXmlPath" class="java.lang.String" lazy-init="false"
-		scope="singleton">
-		<constructor-arg index="0"
-			value="src/main/webapp/WEB-INF/queue.xml" />
-	</bean>
-
 	<bean id="localTaskQueueServiceTestConfig"
 		class="com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig"
 		scope="singleton">
-		<property name="queueXmlPath">
-			<ref bean="taskQueueXmlPath" />
-		</property>
 	</bean>
 
 </beans>

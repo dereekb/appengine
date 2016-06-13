@@ -25,6 +25,10 @@ import com.dereekb.gae.web.taskqueue.controller.crud.exception.UnregisteredEditT
 @RequestMapping("/taskqueue")
 public final class TaskQueueEditController {
 
+	public static final String CREATE_PATH = "create";
+	public static final String UPDATE_PATH = "update";
+	public static final String DELETE_PATH = "delete";
+
 	private TypeModelKeyConverter keyTypeConverter;
 	private Map<String, TaskQueueEditControllerEntry> entries;
 
@@ -53,7 +57,7 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/{type}/create", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/" + CREATE_PATH, method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewCreate(@PathVariable("type") String modelType,
 	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
@@ -62,7 +66,7 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/{type}/update", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/" + UPDATE_PATH, method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewUpdate(@PathVariable("type") String modelType,
 	                         @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
@@ -71,7 +75,7 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/{type}/delete", method = RequestMethod.DELETE, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/" + DELETE_PATH, method = RequestMethod.DELETE, consumes = "application/octet-stream")
 	public void processDelete(@PathVariable("type") String modelType,
 	                          @RequestParam List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);

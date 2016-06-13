@@ -15,6 +15,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfNull;
 
 /**
@@ -52,8 +53,11 @@ public final class GeoPlace extends DescribedDatabaseModel
 	/**
 	 * Parent {@link GeoPlace} that is related to/contains this place.
 	 */
-	@Index
+	@Index({ IfNotNull.class })
+	@IgnoreSave({ IfNull.class })
 	private Key<GeoPlace> parent;
+
+	// TODO: Add address and other related info?
 
 	public GeoPlace() {}
 

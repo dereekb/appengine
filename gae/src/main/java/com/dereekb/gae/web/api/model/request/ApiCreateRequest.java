@@ -15,6 +15,7 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
  * @author dereekb
  *
  * @param <I>
+ *            model dto type
  */
 public final class ApiCreateRequest<I> extends ApiRequest<List<I>> {
 
@@ -28,11 +29,11 @@ public final class ApiCreateRequest<I> extends ApiRequest<List<I>> {
 	}
 
 	public List<I> getTemplates() {
-		return this.data;
+		return this.getData();
 	}
 
 	public void setTemplates(List<I> templates) {
-		this.data = templates;
+		this.setData(templates);
 	}
 
 	public CreateRequestOptions getOptions() {
@@ -41,6 +42,11 @@ public final class ApiCreateRequest<I> extends ApiRequest<List<I>> {
 
 	public void setOptions(CreateRequestOptions options) {
 		this.options = options;
+	}
+
+	@Override
+	public String toString() {
+		return "ApiCreateRequest [options=" + this.options + "]";
 	}
 
 }

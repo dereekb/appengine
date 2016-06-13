@@ -28,19 +28,19 @@ public class SimplePathImpl
 		this.divider = DEFAULT_DIVIDER;
 	}
 
-	public SimplePathImpl(String path) {
+	public SimplePathImpl(String path) throws IllegalArgumentException {
 		this(PathUtility.getComponents(path, DEFAULT_DIVIDER));
 	}
 
-	public SimplePathImpl(String path, String divider) {
+	public SimplePathImpl(String path, String divider) throws IllegalArgumentException {
 		this(PathUtility.getComponents(path, divider), divider);
 	}
 
-	public SimplePathImpl(List<String> pathComponents) {
+	public SimplePathImpl(List<String> pathComponents) throws IllegalArgumentException {
 		this(pathComponents, null);
 	}
 
-	public SimplePathImpl(List<String> pathComponents, String divider) {
+	public SimplePathImpl(List<String> pathComponents, String divider) throws IllegalArgumentException {
 		if (divider == null) {
 			divider = DEFAULT_DIVIDER;
 		}

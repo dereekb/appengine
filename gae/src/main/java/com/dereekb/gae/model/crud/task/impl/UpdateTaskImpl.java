@@ -10,6 +10,7 @@ import com.dereekb.gae.model.crud.task.config.UpdateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.UpdateTaskConfigImpl;
 import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
@@ -25,6 +26,13 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 
 	private UpdateTaskDelegate<T> delegate;
 	private IterableTask<T> saveTask;
+
+	private TaskRequestSender<T> reviewTaskSender;
+
+	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask, TaskRequestSender<T> sender) {
+		this(delegate, saveTask);
+		this.setReviewTaskSender(sender);
+	}
 
 	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask) {
 		super(new UpdateTaskConfigImpl());
@@ -48,6 +56,14 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 		this.saveTask = saveTask;
 	}
 
+	public TaskRequestSender<T> getReviewTaskSender() {
+		return this.reviewTaskSender;
+	}
+
+	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) {
+		this.reviewTaskSender = reviewTaskSender;
+	}
+
 	// MARK: Update Task
 	@Override
 	public void doTask(Iterable<UpdatePair<T>> input,
@@ -57,6 +73,10 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 		List<UpdatePair<T>> pairs = UpdatePair.pairsWithResults(input);
 		List<T> targets = UpdatePair.getSources(pairs);
 		this.saveTask.doTask(targets);
+
+		if (this.reviewTaskSender != null) {
+			this.reviewTaskSender.sendTasks(targets);
+		}
 	}
 
 	@Override

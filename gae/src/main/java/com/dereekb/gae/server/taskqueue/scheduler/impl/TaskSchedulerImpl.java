@@ -31,6 +31,10 @@ public class TaskSchedulerImpl
 		this(filter, new TaskRequestConverterImpl());
 	}
 
+	public TaskSchedulerImpl(String queue, Filter<TaskRequest> filter) {
+		this(queue, filter, new TaskRequestConverterImpl());
+	}
+
 	public TaskSchedulerImpl(Filter<TaskRequest> filter, TaskRequestConverter converter) {
 		this(null, filter, converter);
 	}

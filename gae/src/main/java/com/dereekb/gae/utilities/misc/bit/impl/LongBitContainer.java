@@ -1,5 +1,8 @@
 package com.dereekb.gae.utilities.misc.bit.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.dereekb.gae.utilities.misc.bit.BitContainer;
 import com.dereekb.gae.utilities.misc.bit.BitFocus;
 import com.dereekb.gae.utilities.misc.bit.BitMasker;
@@ -210,6 +213,52 @@ public class LongBitContainer
 	// MARK: Other
 	public static Long bitsFromInteger(Integer value) {
 		return value.longValue() & INTEGER_BIT_MASK;
+	}
+
+	/**
+	 * Returns the hex index of every element that is active.
+	 *
+	 * @param limit
+	 *            left-limit on the bits to read.
+	 * @return {@link List} of the hex index of every active element.
+	 */
+	public List<String> getActiveHexIndexes(Integer limit) {
+		List<Byte> indexes = this.getActiveIndexes(limit);
+		List<String> hexCodes = new ArrayList<String>();
+
+		for (Byte index : indexes) {
+			String hexCode = Integer.toHexString(index);
+			hexCodes.add(hexCode);
+		}
+
+		return hexCodes;
+	}
+
+	/**
+	 * Returns the index of every element that is active.
+	 *
+	 * @param limit
+	 *            left-limit on the bits to read.
+	 * @return {@link List} of all active elements.
+	 */
+	public List<Byte> getActiveIndexes(Integer limit) {
+		if (limit == null || limit > BITS_IN_LONG) {
+			limit = BITS_IN_LONG;
+		}
+
+		List<Byte> indexes = new ArrayList<Byte>();
+
+		if (this.value != 0L) {
+			for (byte i = 0; i < limit; i += 1) {
+				boolean active = this.getBit(i);
+
+				if (active) {
+					indexes.add(i);
+				}
+			}
+		}
+
+		return indexes;
 	}
 
 	@Override

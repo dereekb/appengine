@@ -13,7 +13,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appengine.target.version>1.9.30</appengine.target.version>
+		<appengine.target.version>1.9.38</appengine.target.version>
 		<spring.target.version>4.2.4.RELEASE</spring.target.version>
 		<spring-security.target.version>4.0.3.RELEASE</spring-security.target.version>
 		<jackson.target.version>2.5.3</jackson.target.version>
