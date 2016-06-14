@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.web.taskqueue.controller.crud.exception.UnregisteredEditTypeException;
 
 /**
@@ -37,7 +38,7 @@ public final class TaskQueueEditController {
 	public TaskQueueEditController(TypeModelKeyConverter keyTypeConverter,
 	        Map<String, TaskQueueEditControllerEntry> entries) {
 		this.keyTypeConverter = keyTypeConverter;
-		this.entries = entries;
+		this.setEntries(entries);
 	}
 
 	public TypeModelKeyConverter getKeyTypeConverter() {
@@ -53,13 +54,13 @@ public final class TaskQueueEditController {
 	}
 
 	public void setEntries(Map<String, TaskQueueEditControllerEntry> entries) {
-		this.entries = entries;
+		this.entries = new CaseInsensitiveMap<TaskQueueEditControllerEntry>(entries);
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "/{type}/" + CREATE_PATH, method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewCreate(@PathVariable("type") String modelType,
-	                         @RequestParam List<String> identifiers) {
+	                         @RequestParam("keys") List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
 		entry.reviewCreate(keys);
@@ -68,7 +69,7 @@ public final class TaskQueueEditController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "/{type}/" + UPDATE_PATH, method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewUpdate(@PathVariable("type") String modelType,
-	                         @RequestParam List<String> identifiers) {
+	                         @RequestParam("keys") List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
 		entry.reviewUpdate(keys);
@@ -77,7 +78,7 @@ public final class TaskQueueEditController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "/{type}/" + DELETE_PATH, method = RequestMethod.DELETE, consumes = "application/octet-stream")
 	public void processDelete(@PathVariable("type") String modelType,
-	                          @RequestParam List<String> identifiers) {
+	                          @RequestParam("keys") List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
 		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
 		entry.processDelete(keys);
@@ -87,7 +88,7 @@ public final class TaskQueueEditController {
 		TaskQueueEditControllerEntry entry = this.entries.get(modelType);
 
 		if (entry == null) {
-			throw new UnregisteredEditTypeException();
+			throw new UnregisteredEditTypeException(modelType);
 		}
 
 		return entry;

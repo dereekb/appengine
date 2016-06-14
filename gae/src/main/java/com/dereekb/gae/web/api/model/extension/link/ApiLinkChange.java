@@ -44,6 +44,27 @@ public class ApiLinkChange {
 	@Max(50)
 	private Set<String> targetKeys;
 
+	public ApiLinkChange() {}
+
+	protected ApiLinkChange(String action, String primaryKey, String linkName) {
+		this.setAction(action);
+		this.setPrimaryKey(primaryKey);
+		this.setLinkName(linkName);
+	}
+
+	public ApiLinkChange(String action, String primaryKey, String linkName, String singleTargetKey) {
+		this(action, primaryKey, linkName);
+
+		Set<String> targetKeys = new HashSet<String>();
+		targetKeys.add(singleTargetKey);
+		this.setTargetKeys(targetKeys);
+	}
+
+	public ApiLinkChange(String action, String primaryKey, String linkName, Set<String> targetKeys) {
+		this(action, primaryKey, linkName);
+		this.setTargetKeys(targetKeys);
+	}
+
 	public String getAction() {
 		return this.action;
 	}

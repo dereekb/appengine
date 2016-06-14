@@ -22,10 +22,12 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskRequest, TaskOptions>
         implements TaskRequestConverter {
 
+	private static final SimplePath DEFAULT_RESOURCE = new SimplePathImpl("/taskqueue");
+
 	/**
 	 * The base system SimplePath/resource to submit the task to.
 	 */
-	private SimplePath resource = new SimplePathImpl("/taskqueue");
+	private SimplePath resource = DEFAULT_RESOURCE;
 
 	/**
 	 * Default method type to submit request as.
@@ -41,7 +43,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 	private TaskRequestTiming timings;
 
 	public TaskRequestConverterImpl() {
-		this(null, null, null);
+		this(DEFAULT_RESOURCE, null, null);
 	}
 
 	public TaskRequestConverterImpl(SimplePath resource) {

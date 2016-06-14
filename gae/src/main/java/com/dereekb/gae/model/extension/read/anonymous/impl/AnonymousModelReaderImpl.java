@@ -12,6 +12,7 @@ import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.read.anonymous.AnonymousModelReader;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * {@link AnonymousModelReader} implementation. Uses a {@link Map} of
@@ -30,7 +31,7 @@ public class AnonymousModelReaderImpl
 	}
 
 	public void setEntries(Map<String, ReadService<? extends UniqueModel>> entries) {
-		this.entries = entries;
+		this.entries = new CaseInsensitiveMap<ReadService<? extends UniqueModel>>(entries);
 	}
 
 	@Override

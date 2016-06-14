@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
@@ -30,6 +29,7 @@ import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceEntry;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * Abstract implementation of different {@link LinkSystem} related elements.
@@ -151,11 +151,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	}
 
 	public final void setReverseLinkNames(Map<String, String> reverseLinkNames) {
-		this.reverseLinkNames = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
-
-		if (reverseLinkNames != null) {
-			this.reverseLinkNames.putAll(reverseLinkNames);
-		}
+		this.reverseLinkNames = new CaseInsensitiveMap<String>(reverseLinkNames);
 	}
 
 	@Override

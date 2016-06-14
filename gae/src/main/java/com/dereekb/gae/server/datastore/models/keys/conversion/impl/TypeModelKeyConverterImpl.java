@@ -3,13 +3,13 @@ package com.dereekb.gae.server.datastore.models.keys.conversion.impl;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * Converter used for converting {@link String} identifiers to their
@@ -29,7 +29,7 @@ public class TypeModelKeyConverterImpl
 	private Map<String, ModelKeyType> map;
 
 	public TypeModelKeyConverterImpl(Map<String, ModelKeyType> map) {
-		this.map = map;
+		this.setMap(map);
 	}
 
 	public final Map<String, ModelKeyType> getMap() {
@@ -37,11 +37,7 @@ public class TypeModelKeyConverterImpl
 	}
 
 	public final void setMap(Map<String, ModelKeyType> map) {
-		this.map = new TreeMap<String, ModelKeyType>(String.CASE_INSENSITIVE_ORDER);
-
-		if (map != null) {
-			this.map.putAll(map);
-		}
+		this.map = new CaseInsensitiveMap<ModelKeyType>(map);
 	}
 
 	// MARK: Conversions

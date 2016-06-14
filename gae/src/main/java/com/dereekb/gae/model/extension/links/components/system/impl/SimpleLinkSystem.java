@@ -1,7 +1,6 @@
 package com.dereekb.gae.model.extension.links.components.system.impl;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +11,7 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnregisteredLinkTypeException;
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * Simple implementation of {@link LinkSystem}.
@@ -23,7 +23,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class SimpleLinkSystem
         implements LinkSystem {
 
-	private Map<String, LinkSystemEntry> entries = new HashMap<String, LinkSystemEntry>();
+	private final Map<String, LinkSystemEntry> entries = new CaseInsensitiveMap<LinkSystemEntry>();
 
 	public SimpleLinkSystem() {}
 

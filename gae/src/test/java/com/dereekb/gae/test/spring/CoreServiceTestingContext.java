@@ -2,18 +2,27 @@ package com.dereekb.gae.test.spring;
 
 import java.util.Map;
 
+import javax.servlet.ServletException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpMethod;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.google.appengine.api.taskqueue.dev.LocalTaskQueueCallback;
 import com.google.appengine.api.urlfetch.URLFetchServicePb.URLFetchRequest;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 
@@ -39,10 +48,14 @@ public class CoreServiceTestingContext {
 	protected ApplicationContext applicationContext;
 
 	@Autowired
+	protected LocalTaskQueueTestConfig taskQueueTestConfig;
+
+	@Autowired
 	protected LocalServiceTestHelper helper;
 
 	@Before
 	public void setUp() {
+		this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
 		this.helper.setUp();
 		this.session = ObjectifyService.begin();
 	}
@@ -69,21 +82,106 @@ public class CoreServiceTestingContext {
 		this.helper = helper;
 	}
 
-	public class ApiTaskqueueCallback
+	public static class TestLocalTaskQueueCallback
 	        implements LocalTaskQueueCallback {
 
 		private static final long serialVersionUID = 1L;
 
+		private static String URL_PREFIX = "http://localhost:8080";
+
+		public static MockMvc mockMvc;
+
+		public static LocalTaskQueueTestConfig.TaskCountDownLatch countDownLatch = new LocalTaskQueueTestConfig.TaskCountDownLatch(
+		        0);
+
 		@Override
 		public int execute(URLFetchRequest arg0) {
-			return 0;
+			this.increaseCounter();
+			MockHttpServletRequestBuilder requestBuilder = this.buildRequest(arg0);
+
+			// Start Objectify service for the thread.
+			Closeable ofy = ObjectifyService.begin();
+
+			try {
+				ResultActions resultActions = mockMvc.perform(requestBuilder);
+				MockHttpServletResponse response = resultActions.andReturn().getResponse();
+				int status = response.getStatus();
+				String error = response.getErrorMessage();
+				return status;
+			} catch (ServletException e) {
+				e.printStackTrace();
+				return 500;
+			} catch (Exception e) {
+				return 0;
+			} finally {
+				ofy.close();
+				this.decreaseCounter();
+			}
+		}
+
+		private void increaseCounter() {
+			Long count = countDownLatch.getCount() + 1;
+			countDownLatch.reset(count.intValue());
+		}
+
+		private void decreaseCounter() {
+			countDownLatch.countDown();
+		}
+
+		private MockHttpServletRequestBuilder buildRequest(URLFetchRequest arg0) {
+			HttpMethod httpMethod = null;
+
+			switch (arg0.getMethod()) {
+				case DELETE:
+					httpMethod = HttpMethod.DELETE;
+					break;
+				case GET:
+					httpMethod = HttpMethod.GET;
+					break;
+				case HEAD:
+					httpMethod = HttpMethod.HEAD;
+					break;
+				case PATCH:
+					httpMethod = HttpMethod.PATCH;
+					break;
+				case POST:
+					httpMethod = HttpMethod.POST;
+					break;
+				case PUT:
+					httpMethod = HttpMethod.PUT;
+					break;
+				default:
+					break;
+			}
+
+			String url = arg0.getUrl();
+			url = url.replaceFirst(URL_PREFIX, "");
+
+			MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.request(httpMethod, url);
+			return requestBuilder;
 		}
 
 		@Override
 		public void initialize(Map<String, String> arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		public static void waitUntilComplete() {
+
+			// TODO: Loop until all tasks are completed.
+
+			try {
+				Thread.sleep(100);
+				countDownLatch.await();
+				System.out.println("Stopped waiting.");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
 		}
 
 	}
+
 
 }
