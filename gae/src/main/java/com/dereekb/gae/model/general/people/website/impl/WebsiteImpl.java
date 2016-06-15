@@ -83,7 +83,6 @@ public class WebsiteImpl
 	}
 
 	// MARK: Website
-
 	@Override
 	public String getWebsiteTitle() {
 		return this.title;

@@ -2,12 +2,18 @@ package com.dereekb.gae.model.general.people.website;
 
 import java.io.Serializable;
 
+import com.dereekb.gae.model.general.people.website.impl.DecodedWebsiteAddress;
+import com.dereekb.gae.model.general.people.website.impl.ServiceWebsiteImpl;
+
 /**
- * Represents an encoded {@link Website} with a specified
+ * Represents an <u>encoded</u> {@link Website} with a specified
  * {@link WebsiteAddressType}.
  *
  * @author dereekb
- *
+ * @see {@link ServiceWebsiteImpl} for an un-encoded {@link Website}
+ *      implementation.
+ * @see {@link DecodedWebsiteAddress}
+ * @see {@link WebsiteAddressDecoder}
  */
 public class WebsiteAddress
         implements Serializable {

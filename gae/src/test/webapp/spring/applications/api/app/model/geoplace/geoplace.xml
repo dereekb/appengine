@@ -35,7 +35,7 @@
 	<alias name="geoPlaceRegistry" alias="geoPlaceAsyncConfiguredDeleter" />
 
 	<bean id="geoPlaceSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.ConfiguredSetterImpl">
+		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1" value="false" />
 	</bean>

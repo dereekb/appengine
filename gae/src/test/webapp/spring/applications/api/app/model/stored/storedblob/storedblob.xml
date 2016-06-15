@@ -34,7 +34,7 @@
 	<alias name="storedBlobRegistry" alias="storedBlobAsyncConfiguredSetter" />
 
 	<bean id="storedBlobSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.ConfiguredSetterImpl">
+		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
 		<constructor-arg index="0" ref="storedBlobRegistry" />
 		<constructor-arg index="1" value="false" />
 	</bean>

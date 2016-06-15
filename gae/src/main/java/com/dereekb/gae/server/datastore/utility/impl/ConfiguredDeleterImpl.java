@@ -1,7 +1,8 @@
-package com.dereekb.gae.server.datastore.utility;
+package com.dereekb.gae.server.datastore.utility.impl;
 
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.utility.ConfiguredDeleter;
 
 /**
  * {@link ConfiguredDeleter} implementation.

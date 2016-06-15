@@ -34,7 +34,7 @@
 	<alias name="storedImageRegistry" alias="storedImageAsyncConfiguredSetter" />
 
 	<bean id="storedImageSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.ConfiguredSetterImpl">
+		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
 		<constructor-arg index="0" ref="storedImageRegistry" />
 		<constructor-arg index="1" value="false" />
 	</bean>

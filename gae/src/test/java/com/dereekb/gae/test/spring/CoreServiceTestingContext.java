@@ -62,8 +62,8 @@ public class CoreServiceTestingContext {
 
 	@After
 	public void tearDown() {
-		this.helper.tearDown();
 		this.session.close();
+		this.helper.tearDown();
 	}
 
 	public ApplicationContext getApplicationContext() {
@@ -88,6 +88,7 @@ public class CoreServiceTestingContext {
 		private static final long serialVersionUID = 1L;
 
 		private static String URL_PREFIX = "http://localhost:8080";
+		private static boolean LOG_EVENTS = true;
 
 		public static MockMvc mockMvc;
 
@@ -97,6 +98,11 @@ public class CoreServiceTestingContext {
 		@Override
 		public int execute(URLFetchRequest arg0) {
 			this.increaseCounter();
+
+			if (LOG_EVENTS) {
+				System.out.println(String.format("Executing taskqueue task %s.", arg0.getUrl()));
+			}
+
 			MockHttpServletRequestBuilder requestBuilder = this.buildRequest(arg0);
 
 			// Start Objectify service for the thread.
@@ -174,7 +180,7 @@ public class CoreServiceTestingContext {
 			try {
 				Thread.sleep(100);
 				countDownLatch.await();
-				System.out.println("Stopped waiting.");
+				System.out.println("Stopped waiting for TaskQueue operation.");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
