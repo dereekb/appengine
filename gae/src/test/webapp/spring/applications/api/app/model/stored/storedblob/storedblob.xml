@@ -39,6 +39,19 @@
 		<constructor-arg index="1" value="false" />
 	</bean>
 
+	<!-- Update Scheduler -->
+	<bean id="storedBlobScheduleUpdateReview" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
+		<constructor-arg index="0" ref="storedBlobType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="storedBlobUpdateConfiguredSetter" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
+		<constructor-arg index="0" ref="storedBlobScheduleUpdateReview" />
+		<constructor-arg index="1" ref="storedBlobRegistry" />
+	</bean>
+
 	<!-- Imported -->
 	<import resource="test.xml" />
 	<import resource="crud.xml" />

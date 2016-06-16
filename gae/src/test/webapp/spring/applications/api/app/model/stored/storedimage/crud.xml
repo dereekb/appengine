@@ -61,7 +61,8 @@
 		<constructor-arg index="0" ref="storedImageCreateTaskDelegate" />
 		<constructor-arg index="1" ref="storedImageSynchronousSaveTask" />
 		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+			<bean
+				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
 				<constructor-arg index="0" ref="storedImageType" />
 				<constructor-arg index="1" ref="taskScheduler" />
 			</bean>
@@ -86,12 +87,7 @@
 		lazy-init="true">
 		<constructor-arg index="0" ref="storedImageAttributeUpdater" />
 		<constructor-arg index="1" ref="storedImageAsyncSaveTask" />
-		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
-				<constructor-arg index="0" ref="storedImageType" />
-				<constructor-arg index="1" ref="taskScheduler" />
-			</bean>
-		</constructor-arg>
+		<constructor-arg index="2" ref="storedImageScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedImageAttributeUpdater"

@@ -18,7 +18,7 @@
 	<bean id="geoPlaceLinkSystem" lazy-init="true"
 		class="com.dereekb.gae.model.geo.place.link.GeoPlaceLinkSystemEntry">
 		<constructor-arg index="0" ref="geoPlaceCrudService" />
-		<constructor-arg index="1" ref="geoPlaceAsyncConfiguredSetter" />
+		<constructor-arg index="1" ref="geoPlaceUpdateConfiguredSetter" />
 		<constructor-arg index="2">
 			<list>
 				<bean class="com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo">

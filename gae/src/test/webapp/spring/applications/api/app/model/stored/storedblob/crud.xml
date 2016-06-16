@@ -61,7 +61,8 @@
 		<constructor-arg index="0" ref="storedBlobCreateTaskDelegate" />
 		<constructor-arg index="1" ref="storedBlobSynchronousSaveTask" />
 		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+			<bean
+				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
 				<constructor-arg index="0" ref="storedBlobType" />
 				<constructor-arg index="1" ref="taskScheduler" />
 			</bean>
@@ -86,12 +87,7 @@
 		lazy-init="true">
 		<constructor-arg index="0" ref="storedBlobAttributeUpdater" />
 		<constructor-arg index="1" ref="storedBlobAsyncSaveTask" />
-		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
-				<constructor-arg index="0" ref="storedBlobType" />
-				<constructor-arg index="1" ref="taskScheduler" />
-			</bean>
-		</constructor-arg>
+		<constructor-arg index="2" ref="storedBlobScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedBlobAttributeUpdater"

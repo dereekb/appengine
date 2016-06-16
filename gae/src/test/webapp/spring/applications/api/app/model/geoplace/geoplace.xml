@@ -40,6 +40,19 @@
 		<constructor-arg index="1" value="false" />
 	</bean>
 
+	<!-- Update Scheduler -->
+	<bean id="geoPlaceScheduleUpdateReview" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
+		<constructor-arg index="0" ref="geoPlaceType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="geoPlaceUpdateConfiguredSetter" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
+		<constructor-arg index="0" ref="geoPlaceScheduleUpdateReview" />
+		<constructor-arg index="1" ref="geoPlaceRegistry" />
+	</bean>
+	
 	<!-- Imported -->
 	<import resource="test.xml" />
 	<import resource="crud.xml" />

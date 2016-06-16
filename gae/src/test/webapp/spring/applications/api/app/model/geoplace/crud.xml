@@ -61,7 +61,8 @@
 		<constructor-arg index="0" ref="geoPlaceCreateTaskDelegate" />
 		<constructor-arg index="1" ref="geoPlaceSynchronousSaveTask" />
 		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+			<bean
+				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
 				<constructor-arg index="0" ref="geoPlaceType" />
 				<constructor-arg index="1" ref="taskScheduler" />
 			</bean>
@@ -86,12 +87,7 @@
 		lazy-init="true">
 		<constructor-arg index="0" ref="geoPlaceAttributeUpdater" />
 		<constructor-arg index="1" ref="geoPlaceAsyncSaveTask" />
-		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
-				<constructor-arg index="0" ref="geoPlaceType" />
-				<constructor-arg index="1" ref="taskScheduler" />
-			</bean>
-		</constructor-arg>
+		<constructor-arg index="2" ref="geoPlaceScheduleUpdateReview" />
 	</bean>
 
 	<bean id="geoPlaceAttributeUpdater"

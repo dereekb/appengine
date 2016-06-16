@@ -19,7 +19,7 @@
 		class="com.dereekb.gae.model.stored.blob.link.StoredBlobLinkSystemEntry">
 		<constructor-arg index="0" ref="storedBlobCrudService" />
 		<constructor-arg index="1"
-			ref="storedBlobAsyncConfiguredSetter" />
+			ref="storedBlobUpdateConfiguredSetter" />
 		<!-- Derivative Links -->
 		<constructor-arg index="2">
 			<list>
