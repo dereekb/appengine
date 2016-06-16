@@ -2,9 +2,8 @@ package com.dereekb.gae.web.api.model.request;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.CreateRequestOptionsImpl;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 
 /**
@@ -19,8 +18,7 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
  */
 public final class ApiCreateRequest<I> extends ApiRequest<List<I>> {
 
-	@Valid
-	private CreateRequestOptions options;
+	private boolean atomic = true;
 
 	public ApiCreateRequest() {}
 
@@ -37,16 +35,7 @@ public final class ApiCreateRequest<I> extends ApiRequest<List<I>> {
 	}
 
 	public CreateRequestOptions getOptions() {
-		return this.options;
-	}
-
-	public void setOptions(CreateRequestOptions options) {
-		this.options = options;
-	}
-
-	@Override
-	public String toString() {
-		return "ApiCreateRequest [options=" + this.options + "]";
+		return new CreateRequestOptionsImpl(this.atomic);
 	}
 
 }

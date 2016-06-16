@@ -23,6 +23,8 @@ public interface LinkService {
 	 *             if any other exceptions occur during the changes. No changes
 	 *             are saved.
 	 */
-	public void updateLinks(LinkServiceRequest request) throws LinkSystemChangesException, AtomicOperationException;
+	public LinkServiceResponse updateLinks(LinkServiceRequest request)
+	        throws LinkSystemChangesException,
+	            AtomicOperationException;
 
 }

@@ -20,6 +20,7 @@ import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
  * Utility class for processing {@link LinkSystemChange} changes.
@@ -91,6 +92,31 @@ public class LinkSystemChangesRunner {
 		}
 
 		return failures;
+	}
+
+	public boolean hasMissingKeys() {
+		boolean hasMissing = false;
+
+		for (LinkChangesRunnerInstance instance : this.instances.values()) {
+			if (instance.missingKeys.isEmpty() == false) {
+				hasMissing = true;
+				break;
+			}
+		}
+
+		return hasMissing;
+	}
+
+	public HashMapWithSet<String, ModelKey> getMissing() {
+		HashMapWithSet<String, ModelKey> missing = new HashMapWithSet<String, ModelKey>();
+
+		for (LinkChangesRunnerInstance instance : this.instances.values()) {
+			if (instance.missingKeys.isEmpty() == false) {
+				missing.addAll(instance.type, instance.missingKeys);
+			}
+		}
+
+		return missing;
 	}
 
 	// Internal

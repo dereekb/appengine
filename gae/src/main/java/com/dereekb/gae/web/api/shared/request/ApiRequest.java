@@ -11,12 +11,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author dereekb
  *
  * @param <I>
+ *            data type
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiRequest<I> {
 
-	@NotNull
 	@Valid
+	@NotNull
 	protected I data;
 
 	public ApiRequest() {}
@@ -29,7 +30,11 @@ public class ApiRequest<I> {
 		return this.data;
 	}
 
-	public void setData(I data) {
+	public void setData(I data) throws IllegalArgumentException {
+		if (data == null) {
+			throw new IllegalArgumentException("Data cannot be null.");
+		}
+
 		this.data = data;
 	}
 

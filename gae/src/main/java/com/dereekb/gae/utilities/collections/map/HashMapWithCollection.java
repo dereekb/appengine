@@ -112,6 +112,36 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 		return list.iterator();
 	}
 
+	/**
+	 * Creates a {@link Map} containing all values.
+	 * <p>
+	 * The internal collections are copied.
+	 *
+	 * @return {@link Map}. Never {@code null}.
+	 */
+	public Map<K, C> getMap() {
+		Map<K, C> copy = new HashMap<K, C>();
+
+		for (K key : this.keySet()) {
+			C collection = this.map.get(key);
+			C collectionCopy = this.makeCollection();
+			collectionCopy.addAll(collection);
+			copy.put(key, collectionCopy);
+		}
+
+		return new HashMap<K, C>(this.map);
+	}
+
+	/**
+	 * Returns the raw internal map.
+	 *
+	 * @return {@link Map}. Never {@code null}.
+	 * @see #getMap() for safer usage.
+	 */
+	public Map<K, C> getRawMap() {
+		return this.map;
+	}
+
 	// MARK: HashMapWithCollection
 
 	/**

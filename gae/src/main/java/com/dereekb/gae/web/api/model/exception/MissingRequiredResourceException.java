@@ -23,12 +23,12 @@ public class MissingRequiredResourceException extends RuntimeException {
 	public String message;
 
 	public MissingRequiredResourceException(List<String> resources) {
-		this.resources = resources;
+		this(resources, null);
 	}
 
 	public MissingRequiredResourceException(List<String> resources, String message) {
-		this.resources = resources;
-		this.message = message;
+		this.setResources(resources);
+		this.setMessage(message);
 	}
 
 	public List<String> getResources() {

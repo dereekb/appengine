@@ -17,19 +17,26 @@ public abstract class AtomicRequestOptionsImpl
 	private boolean atomic;
 
 	public AtomicRequestOptionsImpl() {
-		this.atomic = true;
+		this(true);
 	}
 
 	public AtomicRequestOptionsImpl(boolean atomic) {
 		this.atomic = atomic;
 	}
 
-	public boolean isAtomic() {
+	@Override
+    public boolean isAtomic() {
 		return this.atomic;
 	}
 
-	public void setAtomic(boolean atomic) {
+	@Override
+    public void setAtomic(boolean atomic) {
 		this.atomic = atomic;
+	}
+
+	@Override
+	public String toString() {
+		return "AtomicRequestOptionsImpl [atomic=" + this.atomic + "]";
 	}
 
 }

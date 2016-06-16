@@ -15,6 +15,7 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController;
+import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
@@ -35,6 +36,11 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 	}
 
 	protected void performRequest(ApiRequest<List<ApiLinkChange>> request) {
+		ApiLinkChangeRequest changeRequest = new ApiLinkChangeRequest(request.getData());
+		this.performRequest(changeRequest);
+	}
+
+	protected void performRequest(ApiLinkChangeRequest request) {
 		try {
 			ApiResponse response = this.controller.link(this.modelType, request);
 			Assert.assertTrue(response.getResponseSuccess());

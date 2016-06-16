@@ -26,6 +26,7 @@ public class AtomicOperationFailureResolver {
 		switch (reason) {
 			case EXCEPTION:
 				throw e;
+			case UNSPECIFIED:
 			case UNAVAILABLE:
 				List<String> unavailable = e.getUnavailableStringKeys();
 				throw new MissingRequiredResourceException(unavailable);

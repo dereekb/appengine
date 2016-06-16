@@ -20,6 +20,11 @@ public enum AtomicOperationExceptionReason {
 	/**
 	 * The operation couldn't be completed due to filtering.
 	 */
-	FILTERED
+	FILTERED,
+
+	/**
+	 * Reason is unspecified.
+	 */
+	UNSPECIFIED
 
 }
