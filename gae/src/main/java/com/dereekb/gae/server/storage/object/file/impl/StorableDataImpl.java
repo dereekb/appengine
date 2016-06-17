@@ -18,8 +18,8 @@ public class StorableDataImpl
 	private byte[] fileData;
 
 	public StorableDataImpl(StorableFile file, byte[] bytes) throws IllegalArgumentException {
-		this.file = file;
-		this.fileData = bytes;
+		this.setFile(file);
+		this.setFileData(bytes);
 	}
 
 	public StorableFile getFile() {
@@ -49,7 +49,11 @@ public class StorableDataImpl
 		return this.fileData;
 	}
 
-	public void setFileData(byte[] fileData) {
+	public void setFileData(byte[] fileData) throws IllegalArgumentException {
+		if (fileData == null) {
+			throw new IllegalArgumentException("File data cannot be null.");
+		}
+
 		this.fileData = fileData;
 	}
 

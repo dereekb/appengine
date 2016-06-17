@@ -11,7 +11,7 @@
 
 	<!-- Upload URL -->
 	<bean id="baseFileUploadUrl" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="/api/upload" />
+		<constructor-arg index="0" value="/upload" />
 	</bean>
 
 	<bean id="fileUploadBucket" class="java.lang.String" scope="singleton">
@@ -19,7 +19,7 @@
 	</bean>
 
 	<!-- Link -->
-	<bean id="uploadExtensionApiController" lazy-init="true" scope="singleton"
+	<bean id="uploadApiExtensionController" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.web.api.model.extension.upload.UploadApiExtensionController">
 		<constructor-arg index="0" ref="fileUploadUrlFactory" />
 		<constructor-arg index="1" ref="fileUploadHandler" />

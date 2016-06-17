@@ -169,14 +169,10 @@ public class CoreServiceTestingContext {
 
 		@Override
 		public void initialize(Map<String, String> arg0) {
-			// TODO Auto-generated method stub
 
 		}
 
 		public static void waitUntilComplete() {
-
-			// TODO: Loop until all tasks are completed.
-
 			try {
 				Thread.sleep(100);
 				countDownLatch.await();

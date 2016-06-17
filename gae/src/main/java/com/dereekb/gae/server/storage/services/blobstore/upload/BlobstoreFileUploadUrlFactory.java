@@ -40,7 +40,6 @@ public class BlobstoreFileUploadUrlFactory
 		this.uploadBucket = uploadBucket;
 	}
 
-
 	private UploadOptions createUploadOptions() {
 		UploadOptions options = null;
 
@@ -61,17 +60,16 @@ public class BlobstoreFileUploadUrlFactory
 		return options;
 	}
 
-	private String makeForwardUrl(String data) {
-		return String.format(this.urlFormat, this.baseUrl, data);
-	}
-
 	// MARK: FileUploadUrlFactory
 	@Override
 	public String makeUploadUrl(String data) {
 		UploadOptions options = this.createUploadOptions();
 		String forwardUrl = this.makeForwardUrl(data);
-		String uploadUrl = this.blobstoreService.createUploadUrl(forwardUrl, options);
-		return uploadUrl;
+		return this.blobstoreService.createUploadUrl(forwardUrl, options);
+	}
+
+	private String makeForwardUrl(String data) {
+		return String.format(this.urlFormat, this.baseUrl, data);
 	}
 
 	@Override

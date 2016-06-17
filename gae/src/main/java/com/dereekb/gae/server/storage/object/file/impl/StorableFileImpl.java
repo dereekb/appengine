@@ -6,7 +6,7 @@ import com.dereekb.gae.server.storage.object.folder.StorableFolder;
 
 /**
  * Basic storage file that implements the {@link StorableFile} interface.
- *
+ * <p>
  * It contains a filename and the full filePath to that file.
  *
  * @author dereekb

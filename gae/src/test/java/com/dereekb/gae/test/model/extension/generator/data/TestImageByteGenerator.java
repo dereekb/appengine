@@ -19,15 +19,14 @@ public class TestImageByteGenerator
 	public TestImageByteGenerator() {}
 
 	public TestImageByteGenerator(Integer width, Integer height) {
-		this.width = width;
-		this.height = height;
+		this.setWidth(width);
+		this.setHeight(height);
 	}
 
 	public TestImageByteGenerator(Integer width, Integer height, Integer bufferSize, String imageType) {
-		this.width = width;
-		this.height = height;
-		this.bufferSize = bufferSize;
-		this.imageType = imageType;
+		this(width, height);
+		this.setBufferSize(bufferSize);
+		this.setImageType(imageType);
 	}
 
 	public Integer getWidth() {

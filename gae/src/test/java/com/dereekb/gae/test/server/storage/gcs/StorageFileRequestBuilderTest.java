@@ -3,7 +3,9 @@ package com.dereekb.gae.test.server.storage.gcs;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dereekb.gae.server.storage.object.file.StorableFile;
 import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
+import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
 import com.dereekb.gae.server.storage.object.file.options.StorableFileVisibility;
 import com.dereekb.gae.server.storage.object.file.options.impl.StorableFileCacheOptionsImpl;
 import com.dereekb.gae.server.storage.object.file.options.impl.StorableFileOptionsImpl;
@@ -30,7 +32,9 @@ public class StorageFileRequestBuilderTest {
 		options.setCacheOptions(cacheOptions);
 		builder.setDefaultOptions(options);
 
-		StorableContentImpl content = new StorableContentImpl(null, null, "test/test");
+		byte[] bytes = new byte[] { 1, 1, 1, 1 };
+		StorableFile file = new StorableFileImpl("x", "y");
+		StorableContentImpl content = new StorableContentImpl(file, bytes, "test/test");
 		GcsFileOptions builtOptions = builder.buildOptions(content);
 
 		String acl = builtOptions.getAcl();

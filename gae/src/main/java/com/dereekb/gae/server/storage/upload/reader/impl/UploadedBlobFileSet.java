@@ -110,7 +110,7 @@ public class UploadedBlobFileSet
 		return bytes;
 	}
 
-	//MARK: UploadedFileSet
+	// MARK: UploadedFileSet
 	@Override
 	public Set<String> getUploadedFileNames() {
 		HashMapWithList<String, UploadedBlobFile> map = this.getFileInfoMap();

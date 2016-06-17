@@ -177,8 +177,13 @@ public class GcsStorageSystem
 		return new GcsStorableFileRequestImpl(this.gcsBucket, file);
 	}
 
-	private GcsStorableFileSaveRequest makeGcsFileSaveRequest(StorableContent content) {
-		return this.saveRequestBuilder.buildRequest(this.gcsBucket, content);
+	public GcsStorableFileSaveRequest makeGcsFileSaveRequest(StorableContent content) {
+		return this.makeGcsFileSaveRequest(this.gcsBucket, content);
+	}
+
+	public GcsStorableFileSaveRequest makeGcsFileSaveRequest(String bucket,
+	                                                         StorableContent content) {
+		return this.saveRequestBuilder.buildRequest(bucket, content);
 	}
 
 	private byte[] readBytes(GcsStorableFileRequest request) throws IOException {

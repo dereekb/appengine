@@ -71,6 +71,8 @@ public class UploadApiExtensionController {
 		ApiResponseDataImpl urlData = new ApiResponseDataImpl("url");
 		urlData.setData(uploadUrl);
 
+		response.setData(urlData);
+
 		return response;
 	}
 
