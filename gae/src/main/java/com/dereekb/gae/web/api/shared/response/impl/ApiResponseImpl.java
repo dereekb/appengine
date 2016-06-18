@@ -9,6 +9,7 @@ import java.util.Map;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -27,7 +28,6 @@ public class ApiResponseImpl
 	/**
 	 * Whether or not the processed request was successful.
 	 */
-	@JsonInclude(Include.NON_DEFAULT)
 	protected Boolean success = true;
 
 	/**
@@ -58,6 +58,7 @@ public class ApiResponseImpl
 		this.success = success;
 	}
 
+	@JsonInclude(Include.NON_DEFAULT)
 	public Boolean getSuccess() {
 		return this.success;
 	}
@@ -130,31 +131,35 @@ public class ApiResponseImpl
 		this.errors.addAll(errors);
 	}
 
-	@Override
-	public String toString() {
-		return "ApiResponseImpl [success=" + this.success + ", data=" + this.data + ", included=" + this.included
-		        + ", errors=" + this.errors + "]";
-	}
-
 	// MARK: ApiResponseImpl
+	@JsonIgnore
 	@Override
 	public boolean getResponseSuccess() {
 		return this.success;
 	}
 
+	@JsonIgnore
 	@Override
 	public ApiResponseData getResponsePrimaryData() {
 		return this.data;
 	}
 
+	@JsonIgnore
 	@Override
 	public Map<String, ApiResponseData> getResponseIncludedData() {
 		return this.included;
 	}
 
+	@JsonIgnore
 	@Override
 	public List<ApiResponseError> getResponseErrors() {
 		return this.errors;
+	}
+
+	@Override
+	public String toString() {
+		return "ApiResponseImpl [success=" + this.success + ", data=" + this.data + ", included=" + this.included
+		        + ", errors=" + this.errors + "]";
 	}
 
 }

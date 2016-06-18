@@ -2,6 +2,7 @@ package com.dereekb.gae.web.api.shared.response.impl;
 
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -17,6 +18,7 @@ public class ApiResponseDataImpl
         implements ApiResponseData {
 
 	private String type;
+
 	private Object data;
 
 	public ApiResponseDataImpl() {}
@@ -55,11 +57,13 @@ public class ApiResponseDataImpl
 	}
 
 	// MARK: ApiResponseData
+	@JsonIgnore
 	@Override
 	public String getResponseDataType() {
 		return this.type;
 	}
 
+	@JsonIgnore
 	@Override
 	public Object getResponseData() {
 		return this.data;
