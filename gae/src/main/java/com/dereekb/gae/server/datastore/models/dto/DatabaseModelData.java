@@ -6,6 +6,7 @@ import java.util.Date;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -47,6 +48,7 @@ public abstract class DatabaseModelData
 		return this.identifier;
 	}
 
+	@JsonIgnore
 	public void setIdentifier(ModelKey key) {
 		this.identifier = ModelKey.readStringKey(key);
 	}
@@ -55,6 +57,7 @@ public abstract class DatabaseModelData
 		this.identifier = identifier;
 	}
 
+	@JsonIgnore
 	public void setIdentifier(Long identifier) {
 		String idString = null;
 
@@ -73,6 +76,7 @@ public abstract class DatabaseModelData
 		this.created = creationTime;
 	}
 
+	@JsonIgnore
 	public void setCreated(Date creationDate) {
 		Long time = null;
 

@@ -18,6 +18,8 @@ import com.thevisitcompany.gae.deprecated.web.response.ApiResponse;
 
 @ControllerAdvice
 public class ApiValidationExceptionHandler {
+	
+	
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -9,17 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.thevisitcompany.gae.deprecated.model.mod.cruds.exceptions.ForbiddenObjectChangesException;
-import com.thevisitcompany.gae.deprecated.model.mod.cruds.exceptions.UnavailableObjectsException;
-import com.thevisitcompany.gae.deprecated.web.api.models.support.links.ApiLinksChangeUnavailableException;
-import com.thevisitcompany.gae.deprecated.web.api.models.support.scheduler.ApiTaskUnavailableException;
-import com.thevisitcompany.gae.deprecated.web.exceptions.ApiRuntimeException;
-import com.thevisitcompany.gae.deprecated.web.exceptions.ForbiddenModelRequestException;
-import com.thevisitcompany.gae.deprecated.web.exceptions.ModelRequestException;
-import com.thevisitcompany.gae.deprecated.web.exceptions.ResourceUnavailableException;
-import com.thevisitcompany.gae.deprecated.web.exceptions.UnavailableModelsRequestException;
-import com.thevisitcompany.gae.deprecated.web.exceptions.UnsupportedRequestException;
-import com.thevisitcompany.gae.deprecated.web.response.ApiResponse;
+import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 @ControllerAdvice
 public class ModelRequestExceptionHandler {

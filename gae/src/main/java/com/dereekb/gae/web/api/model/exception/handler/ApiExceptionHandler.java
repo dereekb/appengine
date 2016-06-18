@@ -2,6 +2,7 @@ package com.dereekb.gae.web.api.model.exception.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,6 +19,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @author dereekb
  *
  */
+@ControllerAdvice
 public class ApiExceptionHandler {
 
 	/**
@@ -29,8 +31,10 @@ public class ApiExceptionHandler {
 	public ApiResponseImpl handleException(HttpMessageNotReadableException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 
+		// TODO: Exposing this much info might not be as great as we'd hope.
+
 		Throwable cause = exception.getCause();
-		String causeName = cause.getClass().getName();
+		String causeName = cause.getClass().getSimpleName();
 		String causeMessage = cause.getMessage();
 
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
