@@ -15,7 +15,7 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
  * @param <I>
  *            The input elements. Null values on these elements will be ignored.
  */
-public final class ApiUpdateRequest<I> extends ApiRequest<List<I>> {
+public final class ApiUpdateRequest<I> extends ApiRequest<I> {
 
 	@Valid
 	private UpdateRequestOptions options;

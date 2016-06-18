@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.shared.request;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -18,24 +20,29 @@ public class ApiRequest<I> {
 
 	@Valid
 	@NotNull
-	protected I data;
+	protected List<I> data;
 
 	public ApiRequest() {}
 
-	public ApiRequest(I data) {
+	public ApiRequest(List<I> data) {
 		this.data = data;
 	}
 
-	public I getData() {
+	public List<I> getData() {
 		return this.data;
 	}
 
-	public void setData(I data) throws IllegalArgumentException {
+	public void setData(List<I> data) throws IllegalArgumentException {
 		if (data == null) {
 			throw new IllegalArgumentException("Data cannot be null.");
 		}
 
 		this.data = data;
+	}
+
+	@Override
+	public String toString() {
+		return "ApiRequest [data=" + this.data + "]";
 	}
 
 }

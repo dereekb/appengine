@@ -35,7 +35,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		this.modelType = modelType;
 	}
 
-	protected void performRequest(ApiRequest<List<ApiLinkChange>> request) {
+	protected void performRequest(ApiRequest<ApiLinkChange> request) {
 		ApiLinkChangeRequest changeRequest = new ApiLinkChangeRequest(request.getData());
 		this.performRequest(changeRequest);
 	}
@@ -50,7 +50,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		}
 	}
 
-	protected ApiRequest<List<ApiLinkChange>> buildRequest(LinkChangeAction action,
+	protected ApiRequest<ApiLinkChange> buildRequest(LinkChangeAction action,
 	                                                       String linkName,
 	                                                     String targetType,
 	                                                     T primaryModel,
@@ -58,7 +58,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		return this.buildRequest(action, linkName, targetType, primaryModel, SingleItem.withValue(targetModel));
 	}
 
-	protected ApiRequest<List<ApiLinkChange>> buildRequest(LinkChangeAction action,
+	protected ApiRequest<ApiLinkChange> buildRequest(LinkChangeAction action,
 	                                                       String linkName,
 	                                                       String targetType,
 	                                                       T primaryModel,
@@ -73,7 +73,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 
 		changes.add(targetChange);
 
-		ApiRequest<List<ApiLinkChange>> request = new ApiRequest<>();
+		ApiRequest<ApiLinkChange> request = new ApiRequest<>();
 		request.setData(changes);
 		return request;
 	}

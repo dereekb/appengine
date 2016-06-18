@@ -91,6 +91,7 @@ public abstract class DatabaseModelData
 	/**
 	 * Override in super classes to convert to expected type.
 	 */
+	@JsonIgnore
 	@Deprecated
 	@Override
 	public ModelKey getModelKey() {

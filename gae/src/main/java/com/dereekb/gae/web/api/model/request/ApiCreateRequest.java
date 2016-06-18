@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ApiCreateRequest<I> extends ApiRequest<List<I>> {
+public final class ApiCreateRequest<I> extends ApiRequest<I> {
 
 	private boolean atomic = true;
 
@@ -70,7 +70,7 @@ public final class ApiCreateRequest<I> extends ApiRequest<List<I>> {
 
 	@Override
 	public String toString() {
-		return "ApiCreateRequest [atomic=" + this.atomic + "]";
+		return "ApiCreateRequest [atomic=" + this.atomic + ", data=" + this.data + "]";
 	}
 
 }

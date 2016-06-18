@@ -72,7 +72,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		return serviceRequest;
 	}
 
-	private List<T> convertRequestTemplateData(ApiRequest<? extends List<I>> request) throws RequestArgumentException {
+	private List<T> convertRequestTemplateData(ApiRequest<I> request) throws RequestArgumentException {
 		List<I> input = request.getData();
 
 		if (input == null || input.isEmpty()) {

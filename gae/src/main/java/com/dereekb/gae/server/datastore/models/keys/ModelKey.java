@@ -9,6 +9,7 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 /**
  * Represents a key for a model.
@@ -19,6 +20,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelK
  *
  * @author dereekb
  */
+@JsonIgnoreType
 public final class ModelKey
         implements UniqueModel {
 

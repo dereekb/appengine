@@ -12,7 +12,7 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
  *
  * @author dereekb
  */
-public final class ApiDeleteRequest extends ApiRequest<List<String>> {
+public final class ApiDeleteRequest extends ApiRequest<String> {
 
 	@Valid
 	private DeleteRequestOptions options;

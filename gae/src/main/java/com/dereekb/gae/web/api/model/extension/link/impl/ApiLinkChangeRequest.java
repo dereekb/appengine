@@ -12,7 +12,7 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
  * @author dereekb
  * @see {@link LinkExtensionApiController}
  */
-public class ApiLinkChangeRequest extends ApiRequest<List<ApiLinkChange>> {
+public class ApiLinkChangeRequest extends ApiRequest<ApiLinkChange> {
 
 	private boolean atomic = true;
 

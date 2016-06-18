@@ -1,7 +1,5 @@
 package com.dereekb.gae.test.applications.api.api.stored.image;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +52,7 @@ public class StoredImageApiLinkTest extends ApiLinkTest<StoredImage> {
 
 		this.geoPlaceGetterSetter.save(place, false);
 
-		ApiRequest<List<ApiLinkChange>> request = this.buildRequest(LinkChangeAction.LINK, "GeoPlace", "GeoPlace",
+		ApiRequest<ApiLinkChange> request = this.buildRequest(LinkChangeAction.LINK, "GeoPlace", "GeoPlace",
 		        image, place);
 		this.performRequest(request);
 
