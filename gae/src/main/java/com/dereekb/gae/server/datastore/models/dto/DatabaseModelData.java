@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class DatabaseModelData
-        implements Serializable, UniqueModel {
+        implements Serializable, UniqueModel, SimpleKeyModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,10 +44,12 @@ public abstract class DatabaseModelData
 		this.created = creationTime;
 	}
 
+	@Override
 	public String getKey() {
 		return this.key;
 	}
 
+	@Override
 	public void setKey(String key) {
 		this.key = key;
 	}

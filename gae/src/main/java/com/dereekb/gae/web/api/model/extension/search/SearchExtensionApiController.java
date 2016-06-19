@@ -115,9 +115,10 @@ public class SearchExtensionApiController {
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 
+			request.setParameters(parameters);
+
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);
-			request.setParameters(parameters);
 
 			response = this.delegate.search(type, request);
 		} catch (AtomicOperationException e) {

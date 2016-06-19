@@ -112,7 +112,8 @@ public class CoreServiceTestingContext {
 				ResultActions resultActions = mockMvc.perform(requestBuilder);
 				MockHttpServletResponse response = resultActions.andReturn().getResponse();
 				int status = response.getStatus();
-				String error = response.getErrorMessage();
+
+				// String error = response.getErrorMessage();
 				return status;
 			} catch (ServletException e) {
 				e.printStackTrace();
