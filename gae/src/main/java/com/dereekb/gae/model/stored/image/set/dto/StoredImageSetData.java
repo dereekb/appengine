@@ -73,14 +73,14 @@ public final class StoredImageSetData extends SearchableDatabaseModelData {
 	// UniqueModel
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.identifier);
+		return ModelKey.convertNumberString(this.key);
 	}
 
 	@Override
 	public String toString() {
 		return "StoredImageSetData [label=" + this.label + ", detail=" + this.detail + ", tags=" + this.tags
 		        + ", icon=" + this.icon + ", images=" + this.images + ", searchIdentifier=" + this.searchIdentifier
-		        + ", identifier=" + this.identifier + ", created=" + this.created + "]";
+		        + ", identifier=" + this.key + ", created=" + this.created + "]";
 	}
 
 }

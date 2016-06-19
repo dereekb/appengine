@@ -56,14 +56,14 @@ public class GeoPlaceData extends DescribedDatabaseModelData {
 	// UniqueModel
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.identifier);
+		return ModelKey.convertNumberString(this.key);
 	}
 
 	@Override
 	public String toString() {
 		return "GeoPlaceData [point=" + this.point + ", region=" + this.region + ", parent=" + this.parent
 		        + ", descriptor=" + this.descriptor + ", searchIdentifier=" + this.searchIdentifier + ", identifier="
-		        + this.identifier + ", created=" + this.created + "]";
+		        + this.key + ", created=" + this.created + "]";
 	}
 
 }

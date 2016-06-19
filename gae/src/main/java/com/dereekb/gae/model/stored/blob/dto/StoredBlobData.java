@@ -31,13 +31,13 @@ public final class StoredBlobData extends DescribedDatabaseModelData {
 	// UniqueModel
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.identifier);
+		return ModelKey.convertNumberString(this.key);
 	}
 
 	@Override
 	public String toString() {
 		return "StoredBlobData [download=" + this.download + ", descriptor=" + this.descriptor + ", searchIdentifier="
-		        + this.searchIdentifier + ", identifier=" + this.identifier + ", created=" + this.created + "]";
+		        + this.searchIdentifier + ", identifier=" + this.key + ", created=" + this.created + "]";
 	}
 
 }

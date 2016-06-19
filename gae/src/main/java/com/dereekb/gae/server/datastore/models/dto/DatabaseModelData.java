@@ -26,7 +26,7 @@ public abstract class DatabaseModelData
 	/**
 	 * The model's database identifier as a String.
 	 */
-	protected String identifier;
+	protected String key;
 
 	/**
 	 * Date that the model was created encoded in a Long.
@@ -36,25 +36,25 @@ public abstract class DatabaseModelData
 	public DatabaseModelData() {}
 
 	public DatabaseModelData(String identifier) {
-		this.identifier = identifier;
+		this.key = identifier;
 	}
 
 	public DatabaseModelData(String identifier, Long creationTime) {
-		this.identifier = identifier;
+		this.key = identifier;
 		this.created = creationTime;
 	}
 
-	public String getIdentifier() {
-		return this.identifier;
+	public String getKey() {
+		return this.key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	@JsonIgnore
 	public void setIdentifier(ModelKey key) {
-		this.identifier = ModelKey.readStringKey(key);
-	}
-
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+		this.key = ModelKey.readStringKey(key);
 	}
 
 	@JsonIgnore
@@ -65,7 +65,7 @@ public abstract class DatabaseModelData
 			idString = identifier.toString();
 		}
 
-		this.identifier = idString;
+		this.key = idString;
 	}
 
 	public Long getCreated() {
@@ -95,7 +95,7 @@ public abstract class DatabaseModelData
 	@Deprecated
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convert(this.identifier);
+		return ModelKey.convert(this.key);
 	}
 
 }

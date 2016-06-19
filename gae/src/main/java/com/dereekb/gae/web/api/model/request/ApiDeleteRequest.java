@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.DeleteRequestOptionsImpl;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 
 /**
@@ -15,7 +15,7 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
 public final class ApiDeleteRequest extends ApiRequest<String> {
 
 	@Valid
-	private DeleteRequestOptions options;
+	private DeleteRequestOptionsImpl options;
 
 	public ApiDeleteRequest() {
 		super();
@@ -25,12 +25,17 @@ public final class ApiDeleteRequest extends ApiRequest<String> {
 		super(ids);
 	}
 
-	public DeleteRequestOptions getOptions() {
+	public DeleteRequestOptionsImpl getOptions() {
 		return this.options;
 	}
 
-	public void setOptions(DeleteRequestOptions options) {
+	public void setOptions(DeleteRequestOptionsImpl options) {
 		this.options = options;
+	}
+
+	@Override
+	public String toString() {
+		return "ApiDeleteRequest [options=" + this.options + ", data=" + this.data + "]";
 	}
 
 }

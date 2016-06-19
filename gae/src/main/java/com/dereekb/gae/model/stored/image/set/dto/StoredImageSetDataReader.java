@@ -30,7 +30,7 @@ public class StoredImageSetDataReader extends AbstractDirectionalConverter<Store
 		StoredImageSet set = new StoredImageSet();
 
 		// Identifier
-		String stringIdentifier = input.getIdentifier();
+		String stringIdentifier = input.getKey();
 		set.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
 		set.setSearchIdentifier(input.getSearchIdentifier());
 

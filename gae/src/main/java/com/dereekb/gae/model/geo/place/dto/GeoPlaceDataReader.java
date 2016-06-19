@@ -27,7 +27,7 @@ public final class GeoPlaceDataReader extends AbstractDirectionalConverter<GeoPl
 		GeoPlace geoPlace = new GeoPlace();
 
 		// Identifier
-		String stringIdentifier = input.getIdentifier();
+		String stringIdentifier = input.getKey();
 		geoPlace.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
 
 		// Date

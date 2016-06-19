@@ -33,7 +33,7 @@ public class StoredImageDataReader extends AbstractDirectionalConverter<StoredIm
 		StoredImage image = new StoredImage();
 
 		// Identifier
-		String stringIdentifier = input.getIdentifier();
+		String stringIdentifier = input.getKey();
 		image.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
 		image.setSearchIdentifier(input.getSearchIdentifier());
 
