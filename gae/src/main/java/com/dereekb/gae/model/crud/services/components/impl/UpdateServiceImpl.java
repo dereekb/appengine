@@ -64,13 +64,15 @@ public class UpdateServiceImpl<T extends UniqueModel>
 
 	// MARK: UpdateService
 	@Override
-	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException {
+	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException, IllegalArgumentException {
 		UpdateResponse<T> updateResponse = null;
+
 		UpdateRequestOptions options = request.getOptions();
 		Collection<T> updateTemplates = request.getTemplates();
 
 		// Read Models to update
-		ReadRequestOptions readOptions = new ReadRequestOptionsImpl(true);
+		boolean atomic = options.isAtomic();
+		ReadRequestOptions readOptions = new ReadRequestOptionsImpl(atomic);
 		ModelReadRequest readRequest = new ModelReadRequest(updateTemplates, readOptions);
 
 		ReadResponse<T> readResponse = this.readService.read(readRequest);
@@ -80,7 +82,7 @@ public class UpdateServiceImpl<T extends UniqueModel>
 		List<UpdatePair<T>> pairs = UpdatePair.makePairs(models, updateTemplates);
 
 		try {
-			UpdateTaskConfig config = new UpdateTaskConfigImpl(options.isAtomic());
+			UpdateTaskConfig config = new UpdateTaskConfigImpl(atomic);
 			this.updateTask.doTask(pairs, config);
 
 			HashMapWithList<FilterResult, UpdatePair<T>> results = UpdatePair.filterSuccessfulPairs(pairs);

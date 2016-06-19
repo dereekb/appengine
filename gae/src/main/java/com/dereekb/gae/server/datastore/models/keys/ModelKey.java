@@ -2,13 +2,17 @@ package com.dereekb.gae.server.datastore.models.keys;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.exception.NullModelKeyException;
+import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 /**
@@ -386,6 +390,83 @@ public final class ModelKey
 		}
 
 		return keys;
+	}
+
+	/**
+	 * Checks if all models have a valid {@link ModelKey} attached.
+	 *
+	 * @param models
+	 * @return {@code true} if all models have a key set.
+	 */
+	public static boolean allModelsHaveKeys(Iterable<? extends UniqueModel> models) {
+		boolean valid = true;
+
+		for (UniqueModel model : models) {
+			ModelKey key = model.getModelKey();
+
+			if (key == null) {
+				valid = false;
+			}
+		}
+
+		return valid;
+	}
+
+	/**
+	 * Matches "right" models to "left" models.
+	 *
+	 * @param leftModels
+	 *            Models to map right pairs to. The left model may appear
+	 *            multiple times in result pairs.
+	 * @param rightModels
+	 *            Models to map to the left. Will only appear once.
+	 * @return {@link List} of {@link HandlerPair} values.
+	 * @throws NullModelKeyException
+	 *             Thrown if any left model has no model key.
+	 */
+	public static <L extends UniqueModel, R extends UniqueModel> List<HandlerPair<L, R>> makePairs(Iterable<? extends L> leftModels,
+	                                                                                               Iterable<? extends R> rightModels)
+	        throws NullModelKeyException {
+
+		List<HandlerPair<L, R>> pairs = new ArrayList<HandlerPair<L, R>>();
+		Map<ModelKey, L> leftMap = makeModelKeyMap(leftModels);
+
+		for (R right : rightModels) {
+			ModelKey key = right.getModelKey();
+			L left = leftMap.get(key);
+
+			if (left != null) {
+				pairs.add(new HandlerPair<L, R>(left, right));
+			}
+		}
+
+		return pairs;
+	}
+
+	/**
+	 * Creates a map of models keyed by their {@link ModelKey} value.
+	 *
+	 * @param models
+	 *            {@link Iterable} collection. Never {@code null}.
+	 * @return {@link Map}. Never {@code null}.
+	 * @throws NullModelKeyException
+	 *             Thrown if a model does not have a key.
+	 */
+	public static <T extends UniqueModel> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
+	        throws NullModelKeyException {
+		Map<ModelKey, T> modelKeyMap = new HashMap<ModelKey, T>();
+
+		for (T model : models) {
+			ModelKey key = model.getModelKey();
+
+			if (key == null) {
+				throw new NullModelKeyException();
+			} else {
+				modelKeyMap.put(key, model);
+			}
+		}
+
+		return modelKeyMap;
 	}
 
 }

@@ -75,6 +75,11 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
     }
 
 	@Override
+	public T generateModelWithoutKey() {
+		return this.generator.generateModelWithoutKey();
+	}
+
+	@Override
 	public T generateModel(ModelKey identifier) {
 		T model = this.generator.generateModel(identifier);
 		this.setter.save(model, false);

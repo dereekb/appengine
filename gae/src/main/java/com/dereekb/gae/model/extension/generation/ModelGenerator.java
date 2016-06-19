@@ -26,6 +26,11 @@ public interface ModelGenerator<T extends UniqueModel>
 	public T generateModel(ModelKey key);
 
 	/**
+	 * Generates a new unique model that has no key attached.
+	 */
+	public T generateModelWithoutKey();
+
+	/**
 	 * Generates new models with the passed keys. The keys may also be used for
 	 * randomization purposes.
 	 *

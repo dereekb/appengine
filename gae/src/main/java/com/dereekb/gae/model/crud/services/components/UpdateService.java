@@ -26,6 +26,6 @@ public interface UpdateService<T extends UniqueModel> {
 	 * @throws AtomicOperationException
 	 *             Occurs when not all objects requested can be updated.
 	 */
-	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException;
+	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException, IllegalArgumentException;
 
 }

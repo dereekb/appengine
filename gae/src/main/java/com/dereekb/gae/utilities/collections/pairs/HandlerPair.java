@@ -2,8 +2,10 @@ package com.dereekb.gae.utilities.collections.pairs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Basic tuple.
@@ -15,7 +17,7 @@ import java.util.Map;
  * @param <R>
  *            Object value
  */
-public abstract class HandlerPair<L, R> {
+public class HandlerPair<L, R> {
 
 	protected L key;
 	protected R object;
@@ -25,11 +27,11 @@ public abstract class HandlerPair<L, R> {
 		this.object = object;
 	}
 
-	protected L getKey() {
+	public L getKey() {
 		return this.key;
 	}
 
-	protected R getObject() {
+	public R getObject() {
 		return this.object;
 	}
 
@@ -98,6 +100,23 @@ public abstract class HandlerPair<L, R> {
 		}
 
 		return map;
+	}
+
+	public static <L, T extends HandlerPair<L, ?>> List<T> filterRepeatingKeys(Iterable<? extends T> pairs) {
+		Set<L> keysUsed = new HashSet<L>();
+
+		List<T> filtered = new ArrayList<T>();
+
+		for (T pair : pairs) {
+			L key = pair.getKey();
+
+			if (keysUsed.contains(key) == false) {
+				filtered.add(pair);
+				keysUsed.add(key);
+			}
+		}
+
+		return filtered;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.api.tests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.web.api.model.controller.EditModelController;
 import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
 import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
@@ -122,8 +124,40 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 
 		@SuppressWarnings("unchecked")
 		List<I> resultData = (List<I>) data;
-
 		Assert.assertTrue(resultData.size() == modelData.size());
+	}
+
+	@Test
+	public void testEditWithNoIdentifier() {
+		T model = this.modelGenerator.generateModelWithoutKey();
+		List<I> modelDatas = this.converter.convert(SingleItem.withValue(model));
+
+		ApiUpdateRequest<I> request = new ApiUpdateRequest<I>();
+		request.setData(modelDatas);
+
+		try {
+			this.controller.update(request);
+			Assert.fail("Should fail due to no identifier on input element.");
+		} catch (Exception e) {
+
+		}
+	}
+
+	@Test
+	public void testEditWithMultipleOfSameObject() {
+		T model = this.modelGenerator.generate();
+		List<T> models = new ArrayList<T>();
+
+		models.add(model);
+		models.add(model);
+
+		List<I> modelDatas = this.converter.convert(models);
+
+		ApiUpdateRequest<I> request = new ApiUpdateRequest<I>();
+		request.setData(modelDatas);
+
+		ApiResponse response = this.controller.update(request);
+		Assert.assertTrue(response.getResponseSuccess());
 	}
 
 	@Test

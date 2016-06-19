@@ -1,6 +1,5 @@
 package com.dereekb.gae.web.api.model.request;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
@@ -44,18 +43,6 @@ public final class ApiCreateRequest<I> extends ApiRequest<I> {
 	@JsonIgnore
 	public List<I> getTemplates() {
 		return this.getData();
-	}
-
-	public void setTemplate(I template) throws IllegalArgumentException {
-		List<I> templates = new ArrayList<I>();
-
-		if (template != null) {
-			templates.add(template);
-		} else {
-			throw new IllegalArgumentException("Template cannot be null.");
-		}
-
-		this.setData(templates);
 	}
 
 	@JsonIgnore

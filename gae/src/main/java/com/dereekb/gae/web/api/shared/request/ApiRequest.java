@@ -1,10 +1,12 @@
 package com.dereekb.gae.web.api.shared.request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -38,6 +40,19 @@ public class ApiRequest<I> {
 		}
 
 		this.data = data;
+	}
+
+	@JsonIgnore
+	public void setDataElement(I data) throws IllegalArgumentException {
+		List<I> templates = new ArrayList<I>();
+
+		if (data != null) {
+			templates.add(data);
+		} else {
+			throw new IllegalArgumentException("Template cannot be null.");
+		}
+
+		this.setData(templates);
 	}
 
 	@Override

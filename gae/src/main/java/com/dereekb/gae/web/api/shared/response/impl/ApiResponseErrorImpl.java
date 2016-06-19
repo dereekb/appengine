@@ -1,6 +1,8 @@
 package com.dereekb.gae.web.api.shared.response.impl;
 
+import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -73,21 +75,25 @@ public class ApiResponseErrorImpl
 	}
 
 	// MARK: ApiResponseError
+	@JsonIgnore
 	@Override
 	public String getErrorCode() {
 		return this.code;
 	}
 
+	@JsonIgnore
 	@Override
 	public String getErrorTitle() {
 		return this.title;
 	}
 
+	@JsonIgnore
 	@Override
 	public String getErrorDetail() {
 		return this.detail;
 	}
 
+	@JsonIgnore
 	@Override
 	public Object getErrorData() {
 		return this.data;

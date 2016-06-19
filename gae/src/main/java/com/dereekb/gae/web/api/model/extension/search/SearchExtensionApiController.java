@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
+import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchReadRequestImpl;
@@ -79,6 +80,8 @@ public class SearchExtensionApiController {
 			response = this.delegate.search(types, request);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);
 		}

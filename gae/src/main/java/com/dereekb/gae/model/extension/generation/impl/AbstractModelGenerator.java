@@ -77,6 +77,12 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 	}
 
 	@Override
+	public T generateModelWithoutKey() {
+		GeneratorArg arg = new GeneratorArgImpl();
+		return this.generateModel(null, arg);
+	}
+
+	@Override
 	public T generateModel(ModelKey key) {
 		GeneratorArg arg = null;
 
@@ -96,7 +102,8 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 	 * @param key
 	 *            (Optional) {@link ModelKey}.
 	 * @param arg
-	 *            {@link GeneratorArg} to use for generation. Never null.
+	 *            {@link GeneratorArg} to use for generation. Never {@code null}
+	 *            .
 	 * @return new model instance.
 	 */
 	protected abstract T generateModel(ModelKey key,

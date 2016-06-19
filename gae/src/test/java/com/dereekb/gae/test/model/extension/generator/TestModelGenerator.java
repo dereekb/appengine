@@ -59,7 +59,7 @@ public interface TestModelGenerator<T extends UniqueModel>
 	 * The model is saved to the configured datastore.
 	 *
 	 * @param identifier
-	 * @return Generated model. Never null.
+	 * @return Generated model. Never {@code null}.
 	 */
 	@Override
 	public T generateModel(ModelKey identifier);

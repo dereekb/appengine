@@ -68,6 +68,8 @@ public class UploadApiExtensionController {
 
 		String uploadUrl = this.urlFactory.makeUploadUrl(type);
 
+		// TODO: Fail is the type is unknown.
+
 		ApiResponseDataImpl urlData = new ApiResponseDataImpl("url");
 		urlData.setData(uploadUrl);
 

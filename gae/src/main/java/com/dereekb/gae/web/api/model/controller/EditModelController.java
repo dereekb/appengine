@@ -16,6 +16,7 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
@@ -92,6 +93,10 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 			response = this.conversionDelegate.convert(updateResponse);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
+		} catch (RuntimeException e) {
+			throw new ApiRuntimeException(e);
 		}
 
 		return response;
