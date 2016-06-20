@@ -58,7 +58,7 @@ public class SomeLinkModel
 	// UniqueModel
 	@Override
 	public ModelKey getModelKey() {
-		return new ModelKey(this.identifier);
+		return ModelKey.safe(this.identifier);
 	}
 
 }

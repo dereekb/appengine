@@ -54,7 +54,13 @@ public class StoredBlobGenerator extends AbstractModelGenerator<StoredBlob> {
 		// Info
 		storedBlob.setBlobType(StoredBlobType.BLOB);
 
-		String fileName = key.keyAsString();
+		String fileName;
+
+		if (key != null) {
+			fileName = key.keyAsString();
+		} else {
+			fileName = "file";
+		}
 
 		storedBlob.setBlobName(fileName);
 		storedBlob.setFilePath(String.format(this.filePathFormat, fileName));

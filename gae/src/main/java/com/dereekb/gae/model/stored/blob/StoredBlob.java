@@ -134,7 +134,7 @@ public final class StoredBlob extends DescribedDatabaseModel
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
-		return new ModelKey(this.identifier);
+		return ModelKey.safe(this.identifier);
 	}
 
 	public void setModelKey(ModelKey key) {

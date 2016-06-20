@@ -189,7 +189,7 @@ public final class StoredImage extends SearchableDatabaseModel
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
-		return new ModelKey(this.identifier);
+		return ModelKey.safe(this.identifier);
 	}
 
 	public void setModelKey(ModelKey key) {

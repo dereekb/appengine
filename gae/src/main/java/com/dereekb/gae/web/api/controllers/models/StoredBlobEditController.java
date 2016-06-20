@@ -10,7 +10,7 @@ import com.dereekb.gae.web.api.model.controller.EditModelControllerConversionDel
 import com.dereekb.gae.web.api.model.controller.EditModelControllerDelegate;
 
 @RestController
-@RequestMapping("/blob")
+@RequestMapping({ "/blob", "/storedblob" })
 public class StoredBlobEditController extends EditModelController<StoredBlob, StoredBlobData> {
 
 	public StoredBlobEditController(EditModelControllerDelegate<StoredBlob> delegate,

@@ -89,7 +89,7 @@ public class Login extends DatabaseModel
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
-		return new ModelKey(this.identifier);
+		return ModelKey.safe(this.identifier);
 	}
 
 	// Database Model

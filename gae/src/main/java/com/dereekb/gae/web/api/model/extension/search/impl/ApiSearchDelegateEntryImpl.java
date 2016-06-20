@@ -38,9 +38,8 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 
 	public ApiSearchDelegateEntryImpl(String type,
 	        ModelQueryService<T> queryService,
-	        SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder,
 	        DirectionalConverter<T, ? extends Object> resultConverter) {
-		this(type, queryService, null, requestBuilder, resultConverter);
+		this(type, queryService, null, null, resultConverter);
 	}
 
 	public ApiSearchDelegateEntryImpl(String type,

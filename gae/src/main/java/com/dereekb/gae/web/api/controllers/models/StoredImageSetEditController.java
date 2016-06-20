@@ -10,7 +10,7 @@ import com.dereekb.gae.web.api.model.controller.EditModelControllerConversionDel
 import com.dereekb.gae.web.api.model.controller.EditModelControllerDelegate;
 
 @RestController
-@RequestMapping("/imageset")
+@RequestMapping({ "/imageset", "/storedimageset" })
 public class StoredImageSetEditController extends EditModelController<StoredImageSet, StoredImageSetData> {
 
 	public StoredImageSetEditController(EditModelControllerDelegate<StoredImageSet> delegate,
