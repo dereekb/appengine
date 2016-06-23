@@ -23,6 +23,7 @@ import com.googlecode.objectify.Key;
 public class StoredImageSetDataReader extends AbstractDirectionalConverter<StoredImageSetData, StoredImageSet> {
 
 	private static final StringModelKeyConverter KEY_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
+
 	private static final ObjectifyKeyUtility<StoredImage> IMAGE_KEY_UTIL = ObjectifyKeyUtility.make(StoredImage.class);
 
 	@Override

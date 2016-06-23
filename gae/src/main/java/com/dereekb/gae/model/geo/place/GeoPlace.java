@@ -109,17 +109,6 @@ public final class GeoPlace extends DescribedDatabaseModel
 		return this.parent;
 	}
 
-	@Deprecated
-	public Long getParentLongKey() {
-		Long key = null;
-
-		if (this.parent != null) {
-			key = this.parent.getId();
-		}
-
-		return key;
-	}
-
 	public void setParent(Key<GeoPlace> parent) {
 		this.parent = parent;
 	}

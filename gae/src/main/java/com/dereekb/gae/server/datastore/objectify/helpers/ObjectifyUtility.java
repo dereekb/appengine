@@ -49,6 +49,22 @@ public class ObjectifyUtility {
 		return values;
 	}
 
+	public static <T extends ObjectifyModel<T>> List<String> readKeyNames(Iterable<Key<T>> keys) {
+		List<String> values = new ArrayList<String>();
+
+		if (keys != null) {
+			for (Key<T> key : keys) {
+				String value = key.getName();
+
+				if (value != null) {
+					values.add(value);
+				}
+			}
+		}
+
+		return values;
+    }
+
 	public static <T extends ObjectifyModel<T>> Long readKeyIdentifier(Key<T> key) {
 		Long identifier = null;
 

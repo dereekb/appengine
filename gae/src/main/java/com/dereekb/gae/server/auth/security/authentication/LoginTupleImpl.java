@@ -30,7 +30,7 @@ public final class LoginTupleImpl
 
 	public LoginTupleImpl(String loginSystem, Login login, LoginPointer loginPointer) throws IllegalArgumentException {
 		if (loginSystem == null || login == null || loginPointer == null) {
-			throw new IllegalArgumentException("Failed to create tuple. Null argument.");
+			throw new IllegalArgumentException("Failed to create tuple. All arguments must not be null.");
 		}
 
 		this.loginSystem = loginSystem;

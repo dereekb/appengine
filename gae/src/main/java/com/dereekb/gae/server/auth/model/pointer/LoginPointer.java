@@ -6,6 +6,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * Internal type used by {@link Login} to allow a flexible login system, and
@@ -32,7 +33,8 @@ public class LoginPointer extends DatabaseModel
 	/**
 	 * Identifier for the target {@link Login}.
 	 */
-	private Key<Login> loginKey;
+	@Index
+	private Key<Login> login;
 
 	public LoginPointer() {}
 
@@ -48,23 +50,27 @@ public class LoginPointer extends DatabaseModel
 		this.identifier = identifier;
 	}
 
-	public Key<Login> getLoginKey() {
-		return this.loginKey;
+	public Key<Login> getLogin() {
+		return this.login;
 	}
 
 	public ModelKey getLoginModelKey() {
-		Long id = this.loginKey.getId();
+		Long id = this.login.getId();
 		return new ModelKey(id);
 	}
 
-	public void setLoginKey(Key<Login> loginKey) {
-		this.loginKey = loginKey;
+	public void setLogin(Key<Login> loginKey) {
+		this.login = loginKey;
 	}
 
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
 		return new ModelKey(this.identifier);
+	}
+
+	public void setModelKey(ModelKey key) {
+		this.identifier = ModelKey.readName(key);
 	}
 
 	// Database Model
@@ -81,7 +87,7 @@ public class LoginPointer extends DatabaseModel
 
 	@Override
 	public String toString() {
-		return "LoginPointer [identifier=" + this.identifier + ", loginKey=" + this.loginKey + "]";
+		return "LoginPointer [identifier=" + this.identifier + ", loginKey=" + this.login + "]";
 	}
 
 }
