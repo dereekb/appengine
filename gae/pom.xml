@@ -66,6 +66,13 @@
 			<version>1.20.0</version>
 		</dependency>
 
+		<!-- Tokens -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.6.0</version>
+		</dependency>
+
 		<!-- Objectify -->
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
