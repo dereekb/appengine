@@ -18,4 +18,8 @@ public class TokenException extends AuthenticationException {
 		super(message);
 	}
 
+	public TokenException(String msg, Throwable t) {
+		super(msg, t);
+	}
+
 }

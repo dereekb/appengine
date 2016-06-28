@@ -2,59 +2,57 @@ package com.dereekb.gae.server.auth.security.token.model;
 
 import java.util.Date;
 
+import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+
 /**
  * Login token object
  *
  * @author dereekb
  *
  */
-public class LoginToken {
+public interface LoginToken {
 
 	/**
-	 * Login this token is associated with.
+	 * Returns the subject of the token. Generally the result of
+	 * {@link #getLogin()}.
+	 *
+	 * @return {@link String} subject. Never {@code null}.
 	 */
-	private Long login;
+	public String getSubject();
 
 	/**
-	 * Login pointer used for logging in.
+	 *
+	 * @return
 	 */
-	private String loginPointer;
+	public Long getLogin();
+
+	/**
+	 * Key of {@link LoginPointer} used for logging in.
+	 *
+	 * @return {@link String} key of the {@link LoginPointer} used for logging
+	 *         in. May be {@code null}.
+	 */
+	public String getLoginPointer();
 
 	/**
 	 * Token expiration date.
+	 *
+	 * @return{@link Date} of expiration. Never {@code null}.
 	 */
-	private Date expiration;
+	public Date getExpiration();
 
-	public LoginToken() {
-		this.expiration = new Date();
-	}
+	/**
+	 * Token issue date.
+	 *
+	 * @return{@link Date} token was issued. Never {@code null}.
+	 */
+	public Date getIssued();
 
-	public Long getLogin() {
-		return this.login;
-	}
-
-	public void setLogin(Long login) {
-		this.login = login;
-	}
-
-	public String getLoginPointer() {
-		return this.loginPointer;
-	}
-
-	public void setLoginPointer(String loginPointer) {
-		this.loginPointer = loginPointer;
-	}
-
-	public Date getExpiration() {
-		return this.expiration;
-	}
-
-	public void setExpiration(Date expiration) {
-		this.expiration = expiration;
-	}
-
-	public boolean hasExpired() {
-		return new Date().after(this.expiration);
-	}
+	/**
+	 * Whether or not this token has expired.
+	 *
+	 * @return {@code true} if expired.
+	 */
+	public boolean hasExpired();
 
 }
