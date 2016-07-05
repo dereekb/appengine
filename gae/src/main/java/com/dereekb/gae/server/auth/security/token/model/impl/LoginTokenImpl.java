@@ -2,25 +2,41 @@ package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
 
+import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * {@link LoginToken} implementation.
  *
  * @author dereekb
- *
  */
 public class LoginTokenImpl
         implements LoginToken {
 
+	/**
+	 * Optional subject
+	 */
 	private String subject;
 
+	/**
+	 * {@link Login} identifier
+	 */
 	private Long login;
 
+	/**
+	 * {@link LoginPointer} identifier
+	 */
 	private String loginPointer;
 
+	/**
+	 * Time the token was issued.
+	 */
 	private Date issued;
 
+	/**
+	 * Time the token will expire.
+	 */
 	private Date expiration;
 
 	public LoginTokenImpl() {
@@ -32,7 +48,7 @@ public class LoginTokenImpl
 		String subject = this.subject;
 
 		if (subject == null) {
-			subject = this.login.toString();
+			subject = (this.login != null) ? this.login.toString() : null;
 		}
 
 		return subject;
@@ -81,6 +97,12 @@ public class LoginTokenImpl
 	@Override
     public boolean hasExpired() {
 		return new Date().after(this.expiration);
+	}
+
+	@Override
+	public String toString() {
+		return "LoginTokenImpl [subject=" + this.subject + ", login=" + this.login + ", loginPointer="
+		        + this.loginPointer + ", issued=" + this.issued + ", expiration=" + this.expiration + "]";
 	}
 
 }

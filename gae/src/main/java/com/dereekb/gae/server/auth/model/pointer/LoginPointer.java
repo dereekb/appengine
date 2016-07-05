@@ -6,12 +6,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfEmpty;
 
 /**
  * Internal type used by {@link Login} to allow a flexible login system, and
  * specify different aliases.
- *
+ * <p>
  * The pointer is used for authentication purposes, and uses a user's email
  * address as the pointer key.
  *
@@ -25,7 +27,7 @@ public class LoginPointer extends DatabaseModel
 	/**
 	 * Identifier for logging in.
 	 *
-	 * Is generally an email address.
+	 * Is generally the username or an email address.
 	 */
 	@Id
 	private String identifier;
@@ -35,6 +37,23 @@ public class LoginPointer extends DatabaseModel
 	 */
 	@Index
 	private Key<Login> login;
+
+	/**
+	 * Pointer type.
+	 */
+	private Integer type;
+
+	/**
+	 * Password, if applicable.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String password;
+
+	/**
+	 * Pointer data, if applicable.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String data;
 
 	public LoginPointer() {}
 
@@ -61,6 +80,46 @@ public class LoginPointer extends DatabaseModel
 
 	public void setLogin(Key<Login> loginKey) {
 		this.login = loginKey;
+	}
+
+	public LoginPointerType getLoginPointerType() {
+		return LoginPointerType.valueOf(this.type);
+	}
+
+	public void setLoginPointerType(LoginPointerType type) throws IllegalArgumentException {
+		if (type == null) {
+			this.setTypeId(null);
+		} else {
+			this.type = type.id;
+		}
+	}
+
+	public Integer getTypeId() {
+		return this.type;
+	}
+
+	public void setTypeId(Integer type) throws IllegalArgumentException {
+		if (type == null) {
+			throw new IllegalArgumentException("TypeId cannot be null.");
+		}
+
+		this.type = type;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getData() {
+		return this.data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
 	}
 
 	// Unique Model

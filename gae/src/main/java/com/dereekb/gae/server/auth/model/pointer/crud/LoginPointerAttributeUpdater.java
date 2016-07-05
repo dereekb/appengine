@@ -11,6 +11,9 @@ public class LoginPointerAttributeUpdater
 	public void updateTarget(LoginPointer target,
 	                         LoginPointer template) throws AttributeFailureException {
 
+		// TODO: Update using delegate depending on the type of the login
+		// pointer.
+
 	}
 
 }
