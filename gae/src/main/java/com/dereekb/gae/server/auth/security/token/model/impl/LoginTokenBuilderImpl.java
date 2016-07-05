@@ -56,13 +56,7 @@ public class LoginTokenBuilderImpl
 	}
 
 	public Date getExpirationDate() {
-		return this.getExpirationDate(new Date());
-	}
-
-	public Date getExpirationDate(Date date) {
-		Long time = date.getTime();
-		time += this.expirationTime;
-		return new Date(time);
+		return new Date(System.currentTimeMillis() + this.expirationTime);
 	}
 
 	@Override

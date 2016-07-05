@@ -14,6 +14,10 @@ public class LoginExistsException extends LoginException {
 		super(null, "The login exists.");
 	}
 
+	public LoginExistsException(String username) {
+		super(username);
+	}
+
 	@Override
 	public String toString() {
 		return "LoginExistsException []";

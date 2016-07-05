@@ -5,6 +5,8 @@ import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
@@ -19,6 +21,8 @@ import com.googlecode.objectify.condition.IfEmpty;
  *
  * @author dereekb
  */
+@Cache
+@Entity
 public class LoginPointer extends DatabaseModel
         implements ObjectifyModel<LoginPointer> {
 

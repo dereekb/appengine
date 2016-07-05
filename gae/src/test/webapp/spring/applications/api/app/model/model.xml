@@ -11,6 +11,8 @@
 
 	<!-- IMPORTS -->
 	<!-- Models -->
+	<import resource="login/login/login.xml" />
+	<import resource="login/loginpointer/loginpointer.xml" />
 	<import resource="geoplace/geoplace.xml" />
 	<import resource="stored/storedblob/storedblob.xml" />
 	<import resource="stored/storedimage/storedimage.xml" />
@@ -31,6 +33,8 @@
 				<entry key-ref="storedBlobType" value="NUMBER"></entry>
 				<entry key-ref="storedImageType" value="NUMBER"></entry>
 				<entry key-ref="storedImageSetType" value="NUMBER"></entry>
+				<entry key-ref="loginType" value="NUMBER"></entry>
+				<entry key-ref="loginPointerType" value="NAME"></entry>
 			</map>
 		</constructor-arg>
 	</bean>

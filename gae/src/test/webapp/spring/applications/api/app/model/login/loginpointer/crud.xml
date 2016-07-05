@@ -1,0 +1,108 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Cruds -->
+	<bean id="loginPointerCrudService" lazy-init="true"
+		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
+		<constructor-arg index="0" ref="loginPointerCreateService" />
+		<constructor-arg index="1" ref="loginPointerReadService" />
+		<constructor-arg index="2" ref="loginPointerUpdateService" />
+		<constructor-arg index="3" ref="loginPointerDeleteService" />
+	</bean>
+
+	<!-- Services -->
+	<bean id="loginPointerCreateService" lazy-init="true"
+		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
+		<constructor-arg index="0" ref="loginPointerCreateTask" />
+	</bean>
+
+	<bean id="loginPointerReadService" lazy-init="true"
+		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
+		<constructor-arg index="0" ref="loginPointerReadTask" />
+	</bean>
+
+	<bean id="loginPointerUpdateService" lazy-init="true"
+		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
+		<constructor-arg index="0" ref="loginPointerReadService" />
+		<constructor-arg index="1" ref="loginPointerUpdateTask" />
+	</bean>
+
+	<bean id="loginPointerDeleteService"
+		class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl">
+		<constructor-arg index="0" ref="loginPointerReadService" />
+		<constructor-arg index="1" ref="loginPointerDeleteTask" />
+	</bean>
+
+	<!-- Save/Delete Tasks -->
+	<bean id="loginPointerSynchronousSaveTask"
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
+		lazy-init="true">
+		<constructor-arg index="0"
+			ref="loginPointerSynchronousConfiguredSetter" />
+	</bean>
+
+	<bean id="loginPointerAsyncSaveTask"
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
+		lazy-init="true">
+		<constructor-arg index="0" ref="loginPointerAsyncConfiguredSetter" />
+	</bean>
+
+	<!-- Create -->
+	<bean id="loginPointerCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
+		lazy-init="true">
+		<constructor-arg index="0" ref="loginPointerCreateTaskDelegate" />
+		<constructor-arg index="1" ref="loginPointerSynchronousSaveTask" />
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+				<constructor-arg index="0" ref="loginPointerType" />
+				<constructor-arg index="1" ref="taskScheduler" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="loginPointerCreateTaskDelegate"
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl"
+		lazy-init="true">
+		<constructor-arg index="0" ref="loginPointerFactory" />
+		<constructor-arg index="1" ref="loginPointerAttributeUpdater" />
+	</bean>
+
+	<!-- Read -->
+	<bean id="loginPointerReadTask" lazy-init="true"
+		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+		<constructor-arg index="0" ref="loginPointerRegistry" />
+	</bean>
+
+	<!-- Update -->
+	<bean id="loginPointerUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl"
+		lazy-init="true">
+		<constructor-arg index="0" ref="loginPointerAttributeUpdater" />
+		<constructor-arg index="1" ref="loginPointerAsyncSaveTask" />
+		<constructor-arg index="2" ref="loginPointerScheduleUpdateReview" />
+	</bean>
+
+	<bean id="loginPointerAttributeUpdater"
+		class="com.dereekb.gae.server.auth.model.pointer.crud.LoginPointerAttributeUpdater"
+		lazy-init="true">
+	</bean>
+
+	<!-- Delete -->
+	<alias name="loginPointerScheduleDeleteTask" alias="loginPointerDeleteTask" />
+
+	<bean id="loginPointerScheduleDeleteTask"
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
+		lazy-init="true">
+		<constructor-arg index="0" ref="loginPointerType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+</beans>

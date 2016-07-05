@@ -9,21 +9,17 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Objectify -->
-	<bean id="objectifyDatabase"
-		class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase"
-		scope="singleton" primary="true" lazy-init="false">
-		<constructor-arg index="0" ref="objectifyDatabaseEntities" />
-		<constructor-arg index="1" value="false"/>
+	<!-- Factory -->
+	<bean id="loginFactory" lazy-init="true"
+		class="com.dereekb.gae.utilities.factory.BasicFactory">
+		<constructor-arg index="0" type="java.lang.Class"
+			value="com.dereekb.gae.server.auth.model.login.Login" />
 	</bean>
 
-	<util:list id="objectifyDatabaseEntities">
-		<ref bean="loginObjectifyEntry" />
-		<ref bean="loginPointerObjectifyEntry" />
-		<ref bean="geoPlaceObjectifyEntry" />
-		<ref bean="storedBlobObjectifyEntry" />
-		<ref bean="storedImageObjectifyEntry" />
-		<ref bean="storedImageSetObjectifyEntry" />
-	</util:list>
+	<!-- Generator -->
+	<bean id="loginGenerator"
+		class="com.dereekb.gae.server.auth.model.login.generator.LoginGenerator"
+		scope="singleton">
+	</bean>
 
 </beans>

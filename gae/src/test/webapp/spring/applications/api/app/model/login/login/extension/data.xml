@@ -9,21 +9,22 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Objectify -->
-	<bean id="objectifyDatabase"
-		class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase"
-		scope="singleton" primary="true" lazy-init="false">
-		<constructor-arg index="0" ref="objectifyDatabaseEntities" />
-		<constructor-arg index="1" value="false"/>
+	<!-- Type -->
+	<bean id="loginDataBuilder"
+		class="com.dereekb.gae.server.auth.model.login.dto.LoginDataBuilder"
+		scope="singleton" lazy-init="true">
 	</bean>
 
-	<util:list id="objectifyDatabaseEntities">
-		<ref bean="loginObjectifyEntry" />
-		<ref bean="loginPointerObjectifyEntry" />
-		<ref bean="geoPlaceObjectifyEntry" />
-		<ref bean="storedBlobObjectifyEntry" />
-		<ref bean="storedImageObjectifyEntry" />
-		<ref bean="storedImageSetObjectifyEntry" />
-	</util:list>
+	<bean id="loginDataReader"
+		class="com.dereekb.gae.server.auth.model.login.dto.LoginDataReader"
+		scope="singleton" lazy-init="true">
+	</bean>
+
+	<bean id="loginDataConverter"
+		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="loginDataBuilder" />
+		<constructor-arg index="1" ref="loginDataReader" />
+	</bean>
 
 </beans>
