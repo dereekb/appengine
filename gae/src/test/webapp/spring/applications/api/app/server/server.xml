@@ -9,6 +9,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<import resource="login.xml" />
 	<import resource="taskqueue.xml" />
 	<import resource="database.xml" />
 	<import resource="keys.xml" />

@@ -59,5 +59,6 @@
 	<import resource="extension/data.xml" />
 	<import resource="extension/link.xml" />
 	<import resource="extension/generation.xml" />
+	<import resource="extension/search.xml" />
 
 </beans>

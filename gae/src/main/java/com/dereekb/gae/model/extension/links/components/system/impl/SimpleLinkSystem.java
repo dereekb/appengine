@@ -46,7 +46,7 @@ public class SimpleLinkSystem
 		LinkSystemEntry entry = this.entries.get(key);
 
 		if (entry == null) {
-			throw new UnregisteredLinkTypeException();
+			throw new UnregisteredLinkTypeException("Missing type: " + key);
 		}
 
 		return entry;

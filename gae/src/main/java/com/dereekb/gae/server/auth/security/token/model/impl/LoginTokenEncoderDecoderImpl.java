@@ -49,8 +49,8 @@ public class LoginTokenEncoderDecoderImpl
 	}
 
 	public void setSecret(String secret) throws IllegalArgumentException {
-		if (secret == null) {
-			throw new IllegalArgumentException("Secret cannot be null.");
+		if (secret == null || secret.isEmpty()) {
+			throw new IllegalArgumentException("Secret cannot be null or empty.");
 		}
 
 		this.secret = secret;
@@ -115,14 +115,20 @@ public class LoginTokenEncoderDecoderImpl
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 
 		Number loginNumber = claims.get(LOGIN_KEY, Number.class);
-		Long login = loginNumber.longValue();
+		Long login = null;
+
+		if (loginNumber != null) {
+			loginNumber.longValue();
+		}
+
 		String loginPointer = claims.get(LOGIN_POINTER_KEY, String.class);
 
 		String subject = claims.getSubject();
 		Date expiration = claims.getExpiration();
 		Date issued = claims.getIssuedAt();
 
-		if (login == null || loginPointer == null || expiration == null || issued == null) {
+		// Login might not always be present.
+		if (loginPointer == null || expiration == null || issued == null) {
 			throw new TokenUnauthorizedException("Invalid token.");
 		}
 

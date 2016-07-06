@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.token.model;
 
 import java.util.Date;
 
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 
 /**
@@ -21,8 +22,10 @@ public interface LoginToken {
 	public String getSubject();
 
 	/**
+	 * Key of {@link Login} used for logging in.
 	 *
-	 * @return
+	 * @return {@link Long} key of the {@link Login} used for logging in. May be
+	 *         {@code null}.
 	 */
 	public Long getLogin();
 

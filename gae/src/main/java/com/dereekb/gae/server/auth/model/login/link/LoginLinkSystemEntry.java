@@ -30,8 +30,8 @@ public class LoginLinkSystemEntry extends AbstractModelLinkSystemEntry<Login> {
 
 	public static final String LOGIN_LINK_TYPE = "Login";
 
-	private static final ExtendedObjectifyModelKeyUtil<LoginPointer> loginPointerUtil = ExtendedObjectifyModelKeyUtil.make(
-	        LoginPointer.class, ModelKeyType.NUMBER);
+	private static final ExtendedObjectifyModelKeyUtil<LoginPointer> loginPointerUtil = ExtendedObjectifyModelKeyUtil
+	        .make(LoginPointer.class, ModelKeyType.NAME);
 
 	private String loginPointersLinkName = LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE;
 

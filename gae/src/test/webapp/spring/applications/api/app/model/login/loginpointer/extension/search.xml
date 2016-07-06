@@ -9,14 +9,11 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- MODELS -->
-	<import resource="model/model.xml" />
-
-	<!-- EXTENSIONs -->
-	<import resource="extension/link.xml" />
-	<import resource="extension/login.xml" />
-	<import resource="extension/search.xml" />
-	<import resource="extension/upload.xml" />
-	<import resource="extension/download.xml" />
+	<!-- Query Services -->
+	<bean id="loginPointerQueryService"
+		class="com.dereekb.gae.model.extension.search.query.search.service.impl.ModelQueryServiceImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="loginPointerRegistry"/>
+	</bean>
 
 </beans>

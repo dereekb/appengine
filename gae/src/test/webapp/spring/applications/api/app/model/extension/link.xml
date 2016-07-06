@@ -45,6 +45,8 @@
 		<ref bean="storedBlobLinkSystem" />
 		<ref bean="storedImageLinkSystem" />
 		<ref bean="storedImageSetLinkSystem" />
+		<ref bean="loginLinkSystem" />
+		<ref bean="loginPointerLinkSystem" />
 	</util:list>
 	
 </beans>

@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.auth.response;
 
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -34,6 +36,11 @@ public class LoginTokenPair {
 
 	public void setLoginPointer(String loginPointer) {
 		this.loginPointer = loginPointer;
+	}
+
+	@JsonIgnore
+	public ModelKey getLoginPointerKey() {
+		return ModelKey.safe(this.loginPointer);
 	}
 
 	public String getToken() {

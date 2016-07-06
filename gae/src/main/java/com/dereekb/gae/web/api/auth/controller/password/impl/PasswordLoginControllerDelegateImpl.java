@@ -21,11 +21,21 @@ public class PasswordLoginControllerDelegateImpl
 	private PasswordLoginService loginService;
 	private LoginTokenService tokenService;
 
+	public PasswordLoginControllerDelegateImpl(PasswordLoginService loginService, LoginTokenService tokenService)
+	        throws IllegalArgumentException {
+		this.setLoginService(loginService);
+		this.setTokenService(tokenService);
+	}
+
 	public PasswordLoginService getLoginService() {
 		return this.loginService;
 	}
 
-	public void setLoginService(PasswordLoginService loginService) {
+	public void setLoginService(PasswordLoginService loginService) throws IllegalArgumentException {
+		if (loginService == null) {
+			throw new IllegalArgumentException();
+		}
+
 		this.loginService = loginService;
 	}
 
@@ -33,7 +43,11 @@ public class PasswordLoginControllerDelegateImpl
 		return this.tokenService;
 	}
 
-	public void setTokenService(LoginTokenService tokenService) {
+	public void setTokenService(LoginTokenService tokenService) throws IllegalArgumentException {
+		if (tokenService == null) {
+			throw new IllegalArgumentException();
+		}
+
 		this.tokenService = tokenService;
 	}
 
