@@ -1,12 +1,14 @@
 package com.dereekb.gae.model.extension.links.components.exception;
 
+import com.dereekb.gae.model.extension.links.exception.LinkException;
+
 /**
  * Thrown when a {@link Link} is unavailable.
  *
  * @author dereekb
  *
  */
-public class UnavailableLinkException extends RuntimeException {
+public class UnavailableLinkException extends LinkException {
 
 	private static final long serialVersionUID = 1L;
 

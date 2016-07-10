@@ -31,7 +31,7 @@ public final class LoginDataBuilder extends AbstractDirectionalConverter<Login, 
 
 		// Data
 		data.setRoles(login.getRoles());
-		data.setType(login.getType());
+		data.setGroup(login.getGroup());
 
 		return data;
 	}

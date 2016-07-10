@@ -10,7 +10,8 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableExce
  * @author dereekb
  *
  */
-public interface LoginService {
+public interface LoginService
+        extends LoginRegisterService {
 
 	/**
 	 * Retrieves a {@link LoginPointer} with the given username if it exists.

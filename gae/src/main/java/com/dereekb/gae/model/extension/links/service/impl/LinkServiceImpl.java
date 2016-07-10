@@ -9,6 +9,8 @@ import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 

@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.components.exception;
 
 import com.dereekb.gae.model.extension.links.components.Relation;
+import com.dereekb.gae.model.extension.links.exception.LinkException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -9,7 +10,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public class RelationChangeException extends RuntimeException {
+public class RelationChangeException extends LinkException {
 
 	private static final long serialVersionUID = 1L;
 

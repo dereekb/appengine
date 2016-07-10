@@ -45,7 +45,7 @@ public final class LoginDataReader extends AbstractDirectionalConverter<LoginDat
 
 		// Roles
 		model.setRoles(input.getRoles());
-		model.setType(input.getType());
+		model.setGroup(input.getGroup());
 
 		return model;
 	}

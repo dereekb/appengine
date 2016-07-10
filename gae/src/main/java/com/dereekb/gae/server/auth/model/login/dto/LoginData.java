@@ -22,7 +22,7 @@ public class LoginData extends SearchableDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer type;
+	private Integer group;
 
 	private Set<Integer> roles;
 
@@ -30,15 +30,15 @@ public class LoginData extends SearchableDatabaseModelData {
 
 	public LoginData() {}
 
-	public Integer getType() {
-		return this.type;
+	public Integer getGroup() {
+		return this.group;
 	}
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setGroup(Integer group) {
+		this.group = group;
 	}
 
-    public Set<Integer> getRoles() {
+	public Set<Integer> getRoles() {
 		return this.roles;
 	}
 

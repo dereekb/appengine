@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.deleter.exception;
 
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
+import com.dereekb.gae.model.extension.links.exception.LinkException;
 
 /**
  * Thrown by {@link LinkSystem} with an unavailable type is requested.
@@ -8,7 +9,7 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
  * @author dereekb
  *
  */
-public class UnregisteredDeleterException extends RuntimeException {
+public class UnregisteredDeleterException extends LinkException {
 
 	private static final long serialVersionUID = 1L;
 

@@ -1,5 +1,6 @@
-package com.dereekb.gae.model.extension.links.service.impl;
+package com.dereekb.gae.model.extension.links.service.exception;
 
+import com.dereekb.gae.model.extension.links.exception.LinkException;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 
 /**
@@ -8,7 +9,7 @@ import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
  * @author dereekb
  *
  */
-public class LinkSystemChangeException extends RuntimeException {
+public class LinkSystemChangeException extends LinkException {
 
 	private static final long serialVersionUID = 1L;
 

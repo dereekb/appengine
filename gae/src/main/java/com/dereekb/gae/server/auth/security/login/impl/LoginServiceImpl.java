@@ -1,6 +1,11 @@
 package com.dereekb.gae.server.auth.security.login.impl;
 
+import java.util.Set;
+
+import com.dereekb.gae.model.extension.links.exception.LinkException;
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.LoginService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
@@ -18,6 +23,8 @@ public class LoginServiceImpl
 
 	private String format;
 	private GetterSetter<LoginPointer> getterSetter;
+
+	private LoginRegisterService registerService;
 
 	public LoginServiceImpl(String format, GetterSetter<LoginPointer> getterSetter) throws IllegalArgumentException {
 		this.setFormat(format);
@@ -82,6 +89,18 @@ public class LoginServiceImpl
 
 	protected String getLoginIdForUsername(String username) {
 		return String.format(this.format, username.toLowerCase());
+	}
+
+	// MARK: LoginRegisterService
+	@Override
+	public Login register(LoginPointer pointer) throws LoginExistsException {
+		return this.registerService.register(pointer);
+	}
+
+	@Override
+	public void registerLogins(ModelKey loginKey,
+	                           Set<String> loginPointers) throws LinkException {
+		this.registerService.registerLogins(loginKey, loginPointers);
 	}
 
 }
