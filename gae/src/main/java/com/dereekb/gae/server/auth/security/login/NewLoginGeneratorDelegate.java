@@ -2,14 +2,15 @@ package com.dereekb.gae.server.auth.security.login;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
 
 /**
- * Used for generating new {@link Login} objects.
+ * {@link NewLoginGeneratorImpl} delegate.
  *
  * @author dereekb
  *
  */
-public interface NewLoginGenerator {
+public interface NewLoginGeneratorDelegate {
 
 	/**
 	 * Creates a new {@link Login}, using data from the {@link LoginPointer}.
@@ -19,8 +20,8 @@ public interface NewLoginGenerator {
 	 * @param pointer
 	 *            {@link LoginPointer}. Can be {@code null} depending on
 	 *            implementation.
-	 * @return {@link Login}.
+	 * @return {@link Login} without an identifier.
 	 */
-	public Login makeLogin(LoginPointer pointer);
+	public Login makeNewLogin(LoginPointer pointer);
 
 }

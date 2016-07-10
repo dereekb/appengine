@@ -36,6 +36,44 @@ public class LoginRegisterServiceImpl
 	private NewLoginGenerator loginGenerator;
 	private LinkService linkService;
 
+	public LoginRegisterServiceImpl(NewLoginGenerator loginGenerator, LinkService linkService) {
+		this.setLoginGenerator(loginGenerator);
+		this.setLinkService(linkService);
+	}
+
+	public String getLoginLinkType() {
+		return this.loginLinkType;
+	}
+
+	public void setLoginLinkType(String loginLinkType) {
+		this.loginLinkType = loginLinkType;
+	}
+
+	public String getLoginPointerLinkName() {
+		return this.loginPointerLinkName;
+	}
+
+	public void setLoginPointerLinkName(String loginPointerLinkName) {
+		this.loginPointerLinkName = loginPointerLinkName;
+	}
+
+	public NewLoginGenerator getLoginGenerator() {
+		return this.loginGenerator;
+	}
+
+	public void setLoginGenerator(NewLoginGenerator loginGenerator) {
+		this.loginGenerator = loginGenerator;
+	}
+
+	public LinkService getLinkService() {
+		return this.linkService;
+	}
+
+	public void setLinkService(LinkService linkService) {
+		this.linkService = linkService;
+	}
+
+	// MARK: LoginRegisterService
 	@Override
 	public Login register(LoginPointer pointer) throws LoginExistsException {
 
@@ -48,6 +86,7 @@ public class LoginRegisterServiceImpl
 		}
 
 		Login login = this.loginGenerator.makeLogin(pointer);
+
 		Set<String> loginPointers = new HashSet<String>(1);
 		loginPointers.add(pointer.getIdentifier());
 

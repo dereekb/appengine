@@ -30,7 +30,12 @@ public class LoginRegisterControllerDelegateImpl
 	private LoginRegisterService registerService;
 	private LoginTokenService tokenService;
 
-    public LoginRegisterService getRegisterService() {
+	public LoginRegisterControllerDelegateImpl(LoginRegisterService registerService, LoginTokenService tokenService) {
+		this.registerService = registerService;
+		this.tokenService = tokenService;
+	}
+
+	public LoginRegisterService getRegisterService() {
     	return this.registerService;
     }
 
@@ -59,7 +64,8 @@ public class LoginRegisterControllerDelegateImpl
 
 		Login login = this.registerService.register(pointer);
 
-		// Temporarily set for token, without having to load new pointer.
+		// Temporarily set for token, without having to load new pointer for
+		// encoding.
 		pointer.setLogin(login.getObjectifyKey());
 
 		String token = this.tokenService.encodeLoginToken(pointer);
@@ -92,7 +98,6 @@ public class LoginRegisterControllerDelegateImpl
 		}
 
 		this.registerService.registerLogins(new ModelKey(primaryLoginId), loginPointers);
-
 	}
 
 

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
@@ -28,7 +29,7 @@ import com.googlecode.objectify.condition.IfNotDefault;
 @Cache
 @Entity
 public final class Login extends SearchableDatabaseModel
-        implements ObjectifyModel<Login> {
+        implements ObjectifyModel<Login>, EncodedRolesBearer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -72,19 +73,19 @@ public final class Login extends SearchableDatabaseModel
 	 * This allows multiple different pointers to have access to the same login,
 	 * if such functionality is required by the system.
 	 */
-	private Set<Key<LoginPointer>> pointers;
+	private Set<Key<LoginPointer>> pointers = new HashSet<Key<LoginPointer>>();
 
 	/**
 	 * Parent Logins that have access to this login.
 	 */
 	@IgnoreSave({ IfEmpty.class })
-	private Set<Key<Login>> parents;
+	private Set<Key<Login>> parents = new HashSet<Key<Login>>();
 
 	/**
 	 * Children logins that this login has access to.
 	 */
 	@IgnoreSave({ IfEmpty.class })
-	private Set<Key<Login>> children;
+	private Set<Key<Login>> children = new HashSet<Key<Login>>();
 
 	public Login() {}
 
@@ -125,6 +126,11 @@ public final class Login extends SearchableDatabaseModel
 	}
 
 	public Set<Integer> getRoles() {
+		return this.roles;
+	}
+
+	@Override
+	public Set<Integer> getEncodedRoles() {
 		return this.roles;
 	}
 

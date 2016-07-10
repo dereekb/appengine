@@ -55,11 +55,11 @@ public class LinkServiceImpl
 		boolean hasMissingKeys = runner.hasMissingKeys();
 
 		if (failures.isEmpty()) {
-			if (request.isAtomic() && hasMissingKeys == false) {
-				runner.saveChanges();
-			} else {
+			if (request.isAtomic() && hasMissingKeys) {
 				HashMapWithSet<String, ModelKey> missing = runner.getMissing();
 				throw new AtomicOperationException(missing.valuesSet(), AtomicOperationExceptionReason.UNAVAILABLE);
+			} else {
+				runner.saveChanges();
 			}
 		} else {
 			throw new LinkSystemChangesException(failures);

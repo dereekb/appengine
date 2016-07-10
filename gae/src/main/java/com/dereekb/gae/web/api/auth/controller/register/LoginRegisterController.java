@@ -33,7 +33,11 @@ public class LoginRegisterController {
 
 	private LoginRegisterControllerDelegate delegate;
 
-    public LoginRegisterControllerDelegate getDelegate() {
+	public LoginRegisterController(LoginRegisterControllerDelegate delegate) {
+		this.setDelegate(delegate);
+	}
+
+	public LoginRegisterControllerDelegate getDelegate() {
 		return this.delegate;
 	}
 
@@ -69,7 +73,7 @@ public class LoginRegisterController {
 	 * Returns a new {@link LoginTokenPair}.
 	 */
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(path = "/tokens", method = RequestMethod.POST, produces = "application/json")
 	public final void registerLogins(@RequestParam @NotEmpty @Min(2) List<String> tokens) {
 		try {
 			this.delegate.registerLogins(tokens);

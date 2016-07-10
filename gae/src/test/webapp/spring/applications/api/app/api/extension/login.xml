@@ -9,10 +9,24 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Register Controller -->
+	<bean id="loginRegisterController"
+		class="com.dereekb.gae.web.api.auth.controller.register.LoginRegisterController"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="loginRegisterControllerDelegate"/>
+	</bean>
+
+	<bean id="loginRegisterControllerDelegate"
+		class="com.dereekb.gae.web.api.auth.controller.register.impl.LoginRegisterControllerDelegateImpl"
+		scope="singleton" lazy-init="true">
+		<constructor-arg index="0" ref="loginRegisterService"/>
+		<constructor-arg index="1" ref="loginTokenService"/>
+	</bean>
+
 	<!-- Password Login Controller -->
 	<bean id="passwordLoginController"
 		class="com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController"
-		scope="singleton" lazy-init="false">
+		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="passwordLoginControllerDelegate"/>
 	</bean>
 

@@ -36,5 +36,17 @@
 	<bean id="passwordEncoder" scope="singleton" lazy-init="true"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
 	</bean>
+	
+	<!-- Register Service -->
+	<bean id="loginRegisterService" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl">
+		<constructor-arg index="0" ref="newLoginGenerator"/>
+		<constructor-arg index="1" ref="linkService"/>
+	</bean>
+
+	<bean id="newLoginGenerator" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl">
+		<constructor-arg index="0" ref="loginRegistry"/>
+	</bean>
 
 </beans>

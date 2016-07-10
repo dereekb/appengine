@@ -75,9 +75,7 @@ public class LoginTokenEncoderDecoderImpl
 		JwtBuilder builder = Jwts.builder().signWith(this.algorithm, this.secret);
 		Claims claims = this.buildClaims(loginToken);
 
-		builder.setClaims(claims);
-
-		return builder.compact();
+		return builder.setClaims(claims).compact();
 	}
 
 	private Claims buildClaims(LoginToken loginToken) {
@@ -118,7 +116,7 @@ public class LoginTokenEncoderDecoderImpl
 		Long login = null;
 
 		if (loginNumber != null) {
-			loginNumber.longValue();
+			login = loginNumber.longValue();
 		}
 
 		String loginPointer = claims.get(LOGIN_POINTER_KEY, String.class);
