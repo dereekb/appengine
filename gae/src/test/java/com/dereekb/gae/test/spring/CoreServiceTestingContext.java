@@ -119,6 +119,8 @@ public class CoreServiceTestingContext {
 				e.printStackTrace();
 				return 500;
 			} catch (Exception e) {
+				System.out.println(String.format("Exception occured while executing task %s.", arg0.getUrl()));
+				e.printStackTrace();
 				return 0;
 			} finally {
 				ofy.close();

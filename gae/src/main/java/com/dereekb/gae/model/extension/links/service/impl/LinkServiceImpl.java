@@ -55,7 +55,7 @@ public class LinkServiceImpl
 		boolean hasMissingKeys = runner.hasMissingKeys();
 
 		if (failures.isEmpty()) {
-			if (request.isAtomic() && hasMissingKeys) {
+			if (hasMissingKeys && request.isAtomic()) {
 				HashMapWithSet<String, ModelKey> missing = runner.getMissing();
 				throw new AtomicOperationException(missing.valuesSet(), AtomicOperationExceptionReason.UNAVAILABLE);
 			} else {

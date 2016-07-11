@@ -4,6 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
@@ -13,6 +17,9 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Tests creating and logging in using the password API.
@@ -35,6 +42,7 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 	@Qualifier("loginPointerRegistry")
 	public ObjectifyRegistry<LoginPointer> loginPointerRegistry;
 
+	// MARK: Direct Controller Tests
 	@Test
 	public void testCreate() {
 		LoginTokenPair pair = this.passwordController.create(TEST_USERNAME, TEST_PASSWORD);
@@ -86,4 +94,38 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 			Assert.assertTrue(e.getReason().equals(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS));
 		}
 	}
+
+	// MARK: Mock Tests
+	@Test
+	public void testLoginRequests() throws Exception {
+		JsonParser parser = new JsonParser();
+
+		MockHttpServletRequestBuilder createRequestBuilder = MockMvcRequestBuilders.post("/login/pass/create");
+		createRequestBuilder.param("username", TEST_USERNAME);
+		createRequestBuilder.param("password", TEST_PASSWORD);
+		createRequestBuilder.accept("application/json");
+
+		MvcResult createResult = this.mockMvc.perform(createRequestBuilder).andReturn();
+		MockHttpServletResponse createResponse = createResult.getResponse();
+		String createResponseData = createResponse.getContentAsString();
+
+		Assert.assertTrue("Expected 200 but got " + createResponse.getStatus() + ".", createResponse.getStatus() == 200);
+		Assert.assertNotNull(createResponseData);
+
+		TestLocalTaskQueueCallback.waitUntilComplete();
+
+		JsonElement createResponseJson = parser.parse(createResponseData);
+		JsonObject object = createResponseJson.getAsJsonObject();
+		String token = object.get("token").getAsString();
+
+		Assert.assertNotNull(token);
+
+		try {
+			this.loginTokenService.decodeLoginToken(token);
+		} catch (Exception e) {
+			Assert.fail("Should decode token.");
+		}
+
+	}
+
 }

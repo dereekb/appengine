@@ -44,6 +44,7 @@
 	<bean id="localDatastoreServiceTestConfig"
 		class="com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig"
 		scope="singleton" init-method="setApplyAllHighRepJobPolicy">
+		<property name="noStorage" value="true" />
 	</bean>
 
 	<bean id="localSearchServiceTestConfig"
@@ -66,9 +67,26 @@
 		scope="singleton">
 	</bean>
 
+	<bean id="datastoreIndexesXmlPath" class="java.lang.String"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0"
+			value="src/test/webapp/datastore-indexes.xml" />
+	</bean>
+
+	<bean id="taskQueueXmlPath" class="java.lang.String" lazy-init="false"
+		scope="singleton">
+		<constructor-arg index="0"
+			value="src/test/webapp/queue.xml" />
+	</bean>
+
 	<bean id="localTaskQueueServiceTestConfig"
 		class="com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig"
 		scope="singleton">
+		<property name="queueXmlPath">
+			<ref bean="taskQueueXmlPath" />
+		</property>
+		<property name="callbackClass" value="com.dereekb.gae.test.spring.CoreServiceTestingContext.TestLocalTaskQueueCallback"/>
+		<property name="disableAutoTaskExecution" value="false"></property>
 	</bean>
 
 </beans>

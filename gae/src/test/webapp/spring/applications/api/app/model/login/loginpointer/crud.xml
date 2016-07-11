@@ -12,18 +12,13 @@
 	<!-- Cruds -->
 	<bean id="loginPointerCrudService" lazy-init="true"
 		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
-		<constructor-arg index="0" ref="loginPointerCreateService" />
+		<constructor-arg index="0"><null/></constructor-arg>
 		<constructor-arg index="1" ref="loginPointerReadService" />
 		<constructor-arg index="2" ref="loginPointerUpdateService" />
 		<constructor-arg index="3" ref="loginPointerDeleteService" />
 	</bean>
 
 	<!-- Services -->
-	<bean id="loginPointerCreateService" lazy-init="true"
-		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
-		<constructor-arg index="0" ref="loginPointerCreateTask" />
-	</bean>
-
 	<bean id="loginPointerReadService" lazy-init="true"
 		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
 		<constructor-arg index="0" ref="loginPointerReadTask" />
@@ -52,23 +47,18 @@
 	<bean id="loginPointerAsyncSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
 		lazy-init="true">
-		<constructor-arg index="0" ref="loginPointerAsyncConfiguredSetter" />
+		<constructor-arg index="0"
+			ref="loginPointerAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Create -->
-	<bean id="loginPointerCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
-		lazy-init="true">
-		<constructor-arg index="0" ref="loginPointerCreateTaskDelegate" />
-		<constructor-arg index="1" ref="loginPointerSynchronousSaveTask" />
-		<constructor-arg index="2">
-			<bean
-				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
-				<constructor-arg index="0" ref="loginPointerType" />
-				<constructor-arg index="1" ref="taskScheduler" />
-			</bean>
-		</constructor-arg>
+	<bean id="loginPointerScheduleCreateReview" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+		<constructor-arg index="0" ref="loginPointerType" />
+		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
-
+	
 	<bean id="loginPointerCreateTaskDelegate"
 		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl"
 		lazy-init="true">
@@ -87,7 +77,8 @@
 		lazy-init="true">
 		<constructor-arg index="0" ref="loginPointerAttributeUpdater" />
 		<constructor-arg index="1" ref="loginPointerAsyncSaveTask" />
-		<constructor-arg index="2" ref="loginPointerScheduleUpdateReview" />
+		<constructor-arg index="2"
+			ref="loginPointerScheduleUpdateReview" />
 	</bean>
 
 	<bean id="loginPointerAttributeUpdater"

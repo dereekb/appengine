@@ -12,18 +12,13 @@
 	<!-- Cruds -->
 	<bean id="loginCrudService" lazy-init="true"
 		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
-		<constructor-arg index="0" ref="loginCreateService" />
+		<constructor-arg index="0"><null/></constructor-arg>
 		<constructor-arg index="1" ref="loginReadService" />
 		<constructor-arg index="2" ref="loginUpdateService" />
 		<constructor-arg index="3" ref="loginDeleteService" />
 	</bean>
 
 	<!-- Services -->
-	<bean id="loginCreateService" lazy-init="true"
-		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
-		<constructor-arg index="0" ref="loginCreateTask" />
-	</bean>
-
 	<bean id="loginReadService" lazy-init="true"
 		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
 		<constructor-arg index="0" ref="loginReadTask" />
@@ -56,17 +51,10 @@
 	</bean>
 
 	<!-- Create -->
-	<bean id="loginCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
-		lazy-init="true">
-		<constructor-arg index="0" ref="loginCreateTaskDelegate" />
-		<constructor-arg index="1" ref="loginSynchronousSaveTask" />
-		<constructor-arg index="2">
-			<bean
-				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
-				<constructor-arg index="0" ref="loginType" />
-				<constructor-arg index="1" ref="taskScheduler" />
-			</bean>
-		</constructor-arg>
+	<bean id="loginScheduleCreateReview" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+		<constructor-arg index="0" ref="loginType" />
+		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
 	<bean id="loginCreateTaskDelegate"

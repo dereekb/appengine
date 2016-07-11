@@ -11,6 +11,7 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
  * Abstract {@link LoginService} implementation.
@@ -23,21 +24,35 @@ public class LoginServiceImpl
 
 	private String format;
 	private GetterSetter<LoginPointer> getterSetter;
-
+	private TaskRequestSender<LoginPointer> reviewTask;
 	private LoginRegisterService registerService;
 
 	public LoginServiceImpl(String format, GetterSetter<LoginPointer> getterSetter) throws IllegalArgumentException {
+		this(format, getterSetter, null);
+	}
+
+	public LoginServiceImpl(String format, GetterSetter<LoginPointer> getterSetter, LoginRegisterService registerService)
+	        throws IllegalArgumentException {
+		this(format, getterSetter, null, registerService);
+	}
+
+	public LoginServiceImpl(String format,
+	        GetterSetter<LoginPointer> getterSetter,
+	        TaskRequestSender<LoginPointer> reviewTask,
+	        LoginRegisterService registerService) throws IllegalArgumentException {
 		this.setFormat(format);
 		this.setGetterSetter(getterSetter);
+		this.setReviewTask(reviewTask);
+		this.setRegisterService(registerService);
 	}
 
 	public String getFormat() {
 		return this.format;
-    }
+	}
 
 	public void setFormat(String format) {
 		this.format = format;
-    }
+	}
 
 	public GetterSetter<LoginPointer> getGetterSetter() {
 		return this.getterSetter;
@@ -51,9 +66,25 @@ public class LoginServiceImpl
 		this.getterSetter = getterSetter;
 	}
 
+	public TaskRequestSender<LoginPointer> getReviewTask() {
+		return this.reviewTask;
+	}
+
+	public void setReviewTask(TaskRequestSender<LoginPointer> reviewTask) {
+		this.reviewTask = reviewTask;
+	}
+
+	public LoginRegisterService getRegisterService() {
+		return this.registerService;
+	}
+
+	public void setRegisterService(LoginRegisterService registerService) {
+		this.registerService = registerService;
+	}
+
 	// MARK: LoginService
 	@Override
-    public LoginPointer getLogin(String username) throws LoginUnavailableException {
+	public LoginPointer getLogin(String username) throws LoginUnavailableException {
 		LoginPointer pointer = this.loadLogin(username);
 
 		if (pointer == null) {
@@ -61,7 +92,7 @@ public class LoginServiceImpl
 		}
 
 		return pointer;
-    }
+	}
 
 	protected LoginPointer createLogin(String username,
 	                                   LoginPointer template) throws LoginExistsException {
@@ -74,6 +105,11 @@ public class LoginServiceImpl
 
 		template.setModelKey(key);
 		this.getterSetter.save(template, false);
+
+		if (this.reviewTask != null) {
+			this.reviewTask.sendTask(template);
+		}
+
 		return template;
 	}
 

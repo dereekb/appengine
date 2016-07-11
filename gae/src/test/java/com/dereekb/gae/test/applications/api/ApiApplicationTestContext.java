@@ -31,6 +31,7 @@ public class ApiApplicationTestContext extends CoreServiceTestingContext {
 	public void setUp() {
 		super.setUp();
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
 	}
 
 	public WebApplicationContext getWebApplicationContext() {

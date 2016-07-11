@@ -31,6 +31,8 @@
 		class="com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl">
 		<constructor-arg index="0" ref="passwordEncoder"/>
 		<constructor-arg index="1" ref="loginPointerRegistry"/>
+		<constructor-arg index="2" ref="loginPointerScheduleCreateReview"/>
+		<constructor-arg index="3" ref="loginRegisterService"/>
 	</bean>
 	
 	<bean id="passwordEncoder" scope="singleton" lazy-init="true"
@@ -47,6 +49,7 @@
 	<bean id="newLoginGenerator" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl">
 		<constructor-arg index="0" ref="loginRegistry"/>
+		<constructor-arg index="1" ref="loginScheduleCreateReview"/>
 	</bean>
 
 </beans>

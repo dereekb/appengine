@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE appengine>
+<datastore-indexes autoGenerate="true">
+
+	<!-- TODO: Updated index configurations. -->
+    
+    <!-- These indexes are for querying models in a destination versus when they were added. Not really necessary. -->
+    <!--
+    <datastore-index kind="Series" ancestor="false" source="manual">
+        <property name="destination" direction="asc"/>
+        <property name="creationDate"  direction="desc"/>
+    </datastore-index>
+    <datastore-index kind="Place" ancestor="false" source="manual">
+        <property name="destination" direction="asc"/>
+        <property name="creationDate"  direction="desc"/>
+    </datastore-index>
+     -->
+
+</datastore-indexes>
