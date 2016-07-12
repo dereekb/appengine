@@ -22,6 +22,7 @@
 	
 	<bean id="loginTokenBuilder" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl">
+		<constructor-arg index="0" ref="loginRegistry"/>
 	</bean>
 	
 	<alias name="loginTokenService" alias="loginTokenEncoderDecoder"/>

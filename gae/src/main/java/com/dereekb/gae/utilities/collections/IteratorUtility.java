@@ -69,4 +69,14 @@ public class IteratorUtility {
 		return set;
 	}
 
+	public static List<String> iterableToStrings(Iterable<? extends Object> iterable) {
+		List<String> list = new ArrayList<String>();
+
+		for (Object object : iterable) {
+			list.add(object.toString());
+		}
+
+		return list;
+	}
+
 }

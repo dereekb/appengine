@@ -28,13 +28,26 @@ public class ListUtility {
 	}
 
 	/**
+	 * Converts the array elements to a list.
+	 *
+	 * @param elements
+	 *            Array of elements to add.
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public static <T> List<T> toList(T[] elements) {
+		List<T> list = new ArrayList<T>();
+		addElements(list, elements);
+		return list;
+	}
+
+	/**
 	 * Adds the elements from an array to the input list.
 	 *
 	 * @param list
 	 *            {@link List} or {@code null}.
 	 * @param elements
 	 *            Array of elements to add.
-	 * @return {@link List}. Never {@code null}.
+	 * @return {@link Collection}. Never {@code null}.
 	 */
 	public static <T> Collection<T> addElements(Collection<T> list,
 	                                            T[] elements) {

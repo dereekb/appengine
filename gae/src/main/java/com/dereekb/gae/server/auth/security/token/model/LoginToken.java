@@ -22,6 +22,13 @@ public interface LoginToken {
 	public String getSubject();
 
 	/**
+	 * Returns role codes for the user.
+	 *
+	 * @return {@link Role}. Never {@code null}.
+	 */
+	public String getEncodedRoles();
+
+	/**
 	 * Key of {@link Login} used for logging in.
 	 *
 	 * @return {@link Long} key of the {@link Login} used for logging in. May be

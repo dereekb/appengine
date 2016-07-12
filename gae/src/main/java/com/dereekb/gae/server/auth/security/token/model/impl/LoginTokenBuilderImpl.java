@@ -1,11 +1,13 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
-import com.googlecode.objectify.Key;
+import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link LoginTokenBuilder} implementation.
@@ -21,6 +23,12 @@ public class LoginTokenBuilderImpl
 
 	private Long expirationTime = DEFAULT_EXPIRATION_TIME;
 
+	private Getter<Login> loginGetter;
+
+	public LoginTokenBuilderImpl(Getter<Login> loginGetter) {
+		this.setLoginGetter(loginGetter);
+	}
+
 	public Long getExpirationTime() {
 		return this.expirationTime;
 	}
@@ -29,22 +37,38 @@ public class LoginTokenBuilderImpl
 		this.expirationTime = expirationTime;
 	}
 
+	public Getter<Login> getLoginGetter() {
+		return this.loginGetter;
+	}
+
+	public void setLoginGetter(Getter<Login> loginGetter) {
+		this.loginGetter = loginGetter;
+	}
+
 	// MARK: LoginTokenBuilder
 	@Override
 	public LoginTokenImpl buildLoginToken(LoginPointer pointer) {
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 
-		Key<Login> loginKey = pointer.getLogin();
-		Long login = null;
+		ModelKey loginKey = pointer.getLoginModelKey();
+		Set<Integer> roles = null;
+		Long loginId = null;
 
 		if (loginKey != null) {
-			login = loginKey.getId();
+			loginId = loginKey.getId();
+
+			Login login = this.loginGetter.get(loginKey);
+
+			if (login != null) {
+				roles = login.getRoles();
+			}
 		}
 
 		String pointerId = pointer.getIdentifier();
 
-		loginToken.setLogin(login);
+		loginToken.setLogin(loginId);
 		loginToken.setLoginPointer(pointerId);
+		loginToken.setRoles(roles);
 
 		Date issued = new Date();
 		Date expiration = this.getExpirationDate();
@@ -61,7 +85,8 @@ public class LoginTokenBuilderImpl
 
 	@Override
 	public String toString() {
-		return "LoginTokenBuilderImpl [expirationTime=" + this.expirationTime + "]";
+		return "LoginTokenBuilderImpl [expirationTime=" + this.expirationTime + ", loginGetter=" + this.loginGetter
+		        + "]";
 	}
 
 }

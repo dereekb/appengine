@@ -27,8 +27,9 @@ import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
 public class LoginTokenEncoderDecoderImpl
         implements LoginTokenEncoder, LoginTokenDecoder {
 
-	private static final String LOGIN_KEY = "login";
-	private static final String LOGIN_POINTER_KEY = "pointer";
+	private static final String LOGIN_KEY = "lgn";
+	private static final String LOGIN_POINTER_KEY = "ptr";
+	private static final String ROLES_KEY = "roles";
 
 	private static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureAlgorithm.HS256;
 
@@ -87,6 +88,7 @@ public class LoginTokenEncoderDecoderImpl
 
 		claims.put(LOGIN_KEY, loginToken.getLogin());
 		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointer());
+		claims.put(ROLES_KEY, loginToken.getEncodedRoles());
 
 		return claims;
 	}
@@ -120,6 +122,7 @@ public class LoginTokenEncoderDecoderImpl
 		}
 
 		String loginPointer = claims.get(LOGIN_POINTER_KEY, String.class);
+		String roles = claims.get(ROLES_KEY, String.class);
 
 		String subject = claims.getSubject();
 		Date expiration = claims.getExpiration();
@@ -132,6 +135,7 @@ public class LoginTokenEncoderDecoderImpl
 
 		loginToken.setLogin(login);
 		loginToken.setLoginPointer(loginPointer);
+		loginToken.setRoles(roles);
 
 		loginToken.setSubject(subject);
 		loginToken.setExpiration(expiration);

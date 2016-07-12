@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.applications.api.model.login.login;
 
+import org.junit.Ignore;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -31,5 +33,10 @@ public class LoginCrudTest extends CrudServiceTester<Login> {
 	public void setModelGenerator(TestModelGenerator<Login> modelGenerator) {
 		super.setModelGenerator(modelGenerator);
 	}
+
+	@Override
+	@Ignore
+	@Test
+	public void testCreateService() {}
 
 }

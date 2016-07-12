@@ -78,8 +78,14 @@ public class LoginPointer extends DatabaseModel
 	}
 
 	public ModelKey getLoginModelKey() {
-		Long id = this.login.getId();
-		return new ModelKey(id);
+		ModelKey key = null;
+
+		if (this.login != null) {
+			Long id = this.login.getId();
+			key = ModelKey.safe(id);
+		}
+
+		return key;
 	}
 
 	public void setLogin(Key<Login> loginKey) {
