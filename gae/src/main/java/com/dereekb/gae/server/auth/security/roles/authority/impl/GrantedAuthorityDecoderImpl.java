@@ -27,7 +27,7 @@ public class GrantedAuthorityDecoderImpl extends SetDecoderImpl<GrantedAuthority
 		super(map);
 	}
 
-	public GrantedAuthorityDecoderImpl withStringMap(Map<String, String> map) throws IllegalArgumentException {
+	public static GrantedAuthorityDecoderImpl withStringMap(Map<String, String> map) throws IllegalArgumentException {
 		if (map == null) {
 			throw new IllegalArgumentException("Map cannot be null.");
 		}

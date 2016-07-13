@@ -27,15 +27,48 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	private GrantedAuthorityDecoder grantedAuthorityConverter;
 
-	// TODO: Roles mapper to GrantedAuthority type
+	public LoginTokenUserDetailsBuilderImpl(Getter<Login> loginGetter,
+	        Getter<LoginPointer> loginPointerGetter,
+	        GrantedAuthorityDecoder grantedAuthorityConverter) {
+		this.setLoginGetter(loginGetter);
+		this.setLoginPointerGetter(loginPointerGetter);
+		this.setGrantedAuthorityConverter(grantedAuthorityConverter);
+	}
+
+	public Getter<Login> getLoginGetter() {
+		return this.loginGetter;
+	}
+
+	public void setLoginGetter(Getter<Login> loginGetter) {
+		this.loginGetter = loginGetter;
+	}
+
+	public Getter<LoginPointer> getLoginPointerGetter() {
+		return this.loginPointerGetter;
+	}
+
+	public void setLoginPointerGetter(Getter<LoginPointer> loginPointerGetter) {
+		this.loginPointerGetter = loginPointerGetter;
+	}
+
+	public GrantedAuthorityDecoder getGrantedAuthorityConverter() {
+		return this.grantedAuthorityConverter;
+	}
+
+	public void setGrantedAuthorityConverter(GrantedAuthorityDecoder grantedAuthorityConverter) {
+		this.grantedAuthorityConverter = grantedAuthorityConverter;
+	}
 
 	@Override
 	public LoginTokenUserDetails buildDetails(LoginToken loginToken) throws IllegalArgumentException {
 		return new LoginTokenUserDetailsImpl(loginToken);
 	}
 
+	// MARK: LoginTokenUserDetails
 	private class LoginTokenUserDetailsImpl
 	        implements LoginTokenUserDetails {
+
+		private static final long serialVersionUID = 1L;
 
 		private final LoginToken loginToken;
 		private Set<GrantedAuthority> authorities;

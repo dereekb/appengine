@@ -24,7 +24,6 @@ public final class LoginTokenAuthenticationProviderImpl
         implements LoginTokenAuthenticationProvider {
 
 	private LoginTokenDecoder decoder;
-
 	private LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder;
 
 	public LoginTokenAuthenticationProviderImpl(LoginTokenDecoder decoder,

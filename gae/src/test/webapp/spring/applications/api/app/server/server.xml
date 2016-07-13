@@ -13,6 +13,7 @@
 	<import resource="taskqueue.xml" />
 	<import resource="database.xml" />
 	<import resource="keys.xml" />
+	<import resource="security.xml" />
 	<import resource="storage.xml" />
 	<import resource="search.xml" />
 	<import resource="image.xml" />

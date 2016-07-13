@@ -1,0 +1,68 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- No HTTP security for Google App Engine. -->
+	<security:http pattern="/_ah/**" security="none" />
+
+	<!-- No HTTP security for TaskQueue -->
+	<security:http pattern="/taskqueue/**" security="none" />
+
+	<!-- <security:http use-expressions="true" entry-point-ref="securityEntryPoint"> 
+		<security:intercept-url pattern="/register" access="isAuthenticated() and 
+		hasRole('ROLE_NEW_USER')" /> <security:intercept-url pattern="/**" access="isAuthenticated() 
+		and hasRole('ROLE_USER')" /> <security:custom-filter ref="authenticationFilter" 
+		position="PRE_AUTH_FILTER" /> <security:form-login always-use-default-target="true" 
+		/> <security:logout logout-success-url="/logout" /> </security:http> -->
+
+	<bean id="securityEntryPoint"
+		class="com.dereekb.gae.server.auth.security.token.entry.TokenAuthenticationEntryPoint" />
+
+	<bean id="authenticationFilter" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter">
+		<constructor-arg index="0"
+			ref="loginTokenAuthenticationProvider" />
+		<constructor-arg index="1">
+			<null />
+		</constructor-arg>
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.server.auth.security.token.filter.handlers.LoginTokenAuthenticationFailureHandler">
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="loginTokenAuthenticationProvider" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl">
+		<constructor-arg index="0" ref="loginTokenService" />
+		<constructor-arg index="1" ref="loginTokenUserDetailsBuilder" />
+	</bean>
+
+	<bean id="loginTokenUserDetailsBuilder" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="loginPointerRegistry" />
+		<constructor-arg index="2" ref="loginGrantedAuthorityDecoder" />
+	</bean>
+
+	<bean id="loginGrantedAuthorityDecoder" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl"
+		factory-method="withStringMap">
+		<constructor-arg index="0">
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<!-- Map of encoded role values. -->
+				<entry key="0" value="USER" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+</beans>

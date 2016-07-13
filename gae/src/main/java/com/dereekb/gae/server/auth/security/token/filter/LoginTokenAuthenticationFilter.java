@@ -40,12 +40,20 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 	private int bearerPrefixLength = DEFAULT_BEARER_PREFIX.length();
 
 	private LoginTokenAuthenticationProvider loginTokenAuthenticationProvider;
-	private WebAuthenticationDetailsSource authenticationDetailsSource = new WebAuthenticationDetailsSource();
+	private final WebAuthenticationDetailsSource authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
 	private AuthenticationSuccessHandler successHandler;
 	private AuthenticationFailureHandler failureHandler;
 
 	public LoginTokenAuthenticationFilter() {}
+
+	public LoginTokenAuthenticationFilter(LoginTokenAuthenticationProvider loginTokenAuthenticationProvider,
+	        AuthenticationSuccessHandler successHandler,
+	        AuthenticationFailureHandler failureHandler) throws IllegalArgumentException {
+		this.setLoginTokenAuthenticationProvider(loginTokenAuthenticationProvider);
+		this.setSuccessHandler(successHandler);
+		this.setFailureHandler(failureHandler);
+	}
 
 	public String getHeaderString() {
 		return this.headerString;
@@ -72,7 +80,12 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		return this.loginTokenAuthenticationProvider;
 	}
 
-	public void setLoginTokenAuthenticationProvider(LoginTokenAuthenticationProvider loginTokenAuthenticationProvider) {
+	public void setLoginTokenAuthenticationProvider(LoginTokenAuthenticationProvider loginTokenAuthenticationProvider)
+	        throws IllegalArgumentException {
+		if (loginTokenAuthenticationProvider == null) {
+			throw new IllegalArgumentException("LoginTokenAuthenticationProvider cannot be null.");
+		}
+
 		this.loginTokenAuthenticationProvider = loginTokenAuthenticationProvider;
 	}
 
