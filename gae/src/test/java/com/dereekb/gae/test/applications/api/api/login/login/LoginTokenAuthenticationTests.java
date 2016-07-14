@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.api.login.login;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,7 +40,7 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 
 	@Autowired
 	@Qualifier("loginRegistry")
-	public ObjectifyRegistry<Login> loginPointer;
+	public ObjectifyRegistry<Login> loginRegistry;
 
 	@Autowired
 	@Qualifier("loginTokenService")
@@ -59,15 +60,25 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 		LoginPointer pointer = this.loginPointerRegistry.get(primary.getLoginPointerKey());
 		Login login = this.registerService.register(pointer);
 
+		login.setRoles(0b0111L);
+		this.loginRegistry.save(login, false);
 
 		LoginTokenPair tokenPair = this.passwordController.login(TEST_USERNAME, TEST_PASSWORD);
 		String token = tokenPair.getToken();
 
 		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(token, null);
-		LoginToken authLoginToken = authentication.getCredentials();
-		LoginTokenUserDetails authLoginTokenUserDetails = authentication.getPrincipal();
 
-		// TODO: Check data
+		LoginToken authLoginToken = authentication.getCredentials();
+		Assert.assertNotNull(authLoginToken);
+
+		LoginTokenUserDetails authLoginTokenUserDetails = authentication.getPrincipal();
+		Assert.assertNotNull(authLoginTokenUserDetails);
+
+		Login authLogin = authLoginTokenUserDetails.getLogin();
+		Assert.assertNotNull(authLogin);
+
+		LoginPointer authLoginPointer = authLoginTokenUserDetails.getLoginPointer();
+		Assert.assertNotNull(authLoginPointer);
 
 	}
 

@@ -1,13 +1,10 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.google.common.base.Joiner;
 
 /**
  * {@link LoginToken} implementation.
@@ -16,8 +13,6 @@ import com.google.common.base.Joiner;
  */
 public class LoginTokenImpl
         implements LoginToken {
-
-	public static final String ROLES_SEPARATOR = ",";
 
 	/**
 	 * Optional subject
@@ -37,7 +32,7 @@ public class LoginTokenImpl
 	/**
 	 * Set of roles.
 	 */
-	private Set<Integer> roles = new HashSet<Integer>();
+	private Long roles;
 
 	/**
 	 * Time the token was issued.
@@ -86,38 +81,13 @@ public class LoginTokenImpl
 		this.loginPointer = loginPointer;
 	}
 
-	public Set<Integer> getRoles() {
+	@Override
+	public Long getRoles() {
 		return this.roles;
 	}
 
-	@Override
-	public String getEncodedRoles() {
-		Joiner joiner = Joiner.on(ROLES_SEPARATOR).skipNulls();
-		String roles = joiner.join(this.roles);
-		return (roles.isEmpty()) ? null : roles;
-	}
-
-	public void setRoles(Set<Integer> roles) {
-		if (roles == null) {
-			roles = new HashSet<Integer>();
-		}
-
-		this.roles = roles;
-	}
-
-	public void setRoles(String roles) throws NumberFormatException {
-		Set<Integer> roleSet = new HashSet<Integer>();
-
-		if (roles != null && roles.isEmpty() == false) {
-			String[] roleNumbers = roles.split(ROLES_SEPARATOR);
-
-			for (String role : roleNumbers) {
-				Integer roleInt = new Integer(role);
-				roleSet.add(roleInt);
-			}
-		}
-
-		this.setRoles(roleSet);
+	public void setRoles(Long roles) {
+		this.roles = (roles != null) ? roles : 0L;
 	}
 
 	@Override

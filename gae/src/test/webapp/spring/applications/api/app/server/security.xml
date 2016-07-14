@@ -51,6 +51,14 @@
 		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1" ref="loginPointerRegistry" />
 		<constructor-arg index="2" ref="loginGrantedAuthorityDecoder" />
+		<constructor-arg index="3">
+			<!-- Roles given to all users -->
+			<array>
+				<bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+					<constructor-arg index="0" value="USER" />
+				</bean>
+			</array>
+		</constructor-arg>
 	</bean>
 
 	<bean id="loginGrantedAuthorityDecoder" lazy-init="true"
@@ -58,7 +66,7 @@
 		class="com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl"
 		factory-method="withStringMap">
 		<constructor-arg index="0">
-			<map key-type="java.lang.String" value-type="java.lang.String">
+			<map key-type="java.lang.Integer" value-type="java.lang.String">
 				<!-- Map of encoded role values. -->
 				<entry key="0" value="USER" />
 			</map>

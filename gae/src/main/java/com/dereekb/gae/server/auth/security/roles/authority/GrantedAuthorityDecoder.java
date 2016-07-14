@@ -4,17 +4,14 @@ import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.dereekb.gae.utilities.collections.set.SetDecoder;
-
 /**
  * Used for decoding encoded granted authorities.
  *
  * @author dereekb
  *
  */
-public interface GrantedAuthorityDecoder
-        extends SetDecoder<GrantedAuthority> {
+public interface GrantedAuthorityDecoder {
 
-	public Set<GrantedAuthority> decodeRoles(Iterable<Integer> encodedRoles);
+	public Set<GrantedAuthority> decodeRoles(Long encodedRoles);
 
 }

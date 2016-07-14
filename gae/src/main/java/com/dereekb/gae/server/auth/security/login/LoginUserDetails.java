@@ -17,7 +17,7 @@ public interface LoginUserDetails
 	/**
 	 * Returns the current {@link Login}.
 	 *
-	 * @return {@link Login}. Never {@code null}.
+	 * @return {@link Login}. May be {@code null}.
 	 */
 	public Login getLogin();
 

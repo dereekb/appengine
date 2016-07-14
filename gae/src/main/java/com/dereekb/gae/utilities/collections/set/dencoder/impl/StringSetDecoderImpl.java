@@ -1,4 +1,4 @@
-package com.dereekb.gae.utilities.collections.set.impl;
+package com.dereekb.gae.utilities.collections.set.dencoder.impl;
 
 import java.util.HashSet;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.utilities.collections.set.SetDecoder;
+import com.dereekb.gae.utilities.collections.set.dencoder.StringSetDecoder;
 
 /**
  * Used for decoding using a map.
@@ -16,8 +16,8 @@ import com.dereekb.gae.utilities.collections.set.SetDecoder;
  * @param <T>
  *            decoded type
  */
-public class SetDecoderImpl<T>
-        implements SetDecoder<T> {
+public class StringSetDecoderImpl<T>
+        implements StringSetDecoder<T> {
 
 	public static final String DEFAULT_DECODER = ",";
 
@@ -25,7 +25,7 @@ public class SetDecoderImpl<T>
 
 	private String decoder = DEFAULT_DECODER;
 
-	public SetDecoderImpl(Map<String, T> map) throws IllegalArgumentException {
+	public StringSetDecoderImpl(Map<String, T> map) throws IllegalArgumentException {
 		this.setMap(map);
 	}
 
@@ -50,7 +50,7 @@ public class SetDecoderImpl<T>
 	}
 
 	@Override
-	public Set<T> decode(Iterable<String> encodedValues) {
+	public Set<T> decode(Iterable<? extends String> encodedValues) {
 		Set<T> values = new HashSet<T>();
 
 		for (String encodedValue : encodedValues) {

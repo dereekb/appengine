@@ -26,7 +26,7 @@ public interface LoginToken {
 	 *
 	 * @return {@link Role}. Never {@code null}.
 	 */
-	public String getEncodedRoles();
+	public Long getRoles();
 
 	/**
 	 * Key of {@link Login} used for logging in.

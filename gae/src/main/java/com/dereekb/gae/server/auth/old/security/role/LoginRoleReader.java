@@ -9,6 +9,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
  *
  * @author dereekb
  */
+@Deprecated
 public interface LoginRoleReader {
 
 	public List<? extends Role> rolesForLogin(Login login);

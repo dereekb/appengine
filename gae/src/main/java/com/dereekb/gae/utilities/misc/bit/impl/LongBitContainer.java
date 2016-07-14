@@ -234,6 +234,10 @@ public class LongBitContainer
 		return hexCodes;
 	}
 
+	public List<Byte> getAllActiveIndexes() {
+		return this.getActiveIndexes(null);
+	}
+
 	/**
 	 * Returns the index of every element that is active.
 	 *

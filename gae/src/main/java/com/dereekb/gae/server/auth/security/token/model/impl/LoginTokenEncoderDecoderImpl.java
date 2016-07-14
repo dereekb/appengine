@@ -88,7 +88,7 @@ public class LoginTokenEncoderDecoderImpl
 
 		claims.put(LOGIN_KEY, loginToken.getLogin());
 		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointer());
-		claims.put(ROLES_KEY, loginToken.getEncodedRoles());
+		claims.put(ROLES_KEY, loginToken.getRoles());
 
 		return claims;
 	}
@@ -122,7 +122,12 @@ public class LoginTokenEncoderDecoderImpl
 		}
 
 		String loginPointer = claims.get(LOGIN_POINTER_KEY, String.class);
-		String roles = claims.get(ROLES_KEY, String.class);
+		Number rolesNumber = claims.get(ROLES_KEY, Number.class);
+		Long roles = null;
+
+		if (rolesNumber != null) {
+			roles = rolesNumber.longValue();
+		}
 
 		String subject = claims.getSubject();
 		Date expiration = claims.getExpiration();

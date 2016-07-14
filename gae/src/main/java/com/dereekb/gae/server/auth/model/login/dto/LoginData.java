@@ -1,7 +1,6 @@
 package com.dereekb.gae.server.auth.model.login.dto;
 
 import java.util.List;
-import java.util.Set;
 
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
 import com.dereekb.gae.server.auth.model.login.Login;
@@ -24,7 +23,7 @@ public class LoginData extends SearchableDatabaseModelData {
 
 	private Integer group;
 
-	private Set<Integer> roles;
+	private Long roles;
 
 	private List<String> pointers;
 
@@ -38,11 +37,11 @@ public class LoginData extends SearchableDatabaseModelData {
 		this.group = group;
 	}
 
-	public Set<Integer> getRoles() {
+	public Long getRoles() {
 		return this.roles;
 	}
 
-	public void setRoles(Set<Integer> roles) {
+	public void setRoles(Long roles) {
 		this.roles = roles;
 	}
 

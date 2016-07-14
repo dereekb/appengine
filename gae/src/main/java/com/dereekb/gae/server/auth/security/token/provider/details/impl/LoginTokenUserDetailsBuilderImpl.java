@@ -1,6 +1,9 @@
 package com.dereekb.gae.server.auth.security.token.provider.details.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +15,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
 import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link LoginTokenUserDetailsBuilder} implementation.
@@ -25,14 +29,24 @@ public class LoginTokenUserDetailsBuilderImpl
 	private Getter<Login> loginGetter;
 	private Getter<LoginPointer> loginPointerGetter;
 
-	private GrantedAuthorityDecoder grantedAuthorityConverter;
+	private GrantedAuthorityDecoder grantedAuthorityDecoder;
+
+	private List<GrantedAuthority> tokenAuthorities;
 
 	public LoginTokenUserDetailsBuilderImpl(Getter<Login> loginGetter,
 	        Getter<LoginPointer> loginPointerGetter,
-	        GrantedAuthorityDecoder grantedAuthorityConverter) {
+	        GrantedAuthorityDecoder grantedAuthorityDecoder) {
+		this(loginGetter, loginPointerGetter, grantedAuthorityDecoder, null);
+	}
+
+	public LoginTokenUserDetailsBuilderImpl(Getter<Login> loginGetter,
+	        Getter<LoginPointer> loginPointerGetter,
+	        GrantedAuthorityDecoder grantedAuthorityDecoder,
+	        List<GrantedAuthority> tokenAuthorities) {
 		this.setLoginGetter(loginGetter);
 		this.setLoginPointerGetter(loginPointerGetter);
-		this.setGrantedAuthorityConverter(grantedAuthorityConverter);
+		this.setGrantedAuthorityDecoder(grantedAuthorityDecoder);
+		this.setTokenAuthorities(tokenAuthorities);
 	}
 
 	public Getter<Login> getLoginGetter() {
@@ -51,14 +65,27 @@ public class LoginTokenUserDetailsBuilderImpl
 		this.loginPointerGetter = loginPointerGetter;
 	}
 
-	public GrantedAuthorityDecoder getGrantedAuthorityConverter() {
-		return this.grantedAuthorityConverter;
+	public GrantedAuthorityDecoder getGrantedAuthorityDecoder() {
+		return this.grantedAuthorityDecoder;
 	}
 
-	public void setGrantedAuthorityConverter(GrantedAuthorityDecoder grantedAuthorityConverter) {
-		this.grantedAuthorityConverter = grantedAuthorityConverter;
+	public void setGrantedAuthorityDecoder(GrantedAuthorityDecoder grantedAuthorityDecoder) {
+		this.grantedAuthorityDecoder = grantedAuthorityDecoder;
 	}
 
+	public List<GrantedAuthority> getTokenAuthorities() {
+		return this.tokenAuthorities;
+	}
+
+	public void setTokenAuthorities(List<GrantedAuthority> tokenAuthorities) {
+		if (tokenAuthorities == null) {
+			tokenAuthorities = new ArrayList<GrantedAuthority>();
+		}
+
+		this.tokenAuthorities = tokenAuthorities;
+	}
+
+	// MARK: LoginTokenUserDetailsBuilder
 	@Override
 	public LoginTokenUserDetails buildDetails(LoginToken loginToken) throws IllegalArgumentException {
 		return new LoginTokenUserDetailsImpl(loginToken);
@@ -71,6 +98,11 @@ public class LoginTokenUserDetailsBuilderImpl
 		private static final long serialVersionUID = 1L;
 
 		private final LoginToken loginToken;
+
+		private boolean loginLoaded = false;
+		private Login login = null;
+		private LoginPointer loginPointer = null;
+
 		private Set<GrantedAuthority> authorities;
 
 		public LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
@@ -83,22 +115,39 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public Login getLogin() {
+			if (this.loginLoaded == false) {
+				Long id = this.loginToken.getLogin();
+				ModelKey key = new ModelKey(id);
+				this.login = LoginTokenUserDetailsBuilderImpl.this.loginGetter.get(key);
+			}
 
-			// TODO Auto-generated method stub
-			return null;
+			return this.login;
 		}
 
 		@Override
 		public LoginPointer getLoginPointer() {
-			// TODO Auto-generated method stub
-			return null;
+			if (this.loginPointer == null) {
+				String id = this.loginToken.getLoginPointer();
+				ModelKey key = new ModelKey(id);
+				this.loginPointer = LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter.get(key);
+			}
+
+			return this.loginPointer;
 		}
 
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			if (this.authorities == null) {
-				this.authorities = LoginTokenUserDetailsBuilderImpl.this.grantedAuthorityConverter
-				        .decode(this.loginToken.getEncodedRoles());
+				Long encodedRoles = this.loginToken.getRoles();
+
+				if (encodedRoles == null) {
+					this.authorities = LoginTokenUserDetailsBuilderImpl.this.grantedAuthorityDecoder
+					        .decodeRoles(encodedRoles);
+				} else {
+					this.authorities = new HashSet<GrantedAuthority>();
+				}
+
+				this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.tokenAuthorities);
 			}
 
 			return this.authorities;
@@ -121,20 +170,17 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public boolean isAccountNonLocked() {
-			// TODO Auto-generated method stub
-			return false;
+			return false; // Accounts are never locked.
 		}
 
 		@Override
 		public boolean isCredentialsNonExpired() {
-			// TODO Auto-generated method stub
-			return false;
+			return this.loginToken.hasExpired();
 		}
 
 		@Override
 		public boolean isEnabled() {
-			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 		@Override

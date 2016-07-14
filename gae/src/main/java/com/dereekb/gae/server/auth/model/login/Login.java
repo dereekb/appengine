@@ -58,12 +58,12 @@ public final class Login extends SearchableDatabaseModel
 	private Integer group = 0;
 
 	/**
-	 * A set of identifiers that correspond to different role types.
+	 * A {@link Long} that encodes all roles.
 	 * <p>
 	 * The roles identifiers will differ between systems.
 	 */
-	@IgnoreSave({ IfEmpty.class })
-	private Set<Integer> roles;
+	@IgnoreSave({ IfDefault.class })
+	private Long roles = 0L;
 
 	/**
 	 * Pointers for this login.
@@ -125,18 +125,18 @@ public final class Login extends SearchableDatabaseModel
 		this.group = group;
 	}
 
-	public Set<Integer> getRoles() {
+	public Long getRoles() {
 		return this.roles;
 	}
 
 	@Override
-	public Set<Integer> getEncodedRoles() {
+	public Long getEncodedRoles() {
 		return this.roles;
 	}
 
-	public void setRoles(Set<Integer> roles) {
+	public void setRoles(Long roles) {
 		if (roles == null) {
-			roles = new HashSet<Integer>();
+			roles = 0L;
 		}
 
 		this.roles = roles;

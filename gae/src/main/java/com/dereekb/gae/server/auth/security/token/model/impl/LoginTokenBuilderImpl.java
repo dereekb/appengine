@@ -1,7 +1,6 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
-import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -51,7 +50,7 @@ public class LoginTokenBuilderImpl
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 
 		ModelKey loginKey = pointer.getLoginModelKey();
-		Set<Integer> roles = null;
+		Long roles = null;
 		Long loginId = null;
 
 		if (loginKey != null) {

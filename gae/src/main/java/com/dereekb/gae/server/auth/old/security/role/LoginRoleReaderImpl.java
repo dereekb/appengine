@@ -12,6 +12,7 @@ import com.dereekb.gae.utilities.collections.map.MapReader;
  *
  * @author dereekb
  */
+@Deprecated
 public class LoginRoleReaderImpl
         implements LoginRoleReader {
 
@@ -31,7 +32,7 @@ public class LoginRoleReaderImpl
 
 	@Override
 	public List<? extends Role> rolesForLogin(Login login) {
-		Set<Integer> roleIds = login.getRoles();
+		Set<Integer> roleIds = null; // login.getRoles();
 		List<? extends Role> roles = MapReader.quickRead(this.rolesMap, roleIds);
 		return roles;
 	}

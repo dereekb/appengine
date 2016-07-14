@@ -1,7 +1,6 @@
 package com.dereekb.gae.server.auth.security.roles.authority.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,31 +9,31 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.dereekb.gae.server.auth.security.roles.authority.GrantedAuthorityDecoder;
-import com.dereekb.gae.utilities.collections.IteratorUtility;
-import com.dereekb.gae.utilities.collections.set.impl.SetDecoderImpl;
+import com.dereekb.gae.utilities.collections.set.dencoder.impl.EncodedLongDecoderImpl;
+import com.dereekb.gae.utilities.collections.set.dencoder.impl.StringSetDecoderImpl;
 
 /**
  * {@link GrantedAuthorityDecoder} implementation that directly extends
- * {@link SetDecoderImpl} and contains a map of {@link GrantedAuthority} values.
+ * {@link StringSetDecoderImpl} and contains a map of {@link GrantedAuthority} values.
  *
  * @author dereekb
  *
  */
-public class GrantedAuthorityDecoderImpl extends SetDecoderImpl<GrantedAuthority>
+public class GrantedAuthorityDecoderImpl extends EncodedLongDecoderImpl<GrantedAuthority>
         implements GrantedAuthorityDecoder {
 
-	public GrantedAuthorityDecoderImpl(Map<String, GrantedAuthority> map) throws IllegalArgumentException {
+	public GrantedAuthorityDecoderImpl(Map<Integer, GrantedAuthority> map) throws IllegalArgumentException {
 		super(map);
 	}
 
-	public static GrantedAuthorityDecoderImpl withStringMap(Map<String, String> map) throws IllegalArgumentException {
+	public static GrantedAuthorityDecoderImpl withStringMap(Map<Integer, String> map) throws IllegalArgumentException {
 		if (map == null) {
 			throw new IllegalArgumentException("Map cannot be null.");
 		}
 
-		Map<String, GrantedAuthority> authorityMap = new HashMap<String, GrantedAuthority>();
+		Map<Integer, GrantedAuthority> authorityMap = new HashMap<Integer, GrantedAuthority>();
 
-		for (Entry<String, String> entry : map.entrySet()) {
+		for (Entry<Integer, String> entry : map.entrySet()) {
 			authorityMap.put(entry.getKey(), new SimpleGrantedAuthority(entry.getValue()));;
 		}
 
@@ -43,14 +42,13 @@ public class GrantedAuthorityDecoderImpl extends SetDecoderImpl<GrantedAuthority
 
 	// MARK: GrantedAuthorityDecoder
 	@Override
-	public Set<GrantedAuthority> decodeRoles(Iterable<Integer> encodedRoles) {
-		List<String> encodedStringRoles = IteratorUtility.iterableToStrings(encodedRoles);
-		return this.decode(encodedStringRoles);
+	public Set<GrantedAuthority> decodeRoles(Long encoded) {
+		return super.decode(encoded);
 	}
 
 	@Override
 	public String toString() {
-		return "GrantedAuthorityDecoderImpl []";
+		return "GrantedAuthorityDecoderImpl [map=" + this.getMap() + "]";
 	}
 
 }

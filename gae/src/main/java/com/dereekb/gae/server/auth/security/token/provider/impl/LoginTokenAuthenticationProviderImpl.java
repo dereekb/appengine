@@ -16,7 +16,7 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
 
 /**
  * {@link LoginTokenAuthenticationProvider} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -126,7 +126,7 @@ public final class LoginTokenAuthenticationProviderImpl
 
 		@Override
 		public LoginTokenUserDetails getPrincipal() {
-			if (this.userDetails != null) {
+			if (this.userDetails == null) {
 				this.userDetails = LoginTokenAuthenticationProviderImpl.this.loginTokenUserDetailsBuilder
 				        .buildDetails(this.loginToken);
 			}
