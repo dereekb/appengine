@@ -55,18 +55,13 @@ public final class LoginTokenAuthenticationProviderImpl
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return authentication.isAssignableFrom(BasicLoginTokenAuthentication.class);
+		return BasicLoginTokenAuthentication.class.isAssignableFrom(authentication);
 	}
 
 	// MARK: LoginTokenAuthenticationProvider
 	@Override
 	public LoginTokenAuthentication authenticate(LoginToken loginToken,
 	                                             WebAuthenticationDetails details) {
-
-		/*
-		 * if (loginToken.hasExpired()) { throw new TokenExpiredException(); }
-		 */
-
 		return this.buildAuthentication(loginToken, details);
 	}
 

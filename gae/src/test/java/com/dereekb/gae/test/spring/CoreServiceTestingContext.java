@@ -54,14 +54,14 @@ public class CoreServiceTestingContext {
 	protected LocalServiceTestHelper helper;
 
 	@Before
-	public void setUp() {
+	public void setUpCoreServices() {
 		this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
 		this.helper.setUp();
 		this.session = ObjectifyService.begin();
 	}
 
 	@After
-	public void tearDown() {
+	public void tearDownCoreServices() {
 		this.session.close();
 		this.helper.tearDown();
 	}
