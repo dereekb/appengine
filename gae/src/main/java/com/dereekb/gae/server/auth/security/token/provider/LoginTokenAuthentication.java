@@ -1,7 +1,6 @@
 package com.dereekb.gae.server.auth.security.token.provider;
 
 import com.dereekb.gae.server.auth.security.login.LoginAuthentication;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 
 /**
@@ -11,10 +10,7 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
  *
  */
 public interface LoginTokenAuthentication
-        extends LoginAuthentication {
-
-	@Override
-	public LoginToken getCredentials();
+        extends LoginAuthentication, BasicLoginTokenAuthentication {
 
 	@Override
 	public LoginTokenUserDetails getPrincipal();

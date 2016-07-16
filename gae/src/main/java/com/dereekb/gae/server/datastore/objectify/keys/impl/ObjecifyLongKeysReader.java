@@ -22,7 +22,7 @@ public class ObjecifyLongKeysReader<T>
 
 	@Override
 	public List<ModelKey> readKeys(Iterable<Key<T>> keys) throws IllegalKeyConversionException {
-		List<ModelKey> modelKeys = new ArrayList<ModelKey>();
+		List<ModelKey> modelKeys = new ArrayList<>();
 
 		for (Key<T> key : keys) {
 			Long id = key.getId();
@@ -42,7 +42,7 @@ public class ObjecifyLongKeysReader<T>
 	public ModelKey readKey(Key<T> key) throws IllegalKeyConversionException {
 		Long id = key.getId();
 
-		if (id == null) {
+		if (id == 0) {
 			throw new IllegalKeyConversionException();
 		} else {
 			return new ModelKey(id);

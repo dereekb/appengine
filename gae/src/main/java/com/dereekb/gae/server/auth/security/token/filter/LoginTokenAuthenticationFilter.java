@@ -9,6 +9,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -20,8 +21,9 @@ import org.springframework.web.filter.GenericFilterBean;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenHeaderMissingException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
-import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticationProvider;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
+import com.dereekb.gae.server.auth.security.token.provider.BasicLoginTokenAuthentication;
+import com.dereekb.gae.server.auth.security.token.provider.impl.BasicLoginTokenAuthenticationImpl;
 
 /**
  * Authentication filter for filtering security by using a {@link LoginToken}.
@@ -31,26 +33,30 @@ import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticat
  */
 public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 
-	private static final String DEFAULT_BEARER_PREFIX = "Bearer ";
-	private static final String DEFAULT_HEADER_STRING = "Authorization";
+	public static final String DEFAULT_BEARER_PREFIX = "Bearer ";
+	public static final String DEFAULT_HEADER_STRING = "Authorization";
 
 	private String headerString = DEFAULT_HEADER_STRING;
 	private String bearerPrefix = DEFAULT_BEARER_PREFIX;
 
 	private int bearerPrefixLength = DEFAULT_BEARER_PREFIX.length();
 
-	private LoginTokenAuthenticationProvider loginTokenAuthenticationProvider;
+	private AuthenticationManager authenticationManager;
 	private final WebAuthenticationDetailsSource authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
 	private AuthenticationSuccessHandler successHandler;
 	private AuthenticationFailureHandler failureHandler;
 
+	private LoginTokenDecoder decoder;
+
 	public LoginTokenAuthenticationFilter() {}
 
-	public LoginTokenAuthenticationFilter(LoginTokenAuthenticationProvider loginTokenAuthenticationProvider,
+	public LoginTokenAuthenticationFilter(AuthenticationManager authenticationManager,
+	        LoginTokenDecoder decoder,
 	        AuthenticationSuccessHandler successHandler,
 	        AuthenticationFailureHandler failureHandler) throws IllegalArgumentException {
-		this.setLoginTokenAuthenticationProvider(loginTokenAuthenticationProvider);
+		this.setAuthenticationManager(authenticationManager);
+		this.setDecoder(decoder);
 		this.setSuccessHandler(successHandler);
 		this.setFailureHandler(failureHandler);
 	}
@@ -76,17 +82,12 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		this.bearerPrefixLength = this.bearerPrefix.length();
 	}
 
-	public LoginTokenAuthenticationProvider getLoginTokenAuthenticationProvider() {
-		return this.loginTokenAuthenticationProvider;
+	public AuthenticationManager getAuthenticationManager() {
+		return this.authenticationManager;
 	}
 
-	public void setLoginTokenAuthenticationProvider(LoginTokenAuthenticationProvider loginTokenAuthenticationProvider)
-	        throws IllegalArgumentException {
-		if (loginTokenAuthenticationProvider == null) {
-			throw new IllegalArgumentException("LoginTokenAuthenticationProvider cannot be null.");
-		}
-
-		this.loginTokenAuthenticationProvider = loginTokenAuthenticationProvider;
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
 	}
 
 	public AuthenticationSuccessHandler getSuccessHandler() {
@@ -105,6 +106,18 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		this.failureHandler = failureHandler;
 	}
 
+	public LoginTokenDecoder getDecoder() {
+		return this.decoder;
+	}
+
+	public void setDecoder(LoginTokenDecoder decoder) throws IllegalArgumentException {
+		if (decoder == null) {
+			throw new IllegalArgumentException("Decoder cannot be null.");
+		}
+
+		this.decoder = decoder;
+	}
+
 	// MARK: GenericFilterBean
 	@Override
 	public void doFilter(ServletRequest req,
@@ -114,7 +127,7 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 
-		LoginTokenAuthentication authentication;
+		Authentication authentication;
 
 		try {
 			authentication = this.attemptAuthentication(request, response);
@@ -128,7 +141,7 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		chain.doFilter(request, response);
 	}
 
-	protected LoginTokenAuthentication attemptAuthentication(HttpServletRequest request,
+	protected Authentication attemptAuthentication(HttpServletRequest request,
 	                                                         HttpServletResponse response)
 	        throws TokenHeaderMissingException {
 
@@ -139,8 +152,12 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		}
 
 		String token = header.substring(this.bearerPrefixLength);
+
+		LoginToken loginToken = this.decoder.decodeLoginToken(token);
 		WebAuthenticationDetails details = this.authenticationDetailsSource.buildDetails(request);
-		return this.loginTokenAuthenticationProvider.authenticate(token, details);
+
+		BasicLoginTokenAuthentication preAuth = new BasicLoginTokenAuthenticationImpl(loginToken, details);
+		return this.authenticationManager.authenticate(preAuth);
 	}
 
 	protected void successfulAuthentication(HttpServletRequest request,

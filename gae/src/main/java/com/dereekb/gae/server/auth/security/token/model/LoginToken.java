@@ -62,7 +62,10 @@ public interface LoginToken {
 	 * Whether or not this token has expired.
 	 *
 	 * @return {@code true} if expired.
+	 * @deprecated Token decoding process will throw an error, and the token
+	 *             probably shouldn't expire mid-request.
 	 */
+	@Deprecated
 	public boolean hasExpired();
 
 }

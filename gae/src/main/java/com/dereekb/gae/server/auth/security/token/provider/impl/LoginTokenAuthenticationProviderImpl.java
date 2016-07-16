@@ -2,13 +2,13 @@ package com.dereekb.gae.server.auth.security.token.provider.impl;
 
 import java.util.Collection;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
-import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
+import com.dereekb.gae.server.auth.security.token.provider.BasicLoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticationProvider;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
@@ -23,25 +23,11 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
 public final class LoginTokenAuthenticationProviderImpl
         implements LoginTokenAuthenticationProvider {
 
-	private LoginTokenDecoder decoder;
 	private LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder;
 
-	public LoginTokenAuthenticationProviderImpl(LoginTokenDecoder decoder,
-	        LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder) throws IllegalArgumentException {
-		this.setDecoder(decoder);
+	public LoginTokenAuthenticationProviderImpl(LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder)
+	        throws IllegalArgumentException {
 		this.setLoginTokenUserDetailsBuilder(loginTokenUserDetailsBuilder);
-	}
-
-	public LoginTokenDecoder getDecoder() {
-		return this.decoder;
-	}
-
-	public void setDecoder(LoginTokenDecoder decoder) throws IllegalArgumentException {
-		if (decoder == null) {
-			throw new IllegalArgumentException("Decoder cannot be null.");
-		}
-
-		this.decoder = decoder;
 	}
 
 	public LoginTokenUserDetailsBuilder getLoginTokenUserDetailsBuilder() {
@@ -57,18 +43,29 @@ public final class LoginTokenAuthenticationProviderImpl
 		this.loginTokenUserDetailsBuilder = loginTokenUserDetailsBuilder;
 	}
 
+	// MARK: Authentication Provider
+
+	@Override
+	public LoginTokenAuthentication authenticate(Authentication authentication) throws AuthenticationException {
+		BasicLoginTokenAuthentication auth = (BasicLoginTokenAuthentication) authentication;
+		LoginToken token = auth.getCredentials();
+		WebAuthenticationDetails details = auth.getDetails();
+		return this.authenticate(token, details);
+	}
+
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return authentication.isAssignableFrom(BasicLoginTokenAuthentication.class);
+	}
+
 	// MARK: LoginTokenAuthenticationProvider
 	@Override
-	public LoginTokenAuthentication authenticate(String token,
-	                                             WebAuthenticationDetails details)
-	        throws TokenExpiredException,
-	            TokenUnauthorizedException {
+	public LoginTokenAuthentication authenticate(LoginToken loginToken,
+	                                             WebAuthenticationDetails details) {
 
-		LoginToken loginToken = this.decoder.decodeLoginToken(token);
-
-		if (loginToken.hasExpired()) {
-			throw new TokenExpiredException();
-		}
+		/*
+		 * if (loginToken.hasExpired()) { throw new TokenExpiredException(); }
+		 */
 
 		return this.buildAuthentication(loginToken, details);
 	}
@@ -135,6 +132,5 @@ public final class LoginTokenAuthenticationProviderImpl
 		}
 
 	}
-
 
 }

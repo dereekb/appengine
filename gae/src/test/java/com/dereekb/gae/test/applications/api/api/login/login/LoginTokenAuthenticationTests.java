@@ -66,7 +66,8 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 		LoginTokenPair tokenPair = this.passwordController.login(TEST_USERNAME, TEST_PASSWORD);
 		String token = tokenPair.getToken();
 
-		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(token, null);
+		LoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
+		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
 
 		LoginToken authLoginToken = authentication.getCredentials();
 		Assert.assertNotNull(authLoginToken);
@@ -79,7 +80,6 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 
 		LoginPointer authLoginPointer = authLoginTokenUserDetails.getLoginPointer();
 		Assert.assertNotNull(authLoginPointer);
-
 	}
 
 }

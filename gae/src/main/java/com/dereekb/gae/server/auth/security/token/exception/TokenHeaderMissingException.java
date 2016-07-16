@@ -11,7 +11,7 @@ public class TokenHeaderMissingException extends TokenException {
 	private static final long serialVersionUID = 1L;
 
 	public TokenHeaderMissingException() {
-		this("Token Expired");
+		this("Token Missing");
 	}
 
 	public TokenHeaderMissingException(String message) {

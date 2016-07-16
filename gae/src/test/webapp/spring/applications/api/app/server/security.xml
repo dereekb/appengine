@@ -27,23 +27,27 @@
 
 	<bean id="authenticationFilter" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter">
-		<constructor-arg index="0"
-			ref="loginTokenAuthenticationProvider" />
-		<constructor-arg index="1">
+		<constructor-arg index="0" ref="loginAuthenticationManager" />
+		<constructor-arg index="1" ref="loginTokenService" />
+		<constructor-arg index="2">
 			<null />
 		</constructor-arg>
-		<constructor-arg index="2">
+		<constructor-arg index="3">
 			<bean
 				class="com.dereekb.gae.server.auth.security.token.filter.handlers.LoginTokenAuthenticationFailureHandler">
 			</bean>
 		</constructor-arg>
 	</bean>
 
+	<security:authentication-manager alias="loginAuthenticationManager">
+		<security:authentication-provider
+			ref="loginTokenAuthenticationProvider" />
+	</security:authentication-manager>
+	
 	<bean id="loginTokenAuthenticationProvider" lazy-init="true"
 		scope="singleton"
 		class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl">
-		<constructor-arg index="0" ref="loginTokenService" />
-		<constructor-arg index="1" ref="loginTokenUserDetailsBuilder" />
+		<constructor-arg index="0" ref="loginTokenUserDetailsBuilder" />
 	</bean>
 
 	<bean id="loginTokenUserDetailsBuilder" lazy-init="true" scope="singleton"

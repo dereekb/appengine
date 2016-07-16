@@ -121,6 +121,7 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring-security.target.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
@@ -161,7 +162,7 @@
 		</dependency>
 
 		<!-- Test Dependencies -->
-
+    
 		<!-- Servlet 3.0 API required for Spring 4.1 testing. Is not required on 
 			final product, allegedly. -->
 		<dependency>
@@ -180,8 +181,8 @@
 
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>2.0.2-beta</version>
+			<artifactId>mockito-core</artifactId>
+			<version>2.0.86-beta</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -191,6 +192,13 @@
 			<version>${spring.target.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+	        <groupId>org.springframework.security</groupId>
+	        <artifactId>spring-security-test</artifactId>
+			<version>${spring-security.target.version}</version>
+			<scope>test</scope>
+	    </dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
