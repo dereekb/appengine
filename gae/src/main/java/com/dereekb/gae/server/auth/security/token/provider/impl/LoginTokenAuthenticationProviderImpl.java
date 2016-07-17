@@ -23,6 +23,8 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
 public final class LoginTokenAuthenticationProviderImpl
         implements LoginTokenAuthenticationProvider {
 
+	private static final String UNREGISTERED_DEFAULT_NAME = "Unregistered";
+
 	private LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder;
 
 	public LoginTokenAuthenticationProviderImpl(LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder)
@@ -80,7 +82,12 @@ public final class LoginTokenAuthenticationProviderImpl
 
 		private LoginTokenUserDetails userDetails;
 
-		public LoginTokenAuthenticationImpl(LoginToken loginToken, WebAuthenticationDetails details) {
+		public LoginTokenAuthenticationImpl(LoginToken loginToken, WebAuthenticationDetails details)
+		        throws IllegalArgumentException {
+			if (loginToken == null) {
+				throw new IllegalArgumentException("LoginToken cannot be null.");
+			}
+
 			this.loginToken = loginToken;
 			this.details = details;
 		}
@@ -113,7 +120,9 @@ public final class LoginTokenAuthenticationProviderImpl
 
 		@Override
 		public String getName() {
-			return this.loginToken.getLogin().toString();
+			Long loginId = this.loginToken.getLogin();
+			String name = (loginId != null) ? loginId.toString() : UNREGISTERED_DEFAULT_NAME;
+			return name;
 		}
 
 		@Override

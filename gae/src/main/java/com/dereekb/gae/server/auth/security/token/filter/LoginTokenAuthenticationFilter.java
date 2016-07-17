@@ -180,4 +180,12 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		}
 	}
 
+	public static String buildTokenHeader(String token) {
+		if (token == null) {
+			throw new IllegalArgumentException("Token cannot be null.");
+		}
+
+		return LoginTokenAuthenticationFilter.DEFAULT_BEARER_PREFIX + token;
+	}
+
 }

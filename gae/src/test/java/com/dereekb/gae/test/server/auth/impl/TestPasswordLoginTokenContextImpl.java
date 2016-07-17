@@ -167,6 +167,11 @@ public class TestPasswordLoginTokenContextImpl
 	}
 
 	@Override
+	public void clearLogin() {
+		this.pointer = null;
+	}
+
+	@Override
 	public void setLogin(LoginToken token) {
 		String pointerId = token.getLoginPointer();
 		LoginPointer pointer = this.loginPointerRegistry.get(new ModelKey(pointerId));

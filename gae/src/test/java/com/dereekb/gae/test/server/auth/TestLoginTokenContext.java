@@ -21,6 +21,8 @@ public interface TestLoginTokenContext {
 	 */
 	public LoginPointer generateLogin();
 
+	public void clearLogin();
+
 	public void setLogin(LoginToken token);
 
 	public void setLogin(LoginPointer pointer);

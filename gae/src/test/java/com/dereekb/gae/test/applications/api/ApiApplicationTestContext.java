@@ -28,10 +28,8 @@ public class ApiApplicationTestContext extends CoreServiceTestingContext {
 
 	protected MockMvc mockMvc;
 
-	@Override
-    @Before
-	public void setUp() {
-		super.setUp();
+	@Before
+	public void setUpApi() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).apply(springSecurity()).build();
 		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
 	}

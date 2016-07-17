@@ -71,7 +71,7 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 
 			if (token != null) {
 				request.header(LoginTokenAuthenticationFilter.DEFAULT_HEADER_STRING,
-				        LoginTokenAuthenticationFilter.DEFAULT_BEARER_PREFIX + token);
+				        LoginTokenAuthenticationFilter.buildTokenHeader(token));
 			}
 		}
 
