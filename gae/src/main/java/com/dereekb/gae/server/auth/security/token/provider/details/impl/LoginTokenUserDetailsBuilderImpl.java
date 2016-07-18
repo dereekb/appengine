@@ -79,7 +79,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	public void setTokenAuthorities(List<GrantedAuthority> tokenAuthorities) {
 		if (tokenAuthorities == null) {
-			tokenAuthorities = new ArrayList<GrantedAuthority>();
+			tokenAuthorities = new ArrayList<>();
 		}
 
 		this.tokenAuthorities = tokenAuthorities;
@@ -144,7 +144,7 @@ public class LoginTokenUserDetailsBuilderImpl
 					this.authorities = LoginTokenUserDetailsBuilderImpl.this.grantedAuthorityDecoder
 					        .decodeRoles(encodedRoles);
 				} else {
-					this.authorities = new HashSet<GrantedAuthority>();
+					this.authorities = new HashSet<>();
 				}
 
 				this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.tokenAuthorities);
@@ -175,7 +175,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public boolean isCredentialsNonExpired() {
-			return this.loginToken.hasExpired();
+			return false;
 		}
 
 		@Override

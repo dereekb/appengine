@@ -1,25 +1,15 @@
 package com.dereekb.gae.test.applications.api.model.login.login;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.model.extension.search.document.index.IndexAction;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder;
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
-import com.dereekb.gae.model.extension.search.document.search.model.DateSearch;
-import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchResponse;
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchService;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.model.login.search.document.query.LoginSearchBuilder.LoginSearch;
 import com.dereekb.gae.server.auth.model.login.search.document.query.LoginSearchRequest;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
@@ -28,7 +18,6 @@ public class LoginSearchDocumentTest extends ModelSearchDocumentTest<Login> {
 	@Autowired
 	@Qualifier("loginRegistry")
 	private ObjectifyRegistry<Login> loginRegistry;
-
 	@Override
 	@Autowired
 	@Qualifier("loginTestModelGenerator")
