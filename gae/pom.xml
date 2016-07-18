@@ -62,8 +62,8 @@
 		<!-- Google APIs -->
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client-appengine</artifactId>
-			<version>1.20.0</version>
+			<artifactId>google-oauth-client</artifactId>
+			<version>1.22.0</version>
 		</dependency>
 
 		<!-- Tokens -->
