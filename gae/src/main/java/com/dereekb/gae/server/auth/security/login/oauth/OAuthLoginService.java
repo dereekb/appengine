@@ -10,6 +10,6 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
  */
 public interface OAuthLoginService {
 
-	public LoginPointer login(OAuthLoginInfo authCode);
+	public LoginPointer login(OAuthAuthorizationInfo authCode);
 
 }
