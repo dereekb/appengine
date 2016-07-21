@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.login.LoginPointerService;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredentialsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
@@ -11,8 +12,6 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableExce
 import com.dereekb.gae.server.auth.security.login.impl.LoginServiceImpl;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginService;
-import com.dereekb.gae.server.datastore.GetterSetter;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
  * {@link PasswordLoginService} implementation.
@@ -29,17 +28,16 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
 
 	private PasswordEncoder encoder;
 
-	public PasswordLoginServiceImpl(PasswordEncoder encoder, GetterSetter<LoginPointer> getterSetter)
+	public PasswordLoginServiceImpl(PasswordEncoder encoder, LoginPointerService pointerService)
 	        throws IllegalArgumentException {
-		super(DEFAULT_FORMAT, getterSetter);
-		this.setEncoder(encoder);
+		this(encoder, pointerService, null);
 	}
 
 	public PasswordLoginServiceImpl(PasswordEncoder encoder,
-	        GetterSetter<LoginPointer> getterSetter,
-	        TaskRequestSender<LoginPointer> reviewTask,
-	        LoginRegisterService registerService) throws IllegalArgumentException {
-		super(DEFAULT_FORMAT, getterSetter, reviewTask, registerService);
+	        LoginPointerService pointerService,
+	        LoginRegisterService registerService)
+	        throws IllegalArgumentException {
+		super(DEFAULT_FORMAT, pointerService, registerService);
 		this.setEncoder(encoder);
 	}
 
@@ -83,7 +81,6 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
 
 	@Override
 	public LoginPointer create(PasswordLoginPair pair) throws LoginExistsException {
-
 		String username = pair.getUsername();
 		String password = pair.getPassword();
 

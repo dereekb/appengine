@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.login.oauth;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthDeniedException;
 
@@ -12,6 +13,8 @@ import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthDeniedExc
  *
  */
 public interface OAuthService {
+
+	public LoginPointerType getLoginType();
 
 	public String getAuthorizationCodeRequestUrl();
 

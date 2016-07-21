@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
@@ -16,14 +17,18 @@ import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthoriza
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthDeniedException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthException;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.AbstractOAuthAuthorizationInfo;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
 import com.dereekb.gae.utilities.data.url.ConnectionUtility;
+import com.dereekb.gae.utilities.json.JsonUtility;
+import com.dereekb.gae.utilities.json.JsonUtility.JsonObjectReader;
 import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 /**
@@ -32,23 +37,24 @@ import com.google.gson.JsonSyntaxException;
  * @author dereekb
  *
  */
-public class GoogleOAuthLoginService extends AbstractOAuthLoginService {
+public class GoogleOAuthService extends AbstractOAuthService {
 
 	private static final String GOOGLE_OAUTH_SERVER = "https://accounts.google.com/o/oauth2/v2/auth";
-
 	private static final String GOOGLE_USER_REQUEST_URI = "https://www.googleapis.com/userinfo/v2/me";
-
-
-
 
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String AUTHORIZATION_FORMAT = "Bearer %s";
 
 	private static final List<String> GOOGLE_OAUTH_SCOPES = Arrays.asList("https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile");
 
-	public GoogleOAuthLoginService(String clientId, String clientSecret, String redirectUrl)
+	public GoogleOAuthService(String clientId, String clientSecret, String redirectUrl)
 	        throws IllegalArgumentException {
 		super(GOOGLE_OAUTH_SERVER, clientId, clientSecret, redirectUrl, GOOGLE_OAUTH_SCOPES);
+	}
+
+	@Override
+	public LoginPointerType getLoginType() {
+		return LoginPointerType.OAUTH_GOOGLE;
 	}
 
 	@Override
@@ -106,22 +112,16 @@ public class GoogleOAuthLoginService extends AbstractOAuthLoginService {
 
 			result = new OAuthAccessTokenImpl(accessToken, refreshToken, expiration);
 		} catch (TokenResponseException e) {
-			TokenErrorResponse response = e.getDetails();
+			TokenErrorResponse errorResponse = e.getDetails();
 
-			// TODO: Complete Exception Throwing here
+			if (errorResponse != null) {
+				String code = errorResponse.getError();
+				String description = errorResponse.getErrorDescription();
 
-			if (e.getDetails() != null) {
-
-				System.err.println("Error: " + e.getDetails().getError());
-		        if (e.getDetails().getErrorDescription() != null) {
-		          System.err.println(e.getDetails().getErrorDescription());
-		        }
-		        if (e.getDetails().getErrorUri() != null) {
-		          System.err.println(e.getDetails().getErrorUri());
-		        }
-		      } else {
-		        System.err.println(e.getMessage());
-		      }
+				throw new OAuthAuthorizationTokenRequestException(code, description);
+			} else {
+				throw new OAuthAuthorizationTokenRequestException();
+			}
 		} catch (IOException e) {
 			throw new OAuthConnectionException(e);
 		}
@@ -177,13 +177,12 @@ public class GoogleOAuthLoginService extends AbstractOAuthLoginService {
 		}
 		 */
 		JsonElement json = ConnectionUtility.readJsonFromConnection(connection);
-		JsonObject jsonRoot = json.getAsJsonObject();
-
 		return GoogleOAuthUserResult.fromResult(token, json);
 	}
 
 	/**
-	 * {@link OAuthAuthorizationInfo} implementation for {@link
+	 * {@link OAuthAuthorizationInfo} implementation for
+	 * {@link GoogleOAuthService}.
 	 *
 	 * @author dereekb
 	 *
@@ -191,28 +190,42 @@ public class GoogleOAuthLoginService extends AbstractOAuthLoginService {
 	public static class GoogleOAuthUserResult extends AbstractOAuthAuthorizationInfo
 	        implements OAuthAuthorizationInfo, OAuthLoginInfo {
 
-		private JsonElement json;
+		private static final String ID_KEY = "id";
+		private static final String EMAIL_KEY = "email";
+		private static final String NAME_KEY = "name";
+		private static final String VERIFIED_KEY = "verified_email";
 
-		private GoogleOAuthUserResult(OAuthAccessToken accessToken, JsonElement json) throws IllegalArgumentException {
+		private JsonObjectReader reader;
+
+		private GoogleOAuthUserResult(OAuthAccessToken accessToken, JsonElement json) {
 			super(accessToken);
 			this.setJson(json);
 		}
 
 		public static GoogleOAuthUserResult fromResult(OAuthAccessToken accessToken,
-		                                               JsonElement json) {
+		                                               JsonElement json)
+		        throws OAuthInsufficientException,
+		            IllegalArgumentException {
 
-			// TODO: Assert an email is available.
+			if (json == null) {
+				throw new IllegalArgumentException("Json cannot be null.");
+			}
 
-			// TODO Auto-generated method stub
+			String id = JsonUtility.getString(json, "id");
+
+			if (id == null) {
+				throw new OAuthInsufficientException("This account has no identifier.");
+			}
+
 			return new GoogleOAuthUserResult(accessToken, json);
 		}
 
 		public JsonElement getJson() {
-			return this.json;
+			return this.reader.getElement();
 		}
 
 		public void setJson(JsonElement json) {
-			this.json = json;
+			this.reader = new JsonObjectReader(json);
 		}
 
 		// MARK: OAuthAuthorizationInfo
@@ -223,21 +236,37 @@ public class GoogleOAuthLoginService extends AbstractOAuthLoginService {
 
 		// MARK: OAuthLoginInfo
 		@Override
-		public String getUsername() {
-			// TODO Auto-generated method stub
-			return null;
+		public LoginPointerType getLoginType() {
+			return LoginPointerType.OAUTH_GOOGLE;
 		}
 
 		@Override
 		public String getEmail() {
-			// TODO Auto-generated method stub
-			return null;
+			return this.reader.getString(EMAIL_KEY);
+		}
+
+		@Override
+		public String getId() {
+			return this.reader.getString(ID_KEY);
+		}
+
+		@Override
+		public String getName() {
+			return this.reader.getString(NAME_KEY);
+		}
+
+		public boolean isVerifiedEmail() {
+			return this.reader.getBoolean(VERIFIED_KEY);
 		}
 
 		@Override
 		public boolean isAcceptable() {
-			// TODO Auto-generated method stub
-			return false;
+			return (this.getId() != null && this.getEmail() != null);
+		}
+
+		@Override
+		public String toString() {
+			return "GoogleOAuthUserResult [reader=" + this.reader + "]";
 		}
 
 	}

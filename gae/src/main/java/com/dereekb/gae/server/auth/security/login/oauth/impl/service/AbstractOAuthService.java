@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
  * @author dereekb
  *
  */
-public abstract class AbstractOAuthLoginService
+public abstract class AbstractOAuthService
         implements OAuthService {
 
 	private static final String DEFAULT_STATE = "/login";
@@ -40,7 +40,7 @@ public abstract class AbstractOAuthLoginService
 
 	private List<String> scopes;
 
-	public AbstractOAuthLoginService(String server,
+	public AbstractOAuthService(String server,
 	        String clientId,
 	        String clientSecret,
 	        String redirectUrl,
@@ -48,7 +48,7 @@ public abstract class AbstractOAuthLoginService
 		this(server, clientId, clientSecret, redirectUrl, DEFAULT_STATE, scopes);
 	}
 
-	public AbstractOAuthLoginService(String server,
+	public AbstractOAuthService(String server,
 	        String clientId,
 	        String clientSecret,
 	        String redirectUrl,

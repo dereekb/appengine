@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.auth.security.login.oauth;
 
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+
 /**
  * Login info retrieved from a remote OAuth source.
  *
@@ -9,11 +11,25 @@ package com.dereekb.gae.server.auth.security.login.oauth;
 public interface OAuthLoginInfo {
 
 	/**
-	 * Returns the username, generally an email address.
+	 * Returns the login type used.
 	 *
-	 * @return
+	 * @return {@link LoginPointerType}. Never {@code null}.
 	 */
-	public String getUsername();
+	public LoginPointerType getLoginType();
+
+	/**
+	 * Returns the id, generally an email address.
+	 *
+	 * @return Id. Never {@code null}.
+	 */
+	public String getId();
+
+	/**
+	 * Returns the name of the user.
+	 *
+	 * @return Name if available, or {@code null} otherwise.
+	 */
+	public String getName();
 
 	/**
 	 * Returns the email address for the user.

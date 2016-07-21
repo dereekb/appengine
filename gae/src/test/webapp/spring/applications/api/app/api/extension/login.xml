@@ -35,5 +35,7 @@
 		<constructor-arg index="0" ref="passwordLoginService"/>
 		<constructor-arg index="1" ref="loginTokenService"/>
 	</bean>
+	
+	<!-- OAuth -->
 
 </beans>

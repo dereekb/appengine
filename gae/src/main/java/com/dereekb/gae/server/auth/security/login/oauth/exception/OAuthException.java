@@ -19,6 +19,10 @@ public class OAuthException extends RuntimeException {
 		this.setCode(code);
 	}
 
+	public OAuthException(String message) {
+		super(message);
+	}
+
 	public OAuthException(Throwable cause) {
 		super(cause);
 	}

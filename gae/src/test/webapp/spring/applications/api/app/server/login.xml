@@ -24,22 +24,60 @@
 		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl">
 		<constructor-arg index="0" ref="loginRegistry"/>
 	</bean>
-	
+
 	<alias name="loginTokenService" alias="loginTokenEncoderDecoder"/>
+	
+	<!-- Login Pointer Service -->
+	<bean id="loginPointerService" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl">
+		<constructor-arg index="0" ref="loginPointerRegistry"/>
+		<constructor-arg index="1" ref="loginPointerScheduleCreateReview"/>
+	</bean>
 	
 	<!-- Password Service -->
 	<bean id="passwordLoginService" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl">
 		<constructor-arg index="0" ref="passwordEncoder"/>
-		<constructor-arg index="1" ref="loginPointerRegistry"/>
-		<constructor-arg index="2" ref="loginPointerScheduleCreateReview"/>
-		<constructor-arg index="3" ref="loginRegisterService"/>
+		<constructor-arg index="1" ref="loginPointerService"/>
+		<constructor-arg index="2" ref="loginRegisterService"/>
 	</bean>
 	
 	<bean id="passwordEncoder" scope="singleton" lazy-init="true"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
 	</bean>
 	
+	<!-- OAuth Services -->
+	<bean id="oAuthServiceManager" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl">
+		<constructor-arg index="0" ref="loginPointerService"/>
+		<constructor-arg index="1">
+			<map key-type="com.dereekb.gae.server.auth.model.pointer.LoginPointerType">
+				<entry key="OAUTH_GOOGLE" value-ref="googleOAuthService" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="oAuthLoginService" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl">
+		<constructor-arg index="0" ref="loginPointerService"/>
+	</bean>
+	
+	<bean id="googleOAuthClientId" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" value="674306976477-nhdbcc4v905e0pe4sjm7t97o1671slik.apps.googleusercontent.com" />
+	</bean>
+	
+	<bean id="googleOAuthClientSecret" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" value="4L2-my9trc_dfbbGWvuNqJt3" />
+	</bean>
+	
+	<bean id="googleOAuthService" scope="singleton"
+		lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.GoogleOAuthService">
+		<constructor-arg index="0" ref="googleOAuthClientId"/>
+		<constructor-arg index="1" ref="googleOAuthClientSecret"/>
+		<constructor-arg index="2" ref="https://thevisitapp.com/login/oauth/google/token"/>
+	</bean>
+
 	<!-- Register Service -->
 	<bean id="loginRegisterService" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl">

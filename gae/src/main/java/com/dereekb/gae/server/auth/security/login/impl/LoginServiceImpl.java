@@ -5,13 +5,12 @@ import java.util.Set;
 import com.dereekb.gae.model.extension.links.exception.LinkException;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.login.LoginPointerService;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.LoginService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
-import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
  * Abstract {@link LoginService} implementation.
@@ -23,26 +22,18 @@ public class LoginServiceImpl
         implements LoginService {
 
 	private String format;
-	private GetterSetter<LoginPointer> getterSetter;
-	private TaskRequestSender<LoginPointer> reviewTask;
+	private LoginPointerService pointerService;
 	private LoginRegisterService registerService;
 
-	public LoginServiceImpl(String format, GetterSetter<LoginPointer> getterSetter) throws IllegalArgumentException {
-		this(format, getterSetter, null);
-	}
-
-	public LoginServiceImpl(String format, GetterSetter<LoginPointer> getterSetter, LoginRegisterService registerService)
-	        throws IllegalArgumentException {
-		this(format, getterSetter, null, registerService);
+	public LoginServiceImpl(String format, LoginPointerService pointerService) throws IllegalArgumentException {
+		this(format, pointerService, null);
 	}
 
 	public LoginServiceImpl(String format,
-	        GetterSetter<LoginPointer> getterSetter,
-	        TaskRequestSender<LoginPointer> reviewTask,
+	        LoginPointerService pointerService,
 	        LoginRegisterService registerService) throws IllegalArgumentException {
 		this.setFormat(format);
-		this.setGetterSetter(getterSetter);
-		this.setReviewTask(reviewTask);
+		this.setPointerService(pointerService);
 		this.setRegisterService(registerService);
 	}
 
@@ -54,24 +45,16 @@ public class LoginServiceImpl
 		this.format = format;
 	}
 
-	public GetterSetter<LoginPointer> getGetterSetter() {
-		return this.getterSetter;
+	public LoginPointerService getPointerService() {
+		return this.pointerService;
 	}
 
-	public void setGetterSetter(GetterSetter<LoginPointer> getterSetter) throws IllegalArgumentException {
-		if (getterSetter == null) {
+	public void setPointerService(LoginPointerService pointerService) throws IllegalArgumentException {
+		if (pointerService == null) {
 			throw new IllegalArgumentException("Encoder cannot be null.");
 		}
 
-		this.getterSetter = getterSetter;
-	}
-
-	public TaskRequestSender<LoginPointer> getReviewTask() {
-		return this.reviewTask;
-	}
-
-	public void setReviewTask(TaskRequestSender<LoginPointer> reviewTask) {
-		this.reviewTask = reviewTask;
+		this.pointerService = pointerService;
 	}
 
 	public LoginRegisterService getRegisterService() {
@@ -97,25 +80,12 @@ public class LoginServiceImpl
 	protected LoginPointer createLogin(String username,
 	                                   LoginPointer template) throws LoginExistsException {
 		ModelKey key = this.getLoginPointerKey(username);
-		boolean exists = this.getterSetter.exists(key);
-
-		if (exists) {
-			throw new LoginExistsException(username);
-		}
-
-		template.setModelKey(key);
-		this.getterSetter.save(template, false);
-
-		if (this.reviewTask != null) {
-			this.reviewTask.sendTask(template);
-		}
-
-		return template;
+		return this.pointerService.getLoginPointer(key);
 	}
 
 	protected LoginPointer loadLogin(String username) {
 		ModelKey key = this.getLoginPointerKey(username);
-		return this.getterSetter.get(key);
+		return this.pointerService.getLoginPointer(key);
 	}
 
 	protected ModelKey getLoginPointerKey(String username) {
@@ -137,6 +107,12 @@ public class LoginServiceImpl
 	public void registerLogins(ModelKey loginKey,
 	                           Set<String> loginPointers) throws LinkException {
 		this.registerService.registerLogins(loginKey, loginPointers);
+	}
+
+	@Override
+	public String toString() {
+		return "LoginServiceImpl [format=" + this.format + ", pointerService=" + this.pointerService
+		        + ", registerService=" + this.registerService + "]";
 	}
 
 }
