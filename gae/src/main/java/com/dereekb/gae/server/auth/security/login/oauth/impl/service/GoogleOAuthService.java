@@ -39,7 +39,9 @@ import com.google.gson.JsonSyntaxException;
  */
 public class GoogleOAuthService extends AbstractOAuthService {
 
-	private static final String GOOGLE_OAUTH_SERVER = "https://accounts.google.com/o/oauth2/v2/auth";
+	private static final String GOOGLE_ACCOUNT_LOGIN_PATH = "https://accounts.google.com/o/oauth2/v2/auth";
+	private static final String GOOGLE_AUTH_TOKEN_PATH = "https://www.googleapis.com/oauth2/v4/token";
+
 	private static final String GOOGLE_USER_REQUEST_URI = "https://www.googleapis.com/userinfo/v2/me";
 
 	private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -47,9 +49,9 @@ public class GoogleOAuthService extends AbstractOAuthService {
 
 	private static final List<String> GOOGLE_OAUTH_SCOPES = Arrays.asList("https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile");
 
-	public GoogleOAuthService(String clientId, String clientSecret, String redirectUrl)
+	public GoogleOAuthService(String clientId, String clientSecret)
 	        throws IllegalArgumentException {
-		super(GOOGLE_OAUTH_SERVER, clientId, clientSecret, redirectUrl, GOOGLE_OAUTH_SCOPES);
+		super(GOOGLE_ACCOUNT_LOGIN_PATH, GOOGLE_AUTH_TOKEN_PATH, clientId, clientSecret, GOOGLE_OAUTH_SCOPES);
 	}
 
 	@Override
@@ -120,7 +122,9 @@ public class GoogleOAuthService extends AbstractOAuthService {
 
 				throw new OAuthAuthorizationTokenRequestException(code, description);
 			} else {
-				throw new OAuthAuthorizationTokenRequestException();
+				Integer httpCode = e.getStatusCode();
+				String statusMessage = e.getStatusMessage();
+				throw new OAuthAuthorizationTokenRequestException(httpCode.toString(), statusMessage);
 			}
 		} catch (IOException e) {
 			throw new OAuthConnectionException(e);

@@ -26,13 +26,25 @@ public abstract class AbstractOAuthService
         implements OAuthService {
 
 	private static final String DEFAULT_STATE = "/login";
+	private static final String DEFAULT_AUTH_TOKEN_REDIRECT_URL = "";
 
-	private String server = null;
+	/**
+	 * Path to the access token step. The initial step.
+	 */
+	private String serverLoginTokenUrl;
+
+	/**
+	 * Path to the authorization token step, after retrieving the access token
+	 * request.
+	 */
+	private String serverAuthTokenUrl;
 
 	private String clientId = null;
 	private String clientSecret = null;
 
-	private String redirectUrl = null;
+	private String loginTokenRedirectUrl = null;
+	private String authTokenRedirectUrl = DEFAULT_AUTH_TOKEN_REDIRECT_URL;
+
 	private String state = DEFAULT_STATE;
 
 	private String authorizationGrantType = "authorization_code";
@@ -40,34 +52,42 @@ public abstract class AbstractOAuthService
 
 	private List<String> scopes;
 
-	public AbstractOAuthService(String server,
+	public AbstractOAuthService(String serverLoginTokenUrl,
+	        String serverAuthTokenUrl,
 	        String clientId,
 	        String clientSecret,
-	        String redirectUrl,
 	        List<String> scopes) throws IllegalArgumentException {
-		this(server, clientId, clientSecret, redirectUrl, DEFAULT_STATE, scopes);
+		this(serverLoginTokenUrl, serverAuthTokenUrl, clientId, clientSecret, DEFAULT_STATE, scopes);
 	}
 
-	public AbstractOAuthService(String server,
+	public AbstractOAuthService(String serverLoginTokenUrl,
+	        String serverAuthTokenUrl,
 	        String clientId,
 	        String clientSecret,
-	        String redirectUrl,
 	        String state,
 	        List<String> scopes) throws IllegalArgumentException {
-		this.setServer(server);
+		this.setServerLoginTokenUrl(serverLoginTokenUrl);
+		this.setServerAuthTokenUrl(serverAuthTokenUrl);
 		this.setClientId(clientId);
 		this.setClientSecret(clientSecret);
-		this.setRedirectUrl(redirectUrl);
 		this.setState(state);
 		this.setScopes(scopes);
 	}
 
-	public String getServer() {
-		return this.server;
+	public String getServerLoginTokenUrl() {
+		return this.serverLoginTokenUrl;
 	}
 
-	public void setServer(String server) {
-		this.server = server;
+	public void setServerLoginTokenUrl(String serverLoginTokenUrl) {
+		this.serverLoginTokenUrl = serverLoginTokenUrl;
+	}
+
+	public String getServerAuthTokenUrl() {
+		return this.serverAuthTokenUrl;
+	}
+
+	public void setServerAuthTokenUrl(String serverAuthTokenUrl) {
+		this.serverAuthTokenUrl = serverAuthTokenUrl;
 	}
 
 	public String getClientId() {
@@ -86,12 +106,20 @@ public abstract class AbstractOAuthService
 		this.clientSecret = clientSecret;
 	}
 
-	public String getRedirectUrl() {
-		return this.redirectUrl;
+	public String getLoginTokenRedirectUrl() {
+		return this.loginTokenRedirectUrl;
 	}
 
-	public void setRedirectUrl(String redirectUrl) {
-		this.redirectUrl = redirectUrl;
+	public void setLoginTokenRedirectUrl(String loginTokenRedirectUrl) {
+		this.loginTokenRedirectUrl = loginTokenRedirectUrl;
+	}
+
+	public String getAuthTokenRedirectUrl() {
+		return this.authTokenRedirectUrl;
+	}
+
+	public void setAuthTokenRedirectUrl(String authTokenRedirectUrl) {
+		this.authTokenRedirectUrl = authTokenRedirectUrl;
 	}
 
 	public String getState() {
@@ -140,7 +168,9 @@ public abstract class AbstractOAuthService
 	}
 
 	public GoogleAuthorizationCodeRequestUrl getAuthorizationCodeRequest() {
-		return new GoogleAuthorizationCodeRequestUrl(this.server, this.clientId, this.redirectUrl, this.scopes);
+		return new GoogleAuthorizationCodeRequestUrl(this.serverLoginTokenUrl, this.clientId,
+		        this.loginTokenRedirectUrl,
+		        this.scopes);
 	}
 
 	// MARK: Extension
@@ -157,11 +187,11 @@ public abstract class AbstractOAuthService
 
 	protected AuthorizationCodeTokenRequest makeAuthorizationCodeTokenRequest(String authCode) {
 
-		GenericUrl serverUrl = new GenericUrl(this.getServer());
+		GenericUrl serverUrl = new GenericUrl(this.serverAuthTokenUrl);
 		BasicAuthentication clientServerAuthentication = this.getClientServerAuthentication();
 
 		return new AuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(), serverUrl, authCode)
-		        .setRedirectUri(this.redirectUrl).setClientAuthentication(clientServerAuthentication)
+		        .setRedirectUri(this.authTokenRedirectUrl).setClientAuthentication(clientServerAuthentication)
 		        .setGrantType(this.authorizationGrantType);
 	}
 
@@ -198,7 +228,7 @@ public abstract class AbstractOAuthService
 	protected Credential buildFullCredential(String accessToken,
 	                                         String refreshToken,
 	                                         Long expiration) {
-		GenericUrl serverUrl = new GenericUrl(this.getServer());
+		GenericUrl serverUrl = new GenericUrl(this.serverAuthTokenUrl);
 		BasicAuthentication clientServerAuthentication = this.getClientServerAuthentication();
 
 		Credential credential = new Credential.Builder(BearerToken.authorizationHeaderAccessMethod())
@@ -210,6 +240,16 @@ public abstract class AbstractOAuthService
 		credential.setExpiresInSeconds(expiration);
 
 		return credential;
+	}
+
+	@Override
+	public String toString() {
+		return "AbstractOAuthService [serverLoginTokenUrl=" + this.serverLoginTokenUrl + ", serverAuthTokenUrl="
+		        + this.serverAuthTokenUrl + ", clientId=" + this.clientId + ", clientSecret=" + this.clientSecret
+		        + ", loginTokenRedirectUrl=" + this.loginTokenRedirectUrl + ", authTokenRedirectUrl="
+		        + this.authTokenRedirectUrl + ", state=" + this.state + ", authorizationGrantType="
+		        + this.authorizationGrantType + ", allowRefreshCredentials=" + this.allowRefreshCredentials
+		        + ", scopes=" + this.scopes + "]";
 	}
 
 }

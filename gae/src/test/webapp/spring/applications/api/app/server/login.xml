@@ -63,11 +63,11 @@
 	</bean>
 	
 	<bean id="googleOAuthClientId" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="674306976477-nhdbcc4v905e0pe4sjm7t97o1671slik.apps.googleusercontent.com" />
+		<constructor-arg index="0" value="326101736804-mgrnl6qnirj54j3q5cer8ci6lf6i1e8c.apps.googleusercontent.com" />
 	</bean>
 	
 	<bean id="googleOAuthClientSecret" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="4L2-my9trc_dfbbGWvuNqJt3" />
+		<constructor-arg index="0" value="hUG1RNQXv6f9qfiSesB0vbJz" />
 	</bean>
 	
 	<bean id="googleOAuthService" scope="singleton"
@@ -75,7 +75,8 @@
 		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.GoogleOAuthService">
 		<constructor-arg index="0" ref="googleOAuthClientId"/>
 		<constructor-arg index="1" ref="googleOAuthClientSecret"/>
-		<constructor-arg index="2" ref="https://thevisitapp.com/login/oauth/google/token"/>
+		<property name="loginTokenRedirectUrl" value="https://developers.google.com/oauthplayground" />
+		<property name="authTokenRedirectUrl" value="https://developers.google.com/oauthplayground" />
 	</bean>
 
 	<!-- Register Service -->
