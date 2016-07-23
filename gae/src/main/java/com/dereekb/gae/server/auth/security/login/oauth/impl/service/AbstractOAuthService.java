@@ -3,7 +3,6 @@ package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
 import java.util.List;
 
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
-import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
@@ -177,8 +176,6 @@ public abstract class AbstractOAuthService
 	public abstract OAuthAccessToken getAuthorizationToken(String authCode)
 	        throws OAuthAuthorizationTokenRequestException,
 	            OAuthConnectionException;
-
-	public abstract OAuthAuthorizationInfo getLoginInfo(OAuthAccessToken accessToken);
 
 	// MARK: Internal
 	protected BasicAuthentication getClientServerAuthentication() {

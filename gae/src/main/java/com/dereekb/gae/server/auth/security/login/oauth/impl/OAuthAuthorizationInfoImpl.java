@@ -18,9 +18,13 @@ public class OAuthAuthorizationInfoImpl
 
 	public OAuthAuthorizationInfoImpl() {}
 
+	public OAuthAuthorizationInfoImpl(OAuthLoginInfo loginInfo) {
+		this(loginInfo, null);
+	}
+
 	public OAuthAuthorizationInfoImpl(OAuthLoginInfo loginInfo, OAuthAccessToken accessToken) {
-		this.loginInfo = loginInfo;
-		this.accessToken = accessToken;
+		this.setLoginInfo(loginInfo);
+		this.setAccessToken(accessToken);
 	}
 
 	@Override

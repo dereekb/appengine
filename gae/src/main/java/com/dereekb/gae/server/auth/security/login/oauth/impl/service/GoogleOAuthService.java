@@ -93,7 +93,7 @@ public class GoogleOAuthService extends AbstractOAuthService {
 	@Override
 	public OAuthAuthorizationInfo processAuthorizationCode(String authCode) {
 		OAuthAccessToken accessToken = this.getAuthorizationToken(authCode);
-		return this.getLoginInfo(accessToken);
+		return this.getAuthorizationInfo(accessToken);
 	}
 
 
@@ -134,7 +134,7 @@ public class GoogleOAuthService extends AbstractOAuthService {
 	}
 
 	@Override
-	public OAuthAuthorizationInfo getLoginInfo(OAuthAccessToken token) throws OAuthConnectionException {
+	public OAuthAuthorizationInfo getAuthorizationInfo(OAuthAccessToken token) throws OAuthConnectionException {
 		GoogleOAuthUserResult result = null;
 
 		try {

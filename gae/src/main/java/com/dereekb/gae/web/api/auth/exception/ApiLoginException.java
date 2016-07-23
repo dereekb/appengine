@@ -18,7 +18,11 @@ public class ApiLoginException extends RuntimeException {
 
 		INVALID_CREDENTIALS("INVALID_CREDENTIALS", "Invalid Credentials"),
 
-		EXISTS("LOGIN_EXISTS", "Login Exists");
+		EXISTS("LOGIN_EXISTS", "Login Exists"),
+
+		UNSUPPORTED("LOGIN_UNSUPPORTED", "Unsupported type"),
+
+		ERROR("LOGIN_ERROR", "Unexpected error");
 
 		private final String code;
 		private final String title;

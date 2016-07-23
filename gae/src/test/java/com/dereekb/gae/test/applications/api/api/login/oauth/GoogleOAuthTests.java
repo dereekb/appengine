@@ -60,7 +60,7 @@ public class GoogleOAuthTests extends AbstractOAuthTests {
 	@Test
 	public void testGetLoginInfo() {
 		OAuthAccessToken token = new OAuthAccessTokenImpl(this.TEMPORARY_ACCESS_TOKEN);
-		OAuthAuthorizationInfo authorizationInfo = this.googleOAuthService.getLoginInfo(token);
+		OAuthAuthorizationInfo authorizationInfo = this.googleOAuthService.getAuthorizationInfo(token);
 		Assert.assertNotNull(authorizationInfo);
 	}
 

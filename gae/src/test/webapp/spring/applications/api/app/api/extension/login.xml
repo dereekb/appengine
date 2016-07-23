@@ -10,32 +10,39 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Register Controller -->
-	<bean id="loginRegisterController"
-		class="com.dereekb.gae.web.api.auth.controller.register.LoginRegisterController"
-		scope="singleton" lazy-init="true">
+	<bean id="loginRegisterController" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.register.LoginRegisterController">
 		<constructor-arg index="0" ref="loginRegisterControllerDelegate"/>
 	</bean>
 
-	<bean id="loginRegisterControllerDelegate"
-		class="com.dereekb.gae.web.api.auth.controller.register.impl.LoginRegisterControllerDelegateImpl"
-		scope="singleton" lazy-init="true">
+	<bean id="loginRegisterControllerDelegate" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.register.impl.LoginRegisterControllerDelegateImpl">
 		<constructor-arg index="0" ref="loginRegisterService"/>
 		<constructor-arg index="1" ref="loginTokenService"/>
 	</bean>
 
 	<!-- Password Login Controller -->
-	<bean id="passwordLoginController"
-		class="com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController"
-		scope="singleton" lazy-init="true">
+	<bean id="passwordLoginController" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController">
 		<constructor-arg index="0" ref="passwordLoginControllerDelegate"/>
 	</bean>
 
-	<bean id="passwordLoginControllerDelegate"
+	<bean id="passwordLoginControllerDelegate" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginControllerDelegateImpl">
 		<constructor-arg index="0" ref="passwordLoginService"/>
 		<constructor-arg index="1" ref="loginTokenService"/>
 	</bean>
 	
 	<!-- OAuth -->
+	<bean id="oAuthLoginController" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginController">
+		<constructor-arg index="0" ref="oAuthLoginControllerDelegate"/>
+	</bean>
+
+	<bean id="oAuthLoginControllerDelegate" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.oauth.impl.OAuthLoginControllerDelegateImpl">
+		<constructor-arg index="0" ref="oAuthServiceManager"/>
+		<constructor-arg index="1" ref="loginTokenService"/>
+	</bean>
 
 </beans>

@@ -49,7 +49,7 @@
 	<!-- OAuth Services -->
 	<bean id="oAuthServiceManager" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl">
-		<constructor-arg index="0" ref="loginPointerService"/>
+		<constructor-arg index="0" ref="oAuthLoginService"/>
 		<constructor-arg index="1">
 			<map key-type="com.dereekb.gae.server.auth.model.pointer.LoginPointerType">
 				<entry key="OAUTH_GOOGLE" value-ref="googleOAuthService" />

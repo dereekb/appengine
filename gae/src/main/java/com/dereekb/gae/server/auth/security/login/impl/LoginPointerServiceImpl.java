@@ -48,7 +48,7 @@ public class LoginPointerServiceImpl
 	// MARK: LoginPointerService
 	@Override
 	public LoginPointer getLoginPointer(ModelKey key) {
-		return this.getLoginPointer(key);
+		return this.getterSetter.get(key);
 	}
 
 	@Override

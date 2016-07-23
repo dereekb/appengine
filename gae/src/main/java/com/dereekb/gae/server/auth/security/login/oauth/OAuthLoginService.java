@@ -22,6 +22,6 @@ public interface OAuthLoginService {
 	 * @throws OAuthInsufficientException
 	 *             if the input is unacceptable.
 	 */
-	public LoginPointer login(OAuthAuthorizationInfo authCode) throws OAuthInsufficientException;
+	public LoginPointer login(OAuthAuthorizationInfo authorizationInfo) throws OAuthInsufficientException;
 
 }
