@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
@@ -237,6 +239,17 @@ public abstract class AbstractOAuthService
 		credential.setExpiresInSeconds(expiration);
 
 		return credential;
+	}
+
+	protected void handleLoginConnectionException(IOException e,
+	                                              HttpURLConnection connection) {
+		try {
+			int code = connection.getResponseCode();
+			String message = connection.getResponseMessage();
+			throw new OAuthAuthorizationTokenRequestException(code, message);
+		} catch (IOException ioe) {
+			throw new OAuthConnectionException(e);
+		}
 	}
 
 	@Override

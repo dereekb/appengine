@@ -29,6 +29,8 @@ public interface OAuthService {
 	            OAuthConnectionException,
 	            OAuthAuthorizationTokenRequestException;
 
-	public OAuthAuthorizationInfo getAuthorizationInfo(OAuthAccessToken token) throws OAuthConnectionException;
+	public OAuthAuthorizationInfo getAuthorizationInfo(OAuthAccessToken token)
+	        throws OAuthAuthorizationTokenRequestException,
+	            OAuthConnectionException;
 
 }

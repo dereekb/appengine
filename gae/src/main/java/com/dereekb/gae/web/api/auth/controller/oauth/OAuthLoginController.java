@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
@@ -64,6 +65,8 @@ public class OAuthLoginController {
 
 		try {
 			response = this.delegate.login(type, accessToken);
+		} catch (OAuthAuthorizationTokenRequestException e) {
+			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
 		} catch (OAuthServiceUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNSUPPORTED, e);
 		} catch (OAuthInsufficientException e) {

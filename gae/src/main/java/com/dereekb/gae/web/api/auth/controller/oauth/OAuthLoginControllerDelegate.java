@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.auth.controller.oauth;
 
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
@@ -29,6 +30,7 @@ public interface OAuthLoginControllerDelegate {
 	public LoginTokenPair login(String type,
 	                            String accessToken)
 	        throws OAuthInsufficientException,
+	            OAuthAuthorizationTokenRequestException,
 	            OAuthServiceUnavailableException,
 	            OAuthConnectionException;
 

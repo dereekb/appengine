@@ -42,7 +42,7 @@ public class ApiLoginExceptionHandler {
 
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.CONFLICT)
-	@ExceptionHandler(ApiLoginInvalidException.class)
+	@ExceptionHandler(ApiLoginExistsException.class)
 	public ApiResponseImpl handleExistsException(ApiLoginExistsException exception) {
 		return this.buildErrorResponse(exception);
 	}
