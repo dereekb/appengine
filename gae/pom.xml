@@ -44,7 +44,14 @@
 		<dependency>
 			<groupId>com.google.appengine.tools</groupId>
 			<artifactId>appengine-gcs-client</artifactId>
-			<version>RELEASE</version>
+			<version>0.6</version>
+			<exclusions>
+				<exclusion>
+					<!-- TODO remove me after the issue is fixed https://github.com/google/google-http-java-client/issues/330 -->
+					<groupId>com.google.http-client</groupId>
+					<artifactId>google-http-client</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -63,6 +70,12 @@
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client</artifactId>
+			<version>1.22.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client</artifactId>
 			<version>1.22.0</version>
 		</dependency>
 
@@ -121,7 +134,7 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring-security.target.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
@@ -162,7 +175,7 @@
 		</dependency>
 
 		<!-- Test Dependencies -->
-    
+
 		<!-- Servlet 3.0 API required for Spring 4.1 testing. Is not required on 
 			final product, allegedly. -->
 		<dependency>
@@ -194,43 +207,39 @@
 		</dependency>
 
 		<dependency>
-	        <groupId>org.springframework.security</groupId>
-	        <artifactId>spring-security-test</artifactId>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<version>${spring-security.target.version}</version>
 			<scope>test</scope>
-	    </dependency>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-testing</artifactId>
 			<version>${appengine.target.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-labs</artifactId>
 			<version>${appengine.target.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-stubs</artifactId>
 			<version>${appengine.target.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-tools-sdk</artifactId>
 			<version>${appengine.target.version}</version>
+			<scope>test</scope>
 		</dependency>
-
-		<!-- <dependency> <groupId>com.google.appengine</groupId> <artifactId>appengine-local-runtime</artifactId> 
-			<version>${appengine.target.version}</version> <systemPath>/Applications/Spring 
-			Tools Suite/sts-3.6.2.RELEASE/plugins/com.google.appengine.eclipse.sdkbundle_1.9.22/appengine-java-sdk-1.9.22/lib/impl/appengine-local-runtime.jar</systemPath> 
-			<scope>system</scope> </dependency> <dependency> <groupId>com.google.appengine</groupId> 
-			<artifactId>appengine-local-runtime-shared</artifactId> <version>${appengine.target.version}</version> 
-			<systemPath>/Applications/Spring Tools Suite/sts-3.6.2.RELEASE/plugins/com.google.appengine.eclipse.sdkbundle_1.9.22/appengine-java-sdk-1.9.22/lib/shared/appengine-local-runtime-shared.jar</systemPath> 
-			<scope>system</scope> </dependency> -->
 
 	</dependencies>
 

@@ -8,6 +8,7 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -28,7 +29,7 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 	@Autowired(required = false)
 	protected TestLoginTokenContext testLoginTokenContext;
 
-	@Autowired
+	@Autowired(required = false)
 	protected FilterChainProxy springSecurityFilterChain;
 
 	@Autowired
@@ -38,11 +39,16 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 
 	@Before
 	public void setUpWebServices() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
-		        .apply(springSecurity(this.springSecurityFilterChain)).build();
+		DefaultMockMvcBuilder mockMvcBuilder = MockMvcBuilders.webAppContextSetup(this.webApplicationContext);
+
+		if (this.springSecurityFilterChain != null) {
+			mockMvcBuilder.apply(springSecurity(this.springSecurityFilterChain));
+		}
+
+		this.mockMvc = mockMvcBuilder.build();
 		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
 
-		if (this.testLoginTokenContext != null) {
+		if (this.springSecurityFilterChain != null && this.testLoginTokenContext != null) {
 			this.testLoginTokenContext.generateLogin();
 			TestLocalTaskQueueCallback.waitUntilComplete();
 		}

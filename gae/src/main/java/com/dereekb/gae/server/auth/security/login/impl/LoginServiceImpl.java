@@ -80,7 +80,7 @@ public class LoginServiceImpl
 	protected LoginPointer createLogin(String username,
 	                                   LoginPointer template) throws LoginExistsException {
 		ModelKey key = this.getLoginPointerKey(username);
-		return this.pointerService.getLoginPointer(key);
+		return this.pointerService.createLoginPointer(key, template);
 	}
 
 	protected LoginPointer loadLogin(String username) {

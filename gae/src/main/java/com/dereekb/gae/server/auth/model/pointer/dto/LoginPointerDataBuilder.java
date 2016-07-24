@@ -24,6 +24,9 @@ public final class LoginPointerDataBuilder extends AbstractDirectionalConverter<
 		// Id
 		data.setIdentifier(loginPointer.getModelKey());
 
+		// Data
+		data.setEmail(loginPointer.getEmail());
+
 		// Links
 		data.setLogin(ObjectifyKeyUtility.readKeyIdentifier(loginPointer.getLogin()));
 

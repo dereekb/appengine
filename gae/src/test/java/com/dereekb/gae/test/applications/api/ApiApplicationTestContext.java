@@ -1,7 +1,5 @@
 package com.dereekb.gae.test.applications.api;
 
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ public class ApiApplicationTestContext extends CoreServiceTestingContext {
 
 	@Before
 	public void setUpApi() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).apply(springSecurity()).build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
 	}
 

@@ -21,6 +21,8 @@ public class LoginPointerData extends DatabaseModelData {
 
 	private Long login;
 
+	private String email;
+
 	public LoginPointerData() {}
 
 	public Long getLogin() {
@@ -29,6 +31,14 @@ public class LoginPointerData extends DatabaseModelData {
 
 	public void setLogin(Long login) {
 		this.login = login;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	// UniqueModel

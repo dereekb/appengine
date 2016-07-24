@@ -59,6 +59,12 @@ public class LoginPointer extends DatabaseModel
 	@IgnoreSave({ IfEmpty.class })
 	private String data;
 
+	/**
+	 * Email address, if applicable.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String email;
+
 	public LoginPointer() {}
 
 	public LoginPointer(String identifier) {
@@ -130,6 +136,14 @@ public class LoginPointer extends DatabaseModel
 
 	public void setData(String data) {
 		this.data = data;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	// Unique Model

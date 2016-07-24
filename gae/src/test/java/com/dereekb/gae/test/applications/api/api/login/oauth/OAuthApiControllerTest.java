@@ -35,6 +35,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 	@Autowired
 	private OAuthServiceManager serverManager;
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private OAuthLoginController loginController;
 

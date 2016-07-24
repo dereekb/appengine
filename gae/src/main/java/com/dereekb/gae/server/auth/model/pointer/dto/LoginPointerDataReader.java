@@ -29,6 +29,9 @@ public final class LoginPointerDataReader extends AbstractDirectionalConverter<L
 		String stringIdentifier = input.getKey();
 		model.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
 
+		// Data
+		model.setEmail(input.getEmail());
+
 		// Links
 		model.setLogin(LOGIN_KEY_UTIL.keyFromId(input.getLogin()));
 

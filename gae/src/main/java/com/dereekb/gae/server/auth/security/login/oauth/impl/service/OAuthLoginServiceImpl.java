@@ -44,6 +44,7 @@ public class OAuthLoginServiceImpl
 		LoginPointer template = new LoginPointer();
 		template.setModelKey(key);
 		template.setLoginPointerType(type);
+		template.setEmail(info.getEmail());
 
 		return this.loginPointerService.getOrCreateLoginPointer(key, template);
 	}
