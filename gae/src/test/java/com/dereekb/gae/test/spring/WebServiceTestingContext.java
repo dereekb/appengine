@@ -42,7 +42,7 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 		DefaultMockMvcBuilder mockMvcBuilder = MockMvcBuilders.webAppContextSetup(this.webApplicationContext);
 
 		if (this.springSecurityFilterChain != null) {
-			mockMvcBuilder.apply(springSecurity(this.springSecurityFilterChain));
+			mockMvcBuilder = mockMvcBuilder.apply(springSecurity(this.springSecurityFilterChain));
 		}
 
 		this.mockMvc = mockMvcBuilder.build();
