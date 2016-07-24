@@ -11,10 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginErrorException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 
+/**
+ * Controller for logging in using oAuth.
+ *
+ * @author dereekb
+ *
+ */
 @RestController
 @RequestMapping("/login/oauth")
 public class OAuthLoginController {
@@ -38,10 +46,20 @@ public class OAuthLoginController {
 	}
 
 	// MARK: Controller
+	/**
+	 *
+	 * @param type
+	 *            OAuth service/type. Example "google".
+	 * @param accessToken
+	 *            OAuth access token retrieved by the client before connecting.
+	 * @return {@link LoginTokenPair}. Never {@code null}.
+	 */
 	@ResponseBody
 	@RequestMapping(path = "/{type}", method = RequestMethod.POST, produces = "application/json")
 	public final LoginTokenPair login(@PathVariable("type") String type,
-	                                  @RequestParam @NotEmpty String accessToken) {
+	                                  @RequestParam @NotEmpty String accessToken)
+	        throws ApiLoginException,
+	            ApiRuntimeException {
 		LoginTokenPair response = null;
 
 		try {
@@ -49,9 +67,9 @@ public class OAuthLoginController {
 		} catch (OAuthServiceUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNSUPPORTED, e);
 		} catch (OAuthInsufficientException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
+			throw new ApiLoginInvalidException(e);
 		} catch (OAuthConnectionException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.ERROR, e);
+			throw new ApiLoginErrorException(e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);
 		}

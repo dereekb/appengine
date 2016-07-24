@@ -13,6 +13,8 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableExce
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
 import com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginPairImpl;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 
@@ -54,12 +56,12 @@ public final class PasswordLoginController {
 		try {
 			PasswordLoginPair loginPair = new PasswordLoginPairImpl(username, password);
 			response = this.delegate.login(loginPair);
-		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
 		} catch (LoginUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNAVAILABLE, e);
 		} catch (InvalidLoginCredentialsException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
+			throw new ApiLoginInvalidException(e);
+		} catch (RuntimeException e) {
+			throw new ApiRuntimeException(e);
 		}
 
 		return response;
@@ -74,13 +76,18 @@ public final class PasswordLoginController {
 		try {
 			PasswordLoginPair loginPair = new PasswordLoginPairImpl(username, password);
 			response = this.delegate.createLogin(loginPair);
+		} catch (LoginExistsException e) {
+			throw new ApiLoginExistsException(e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);
-		} catch (LoginExistsException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.EXISTS, e);
 		}
 
 		return response;
+	}
+
+	@Override
+	public String toString() {
+		return "PasswordLoginController [delegate=" + this.delegate + "]";
 	}
 
 }

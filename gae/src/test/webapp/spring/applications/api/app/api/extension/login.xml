@@ -44,5 +44,10 @@
 		<constructor-arg index="0" ref="oAuthServiceManager"/>
 		<constructor-arg index="1" ref="loginTokenService"/>
 	</bean>
+	
+	<!-- Exception Handler -->
+	<bean id="loginExceptionHandler" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.exception.ApiLoginExceptionHandler">
+	</bean>
 
 </beans>

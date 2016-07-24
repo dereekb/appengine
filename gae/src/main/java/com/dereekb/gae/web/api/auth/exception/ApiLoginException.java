@@ -14,15 +14,19 @@ public class ApiLoginException extends RuntimeException {
 
 	public static enum LoginExceptionReason {
 
+	    // Bad Request
 		UNAVAILABLE("LOGIN_UNAVALABLE", "Login Unavailble"),
-
-		INVALID_CREDENTIALS("INVALID_CREDENTIALS", "Invalid Credentials"),
-
-		EXISTS("LOGIN_EXISTS", "Login Exists"),
 
 		UNSUPPORTED("LOGIN_UNSUPPORTED", "Unsupported type"),
 
-		ERROR("LOGIN_ERROR", "Unexpected error");
+	    // Conflict
+		EXISTS("LOGIN_EXISTS", "Login Exists"),
+
+	    // Internal Service Error
+		ERROR("LOGIN_ERROR", "Unexpected error"),
+
+	    // Forbidden
+		INVALID_CREDENTIALS("INVALID_CREDENTIALS", "Invalid Credentials");
 
 		private final String code;
 		private final String title;
