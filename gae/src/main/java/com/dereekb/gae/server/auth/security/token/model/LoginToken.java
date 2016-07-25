@@ -22,6 +22,12 @@ public interface LoginToken {
 	public String getSubject();
 
 	/**
+	 *
+	 * @return {@code true} if it is an Anoynmous login.
+	 */
+	public boolean isAnonymous();
+
+	/**
 	 * Returns role codes for the user.
 	 *
 	 * @return {@link Role}. Never {@code null}.

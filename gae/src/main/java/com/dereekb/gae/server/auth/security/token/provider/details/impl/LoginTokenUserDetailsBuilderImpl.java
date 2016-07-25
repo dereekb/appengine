@@ -32,6 +32,7 @@ public class LoginTokenUserDetailsBuilderImpl
 	private GrantedAuthorityDecoder grantedAuthorityDecoder;
 
 	private List<GrantedAuthority> tokenAuthorities;
+	private List<GrantedAuthority> anonymousAuthorities;
 
 	public LoginTokenUserDetailsBuilderImpl(Getter<Login> loginGetter,
 	        Getter<LoginPointer> loginPointerGetter,
@@ -47,6 +48,7 @@ public class LoginTokenUserDetailsBuilderImpl
 		this.setLoginPointerGetter(loginPointerGetter);
 		this.setGrantedAuthorityDecoder(grantedAuthorityDecoder);
 		this.setTokenAuthorities(tokenAuthorities);
+		this.setAnonymousAuthorities(null);
 	}
 
 	public Getter<Login> getLoginGetter() {
@@ -85,6 +87,18 @@ public class LoginTokenUserDetailsBuilderImpl
 		this.tokenAuthorities = tokenAuthorities;
 	}
 
+	public List<GrantedAuthority> getAnonymousAuthorities() {
+		return this.anonymousAuthorities;
+	}
+
+	public void setAnonymousAuthorities(List<GrantedAuthority> anonymousAuthorities) {
+		if (anonymousAuthorities == null) {
+			anonymousAuthorities = new ArrayList<>();
+		}
+
+		this.anonymousAuthorities = anonymousAuthorities;
+	}
+
 	// MARK: LoginTokenUserDetailsBuilder
 	@Override
 	public LoginTokenUserDetails buildDetails(LoginToken loginToken) throws IllegalArgumentException {
@@ -100,6 +114,7 @@ public class LoginTokenUserDetailsBuilderImpl
 		private final LoginToken loginToken;
 
 		private boolean loginLoaded = false;
+
 		private Login login = null;
 		private LoginPointer loginPointer = null;
 
@@ -147,7 +162,11 @@ public class LoginTokenUserDetailsBuilderImpl
 					this.authorities = new HashSet<>();
 				}
 
-				this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.tokenAuthorities);
+				if (this.loginToken.isAnonymous()) {
+					this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.anonymousAuthorities);
+				} else {
+					this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.tokenAuthorities);
+				}
 			}
 
 			return this.authorities;

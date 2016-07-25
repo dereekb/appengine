@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -46,8 +47,18 @@ public class LoginTokenBuilderImpl
 
 	// MARK: LoginTokenBuilder
 	@Override
+	public LoginToken buildAnonymousLoginToken(String anonymousId) {
+		LoginTokenImpl loginToken = this.makeLoginToken();
+
+		loginToken.setSubject(anonymousId);
+		loginToken.setAnonymous(true);
+
+		return loginToken;
+	}
+
+	@Override
 	public LoginTokenImpl buildLoginToken(LoginPointer pointer) {
-		LoginTokenImpl loginToken = new LoginTokenImpl();
+		LoginTokenImpl loginToken = this.makeLoginToken();
 
 		ModelKey loginKey = pointer.getLoginModelKey();
 		Long roles = null;
@@ -68,6 +79,12 @@ public class LoginTokenBuilderImpl
 		loginToken.setLogin(loginId);
 		loginToken.setLoginPointer(pointerId);
 		loginToken.setRoles(roles);
+
+		return loginToken;
+	}
+
+	protected LoginTokenImpl makeLoginToken() {
+		LoginTokenImpl loginToken = new LoginTokenImpl();
 
 		Date issued = new Date();
 		Date expiration = this.getExpirationDate();

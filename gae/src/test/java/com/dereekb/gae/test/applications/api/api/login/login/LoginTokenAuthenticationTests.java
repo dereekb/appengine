@@ -1,9 +1,12 @@
 package com.dereekb.gae.test.applications.api.api.login.login;
 
+import java.util.Collection;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -17,6 +20,7 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.web.api.auth.controller.anonymous.AnonymousLoginController;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
@@ -29,6 +33,10 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 	@Autowired
 	@Qualifier("passwordLoginController")
 	public PasswordLoginController passwordController;
+
+	@Autowired
+	@Qualifier("anonymousLoginController")
+	public AnonymousLoginController anonymousController;
 
 	@Autowired
 	@Qualifier("loginRegisterService")
@@ -80,6 +88,29 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 
 		LoginPointer authLoginPointer = authLoginTokenUserDetails.getLoginPointer();
 		Assert.assertNotNull(authLoginPointer);
+
+		Collection<? extends GrantedAuthority> authorities = authLoginTokenUserDetails.getAuthorities();
+		Assert.assertNotNull(authorities);
+	}
+
+	@Test
+	public void testAnonymousAuthentication() {
+		LoginTokenPair pair = this.anonymousController.login(null);
+		String token = pair.getToken();
+
+		LoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
+		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
+
+		LoginToken authLoginToken = authentication.getCredentials();
+		Assert.assertNotNull(authLoginToken);
+
+		LoginTokenUserDetails authLoginTokenUserDetails = authentication.getPrincipal();
+		Assert.assertNotNull(authLoginTokenUserDetails);
+
+		Assert.assertTrue(decodedToken.isAnonymous());
+
+		Collection<? extends GrantedAuthority> authorities = authLoginTokenUserDetails.getAuthorities();
+		Assert.assertNotNull(authorities);
 	}
 
 }

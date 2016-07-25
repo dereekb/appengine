@@ -60,10 +60,18 @@
 			<!-- Roles given to all users -->
 			<array>
 				<bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
-					<constructor-arg index="0" value="USER" />
+					<constructor-arg index="0" value="ROLE_USER" />
 				</bean>
 			</array>
 		</constructor-arg>
+		<property name="anonymousAuthorities">
+			<!-- Roles given to anonymous users -->
+			<array>
+				<bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+					<constructor-arg index="0" value="ROLE_ANON" />
+				</bean>
+			</array>
+		</property>
 	</bean>
 
 	<bean id="loginGrantedAuthorityDecoder" lazy-init="true"
@@ -73,7 +81,9 @@
 		<constructor-arg index="0">
 			<map key-type="java.lang.Integer" value-type="java.lang.String">
 				<!-- Map of encoded role values. -->
-				<entry key="0" value="USER" />
+				<!--
+				<entry key="0" value="ROLE_USER" />
+				 -->
 			</map>
 		</constructor-arg>
 	</bean>

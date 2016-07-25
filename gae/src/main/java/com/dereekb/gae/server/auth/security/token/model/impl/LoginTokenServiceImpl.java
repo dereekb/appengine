@@ -1,11 +1,11 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
-import io.jsonwebtoken.SignatureAlgorithm;
-
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
+
+import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * {@link LoginTokenService} implementation.
@@ -42,8 +42,19 @@ public class LoginTokenServiceImpl extends LoginTokenEncoderDecoderImpl
 
 	// MARK: LoginTokenService
 	@Override
+	public String encodeAnonymousLoginToken(String anonymousId) {
+		LoginToken token = this.buildAnonymousLoginToken(anonymousId);
+		return this.encodeLoginToken(token);
+	}
+
+	@Override
+	public LoginToken buildAnonymousLoginToken(String anonymousId) {
+		return this.builder.buildAnonymousLoginToken(anonymousId);
+	}
+
+	@Override
 	public String encodeLoginToken(LoginPointer pointer) {
-		LoginToken token = this.builder.buildLoginToken(pointer);
+		LoginToken token = this.buildLoginToken(pointer);
 		return this.encodeLoginToken(token);
 	}
 

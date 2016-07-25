@@ -20,6 +20,11 @@ public class LoginTokenImpl
 	private String subject;
 
 	/**
+	 * Anonymous login or not.
+	 */
+	private boolean anonymous = false;
+
+	/**
 	 * {@link Login} identifier
 	 */
 	private Long login;
@@ -61,6 +66,15 @@ public class LoginTokenImpl
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	@Override
+	public boolean isAnonymous() {
+		return this.anonymous;
+	}
+
+	public void setAnonymous(boolean anonymous) {
+		this.anonymous = anonymous;
 	}
 
 	@Override

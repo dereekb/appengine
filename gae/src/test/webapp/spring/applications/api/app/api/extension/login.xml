@@ -21,6 +21,17 @@
 		<constructor-arg index="1" ref="loginTokenService"/>
 	</bean>
 
+	<!-- Anonymous Login Controller -->
+	<bean id="anonymousLoginController" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.anonymous.AnonymousLoginController">
+		<constructor-arg index="0" ref="anonymousLoginControllerDelegate"/>
+	</bean>
+
+	<bean id="anonymousLoginControllerDelegate" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.anonymous.impl.AnonymousLoginControllerDelegateImpl">
+		<constructor-arg index="0" ref="loginTokenService"/>
+	</bean>
+
 	<!-- Password Login Controller -->
 	<bean id="passwordLoginController" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController">

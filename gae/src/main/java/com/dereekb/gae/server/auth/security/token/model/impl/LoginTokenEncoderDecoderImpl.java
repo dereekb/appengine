@@ -1,5 +1,13 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
+import java.util.Date;
+
+import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
+import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.IncorrectClaimException;
@@ -9,14 +17,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MissingClaimException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
-
-import java.util.Date;
-
-import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
-import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
-import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
 
 /**
  * {@link LoginTokenEncoder} and {@link LoginTokenDecoder}
@@ -29,6 +29,7 @@ public class LoginTokenEncoderDecoderImpl
 
 	private static final String LOGIN_KEY = "lgn";
 	private static final String LOGIN_POINTER_KEY = "ptr";
+	private static final String ANONYMOUS_KEY = "anon";
 	private static final String ROLES_KEY = "roles";
 
 	private static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureAlgorithm.HS256;
@@ -90,6 +91,10 @@ public class LoginTokenEncoderDecoderImpl
 		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointer());
 		claims.put(ROLES_KEY, loginToken.getRoles());
 
+		if (loginToken.isAnonymous()) {
+			claims.put(ANONYMOUS_KEY, 1);
+		}
+
 		return claims;
 	}
 
@@ -130,12 +135,21 @@ public class LoginTokenEncoderDecoderImpl
 		}
 
 		String subject = claims.getSubject();
+
+		boolean anonymous = false;
+
+		if (claims.containsKey(ANONYMOUS_KEY)) {
+			anonymous = (claims.get(ANONYMOUS_KEY, Number.class).intValue() == 1);
+		}
+
 		Date expiration = claims.getExpiration();
 		Date issued = claims.getIssuedAt();
 
 		// Login might not always be present.
-		if (loginPointer == null || expiration == null || issued == null) {
-			throw new TokenUnauthorizedException("Invalid token.");
+		if (expiration == null || issued == null) {
+			if (anonymous == false && loginPointer == null) {
+				throw new TokenUnauthorizedException("Invalid token.");
+			}
 		}
 
 		loginToken.setLogin(login);
@@ -143,6 +157,7 @@ public class LoginTokenEncoderDecoderImpl
 		loginToken.setRoles(roles);
 
 		loginToken.setSubject(subject);
+		loginToken.setAnonymous(anonymous);
 		loginToken.setExpiration(expiration);
 		loginToken.setIssued(issued);
 
