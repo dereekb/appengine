@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
-import com.dereekb.gae.server.auth.security.token.exception.TokenHeaderMissingException;
+import com.dereekb.gae.server.auth.security.token.exception.TokenMissingException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.provider.BasicLoginTokenAuthentication;
@@ -131,24 +131,23 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 
 		try {
 			authentication = this.attemptAuthentication(request, response);
+			this.successfulAuthentication(request, response, authentication);
 		} catch (TokenException failed) {
 			this.unsuccessfulAuthentication(request, response, failed);
-			return;
+			return;	// Do not continue the chain.
 		}
-
-		this.successfulAuthentication(request, response, authentication);
 
 		chain.doFilter(request, response);
 	}
 
 	protected Authentication attemptAuthentication(HttpServletRequest request,
-	                                                         HttpServletResponse response)
-	        throws TokenHeaderMissingException {
+	                                               HttpServletResponse response)
+	        throws TokenMissingException {
 
 		String header = request.getHeader(this.headerString);
 
 		if (header == null || !header.startsWith(this.bearerPrefix)) {
-			throw new TokenHeaderMissingException();
+			throw new TokenMissingException();
 		}
 
 		String token = header.substring(this.bearerPrefixLength);

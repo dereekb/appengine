@@ -35,6 +35,7 @@
 		<constructor-arg index="3">
 			<bean
 				class="com.dereekb.gae.server.auth.security.token.filter.handlers.LoginTokenAuthenticationFailureHandler">
+				<constructor-arg index="0" ref="loginTokenExceptionHandler" />
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -75,6 +76,11 @@
 				<entry key="0" value="USER" />
 			</map>
 		</constructor-arg>
+	</bean>
+
+	<!-- Exception Handler -->
+	<bean id="loginTokenExceptionHandler" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler">
 	</bean>
 
 </beans>

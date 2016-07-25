@@ -12,15 +12,19 @@ public class TokenUnauthorizedException extends TokenException {
     private static final long serialVersionUID = 1L;
 
 	public TokenUnauthorizedException() {
-		this("Token Unauthorized");
+		super(TokenExceptionReason.INVALID_TOKEN);
+	}
+
+	public TokenUnauthorizedException(Throwable cause) {
+		super(TokenExceptionReason.INVALID_TOKEN, cause);
 	}
 
 	public TokenUnauthorizedException(String message) {
-		this(message, null);
+		super(TokenExceptionReason.INVALID_TOKEN, message);
 	}
 
-	public TokenUnauthorizedException(String message, Throwable e) {
-		super(message, e);
+	public TokenUnauthorizedException(String message, Throwable cause) {
+		super(TokenExceptionReason.INVALID_TOKEN, message, cause);
 	}
 
 }

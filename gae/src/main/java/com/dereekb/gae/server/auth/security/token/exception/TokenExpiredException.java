@@ -13,11 +13,19 @@ public class TokenExpiredException extends TokenException {
 	private static final long serialVersionUID = 1L;
 
 	public TokenExpiredException() {
-		this("Token Expired");
+		super(TokenExceptionReason.EXPIRED_TOKEN);
+	}
+
+	public TokenExpiredException(Throwable cause) {
+		super(TokenExceptionReason.EXPIRED_TOKEN, cause);
 	}
 
 	public TokenExpiredException(String message) {
-		super(message);
+		super(TokenExceptionReason.EXPIRED_TOKEN, message);
+	}
+
+	public TokenExpiredException(String message, Throwable cause) {
+		super(TokenExceptionReason.EXPIRED_TOKEN, message, cause);
 	}
 
 }

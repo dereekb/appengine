@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.auth.exception;
+package com.dereekb.gae.web.api.auth.exception.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.dereekb.gae.web.api.auth.exception.ApiLoginErrorException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException.LoginExceptionReason;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;

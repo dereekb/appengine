@@ -47,7 +47,7 @@
 	
 	<!-- Exception Handler -->
 	<bean id="loginExceptionHandler" scope="singleton" lazy-init="true"
-		class="com.dereekb.gae.web.api.auth.exception.ApiLoginExceptionHandler">
+		class="com.dereekb.gae.web.api.auth.exception.handler.ApiLoginExceptionHandler">
 	</bean>
 
 </beans>
