@@ -102,7 +102,46 @@ public class LoginTokenUserDetailsBuilderImpl
 	// MARK: LoginTokenUserDetailsBuilder
 	@Override
 	public LoginTokenUserDetails buildDetails(LoginToken loginToken) throws IllegalArgumentException {
-		return new LoginTokenUserDetailsImpl(loginToken);
+		LoginTokenUserDetails details;
+
+		if (loginToken.isAnonymous()) {
+			details = new AnonymousLoginTokenUserDetailsImpl(loginToken);
+		} else {
+			details = new LoginTokenUserDetailsImpl(loginToken);
+		}
+
+		return details;
+	}
+
+	// MARK: Anonymous
+	private class AnonymousLoginTokenUserDetailsImpl extends LoginTokenUserDetailsImpl {
+
+		private static final long serialVersionUID = 1L;
+
+		private AnonymousLoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+			super(loginToken);
+		}
+
+		@Override
+		public Login getLogin() {
+			return null;
+		}
+
+		@Override
+		public LoginPointer getLoginPointer() {
+			return null;
+		}
+
+		@Override
+		public boolean isEnabled() {
+			return true;
+		}
+
+		@Override
+		public boolean isAnonymous() {
+			return true;
+		}
+
 	}
 
 	// MARK: LoginTokenUserDetails
@@ -111,7 +150,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		private static final long serialVersionUID = 1L;
 
-		private final LoginToken loginToken;
+		protected final LoginToken loginToken;
 
 		private boolean loginLoaded = false;
 
@@ -120,7 +159,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		private Set<GrantedAuthority> authorities;
 
-		public LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+		private LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
 			if (loginToken == null) {
 				throw new IllegalArgumentException("Token cannnot be null.");
 			}
@@ -132,8 +171,13 @@ public class LoginTokenUserDetailsBuilderImpl
 		public Login getLogin() {
 			if (this.loginLoaded == false) {
 				Long id = this.loginToken.getLogin();
-				ModelKey key = new ModelKey(id);
-				this.login = LoginTokenUserDetailsBuilderImpl.this.loginGetter.get(key);
+
+				if (id != null) {
+					ModelKey key = new ModelKey(id);
+					this.login = LoginTokenUserDetailsBuilderImpl.this.loginGetter.get(key);
+				}
+
+				this.loginLoaded = true;
 			}
 
 			return this.login;
@@ -143,6 +187,7 @@ public class LoginTokenUserDetailsBuilderImpl
 		public LoginPointer getLoginPointer() {
 			if (this.loginPointer == null) {
 				String id = this.loginToken.getLoginPointer();
+
 				ModelKey key = new ModelKey(id);
 				this.loginPointer = LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter.get(key);
 			}
@@ -179,7 +224,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public String getUsername() {
-			return this.loginToken.getLoginPointer();
+			return this.loginToken.getSubject();
 		}
 
 		@Override
@@ -205,6 +250,11 @@ public class LoginTokenUserDetailsBuilderImpl
 		@Override
 		public LoginToken getLoginToken() {
 			return this.loginToken;
+		}
+
+		@Override
+		public boolean isAnonymous() {
+			return false;
 		}
 
 	}

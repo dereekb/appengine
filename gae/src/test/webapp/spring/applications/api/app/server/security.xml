@@ -15,12 +15,11 @@
 	<!-- No HTTP security for TaskQueue -->
 	<security:http pattern="/taskqueue/**" security="none" />
 
-	<!-- <security:http use-expressions="true" entry-point-ref="securityEntryPoint"> 
-		<security:intercept-url pattern="/register" access="isAuthenticated() and 
-		hasRole('ROLE_NEW_USER')" /> <security:intercept-url pattern="/**" access="isAuthenticated() 
-		and hasRole('ROLE_USER')" /> <security:custom-filter ref="authenticationFilter" 
-		position="PRE_AUTH_FILTER" /> <security:form-login always-use-default-target="true" 
-		/> <security:logout logout-success-url="/logout" /> </security:http> -->
+	<security:http use-expressions="true" create-session="stateless" entry-point-ref="securityEntryPoint">
+		<security:csrf disabled="true"/>
+		<security:intercept-url pattern="/**" access="isAuthenticated()" />
+		<security:custom-filter ref="authenticationFilter" position="PRE_AUTH_FILTER" />
+	</security:http>
 
 	<bean id="securityEntryPoint"
 		class="com.dereekb.gae.server.auth.security.token.entry.TokenAuthenticationEntryPoint" />

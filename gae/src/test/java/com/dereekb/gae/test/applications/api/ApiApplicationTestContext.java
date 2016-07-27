@@ -11,7 +11,8 @@ import com.dereekb.gae.test.spring.WebServiceTestingContext;
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextHierarchy({ @ContextConfiguration(name = "api", locations = { ApiApplicationTestContext.API_APPLICATION_XML_PATH }) })
+@ContextHierarchy({ @ContextConfiguration(name = "api", locations = {
+        ApiApplicationTestContext.API_APPLICATION_XML_PATH, WebServiceTestingContext.WEB_TESTING_XML_PATH }) })
 public class ApiApplicationTestContext extends WebServiceTestingContext {
 
 	public static final String API_APPLICATION_XML_PATH = CoreServiceTestingContext.APPLICATION_TESTING_PATH

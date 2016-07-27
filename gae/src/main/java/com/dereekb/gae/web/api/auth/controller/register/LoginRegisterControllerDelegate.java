@@ -20,10 +20,13 @@ public interface LoginRegisterControllerDelegate {
 	 * Registers a new {@link Login} for the {@link LoginPointer}.
 	 *
 	 * @return New {@link LoginTokenPair}.
+	 * @throws TokenUnauthorizedException
+	 *             Thrown if the current token is not authorized for
+	 *             registering, such as an anonymous token.
 	 * @throws LoginExistsException
 	 *             Thrown if the current token already is linked to a login.
 	 */
-	public LoginTokenPair register() throws LoginExistsException;
+	public LoginTokenPair register() throws TokenUnauthorizedException, LoginExistsException;
 
 	/**
 	 * Registers multiple logins for the {@link LoginPointer}.

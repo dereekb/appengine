@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
@@ -57,10 +58,12 @@ public class LoginRegisterController {
 
 		try {
 			response = this.delegate.register();
-		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
 		} catch (LoginExistsException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.EXISTS, e);
+		} catch (TokenException e) {
+			throw e;
+		} catch (RuntimeException e) {
+			throw new ApiRuntimeException(e);
 		}
 
 		return response;
@@ -77,6 +80,8 @@ public class LoginRegisterController {
 	public final void registerLogins(@RequestParam @NotEmpty @Min(2) List<String> tokens) {
 		try {
 			this.delegate.registerLogins(tokens);
+		} catch (TokenException e) {
+			throw e;
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {

@@ -37,6 +37,8 @@ public class TestPasswordLoginTokenContextImpl
 	private Long encodedRoles = null;
 	private Integer group = null;
 
+	private boolean defaultToAnonymous = true;
+
 	private String username = TEST_USERNAME;
 	private String password = TEST_PASSWORD;
 
@@ -132,6 +134,14 @@ public class TestPasswordLoginTokenContextImpl
 		this.password = password;
 	}
 
+	public boolean isDefaultToAnonymous() {
+		return this.defaultToAnonymous;
+	}
+
+	public void setDefaultToAnonymous(boolean defaultToAnonymous) {
+		this.defaultToAnonymous = defaultToAnonymous;
+	}
+
 	// MARK: TestLoginTokenContext
 	@Override
 	public String getToken() {
@@ -139,9 +149,17 @@ public class TestPasswordLoginTokenContextImpl
 
 		if (this.pointer != null) {
 			token = this.service.encodeLoginToken(this.pointer);
+		} else if (this.isDefaultToAnonymous()) {
+			token = this.service.encodeAnonymousLoginToken("LOGIN-TOKEN");
 		}
 
 		return token;
+	}
+
+	@Override
+	public void generateAnonymousLogin() {
+		this.clearLogin();
+		this.setDefaultToAnonymous(true);
 	}
 
 	@Override
@@ -169,6 +187,7 @@ public class TestPasswordLoginTokenContextImpl
 	@Override
 	public void clearLogin() {
 		this.pointer = null;
+		this.setDefaultToAnonymous(false);
 	}
 
 	@Override

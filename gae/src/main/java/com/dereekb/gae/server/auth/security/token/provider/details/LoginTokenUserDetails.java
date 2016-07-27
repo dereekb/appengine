@@ -14,4 +14,6 @@ public interface LoginTokenUserDetails
 
 	public LoginToken getLoginToken();
 
+	public boolean isAnonymous();
+
 }

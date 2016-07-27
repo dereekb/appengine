@@ -17,10 +17,18 @@ public interface TestLoginTokenContext {
 	public String getToken();
 
 	/**
+	 * Generates an anonymous login.
+	 */
+	public void generateAnonymousLogin();
+
+	/**
 	 * Generates a new login, and login pointer.
 	 */
 	public LoginPointer generateLogin();
 
+	/**
+	 * Clears the current login, be it anonymous or normal.
+	 */
 	public void clearLogin();
 
 	public void setLogin(LoginToken token);

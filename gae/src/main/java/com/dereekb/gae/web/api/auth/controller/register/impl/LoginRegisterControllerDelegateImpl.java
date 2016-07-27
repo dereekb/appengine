@@ -53,9 +53,14 @@ public class LoginRegisterControllerDelegateImpl
 
 	// MARK: LoginRegisterControllerDelegate
 	@Override
-	public LoginTokenPair register() throws LoginExistsException {
+	public LoginTokenPair register() throws TokenUnauthorizedException, LoginExistsException {
 		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
 		LoginTokenUserDetails details = authentication.getPrincipal();
+
+		if (details.isAnonymous()) {
+			throw new TokenUnauthorizedException("Cannot register anonymous types.");
+		}
+
 		LoginPointer pointer = details.getLoginPointer();
 
 		if (pointer == null) {
@@ -75,7 +80,7 @@ public class LoginRegisterControllerDelegateImpl
 	@Override
 	public void registerLogins(List<String> tokens) throws TokenUnauthorizedException, IllegalArgumentException {
 		Long primaryLoginId = null;
-		Set<String> loginPointers = new HashSet<String>();
+		Set<String> loginPointers = new HashSet<>();
 
 		for (String token : tokens) {
 			LoginToken loginToken = this.tokenService.decodeLoginToken(token);

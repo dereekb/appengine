@@ -24,7 +24,7 @@ public interface LoginUserDetails
 	/**
 	 * Returns the {@link LoginPointer} associated with this instance.
 	 *
-	 * @return {@link LoginPointer}. Never {@code null}.
+	 * @return {@link LoginPointer}. May be {@code null}.
 	 */
 	public LoginPointer getLoginPointer();
 

@@ -5,10 +5,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -17,6 +22,7 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.web.api.auth.controller.anonymous.AnonymousLoginController;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.controller.register.LoginRegisterController;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -29,8 +35,14 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
  */
 public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 
+	private static final String LOGIN_REGISTER_URL = "/login/register";
+
 	private static final String TEST_USERNAME = "username";
 	private static final String TEST_PASSWORD = "password";
+
+	@Autowired
+	@Qualifier("anonymousLoginController")
+	public AnonymousLoginController anonymousController;
 
 	@Autowired
 	@Qualifier("passwordLoginController")
@@ -73,7 +85,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		Login login = this.registerService.register(pointer);
 
 		String[] usernames = new String[] { "A", "B", "C" };
-		Set<String> pointers = new HashSet<String>();
+		Set<String> pointers = new HashSet<>();
 
 		for (String username : usernames) {
 			LoginTokenPair pair = this.passwordController.create(username, TEST_PASSWORD);
@@ -94,7 +106,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		String primaryToken = this.loginTokenService.encodeLoginToken(pointer);
 
 		String[] usernames = new String[] { "A", "B", "C" };
-		List<String> tokens = new ArrayList<String>();
+		List<String> tokens = new ArrayList<>();
 		tokens.add(primaryToken);
 
 		for (String username : usernames) {
@@ -108,5 +120,17 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		// Assert those login pointers reference the login...
 	}
 
+	// MARK: Mock Controllers
+	@Test
+	public void testAnonymousRegisteringFails() throws Exception {
+
+		this.testLoginTokenContext.generateAnonymousLogin();
+
+		MockHttpServletRequestBuilder registerRequestBuilder = MockMvcRequestBuilders.post(LOGIN_REGISTER_URL);
+		MvcResult result = this.performHttpRequest(registerRequestBuilder).andReturn();
+
+		Assert.assertTrue(result.getResponse().getStatus() == HttpServletResponse.SC_UNAUTHORIZED);
+
+	}
 
 }
