@@ -29,8 +29,8 @@ import com.google.gson.JsonParser;
  */
 public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 
-	private static final String TEST_USERNAME = "username";
-	private static final String TEST_PASSWORD = "password";
+	private static final String TEST_USERNAME = "pUsername";
+	private static final String TEST_PASSWORD = "pPassword";
 
 	@Autowired
 	public PasswordLoginController passwordController;

@@ -64,9 +64,6 @@ public class LoginTokenAuthenticationFailureHandler
 
 			ServletOutputStream outputStream = response.getOutputStream();
 			this.mapper.writeValue(outputStream, apiResponse);
-
-			// mapper.writeValue(response.getOutputStream()
-
 		} else {
 
 		}

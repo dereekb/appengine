@@ -27,8 +27,8 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
 public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 
-	private static final String TEST_USERNAME = "username";
-	private static final String TEST_PASSWORD = "password";
+	private static final String TEST_USERNAME = "tUsername";
+	private static final String TEST_PASSWORD = "tPassword";
 
 	@Autowired
 	@Qualifier("passwordLoginController")

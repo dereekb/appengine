@@ -37,8 +37,8 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 
 	private static final String LOGIN_REGISTER_URL = "/login/register";
 
-	private static final String TEST_USERNAME = "username";
-	private static final String TEST_PASSWORD = "password";
+	private static final String TEST_USERNAME = "tUsername";
+	private static final String TEST_PASSWORD = "tPassword";
 
 	@Autowired
 	@Qualifier("anonymousLoginController")
