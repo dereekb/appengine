@@ -16,6 +16,8 @@
 		<constructor-arg index="2" ref="loginTokenService"/>	
 		<constructor-arg index="3" ref="loginPointerRegistry"/>
 		<constructor-arg index="4" ref="loginRegistry"/>	
+		<!-- Admin Login -->
+		<property name="encodedRoles" value="1"/>
 	</bean>
 
 </beans>

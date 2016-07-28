@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,7 +77,6 @@ public class LinkExtensionApiController {
 	}
 
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'link')")
 	@RequestMapping(value = "/links/{type}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponseImpl link(@PathVariable("type") String primaryType,
 	                                  @Valid @RequestBody ApiLinkChangeRequest request) {
@@ -108,7 +106,7 @@ public class LinkExtensionApiController {
 	private void addMissingKeysToResponse(LinkServiceResponse linkServiceResponse,
 	                                      ApiResponseImpl response) {
 		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingKeys();
-		HashMapWithList<String, String> missingKeysMap = new HashMapWithList<String, String>();
+		HashMapWithList<String, String> missingKeysMap = new HashMapWithList<>();
 		Set<String> missingTypes = missingKeys.keySet();
 
 		if (missingTypes.isEmpty() == false) {

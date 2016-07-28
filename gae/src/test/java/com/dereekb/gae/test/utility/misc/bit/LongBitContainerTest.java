@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.utility.misc.bit;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,6 +70,23 @@ public class LongBitContainerTest {
 
 		Long focusedBits = container.focusBitsWithMask(mask, start);
 		Assert.assertTrue(focusedBits == 0xF);
+	}
+
+	@Test
+	public void testActiveBits() {
+		LongBitContainer container = new LongBitContainer(1L);
+		Long value = container.getValue();
+
+		Assert.assertTrue(value == 1L);
+		Assert.assertTrue(container.getBit(0));
+		Assert.assertFalse(container.getBit(32));
+		Assert.assertFalse(container.getBit(63));
+
+		List<Byte> activeIndexes = container.getAllActiveIndexes();
+		Assert.assertTrue(activeIndexes.size() == 1);
+
+		Byte b = 0;
+		Assert.assertTrue(activeIndexes.contains(b));
 	}
 
 }

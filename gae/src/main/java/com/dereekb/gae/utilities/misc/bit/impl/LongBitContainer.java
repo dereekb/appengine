@@ -154,9 +154,24 @@ public class LongBitContainer
 	}
 
 	public String getBitString(int bits) {
+		return this.getLittleEndianBitString(bits);
+	}
+
+	public String getLittleEndianBitString(int bits) {
 		StringBuilder string = new StringBuilder();
 
 		for (int i = bits; i >= 0; i--) {
+			boolean value = this.getBit(i);
+			string.append(((value) ? "1" : "0"));
+		}
+
+		return string.toString();
+	}
+
+	public String getBigEndianBitString(int bits) {
+		StringBuilder string = new StringBuilder();
+
+		for (int i = 0; i < bits; i += 1) {
 			boolean value = this.getBit(i);
 			string.append(((value) ? "1" : "0"));
 		}
@@ -186,7 +201,7 @@ public class LongBitContainer
 
 	// MARK: Internal
 	public Long readBitValue(int index) {
-		Long value = (this.value & (1 << index)); // read
+		Long value = (this.value & (1L << index)); // read
 		return value;
 	}
 
@@ -224,7 +239,7 @@ public class LongBitContainer
 	 */
 	public List<String> getActiveHexIndexes(Integer limit) {
 		List<Byte> indexes = this.getActiveIndexes(limit);
-		List<String> hexCodes = new ArrayList<String>();
+		List<String> hexCodes = new ArrayList<>();
 
 		for (Byte index : indexes) {
 			String hexCode = Integer.toHexString(index);
@@ -250,7 +265,7 @@ public class LongBitContainer
 			limit = BITS_IN_LONG;
 		}
 
-		List<Byte> indexes = new ArrayList<Byte>();
+		List<Byte> indexes = new ArrayList<>();
 
 		if (this.value != 0L) {
 			for (byte i = 0; i < limit; i += 1) {

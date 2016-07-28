@@ -47,13 +47,13 @@ public class EncodedLongDecoderImpl<T>
 
 	@Override
 	public Set<T> decode(Iterable<? extends Number> encoded) {
-		Set<T> decoded = new HashSet<T>();
+		Set<T> decoded = new HashSet<>();
 
 		for (Number e : encoded) {
 			Integer index = e.intValue();
 			T value = this.map.get(index);
 
-			if (value == null) {
+			if (value != null) {
 				decoded.add(value);
 			}
 		}

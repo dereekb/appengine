@@ -44,7 +44,7 @@
 		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl"
 		scope="singleton">
 		<constructor-arg index="0" ref="loginPointerType" />
-		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
+		<constructor-arg index="1" ref="stringModelKeyConverter" />
 		<constructor-arg index="2" ref="loginPointerDataConverter" />
 	</bean>
 

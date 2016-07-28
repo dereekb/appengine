@@ -198,18 +198,19 @@ public class LoginTokenUserDetailsBuilderImpl
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			if (this.authorities == null) {
-				Long encodedRoles = this.loginToken.getRoles();
-
-				if (encodedRoles == null) {
-					this.authorities = LoginTokenUserDetailsBuilderImpl.this.grantedAuthorityDecoder
-					        .decodeRoles(encodedRoles);
-				} else {
-					this.authorities = new HashSet<>();
-				}
 
 				if (this.loginToken.isAnonymous()) {
-					this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.anonymousAuthorities);
+					this.authorities = new HashSet<>(LoginTokenUserDetailsBuilderImpl.this.anonymousAuthorities);
 				} else {
+					Long encodedRoles = this.loginToken.getRoles();
+
+					if (encodedRoles != null) {
+						this.authorities = LoginTokenUserDetailsBuilderImpl.this.grantedAuthorityDecoder
+						        .decodeRoles(encodedRoles);
+					} else {
+						this.authorities = new HashSet<>();
+					}
+
 					this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.tokenAuthorities);
 				}
 			}

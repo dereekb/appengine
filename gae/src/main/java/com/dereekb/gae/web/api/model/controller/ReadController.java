@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.validation.constraints.Max;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +20,7 @@ import com.dereekb.gae.model.extension.inclusion.reader.InclusionReaderSetAnalys
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryRequestImpl;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
@@ -40,12 +40,16 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 @RestController
 public class ReadController {
 
+	public static final String ATOMIC_PARAM = "atomic";
+	public static final String LOAD_RELATED_PARAM = "related";
+
 	private boolean appendUnavailable = true;
 
 	private TypeModelKeyConverter keyTypeConverter;
 	private Map<String, ReadControllerEntry> entries;
 
-	public ReadController(TypeModelKeyConverter keyTypeConverter, Map<String, ReadControllerEntry> entries) {
+	public ReadController(TypeModelKeyConverter keyTypeConverter, Map<String, ReadControllerEntry> entries)
+	        throws IllegalArgumentException {
 		this.setKeyTypeConverter(keyTypeConverter);
 		this.setEntries(entries);
 	}
@@ -62,7 +66,11 @@ public class ReadController {
 		return this.keyTypeConverter;
 	}
 
-	public void setKeyTypeConverter(TypeModelKeyConverter keyTypeConverter) {
+	public void setKeyTypeConverter(TypeModelKeyConverter keyTypeConverter) throws IllegalArgumentException {
+		if (keyTypeConverter == null) {
+			throw new IllegalArgumentException();
+		}
+
 		this.keyTypeConverter = keyTypeConverter;
 	}
 
@@ -70,8 +78,12 @@ public class ReadController {
 		return this.entries;
 	}
 
-	public void setEntries(Map<String, ReadControllerEntry> entries) {
-		this.entries = entries;
+	public void setEntries(Map<String, ReadControllerEntry> entries) throws IllegalArgumentException {
+		if (entries == null) {
+			throw new IllegalArgumentException();
+		}
+
+		this.entries = new CaseInsensitiveMap<>(entries);
 	}
 
 	// MARK: Controller
@@ -92,12 +104,11 @@ public class ReadController {
 	 * @return {@link ApiResponse}
 	 */
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'read')")
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = "application/json")
 	public ApiResponse readModels(@PathVariable("type") String modelType,
 	                              @Max(40) @RequestParam(required = true) List<String> ids,
-	                              @RequestParam(required = false, defaultValue = "false") boolean atomic,
-	                              @RequestParam(required = false, defaultValue = "false") boolean loadRelated,
+	                              @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
+	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
 	                              @RequestParam(required = false) Set<String> relatedTypes) {
 
 		ApiResponseImpl response = null;
@@ -172,7 +183,8 @@ public class ReadController {
 	}
 
 	private ApiResponseDataImpl readRelated(String modelType,
-	                                        Set<ModelKey> keys) throws UnavailableTypesException {
+	                                        Set<ModelKey> keys)
+	        throws UnavailableTypesException {
 		ReadControllerEntryResponse response = this.read(modelType, false, keys);
 		Collection<Object> models = response.getResponseModels();
 		return new ApiResponseDataImpl(modelType, models);
@@ -187,7 +199,8 @@ public class ReadController {
 		return this.read(entry, request);
 	}
 
-	private ReadControllerEntryResponse read(ReadControllerEntry entry, ReadControllerEntryRequest request) {
+	private ReadControllerEntryResponse read(ReadControllerEntry entry,
+	                                         ReadControllerEntryRequest request) {
 		return entry.read(request);
 	}
 

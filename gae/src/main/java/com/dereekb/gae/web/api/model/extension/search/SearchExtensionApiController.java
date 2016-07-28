@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,7 +59,6 @@ public class SearchExtensionApiController {
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 */
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchMultiple(@RequestParam @NotEmpty String query,
 	                                        @RequestParam @NotEmpty Set<String> types,
@@ -104,7 +102,6 @@ public class SearchExtensionApiController {
 	 * @return {@link ApiResponse} with all returned models.
 	 */
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/{type}/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchSingle(@PathVariable("type") String type,
 	                                      @RequestParam Map<String, String> parameters,
@@ -143,7 +140,6 @@ public class SearchExtensionApiController {
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 */
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'query')")
 	@RequestMapping(value = "/{type}/query", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse querySingle(@PathVariable("type") String type,
 	                                     @RequestParam Map<String, String> parameters,
@@ -172,7 +168,6 @@ public class SearchExtensionApiController {
 
 	// MARK: Update
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/{type}/search/index", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponse updateIndex(@PathVariable("type") String type,
 	                                     @RequestParam List<String> keys) {
