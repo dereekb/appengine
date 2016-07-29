@@ -3,8 +3,10 @@ package com.dereekb.gae.server.datastore.models.keys;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
@@ -134,7 +136,7 @@ public final class ModelKey
 	}
 
 	public static List<ModelKey> readModelKeys(Iterable<? extends UniqueModel> models) {
-		List<ModelKey> values = new ArrayList<ModelKey>();
+		List<ModelKey> values = new ArrayList<>();
 
 		if (models != null) {
 			for (UniqueModel model : models) {
@@ -150,7 +152,7 @@ public final class ModelKey
 	}
 
 	public static List<String> readStringKeys(Iterable<? extends UniqueModel> models) {
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 
 		if (models != null) {
 			for (UniqueModel model : models) {
@@ -167,7 +169,7 @@ public final class ModelKey
 	}
 
 	public static List<String> keysAsStrings(Iterable<ModelKey> keys) {
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 
 		if (keys != null) {
 			for (ModelKey key : keys) {
@@ -377,7 +379,7 @@ public final class ModelKey
 	 */
 	@Deprecated
 	public static List<ModelKey> convert(List<String> identifiers) throws IllegalArgumentException {
-		List<ModelKey> keys = new ArrayList<ModelKey>();
+		List<ModelKey> keys = new ArrayList<>();
 
 		for (String identifier : identifiers) {
 			ModelKey key = convert(identifier);
@@ -428,7 +430,7 @@ public final class ModelKey
 	                                                                                               Iterable<? extends R> rightModels)
 	        throws NullModelKeyException {
 
-		List<HandlerPair<L, R>> pairs = new ArrayList<HandlerPair<L, R>>();
+		List<HandlerPair<L, R>> pairs = new ArrayList<>();
 		Map<ModelKey, L> leftMap = makeModelKeyMap(leftModels);
 
 		for (R right : rightModels) {
@@ -436,7 +438,7 @@ public final class ModelKey
 			L left = leftMap.get(key);
 
 			if (left != null) {
-				pairs.add(new HandlerPair<L, R>(left, right));
+				pairs.add(new HandlerPair<>(left, right));
 			}
 		}
 
@@ -454,7 +456,7 @@ public final class ModelKey
 	 */
 	public static <T extends UniqueModel> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
 	        throws NullModelKeyException {
-		Map<ModelKey, T> modelKeyMap = new HashMap<ModelKey, T>();
+		Map<ModelKey, T> modelKeyMap = new HashMap<>();
 
 		for (T model : models) {
 			ModelKey key = model.getModelKey();
@@ -467,6 +469,32 @@ public final class ModelKey
 		}
 
 		return modelKeyMap;
+	}
+
+	/**
+	 * Creates a map of model keys for the input models.
+	 *
+	 * @param models
+	 *            {@link Iterable} collection. Never {@code null}.
+	 * @return {@link Set}. Never {@code null}.
+	 * @throws NullModelKeyException
+	 *             Thrown if a model does not have a key.
+	 */
+	public static <T extends UniqueModel> Set<ModelKey> makeModelKeySet(Iterable<? extends T> models)
+	        throws NullModelKeyException {
+		Set<ModelKey> keys = new HashSet<>();
+
+		for (T model : models) {
+			ModelKey key = model.getModelKey();
+
+			if (key == null) {
+				throw new NullModelKeyException();
+			} else {
+				keys.add(key);
+			}
+		}
+
+		return keys;
 	}
 
 }

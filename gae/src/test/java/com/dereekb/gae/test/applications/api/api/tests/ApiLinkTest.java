@@ -21,7 +21,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationTestContext {
 
-	private String modelType;
+	protected String modelType;
 
 	@Autowired
 	@Qualifier("linkExtensionApiController")
@@ -64,7 +64,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 	                                                       T primaryModel,
 	                                                       Collection<? extends UniqueModel> targetModels) {
 
-		List<ApiLinkChange> changes = new ArrayList<ApiLinkChange>();
+		List<ApiLinkChange> changes = new ArrayList<>();
 		ApiLinkChange targetChange = new ApiLinkChange();
 		targetChange.setAction(action.getAction());
 		targetChange.setLinkName(linkName);

@@ -17,6 +17,12 @@ public class RelationChangeException extends LinkException {
 	private final ModelKey primary;
 	private final Relation relation;
 
+	public RelationChangeException(String message) {
+		super(message);
+		this.relation = null;
+		this.primary = null;
+	}
+
 	public RelationChangeException(ModelKey primary, Relation relation) {
 		this.primary = primary;
 		this.relation = relation;

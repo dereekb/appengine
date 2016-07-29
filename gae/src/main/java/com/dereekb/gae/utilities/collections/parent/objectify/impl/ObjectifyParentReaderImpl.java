@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.utilities.collections.parent.objectify.ObjectifyChild;
 import com.dereekb.gae.utilities.collections.parent.objectify.ObjectifyParentReader;
@@ -38,8 +40,7 @@ public class ObjectifyParentReaderImpl<T extends ObjectifyChild<T>>
 	// MARK: ObjectifyParentIterator
 	@Override
 	public List<T> getParentModels(T child) {
-		Set<T> set = new HashSet<T>();
-
+		Set<T> set = new HashSet<>();
 		T current = child;
 
 		while (current != null) {
@@ -62,7 +63,27 @@ public class ObjectifyParentReaderImpl<T extends ObjectifyChild<T>>
 			}
 		}
 
-		return new ArrayList<T>(set);
+		return new ArrayList<>(set);
+	}
+
+	@Override
+	public Set<ModelKey> getParentKeys(ModelKey childKey) throws UnavailableModelException {
+		T child = this.registry.get(childKey);
+		Set<ModelKey> parentKeys = null;
+
+		if (child == null) {
+			throw new UnavailableModelException(childKey);
+		} else {
+			parentKeys = this.getParentKeys(child);
+		}
+
+		return parentKeys;
+	}
+
+	@Override
+	public Set<ModelKey> getParentKeys(T child) {
+		List<T> parents = this.getParentModels(child);
+		return ModelKey.makeModelKeySet(parents);
 	}
 
 	// NOTE: Add functions for detecting parent loops
