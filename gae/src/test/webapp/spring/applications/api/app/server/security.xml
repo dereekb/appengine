@@ -36,6 +36,7 @@
 		<security:csrf disabled="true"/>
 		<security:intercept-url pattern="/**" access="isAuthenticated()" />
 		<security:custom-filter ref="authenticationFilter" position="PRE_AUTH_FILTER" />
+		<security:access-denied-handler ref="accessDeniedHandler"/>
 	</security:http>
 
 	<bean id="securityEntryPoint"
@@ -90,8 +91,7 @@
 		</property>
 	</bean>
 
-	<bean id="loginGrantedAuthorityDecoder" lazy-init="true"
-		scope="singleton"
+	<bean id="loginGrantedAuthorityDecoder" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl"
 		factory-method="withStringMap">
 		<constructor-arg index="0">
@@ -105,6 +105,10 @@
 	<!-- Exception Handler -->
 	<bean id="loginTokenExceptionHandler" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler">
+	</bean>
+	
+	<bean id="accessDeniedHandler" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl">
 	</bean>
 
 </beans>
