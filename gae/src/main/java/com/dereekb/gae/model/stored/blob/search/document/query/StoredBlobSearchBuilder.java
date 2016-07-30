@@ -10,6 +10,7 @@ import com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDocumen
 import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchBuilder.StoredBlobSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
+import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 import com.dereekb.gae.utilities.collections.map.StringMapReader;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
@@ -117,7 +118,7 @@ public class StoredBlobSearchBuilder extends AbstractSearchBuilderImpl<StoredBlo
 		String name = search.getName();
 		if (name != null) {
 			String nameName = String.format(format, this.nameField);
-			builder = builder.and(new AtomField(nameName, name));
+			builder = builder.and(new TextField(nameName, name));
 		}
 
 		return builder;

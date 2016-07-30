@@ -194,6 +194,11 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 			return this.getModels();
 		}
 
+		@Override
+		public String toString() {
+			return "ModelDocumentSearchResponseImpl [getKeys()=" + this.getKeys() + "]";
+		}
+
 	}
 
 	@Override

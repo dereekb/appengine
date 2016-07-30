@@ -70,7 +70,7 @@ public class AccessDeniedHandlerImpl extends AbstractResponseHandler
 
 	@Override
 	public String toString() {
-		return "AccessDeniedHandlerImpl [errorCode=" + this.errorCode + ", errorTitle=" + this.errorTitle + "]";
+		return "AccessDeniedHandlerImpl [errorCode=" + errorCode + ", errorTitle=" + errorTitle + "]";
 	}
 
 }
