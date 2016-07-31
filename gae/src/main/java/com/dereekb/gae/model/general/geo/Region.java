@@ -2,6 +2,8 @@ package com.dereekb.gae.model.general.geo;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -18,6 +20,7 @@ public final class Region {
 	/**
 	 * List of points that make up this region.
 	 */
+	@Valid
 	private List<Point> points;
 
 	public Region() {}

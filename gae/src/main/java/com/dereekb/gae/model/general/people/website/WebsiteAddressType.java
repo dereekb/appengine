@@ -156,8 +156,8 @@ public enum WebsiteAddressType {
 		return this.base;
 	}
 
-	public static WebsiteAddressType typeForId(Integer id) {
-		WebsiteAddressType type;
+	public static WebsiteAddressType valueOf(Integer id) {
+		WebsiteAddressType type = WEBSITE;
 
 		switch (id) {
 			case 0:
@@ -186,9 +186,6 @@ public enum WebsiteAddressType {
 				break;
 			case 8:
 				type = PINTEREST;
-				break;
-			default:
-				type = WEBSITE;
 				break;
 		}
 

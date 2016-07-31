@@ -2,6 +2,8 @@ package com.dereekb.gae.model.stored.image.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,14 +18,23 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class StoredImageData extends SearchableDatabaseModelData {
 
+	public static final int MAX_NAME_LENGTH = 50;
+	public static final int MAX_SUMMARY_LENGTH = 250;
+	public static final int MAX_TYPE_LENGTH = 50;
+	public static final int MAX_TAGS_LENGTH = 200;
+
 	private static final long serialVersionUID = 1L;
 
+	@Size(max = MAX_NAME_LENGTH)
 	private String name;
 
+	@Size(max = MAX_SUMMARY_LENGTH)
 	private String summary;
 
+	@Size(max = MAX_TAGS_LENGTH)
 	private String tags;
 
+	@Size(max = MAX_TYPE_LENGTH)
 	private Integer type;
 
 	private Long blob;

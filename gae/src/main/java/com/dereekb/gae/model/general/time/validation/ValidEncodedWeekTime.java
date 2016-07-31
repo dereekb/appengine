@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.general.validation;
+package com.dereekb.gae.model.general.time.validation;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -13,15 +13,13 @@ import javax.validation.Payload;
 
 @Target({ METHOD, FIELD, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { PhoneValidator.class })
-public @interface Phone {
+@Constraint(validatedBy = { EncodedWeekTimeValidator.class })
+public @interface ValidEncodedWeekTime {
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
 
-	String message() default "Invalid Phone Number";
-
-	boolean fast() default true;
+	String message() default "Invalid Week Time";
 
 }
