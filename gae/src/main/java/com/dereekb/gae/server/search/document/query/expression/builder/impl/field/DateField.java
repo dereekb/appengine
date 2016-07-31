@@ -41,10 +41,10 @@ public class DateField extends AbstractField {
 
 	public void setDate(Date date) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
+		calendar.setTime(date);
 
 		this.day = calendar.get(Calendar.DAY_OF_MONTH);
-		this.month = calendar.get(Calendar.MONTH);
+		this.month = calendar.get(Calendar.MONTH) + 1;	// Month from 0 to 11?
 		this.year = calendar.get(Calendar.YEAR);
 	}
 

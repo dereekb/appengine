@@ -44,7 +44,7 @@ public class LoginPointerData extends DatabaseModelData {
 	// UniqueModel
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.key);
+		return ModelKey.safe(this.key);
 	}
 
 	@Override

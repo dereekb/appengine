@@ -21,6 +21,7 @@ import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceDocumentBuilderStep;
 import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder.GeoPlaceSearch;
 import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequest;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
@@ -59,18 +60,8 @@ public class GeoPlaceSearchDocumentTest extends ModelSearchDocumentTest<GeoPlace
 	private ModelDocumentSearchService<GeoPlace, GeoPlaceSearchRequest> searchService;
 
 	@Test
-	public void testSearchService() {
+	public void testNoArgsSearch() {
 		List<GeoPlace> models = this.getGenerator().generate(10);
-
-		// Index Models
-		GeoPlace model = models.get(0);
-
-		Date date = new Date(0); // Set for later query test.
-		model.setDate(date);
-
-		this.geoPlaceRegistry.save(model, false);
-
-		Assert.assertNotNull(date);
 		this.indexService.indexChange(models, IndexAction.INDEX);
 
 		// No-args search
@@ -79,18 +70,37 @@ public class GeoPlaceSearchDocumentTest extends ModelSearchDocumentTest<GeoPlace
 
 		Collection<GeoPlace> results = response.getModelSearchResults();
 		Assert.assertTrue(results.containsAll(models));
+	}
+
+	@Test
+	public void testDateSearchService() {
+		List<GeoPlace> models = this.getGenerator().generate(1);
+
+		// Index Models
+		GeoPlace model = models.get(0);
+
+		Date date = new Date(10); // Set for later query test.
+		model.setDate(date);
+
+		this.geoPlaceRegistry.save(model, false);
+
+		Assert.assertNotNull(date);
+		this.indexService.indexChange(models, IndexAction.INDEX);
 
 		// Date Search
+		GeoPlaceSearchRequest request = new GeoPlaceSearchRequest();
 		GeoPlaceSearch search = request.getSearch();
-		DateSearch dateSearch = new DateSearch(date);
 
-		dateSearch.setOperator(ExpressionOperator.LessThan);
+		DateSearch dateSearch = new DateSearch(date);
+		dateSearch.setOperator(ExpressionOperator.Equal);
 		search.setDate(dateSearch);
 
-		response = this.searchService.search(request);
-		results = response.getModelSearchResults();
-		Assert.assertTrue(results.contains(model));
+		ModelDocumentSearchResponse<GeoPlace> response = this.searchService.search(request);
+		Collection<ModelKey> resultKeys = response.getKeySearchResults();
+		Assert.assertFalse(resultKeys.isEmpty());
 
+		Collection<GeoPlace> results = response.getModelSearchResults();
+		Assert.assertTrue(results.contains(model));
 	}
 
 	@Test

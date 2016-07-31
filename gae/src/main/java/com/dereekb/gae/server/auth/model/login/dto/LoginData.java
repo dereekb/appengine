@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -53,10 +52,11 @@ public class LoginData extends SearchableDatabaseModelData {
 		this.pointers = pointers;
 	}
 
-	// UniqueModel
 	@Override
-	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.key);
+	public String toString() {
+		return "LoginData [group=" + this.group + ", roles=" + this.roles + ", pointers=" + this.pointers
+		        + ", searchIdentifier=" + this.searchIdentifier + ", key=" + this.key + ", created=" + this.created
+		        + "]";
 	}
 
 }

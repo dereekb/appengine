@@ -90,14 +90,10 @@ public abstract class DatabaseModelData
 	}
 
 	// UniqueModel
-	/**
-	 * Override in super classes to convert to expected type.
-	 */
-	@JsonIgnore
-	@Deprecated
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convert(this.key);
+		// Default implementation for keys that are numbers.
+		return ModelKey.convertNumberString(this.key);
 	}
 
 }

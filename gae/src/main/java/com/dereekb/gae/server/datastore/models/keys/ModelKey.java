@@ -307,7 +307,7 @@ public final class ModelKey
 	}
 
 	/**
-	 * Converts a number as a string to a {@link ModelKey}. If the string is
+	 * Converts a string number with radix 10 to a {@link ModelKey}. If the string is
 	 * {@code null}, will return {@code null}.
 	 *
 	 * @param numberString
@@ -318,10 +318,29 @@ public final class ModelKey
 	 *             converted with {@link Long#Long(String)}.
 	 */
 	public static ModelKey convertNumberString(String numberString) throws NumberFormatException {
+		return convertNumberString(numberString, 10);
+	}
+
+	/**
+	 * Converts a number as a string to a {@link ModelKey}. If the string is
+	 * {@code null}, will return {@code null}.
+	 *
+	 * @param numberString
+	 *            String number to convert.
+	 * @param radix
+	 *            Number radix.
+	 * @return {@link ModelKey} with a Number identifier.
+	 * @throws NumberFormatException
+	 *             if the input string is not {@code null} but cannot be
+	 *             converted with {@link Long#Long(String)}.
+	 */
+	public static ModelKey convertNumberString(String numberString,
+	                                           int radix)
+	        throws NumberFormatException {
 		ModelKey key = null;
 
 		if (numberString != null) {
-			Long id = new Long(numberString);
+			Long id = Long.parseLong(numberString, radix);
 			key = new ModelKey(id);
 		}
 

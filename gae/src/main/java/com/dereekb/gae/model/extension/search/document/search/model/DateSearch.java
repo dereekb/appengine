@@ -21,6 +21,10 @@ public class DateSearch {
 	private Date date;
 	private ExpressionOperator operator;
 
+	public DateSearch() {
+		this(new Date());
+	}
+
 	public DateSearch(Long date) {
 		this(new Date(date));
 	}

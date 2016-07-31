@@ -3,7 +3,6 @@ package com.dereekb.gae.model.stored.image.dto;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -89,12 +88,6 @@ public final class StoredImageData extends SearchableDatabaseModelData {
 
 	public void setImageSets(List<Long> imageSets) {
 		this.imageSets = imageSets;
-	}
-
-	// UniqueModel
-	@Override
-	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.key);
 	}
 
 	@Override
