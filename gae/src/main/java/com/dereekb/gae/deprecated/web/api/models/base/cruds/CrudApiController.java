@@ -39,6 +39,7 @@ import com.thevisitcompany.gae.utilities.misc.range.IntegerRange;
  *
  * @author dereekb
  */
+@Deprecated
 public abstract class CrudApiController<T extends KeyedModel<K>, K, A> {
 
 	private IntegerRange samplesRange = new IntegerRange(1, 1, 20);

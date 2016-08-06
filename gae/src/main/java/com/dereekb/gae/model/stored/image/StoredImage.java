@@ -18,11 +18,11 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfNotDefault;
 import com.googlecode.objectify.condition.IfNotNull;
-import com.googlecode.objectify.condition.IfNotZero;
 import com.googlecode.objectify.condition.IfNull;
-import com.googlecode.objectify.condition.IfZero;
 
 /**
  * Is an {@link StoredBlobInfoType} for a {@link StoredBlob}.
@@ -38,6 +38,8 @@ public final class StoredImage extends SearchableDatabaseModel
 	public static final String DESCRIPTOR_TYPE = "StoredImage";
 
 	private static final long serialVersionUID = 1L;
+
+	public static final Integer DEFAULT_IMAGE_TYPE = StoredImageType.IMAGE.id;
 
 	/**
 	 * Database identifier.
@@ -66,9 +68,9 @@ public final class StoredImage extends SearchableDatabaseModel
 	/**
 	 * Describes the image type.
 	 */
-	@Index({ IfNotZero.class, IfNotNull.class })
-	@IgnoreSave({ IfZero.class })
-	protected Integer type = 0;
+	@Index({ IfNotDefault.class, IfNotNull.class })
+	@IgnoreSave({ IfDefault.class })
+	protected Integer type = DEFAULT_IMAGE_TYPE;
 
 	/**
 	 * Must be set.
@@ -87,7 +89,7 @@ public final class StoredImage extends SearchableDatabaseModel
 	 * Set of all {@link StoredImageSet} this image is a part of.
 	 */
 	@IgnoreSave(IfEmpty.class)
-	private Set<Key<StoredImageSet>> imageSets = new HashSet<Key<StoredImageSet>>();
+	private Set<Key<StoredImageSet>> imageSets = new HashSet<>();
 
 	public StoredImage() {}
 
@@ -128,11 +130,15 @@ public final class StoredImage extends SearchableDatabaseModel
 	}
 
 	public StoredImageType getType() {
-		return StoredImageType.typeForId(this.type);
+		return StoredImageType.valueOf(this.type);
 	}
 
 	public void setType(StoredImageType type) {
-		this.type = type.getType();
+		if (type == null) {
+			this.setTypeId(null);
+		} else {
+			this.type = type.getId();
+		}
 	}
 
 	public Integer getTypeId() {
@@ -140,7 +146,11 @@ public final class StoredImage extends SearchableDatabaseModel
 	}
 
 	public void setTypeId(Integer type) {
-		this.type = type;
+		if (type == null) {
+			this.type = DEFAULT_IMAGE_TYPE;
+		} else {
+			this.type = type;
+		}
 	}
 
 	public Key<StoredBlob> getStoredBlob() {
@@ -180,7 +190,7 @@ public final class StoredImage extends SearchableDatabaseModel
 
 	public void setImageSets(Set<Key<StoredImageSet>> imageSets) {
 		if (imageSets == null) {
-			imageSets = new HashSet<Key<StoredImageSet>>();
+			imageSets = new HashSet<>();
 		}
 
 		this.imageSets = imageSets;

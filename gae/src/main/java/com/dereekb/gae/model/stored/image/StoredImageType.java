@@ -36,24 +36,24 @@ public enum StoredImageType {
 	 */
 	HD_IMAGE(2, "hd");
 
-	private final int type;
-	private final String abbreviation;
+	public final int id;
+	public final String abbreviation;
 
-	private StoredImageType(int type,
+	private StoredImageType(int id,
 	                  String abbreviation) {
-		this.type = type;
+		this.id = id;
 		this.abbreviation = abbreviation;
 	}
 
-	public int getType() {
-		return this.type;
+	public int getId() {
+		return this.id;
 	}
 
 	public String getTypeName() {
 		return this.abbreviation;
 	}
 
-	public static StoredImageType typeForId(Integer type) {
+	public static StoredImageType valueOf(Integer type) {
 		StoredImageType imageType = StoredImageType.IMAGE;
 
 		switch (type) {
@@ -65,9 +65,6 @@ public enum StoredImageType {
 				break;
 			case 2:
 				imageType = StoredImageType.HD_IMAGE;
-				break;
-			default:
-				imageType = StoredImageType.IMAGE;
 				break;
 		}
 

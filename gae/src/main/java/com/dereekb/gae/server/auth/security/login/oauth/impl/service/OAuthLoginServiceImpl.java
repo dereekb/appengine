@@ -38,13 +38,22 @@ public class OAuthLoginServiceImpl
 
 		LoginPointerType type = info.getLoginType();
 		String identifier = info.getId();
+		String email = info.getEmail();
+
+		if (identifier == null) {
+			throw new OAuthInsufficientException("Id was not available for login.");
+		}
+
+		if (email == null) {
+			throw new OAuthInsufficientException("Email was not available for login.");
+		}
 
 		ModelKey key = type.makeKey(identifier);
 
 		LoginPointer template = new LoginPointer();
 		template.setModelKey(key);
 		template.setLoginPointerType(type);
-		template.setEmail(info.getEmail());
+		template.setEmail(email);
 
 		return this.loginPointerService.getOrCreateLoginPointer(key, template);
 	}

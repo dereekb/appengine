@@ -3,6 +3,12 @@ package com.dereekb.gae.server.auth.security.login.oauth.impl;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 
+/**
+ * {@link OAuthLoginInfo} implementation.
+ * 
+ * @author dereekb
+ *
+ */
 public class OAuthLoginInfoImpl
         implements OAuthLoginInfo {
 

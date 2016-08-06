@@ -77,7 +77,7 @@ public class LinkExtensionApiController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/links/{type}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/{type}/link", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponseImpl link(@PathVariable("type") String primaryType,
 	                                  @Valid @RequestBody ApiLinkChangeRequest request) {
 		ApiResponseImpl response = null;
