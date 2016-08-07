@@ -1,6 +1,11 @@
 package com.dereekb.gae.server.storage.upload.exception;
 
-
+/**
+ * Thrown when a file or multiple files fail to upload.
+ *
+ * @author dereekb
+ *
+ */
 public class FileUploadFailedException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

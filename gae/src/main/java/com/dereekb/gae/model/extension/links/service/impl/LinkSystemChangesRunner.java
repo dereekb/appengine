@@ -32,8 +32,8 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 public class LinkSystemChangesRunner {
 
 	private final LinkSystem system;
-	private final Map<String, LinkModelSet> sets = new HashMap<String, LinkModelSet>();
-	private final Map<String, LinkChangesRunnerInstance> instances = new HashMap<String, LinkChangesRunnerInstance>();
+	private final Map<String, LinkModelSet> sets = new HashMap<>();
+	private final Map<String, LinkChangesRunnerInstance> instances = new HashMap<>();
 
 	private boolean waitingSave = false;
 
@@ -86,7 +86,7 @@ public class LinkSystemChangesRunner {
 	}
 
 	public List<LinkSystemChangeException> getFailures() {
-		List<LinkSystemChangeException> failures = new ArrayList<LinkSystemChangeException>();
+		List<LinkSystemChangeException> failures = new ArrayList<>();
 
 		for (LinkChangesRunnerInstance instance : this.instances.values()) {
 			failures.addAll(instance.failures);
@@ -109,7 +109,7 @@ public class LinkSystemChangesRunner {
 	}
 
 	public HashMapWithSet<String, ModelKey> getMissing() {
-		HashMapWithSet<String, ModelKey> missing = new HashMapWithSet<String, ModelKey>();
+		HashMapWithSet<String, ModelKey> missing = new HashMapWithSet<>();
 
 		for (LinkChangesRunnerInstance instance : this.instances.values()) {
 			if (instance.missingKeys.isEmpty() == false) {
@@ -122,7 +122,7 @@ public class LinkSystemChangesRunner {
 
 	// Internal
 	private HashMapWithList<String, LinkSystemChange> divideChanges(List<LinkSystemChange> changes) {
-		HashMapWithList<String, LinkSystemChange> map = new HashMapWithList<String, LinkSystemChange>();
+		HashMapWithList<String, LinkSystemChange> map = new HashMapWithList<>();
 
 		for (LinkSystemChange change : changes) {
 			String type = change.getPrimaryType();
@@ -138,8 +138,8 @@ public class LinkSystemChangesRunner {
 		private final List<LinkSystemChange> changes;
 		private final LinkModelSet linkSet;
 
-		private List<ModelKey> missingKeys = new ArrayList<ModelKey>();
-		private List<LinkSystemChangeException> failures = new ArrayList<LinkSystemChangeException>();
+		private List<ModelKey> missingKeys = new ArrayList<>();
+		private List<LinkSystemChangeException> failures = new ArrayList<>();
 
 		public LinkChangesRunnerInstance(String type, List<LinkSystemChange> changes) {
 			this.type = type;
@@ -178,7 +178,7 @@ public class LinkSystemChangesRunner {
 								modelLink.clearRelations();
 								break;
 						}
-					} catch (RelationChangeException | UnavailableLinkException e) {
+					} catch (UnavailableLinkException | RelationChangeException e) {
 						LinkSystemChangeException failure = new LinkSystemChangeException(change, e);
 						this.failures.add(failure);
 					}
@@ -192,7 +192,7 @@ public class LinkSystemChangesRunner {
 
 		private LinkModelSet loadSet() {
 			LinkModelSet linkSet = LinkSystemChangesRunner.this.system.loadSet(this.type);
-			List<ModelKey> keys = new ArrayList<ModelKey>();
+			List<ModelKey> keys = new ArrayList<>();
 
 			for (LinkSystemChange change : this.changes) {
 				ModelKey key = change.getPrimaryKey();

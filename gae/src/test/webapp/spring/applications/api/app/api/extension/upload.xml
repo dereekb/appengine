@@ -9,6 +9,11 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Exception Handler -->
+	<bean id="uploadExceptionHandler"
+		class="com.dereekb.gae.web.api.model.extension.upload.exception.handler.ApiUploadExceptionHandler">
+	</bean>
+
 	<!-- Upload URL -->
 	<bean id="baseFileUploadUrl" class="java.lang.String" scope="singleton">
 		<constructor-arg index="0" value="/upload" />
@@ -29,8 +34,14 @@
 		class="com.dereekb.gae.server.storage.services.blobstore.upload.BlobstoreFileUploadUrlFactory">
 		<constructor-arg index="0" ref="baseFileUploadUrl" />
 		<constructor-arg index="1" ref="fileUploadBucket" />
+		<constructor-arg index="2">
+			<util:set value-type="java.lang.String">
+				<value>icon</value>
+				<value>hdImage</value>
+			</util:set>
+		</constructor-arg>
 	</bean>
-
+	
 	<bean id="fileUploadHandler" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.storage.upload.handler.impl.FileUploadHandlerImpl">
 		<constructor-arg index="0" ref="uploadedFileReader" />
@@ -42,8 +53,9 @@
 	</bean>
 
 	<!-- File Upload Handler Delegates -->
-	<bean id="fileUploadHandlerDelegates" lazy-init="true" scope="singleton"
-		class="com.dereekb.gae.utilities.collections.map.catchmap.impl.CatchMapImpl">
+	<bean id="fileUploadHandlerDelegates" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.utilities.collections.map.catchmap.impl.CaseInsensitiveCatchMapImpl">
 		<constructor-arg index="0" value="null" />
 		<constructor-arg index="1" value="null" />
 		<constructor-arg index="2">

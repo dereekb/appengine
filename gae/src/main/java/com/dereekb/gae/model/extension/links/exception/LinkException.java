@@ -1,6 +1,11 @@
 package com.dereekb.gae.model.extension.links.exception;
 
-
+/**
+ * Runtime exception caused by the link service.
+ *
+ * @author dereekb
+ *
+ */
 public class LinkException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

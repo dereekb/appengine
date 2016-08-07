@@ -16,6 +16,10 @@ public class ApiLinkChangeRequest extends ApiRequest<ApiLinkChange> {
 
 	private boolean atomic = true;
 
+	public ApiLinkChangeRequest() {
+		super();
+	};
+
 	public ApiLinkChangeRequest(List<ApiLinkChange> data) {
 		super(data);
 	}

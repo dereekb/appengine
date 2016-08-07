@@ -4,12 +4,14 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
 /**
@@ -170,6 +172,8 @@ public class TestPasswordLoginTokenContextImpl
 
 		try {
 			login = this.registerService.register(pointer);
+		} catch (LoginRegistrationRejectedException e) {
+			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.REJECTED, e);
 		} catch (LoginExistsException e) {
 			throw new RuntimeException(e);
 		}

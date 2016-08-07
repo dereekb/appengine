@@ -9,6 +9,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
@@ -53,7 +54,10 @@ public class LoginRegisterControllerDelegateImpl
 
 	// MARK: LoginRegisterControllerDelegate
 	@Override
-	public LoginTokenPair register() throws TokenUnauthorizedException, LoginExistsException {
+	public LoginTokenPair register()
+	        throws TokenUnauthorizedException,
+	            LoginExistsException,
+	            LoginRegistrationRejectedException {
 		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
 		LoginTokenUserDetails details = authentication.getPrincipal();
 

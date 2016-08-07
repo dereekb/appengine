@@ -5,6 +5,7 @@ import java.util.List;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
@@ -25,8 +26,13 @@ public interface LoginRegisterControllerDelegate {
 	 *             registering, such as an anonymous token.
 	 * @throws LoginExistsException
 	 *             Thrown if the current token already is linked to a login.
+	 * @throws LoginRegistrationRejectedException
+	 *             if the current token was rejected from registering.
 	 */
-	public LoginTokenPair register() throws TokenUnauthorizedException, LoginExistsException;
+	public LoginTokenPair register()
+	        throws TokenUnauthorizedException,
+	            LoginExistsException,
+	            LoginRegistrationRejectedException;
 
 	/**
 	 * Registers multiple logins for the {@link LoginPointer}.

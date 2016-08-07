@@ -14,18 +14,18 @@ public class LinkSystemChangesException extends LinkException {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<LinkSystemChangeException> exception;
+	private List<LinkSystemChangeException> exceptions;
 
-	public LinkSystemChangesException(List<LinkSystemChangeException> exception) {
-		this.exception = exception;
+	public LinkSystemChangesException(List<LinkSystemChangeException> exceptions) {
+		this.exceptions = exceptions;
 	}
 
-	public List<LinkSystemChangeException> getException() {
-		return this.exception;
+	public List<LinkSystemChangeException> getExceptions() {
+		return this.exceptions;
 	}
 
-	public void setException(List<LinkSystemChangeException> exception) {
-		this.exception = exception;
+	public void setExceptions(List<LinkSystemChangeException> exceptions) {
+		this.exceptions = exceptions;
 	}
 
 }

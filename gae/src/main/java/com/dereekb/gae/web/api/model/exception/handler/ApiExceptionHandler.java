@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -101,6 +102,22 @@ public class ApiExceptionHandler {
 		return response;
 	}
 
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ApiResponse handleException(HttpRequestMethodNotSupportedException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+		error.setCode("METHOD_NOT_ALLOWED");
+		error.setTitle("Method Not Allowed");
+		error.setDetail(e.getMessage());
+
+		response.setError(error);
+
+		return response;
+	}
+
 	// MARK: Validation
 	/**
 	 * Used for capturing validation errors.
@@ -135,7 +152,7 @@ public class ApiExceptionHandler {
 
 		public void buildUsingBindingResult(BindingResult bindingResult) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
-			List<FieldValidationIssue> issues = new ArrayList<FieldValidationIssue>();
+			List<FieldValidationIssue> issues = new ArrayList<>();
 
 			for (FieldError error : errors) {
 				FieldValidationIssue issue = new FieldValidationIssue(error);

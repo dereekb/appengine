@@ -12,6 +12,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
@@ -63,7 +64,7 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 	private LoginTokenUserDetailsBuilder builder;
 
 	@Test
-	public void testLoginTokenAuthentication() throws LoginExistsException {
+	public void testLoginTokenAuthentication() throws LoginExistsException, LoginRegistrationRejectedException {
 		LoginTokenPair primary = this.passwordController.create(TEST_USERNAME, TEST_PASSWORD);
 		LoginPointer pointer = this.loginPointerRegistry.get(primary.getLoginPointerKey());
 		Login login = this.registerService.register(pointer);

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -60,6 +61,8 @@ public class LoginRegisterController {
 			response = this.delegate.register();
 		} catch (LoginExistsException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.EXISTS, e);
+		} catch (LoginRegistrationRejectedException e) {
+			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.REJECTED, e);
 		} catch (TokenException e) {
 			throw e;
 		} catch (RuntimeException e) {

@@ -26,7 +26,9 @@ public class ApiLoginException extends RuntimeException {
 		ERROR("LOGIN_ERROR", "Unexpected error"),
 
 	    // Forbidden
-		INVALID_CREDENTIALS("INVALID_CREDENTIALS", "Invalid Credentials");
+		INVALID_CREDENTIALS("INVALID_CREDENTIALS", "Invalid Credentials"),
+
+		REJECTED("REJECTED", "Rejected Credentials");
 
 		private final String code;
 		private final String title;

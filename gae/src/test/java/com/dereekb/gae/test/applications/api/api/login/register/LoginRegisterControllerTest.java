@@ -19,6 +19,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
@@ -73,13 +74,13 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		try {
 			Login login = this.registerService.register(pointer);
 			Assert.assertNotNull(login);
-		} catch (LoginExistsException e) {
+		} catch (LoginExistsException | LoginRegistrationRejectedException e) {
 			Assert.fail();
 		}
 	}
 
 	@Test
-	public void testLoginServiceRegisterTokens() throws LoginExistsException {
+	public void testLoginServiceRegisterTokens() throws LoginExistsException, LoginRegistrationRejectedException {
 		LoginTokenPair primary = this.passwordController.create(TEST_USERNAME, TEST_PASSWORD);
 		LoginPointer pointer = this.loginPointerRegistry.get(primary.getLoginPointerKey());
 		Login login = this.registerService.register(pointer);
@@ -97,7 +98,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 
 	// MARK: LoginRegisterController
 	@Test
-	public void testRegisterControllerRegisterLogins() throws LoginExistsException {
+	public void testRegisterControllerRegisterLogins() throws LoginExistsException, LoginRegistrationRejectedException {
 		LoginTokenPair primary = this.passwordController.create(TEST_USERNAME, TEST_PASSWORD);
 		LoginPointer pointer = this.loginPointerRegistry.get(primary.getLoginPointerKey());
 		Login login = this.registerService.register(pointer);

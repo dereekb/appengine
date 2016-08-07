@@ -6,6 +6,7 @@ import com.dereekb.gae.model.extension.links.exception.LinkException;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -25,8 +26,10 @@ public interface LoginRegisterService {
 	 * @throws LoginExistsException
 	 *             Thrown if the {@link LoginPointer} already has a
 	 *             {@link Login} set.
+	 * @throws LoginRegistrationRejectedException
+	 *             Thrown otherwise if the request is rejected.
 	 */
-	public Login register(LoginPointer pointer) throws LoginExistsException;
+	public Login register(LoginPointer pointer) throws LoginExistsException, LoginRegistrationRejectedException;
 
 	/**
 	 * Links multiple {@link LoginPointer} values to a {@link Login}.

@@ -59,7 +59,7 @@ public final class LinkModelImpl<T extends UniqueModel>
 		Link link = map.get(name);
 
 		if (link == null) {
-			throw new UnavailableLinkException();
+			throw UnavailableLinkException.withLink(name);
 		}
 
 		return link;

@@ -9,6 +9,7 @@ import com.dereekb.gae.server.auth.security.login.LoginPointerService;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.LoginService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -99,7 +100,7 @@ public class LoginServiceImpl
 
 	// MARK: LoginRegisterService
 	@Override
-	public Login register(LoginPointer pointer) throws LoginExistsException {
+	public Login register(LoginPointer pointer) throws LoginExistsException, LoginRegistrationRejectedException {
 		return this.registerService.register(pointer);
 	}
 

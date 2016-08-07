@@ -1,7 +1,7 @@
 package com.dereekb.gae.web.api.auth.exception;
 
 /**
- * Invalid credentials exception.
+ * Login exists exception.
  *
  * @author dereekb
  *

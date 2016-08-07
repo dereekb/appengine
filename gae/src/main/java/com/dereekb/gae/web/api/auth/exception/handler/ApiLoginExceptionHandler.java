@@ -12,6 +12,7 @@ import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException.LoginExceptionReason;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginRejectedException;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
@@ -42,6 +43,13 @@ public class ApiLoginExceptionHandler {
 	@ResponseStatus(value = HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ApiLoginInvalidException.class)
 	public ApiResponseImpl handleInvalidException(ApiLoginInvalidException exception) {
+		return this.buildErrorResponse(exception);
+	}
+
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.FORBIDDEN)
+	@ExceptionHandler(ApiLoginRejectedException.class)
+	public ApiResponseImpl handleInvalidException(ApiLoginRejectedException exception) {
 		return this.buildErrorResponse(exception);
 	}
 

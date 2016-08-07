@@ -18,6 +18,7 @@ import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntr
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.NewLoginGenerator;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 
@@ -75,10 +76,10 @@ public class LoginRegisterServiceImpl
 
 	// MARK: LoginRegisterService
 	@Override
-	public Login register(LoginPointer pointer) throws LoginExistsException {
+	public Login register(LoginPointer pointer) throws LoginExistsException, LoginRegistrationRejectedException {
 
 		if (pointer == null) {
-			throw new IllegalArgumentException("Pointer is null.");
+			throw new IllegalArgumentException("Pointer cannot be null.");
 		}
 
 		if (pointer.getLogin() != null) {
@@ -87,7 +88,7 @@ public class LoginRegisterServiceImpl
 
 		Login login = this.loginGenerator.makeLogin(pointer);
 
-		Set<String> loginPointers = new HashSet<String>(1);
+		Set<String> loginPointers = new HashSet<>(1);
 		loginPointers.add(pointer.getIdentifier());
 
 		this.registerLogins(login.getModelKey(), loginPointers);
@@ -97,7 +98,7 @@ public class LoginRegisterServiceImpl
 	@Override
 	public void registerLogins(ModelKey loginKey,
 	                           Set<String> loginPointers) throws LinkException {
-		List<LinkSystemChange> changes = new ArrayList<LinkSystemChange>();
+		List<LinkSystemChange> changes = new ArrayList<>();
 
 		LinkSystemChangeImpl change = new LinkSystemChangeImpl(LinkChangeAction.LINK, this.loginLinkType, loginKey,
 		        this.loginPointerLinkName, loginPointers);

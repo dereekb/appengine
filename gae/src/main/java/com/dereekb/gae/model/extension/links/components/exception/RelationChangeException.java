@@ -1,8 +1,10 @@
 package com.dereekb.gae.model.extension.links.components.exception;
 
 import com.dereekb.gae.model.extension.links.components.Relation;
-import com.dereekb.gae.model.extension.links.exception.LinkException;
+import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
  * Exception that occurs when a relation change experiences an error.
@@ -10,9 +12,12 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public class RelationChangeException extends LinkException {
+public class RelationChangeException extends ApiLinkException {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final String ERROR_CODE = "CHANGE_FAILURE";
+	public static final String ERROR_TITLE = "Link Change Failure";
 
 	private final ModelKey primary;
 	private final Relation relation;
@@ -46,6 +51,17 @@ public class RelationChangeException extends LinkException {
 
 	public Relation getRelation() {
 		return this.relation;
+	}
+
+	@Override
+	public ApiResponseError getResponseError() {
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+
+		error.setCode(ERROR_CODE);
+		error.setTitle(ERROR_TITLE);
+		error.setDetail(this.getMessage());
+
+		return error;
 	}
 
 	@Override
