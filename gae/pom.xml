@@ -13,7 +13,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appengine.target.version>1.9.38</appengine.target.version>
+		<appengine.target.version>1.9.48</appengine.target.version>
 		<spring.target.version>4.2.6.RELEASE</spring.target.version>
 		<spring-security.target.version>4.1.0.RELEASE</spring-security.target.version>
 		<jackson.target.version>2.6.7</jackson.target.version>
@@ -83,14 +83,14 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
-			<version>0.6.0</version>
+			<version>0.7.0</version>
 		</dependency>
 
 		<!-- Objectify -->
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
-			<version>5.1.9</version>
+			<version>5.1.14</version>
 		</dependency>
 
 		<!-- Jackson -->
