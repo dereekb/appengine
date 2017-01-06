@@ -12,9 +12,11 @@ public enum LoginPointerType {
 
 	PASSWORD(0, LoginType.PASSWORD, "P"),
 
-	OAUTH_GOOGLE(1, LoginType.OAUTH, "G"),
+	API_KEY(1, LoginType.API_KEY, "K"),
 
-	OAUTH_FACEBOOK(2, LoginType.OAUTH, "F");
+	OAUTH_GOOGLE(2, LoginType.OAUTH, "G"),
+
+	OAUTH_FACEBOOK(3, LoginType.OAUTH, "F");
 
 	/**
 	 * Login type/category.
@@ -22,8 +24,10 @@ public enum LoginPointerType {
 	 * @author dereekb
 	 */
 	public static enum LoginType {
-
+		
 		PASSWORD,
+		
+		API_KEY,
 
 		OAUTH
 
@@ -66,9 +70,12 @@ public enum LoginPointerType {
 				type = LoginPointerType.PASSWORD;
 				break;
 			case 1:
-				type = LoginPointerType.OAUTH_GOOGLE;
+				type = LoginPointerType.API_KEY;
 				break;
 			case 2:
+				type = LoginPointerType.OAUTH_GOOGLE;
+				break;
+			case 3:
 				type = LoginPointerType.OAUTH_FACEBOOK;
 				break;
 		}

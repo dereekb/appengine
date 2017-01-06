@@ -45,6 +45,7 @@ public class LoginPointer extends DatabaseModel
 	/**
 	 * Pointer type.
 	 */
+	@Index
 	private Integer type;
 
 	/**

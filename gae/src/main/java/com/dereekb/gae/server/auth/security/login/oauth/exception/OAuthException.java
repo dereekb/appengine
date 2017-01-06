@@ -1,22 +1,23 @@
 package com.dereekb.gae.server.auth.security.login.oauth.exception;
 
+import com.dereekb.gae.server.auth.security.login.exception.LoginAuthenticationException;
+
 /**
  * General OAuthException.
  *
  * @author dereekb
  *
  */
-public class OAuthException extends RuntimeException {
+public class OAuthException extends LoginAuthenticationException {
 
 	private static final long serialVersionUID = 1L;
 
-	private String code;
-
-	public OAuthException() {}
+	public OAuthException() {
+		super();
+	}
 
 	public OAuthException(String code, String message) {
-		super(message);
-		this.setCode(code);
+		super(code, message);
 	}
 
 	public OAuthException(String message) {
@@ -25,14 +26,6 @@ public class OAuthException extends RuntimeException {
 
 	public OAuthException(Throwable cause) {
 		super(cause);
-	}
-
-	public String getCode() {
-		return this.code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	@Override
