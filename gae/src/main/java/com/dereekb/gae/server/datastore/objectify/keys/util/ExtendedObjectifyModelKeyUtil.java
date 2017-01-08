@@ -43,6 +43,11 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 		return new ExtendedObjectifyModelKeyUtil<T>(type, ModelKeyType.NUMBER);
 	}
 
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return this.converter.getModelKeyType();
+	}
+	
 	public ObjectifyKeyConverter<T, ModelKey> getConverter() {
 		return this.converter;
 	}
@@ -61,6 +66,10 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	}
 
 	// MARK: Key
+	public Key<T> keyFromString(String string) throws IllegalArgumentException {
+		return this.keyFromString(this.getModelKeyType(), string);
+	}
+
 	public Key<T> fromModelKey(ModelKey modelKey) {
 		Key<T> key;
 

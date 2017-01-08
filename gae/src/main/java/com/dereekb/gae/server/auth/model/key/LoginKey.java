@@ -25,11 +25,12 @@ import com.googlecode.objectify.condition.IfNull;
  */
 @Cache
 @Entity
-public class LoginKey extends DatabaseModel implements ObjectifyModel<LoginKey> {
+public class LoginKey extends DatabaseModel
+        implements ObjectifyModel<LoginKey> {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final long MIN_EXPIRATION_TIME = 600000L;	//10 Minutes
+	public static final long MIN_EXPIRATION_TIME = 600000L;	// 10 Minutes
 
 	@Id
 	private Long identifier;
@@ -67,8 +68,7 @@ public class LoginKey extends DatabaseModel implements ObjectifyModel<LoginKey> 
 	@IgnoreSave({ IfNull.class })
 	private Long expiration;
 
-	public LoginKey() {
-	}
+	public LoginKey() {}
 
 	public LoginKey(Long identifier) {
 		this.identifier = identifier;
@@ -138,7 +138,7 @@ public class LoginKey extends DatabaseModel implements ObjectifyModel<LoginKey> 
 		if (expiration != null) {
 			expiration = Math.max(expiration, MIN_EXPIRATION_TIME);
 		}
-		
+
 		this.expiration = expiration;
 	}
 
@@ -167,7 +167,7 @@ public class LoginKey extends DatabaseModel implements ObjectifyModel<LoginKey> 
 	@Override
 	public String toString() {
 		return "ApiLoginKey [identifier=" + identifier + ", pointer=" + pointer + ", name=" + name + ", verification="
-				+ verification + ", mask=" + mask + ", created=" + created + ", expiration=" + expiration + "]";
+		        + verification + ", mask=" + mask + ", created=" + created + ", expiration=" + expiration + "]";
 	}
 
 }

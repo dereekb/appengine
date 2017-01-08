@@ -8,12 +8,22 @@ import com.googlecode.objectify.Key;
  * 
  * @author dereekb
  *
- * @see {@link KeyLoginAuthneticationService} for usage.
+ * @see {@link KeyLoginAuthenticationService} for usage.
  */
 public interface KeyLoginInfo {
 
+	/**
+	 * Returns the {@link Key} for the {@link LoginKey}.
+	 * 
+	 * @return {@link Key}. Never {@code null}.
+	 */
 	public Key<LoginKey> getKey();
-	
-	public String getValidation();
-	
+
+	/**
+	 * Returns the verification string.
+	 * 
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getVerification();
+
 }

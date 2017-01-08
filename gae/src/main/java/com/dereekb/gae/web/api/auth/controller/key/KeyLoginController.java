@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginRejectedException;
-import com.dereekb.gae.server.auth.security.login.key.exception.NoKeyLoginPointerException;
+import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
@@ -25,6 +25,22 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
 public class KeyLoginController {
 
 	private KeyLoginControllerDelegate delegate;
+
+	public KeyLoginController(KeyLoginControllerDelegate delegate) throws IllegalArgumentException {
+		this.setDelegate(delegate);
+	}
+
+	public KeyLoginControllerDelegate getDelegate() {
+		return delegate;
+	}
+
+	public void setDelegate(KeyLoginControllerDelegate delegate) {
+		if (delegate == null) {
+			throw new IllegalArgumentException("Delegate cannot be null.");
+		}
+
+		this.delegate = delegate;
+	}
 
 	// MARK: Enable/Disable
 	/**
@@ -86,14 +102,14 @@ public class KeyLoginController {
 	                                  @RequestParam @NotEmpty String verification)
 	        throws ApiLoginException,
 	            ApiRuntimeException {
-		
+
 		LoginTokenPair response = null;
 
 		try {
 			response = this.delegate.login(key, verification);
 		} catch (KeyLoginRejectedException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.REJECTED, e);
-		} catch (NoKeyLoginPointerException e) {
+		} catch (KeyLoginUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNAVAILABLE, e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);

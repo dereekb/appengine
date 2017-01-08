@@ -69,7 +69,7 @@
 	<bean id="datastoreIndexesXmlPath" class="java.lang.String"
 		lazy-init="true" scope="singleton">
 		<constructor-arg index="0"
-			value="src/main/webapp/WEB-INF/datastore-indexes.xml" />
+			value="src/test/webapp/datastore-indexes.xml" />
 	</bean>
 
 	<bean id="taskQueueXmlPath" class="java.lang.String" lazy-init="false"

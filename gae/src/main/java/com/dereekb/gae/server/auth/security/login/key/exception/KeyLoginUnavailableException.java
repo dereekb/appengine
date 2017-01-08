@@ -6,7 +6,7 @@ package com.dereekb.gae.server.auth.security.login.key.exception;
  * @author dereekb
  *
  */
-public class NoKeyLoginPointerException extends RuntimeException {
+public class KeyLoginUnavailableException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 	

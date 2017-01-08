@@ -2,7 +2,12 @@ package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 
-
+/**
+ * {@link AbstractQueryFieldParameter} used in Objectify queries.
+ * 
+ * @author dereekb
+ *
+ */
 public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Integer> {
 
 	public IntegerQueryFieldParameter() {

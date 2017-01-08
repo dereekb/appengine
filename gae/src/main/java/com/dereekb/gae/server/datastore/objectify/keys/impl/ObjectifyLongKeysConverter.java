@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.IllegalKeyConversionException;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.googlecode.objectify.Key;
@@ -29,6 +30,11 @@ public final class ObjectifyLongKeysConverter<T> extends ObjecifyLongKeysReader<
 		return new ObjectifyLongKeysConverter<T>(type);
 	}
 
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return ModelKeyType.NUMBER;
+	}
+	
 	@Override
 	public List<Key<T>> writeKeys(Iterable<ModelKey> modelKeys) throws IllegalKeyConversionException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
