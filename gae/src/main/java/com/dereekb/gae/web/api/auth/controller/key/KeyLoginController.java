@@ -110,7 +110,8 @@ public class KeyLoginController {
 		} catch (KeyLoginRejectedException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.REJECTED, e);
 		} catch (KeyLoginUnavailableException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNAVAILABLE, e);
+			//Also return rejected to prevent brute-force checking for keys.
+			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.REJECTED, e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);
 		}

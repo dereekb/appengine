@@ -47,6 +47,13 @@ public interface KeyLoginStatusService {
 	 */
 	public LoginPointer enable() throws KeyLoginExistsException;
 	
+	/**
+	 * 
+	 * 
+	 * @return {@code true} if authentication is enabled.
+	 */
+	public boolean isEnabled();
+	
 	//NOTE: Add Disable?
 	
 }

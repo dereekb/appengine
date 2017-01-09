@@ -9,22 +9,20 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Objectify -->
-	<bean id="objectifyDatabase"
-		class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase"
-		scope="singleton" primary="true" lazy-init="false">
-		<constructor-arg index="0" ref="objectifyDatabaseEntities" />
-		<constructor-arg index="1" value="false"/>
+	<!-- Generator -->
+	<bean id="loginKeyTestModelGenerator"
+		class="com.dereekb.gae.test.model.extension.generator.TestModelGeneratorImpl"
+		scope="singleton">
+		<constructor-arg index="0" ref="loginKeyRegistry" />
+		<constructor-arg index="1" ref="loginKeyGenerator" />
 	</bean>
 
-	<util:list id="objectifyDatabaseEntities">
-		<ref bean="loginObjectifyEntry" />
-		<ref bean="loginKeyObjectifyEntry" />
-		<ref bean="loginPointerObjectifyEntry" />
-		<ref bean="geoPlaceObjectifyEntry" />
-		<ref bean="storedBlobObjectifyEntry" />
-		<ref bean="storedImageObjectifyEntry" />
-		<ref bean="storedImageSetObjectifyEntry" />
-	</util:list>
+	<!-- Data Generator -->
+	<bean id="loginKeyTestDataGenerator"
+		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl"
+		scope="singleton">
+		<constructor-arg index="0" ref="loginKeyGenerator" />
+		<constructor-arg index="1" ref="loginKeyDataBuilder" />
+	</bean>
 
 </beans>

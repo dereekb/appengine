@@ -10,6 +10,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
+import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -165,8 +166,13 @@ public class TestPasswordLoginTokenContextImpl
 	}
 
 	@Override
-	public LoginPointer generateLogin() {
-		LoginTokenPair primary = this.passwordController.create(this.username, this.password);
+	public TestLoginTokenPair generateLogin() {
+		return this.generateLogin(this.username);
+	}
+	
+	@Override
+	public TestLoginTokenPair generateLogin(String username) {
+		LoginTokenPair primary = this.passwordController.create(username, this.password);
 		LoginPointer pointer = this.loginPointerRegistry.get(primary.getLoginPointerKey());
 		Login login;
 
@@ -185,7 +191,8 @@ public class TestPasswordLoginTokenContextImpl
 
 		pointer.setLogin(login.getObjectifyKey());
 		this.setLogin(pointer);
-		return pointer;
+	
+		return new TestLoginTokenPairImpl(login, pointer);
 	}
 
 	@Override
@@ -204,6 +211,28 @@ public class TestPasswordLoginTokenContextImpl
 	@Override
 	public void setLogin(LoginPointer pointer) {
 		this.pointer = pointer;
+	}
+	
+	private class TestLoginTokenPairImpl implements TestLoginTokenPair {
+
+		private Login login;
+		private LoginPointer loginPointer;
+		
+		public TestLoginTokenPairImpl(Login login, LoginPointer loginPointer) {
+			this.login = login;
+			this.loginPointer = loginPointer;
+		}
+
+		@Override
+		public Login getLogin() {
+			return login;
+		}
+
+		@Override
+		public LoginPointer getLoginPointer() {
+			return loginPointer;
+		}
+		
 	}
 
 }

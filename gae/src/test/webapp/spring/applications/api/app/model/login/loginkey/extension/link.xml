@@ -9,22 +9,21 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Objectify -->
-	<bean id="objectifyDatabase"
-		class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase"
-		scope="singleton" primary="true" lazy-init="false">
-		<constructor-arg index="0" ref="objectifyDatabaseEntities" />
-		<constructor-arg index="1" value="false"/>
+	<bean id="loginKeyLinkTarget" lazy-init="true"
+		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
+		<constructor-arg index="0" ref="loginKeyType" />
+		<constructor-arg index="1" value="NUMBER" />
 	</bean>
 
-	<util:list id="objectifyDatabaseEntities">
-		<ref bean="loginObjectifyEntry" />
-		<ref bean="loginKeyObjectifyEntry" />
-		<ref bean="loginPointerObjectifyEntry" />
-		<ref bean="geoPlaceObjectifyEntry" />
-		<ref bean="storedBlobObjectifyEntry" />
-		<ref bean="storedImageObjectifyEntry" />
-		<ref bean="storedImageSetObjectifyEntry" />
-	</util:list>
+	<bean id="loginKeyLinkSystem" lazy-init="true"
+		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemEntry">
+		<constructor-arg index="0" ref="loginKeyCrudService" />
+		<constructor-arg index="1" ref="loginKeyUpdateConfiguredSetter" />
+	</bean>
 
+	<!-- Links -->
+	<bean id="loginKeyLoginPointerLinkName" class="java.lang.String" scope="singleton">
+		<constructor-arg index="0" ref="loginPointerType" />
+	</bean>
+	
 </beans>

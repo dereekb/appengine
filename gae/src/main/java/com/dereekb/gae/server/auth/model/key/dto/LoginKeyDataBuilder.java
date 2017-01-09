@@ -27,7 +27,7 @@ public final class LoginKeyDataBuilder extends AbstractDirectionalConverter<Logi
 		data.setCreated(loginKey.getCreated());
 
 		// Pointers
-		data.setPointer(ObjectifyKeyUtility.nameFromKey(loginKey.getPointer()));
+		data.setPointer(ObjectifyKeyUtility.nameFromKey(loginKey.getLoginPointer()));
 
 		// Data
 		data.setName(loginKey.getName());

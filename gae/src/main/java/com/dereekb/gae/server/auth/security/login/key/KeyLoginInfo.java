@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.login.key;
 
 import com.dereekb.gae.server.auth.model.key.LoginKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.googlecode.objectify.Key;
 
 /**
@@ -17,7 +18,7 @@ public interface KeyLoginInfo {
 	 * 
 	 * @return {@link Key}. Never {@code null}.
 	 */
-	public Key<LoginKey> getKey();
+	public ModelKey getKey();
 
 	/**
 	 * Returns the verification string.

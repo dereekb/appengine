@@ -1,10 +1,8 @@
 package com.dereekb.gae.server.auth.security.login.key.impl;
 
-import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginInfo;
-import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
-import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.googlecode.objectify.Key;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 
 /**
  * {@link KeyLoginInfo} implementation.
@@ -15,26 +13,23 @@ import com.googlecode.objectify.Key;
 public class KeyLoginInfoImpl
         implements KeyLoginInfo {
 
-	private static final ExtendedObjectifyModelKeyUtil<LoginKey> LOGIN_KEY_UTIL = ExtendedObjectifyModelKeyUtil
-	        .make(LoginKey.class, ModelKeyType.NAME);
-
-	private Key<LoginKey> key;
+	private ModelKey key;
 	private String verification;
 
 	public KeyLoginInfoImpl(String key, String verification) throws IllegalArgumentException {
-		this(LOGIN_KEY_UTIL.keyFromString(key), verification);
+		this(StringLongModelKeyConverterImpl.CONVERTER.convertSingle(key), verification);
 	}
 
-	public KeyLoginInfoImpl(Key<LoginKey> key, String validation) throws IllegalArgumentException {
+	public KeyLoginInfoImpl(ModelKey key, String validation) throws IllegalArgumentException {
 		this.setKey(key);
 		this.setVerification(validation);
 	}
 
-	public Key<LoginKey> getKey() {
+	public ModelKey getKey() {
 		return key;
 	}
 
-	public void setKey(Key<LoginKey> key) throws IllegalArgumentException {
+	public void setKey(ModelKey key) throws IllegalArgumentException {
 		if (key == null) {
 			throw new IllegalArgumentException("Key cannot be null.");
 		}

@@ -12,6 +12,7 @@
 	<!-- IMPORTS -->
 	<!-- Models -->
 	<import resource="login/login/login.xml" />
+	<import resource="login/loginkey/loginkey.xml" />
 	<import resource="login/loginpointer/loginpointer.xml" />
 	<import resource="geoplace/geoplace.xml" />
 	<import resource="stored/storedblob/storedblob.xml" />

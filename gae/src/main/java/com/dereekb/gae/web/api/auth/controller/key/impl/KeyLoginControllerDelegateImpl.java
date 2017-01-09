@@ -32,15 +32,28 @@ public class KeyLoginControllerDelegateImpl implements KeyLoginControllerDelegat
 	private static final String ENABLED_KEY = "Enabled";
 	
 	private LoginTokenService tokenService;
-	
 	private KeyLoginStatusServiceManager serviceManager;
 	private KeyLoginAuthenticationService authenticationService;
 	
-	public KeyLoginControllerDelegateImpl(KeyLoginStatusServiceManager serviceManager,
+	public KeyLoginControllerDelegateImpl(LoginTokenService tokenService,
+	        KeyLoginStatusServiceManager serviceManager,
 	        KeyLoginAuthenticationService authenticationService) {
 		super();
+		this.setTokenService(tokenService);
 		this.setServiceManager(serviceManager);
 		this.setAuthenticationService(authenticationService);
+	}
+
+	public LoginTokenService getTokenService() {
+		return tokenService;
+	}
+
+	public void setTokenService(LoginTokenService tokenService) {
+		if (tokenService == null) {
+			throw new IllegalArgumentException("TokenService cannot be null.");
+		}
+		
+		this.tokenService = tokenService;
 	}
 
 	public KeyLoginStatusServiceManager getServiceManager() {

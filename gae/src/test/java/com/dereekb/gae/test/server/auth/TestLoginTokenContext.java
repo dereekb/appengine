@@ -24,7 +24,12 @@ public interface TestLoginTokenContext {
 	/**
 	 * Generates a new login, and login pointer.
 	 */
-	public LoginPointer generateLogin();
+	public TestLoginTokenPair generateLogin();
+
+	/**
+	 * Generates a new login, and login pointer using a specific username.
+	 */
+	public TestLoginTokenPair generateLogin(String username);
 
 	/**
 	 * Clears the current login, be it anonymous or normal.

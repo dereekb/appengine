@@ -64,15 +64,17 @@
 	</bean>
 
 	<!-- API Login Controller -->
-	<bean id="apiKeyLoginController" scope="singleton" lazy-init="true"
-		class="com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginController">
+	<bean id="keyLoginController" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.key.KeyLoginController">
 		<constructor-arg index="0" ref="keyLoginControllerDelegate" />
 	</bean>
 
-	<bean id="apiKeyLoginControllerDelegate" scope="singleton" lazy-init="true"
-		class="com.dereekb.gae.web.api.auth.controller.oauth.impl.OAuthLoginControllerDelegateImpl">
-		<constructor-arg index="0" ref="oAuthServiceManager" />
-		<constructor-arg index="1" ref="loginTokenService" />
+	<bean id="keyLoginControllerDelegate" scope="singleton"
+		lazy-init="true"
+		class="com.dereekb.gae.web.api.auth.controller.key.impl.KeyLoginControllerDelegateImpl">
+		<constructor-arg index="0" ref="loginTokenService" />
+		<constructor-arg index="1" ref="keyLoginStatusServiceManager" />
+		<constructor-arg index="2" ref="keyLoginAuthenticationService" />
 	</bean>
 
 	<!-- Exception Handler -->

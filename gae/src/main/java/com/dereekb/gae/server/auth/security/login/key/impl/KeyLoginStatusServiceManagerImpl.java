@@ -25,11 +25,23 @@ import com.googlecode.objectify.Key;
 public class KeyLoginStatusServiceManagerImpl
         implements KeyLoginStatusServiceManager {
 
+	private String DEFAULT_FORMAT = "%s_API";
+	
+	private String loginPointerFormat = DEFAULT_FORMAT;
+	
 	private ObjectifyRegistry<LoginPointer> loginPointerRegistry;
 
 	public KeyLoginStatusServiceManagerImpl(ObjectifyRegistry<LoginPointer> loginPointerRegistry)
 	        throws IllegalArgumentException {
 		this.setLoginPointerRegistry(loginPointerRegistry);
+	}
+
+	public String getLoginPointerFormat() {
+		return loginPointerFormat;
+	}
+	
+	public void setLoginPointerFormat(String loginPointerFormat) {
+		this.loginPointerFormat = loginPointerFormat;
 	}
 
 	public ObjectifyRegistry<LoginPointer> getLoginPointerRegistry() {
@@ -96,6 +108,19 @@ public class KeyLoginStatusServiceManagerImpl
 		}
 
 		@Override
+		public boolean isEnabled() {
+			boolean isEnabled = true;
+			
+			try {
+			this.getKeyLoginPointerKey();
+			} catch (KeyLoginUnavailableException e) {
+				isEnabled = false;
+			}
+			
+			return isEnabled;
+		}
+		
+		@Override
 		public LoginPointer enable() throws KeyLoginExistsException {
 			try {
 				this.getKeyLoginPointerKey();
@@ -103,14 +128,19 @@ public class KeyLoginStatusServiceManagerImpl
 			} catch (KeyLoginUnavailableException e) {
 
 				Key<Login> loginKey = this.login.getObjectifyKey();
-
+				Long id = loginKey.getId();
+				
 				LoginPointer pointer = new LoginPointer();
-
+				String pointerString = String.format(loginPointerFormat, id);
+				
+				pointer.setIdentifier(pointerString);
 				pointer.setLogin(loginKey);
 				pointer.setLoginPointerType(LoginPointerType.API_KEY);
 
 				loginPointerRegistry.save(pointer, false);
 
+				this.cachedLoginPointer = pointer.getObjectifyKey();
+				
 				return pointer;
 			}
 		}

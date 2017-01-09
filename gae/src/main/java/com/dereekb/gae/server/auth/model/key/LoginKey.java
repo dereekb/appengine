@@ -82,11 +82,15 @@ public class LoginKey extends DatabaseModel
 		this.identifier = identifier;
 	}
 
-	public Key<LoginPointer> getPointer() {
+	public Key<LoginPointer> getLoginPointer() {
 		return pointer;
 	}
 
-	public void setPointer(Key<LoginPointer> pointer) throws IllegalArgumentException {
+	public ModelKey getPointerModelKey() {
+		return ModelKey.safe(this.pointer.getName());
+	}
+
+	public void setLoginPointer(Key<LoginPointer> pointer) throws IllegalArgumentException {
 		if (pointer == null) {
 			throw new IllegalArgumentException("LoginPointer cannot be null.");
 		}
