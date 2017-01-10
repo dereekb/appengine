@@ -37,7 +37,10 @@ public final class LoginKeyDataReader extends AbstractDirectionalConverter<Login
 
 		// Pointers
 		Key<LoginPointer> pointer = LOGIN_POINTER_KEY_UTIL.keyFromString(input.getPointer());
-		model.setLoginPointer(pointer);
+		
+		if (pointer != null) {
+			model.setLoginPointer(pointer);
+		}
 
 		// Data
 		model.setName(input.getName());

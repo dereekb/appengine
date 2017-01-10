@@ -15,6 +15,7 @@
 	<import resource="storedimage.xml" />
 	<import resource="storedimageset.xml" />
 	<import resource="login.xml" />
+	<import resource="loginkey.xml" />
 	<import resource="loginpointer.xml" />
 
 	<!-- Read Controller -->
@@ -28,6 +29,7 @@
 				<entry key-ref="storedImageType" value-ref="storedImageReadControllerEntry"></entry>
 				<entry key-ref="storedImageSetType" value-ref="storedImageSetReadControllerEntry"></entry>
 				<entry key-ref="loginType" value-ref="loginReadControllerEntry"></entry>
+				<entry key-ref="loginKeyType" value-ref="loginKeyReadControllerEntry"></entry>
 				<entry key-ref="loginPointerType" value-ref="loginPointerReadControllerEntry"></entry>
 			</map>
 		</constructor-arg>

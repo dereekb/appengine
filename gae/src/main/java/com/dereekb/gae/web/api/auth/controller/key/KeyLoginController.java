@@ -51,7 +51,7 @@ public class KeyLoginController {
 	 * @throws ApiRuntimeException
 	 */
 	@ResponseBody
-	@RequestMapping(path = "/enable", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(path = "/enable", method = RequestMethod.PUT, produces = "application/json")
 	public final ApiResponse enable() throws ApiRuntimeException {
 		ApiResponse response = null;
 

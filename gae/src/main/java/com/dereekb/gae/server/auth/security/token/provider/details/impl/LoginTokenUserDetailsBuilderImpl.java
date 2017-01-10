@@ -10,8 +10,10 @@ import org.springframework.security.core.GrantedAuthority;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.roles.authority.GrantedAuthorityDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.provider.details.LoginPointerGrantedAuthorityBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
 import com.dereekb.gae.server.datastore.Getter;
@@ -26,6 +28,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class LoginTokenUserDetailsBuilderImpl
         implements LoginTokenUserDetailsBuilder {
 
+	private static final String DEFAULT_ADMIN_ROLE = "ROLE_ADMIN";
+
 	private Getter<Login> loginGetter;
 	private Getter<LoginPointer> loginPointerGetter;
 
@@ -33,6 +37,10 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	private List<GrantedAuthority> tokenAuthorities;
 	private List<GrantedAuthority> anonymousAuthorities;
+	
+	private LoginPointerGrantedAuthorityBuilder loginPointerAuthorityBuilder = new LoginPointerGrantedAuthorityBuilderImpl();
+	
+	private String adminGrantedAuthority = DEFAULT_ADMIN_ROLE;
 
 	public LoginTokenUserDetailsBuilderImpl(Getter<Login> loginGetter,
 	        Getter<LoginPointer> loginPointerGetter,
@@ -97,6 +105,27 @@ public class LoginTokenUserDetailsBuilderImpl
 		}
 
 		this.anonymousAuthorities = anonymousAuthorities;
+	}
+	
+	public String getAdminGrantedAuthority() {
+		return adminGrantedAuthority;
+	}
+	
+	public void setAdminGrantedAuthority(String adminGrantedAuthority) throws IllegalArgumentException {
+		
+		if (adminGrantedAuthority == null || adminGrantedAuthority.isEmpty()) {
+			throw new IllegalArgumentException("Admin role cannot be null or empty.");
+		}
+		
+		this.adminGrantedAuthority = adminGrantedAuthority;
+	}
+	
+	public LoginPointerGrantedAuthorityBuilder getLoginPointerAuthorityBuilder() {
+		return loginPointerAuthorityBuilder;
+	}
+
+	public void setLoginPointerAuthorityBuilder(LoginPointerGrantedAuthorityBuilder loginPointerAuthorityBuilder) {
+		this.loginPointerAuthorityBuilder = loginPointerAuthorityBuilder;
 	}
 
 	// MARK: LoginTokenUserDetailsBuilder
@@ -213,6 +242,9 @@ public class LoginTokenUserDetailsBuilderImpl
 
 					this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.tokenAuthorities);
 				}
+				
+				LoginPointerType type = this.loginToken.getPointerType();
+				this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.loginPointerAuthorityBuilder.getGrantedAuthorities(type));
 			}
 
 			return this.authorities;
@@ -251,6 +283,11 @@ public class LoginTokenUserDetailsBuilderImpl
 		@Override
 		public LoginToken getLoginToken() {
 			return this.loginToken;
+		}
+
+		@Override
+		public boolean isAdministrator() {
+			return this.getAuthorities().contains(adminGrantedAuthority);
 		}
 
 		@Override

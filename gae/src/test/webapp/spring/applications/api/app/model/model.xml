@@ -35,6 +35,7 @@
 				<entry key-ref="storedImageType" value="NUMBER"></entry>
 				<entry key-ref="storedImageSetType" value="NUMBER"></entry>
 				<entry key-ref="loginType" value="NUMBER"></entry>
+				<entry key-ref="loginKeyType" value="NUMBER"></entry>
 				<entry key-ref="loginPointerType" value="NAME"></entry>
 			</map>
 		</constructor-arg>

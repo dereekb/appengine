@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
 import com.dereekb.gae.server.datastore.Getter;
@@ -52,6 +53,7 @@ public class LoginTokenBuilderImpl
 
 		loginToken.setSubject(anonymousId);
 		loginToken.setAnonymous(true);
+		loginToken.setPointerType(LoginPointerType.ANONYMOUS);
 
 		return loginToken;
 	}
@@ -79,6 +81,7 @@ public class LoginTokenBuilderImpl
 		loginToken.setLogin(loginId);
 		loginToken.setLoginPointer(pointerId);
 		loginToken.setRoles(roles);
+		loginToken.setPointerType(pointer.getLoginPointerType());
 
 		return loginToken;
 	}

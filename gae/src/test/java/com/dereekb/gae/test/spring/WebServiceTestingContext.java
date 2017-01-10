@@ -72,13 +72,21 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 
 	// MARK: Mock Requests
 	protected ResultActions performHttpRequest(MockHttpServletRequestBuilder request) throws Exception {
+		String token = null;
+				
 		if (this.testLoginTokenContext != null) {
-			String token = this.testLoginTokenContext.getToken();
+			token = this.testLoginTokenContext.getToken();
+		}
 
-			if (token != null) {
-				request.header(LoginTokenAuthenticationFilter.DEFAULT_HEADER_STRING,
-				        LoginTokenAuthenticationFilter.buildTokenHeader(token));
-			}
+		return this.performSecureHttpRequest(request, token);
+	}
+
+	protected ResultActions performSecureHttpRequest(MockHttpServletRequestBuilder request,
+	                                                 String token)
+	        throws Exception {
+		if (token != null) {
+			request.header(LoginTokenAuthenticationFilter.DEFAULT_HEADER_STRING,
+			        LoginTokenAuthenticationFilter.buildTokenHeader(token));
 		}
 
 		return this.mockMvc.perform(request);

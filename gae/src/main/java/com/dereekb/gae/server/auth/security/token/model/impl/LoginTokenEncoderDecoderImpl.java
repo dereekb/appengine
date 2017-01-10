@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
 
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
@@ -29,6 +30,7 @@ public class LoginTokenEncoderDecoderImpl
 
 	private static final String LOGIN_KEY = "lgn";
 	private static final String LOGIN_POINTER_KEY = "ptr";
+	private static final String LOGIN_POINTER_TYPE_KEY = "pt";
 	private static final String ANONYMOUS_KEY = "anon";
 	private static final String ROLES_KEY = "roles";
 
@@ -89,6 +91,7 @@ public class LoginTokenEncoderDecoderImpl
 
 		claims.put(LOGIN_KEY, loginToken.getLogin());
 		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointer());
+		claims.put(LOGIN_POINTER_TYPE_KEY, loginToken.getPointerType().getId());
 		claims.put(ROLES_KEY, loginToken.getRoles());
 
 		if (loginToken.isAnonymous()) {
@@ -128,10 +131,16 @@ public class LoginTokenEncoderDecoderImpl
 
 		String loginPointer = claims.get(LOGIN_POINTER_KEY, String.class);
 		Number rolesNumber = claims.get(ROLES_KEY, Number.class);
+		Number typeNumber = claims.get(LOGIN_POINTER_TYPE_KEY, Number.class);
 		Long roles = null;
+		Integer type = null;
 
 		if (rolesNumber != null) {
 			roles = rolesNumber.longValue();
+		}
+		
+		if (typeNumber != null) {
+			type = typeNumber.intValue();
 		}
 
 		String subject = claims.getSubject();
@@ -155,6 +164,10 @@ public class LoginTokenEncoderDecoderImpl
 		loginToken.setLogin(login);
 		loginToken.setLoginPointer(loginPointer);
 		loginToken.setRoles(roles);
+	
+		if (type != null) {
+			loginToken.setPointerType(LoginPointerType.valueOf(type));
+		}
 
 		loginToken.setSubject(subject);
 		loginToken.setAnonymous(anonymous);

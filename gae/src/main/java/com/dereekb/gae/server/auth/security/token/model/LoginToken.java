@@ -4,9 +4,10 @@ import java.util.Date;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 
 /**
- * Login token object
+ * Login token object used as an authentication item.
  *
  * @author dereekb
  *
@@ -49,6 +50,14 @@ public interface LoginToken {
 	 *         in. May be {@code null}.
 	 */
 	public String getLoginPointer();
+
+	/**
+	 * Returns the {@link LoginPointerType} used for generating this
+	 * {@link LoginToken}.
+	 * 
+	 * @return {@link LoginPointerType}. Never {@code null}.
+	 */
+	public LoginPointerType getPointerType();
 
 	/**
 	 * Token expiration date.

@@ -12,13 +12,18 @@
 	<!-- Cruds -->
 	<bean id="loginKeyCrudService" lazy-init="true"
 		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
-		<constructor-arg index="0"><null/></constructor-arg>
+		<constructor-arg index="0" ref="loginKeyCreateService" />
 		<constructor-arg index="1" ref="loginKeyReadService" />
 		<constructor-arg index="2" ref="loginKeyUpdateService" />
 		<constructor-arg index="3" ref="loginKeyDeleteService" />
 	</bean>
 
 	<!-- Services -->
+	<bean id="loginKeyCreateService" lazy-init="true"
+		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
+		<constructor-arg index="0" ref="loginKeyCreateTask" />
+	</bean>
+	
 	<bean id="loginKeyReadService" lazy-init="true"
 		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
 		<constructor-arg index="0" ref="loginKeyReadTask" />
@@ -51,6 +56,13 @@
 	</bean>
 
 	<!-- Create -->
+	<bean id="loginKeyCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
+		lazy-init="true">
+		<constructor-arg index="0" ref="loginKeyCreateTaskDelegate" />
+		<constructor-arg index="1" ref="loginKeySynchronousSaveTask" />
+		<constructor-arg index="2" ref="loginKeyScheduleCreateReview" />
+	</bean>
+	
 	<bean id="loginKeyScheduleCreateReview" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
 		<constructor-arg index="0" ref="loginKeyType" />
@@ -61,7 +73,16 @@
 		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl"
 		lazy-init="true">
 		<constructor-arg index="0" ref="loginKeyFactory" />
-		<constructor-arg index="1" ref="loginKeyAttributeUpdater" />
+		<constructor-arg index="1"
+			ref="loginKeyAuthenticationAttributeUpdater" />
+	</bean>
+
+	<bean id="loginKeyAuthenticationAttributeUpdater"
+		class="com.dereekb.gae.server.auth.model.key.crud.LoginKeyAuthenticationAttributeUpdater"
+		lazy-init="true">
+		<constructor-arg index="0" ref="loginKeyAttributeUpdater" />
+		<constructor-arg index="1" ref="loginPointerRegistry" />
+		<constructor-arg index="2" ref="keyLoginStatusServiceManager" />
 	</bean>
 
 	<!-- Read -->

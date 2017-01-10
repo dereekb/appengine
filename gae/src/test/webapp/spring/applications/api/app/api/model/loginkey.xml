@@ -1,0 +1,63 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Read Controller -->
+	<bean id="loginKeyReadControllerEntry"
+		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
+		scope="singleton" lazy-init="false">
+		<constructor-arg index="0" ref="loginKeyReadService" />
+		<constructor-arg index="1" ref="loginKeyDataConverter" />
+		<constructor-arg index="2" ref="loginKeyLinkModelInclusionReader" />
+	</bean>
+	
+	<bean id="loginKeyLinkModelInclusionReader"
+		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
+		scope="singleton" lazy-init="false">
+		<constructor-arg index="0" ref="loginKeyLinkSystem"></constructor-arg>
+	</bean>
+
+	<!-- Edit Controller -->
+	<bean id="loginKeyEditController"
+		class="com.dereekb.gae.web.api.controllers.models.LoginKeyEditController"
+		scope="singleton" lazy-init="false">
+		<constructor-arg index="0"
+			ref="loginKeyEditControllerDelegate" />
+		<constructor-arg index="1"
+			ref="loginKeyEditControllerConversionDelegate" />
+	</bean>
+
+	<bean id="loginKeyEditControllerDelegate"
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl"
+		scope="singleton">
+		<constructor-arg index="0" ref="loginKeyCrudService" />
+	</bean>
+
+	<bean id="loginKeyEditControllerConversionDelegate"
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl"
+		scope="singleton">
+		<constructor-arg index="0" ref="loginKeyType" />
+		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
+		<constructor-arg index="2" ref="loginKeyDataConverter" />
+	</bean>
+
+	<!-- Search Component -->
+	<alias name="loginKeyType" alias="loginKeySearchType"/>
+
+	<bean id="loginKeySearchDelegateEntry" scope="singleton"
+		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
+		<constructor-arg index="0" ref="loginKeySearchType" />
+		<constructor-arg index="1" ref="loginKeyQueryService" />
+		<constructor-arg index="2" ref="loginKeySearchResultConverter" />
+	</bean>
+
+	<alias name="loginKeyDataConverter" alias="loginKeySearchResultConverter"/>
+
+</beans>

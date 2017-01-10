@@ -25,6 +25,9 @@
 	<!-- No HTTP security for oauth login. -->
 	<security:http pattern="/login/oauth/*" security="none" />
 	
+	<!-- No HTTP security for key login. -->
+	<security:http pattern="/login/key" security="none" />
+	
 	<!-- No HTTP security for pass login. -->
 	<!-- DEPRECATED: Do not enable this on production apps -->
 	<security:http pattern="/login/pass/*" security="none" />
@@ -34,6 +37,8 @@
 		 
 	<security:http use-expressions="true" create-session="stateless" entry-point-ref="securityEntryPoint">
 		<security:csrf disabled="true"/>
+		<!-- API not allowed to access loginKey API. -->
+		<security:intercept-url pattern="/loginkey/**" access="!hasRole('ROLE_LOGINTYPE_API')" />
 		<security:intercept-url pattern="/**" access="isAuthenticated()" />
 		<security:custom-filter ref="authenticationFilter" position="PRE_AUTH_FILTER" />
 		<security:access-denied-handler ref="accessDeniedHandler"/>

@@ -9,14 +9,16 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  */
 public enum LoginPointerType {
+	
+	ANONYMOUS(0, LoginType.NONE, "A"),
 
-	PASSWORD(0, LoginType.PASSWORD, "P"),
+	PASSWORD(1, LoginType.PASSWORD, "P"),
 
-	API_KEY(1, LoginType.API_KEY, "K"),
+	API_KEY(2, LoginType.API, "K"),
 
-	OAUTH_GOOGLE(2, LoginType.OAUTH, "G"),
+	OAUTH_GOOGLE(3, LoginType.OAUTH, "G"),
 
-	OAUTH_FACEBOOK(3, LoginType.OAUTH, "F");
+	OAUTH_FACEBOOK(4, LoginType.OAUTH, "F");
 
 	/**
 	 * Login type/category.
@@ -25,9 +27,11 @@ public enum LoginPointerType {
 	 */
 	public static enum LoginType {
 		
+		NONE,
+		
 		PASSWORD,
 		
-		API_KEY,
+		API,
 
 		OAUTH
 
@@ -67,15 +71,18 @@ public enum LoginPointerType {
 
 		switch (id) {
 			case 0:
-				type = LoginPointerType.PASSWORD;
+				type = LoginPointerType.ANONYMOUS;
 				break;
 			case 1:
-				type = LoginPointerType.API_KEY;
+				type = LoginPointerType.PASSWORD;
 				break;
 			case 2:
-				type = LoginPointerType.OAUTH_GOOGLE;
+				type = LoginPointerType.API_KEY;
 				break;
 			case 3:
+				type = LoginPointerType.OAUTH_GOOGLE;
+				break;
+			case 4:
 				type = LoginPointerType.OAUTH_FACEBOOK;
 				break;
 		}

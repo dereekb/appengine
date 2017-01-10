@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
@@ -49,6 +50,11 @@ public class LoginTokenImpl
 	 */
 	private Date expiration;
 
+	/**
+	 * Pointer type.
+	 */
+	private LoginPointerType pointerType;
+
 	public LoginTokenImpl() {
 		this.issued = new Date();
 	}
@@ -78,7 +84,7 @@ public class LoginTokenImpl
 	}
 
 	@Override
-    public Long getLogin() {
+	public Long getLogin() {
 		return this.login;
 	}
 
@@ -87,7 +93,7 @@ public class LoginTokenImpl
 	}
 
 	@Override
-    public String getLoginPointer() {
+	public String getLoginPointer() {
 		return this.loginPointer;
 	}
 
@@ -105,7 +111,7 @@ public class LoginTokenImpl
 	}
 
 	@Override
-    public Date getIssued() {
+	public Date getIssued() {
 		return this.issued;
 	}
 
@@ -114,7 +120,7 @@ public class LoginTokenImpl
 	}
 
 	@Override
-    public Date getExpiration() {
+	public Date getExpiration() {
 		return this.expiration;
 	}
 
@@ -123,8 +129,17 @@ public class LoginTokenImpl
 	}
 
 	@Override
-    public boolean hasExpired() {
+	public boolean hasExpired() {
 		return new Date().after(this.expiration);
+	}
+
+	@Override
+	public LoginPointerType getPointerType() {
+		return pointerType;
+	}
+
+	public void setPointerType(LoginPointerType pointerType) {
+		this.pointerType = pointerType;
 	}
 
 	@Override
