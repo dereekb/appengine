@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginRejectedException;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginRejectedException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
@@ -108,10 +109,10 @@ public class KeyLoginController {
 		try {
 			response = this.delegate.login(key, verification);
 		} catch (KeyLoginRejectedException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.REJECTED, e);
+			throw new ApiLoginRejectedException(e);
 		} catch (KeyLoginUnavailableException e) {
 			//Also return rejected to prevent brute-force checking for keys.
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.REJECTED, e);
+			throw new ApiLoginRejectedException(e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);
 		}
