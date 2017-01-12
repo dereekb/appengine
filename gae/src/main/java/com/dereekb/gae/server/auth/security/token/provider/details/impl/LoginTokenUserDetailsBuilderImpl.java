@@ -1,23 +1,18 @@
 package com.dereekb.gae.server.auth.security.token.provider.details.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
-import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
-import com.dereekb.gae.server.auth.security.roles.authority.GrantedAuthorityDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.provider.details.LoginPointerGrantedAuthorityBuilder;
+import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGrantedAuthorityBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;
 
 /**
  * {@link LoginTokenUserDetailsBuilder} implementation.
@@ -33,30 +28,20 @@ public class LoginTokenUserDetailsBuilderImpl
 	private Getter<Login> loginGetter;
 	private Getter<LoginPointer> loginPointerGetter;
 
-	private GrantedAuthorityDecoder grantedAuthorityDecoder;
+	private LoginTokenGrantedAuthorityBuilder authorityBuilder;
 
-	private List<GrantedAuthority> tokenAuthorities;
-	private List<GrantedAuthority> anonymousAuthorities;
-	
-	private LoginPointerGrantedAuthorityBuilder loginPointerAuthorityBuilder = new LoginPointerGrantedAuthorityBuilderImpl();
-	
 	private String adminGrantedAuthority = DEFAULT_ADMIN_ROLE;
 
-	public LoginTokenUserDetailsBuilderImpl(Getter<Login> loginGetter,
-	        Getter<LoginPointer> loginPointerGetter,
-	        GrantedAuthorityDecoder grantedAuthorityDecoder) {
-		this(loginGetter, loginPointerGetter, grantedAuthorityDecoder, null);
+	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder authorityBuilder) {
+		this(authorityBuilder, null, null);
 	}
 
-	public LoginTokenUserDetailsBuilderImpl(Getter<Login> loginGetter,
-	        Getter<LoginPointer> loginPointerGetter,
-	        GrantedAuthorityDecoder grantedAuthorityDecoder,
-	        List<GrantedAuthority> tokenAuthorities) {
+	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder authorityBuilder,
+	        Getter<Login> loginGetter,
+	        Getter<LoginPointer> loginPointerGetter) {
+		this.setAuthorityBuilder(authorityBuilder);
 		this.setLoginGetter(loginGetter);
 		this.setLoginPointerGetter(loginPointerGetter);
-		this.setGrantedAuthorityDecoder(grantedAuthorityDecoder);
-		this.setTokenAuthorities(tokenAuthorities);
-		this.setAnonymousAuthorities(null);
 	}
 
 	public Getter<Login> getLoginGetter() {
@@ -75,57 +60,29 @@ public class LoginTokenUserDetailsBuilderImpl
 		this.loginPointerGetter = loginPointerGetter;
 	}
 
-	public GrantedAuthorityDecoder getGrantedAuthorityDecoder() {
-		return this.grantedAuthorityDecoder;
+	public LoginTokenGrantedAuthorityBuilder getAuthorityBuilder() {
+		return this.authorityBuilder;
 	}
 
-	public void setGrantedAuthorityDecoder(GrantedAuthorityDecoder grantedAuthorityDecoder) {
-		this.grantedAuthorityDecoder = grantedAuthorityDecoder;
-	}
-
-	public List<GrantedAuthority> getTokenAuthorities() {
-		return this.tokenAuthorities;
-	}
-
-	public void setTokenAuthorities(List<GrantedAuthority> tokenAuthorities) {
-		if (tokenAuthorities == null) {
-			tokenAuthorities = new ArrayList<>();
+	public void setAuthorityBuilder(LoginTokenGrantedAuthorityBuilder authorityBuilder) {
+		if (authorityBuilder == null) {
+			throw new IllegalArgumentException("AuthorityBuilder cannot be null.");
 		}
 
-		this.tokenAuthorities = tokenAuthorities;
+		this.authorityBuilder = authorityBuilder;
 	}
 
-	public List<GrantedAuthority> getAnonymousAuthorities() {
-		return this.anonymousAuthorities;
-	}
-
-	public void setAnonymousAuthorities(List<GrantedAuthority> anonymousAuthorities) {
-		if (anonymousAuthorities == null) {
-			anonymousAuthorities = new ArrayList<>();
-		}
-
-		this.anonymousAuthorities = anonymousAuthorities;
-	}
-	
 	public String getAdminGrantedAuthority() {
-		return adminGrantedAuthority;
+		return this.adminGrantedAuthority;
 	}
-	
+
 	public void setAdminGrantedAuthority(String adminGrantedAuthority) throws IllegalArgumentException {
-		
+
 		if (adminGrantedAuthority == null || adminGrantedAuthority.isEmpty()) {
 			throw new IllegalArgumentException("Admin role cannot be null or empty.");
 		}
-		
-		this.adminGrantedAuthority = adminGrantedAuthority;
-	}
-	
-	public LoginPointerGrantedAuthorityBuilder getLoginPointerAuthorityBuilder() {
-		return loginPointerAuthorityBuilder;
-	}
 
-	public void setLoginPointerAuthorityBuilder(LoginPointerGrantedAuthorityBuilder loginPointerAuthorityBuilder) {
-		this.loginPointerAuthorityBuilder = loginPointerAuthorityBuilder;
+		this.adminGrantedAuthority = adminGrantedAuthority;
 	}
 
 	// MARK: LoginTokenUserDetailsBuilder
@@ -143,7 +100,7 @@ public class LoginTokenUserDetailsBuilderImpl
 	}
 
 	// MARK: Anonymous
-	private class AnonymousLoginTokenUserDetailsImpl extends LoginTokenUserDetailsImpl {
+	protected class AnonymousLoginTokenUserDetailsImpl extends LoginTokenUserDetailsImpl {
 
 		private static final long serialVersionUID = 1L;
 
@@ -152,8 +109,18 @@ public class LoginTokenUserDetailsBuilderImpl
 		}
 
 		@Override
+		public ModelKey getLoginKey() throws NoModelKeyException {
+			throw new NoModelKeyException();
+		}
+
+		@Override
 		public Login getLogin() {
 			return null;
+		}
+
+		@Override
+		public ModelKey getLoginPointerKey() throws NoModelKeyException {
+			throw new NoModelKeyException();
 		}
 
 		@Override
@@ -174,7 +141,7 @@ public class LoginTokenUserDetailsBuilderImpl
 	}
 
 	// MARK: LoginTokenUserDetails
-	private class LoginTokenUserDetailsImpl
+	protected class LoginTokenUserDetailsImpl
 	        implements LoginTokenUserDetails {
 
 		private static final long serialVersionUID = 1L;
@@ -182,11 +149,12 @@ public class LoginTokenUserDetailsBuilderImpl
 		protected final LoginToken loginToken;
 
 		private boolean loginLoaded = false;
+		private boolean loginPointerLoaded = false;
 
 		private Login login = null;
 		private LoginPointer loginPointer = null;
 
-		private Set<GrantedAuthority> authorities;
+		private Collection<? extends GrantedAuthority> authorities;
 
 		private LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
 			if (loginToken == null) {
@@ -197,28 +165,66 @@ public class LoginTokenUserDetailsBuilderImpl
 		}
 
 		@Override
-		public Login getLogin() {
-			if (this.loginLoaded == false) {
-				Long id = this.loginToken.getLogin();
+		public ModelKey getLoginKey() throws NoModelKeyException {
+			Long id = this.loginToken.getLoginId();
+			ModelKey key = null;
 
-				if (id != null) {
-					ModelKey key = new ModelKey(id);
-					this.login = LoginTokenUserDetailsBuilderImpl.this.loginGetter.get(key);
+			if (id != null) {
+				key = new ModelKey(id);
+			} else {
+				throw new NoModelKeyException();
+			}
+
+			return key;
+		}
+
+		@Override
+		public Login getLogin() throws UnsupportedOperationException {
+			if (this.loginLoaded == false) {
+				this.loginLoaded = true;
+
+				if (LoginTokenUserDetailsBuilderImpl.this.loginGetter == null) {
+					throw new UnsupportedOperationException();
 				}
 
-				this.loginLoaded = true;
+				try {
+					ModelKey key = this.getLoginKey();
+					this.login = LoginTokenUserDetailsBuilderImpl.this.loginGetter.get(key);
+				} catch (NoModelKeyException e) {
+				}
 			}
 
 			return this.login;
 		}
 
 		@Override
-		public LoginPointer getLoginPointer() {
-			if (this.loginPointer == null) {
-				String id = this.loginToken.getLoginPointer();
+		public ModelKey getLoginPointerKey() throws NoModelKeyException {
+			String id = this.loginToken.getLoginPointerId();
+			ModelKey key = null;
 
-				ModelKey key = new ModelKey(id);
-				this.loginPointer = LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter.get(key);
+			if (id != null) {
+				key = new ModelKey(id);
+			} else {
+				throw new NoModelKeyException();
+			}
+
+			return key;
+		}
+
+		@Override
+		public LoginPointer getLoginPointer() throws UnsupportedOperationException {
+			if (this.loginPointerLoaded == false) {
+				this.loginPointerLoaded = true;
+
+				if (LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter == null) {
+					throw new UnsupportedOperationException();
+				}
+
+				try {
+					ModelKey key = this.getLoginPointerKey();
+					this.loginPointer = LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter.get(key);
+				} catch (NoModelKeyException e) {
+				}
 			}
 
 			return this.loginPointer;
@@ -227,24 +233,8 @@ public class LoginTokenUserDetailsBuilderImpl
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			if (this.authorities == null) {
-
-				if (this.loginToken.isAnonymous()) {
-					this.authorities = new HashSet<>(LoginTokenUserDetailsBuilderImpl.this.anonymousAuthorities);
-				} else {
-					Long encodedRoles = this.loginToken.getRoles();
-
-					if (encodedRoles != null) {
-						this.authorities = LoginTokenUserDetailsBuilderImpl.this.grantedAuthorityDecoder
-						        .decodeRoles(encodedRoles);
-					} else {
-						this.authorities = new HashSet<>();
-					}
-
-					this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.tokenAuthorities);
-				}
-				
-				LoginPointerType type = this.loginToken.getPointerType();
-				this.authorities.addAll(LoginTokenUserDetailsBuilderImpl.this.loginPointerAuthorityBuilder.getGrantedAuthorities(type));
+				this.authorities = LoginTokenUserDetailsBuilderImpl.this.authorityBuilder
+				        .getAuthorities(this.loginToken);
 			}
 
 			return this.authorities;
@@ -287,7 +277,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public boolean isAdministrator() {
-			return this.getAuthorities().contains(adminGrantedAuthority);
+			return this.getAuthorities().contains(LoginTokenUserDetailsBuilderImpl.this.adminGrantedAuthority);
 		}
 
 		@Override

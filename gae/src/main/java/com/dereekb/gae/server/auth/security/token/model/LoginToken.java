@@ -16,7 +16,7 @@ public interface LoginToken {
 
 	/**
 	 * Returns the subject of the token. Generally the result of
-	 * {@link #getLogin()}.
+	 * {@link #getLoginId()}.
 	 *
 	 * @return {@link String} subject. Never {@code null}.
 	 */
@@ -41,7 +41,7 @@ public interface LoginToken {
 	 * @return {@link Long} key of the {@link Login} used for logging in. May be
 	 *         {@code null}.
 	 */
-	public Long getLogin();
+	public Long getLoginId();
 
 	/**
 	 * Key of {@link LoginPointer} used for logging in.
@@ -49,7 +49,7 @@ public interface LoginToken {
 	 * @return {@link String} key of the {@link LoginPointer} used for logging
 	 *         in. May be {@code null}.
 	 */
-	public String getLoginPointer();
+	public String getLoginPointerId();
 
 	/**
 	 * Returns the {@link LoginPointerType} used for generating this

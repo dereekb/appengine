@@ -28,8 +28,8 @@ public class LoginTokenTests {
 		Assert.assertNotNull(encodedToken);
 
 		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken);
-		Assert.assertTrue(decodedToken.getLoginPointer().equals(loginToken.getLoginPointer()));
-		Assert.assertTrue(decodedToken.getLogin().equals(loginToken.getLogin()));
+		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
+		Assert.assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
 
 	}
 

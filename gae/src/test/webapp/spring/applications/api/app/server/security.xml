@@ -75,10 +75,16 @@
 
 	<bean id="loginTokenUserDetailsBuilder" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl">
-		<constructor-arg index="0" ref="loginRegistry" />
-		<constructor-arg index="1" ref="loginPointerRegistry" />
-		<constructor-arg index="2" ref="loginGrantedAuthorityDecoder" />
-		<constructor-arg index="3">
+		<constructor-arg index="0" ref="loginTokenGrantedAuthorityBuilder" />
+		<constructor-arg index="1" ref="loginRegistry" />
+		<constructor-arg index="2" ref="loginPointerRegistry" />
+	</bean>
+
+	<bean id="loginTokenGrantedAuthorityBuilder" lazy-init="true"
+		scope="singleton"
+		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl">
+		<constructor-arg index="0" ref="loginGrantedAuthorityDecoder" />
+		<constructor-arg index="1">
 			<!-- Roles given to all users -->
 			<array>
 				<bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
@@ -86,14 +92,14 @@
 				</bean>
 			</array>
 		</constructor-arg>
-		<property name="anonymousAuthorities">
+		<constructor-arg index="2">
 			<!-- Roles given to anonymous users -->
 			<array>
 				<bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
 					<constructor-arg index="0" value="ROLE_ANON" />
 				</bean>
 			</array>
-		</property>
+		</constructor-arg>
 	</bean>
 
 	<bean id="loginGrantedAuthorityDecoder" lazy-init="true" scope="singleton"

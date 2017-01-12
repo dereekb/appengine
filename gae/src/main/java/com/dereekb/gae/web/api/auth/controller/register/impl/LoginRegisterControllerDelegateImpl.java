@@ -88,8 +88,8 @@ public class LoginRegisterControllerDelegateImpl
 
 		for (String token : tokens) {
 			LoginToken loginToken = this.tokenService.decodeLoginToken(token);
-			Long loginId = loginToken.getLogin();
-			String loginPointer = loginToken.getLoginPointer();
+			Long loginId = loginToken.getLoginId();
+			String loginPointer = loginToken.getLoginPointerId();
 
 			if (primaryLoginId == null) {
 				primaryLoginId = loginId;

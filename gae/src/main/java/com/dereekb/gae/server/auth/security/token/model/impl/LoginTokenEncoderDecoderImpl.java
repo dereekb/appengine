@@ -89,8 +89,8 @@ public class LoginTokenEncoderDecoderImpl
 		claims.setIssuedAt(loginToken.getIssued());
 		claims.setExpiration(loginToken.getExpiration());
 
-		claims.put(LOGIN_KEY, loginToken.getLogin());
-		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointer());
+		claims.put(LOGIN_KEY, loginToken.getLoginId());
+		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointerId());
 		claims.put(LOGIN_POINTER_TYPE_KEY, loginToken.getPointerType().getId());
 		claims.put(ROLES_KEY, loginToken.getRoles());
 

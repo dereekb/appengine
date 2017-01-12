@@ -120,7 +120,7 @@ public final class LoginTokenAuthenticationProviderImpl
 
 		@Override
 		public String getName() {
-			Long loginId = this.loginToken.getLogin();
+			Long loginId = this.loginToken.getLoginId();
 			String name = (loginId != null) ? loginId.toString() : UNREGISTERED_DEFAULT_NAME;
 			return name;
 		}

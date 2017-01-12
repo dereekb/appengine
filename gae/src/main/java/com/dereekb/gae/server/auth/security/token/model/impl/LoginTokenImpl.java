@@ -84,7 +84,7 @@ public class LoginTokenImpl
 	}
 
 	@Override
-	public Long getLogin() {
+	public Long getLoginId() {
 		return this.login;
 	}
 
@@ -93,7 +93,7 @@ public class LoginTokenImpl
 	}
 
 	@Override
-	public String getLoginPointer() {
+	public String getLoginPointerId() {
 		return this.loginPointer;
 	}
 

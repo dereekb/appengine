@@ -203,7 +203,7 @@ public class TestPasswordLoginTokenContextImpl
 
 	@Override
 	public void setLogin(LoginToken token) {
-		String pointerId = token.getLoginPointer();
+		String pointerId = token.getLoginPointerId();
 		LoginPointer pointer = this.loginPointerRegistry.get(new ModelKey(pointerId));
 		this.setLogin(pointer);
 	}

@@ -59,7 +59,7 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 			LoginToken loginToken = this.loginTokenService.decodeLoginToken(token);
 			Assert.assertNotNull(loginToken);
 
-			Assert.assertTrue(pointer.equals(loginToken.getLoginPointer()));
+			Assert.assertTrue(pointer.equals(loginToken.getLoginPointerId()));
 		} catch (Exception e) {
 			Assert.fail("Login token failed decoding.");
 		}
