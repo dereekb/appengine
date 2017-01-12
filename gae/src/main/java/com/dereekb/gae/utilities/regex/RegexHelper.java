@@ -21,6 +21,7 @@ public class RegexHelper {
 	        WHITESPACE_BEFORE_AND_AFTER_FUNCTION, ANY_DIGIT_OR_LETTER);
 	public static final String OR_REGEX = "(%s)|(%s)";
 	public static final String BACKSLASH = "\\";
+	public static final String TWITTER_TEXT_USERNAME = "^(\\w{1,15})\\b$";	//15char Username w/o the @
 	public static final String EXCEPT_ALPHANUMERIC_AND_SYMBOLS = "[^(a-zA-Z0-9)(,\\.\"\')(\\s)(:!@#$%^&*)(\\-<>+=)$]";
 	public static final String PUNCTUATION = "\\p{Punct}";
 

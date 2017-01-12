@@ -10,6 +10,8 @@ import com.dereekb.gae.server.auth.model.login.search.document.index.LoginDocume
 import com.dereekb.gae.server.auth.model.login.search.document.query.LoginSearchBuilder.LoginSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
+import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.BooleanField;
+import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 import com.dereekb.gae.utilities.collections.map.StringMapReader;
 import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
 
@@ -23,9 +25,15 @@ public class LoginSearchBuilder extends AbstractSearchBuilderImpl<LoginSearch> {
 
 	public static final String DEFAULT_ID_FIELD = ModelDocumentBuilderUtility.ID_FIELD;
 	public static final String DEFAULT_DATE_FIELD = ModelDocumentBuilderUtility.DATE_FIELD;
+	public static final String DEFAULT_ROLES_FIELD = LoginDocumentBuilderStep.ROLES_FIELD;
+	public static final String DEFAULT_ROOT_FIELD = LoginDocumentBuilderStep.ROOT_FIELD;
+	public static final String DEFAULT_GROUP_FIELD = LoginDocumentBuilderStep.GROUP_FIELD;
 
 	private String idField = DEFAULT_ID_FIELD;
 	private String dateField = DEFAULT_DATE_FIELD;
+	private String rolesField = DEFAULT_ROLES_FIELD;
+	private String rootField = DEFAULT_ROOT_FIELD;
+	private String groupField = DEFAULT_GROUP_FIELD;
 
 	public LoginSearchBuilder() {
 		super(LoginDocumentBuilderStep.DERIVATIVE_PREFIX);
@@ -89,17 +97,39 @@ public class LoginSearchBuilder extends AbstractSearchBuilderImpl<LoginSearch> {
 			builder = builder.and(date.make(dateName));
 		}
 
+		String roles = search.getRoles();
+		if (roles != null) {
+			String rolesName = String.format(format, this.rolesField);
+			builder = builder.and(new TextField(rolesName, roles));
+		}
+
+		Boolean root = search.getRoot();
+		if (root != null) {
+			String rootName = String.format(format, this.rootField);
+			builder = builder.and(new BooleanField(rootName, root));
+		}
+
+		Integer group = search.getGroup();
+		if (group != null) {
+			String groupName = String.format(format, this.groupField);
+			builder = builder.and(new AtomField(groupName, group));
+		}
+
 		return builder;
 	}
 
 	public class LoginSearch extends AbstractSearchImpl {
 
-		private Boolean region;
-
-		private Long id;
+		// Both
 		private DateSearch date;
 
-		// TODO
+		// Derivative
+		private Long id;
+
+		// Login
+		private String roles;
+		private Integer group;
+		private Boolean root;
 
 		private LoginSearch() {}
 
@@ -108,24 +138,8 @@ public class LoginSearchBuilder extends AbstractSearchBuilderImpl<LoginSearch> {
 		}
 
 		@Override
-        public void applyParameters(Map<String, String> parameters) {
+		public void applyParameters(Map<String, String> parameters) {
 			LoginSearchBuilder.this.applyParameters(this, parameters);
-		}
-
-		public Boolean getRegion() {
-			return this.region;
-		}
-
-		public void setRegion(Boolean region) {
-			this.region = region;
-		}
-
-		public Long getId() {
-			return this.id;
-		}
-
-		public void setId(Long id) {
-			this.id = id;
 		}
 
 		public DateSearch getDate() {
@@ -136,11 +150,48 @@ public class LoginSearchBuilder extends AbstractSearchBuilderImpl<LoginSearch> {
 			this.date = date;
 		}
 
+		public Long getId() {
+			return this.id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getRoles() {
+			return this.roles;
+		}
+
+		public void setRoles(String roles) {
+			this.roles = roles;
+		}
+
+		public Integer getGroup() {
+			return this.group;
+		}
+
+		public void setGroup(Integer group) {
+			this.group = group;
+		}
+
+		public Boolean getRoot() {
+			return this.root;
+		}
+
+		public void setRoot(Boolean root) {
+			this.root = root;
+		}
+
 		@Override
 		public ExpressionBuilder makeExpression() {
 			return LoginSearchBuilder.this.make(this);
 		}
 
+		@Override
+		public String toString() {
+			return "LoginSearch [date=" + this.date + ", id=" + this.id + ", roles=" + this.roles + ", group="
+			        + this.group + ", root=" + this.root + "]";
+		}
 
 	}
 

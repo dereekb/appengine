@@ -20,6 +20,13 @@ import com.googlecode.objectify.cmd.SimpleQuery;
 public interface ObjectifyQueryResponse<T extends ObjectifyModel<T>> {
 
 	/**
+	 * Checks whether or not any results exist.
+	 * 
+	 * @return {@code true} if one or more results are available.
+	 */
+	public boolean hasResults();
+	
+	/**
 	 * Returns the created query.
 	 *
 	 * @return {@link SimpleQuery} used. Never {@code null}.

@@ -85,6 +85,11 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
     }
 
 	@Override
+	public boolean hasResults() {
+		return this.getResponse().hasResults();
+	}
+	
+	@Override
 	public SimpleQuery<T> getQuery() {
 		return this.getResponse().getQuery();
 	}

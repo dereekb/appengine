@@ -2,12 +2,11 @@ package com.dereekb.gae.server.auth.model.login.dto;
 
 import java.util.List;
 
-import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
+import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelData;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 
 /**
  * DTO of the {@link Login} class.
@@ -16,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginData extends SearchableDatabaseModelData {
+public class LoginData extends DescribedDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 

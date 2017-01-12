@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.CrudService;
+import com.dereekb.gae.model.crud.services.components.DeleteService;
+import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl;
+import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollectionImpl;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
-import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
+import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry;
@@ -26,7 +29,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
-public class LoginLinkSystemEntry extends AbstractModelLinkSystemEntry<Login> {
+public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntry<Login> {
 
 	public static final String LOGIN_LINK_TYPE = "Login";
 
@@ -38,9 +41,27 @@ public class LoginLinkSystemEntry extends AbstractModelLinkSystemEntry<Login> {
 	private LinkTarget loginPointerTarget = new LinkTargetImpl(LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE,
 	        ModelKeyType.NAME);
 
-	public LoginLinkSystemEntry(CrudService<Login> crudService,
-	                            ConfiguredSetter<Login> setter) {
+	public LoginLinkSystemEntry(CrudService<Login> crudService, ConfiguredSetter<Login> setter) {
 		super(LOGIN_LINK_TYPE, crudService, crudService, setter);
+	}
+
+	public LoginLinkSystemEntry(CrudService<Login> crudService,
+	        ConfiguredSetter<Login> setter,
+	        List<DescribedModelLinkInfo> info) {
+		super(LOGIN_LINK_TYPE, crudService, crudService, setter, info);
+	}
+
+	public LoginLinkSystemEntry(ReadService<Login> readService,
+	        DeleteService<Login> deleteService,
+	        ConfiguredSetter<Login> setter) {
+		super(LOGIN_LINK_TYPE, readService, deleteService, setter);
+	}
+
+	public LoginLinkSystemEntry(ReadService<Login> readService,
+	        DeleteService<Login> deleteService,
+	        ConfiguredSetter<Login> setter,
+	        List<DescribedModelLinkInfo> info) {
+		super(LOGIN_LINK_TYPE, readService, deleteService, setter, info);
 	}
 
 	public String getLoginPointersLinkName() {
@@ -65,7 +86,7 @@ public class LoginLinkSystemEntry extends AbstractModelLinkSystemEntry<Login> {
 
 	// MARK: AbstractModelLinkSystemEntry
 	@Override
-	public List<Link> getLinks(final Login model) {
+	public List<Link> makeDefinedLinksForModel(final Login model) {
 		List<Link> links = new ArrayList<Link>();
 
 		ModelKey key = model.getModelKey();
@@ -73,8 +94,7 @@ public class LoginLinkSystemEntry extends AbstractModelLinkSystemEntry<Login> {
 		// Pointers Link
 		LinkInfoImpl loginPointersLinkInfo = new LinkInfoImpl(this.loginPointersLinkName, key, this.loginPointerTarget);
 		LinkCollectionImpl<Key<LoginPointer>> imagesLink = new LinkCollectionImpl<Key<LoginPointer>>(
-		        loginPointersLinkInfo,
-		        model.getPointers(), loginPointerUtil);
+		        loginPointersLinkInfo, model.getPointers(), loginPointerUtil);
 		links.add(imagesLink);
 
 		return links;

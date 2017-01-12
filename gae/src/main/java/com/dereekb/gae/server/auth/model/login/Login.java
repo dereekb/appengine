@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -17,7 +17,6 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
-import com.googlecode.objectify.condition.IfNotDefault;
 
 /**
  * Default login model.
@@ -28,7 +27,7 @@ import com.googlecode.objectify.condition.IfNotDefault;
  */
 @Cache
 @Entity
-public final class Login extends SearchableDatabaseModel
+public final class Login extends DescribedDatabaseModel
         implements ObjectifyModel<Login>, EncodedRolesBearer {
 
 	private static final long serialVersionUID = 1L;
@@ -42,6 +41,7 @@ public final class Login extends SearchableDatabaseModel
 	/**
 	 * Creation date of the login.
 	 */
+	@Index
 	private Date date = new Date();
 
 	/**
@@ -53,7 +53,7 @@ public final class Login extends SearchableDatabaseModel
 	/**
 	 * Login group identifier
 	 */
-	@Index({ IfNotDefault.class })
+	// @Index({ IfNotDefault.class })
 	@IgnoreSave({ IfDefault.class })
 	private Integer group = 0;
 
@@ -73,6 +73,7 @@ public final class Login extends SearchableDatabaseModel
 	 * This allows multiple different pointers to have access to the same login,
 	 * if such functionality is required by the system.
 	 */
+	@IgnoreSave({ IfEmpty.class })
 	private Set<Key<LoginPointer>> pointers = new HashSet<Key<LoginPointer>>();
 
 	/**

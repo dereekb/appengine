@@ -43,6 +43,9 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+## Eclipse
+.project
+
 ## Project Specific
 
 *.cfs
@@ -52,8 +55,4 @@ buildNumber.properties
 # App Engine Generated Files #
 ##############################
 appengine-generated/
-
-# Deprecated #
-##############
-dnsolutions/
 

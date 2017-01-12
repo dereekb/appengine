@@ -14,24 +14,25 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
  */
 public final class LoginDataBuilder extends AbstractDirectionalConverter<Login, LoginData> {
 
-	public LoginDataBuilder() {}
-
 	// Single Directional Converter
 	@Override
-	public LoginData convertSingle(Login login) throws ConversionFailureException {
+	public LoginData convertSingle(Login input) throws ConversionFailureException {
 		LoginData data = new LoginData();
 
 		// Id
-		data.setIdentifier(login.getModelKey());
-		data.setCreated(login.getDate());
-		data.setSearchIdentifier(login.getSearchIdentifier());
+		data.setIdentifier(input.getModelKey());
+		data.setCreated(input.getDate());
+		data.setSearchIdentifier(input.getSearchIdentifier());
 
 		// Links
-		data.setPointers(ObjectifyKeyUtility.readKeyNames(login.getPointers()));
+		data.setPointers(ObjectifyKeyUtility.readKeyNames(input.getPointers()));
 
 		// Data
-		data.setRoles(login.getRoles());
-		data.setGroup(login.getGroup());
+		data.setRoles(input.getRoles());
+		data.setGroup(input.getGroup());
+
+		// Descriptor
+		data.setDescriptor(input.getDescriptor());
 
 		return data;
 	}

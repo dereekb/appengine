@@ -608,6 +608,11 @@ public class ObjectifyDatabaseImpl
 
 			// MARK: ObjectifyQueryResponse
 			@Override
+			public boolean hasResults() {
+				return this.queryObjectifyKeys().isEmpty() == false;
+			}
+			
+			@Override
 			public SimpleQuery<T> getQuery() {
 				return this.query;
 			}

@@ -132,19 +132,22 @@ public final class SearchDocumentBuilderUtility {
 	public static void addDate(String format,
 	                           String name,
 	                           Date value,
-	                           Document.Builder builder) throws IllegalArgumentException {
+	                           Document.Builder builder)
+	        throws IllegalArgumentException {
 		addDate(String.format(format, name), value, builder);
 	}
 
 	public static void addDate(String name,
 	                           Date value,
-	                           Document.Builder builder) throws IllegalArgumentException {
+	                           Document.Builder builder)
+	        throws IllegalArgumentException {
 		Field.Builder field = dateField(name, value);
 		builder.addField(field);
 	}
 
 	public static Field.Builder dateField(String name,
-	                                      Date date) throws IllegalArgumentException {
+	                                      Date date)
+	        throws IllegalArgumentException {
 		if (date == null) {
 			date = new Date(0);
 		}
