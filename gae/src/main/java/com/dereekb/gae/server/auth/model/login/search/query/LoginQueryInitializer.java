@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.ConfigurableQueryParameters;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.DateQueryFieldParameter;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyDateQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameters;
 
 /**
  * {@link ConfigurableQueryParameters} implementation for a {@link LoginQuery}.
@@ -33,13 +33,13 @@ public class LoginQueryInitializer
 	public static class LoginQuery
 	        implements ConfigurableQueryParameters {
 
-		private DateQueryFieldParameter date;
+		private ObjectifyDateQueryFieldParameter date;
 
-		public DateQueryFieldParameter getDate() {
+		public ObjectifyDateQueryFieldParameter getDate() {
 			return this.date;
 		}
 
-		public void setDate(DateQueryFieldParameter date) {
+		public void setDate(ObjectifyDateQueryFieldParameter date) {
 			this.date = date;
 		}
 
@@ -60,7 +60,7 @@ public class LoginQueryInitializer
 			String dateString = parameters.get(DATE_FIELD);
 
 			if (dateString != null) {
-				this.date = new DateQueryFieldParameter(DATE_FIELD, dateString);
+				this.date = new ObjectifyDateQueryFieldParameter(DATE_FIELD, dateString);
 			} else {
 				this.date = null;
 			}

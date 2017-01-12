@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.datastore.objectify.query.builder.parameters;
+package com.dereekb.gae.utilities.query.builder.parameters;
 
 import java.util.Map;
 

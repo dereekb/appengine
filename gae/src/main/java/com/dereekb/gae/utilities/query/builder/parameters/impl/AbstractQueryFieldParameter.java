@@ -1,14 +1,10 @@
-package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl;
+package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.ConfigurableQueryParameter;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.QueryFieldParameterDencoder.Parameter;
-import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
-import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.Parameter;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
  * {@link ObjectifyQueryRequestLimitedConfigurer} implementation that targets a
@@ -26,7 +22,7 @@ public abstract class AbstractQueryFieldParameter<T>
 	private ExpressionOperator operator;
 	protected T value;
 
-	private ObjectifyQueryResultsOrdering ordering;
+	private QueryResultsOrdering ordering;
 
 	public AbstractQueryFieldParameter() {}
 
@@ -66,7 +62,11 @@ public abstract class AbstractQueryFieldParameter<T>
 		return this;
 	}
 
-	public AbstractQueryFieldParameter<T> setOrdering(ObjectifyQueryResultsOrdering ordering) {
+	public QueryResultsOrdering getOrdering() {
+		return this.ordering;
+	}
+
+	public AbstractQueryFieldParameter<T> setOrdering(QueryResultsOrdering ordering) {
 		this.ordering = ordering;
 		return this;
 	}
@@ -86,36 +86,17 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	// Filter
 	public AbstractQueryFieldParameter<T> setEqualityFilter(String field,
-	                                                T value) {
+	                                                        T value) {
 		return this.setFilter(field, ExpressionOperator.Equal, value);
 	}
 
 	public AbstractQueryFieldParameter<T> setFilter(String field,
-	                                        ExpressionOperator operator,
-	                                        T value) {
+	                                                ExpressionOperator operator,
+	                                                T value) {
 		this.setField(field);
 		this.setOperator(operator);
 		this.setValue(value);
 		return this;
-	}
-
-	// MARK: ObjectifyQueryRequestConfigurer
-	@Override
-	public void configure(ObjectifyQueryRequestLimitedBuilder request) {
-		if (this.field != null) {
-
-			if (this.operator != null) {
-				ObjectifyConditionQueryFilter filter = new ObjectifyConditionQueryFilter(this.field, this.operator,
-				        this.value);
-				request.addQueryFilter(filter);
-			}
-
-			if (this.ordering != null) {
-				ObjectifyQueryOrdering ordering = new ObjectifyQueryOrderingImpl(this.field, this.ordering);
-				request.addResultsOrdering(ordering);
-			}
-
-		}
 	}
 
 	// MARK: QueryParameter
@@ -125,6 +106,7 @@ public abstract class AbstractQueryFieldParameter<T>
 		return QueryFieldParameterDencoder.SINGLETON.encodeString(parameter);
 	}
 
+	// MARK: ConfigurableQueryParameter
 	@Override
 	public void setParameterString(String parameterString) throws IllegalArgumentException {
 		Parameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
@@ -148,8 +130,8 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	@Override
 	public String toString() {
-		return "AbstractQueryFieldParameter [field=" + this.field + ", operator=" + this.operator + ", value=" + this.value
-		        + ", ordering=" + this.ordering + "]";
+		return "AbstractQueryFieldParameter [field=" + this.field + ", operator=" + this.operator + ", value="
+		        + this.value + ", ordering=" + this.ordering + "]";
 	}
 
 }

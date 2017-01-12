@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.AbstractQueryFieldParameter;
 import com.googlecode.objectify.Key;
 
 /**
@@ -54,12 +55,14 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 	}
 
 	public ObjectifyKeyFieldParameter<T> make(String field,
-	                                          Key<T> value) throws IllegalArgumentException {
+	                                          Key<T> value)
+	        throws IllegalArgumentException {
 		return new ObjectifyKeyFieldParameter<T>(this, field, value);
 	}
 
 	public ObjectifyKeyFieldParameter<T> make(String field,
-	                                          String parameterString) throws IllegalArgumentException {
+	                                          String parameterString)
+	        throws IllegalArgumentException {
 		return new ObjectifyKeyFieldParameter<T>(this, field, parameterString);
 	}
 
@@ -69,7 +72,7 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 	 * @author dereekb
 	 *
 	 */
-	public static final class ObjectifyKeyFieldParameter<T extends ObjectifyModel<T>> extends AbstractQueryFieldParameter<Key<T>> {
+	public static final class ObjectifyKeyFieldParameter<T extends ObjectifyModel<T>> extends ObjectifyAbstractQueryFieldParameter<Key<T>> {
 
 		private final ObjectifyKeyFieldParameterBuilder<T> builder;
 

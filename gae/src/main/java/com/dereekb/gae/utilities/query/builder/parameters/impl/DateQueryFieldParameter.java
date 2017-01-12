@@ -1,12 +1,12 @@
-package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl;
+package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
- * {@link AbstractQueryFieldParameter} for a date.
+ * {@link AbstractQueryFieldParameter} used for {@link Date} query parameters.
  *
  * @author dereekb
  *
@@ -37,7 +37,7 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 
 	public static DateQueryFieldParameter recentDate(String field) {
 		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
-		parameter.setOrdering(ObjectifyQueryResultsOrdering.Descending);
+		parameter.setOrdering(QueryResultsOrdering.Descending);
 		parameter.setOperator(ExpressionOperator.LessOrEqualTo);
 		return parameter;
 	}
@@ -54,6 +54,10 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	// MARK: AbstractQueryFieldParameter
 	@Override
 	public String getParameterValue() {
+
+		// TODO: Change to date format and not use {@link Long} as it is not
+		// safe to use cross platform and does not contain timezone info.
+
 		Long time = this.value.getTime();
 		return time.toString();
 	}

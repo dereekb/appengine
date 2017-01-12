@@ -8,10 +8,10 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.ConfigurableQueryParameters;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.IntegerQueryFieldParameter;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyIntegerQueryFieldParameter;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder.ObjectifyKeyFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameters;
 import com.googlecode.objectify.Key;
 
 /**
@@ -46,10 +46,10 @@ public class LoginPointerQueryInitializer
 	public static class LoginPointerQuery
 	        implements ConfigurableQueryParameters {
 
-		private IntegerQueryFieldParameter type;
+		private ObjectifyIntegerQueryFieldParameter type;
 		private ObjectifyKeyFieldParameter<Login> login;
 
-		public IntegerQueryFieldParameter getType() {
+		public ObjectifyIntegerQueryFieldParameter getType() {
 			return type;
 		}
 
@@ -65,7 +65,7 @@ public class LoginPointerQueryInitializer
 
 		public void setType(Integer type) {
 			if (type != null) {
-				this.type = new IntegerQueryFieldParameter(TYPE_FIELD, type);
+				this.type = new ObjectifyIntegerQueryFieldParameter(TYPE_FIELD, type);
 			} else {
 				this.type = null;
 			}

@@ -1,28 +1,28 @@
-package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl;
+package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 
 /**
- * {@link AbstractQueryFieldParameter} used in Objectify queries.
+ * {@link AbstractQueryFieldParameter} used for integer query parameters.
  * 
  * @author dereekb
  *
  */
-public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Integer> {
+public class ModelKeyQueryFieldParameter extends AbstractQueryFieldParameter<Integer> {
 
-	public IntegerQueryFieldParameter() {
+	public ModelKeyQueryFieldParameter() {
 		super();
 	}
 
-	public IntegerQueryFieldParameter(String field, ExpressionOperator operator, Integer value) {
+	public ModelKeyQueryFieldParameter(String field, ExpressionOperator operator, Integer value) {
 		super(field, operator, value);
 	}
 
-	public IntegerQueryFieldParameter(String field, Integer value) {
+	public ModelKeyQueryFieldParameter(String field, Integer value) {
 		super(field, value);
 	}
 
-	public IntegerQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+	public ModelKeyQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
 		super(field, parameterString);
 	}
 

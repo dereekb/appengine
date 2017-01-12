@@ -1,11 +1,12 @@
-package com.dereekb.gae.server.datastore.objectify.query.builder.parameters;
+package com.dereekb.gae.utilities.query.builder.parameters;
 
+import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder;
 
 /**
  * {@link QueryParameter} that can be configured by using a parameter string.
  *
  * @author dereekb
- *
+ * @see {@link QueryFieldParameterDencoder} for encoding/decoding.
  */
 public interface ConfigurableQueryParameter
         extends QueryParameter {

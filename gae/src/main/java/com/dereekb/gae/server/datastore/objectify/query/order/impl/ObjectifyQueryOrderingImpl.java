@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query.order.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 
 /**
@@ -17,20 +17,20 @@ public class ObjectifyQueryOrderingImpl
 	public static final String ORDER_BY_KEY_VALUE = "__key__";
 
 	private String variable;
-	private ObjectifyQueryResultsOrdering ordering;
+	private QueryResultsOrdering ordering;
 
-	public ObjectifyQueryOrderingImpl(ObjectifyQueryResultsOrdering ordering) {
+	public ObjectifyQueryOrderingImpl(QueryResultsOrdering ordering) {
 		this(ORDER_BY_KEY_VALUE, ordering);
 	}
 
-	public ObjectifyQueryOrderingImpl(String variable, ObjectifyQueryResultsOrdering ordering) {
+	public ObjectifyQueryOrderingImpl(String variable, QueryResultsOrdering ordering) {
 		this.setVariable(variable);
 		this.setOrdering(ordering);
 	}
 
-	public static ObjectifyQueryOrderingImpl orderByKey(ObjectifyQueryResultsOrdering ordering) {
+	public static ObjectifyQueryOrderingImpl orderByKey(QueryResultsOrdering ordering) {
 		if (ordering == null) {
-			ordering = ObjectifyQueryResultsOrdering.Descending;
+			ordering = QueryResultsOrdering.Descending;
 		}
 
 		return new ObjectifyQueryOrderingImpl(ordering);
@@ -52,11 +52,11 @@ public class ObjectifyQueryOrderingImpl
 		this.variable = variable;
 	}
 
-	public ObjectifyQueryResultsOrdering getOrdering() {
+	public QueryResultsOrdering getOrdering() {
 		return this.ordering;
 	}
 
-	public void setOrdering(ObjectifyQueryResultsOrdering ordering) {
+	public void setOrdering(QueryResultsOrdering ordering) {
 		if (ordering == null) {
 			throw new IllegalArgumentException("Ordering cannot be null.");
 		}
@@ -65,11 +65,11 @@ public class ObjectifyQueryOrderingImpl
 	}
 
 	public boolean isAscending() {
-		return (this.ordering == ObjectifyQueryResultsOrdering.Ascending);
+		return (this.ordering == QueryResultsOrdering.Ascending);
 	}
 
 	public boolean isDescending() {
-		return (this.ordering == ObjectifyQueryResultsOrdering.Descending);
+		return (this.ordering == QueryResultsOrdering.Descending);
 	}
 
     public boolean isKeysOrdering() {
@@ -80,7 +80,7 @@ public class ObjectifyQueryOrderingImpl
 	public String getOrderingString() {
 		String condition = this.variable;
 
-		if (this.ordering == ObjectifyQueryResultsOrdering.Descending) {
+		if (this.ordering == QueryResultsOrdering.Descending) {
 			condition = "-" + condition;
 		}
 

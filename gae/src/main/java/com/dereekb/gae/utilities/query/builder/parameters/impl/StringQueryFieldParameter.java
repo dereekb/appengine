@@ -1,9 +1,9 @@
-package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl;
+package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 
 /**
- * {@link AbstractQueryFieldParameter} for a {@link String} value.
+ * {@link AbstractQueryFieldParameter} used for {@link String} query parameters.
  *
  * @author dereekb
  *
@@ -15,6 +15,7 @@ public class StringQueryFieldParameter extends AbstractQueryFieldParameter<Strin
 	}
 
 	public StringQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+		// Configure here; ambignous otherwise if passed to super.
 		this.setField(field);
 		this.setParameterString(parameterString);
 	}

@@ -7,9 +7,9 @@ import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.ConfigurableQueryParameters;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder.ObjectifyKeyFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameters;
 import com.googlecode.objectify.Key;
 
 /**

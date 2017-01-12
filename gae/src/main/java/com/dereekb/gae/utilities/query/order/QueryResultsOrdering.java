@@ -1,8 +1,12 @@
-package com.dereekb.gae.server.datastore.objectify.query.order;
+package com.dereekb.gae.utilities.query.order;
 
-
-
-public enum ObjectifyQueryResultsOrdering {
+/**
+ * Which way to sort index results.
+ * 
+ * @author dereekb
+ *
+ */
+public enum QueryResultsOrdering {
 
 	/**
 	 * Orders from lowest value to the highest value
@@ -16,7 +20,7 @@ public enum ObjectifyQueryResultsOrdering {
 
 	private final String code;
 
-	private ObjectifyQueryResultsOrdering(String code) {
+	private QueryResultsOrdering(String code) {
 		this.code = code;
 	}
 
@@ -24,15 +28,15 @@ public enum ObjectifyQueryResultsOrdering {
 		return this.code;
 	}
 
-	public static ObjectifyQueryResultsOrdering fromString(String string) throws IllegalArgumentException {
-		ObjectifyQueryResultsOrdering order;
+	public static QueryResultsOrdering fromString(String string) throws IllegalArgumentException {
+		QueryResultsOrdering order;
 
 		switch (string) {
 			case "ASC":
-				order = ObjectifyQueryResultsOrdering.Ascending;
+				order = QueryResultsOrdering.Ascending;
 				break;
 			case "DESC":
-				order = ObjectifyQueryResultsOrdering.Descending;
+				order = QueryResultsOrdering.Descending;
 				break;
 			default:
 				throw new IllegalArgumentException();

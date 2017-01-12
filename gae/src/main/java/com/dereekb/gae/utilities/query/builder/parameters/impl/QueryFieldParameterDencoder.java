@@ -1,14 +1,15 @@
-package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl;
+package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 import com.google.common.base.Joiner;
 
 /**
- * Used for encoding and decoding a string for a {@link AbstractQueryFieldParameter}.
+ * Used for encoding and decoding a string for a
+ * {@link AbstractQueryFieldParameter}.
  *
  * @author dereekb
  *
@@ -56,7 +57,7 @@ public class QueryFieldParameterDencoder {
 
 	public String encodeString(Parameter parameter) {
 		String value = parameter.getValue();
-		ObjectifyQueryResultsOrdering ordering = parameter.getOrdering();
+		QueryResultsOrdering ordering = parameter.getOrdering();
 		ExpressionOperator operator = parameter.getOperator();
 
 		String[] components = new String[] { null, value, null };
@@ -77,7 +78,7 @@ public class QueryFieldParameterDencoder {
 		private final String[] split;
 
 		private String value;
-		private ObjectifyQueryResultsOrdering ordering;
+		private QueryResultsOrdering ordering;
 		private ExpressionOperator operator;
 
 		private Decoder(String[] split) {
@@ -122,7 +123,7 @@ public class QueryFieldParameterDencoder {
 			int valueEnd;
 
 			try {
-				this.ordering = ObjectifyQueryResultsOrdering.fromString(this.split[this.split.length - 1]);
+				this.ordering = QueryResultsOrdering.fromString(this.split[this.split.length - 1]);
 				valueEnd = this.split.length - 1;
 			} catch (IllegalArgumentException e) {
 				valueEnd = this.split.length;
@@ -137,7 +138,7 @@ public class QueryFieldParameterDencoder {
 
 		private String value;
 		private ExpressionOperator operator;
-		private ObjectifyQueryResultsOrdering ordering;
+		private QueryResultsOrdering ordering;
 
 		public Parameter(String value) {
 			this(value, ExpressionOperator.Equal);
@@ -147,7 +148,7 @@ public class QueryFieldParameterDencoder {
 			this(value, operator, null);
 		}
 
-		public Parameter(String value, ExpressionOperator operator, ObjectifyQueryResultsOrdering ordering) {
+		public Parameter(String value, ExpressionOperator operator, QueryResultsOrdering ordering) {
 			this.setValue(value);
 			this.setOperator(operator);
 			this.setOrdering(ordering);
@@ -169,11 +170,11 @@ public class QueryFieldParameterDencoder {
 			this.operator = operator;
 		}
 
-		public ObjectifyQueryResultsOrdering getOrdering() {
+		public QueryResultsOrdering getOrdering() {
 			return this.ordering;
 		}
 
-		public void setOrdering(ObjectifyQueryResultsOrdering ordering) {
+		public void setOrdering(QueryResultsOrdering ordering) {
 			this.ordering = ordering;
 		}
 
