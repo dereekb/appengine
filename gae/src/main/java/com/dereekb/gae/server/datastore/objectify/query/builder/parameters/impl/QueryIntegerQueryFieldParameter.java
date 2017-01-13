@@ -12,22 +12,22 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryField
  * @author dereekb
  *
  */
-public class ObjectifyIntegerQueryFieldParameter extends IntegerQueryFieldParameter
+public class QueryIntegerQueryFieldParameter extends IntegerQueryFieldParameter
         implements ObjectifyQueryRequestLimitedConfigurer {
 
-	public ObjectifyIntegerQueryFieldParameter() {
+	public QueryIntegerQueryFieldParameter() {
 		super();
 	}
 
-	public ObjectifyIntegerQueryFieldParameter(String field, ExpressionOperator operator, Integer value) {
+	public QueryIntegerQueryFieldParameter(String field, ExpressionOperator operator, Integer value) {
 		super(field, operator, value);
 	}
 
-	public ObjectifyIntegerQueryFieldParameter(String field, Integer value) {
+	public QueryIntegerQueryFieldParameter(String field, Integer value) {
 		super(field, value);
 	}
 
-	public ObjectifyIntegerQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+	public QueryIntegerQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
 		super(field, parameterString);
 	}
 

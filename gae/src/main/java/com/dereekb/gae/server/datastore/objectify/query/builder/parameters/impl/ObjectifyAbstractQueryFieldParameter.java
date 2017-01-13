@@ -46,6 +46,27 @@ public abstract class ObjectifyAbstractQueryFieldParameter<T> extends AbstractQu
 
 	// MARK: Static
 	/**
+	 * Configures only if parameter is not null.
+	 */
+	public static <T> void tryConfigure(ObjectifyQueryRequestLimitedBuilder request,
+	                                    AbstractQueryFieldParameter<T> parameter) {
+		if (parameter != null) {
+			configure(request, parameter);
+		}
+	}
+
+	/**
+	 * Configures only if parameter is not null.
+	 */
+	public static <T> void tryConfigure(ObjectifyQueryRequestLimitedBuilder request,
+	                                    AbstractQueryFieldParameter<?> parameter,
+	                                    T value) {
+		if (parameter != null) {
+			configure(request, parameter, value);
+		}
+	}
+
+	/**
 	 * Configures a request using the input query parameter.
 	 * 
 	 * @param request
@@ -56,8 +77,29 @@ public abstract class ObjectifyAbstractQueryFieldParameter<T> extends AbstractQu
 	 */
 	public static <T> void configure(ObjectifyQueryRequestLimitedBuilder request,
 	                                 AbstractQueryFieldParameter<T> parameter) {
-		String field = parameter.getField();
 		T value = parameter.getValue();
+		ObjectifyAbstractQueryFieldParameter.configure(request, parameter, value);
+	}
+
+	/**
+	 * Configures the request using the input query parameter, and a custom
+	 * value.
+	 * 
+	 * Use when the value needs to be overridden, but otherwise the rest of the
+	 * config comes from the parameter.
+	 * 
+	 * @param request
+	 *            {@link ObjectifyQueryRequestLimitedBuilder}. Never
+	 *            {@code null}.
+	 * @param parameter
+	 *            {@link AbstractQueryFieldParameter}. Never {@code null}.
+	 * @param value
+	 *            value to override.
+	 */
+	public static <T> void configure(ObjectifyQueryRequestLimitedBuilder request,
+	                                 AbstractQueryFieldParameter<?> parameter,
+	                                 T value) {
+		String field = parameter.getField();
 		ExpressionOperator operator = parameter.getOperator();
 		QueryResultsOrdering resultsOrdering = parameter.getOrdering();
 

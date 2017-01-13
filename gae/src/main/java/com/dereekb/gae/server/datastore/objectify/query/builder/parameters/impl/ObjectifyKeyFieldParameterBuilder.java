@@ -1,9 +1,13 @@
 package com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl;
 
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
+import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.AbstractQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.googlecode.objectify.Key;
 
 /**
@@ -14,13 +18,12 @@ import com.googlecode.objectify.Key;
  * @param <T>
  *            model type
  */
-public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
+public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> extends ModelKeyQueryFieldParameterBuilder {
 
-	private ModelKeyType keyType;
-	private ObjectifyModelKeyUtil<T> util;
+	private ExtendedObjectifyModelKeyUtil<T> util;
 
 	public ObjectifyKeyFieldParameterBuilder(ModelKeyType keyType, Class<T> type) throws IllegalArgumentException {
-		this.setKeyType(keyType);
+		super(keyType);
 		this.setType(type);
 	}
 
@@ -28,6 +31,10 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 	                                                                                         Class<T> type)
 	        throws IllegalArgumentException {
 		return new ObjectifyKeyFieldParameterBuilder<T>(keyType, type);
+	}
+
+	public ExtendedObjectifyModelKeyUtil<T> getUtil() {
+		return this.util;
 	}
 
 	public Class<T> getType() {
@@ -39,31 +46,29 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 			throw new IllegalArgumentException("Type cannot be null.");
 		}
 
-		this.util = new ObjectifyModelKeyUtil<T>(type);
+		this.util = new ExtendedObjectifyModelKeyUtil<T>(type, this.getKeyType());
 	}
 
-	public ModelKeyType getKeyType() {
-		return this.keyType;
-	}
-
-	public void setKeyType(ModelKeyType keyType) throws IllegalArgumentException {
-		if (keyType == null) {
-			throw new IllegalArgumentException("Key type cannot be null.");
-		}
-
-		this.keyType = keyType;
-	}
-
-	public ObjectifyKeyFieldParameter<T> make(String field,
-	                                          Key<T> value)
+	public ObjectifyKeyFieldParameter make(String field,
+	                                       Key<T> value)
 	        throws IllegalArgumentException {
-		return new ObjectifyKeyFieldParameter<T>(this, field, value);
+		return new ObjectifyKeyFieldParameter(field, value);
 	}
 
-	public ObjectifyKeyFieldParameter<T> make(String field,
-	                                          String parameterString)
+	public ObjectifyKeyFieldParameter make(ModelKeyQueryFieldParameter parameter) throws IllegalArgumentException {
+		return new ObjectifyKeyFieldParameter(parameter);
+	}
+
+	public ObjectifyKeyFieldParameter make(String field,
+	                                       ModelKeyQueryFieldParameter parameter)
 	        throws IllegalArgumentException {
-		return new ObjectifyKeyFieldParameter<T>(this, field, parameterString);
+		return new ObjectifyKeyFieldParameter(field, parameter);
+	}
+
+	public ObjectifyKeyFieldParameter makeObjectifyKeyParameter(String field,
+	                                                            String parameterString)
+	        throws IllegalArgumentException {
+		return new ObjectifyKeyFieldParameter(field, parameterString);
 	}
 
 	/**
@@ -72,35 +77,82 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> {
 	 * @author dereekb
 	 *
 	 */
-	public static final class ObjectifyKeyFieldParameter<T extends ObjectifyModel<T>> extends ObjectifyAbstractQueryFieldParameter<Key<T>> {
+	public final class ObjectifyKeyFieldParameter extends ModelKeyQueryFieldParameter
+	        implements ObjectifyQueryRequestLimitedConfigurer {
 
-		private final ObjectifyKeyFieldParameterBuilder<T> builder;
-
-		private ObjectifyKeyFieldParameter(ObjectifyKeyFieldParameterBuilder<T> builder,
-		        String field,
-		        String parameterString) throws IllegalArgumentException {
-			this.builder = builder;
-			this.setField(field);
-			this.setParameterString(parameterString);
+		protected ObjectifyKeyFieldParameter(AbstractQueryFieldParameter<ModelKey> parameter)
+		        throws IllegalArgumentException {
+			super(parameter);
 		}
 
-		private ObjectifyKeyFieldParameter(ObjectifyKeyFieldParameterBuilder<T> builder, String field, Key<T> value)
+		protected ObjectifyKeyFieldParameter(String field, AbstractQueryFieldParameter<ModelKey> parameter)
 		        throws IllegalArgumentException {
-			this.builder = builder;
+			super(field, parameter);
+		}
+
+		protected ObjectifyKeyFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+			super(field, parameterString);
+		}
+
+		protected ObjectifyKeyFieldParameter(String field, ModelKey value) throws IllegalArgumentException {
+			super(field, value);
+		}
+
+		protected ObjectifyKeyFieldParameter(String field, Key<T> value) throws IllegalArgumentException {
 			this.setField(field);
 			this.setValue(value);
 		}
 
-		@Override
-		public String getParameterValue() {
-			return ObjectifyModelKeyUtil.readKeyString(this.builder.keyType, this.value);
+		// MARK: Key Values
+		public Key<T> getObjectifyKeyValue() {
+			Key<T> key = null;
+
+			if (this.value != null) {
+				key = ObjectifyKeyFieldParameterBuilder.this.util.fromModelKey(this.value);
+			}
+
+			return key;
 		}
 
-		@Override
-		public void setParameterValue(String value) throws IllegalArgumentException {
-			this.value = this.builder.util.keyFromString(this.builder.keyType, value);
+		public AbstractQueryFieldParameter<ModelKey> setValue(Key<T> value) throws IllegalArgumentException {
+			ModelKey key = null;
+
+			if (value != null) {
+				key = ObjectifyKeyFieldParameterBuilder.this.util.readKey(value);
+			}
+
+			this.value = key;
+			return this;
 		}
 
+		// MARK: ObjectifyQueryRequestLimitedConfigurer
+		@Override
+		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
+			Key<T> value = this.getObjectifyKeyValue();
+			ObjectifyAbstractQueryFieldParameter.configure(request, this, value);
+		}
+
+	}
+
+	/**
+	 * Configures the request with the input parameter converted to a
+	 * {@link Key}.
+	 * 
+	 * If the parameter is null, nothing happens.
+	 * 
+	 * @param request
+	 *            {@link ObjectifyQueryRequestLimitedBuilder}. Never
+	 *            {@code null}.
+	 * @param parameter
+	 *            {@link ModelKeyQueryFieldParameter}. May be {@code null}.
+	 */
+	public void configure(ObjectifyQueryRequestLimitedBuilder request,
+	                      ModelKeyQueryFieldParameter parameter) {
+		if (parameter != null) {
+			ModelKey modelKey = parameter.getValue();
+			Key<T> key = this.util.fromModelKey(modelKey);
+			ObjectifyAbstractQueryFieldParameter.configure(request, parameter, key);
+		}
 	}
 
 }

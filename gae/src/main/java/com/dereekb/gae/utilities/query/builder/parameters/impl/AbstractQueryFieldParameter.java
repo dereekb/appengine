@@ -24,18 +24,34 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	private QueryResultsOrdering ordering;
 
-	public AbstractQueryFieldParameter() {}
+	protected AbstractQueryFieldParameter() {}
 
-	public AbstractQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+	protected AbstractQueryFieldParameter(AbstractQueryFieldParameter<T> parameter) throws IllegalArgumentException {
+		this((parameter != null) ? parameter.getField() : null, parameter);
+	}
+
+	protected AbstractQueryFieldParameter(String field, AbstractQueryFieldParameter<T> parameter)
+	        throws IllegalArgumentException {
+		if (parameter == null) {
+			throw new IllegalArgumentException("Parameter cannot be null.");
+		}
+
+		this.setField(field);
+		this.setOperator(parameter.getOperator());
+		this.setValue(parameter.getValue());
+		this.setOrdering(parameter.getOrdering());
+	}
+
+	protected AbstractQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
 		this.setField(field);
 		this.setParameterString(parameterString);
 	}
 
-	public AbstractQueryFieldParameter(String field, T value) {
+	protected AbstractQueryFieldParameter(String field, T value) {
 		this.setEqualityFilter(field, value);
 	}
 
-	public AbstractQueryFieldParameter(String field, ExpressionOperator operator, T value) {
+	protected AbstractQueryFieldParameter(String field, ExpressionOperator operator, T value) {
 		this.setFilter(field, operator, value);
 	}
 

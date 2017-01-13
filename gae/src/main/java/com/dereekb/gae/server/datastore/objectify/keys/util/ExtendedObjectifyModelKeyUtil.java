@@ -47,7 +47,7 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	public ModelKeyType getModelKeyType() {
 		return this.converter.getModelKeyType();
 	}
-	
+
 	public ObjectifyKeyConverter<T, ModelKey> getConverter() {
 		return this.converter;
 	}
@@ -70,6 +70,7 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 		return this.keyFromString(this.getModelKeyType(), string);
 	}
 
+	@Override
 	public Key<T> fromModelKey(ModelKey modelKey) {
 		Key<T> key;
 

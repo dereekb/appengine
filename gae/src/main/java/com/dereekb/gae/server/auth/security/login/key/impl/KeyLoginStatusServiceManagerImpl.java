@@ -148,7 +148,7 @@ public class KeyLoginStatusServiceManagerImpl
 		// MARK: Internal
 		private Key<LoginPointer> queryKeyLoginPointerKey() throws KeyLoginUnavailableException {
 			ObjectifyQueryRequestBuilder<LoginPointer> queryBuilder = loginPointerRegistry.makeQuery();
-			LoginPointerQueryInitializer.LoginPointerQuery queryConfig = new LoginPointerQueryInitializer.LoginPointerQuery();
+			LoginPointerQueryInitializer.ObjectifyLoginPointerQuery queryConfig = new LoginPointerQueryInitializer.ObjectifyLoginPointerQuery();
 
 			Key<Login> loginKey = this.login.getObjectifyKey();
 			queryConfig.setLogin(loginKey);

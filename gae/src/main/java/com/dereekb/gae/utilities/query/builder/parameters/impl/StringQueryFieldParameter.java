@@ -10,7 +10,7 @@ import com.dereekb.gae.server.search.document.query.expression.ExpressionOperato
  */
 public class StringQueryFieldParameter extends AbstractQueryFieldParameter<String> {
 
-	public StringQueryFieldParameter() {
+	protected StringQueryFieldParameter() {
 		super();
 	}
 
