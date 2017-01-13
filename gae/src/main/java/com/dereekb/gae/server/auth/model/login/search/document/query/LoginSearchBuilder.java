@@ -13,7 +13,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.fiel
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.BooleanField;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 import com.dereekb.gae.utilities.collections.map.StringMapReader;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Builder for {@link LoginSearch} elements.

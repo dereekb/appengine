@@ -1,19 +1,23 @@
 package com.dereekb.gae.test.applications.api.model.tests.crud;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
 
 import com.dereekb.gae.model.crud.services.components.UpdateService;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.request.impl.UpdateRequestImpl;
+import com.dereekb.gae.model.crud.services.request.options.impl.UpdateRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.runnable.RunnableTest;
+import com.dereekb.gae.utilities.collections.IteratorUtility;
 
 /**
  * Used for testing a {@link UpdateService}.
@@ -25,7 +29,7 @@ import com.dereekb.gae.test.runnable.RunnableTest;
 public class UpdateServiceTester<T extends UniqueModel>
         implements RunnableTest {
 
-	private Integer genCount = 5;
+	private Integer genCount = 3;
 
 	protected UpdateService<T> updateService;
 	protected GetterSetter<T> getterSetter;
@@ -54,18 +58,14 @@ public class UpdateServiceTester<T extends UniqueModel>
 	@Override
 	public void runTests() {
 		List<T> results = this.modelGenerator.generate(this.genCount);
-		List<ModelKey> keys = ModelKey.readModelKeys(results);
 
-		this.testUpdatingSingle(keys.get(0));
-		this.testUpdatingMultiple(keys);
+		this.testUpdatingMultiple(results);
+		this.testUpdatingSingle(results.get(0));
 		this.testUpdatingUnavailable();
 		this.testUpdatingNothing();
 	}
 
-	private void testUpdatingSingle(ModelKey modelKey) {
-		T template = this.modelGenerator.generate();
-		ModelKey targetKey = template.getModelKey();
-
+	private void testUpdatingSingle(T template) {
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(template);
 		UpdateResponse<T> response = this.updateService.update(request);
 
@@ -74,22 +74,59 @@ public class UpdateServiceTester<T extends UniqueModel>
 
 		T updatedModel = updated.iterator().next();
 		ModelKey updatedModelKey = updatedModel.getModelKey();
-		targetKey.equals(updatedModelKey);
+		template.getModelKey().equals(updatedModelKey);
 	}
 
-	private void testUpdatingMultiple(List<ModelKey> keys) {
-		// TODO Auto-generated method stub
+	private void testUpdatingMultiple(List<T> templates) {
+		UpdateRequest<T> request = new UpdateRequestImpl<T>(templates);
+		UpdateResponse<T> response = this.updateService.update(request);
 
+		Collection<T> updated = response.getUpdatedModels();
+		Assert.assertTrue(updated.size() == this.genCount);
 	}
 
 	private void testUpdatingUnavailable() {
-		// TODO Auto-generated method stub
+		this.testUpdatingAtomicUnavailable();
+		this.testUpdatingNonAtomicUnavailable();
+	}
 
+	private void testUpdatingAtomicUnavailable() {
+		T template = this.modelGenerator.generate();
+		ModelKey key = template.getModelKey();
+		this.getterSetter.delete(template, true);
+
+		UpdateRequest<T> request = new UpdateRequestImpl<T>(template);
+
+		try {
+			this.updateService.update(request);
+			Assert.fail("Should have failed atomic operation.");
+		} catch (AtomicOperationException e) {
+			Iterable<? extends UniqueModel> failed = e.getFailed();
+			Assert.assertTrue(IteratorUtility.iterableToSet(failed).contains(key));
+		}
+	}
+
+	private void testUpdatingNonAtomicUnavailable() {
+		T template = this.modelGenerator.generate();
+		this.getterSetter.delete(template, true);
+
+		UpdateRequestOptionsImpl options = new UpdateRequestOptionsImpl(false);
+		UpdateRequest<T> request = new UpdateRequestImpl<T>(template, options);
+
+		try {
+			UpdateResponse<T> response = this.updateService.update(request);
+			Assert.assertTrue(response.getUpdatedModels().size() == 0);
+		} catch (AtomicOperationException e) {
+			Assert.fail("Should not have failed atomic operation.");
+		}
 	}
 
 	private void testUpdatingNothing() {
-		// TODO Auto-generated method stub
+		List<T> templates = Collections.emptyList();
+		UpdateRequest<T> request = new UpdateRequestImpl<T>(templates);
+		UpdateResponse<T> response = this.updateService.update(request);
 
+		Assert.assertTrue(response.getUpdatedModels().isEmpty());
 	}
 
 }

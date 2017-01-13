@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.spring;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -27,13 +29,15 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 
 /**
- * Testing context that initializes a Google App Engine {@link LocalServiceTestHelper} from a Spring IoC container.
+ * Testing context that initializes a Google App Engine
+ * {@link LocalServiceTestHelper} from a Spring IoC container.
  *
  * @author dereekb
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextHierarchy({ @ContextConfiguration(name = "testing", locations = { CoreServiceTestingContext.GAE_TESTING_XML_PATH }) })
+@ContextHierarchy({
+        @ContextConfiguration(name = "testing", locations = { CoreServiceTestingContext.GAE_TESTING_XML_PATH }) })
 public class CoreServiceTestingContext {
 
 	public static final String SRC_PATH = "file:src/";
@@ -103,7 +107,16 @@ public class CoreServiceTestingContext {
 				System.out.println(String.format("Executing taskqueue task %s.", arg0.getUrl()));
 			}
 
-			MockHttpServletRequestBuilder requestBuilder = this.buildRequest(arg0);
+			MockHttpServletRequestBuilder requestBuilder;
+
+			try {
+				requestBuilder = this.buildRequest(arg0);
+			} catch (UnsupportedEncodingException e) {
+				System.out.println(String.format("Exception decoding URL: %s.", arg0.getUrl()));
+				e.printStackTrace();
+				this.decreaseCounter();
+				return 0;
+			}
 
 			// Start Objectify service for the thread.
 			Closeable ofy = ObjectifyService.begin();
@@ -137,7 +150,7 @@ public class CoreServiceTestingContext {
 			countDownLatch.countDown();
 		}
 
-		private MockHttpServletRequestBuilder buildRequest(URLFetchRequest arg0) {
+		private MockHttpServletRequestBuilder buildRequest(URLFetchRequest arg0) throws UnsupportedEncodingException {
 			HttpMethod httpMethod = null;
 
 			switch (arg0.getMethod()) {
@@ -163,7 +176,9 @@ public class CoreServiceTestingContext {
 					break;
 			}
 
-			String url = arg0.getUrl();
+			// Decode to prevent the mock request from encoding an encoded
+			// value.
+			String url = URLDecoder.decode(arg0.getUrl(), "UTF-8");
 			url = url.replaceFirst(URL_PREFIX, "");
 
 			MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.request(httpMethod, url);
@@ -187,6 +202,5 @@ public class CoreServiceTestingContext {
 		}
 
 	}
-
 
 }

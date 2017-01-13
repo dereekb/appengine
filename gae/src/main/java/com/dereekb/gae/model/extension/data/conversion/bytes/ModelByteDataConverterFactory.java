@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.data.conversion.bytes;
 
 import com.dereekb.gae.model.extension.data.conversion.KeyedBidirectionalConverter;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 public class ModelByteDataConverterFactory<T, A, W>
         implements Factory<ModelByteDataConverter<T, A, W>> {

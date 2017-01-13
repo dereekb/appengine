@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public interface UniqueModel {
 
 	/**
-	 * @return the {@link ModelKey} for this type. Can be null.
+	 * @return the {@link ModelKey} for this type. Can be {@code null}.
 	 */
 	public ModelKey getModelKey();
 

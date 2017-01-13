@@ -15,4 +15,6 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 public interface TaskRequestConverter
         extends DirectionalConverter<TaskRequest, TaskOptions>, SingleDirectionalConverter<TaskRequest, TaskOptions> {
 
+	public TaskRequestReader makeReader(TaskRequest request);
+
 }

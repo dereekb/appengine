@@ -1,4 +1,7 @@
-package com.dereekb.gae.utilities.factory;
+package com.dereekb.gae.utilities.factory.impl;
+
+import com.dereekb.gae.utilities.factory.Factory;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Builds new models

@@ -5,7 +5,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.impl.TaskRequestConverterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.filter.TaskRequestHashFilterFactory;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.google.appengine.api.taskqueue.TaskOptions;
 

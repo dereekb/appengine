@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.model.extension.generator;
+package com.dereekb.gae.test.model.extension.generator.impl;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
 import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 /**
  * {@link TestModelGenerator} implementation.
@@ -48,11 +49,16 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 
 	// MARK: TestModelGenerator
 	@Override
-    public T generate() {
+	public ModelKey generateKey() {
+		return this.generator.generateKey();
+	}
+
+	@Override
+	public T generate() {
 		T model = this.generator.generate();
 		this.setter.save(model, false);
 		return model;
-    }
+	}
 
 	@Override
 	public T generate(GeneratorArg arg) {
@@ -72,7 +78,7 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 		List<T> models = this.generator.generate(count, arg);
 		this.setter.save(models, false);
 		return models;
-    }
+	}
 
 	@Override
 	public T generateModelWithoutKey() {

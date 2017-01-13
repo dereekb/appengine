@@ -2,6 +2,8 @@ package com.dereekb.gae.test.spring;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.FilterChainProxy;
@@ -71,9 +73,15 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 	}
 
 	// MARK: Mock Requests
+	protected void performHttpRequests(List<MockHttpServletRequestBuilder> mockRequests) throws Exception {
+		for (MockHttpServletRequestBuilder request : mockRequests) {
+			this.performHttpRequest(request);
+		}
+	}
+
 	protected ResultActions performHttpRequest(MockHttpServletRequestBuilder request) throws Exception {
 		String token = null;
-				
+
 		if (this.testLoginTokenContext != null) {
 			token = this.testLoginTokenContext.getToken();
 		}

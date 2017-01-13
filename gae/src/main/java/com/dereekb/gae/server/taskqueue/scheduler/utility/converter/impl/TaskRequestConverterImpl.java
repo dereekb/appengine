@@ -8,6 +8,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestReader;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -86,23 +87,36 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 
 	@Override
 	public TaskOptions convertSingle(TaskRequest input) throws ConversionFailureException {
-		TaskRequestReader reader = new TaskRequestReader(input);
+		TaskRequestReaderImpl reader = this.makeReader(input);
 		TaskOptionBuilder builder = new TaskOptionBuilder(reader);
 		return builder.buildTaskOptions();
 	}
 
-	private class TaskRequestReader {
+	@Override
+	public TaskRequestReaderImpl makeReader(TaskRequest request) {
+		return new TaskRequestReaderImpl(request);
+	}
+
+	private class TaskRequestReaderImpl
+	        implements TaskRequestReader {
 
 		private final TaskRequest request;
 
-		public TaskRequestReader(TaskRequest request) {
+		public TaskRequestReaderImpl(TaskRequest request) {
 			this.request = request;
 		}
 
+		@Override
+		public TaskRequest getTaskRequest() {
+			return this.request;
+		}
+
+		@Override
 		public String getName() {
 			return this.request.getName();
 		}
 
+		@Override
 		public String getFullRequestUri() {
 			SimplePath path = this.request.getPath();
 
@@ -113,6 +127,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			return path.getPath();
 		}
 
+		@Override
 		public Method getMethod() {
 			Method method = this.request.getMethod();
 
@@ -123,6 +138,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			return method;
 		}
 
+		@Override
 		public TaskRequestTiming getTiming() {
 			TaskRequestTiming timing = this.request.getTimings();
 
@@ -133,10 +149,12 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			return timing;
 		}
 
+		@Override
 		public Collection<TaskParameter> getHeaders() {
 			return this.request.getHeaders();
 		}
 
+		@Override
 		public Collection<TaskParameter> getParameters() {
 			return this.request.getParameters();
 		}
@@ -145,9 +163,9 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 
 	private class TaskOptionBuilder {
 
-		private final TaskRequestReader reader;
+		private final TaskRequestReaderImpl reader;
 
-		public TaskOptionBuilder(TaskRequestReader reader) {
+		public TaskOptionBuilder(TaskRequestReaderImpl reader) {
 			this.reader = reader;
 		}
 

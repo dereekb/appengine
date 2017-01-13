@@ -11,7 +11,7 @@
 
 	<!-- Generator -->
 	<bean id="storedImageSetTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.TestModelGeneratorImpl"
+		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl"
 		scope="singleton">
 		<constructor-arg index="0" ref="storedImageSetRegistry" />
 		<constructor-arg index="1" ref="storedImageSetGenerator" />

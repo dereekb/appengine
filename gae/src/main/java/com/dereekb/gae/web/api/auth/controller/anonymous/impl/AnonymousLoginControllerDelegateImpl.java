@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.web.api.auth.controller.anonymous.AnonymousLoginControllerDelegate;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 

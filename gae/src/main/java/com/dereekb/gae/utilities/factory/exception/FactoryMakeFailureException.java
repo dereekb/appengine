@@ -1,4 +1,6 @@
-package com.dereekb.gae.utilities.factory;
+package com.dereekb.gae.utilities.factory.exception;
+
+import com.dereekb.gae.utilities.factory.Factory;
 
 /**
  * Runtime exception thrown when a {@link Factory} cannot complete the make() function.

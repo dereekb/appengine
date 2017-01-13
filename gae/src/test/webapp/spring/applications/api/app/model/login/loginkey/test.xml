@@ -11,7 +11,7 @@
 
 	<!-- Generator -->
 	<bean id="loginKeyTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.TestModelGeneratorImpl"
+		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl"
 		scope="singleton">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
 		<constructor-arg index="1" ref="loginKeyGenerator" />
