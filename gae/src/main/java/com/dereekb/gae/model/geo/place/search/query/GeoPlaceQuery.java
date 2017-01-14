@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameters;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
 
@@ -16,7 +16,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFiel
  *
  */
 public class GeoPlaceQuery
-        implements ConfigurableQueryParameters {
+        implements ConfigurableEncodedQueryParameters {
 
 	public static final String PARENT_FIELD = "parent";
 

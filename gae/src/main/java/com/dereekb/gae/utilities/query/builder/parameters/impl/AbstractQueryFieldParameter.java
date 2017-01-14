@@ -2,8 +2,9 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameter;
-import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.Parameter;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.ParameterImpl;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
@@ -16,11 +17,16 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  *
  */
 public abstract class AbstractQueryFieldParameter<T>
-        implements ConfigurableQueryParameter {
+        implements ConfigurableEncodedQueryParameter {
+
+	/**
+	 * Empty string by default.
+	 */
+	public static final String DEFAULT_NULL_VALUE = "";
 
 	private String field;
 	private ExpressionOperator operator;
-	protected T value;
+	private T value;
 
 	private QueryResultsOrdering ordering;
 
@@ -37,8 +43,10 @@ public abstract class AbstractQueryFieldParameter<T>
 		}
 
 		this.setField(field);
+
 		this.setOperator(parameter.getOperator());
 		this.setValue(parameter.getValue());
+
 		this.setOrdering(parameter.getOrdering());
 	}
 
@@ -56,7 +64,8 @@ public abstract class AbstractQueryFieldParameter<T>
 	}
 
 	public void setComparison(ExpressionOperator operator,
-	                          T value) {
+	                          T value)
+	        throws IllegalArgumentException {
 		this.setOperator(operator);
 		this.setValue(value);
 	}
@@ -65,7 +74,19 @@ public abstract class AbstractQueryFieldParameter<T>
 		return this.operator;
 	}
 
-	public void setOperator(ExpressionOperator operator) {
+	/**
+	 * Sets the operator.
+	 *
+	 * @param operator
+	 *            {@link ExpressionOperator}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             if the operator is null.
+	 */
+	public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
+		if (operator == null) {
+			throw new IllegalArgumentException("Operator cannot be null.");
+		}
+
 		this.operator = operator;
 	}
 
@@ -102,13 +123,15 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	// Filter
 	public AbstractQueryFieldParameter<T> setEqualityFilter(String field,
-	                                                        T value) {
+	                                                        T value)
+	        throws IllegalArgumentException {
 		return this.setFilter(field, ExpressionOperator.Equal, value);
 	}
 
 	public AbstractQueryFieldParameter<T> setFilter(String field,
 	                                                ExpressionOperator operator,
-	                                                T value) {
+	                                                T value)
+	        throws IllegalArgumentException {
 		this.setField(field);
 		this.setOperator(operator);
 		this.setValue(value);
@@ -130,19 +153,63 @@ public abstract class AbstractQueryFieldParameter<T>
 	}
 
 	public Parameter getParameterRepresentation() {
-		String value = this.getParameterValue();
-		return new Parameter(value, this.operator, this.ordering);
+		String value = null;
+
+		if (this.value == null) {
+
+		} else {
+			value = this.getParameterValue();
+		}
+
+		return new ParameterImpl(value, this.operator, this.ordering);
 	}
 
 	public void setParameterRepresentation(Parameter parameter) throws IllegalArgumentException {
 		this.operator = parameter.getOperator();
 		this.ordering = parameter.getOrdering();
-		this.setParameterValue(parameter.getValue());
+
+		if (this.operator == ExpressionOperator.IsNull) {
+			this.setNullParameterValue();
+		} else {
+			this.setParameterValue(parameter.getValue());
+		}
 	}
 
-	public abstract String getParameterValue();
+	/**
+	 * Retrieves the current parameter value.
+	 * 
+	 * @return {@link String} value for the current value. Never {@code null}.
+	 */
+	protected abstract String getParameterValue();
 
-	public abstract void setParameterValue(String value) throws IllegalArgumentException;
+	/**
+	 * Sets the parameter value.
+	 * 
+	 * @param value
+	 *            {@link String}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             if the input value is not acceptable.
+	 */
+	protected abstract void setParameterValue(String value) throws IllegalArgumentException;
+
+	/**
+	 * Retrieves the string representation for a null value.
+	 * 
+	 * @return {@link String} value for the current value. Never {@code null}.
+	 */
+	protected String getNullParameterValue() throws IllegalArgumentException {
+		return DEFAULT_NULL_VALUE;
+	}
+
+	/**
+	 * Called when the value needs to be set null.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the input value is not acceptable.
+	 */
+	protected void setNullParameterValue() throws IllegalArgumentException {
+		this.value = null;
+	}
 
 	@Override
 	public String toString() {

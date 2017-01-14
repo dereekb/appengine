@@ -11,25 +11,33 @@ public enum ExpressionOperator {
 	Equal("="),
 
 	/**
-	 * For Geopoint locations, this specifies that the given point is outside the given radius.
+	 * For Geopoint locations, this specifies that the given point is outside
+	 * the given radius.
 	 */
 	GreaterThan(">"),
 	GreaterOrEqualTo(">="),
 
 	/**
-	 * For Geopoint locations, this specifies that the given point is within the given radius.
+	 * For Geopoint locations, this specifies that the given point is within the
+	 * given radius.
 	 */
 	LessThan("<"),
 	LessOrEqualTo("<="),
 
-	// Query Only
+    // Query Only
 	NotEqual("!="),
 	GreaterAndLessThanButNotEqualTo("<>"),
-	In("in");
+	In("in"),
+
+    // Special
+	/**
+	 * Used only in special cases.
+	 */
+	IsNull("=n");
 
 	private final String value;
 
-	ExpressionOperator(String value){
+	ExpressionOperator(String value) {
 		this.value = value;
 	}
 
@@ -37,6 +45,9 @@ public enum ExpressionOperator {
 		ExpressionOperator operation = null;
 
 		switch (op) {
+			case "=n":
+				operation = IsNull;
+				break;
 			case "=":
 				operation = Equal;
 				break;
@@ -73,7 +84,7 @@ public enum ExpressionOperator {
 	}
 
 	@Override
-    public String toString() {
+	public String toString() {
 		return this.value;
 	}
 

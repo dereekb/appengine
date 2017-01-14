@@ -4,8 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder;
-import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.Parameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.ParameterImpl;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
@@ -16,15 +17,15 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  */
 public class QueryFieldParameterTests {
 
+	private static final QueryFieldParameterDencoder dencoder = new QueryFieldParameterDencoder();
+
 	@Test
 	public void testQueryFieldParameterDencoder() {
-		QueryFieldParameterDencoder dencoder = new QueryFieldParameterDencoder();
-
 		String value = "value";
 		QueryResultsOrdering ordering = QueryResultsOrdering.Ascending;
 		ExpressionOperator operator = ExpressionOperator.Equal;
 
-		Parameter parameters = new Parameter(value, operator, ordering);
+		Parameter parameters = new ParameterImpl(value, operator, ordering);
 		String encoding = dencoder.encodeString(parameters);
 
 		Parameter decoded = dencoder.decodeString(encoding);
@@ -35,13 +36,25 @@ public class QueryFieldParameterTests {
 
 	@Test
 	public void testDecodingShort() {
-		QueryFieldParameterDencoder dencoder = new QueryFieldParameterDencoder();
-
 		Parameter parameter = dencoder.decodeString("=,2");
 
 		Assert.assertTrue(parameter.getValue().equals("2"));
 		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.Equal);
+	}
 
+	@Test
+	public void testEncodingEqualsNull() {
+		ParameterImpl parameter = new ParameterImpl("null", ExpressionOperator.IsNull);
+		String encoded = dencoder.encodeString(parameter);
+		Assert.assertTrue(encoded.equals("=n,null"));
+	}
+
+	@Test
+	public void testDecodingShortEqualsNull() {
+		Parameter parameter = dencoder.decodeString("=n,null");
+
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IsNull);
+		Assert.assertTrue(parameter.getValue().equals("null"));
 	}
 
 }

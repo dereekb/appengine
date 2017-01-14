@@ -2,6 +2,7 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 
 /**
  * Builder for {@link ModelKeyQueryFieldParameter} instances.
@@ -73,8 +74,16 @@ public class ModelKeyQueryFieldParameterBuilder {
 		}
 
 		protected ModelKeyQueryFieldParameter(String field, ModelKey value) throws IllegalArgumentException {
-			this.setField(field);
-			this.setValue(value);
+			this.setEqualityFilter(field, value);
+		}
+
+		@Override
+		public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
+			if (operator == null) {
+				operator = ExpressionOperator.Equal;
+			}
+
+			super.setOperator(operator);
 		}
 
 		// MARK: Override
@@ -84,19 +93,18 @@ public class ModelKeyQueryFieldParameterBuilder {
 				throw new IllegalArgumentException("Key types did not match.");
 			}
 
-			this.value = value;
-			return this;
+			return this.setValue(value);
 		}
 
 		// MARK: AbstractQueryFieldParameter
 		@Override
-		public String getParameterValue() {
-			return this.value.toString();
+		protected String getParameterValue() {
+			return this.getValue().toString();
 		}
 
 		@Override
-		public void setParameterValue(String value) throws IllegalArgumentException {
-			this.value = ModelKey.convert(ModelKeyQueryFieldParameterBuilder.this.keyType, value);
+		protected void setParameterValue(String value) throws IllegalArgumentException {
+			this.setValue(ModelKey.convert(ModelKeyQueryFieldParameterBuilder.this.keyType, value));
 		}
 
 	}

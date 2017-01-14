@@ -26,13 +26,13 @@ public class StringQueryFieldParameter extends AbstractQueryFieldParameter<Strin
 
 	// MARK: AbstractQueryFieldParameter
 	@Override
-	public String getParameterValue() {
-		return this.value;
+	protected String getParameterValue() {
+		return this.getValue();
 	}
 
 	@Override
-	public void setParameterValue(String value) throws IllegalArgumentException {
-		this.value = value;
+	protected void setParameterValue(String value) throws IllegalArgumentException {
+		this.setValue(value);
 	}
 
 }

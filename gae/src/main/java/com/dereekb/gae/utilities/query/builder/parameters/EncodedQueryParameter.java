@@ -8,7 +8,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParamet
  * @author dereekb
  * @see {@link QueryFieldParameterDencoder} for encoding.
  */
-public interface QueryParameter {
+public interface EncodedQueryParameter {
 
 	/**
 	 * Returns the parameter string.

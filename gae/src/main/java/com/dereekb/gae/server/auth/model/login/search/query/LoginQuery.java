@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameters;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
 
 /**
@@ -14,7 +14,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldPar
  *
  */
 public class LoginQuery
-        implements ConfigurableQueryParameters {
+        implements ConfigurableEncodedQueryParameters {
 
 	public static final String DATE_FIELD = "date";
 

@@ -1,6 +1,7 @@
 package com.dereekb.gae.test.applications.api.model.tests.crud;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Assert;
 
@@ -59,7 +60,6 @@ public class CreateServiceTester<T extends UniqueModel>
 		this.createService = createService;
 	}
 
-
 	public TestModelGenerator<T> getModelGenerator() {
 		return this.modelGenerator;
 	}
@@ -89,8 +89,14 @@ public class CreateServiceTester<T extends UniqueModel>
 	}
 
 	private void testCreatingMultiple() {
-		// TODO Auto-generated method stub
+		List<T> templates = this.modelGenerator.generate(this.genCount);
+		CreateRequestImpl<T> request = new CreateRequestImpl<T>(templates);
+		CreateResponse<T> response = this.createService.create(request);
 
+		Collection<ModelKey> keys = response.getCreatedModelKeys();
+		Collection<T> created = response.getCreatedModels();
+		Assert.assertTrue(keys.size() == templates.size());
+		Assert.assertTrue(created.size() == templates.size());
 	}
 
 	private void testCreatingNothing() {

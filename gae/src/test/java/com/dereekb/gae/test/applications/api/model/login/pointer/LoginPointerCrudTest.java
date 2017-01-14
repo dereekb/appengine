@@ -38,7 +38,7 @@ public class LoginPointerCrudTest extends CrudServiceTester<LoginPointer> {
 	@Ignore
 	@Test
 	public void testCreateService() {
-		// Ignored, since pointers should not be created through this.
+		// Ignored, since pointers are not created through the CRUD service.
 	}
 
 }

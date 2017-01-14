@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 import com.google.common.base.Joiner;
 
@@ -46,7 +47,7 @@ public class QueryFieldParameterDencoder {
 		Parameter parameter;
 
 		if (split.length == 1) {
-			parameter = new Parameter(parameterString);
+			parameter = new ParameterImpl(parameterString);
 		} else {
 			Decoder decoder = new Decoder(split);
 			parameter = decoder.decode();
@@ -96,7 +97,7 @@ public class QueryFieldParameterDencoder {
 			}
 
 			this.buildValue(valueStart, valueEnd);
-			return new Parameter(this.value, this.operator, this.ordering);
+			return new ParameterImpl(this.value, this.operator, this.ordering);
 		}
 
 		private void buildValue(int start,
@@ -134,34 +135,41 @@ public class QueryFieldParameterDencoder {
 
 	}
 
-	public static final class Parameter {
+	public static final class ParameterImpl
+	        implements Parameter {
 
 		private String value;
 		private ExpressionOperator operator;
 		private QueryResultsOrdering ordering;
 
-		public Parameter(String value) {
+		public ParameterImpl(String value) {
 			this(value, ExpressionOperator.Equal);
 		}
 
-		public Parameter(String value, ExpressionOperator operator) {
+		public ParameterImpl(String value, ExpressionOperator operator) {
 			this(value, operator, null);
 		}
 
-		public Parameter(String value, ExpressionOperator operator, QueryResultsOrdering ordering) {
+		public ParameterImpl(String value, ExpressionOperator operator, QueryResultsOrdering ordering) {
 			this.setValue(value);
 			this.setOperator(operator);
 			this.setOrdering(ordering);
 		}
 
+		@Override
 		public String getValue() {
 			return this.value;
 		}
 
-		public void setValue(String value) {
+		public void setValue(String value) throws IllegalArgumentException {
+			if (value == null) {
+				throw new IllegalArgumentException("Parameter value cannot be null.");
+			}
+
 			this.value = value;
 		}
 
+		@Override
 		public ExpressionOperator getOperator() {
 			return this.operator;
 		}
@@ -170,6 +178,7 @@ public class QueryFieldParameterDencoder {
 			this.operator = operator;
 		}
 
+		@Override
 		public QueryResultsOrdering getOrdering() {
 			return this.ordering;
 		}
@@ -199,7 +208,8 @@ public class QueryFieldParameterDencoder {
 			if (this.getClass() != obj.getClass()) {
 				return false;
 			}
-			Parameter other = (Parameter) obj;
+
+			ParameterImpl other = (ParameterImpl) obj;
 			if (this.operator != other.operator) {
 				return false;
 			}

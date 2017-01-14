@@ -28,14 +28,14 @@ public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Inte
 
 	// MARK: AbstractQueryFieldParameters
 	@Override
-	public String getParameterValue() {
-		return this.value.toString();
+	protected String getParameterValue() {
+		return this.getValue().toString();
 	}
 
 	@Override
-	public void setParameterValue(String value) throws IllegalArgumentException {
+	protected void setParameterValue(String value) throws IllegalArgumentException {
 		try {
-			this.value = new Integer(value);
+			this.setValue(new Integer(value));
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

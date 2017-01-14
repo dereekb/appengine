@@ -93,6 +93,13 @@
 			<version>5.1.14</version>
 		</dependency>
 
+		<!-- Dates -->
+		<dependency>
+			<groupId>org.threeten</groupId>
+			<artifactId>threetenbp</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+
 		<!-- Jackson -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableQueryParameters;
+import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
@@ -18,7 +18,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFiel
  *
  */
 public class LoginPointerQuery
-        implements ConfigurableQueryParameters {
+        implements ConfigurableEncodedQueryParameters {
 
 	public static final String TYPE_FIELD = "type";
 	public static final String LOGIN_FIELD = "login";

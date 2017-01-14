@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
+import com.dereekb.gae.utilities.time.IsoTimeConverter;
+import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
 
 /**
  * {@link AbstractQueryFieldParameter} used for {@link Date} query parameters.
@@ -15,20 +17,32 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 
 	public static final String DEFAULT_DATE_FIELD = "date";
 
-	public DateQueryFieldParameter(String field) {
-		super(field, new Date());
+	private static final IsoTimeConverter DATE_CONVERTER = ThreeTenIsoTimeConverter.SINGLETON;
+
+	/**
+	 * New Query that searches for all dates before now.
+	 * 
+	 * @param field
+	 *            {@link String}. Never {@code null}.
+	 */
+	public DateQueryFieldParameter(String field) throws IllegalArgumentException {
+		this(field, ExpressionOperator.LessThan);
 	}
 
-	public DateQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
-		super(field, parameterString);
+	public DateQueryFieldParameter(String field, ExpressionOperator operator) {
+		super(field, operator, new Date());
 	}
 
-	public DateQueryFieldParameter(String field, Date value) {
-		super(field, ExpressionOperator.LessOrEqualTo, value);
+	public DateQueryFieldParameter(String field, Date value) throws IllegalArgumentException {
+		super(field, ExpressionOperator.LessThan, value);
 	}
 
 	public DateQueryFieldParameter(String field, ExpressionOperator operator, Date value) {
 		super(field, operator, value);
+	}
+
+	public DateQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+		super(field, parameterString);
 	}
 
 	public static DateQueryFieldParameter recentDate() {
@@ -54,23 +68,12 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	// MARK: AbstractQueryFieldParameter
 	@Override
 	public String getParameterValue() {
-
-		// TODO: Change to date format and not use {@link Long} as it is not
-		// safe to use cross platform and does not contain timezone info.
-
-		Long time = this.value.getTime();
-		return time.toString();
+		return DATE_CONVERTER.convertToString(this.getValue());
 	}
 
 	@Override
 	public void setParameterValue(String value) throws IllegalArgumentException {
-		try {
-			Long time = new Long(value);
-			Date date = new Date(time);
-			this.setValue(date);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Could not convert value to date.", e);
-		}
+		this.setValue(DATE_CONVERTER.convertFromString(value));
 	}
 
 }

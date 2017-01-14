@@ -107,8 +107,8 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> exte
 		public Key<T> getObjectifyKeyValue() {
 			Key<T> key = null;
 
-			if (this.value != null) {
-				key = ObjectifyKeyFieldParameterBuilder.this.util.fromModelKey(this.value);
+			if (this.getValue() != null) {
+				key = ObjectifyKeyFieldParameterBuilder.this.util.fromModelKey(this.getValue());
 			}
 
 			return key;
@@ -121,8 +121,7 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> exte
 				key = ObjectifyKeyFieldParameterBuilder.this.util.readKey(value);
 			}
 
-			this.value = key;
-			return this;
+			return this.setValue(key);
 		}
 
 		// MARK: ObjectifyQueryRequestLimitedConfigurer

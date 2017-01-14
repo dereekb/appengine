@@ -37,6 +37,9 @@ public class LoginKeyCrudTest extends CrudServiceTester<LoginKey> {
 	@Override
 	@Ignore
 	@Test
-	public void testCreateService() {}
+	public void testCreateService() {
+		// Ignored, since login keys are created special and require an API
+		// context.
+	}
 
 }

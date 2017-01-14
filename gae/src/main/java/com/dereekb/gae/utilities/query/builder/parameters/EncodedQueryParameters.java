@@ -8,7 +8,7 @@ import java.util.Map;
  * @author dereekb
  *
  */
-public interface QueryParameters {
+public interface EncodedQueryParameters {
 
 	public Map<String, String> getParameters();
 

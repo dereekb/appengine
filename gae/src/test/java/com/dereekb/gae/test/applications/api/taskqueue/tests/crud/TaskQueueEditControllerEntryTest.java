@@ -277,7 +277,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	@Ignore
 	public void testTaskQueueApiCreateReview() throws Exception {
 
-		// TODO: Not really necessary.
+		// NOTE: Not really a necessary test.
 
 		List<T> models = this.create(false);
 		this.scheduleCreateReviewTask.sendTasks(models);
