@@ -49,6 +49,12 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 		return recentDate(DEFAULT_DATE_FIELD);
 	}
 
+	public static DateQueryFieldParameter sortByDatesDescending() {
+		DateQueryFieldParameter parameter = new DateQueryFieldParameter(DEFAULT_DATE_FIELD);
+		parameter.setOrdering(QueryResultsOrdering.Descending);
+		return parameter;
+	}
+
 	public static DateQueryFieldParameter recentDate(String field) {
 		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
 		parameter.setOrdering(QueryResultsOrdering.Descending);

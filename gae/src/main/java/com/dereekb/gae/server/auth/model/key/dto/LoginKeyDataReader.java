@@ -33,11 +33,11 @@ public final class LoginKeyDataReader extends AbstractDirectionalConverter<Login
 		model.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
 
 		Long date = input.getCreated();
-		model.setCreated(DateLongConverter.CONVERTER.safeConvert(date));
+		model.setDate(DateLongConverter.CONVERTER.safeConvert(date));
 
 		// Pointers
 		Key<LoginPointer> pointer = LOGIN_POINTER_KEY_UTIL.keyFromString(input.getPointer());
-		
+
 		if (pointer != null) {
 			model.setLoginPointer(pointer);
 		}

@@ -1,12 +1,12 @@
-package com.dereekb.gae.model.extension.search.query.search.service.impl;
+package com.dereekb.gae.model.extension.search.query.service.impl;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryRequest;
-import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryResponse;
-import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryService;
+import com.dereekb.gae.model.extension.search.query.service.ModelQueryRequest;
+import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
+import com.dereekb.gae.model.extension.search.query.service.ModelQueryService;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
@@ -14,6 +14,7 @@ import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
+import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.googlecode.objectify.Key;
 
 /**
@@ -71,7 +72,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		}
 
 		ExecutableObjectifyQuery<T> query = builder.buildExecutableQuery();
-		return new ResponseImpl(request.isKeySearch(), query);
+		return new ResponseImpl(request.isKeysOnly(), query);
 	}
 
 	/**
@@ -99,18 +100,18 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 
 		// MARK: ModelQueryResponse
 		@Override
-		public boolean isKeyOnlyResponse() {
+		public boolean isKeysOnlyResponse() {
 			return this.keysQuery;
 		}
 
 		@Override
-		public Collection<T> getModels() {
+		public Collection<T> getModelResults() {
 			if (this.models == null) {
 				if (this.keysQuery == false) {
 					this.models = this.query.queryModels();
 				} else {
-					this.models = ModelQueryServiceImpl.this.registry.getWithObjectifyKeys(this
-					        .getResponseObjectifyKeys());
+					this.models = ModelQueryServiceImpl.this.registry
+					        .getWithObjectifyKeys(this.getResponseObjectifyKeys());
 				}
 			}
 
@@ -118,7 +119,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		}
 
 		@Override
-		public List<ModelKey> getResponseKeys() {
+		public List<ModelKey> getKeyResults() {
 			if (this.keys == null) {
 				List<Key<T>> keys = this.getResponseObjectifyKeys();
 				this.keys = ModelQueryServiceImpl.this.registry.getObjectifyKeyConverter().convertTo(keys);
@@ -133,11 +134,20 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 				if (this.keysQuery) {
 					this.objectifyKeys = this.query.queryObjectifyKeys();
 				} else {
-					this.objectifyKeys = ObjectifyUtility.readKeys(this.getModels());
+					this.objectifyKeys = ObjectifyUtility.readKeys(this.getModelResults());
 				}
 			}
 
 			return this.objectifyKeys;
+		}
+
+		@Override
+		public String getSearchCursor() {
+			try {
+				return this.query.getCursor().toWebSafeString();
+			} catch (NoSearchCursorException e) {
+				return null;
+			}
 		}
 
 	}

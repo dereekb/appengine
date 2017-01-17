@@ -48,7 +48,7 @@ public class LoginKey extends DatabaseModel
 	private String name;
 
 	/**
-	 * Verificiation code.
+	 * Verification code.
 	 */
 	private String verification;
 
@@ -60,7 +60,8 @@ public class LoginKey extends DatabaseModel
 	/**
 	 * Creation date
 	 */
-	private Date created;
+	@Index
+	private Date date;
 
 	/**
 	 * Expiration time in milliseconds. Can be {@code null} if it never expires.
@@ -75,7 +76,7 @@ public class LoginKey extends DatabaseModel
 	}
 
 	public Long getIdentifier() {
-		return identifier;
+		return this.identifier;
 	}
 
 	public void setIdentifier(Long identifier) {
@@ -83,7 +84,7 @@ public class LoginKey extends DatabaseModel
 	}
 
 	public Key<LoginPointer> getLoginPointer() {
-		return pointer;
+		return this.pointer;
 	}
 
 	public ModelKey getPointerModelKey() {
@@ -99,7 +100,7 @@ public class LoginKey extends DatabaseModel
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -107,7 +108,7 @@ public class LoginKey extends DatabaseModel
 	}
 
 	public String getVerification() {
-		return verification;
+		return this.verification;
 	}
 
 	public void setVerification(String verification) {
@@ -119,23 +120,23 @@ public class LoginKey extends DatabaseModel
 	}
 
 	public Long getMask() {
-		return mask;
+		return this.mask;
 	}
 
 	public void setMask(Long mask) {
 		this.mask = mask;
 	}
 
-	public Date getCreated() {
-		return created;
+	public Date getDate() {
+		return this.date;
 	}
 
-	public void setCreated(Date created) {
-		this.created = created;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public Long getExpiration() {
-		return expiration;
+		return this.expiration;
 	}
 
 	public void setExpiration(Long expiration) {
@@ -170,8 +171,9 @@ public class LoginKey extends DatabaseModel
 
 	@Override
 	public String toString() {
-		return "ApiLoginKey [identifier=" + identifier + ", pointer=" + pointer + ", name=" + name + ", verification="
-		        + verification + ", mask=" + mask + ", created=" + created + ", expiration=" + expiration + "]";
+		return "ApiLoginKey [identifier=" + this.identifier + ", pointer=" + this.pointer + ", name=" + this.name
+		        + ", verification=" + this.verification + ", mask=" + this.mask + ", date=" + this.date
+		        + ", expiration=" + this.expiration + "]";
 	}
 
 }

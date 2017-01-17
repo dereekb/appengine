@@ -1,9 +1,9 @@
-package com.dereekb.gae.model.extension.search.query.search.service.key;
+package com.dereekb.gae.model.extension.search.query.service.key;
 
 import java.util.List;
 
-import com.dereekb.gae.model.extension.search.query.search.ObjectifyQueryFunction;
-import com.dereekb.gae.model.extension.search.query.search.QueryPair;
+import com.dereekb.gae.model.extension.search.query.ObjectifyQueryFunction;
+import com.dereekb.gae.model.extension.search.query.QueryPair;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.utilities.factory.Factory;

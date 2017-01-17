@@ -7,12 +7,14 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyEntityQueryService;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryModelResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
-import com.google.appengine.api.datastore.QueryResultIterable;
+import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
+import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
@@ -31,16 +33,15 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	private ObjectifyQueryRequestOptions options;
 	private ObjectifyEntityQueryService<T> service;
 
-	private ObjectifyQueryResponse<T> response;
+	private ObjectifyQueryModelResponse<T> response;
 
 	public ExecutableObjectifyQueryImpl(ObjectifyEntityQueryService<T> service,
 	        ObjectifyQueryRequest<T> request,
-	        ObjectifyQueryRequestOptions options)
-	        throws IllegalArgumentException {
+	        ObjectifyQueryRequestOptions options) throws IllegalArgumentException {
 		this.setService(service);
 		this.setRequest(request);
 		this.setOptions(options);
-    }
+	}
 
 	public ObjectifyEntityQueryService<T> getService() {
 		return this.service;
@@ -76,19 +77,29 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 		this.request = request;
 	}
 
-	public ObjectifyQueryResponse<T> getResponse() {
-    	if (this.response == null) {
+	public ObjectifyQueryModelResponse<T> getResponse() {
+		if (this.response == null) {
 			this.response = this.service.query(this.request);
-    	}
+		}
 
-    	return this.response;
-    }
+		return this.response;
+	}
+
+	@Override
+	public Integer getResultCount() {
+		return this.getResponse().getResultCount();
+	}
+
+	@Override
+	public Cursor getCursor() throws NoSearchCursorException {
+		return this.getResponse().getCursor();
+	}
 
 	@Override
 	public boolean hasResults() {
 		return this.getResponse().hasResults();
 	}
-	
+
 	@Override
 	public SimpleQuery<T> getQuery() {
 		return this.getResponse().getQuery();
@@ -110,13 +121,13 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public QueryResultIterable<T> queryModelsIterable() {
-		return this.getResponse().queryModelsIterable();
+	public QueryResultIterator<T> queryModelsIterator() {
+		return this.getResponse().queryModelsIterator();
 	}
 
 	@Override
-	public QueryResultIterable<Key<T>> queryObjectifyKeyIterable() {
-		return this.getResponse().queryObjectifyKeyIterable();
+	public QueryResultIterator<Key<T>> queryObjectifyKeyIterator() {
+		return this.getResponse().queryObjectifyKeyIterator();
 	}
 
 	// MARK: ObjectifyQueryRequest

@@ -68,7 +68,7 @@ public class GeoPlaceSearchDocumentTest extends ModelSearchDocumentTest<GeoPlace
 		GeoPlaceSearchRequest request = new GeoPlaceSearchRequest();
 		ModelDocumentSearchResponse<GeoPlace> response = this.searchService.search(request);
 
-		Collection<GeoPlace> results = response.getModelSearchResults();
+		Collection<GeoPlace> results = response.getModelResults();
 		Assert.assertTrue(results.containsAll(models));
 	}
 
@@ -96,10 +96,10 @@ public class GeoPlaceSearchDocumentTest extends ModelSearchDocumentTest<GeoPlace
 		search.setDate(dateSearch);
 
 		ModelDocumentSearchResponse<GeoPlace> response = this.searchService.search(request);
-		Collection<ModelKey> resultKeys = response.getKeySearchResults();
+		Collection<ModelKey> resultKeys = response.getKeyResults();
 		Assert.assertFalse(resultKeys.isEmpty());
 
-		Collection<GeoPlace> results = response.getModelSearchResults();
+		Collection<GeoPlace> results = response.getModelResults();
 		Assert.assertTrue(results.contains(model));
 	}
 

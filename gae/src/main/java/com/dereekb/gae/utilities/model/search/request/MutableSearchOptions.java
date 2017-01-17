@@ -1,5 +1,6 @@
-package com.dereekb.gae.server.search.model;
+package com.dereekb.gae.utilities.model.search.request;
 
+import com.dereekb.gae.utilities.misc.parameters.MutableParameters;
 
 /**
  * {@link SearchOptions} with setters accessible.
@@ -8,7 +9,7 @@ package com.dereekb.gae.server.search.model;
  *
  */
 public interface MutableSearchOptions
-        extends SearchOptions {
+        extends SearchOptions, MutableParameters {
 
 	public void setCursor(String cursor);
 

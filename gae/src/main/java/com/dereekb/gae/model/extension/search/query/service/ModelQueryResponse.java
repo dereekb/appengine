@@ -1,9 +1,9 @@
-package com.dereekb.gae.model.extension.search.query.search.service;
+package com.dereekb.gae.model.extension.search.query.service;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
 import com.googlecode.objectify.Key;
 
 /**
@@ -14,15 +14,9 @@ import com.googlecode.objectify.Key;
  * @param <T>
  *            model type
  */
-public interface ModelQueryResponse<T> {
-
-	public boolean isKeyOnlyResponse();
-
-	public Collection<T> getModels();
-
-	public List<ModelKey> getResponseKeys();
+public interface ModelQueryResponse<T>
+        extends ModelSearchResponse<T> {
 
 	public List<Key<T>> getResponseObjectifyKeys();
 
 }
-

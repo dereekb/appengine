@@ -30,8 +30,10 @@ public interface ModelQueryIterator<T>
 	public Cursor getCurrentCursor();
 
 	/**
+	 * Returns the cursor this iterator ended on.
 	 *
-	 * @return Returns the cursor this iterator ended on. Is null if the iterator has not started running.
+	 * @return Returns the cursor this iterator ended on. Is {@code null} if the
+	 *         iterator has not started running.
 	 */
 	public Cursor getEndCursor();
 

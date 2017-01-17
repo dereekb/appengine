@@ -17,6 +17,7 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfNotDefault;
 
 /**
  * Default login model.
@@ -53,7 +54,7 @@ public final class Login extends DescribedDatabaseModel
 	/**
 	 * Login group identifier
 	 */
-	// @Index({ IfNotDefault.class })
+	@Index({ IfNotDefault.class })
 	@IgnoreSave({ IfDefault.class })
 	private Integer group = 0;
 
@@ -62,6 +63,7 @@ public final class Login extends DescribedDatabaseModel
 	 * <p>
 	 * The roles identifiers will differ between systems.
 	 */
+	@Index({ IfNotDefault.class })
 	@IgnoreSave({ IfDefault.class })
 	private Long roles = 0L;
 

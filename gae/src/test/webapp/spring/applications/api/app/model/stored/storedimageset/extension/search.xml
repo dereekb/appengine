@@ -87,7 +87,7 @@
 	
 	<!-- Query Services -->
 	<bean id="storedImageSetQueryService"
-		class="com.dereekb.gae.model.extension.search.query.search.service.impl.ModelQueryServiceImpl"
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl"
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="storedImageSetRegistry"/>
 	</bean>

@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.query.search;
+package com.dereekb.gae.model.extension.search.query;
 
 import java.util.List;
 

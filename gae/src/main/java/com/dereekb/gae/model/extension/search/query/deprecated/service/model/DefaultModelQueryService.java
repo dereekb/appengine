@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.query.search.service.model;
+package com.dereekb.gae.model.extension.search.query.service.model;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryResponse;
-import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryService;
+import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
+import com.dereekb.gae.model.extension.search.query.service.ModelQueryService;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 

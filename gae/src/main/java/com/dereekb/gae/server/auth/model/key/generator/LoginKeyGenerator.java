@@ -37,7 +37,7 @@ public final class LoginKeyGenerator extends AbstractModelGenerator<LoginKey> {
 	                              GeneratorArg arg) {
 		LoginKey loginKey = new LoginKey();
 
-		loginKey.setCreated(new Date());
+		loginKey.setDate(new Date());
 		loginKey.setMask(0L);
 
 		if (this.loginPointerGenerator != null) {

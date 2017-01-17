@@ -93,7 +93,7 @@ public class ModelKeyQueryFieldParameterBuilder {
 				throw new IllegalArgumentException("Key types did not match.");
 			}
 
-			return this.setValue(value);
+			return super.setValue(value);
 		}
 
 		// MARK: AbstractQueryFieldParameter

@@ -20,6 +20,8 @@ import com.dereekb.gae.model.extension.search.document.search.utility.SearchDocu
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
+import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.ScoredDocument;
 
 /**
@@ -167,6 +169,20 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 			return keys;
 		}
 
+		@Override
+		public boolean isKeysOnlyResponse() {
+			return false;
+		}
+
+		@Override
+		public String getSearchCursor() {
+			try {
+				return this.getResultsCursor().toWebSafeString();
+			} catch (NoSearchCursorException e) {
+				return null;
+			}
+		}
+
 		// MARK: SearchDocumentQueryResponse
 		@Override
 		public Collection<ScoredDocument> getDocumentResults() {
@@ -183,14 +199,19 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 			return this.response.getReturnedResults();
 		}
 
+		@Override
+		public Cursor getResultsCursor() {
+			return this.response.getResultsCursor();
+		}
+
 		// MARK: ModelDocumentSearchResponse
 		@Override
-		public List<ModelKey> getKeySearchResults() {
+		public List<ModelKey> getKeyResults() {
 			return this.getKeys();
 		}
 
 		@Override
-		public Collection<T> getModelSearchResults() {
+		public Collection<T> getModelResults() {
 			return this.getModels();
 		}
 

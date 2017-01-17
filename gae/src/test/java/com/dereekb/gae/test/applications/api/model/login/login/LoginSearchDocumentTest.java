@@ -63,7 +63,7 @@ public class LoginSearchDocumentTest extends ModelSearchDocumentTest<Login> {
 		LoginSearchRequest request = new LoginSearchRequest();
 		ModelDocumentSearchResponse<Login> response = this.searchService.search(request);
 
-		Collection<Login> results = response.getModelSearchResults();
+		Collection<Login> results = response.getModelResults();
 		Assert.assertTrue(results.containsAll(models));
 
 		// Date Search
@@ -74,7 +74,7 @@ public class LoginSearchDocumentTest extends ModelSearchDocumentTest<Login> {
 		search.setDate(dateSearch);
 
 		response = this.searchService.search(request);
-		results = response.getModelSearchResults();
+		results = response.getModelResults();
 		Assert.assertTrue(results.contains(model));
 		 */
 	}

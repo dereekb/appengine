@@ -11,6 +11,6 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
  *            model type
  */
 public interface ExecutableObjectifyQuery<T extends ObjectifyModel<T>>
-        extends ObjectifyQueryResponse<T>, ObjectifyQueryRequest<T> {
+        extends ObjectifyQueryModelResponse<T>, ObjectifyQueryRequest<T> {
 
 }

@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.query.search.service;
+package com.dereekb.gae.model.extension.search.query.service;
 
 
 /**

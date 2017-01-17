@@ -108,6 +108,14 @@ public abstract class AbstractQueryFieldParameter<T>
 		return this;
 	}
 
+	public AbstractQueryFieldParameter<T> sortDescending() {
+		return this.setOrdering(QueryResultsOrdering.Descending);
+	}
+
+	public AbstractQueryFieldParameter<T> sortAscending() {
+		return this.setOrdering(QueryResultsOrdering.Ascending);
+	}
+
 	public String getField() {
 		return this.field;
 	}

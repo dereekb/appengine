@@ -1,8 +1,10 @@
 package com.dereekb.gae.server.search.model.impl;
 
-import com.dereekb.gae.server.search.model.MutableSearchOptions;
-import com.dereekb.gae.server.search.model.SearchOptions;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.dereekb.gae.utilities.model.search.request.MutableSearchOptions;
+import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 
 /**
  * Base model query that contains a field for an Objectify query cursor and
@@ -14,11 +16,13 @@ import com.dereekb.gae.server.search.model.SearchOptions;
 public class SearchOptionsImpl
         implements MutableSearchOptions {
 
-	private static final Integer DEFAULT_LIMIT = 20;
+	public static final String CURSOR_PARAM = "cursor";
+	public static final String LIMIT_PARAM = "limit";
+	public static final String OFFSET_PARAM = "offset";
 
-	protected String cursor;
-	protected Integer offset = 0;
-	protected Integer limit = DEFAULT_LIMIT;
+	private String cursor;
+	private Integer offset;
+	private Integer limit;
 
 	public SearchOptionsImpl() {}
 
@@ -74,6 +78,33 @@ public class SearchOptionsImpl
 		}
 
 		this.limit = limit;
+	}
+
+	// MARK: Parameters
+	@Override
+	public Map<String, String> getParameters() {
+		Map<String, String> parameters = new HashMap<String, String>();
+
+		if (this.cursor != null) {
+			parameters.put(CURSOR_PARAM, this.cursor);
+		}
+
+		if (this.limit != null) {
+			parameters.put(LIMIT_PARAM, this.limit.toString());
+		}
+
+		if (this.offset != null) {
+			parameters.put(OFFSET_PARAM, this.offset.toString());
+		}
+
+		return parameters;
+	}
+
+	// MARK: Mutable Parameters
+	@Override
+	public void setParameters(Map<String, String> parameters) throws IllegalArgumentException {
+		parameters.get(CURSOR_PARAM);
+
 	}
 
 	@Override

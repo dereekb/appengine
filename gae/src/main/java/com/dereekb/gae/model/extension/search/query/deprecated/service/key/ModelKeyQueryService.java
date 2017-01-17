@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.query.search.service.key;
+package com.dereekb.gae.model.extension.search.query.service.key;
 
 import java.util.List;
 

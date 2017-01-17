@@ -68,7 +68,7 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 		StoredImageSearchRequest request = new StoredImageSearchRequest();
 		ModelDocumentSearchResponse<StoredImage> response = this.searchService.search(request);
 
-		Collection<StoredImage> results = response.getModelSearchResults();
+		Collection<StoredImage> results = response.getModelResults();
 		Assert.assertTrue(results.containsAll(models));
 	}
 

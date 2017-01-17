@@ -2,6 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.query.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
+import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
@@ -17,6 +18,14 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 
 	public ObjectifyQueryRequestOptionsImpl() {}
 
+	public ObjectifyQueryRequestOptionsImpl(SearchOptions options) {
+		super(options);
+	}
+
+	public ObjectifyQueryRequestOptionsImpl(String cursor, Integer offset, Integer limit) {
+		super(cursor, offset, limit);
+	}
+
 	public ObjectifyQueryRequestOptionsImpl(ObjectifyQueryRequestOptions options) {
 		if (options != null) {
 			this.copyOptions(options);
@@ -26,9 +35,9 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 	public void copyOptions(ObjectifyQueryRequestOptions options) {
 		this.setCursor(options.getCursor());
 		this.setLimit(options.getLimit());
+		this.setOffset(options.getOffset());
 		this.setAllowCache(options.allowCache());
 	}
-
 
 	@Override
 	public boolean allowCache() {
@@ -36,7 +45,7 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 	}
 
 	@Override
-    public void setAllowCache(boolean allowCache) {
+	public void setAllowCache(boolean allowCache) {
 		this.allowCache = allowCache;
 	}
 
@@ -44,8 +53,8 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 	public Cursor getQueryCursor() {
 		Cursor cursor = null;
 
-		if (this.cursor != null) {
-			cursor = Cursor.fromWebSafeString(this.cursor);
+		if (this.getCursor() != null) {
+			cursor = Cursor.fromWebSafeString(this.getCursor());
 		}
 
 		return cursor;
@@ -53,34 +62,19 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 
 	@Override
 	public void setQueryCursor(Cursor cursor) {
-		if (cursor == null) {
-			this.cursor = null;
-		} else {
-			this.cursor = cursor.toWebSafeString();
-		}
-	}
+		String cursorString = null;
 
-	/**
-	 *
-	public void updateObjectifyQuery(ObjectifyQueryRequestBuilder<?> query) {
-		ObjectifyQueryRequestOptionsImpl options = new ObjectifyQueryRequestOptionsImpl();
-
-		options.setLimit(this.limit);
-		options.setAllowCache(this.allowCache);
-
-		if (this.cursor != null) {
-			options.setCursor(Cursor.fromWebSafeString(this.cursor));
+		if (cursor != null) {
+			cursorString = cursor.toWebSafeString();
 		}
 
-		query.setOptions(options);
+		this.setCursor(cursorString);
 	}
-	 *
-	 */
 
 	@Override
 	public String toString() {
-		return "ObjectifyQueryRequestOptionsImpl [limit=" + this.limit + ", cursor=" + this.cursor + ", allowCache="
-		        + this.allowCache + "]";
+		return "ObjectifyQueryRequestOptionsImpl [limit=" + this.getLimit() + ", cursor=" + this.getCursor()
+		        + ", allowCache=" + this.allowCache + "]";
 	}
 
 }

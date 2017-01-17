@@ -1,4 +1,6 @@
-package com.dereekb.gae.server.search.model;
+package com.dereekb.gae.utilities.model.search.request;
+
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 
 /**
  * Search options that specify a cursor, limit and offset.
@@ -6,7 +8,8 @@ package com.dereekb.gae.server.search.model;
  * @author dereekb
  *
  */
-public interface SearchOptions {
+public interface SearchOptions
+        extends Parameters {
 
 	/**
 	 * Returns the query cursor.

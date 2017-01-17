@@ -1,6 +1,6 @@
 package com.dereekb.gae.utilities.query.builder.parameters;
 
-import java.util.Map;
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 
 /**
  * Represents query parameters that can be mapped to a map of string parameters.
@@ -8,8 +8,7 @@ import java.util.Map;
  * @author dereekb
  *
  */
-public interface EncodedQueryParameters {
-
-	public Map<String, String> getParameters();
+public interface EncodedQueryParameters
+        extends Parameters {
 
 }

@@ -1,11 +1,9 @@
 package com.dereekb.gae.server.auth.model.login.search.query;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.search.query.AbstractDateModelQuery;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
-import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
 
 /**
  * Utility used for querying a {@link Login}.
@@ -13,42 +11,22 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldPar
  * @author dereekb
  *
  */
-public class LoginQuery
-        implements ConfigurableEncodedQueryParameters {
+public class LoginQuery extends AbstractDateModelQuery {
 
-	public static final String DATE_FIELD = "date";
-
-	private DateQueryFieldParameter date;
-
-	public DateQueryFieldParameter getDate() {
-		return this.date;
-	}
-
-	public void setDate(DateQueryFieldParameter date) {
-		this.date = date;
-	}
+	// TODO: Add Groups and Roles querying to LoginQuery.
 
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
-		Map<String, String> parameters = new HashMap<String, String>();
-
-		if (this.date != null) {
-			parameters.put(DATE_FIELD, this.date.getParameterString());
-		}
+		Map<String, String> parameters = super.getParameters();
 
 		return parameters;
 	}
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
-		String dateString = parameters.get(DATE_FIELD);
 
-		if (dateString != null) {
-			this.date = new DateQueryFieldParameter(DATE_FIELD, dateString);
-		} else {
-			this.date = null;
-		}
+		super.setParameters(parameters);
 	}
 
 }

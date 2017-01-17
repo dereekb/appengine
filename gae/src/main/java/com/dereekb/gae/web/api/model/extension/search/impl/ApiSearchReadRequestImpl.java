@@ -1,10 +1,10 @@
 package com.dereekb.gae.web.api.model.extension.search.impl;
 
+import java.util.Collections;
 import java.util.Map;
 
-import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
+import com.dereekb.gae.server.search.model.impl.SearchRequestImpl;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
-
 
 /**
  * {@link ApiSearchReadRequest} implementation.
@@ -12,39 +12,24 @@ import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
  * @author dereekb
  *
  */
-public class ApiSearchReadRequestImpl extends SearchOptionsImpl
+public class ApiSearchReadRequestImpl extends SearchRequestImpl
         implements ApiSearchReadRequest {
 
 	private String query;
-	private boolean keysOnly;
-	private Map<String, String> parameters;
 
 	public ApiSearchReadRequestImpl() {}
 
-	public ApiSearchReadRequestImpl(Map<String, String> parameters, Integer limit) {
+	public ApiSearchReadRequestImpl(Map<String, String> parameters) {
 		this.setParameters(parameters);
-		this.setLimit(limit);
 	}
 
-	public ApiSearchReadRequestImpl(String query, Integer limit) {
-		this(query, limit, null, null);
+	public ApiSearchReadRequestImpl(String query) throws IllegalArgumentException {
+		this(query, Collections.<String, String> emptyMap());
 	}
 
-	public ApiSearchReadRequestImpl(String query, Integer limit, Map<String, String> parameters) {
-		this(query, limit, parameters, null);
-	}
-
-	public ApiSearchReadRequestImpl(String query, Integer limit, Map<String, String> parameters, String cursor)
-	        throws IllegalArgumentException {
-
-		if (query == null || query.isEmpty()) {
-			throw new IllegalArgumentException("Query cannot be null.");
-		}
-
+	public ApiSearchReadRequestImpl(String query, Map<String, String> rawParameters) throws IllegalArgumentException {
+		super(rawParameters);
 		this.setQuery(query);
-		this.setLimit(limit);
-		this.setParameters(parameters);
-		this.setCursor(cursor);
 	}
 
 	@Override
@@ -53,31 +38,11 @@ public class ApiSearchReadRequestImpl extends SearchOptionsImpl
 	}
 
 	public void setQuery(String query) {
+		if (query == null || query.isEmpty()) {
+			throw new IllegalArgumentException("Query cannot be null.");
+		}
+
 		this.query = query;
-	}
-
-	@Override
-	public boolean getKeysOnly() {
-		return this.keysOnly;
-	}
-
-	public void setKeysOnly(boolean keysOnly) {
-		this.keysOnly = keysOnly;
-	}
-
-	@Override
-	public Map<String, String> getParameters() {
-		return this.parameters;
-	}
-
-	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
-	}
-
-	@Override
-	public String toString() {
-		return "ApiSearchReadRequestImpl [query=" + this.query + ", keysOnly=" + this.keysOnly + ", parameters="
-		        + this.parameters + "]";
 	}
 
 }

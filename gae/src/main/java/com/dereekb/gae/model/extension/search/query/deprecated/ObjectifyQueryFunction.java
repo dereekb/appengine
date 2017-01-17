@@ -1,8 +1,8 @@
-package com.dereekb.gae.model.extension.search.query.search;
+package com.dereekb.gae.model.extension.search.query;
 
 import java.util.List;
 
-import com.dereekb.gae.model.extension.search.query.search.components.ModelQueryConverter;
+import com.dereekb.gae.model.extension.search.query.components.ModelQueryConverter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
