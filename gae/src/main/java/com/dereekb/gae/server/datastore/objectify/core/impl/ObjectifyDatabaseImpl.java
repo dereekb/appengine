@@ -545,10 +545,15 @@ public class ObjectifyDatabaseImpl
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
 				Cursor cursor = options.getQueryCursor();
+				Integer offset = options.getOffset();
 				Integer limit = options.getLimit();
 
 				if (limit != null) {
 					query = query.limit(limit);
+				}
+
+				if (offset != null) {
+					query = query.offset(offset);
 				}
 
 				if (cursor != null) {

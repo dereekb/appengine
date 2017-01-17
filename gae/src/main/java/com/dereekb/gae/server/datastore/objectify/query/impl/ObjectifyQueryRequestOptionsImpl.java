@@ -22,6 +22,14 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 		super(options);
 	}
 
+	public ObjectifyQueryRequestOptionsImpl(Integer limit) {
+		this(null, null, limit);
+	}
+
+	public ObjectifyQueryRequestOptionsImpl(Integer offset, Integer limit) {
+		this(null, offset, limit);
+	}
+
 	public ObjectifyQueryRequestOptionsImpl(String cursor, Integer offset, Integer limit) {
 		super(cursor, offset, limit);
 	}
