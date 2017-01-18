@@ -113,7 +113,6 @@ public class SearchExtensionApiController {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 
 			request.setParameters(parameters);
-
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);
 
@@ -150,9 +149,9 @@ public class SearchExtensionApiController {
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 
+			request.setParameters(parameters);
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);
-			request.setParameters(parameters);
 
 			response = this.delegate.query(type, request);
 		} catch (LinkSystemChangesException e) {

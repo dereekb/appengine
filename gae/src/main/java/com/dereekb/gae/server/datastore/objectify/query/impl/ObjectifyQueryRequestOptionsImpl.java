@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.query.impl;
 
+import com.dereekb.gae.server.datastore.objectify.query.MutableObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
@@ -12,7 +13,7 @@ import com.google.appengine.api.datastore.Cursor;
  *
  */
 public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
-        implements ObjectifyQueryRequestOptions {
+        implements MutableObjectifyQueryRequestOptions {
 
 	private boolean allowCache = true;
 
@@ -44,11 +45,11 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 		this.setCursor(options.getCursor());
 		this.setLimit(options.getLimit());
 		this.setOffset(options.getOffset());
-		this.setAllowCache(options.allowCache());
+		this.setAllowCache(options.getAllowCache());
 	}
 
 	@Override
-	public boolean allowCache() {
+	public boolean getAllowCache() {
 		return this.allowCache;
 	}
 

@@ -38,6 +38,13 @@ public class LoginKeyQueryTest extends ModelQueryTest<LoginKey> {
 		super.setModelGenerator(modelGenerator);
 	}
 
+	@Override
+	@Autowired
+	@Qualifier("loginKeyType")
+	public void setQueryType(String queryType) {
+		super.setQueryType(queryType);
+	}
+
 	@Test
 	public void testQueryingLoginPointer() {
 		String pointerId = "POINTER_KEY";

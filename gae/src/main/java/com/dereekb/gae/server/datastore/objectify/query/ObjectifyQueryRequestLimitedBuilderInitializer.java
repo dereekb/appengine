@@ -22,4 +22,16 @@ public interface ObjectifyQueryRequestLimitedBuilderInitializer {
 	public void initalizeBuilder(ObjectifyQueryRequestLimitedBuilder builder,
 	                             Map<String, String> parameters);
 
+	/**
+	 * Overrides the input options.
+	 * 
+	 * @param builder
+	 *            {@link ObjectifyQueryRequestLimitedBuilder} to update. Never
+	 *            {@code null}.
+	 * @param options
+	 *            {@link ObjectifyQueryRequestOptions}. Never {@code null}.
+	 */
+	public void overrideOptions(ObjectifyQueryRequestLimitedBuilder builder,
+	                            ObjectifyQueryRequestOptions options);
+
 }

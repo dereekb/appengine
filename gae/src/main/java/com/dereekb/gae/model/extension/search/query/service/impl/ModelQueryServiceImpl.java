@@ -67,8 +67,10 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		if (this.initializer != null) {
 			builder = this.registry.makeQuery();
 			this.initializer.initalizeBuilder(builder, parameters);
+			this.initializer.overrideOptions(builder, request);
 		} else {
 			builder = this.registry.makeQuery(parameters);
+			builder.setOptions(request);
 		}
 
 		ExecutableObjectifyQuery<T> query = builder.buildExecutableQuery();

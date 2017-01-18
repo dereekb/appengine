@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 
 /**
  * Abstract {@link ObjectifyQueryRequestLimitedBuilderInitializer}
@@ -26,6 +27,12 @@ public abstract class AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl
 			configurer.configure(builder);
 		}
 
+	}
+
+	@Override
+	public void overrideOptions(ObjectifyQueryRequestLimitedBuilder builder,
+	                            ObjectifyQueryRequestOptions options) {
+		builder.setOptions(options);
 	}
 
 	protected abstract ConfigurableObjectifyQueryRequestConfigurer makeConfigurer();

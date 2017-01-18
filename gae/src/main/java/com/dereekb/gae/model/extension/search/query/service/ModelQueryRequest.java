@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.search.query.service;
 
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 
 /**
@@ -9,6 +10,6 @@ import com.dereekb.gae.utilities.model.search.request.SearchRequest;
  *
  */
 public interface ModelQueryRequest
-        extends SearchRequest {
+        extends SearchRequest, ObjectifyQueryRequestOptions {
 
 }

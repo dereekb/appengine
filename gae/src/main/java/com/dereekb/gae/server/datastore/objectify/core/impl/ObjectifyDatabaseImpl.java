@@ -528,7 +528,7 @@ public class ObjectifyDatabaseImpl
 			public ObjectifyQueryModelResponse<T> query() {
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
-				boolean cache = options.allowCache();
+				boolean cache = options.getAllowCache();
 				Query<T> query = ObjectifyDatabaseEntityImpl.this.makeQuery(cache);
 
 				query = this.applyOptions(query);
@@ -615,7 +615,7 @@ public class ObjectifyDatabaseImpl
 			// MARK: ObjectifyQueryModelResponse
 			@Override
 			public List<T> queryModels() {
-				if (this.modelsResult != null) {
+				if (this.modelsResult == null) {
 					this.modelsResult = ObjectifyDatabaseEntityImpl.this
 					        .getWithObjectifyKeys(this.queryObjectifyKeys());
 				}

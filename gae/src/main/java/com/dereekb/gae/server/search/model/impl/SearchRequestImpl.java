@@ -23,7 +23,7 @@ public class SearchRequestImpl extends SearchOptionsImpl
 
 	public SearchRequestImpl() {}
 
-	public SearchRequestImpl(SearchRequest request) {
+	public SearchRequestImpl(SearchRequest request) throws IllegalArgumentException {
 		if (request == null) {
 			throw new IllegalArgumentException("Request cannot be null.");
 		}

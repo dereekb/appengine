@@ -26,6 +26,7 @@
 				<entry key-ref="storedImageSearchType" value-ref="storedImageSearchDelegateEntry" />
 				<entry key-ref="storedImageSetSearchType" value-ref="storedImageSetSearchDelegateEntry" />
 				<entry key-ref="loginSearchType" value-ref="loginSearchDelegateEntry" />
+				<entry key-ref="loginKeySearchType" value-ref="loginKeySearchDelegateEntry" />
 				<entry key-ref="loginPointerSearchType" value-ref="loginPointerSearchDelegateEntry" />
 			</map>
 		</constructor-arg>

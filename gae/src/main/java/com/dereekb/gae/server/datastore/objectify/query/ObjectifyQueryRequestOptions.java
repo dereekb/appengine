@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.query;
 
-import com.dereekb.gae.utilities.model.search.request.MutableSearchOptions;
+import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
@@ -10,14 +10,10 @@ import com.google.appengine.api.datastore.Cursor;
  * @see {@link ObjectifyQueryRequestBuilder}
  */
 public interface ObjectifyQueryRequestOptions
-        extends MutableSearchOptions {
+        extends SearchOptions {
 
-	public boolean allowCache();
-
-	public void setAllowCache(boolean cache);
+	public boolean getAllowCache();
 
 	public Cursor getQueryCursor();
-
-	public void setQueryCursor(Cursor cursor);
 
 }
