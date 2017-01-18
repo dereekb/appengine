@@ -71,7 +71,7 @@ public class LoginKeyData extends DatabaseModelData {
 	@Override
 	public String toString() {
 		return "LoginKeyData [pointer=" + pointer + ", name=" + name + ", mask=" + mask + ", verification="
-		        + verification + ", expiration=" + expiration + ", key=" + key + ", created=" + created + "]";
+		        + verification + ", expiration=" + expiration + ", key=" + key + ", created=" + date + "]";
 	}
 
 }

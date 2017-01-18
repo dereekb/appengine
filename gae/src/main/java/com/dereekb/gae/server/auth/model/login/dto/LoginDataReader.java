@@ -10,7 +10,6 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
-import com.dereekb.gae.utilities.misc.reader.DateLongConverter;
 import com.googlecode.objectify.Key;
 
 /**
@@ -34,9 +33,7 @@ public final class LoginDataReader extends AbstractDirectionalConverter<LoginDat
 		String stringIdentifier = input.getKey();
 		model.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
 
-		Long date = input.getCreated();
-		model.setDate(DateLongConverter.CONVERTER.safeConvert(date));
-
+		model.setDate(input.getDateValue());
 		model.setSearchIdentifier(input.getSearchIdentifier());
 
 		// Pointers

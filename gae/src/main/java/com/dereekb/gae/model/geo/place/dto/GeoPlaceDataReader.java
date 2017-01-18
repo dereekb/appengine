@@ -9,7 +9,6 @@ import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
-import com.dereekb.gae.utilities.misc.reader.DateLongConverter;
 
 /**
  * {@link DirectionalConverter} for converting a {@link GeoPlace} to
@@ -31,8 +30,7 @@ public final class GeoPlaceDataReader extends AbstractDirectionalConverter<GeoPl
 		geoPlace.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
 
 		// Date
-		Long date = input.getCreated();
-		geoPlace.setDate(DateLongConverter.CONVERTER.safeConvert(date));
+		geoPlace.setDate(input.getDateValue());
 
 		// Links
 		geoPlace.setParent(GEO_PLACE_KEY_UTIL.keyFromId(input.getParent()));

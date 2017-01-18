@@ -22,8 +22,8 @@ public final class GeoPlaceDataBuilder extends AbstractDirectionalConverter<GeoP
 		GeoPlaceData data = new GeoPlaceData();
 
 		// Id
-		data.setIdentifier(geoPlace.getModelKey());
-		data.setCreated(geoPlace.getDate());
+		data.setKey(geoPlace.getModelKey());
+		data.setDate(geoPlace.getDate());
 		data.setSearchIdentifier(geoPlace.getSearchIdentifier());
 
 		// Links

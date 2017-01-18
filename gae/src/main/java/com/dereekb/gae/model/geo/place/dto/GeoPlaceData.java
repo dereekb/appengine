@@ -56,7 +56,7 @@ public class GeoPlaceData extends DescribedDatabaseModelData {
 	public String toString() {
 		return "GeoPlaceData [point=" + this.point + ", region=" + this.region + ", parent=" + this.parent
 		        + ", descriptor=" + this.descriptor + ", searchIdentifier=" + this.searchIdentifier + ", identifier="
-		        + this.key + ", created=" + this.created + "]";
+		        + this.key + ", created=" + this.date + "]";
 	}
 
 }

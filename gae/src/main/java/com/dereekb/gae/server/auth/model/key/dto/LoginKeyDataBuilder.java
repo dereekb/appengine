@@ -5,6 +5,7 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.model.login.dto.LoginData;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
@@ -23,8 +24,8 @@ public final class LoginKeyDataBuilder extends AbstractDirectionalConverter<Logi
 		LoginKeyData data = new LoginKeyData();
 
 		// Id
-		data.setIdentifier(loginKey.getModelKey());
-		data.setCreated(loginKey.getDate());
+		data.setKey(loginKey.getModelKey());
+		data.setDate(loginKey.getDate());
 
 		// Pointers
 		data.setPointer(ObjectifyKeyUtility.nameFromKey(loginKey.getLoginPointer()));
@@ -34,7 +35,7 @@ public final class LoginKeyDataBuilder extends AbstractDirectionalConverter<Logi
 		data.setMask(loginKey.getMask());
 		data.setVerification(loginKey.getVerification());
 		data.setExpiration(loginKey.getExpiration());
-		
+
 		return data;
 	}
 

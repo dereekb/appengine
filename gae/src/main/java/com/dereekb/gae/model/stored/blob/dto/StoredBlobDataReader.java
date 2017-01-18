@@ -6,7 +6,6 @@ import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalC
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
-import com.dereekb.gae.utilities.misc.reader.DateLongConverter;
 
 /**
  * {@link DirectionalConverter} for converting a {@link StoredBlobData} to
@@ -28,8 +27,7 @@ public final class StoredBlobDataReader extends AbstractDirectionalConverter<Sto
 		blob.setSearchIdentifier(input.getSearchIdentifier());
 
 		// Date
-		Long created = input.getCreated();
-		blob.setDate(DateLongConverter.CONVERTER.safeConvert(created));
+		blob.setDate(input.getDateValue());
 
 		// Links
 		blob.setDescriptor(input.getDescriptor());

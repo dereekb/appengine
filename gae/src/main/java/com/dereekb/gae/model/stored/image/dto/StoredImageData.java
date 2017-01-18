@@ -106,7 +106,7 @@ public final class StoredImageData extends SearchableDatabaseModelData {
 		return "StoredImageData [name=" + this.name + ", summary=" + this.summary + ", tags=" + this.tags + ", type="
 		        + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace + ", imageSets=" + this.imageSets
 		        + ", searchIdentifier=" + this.searchIdentifier + ", identifier=" + this.key + ", created="
-		        + this.created + "]";
+		        + this.date + "]";
 	}
 
 }

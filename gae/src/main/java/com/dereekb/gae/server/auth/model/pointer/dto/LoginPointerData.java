@@ -49,7 +49,7 @@ public class LoginPointerData extends DatabaseModelData {
 
 	@Override
 	public String toString() {
-		return "LoginPointerData [login=" + this.login + ", key=" + this.key + ", created=" + this.created + "]";
+		return "LoginPointerData [login=" + this.login + ", key=" + this.key + ", created=" + this.date + "]";
 	}
 
 }
