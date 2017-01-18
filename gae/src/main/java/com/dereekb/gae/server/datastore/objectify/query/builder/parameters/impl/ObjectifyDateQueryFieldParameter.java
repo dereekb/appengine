@@ -37,7 +37,7 @@ public class ObjectifyDateQueryFieldParameter extends DateQueryFieldParameter
 	public static ObjectifyDateQueryFieldParameter recentDate(String field) {
 		ObjectifyDateQueryFieldParameter parameter = new ObjectifyDateQueryFieldParameter(field);
 		parameter.setOrdering(QueryResultsOrdering.Descending);
-		parameter.setOperator(ExpressionOperator.LessOrEqualTo);
+		parameter.setOperator(ExpressionOperator.LESS_OR_EQUAL_TO);
 		return parameter;
 	}
 

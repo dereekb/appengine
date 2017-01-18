@@ -22,7 +22,7 @@ public class ObjectifyConditionQueryFilter
 	}
 
 	public ObjectifyConditionQueryFilter(String field, ExpressionOperator operator, Object value) {
-		if (operator == ExpressionOperator.IsNull) {
+		if (operator == ExpressionOperator.IS_NULL) {
 			value = null;
 		}
 

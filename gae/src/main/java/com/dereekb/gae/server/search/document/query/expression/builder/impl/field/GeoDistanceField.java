@@ -18,7 +18,7 @@ public class GeoDistanceField extends GeoField {
 	private ExpressionOperator operator;
 
     public GeoDistanceField(String name, Point point, Integer radius) {
-	    this(name, point, radius, ExpressionOperator.LessThan);
+	    this(name, point, radius, ExpressionOperator.LESS_THAN);
     }
 
     public GeoDistanceField(String name, Point point, Integer radius, ExpressionOperator operator) {
@@ -41,7 +41,7 @@ public class GeoDistanceField extends GeoField {
 
     public void setOperator(ExpressionOperator operator) {
 		if (operator == null) {
-			operator = ExpressionOperator.LessThan;
+			operator = ExpressionOperator.LESS_THAN;
 		}
 
     	this.operator = operator;

@@ -80,7 +80,7 @@ public class ModelKeyQueryFieldParameterBuilder {
 		@Override
 		public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
 			if (operator == null) {
-				operator = ExpressionOperator.Equal;
+				operator = ExpressionOperator.EQUAL;
 			}
 
 			super.setOperator(operator);

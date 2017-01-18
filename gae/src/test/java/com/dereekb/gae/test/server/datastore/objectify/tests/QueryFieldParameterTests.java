@@ -23,7 +23,7 @@ public class QueryFieldParameterTests {
 	public void testQueryFieldParameterDencoder() {
 		String value = "value";
 		QueryResultsOrdering ordering = QueryResultsOrdering.Ascending;
-		ExpressionOperator operator = ExpressionOperator.Equal;
+		ExpressionOperator operator = ExpressionOperator.EQUAL;
 
 		Parameter parameters = new ParameterImpl(value, operator, ordering);
 		String encoding = dencoder.encodeString(parameters);
@@ -39,12 +39,12 @@ public class QueryFieldParameterTests {
 		Parameter parameter = dencoder.decodeString("=,2");
 
 		Assert.assertTrue(parameter.getValue().equals("2"));
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.Equal);
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
 	}
 
 	@Test
 	public void testEncodingEqualsNull() {
-		ParameterImpl parameter = new ParameterImpl("null", ExpressionOperator.IsNull);
+		ParameterImpl parameter = new ParameterImpl("null", ExpressionOperator.IS_NULL);
 		String encoded = dencoder.encodeString(parameter);
 		Assert.assertTrue(encoded.equals("=n,null"));
 	}
@@ -53,7 +53,7 @@ public class QueryFieldParameterTests {
 	public void testDecodingShortEqualsNull() {
 		Parameter parameter = dencoder.decodeString("=n,null");
 
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IsNull);
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IS_NULL);
 		Assert.assertTrue(parameter.getValue().equals("null"));
 	}
 

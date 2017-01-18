@@ -8,32 +8,32 @@ package com.dereekb.gae.server.search.document.query.expression;
  */
 public enum ExpressionOperator {
 
-	Equal("="),
+	EQUAL("="),
 
 	/**
 	 * For Geopoint locations, this specifies that the given point is outside
 	 * the given radius.
 	 */
-	GreaterThan(">"),
-	GreaterOrEqualTo(">="),
+	GREATER_THAN(">"),
+	GREATER_OR_EQUAL_TO(">="),
 
 	/**
 	 * For Geopoint locations, this specifies that the given point is within the
 	 * given radius.
 	 */
-	LessThan("<"),
-	LessOrEqualTo("<="),
+	LESS_THAN("<"),
+	LESS_OR_EQUAL_TO("<="),
 
     // Query Only
-	NotEqual("!="),
-	GreaterAndLessThanButNotEqualTo("<>"),
-	In("in"),
+	NOT_EQUAL("!="),
+	GREATER_OR_LESS_BUT_NOT_EQUAL_TO("<>"),
+	IN("in"),
 
     // Special
 	/**
 	 * Used only in special cases.
 	 */
-	IsNull("=n");
+	IS_NULL("=n");
 
 	private final String value;
 
@@ -46,28 +46,28 @@ public enum ExpressionOperator {
 
 		switch (op) {
 			case "=n":
-				operation = IsNull;
+				operation = IS_NULL;
 				break;
 			case "=":
-				operation = Equal;
+				operation = EQUAL;
 				break;
 			case ">":
-				operation = GreaterThan;
+				operation = GREATER_THAN;
 				break;
 			case ">=":
-				operation = GreaterOrEqualTo;
+				operation = GREATER_OR_EQUAL_TO;
 				break;
 			case "<":
-				operation = LessThan;
+				operation = LESS_THAN;
 				break;
 			case "<=":
-				operation = LessOrEqualTo;
+				operation = LESS_OR_EQUAL_TO;
 				break;
 			case "!=":
-				operation = NotEqual;
+				operation = NOT_EQUAL;
 				break;
 			case "<>":
-				operation = GreaterAndLessThanButNotEqualTo;
+				operation = GREATER_OR_LESS_BUT_NOT_EQUAL_TO;
 				break;
 
 		}
@@ -89,7 +89,7 @@ public enum ExpressionOperator {
 	}
 
 	public boolean isComplex() {
-		return this.equals(Equal) == false;
+		return this.equals(EQUAL) == false;
 	}
 
 }

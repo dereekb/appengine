@@ -84,6 +84,12 @@
 		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl"
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="loginRegistry"/>
+		<constructor-arg index="1" ref="loginQueryInitializer"/>
+	</bean>
+
+	<bean id="loginQueryInitializer"
+		class="com.dereekb.gae.server.auth.model.login.search.query.LoginQueryInitializer"
+		scope="singleton" lazy-init="true">
 	</bean>
 
 </beans>

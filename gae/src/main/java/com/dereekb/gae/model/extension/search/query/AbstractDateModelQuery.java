@@ -30,7 +30,7 @@ public class AbstractDateModelQuery
 	}
 
 	public void searchDatesAfter(Date value) {
-		this.date = new DateQueryFieldParameter(this.getDateField(), ExpressionOperator.GreaterThan, value);
+		this.date = new DateQueryFieldParameter(this.getDateField(), ExpressionOperator.GREATER_THAN, value);
 	}
 
 	public void orderByDatesDescending() {

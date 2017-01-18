@@ -30,6 +30,10 @@ public class LoginPointerQueryInitializer extends AbstractObjectifyQueryRequestL
 	public static class ObjectifyLoginPointerQuery extends LoginPointerQuery
 	        implements ConfigurableObjectifyQueryRequestConfigurer {
 
+		public void setLogin(Login login) throws NullPointerException {
+			this.setLogin(login.getObjectifyKey());
+		}
+
 		public void setLogin(Key<Login> login) {
 			this.setLogin(LOGIN_BUILDER.getUtil().toModelKey(login));
 		}

@@ -17,7 +17,7 @@ public class NumberField extends AbstractField {
 	private ExpressionOperator operator;
 
 	public NumberField(String name, Number value) {
-		this(name, ExpressionOperator.Equal, value);
+		this(name, ExpressionOperator.EQUAL, value);
 	}
 
 	public NumberField(String name, ExpressionOperator operator, Number value) {

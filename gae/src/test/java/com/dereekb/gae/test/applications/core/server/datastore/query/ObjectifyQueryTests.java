@@ -145,4 +145,6 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		Assert.assertTrue(query.getResultCount() == count);
 	}
 
+	// TODO: Test querying limits?
+
 }

@@ -17,7 +17,7 @@ public class DateField extends AbstractField {
 	private ExpressionOperator operator;
 
 	public DateField(String name, Date date) {
-		this(name, date, ExpressionOperator.Equal);
+		this(name, date, ExpressionOperator.EQUAL);
 	}
 
 	public DateField(String name, Date date, ExpressionOperator operator) {
@@ -78,7 +78,7 @@ public class DateField extends AbstractField {
 
 	public void setOperator(ExpressionOperator operator) {
 		if (operator == null) {
-			operator = ExpressionOperator.Equal;
+			operator = ExpressionOperator.EQUAL;
 		}
 
 		this.operator = operator;
@@ -94,7 +94,7 @@ public class DateField extends AbstractField {
 
 	@Override
 	public boolean isComplex() {
-		return !this.operator.equals(ExpressionOperator.Equal);
+		return !this.operator.equals(ExpressionOperator.EQUAL);
 	}
 
 	@Override

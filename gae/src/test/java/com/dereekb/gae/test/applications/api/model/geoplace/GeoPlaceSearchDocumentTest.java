@@ -92,7 +92,7 @@ public class GeoPlaceSearchDocumentTest extends ModelSearchDocumentTest<GeoPlace
 		GeoPlaceSearch search = request.getSearch();
 
 		DateSearch dateSearch = new DateSearch(date);
-		dateSearch.setOperator(ExpressionOperator.Equal);
+		dateSearch.setOperator(ExpressionOperator.EQUAL);
 		search.setDate(dateSearch);
 
 		ModelDocumentSearchResponse<GeoPlace> response = this.searchService.search(request);

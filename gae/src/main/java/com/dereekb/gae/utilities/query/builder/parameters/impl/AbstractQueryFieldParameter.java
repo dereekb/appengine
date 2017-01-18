@@ -133,7 +133,7 @@ public abstract class AbstractQueryFieldParameter<T>
 	public AbstractQueryFieldParameter<T> setEqualityFilter(String field,
 	                                                        T value)
 	        throws IllegalArgumentException {
-		return this.setFilter(field, ExpressionOperator.Equal, value);
+		return this.setFilter(field, ExpressionOperator.EQUAL, value);
 	}
 
 	public AbstractQueryFieldParameter<T> setFilter(String field,
@@ -176,7 +176,7 @@ public abstract class AbstractQueryFieldParameter<T>
 		this.operator = parameter.getOperator();
 		this.ordering = parameter.getOrdering();
 
-		if (this.operator == ExpressionOperator.IsNull) {
+		if (this.operator == ExpressionOperator.IS_NULL) {
 			this.setNullParameterValue();
 		} else {
 			this.setParameterValue(parameter.getValue());

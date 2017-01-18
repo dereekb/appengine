@@ -152,18 +152,21 @@ public abstract class ModelQueryTest<T extends ObjectifyModel<T>> extends ApiApp
 			List<ModelKey> results = this.performModelHttpRequest(options);
 
 			ObjectifyQueryRequestBuilder<T> builder = ModelQueryTest.this.registry.makeQuery();
+			this.query.configure(builder);
 
 			if (options != null) {
 				builder.setOptions(options);
 			}
 
-			ExecutableObjectifyQuery<T> query = builder.buildExecutableQuery();
+			ExecutableObjectifyQuery<T> executableQuery = builder.buildExecutableQuery();
 
-			return new Results(query, results);
+			return new Results(executableQuery, results);
 		}
 
 		public List<ModelKey> performModelHttpRequest(ObjectifyQueryRequestOptions options) throws Exception {
 			MockHttpServletResponse response = this.performHttpRequest(options);
+
+			Assert.assertTrue("Query failed.", response.getStatus() == 200);
 
 			String jsonContent = response.getContentAsString();
 			JsonElement jsonElement = ModelQueryTest.this.parser.parse(jsonContent);
@@ -222,6 +225,7 @@ public abstract class ModelQueryTest<T extends ObjectifyModel<T>> extends ApiApp
 
 			public void assertResultsMatch() {
 				List<ModelKey> queryKeyResults = this.query.queryModelKeys();
+				Assert.assertTrue(queryKeyResults.size() == this.modelKeys.size());
 				Assert.assertTrue(queryKeyResults.containsAll(this.modelKeys));
 			}
 

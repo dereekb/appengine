@@ -26,7 +26,7 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	 *            {@link String}. Never {@code null}.
 	 */
 	public DateQueryFieldParameter(String field) throws IllegalArgumentException {
-		this(field, ExpressionOperator.LessThan);
+		this(field, ExpressionOperator.LESS_THAN);
 	}
 
 	public DateQueryFieldParameter(String field, ExpressionOperator operator) {
@@ -34,7 +34,7 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	}
 
 	public DateQueryFieldParameter(String field, Date value) throws IllegalArgumentException {
-		super(field, ExpressionOperator.LessThan, value);
+		super(field, ExpressionOperator.LESS_THAN, value);
 	}
 
 	public DateQueryFieldParameter(String field, ExpressionOperator operator, Date value) {
@@ -58,7 +58,7 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	public static DateQueryFieldParameter recentDate(String field) {
 		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
 		parameter.setOrdering(QueryResultsOrdering.Descending);
-		parameter.setOperator(ExpressionOperator.LessOrEqualTo);
+		parameter.setOperator(ExpressionOperator.LESS_OR_EQUAL_TO);
 		return parameter;
 	}
 

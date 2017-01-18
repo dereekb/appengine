@@ -90,12 +90,7 @@ public class LoginPointerQuery
 		}
 
 		if (typeString != null) {
-			try {
-				Integer typeInteger = new Integer(typeString);
-				this.setType(typeInteger);
-			} catch (NumberFormatException e) {
-				throw new IllegalArgumentException(e);
-			}
+			this.type = new IntegerQueryFieldParameter(TYPE_FIELD, typeString);
 		} else {
 			this.type = null;
 		}

@@ -30,7 +30,7 @@ public class DateSearch {
 	}
 
 	public DateSearch(Date date) {
-		this(date, ExpressionOperator.Equal);
+		this(date, ExpressionOperator.EQUAL);
 	}
 
 	public DateSearch(Date date, ExpressionOperator operator) {

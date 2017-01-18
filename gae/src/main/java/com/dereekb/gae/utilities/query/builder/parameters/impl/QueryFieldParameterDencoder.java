@@ -143,7 +143,7 @@ public class QueryFieldParameterDencoder {
 		private QueryResultsOrdering ordering;
 
 		public ParameterImpl(String value) {
-			this(value, ExpressionOperator.Equal);
+			this(value, ExpressionOperator.EQUAL);
 		}
 
 		public ParameterImpl(String value, ExpressionOperator operator) {
