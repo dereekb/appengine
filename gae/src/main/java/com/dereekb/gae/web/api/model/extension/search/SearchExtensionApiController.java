@@ -69,8 +69,8 @@ public class SearchExtensionApiController {
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
-			request.setQuery(query);
 			request.setParameters(parameters);
+			request.setQuery(query);
 
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);

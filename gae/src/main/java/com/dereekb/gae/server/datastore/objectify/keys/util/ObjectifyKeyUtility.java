@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
+import com.dereekb.gae.utilities.cache.map.CacheMap;
+import com.dereekb.gae.utilities.cache.map.CacheMapDelegate;
+import com.dereekb.gae.utilities.cache.map.impl.CacheMapImpl;
 import com.googlecode.objectify.Key;
 
 /**
@@ -14,9 +17,32 @@ import com.googlecode.objectify.Key;
  */
 public class ObjectifyKeyUtility<T> extends ObjectifyUtility {
 
+	private static final CacheMap<Class<?>, ObjectifyKeyUtility<?>> SINGLETON_CACHE = new CacheMapImpl<Class<?>, ObjectifyKeyUtility<?>>(
+	        new CacheMapDelegate<Class<?>, ObjectifyKeyUtility<?>>() {
+
+		        @SuppressWarnings({ "unchecked", "rawtypes" })
+		        @Override
+		        public ObjectifyKeyUtility<?> makeCacheElement(Class<?> key) throws IllegalArgumentException {
+			        return new ObjectifyKeyUtility(key);
+		        }
+
+	        });
+
 	private Class<T> type;
 
-	public ObjectifyKeyUtility(Class<T> type) {
+	public ObjectifyKeyUtility(Class<T> type) throws IllegalArgumentException {
+		this.setType(type);
+	}
+
+	public Class<T> getType() {
+		return this.type;
+	}
+
+	public void setType(Class<T> type) throws IllegalArgumentException {
+		if (type == null) {
+			throw new IllegalArgumentException("Type cannot be null.");
+		}
+
 		this.type = type;
 	}
 
@@ -44,11 +70,11 @@ public class ObjectifyKeyUtility<T> extends ObjectifyUtility {
 		Set<Key<T>> keys = new HashSet<Key<T>>();
 
 		if (ids != null) {
-	        for (Long id : ids) {
-	        	Key<T> key = Key.create(this.type, id);
-	        	keys.add(key);
-	        }
-        }
+			for (Long id : ids) {
+				Key<T> key = Key.create(this.type, id);
+				keys.add(key);
+			}
+		}
 
 		return keys;
 	}
@@ -57,11 +83,11 @@ public class ObjectifyKeyUtility<T> extends ObjectifyUtility {
 		Set<Key<T>> keys = new HashSet<Key<T>>();
 
 		if (names != null) {
-	        for (String name : names) {
-	        	Key<T> key = Key.create(this.type, name);
-	        	keys.add(key);
-	        }
-        }
+			for (String name : names) {
+				Key<T> key = Key.create(this.type, name);
+				keys.add(key);
+			}
+		}
 
 		return keys;
 	}
@@ -86,8 +112,9 @@ public class ObjectifyKeyUtility<T> extends ObjectifyUtility {
 		return name;
 	}
 
-	public static <T> ObjectifyKeyUtility<T> make(Class<T> type) {
-		return new ObjectifyKeyUtility<T>(type);
+	@SuppressWarnings("unchecked")
+	public static final <T> ObjectifyKeyUtility<T> make(Class<T> type) {
+		return (ObjectifyKeyUtility<T>) SINGLETON_CACHE.get(type);
 	}
 
 }

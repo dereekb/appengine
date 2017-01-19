@@ -38,11 +38,20 @@ public class ApiSearchReadRequestImpl extends SearchRequestImpl
 	}
 
 	public void setQuery(String query) {
-		if (query == null || query.isEmpty()) {
+		if (query == null) {
 			throw new IllegalArgumentException("Query cannot be null.");
 		}
 
 		this.query = query;
+	}
+
+	@Override
+	public void setParameters(Map<String, String> parameters) throws IllegalArgumentException {
+		if (parameters == null) {
+			parameters = Collections.emptyMap();
+		}
+
+		super.setParameters(parameters);
 	}
 
 }
