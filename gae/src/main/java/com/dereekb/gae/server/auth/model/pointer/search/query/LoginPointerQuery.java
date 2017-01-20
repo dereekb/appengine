@@ -10,6 +10,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQue
 import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.utility.ParameterUtility;
 
 /**
  * Utility used for querying a {@link LoginPointer}.
@@ -42,12 +43,12 @@ public class LoginPointerQuery
 		this.setType(typeInteger);
 	}
 
+	public void setType(String type) {
+		this.type = IntegerQueryFieldParameter.make(TYPE_FIELD, type);
+	}
+
 	public void setType(Integer type) {
-		if (type != null) {
-			this.type = new IntegerQueryFieldParameter(TYPE_FIELD, type);
-		} else {
-			this.type = null;
-		}
+		this.type = IntegerQueryFieldParameter.make(TYPE_FIELD, type);
 	}
 
 	public ModelKeyQueryFieldParameter getLogin() {
@@ -55,46 +56,26 @@ public class LoginPointerQuery
 	}
 
 	public void setLogin(ModelKey login) {
-		if (login != null) {
-			this.login = LOGIN_FIELD_BUILDER.make(LOGIN_FIELD, login);
-		} else {
-			this.login = null;
-		}
+		this.login = LOGIN_FIELD_BUILDER.make(LOGIN_FIELD, login);
+	}
+
+	public void setLogin(String login) {
+		this.login = LOGIN_FIELD_BUILDER.makeModelKeyParameter(LOGIN_FIELD, login);
 	}
 
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
 		Map<String, String> parameters = new HashMap<String, String>();
-
-		if (this.login != null) {
-			parameters.put(LOGIN_FIELD, this.login.getParameterString());
-		}
-
-		if (this.type != null) {
-			parameters.put(TYPE_FIELD, this.type.getParameterString());
-		}
-
+		ParameterUtility.put(parameters, this.login);
+		ParameterUtility.put(parameters, this.type);
 		return parameters;
 	}
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
-		String loginString = parameters.get(LOGIN_FIELD);
-		String typeString = parameters.get(TYPE_FIELD);
-
-		if (loginString != null) {
-			this.login = LOGIN_FIELD_BUILDER.makeModelKeyParameter(LOGIN_FIELD, loginString);
-		} else {
-			this.login = null;
-		}
-
-		if (typeString != null) {
-			this.type = new IntegerQueryFieldParameter(TYPE_FIELD, typeString);
-		} else {
-			this.type = null;
-		}
-
+		this.setLogin(parameters.get(LOGIN_FIELD));
+		this.setType(parameters.get(TYPE_FIELD));
 	}
 
 }

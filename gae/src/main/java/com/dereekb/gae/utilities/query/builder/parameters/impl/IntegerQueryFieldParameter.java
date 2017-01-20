@@ -26,6 +26,51 @@ public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Inte
 		super(field, parameterString);
 	}
 
+	public IntegerQueryFieldParameter(AbstractQueryFieldParameter<Integer> parameter) throws IllegalArgumentException {
+		super(parameter);
+	}
+
+	public IntegerQueryFieldParameter(String field, AbstractQueryFieldParameter<Integer> parameter)
+	        throws IllegalArgumentException {
+		super(field, parameter);
+	}
+
+	public static IntegerQueryFieldParameter make(String field,
+	                                              Integer value)
+	        throws IllegalArgumentException {
+		IntegerQueryFieldParameter fieldParameter = null;
+
+		if (value != null) {
+			fieldParameter = new IntegerQueryFieldParameter(field, value);
+		}
+
+		return fieldParameter;
+	}
+
+	public static IntegerQueryFieldParameter make(String field,
+	                                              String parameterString)
+	        throws IllegalArgumentException {
+		IntegerQueryFieldParameter fieldParameter = null;
+
+		if (parameterString != null) {
+			fieldParameter = new IntegerQueryFieldParameter(field, parameterString);
+		}
+
+		return fieldParameter;
+	}
+
+	public static IntegerQueryFieldParameter make(String field,
+	                                              IntegerQueryFieldParameter parameter)
+	        throws IllegalArgumentException {
+		IntegerQueryFieldParameter fieldParameter = null;
+
+		if (parameter != null) {
+			fieldParameter = new IntegerQueryFieldParameter(field, parameter);
+		}
+
+		return fieldParameter;
+	}
+
 	// MARK: AbstractQueryFieldParameters
 	@Override
 	protected String getParameterValue() {

@@ -146,7 +146,12 @@ public abstract class AbstractQueryFieldParameter<T>
 		return this;
 	}
 
-	// MARK: QueryParameter
+	// MARK: KeyedEncodedQueryParameter
+	@Override
+	public String getParameterKey() {
+		return this.field;
+	}
+
 	@Override
 	public String getParameterString() {
 		Parameter parameter = this.getParameterRepresentation();

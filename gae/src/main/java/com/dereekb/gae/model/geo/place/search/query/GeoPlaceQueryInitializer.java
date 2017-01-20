@@ -18,8 +18,8 @@ import com.googlecode.objectify.Key;
  */
 public class GeoPlaceQueryInitializer extends AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl {
 
-	private static final ObjectifyKeyFieldParameterBuilder<GeoPlace> PARENT_BUILDER = new ObjectifyKeyFieldParameterBuilder<GeoPlace>(
-	        ModelKeyType.NUMBER, GeoPlace.class);
+	private static final ObjectifyKeyFieldParameterBuilder<GeoPlace> PARENT_BUILDER = ObjectifyKeyFieldParameterBuilder
+	        .make(ModelKeyType.NUMBER, GeoPlace.class);
 
 	@Override
 	protected ConfigurableObjectifyQueryRequestConfigurer makeConfigurer() {

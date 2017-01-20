@@ -24,6 +24,39 @@ public class StringQueryFieldParameter extends AbstractQueryFieldParameter<Strin
 		super(field, operator, value);
 	}
 
+	public StringQueryFieldParameter(String field, AbstractQueryFieldParameter<String> parameter)
+	        throws IllegalArgumentException {
+		super(field, parameter);
+	}
+
+	public StringQueryFieldParameter(AbstractQueryFieldParameter<String> parameter) throws IllegalArgumentException {
+		super(parameter);
+	}
+
+	public static StringQueryFieldParameter make(String field,
+	                                             String parameterString)
+	        throws IllegalArgumentException {
+		StringQueryFieldParameter fieldParameter = null;
+
+		if (parameterString != null) {
+			fieldParameter = new StringQueryFieldParameter(field, parameterString);
+		}
+
+		return fieldParameter;
+	}
+
+	public static StringQueryFieldParameter make(String field,
+	                                             StringQueryFieldParameter parameter)
+	        throws IllegalArgumentException {
+		StringQueryFieldParameter fieldParameter = null;
+
+		if (parameter != null) {
+			fieldParameter = new StringQueryFieldParameter(field, parameter);
+		}
+
+		return fieldParameter;
+	}
+
 	// MARK: AbstractQueryFieldParameter
 	@Override
 	protected String getParameterValue() {

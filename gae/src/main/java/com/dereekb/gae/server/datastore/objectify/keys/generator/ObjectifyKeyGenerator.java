@@ -7,40 +7,40 @@ import java.util.Set;
 import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
-import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.utilities.cache.map.CacheMap;
+import com.dereekb.gae.utilities.cache.map.CacheMapDelegate;
+import com.dereekb.gae.utilities.cache.map.impl.CacheMapImpl;
 import com.dereekb.gae.utilities.misc.random.PositiveLongGenerator;
 import com.dereekb.gae.utilities.misc.random.StringLongGenerator;
 import com.googlecode.objectify.Key;
 
 /**
  * {@link Generator} for Objectify {@link Key} values.
+ * 
+ * Use {@link #nameKeyGenerator(Class)} and {@link #numberKeyGenerator(Class)}
+ * for generators.
  *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
-public class ObjectifyKeyGenerator<T> extends AbstractGenerator<Key<T>> {
+public abstract class ObjectifyKeyGenerator<T> extends AbstractGenerator<Key<T>> {
 
-	private final Class<T> type;
-	private final Generator<Key<T>> internalGenerator;
+	protected final Class<T> type;
 
-	public ObjectifyKeyGenerator(Class<T> type, ModelKeyType keyType) {
-		this.type = type;
-
-		if (keyType.equals(ModelKeyType.NAME)) {
-			this.internalGenerator = new InternalObjectifyNameKeyGenerator();
-		} else {
-			this.internalGenerator = new InternalObjectifyNumberKeyGenerator();
-		}
-	}
-
+	@SuppressWarnings("unchecked")
 	public static <T> ObjectifyKeyGenerator<T> nameKeyGenerator(Class<T> type) {
-		return new ObjectifyKeyGenerator<T>(type, ModelKeyType.NAME);
+		return (ObjectifyKeyGenerator<T>) ObjectifyNameKeyGenerator.SINGLETON_CACHE.get(type);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> ObjectifyKeyGenerator<T> numberKeyGenerator(Class<T> type) {
-		return new ObjectifyKeyGenerator<T>(type, ModelKeyType.NUMBER);
+		return (ObjectifyKeyGenerator<T>) ObjectifyLongKeyGenerator.SINGLETON_CACHE.get(type);
+	}
+
+	private ObjectifyKeyGenerator(Class<T> type) {
+		this.type = type;
 	}
 
 	public Class<T> getType() {
@@ -48,10 +48,7 @@ public class ObjectifyKeyGenerator<T> extends AbstractGenerator<Key<T>> {
 	}
 
 	@Override
-	public Key<T> generate(GeneratorArg arg) {
-		Key<T> key = this.internalGenerator.generate(arg);
-		return key;
-	}
+	public abstract Key<T> generate(GeneratorArg arg);
 
 	public Set<Key<T>> generateSet(int count,
 	                               GeneratorArg arg) {
@@ -59,23 +56,53 @@ public class ObjectifyKeyGenerator<T> extends AbstractGenerator<Key<T>> {
 		return new HashSet<Key<T>>(keys);
 	}
 
-	private final class InternalObjectifyNameKeyGenerator extends AbstractGenerator<Key<T>> {
+	private static final class ObjectifyNameKeyGenerator<T> extends ObjectifyKeyGenerator<T> {
+
+		private static final CacheMap<Class<?>, ObjectifyNameKeyGenerator<?>> SINGLETON_CACHE = new CacheMapImpl<Class<?>, ObjectifyNameKeyGenerator<?>>(
+		        new CacheMapDelegate<Class<?>, ObjectifyNameKeyGenerator<?>>() {
+
+			        @SuppressWarnings({ "unchecked", "rawtypes" })
+			        @Override
+			        public ObjectifyNameKeyGenerator<?> makeCacheElement(Class<?> key) throws IllegalArgumentException {
+				        return new ObjectifyNameKeyGenerator(key);
+			        }
+
+		        });
+
+		private ObjectifyNameKeyGenerator(Class<T> type) {
+			super(type);
+		}
 
 		@Override
 		public Key<T> generate(GeneratorArg arg) {
 			String name = StringLongGenerator.GENERATOR.generate(arg);
-			Key<T> key = Key.create(ObjectifyKeyGenerator.this.type, name);
+			Key<T> key = Key.create(this.type, name);
 			return key;
 		}
 
 	}
 
-	private final class InternalObjectifyNumberKeyGenerator extends AbstractGenerator<Key<T>> {
+	private static final class ObjectifyLongKeyGenerator<T> extends ObjectifyKeyGenerator<T> {
+
+		private static final CacheMap<Class<?>, ObjectifyLongKeyGenerator<?>> SINGLETON_CACHE = new CacheMapImpl<Class<?>, ObjectifyLongKeyGenerator<?>>(
+		        new CacheMapDelegate<Class<?>, ObjectifyLongKeyGenerator<?>>() {
+
+			        @SuppressWarnings({ "unchecked", "rawtypes" })
+			        @Override
+			        public ObjectifyLongKeyGenerator<?> makeCacheElement(Class<?> key) throws IllegalArgumentException {
+				        return new ObjectifyLongKeyGenerator(key);
+			        }
+
+		        });
+
+		private ObjectifyLongKeyGenerator(Class<T> type) {
+			super(type);
+		}
 
 		@Override
 		public Key<T> generate(GeneratorArg arg) {
 			Long id = PositiveLongGenerator.GENERATOR.generate(arg);
-			Key<T> key = Key.create(ObjectifyKeyGenerator.this.type, id);
+			Key<T> key = Key.create(this.type, id);
 			return key;
 		}
 

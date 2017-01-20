@@ -8,6 +8,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.utility.ParameterUtility;
 
 /**
  * Utility used for querying a {@link Login}.
@@ -29,11 +30,11 @@ public class LoginKeyQuery
 	}
 
 	public void setLoginPointer(ModelKey loginPointer) {
-		if (loginPointer != null) {
-			this.loginPointer = LOGIN_POINTER_FIELD_BUILDER.make(LOGIN_POINTER_FIELD, loginPointer);
-		} else {
-			this.loginPointer = null;
-		}
+		this.loginPointer = LOGIN_POINTER_FIELD_BUILDER.make(LOGIN_POINTER_FIELD, loginPointer);
+	}
+
+	public void setLoginPointer(String loginPointer) {
+		this.loginPointer = LOGIN_POINTER_FIELD_BUILDER.makeModelKeyParameter(LOGIN_POINTER_FIELD, loginPointer);
 	}
 
 	// MARK: ConfigurableQueryParameters
@@ -41,23 +42,14 @@ public class LoginKeyQuery
 	public Map<String, String> getParameters() {
 		Map<String, String> parameters = new HashMap<String, String>();
 
-		if (this.loginPointer != null) {
-			parameters.put(LOGIN_POINTER_FIELD, this.loginPointer.getParameterString());
-		}
+		ParameterUtility.put(parameters, this.loginPointer);
 
 		return parameters;
 	}
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
-		String loginString = parameters.get(LOGIN_POINTER_FIELD);
-
-		if (loginString != null) {
-			this.loginPointer = LOGIN_POINTER_FIELD_BUILDER.makeModelKeyParameter(LOGIN_POINTER_FIELD, loginString);
-		} else {
-			this.loginPointer = null;
-		}
-
+		this.setLoginPointer(parameters.get(LOGIN_POINTER_FIELD));
 	}
 
 }

@@ -45,6 +45,15 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 		super(field, parameterString);
 	}
 
+	public DateQueryFieldParameter(String field, AbstractQueryFieldParameter<Date> parameter)
+	        throws IllegalArgumentException {
+		super(field, parameter);
+	}
+
+	public DateQueryFieldParameter(AbstractQueryFieldParameter<Date> parameter) throws IllegalArgumentException {
+		super(parameter);
+	}
+
 	public static DateQueryFieldParameter recentDate() {
 		return recentDate(DEFAULT_DATE_FIELD);
 	}
@@ -60,6 +69,30 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 		parameter.setOrdering(QueryResultsOrdering.Descending);
 		parameter.setOperator(ExpressionOperator.LESS_OR_EQUAL_TO);
 		return parameter;
+	}
+
+	public static DateQueryFieldParameter make(String field,
+	                                           String parameterString)
+	        throws IllegalArgumentException {
+		DateQueryFieldParameter fieldParameter = null;
+
+		if (parameterString != null) {
+			fieldParameter = new DateQueryFieldParameter(field, parameterString);
+		}
+
+		return fieldParameter;
+	}
+
+	public static DateQueryFieldParameter make(String field,
+	                                           DateQueryFieldParameter parameter)
+	        throws IllegalArgumentException {
+		DateQueryFieldParameter fieldParameter = null;
+
+		if (parameter != null) {
+			fieldParameter = new DateQueryFieldParameter(field, parameter);
+		}
+
+		return fieldParameter;
 	}
 
 	@Override

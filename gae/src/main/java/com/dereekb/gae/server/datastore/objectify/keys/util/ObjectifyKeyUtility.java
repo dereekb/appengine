@@ -11,6 +11,8 @@ import com.googlecode.objectify.Key;
 
 /**
  * Utility for safely reading values to/from {@link Key}.
+ * 
+ * Build using {@link #make(Class)}.
  *
  * @author dereekb
  *
@@ -30,7 +32,7 @@ public class ObjectifyKeyUtility<T> extends ObjectifyUtility {
 
 	private Class<T> type;
 
-	public ObjectifyKeyUtility(Class<T> type) throws IllegalArgumentException {
+	protected ObjectifyKeyUtility(Class<T> type) throws IllegalArgumentException {
 		this.setType(type);
 	}
 

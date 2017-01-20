@@ -9,7 +9,7 @@ import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
  *
  * @author dereekb
  *
- * @param <T>
+ * @param <T> model type
  */
 public final class VisibilityPair<T> extends SuccessResultsPair<T> {
 

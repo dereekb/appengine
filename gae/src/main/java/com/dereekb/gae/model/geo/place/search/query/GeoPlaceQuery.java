@@ -8,6 +8,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.utility.ParameterUtility;
 
 /**
  * Utility used for querying a {@link GeoPlace}.
@@ -28,12 +29,16 @@ public class GeoPlaceQuery
 		return this.parent;
 	}
 
-	public void setParent(ModelKey login) {
-		if (login != null) {
-			this.parent = PARENT_FIELD_BUILDER.make(PARENT_FIELD, login);
-		} else {
-			this.parent = null;
-		}
+	public void setParent(ModelKey parent) {
+		this.parent = PARENT_FIELD_BUILDER.make(PARENT_FIELD, parent);
+	}
+
+	public void setParent(ModelKeyQueryFieldParameter parent) {
+		this.parent = PARENT_FIELD_BUILDER.make(PARENT_FIELD, parent);
+	}
+
+	public void setParent(String parent) {
+		this.parent = PARENT_FIELD_BUILDER.makeModelKeyParameter(PARENT_FIELD, parent);
 	}
 
 	// MARK: ConfigurableQueryParameters
@@ -41,23 +46,14 @@ public class GeoPlaceQuery
 	public Map<String, String> getParameters() {
 		Map<String, String> parameters = new HashMap<String, String>();
 
-		if (this.parent != null) {
-			parameters.put(PARENT_FIELD, this.parent.getParameterString());
-		}
+		ParameterUtility.put(parameters, this.parent);
 
 		return parameters;
 	}
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
-		String parentString = parameters.get(PARENT_FIELD);
-
-		if (parentString != null) {
-			this.parent = PARENT_FIELD_BUILDER.makeModelKeyParameter(PARENT_FIELD, parentString);
-		} else {
-			this.parent = null;
-		}
-
+		this.setParent(parameters.get(PARENT_FIELD));
 	}
 
 }

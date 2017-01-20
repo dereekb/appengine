@@ -18,8 +18,8 @@ import com.googlecode.objectify.Key;
  */
 public class LoginKeyQueryInitializer extends AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl {
 
-	private static final ObjectifyKeyFieldParameterBuilder<LoginPointer> LOGIN_POINTER_BUILDER = new ObjectifyKeyFieldParameterBuilder<LoginPointer>(
-	        ModelKeyType.NAME, LoginPointer.class);
+	private static final ObjectifyKeyFieldParameterBuilder<LoginPointer> LOGIN_POINTER_BUILDER = ObjectifyKeyFieldParameterBuilder
+	        .make(ModelKeyType.NAME, LoginPointer.class);
 
 	@Override
 	protected ConfigurableObjectifyQueryRequestConfigurer makeConfigurer() {

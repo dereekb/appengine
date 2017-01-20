@@ -7,6 +7,7 @@ import java.util.Map;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.utility.ParameterUtility;
 
 /**
  * Used by classes that search with a date field.
@@ -37,6 +38,14 @@ public class AbstractDateModelQuery
 		this.date = DateQueryFieldParameter.sortByDatesDescending();
 	}
 
+	public void setDate(String date) {
+		this.date = DateQueryFieldParameter.make(this.getDateField(), date);
+	}
+
+	public void setDate(DateQueryFieldParameter date) {
+		this.date = DateQueryFieldParameter.make(this.getDateField(), date);
+	}
+
 	protected String getDateField() {
 		return DEFAULT_DATE_FIELD;
 	}
@@ -45,11 +54,7 @@ public class AbstractDateModelQuery
 	@Override
 	public Map<String, String> getParameters() {
 		Map<String, String> parameters = new HashMap<String, String>();
-
-		if (this.date != null) {
-			parameters.put(this.getDateField(), this.date.getParameterString());
-		}
-
+		ParameterUtility.put(parameters, this.date);
 		return parameters;
 	}
 
@@ -59,13 +64,7 @@ public class AbstractDateModelQuery
 	}
 
 	protected void setDateParameters(Map<String, String> parameters) {
-		String dateString = parameters.get(this.getDateField());
-
-		if (dateString != null) {
-			this.date = new DateQueryFieldParameter(this.getDateField(), dateString);
-		} else {
-			this.date = null;
-		}
+		this.setDate(parameters.get(this.getDateField()));
 	}
 
 }

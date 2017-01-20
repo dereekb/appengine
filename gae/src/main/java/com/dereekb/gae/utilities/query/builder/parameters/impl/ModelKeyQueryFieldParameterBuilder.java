@@ -38,13 +38,37 @@ public class ModelKeyQueryFieldParameterBuilder {
 	public ModelKeyQueryFieldParameter make(String field,
 	                                        ModelKey value)
 	        throws IllegalArgumentException {
-		return new ModelKeyQueryFieldParameter(field, value);
+		ModelKeyQueryFieldParameter fieldParameter = null;
+
+		if (value != null) {
+			fieldParameter = new ModelKeyQueryFieldParameter(field, value);
+		}
+
+		return fieldParameter;
+	}
+
+	public ModelKeyQueryFieldParameter make(String field,
+	                                        ModelKeyQueryFieldParameter value)
+	        throws IllegalArgumentException {
+		ModelKeyQueryFieldParameter fieldParameter = null;
+
+		if (value != null) {
+			fieldParameter = new ModelKeyQueryFieldParameter(field, value);
+		}
+
+		return fieldParameter;
 	}
 
 	public ModelKeyQueryFieldParameter makeModelKeyParameter(String field,
 	                                                         String parameterString)
 	        throws IllegalArgumentException {
-		return new ModelKeyQueryFieldParameter(field, parameterString);
+		ModelKeyQueryFieldParameter fieldParameter = null;
+
+		if (parameterString == null) {
+			fieldParameter = new ModelKeyQueryFieldParameter(field, parameterString);
+		}
+
+		return fieldParameter;
 	}
 
 	/**

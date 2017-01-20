@@ -22,12 +22,12 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> exte
 
 	private ExtendedObjectifyModelKeyUtil<T> util;
 
-	public ObjectifyKeyFieldParameterBuilder(ModelKeyType keyType, Class<T> type) throws IllegalArgumentException {
+	protected ObjectifyKeyFieldParameterBuilder(ModelKeyType keyType, Class<T> type) throws IllegalArgumentException {
 		super(keyType);
 		this.setType(type);
 	}
 
-	public static <T extends ObjectifyModel<T>> ObjectifyKeyFieldParameterBuilder<T> builder(ModelKeyType keyType,
+	public static <T extends ObjectifyModel<T>> ObjectifyKeyFieldParameterBuilder<T> make(ModelKeyType keyType,
 	                                                                                         Class<T> type)
 	        throws IllegalArgumentException {
 		return new ObjectifyKeyFieldParameterBuilder<T>(keyType, type);
@@ -46,7 +46,7 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> exte
 			throw new IllegalArgumentException("Type cannot be null.");
 		}
 
-		this.util = new ExtendedObjectifyModelKeyUtil<T>(type, this.getKeyType());
+		this.util = ExtendedObjectifyModelKeyUtil.make(type, this.getKeyType());
 	}
 
 	public ObjectifyKeyFieldParameter make(String field,
@@ -59,6 +59,7 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> exte
 		return new ObjectifyKeyFieldParameter(parameter);
 	}
 
+	@Override
 	public ObjectifyKeyFieldParameter make(String field,
 	                                       ModelKeyQueryFieldParameter parameter)
 	        throws IllegalArgumentException {
