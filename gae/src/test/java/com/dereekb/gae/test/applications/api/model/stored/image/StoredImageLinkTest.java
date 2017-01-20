@@ -158,7 +158,6 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImageSet.setImages(null);
 		this.storedImageSetRegistry.save(storedImageSet, false);
 
-		storedImage.setImageSets(null);
 		this.storedImageRegistry.save(storedImage, false);
 
 		// Start Test Linking
@@ -168,7 +167,6 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 
-		Assert.assertTrue(storedImage.getImageSets().contains(storedImageSet.getObjectifyKey()));
 		Assert.assertTrue(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
 
 		// Test Unlinking
@@ -178,7 +176,6 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 
-		Assert.assertFalse(storedImage.getImageSets().contains(storedImageSet.getObjectifyKey()));
 		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
 	}
 
@@ -201,7 +198,6 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
 		storedImage.setStoredBlob(null);
 		storedImage.setGeoPlace(null);
-		storedImage.setImageSets(null);
 		this.storedImageRegistry.save(storedImage, false);
 
 		// Link Together
@@ -232,7 +228,6 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		Assert.assertFalse(geoPlace.getObjectifyKey().equals(storedImage.getGeoPlace()));
 		Assert.assertFalse(storedImage.equals(geoPlace.getDescriptor()));
 
-		Assert.assertFalse(storedImage.getImageSets().contains(storedImageSet.getObjectifyKey()));
 		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
 	}
 

@@ -1,15 +1,11 @@
 package com.dereekb.gae.model.stored.image;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorImpl;
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobInfoType;
-import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
@@ -84,12 +80,6 @@ public final class StoredImage extends SearchableDatabaseModel
 	 */
 	@IgnoreSave(IfNull.class)
 	private Key<GeoPlace> geoPlace;
-
-	/**
-	 * Set of all {@link StoredImageSet} this image is a part of.
-	 */
-	@IgnoreSave(IfEmpty.class)
-	private Set<Key<StoredImageSet>> imageSets = new HashSet<>();
 
 	public StoredImage() {}
 
@@ -184,18 +174,6 @@ public final class StoredImage extends SearchableDatabaseModel
 		this.geoPlace = geoPlace;
 	}
 
-	public Set<Key<StoredImageSet>> getImageSets() {
-		return this.imageSets;
-	}
-
-	public void setImageSets(Set<Key<StoredImageSet>> imageSets) {
-		if (imageSets == null) {
-			imageSets = new HashSet<>();
-		}
-
-		this.imageSets = imageSets;
-	}
-
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
@@ -238,8 +216,7 @@ public final class StoredImage extends SearchableDatabaseModel
 	public String toString() {
 		return "StoredImage [identifier=" + this.identifier + ", name=" + this.name + ", summary=" + this.summary
 		        + ", tags=" + this.tags + ", type=" + this.type + ", storedBlob=" + this.storedBlob + ", geoPlace="
-		        + this.geoPlace
-		        + ", imageSets=" + this.imageSets + ", searchIdentifier=" + this.searchIdentifier + "]";
+		        + this.geoPlace + ", searchIdentifier=" + this.searchIdentifier + "]";
 	}
 
 }

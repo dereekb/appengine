@@ -60,11 +60,6 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImageSet.setIcon(null);
 		storedImageSet.setImages(null);
 		this.storedImageSetRegistry.save(storedImageSet, false);
-
-		for (StoredImage imageInSet : imagesInSet) {
-			imageInSet.setImageSets(null);
-		}
-
 		this.storedImageRegistry.save(imagesInSet, false);
 
 		// Start Test Linking
@@ -77,10 +72,6 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
 		Assert.assertTrue(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 
-		for (StoredImage imageInSet : imagesInSet) {
-			Assert.assertTrue(imageInSet.getImageSets().contains(storedImageSet.getObjectifyKey()));
-		}
-
 		// Test Unlinking
 		this.unlinkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetIconLinkName, storedImage);
 		this.unlinkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetImagesLinkName, imagesInSet);
@@ -88,10 +79,6 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 		imagesInSet = this.storedImageRegistry.get(imagesInSet);
-
-		for (StoredImage imageInSet : imagesInSet) {
-			Assert.assertFalse(imageInSet.getImageSets().contains(storedImageSet.getObjectifyKey()));
-		}
 
 		Assert.assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 	}
@@ -106,11 +93,6 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImageSet.setIcon(null);
 		storedImageSet.setImages(null);
 		this.storedImageSetRegistry.save(storedImageSet, false);
-
-		for (StoredImage imageInSet : imagesInSet) {
-			imageInSet.setImageSets(null);
-		}
-
 		this.storedImageRegistry.save(imagesInSet, false);
 
 		// Link Together
@@ -127,10 +109,6 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 		imagesInSet = this.storedImageRegistry.get(imagesInSet);
-
-		for (StoredImage imageInSet : imagesInSet) {
-			Assert.assertFalse(imageInSet.getImageSets().contains(storedImageSet.getObjectifyKey()));
-		}
 
 		Assert.assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 	}

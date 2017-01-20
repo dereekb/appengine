@@ -4,7 +4,6 @@ import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.model.stored.image.StoredImage;
-import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
@@ -33,9 +32,6 @@ public class StoredImageDataBuilder extends AbstractDirectionalConverter<StoredI
 
 		// Geo Place
 		data.setGeoPlace(ObjectifyKeyUtility.idFromKey(input.getGeoPlace()));
-
-		// Image Sets
-		data.setImageSets(ObjectifyUtility.readKeyIdentifiers(input.getImageSets()));
 
 		return data;
 	}
