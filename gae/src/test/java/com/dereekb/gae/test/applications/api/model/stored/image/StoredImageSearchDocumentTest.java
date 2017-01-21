@@ -79,9 +79,6 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 		StoredImage storedImage = this.generator.generate();
 		super.testDocumentBuilding();
 
-		// Test with null GeoPlace
-		storedImage.setGeoPlace(null);
-
 		Document document = this.builder.buildSearchDocument(storedImage);
 		Assert.assertNotNull(document);
 	}
@@ -107,9 +104,6 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 		@Override
 		public StoredImage generate(GeneratorArg arg) throws IllegalArgumentException {
 			StoredImage storedImage = super.generate(arg);
-
-			GeoPlace geoPlace = StoredImageSearchDocumentTest.this.geoPlaceGenerator.generate();
-			storedImage.setGeoPlace(geoPlace.getObjectifyKey());
 
 			StoredBlob storedBlob = StoredImageSearchDocumentTest.this.storedBlobGenerator.generate();
 			storedImage.setStoredBlob(storedBlob.getObjectifyKey());

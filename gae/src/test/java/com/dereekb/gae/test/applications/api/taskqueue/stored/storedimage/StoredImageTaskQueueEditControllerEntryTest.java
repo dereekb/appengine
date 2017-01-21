@@ -14,7 +14,6 @@ import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTask
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
-
 public class StoredImageTaskQueueEditControllerEntryTest extends SearchableTaskQueueEditControllerEntryTest<StoredImage> {
 
 	@Autowired
@@ -63,19 +62,12 @@ public class StoredImageTaskQueueEditControllerEntryTest extends SearchableTaskQ
 	@Override
 	protected void removeRelated(StoredImage model,
 	                             Setter<StoredImage> setter) {
-		model.setGeoPlace(null);
 		model.setStoredBlob(null);
 	}
 
 	@Override
 	protected void createRelated(StoredImage model) {
-		Key<GeoPlace> geoPlaceKey = model.getGeoPlace();
 		Key<StoredBlob> storedBlobKey = model.getStoredBlob();
-
-		if (geoPlaceKey != null) {
-			ModelKey geoPlaceModelKey = new ModelKey(geoPlaceKey.getId());
-			this.geoPlaceGenerator.generateModel(geoPlaceModelKey);
-		}
 
 		if (storedBlobKey != null) {
 			ModelKey storedBlobModelKey = new ModelKey(storedBlobKey.getId());

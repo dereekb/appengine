@@ -4,7 +4,6 @@ import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractModelGenerator;
 import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.StoredImageType;
@@ -21,8 +20,6 @@ public final class StoredImageGenerator extends AbstractModelGenerator<StoredIma
 
 	private static final ObjectifyKeyGenerator<StoredBlob> STORED_BLOB_GENERATOR = ObjectifyKeyGenerator
 	        .numberKeyGenerator(StoredBlob.class);
-	private static final ObjectifyKeyGenerator<GeoPlace> GEO_PLACE_GENERATOR = ObjectifyKeyGenerator
-	        .numberKeyGenerator(GeoPlace.class);
 
 	public int setsToGenerate = 1;
 
@@ -56,10 +53,6 @@ public final class StoredImageGenerator extends AbstractModelGenerator<StoredIma
 		// Stored Blob
 		Key<StoredBlob> storedBlob = STORED_BLOB_GENERATOR.generate(arg);
 		image.setStoredBlob(storedBlob);
-
-		// Geo Place
-		Key<GeoPlace> geoPlace = GEO_PLACE_GENERATOR.generate(arg);
-		image.setGeoPlace(geoPlace);
 
 		return image;
 	}

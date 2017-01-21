@@ -3,7 +3,6 @@ package com.dereekb.gae.model.stored.image;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorImpl;
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobInfoType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -18,7 +17,6 @@ import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
 import com.googlecode.objectify.condition.IfNotDefault;
 import com.googlecode.objectify.condition.IfNotNull;
-import com.googlecode.objectify.condition.IfNull;
 
 /**
  * Is an {@link StoredBlobInfoType} for a {@link StoredBlob}.
@@ -74,12 +72,6 @@ public final class StoredImage extends SearchableDatabaseModel
 	 * Key to the {@link StoredBlob} that this image describes.
 	 */
 	private Key<StoredBlob> storedBlob;
-
-	/**
-	 * (Optional) {@link GeoPlace} entry that places this image into the world.
-	 */
-	@IgnoreSave(IfNull.class)
-	private Key<GeoPlace> geoPlace;
 
 	public StoredImage() {}
 
@@ -166,14 +158,6 @@ public final class StoredImage extends SearchableDatabaseModel
 		return id;
 	}
 
-	public Key<GeoPlace> getGeoPlace() {
-		return this.geoPlace;
-	}
-
-	public void setGeoPlace(Key<GeoPlace> geoPlace) {
-		this.geoPlace = geoPlace;
-	}
-
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
@@ -215,8 +199,8 @@ public final class StoredImage extends SearchableDatabaseModel
 	@Override
 	public String toString() {
 		return "StoredImage [identifier=" + this.identifier + ", name=" + this.name + ", summary=" + this.summary
-		        + ", tags=" + this.tags + ", type=" + this.type + ", storedBlob=" + this.storedBlob + ", geoPlace="
-		        + this.geoPlace + ", searchIdentifier=" + this.searchIdentifier + "]";
+		        + ", tags=" + this.tags + ", type=" + this.type + ", storedBlob=" + this.storedBlob
+		        + ", searchIdentifier=" + this.searchIdentifier + "]";
 	}
 
 }

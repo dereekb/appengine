@@ -12,7 +12,6 @@ import com.dereekb.gae.test.applications.api.api.tests.ApiSearchTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
-
 public class StoredImageApiSearchTest extends ApiSearchTest<StoredImage> {
 
 	@Autowired
@@ -46,13 +45,7 @@ public class StoredImageApiSearchTest extends ApiSearchTest<StoredImage> {
 
 	@Override
 	protected void createRelated(StoredImage model) {
-		Key<GeoPlace> geoPlaceKey = model.getGeoPlace();
 		Key<StoredBlob> storedBlobKey = model.getStoredBlob();
-
-		if (geoPlaceKey != null) {
-			ModelKey geoPlaceModelKey = new ModelKey(geoPlaceKey.getId());
-			this.geoPlaceGenerator.generateModel(geoPlaceModelKey);
-		}
 
 		if (storedBlobKey != null) {
 			ModelKey storedBlobModelKey = new ModelKey(storedBlobKey.getId());

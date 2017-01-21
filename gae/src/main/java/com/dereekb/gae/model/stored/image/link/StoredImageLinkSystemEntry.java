@@ -15,8 +15,6 @@ import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
-import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.model.geo.place.link.GeoPlaceLinkSystemEntry;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.link.StoredBlobLinkSystemEntry;
 import com.dereekb.gae.model.stored.image.StoredImage;
@@ -36,17 +34,12 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 
 	public static final String STORED_IMAGE_LINK_TYPE = "StoredImage";
 
-	private static final ExtendedObjectifyModelKeyUtil<GeoPlace> geoPlaceUtil = ExtendedObjectifyModelKeyUtil
-	        .make(GeoPlace.class, ModelKeyType.NUMBER);
 	private static final ExtendedObjectifyModelKeyUtil<StoredBlob> blobUtil = ExtendedObjectifyModelKeyUtil
 	        .make(StoredBlob.class, ModelKeyType.NUMBER);
 
 	private String blobLinkName = StoredBlobLinkSystemEntry.STORED_BLOB_LINK_TYPE;
-	private String geoPlaceLinkName = GeoPlaceLinkSystemEntry.GEO_PLACE_LINK_TYPE;
 
 	private LinkTarget blobTarget = new LinkTargetImpl(StoredBlobLinkSystemEntry.STORED_BLOB_LINK_TYPE,
-	        ModelKeyType.NUMBER);
-	private LinkTarget geoPlaceTarget = new LinkTargetImpl(GeoPlaceLinkSystemEntry.GEO_PLACE_LINK_TYPE,
 	        ModelKeyType.NUMBER);
 
 	public StoredImageLinkSystemEntry(CrudService<StoredImage> crudService, ConfiguredSetter<StoredImage> setter) {
@@ -67,28 +60,12 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 		this.blobLinkName = storedBlobLinkName;
 	}
 
-	public String getGeoPlaceLinkName() {
-		return this.geoPlaceLinkName;
-	}
-
-	public void setGeoPlaceLinkName(String geoPlaceLinkName) {
-		this.geoPlaceLinkName = geoPlaceLinkName;
-	}
-
 	public LinkTarget getStoredBlobTarget() {
 		return this.blobTarget;
 	}
 
 	public void setStoredBlobTarget(LinkTarget storedBlobTarget) {
 		this.blobTarget = storedBlobTarget;
-	}
-
-	public LinkTarget getGeoPlaceTarget() {
-		return this.geoPlaceTarget;
-	}
-
-	public void setGeoPlaceTarget(LinkTarget geoPlaceTarget) {
-		this.geoPlaceTarget = geoPlaceTarget;
 	}
 
 	@Override
@@ -117,33 +94,12 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 
 		links.add(blobLink);
 
-		// GeoPlace Link
-		LinkInfoImpl geoPlaceLinkInfo = new LinkInfoImpl(this.geoPlaceLinkName, key, this.geoPlaceTarget);
-		LinkImpl geoPlaceLink = new LinkImpl(geoPlaceLinkInfo, new SingleLink(new SingleLinkDelegate() {
-
-			@Override
-			public ModelKey getKey() {
-				Key<GeoPlace> key = model.getGeoPlace();
-				return geoPlaceUtil.toModelKey(key);
-			}
-
-			@Override
-			public void setKey(ModelKey modelKey) {
-				Key<GeoPlace> key = geoPlaceUtil.fromModelKey(modelKey);
-				model.setGeoPlace(key);
-			}
-
-		}));
-
-		links.add(geoPlaceLink);
-
 		return links;
 	}
 
 	@Override
 	public String toString() {
-		return "StoredImageLinkSystemEntry [blobLinkName=" + this.blobLinkName + ", geoPlaceLinkName="
-		        + this.geoPlaceLinkName + ", blobTarget=" + this.blobTarget + ", geoPlaceTarget=" + this.geoPlaceTarget
+		return "StoredImageLinkSystemEntry [blobLinkName=" + this.blobLinkName + ", blobTarget=" + this.blobTarget
 		        + ", modelType=" + this.modelType + ", indexService=" + this.readService + ", setter=" + this.setter
 		        + ", reviewer=" + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames="
 		        + this.getReverseLinkNames() + "]";

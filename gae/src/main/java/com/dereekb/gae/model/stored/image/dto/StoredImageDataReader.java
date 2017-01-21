@@ -3,7 +3,6 @@ package com.dereekb.gae.model.stored.image.dto;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
@@ -21,7 +20,6 @@ public class StoredImageDataReader extends AbstractDirectionalConverter<StoredIm
 
 	private static final StringModelKeyConverter KEY_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
 
-	private static final ObjectifyKeyUtility<GeoPlace> GEO_PLACE_KEY_UTIL = ObjectifyKeyUtility.make(GeoPlace.class);
 	private static final ObjectifyKeyUtility<StoredBlob> STORED_BLOB_KEY_UTIL = ObjectifyKeyUtility
 	        .make(StoredBlob.class);
 
@@ -42,7 +40,6 @@ public class StoredImageDataReader extends AbstractDirectionalConverter<StoredIm
 
 		// Links
 		image.setStoredBlob(STORED_BLOB_KEY_UTIL.keyFromId(input.getBlob()));
-		image.setGeoPlace(GEO_PLACE_KEY_UTIL.keyFromId(input.getGeoPlace()));
 
 		return image;
 	}
