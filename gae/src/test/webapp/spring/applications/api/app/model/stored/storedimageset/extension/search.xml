@@ -90,6 +90,12 @@
 		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl"
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="storedImageSetRegistry"/>
+		<constructor-arg index="1" ref="storedImageSetQueryInitializer"/>
 	</bean>
-	
+
+	<bean id="storedImageSetQueryInitializer"
+		class="com.dereekb.gae.model.stored.image.set.search.query.StoredImageSetQueryInitializer"
+		scope="singleton" lazy-init="true">
+	</bean>
+
 </beans>

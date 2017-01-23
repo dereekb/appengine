@@ -14,8 +14,10 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.exception.NullModelKeyException;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.google.common.base.Joiner;
 
 /**
  * Represents a key for a model.
@@ -241,6 +243,32 @@ public final class ModelKey
 		return keyString;
 	}
 
+	private static final String SPLITTER = ",";
+
+	public static String keysAsString(Set<ModelKey> keys) {
+		return keysAsString(keys, SPLITTER);
+	}
+
+	public static String keysAsString(Set<ModelKey> keys,
+	                                  String splitter) {
+		Joiner joiner = Joiner.on(splitter).skipNulls();
+		return joiner.join(keys);
+	}
+
+	public static List<ModelKey> convertKeysInString(ModelKeyType keyType,
+	                                                 String stringKey) {
+		return convertKeysInString(keyType, stringKey, SPLITTER);
+	}
+
+	public static List<ModelKey> convertKeysInString(ModelKeyType keyType,
+	                                                 String keys,
+	                                                 String splitter)
+	        throws IllegalArgumentException {
+		String[] values = keys.split(splitter);
+		List<String> valuesList = ListUtility.toList(values);
+		return convert(keyType, valuesList);
+	}
+
 	/**
 	 * Same as {@link #convert(String)}, except with the {@link ModelKeyType}
 	 * specified.
@@ -289,7 +317,8 @@ public final class ModelKey
 	 *             if the conversion fails.
 	 */
 	public static List<ModelKey> convert(ModelKeyType keyType,
-	                                     Collection<String> values) throws ConversionFailureException {
+	                                     Collection<String> values)
+	        throws ConversionFailureException {
 		List<ModelKey> keys;
 
 		switch (keyType) {
@@ -307,7 +336,8 @@ public final class ModelKey
 	}
 
 	/**
-	 * Converts a string number with radix 10 to a {@link ModelKey}. If the string is
+	 * Converts a string number with radix 10 to a {@link ModelKey}. If the
+	 * string is
 	 * {@code null}, will return {@code null}.
 	 *
 	 * @param numberString

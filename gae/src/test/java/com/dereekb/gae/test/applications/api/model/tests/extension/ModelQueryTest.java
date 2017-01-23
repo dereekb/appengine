@@ -171,13 +171,16 @@ public abstract class ModelQueryTest<T extends ObjectifyModel<T>> extends ApiApp
 			String jsonContent = response.getContentAsString();
 			JsonElement jsonElement = ModelQueryTest.this.parser.parse(jsonContent);
 			JsonElement jsonData = jsonElement.getAsJsonObject().get("data");
-
-			JsonArray keys = jsonData.getAsJsonObject().get("data").getAsJsonArray();
 			List<String> stringResults = new ArrayList<String>();
 
-			for (JsonElement element : keys) {
-				String keyString = element.getAsString();
-				stringResults.add(keyString);
+			try {
+				JsonArray keys = jsonData.getAsJsonObject().get("data").getAsJsonArray();
+
+				for (JsonElement element : keys) {
+					String keyString = element.getAsString();
+					stringResults.add(keyString);
+				}
+			} catch (Exception e) {
 			}
 
 			return ModelQueryTest.this.keyTypeConverter.convertKeys(ModelQueryTest.this.queryType, stringResults);

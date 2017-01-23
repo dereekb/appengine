@@ -17,10 +17,27 @@ public class ModelKeyQueryFieldParameterBuilder {
 	public static final ModelKeyQueryFieldParameterBuilder NUMBER_SINGLETON = new ModelKeyQueryFieldParameterBuilder(
 	        ModelKeyType.NUMBER);
 
+	public static final ExpressionOperator DEFAULT_OPERATOR = ExpressionOperator.EQUAL;
+
 	private ModelKeyType keyType;
+	private ExpressionOperator defaultOperator = DEFAULT_OPERATOR;
 
 	public ModelKeyQueryFieldParameterBuilder(ModelKeyType keyType) throws IllegalArgumentException {
 		this.setKeyType(keyType);
+	}
+
+	public ModelKeyQueryFieldParameterBuilder(ModelKeyType keyType, ExpressionOperator operator)
+	        throws IllegalArgumentException {
+		this.setKeyType(keyType);
+		this.setOperator(operator);
+	}
+
+	public static ModelKeyQueryFieldParameterBuilder name(ExpressionOperator operator) {
+		return new ModelKeyQueryFieldParameterBuilder(ModelKeyType.NAME, operator);
+	}
+
+	public static ModelKeyQueryFieldParameterBuilder number(ExpressionOperator operator) {
+		return new ModelKeyQueryFieldParameterBuilder(ModelKeyType.NUMBER, operator);
 	}
 
 	public ModelKeyType getKeyType() {
@@ -35,13 +52,25 @@ public class ModelKeyQueryFieldParameterBuilder {
 		this.keyType = keyType;
 	}
 
+	public ExpressionOperator getOperator() {
+		return this.defaultOperator;
+	}
+
+	public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
+		if (operator == null) {
+			throw new IllegalArgumentException("Operator cannot be null.");
+		}
+
+		this.defaultOperator = operator;
+	}
+
 	public ModelKeyQueryFieldParameter make(String field,
 	                                        ModelKey value)
 	        throws IllegalArgumentException {
 		ModelKeyQueryFieldParameter fieldParameter = null;
 
 		if (value != null) {
-			fieldParameter = new ModelKeyQueryFieldParameter(field, value);
+			fieldParameter = new ModelKeyQueryFieldParameter(field, this.defaultOperator, value);
 		}
 
 		return fieldParameter;
@@ -64,7 +93,7 @@ public class ModelKeyQueryFieldParameterBuilder {
 	        throws IllegalArgumentException {
 		ModelKeyQueryFieldParameter fieldParameter = null;
 
-		if (parameterString == null) {
+		if (parameterString != null) {
 			fieldParameter = new ModelKeyQueryFieldParameter(field, parameterString);
 		}
 
@@ -97,6 +126,12 @@ public class ModelKeyQueryFieldParameterBuilder {
 			this.setParameterString(parameterString);
 		}
 
+		protected ModelKeyQueryFieldParameter(String field, ExpressionOperator operator, ModelKey value)
+		        throws IllegalArgumentException {
+			this(field, value);
+			this.setOperator(operator);
+		}
+
 		protected ModelKeyQueryFieldParameter(String field, ModelKey value) throws IllegalArgumentException {
 			this.setEqualityFilter(field, value);
 		}
@@ -104,7 +139,7 @@ public class ModelKeyQueryFieldParameterBuilder {
 		@Override
 		public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
 			if (operator == null) {
-				operator = ExpressionOperator.EQUAL;
+				operator = ModelKeyQueryFieldParameterBuilder.this.defaultOperator;
 			}
 
 			super.setOperator(operator);

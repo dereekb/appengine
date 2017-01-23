@@ -1,6 +1,7 @@
 package com.dereekb.gae.test.applications.api.model.stored.imageset;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,9 +12,12 @@ import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceRequest;
 import com.dereekb.gae.model.extension.links.deleter.impl.LinkDeleterServiceRequestImpl;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
 import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkServiceTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.googlecode.objectify.Key;
 
 public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
@@ -24,6 +28,9 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 	@Autowired
 	@Qualifier("storedImageSetImagesLinkName")
 	private String storedImageSetImagesLinkName;
+
+	private ExtendedObjectifyModelKeyUtil<StoredImage> storedImageKeysUtil = ExtendedObjectifyModelKeyUtil
+	        .number(StoredImage.class);
 
 	// MARK: Components
 	@Autowired
@@ -84,6 +91,67 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 	}
 
 	@Test
+	public void testLinkingImage() {
+		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
+		StoredImage storedImage = this.storedImageGenerator.generate();
+
+		// Clear any generated links
+		storedImageSet.setImages(null);
+		this.storedImageSetRegistry.save(storedImageSet, false);
+
+		this.storedImageRegistry.save(storedImage, false);
+
+		// Start Test Linking
+		this.linkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetImagesLinkName,
+		        storedImage.getModelKey());
+
+		storedImage = this.storedImageRegistry.get(storedImage);
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+
+		Assert.assertTrue(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
+
+		// Test Unlinking
+		this.unlinkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetImagesLinkName,
+		        storedImage.getModelKey());
+
+		storedImage = this.storedImageRegistry.get(storedImage);
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+
+		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
+	}
+
+	@Test
+	public void testLinkingMultipleImages() {
+		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
+		List<StoredImage> storedImages = this.storedImageGenerator.generate(10);
+
+		// Clear any generated links
+		storedImageSet.setImages(null);
+		this.storedImageSetRegistry.save(storedImageSet, false);
+
+		List<ModelKey> keys = ModelKey.readModelKeys(storedImages);
+
+		// Start Test Linking
+		this.linkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetImagesLinkName,
+		        keys);
+
+		storedImages = this.storedImageRegistry.get(storedImages);
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+
+		Set<Key<StoredImage>> setKeys = storedImageSet.getImages();
+		List<Key<StoredImage>> objectifyKeys = this.storedImageKeysUtil.convertFrom(keys);
+		Assert.assertTrue(setKeys.containsAll(objectifyKeys));
+
+		// Test Unlinking
+		this.unlinkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetImagesLinkName,
+		        keys);
+
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+
+		Assert.assertFalse(storedImageSet.getImages().containsAll(objectifyKeys));
+	}
+
+	@Test
 	public void testLinkDeleter() {
 		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
 		StoredImage storedImage = this.storedImageGenerator.generate();
@@ -111,6 +179,28 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		imagesInSet = this.storedImageRegistry.get(imagesInSet);
 
 		Assert.assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
+	}
+
+	@Test
+	public void testUnlinkFromDeletedStoredImage() {
+		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
+		StoredImage storedImage = this.storedImageGenerator.generate();
+
+		// Clear any generated links
+		storedImageSet.setImages(null);
+		this.storedImageSetRegistry.save(storedImageSet, false);
+
+		// Link Together
+		this.linkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetImagesLinkName, storedImage);
+
+		// Delete the model
+		this.storedImageRegistry.delete(storedImage, true);
+
+		// Let the TaskQueue Complete
+		TestLocalTaskQueueCallback.waitUntilComplete();
+
+		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
+		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
 	}
 
 }

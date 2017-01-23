@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceRequest;
 import com.dereekb.gae.model.extension.links.deleter.impl.LinkDeleterServiceRequestImpl;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
@@ -91,42 +90,6 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 	}
 
-	// TODO: Move to StoredImageSet Unit Tests
-	/*
-	 * @Test
-	 * public void testLinkingToStoredImageSet() {
-	 * StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
-	 * StoredImage storedImage = this.storedImageGenerator.generate();
-	 * 
-	 * // Clear any generated links
-	 * storedImageSet.setImages(null);
-	 * this.storedImageSetRegistry.save(storedImageSet, false);
-	 * 
-	 * this.storedImageRegistry.save(storedImage, false);
-	 * 
-	 * // Start Test Linking
-	 * this.linkModels(this.storedImageLinkType, storedImage.getModelKey(),
-	 * this.storedImageStoredImageSetLinkName,
-	 * storedImageSet.getModelKey());
-	 * 
-	 * storedImage = this.storedImageRegistry.get(storedImage);
-	 * storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
-	 * 
-	 * Assert.assertTrue(storedImageSet.getImages().contains(storedImage.
-	 * getObjectifyKey()));
-	 * 
-	 * // Test Unlinking
-	 * this.unlinkModels(this.storedImageLinkType, storedImage.getModelKey(),
-	 * this.storedImageStoredImageSetLinkName,
-	 * storedImageSet.getModelKey());
-	 * 
-	 * storedImage = this.storedImageRegistry.get(storedImage);
-	 * storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
-	 * 
-	 * Assert.assertFalse(storedImageSet.getImages().contains(storedImage.
-	 * getObjectifyKey()));
-	 * }
-	 */
 	@Test
 	public void testLinkDeleter() {
 		StoredImage storedImage = this.storedImageGenerator.generate();

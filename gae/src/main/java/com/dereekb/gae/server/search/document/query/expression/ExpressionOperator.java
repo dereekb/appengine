@@ -45,9 +45,6 @@ public enum ExpressionOperator {
 		ExpressionOperator operation = null;
 
 		switch (op) {
-			case "=n":
-				operation = IS_NULL;
-				break;
 			case "=":
 				operation = EQUAL;
 				break;
@@ -69,7 +66,12 @@ public enum ExpressionOperator {
 			case "<>":
 				operation = GREATER_OR_LESS_BUT_NOT_EQUAL_TO;
 				break;
-
+			case "in":
+				operation = IN;
+				break;
+			case "=n":
+				operation = IS_NULL;
+				break;
 		}
 
 		return operation;

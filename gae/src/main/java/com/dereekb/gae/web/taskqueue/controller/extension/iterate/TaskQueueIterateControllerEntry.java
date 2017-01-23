@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.taskqueue.controller.extension.iterate;
 
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.InvalidIterateTaskException;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnknownIterateTaskException;
 
 /**
@@ -19,7 +20,10 @@ public interface TaskQueueIterateControllerEntry {
 	 * @throws UnknownIterateTaskException
 	 *             thrown if no task is available with the input
 	 *             {@code taskName} value.
+	 * @throws InvalidIterateTaskException
+	 *             thrown if a task was available but not able to be
+	 *             initialized.
 	 */
-	public void performTask(IterateTaskRequest request) throws UnknownIterateTaskException;
+	public void performTask(IterateTaskRequest request) throws UnknownIterateTaskException, InvalidIterateTaskException;
 
 }
