@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
+import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.google.common.base.Joiner;
 
 /**
  * {@link TaskParameter} implementation.
  *
  * @author dereekb
- *
+ * @deprecated use {@link KeyedEncodedParameterImpl} instead.
  */
+@Deprecated
 public class TaskParameterImpl
         implements TaskParameter {
 
@@ -43,7 +45,7 @@ public class TaskParameterImpl
 	}
 
 	@Override
-	public String getParameter() {
+	public String getParameterKey() {
 		return this.parameter;
 	}
 
@@ -56,7 +58,7 @@ public class TaskParameterImpl
 	}
 
 	@Override
-	public String getValue() {
+	public String getParameterString() {
 		return this.value;
 	}
 
@@ -130,6 +132,7 @@ public class TaskParameterImpl
 	 * @return {@link List} of {@link TaskParameterImpl} values. Never
 	 *         {@code null}.
 	 */
+	@Deprecated
 	public static List<TaskParameterImpl> makeParametersWithMap(Map<String, ? extends Object> map)
 	        throws IllegalArgumentException {
 		List<TaskParameterImpl> pairs = new ArrayList<TaskParameterImpl>();
@@ -143,13 +146,14 @@ public class TaskParameterImpl
 		return pairs;
 	}
 
+	@Deprecated
 	public static List<TaskParameter> replaceParameterInCollection(Collection<TaskParameter> inputParameters,
 	                                                               TaskParameter replacement) {
 		List<TaskParameter> newParameters = new ArrayList<TaskParameter>();
 
 		if (inputParameters != null) {
 			for (TaskParameter parameter : inputParameters) {
-				String param = parameter.getParameter();
+				String param = parameter.getParameterKey();
 
 				// Filter out parameters with the same name.
 				if (param.equals(replacement) == false) {

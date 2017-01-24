@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -57,7 +57,7 @@ public class TaskQueueIterateController {
 		this.setEntries(entries);
 	}
 
-    public TaskScheduler getScheduler() {
+	public TaskScheduler getScheduler() {
 		return this.scheduler;
 	}
 
@@ -138,8 +138,8 @@ public class TaskQueueIterateController {
 		@Override
 		public void scheduleContinuation(String cursor) {
 			String path = this.getContinutationPath();
-			Collection<TaskParameter> headers = this.getContinuationHeaders(cursor);
-			Collection<TaskParameter> parameters = this.getContinuationParameters();
+			Collection<KeyedEncodedParameter> headers = this.getContinuationHeaders(cursor);
+			Collection<KeyedEncodedParameter> parameters = this.getContinuationParameters();
 
 			TaskRequestImpl request = new TaskRequestImpl(path, Method.POST);
 			request.setHeaders(headers);
@@ -154,20 +154,20 @@ public class TaskQueueIterateController {
 			return String.format("%s/iterate/%s", modelType, taskName);
 		}
 
-		private Collection<TaskParameter> getContinuationHeaders(String cursor) {
+		private Collection<KeyedEncodedParameter> getContinuationHeaders(String cursor) {
 			Integer step = this.taskInput.getIterationStep() + 1;
 
-			List<TaskParameter> parameters = new ArrayList<TaskParameter>();
-			parameters.add(new TaskParameterImpl(TASK_STEP_HEADER, step));
-			parameters.add(new TaskParameterImpl(CURSOR_HEADER, cursor));
+			List<KeyedEncodedParameter> parameters = new ArrayList<KeyedEncodedParameter>();
+			parameters.add(new KeyedEncodedParameterImpl(TASK_STEP_HEADER, step));
+			parameters.add(new KeyedEncodedParameterImpl(CURSOR_HEADER, cursor));
 
 			return parameters;
 		}
 
-		private Collection<TaskParameter> getContinuationParameters() {
+		private Collection<KeyedEncodedParameter> getContinuationParameters() {
 			Map<String, String> parameters = this.taskInput.getParameters();
-			List<TaskParameterImpl> impl = TaskParameterImpl.makeParametersWithMap(parameters);
-			return new ArrayList<TaskParameter>(impl);
+			List<KeyedEncodedParameterImpl> impl = KeyedEncodedParameterImpl.makeParametersWithMap(parameters);
+			return new ArrayList<KeyedEncodedParameter>(impl);
 		}
 
 	}

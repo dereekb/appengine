@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.request.reader;
 
-import com.dereekb.gae.model.extension.request.Request;
+import com.dereekb.gae.model.extension.deprecated.request.Request;
 
 /**
  * Used to look up a {@link Request} for input models.

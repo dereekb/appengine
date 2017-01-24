@@ -56,6 +56,7 @@
 		</constructor-arg>
 	</bean>
 	
+	<!-- StoredImageSet Remove Images Task -->
 	<bean id="storedImageSetRemoveImagesTaskKey" class="java.lang.String" lazy-init="true" scope="singleton">
 		<constructor-arg index="0" value="removeImages" />
 	</bean>
@@ -69,6 +70,10 @@
 				class="com.dereekb.gae.model.stored.image.set.link.taskqueue.UnlinkStoredImagesInStoredImageSet">
 			</bean>
 		</constructor-arg>
+	</bean>
+	
+	<bean id="scheduleRemoveImagesFromStoredImageSetsTask">
+		
 	</bean>
 
 </beans>

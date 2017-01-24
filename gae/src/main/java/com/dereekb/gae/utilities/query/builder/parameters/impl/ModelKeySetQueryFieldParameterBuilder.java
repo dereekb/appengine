@@ -9,7 +9,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
-import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
+import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
 
 public class ModelKeySetQueryFieldParameterBuilder {
 
@@ -107,7 +107,7 @@ public class ModelKeySetQueryFieldParameterBuilder {
 	}
 
 	public List<ModelKey> decodeModelKeysFromParameter(String parameterString) throws IllegalArgumentException {
-		Parameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
+		QueryParameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
 		return this.decodeModelKeysFromValue(parameter.getValue());
 	}
 

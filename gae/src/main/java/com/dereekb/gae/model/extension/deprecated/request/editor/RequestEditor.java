@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.request.editor;
 
-import com.dereekb.gae.model.extension.request.service.RequestService;
+import com.dereekb.gae.model.extension.deprecated.request.service.RequestService;
 
 /**
  * Used to create and delete similar {@link Request} for an element.

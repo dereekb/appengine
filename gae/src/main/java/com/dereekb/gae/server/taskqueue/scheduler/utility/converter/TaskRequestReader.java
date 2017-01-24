@@ -2,7 +2,7 @@ package com.dereekb.gae.server.taskqueue.scheduler.utility.converter;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -30,8 +30,8 @@ public interface TaskRequestReader {
 
 	public TaskRequestTiming getTiming();
 
-	public Collection<TaskParameter> getHeaders();
+	public Collection<KeyedEncodedParameter> getHeaders();
 
-	public Collection<TaskParameter> getParameters();
+	public Collection<KeyedEncodedParameter> getParameters();
 
 }

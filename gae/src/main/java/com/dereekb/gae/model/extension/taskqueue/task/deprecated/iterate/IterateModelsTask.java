@@ -136,7 +136,7 @@ public class IterateModelsTask<T>
 				throw new RuntimeException("No request set for IterateModelsTaskInstance.");
 			}
 
-			Map<String, String> parameters = this.request.getTaskParameters();
+			Map<String, String> parameters = this.request.getKeyedEncodedParameters();
 			this.iterable.setCustomParameters(parameters);
 
 			String cursorString = parameters.get(IterateModelsTask.this.cursorParam);

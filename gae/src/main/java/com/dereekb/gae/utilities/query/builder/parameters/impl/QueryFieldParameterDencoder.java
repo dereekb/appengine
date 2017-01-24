@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
+import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 import com.google.common.base.Joiner;
 
@@ -42,9 +42,9 @@ public class QueryFieldParameterDencoder {
 		this.splitter = splitter;
 	}
 
-	public Parameter decodeString(String parameterString) throws IllegalArgumentException {
+	public QueryParameter decodeString(String parameterString) throws IllegalArgumentException {
 		String[] split = parameterString.split(this.splitter);
-		Parameter parameter;
+		QueryParameter parameter;
 
 		if (split.length == 1) {
 			parameter = new ParameterImpl(parameterString);
@@ -56,7 +56,7 @@ public class QueryFieldParameterDencoder {
 		return parameter;
 	}
 
-	public String encodeString(Parameter parameter) {
+	public String encodeString(QueryParameter parameter) {
 		String value = parameter.getValue();
 		QueryResultsOrdering ordering = parameter.getOrdering();
 		ExpressionOperator operator = parameter.getOperator();
@@ -86,7 +86,7 @@ public class QueryFieldParameterDencoder {
 			this.split = split;
 		}
 
-		public Parameter decode() {
+		public QueryParameter decode() {
 			int valueStart = this.decodeOperator();
 			int valueEnd = this.split.length;
 
@@ -136,7 +136,7 @@ public class QueryFieldParameterDencoder {
 	}
 
 	public static final class ParameterImpl
-	        implements Parameter {
+	        implements QueryParameter {
 
 		private String value;
 		private ExpressionOperator operator;

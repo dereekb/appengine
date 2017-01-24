@@ -3,9 +3,9 @@ package com.dereekb.gae.model.extension.request.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.request.Request;
-import com.dereekb.gae.model.extension.request.builder.RequestBuilder;
-import com.dereekb.gae.model.extension.request.key.RequestKeyBuilder;
+import com.dereekb.gae.model.extension.deprecated.request.Request;
+import com.dereekb.gae.model.extension.deprecated.request.builder.RequestBuilder;
+import com.dereekb.gae.model.extension.deprecated.request.key.RequestKeyBuilder;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.utility.ConfiguredDeleter;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;

@@ -1,8 +1,8 @@
-package com.dereekb.gae.utilities.query.builder.parameters.utility;
+package com.dereekb.gae.utilities.misc.parameters.utility;
 
 import java.util.Map;
 
-import com.dereekb.gae.utilities.query.builder.parameters.KeyedEncodedQueryParameter;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
 /**
  * Static utility type.
@@ -13,7 +13,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.KeyedEncodedQueryParam
 public class ParameterUtility {
 
 	public static void put(Map<String, String> parameters,
-	                       KeyedEncodedQueryParameter parameter) {
+	                       KeyedEncodedParameter parameter) {
 
 		if (parameter != null) {
 			parameters.put(parameter.getParameterKey(), parameter.getParameterString());

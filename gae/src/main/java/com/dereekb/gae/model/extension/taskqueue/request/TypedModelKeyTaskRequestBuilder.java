@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.taskqueue.request;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
+import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
@@ -49,7 +49,7 @@ public class TypedModelKeyTaskRequestBuilder<T extends UniqueModel> extends Mode
 
 	// MARK: TaskRequestBuilder
 	@Override
-	protected TaskRequestImpl createNewModelKeyRequest(TaskParameterImpl keyParameter) {
+	protected TaskRequestImpl createNewModelKeyRequest(KeyedEncodedParameterImpl keyParameter) {
 		TaskRequestImpl request = super.createNewModelKeyRequest(keyParameter);
 
 		SimplePath path = request.getPath();

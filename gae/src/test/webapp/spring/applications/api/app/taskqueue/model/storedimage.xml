@@ -41,7 +41,7 @@
 		<constructor-arg index="1">
 			<list>
 				<ref bean="typedDocumentIndexServiceUnindexTask" />
-				<!-- <ref bean="clearImageFromLinkedStoredImageSetsTask" /> -->
+				<ref bean="scheduleRemoveImagesFromStoredImageSetsTask" />
 			</list>
 		</constructor-arg>
 	</bean>

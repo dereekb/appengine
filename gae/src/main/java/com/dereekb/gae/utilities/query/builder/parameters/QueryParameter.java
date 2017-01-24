@@ -9,7 +9,7 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  * @author dereekb
  *
  */
-public interface Parameter {
+public interface QueryParameter {
 
 	/**
 	 * Returns the string representation of the value.

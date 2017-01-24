@@ -8,10 +8,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestReader;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
@@ -108,19 +108,19 @@ public class TaskRequestMockHttpRequestConverter extends AbstractDirectionalConv
 	}
 
 	public static void appendHeaders(MockHttpServletRequestBuilder builder,
-	                                 Collection<TaskParameter> parameters) {
+	                                 Collection<KeyedEncodedParameter> parameters) {
 		if (parameters != null) {
-			for (TaskParameter parameter : parameters) {
-				builder.header(parameter.getParameter(), parameter.getValue());
+			for (KeyedEncodedParameter parameter : parameters) {
+				builder.header(parameter.getParameterKey(), parameter.getParameterString());
 			}
 		}
 	}
 
 	public static void appendParameters(MockHttpServletRequestBuilder builder,
-	                                    Collection<TaskParameter> parameters) {
+	                                    Collection<KeyedEncodedParameter> parameters) {
 		if (parameters != null) {
-			for (TaskParameter parameter : parameters) {
-				builder.param(parameter.getParameter(), parameter.getValue());
+			for (KeyedEncodedParameter parameter : parameters) {
+				builder.param(parameter.getParameterKey(), parameter.getParameterString());
 			}
 		}
 	}

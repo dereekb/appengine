@@ -6,14 +6,14 @@ import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestBuilder;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestCopier;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl.TaskRequestCopierImpl;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 
 /**
  * Implementation of {@link TaskRequestBuilder} that generates tasks keyed to
@@ -138,18 +138,18 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 
 	private TaskRequest buildRequestForPartition(Iterable<ModelKey> input) {
 		List<String> keys = ModelKey.keysAsStrings(input);
-		TaskParameterImpl keyParameter = TaskParameterImpl.parametersWithCommaSeparatedValue(this.idParameter, keys);
+		KeyedEncodedParameterImpl keyParameter = KeyedEncodedParameterImpl.make(this.idParameter, keys);
 		TaskRequestImpl request = this.createNewModelKeyRequest(keyParameter);
 		return request;
 	}
 
 	private List<TaskRequest> buildMultiRequests(Iterable<ModelKey> input) {
 		List<String> keys = ModelKey.keysAsStrings(input);
-		List<TaskParameterImpl> keyParameters = TaskParameterImpl.makeParametersForValues(this.idParameter, keys);
+		List<KeyedEncodedParameterImpl> keyParameters = KeyedEncodedParameterImpl.makeForValues(this.idParameter, keys);
 
 		List<TaskRequest> requests = new ArrayList<TaskRequest>();
 
-		for (TaskParameterImpl keyParameter : keyParameters) {
+		for (KeyedEncodedParameterImpl keyParameter : keyParameters) {
 			TaskRequest request = this.createNewModelKeyRequest(keyParameter);
 			requests.add(request);
 		}
@@ -157,12 +157,12 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		return requests;
 	}
 
-	protected TaskRequestImpl createNewModelKeyRequest(TaskParameterImpl keyParameter) {
+	protected TaskRequestImpl createNewModelKeyRequest(KeyedEncodedParameterImpl keyParameter) {
 		TaskRequestImpl request = this.copier.fullyCopyRequest(this.baseRequest);
-		Collection<TaskParameter> parameters = request.getParameters();
+		Collection<KeyedEncodedParameter> parameters = request.getParameters();
 
 		if (parameters == null) {
-			parameters = new ArrayList<TaskParameter>();
+			parameters = new ArrayList<KeyedEncodedParameter>();
 			request.setParameters(parameters);
 		}
 

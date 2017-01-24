@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
+import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.ParameterImpl;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
@@ -25,10 +25,10 @@ public class QueryFieldParameterTests {
 		QueryResultsOrdering ordering = QueryResultsOrdering.Ascending;
 		ExpressionOperator operator = ExpressionOperator.EQUAL;
 
-		Parameter parameters = new ParameterImpl(value, operator, ordering);
+		QueryParameter parameters = new ParameterImpl(value, operator, ordering);
 		String encoding = dencoder.encodeString(parameters);
 
-		Parameter decoded = dencoder.decodeString(encoding);
+		QueryParameter decoded = dencoder.decodeString(encoding);
 		Assert.assertTrue(decoded.getValue().equals(value));
 		Assert.assertTrue(decoded.equals(parameters));
 
@@ -36,7 +36,7 @@ public class QueryFieldParameterTests {
 
 	@Test
 	public void testDecodingShort() {
-		Parameter parameter = dencoder.decodeString("=,2");
+		QueryParameter parameter = dencoder.decodeString("=,2");
 
 		Assert.assertTrue(parameter.getValue().equals("2"));
 		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
@@ -51,7 +51,7 @@ public class QueryFieldParameterTests {
 
 	@Test
 	public void testDecodingShortEqualsNull() {
-		Parameter parameter = dencoder.decodeString("=n,null");
+		QueryParameter parameter = dencoder.decodeString("=n,null");
 
 		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IS_NULL);
 		Assert.assertTrue(parameter.getValue().equals("null"));
@@ -61,7 +61,7 @@ public class QueryFieldParameterTests {
 	public void testDecodingCommaSeparatedValuesNull() {
 		String value = "1,2,3,4,5,6,7,8,9";
 
-		Parameter parameter = dencoder.decodeString("in," + value);
+		QueryParameter parameter = dencoder.decodeString("in," + value);
 
 		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
 		Assert.assertTrue(parameter.getValue().equals(value));

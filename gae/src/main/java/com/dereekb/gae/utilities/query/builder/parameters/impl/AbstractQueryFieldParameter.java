@@ -2,8 +2,8 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameter;
-import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
+import com.dereekb.gae.utilities.misc.parameters.ConfigurableEncodedParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.ParameterImpl;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
@@ -17,7 +17,7 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  *
  */
 public abstract class AbstractQueryFieldParameter<T>
-        implements ConfigurableEncodedQueryParameter {
+        implements ConfigurableEncodedParameter {
 
 	/**
 	 * Empty string by default.
@@ -154,18 +154,18 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	@Override
 	public String getParameterString() {
-		Parameter parameter = this.getParameterRepresentation();
+		QueryParameter parameter = this.getParameterRepresentation();
 		return QueryFieldParameterDencoder.SINGLETON.encodeString(parameter);
 	}
 
 	// MARK: ConfigurableQueryParameter
 	@Override
 	public void setParameterString(String parameterString) throws IllegalArgumentException {
-		Parameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
+		QueryParameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
 		this.setParameterRepresentation(parameter);
 	}
 
-	public Parameter getParameterRepresentation() {
+	public QueryParameter getParameterRepresentation() {
 		String value = null;
 
 		if (this.value == null) {
@@ -177,7 +177,7 @@ public abstract class AbstractQueryFieldParameter<T>
 		return new ParameterImpl(value, this.operator, this.ordering);
 	}
 
-	public void setParameterRepresentation(Parameter parameter) throws IllegalArgumentException {
+	public void setParameterRepresentation(QueryParameter parameter) throws IllegalArgumentException {
 		this.operator = parameter.getOperator();
 		this.ordering = parameter.getOrdering();
 

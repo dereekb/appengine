@@ -4,11 +4,11 @@ import java.util.Collection;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestReader;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -150,12 +150,12 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 		}
 
 		@Override
-		public Collection<TaskParameter> getHeaders() {
+		public Collection<KeyedEncodedParameter> getHeaders() {
 			return this.request.getHeaders();
 		}
 
 		@Override
-		public Collection<TaskParameter> getParameters() {
+		public Collection<KeyedEncodedParameter> getParameters() {
 			return this.request.getParameters();
 		}
 
@@ -206,12 +206,12 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 		}
 
 		private TaskOptions appendParameters(TaskOptions options) {
-			Collection<TaskParameter> parameters = this.reader.getParameters();
+			Collection<KeyedEncodedParameter> parameters = this.reader.getParameters();
 
 			if (parameters != null) {
-				for (TaskParameter pair : parameters) {
-					String param = pair.getParameter();
-					String value = pair.getValue();
+				for (KeyedEncodedParameter pair : parameters) {
+					String param = pair.getParameterKey();
+					String value = pair.getParameterString();
 					options = options.param(param, value);
 				}
 			}
@@ -220,12 +220,12 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 		}
 
 		private TaskOptions appendHeaders(TaskOptions options) {
-			Collection<TaskParameter> headers = this.reader.getHeaders();
+			Collection<KeyedEncodedParameter> headers = this.reader.getHeaders();
 
 			if (headers != null) {
-				for (TaskParameter pair : headers) {
-					String param = pair.getParameter();
-					String value = pair.getValue();
+				for (KeyedEncodedParameter pair : headers) {
+					String param = pair.getParameterKey();
+					String value = pair.getParameterString();
 					options = options.header(param, value);
 				}
 			}

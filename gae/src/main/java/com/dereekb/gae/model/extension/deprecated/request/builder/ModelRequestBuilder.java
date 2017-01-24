@@ -2,8 +2,8 @@ package com.dereekb.gae.model.extension.request.builder;
 
 import java.util.HashMap;
 
-import com.dereekb.gae.model.extension.request.Request;
-import com.dereekb.gae.model.extension.request.key.RequestKeyBuilder;
+import com.dereekb.gae.model.extension.deprecated.request.Request;
+import com.dereekb.gae.model.extension.deprecated.request.key.RequestKeyBuilder;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 

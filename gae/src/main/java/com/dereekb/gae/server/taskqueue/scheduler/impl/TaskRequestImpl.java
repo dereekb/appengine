@@ -2,9 +2,10 @@ package com.dereekb.gae.server.taskqueue.scheduler.impl;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -24,9 +25,9 @@ public class TaskRequestImpl
 
 	private SimplePath path;
 
-	private Collection<TaskParameter> headers;
+	private Collection<KeyedEncodedParameter> headers;
 
-	private Collection<TaskParameter> parameters;
+	private Collection<KeyedEncodedParameter> parameters;
 
 	private TaskRequestTiming timings;
 
@@ -44,11 +45,14 @@ public class TaskRequestImpl
 		this(path, method, timings, null);
 	}
 
-	public TaskRequestImpl(String path, TaskRequestTiming timings, Collection<TaskParameter> headers) {
+	public TaskRequestImpl(String path, TaskRequestTiming timings, Collection<KeyedEncodedParameter> headers) {
 		this(path, Method.PUT, timings, headers);
 	}
 
-	public TaskRequestImpl(String path, Method method, TaskRequestTiming timings, Collection<TaskParameter> headers) {
+	public TaskRequestImpl(String path,
+	        Method method,
+	        TaskRequestTiming timings,
+	        Collection<KeyedEncodedParameter> headers) {
 		this(null, method, path, timings, headers, null);
 	}
 
@@ -56,8 +60,8 @@ public class TaskRequestImpl
 	        Method method,
 	        String path,
 	        TaskRequestTiming timings,
-	        Collection<TaskParameter> headers,
-	        Collection<TaskParameter> parameters) {
+	        Collection<KeyedEncodedParameter> headers,
+	        Collection<KeyedEncodedParameter> parameters) {
 		this.setName(name);
 		this.setMethod(method);
 		this.setPath(path);
@@ -106,29 +110,29 @@ public class TaskRequestImpl
 	}
 
 	@Override
-	public Collection<TaskParameter> getHeaders() {
+	public Collection<KeyedEncodedParameter> getHeaders() {
 		return this.headers;
 	}
 
-	public void setHeaders(Collection<TaskParameter> headers) {
+	public void setHeaders(Collection<KeyedEncodedParameter> headers) {
 		this.headers = headers;
 	}
 
-	public void replaceHeader(TaskParameter replacement) {
-		this.headers = TaskParameterImpl.replaceParameterInCollection(this.headers, replacement);
+	public void replaceHeader(KeyedEncodedParameter replacement) {
+		this.headers = KeyedEncodedParameterImpl.replaceInCollection(this.headers, replacement);
 	}
 
 	@Override
-	public Collection<TaskParameter> getParameters() {
+	public Collection<KeyedEncodedParameter> getParameters() {
 		return this.parameters;
 	}
 
-	public void setParameters(Collection<TaskParameter> parameters) {
+	public void setParameters(Collection<KeyedEncodedParameter> parameters) {
 		this.parameters = parameters;
 	}
 
-	public void replaceParameter(TaskParameter replacement) {
-		this.parameters = TaskParameterImpl.replaceParameterInCollection(this.parameters, replacement);
+	public void replaceParameter(KeyedEncodedParameter replacement) {
+		this.parameters = KeyedEncodedParameterImpl.replaceInCollection(this.parameters, replacement);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
@@ -242,7 +242,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 			Assert.assertNotNull(request.getPath());
 			Assert.assertTrue(request.getMethod() == Method.DELETE);
 
-			Collection<TaskParameter> parameters = request.getParameters();
+			Collection<KeyedEncodedParameter> parameters = request.getParameters();
 			Assert.assertFalse(parameters.isEmpty());
 		}
 

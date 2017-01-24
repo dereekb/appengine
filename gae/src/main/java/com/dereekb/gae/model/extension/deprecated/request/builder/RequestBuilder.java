@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.request.builder;
 
-import com.dereekb.gae.model.extension.request.Request;
+import com.dereekb.gae.model.extension.deprecated.request.Request;
 
 /**
  * Used to generate a new {@link Request} for the input model.
