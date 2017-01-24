@@ -22,6 +22,7 @@
 		<constructor-arg index="1" type="java.lang.Class"
 			value="com.dereekb.gae.server.auth.model.key.LoginKey" />
 		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="3" ref="loginKeyQueryInitializer" />
 	</bean>
 
 	<bean id="loginKeyRegistry" factory-bean="objectifyDatabase"

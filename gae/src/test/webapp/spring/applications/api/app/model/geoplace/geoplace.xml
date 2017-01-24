@@ -22,6 +22,7 @@
 		<constructor-arg index="1" type="java.lang.Class"
 			value="com.dereekb.gae.model.geo.place.GeoPlace" />
 		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="3" ref="geoPlaceQueryInitializer" />
 	</bean>
 
 	<bean id="geoPlaceRegistry" factory-bean="objectifyDatabase"

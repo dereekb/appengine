@@ -47,6 +47,10 @@ public class ClearLinkTask<T extends UniqueModel>
 	}
 
 	public void setLinkName(String linkName) {
+		if (linkName == null) {
+			throw new IllegalArgumentException("LinkName cannot be null.");
+		}
+
 		this.linkName = linkName;
 	}
 
@@ -55,6 +59,10 @@ public class ClearLinkTask<T extends UniqueModel>
 	}
 
 	public void setSystem(LinkSystem system) {
+		if (system == null) {
+			throw new IllegalArgumentException("System cannot be null.");
+		}
+
 		this.system = system;
 	}
 

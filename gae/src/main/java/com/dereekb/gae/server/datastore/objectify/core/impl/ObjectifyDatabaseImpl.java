@@ -35,6 +35,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOpt
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyKeyInSetFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestBuilderImpl;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQueryIterableFactoryImpl;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
@@ -135,6 +136,7 @@ public class ObjectifyDatabaseImpl
 
 		private final ObjectifyKeyConverter<T, ModelKey> objectifyKeyConverter;
 		private final ObjectifyQueryRequestLimitedBuilderInitializer initializer;
+		private final ObjectifyQueryIterableFactory<T> iterableFactory;
 
 		protected ObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			ObjectifyDatabaseEntityDefinition entity = ObjectifyDatabaseImpl.this.getDefinition(type);
@@ -144,6 +146,7 @@ public class ObjectifyDatabaseImpl
 			this.keyType = entity.getEntityKeyType();
 			this.objectifyKeyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
 			this.initializer = entity.getQueryInitializer();
+			this.iterableFactory = new ObjectifyQueryIterableFactoryImpl<T>(this);
 		}
 
 		public boolean isConfiguredAsync() {
@@ -453,7 +456,7 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public ObjectifyQueryIterableFactory<T> makeIterableQueryFactory() {
-			return new ObjectifyQueryIterableFactoryImpl<T>(this);
+			return this.iterableFactory;
 		}
 
 		@Override
@@ -511,6 +514,35 @@ public class ObjectifyDatabaseImpl
 			return new LoadedModelKeyListAccessor<T>(this.modelTypeName, models);
 		}
 
+		// MARK: ObjectifyQueryIterableFactory
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable() {
+			return this.iterableFactory.makeIterable();
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(Cursor cursor) {
+			return this.iterableFactory.makeIterable(cursor);
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(Map<String, String> parameters,
+		                                              Cursor cursor) {
+			return this.iterableFactory.makeIterable(parameters, cursor);
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query) {
+			return this.iterableFactory.makeIterable(query);
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query,
+		                                              Cursor cursor) {
+			return this.iterableFactory.makeIterable(query, cursor);
+		}
+
+		// MARK: Request Executor
 		/**
 		 * Internal implementation for executing a query.
 		 *
@@ -699,8 +731,6 @@ public class ObjectifyDatabaseImpl
 
 				List<Key<T>> keys = IteratorUtility.iteratorToList(iterator);
 				Cursor cursor = iterator.getCursor();
-
-				// TODO: Verify that iteratorToList is properly limited.
 
 				return new Result(keys, cursor);
 			}

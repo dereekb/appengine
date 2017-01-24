@@ -2,12 +2,14 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
+import com.dereekb.gae.utilities.query.builder.parameters.Parameter;
 
 public class ModelKeySetQueryFieldParameterBuilder {
 
@@ -21,8 +23,19 @@ public class ModelKeySetQueryFieldParameterBuilder {
 
 	private ModelKeyType keyType;
 
-	public ModelKeySetQueryFieldParameterBuilder(ModelKeyType keyType) throws IllegalArgumentException {
+	protected ModelKeySetQueryFieldParameterBuilder(ModelKeyType keyType) throws IllegalArgumentException {
 		this.setKeyType(keyType);
+	}
+
+	public static ModelKeySetQueryFieldParameterBuilder make(ModelKeyType type) throws IllegalArgumentException {
+		switch (type) {
+			case NAME:
+				return NAME_SINGLETON;
+			case NUMBER:
+				return NUMBER_SINGLETON;
+			default:
+				throw new IllegalArgumentException("Disallowed key type.");
+		}
 	}
 
 	public static ModelKeySetQueryFieldParameterBuilder name() {
@@ -58,7 +71,7 @@ public class ModelKeySetQueryFieldParameterBuilder {
 	}
 
 	public ModelKeySetQueryFieldParameter make(String field,
-	                                           Set<ModelKey> value)
+	                                           Collection<ModelKey> value)
 	        throws IllegalArgumentException {
 		ModelKeySetQueryFieldParameter fieldParameter = null;
 
@@ -93,6 +106,15 @@ public class ModelKeySetQueryFieldParameterBuilder {
 		return fieldParameter;
 	}
 
+	public List<ModelKey> decodeModelKeysFromParameter(String parameterString) throws IllegalArgumentException {
+		Parameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
+		return this.decodeModelKeysFromValue(parameter.getValue());
+	}
+
+	public List<ModelKey> decodeModelKeysFromValue(String value) throws IllegalArgumentException {
+		return ModelKey.convertKeysInString(this.keyType, value);
+	}
+
 	/**
 	 * {@link AbstractQueryFieldParameter} used for {@link ModelKey} query
 	 * parameters.
@@ -125,7 +147,8 @@ public class ModelKeySetQueryFieldParameterBuilder {
 			this.setOperator(ExpressionOperator.IN);
 		}
 
-		protected ModelKeySetQueryFieldParameter(String field, Set<ModelKey> value) throws IllegalArgumentException {
+		protected ModelKeySetQueryFieldParameter(String field, Collection<ModelKey> value)
+		        throws IllegalArgumentException {
 			this.setField(field);
 			this.setValue(value);
 			this.setOperator(ExpressionOperator.IN);
@@ -178,7 +201,7 @@ public class ModelKeySetQueryFieldParameterBuilder {
 
 		@Override
 		protected void setParameterValue(String value) throws IllegalArgumentException {
-			this.setValue(ModelKey.convertKeysInString(ModelKeySetQueryFieldParameterBuilder.this.keyType, value));
+			this.setValue(ModelKeySetQueryFieldParameterBuilder.this.decodeModelKeysFromValue(value));
 		}
 
 	}

@@ -60,8 +60,8 @@ public class ObjectifyKeySetFieldParameterBuilder<T extends ObjectifyModel<T>> e
 		return new ObjectifyKeySetFieldParameter(field, value);
 	}
 
-	public ObjectifyKeySetFieldParameter make(String field,
-	                                          Collection<Key<T>> value)
+	public ObjectifyKeySetFieldParameter makeWithObjectifyKeys(String field,
+	                                                           Collection<Key<T>> value)
 	        throws IllegalArgumentException {
 		return new ObjectifyKeySetFieldParameter(field, value);
 	}

@@ -46,35 +46,29 @@
 	</bean>
 	
 	<!-- Iterate Controller -->
-	<!--
 	<bean id="storedImageSetTaskQueueIterateControllerEntry" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
-		<constructor-arg index="0" ref="storedImageSetIterateTaskExecutorFactory"/>
+		<constructor-arg index="0" ref="storedImageSetRegistry"/>
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
-				<entry key-ref="storedImageSetRemoveImageTaskKey" value-ref="storedImageSetClearParentsTask" />
+				<entry key-ref="storedImageSetRemoveImageTaskKey" value-ref="storedImageSetRemoveImagesTaskFactory" />
 			</map>
 		</constructor-arg>
 	</bean>
 	
-	<bean id="storedImageSetIterateTaskExecutorFactory" scope="singleton" lazy-init="true"
-		class="com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl">
-		<constructor-arg index="0" ref="storedImageSetRegistry"/>
+	<bean id="storedImageSetRemoveImagesTaskKey" class="java.lang.String" lazy-init="true" scope="singleton">
+		<constructor-arg index="0" value="removeImages" />
 	</bean>
 	
-	<bean id="storedImageSetRemoveIterateTaskKey" class="java.lang.String" lazy-init="true" scope="singleton">
-		<constructor-arg index="0" value="clearParents" />
-	</bean>
-	
-	<bean id="storedImageSetClearParentsTask"
-		class="com.dereekb.gae.model.extension.links.task.ClearLinkTask"
+	<bean id="storedImageSetRemoveImagesTaskFactory"
+		class="com.dereekb.gae.model.extension.links.task.LinkModelChangeTaskFactory"
 		lazy-init="true" scope="singleton">
-		<constructor-arg index="0" value="parent" />
-		<constructor-arg index="1" ref="linkSystem" />
+		<constructor-arg index="0" ref="linkSystem" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.model.stored.image.set.link.taskqueue.UnlinkStoredImagesInStoredImageSet">
+			</bean>
+		</constructor-arg>
 	</bean>
-	
-	<bean id="clearImageFromLinkedStoredImageSetsTask">
-	</bean>
-	  -->
 
 </beans>

@@ -49,17 +49,12 @@
 	<!-- Iterate Controller -->
 	<bean id="geoPlaceTaskQueueIterateControllerEntry" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
-		<constructor-arg index="0" ref="geoPlaceIterateTaskExecutorFactory"/>
+		<constructor-arg index="0" ref="geoPlaceRegistry"/>
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
 				<entry key-ref="geoPlaceClearParentsIterateTaskKey" value-ref="geoPlaceClearParentsTask" />
 			</map>
 		</constructor-arg>
-	</bean>
-	
-	<bean id="geoPlaceIterateTaskExecutorFactory" scope="singleton" lazy-init="true"
-		class="com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl">
-		<constructor-arg index="0" ref="geoPlaceRegistry"/>
 	</bean>
 	
 	<!-- Tasks -->

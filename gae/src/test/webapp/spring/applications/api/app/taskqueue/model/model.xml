@@ -42,6 +42,7 @@
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
 				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueIterateControllerEntry"/>
+				<entry key-ref="storedImageSetType" value-ref="storedImageSetTaskQueueIterateControllerEntry"/>
 			</map>
 		</constructor-arg>
 	</bean>

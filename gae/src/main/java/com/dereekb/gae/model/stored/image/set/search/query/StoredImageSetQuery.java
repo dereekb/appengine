@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.stored.image.set.search.query;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,20 +27,24 @@ public class StoredImageSetQuery
 
 	private ModelKeySetQueryFieldParameter images;
 
-	public ModelKeySetQueryFieldParameter getImage() {
+	public ModelKeySetQueryFieldParameter getImages() {
 		return this.images;
 	}
 
-	public void setImage(ModelKeySetQueryFieldParameter image) {
+	public void setImages(ModelKeySetQueryFieldParameter image) {
 		this.images = image;
 	}
 
-	public void setImage(ModelKey image) {
+	public void setImages(ModelKey image) {
 		this.images = IMAGE_FIELD_BUILDER.make(IMAGES_FIELD, image);
 	}
 
-	public void setImage(String image) {
-		this.images = IMAGE_FIELD_BUILDER.makeModelKeyParameter(IMAGES_FIELD, image);
+	public void setImages(Collection<ModelKey> images) {
+		this.images = IMAGE_FIELD_BUILDER.make(IMAGES_FIELD, images);
+	}
+
+	public void setImages(String parameterString) {
+		this.images = IMAGE_FIELD_BUILDER.makeModelKeyParameter(IMAGES_FIELD, parameterString);
 	}
 
 	// MARK: ConfigurableQueryParameters
@@ -52,7 +57,7 @@ public class StoredImageSetQuery
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
-		this.setImage(parameters.get(IMAGES_FIELD));
+		this.setImages(parameters.get(IMAGES_FIELD));
 	}
 
 }

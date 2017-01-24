@@ -23,7 +23,7 @@ public class IterateTaskExecutorFactoryImpl<T extends ObjectifyModel<T>>
 	private ModelKeyListAccessorFactory<T> accessorFactory;
 
 	public IterateTaskExecutorFactoryImpl(ObjectifyRegistry<T> registry) throws IllegalArgumentException {
-		this(registry.makeIterableQueryFactory(), registry);
+		this(registry, registry);
 	}
 
 	public IterateTaskExecutorFactoryImpl(ObjectifyQueryIterableFactory<T> queryFactory,

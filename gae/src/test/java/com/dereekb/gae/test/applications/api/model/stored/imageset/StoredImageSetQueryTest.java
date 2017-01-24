@@ -14,6 +14,7 @@ import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.model.stored.image.set.search.query.StoredImageSetQueryInitializer.ObjectifyStoredImageSetQuery;
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
@@ -57,9 +58,11 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 
 		StoredImage imageA = this.storedImageGenerator.generate();
 		StoredImage imageB = this.storedImageGenerator.generate();
+		StoredImage imageC = this.storedImageGenerator.generate();
 
 		Key<StoredImage> imageAKey = imageA.getObjectifyKey();
 		Key<StoredImage> imageBKey = imageB.getObjectifyKey();
+		Key<StoredImage> imageCKey = imageC.getObjectifyKey();
 
 		List<StoredImageSet> imageSets = this.getModelGenerator().generate(count);
 		List<StoredImageSet> imageASets = new ArrayList<>();
@@ -73,6 +76,7 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 			Set<Key<StoredImage>> imageSet = new HashSet<>();
 
 			imageSet.add((i % 2 == 1) ? imageAKey : imageBKey);
+			imageSet.add(imageCKey);
 
 			((i % 2 == 1) ? imageASets : imageBSets).add(set);
 
@@ -82,7 +86,7 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 		this.getRegistry().save(imageSets, false);
 
 		ObjectifyStoredImageSetQuery queryConfig = new ObjectifyStoredImageSetQuery();
-		queryConfig.setImage(imageAKey);
+		queryConfig.setImages(imageA);
 
 		// No limit, should only return the 5.
 		ModelQueryUnitTest<ObjectifyStoredImageSetQuery> test = new ModelQueryUnitTest<ObjectifyStoredImageSetQuery>(
@@ -93,6 +97,67 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 		List<StoredImageSet> resultModels = results.getQuery().queryModels();
 		Assert.assertTrue(imageASets.containsAll(resultModels));
 		Assert.assertTrue(imageASets.size() == resultModels.size());
+	}
+
+	@Test
+	public void queryImageAndTest() throws Exception {
+
+		Integer count = 10;
+
+		StoredImage imageA = this.storedImageGenerator.generate();
+		StoredImage imageB = this.storedImageGenerator.generate();
+		StoredImage imageC = this.storedImageGenerator.generate();
+
+		Key<StoredImage> imageAKey = imageA.getObjectifyKey();
+		Key<StoredImage> imageBKey = imageB.getObjectifyKey();
+		Key<StoredImage> imageCKey = imageC.getObjectifyKey();
+
+		List<StoredImageSet> imageSets = this.getModelGenerator().generate(count);
+		List<StoredImageSet> imageASets = new ArrayList<>();
+		List<StoredImageSet> imageBSets = new ArrayList<>();
+
+		// Clear Images
+		for (int i = 0; i < count; i += 1) {
+			StoredImageSet set = imageSets.get(i);
+			set.setImages(null);
+
+			Set<Key<StoredImage>> imageSet = new HashSet<>();
+
+			imageSet.add((i % 2 == 1) ? imageAKey : imageBKey);
+			imageSet.add(imageCKey);
+
+			((i % 2 == 1) ? imageASets : imageBSets).add(set);
+
+			set.setImages(imageSet);
+		}
+
+		this.getRegistry().save(imageSets, false);
+
+		ObjectifyStoredImageSetQuery queryConfig = new ObjectifyStoredImageSetQuery();
+
+		List<StoredImage> images = new ArrayList<StoredImage>();
+		images.add(imageA);
+		images.add(imageC);
+
+		queryConfig.setImages(ModelKey.readModelKeys(images));
+
+		// No limit, should only return the 5.
+		ModelQueryUnitTest<ObjectifyStoredImageSetQuery> test = new ModelQueryUnitTest<ObjectifyStoredImageSetQuery>(
+		        queryConfig);
+		ModelQueryUnitTest<ObjectifyStoredImageSetQuery>.Results results = test.performQuery();
+
+		results.assertResultsMatch();
+		List<StoredImageSet> resultModels = results.getQuery().queryModels();
+
+		// Results should return everything, since they all reference image C.
+		Assert.assertTrue(imageSets.containsAll(resultModels));
+		Assert.assertTrue(imageSets.size() == resultModels.size());
+
+		Assert.assertTrue(resultModels.containsAll(imageASets));
+		Assert.assertTrue(resultModels.containsAll(imageBSets));
+
+		Assert.assertFalse(imageASets.containsAll(resultModels));
+		Assert.assertFalse(imageBSets.containsAll(resultModels));
 	}
 
 }

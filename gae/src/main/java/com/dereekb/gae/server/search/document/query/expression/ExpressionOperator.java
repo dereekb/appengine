@@ -27,6 +27,13 @@ public enum ExpressionOperator {
     // Query Only
 	NOT_EQUAL("!="),
 	GREATER_OR_LESS_BUT_NOT_EQUAL_TO("<>"),
+
+	/**
+	 * Used to check that one or more items of one collection are in another.
+	 * 
+	 * I.E. will check if EITHER object A or B are referenced within a
+	 * collection.
+	 */
 	IN("in"),
 
     // Special

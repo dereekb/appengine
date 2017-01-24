@@ -22,6 +22,7 @@
 		<constructor-arg index="1" type="java.lang.Class"
 			value="com.dereekb.gae.server.auth.model.pointer.LoginPointer" />
 		<constructor-arg index="2" value="NAME" />
+		<constructor-arg index="3" ref="loginPointerQueryInitializer" />
 	</bean>
 
 	<bean id="loginPointerRegistry" factory-bean="objectifyDatabase"

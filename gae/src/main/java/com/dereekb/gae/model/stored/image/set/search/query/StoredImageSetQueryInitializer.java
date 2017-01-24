@@ -29,18 +29,18 @@ public class StoredImageSetQueryInitializer extends AbstractObjectifyQueryReques
 	public static class ObjectifyStoredImageSetQuery extends StoredImageSetQuery
 	        implements ConfigurableObjectifyQueryRequestConfigurer {
 
-		public void setImage(StoredImage image) throws NullPointerException {
-			this.setImage(image.getObjectifyKey());
+		public void setImages(StoredImage image) throws NullPointerException {
+			this.setImages(image.getModelKey());
 		}
 
 		public void setImage(Key<StoredImage> image) {
-			this.setImage(STORED_IMAGE_BUILDER.getUtil().toModelKey(image));
+			this.setImages(STORED_IMAGE_BUILDER.getUtil().toModelKey(image));
 		}
 
 		// MARK: ConfigurableObjectifyQueryRequestConfigurer
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
-			STORED_IMAGE_BUILDER.configure(request, this.getImage());
+			STORED_IMAGE_BUILDER.configure(request, this.getImages());
 		}
 
 	}
