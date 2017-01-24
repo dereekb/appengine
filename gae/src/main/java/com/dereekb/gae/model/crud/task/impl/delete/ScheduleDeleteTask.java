@@ -10,8 +10,7 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionRea
 import com.dereekb.gae.model.crud.task.DeleteTask;
 import com.dereekb.gae.model.crud.task.config.DeleteTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.DeleteTaskConfigImpl;
-import com.dereekb.gae.model.crud.task.impl.task.AbstractScheduleReviewTask;
-import com.dereekb.gae.model.extension.taskqueue.request.ModelKeyTaskRequestBuilder;
+import com.dereekb.gae.model.crud.task.impl.task.ScheduleReviewTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
@@ -23,10 +22,11 @@ import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
- * {@link DeleteTask} implementation that extends
- * {@link ModelKeyTaskRequestBuilder}.
+ * Pre-configured {@link ScheduleReviewTask} and {@link DeleteTask} for
+ * performing deletions in
+ * the taskqueue.
  * <p>
- * Generally used to queue up values to {@link TaskQueueEditController}.
+ * Generally used to queue up requests to {@link TaskQueueEditController}.
  *
  * @author dereekb
  *
@@ -34,20 +34,19 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *            model type
  * @see {@link TaskQueueEditController}
  */
-public class ScheduleDeleteTask<T extends UniqueModel> extends AbstractScheduleReviewTask<T>
+public class ScheduleDeleteTask<T extends UniqueModel> extends ScheduleReviewTask<T>
         implements DeleteTask<T> {
 
 	private DeleteTaskConfig defaultConfig;
 	private Filter<T> deleteFilter;
 
 	public ScheduleDeleteTask(String modelResource, TaskScheduler scheduler) throws URISyntaxException {
-		this(modelResource, scheduler, null);
+		this(modelResource, scheduler, new TaskRequestImpl("delete", Method.DELETE));
 	}
 
 	public ScheduleDeleteTask(String modelResource, TaskScheduler scheduler, TaskRequest baseRequest)
 	        throws URISyntaxException {
-		super(modelResource, scheduler, baseRequest);
-
+		super(modelResource, baseRequest, scheduler);
 		this.setDefaultConfig(null);
 	}
 
@@ -69,16 +68,6 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends AbstractScheduleR
 
 	public void setDeleteFilter(Filter<T> deleteFilter) {
 		this.deleteFilter = deleteFilter;
-	}
-
-	// MARK: TypedModelKeyTaskRequestBuilder
-	@Override
-	public void setBaseRequest(TaskRequest request) {
-		if (request == null) {
-			request = new TaskRequestImpl("delete", Method.DELETE);
-		}
-
-		super.setBaseRequest(request);
 	}
 
 	// MARK: DeleteTask
@@ -115,12 +104,6 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends AbstractScheduleR
 
 		// Update results states
 		SuccessResultsPair.setResultPairsSuccess(input, true);
-	}
-
-	@Override
-	public String toString() {
-		return "ScheduleDeleteTask [defaultConfig=" + this.defaultConfig + ", deleteFilter=" + this.deleteFilter
-		        + ", scheduler=" + this.scheduler + "]";
 	}
 
 }

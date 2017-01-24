@@ -7,6 +7,10 @@ import java.util.List;
 
 public class ListUtility {
 
+	public static <T> List<T> copy(Collection<? extends T> input) {
+		return new ArrayList<T>(input);
+	}
+
 	/**
 	 * Safe copies the values from the collection into an array, only if the
 	 * input is not null. Otherwise returns null.

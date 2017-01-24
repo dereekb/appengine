@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestBuilder;
@@ -74,6 +75,10 @@ public abstract class AbstractTaskRequestBuilder<T>
 	}
 
 	public void setBaseRequest(TaskRequest baseRequest) throws IllegalArgumentException {
+		if (baseRequest == null) {
+			throw new IllegalArgumentException("Base task request cannot be null.");
+		}
+
 		this.baseRequest = baseRequest;
 	}
 
@@ -82,6 +87,10 @@ public abstract class AbstractTaskRequestBuilder<T>
 	}
 
 	public void setCopier(TaskRequestCopier<TaskRequestImpl> copier) throws IllegalArgumentException {
+		if (copier == null) {
+			throw new IllegalArgumentException("Copier cannot be null.");
+		}
+
 		this.copier = copier;
 	}
 
@@ -107,8 +116,8 @@ public abstract class AbstractTaskRequestBuilder<T>
 
 	// MARK: TaskRequestBuilder
 	@Override
-	public List<TaskRequest> buildRequests(Iterable<T> input) {
-		List<TaskRequest> requests = null;
+	public List<MutableTaskRequest> buildRequests(Iterable<T> input) {
+		List<MutableTaskRequest> requests = null;
 
 		if (this.asIndividualRequests) {
 			requests = this.buildIndividualRequests(input);
@@ -119,21 +128,21 @@ public abstract class AbstractTaskRequestBuilder<T>
 		return requests;
 	}
 
-	protected List<TaskRequest> buildRequestPartitions(Iterable<T> input) {
+	protected List<MutableTaskRequest> buildRequestPartitions(Iterable<T> input) {
 		List<List<T>> partitions = this.partitioner.makePartitions(input);
 		return this.buildRequestsForPartitions(partitions);
 	}
 
-	protected List<TaskRequest> buildIndividualRequests(Iterable<T> input) {
+	protected List<MutableTaskRequest> buildIndividualRequests(Iterable<T> input) {
 		List<List<T>> partitions = PartitionerImpl.SINGLE_OBJECT_PARTITIONER.makePartitions(input);
 		return this.buildRequestsForPartitions(partitions);
 	}
 
-	protected List<TaskRequest> buildRequestsForPartitions(List<List<T>> partitions) {
-		List<TaskRequest> requests = new ArrayList<TaskRequest>();
+	protected List<MutableTaskRequest> buildRequestsForPartitions(List<List<T>> partitions) {
+		List<MutableTaskRequest> requests = new ArrayList<MutableTaskRequest>();
 
 		for (List<T> partition : partitions) {
-			TaskRequest request = this.buildRequest(partition);
+			MutableTaskRequest request = this.buildRequest(partition);
 			requests.add(request);
 		}
 

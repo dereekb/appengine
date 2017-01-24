@@ -108,7 +108,7 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	}
 
 	@Override
-	public List<ModelKey> readKeys(Iterable<Key<T>> keys) throws IllegalKeyConversionException {
+	public List<ModelKey> readKeys(Iterable<? extends Key<T>> keys) throws IllegalKeyConversionException {
 		return this.converter.readKeys(keys);
 	}
 
@@ -118,17 +118,17 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	}
 
 	@Override
-	public List<Key<T>> writeKeys(Iterable<ModelKey> elements) throws IllegalKeyConversionException {
+	public List<Key<T>> writeKeys(Iterable<? extends ModelKey> elements) throws IllegalKeyConversionException {
 		return this.converter.writeKeys(elements);
 	}
 
 	@Override
-	public List<ModelKey> convertTo(Collection<Key<T>> input) throws ConversionFailureException {
+	public List<ModelKey> convertTo(Collection<? extends Key<T>> input) throws ConversionFailureException {
 		return this.converter.convertTo(input);
 	}
 
 	@Override
-	public List<Key<T>> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+	public List<Key<T>> convertFrom(Collection<? extends ModelKey> input) throws ConversionFailureException {
 		return this.converter.convertFrom(input);
 	}
 

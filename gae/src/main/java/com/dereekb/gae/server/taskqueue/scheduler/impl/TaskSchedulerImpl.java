@@ -9,6 +9,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.impl.TaskRequestConverterImpl;
 import com.dereekb.gae.utilities.collections.SingleItem;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
 import com.google.appengine.api.taskqueue.Queue;
@@ -69,14 +70,16 @@ public class TaskSchedulerImpl
 
 	// MARK: TaskScheduler
 	@Override
-    public void schedule(TaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException {
+	public void schedule(TaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException {
 		this.context.schedule(request);
-    }
+	}
 
 	@Override
-    public void schedule(Collection<TaskRequest> requests) throws SubmitTaskException, TaskAlreadyExistsException {
+	public void schedule(Collection<? extends TaskRequest> requests)
+	        throws SubmitTaskException,
+	            TaskAlreadyExistsException {
 		this.context.schedule(requests);
-    }
+	}
 
 	// MARK: Context
 	public Context makeContext(TaskRequestConverter converter) {
@@ -119,10 +122,7 @@ public class TaskSchedulerImpl
 			this(null, queue, filter, converter);
 		}
 
-		protected Context(Context parent,
-		        String queue,
-		        Filter<TaskRequest> filter,
-		        TaskRequestConverter converter) {
+		protected Context(Context parent, String queue, Filter<TaskRequest> filter, TaskRequestConverter converter) {
 			this.parent = parent;
 			this.setQueue(queue);
 			this.setFilter(filter);
@@ -206,7 +206,9 @@ public class TaskSchedulerImpl
 		}
 
 		@Override
-		public void schedule(Collection<TaskRequest> requests) throws SubmitTaskException, TaskAlreadyExistsException {
+		public void schedule(Collection<? extends TaskRequest> requests)
+		        throws SubmitTaskException,
+		            TaskAlreadyExistsException {
 			Collection<TaskRequest> filtered = this.filter(requests);
 
 			if (filtered.isEmpty() == false) {
@@ -223,15 +225,15 @@ public class TaskSchedulerImpl
 		}
 
 		// MARK: Internal
-		private Collection<TaskRequest> filter(Collection<TaskRequest> requests) {
+		private Collection<TaskRequest> filter(Collection<? extends TaskRequest> requests) {
 			Filter<TaskRequest> filter = this.getContextFilter();
 
 			if (filter != null) {
 				FilterResults<TaskRequest> results = filter.filterObjects(requests);
-				requests = results.getPassingObjects();
+				return results.getPassingObjects();
+			} else {
+				return ListUtility.safeCopy(requests);
 			}
-
-			return requests;
 		}
 
 		private Queue getTaskQueue() {

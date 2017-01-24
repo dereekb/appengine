@@ -21,7 +21,7 @@ public class ObjecifyLongKeysReader<T>
         implements ObjectifyKeyReader<T, ModelKey> {
 
 	@Override
-	public List<ModelKey> readKeys(Iterable<Key<T>> keys) throws IllegalKeyConversionException {
+	public List<ModelKey> readKeys(Iterable<? extends Key<T>> keys) throws IllegalKeyConversionException {
 		List<ModelKey> modelKeys = new ArrayList<>();
 
 		for (Key<T> key : keys) {

@@ -20,12 +20,12 @@ public final class LongModelKeyConverterImpl
 
 	// Bidirectional Converter
 	@Override
-	public List<ModelKey> convertTo(Collection<Long> input) throws ConversionFailureException {
+	public List<ModelKey> convertTo(Collection<? extends Long> input) throws ConversionFailureException {
 		return this.convert(input);
 	}
 
 	@Override
-	public List<Long> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+	public List<Long> convertFrom(Collection<? extends ModelKey> input) throws ConversionFailureException {
 		List<Long> keys = new ArrayList<Long>();
 
 		for (ModelKey modelKey : input) {
@@ -43,7 +43,7 @@ public final class LongModelKeyConverterImpl
 
 	// Directional Converter
 	@Override
-	public List<ModelKey> convert(Collection<Long> input) throws ConversionFailureException {
+	public List<ModelKey> convert(Collection<? extends Long> input) throws ConversionFailureException {
 		List<ModelKey> keys = new ArrayList<ModelKey>();
 
 		try {

@@ -30,9 +30,9 @@ public final class ObjectifyStringKeysConverter<T> extends ObjecifyStringKeysRea
 	public ModelKeyType getModelKeyType() {
 		return ModelKeyType.NAME;
 	}
-	
+
 	@Override
-	public List<Key<T>> writeKeys(Iterable<ModelKey> modelKeys) throws IllegalKeyConversionException {
+	public List<Key<T>> writeKeys(Iterable<? extends ModelKey> modelKeys) throws IllegalKeyConversionException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		for (ModelKey modelKey : modelKeys) {
@@ -56,12 +56,12 @@ public final class ObjectifyStringKeysConverter<T> extends ObjecifyStringKeysRea
 
 	// MARK: BidirectionalConverter
 	@Override
-	public List<ModelKey> convertTo(Collection<Key<T>> input) throws ConversionFailureException {
+	public List<ModelKey> convertTo(Collection<? extends Key<T>> input) throws ConversionFailureException {
 		return this.readKeys(input);
 	}
 
 	@Override
-	public List<Key<T>> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+	public List<Key<T>> convertFrom(Collection<? extends ModelKey> input) throws ConversionFailureException {
 		return this.writeKeys(input);
 	}
 
@@ -71,4 +71,3 @@ public final class ObjectifyStringKeysConverter<T> extends ObjecifyStringKeysRea
 	}
 
 }
-

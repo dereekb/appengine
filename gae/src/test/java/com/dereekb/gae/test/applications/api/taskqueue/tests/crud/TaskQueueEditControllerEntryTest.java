@@ -17,13 +17,14 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.utility.mock.TaskRequestMockHttpRequestConverter;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditControllerEntry;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -234,7 +235,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	@Test
 	public void testDeleteScheduling() {
 		List<T> models = this.create(true);
-		List<TaskRequest> requests = this.deleteTask.buildRequests(models);
+		List<MutableTaskRequest> requests = this.deleteTask.getBuilder().buildRequests(models);
 
 		Assert.assertNotNull(requests);
 
@@ -282,7 +283,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		List<T> models = this.create(false);
 		this.scheduleCreateReviewTask.sendTasks(models);
 
-		List<TaskRequest> requests = this.scheduleCreateReviewTask.buildRequests(models);
+		List<? extends TaskRequest> requests = this.scheduleCreateReviewTask.getBuilder().buildRequests(models);
 
 		this.taskSchedulerImpl.schedule(requests);
 
