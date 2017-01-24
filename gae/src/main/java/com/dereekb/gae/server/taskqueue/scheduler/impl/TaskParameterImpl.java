@@ -49,6 +49,11 @@ public class TaskParameterImpl
 		return this.parameter;
 	}
 
+	@Override
+	public String getKeyValue() {
+		return this.getParameterKey();
+	}
+
 	public void setParameter(String parameter) {
 		if (parameter == null || parameter.isEmpty()) {
 			throw new IllegalArgumentException("Parameter cannot be null or empty.");

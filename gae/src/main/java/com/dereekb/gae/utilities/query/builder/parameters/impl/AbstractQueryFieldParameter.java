@@ -153,6 +153,11 @@ public abstract class AbstractQueryFieldParameter<T>
 	}
 
 	@Override
+	public String getKeyValue() {
+		return this.getParameterKey();
+	}
+
+	@Override
 	public String getParameterString() {
 		QueryParameter parameter = this.getParameterRepresentation();
 		return QueryFieldParameterDencoder.SINGLETON.encodeString(parameter);

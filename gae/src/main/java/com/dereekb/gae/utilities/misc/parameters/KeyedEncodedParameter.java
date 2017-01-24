@@ -1,5 +1,7 @@
 package com.dereekb.gae.utilities.misc.parameters;
 
+import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
+
 /**
  * {@link EncodedParameter} implementation that is also keyed by a string
  * value.
@@ -8,7 +10,7 @@ package com.dereekb.gae.utilities.misc.parameters;
  *
  */
 public interface KeyedEncodedParameter
-        extends EncodedParameter {
+        extends EncodedParameter, AlwaysKeyed<String> {
 
 	/**
 	 * Returns a key for this parameter.

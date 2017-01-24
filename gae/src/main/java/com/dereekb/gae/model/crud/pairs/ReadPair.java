@@ -8,9 +8,9 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.exception.NullModelKeyException;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
+import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
 /**
  * Defines a pair to process a read with.
@@ -49,13 +49,13 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 	}
 
 	public static <T extends UniqueModel> List<ReadPair<T>> createPairsForKeys(Iterable<ModelKey> keys)
-	        throws NullModelKeyException {
+	        throws NullKeyException {
 		List<ReadPair<T>> pairs = new ArrayList<>();
 		Set<ModelKey> keysSet = new HashSet<>();
 
 		for (ModelKey key : keys) {
 			if (key == null) {
-				throw new NullModelKeyException("Encountered null key.");
+				throw new NullKeyException("Encountered null key.");
 			}
 
 			if (keysSet.contains(key) == false) {

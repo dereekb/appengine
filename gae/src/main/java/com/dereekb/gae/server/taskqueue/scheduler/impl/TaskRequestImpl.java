@@ -2,8 +2,11 @@ package com.dereekb.gae.server.taskqueue.scheduler.impl;
 
 import java.util.Collection;
 
+import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
@@ -17,7 +20,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *
  */
 public class TaskRequestImpl
-        implements TaskRequest {
+        implements MutableTaskRequest {
 
 	private String name;
 
@@ -114,8 +117,8 @@ public class TaskRequestImpl
 		return this.headers;
 	}
 
-	public void setHeaders(Collection<KeyedEncodedParameter> headers) {
-		this.headers = headers;
+	public void setHeaders(Collection<? extends KeyedEncodedParameter> headers) {
+		this.parameters = ListUtility.safeCopy(headers);
 	}
 
 	public void replaceHeader(KeyedEncodedParameter replacement) {
@@ -127,12 +130,16 @@ public class TaskRequestImpl
 		return this.parameters;
 	}
 
-	public void setParameters(Collection<KeyedEncodedParameter> parameters) {
-		this.parameters = parameters;
+	public void setParameters(Collection<? extends KeyedEncodedParameter> parameters) {
+		this.parameters = ListUtility.safeCopy(parameters);
+	}
+
+	public void mergeParameters(Collection<KeyedEncodedParameter> parameters) {
+		this.setParameters(KeyedUtility.safeMerge(parameters, this.parameters));
 	}
 
 	public void replaceParameter(KeyedEncodedParameter replacement) {
-		this.parameters = KeyedEncodedParameterImpl.replaceInCollection(this.parameters, replacement);
+		this.setParameters(KeyedEncodedParameterImpl.replaceInCollection(this.parameters, replacement));
 	}
 
 	@Override

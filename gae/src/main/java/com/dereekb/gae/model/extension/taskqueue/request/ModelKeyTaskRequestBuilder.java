@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.taskqueue.request;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,7 +9,9 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestBuilder;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestCopier;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl.AbstractTaskRequestBuilder;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl.TaskRequestCopierImpl;
+import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
@@ -28,8 +29,7 @@ import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
  * @param <T>
  *            model type
  */
-public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
-        implements TaskRequestBuilder<T> {
+public class ModelKeyTaskRequestBuilder<T extends UniqueModel> extends AbstractTaskRequestBuilder<T> {
 
 	public static final String DEFAULT_IDENTIFIER_PARAM_NAME = "keys";
 
@@ -73,101 +73,49 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel>
 		this.idParameter = idParameter;
 	}
 
+	@Override
 	public boolean isAsIndividualRequests() {
 		return this.asIndividualRequests;
 	}
 
+	@Override
 	public void setAsIndividualRequests(boolean asIndividualRequests) {
 		this.asIndividualRequests = asIndividualRequests;
 	}
 
 	public int getPartitionSize() {
-		return this.partitioner.getPartitionSize();
+		return this.partitioner.getDefaultPartitionSize();
 	}
 
 	public void setPartitionSize(Integer partitionSize) {
-		this.partitioner.setPartitionSize(partitionSize);
+		this.partitioner.setDefaultPartitionSize(partitionSize);
 	}
 
+	@Override
 	public TaskRequest getBaseRequest() {
 		return this.baseRequest;
 	}
 
+	@Override
 	public void setBaseRequest(TaskRequest baseRequest) {
 		this.baseRequest = baseRequest;
 	}
 
+	@Override
 	public TaskRequestCopier<TaskRequestImpl> getCopier() {
 		return this.copier;
 	}
 
+	@Override
 	public void setCopier(TaskRequestCopier<TaskRequestImpl> copier) {
 		this.copier = copier;
 	}
 
 	// MARK: TaskRequestBuilder
 	@Override
-	public List<TaskRequest> buildRequests(Iterable<T> input) {
-		List<ModelKey> keys = ModelKey.readModelKeys(input);
-		return this.buildRequestsForKeys(keys);
-	}
-
-	public List<TaskRequest> buildRequestsForKeys(Iterable<ModelKey> input) {
-		List<TaskRequest> requests;
-
-		if (this.asIndividualRequests) {
-			requests = this.buildMultiRequests(input);
-		} else {
-			requests = this.buildRequestPartitions(input);
-		}
-
-		return requests;
-	}
-
-	private List<TaskRequest> buildRequestPartitions(Iterable<ModelKey> input) {
-		List<List<ModelKey>> keyPartitions = this.partitioner.makePartitions(input);
-		List<TaskRequest> requests = new ArrayList<TaskRequest>();
-
-		for (List<ModelKey> keyPartition : keyPartitions) {
-			TaskRequest request = this.buildRequestForPartition(keyPartition);
-			requests.add(request);
-		}
-
-		return requests;
-	}
-
-	private TaskRequest buildRequestForPartition(Iterable<ModelKey> input) {
-		List<String> keys = ModelKey.keysAsStrings(input);
-		KeyedEncodedParameterImpl keyParameter = KeyedEncodedParameterImpl.make(this.idParameter, keys);
-		TaskRequestImpl request = this.createNewModelKeyRequest(keyParameter);
-		return request;
-	}
-
-	private List<TaskRequest> buildMultiRequests(Iterable<ModelKey> input) {
-		List<String> keys = ModelKey.keysAsStrings(input);
-		List<KeyedEncodedParameterImpl> keyParameters = KeyedEncodedParameterImpl.makeForValues(this.idParameter, keys);
-
-		List<TaskRequest> requests = new ArrayList<TaskRequest>();
-
-		for (KeyedEncodedParameterImpl keyParameter : keyParameters) {
-			TaskRequest request = this.createNewModelKeyRequest(keyParameter);
-			requests.add(request);
-		}
-
-		return requests;
-	}
-
-	protected TaskRequestImpl createNewModelKeyRequest(KeyedEncodedParameterImpl keyParameter) {
-		TaskRequestImpl request = this.copier.fullyCopyRequest(this.baseRequest);
-		Collection<KeyedEncodedParameter> parameters = request.getParameters();
-
-		if (parameters == null) {
-			parameters = new ArrayList<KeyedEncodedParameter>();
-			request.setParameters(parameters);
-		}
-
-		parameters.add(keyParameter);
-		return request;
+	protected Collection<KeyedEncodedParameter> buildRequestParameters(List<T> partition) {
+		KeyedEncodedParameterImpl keyParameter = KeyedEncodedParameterImpl.make(this.idParameter, partition);
+		return new SingleItem<KeyedEncodedParameter>(keyParameter);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.dereekb.gae.server.datastore.models.keys;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +12,10 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
-import com.dereekb.gae.server.datastore.models.keys.exception.NullModelKeyException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
+import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.google.common.base.Joiner;
 
@@ -88,6 +88,11 @@ public final class ModelKey
 
 	@Override
 	public ModelKey getModelKey() {
+		return this;
+	}
+
+	@Override
+	public ModelKey getKeyValue() {
 		return this;
 	}
 
@@ -472,12 +477,12 @@ public final class ModelKey
 	 * @param rightModels
 	 *            Models to map to the left. Will only appear once.
 	 * @return {@link List} of {@link HandlerPair} values.
-	 * @throws NullModelKeyException
+	 * @throws NullKeyException
 	 *             Thrown if any left model has no model key.
 	 */
 	public static <L extends UniqueModel, R extends UniqueModel> List<HandlerPair<L, R>> makePairs(Iterable<? extends L> leftModels,
 	                                                                                               Iterable<? extends R> rightModels)
-	        throws NullModelKeyException {
+	        throws NullKeyException {
 
 		List<HandlerPair<L, R>> pairs = new ArrayList<>();
 		Map<ModelKey, L> leftMap = makeModelKeyMap(leftModels);
@@ -500,24 +505,12 @@ public final class ModelKey
 	 * @param models
 	 *            {@link Iterable} collection. Never {@code null}.
 	 * @return {@link Map}. Never {@code null}.
-	 * @throws NullModelKeyException
+	 * @throws NullKeyException
 	 *             Thrown if a model does not have a key.
 	 */
 	public static <T extends UniqueModel> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
-	        throws NullModelKeyException {
-		Map<ModelKey, T> modelKeyMap = new HashMap<>();
-
-		for (T model : models) {
-			ModelKey key = model.getModelKey();
-
-			if (key == null) {
-				throw new NullModelKeyException();
-			} else {
-				modelKeyMap.put(key, model);
-			}
-		}
-
-		return modelKeyMap;
+	        throws NullKeyException {
+		return KeyedUtility.toMap(models);
 	}
 
 	/**
@@ -526,18 +519,18 @@ public final class ModelKey
 	 * @param models
 	 *            {@link Iterable} collection. Never {@code null}.
 	 * @return {@link Set}. Never {@code null}.
-	 * @throws NullModelKeyException
+	 * @throws NullKeyException
 	 *             Thrown if a model does not have a key.
 	 */
 	public static <T extends UniqueModel> Set<ModelKey> makeModelKeySet(Iterable<? extends T> models)
-	        throws NullModelKeyException {
+	        throws NullKeyException {
 		Set<ModelKey> keys = new HashSet<>();
 
 		for (T model : models) {
 			ModelKey key = model.getModelKey();
 
 			if (key == null) {
-				throw new NullModelKeyException();
+				throw new NullKeyException();
 			} else {
 				keys.add(key);
 			}

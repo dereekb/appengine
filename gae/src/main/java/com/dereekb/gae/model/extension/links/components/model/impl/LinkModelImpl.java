@@ -44,9 +44,14 @@ public final class LinkModelImpl<T extends UniqueModel>
 
 	// LinkModel
 	@Override
-    public ModelKey getModelKey() {
+	public ModelKey getModelKey() {
 		return this.model.getModelKey();
-    }
+	}
+
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
+	}
 
 	@Override
 	public String getType() {
@@ -63,7 +68,7 @@ public final class LinkModelImpl<T extends UniqueModel>
 		}
 
 		return link;
-    }
+	}
 
 	@Override
 	public Collection<Link> getLinks() {

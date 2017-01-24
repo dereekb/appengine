@@ -142,4 +142,9 @@ public abstract class DatabaseModelData
 		return ModelKey.convertNumberString(this.key);
 	}
 
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
+	}
+
 }

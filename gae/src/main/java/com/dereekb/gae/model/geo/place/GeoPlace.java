@@ -137,8 +137,8 @@ public final class GeoPlace extends DescribedDatabaseModel
 
 	@Override
 	public String toString() {
-		return "GeoPlace [identifier=" + this.identifier + ", date=" + this.date + ", point=" + this.point
-		        + ", region=" + this.region + ", parent=" + this.parent + ", descriptorType=" + this.descriptorType
+		return "GeoPlace [identifier=" + this.identifier + ", date=" + this.date + ", point=" + this.point + ", region="
+		        + this.region + ", parent=" + this.parent + ", descriptorType=" + this.descriptorType
 		        + ", descriptorId=" + this.descriptorId + ", searchIdentifier=" + this.searchIdentifier + "]";
 	}
 

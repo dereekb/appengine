@@ -8,6 +8,21 @@ import java.util.List;
 public class ListUtility {
 
 	/**
+	 * Safe copies the values from the collection into an array, only if the
+	 * input is not null. Otherwise returns null.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public static <T> List<T> safeCopy(Collection<? extends T> input) {
+		if (input != null) {
+			return new ArrayList<T>(input);
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Wraps the input element. If it is null, returns an empty list created via
 	 * {@link java.util.Collections#emptyList()}.
 	 *

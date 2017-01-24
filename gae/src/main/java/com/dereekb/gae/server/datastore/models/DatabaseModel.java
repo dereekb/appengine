@@ -20,6 +20,11 @@ public abstract class DatabaseModel
 	protected abstract Object getDatabaseIdentifier();
 
 	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
+	}
+
+	@Override
 	public final int hashCode() {
 		final int prime = 31;
 		int result = 0;
@@ -38,14 +43,14 @@ public abstract class DatabaseModel
 	@Override
 	public final boolean equals(Object obj) {
 		if (this == obj) {
-	        return true;
-        }
+			return true;
+		}
 		if (obj == null) {
-	        return false;
-        }
+			return false;
+		}
 		if (this.getClass() != obj.getClass()) {
-	        return false;
-        }
+			return false;
+		}
 
 		DatabaseModel other = (DatabaseModel) obj;
 		return this.keysEqual(other);

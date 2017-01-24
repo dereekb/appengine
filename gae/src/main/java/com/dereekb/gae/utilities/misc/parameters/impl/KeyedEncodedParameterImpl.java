@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.google.common.base.Joiner;
 
@@ -37,6 +38,11 @@ public class KeyedEncodedParameterImpl
 	@Override
 	public String getParameterKey() {
 		return this.parameterKey;
+	}
+
+	@Override
+	public String getKeyValue() {
+		return this.getParameterKey();
 	}
 
 	public void setParameterKey(String parameterKey) throws IllegalArgumentException {
@@ -137,23 +143,19 @@ public class KeyedEncodedParameterImpl
 		return pairs;
 	}
 
-	public static List<KeyedEncodedParameter> replaceInCollection(Collection<KeyedEncodedParameter> inputParameters,
+	/**
+	 * Removes all parameters with the same key as the replacement, then adds a
+	 * single instance of the replacement.
+	 * 
+	 * @param inputParameters
+	 *            {@link Collection} of parameters. Can be {@code null}.
+	 * @param replacement
+	 *            {@link KeyedEncodedParameter}. Never {@code null}.
+	 * @return {@link List} with the values replaced.
+	 */
+	public static List<KeyedEncodedParameter> replaceInCollection(Collection<? extends KeyedEncodedParameter> inputParameters,
 	                                                              KeyedEncodedParameter replacement) {
-		List<KeyedEncodedParameter> newParameters = new ArrayList<KeyedEncodedParameter>();
-
-		if (inputParameters != null) {
-			for (KeyedEncodedParameter parameter : inputParameters) {
-				String param = parameter.getParameterKey();
-
-				// Filter out parameters with the same name.
-				if (param.equals(replacement) == false) {
-					newParameters.add(parameter);
-				}
-			}
-		}
-
-		newParameters.add(replacement);
-		return newParameters;
+		return KeyedUtility.replaceInCollection(inputParameters, replacement);
 	}
 
 }

@@ -16,9 +16,9 @@ import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.exception.NullModelKeyException;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.runnable.RunnableTest;
+import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
 /**
  * Used for testing a {@link ReadService}.
@@ -142,7 +142,7 @@ public class ReadServiceTester<T extends UniqueModel>
 			ReadRequest request = new KeyReadRequest(keys, options);
 			this.readService.read(request);
 			Assert.fail();
-		} catch (NullModelKeyException e) {
+		} catch (NullKeyException e) {
 			// Catch null keys.
 		}
 	}
