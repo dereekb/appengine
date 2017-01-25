@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.task.impl.task;
 
-import com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.ModelKeyTaskRequestBuilder;
+import com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.KeyParameterTaskRequestBuilder;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
@@ -22,7 +22,7 @@ public class ScheduleReviewTask<T extends UniqueModel> extends TaskRequestSender
 	protected ScheduleReviewTask(String modelResource, TaskRequest baseRequest, TaskScheduler scheduler)
 	        throws IllegalArgumentException {
 		this.setScheduler(scheduler);
-		this.setBuilder(new ModelKeyTaskRequestBuilder<T>(baseRequest));
+		this.setBuilder(new KeyParameterTaskRequestBuilder<T>(baseRequest));
 		this.setModifier(new TaskRequestResourceModifier(modelResource));
 	}
 

@@ -25,7 +25,7 @@ import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
  * @param <T>
  *            model type
  */
-public class ModelKeyTaskRequestBuilder<T extends UniqueModel> extends AbstractTaskRequestBuilder<T> {
+public class KeyParameterTaskRequestBuilder<T extends UniqueModel> extends AbstractTaskRequestBuilder<T> {
 
 	public static final String DEFAULT_IDENTIFIER_PARAM_NAME = "keys";
 
@@ -34,10 +34,8 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel> extends AbstractT
 	 */
 	private String idParameter = DEFAULT_IDENTIFIER_PARAM_NAME;
 
-	protected ModelKeyTaskRequestBuilder() {}
-
-	public ModelKeyTaskRequestBuilder(TaskRequest baseRequest) {
-		this.setBaseRequest(baseRequest);
+	public KeyParameterTaskRequestBuilder(TaskRequest baseRequest) {
+		super(baseRequest);
 	}
 
 	public String getIdParameter() {
@@ -55,7 +53,8 @@ public class ModelKeyTaskRequestBuilder<T extends UniqueModel> extends AbstractT
 	// MARK: TaskRequestBuilder
 	@Override
 	protected Collection<KeyedEncodedParameter> buildRequestParameters(List<T> partition) {
-		KeyedEncodedParameterImpl keyParameter = KeyedEncodedParameterImpl.make(this.idParameter, partition);
+		List<ModelKey> keys = ModelKey.readModelKeys(partition);
+		KeyedEncodedParameterImpl keyParameter = KeyedEncodedParameterImpl.make(this.idParameter, keys);
 		return new SingleItem<KeyedEncodedParameter>(keyParameter);
 	}
 

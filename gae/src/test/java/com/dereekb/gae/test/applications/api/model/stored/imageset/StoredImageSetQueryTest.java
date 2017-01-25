@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.model.stored.image.set.search.query.StoredImageSetQueryInitializer.ObjectifyStoredImageSetQuery;
+import com.dereekb.gae.model.stored.image.set.taskqueue.StoredImageSetImagesQueryTaskRequestBuilder;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
+import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
@@ -36,6 +38,10 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 	@Autowired
 	@Qualifier("storedImageTestModelGenerator")
 	private TestModelGenerator<StoredImage> storedImageGenerator;
+
+	@Autowired
+	@Qualifier("scheduleRemoveImagesFromStoredImageSetsTaskBuilder")
+	private StoredImageSetImagesQueryTaskRequestBuilder imageQueryTaskRequestBuilder;
 
 	@Override
 	@Autowired
@@ -158,6 +164,14 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 
 		Assert.assertFalse(imageASets.containsAll(resultModels));
 		Assert.assertFalse(imageBSets.containsAll(resultModels));
+	}
+
+	@Test
+	public void imagesQueryTaskRequestBuilderTest() {
+		List<StoredImage> images = this.storedImageGenerator.generate(20);
+		List<MutableTaskRequest> requests = this.imageQueryTaskRequestBuilder.buildRequests(images);
+
+		Assert.assertNotNull(requests);
 	}
 
 }

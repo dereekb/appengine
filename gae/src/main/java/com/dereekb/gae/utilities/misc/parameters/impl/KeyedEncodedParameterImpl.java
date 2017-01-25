@@ -66,6 +66,12 @@ public class KeyedEncodedParameterImpl
 		this.parameterString = parameterString;
 	}
 
+	@Override
+	public String toString() {
+		return "KeyedEncodedParameterImpl [parameterKey=" + this.parameterKey + ", parameterString="
+		        + this.parameterString + "]";
+	}
+
 	/**
 	 * Creates a single {@link KeyedEncodedParameterImpl} with the values joined
 	 * together.

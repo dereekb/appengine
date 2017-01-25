@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskSchedulerAuthenticator;
 import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.impl.TaskRequestConverterImpl;
@@ -27,6 +28,7 @@ public class TaskSchedulerImpl
         implements TaskScheduler {
 
 	private Context context;
+	private TaskSchedulerAuthenticator authenticator;
 
 	public TaskSchedulerImpl(Filter<TaskRequest> filter) {
 		this(filter, new TaskRequestConverterImpl());
@@ -66,6 +68,14 @@ public class TaskSchedulerImpl
 
 	public void setConverter(TaskRequestConverter converter) {
 		this.context.setConverter(converter);
+	}
+
+	public TaskSchedulerAuthenticator getAuthenticator() {
+		return this.authenticator;
+	}
+
+	public void setAuthenticator(TaskSchedulerAuthenticator authenticator) {
+		this.authenticator = authenticator;
 	}
 
 	// MARK: TaskScheduler
@@ -199,6 +209,10 @@ public class TaskSchedulerImpl
 			return converter;
 		}
 
+		public TaskSchedulerAuthenticator getAuthenticator() {
+			return TaskSchedulerImpl.this.authenticator;
+		}
+
 		// MARK: TaskScheduler
 		@Override
 		public void schedule(TaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException {
@@ -215,6 +229,9 @@ public class TaskSchedulerImpl
 				try {
 					TaskRequestConverter converter = this.getContextConverter();
 					List<TaskOptions> options = converter.convert(filtered);
+
+					options = this.authenticateOptions(options);
+
 					Queue queue = this.getTaskQueue();
 					queue.add(options);
 				} catch (Exception e) {
@@ -225,6 +242,16 @@ public class TaskSchedulerImpl
 		}
 
 		// MARK: Internal
+		private List<TaskOptions> authenticateOptions(List<TaskOptions> options) {
+			TaskSchedulerAuthenticator authenticator = this.getAuthenticator();
+
+			if (authenticator != null) {
+				options = authenticator.authenticateOptions(options);
+			}
+
+			return options;
+		}
+
 		private Collection<TaskRequest> filter(Collection<? extends TaskRequest> requests) {
 			Filter<TaskRequest> filter = this.getContextFilter();
 

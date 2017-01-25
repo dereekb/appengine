@@ -116,6 +116,11 @@ public class TaskQueueIterateController {
 		return entry;
 	}
 
+	public static String pathForIterateTask(String modelType,
+	                                        String taskName) {
+		return String.format("%s/iterate/%s", modelType, taskName);
+	}
+
 	@Override
 	public String toString() {
 		return "TaskQueueIterateController [entries=" + this.entries + "]";
@@ -151,7 +156,7 @@ public class TaskQueueIterateController {
 		private String getContinutationPath() {
 			String taskName = this.taskInput.getTaskName();
 			String modelType = this.taskInput.getModelType();
-			return String.format("%s/iterate/%s", modelType, taskName);
+			return pathForIterateTask(modelType, taskName);
 		}
 
 		private Collection<KeyedEncodedParameter> getContinuationHeaders(String cursor) {

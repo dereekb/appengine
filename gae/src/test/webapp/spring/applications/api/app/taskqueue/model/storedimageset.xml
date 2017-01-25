@@ -72,8 +72,30 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="scheduleRemoveImagesFromStoredImageSetsTask">
-		
+	<!-- Scheduler -->
+	<bean id="scheduleRemoveImagesFromStoredImageSetsTask"
+		class="com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.ListAccessorTaskRequestSenderImpl"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="scheduleRemoveImagesFromStoredImageSetsTaskBuilder" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="scheduleRemoveImagesFromStoredImageSetsTaskBuilder"
+		class="com.dereekb.gae.model.stored.image.set.taskqueue.StoredImageSetImagesQueryTaskRequestBuilder" lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="scheduleRemoveImagesFromStoredImageSetsTaskBaseRequest" />
+	</bean>
+
+	<bean id="scheduleRemoveImagesFromStoredImageSetsTaskBaseRequest"
+		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0">
+			<bean
+				class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController"
+				factory-method="pathForIterateTask">
+				<constructor-arg index="0" ref="storedImageSetType"/>
+				<constructor-arg index="1" ref="storedImageSetRemoveImagesTaskKey"/>
+			</bean>
+		</constructor-arg>
 	</bean>
 
 </beans>

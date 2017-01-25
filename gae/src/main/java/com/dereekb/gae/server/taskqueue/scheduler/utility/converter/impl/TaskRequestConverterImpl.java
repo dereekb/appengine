@@ -6,6 +6,7 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.TaskOptionsUtility;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestReader;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
@@ -209,11 +210,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			Collection<KeyedEncodedParameter> parameters = this.reader.getParameters();
 
 			if (parameters != null) {
-				for (KeyedEncodedParameter pair : parameters) {
-					String param = pair.getParameterKey();
-					String value = pair.getParameterString();
-					options = options.param(param, value);
-				}
+				options = TaskOptionsUtility.appendParameters(options, parameters);
 			}
 
 			return options;
@@ -223,11 +220,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			Collection<KeyedEncodedParameter> headers = this.reader.getHeaders();
 
 			if (headers != null) {
-				for (KeyedEncodedParameter pair : headers) {
-					String param = pair.getParameterKey();
-					String value = pair.getParameterString();
-					options = options.header(param, value);
-				}
+				options = TaskOptionsUtility.appendHeaders(options, headers);
 			}
 
 			return options;

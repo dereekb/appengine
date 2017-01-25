@@ -11,8 +11,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
  *
  * @author dereekb
  */
-public interface ListAccessorTaskRequestSender<T extends UniqueModel>
-        extends TaskRequestSender<T> {
+public interface ListAccessorTaskRequestSender<T extends UniqueModel> {
 
 	/**
 	 * Creates and submits tasks for the input.

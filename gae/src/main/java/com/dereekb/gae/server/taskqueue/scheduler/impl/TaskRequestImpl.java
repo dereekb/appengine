@@ -78,6 +78,7 @@ public class TaskRequestImpl
 		return this.name;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -87,6 +88,7 @@ public class TaskRequestImpl
 		return this.method;
 	}
 
+	@Override
 	public void setMethod(Method method) {
 		if (method == null) {
 			method = Method.PUT;
@@ -104,6 +106,7 @@ public class TaskRequestImpl
 		this.setPath(new SimplePathImpl(path));
 	}
 
+	@Override
 	public void setPath(SimplePath path) throws IllegalArgumentException {
 		if (path == null) {
 			throw new IllegalArgumentException("Path cannot be null.");
@@ -117,6 +120,7 @@ public class TaskRequestImpl
 		return this.headers;
 	}
 
+	@Override
 	public void setHeaders(Collection<? extends KeyedEncodedParameter> headers) {
 		this.parameters = ListUtility.safeCopy(headers);
 	}
@@ -130,11 +134,12 @@ public class TaskRequestImpl
 		return this.parameters;
 	}
 
+	@Override
 	public void setParameters(Collection<? extends KeyedEncodedParameter> parameters) {
 		this.parameters = ListUtility.safeCopy(parameters);
 	}
 
-	public void mergeParameters(Collection<KeyedEncodedParameter> parameters) {
+	public void mergeParameters(Collection<? extends KeyedEncodedParameter> parameters) {
 		this.setParameters(KeyedUtility.safeMerge(parameters, this.parameters));
 	}
 
@@ -147,6 +152,7 @@ public class TaskRequestImpl
 		return this.timings;
 	}
 
+	@Override
 	public void setTimings(TaskRequestTiming timings) {
 		this.timings = timings;
 	}

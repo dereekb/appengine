@@ -18,14 +18,14 @@ import com.dereekb.gae.utilities.collections.batch.Partitioner;
 public class PartitionerImpl
         implements ExtendedPartitioner {
 
+	private static final Integer DEFAULT_PARTITION_SIZE = 100;
+
 	/**
 	 * Singleton partitioner that creates partitions of size 1.
 	 */
 	public static final ExtendedPartitioner SINGLE_OBJECT_PARTITIONER = new PartitionerImpl(1);
 
-	private static final Integer DEFAULT_PARTITION_SIZE = 100;
-
-	private int defaultPartitionSize = DEFAULT_PARTITION_SIZE;
+	private Integer defaultPartitionSize = DEFAULT_PARTITION_SIZE;
 
 	private InternalPartitioner partitioner;
 

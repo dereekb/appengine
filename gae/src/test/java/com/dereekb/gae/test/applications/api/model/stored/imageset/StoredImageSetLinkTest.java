@@ -8,6 +8,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.crud.services.CrudService;
+import com.dereekb.gae.model.crud.services.request.DeleteRequest;
+import com.dereekb.gae.model.crud.services.request.impl.DeleteRequestImpl;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceRequest;
 import com.dereekb.gae.model.extension.links.deleter.impl.LinkDeleterServiceRequestImpl;
 import com.dereekb.gae.model.stored.image.StoredImage;
@@ -56,6 +59,10 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 	@Autowired
 	@Qualifier("storedImageSetTestModelGenerator")
 	private TestModelGenerator<StoredImageSet> storedImageSetGenerator;
+
+	@Autowired
+	@Qualifier("storedImageCrudService")
+	private CrudService<StoredImage> storedImageCrudService;
 
 	@Test
 	public void testLinkingIcon() {
@@ -193,8 +200,9 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		// Link Together
 		this.linkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetImagesLinkName, storedImage);
 
-		// Delete the model
-		this.storedImageRegistry.delete(storedImage, true);
+		// Delete the model via CRUD service.
+		DeleteRequest deleteRequest = new DeleteRequestImpl(storedImage);
+		this.storedImageCrudService.delete(deleteRequest);
 
 		// Let the TaskQueue Complete
 		TestLocalTaskQueueCallback.waitUntilComplete();
