@@ -126,13 +126,13 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 				for (LinkModel model : linkModels) {
 					this.delegate.modifyLinkModel(model);
 				}
+
+				modelSet.save(LinkModelChangeTaskFactory.this.validate);
 			} catch (FailedTaskException e) {
 				throw e;
 			} catch (RuntimeException e) {
 				throw new FailedTaskException(e);
 			}
-
-			modelSet.save(LinkModelChangeTaskFactory.this.validate);
 		}
 
 		@Override

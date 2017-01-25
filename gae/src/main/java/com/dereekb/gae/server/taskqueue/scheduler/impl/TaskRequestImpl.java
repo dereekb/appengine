@@ -22,8 +22,14 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 public class TaskRequestImpl
         implements MutableTaskRequest {
 
+	private static final Method DEFAULT_METHOD = Method.PUT;
+
 	private String name;
 
+	/**
+	 * Task request method. Should avoid using POST, due to potential confusion
+	 * between payload and parameters.
+	 */
 	private Method method;
 
 	private SimplePath path;
@@ -49,7 +55,7 @@ public class TaskRequestImpl
 	}
 
 	public TaskRequestImpl(String path, TaskRequestTiming timings, Collection<KeyedEncodedParameter> headers) {
-		this(path, Method.PUT, timings, headers);
+		this(path, DEFAULT_METHOD, timings, headers);
 	}
 
 	public TaskRequestImpl(String path,
@@ -91,7 +97,7 @@ public class TaskRequestImpl
 	@Override
 	public void setMethod(Method method) {
 		if (method == null) {
-			method = Method.PUT;
+			method = DEFAULT_METHOD;
 		}
 
 		this.method = method;

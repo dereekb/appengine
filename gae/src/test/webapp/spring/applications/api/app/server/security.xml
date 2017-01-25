@@ -1,9 +1,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
@@ -12,10 +10,8 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Enable Method Security -->
-	<!--
-	<security:global-method-security secured-annotations="enabled"></security:global-method-security>
-	  -->
-	  
+	<!-- <security:global-method-security secured-annotations="enabled"></security:global-method-security> -->
+
 	<!-- No HTTP security for Google App Engine. -->
 	<security:http pattern="/_ah/**" security="none" />
 
@@ -24,24 +20,32 @@
 
 	<!-- No HTTP security for oauth login. -->
 	<security:http pattern="/login/oauth/*" security="none" />
-	
+
 	<!-- No HTTP security for key login. -->
 	<security:http pattern="/login/key" security="none" />
-	
+
 	<!-- No HTTP security for pass login. -->
 	<!-- DEPRECATED: Do not enable this on production apps -->
 	<security:http pattern="/login/pass/*" security="none" />
-	
+
 	<!-- No HTTP security for anonymous login. -->
 	<security:http pattern="/login/anon" security="none" />
-		 
-	<security:http use-expressions="true" create-session="stateless" entry-point-ref="securityEntryPoint">
-		<security:csrf disabled="true"/>
+
+	<security:http use-expressions="true" create-session="stateless"
+		entry-point-ref="securityEntryPoint">
+		<security:csrf disabled="true" />
 		<!-- API not allowed to access loginKey API. -->
-		<security:intercept-url pattern="/loginkey/**" access="!hasRole('ROLE_LOGINTYPE_API')" />
-		<security:intercept-url pattern="/**" access="isAuthenticated()" />
-		<security:custom-filter ref="authenticationFilter" position="PRE_AUTH_FILTER" />
-		<security:access-denied-handler ref="accessDeniedHandler"/>
+		<security:intercept-url pattern="/loginkey/**"
+			access="!hasRole('ROLE_LOGINTYPE_API')" />
+		<security:intercept-url pattern="/**"
+			access="isAuthenticated()" />
+			
+		<!-- Only the system can access the taskqueue. -->
+		<security:intercept-url pattern="/taskqueue/*"
+			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
+		<security:custom-filter ref="authenticationFilter"
+			position="PRE_AUTH_FILTER" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
 	</security:http>
 
 	<bean id="securityEntryPoint"
@@ -66,7 +70,7 @@
 		<security:authentication-provider
 			ref="loginTokenAuthenticationProvider" />
 	</security:authentication-manager>
-	
+
 	<bean id="loginTokenAuthenticationProvider" lazy-init="true"
 		scope="singleton"
 		class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl">
@@ -75,7 +79,8 @@
 
 	<bean id="loginTokenUserDetailsBuilder" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl">
-		<constructor-arg index="0" ref="loginTokenGrantedAuthorityBuilder" />
+		<constructor-arg index="0"
+			ref="loginTokenGrantedAuthorityBuilder" />
 		<constructor-arg index="1" ref="loginRegistry" />
 		<constructor-arg index="2" ref="loginPointerRegistry" />
 	</bean>
@@ -87,7 +92,8 @@
 		<constructor-arg index="1">
 			<!-- Roles given to all users -->
 			<array>
-				<bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+				<bean
+					class="org.springframework.security.core.authority.SimpleGrantedAuthority">
 					<constructor-arg index="0" value="ROLE_USER" />
 				</bean>
 			</array>
@@ -95,7 +101,8 @@
 		<constructor-arg index="2">
 			<!-- Roles given to anonymous users -->
 			<array>
-				<bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+				<bean
+					class="org.springframework.security.core.authority.SimpleGrantedAuthority">
 					<constructor-arg index="0" value="ROLE_ANON" />
 				</bean>
 			</array>
@@ -108,16 +115,22 @@
 		<constructor-arg index="0">
 			<map key-type="java.lang.Integer" value-type="java.lang.String">
 				<!-- Map of encoded role values. -->
-				<entry key="0" value="ROLE_ADMIN" />
+				<entry key="0" value="ROLE_SYSTEM" />
+				<entry key="1" value="ROLE_ADMIN" />
 			</map>
 		</constructor-arg>
+	</bean>
+
+	<bean id="systemLoginTokenFactory" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl">
+		<constructor-arg index="0" ref="loginTokenService" />
 	</bean>
 
 	<!-- Exception Handler -->
 	<bean id="loginTokenExceptionHandler" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler">
 	</bean>
-	
+
 	<bean id="accessDeniedHandler" scope="singleton" lazy-init="true"
 		class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl">
 	</bean>

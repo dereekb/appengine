@@ -12,10 +12,16 @@
 	<bean id="taskScheduler" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl">
 		<constructor-arg index="0" ref="taskRequestHashFilter"/>
+		<property name="authenticator" ref="taskSchedulerAuthenticator"/>
 	</bean>
 
 	<bean id="taskRequestHashFilter" lazy-init="true" scope="singleton"
 		class="com.dereekb.gae.server.taskqueue.scheduler.utility.filter.TaskRequestHashFilter">
+	</bean>
+	
+	<bean id="taskSchedulerAuthenticator" lazy-init="true" scope="singleton"
+		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl">
+		<constructor-arg index="0" ref="systemLoginTokenFactory"/>
 	</bean>
 
 </beans>

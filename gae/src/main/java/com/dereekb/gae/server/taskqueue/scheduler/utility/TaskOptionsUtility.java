@@ -1,6 +1,8 @@
 package com.dereekb.gae.server.taskqueue.scheduler.utility;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
@@ -34,6 +36,18 @@ public class TaskOptionsUtility {
 		}
 
 		return options;
+	}
+
+	public static List<TaskOptions> appendHeader(List<TaskOptions> options,
+	                                             KeyedEncodedParameter header) {
+		List<TaskOptions> newOptions = new ArrayList<TaskOptions>(options.size());
+
+		for (TaskOptions option : options) {
+			TaskOptions newOption = appendHeader(option, header);
+			newOptions.add(newOption);
+		}
+
+		return newOptions;
 	}
 
 }

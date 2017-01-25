@@ -6,8 +6,11 @@ import com.dereekb.gae.model.extension.iterate.IterateTaskExecutor;
 import com.dereekb.gae.model.extension.iterate.IterateTaskExecutorFactory;
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedException;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.IterateTaskRequest;
@@ -22,13 +25,18 @@ import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.Unkn
  * @author dereekb
  *
  */
-public class TaskQueueIterateControllerEntryImpl<T extends UniqueModel>
+public class TaskQueueIterateControllerEntryImpl<T extends ObjectifyModel<T>>
         implements TaskQueueIterateControllerEntry {
 
 	private IterateTaskExecutorFactory<T> executorFactory;
 	private Map<String, TaskQueueIterateTaskFactory<T>> tasks;
 
 	public TaskQueueIterateControllerEntryImpl() {}
+
+	public TaskQueueIterateControllerEntryImpl(ObjectifyRegistry<T> registry,
+	        Map<String, TaskQueueIterateTaskFactory<T>> tasks) throws IllegalArgumentException {
+		this(new IterateTaskExecutorFactoryImpl<T>(registry), tasks);
+	}
 
 	public TaskQueueIterateControllerEntryImpl(IterateTaskExecutorFactory<T> executorFactory,
 	        Map<String, TaskQueueIterateTaskFactory<T>> tasks) throws IllegalArgumentException {
@@ -57,7 +65,7 @@ public class TaskQueueIterateControllerEntryImpl<T extends UniqueModel>
 			throw new IllegalArgumentException("Tasks map cannot be null or empty.");
 		}
 
-		this.tasks = tasks;
+		this.tasks = new CaseInsensitiveMap<TaskQueueIterateTaskFactory<T>>(tasks);
 	}
 
 	// MARK: TaskQueueIterateControllerEntry

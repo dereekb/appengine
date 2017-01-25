@@ -96,15 +96,32 @@ public class CoreServiceTestingContext {
 
 		public static MockMvc mockMvc;
 
-		public static LocalTaskQueueTestConfig.TaskCountDownLatch countDownLatch = new LocalTaskQueueTestConfig.TaskCountDownLatch(
+		public static final LocalTaskQueueTestConfig.TaskCountDownLatch countDownLatch = new LocalTaskQueueTestConfig.TaskCountDownLatch(
 		        0);
+
+		public static final void waitForLatch() throws InterruptedException {
+			countDownLatch.await();
+		}
+
+		private static final void increaseLatchCounter() {
+			Long count = countDownLatch.getCount() + 1L;
+
+			System.out.println(String.format("Latch increased to %s.", count));
+
+			countDownLatch.reset(count.intValue());
+		}
+
+		private static final void decreaseLatchCounter() {
+			countDownLatch.countDown();
+			System.out.println(String.format("Latch decreased to %s.", countDownLatch.getCount()));
+		}
 
 		@Override
 		public int execute(URLFetchRequest arg0) {
-			this.increaseCounter();
+			increaseLatchCounter();
 
 			if (LOG_EVENTS) {
-				System.out.println(String.format("Executing taskqueue task %s.", arg0.getUrl()));
+				System.out.println(String.format("Executing taskqueue task %s -> %s", arg0.getMethod(), arg0.getUrl()));
 			}
 
 			MockHttpServletRequestBuilder requestBuilder;
@@ -114,7 +131,7 @@ public class CoreServiceTestingContext {
 			} catch (UnsupportedEncodingException e) {
 				System.out.println(String.format("Exception decoding URL: %s.", arg0.getUrl()));
 				e.printStackTrace();
-				this.decreaseCounter();
+				decreaseLatchCounter();
 				return 0;
 			}
 
@@ -137,17 +154,8 @@ public class CoreServiceTestingContext {
 				return 0;
 			} finally {
 				ofy.close();
-				this.decreaseCounter();
+				this.decreaseLatchCounter();
 			}
-		}
-
-		private void increaseCounter() {
-			Long count = countDownLatch.getCount() + 1;
-			countDownLatch.reset(count.intValue());
-		}
-
-		private void decreaseCounter() {
-			countDownLatch.countDown();
 		}
 
 		private MockHttpServletRequestBuilder buildRequest(URLFetchRequest arg0) throws UnsupportedEncodingException {
@@ -193,7 +201,7 @@ public class CoreServiceTestingContext {
 		public static void waitUntilComplete() {
 			try {
 				Thread.sleep(100);
-				countDownLatch.await();
+				waitForLatch();
 				System.out.println("Stopped waiting for TaskQueue operation.");
 			} catch (InterruptedException e) {
 				e.printStackTrace();

@@ -6,6 +6,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.utilities.time.DateUtility;
 
 /**
  * {@link LoginToken} implementation.
@@ -14,6 +15,8 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
  */
 public class LoginTokenImpl
         implements LoginToken {
+
+	private static final Long DEFAULT_ROLES = 0L;
 
 	/**
 	 * Optional subject
@@ -38,7 +41,7 @@ public class LoginTokenImpl
 	/**
 	 * Set of roles.
 	 */
-	private Long roles;
+	private Long roles = DEFAULT_ROLES;
 
 	/**
 	 * Time the token was issued.
@@ -56,7 +59,12 @@ public class LoginTokenImpl
 	private LoginPointerType pointerType;
 
 	public LoginTokenImpl() {
-		this.issued = new Date();
+		this(LoginPointerType.ANONYMOUS);
+	}
+
+	public LoginTokenImpl(LoginPointerType pointerType) {
+		this.setPointerType(pointerType);
+		this.setIssued(new Date());
 	}
 
 	@Override
@@ -106,8 +114,13 @@ public class LoginTokenImpl
 		return this.roles;
 	}
 
+	@Override
+	public Long getEncodedRoles() {
+		return this.roles;
+	}
+
 	public void setRoles(Long roles) {
-		this.roles = (roles != null) ? roles : 0L;
+		this.roles = (roles != null) ? roles : DEFAULT_ROLES;
 	}
 
 	@Override
@@ -128,6 +141,28 @@ public class LoginTokenImpl
 		this.expiration = expiration;
 	}
 
+	/**
+	 * Sets the expiration time in milliseconds from the issued time.
+	 * 
+	 * @param milliseconds
+	 *            {@link Long}. Never {@code null}.
+	 */
+	public void setExpiration(Long milliseconds) {
+		Date expirationDate = DateUtility.getDateIn(this.issued, milliseconds);
+		this.setExpiration(expirationDate);
+	}
+
+	/**
+	 * Sets the expiration time in milliseconds from the current time.
+	 * 
+	 * @param milliseconds
+	 *            {@link Long}. Never {@code null}.
+	 */
+	public void setToExpireIn(Long milliseconds) {
+		Date expirationDate = DateUtility.getDateIn(milliseconds);
+		this.setExpiration(expirationDate);
+	}
+
 	@Override
 	public boolean hasExpired() {
 		return new Date().after(this.expiration);
@@ -135,7 +170,7 @@ public class LoginTokenImpl
 
 	@Override
 	public LoginPointerType getPointerType() {
-		return pointerType;
+		return this.pointerType;
 	}
 
 	public void setPointerType(LoginPointerType pointerType) {

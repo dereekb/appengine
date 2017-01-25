@@ -46,8 +46,6 @@ public abstract class PartitionedTaskRequestBuilder<T> {
 	 */
 	private Partitioner partitioner;
 
-	protected PartitionedTaskRequestBuilder() {}
-
 	protected PartitionedTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
 		this(false, baseRequest);
 	}

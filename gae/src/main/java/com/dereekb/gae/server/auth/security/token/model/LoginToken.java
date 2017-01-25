@@ -5,6 +5,7 @@ import java.util.Date;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 
 /**
  * Login token object used as an authentication item.
@@ -12,7 +13,8 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
  * @author dereekb
  *
  */
-public interface LoginToken {
+public interface LoginToken
+        extends EncodedRolesBearer {
 
 	/**
 	 * Returns the subject of the token. Generally the result of

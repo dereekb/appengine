@@ -51,7 +51,7 @@
 		<constructor-arg index="0" ref="storedImageSetRegistry"/>
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
-				<entry key-ref="storedImageSetRemoveImageTaskKey" value-ref="storedImageSetRemoveImagesTaskFactory" />
+				<entry key-ref="storedImageSetRemoveImagesTaskKey" value-ref="storedImageSetRemoveImagesTaskFactory" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -89,8 +89,7 @@
 		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl"
 		lazy-init="true" scope="singleton">
 		<constructor-arg index="0">
-			<bean
-				class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController"
+			<bean class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController"
 				factory-method="pathForIterateTask">
 				<constructor-arg index="0" ref="storedImageSetType"/>
 				<constructor-arg index="1" ref="storedImageSetRemoveImagesTaskKey"/>

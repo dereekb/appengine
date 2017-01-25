@@ -24,7 +24,6 @@ public class StoredImageSetImagesQueryTaskRequestBuilder extends AbstractQueryIt
 	// MARK: AbstractQueryIterateTaskRequestBuilder
 	@Override
 	public StoredImageSetQuery getParametersForPartition(List<ModelKey> partition) {
-
 		StoredImageSetQuery query = new StoredImageSetQuery();
 		query.setImages(partition);
 

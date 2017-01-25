@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
@@ -52,7 +53,8 @@ public class TaskQueueIterateController {
 
 	public TaskQueueIterateController() {}
 
-	public TaskQueueIterateController(TaskScheduler scheduler, Map<String, TaskQueueIterateControllerEntry> entries) {
+	public TaskQueueIterateController(TaskScheduler scheduler, Map<String, TaskQueueIterateControllerEntry> entries)
+	        throws IllegalArgumentException {
 		this.setScheduler(scheduler);
 		this.setEntries(entries);
 	}
@@ -61,7 +63,11 @@ public class TaskQueueIterateController {
 		return this.scheduler;
 	}
 
-	public void setScheduler(TaskScheduler scheduler) {
+	public void setScheduler(TaskScheduler scheduler) throws IllegalArgumentException {
+		if (scheduler == null) {
+			throw new IllegalArgumentException("Scheduler cannot be null.");
+		}
+
 		this.scheduler = scheduler;
 	}
 
@@ -69,8 +75,12 @@ public class TaskQueueIterateController {
 		return this.entries;
 	}
 
-	public void setEntries(Map<String, TaskQueueIterateControllerEntry> entries) {
-		this.entries = entries;
+	public void setEntries(Map<String, TaskQueueIterateControllerEntry> entries) throws IllegalArgumentException {
+		if (entries == null) {
+			throw new IllegalArgumentException("Entries cannot be null.");
+		}
+
+		this.entries = new CaseInsensitiveMap<TaskQueueIterateControllerEntry>(entries);
 	}
 
 	/**
@@ -93,7 +103,7 @@ public class TaskQueueIterateController {
 	 *            All request parameters. Never {@code null}.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/iterate/{task}", method = RequestMethod.POST, consumes = "application/octet-stream")
+	@RequestMapping(value = "{type}/iterate/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void iterate(@PathVariable("type") String modelType,
 	                    @PathVariable("task") String taskName,
 	                    @RequestHeader(value = TASK_STEP_HEADER, required = false) Integer step,
@@ -110,7 +120,7 @@ public class TaskQueueIterateController {
 		TaskQueueIterateControllerEntry entry = this.entries.get(modelType);
 
 		if (entry == null) {
-			throw new UnregisteredIterateTypeException();
+			throw new UnregisteredIterateTypeException("Unknown type: " + modelType);
 		}
 
 		return entry;
@@ -146,7 +156,7 @@ public class TaskQueueIterateController {
 			Collection<KeyedEncodedParameter> headers = this.getContinuationHeaders(cursor);
 			Collection<KeyedEncodedParameter> parameters = this.getContinuationParameters();
 
-			TaskRequestImpl request = new TaskRequestImpl(path, Method.POST);
+			TaskRequestImpl request = new TaskRequestImpl(path, Method.PUT);
 			request.setHeaders(headers);
 			request.setParameters(parameters);
 

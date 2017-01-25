@@ -19,14 +19,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class LoginTokenBuilderImpl
         implements LoginTokenBuilder {
 
-	// 1 hour expiration
-	private static final Long DEFAULT_EXPIRATION_TIME = 60 * 60 * 1000L;
+	// 4 hour expiration
+	private static final Long DEFAULT_EXPIRATION_TIME = 4 * 60 * 60 * 1000L;
 
 	private Long expirationTime = DEFAULT_EXPIRATION_TIME;
 
 	private Getter<Login> loginGetter;
 
-	public LoginTokenBuilderImpl(Getter<Login> loginGetter) {
+	public LoginTokenBuilderImpl(Getter<Login> loginGetter) throws IllegalArgumentException {
 		this.setLoginGetter(loginGetter);
 	}
 
@@ -35,6 +35,10 @@ public class LoginTokenBuilderImpl
 	}
 
 	public void setExpirationTime(Long expirationTime) {
+		if (expirationTime == null || expirationTime < 0L) {
+			throw new IllegalArgumentException("ExpirationTime cannot be null or less than 0.");
+		}
+
 		this.expirationTime = expirationTime;
 	}
 
@@ -42,7 +46,11 @@ public class LoginTokenBuilderImpl
 		return this.loginGetter;
 	}
 
-	public void setLoginGetter(Getter<Login> loginGetter) {
+	public void setLoginGetter(Getter<Login> loginGetter) throws IllegalArgumentException {
+		if (loginGetter == null) {
+			throw new IllegalArgumentException("LoginGetter cannot be null.");
+		}
+
 		this.loginGetter = loginGetter;
 	}
 
@@ -90,16 +98,11 @@ public class LoginTokenBuilderImpl
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 
 		Date issued = new Date();
-		Date expiration = this.getExpirationDate();
 
 		loginToken.setIssued(issued);
-		loginToken.setExpiration(expiration);
+		loginToken.setExpiration(this.expirationTime);
 
 		return loginToken;
-	}
-
-	public Date getExpirationDate() {
-		return new Date(System.currentTimeMillis() + this.expirationTime);
 	}
 
 	@Override
