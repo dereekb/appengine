@@ -12,12 +12,12 @@ import com.dereekb.gae.server.search.document.query.expression.ExpressionOperato
  */
 public class ModelKeyQueryFieldParameterBuilder {
 
+	public static final ExpressionOperator DEFAULT_OPERATOR = ExpressionOperator.EQUAL;
+
 	public static final ModelKeyQueryFieldParameterBuilder NAME_SINGLETON = new ModelKeyQueryFieldParameterBuilder(
 	        ModelKeyType.NAME);
 	public static final ModelKeyQueryFieldParameterBuilder NUMBER_SINGLETON = new ModelKeyQueryFieldParameterBuilder(
 	        ModelKeyType.NUMBER);
-
-	public static final ExpressionOperator DEFAULT_OPERATOR = ExpressionOperator.EQUAL;
 
 	private ModelKeyType keyType;
 	private ExpressionOperator defaultOperator = DEFAULT_OPERATOR;

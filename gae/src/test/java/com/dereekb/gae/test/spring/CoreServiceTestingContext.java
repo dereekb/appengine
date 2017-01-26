@@ -87,6 +87,10 @@ public class CoreServiceTestingContext {
 		this.helper = helper;
 	}
 
+	public static void waitUntilTaskQueueCompletes() {
+		TestLocalTaskQueueCallback.waitUntilComplete();
+	}
+
 	public static class TestLocalTaskQueueCallback
 	        implements LocalTaskQueueCallback {
 

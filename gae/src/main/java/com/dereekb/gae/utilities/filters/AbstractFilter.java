@@ -8,6 +8,7 @@ import java.util.List;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public abstract class AbstractFilter<T>
         implements Filter<T> {
@@ -19,7 +20,7 @@ public abstract class AbstractFilter<T>
 	}
 
 	@Override
-    public abstract FilterResult filterObject(T object);
+	public abstract FilterResult filterObject(T object);
 
 	/**
 	 * Runs a pre-filter check to see the entire filter can be skipped or not.
@@ -51,7 +52,8 @@ public abstract class AbstractFilter<T>
 	}
 
 	/**
-	 * Does an efficient pass over input objects checking to see if they all pass the filter.
+	 * Does an efficient pass over input objects checking to see if they all
+	 * pass the filter.
 	 *
 	 *
 	 * @param objects

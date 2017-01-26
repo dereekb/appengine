@@ -44,4 +44,65 @@
 		</constructor-arg>
 	</bean>
 
+	<!-- Iterate Controller -->
+	<bean id="loginKeyTaskQueueIterateControllerEntry" scope="singleton" lazy-init="true"
+		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
+		<constructor-arg index="0" ref="loginKeyRegistry"/>
+		<constructor-arg index="1">
+			<map key-type="java.lang.String">
+				<entry key-ref="loginKeyDeleteByParentTaskKey" value-ref="loginKeyIterateDeleteTask" />
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Scheduler -->
+	<bean id="scheduleLoginKeyDeleteByParentTask"
+		class="com.dereekb.gae.server.datastore.models.keys.accessor.task.ModelKeyListAccessorTaskFilter"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="loginPointerIsApiKeyPointerFilter" />
+		<constructor-arg index="1" ref="scheduleLoginKeyDeleteByParentTaskScheduler" />
+	</bean>
+	
+	<bean id="loginPointerIsApiKeyPointerFilter"
+		class="com.dereekb.gae.server.auth.model.pointer.misc.LoginPointerTypeFilter">
+		<constructor-arg index="0" value="API_KEY" />
+	</bean>
+	
+	<bean id="scheduleLoginKeyDeleteByParentTaskScheduler"
+		class="com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.ListAccessorTaskRequestSenderImpl"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="scheduleLoginKeyDeleteByParentTaskBuilder" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="scheduleLoginKeyDeleteByParentTaskBuilder"
+		class="com.dereekb.gae.server.auth.model.key.taskqueue.LoginKeyLoginPointerQueryTaskRequestBuilder"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="scheduleLoginKeyDeleteByParentTaskBaseRequest" />
+	</bean>
+
+	<bean id="scheduleLoginKeyDeleteByParentTaskBaseRequest"
+		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0">
+			<bean class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController"
+				factory-method="pathForIterateTask">
+				<constructor-arg index="0" ref="loginKeyType"/>
+				<constructor-arg index="1" ref="loginKeyDeleteByParentTaskKey"/>
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<!-- LoginKey Delete By Parent Task -->
+	<!-- Task executed when the parent LoginPointer is deleted. All children LoginPointers are deleted. -->
+	<bean id="loginKeyDeleteByParentTaskKey" class="java.lang.String" lazy-init="true" scope="singleton">
+		<constructor-arg index="0" value="deleteByParent" />
+	</bean>
+	
+	<bean id="loginKeyIterateDeleteTask"
+		class="com.dereekb.gae.model.crud.taskqueue.ModelKeyListAccessorDeleteTask"
+		lazy-init="true" scope="singleton">
+		<constructor-arg index="0" ref="loginKeyCrudService" />
+	</bean>
+	
 </beans>

@@ -323,6 +323,11 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
+		public boolean exists(T model) {
+			return this.exists(model.getObjectifyKey());
+		}
+
+		@Override
 		public boolean exists(ModelKey key) {
 			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
 			return this.exists(objectifyKey);
