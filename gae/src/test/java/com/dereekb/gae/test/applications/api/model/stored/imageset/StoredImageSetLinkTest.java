@@ -188,8 +188,14 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		Assert.assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 	}
 
+	/**
+	 * Tests that when a stored image is deleted, the taskqueue does it's magic
+	 * to remove it from all StoredImageSet values that reference it.
+	 * 
+	 * @throws InterruptedException
+	 */
 	@Test
-	public void testUnlinkFromDeletedStoredImage() {
+	public void testUnlinkFromDeletedStoredImage() throws InterruptedException {
 		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
 		StoredImage storedImage = this.storedImageGenerator.generate();
 

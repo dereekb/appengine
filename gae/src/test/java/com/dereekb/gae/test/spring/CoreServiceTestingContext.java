@@ -3,6 +3,7 @@ package com.dereekb.gae.test.spring;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.ServletException;
 
@@ -96,24 +97,38 @@ public class CoreServiceTestingContext {
 
 		public static MockMvc mockMvc;
 
-		public static final LocalTaskQueueTestConfig.TaskCountDownLatch countDownLatch = new LocalTaskQueueTestConfig.TaskCountDownLatch(
+		public static final AtomicLong atomicCounter = new AtomicLong(0L);
+		private static final LocalTaskQueueTestConfig.TaskCountDownLatch countDownLatch = new LocalTaskQueueTestConfig.TaskCountDownLatch(
 		        0);
 
-		public static final void waitForLatch() throws InterruptedException {
+		public static final void safeWaitForLatch() throws InterruptedException {
+			System.out.println("Waiting for latch....");
+
+			waitForLatch();
+
+			while (atomicCounter.get() != 0L) {
+				System.out.println("Still waiting...");
+				waitForLatch();
+			}
+		}
+
+		private static final void waitForLatch() throws InterruptedException {
+			Thread.sleep(200);
 			countDownLatch.await();
 		}
 
 		private static final void increaseLatchCounter() {
-			Long count = countDownLatch.getCount() + 1L;
+			Long count = atomicCounter.incrementAndGet();
 
-			System.out.println(String.format("Latch increased to %s.", count));
+			System.out.println(String.format("Latch increasing to %s.", count));
 
 			countDownLatch.reset(count.intValue());
 		}
 
 		private static final void decreaseLatchCounter() {
+			Long count = atomicCounter.decrementAndGet();
+			System.out.println(String.format("Latch decreased to %s.", count));
 			countDownLatch.countDown();
-			System.out.println(String.format("Latch decreased to %s.", countDownLatch.getCount()));
 		}
 
 		@Override
@@ -142,7 +157,6 @@ public class CoreServiceTestingContext {
 				ResultActions resultActions = mockMvc.perform(requestBuilder);
 				MockHttpServletResponse response = resultActions.andReturn().getResponse();
 				int status = response.getStatus();
-
 				// String error = response.getErrorMessage();
 				return status;
 			} catch (ServletException e) {
@@ -153,8 +167,12 @@ public class CoreServiceTestingContext {
 				e.printStackTrace();
 				return 0;
 			} finally {
+				if (LOG_EVENTS) {
+					System.out.println(String.format("Finished task at %s.", arg0.getUrl()));
+				}
+
 				ofy.close();
-				this.decreaseLatchCounter();
+				decreaseLatchCounter();
 			}
 		}
 
@@ -194,19 +212,16 @@ public class CoreServiceTestingContext {
 		}
 
 		@Override
-		public void initialize(Map<String, String> arg0) {
-
-		}
+		public void initialize(Map<String, String> arg0) {}
 
 		public static void waitUntilComplete() {
 			try {
-				Thread.sleep(100);
-				waitForLatch();
-				System.out.println("Stopped waiting for TaskQueue operation.");
+				safeWaitForLatch();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
+			System.out.println("Stopped waiting for TaskQueue operation.");
 		}
 
 	}

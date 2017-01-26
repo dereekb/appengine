@@ -1,11 +1,17 @@
 package com.dereekb.gae.test.server.datastore.objectify;
 
+import java.util.List;
+
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntity;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityModifier;
 import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
 
 /**
  * Extension of {@link ObjectifyDatabaseImpl} used for testing.
@@ -66,6 +72,32 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 			return new ObjectifyDatabaseEntityModifierImpl(async);
 		}
 
+		// MARK: Reader
+		@Override
+		public T get(Key<T> key) {
+			resync();
+			return super.get(key);
+		}
+
+		@Override
+		public List<T> keysGet(Iterable<Key<T>> list) {
+			resync();
+			return super.keysGet(list);
+		}
+
+		@Override
+		public List<T> refsGet(Iterable<Ref<T>> list) {
+			resync();
+			return super.refsGet(list);
+		}
+
+	}
+
+	// MARK: Internal
+	public static void resync() {
+		Objectify objectify = ObjectifyService.ofy();
+		objectify.flush();
+		objectify.clear();
 	}
 
 }
