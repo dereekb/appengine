@@ -2,8 +2,8 @@ package com.dereekb.gae.server.auth.model.login.crud;
 
 import com.dereekb.gae.model.extension.links.descriptor.filter.UniqueDescribedModelFilter;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 
 /**
  * Filter that returns {@link FilterResult#PASS} for deletable {@link Login}.

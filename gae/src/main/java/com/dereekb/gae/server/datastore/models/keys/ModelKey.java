@@ -142,6 +142,19 @@ public final class ModelKey
 		return this.keyAsString().equals(other.keyAsString());
 	}
 
+	public static boolean isEqual(ModelKey key,
+	                              ModelKey userKey) {
+		boolean isEqual = false;
+
+		if (key != null) {
+			isEqual = key.equals(userKey);
+		} else if (userKey == null) {
+			isEqual = true;
+		}
+
+		return isEqual;
+	}
+
 	public static List<ModelKey> readModelKeys(Iterable<? extends UniqueModel> models) {
 		List<ModelKey> values = new ArrayList<>();
 

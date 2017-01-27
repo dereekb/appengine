@@ -30,19 +30,23 @@ public class DocumentIndexServiceImpl<T extends UniqueSearchModel>
 	private SearchDocumentSystem indexService;
 	private IndexingDocumentSetBuilder<T> builder;
 
-	public DocumentIndexServiceImpl() {}
+	protected DocumentIndexServiceImpl() {}
 
-	public DocumentIndexServiceImpl(SearchDocumentSystem indexService,
-	                              IndexingDocumentSetBuilder<T> builder) {
-		this.indexService = indexService;
-		this.builder = builder;
+	public DocumentIndexServiceImpl(SearchDocumentSystem indexService, IndexingDocumentSetBuilder<T> builder)
+	        throws IllegalArgumentException {
+		this.setIndexService(indexService);
+		this.setBuilder(builder);
 	}
 
 	public SearchDocumentSystem getIndexService() {
 		return this.indexService;
 	}
 
-	public void setIndexService(SearchDocumentSystem indexService) {
+	public void setIndexService(SearchDocumentSystem indexService) throws IllegalArgumentException {
+		if (indexService == null) {
+			throw new IllegalArgumentException("IndexService cannot be null.");
+		}
+
 		this.indexService = indexService;
 	}
 
@@ -50,14 +54,19 @@ public class DocumentIndexServiceImpl<T extends UniqueSearchModel>
 		return this.builder;
 	}
 
-	public void setBuilder(IndexingDocumentSetBuilder<T> builder) {
+	public void setBuilder(IndexingDocumentSetBuilder<T> builder) throws IllegalArgumentException {
+		if (builder == null) {
+			throw new IllegalArgumentException("Builder cannot be null.");
+		}
+
 		this.builder = builder;
 	}
 
 	// MARK: DocumentIndexService
 	@Override
 	public void indexChange(Iterable<T> models,
-	                           IndexAction action) throws AtomicOperationException {
+	                        IndexAction action)
+	        throws AtomicOperationException {
 		List<IndexPair<T>> pairs = IndexPair.makePairs(models, action);
 
 		try {
@@ -79,6 +88,7 @@ public class DocumentIndexServiceImpl<T extends UniqueSearchModel>
 		}
 	}
 
+	// MARKL Internal
 	public InputSet makeSet(Iterable<IndexPair<T>> pairs) {
 		List<IndexPair<T>> index = new ArrayList<IndexPair<T>>();
 		List<IndexPair<T>> update = new ArrayList<IndexPair<T>>();
@@ -118,9 +128,7 @@ public class DocumentIndexServiceImpl<T extends UniqueSearchModel>
 		private final List<IndexPair<T>> update;
 		private final List<IndexPair<T>> unindex;
 
-		public InputSet(List<IndexPair<T>> index,
-		        List<IndexPair<T>> update,
-		        List<IndexPair<T>> unindex) {
+		public InputSet(List<IndexPair<T>> index, List<IndexPair<T>> update, List<IndexPair<T>> unindex) {
 			this.index = index;
 			this.update = update;
 			this.unindex = unindex;

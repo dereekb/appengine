@@ -10,6 +10,14 @@ import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQuer
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 
+/**
+ * Objectify Registry that implements various components.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public interface ObjectifyRegistry<T extends ObjectifyModel<T>>
         extends ObjectifyQueryIterableFactory<T>, ObjectifyKeyedGetter<T>, ObjectifyKeyedSetter<T>,
         ObjectifyQueryService<T>, ModelKeyListAccessorFactory<T>, GetterSetter<T>, Deleter {

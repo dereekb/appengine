@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.deprecated.extension.delete.filter;
 
-import com.dereekb.gae.utilities.filters.AbstractFilter;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
 
 /**

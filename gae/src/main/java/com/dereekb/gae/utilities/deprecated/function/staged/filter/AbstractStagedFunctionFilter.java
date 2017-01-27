@@ -1,7 +1,7 @@
 package com.dereekb.gae.utilities.function.staged.filter;
 
 import com.dereekb.gae.utilities.deprecated.function.staged.components.StagedFunctionStage;
-import com.dereekb.gae.utilities.filters.AbstractFilter;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResults;
 
 public abstract class AbstractStagedFunctionFilter<T> extends AbstractFilter<T>

@@ -3,7 +3,7 @@ package com.dereekb.gae.server.taskqueue.deprecated;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.dereekb.gae.utilities.filters.AbstractFilter;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
 
 /**

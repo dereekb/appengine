@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.task.Task;
@@ -30,12 +31,12 @@ public abstract class IterateTaskExecutorTest<T extends ObjectifyModel<T>> exten
 	private IterateTaskExecutorFactoryImpl<T> factory;
 
 	public void setModelGenerator(TestModelGenerator<T> generator) {
-    	this.modelGenerator = generator;
-    }
+		this.modelGenerator = generator;
+	}
 
-	public void setFactory(IterateTaskExecutorFactoryImpl<T> factory) {
-    	this.factory = factory;
-    }
+	public void setFactory(ObjectifyRegistry<T> factory) {
+		this.factory = new IterateTaskExecutorFactoryImpl<T>(factory);
+	}
 
 	@Test
 	public void testExecutorFactory() {
@@ -87,6 +88,5 @@ public abstract class IterateTaskExecutorTest<T extends ObjectifyModel<T>> exten
 		}
 
 	}
-
 
 }

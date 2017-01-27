@@ -2,8 +2,8 @@ package com.dereekb.gae.server.auth.model.pointer.misc;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
-import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 
 /**
  * {@link Filter} implementation that filters {@link LoginPointer} instances by

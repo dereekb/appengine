@@ -107,6 +107,22 @@ public class ObjectifyModelKeyUtil<T> {
 	}
 
 	// MARK: Static
+	public static <T> ModelKey readModelKey(Key<T> key) throws IllegalArgumentException {
+		ModelKey modelKey = null;
+
+		if (key != null) {
+			Long id = key.getId();
+
+			if (id == 0) {
+				modelKey = new ModelKey(key.getName());
+			} else {
+				modelKey = new ModelKey(id);
+			}
+		}
+
+		return modelKey;
+	}
+
 	public static <T> String readKeyString(ModelKeyType keyType,
 	                                       Key<T> key)
 	        throws IllegalArgumentException {

@@ -1,6 +1,11 @@
-package com.dereekb.gae.utilities.filters;
+package com.dereekb.gae.utilities.filters.impl;
 
 import java.util.List;
+
+import com.dereekb.gae.utilities.filters.Filter;
+import com.dereekb.gae.utilities.filters.FilterDelegate;
+import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.filters.FilterResults;
 
 /**
  * Basic filter.

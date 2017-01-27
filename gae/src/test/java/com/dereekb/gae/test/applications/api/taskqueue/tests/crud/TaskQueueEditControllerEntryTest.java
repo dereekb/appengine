@@ -178,6 +178,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 
+		models = this.getterSetter.get(models);
+
 		Assert.assertTrue(this.isProperlyInitialized(models));
 	}
 
@@ -208,6 +210,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		// Complete Initializing Models
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 
+		models = this.getterSetter.get(models);
+
 		Assert.assertTrue(this.isProperlyInitialized(models));
 
 		this.controller.reviewUpdate(this.modelTaskQueueType, keys);
@@ -224,6 +228,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 		// Complete Initializing Models
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
+
+		models = this.getterSetter.get(models);
 
 		Assert.assertTrue(this.isProperlyInitialized(models));
 

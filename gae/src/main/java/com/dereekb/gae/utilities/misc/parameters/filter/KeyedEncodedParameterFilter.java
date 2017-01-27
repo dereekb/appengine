@@ -1,7 +1,7 @@
 package com.dereekb.gae.utilities.misc.parameters.filter;
 
-import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
 /**

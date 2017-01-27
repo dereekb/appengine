@@ -22,10 +22,11 @@
 	</bean>
 	
 	<bean id="storedBlobDocumentIndexService"
-		class="com.dereekb.gae.model.extension.search.document.index.service.impl.DocumentIndexServiceImpl"
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl"
 		scope="singleton" lazy-init="true">
 		<constructor-arg index="0" ref="searchSystem"/>
 		<constructor-arg index="1" ref="storedBlobIndexingDocumentBuilder"/>
+		<constructor-arg index="2" ref="storedBlobAsyncConfiguredSetter"/>
 	</bean>
 
 	<!-- Search Indexing -->
