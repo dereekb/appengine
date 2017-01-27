@@ -14,20 +14,22 @@
 		<constructor-arg index="0" value="StoredImage" />
 	</bean>
 	
+	<bean id="storedImageClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0" value="com.dereekb.gae.model.stored.image.StoredImage" />
+	</bean>
+	
 	<!-- Database -->
 	<bean id="storedImageObjectifyEntry"
 		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="storedImageType" />
-		<constructor-arg index="1" type="java.lang.Class"
-			value="com.dereekb.gae.model.stored.image.StoredImage" />
+		<constructor-arg index="1" ref="storedImageClass" />
 		<constructor-arg index="2" value="NUMBER" />
 	</bean>
 
 	<bean id="storedImageRegistry" factory-bean="objectifyDatabase"
 		factory-method="makeRegistry" scope="singleton">
-		<constructor-arg index="0" type="java.lang.Class"
-			value="com.dereekb.gae.model.stored.image.StoredImage" />
+		<constructor-arg index="0" ref="storedImageClass" />
 	</bean>
 
 	<!-- Configured Setters -->

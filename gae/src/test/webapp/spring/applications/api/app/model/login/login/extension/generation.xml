@@ -12,8 +12,7 @@
 	<!-- Factory -->
 	<bean id="loginFactory" lazy-init="true"
 		class="com.dereekb.gae.utilities.factory.impl.BasicFactory">
-		<constructor-arg index="0" type="java.lang.Class"
-			value="com.dereekb.gae.server.auth.model.login.Login" />
+		<constructor-arg index="0" ref="loginClass" />
 	</bean>
 
 	<!-- Generator -->
