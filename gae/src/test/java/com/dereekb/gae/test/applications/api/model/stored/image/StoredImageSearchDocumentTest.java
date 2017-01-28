@@ -89,7 +89,6 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 		Document document = this.builder.buildSearchDocument(model);
 
 		Set<String> names = document.getFieldNames();
-		Assert.assertTrue(names.contains("GP_id")); // GeoPoint ID Field
 		Assert.assertTrue(names.contains("SB_id")); // StoredBlob ID Field
 	}
 

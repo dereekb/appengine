@@ -41,7 +41,7 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 	}
 
 	@Override
-    public void doTask(Iterable<P> input,
+	public void doTask(Iterable<P> input,
 	                   C configuration) {
 		boolean isAtomic = configuration.isAtomic();
 
@@ -58,7 +58,7 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 		}
 	}
 
-	public abstract void usePair(P pair,
-	                             C config);
+	protected abstract void usePair(P pair,
+	                                C config);
 
 }
