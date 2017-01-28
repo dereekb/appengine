@@ -21,7 +21,7 @@ public class StoredImageSetDataBuilder extends AbstractDirectionalConverter<Stor
 		StoredImageSetData data = new StoredImageSetData();
 
 		// Identifier
-		data.setKey(input.getModelKey());
+		data.setModelKey(input.getModelKey());
 		data.setSearchIdentifier(input.getSearchIdentifier());
 
 		// Info

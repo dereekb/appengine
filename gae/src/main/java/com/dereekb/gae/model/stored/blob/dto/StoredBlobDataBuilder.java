@@ -24,7 +24,7 @@ public final class StoredBlobDataBuilder extends AbstractDirectionalConverter<St
 		StoredBlobData data = new StoredBlobData();
 
 		// Identifier
-		data.setKey(input.getModelKey());
+		data.setModelKey(input.getModelKey());
 		data.setDate(input.getDate());
 		data.setSearchIdentifier(input.getSearchIdentifier());
 

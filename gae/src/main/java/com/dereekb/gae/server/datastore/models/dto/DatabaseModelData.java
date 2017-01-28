@@ -67,7 +67,7 @@ public abstract class DatabaseModelData
 	}
 
 	@JsonIgnore
-	public void setKey(ModelKey key) {
+	public void setModelKey(ModelKey key) {
 		this.key = ModelKey.readStringKey(key);
 	}
 

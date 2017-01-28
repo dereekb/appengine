@@ -20,7 +20,7 @@ public final class LoginDataBuilder extends AbstractDirectionalConverter<Login, 
 		LoginData data = new LoginData();
 
 		// Id
-		data.setKey(input.getModelKey());
+		data.setModelKey(input.getModelKey());
 		data.setDate(input.getDate());
 		data.setSearchIdentifier(input.getSearchIdentifier());
 

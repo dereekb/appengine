@@ -16,7 +16,7 @@
 	</bean>
 
 	<bean id="loginKeyLinkSystem"
-		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemEntry">
+		class="com.dereekb.gae.server.auth.model.key.link.LoginKeyLinkSystemEntry">
 		<constructor-arg index="0" ref="loginKeyCrudService" />
 		<constructor-arg index="1"
 			ref="loginKeyUpdateConfiguredSetter" />

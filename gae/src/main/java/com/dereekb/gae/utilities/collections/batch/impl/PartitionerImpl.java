@@ -29,7 +29,9 @@ public class PartitionerImpl
 
 	private InternalPartitioner partitioner;
 
-	public PartitionerImpl() {}
+	public PartitionerImpl() {
+		this.setDefaultPartitionSize(DEFAULT_PARTITION_SIZE);
+	}
 
 	public PartitionerImpl(int partitionSize) throws IllegalArgumentException {
 		this.setDefaultPartitionSize(partitionSize);

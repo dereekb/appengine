@@ -36,7 +36,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	private JsonParser parser = new JsonParser();
 
 	private static final String VERIFICATION_KEY = "VERIFICATION";
-	
+
 	@Autowired
 	private KeyLoginStatusServiceManager serviceManager;
 
@@ -55,7 +55,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		TestLoginTokenPair pair = this.testLoginTokenContext.generateLogin("keyLogin");
 		Login login = pair.getLogin();
 
-		KeyLoginStatusService statusService = serviceManager.getService(login);
+		KeyLoginStatusService statusService = this.serviceManager.getService(login);
 
 		// Test is not yet enabled.
 		Assert.assertFalse(statusService.isEnabled());
@@ -75,7 +75,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		Assert.assertTrue(statusService.isEnabled());
 
 		// Test it is still enabled even with a new service.
-		statusService = serviceManager.getService(login);
+		statusService = this.serviceManager.getService(login);
 		Assert.assertTrue(statusService.isEnabled());
 
 	}
@@ -87,39 +87,40 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		// Already Logged In. Must enable.
 		MockHttpServletResponse enableResponse = this.mockEnableApiKey();
 		Assert.assertTrue("Enabling login failed.", enableResponse.getStatus() == 200);
-		
-		//Create an API Key
+
+		// Create an API Key
 		String name = "My API Key";
 		String verification = VERIFICATION_KEY;
-		
+
 		String apiKeyId = this.createApiKey(name, verification, true);
-		
-		//Login with the API Key
+
+		// Login with the API Key
 		String apiKeyLoginToken = this.tryApiLogin(apiKeyId, VERIFICATION_KEY, true);
-		
-		//Test API Key Cannot Access /loginkey
+
+		// Test API Key Cannot Access /loginkey
 		MockHttpServletRequestBuilder tryApiKeyRequestBuilder = MockMvcRequestBuilders.post("/loginkey/create");
 		tryApiKeyRequestBuilder.accept("application/json");
-		
+
 		ApiCreateRequest<LoginKey> tryRequest = new ApiCreateRequest<LoginKey>();
 
 		LoginKey newKey = new LoginKey();
 		newKey.setName(name);
 		newKey.setVerification(verification);
-		
+
 		tryRequest.setDataElement(newKey);
 
-		String tryApiKeyJson = gson.toJson(tryRequest);
+		String tryApiKeyJson = this.gson.toJson(tryRequest);
 		tryApiKeyRequestBuilder.content(tryApiKeyJson);
 		tryApiKeyRequestBuilder.contentType("application/json");
-		
-		MvcResult tryApiKeyResult = this.performSecureHttpRequest(tryApiKeyRequestBuilder, apiKeyLoginToken).andReturn();
+
+		MvcResult tryApiKeyResult = this.performSecureHttpRequest(tryApiKeyRequestBuilder, apiKeyLoginToken)
+		        .andReturn();
 		MockHttpServletResponse tryApiKeyResponse = tryApiKeyResult.getResponse();
 
 		Assert.assertTrue("LoginKey API should be forbidden to API keys.", tryApiKeyResponse.getStatus() == 403);
-		
-		//Test API Key
-		
+
+		// Test API Key
+
 	}
 
 	@Test
@@ -127,7 +128,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse response = this.mockApiLogin(null, "NONE");
 		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 400);
 	}
-	
+
 	@Test
 	public void testNonexistantAPIAuthLogin() throws Exception {
 		MockHttpServletResponse response = this.mockApiLogin("101010101", "NONE");
@@ -140,112 +141,122 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		String verification = VERIFICATION_KEY;
 
 		this.mockEnableApiKey();
-		
+
 		String apiKeyId = this.createApiKey(name, verification, true);
-		
-		
+
 		MockHttpServletResponse response = this.mockApiLogin(apiKeyId, "INVALID VERIFICATION");
 		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 403);
 
 		response = this.mockApiLogin(apiKeyId, null);
 		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 400);
 	}
-	
+
 	private MockHttpServletResponse mockEnableApiKey() throws Exception {
 		MockHttpServletRequestBuilder enableRequestBuilder = MockMvcRequestBuilders.put("/login/key/enable");
 		MvcResult enableResult = this.performHttpRequest(enableRequestBuilder).andReturn();
-		
+
 		return enableResult.getResponse();
 	}
-	
-	private String tryApiLogin(String key, String verification, boolean assertSuccess) throws Exception {
-		
+
+	private String tryApiLogin(String key,
+	                           String verification,
+	                           boolean assertSuccess)
+	        throws Exception {
+
 		MockHttpServletResponse loginResultResponse = this.mockApiLogin(key, verification);
-		
+
 		boolean success = loginResultResponse.getStatus() == 200;
 
 		if (assertSuccess) {
-			Assert.assertTrue("API Key Authentication Failed.", success);	
+			Assert.assertTrue("API Key Authentication Failed.", success);
 		}
-		
+
 		String apiKeyLoginToken = null;
-		
+
 		if (success) {
 			String loginResultContent = loginResultResponse.getContentAsString();
-			JsonElement loginResultElement = parser.parse(loginResultContent);
-			
+			JsonElement loginResultElement = this.parser.parse(loginResultContent);
+
 			apiKeyLoginToken = loginResultElement.getAsJsonObject().get("token").getAsString();
-			
+
 			if (assertSuccess) {
 				Assert.assertFalse(loginResultContent.isEmpty());
 				Assert.assertFalse(apiKeyLoginToken.isEmpty());
 			}
 		}
-		
+
 		return apiKeyLoginToken;
 	}
-	
-	private MockHttpServletResponse mockApiLogin(String key, String verification) throws Exception {
+
+	private MockHttpServletResponse mockApiLogin(String key,
+	                                             String verification)
+	        throws Exception {
 		MockHttpServletRequestBuilder keyLoginRequestBuilder = MockMvcRequestBuilders.post("/login/key");
 		keyLoginRequestBuilder.param("key", key);
-		
+
 		if (verification != null) {
 			keyLoginRequestBuilder.param("verification", verification);
 		}
-		
+
 		MvcResult loginResult = this.mockMvc.perform(keyLoginRequestBuilder).andReturn();
 		MockHttpServletResponse loginResultResponse = loginResult.getResponse();
-		
+
 		return loginResultResponse;
 	}
-	
-	private String createApiKey(String name, String verification, boolean assertSuccess) throws Exception {
+
+	private String createApiKey(String name,
+	                            String verification,
+	                            boolean assertSuccess)
+	        throws Exception {
 		MockHttpServletResponse response = this.mockApiKeyCreate(name, verification);
-		
+
 		boolean success = response.getStatus() == 200;
-		
+
 		if (assertSuccess) {
 			Assert.assertTrue("Creating API Key Failed.", success);
 		}
-		
+
 		String apiKeyId = null;
-		
+
 		if (success) {
 			String createApiKeyContent = response.getContentAsString();
 			Assert.assertFalse(createApiKeyContent.isEmpty());
 
-			JsonElement createApiKeyElement = parser.parse(createApiKeyContent);
+			JsonElement createApiKeyElement = this.parser.parse(createApiKeyContent);
 
-			apiKeyId = createApiKeyElement.getAsJsonObject().get("data").getAsJsonObject().get("data").getAsJsonArray().get(0).getAsJsonObject().get("key").getAsString();
-			
+			apiKeyId = createApiKeyElement.getAsJsonObject().get("data").getAsJsonObject().get("data").getAsJsonArray()
+			        .get(0).getAsJsonObject().get("key").getAsString();
+
 			if (assertSuccess) {
 				Assert.assertFalse(apiKeyId.isEmpty());
 			}
 		}
-		
+
 		return apiKeyId;
 	}
-	
-	private MockHttpServletResponse mockApiKeyCreate(String name, String verification) throws Exception {
+
+	private MockHttpServletResponse mockApiKeyCreate(String name,
+	                                                 String verification)
+	        throws Exception {
 
 		MockHttpServletRequestBuilder createApiKeyRequestBuilder = MockMvcRequestBuilders.post("/loginkey/create");
 		createApiKeyRequestBuilder.accept("application/json");
-		
+
 		LoginKey newKey = new LoginKey();
-		
+
 		newKey.setName(name);
 		newKey.setVerification(verification);
 
 		ApiCreateRequest<LoginKey> createRequest = new ApiCreateRequest<LoginKey>();
 		createRequest.setDataElement(newKey);
-		
-		String newApiKeyJson = gson.toJson(createRequest);
+
+		String newApiKeyJson = this.gson.toJson(createRequest);
 		createApiKeyRequestBuilder.content(newApiKeyJson);
 		createApiKeyRequestBuilder.contentType("application/json");
-		
+
 		MvcResult createApiKeyResult = this.performHttpRequest(createApiKeyRequestBuilder).andReturn();
 		MockHttpServletResponse createApiKeyResponse = createApiKeyResult.getResponse();
-		
+
 		return createApiKeyResponse;
 	}
 

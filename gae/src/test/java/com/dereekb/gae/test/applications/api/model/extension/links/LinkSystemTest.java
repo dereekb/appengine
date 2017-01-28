@@ -1,6 +1,6 @@
 package com.dereekb.gae.test.applications.api.model.extension.links;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -25,7 +25,7 @@ public class LinkSystemTest extends ApiApplicationTestContext {
 	@Qualifier("linkSystem")
 	private LinkSystem system;
 
-	private ArrayList<? extends LinkSystemEntry> definitions;
+	private List<? extends LinkSystemEntry> definitions;
 
 	public LinkSystem getSystem() {
 		return this.system;
@@ -44,7 +44,7 @@ public class LinkSystemTest extends ApiApplicationTestContext {
 	public void setDefinitions(Object definitions) {
 
 		@SuppressWarnings("unchecked")
-		ArrayList<? extends LinkSystemEntry> cast = (ArrayList<? extends LinkSystemEntry>) definitions;
+		List<? extends LinkSystemEntry> cast = (List<? extends LinkSystemEntry>) definitions;
 		this.definitions = cast;
 	}
 

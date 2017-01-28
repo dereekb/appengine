@@ -22,7 +22,7 @@ public final class LoginPointerDataBuilder extends AbstractDirectionalConverter<
 		LoginPointerData data = new LoginPointerData();
 
 		// Id
-		data.setKey(loginPointer.getModelKey());
+		data.setModelKey(loginPointer.getModelKey());
 
 		// Data
 		data.setEmail(loginPointer.getEmail());
