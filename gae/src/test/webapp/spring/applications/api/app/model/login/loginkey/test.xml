@@ -11,16 +11,14 @@
 
 	<!-- Generator -->
 	<bean id="loginKeyTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl"
-		scope="singleton">
+		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
 		<constructor-arg index="1" ref="loginKeyGenerator" />
 	</bean>
 
 	<!-- Data Generator -->
 	<bean id="loginKeyTestDataGenerator"
-		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl"
-		scope="singleton">
+		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
 		<constructor-arg index="0" ref="loginKeyGenerator" />
 		<constructor-arg index="1" ref="loginKeyDataBuilder" />
 	</bean>

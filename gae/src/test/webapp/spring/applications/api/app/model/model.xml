@@ -25,18 +25,17 @@
 	<!-- SHARED -->
 	<!-- Shared Components -->
 	<bean id="modelKeyTypeConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverterImpl"
-		lazy-init="true">
+		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverterImpl">
 		<constructor-arg index="0">
 			<map key-type="java.lang.String"
 				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value="NUMBER"></entry>
-				<entry key-ref="storedBlobType" value="NUMBER"></entry>
-				<entry key-ref="storedImageType" value="NUMBER"></entry>
-				<entry key-ref="storedImageSetType" value="NUMBER"></entry>
-				<entry key-ref="loginType" value="NUMBER"></entry>
-				<entry key-ref="loginKeyType" value="NUMBER"></entry>
-				<entry key-ref="loginPointerType" value="NAME"></entry>
+				<entry key-ref="geoPlaceType" value-ref="geoPlaceIdType" />
+				<entry key-ref="storedBlobType" value-ref="storedBlobIdType" />
+				<entry key-ref="storedImageType" value-ref="storedImageIdType" />
+				<entry key-ref="storedImageSetType" value-ref="storedImageSetIdType" />
+				<entry key-ref="loginType" value-ref="loginIdType" />
+				<entry key-ref="loginKeyType" value-ref="loginKeyIdType" />
+				<entry key-ref="loginPointerType" value-ref="loginPointerIdType" />
 			</map>
 		</constructor-arg>
 	</bean>

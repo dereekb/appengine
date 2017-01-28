@@ -10,26 +10,31 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Type -->
-	<bean id="loginType" class="java.lang.String" scope="singleton">
+	<bean id="loginType" class="java.lang.String">
 		<constructor-arg index="0" value="Login" />
 	</bean>
-	
+
 	<bean id="loginClass" class="java.lang.Class" factory-method="forName">
-		<constructor-arg index="0" value="com.dereekb.gae.server.auth.model.login.Login" />
+		<constructor-arg index="0"
+			value="com.dereekb.gae.server.auth.model.login.Login" />
 	</bean>
-	
+
+	<bean id="loginIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+		<constructor-arg index="0" value="NUMBER" />
+	</bean>
+
 	<!-- Database -->
 	<bean id="loginObjectifyEntry"
 		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="loginType" />
 		<constructor-arg index="1" ref="loginClass" />
-		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="2" ref="loginIdType" />
 		<constructor-arg index="3" ref="loginQueryInitializer" />
 	</bean>
 
 	<bean id="loginRegistry" factory-bean="objectifyDatabase"
-		factory-method="makeRegistry" scope="singleton">
+		factory-method="makeRegistry">
 		<constructor-arg index="0" ref="loginClass" />
 	</bean>
 
@@ -44,18 +49,18 @@
 	</bean>
 
 	<!-- Update Scheduler -->
-	<bean id="loginScheduleUpdateReview" lazy-init="true" scope="singleton"
+	<bean id="loginScheduleUpdateReview"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
 		<constructor-arg index="0" ref="loginType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="loginUpdateConfiguredSetter" lazy-init="true" scope="singleton"
+	<bean id="loginUpdateConfiguredSetter"
 		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
 		<constructor-arg index="0" ref="loginScheduleUpdateReview" />
 		<constructor-arg index="1" ref="loginRegistry" />
 	</bean>
-	
+
 	<!-- Imported -->
 	<import resource="test.xml" />
 	<import resource="crud.xml" />

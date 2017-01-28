@@ -10,18 +10,18 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Login Service -->
-	<bean id="loginTokenSecret" class="java.lang.String" scope="singleton">
+	<bean id="loginTokenSecret" class="java.lang.String">
 		<constructor-arg index="0"
 			value="3zRepP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=" />
 	</bean>
 
-	<bean id="loginTokenService" scope="singleton" lazy-init="true"
+	<bean id="loginTokenService"
 		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl">
 		<constructor-arg index="0" ref="loginTokenSecret" />
 		<constructor-arg index="1" ref="loginTokenBuilder" />
 	</bean>
 
-	<bean id="loginTokenBuilder" scope="singleton" lazy-init="true"
+	<bean id="loginTokenBuilder"
 		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl">
 		<constructor-arg index="0" ref="loginRegistry" />
 	</bean>
@@ -29,7 +29,7 @@
 	<alias name="loginTokenService" alias="loginTokenEncoderDecoder" />
 
 	<!-- Login Pointer Service -->
-	<bean id="loginPointerService" scope="singleton" lazy-init="true"
+	<bean id="loginPointerService"
 		class="com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl">
 		<constructor-arg index="0" ref="loginPointerRegistry" />
 		<constructor-arg index="1"
@@ -37,19 +37,19 @@
 	</bean>
 
 	<!-- Password Service -->
-	<bean id="passwordLoginService" scope="singleton" lazy-init="true"
+	<bean id="passwordLoginService"
 		class="com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl">
 		<constructor-arg index="0" ref="passwordEncoder" />
 		<constructor-arg index="1" ref="loginPointerService" />
 		<constructor-arg index="2" ref="loginRegisterService" />
 	</bean>
 
-	<bean id="passwordEncoder" scope="singleton" lazy-init="true"
+	<bean id="passwordEncoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
 	</bean>
 
 	<!-- OAuth Services -->
-	<bean id="oAuthServiceManager" scope="singleton" lazy-init="true"
+	<bean id="oAuthServiceManager"
 		class="com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl">
 		<constructor-arg index="0" ref="oAuthLoginService" />
 		<constructor-arg index="1">
@@ -59,21 +59,21 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="oAuthLoginService" scope="singleton" lazy-init="true"
+	<bean id="oAuthLoginService"
 		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl">
 		<constructor-arg index="0" ref="loginPointerService" />
 	</bean>
 
-	<bean id="googleOAuthClientId" class="java.lang.String" scope="singleton">
+	<bean id="googleOAuthClientId" class="java.lang.String">
 		<constructor-arg index="0"
 			value="326101736804-mgrnl6qnirj54j3q5cer8ci6lf6i1e8c.apps.googleusercontent.com" />
 	</bean>
 
-	<bean id="googleOAuthClientSecret" class="java.lang.String" scope="singleton">
+	<bean id="googleOAuthClientSecret" class="java.lang.String">
 		<constructor-arg index="0" value="hUG1RNQXv6f9qfiSesB0vbJz" />
 	</bean>
 
-	<bean id="googleOAuthService" scope="singleton" lazy-init="true"
+	<bean id="googleOAuthService"
 		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.GoogleOAuthService">
 		<constructor-arg index="0" ref="googleOAuthClientId" />
 		<constructor-arg index="1" ref="googleOAuthClientSecret" />
@@ -84,27 +84,27 @@
 	</bean>
 
 	<!-- KeyLogin Services -->
-	<bean id="keyLoginStatusServiceManager" scope="singleton"
-		lazy-init="true"
+	<bean id="keyLoginStatusServiceManager"
+
 		class="com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginStatusServiceManagerImpl">
 		<constructor-arg index="0" ref="loginPointerRegistry" />
 	</bean>
 
-	<bean id="keyLoginAuthenticationService" scope="singleton"
-		lazy-init="true"
+	<bean id="keyLoginAuthenticationService"
+
 		class="com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginAuthenticationServiceImpl">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
 		<constructor-arg index="1" ref="loginPointerRegistry" />
 	</bean>
 
 	<!-- Register Service -->
-	<bean id="loginRegisterService" scope="singleton" lazy-init="true"
+	<bean id="loginRegisterService"
 		class="com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl">
 		<constructor-arg index="0" ref="newLoginGenerator" />
 		<constructor-arg index="1" ref="linkService" />
 	</bean>
 
-	<bean id="newLoginGenerator" scope="singleton" lazy-init="true"
+	<bean id="newLoginGenerator"
 		class="com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl">
 		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1" ref="loginScheduleCreateReview" />

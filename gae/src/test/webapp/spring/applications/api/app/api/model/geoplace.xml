@@ -12,22 +12,23 @@
 	<!-- Read Controller -->
 	<bean id="geoPlaceReadControllerEntry"
 		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="geoPlaceReadService" />
 		<constructor-arg index="1" ref="geoPlaceDataConverter" />
-		<constructor-arg index="2" ref="geoPlaceLinkModelInclusionReader" />
+		<constructor-arg index="2"
+			ref="geoPlaceLinkModelInclusionReader" />
 	</bean>
-	
+
 	<bean id="geoPlaceLinkModelInclusionReader"
 		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="geoPlaceLinkSystem"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->
 	<bean id="geoPlaceEditController"
 		class="com.dereekb.gae.web.api.controllers.models.GeoPlaceEditController"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0"
 			ref="geoPlaceEditControllerDelegate" />
 		<constructor-arg index="1"
@@ -35,35 +36,33 @@
 	</bean>
 
 	<bean id="geoPlaceEditControllerDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl">
 		<constructor-arg index="0" ref="geoPlaceCrudService" />
 	</bean>
 
 	<bean id="geoPlaceEditControllerConversionDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl">
 		<constructor-arg index="0" ref="geoPlaceType" />
 		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
 		<constructor-arg index="2" ref="geoPlaceDataConverter" />
 	</bean>
 
 	<!-- Search Component -->
-	<alias name="geoPlaceType" alias="geoPlaceSearchType"/>
+	<alias name="geoPlaceType" alias="geoPlaceSearchType" />
 
-	<bean id="geoPlaceSearchDelegateEntry" scope="singleton"
+	<bean id="geoPlaceSearchDelegateEntry"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
 		<constructor-arg index="0" ref="geoPlaceSearchType" />
 		<constructor-arg index="1" ref="geoPlaceQueryService" />
 		<constructor-arg index="2" ref="geoPlaceSearchService" />
 		<constructor-arg index="3">
-			<bean id="geoPlaceSearchRequestBuilder" scope="singleton"
+			<bean id="geoPlaceSearchRequestBuilder"
 				class="com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequestBuilder">
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="4" ref="geoPlaceSearchResultConverter" />
 	</bean>
 
-	<alias name="geoPlaceDataConverter" alias="geoPlaceSearchResultConverter"/>
+	<alias name="geoPlaceDataConverter" alias="geoPlaceSearchResultConverter" />
 
 </beans>

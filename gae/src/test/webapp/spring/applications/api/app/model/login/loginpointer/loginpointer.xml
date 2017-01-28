@@ -10,26 +10,32 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Type -->
-	<bean id="loginPointerType" class="java.lang.String" scope="singleton">
+	<bean id="loginPointerType" class="java.lang.String">
 		<constructor-arg index="0" value="LoginPointer" />
 	</bean>
-	
-	<bean id="loginPointerClass" class="java.lang.Class" factory-method="forName">
-		<constructor-arg index="0" value="com.dereekb.gae.server.auth.model.pointer.LoginPointer" />
+
+	<bean id="loginPointerClass" class="java.lang.Class"
+		factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.server.auth.model.pointer.LoginPointer" />
 	</bean>
-	
+
+	<bean id="loginPointerIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+		<constructor-arg index="0" value="NAME" />
+	</bean>
+
 	<!-- Database -->
 	<bean id="loginPointerObjectifyEntry"
 		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="loginPointerType" />
 		<constructor-arg index="1" ref="loginPointerClass" />
-		<constructor-arg index="2" value="NAME" />
+		<constructor-arg index="2" ref="loginPointerIdType" />
 		<constructor-arg index="3" ref="loginPointerQueryInitializer" />
 	</bean>
 
 	<bean id="loginPointerRegistry" factory-bean="objectifyDatabase"
-		factory-method="makeRegistry" scope="singleton">
+		factory-method="makeRegistry">
 		<constructor-arg index="0" ref="loginPointerClass" />
 	</bean>
 
@@ -44,18 +50,19 @@
 	</bean>
 
 	<!-- Update Scheduler -->
-	<bean id="loginPointerScheduleUpdateReview" lazy-init="true" scope="singleton"
+	<bean id="loginPointerScheduleUpdateReview"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
 		<constructor-arg index="0" ref="loginPointerType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="loginPointerUpdateConfiguredSetter" lazy-init="true" scope="singleton"
+	<bean id="loginPointerUpdateConfiguredSetter"
 		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
-		<constructor-arg index="0" ref="loginPointerScheduleUpdateReview" />
+		<constructor-arg index="0"
+			ref="loginPointerScheduleUpdateReview" />
 		<constructor-arg index="1" ref="loginPointerRegistry" />
 	</bean>
-	
+
 	<!-- Imported -->
 	<import resource="test.xml" />
 	<import resource="crud.xml" />

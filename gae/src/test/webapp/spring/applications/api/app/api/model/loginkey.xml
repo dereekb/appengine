@@ -12,22 +12,23 @@
 	<!-- Read Controller -->
 	<bean id="loginKeyReadControllerEntry"
 		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="loginKeyReadService" />
 		<constructor-arg index="1" ref="loginKeyDataConverter" />
-		<constructor-arg index="2" ref="loginKeyLinkModelInclusionReader" />
+		<constructor-arg index="2"
+			ref="loginKeyLinkModelInclusionReader" />
 	</bean>
-	
+
 	<bean id="loginKeyLinkModelInclusionReader"
 		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="loginKeyLinkSystem"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->
 	<bean id="loginKeyEditController"
 		class="com.dereekb.gae.web.api.controllers.models.LoginKeyEditController"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0"
 			ref="loginKeyEditControllerDelegate" />
 		<constructor-arg index="1"
@@ -35,29 +36,27 @@
 	</bean>
 
 	<bean id="loginKeyEditControllerDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl">
 		<constructor-arg index="0" ref="loginKeyCrudService" />
 	</bean>
 
 	<bean id="loginKeyEditControllerConversionDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl">
 		<constructor-arg index="0" ref="loginKeyType" />
 		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
 		<constructor-arg index="2" ref="loginKeyDataConverter" />
 	</bean>
 
 	<!-- Search Component -->
-	<alias name="loginKeyType" alias="loginKeySearchType"/>
+	<alias name="loginKeyType" alias="loginKeySearchType" />
 
-	<bean id="loginKeySearchDelegateEntry" scope="singleton"
+	<bean id="loginKeySearchDelegateEntry"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
 		<constructor-arg index="0" ref="loginKeySearchType" />
 		<constructor-arg index="1" ref="loginKeyQueryService" />
 		<constructor-arg index="2" ref="loginKeySearchResultConverter" />
 	</bean>
 
-	<alias name="loginKeyDataConverter" alias="loginKeySearchResultConverter"/>
+	<alias name="loginKeyDataConverter" alias="loginKeySearchResultConverter" />
 
 </beans>

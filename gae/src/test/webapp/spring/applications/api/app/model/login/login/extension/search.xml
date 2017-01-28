@@ -9,42 +9,37 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="loginSearchIndex" class="java.lang.String" lazy-init="true" scope="singleton">
+	<bean id="loginSearchIndex" class="java.lang.String">
 		<constructor-arg index="0" ref="loginType" />
 	</bean>
-	
+
 	<!-- Index -->
 	<bean id="loginKeyedDocumentIndexService"
-		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="loginReadService"/>
-		<constructor-arg index="1" ref="loginDocumentIndexService"/>
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="loginReadService" />
+		<constructor-arg index="1" ref="loginDocumentIndexService" />
 	</bean>
-	
+
 	<bean id="loginDocumentIndexService"
-		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="searchSystem"/>
-		<constructor-arg index="1" ref="loginIndexingDocumentBuilder"/>
-		<constructor-arg index="2" ref="loginAsyncConfiguredSetter"/>
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="searchSystem" />
+		<constructor-arg index="1" ref="loginIndexingDocumentBuilder" />
+		<constructor-arg index="2" ref="loginAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Search Indexing -->
 	<bean id="loginIndexingDocumentBuilder"
-		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="loginSearchIndex"/>
-		<constructor-arg index="1" ref="loginSearchDocumentBuilder"/>
+		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl">
+		<constructor-arg index="0" ref="loginSearchIndex" />
+		<constructor-arg index="1" ref="loginSearchDocumentBuilder" />
 	</bean>
 
 	<bean id="loginSearchDocumentBuilder"
-		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder">
 		<constructor-arg index="0">
 			<bean
-				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer"
-				scope="singleton">
-				<constructor-arg index="0" ref="loginType"/>
+				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer">
+				<constructor-arg index="0" ref="loginType" />
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -55,42 +50,40 @@
 			</list>
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- Derivative Indexing -->
 	<bean id="loginIncludedDocumentBuilderStep"
-		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="loginRegistry"/>
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.server.auth.model.login.search.document.index.LoginIncludedDocumentBuilderStep"/>
+			<bean
+				class="com.dereekb.gae.server.auth.model.login.search.document.index.LoginIncludedDocumentBuilderStep" />
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- Search Services -->
 	<bean id="loginSearchService"
-		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="loginReadService"/>
-		<constructor-arg index="1" ref="modelDocumentSearchService"/>
+		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl">
+		<constructor-arg index="0" ref="loginReadService" />
+		<constructor-arg index="1" ref="modelDocumentSearchService" />
 		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.server.auth.model.login.search.document.query.LoginSearchRequestConverter">
-				<constructor-arg index="0" ref="loginSearchIndex"/>
+			<bean
+				class="com.dereekb.gae.server.auth.model.login.search.document.query.LoginSearchRequestConverter">
+				<constructor-arg index="0" ref="loginSearchIndex" />
 			</bean>
 		</constructor-arg>
-		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
+		<constructor-arg index="3" ref="scoredDocumentLongKeyReader" />
 	</bean>
-	
+
 	<!-- Query Services -->
 	<bean id="loginQueryService"
-		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="loginRegistry"/>
-		<constructor-arg index="1" ref="loginQueryInitializer"/>
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="loginQueryInitializer" />
 	</bean>
 
 	<bean id="loginQueryInitializer"
-		class="com.dereekb.gae.server.auth.model.login.search.query.LoginQueryInitializer"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.server.auth.model.login.search.query.LoginQueryInitializer">
 	</bean>
 
 </beans>

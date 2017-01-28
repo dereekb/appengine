@@ -39,7 +39,7 @@
 			access="!hasRole('ROLE_LOGINTYPE_API')" />
 		<security:intercept-url pattern="/**"
 			access="isAuthenticated()" />
-			
+
 		<!-- Only the system can access the taskqueue. -->
 		<security:intercept-url pattern="/taskqueue/*"
 			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
@@ -51,7 +51,7 @@
 	<bean id="securityEntryPoint"
 		class="com.dereekb.gae.server.auth.security.token.entry.TokenAuthenticationEntryPoint" />
 
-	<bean id="authenticationFilter" lazy-init="true" scope="singleton"
+	<bean id="authenticationFilter"
 		class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter">
 		<constructor-arg index="0" ref="loginAuthenticationManager" />
 		<constructor-arg index="1" ref="loginTokenService" />
@@ -71,13 +71,13 @@
 			ref="loginTokenAuthenticationProvider" />
 	</security:authentication-manager>
 
-	<bean id="loginTokenAuthenticationProvider" lazy-init="true"
-		scope="singleton"
+	<bean id="loginTokenAuthenticationProvider"
+
 		class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl">
 		<constructor-arg index="0" ref="loginTokenUserDetailsBuilder" />
 	</bean>
 
-	<bean id="loginTokenUserDetailsBuilder" lazy-init="true" scope="singleton"
+	<bean id="loginTokenUserDetailsBuilder"
 		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl">
 		<constructor-arg index="0"
 			ref="loginTokenGrantedAuthorityBuilder" />
@@ -85,8 +85,8 @@
 		<constructor-arg index="2" ref="loginPointerRegistry" />
 	</bean>
 
-	<bean id="loginTokenGrantedAuthorityBuilder" lazy-init="true"
-		scope="singleton"
+	<bean id="loginTokenGrantedAuthorityBuilder"
+
 		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl">
 		<constructor-arg index="0" ref="loginGrantedAuthorityDecoder" />
 		<constructor-arg index="1">
@@ -109,7 +109,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="loginGrantedAuthorityDecoder" lazy-init="true" scope="singleton"
+	<bean id="loginGrantedAuthorityDecoder"
 		class="com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl"
 		factory-method="withStringMap">
 		<constructor-arg index="0">
@@ -121,17 +121,17 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="systemLoginTokenFactory" lazy-init="true" scope="singleton"
+	<bean id="systemLoginTokenFactory"
 		class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl">
 		<constructor-arg index="0" ref="loginTokenService" />
 	</bean>
 
 	<!-- Exception Handler -->
-	<bean id="loginTokenExceptionHandler" scope="singleton" lazy-init="true"
+	<bean id="loginTokenExceptionHandler"
 		class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler">
 	</bean>
 
-	<bean id="accessDeniedHandler" scope="singleton" lazy-init="true"
+	<bean id="accessDeniedHandler"
 		class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl">
 	</bean>
 

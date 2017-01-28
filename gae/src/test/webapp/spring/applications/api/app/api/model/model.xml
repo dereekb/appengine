@@ -20,7 +20,7 @@
 
 	<!-- Read Controller -->
 	<bean id="readController" class="com.dereekb.gae.web.api.model.controller.ReadController"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">

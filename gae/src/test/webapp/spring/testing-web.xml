@@ -10,14 +10,14 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<bean id="testLoginTokenContext"
-		class="com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl" >
-		<constructor-arg index="0" ref="passwordLoginController"/>	
-		<constructor-arg index="1" ref="loginRegisterService"/>	
-		<constructor-arg index="2" ref="loginTokenService"/>	
-		<constructor-arg index="3" ref="loginPointerRegistry"/>
-		<constructor-arg index="4" ref="loginRegistry"/>	
+		class="com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl">
+		<constructor-arg index="0" ref="passwordLoginController" />
+		<constructor-arg index="1" ref="loginRegisterService" />
+		<constructor-arg index="2" ref="loginTokenService" />
+		<constructor-arg index="3" ref="loginPointerRegistry" />
+		<constructor-arg index="4" ref="loginRegistry" />
 		<!-- Admin Login -->
-		<property name="encodedRoles" value="1"/>
+		<property name="encodedRoles" value="1" />
 	</bean>
 
 </beans>

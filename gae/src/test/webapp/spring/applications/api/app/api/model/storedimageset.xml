@@ -12,22 +12,23 @@
 	<!-- Read Controller -->
 	<bean id="storedImageSetReadControllerEntry"
 		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="storedImageSetReadService" />
 		<constructor-arg index="1" ref="storedImageSetDataConverter" />
-		<constructor-arg index="2" ref="storedImageSetLinkModelInclusionReader" />
+		<constructor-arg index="2"
+			ref="storedImageSetLinkModelInclusionReader" />
 	</bean>
 
 	<bean id="storedImageSetLinkModelInclusionReader"
 		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="storedImageSetLinkSystem"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->
 	<bean id="storedImageSetEditController"
 		class="com.dereekb.gae.web.api.controllers.models.StoredImageSetEditController"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0"
 			ref="storedImageSetEditControllerDelegate" />
 		<constructor-arg index="1"
@@ -35,33 +36,33 @@
 	</bean>
 
 	<bean id="storedImageSetEditControllerDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl">
 		<constructor-arg index="0" ref="storedImageSetCrudService" />
 	</bean>
 
 	<bean id="storedImageSetEditControllerConversionDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl">
 		<constructor-arg index="0" ref="storedImageSetType" />
 		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
 		<constructor-arg index="2" ref="storedImageSetDataConverter" />
 	</bean>
 
 	<!-- Search Component -->
-	<alias name="storedImageSetType" alias="storedImageSetSearchType"/>
+	<alias name="storedImageSetType" alias="storedImageSetSearchType" />
 
-	<bean id="storedImageSetSearchDelegateEntry" scope="singleton"
+	<bean id="storedImageSetSearchDelegateEntry"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
 		<constructor-arg index="0" ref="storedImageSetSearchType" />
 		<constructor-arg index="1" ref="storedImageSetQueryService" />
 		<constructor-arg index="2" ref="storedImageSetSearchService" />
 		<constructor-arg index="3">
-			<bean class="com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchRequestBuilder"/>
+			<bean
+				class="com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchRequestBuilder" />
 		</constructor-arg>
-		<constructor-arg index="4" ref="storedImageSetSearchResultConverter" />
+		<constructor-arg index="4"
+			ref="storedImageSetSearchResultConverter" />
 	</bean>
 
-	<alias name="storedImageSetDataConverter" alias="storedImageSetSearchResultConverter"/>
+	<alias name="storedImageSetDataConverter" alias="storedImageSetSearchResultConverter" />
 
 </beans>

@@ -9,42 +9,38 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="geoPlaceSearchIndex" class="java.lang.String" lazy-init="true" scope="singleton">
+	<bean id="geoPlaceSearchIndex" class="java.lang.String">
 		<constructor-arg index="0" ref="geoPlaceType" />
 	</bean>
-	
+
 	<!-- Index -->
 	<bean id="geoPlaceKeyedDocumentIndexService"
-		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceReadService"/>
-		<constructor-arg index="1" ref="geoPlaceDocumentIndexService"/>
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="geoPlaceReadService" />
+		<constructor-arg index="1" ref="geoPlaceDocumentIndexService" />
 	</bean>
-	
+
 	<bean id="geoPlaceDocumentIndexService"
-		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="searchSystem"/>
-		<constructor-arg index="1" ref="geoPlaceIndexingDocumentBuilder"/>
-		<constructor-arg index="2" ref="geoPlaceAsyncConfiguredSetter"/>
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="searchSystem" />
+		<constructor-arg index="1"
+			ref="geoPlaceIndexingDocumentBuilder" />
+		<constructor-arg index="2" ref="geoPlaceAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Search Indexing -->
 	<bean id="geoPlaceIndexingDocumentBuilder"
-		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceSearchIndex"/>
-		<constructor-arg index="1" ref="geoPlaceSearchDocumentBuilder"/>
+		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl">
+		<constructor-arg index="0" ref="geoPlaceSearchIndex" />
+		<constructor-arg index="1" ref="geoPlaceSearchDocumentBuilder" />
 	</bean>
 
 	<bean id="geoPlaceSearchDocumentBuilder"
-		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder">
 		<constructor-arg index="0">
 			<bean
-				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer"
-				scope="singleton">
-				<constructor-arg index="0" ref="geoPlaceType"/>
+				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer">
+				<constructor-arg index="0" ref="geoPlaceType" />
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -55,42 +51,40 @@
 			</list>
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- Derivative Indexing -->
 	<bean id="geoPlaceIncludedDocumentBuilderStep"
-		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceRegistry"/>
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl">
+		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceIncludedDocumentBuilderStep"/>
+			<bean
+				class="com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceIncludedDocumentBuilderStep" />
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- Search Services -->
 	<bean id="geoPlaceSearchService"
-		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceReadService"/>
-		<constructor-arg index="1" ref="modelDocumentSearchService"/>
+		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl">
+		<constructor-arg index="0" ref="geoPlaceReadService" />
+		<constructor-arg index="1" ref="modelDocumentSearchService" />
 		<constructor-arg index="2">
-			<bean class="com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequestConverter">
-				<constructor-arg index="0" ref="geoPlaceSearchIndex"/>
+			<bean
+				class="com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchRequestConverter">
+				<constructor-arg index="0" ref="geoPlaceSearchIndex" />
 			</bean>
 		</constructor-arg>
-		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
+		<constructor-arg index="3" ref="scoredDocumentLongKeyReader" />
 	</bean>
-	
+
 	<!-- Query Services -->
 	<bean id="geoPlaceQueryService"
-		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="geoPlaceRegistry"/>
-		<constructor-arg index="1" ref="geoPlaceQueryInitializer"/>
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="geoPlaceRegistry" />
+		<constructor-arg index="1" ref="geoPlaceQueryInitializer" />
 	</bean>
 
 	<bean id="geoPlaceQueryInitializer"
-		class="com.dereekb.gae.model.geo.place.search.query.GeoPlaceQueryInitializer"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.geo.place.search.query.GeoPlaceQueryInitializer">
 	</bean>
 
 </beans>

@@ -9,19 +9,21 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="geoPlaceLinkTarget" lazy-init="true"
+	<bean id="geoPlaceLinkTarget"
 		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
 		<constructor-arg index="0" ref="geoPlaceType" />
-		<constructor-arg index="1" value="NUMBER" />
+		<constructor-arg index="1" ref="geoPlaceIdType" />
 	</bean>
 
-	<bean id="geoPlaceLinkSystem" lazy-init="true"
+	<bean id="geoPlaceLinkSystem"
 		class="com.dereekb.gae.model.geo.place.link.GeoPlaceLinkSystemEntry">
 		<constructor-arg index="0" ref="geoPlaceCrudService" />
-		<constructor-arg index="1" ref="geoPlaceUpdateConfiguredSetter" />
+		<constructor-arg index="1"
+			ref="geoPlaceUpdateConfiguredSetter" />
 		<constructor-arg index="2">
 			<list>
-				<bean class="com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo">
+				<bean
+					class="com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo">
 					<constructor-arg index="0" ref="storedImageType" />
 					<constructor-arg index="1" ref="storedImageLinkTarget" />
 				</bean>
@@ -39,8 +41,8 @@
 	</bean>
 
 	<!-- Links -->
-	<bean id="geoPlaceParentLinkName" class="java.lang.String" scope="singleton">
+	<bean id="geoPlaceParentLinkName" class="java.lang.String">
 		<constructor-arg index="0" value="parent" />
 	</bean>
-	
+
 </beans>

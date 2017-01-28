@@ -9,13 +9,13 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="loginLinkTarget" lazy-init="true"
+	<bean id="loginLinkTarget"
 		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
 		<constructor-arg index="0" ref="loginType" />
-		<constructor-arg index="1" value="NUMBER" />
+		<constructor-arg index="1" ref="loginIdType" />
 	</bean>
 
-	<bean id="loginLinkSystem" lazy-init="true"
+	<bean id="loginLinkSystem"
 		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemEntry">
 		<constructor-arg index="0" ref="loginCrudService" />
 		<constructor-arg index="1" ref="loginUpdateConfiguredSetter" />
@@ -29,8 +29,8 @@
 	</bean>
 
 	<!-- Links -->
-	<bean id="loginLoginPointerLinkName" class="java.lang.String" scope="singleton">
+	<bean id="loginLoginPointerLinkName" class="java.lang.String">
 		<constructor-arg index="0" ref="loginPointerType" />
 	</bean>
-	
+
 </beans>

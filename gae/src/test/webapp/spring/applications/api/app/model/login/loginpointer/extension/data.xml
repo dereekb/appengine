@@ -11,18 +11,15 @@
 
 	<!-- Type -->
 	<bean id="loginPointerDataBuilder"
-		class="com.dereekb.gae.server.auth.model.pointer.dto.LoginPointerDataBuilder"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.server.auth.model.pointer.dto.LoginPointerDataBuilder">
 	</bean>
 
 	<bean id="loginPointerDataReader"
-		class="com.dereekb.gae.server.auth.model.pointer.dto.LoginPointerDataReader"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.server.auth.model.pointer.dto.LoginPointerDataReader">
 	</bean>
 
 	<bean id="loginPointerDataConverter"
-		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl">
 		<constructor-arg index="0" ref="loginPointerDataBuilder" />
 		<constructor-arg index="1" ref="loginPointerDataReader" />
 	</bean>

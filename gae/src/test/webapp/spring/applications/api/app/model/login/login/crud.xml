@@ -10,21 +10,23 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Cruds -->
-	<bean id="loginCrudService" lazy-init="true"
+	<bean id="loginCrudService"
 		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
-		<constructor-arg index="0"><null/></constructor-arg>
+		<constructor-arg index="0">
+			<null />
+		</constructor-arg>
 		<constructor-arg index="1" ref="loginReadService" />
 		<constructor-arg index="2" ref="loginUpdateService" />
 		<constructor-arg index="3" ref="loginDeleteService" />
 	</bean>
 
 	<!-- Services -->
-	<bean id="loginReadService" lazy-init="true"
+	<bean id="loginReadService"
 		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
 		<constructor-arg index="0" ref="loginReadTask" />
 	</bean>
 
-	<bean id="loginUpdateService" lazy-init="true"
+	<bean id="loginUpdateService"
 		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
 		<constructor-arg index="0" ref="loginReadService" />
 		<constructor-arg index="1" ref="loginUpdateTask" />
@@ -38,57 +40,50 @@
 
 	<!-- Save/Delete Tasks -->
 	<bean id="loginSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
 			ref="loginSynchronousConfiguredSetter" />
 	</bean>
 
 	<bean id="loginAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0" ref="loginAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Create -->
-	<bean id="loginScheduleCreateReview" lazy-init="true" scope="singleton"
+	<bean id="loginScheduleCreateReview"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
 		<constructor-arg index="0" ref="loginType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
 	<bean id="loginCreateTaskDelegate"
-		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
 		<constructor-arg index="0" ref="loginFactory" />
 		<constructor-arg index="1" ref="loginAttributeUpdater" />
 	</bean>
 
 	<!-- Read -->
-	<bean id="loginReadTask" lazy-init="true"
-		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+	<bean id="loginReadTask" class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
 		<constructor-arg index="0" ref="loginRegistry" />
 	</bean>
 
 	<!-- Update -->
-	<bean id="loginUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl"
-		lazy-init="true">
+	<bean id="loginUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="loginAttributeUpdater" />
 		<constructor-arg index="1" ref="loginAsyncSaveTask" />
 		<constructor-arg index="2" ref="loginScheduleUpdateReview" />
 	</bean>
 
 	<bean id="loginAttributeUpdater"
-		class="com.dereekb.gae.server.auth.model.login.crud.LoginAttributeUpdater"
-		lazy-init="true">
+		class="com.dereekb.gae.server.auth.model.login.crud.LoginAttributeUpdater">
 	</bean>
 
 	<!-- Delete -->
 	<alias name="loginScheduleDeleteTask" alias="loginDeleteTask" />
 
 	<bean id="loginScheduleDeleteTask"
-		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
 		<constructor-arg index="0" ref="loginType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 		<property name="deleteFilter">

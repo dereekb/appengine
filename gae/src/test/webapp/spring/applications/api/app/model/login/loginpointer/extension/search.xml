@@ -11,15 +11,13 @@
 
 	<!-- Query Services -->
 	<bean id="loginPointerQueryService"
-		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="loginPointerRegistry"/>
-		<constructor-arg index="1" ref="loginPointerQueryInitializer"/>
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="loginPointerRegistry" />
+		<constructor-arg index="1" ref="loginPointerQueryInitializer" />
 	</bean>
 
 	<bean id="loginPointerQueryInitializer"
-		class="com.dereekb.gae.server.auth.model.pointer.search.query.LoginPointerQueryInitializer"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.server.auth.model.pointer.search.query.LoginPointerQueryInitializer">
 	</bean>
 
 </beans>

@@ -11,8 +11,7 @@
 
 	<!-- Generator -->
 	<bean id="storedBlobTestModelGenerator"
-		class="com.dereekb.gae.test.model.stored.StoredBlobTestGenerator"
-		scope="singleton">
+		class="com.dereekb.gae.test.model.stored.StoredBlobTestGenerator">
 		<constructor-arg index="0" ref="storedBlobRegistry" />
 		<constructor-arg index="1" ref="storedBlobGenerator" />
 		<constructor-arg index="2" ref="storageSystem" />
@@ -20,8 +19,7 @@
 
 	<!-- Data Generator -->
 	<bean id="storedBlobTestDataGenerator"
-		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl"
-		scope="singleton">
+		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
 		<constructor-arg index="0" ref="storedBlobGenerator" />
 		<constructor-arg index="1" ref="storedBlobDataBuilder" />
 	</bean>

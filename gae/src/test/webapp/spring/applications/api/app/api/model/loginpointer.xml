@@ -12,22 +12,23 @@
 	<!-- Read Controller -->
 	<bean id="loginPointerReadControllerEntry"
 		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="loginPointerReadService" />
 		<constructor-arg index="1" ref="loginPointerDataConverter" />
-		<constructor-arg index="2" ref="loginPointerLinkModelInclusionReader" />
+		<constructor-arg index="2"
+			ref="loginPointerLinkModelInclusionReader" />
 	</bean>
-	
+
 	<bean id="loginPointerLinkModelInclusionReader"
 		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0" ref="loginPointerLinkSystem"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->
 	<bean id="loginPointerEditController"
 		class="com.dereekb.gae.web.api.controllers.models.LoginPointerEditController"
-		scope="singleton" lazy-init="false">
+		lazy-init="false">
 		<constructor-arg index="0"
 			ref="loginPointerEditControllerDelegate" />
 		<constructor-arg index="1"
@@ -35,29 +36,28 @@
 	</bean>
 
 	<bean id="loginPointerEditControllerDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl">
 		<constructor-arg index="0" ref="loginPointerCrudService" />
 	</bean>
 
 	<bean id="loginPointerEditControllerConversionDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl"
-		scope="singleton">
+		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl">
 		<constructor-arg index="0" ref="loginPointerType" />
 		<constructor-arg index="1" ref="stringModelKeyConverter" />
 		<constructor-arg index="2" ref="loginPointerDataConverter" />
 	</bean>
 
 	<!-- Search Component -->
-	<alias name="loginPointerType" alias="loginPointerSearchType"/>
+	<alias name="loginPointerType" alias="loginPointerSearchType" />
 
-	<bean id="loginPointerSearchDelegateEntry" scope="singleton"
+	<bean id="loginPointerSearchDelegateEntry"
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
 		<constructor-arg index="0" ref="loginPointerSearchType" />
 		<constructor-arg index="1" ref="loginPointerQueryService" />
-		<constructor-arg index="2" ref="loginPointerSearchResultConverter" />
+		<constructor-arg index="2"
+			ref="loginPointerSearchResultConverter" />
 	</bean>
 
-	<alias name="loginPointerDataConverter" alias="loginPointerSearchResultConverter"/>
+	<alias name="loginPointerDataConverter" alias="loginPointerSearchResultConverter" />
 
 </beans>

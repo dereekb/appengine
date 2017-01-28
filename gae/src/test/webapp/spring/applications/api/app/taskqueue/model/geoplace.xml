@@ -10,24 +10,18 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- CRUDs Controller -->
-	<bean id="geoPlaceTaskQueueEditControllerEntry" scope="singleton" lazy-init="true"
+	<bean id="geoPlaceTaskQueueEditControllerEntry"
 		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
-		<constructor-arg index="0" ref="geoPlaceRegistry"/>
-		<constructor-arg index="1" ref="geoPlaceTaskQueuePostCreateTask"/>
-		<constructor-arg index="2" ref="geoPlaceTaskQueuePostUpdateTask"/>
-		<constructor-arg index="3" ref="geoPlaceTaskQueueProcessDeleteTask"/>
+		<constructor-arg index="0" ref="geoPlaceRegistry" />
+		<constructor-arg index="1"
+			ref="geoPlaceTaskQueuePostCreateTask" />
+		<constructor-arg index="2"
+			ref="geoPlaceTaskQueuePostUpdateTask" />
+		<constructor-arg index="3"
+			ref="geoPlaceTaskQueueProcessDeleteTask" />
 	</bean>
-	
-	<bean id="geoPlaceTaskQueuePostCreateTask" scope="singleton" lazy-init="true"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
-		<constructor-arg index="0">
-			<list>
-				<ref bean="typedDocumentIndexServiceIndexTask" />
-			</list>
-		</constructor-arg>
-	</bean>
-	
-	<bean id="geoPlaceTaskQueuePostUpdateTask" scope="singleton" lazy-init="true"
+
+	<bean id="geoPlaceTaskQueuePostCreateTask"
 		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
@@ -36,7 +30,16 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="geoPlaceTaskQueueProcessDeleteTask" scope="singleton" lazy-init="true"
+	<bean id="geoPlaceTaskQueuePostUpdateTask"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="typedDocumentIndexServiceIndexTask" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="geoPlaceTaskQueueProcessDeleteTask"
 		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1">
@@ -47,24 +50,23 @@
 	</bean>
 
 	<!-- Iterate Controller -->
-	<bean id="geoPlaceTaskQueueIterateControllerEntry" scope="singleton" lazy-init="true"
+	<bean id="geoPlaceTaskQueueIterateControllerEntry"
 		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
-		<constructor-arg index="0" ref="geoPlaceRegistry"/>
+		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
 				<entry key-ref="geoPlaceClearParentsIterateTaskKey" value-ref="geoPlaceClearParentsTask" />
 			</map>
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- Tasks -->
-	<bean id="geoPlaceClearParentsIterateTaskKey" class="java.lang.String" lazy-init="true" scope="singleton">
+	<bean id="geoPlaceClearParentsIterateTaskKey" class="java.lang.String">
 		<constructor-arg index="0" value="clearParents" />
 	</bean>
-	
+
 	<bean id="geoPlaceClearParentsTask"
-		class="com.dereekb.gae.model.extension.links.task.ClearLinkTask"
-		lazy-init="true" scope="singleton">
+		class="com.dereekb.gae.model.extension.links.task.ClearLinkTask">
 		<constructor-arg index="0" value="parent" />
 		<constructor-arg index="1" ref="linkSystem" />
 	</bean>

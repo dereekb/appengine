@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Cruds -->
-	<bean id="storedImageSetCrudService" lazy-init="true"
+	<bean id="storedImageSetCrudService"
 		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
 		<constructor-arg index="0" ref="storedImageSetCreateService" />
 		<constructor-arg index="1" ref="storedImageSetReadService" />
@@ -19,17 +19,17 @@
 	</bean>
 
 	<!-- Services -->
-	<bean id="storedImageSetCreateService" lazy-init="true"
+	<bean id="storedImageSetCreateService"
 		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
 		<constructor-arg index="0" ref="storedImageSetCreateTask" />
 	</bean>
 
-	<bean id="storedImageSetReadService" lazy-init="true"
+	<bean id="storedImageSetReadService"
 		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
 		<constructor-arg index="0" ref="storedImageSetReadTask" />
 	</bean>
 
-	<bean id="storedImageSetUpdateService" lazy-init="true"
+	<bean id="storedImageSetUpdateService"
 		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
 		<constructor-arg index="0" ref="storedImageSetReadService" />
 		<constructor-arg index="1" ref="storedImageSetUpdateTask" />
@@ -43,23 +43,23 @@
 
 	<!-- Save/Delete Tasks -->
 	<bean id="storedImageSetSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
 			ref="storedImageSetSynchronousConfiguredSetter" />
 	</bean>
 
 	<bean id="storedImageSetAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetAsyncConfiguredSetter" />
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
+		<constructor-arg index="0"
+			ref="storedImageSetAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Create -->
-	<bean id="storedImageSetCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
-		lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetCreateTaskDelegate" />
-		<constructor-arg index="1" ref="storedImageSetSynchronousSaveTask" />
+	<bean id="storedImageSetCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
+		<constructor-arg index="0"
+			ref="storedImageSetCreateTaskDelegate" />
+		<constructor-arg index="1"
+			ref="storedImageSetSynchronousSaveTask" />
 		<constructor-arg index="2">
 			<bean
 				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
@@ -70,39 +70,37 @@
 	</bean>
 
 	<bean id="storedImageSetCreateTaskDelegate"
-		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
 		<constructor-arg index="0" ref="storedImageSetFactory" />
-		<constructor-arg index="1" ref="storedImageSetAttributeUpdater" />
+		<constructor-arg index="1"
+			ref="storedImageSetAttributeUpdater" />
 	</bean>
 
 	<!-- Read -->
-	<bean id="storedImageSetReadTask" lazy-init="true"
-		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+	<bean id="storedImageSetReadTask" class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
 		<constructor-arg index="0" ref="storedImageSetRegistry" />
 	</bean>
 
 	<!-- Update -->
-	<bean id="storedImageSetUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl"
-		lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetAttributeUpdater" />
+	<bean id="storedImageSetUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
+		<constructor-arg index="0"
+			ref="storedImageSetAttributeUpdater" />
 		<constructor-arg index="1" ref="storedImageSetAsyncSaveTask" />
-		<constructor-arg index="2" ref="storedImageSetScheduleUpdateReview" />
+		<constructor-arg index="2"
+			ref="storedImageSetScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedImageSetAttributeUpdater"
-		class="com.dereekb.gae.model.stored.image.set.crud.StoredImageSetAttributeUpdater"
-		lazy-init="true">
+		class="com.dereekb.gae.model.stored.image.set.crud.StoredImageSetAttributeUpdater">
 	</bean>
 
 	<!-- Delete -->
-	<alias name="storedImageSetScheduleDeleteTask" alias="storedImageSetDeleteTask"/>
-	
+	<alias name="storedImageSetScheduleDeleteTask" alias="storedImageSetDeleteTask" />
+
 	<bean id="storedImageSetScheduleDeleteTask"
-		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
-		lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetType"/>
-		<constructor-arg index="1" ref="taskScheduler"/>
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
+		<constructor-arg index="0" ref="storedImageSetType" />
+		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
 </beans>

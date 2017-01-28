@@ -10,15 +10,13 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Factory -->
-	<bean id="storedImageSetFactory" lazy-init="true"
-		class="com.dereekb.gae.utilities.factory.impl.BasicFactory">
+	<bean id="storedImageSetFactory" class="com.dereekb.gae.utilities.factory.impl.BasicFactory">
 		<constructor-arg index="0" ref="storedImageSetClass" />
 	</bean>
 
 	<!-- Generator -->
 	<bean id="storedImageSetGenerator"
-		class="com.dereekb.gae.model.stored.image.set.generator.StoredImageSetGenerator"
-		scope="singleton">
+		class="com.dereekb.gae.model.stored.image.set.generator.StoredImageSetGenerator">
 	</bean>
 
 </beans>
