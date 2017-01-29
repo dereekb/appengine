@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.model.login.misc;
+package com.dereekb.gae.server.auth.model.login.misc.owned;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;

@@ -1,11 +1,11 @@
 package com.dereekb.gae.server.auth.security.token.model;
 
 import java.util.Date;
-import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesBearer;
 import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 
 /**
@@ -15,7 +15,7 @@ import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
  *
  */
 public interface LoginToken
-        extends EncodedRolesBearer {
+        extends EncodedRolesBearer, OwnershipRolesBearer {
 
 	/**
 	 * Returns the subject of the token. Generally the result of
@@ -85,12 +85,5 @@ public interface LoginToken
 	 */
 	@Deprecated
 	public boolean hasExpired();
-
-	/**
-	 * Returns a set of ownership roles.
-	 * 
-	 * @return {@link Set}. Never {@code null}.
-	 */
-	public Set<String> getOwnershipRoles();
 
 }

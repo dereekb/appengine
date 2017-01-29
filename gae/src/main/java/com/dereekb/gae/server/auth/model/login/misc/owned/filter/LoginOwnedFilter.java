@@ -1,6 +1,6 @@
-package com.dereekb.gae.server.auth.model.login.misc.filter;
+package com.dereekb.gae.server.auth.model.login.misc.owned.filter;
 
-import com.dereekb.gae.server.auth.model.login.misc.LoginOwned;
+import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwned;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.filter.AbstractModelKeyFilter;
 

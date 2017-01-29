@@ -5,6 +5,8 @@ import java.util.Date;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
+import com.dereekb.gae.server.auth.security.ownership.source.OwnershipRolesReader;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
 import com.dereekb.gae.server.datastore.Getter;
@@ -25,9 +27,12 @@ public class LoginTokenBuilderImpl
 	private Long expirationTime = DEFAULT_EXPIRATION_TIME;
 
 	private Getter<Login> loginGetter;
+	private OwnershipRolesReader<Login> ownershipRolesReader;
 
-	public LoginTokenBuilderImpl(Getter<Login> loginGetter) throws IllegalArgumentException {
+	public LoginTokenBuilderImpl(Getter<Login> loginGetter, OwnershipRolesReader<Login> ownershipRolesReader)
+	        throws IllegalArgumentException {
 		this.setLoginGetter(loginGetter);
+		this.setOwnershipRolesReader(ownershipRolesReader);
 	}
 
 	public Long getExpirationTime() {
@@ -54,6 +59,19 @@ public class LoginTokenBuilderImpl
 		this.loginGetter = loginGetter;
 	}
 
+	public OwnershipRolesReader<Login> getOwnershipRolesReader() {
+		return this.ownershipRolesReader;
+	}
+
+	public void setOwnershipRolesReader(OwnershipRolesReader<Login> ownershipRolesReader)
+	        throws IllegalArgumentException {
+		if (ownershipRolesReader == null) {
+			throw new IllegalArgumentException("OwnershipRolesReader cannot be null.");
+		}
+
+		this.ownershipRolesReader = ownershipRolesReader;
+	}
+
 	// MARK: LoginTokenBuilder
 	@Override
 	public LoginToken buildAnonymousLoginToken(String anonymousId) {
@@ -71,6 +89,7 @@ public class LoginTokenBuilderImpl
 		LoginTokenImpl loginToken = this.makeLoginToken();
 
 		ModelKey loginKey = pointer.getLoginModelKey();
+		OwnershipRoles ownershipRoles = null;
 		Long roles = null;
 		Long loginId = null;
 
@@ -81,6 +100,7 @@ public class LoginTokenBuilderImpl
 
 			if (login != null) {
 				roles = login.getRoles();
+				ownershipRoles = this.ownershipRolesReader.readRoles(login);
 			}
 		}
 
@@ -90,6 +110,7 @@ public class LoginTokenBuilderImpl
 		loginToken.setLoginPointer(pointerId);
 		loginToken.setRoles(roles);
 		loginToken.setPointerType(pointer.getLoginPointerType());
+		loginToken.setOwnershipRoles(ownershipRoles);
 
 		return loginToken;
 	}

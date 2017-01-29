@@ -1,16 +1,15 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
-import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
+import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
-import com.dereekb.gae.utilities.collections.list.SetUtility;
-import com.google.common.base.Joiner;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -30,8 +29,6 @@ import io.jsonwebtoken.SignatureException;
  */
 public class LoginTokenEncoderDecoderImpl
         implements LoginTokenEncoder, LoginTokenDecoder {
-
-	private static final String OWNERSHIP_ROLES_SPLITTER = ",";
 
 	private static final String LOGIN_KEY = "lgn";
 	private static final String LOGIN_POINTER_KEY = "ptr";
@@ -108,9 +105,8 @@ public class LoginTokenEncoderDecoderImpl
 		return claims;
 	}
 
-	private String encodeOwnershipRoles(Set<String> ownershipRoles) {
-		Joiner joiner = Joiner.on(",").skipNulls();
-		return joiner.join(ownershipRoles);
+	private String encodeOwnershipRoles(OwnershipRoles ownershipRoles) {
+		return OwnershipRolesUtility.encodeRoles(ownershipRoles);
 	}
 
 	// MARK: LoginTokenDecoder
@@ -189,16 +185,15 @@ public class LoginTokenEncoderDecoderImpl
 		String encodedOwnershipRoles = claims.get(OWNERSHIP_KEY, String.class);
 
 		if (encodedOwnershipRoles != null) {
-			Set<String> ownershipRoles = this.decodeOwnershipRoles(encodedOwnershipRoles);
+			OwnershipRoles ownershipRoles = this.decodeOwnershipRoles(encodedOwnershipRoles);
 			loginToken.setOwnershipRoles(ownershipRoles);
 		}
 
 		return loginToken;
 	}
 
-	private Set<String> decodeOwnershipRoles(String encodedOwnershipRoles) {
-		String[] roles = encodedOwnershipRoles.split(OWNERSHIP_ROLES_SPLITTER);
-		return SetUtility.makeSet(roles);
+	private OwnershipRoles decodeOwnershipRoles(String encodedOwnershipRoles) {
+		return OwnershipRolesUtility.decodeRoles(encodedOwnershipRoles);
 	}
 
 }

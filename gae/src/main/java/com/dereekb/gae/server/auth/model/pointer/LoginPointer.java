@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.model.pointer;
 
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.model.login.misc.LoginOwned;
+import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwned;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;

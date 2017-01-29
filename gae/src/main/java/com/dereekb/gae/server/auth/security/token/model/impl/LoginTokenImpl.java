@@ -1,12 +1,12 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
+import com.dereekb.gae.server.auth.security.ownership.impl.OwnershipRolesImpl;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.utilities.time.DateUtility;
 
@@ -63,7 +63,7 @@ public class LoginTokenImpl
 	/**
 	 * Ownership roles.
 	 */
-	private Set<String> ownershipRoles = Collections.emptySet();
+	private OwnershipRoles ownershipRoles;
 
 	public LoginTokenImpl() {
 		this(LoginPointerType.ANONYMOUS);
@@ -72,6 +72,7 @@ public class LoginTokenImpl
 	public LoginTokenImpl(LoginPointerType pointerType) {
 		this.setPointerType(pointerType);
 		this.setIssued(new Date());
+		this.setOwnershipRoles(null);
 	}
 
 	@Override
@@ -185,16 +186,20 @@ public class LoginTokenImpl
 	}
 
 	@Override
-	public Set<String> getOwnershipRoles() {
+	public OwnershipRoles getOwnershipRoles() {
 		return this.ownershipRoles;
 	}
 
-	public void setOwnershipRoles(Set<String> ownershipRoles) {
+	public void setOwnershipRoles(OwnershipRoles ownershipRoles) {
 		if (ownershipRoles == null) {
-			ownershipRoles = Collections.emptySet();
+			ownershipRoles = new OwnershipRolesImpl();
 		}
 
 		this.ownershipRoles = ownershipRoles;
+	}
+
+	public void makeOwnershipRoles(String ownerId) {
+		this.ownershipRoles = new OwnershipRolesImpl(ownerId);
 	}
 
 	@Override
