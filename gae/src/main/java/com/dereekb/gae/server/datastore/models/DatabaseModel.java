@@ -11,7 +11,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  */
 public abstract class DatabaseModel
-        implements UniqueModel, KeyEquality, Serializable {
+        implements MutableUniqueModel, KeyEquality, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

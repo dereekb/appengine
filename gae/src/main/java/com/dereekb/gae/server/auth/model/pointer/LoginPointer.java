@@ -1,8 +1,9 @@
 package com.dereekb.gae.server.auth.model.pointer;
 
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.datastore.models.DatabaseModel;
+import com.dereekb.gae.server.auth.model.login.misc.LoginOwned;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -23,8 +24,8 @@ import com.googlecode.objectify.condition.IfEmpty;
  */
 @Cache
 @Entity
-public class LoginPointer extends DatabaseModel
-        implements ObjectifyModel<LoginPointer> {
+public class LoginPointer extends OwnedDatabaseModel
+        implements ObjectifyModel<LoginPointer>, LoginOwned {
 
 	private static final long serialVersionUID = 1L;
 
@@ -167,6 +168,12 @@ public class LoginPointer extends DatabaseModel
 	@Override
 	public Key<LoginPointer> getObjectifyKey() {
 		return Key.create(LoginPointer.class, this.identifier);
+	}
+
+	// Login Owned
+	@Override
+	public ModelKey getLoginOwnerKey() {
+		return this.getLoginModelKey();
 	}
 
 	@Override

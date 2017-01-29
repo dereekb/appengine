@@ -4,14 +4,11 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
+import com.dereekb.gae.model.extension.search.document.dto.SearchableModelDataReader;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
-import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
-import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.googlecode.objectify.Key;
-
 
 /**
  * {@link DirectionalConverter} for converting a {@link StoredImageSetData}
@@ -20,27 +17,24 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
-public class StoredImageSetDataReader extends AbstractDirectionalConverter<StoredImageSetData, StoredImageSet> {
-
-	private static final StringModelKeyConverter KEY_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
+public class StoredImageSetDataReader extends SearchableModelDataReader<StoredImageSet, StoredImageSetData> {
 
 	private static final ObjectifyKeyUtility<StoredImage> IMAGE_KEY_UTIL = ObjectifyKeyUtility.make(StoredImage.class);
 
+	public StoredImageSetDataReader() {
+		super(StoredImageSet.class);
+	}
+
 	@Override
 	public StoredImageSet convertSingle(StoredImageSetData input) throws ConversionFailureException {
-		StoredImageSet set = new StoredImageSet();
+		StoredImageSet set = super.convertSingle(input);
 
-		// Identifier
-		String stringIdentifier = input.getKey();
-		set.setModelKey(KEY_CONVERTER.safeConvert(stringIdentifier));
-		set.setSearchIdentifier(input.getSearchIdentifier());
-
-		// Info
+		// Data
 		set.setLabel(input.getLabel());
 		set.setDetail(input.getDetail());
 		set.setTags(input.getTags());
 
-		// Images
+		// Links
 		Key<StoredImage> icon = IMAGE_KEY_UTIL.keyFromId(input.getIcon());
 		set.setIcon(icon);
 

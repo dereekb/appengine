@@ -1,6 +1,8 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -57,6 +59,11 @@ public class LoginTokenImpl
 	 * Pointer type.
 	 */
 	private LoginPointerType pointerType;
+
+	/**
+	 * Ownership roles.
+	 */
+	private Set<String> ownershipRoles = Collections.emptySet();
 
 	public LoginTokenImpl() {
 		this(LoginPointerType.ANONYMOUS);
@@ -175,6 +182,19 @@ public class LoginTokenImpl
 
 	public void setPointerType(LoginPointerType pointerType) {
 		this.pointerType = pointerType;
+	}
+
+	@Override
+	public Set<String> getOwnershipRoles() {
+		return this.ownershipRoles;
+	}
+
+	public void setOwnershipRoles(Set<String> ownershipRoles) {
+		if (ownershipRoles == null) {
+			ownershipRoles = Collections.emptySet();
+		}
+
+		this.ownershipRoles = ownershipRoles;
 	}
 
 	@Override

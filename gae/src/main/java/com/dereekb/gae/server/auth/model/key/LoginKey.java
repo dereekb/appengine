@@ -3,8 +3,8 @@ package com.dereekb.gae.server.auth.model.key;
 import java.util.Date;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
-import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -25,7 +25,7 @@ import com.googlecode.objectify.condition.IfNull;
  */
 @Cache
 @Entity
-public class LoginKey extends DatabaseModel
+public class LoginKey extends OwnedDatabaseModel
         implements ObjectifyModel<LoginKey> {
 
 	private static final long serialVersionUID = 1L;
@@ -153,6 +153,7 @@ public class LoginKey extends DatabaseModel
 		return ModelKey.safe(this.identifier);
 	}
 
+	@Override
 	public void setModelKey(ModelKey key) {
 		this.identifier = ModelKey.readIdentifier(key);
 	}

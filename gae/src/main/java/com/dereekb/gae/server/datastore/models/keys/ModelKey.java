@@ -12,6 +12,7 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
@@ -241,11 +242,39 @@ public final class ModelKey
 		return id;
 	}
 
+	public static Long strictReadIdentifier(ModelKey key) throws InvalidModelKeyTypeException {
+		Long id = null;
+
+		if (key != null) {
+			id = key.getId();
+
+			if (id == null) {
+				throw new InvalidModelKeyTypeException();
+			}
+		}
+
+		return id;
+	}
+
 	public static String readName(ModelKey key) {
 		String name = null;
 
 		if (key != null) {
 			name = key.getName();
+		}
+
+		return name;
+	}
+
+	public static String strictReadName(ModelKey key) throws InvalidModelKeyTypeException {
+		String name = null;
+
+		if (key != null) {
+			name = key.getName();
+
+			if (name == null) {
+				throw new InvalidModelKeyTypeException();
+			}
 		}
 
 		return name;

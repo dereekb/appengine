@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.model;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -84,5 +85,12 @@ public interface LoginToken
 	 */
 	@Deprecated
 	public boolean hasExpired();
+
+	/**
+	 * Returns a set of ownership roles.
+	 * 
+	 * @return {@link Set}. Never {@code null}.
+	 */
+	public Set<String> getOwnershipRoles();
 
 }

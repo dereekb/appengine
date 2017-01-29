@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.model.key.dto;
 
-import com.dereekb.gae.server.datastore.models.dto.DatabaseModelData;
+import com.dereekb.gae.server.auth.model.key.LoginKey;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginKeyData extends DatabaseModelData {
+public class LoginKeyData extends OwnedDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,7 +30,7 @@ public class LoginKeyData extends DatabaseModelData {
 	public LoginKeyData() {}
 
 	public String getPointer() {
-		return pointer;
+		return this.pointer;
 	}
 
 	public void setPointer(String pointer) {
@@ -37,7 +38,7 @@ public class LoginKeyData extends DatabaseModelData {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -45,7 +46,7 @@ public class LoginKeyData extends DatabaseModelData {
 	}
 
 	public Long getMask() {
-		return mask;
+		return this.mask;
 	}
 
 	public void setMask(Long mask) {
@@ -53,7 +54,7 @@ public class LoginKeyData extends DatabaseModelData {
 	}
 
 	public String getVerification() {
-		return verification;
+		return this.verification;
 	}
 
 	public void setVerification(String verification) {
@@ -61,7 +62,7 @@ public class LoginKeyData extends DatabaseModelData {
 	}
 
 	public Long getExpiration() {
-		return expiration;
+		return this.expiration;
 	}
 
 	public void setExpiration(Long expiration) {
@@ -70,8 +71,9 @@ public class LoginKeyData extends DatabaseModelData {
 
 	@Override
 	public String toString() {
-		return "LoginKeyData [pointer=" + pointer + ", name=" + name + ", mask=" + mask + ", verification="
-		        + verification + ", expiration=" + expiration + ", key=" + key + ", created=" + date + "]";
+		return "LoginKeyData [pointer=" + this.pointer + ", name=" + this.name + ", mask=" + this.mask
+		        + ", verification=" + this.verification + ", expiration=" + this.expiration + ", key=" + key
+		        + ", created=" + date + "]";
 	}
 
 }

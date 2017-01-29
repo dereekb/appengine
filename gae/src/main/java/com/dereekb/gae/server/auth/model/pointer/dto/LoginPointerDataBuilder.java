@@ -2,8 +2,8 @@ package com.dereekb.gae.server.auth.model.pointer.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelDataBuilder;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
@@ -12,23 +12,23 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
  *
  * @author dereekb
  */
-public final class LoginPointerDataBuilder extends AbstractDirectionalConverter<LoginPointer, LoginPointerData> {
+public final class LoginPointerDataBuilder extends OwnedDatabaseModelDataBuilder<LoginPointer, LoginPointerData> {
 
-	public LoginPointerDataBuilder() {}
+	public LoginPointerDataBuilder() {
+		super(LoginPointerData.class);
+	}
 
 	// Single Directional Converter
 	@Override
-	public LoginPointerData convertSingle(LoginPointer loginPointer) throws ConversionFailureException {
-		LoginPointerData data = new LoginPointerData();
-
-		// Id
-		data.setModelKey(loginPointer.getModelKey());
+	public LoginPointerData convertSingle(LoginPointer input) throws ConversionFailureException {
+		LoginPointerData data = super.convertSingle(input);
 
 		// Data
-		data.setEmail(loginPointer.getEmail());
+		data.setEmail(input.getEmail());
+		data.setType(input.getTypeId());
 
 		// Links
-		data.setLogin(ObjectifyKeyUtility.readKeyIdentifier(loginPointer.getLogin()));
+		data.setLogin(ObjectifyKeyUtility.readKeyIdentifier(input.getLogin()));
 
 		return data;
 	}

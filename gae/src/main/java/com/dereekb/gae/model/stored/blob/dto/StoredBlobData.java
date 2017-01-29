@@ -19,12 +19,23 @@ public final class StoredBlobData extends DescribedDatabaseModelData {
 
 	private String download;
 
+	@JsonInclude(Include.NON_DEFAULT)
+	private Integer type = StoredBlob.DEFAULT_BLOB_TYPE;
+
 	public String getDownload() {
 		return this.download;
 	}
 
 	public void setDownload(String download) {
 		this.download = download;
+	}
+
+	public Integer getType() {
+		return this.type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	@Override
