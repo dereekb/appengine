@@ -89,13 +89,15 @@ public class RelatedLoginModelDeleteTest extends ApiApplicationTestContext {
 		keyA.setLoginPointer(pointer.getObjectifyKey());
 
 		List<LoginKey> otherKeys = this.loginKeyGenerator.generate(5);
-
 		this.loginKeyRegistry.save(keyA, true);
 
 		// Delete Login Pointer
 		DeleteRequest request = new DeleteRequestImpl(pointer);
 		this.loginPointerCrudService.delete(request);
 
+		waitUntilTaskQueueCompletes();
+
+		// NOTE: Maven unit test fails here sometimes due to early escape.
 		waitUntilTaskQueueCompletes();
 
 		Assert.assertFalse(this.loginPointerRegistry.exists(pointer));

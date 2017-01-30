@@ -70,7 +70,7 @@ public class CoreServiceTestingContext {
 	}
 
 	@Before
-	public void resetAuthContext() {
+	public final void resetAuthContext() {
 		this.authContext.resetContext();
 	}
 
