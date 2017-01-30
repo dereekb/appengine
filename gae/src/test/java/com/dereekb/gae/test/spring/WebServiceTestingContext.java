@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
@@ -37,7 +39,7 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
 
-	protected MockMvc mockMvc;
+	private MockMvc mockMvc;
 
 	@Before
 	public void setUpWebServices() {
@@ -97,7 +99,17 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 			        LoginTokenAuthenticationFilter.buildTokenHeader(token));
 		}
 
-		return this.mockMvc.perform(request);
+		return this.mockMvcPerform(request);
+	}
+
+	protected ResultActions mockMvcPerform(RequestBuilder requestBuilder) throws Exception {
+		// Clear any context before running to prevent oddities.
+
+		SecurityContextHolder.clearContext();
+		ResultActions actions = this.mockMvc.perform(requestBuilder);
+		this.resetAuthContext();	// Reset the auth context.
+
+		return actions;
 	}
 
 }

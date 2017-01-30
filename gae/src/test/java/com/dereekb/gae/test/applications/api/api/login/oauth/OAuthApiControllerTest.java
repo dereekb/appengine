@@ -43,7 +43,8 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 	@Test
 	public void testOAuthLogin() {
 
-		OAuthLoginInfo loginInfo = new OAuthLoginInfoImpl(LoginPointerType.OAUTH_GOOGLE, "abcde", "name", "test@test.com");
+		OAuthLoginInfo loginInfo = new OAuthLoginInfoImpl(LoginPointerType.OAUTH_GOOGLE, "abcde", "name",
+		        "test@test.com");
 		OAuthAuthorizationInfo info = new OAuthAuthorizationInfoImpl(loginInfo);
 
 		LoginPointer loginPointer = this.serverManager.login(info);
@@ -58,7 +59,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
 
-		MvcResult loginResult = this.mockMvc.perform(loginRequestBuilder).andReturn();
+		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
@@ -82,7 +83,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
 
-		MvcResult loginResult = this.mockMvc.perform(loginRequestBuilder).andReturn();
+		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
@@ -95,7 +96,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/oauth/google");
 		loginRequestBuilder.accept("application/json");
 
-		MvcResult loginResult = this.mockMvc.perform(loginRequestBuilder).andReturn();
+		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 
 		Assert.assertTrue("Expected a bad request.", loginResponse.getStatus() == 400);

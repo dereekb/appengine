@@ -70,7 +70,7 @@ public class CoreServiceTestingContext {
 	}
 
 	@Before
-	public void setAdministratorContext() {
+	public void resetAuthContext() {
 		this.authContext.resetContext();
 	}
 

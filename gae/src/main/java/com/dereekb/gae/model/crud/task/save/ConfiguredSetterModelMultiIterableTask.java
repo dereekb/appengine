@@ -71,7 +71,7 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 	// MARK: Task
 	@Override
 	public void doTask(Iterable<T> input) throws FailedTaskException {
-		this.doTask(input);
+		super.doTask(input);
 		this.setterTask.doTask(input);
 	}
 

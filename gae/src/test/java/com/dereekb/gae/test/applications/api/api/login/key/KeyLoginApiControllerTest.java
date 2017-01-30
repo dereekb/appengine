@@ -198,7 +198,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 			keyLoginRequestBuilder.param("verification", verification);
 		}
 
-		MvcResult loginResult = this.mockMvc.perform(keyLoginRequestBuilder).andReturn();
+		MvcResult loginResult = this.mockMvcPerform(keyLoginRequestBuilder).andReturn();
 		MockHttpServletResponse loginResultResponse = loginResult.getResponse();
 
 		return loginResultResponse;

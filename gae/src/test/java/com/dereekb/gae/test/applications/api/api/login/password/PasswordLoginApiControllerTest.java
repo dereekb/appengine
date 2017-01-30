@@ -105,11 +105,12 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 		createRequestBuilder.param("password", TEST_PASSWORD);
 		createRequestBuilder.accept("application/json");
 
-		MvcResult createResult = this.mockMvc.perform(createRequestBuilder).andReturn();
+		MvcResult createResult = this.mockMvcPerform(createRequestBuilder).andReturn();
 		MockHttpServletResponse createResponse = createResult.getResponse();
 		String createResponseData = createResponse.getContentAsString();
 
-		Assert.assertTrue("Expected 200 but got " + createResponse.getStatus() + ".", createResponse.getStatus() == 200);
+		Assert.assertTrue("Expected 200 but got " + createResponse.getStatus() + ".",
+		        createResponse.getStatus() == 200);
 		Assert.assertNotNull(createResponseData);
 
 		TestLocalTaskQueueCallback.waitUntilComplete();
