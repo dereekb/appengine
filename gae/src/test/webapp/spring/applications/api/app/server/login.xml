@@ -24,6 +24,7 @@
 	<bean id="loginTokenBuilder"
 		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl">
 		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="loginOwnershipRolesReader" />
 	</bean>
 
 	<alias name="loginTokenService" alias="loginTokenEncoderDecoder" />
@@ -106,8 +107,18 @@
 
 	<bean id="newLoginGenerator"
 		class="com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl">
-		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="0" ref="newLoginOwnershipRolesSaver" />
 		<constructor-arg index="1" ref="loginScheduleCreateReview" />
+	</bean>
+
+	<bean id="newLoginOwnershipRolesSaver"
+		class="com.dereekb.gae.server.auth.model.login.misc.ownership.task.NewLoginOwnershipRolesSaver">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="loginOwnershipRolesReader" />
+	</bean>
+
+	<bean id="loginOwnershipRolesReader"
+		class="com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader">
 	</bean>
 
 </beans>

@@ -74,6 +74,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		try {
 			Login login = this.registerService.register(pointer);
 			Assert.assertNotNull(login);
+			Assert.assertNotNull(login.getOwnerId());
 		} catch (LoginExistsException | LoginRegistrationRejectedException e) {
 			Assert.fail();
 		}

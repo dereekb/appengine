@@ -4,7 +4,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.NewLoginGenerator;
 import com.dereekb.gae.server.auth.security.login.NewLoginGeneratorDelegate;
-import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.Saver;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
@@ -16,35 +16,43 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
 public class NewLoginGeneratorImpl
         implements NewLoginGenerator, NewLoginGeneratorDelegate {
 
-	private Setter<Login> loginSetter;
+	private Saver<Login> loginSaver;
 	private TaskRequestSender<Login> reviewTask;
 	private NewLoginGeneratorDelegate delegate = this;
 
-	public NewLoginGeneratorImpl(Setter<Login> loginSetter, TaskRequestSender<Login> reviewTask) {
-		this(loginSetter, reviewTask, null);
+	public NewLoginGeneratorImpl(Saver<Login> loginSaver, TaskRequestSender<Login> reviewTask) {
+		this(loginSaver, reviewTask, null);
 	}
 
-	public NewLoginGeneratorImpl(Setter<Login> loginSetter,
+	public NewLoginGeneratorImpl(Saver<Login> loginSaver,
 	        TaskRequestSender<Login> reviewTask,
 	        NewLoginGeneratorDelegate delegate) {
-		this.setLoginSetter(loginSetter);
+		this.setLoginSaver(loginSaver);
 		this.setReviewTask(reviewTask);
 		this.setDelegate(delegate);
 	}
 
-	public Setter<Login> getLoginSetter() {
-		return this.loginSetter;
+	public Saver<Login> getLoginSaver() {
+		return this.loginSaver;
 	}
 
-	public void setLoginSetter(Setter<Login> loginSetter) {
-		this.loginSetter = loginSetter;
+	public void setLoginSaver(Saver<Login> loginSaver) throws IllegalArgumentException {
+		if (loginSaver == null) {
+			throw new IllegalArgumentException("LoginSaver cannot be null.");
+		}
+
+		this.loginSaver = loginSaver;
 	}
 
 	public TaskRequestSender<Login> getReviewTask() {
 		return this.reviewTask;
 	}
 
-	public void setReviewTask(TaskRequestSender<Login> reviewTask) {
+	public void setReviewTask(TaskRequestSender<Login> reviewTask) throws IllegalArgumentException {
+		if (reviewTask == null) {
+			throw new IllegalArgumentException("ReviewTask cannot be null.");
+		}
+
 		this.reviewTask = reviewTask;
 	}
 
@@ -64,7 +72,7 @@ public class NewLoginGeneratorImpl
 	@Override
 	public Login makeLogin(LoginPointer pointer) {
 		Login login = this.delegate.makeNewLogin(pointer);
-		this.loginSetter.save(login, false);
+		this.loginSaver.save(login, false);
 
 		if (this.reviewTask != null) {
 			this.reviewTask.sendTask(login);
@@ -81,7 +89,7 @@ public class NewLoginGeneratorImpl
 
 	@Override
 	public String toString() {
-		return "NewLoginGeneratorImpl [loginSetter=" + this.loginSetter + ", reviewTask=" + this.reviewTask
+		return "NewLoginGeneratorImpl [loginSaver=" + this.loginSaver + ", reviewTask=" + this.reviewTask
 		        + ", delegate=" + this.delegate + "]";
 	}
 

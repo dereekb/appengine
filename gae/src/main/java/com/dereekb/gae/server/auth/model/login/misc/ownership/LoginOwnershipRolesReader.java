@@ -3,6 +3,7 @@ package com.dereekb.gae.server.auth.model.login.misc.ownership;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.security.ownership.impl.OwnershipRolesImpl;
 import com.dereekb.gae.server.auth.security.ownership.source.OwnershipRolesReader;
+import com.googlecode.objectify.Key;
 
 /**
  * Login Ownership Key.
@@ -13,7 +14,7 @@ import com.dereekb.gae.server.auth.security.ownership.source.OwnershipRolesReade
 public class LoginOwnershipRolesReader
         implements OwnershipRolesReader<Login> {
 
-	public static final String DEFAULT_LOGIN_OWNER_FORMAT = "LO%s";
+	public static final String DEFAULT_LOGIN_OWNER_FORMAT = "Lo%s";
 
 	private String loginOwnerFormat;
 
@@ -37,10 +38,24 @@ public class LoginOwnershipRolesReader
 		this.loginOwnerFormat = loginOwnerFormat;
 	}
 
+	// MARK: OwnershipRolesReader
 	@Override
 	public OwnershipRolesImpl readRoles(Login input) {
+		return this.readRoles(input.getIdentifier());
+	}
+
+	public OwnershipRolesImpl readRoles(Key<Login> input) {
+		Long identifier = null;
+
+		if (input != null) {
+			identifier = input.getId();
+		}
+
+		return this.readRoles(identifier);
+	}
+
+	protected OwnershipRolesImpl readRoles(Long identifier) {
 		OwnershipRolesImpl roles = new OwnershipRolesImpl();
-		Long identifier = input.getIdentifier();
 
 		if (identifier != null) {
 			String ownerId = this.makeOwnerId(identifier);
@@ -50,7 +65,33 @@ public class LoginOwnershipRolesReader
 		return roles;
 	}
 
-	private String makeOwnerId(Long identifier) {
+	/**
+	 * 
+	 * @param login
+	 *            {@link Login}. Never {@code null}.
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String makeOwnerId(Login login) {
+		return this.makeOwnerId(login.getIdentifier());
+	}
+
+	/**
+	 * 
+	 * @param key
+	 *            {@link Key}. Never {@code null}.
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String makeOwnerId(Key<Login> key) {
+		return this.makeOwnerId(key.getId());
+	}
+
+	/**
+	 * 
+	 * @param identifier
+	 *            {@link Long}. Never {@code null}.
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String makeOwnerId(Long identifier) {
 		return String.format(this.loginOwnerFormat, identifier);
 	}
 
