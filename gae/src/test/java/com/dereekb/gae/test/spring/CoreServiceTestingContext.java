@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.google.appengine.api.taskqueue.dev.LocalTaskQueueCallback;
 import com.google.appengine.api.urlfetch.URLFetchServicePb.URLFetchRequest;
@@ -56,6 +57,9 @@ public class CoreServiceTestingContext {
 	@Autowired
 	protected LocalServiceTestHelper helper;
 
+	@Autowired
+	protected TestAuthenticationContext authContext;
+
 	@Before
 	public void setUpCoreServices() {
 		if (this.session == null) {
@@ -63,6 +67,11 @@ public class CoreServiceTestingContext {
 			this.helper.setUp();
 			this.session = ObjectifyService.begin();
 		}
+	}
+
+	@Before
+	public void setAdministratorContext() {
+		this.authContext.resetContext();
 	}
 
 	@After

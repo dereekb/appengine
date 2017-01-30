@@ -19,5 +19,11 @@
 		<!-- Admin Login -->
 		<property name="encodedRoles" value="1" />
 	</bean>
+	
+	<bean id="testSystemAuthenticationContextSetter"
+		class="com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter">
+		<constructor-arg index="0" ref="systemLoginTokenFactory" />
+		<constructor-arg index="1" ref="loginTokenAuthenticationProvider" />
+	</bean>
 
 </beans>
