@@ -64,8 +64,10 @@
 	</bean>
 
 	<!-- Read -->
-	<bean id="loginReadTask" class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+	<bean id="loginReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
 		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
 	</bean>
 
 	<!-- Update -->

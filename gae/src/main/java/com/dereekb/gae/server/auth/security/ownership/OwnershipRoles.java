@@ -13,7 +13,7 @@ public interface OwnershipRoles {
 	/**
 	 * Returns the owner id.
 	 * 
-	 * @return {@link String}. Can be {@code null}.
+	 * @return {@link String}. Can be {@code null}, but never empty.
 	 */
 	public String getOwnerId();
 

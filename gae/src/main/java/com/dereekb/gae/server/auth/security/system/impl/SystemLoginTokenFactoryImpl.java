@@ -36,12 +36,12 @@ public class SystemLoginTokenFactoryImpl
 	private LoginTokenEncoder encoder;
 
 	public SystemLoginTokenFactoryImpl(LoginTokenEncoder encoder) {
-		this(DEFAULT_ROLES, encoder);
+		this(encoder, DEFAULT_ROLES);
 	}
 
-	public SystemLoginTokenFactoryImpl(Long roles, LoginTokenEncoder encoder) {
-		this.setRoles(roles);
+	public SystemLoginTokenFactoryImpl(LoginTokenEncoder encoder, Long roles) {
 		this.setEncoder(encoder);
+		this.setRoles(roles);
 	}
 
 	public String getHeaderKey() {

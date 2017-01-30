@@ -54,6 +54,11 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 		return new TestObjectifyDatabaseEntityImpl<T>(type);
 	}
 
+	@Override
+	protected Objectify ofy() {
+		return ObjectifyService.ofy().cache(false);
+	}
+
 	protected class TestObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>> extends ObjectifyDatabaseEntityImpl<T> {
 
 		protected TestObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {

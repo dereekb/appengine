@@ -2,13 +2,14 @@ package com.dereekb.gae.server.auth.security.login.impl;
 
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.exception.LinkException;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.LoginService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginPointerRegisteredException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -30,9 +31,8 @@ public class LoginServiceImpl
 		this(format, pointerService, null);
 	}
 
-	public LoginServiceImpl(String format,
-	        LoginPointerService pointerService,
-	        LoginRegisterService registerService) throws IllegalArgumentException {
+	public LoginServiceImpl(String format, LoginPointerService pointerService, LoginRegisterService registerService)
+	        throws IllegalArgumentException {
 		this.setFormat(format);
 		this.setPointerService(pointerService);
 		this.setRegisterService(registerService);
@@ -79,7 +79,8 @@ public class LoginServiceImpl
 	}
 
 	protected LoginPointer createLogin(String username,
-	                                   LoginPointer template) throws LoginExistsException {
+	                                   LoginPointer template)
+	        throws LoginExistsException {
 		ModelKey key = this.getLoginPointerKey(username);
 		return this.pointerService.createLoginPointer(key, template);
 	}
@@ -105,9 +106,11 @@ public class LoginServiceImpl
 	}
 
 	@Override
-	public void registerLogins(ModelKey loginKey,
-	                           Set<String> loginPointers) throws LinkException {
-		this.registerService.registerLogins(loginKey, loginPointers);
+	public void registerPointersToLogin(ModelKey loginKey,
+	                                    Set<String> loginPointers)
+	        throws LoginPointerRegisteredException,
+	            AtomicOperationException {
+		this.registerService.registerPointersToLogin(loginKey, loginPointers);
 	}
 
 	@Override

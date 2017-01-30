@@ -27,8 +27,8 @@ public final class OwnershipRolesImpl
 		this(ownerId, null);
 	}
 
-	public OwnershipRolesImpl(String ownerId, Set<String> additionalRoles) {
-		this.ownerId = ownerId;
+	public OwnershipRolesImpl(String ownerId, Set<String> additionalRoles) throws IllegalArgumentException {
+		this.setOwnerId(ownerId);
 		this.setAdditionalRoles(additionalRoles);
 	}
 
@@ -37,7 +37,11 @@ public final class OwnershipRolesImpl
 		return this.ownerId;
 	}
 
-	public void setOwnerId(String ownerId) {
+	public void setOwnerId(String ownerId) throws IllegalArgumentException {
+		if (ownerId != null && ownerId.isEmpty()) {
+			throw new IllegalArgumentException("OwnerId cannot be empty.");
+		}
+
 		this.ownerId = ownerId;
 		this.refreshRoles();
 	}

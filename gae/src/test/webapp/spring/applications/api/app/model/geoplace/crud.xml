@@ -56,7 +56,12 @@
 	<!-- Create -->
 	<bean id="geoPlaceCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceCreateTaskDelegate" />
-		<constructor-arg index="1" ref="geoPlaceSynchronousSaveTask" />
+		<constructor-arg index="1">
+			<bean class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelMultiIterableTask">
+				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
+				<constructor-arg index="1" ref="geoPlaceSynchronousSaveTask"/>
+			</bean>
+		</constructor-arg>
 		<constructor-arg index="2">
 			<bean
 				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
@@ -73,8 +78,10 @@
 	</bean>
 
 	<!-- Read -->
-	<bean id="geoPlaceReadTask" class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+	<bean id="geoPlaceReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
 	</bean>
 
 	<!-- Update -->

@@ -154,8 +154,9 @@ public class LoginPointer extends OwnedDatabaseModel
 		return new ModelKey(this.identifier);
 	}
 
+	@Override
 	public void setModelKey(ModelKey key) {
-		this.identifier = ModelKey.readName(key);
+		this.identifier = ModelKey.strictReadName(key);
 	}
 
 	// Database Model

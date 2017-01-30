@@ -1,11 +1,13 @@
 package com.dereekb.gae.server.auth.security.token.provider.details.impl;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.misc.SecurityUtility;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGrantedAuthorityBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
@@ -30,7 +32,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	private LoginTokenGrantedAuthorityBuilder authorityBuilder;
 
-	private String adminGrantedAuthority = DEFAULT_ADMIN_ROLE;
+	private String adminRole = DEFAULT_ADMIN_ROLE;
 
 	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder authorityBuilder) {
 		this(authorityBuilder, null, null);
@@ -72,17 +74,16 @@ public class LoginTokenUserDetailsBuilderImpl
 		this.authorityBuilder = authorityBuilder;
 	}
 
-	public String getAdminGrantedAuthority() {
-		return this.adminGrantedAuthority;
+	public String getAdminRole() {
+		return this.adminRole;
 	}
 
-	public void setAdminGrantedAuthority(String adminGrantedAuthority) throws IllegalArgumentException {
-
-		if (adminGrantedAuthority == null || adminGrantedAuthority.isEmpty()) {
-			throw new IllegalArgumentException("Admin role cannot be null or empty.");
+	public void setAdminRole(String adminRole) {
+		if (adminRole == null || adminRole.isEmpty()) {
+			throw new IllegalArgumentException("adminRole cannot be null or empty.");
 		}
 
-		this.adminGrantedAuthority = adminGrantedAuthority;
+		this.adminRole = adminRole;
 	}
 
 	// MARK: LoginTokenUserDetailsBuilder
@@ -155,6 +156,7 @@ public class LoginTokenUserDetailsBuilderImpl
 		private LoginPointer loginPointer = null;
 
 		private Collection<? extends GrantedAuthority> authorities;
+		private Set<String> roles;
 
 		private LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
 			if (loginToken == null) {
@@ -240,6 +242,14 @@ public class LoginTokenUserDetailsBuilderImpl
 			return this.authorities;
 		}
 
+		public Set<String> getRoles() {
+			if (this.roles == null) {
+				this.roles = SecurityUtility.getRoles(this.getAuthorities());
+			}
+
+			return this.roles;
+		}
+
 		@Override
 		public String getPassword() {
 			return null; // Password not available
@@ -277,7 +287,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public boolean isAdministrator() {
-			return this.getAuthorities().contains(LoginTokenUserDetailsBuilderImpl.this.adminGrantedAuthority);
+			return this.getRoles().contains(LoginTokenUserDetailsBuilderImpl.this.adminRole);
 		}
 
 		@Override

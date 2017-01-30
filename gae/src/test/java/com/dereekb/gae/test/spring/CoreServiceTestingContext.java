@@ -1,7 +1,6 @@
 package com.dereekb.gae.test.spring;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -12,7 +11,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -20,8 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.google.appengine.api.taskqueue.dev.LocalTaskQueueCallback;
 import com.google.appengine.api.urlfetch.URLFetchServicePb.URLFetchRequest;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -60,15 +58,19 @@ public class CoreServiceTestingContext {
 
 	@Before
 	public void setUpCoreServices() {
-		this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
-		this.helper.setUp();
-		this.session = ObjectifyService.begin();
+		if (this.session == null) {
+			this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
+			this.helper.setUp();
+			this.session = ObjectifyService.begin();
+		}
 	}
 
 	@After
 	public void tearDownCoreServices() {
-		this.session.close();
-		this.helper.tearDown();
+		if (this.session != null) {
+			this.session.close();
+			this.helper.tearDown();
+		}
 	}
 
 	public ApplicationContext getApplicationContext() {
@@ -96,7 +98,6 @@ public class CoreServiceTestingContext {
 
 		private static final long serialVersionUID = 1L;
 
-		private static String URL_PREFIX = "http://localhost:8080";
 		private static boolean LOG_EVENTS = true;
 
 		public static MockMvc mockMvc;
@@ -181,38 +182,7 @@ public class CoreServiceTestingContext {
 		}
 
 		private MockHttpServletRequestBuilder buildRequest(URLFetchRequest arg0) throws UnsupportedEncodingException {
-			HttpMethod httpMethod = null;
-
-			switch (arg0.getMethod()) {
-				case DELETE:
-					httpMethod = HttpMethod.DELETE;
-					break;
-				case GET:
-					httpMethod = HttpMethod.GET;
-					break;
-				case HEAD:
-					httpMethod = HttpMethod.HEAD;
-					break;
-				case PATCH:
-					httpMethod = HttpMethod.PATCH;
-					break;
-				case POST:
-					httpMethod = HttpMethod.POST;
-					break;
-				case PUT:
-					httpMethod = HttpMethod.PUT;
-					break;
-				default:
-					break;
-			}
-
-			// Decode to prevent the mock request from encoding an encoded
-			// value.
-			String url = URLDecoder.decode(arg0.getUrl(), "UTF-8");
-			url = url.replaceFirst(URL_PREFIX, "");
-
-			MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.request(httpMethod, url);
-			return requestBuilder;
+			return MockHttpServletRequestBuilderUtility.convert(arg0);
 		}
 
 		@Override

@@ -37,7 +37,7 @@ public class ListUtility {
 		List<T> list;
 
 		if (element == null) {
-			list = new ArrayList<T>();
+			list = new ArrayList<T>(1);
 			list.add(element);
 		} else {
 			list = Collections.emptyList();

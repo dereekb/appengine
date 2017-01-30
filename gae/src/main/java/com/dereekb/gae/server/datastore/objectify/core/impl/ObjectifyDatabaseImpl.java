@@ -97,7 +97,7 @@ public class ObjectifyDatabaseImpl
 	}
 
 	// Objectify
-	private Objectify ofy() {
+	protected Objectify ofy() {
 		return ObjectifyService.ofy();
 	}
 

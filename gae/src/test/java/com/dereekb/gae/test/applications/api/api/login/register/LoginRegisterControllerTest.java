@@ -94,7 +94,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 			pointers.add(pair.getLoginPointer());
 		}
 
-		this.registerService.registerLogins(login.getModelKey(), pointers);
+		this.registerService.registerPointersToLogin(login.getModelKey(), pointers);
 	}
 
 	// MARK: LoginRegisterController

@@ -1,26 +1,22 @@
 package com.dereekb.gae.server.auth.security.login.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.exception.LinkException;
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
-import com.dereekb.gae.model.extension.links.service.LinkService;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
-import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
-import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangeImpl;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemEntry;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
-import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.NewLoginGenerator;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginPointerRegisteredException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
+import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.googlecode.objectify.Key;
 
 /**
  * {@link LoginRegisterService} implementation.
@@ -31,47 +27,55 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class LoginRegisterServiceImpl
         implements LoginRegisterService {
 
-	private String loginLinkType = LoginLinkSystemEntry.LOGIN_LINK_TYPE;
-	private String loginPointerLinkName = LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE;
-
 	private NewLoginGenerator loginGenerator;
-	private LinkService linkService;
 
-	public LoginRegisterServiceImpl(NewLoginGenerator loginGenerator, LinkService linkService) {
+	private GetterSetter<Login> loginGetterSetter;
+	private GetterSetter<LoginPointer> loginPointerGetterSetter;
+
+	public LoginRegisterServiceImpl(NewLoginGenerator loginGenerator,
+	        GetterSetter<Login> loginGetterSetter,
+	        GetterSetter<LoginPointer> loginPointerGetterSetter) throws IllegalArgumentException {
+		super();
 		this.setLoginGenerator(loginGenerator);
-		this.setLinkService(linkService);
-	}
-
-	public String getLoginLinkType() {
-		return this.loginLinkType;
-	}
-
-	public void setLoginLinkType(String loginLinkType) {
-		this.loginLinkType = loginLinkType;
-	}
-
-	public String getLoginPointerLinkName() {
-		return this.loginPointerLinkName;
-	}
-
-	public void setLoginPointerLinkName(String loginPointerLinkName) {
-		this.loginPointerLinkName = loginPointerLinkName;
+		this.setLoginGetterSetter(loginGetterSetter);
+		this.setLoginPointerGetterSetter(loginPointerGetterSetter);
 	}
 
 	public NewLoginGenerator getLoginGenerator() {
 		return this.loginGenerator;
 	}
 
-	public void setLoginGenerator(NewLoginGenerator loginGenerator) {
+	public void setLoginGenerator(NewLoginGenerator loginGenerator) throws IllegalArgumentException {
+		if (loginGenerator == null) {
+			throw new IllegalArgumentException("LoginGenerator cannot be null.");
+		}
+
 		this.loginGenerator = loginGenerator;
 	}
 
-	public LinkService getLinkService() {
-		return this.linkService;
+	public GetterSetter<Login> getLoginGetterSetter() {
+		return this.loginGetterSetter;
 	}
 
-	public void setLinkService(LinkService linkService) {
-		this.linkService = linkService;
+	public void setLoginGetterSetter(GetterSetter<Login> loginGetterSetter) throws IllegalArgumentException {
+		if (loginGetterSetter == null) {
+			throw new IllegalArgumentException("LoginGetterSetter cannot be null.");
+		}
+
+		this.loginGetterSetter = loginGetterSetter;
+	}
+
+	public GetterSetter<LoginPointer> getLoginPointerGetterSetter() {
+		return this.loginPointerGetterSetter;
+	}
+
+	public void setLoginPointerGetterSetter(GetterSetter<LoginPointer> loginPointerGetterSetter)
+	        throws IllegalArgumentException {
+		if (loginPointerGetterSetter == null) {
+			throw new IllegalArgumentException("LoginPointerGetterSetter cannot be null.");
+		}
+
+		this.loginPointerGetterSetter = loginPointerGetterSetter;
 	}
 
 	// MARK: LoginRegisterService
@@ -91,21 +95,67 @@ public class LoginRegisterServiceImpl
 		Set<String> loginPointers = new HashSet<>(1);
 		loginPointers.add(pointer.getIdentifier());
 
-		this.registerLogins(login.getModelKey(), loginPointers);
+		this.registerPointersToLogin(login, loginPointers);
 		return login;
 	}
 
 	@Override
-	public void registerLogins(ModelKey loginKey,
-	                           Set<String> loginPointers) throws LinkException {
-		List<LinkSystemChange> changes = new ArrayList<>();
+	public void registerPointersToLogin(ModelKey loginKey,
+	                                    Set<String> loginPointers)
+	        throws LoginPointerRegisteredException,
+	            AtomicOperationException {
 
-		LinkSystemChangeImpl change = new LinkSystemChangeImpl(LinkChangeAction.LINK, this.loginLinkType, loginKey,
-		        this.loginPointerLinkName, loginPointers);
-		changes.add(change);
+		Login login = this.loginGetterSetter.get(loginKey);
 
-		LinkServiceRequestImpl request = new LinkServiceRequestImpl(changes);
-		this.linkService.updateLinks(request);
+		if (login == null) {
+			throw new AtomicOperationException("Could not load Login.", AtomicOperationExceptionReason.UNAVAILABLE);
+		}
+
+		this.registerPointersToLogin(login, loginPointers);
+	}
+
+	public void registerPointersToLogin(Login login,
+	                                    Set<String> loginPointers)
+	        throws LoginPointerRegisteredException {
+
+		List<ModelKey> loginPointerKeysArray = ModelKey.convert(ModelKeyType.NAME, loginPointers);
+		Set<ModelKey> loginPointerKeys = new HashSet<ModelKey>(loginPointerKeysArray);
+		List<LoginPointer> pointers = this.loginPointerGetterSetter.getWithKeys(loginPointerKeys);
+
+		if (pointers.size() != loginPointerKeys.size()) {
+			throw new AtomicOperationException("Could not load all requested pointers.",
+			        AtomicOperationExceptionReason.UNAVAILABLE);
+		}
+
+		Key<Login> loginKey = login.getObjectifyKey();
+		String ownerId = login.getOwnerId();
+
+		this.assertPointersAreUnclaimed(loginKey, pointers);
+
+		Set<Key<LoginPointer>> currentPointers = login.getPointers();
+
+		for (LoginPointer pointer : pointers) {
+			Key<LoginPointer> pointerKey = pointer.getObjectifyKey();
+
+			pointer.setLogin(loginKey);
+			pointer.setOwnerId(ownerId);
+			currentPointers.add(pointerKey);
+		}
+
+		this.loginGetterSetter.save(login, true);
+		this.loginPointerGetterSetter.save(pointers, true);
+	}
+
+	private void assertPointersAreUnclaimed(Key<Login> newLogin,
+	                                        List<LoginPointer> pointers)
+	        throws LoginPointerRegisteredException {
+		for (LoginPointer pointer : pointers) {
+			Key<Login> currentLogin = pointer.getLogin();
+
+			if (currentLogin != null && currentLogin.equivalent(newLogin) == false) {
+				throw new LoginPointerRegisteredException(pointer);
+			}
+		}
 	}
 
 }

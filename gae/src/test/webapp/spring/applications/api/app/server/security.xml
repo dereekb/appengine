@@ -14,10 +14,7 @@
 
 	<!-- No HTTP security for Google App Engine. -->
 	<security:http pattern="/_ah/**" security="none" />
-
-	<!-- No HTTP security for TaskQueue -->
-	<security:http pattern="/taskqueue/**" security="none" />
-
+	
 	<!-- No HTTP security for oauth login. -->
 	<security:http pattern="/login/oauth/*" security="none" />
 
@@ -41,8 +38,9 @@
 			access="isAuthenticated()" />
 
 		<!-- Only the system can access the taskqueue. -->
-		<security:intercept-url pattern="/taskqueue/*"
+		<security:intercept-url pattern="/taskqueue/**"
 			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
+			
 		<security:custom-filter ref="authenticationFilter"
 			position="PRE_AUTH_FILTER" />
 		<security:access-denied-handler ref="accessDeniedHandler" />
@@ -124,6 +122,20 @@
 	<bean id="systemLoginTokenFactory"
 		class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl">
 		<constructor-arg index="0" ref="loginTokenService" />
+		<constructor-arg index="1" ref="systemEncodedRoles" />
+	</bean>
+	
+	<bean id="systemEncodedRoles" class="java.lang.Long">
+		<constructor-arg index="0" value="3" />
+	</bean>
+
+	<!-- Security Ownership -->
+	<bean id="securitySetOwnershipRolesTask"
+		class="com.dereekb.gae.server.auth.security.ownership.task.SecuritySetOwnershipRolesTask">
+	</bean>
+	
+	<bean id="securityOwnershipRolesFilter"
+		class="com.dereekb.gae.server.auth.security.ownership.filter.SecurityOwnershipRolesFilter">
 	</bean>
 
 	<!-- Exception Handler -->

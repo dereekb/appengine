@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginPointerRegisteredException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
@@ -37,12 +39,12 @@ public class LoginRegisterControllerDelegateImpl
 	}
 
 	public LoginRegisterService getRegisterService() {
-    	return this.registerService;
-    }
+		return this.registerService;
+	}
 
-    public void setRegisterService(LoginRegisterService registerService) {
-    	this.registerService = registerService;
-    }
+	public void setRegisterService(LoginRegisterService registerService) {
+		this.registerService = registerService;
+	}
 
 	public LoginTokenService getTokenService() {
 		return this.tokenService;
@@ -106,8 +108,12 @@ public class LoginRegisterControllerDelegateImpl
 			throw new IllegalArgumentException("No login was found.");
 		}
 
-		this.registerService.registerLogins(new ModelKey(primaryLoginId), loginPointers);
+		try {
+			this.registerService.registerPointersToLogin(new ModelKey(primaryLoginId), loginPointers);
+		} catch (LoginPointerRegisteredException | AtomicOperationException e) {
+			// TODO: Throw proper exception here to handle better.
+			throw new RuntimeException(e);
+		}
 	}
-
 
 }

@@ -22,16 +22,21 @@ public class OwnershipRolesUtility {
 
 	public static OwnershipRoles decodeRoles(String encodedOwnershipRoles) {
 		OwnershipRoles ownershipRoles = null;
-		String[] roles = encodedOwnershipRoles.split(OWNERSHIP_ROLES_SPLITTER);
 
-		if (roles.length > 0) {
-			String ownerId = roles[0];
+		if (encodedOwnershipRoles.isEmpty() == false) {
+			String[] roles = encodedOwnershipRoles.split(OWNERSHIP_ROLES_SPLITTER);
 
-			Set<String> additionalRoles = SetUtility.makeSet(roles);
-			additionalRoles.remove(ownerId);
+			if (roles.length > 0) {
+				String ownerId = roles[0];
 
-			ownershipRoles = new OwnershipRolesImpl(ownerId, additionalRoles);
-		} else {
+				Set<String> additionalRoles = SetUtility.makeSet(roles);
+				additionalRoles.remove(ownerId);
+
+				ownershipRoles = new OwnershipRolesImpl(ownerId, additionalRoles);
+			}
+		}
+
+		if (ownershipRoles == null) {
 			ownershipRoles = new OwnershipRolesImpl();
 		}
 

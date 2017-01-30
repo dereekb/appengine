@@ -56,7 +56,12 @@
 	<!-- Create -->
 	<bean id="loginKeyCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="loginKeyCreateTaskDelegate" />
-		<constructor-arg index="1" ref="loginKeySynchronousSaveTask" />
+		<constructor-arg index="1">
+			<bean class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelMultiIterableTask">
+				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
+				<constructor-arg index="1" ref="loginKeySynchronousSaveTask"/>
+			</bean>
+		</constructor-arg>
 		<constructor-arg index="2" ref="loginKeyScheduleCreateReview" />
 	</bean>
 
@@ -81,8 +86,10 @@
 	</bean>
 
 	<!-- Read -->
-	<bean id="loginKeyReadTask" class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+	<bean id="loginKeyReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
 	</bean>
 
 	<!-- Update -->
