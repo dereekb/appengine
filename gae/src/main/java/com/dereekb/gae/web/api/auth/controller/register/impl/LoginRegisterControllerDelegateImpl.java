@@ -34,8 +34,8 @@ public class LoginRegisterControllerDelegateImpl
 	private LoginTokenService tokenService;
 
 	public LoginRegisterControllerDelegateImpl(LoginRegisterService registerService, LoginTokenService tokenService) {
-		this.registerService = registerService;
-		this.tokenService = tokenService;
+		this.setRegisterService(registerService);
+		this.setTokenService(tokenService);
 	}
 
 	public LoginRegisterService getRegisterService() {
@@ -43,6 +43,10 @@ public class LoginRegisterControllerDelegateImpl
 	}
 
 	public void setRegisterService(LoginRegisterService registerService) {
+		if (registerService == null) {
+			throw new IllegalArgumentException("registerService cannot be null.");
+		}
+
 		this.registerService = registerService;
 	}
 
@@ -51,6 +55,10 @@ public class LoginRegisterControllerDelegateImpl
 	}
 
 	public void setTokenService(LoginTokenService tokenService) {
+		if (tokenService == null) {
+			throw new IllegalArgumentException("tokenService cannot be null.");
+		}
+
 		this.tokenService = tokenService;
 	}
 

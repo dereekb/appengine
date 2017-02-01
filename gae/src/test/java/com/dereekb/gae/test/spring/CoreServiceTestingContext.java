@@ -46,6 +46,8 @@ public class CoreServiceTestingContext {
 
 	public static final String APPLICATION_TESTING_PATH = BASE_TESTING_PATH + "applications/";
 
+	public static final String BASE_MAIN_PATH = SRC_PATH + "main/webapp/WEB-INF/";
+
 	private Closeable session;
 
 	@Autowired
