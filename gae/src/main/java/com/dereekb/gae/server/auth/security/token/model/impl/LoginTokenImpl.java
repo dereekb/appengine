@@ -69,10 +69,26 @@ public class LoginTokenImpl
 		this(LoginPointerType.ANONYMOUS);
 	}
 
-	public LoginTokenImpl(LoginPointerType pointerType) {
+	public LoginTokenImpl(LoginPointerType pointerType) throws IllegalArgumentException {
 		this.setPointerType(pointerType);
 		this.setIssued(new Date());
 		this.setOwnershipRoles(null);
+	}
+
+	public LoginTokenImpl(LoginToken loginToken) throws IllegalArgumentException {
+		if (loginToken == null) {
+			throw new IllegalArgumentException("LoginToken cannot be null.");
+		}
+
+		this.setSubject(loginToken.getSubject());
+		this.setAnonymous(loginToken.isAnonymous());
+		this.setLogin(loginToken.getLoginId());
+		this.setLoginPointer(loginToken.getLoginPointerId());
+		this.setRoles(loginToken.getEncodedRoles());
+		this.setIssued(loginToken.getIssued());
+		this.setExpiration(loginToken.getExpiration());
+		this.setPointerType(loginToken.getPointerType());
+		this.setOwnershipRoles(loginToken.getOwnershipRoles());
 	}
 
 	@Override

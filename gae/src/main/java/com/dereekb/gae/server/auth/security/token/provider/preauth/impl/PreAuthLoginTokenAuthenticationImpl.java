@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.token.provider.impl;
+package com.dereekb.gae.server.auth.security.token.provider.preauth.impl;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,23 +7,28 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.provider.BasicLoginTokenAuthentication;
+import com.dereekb.gae.server.auth.security.token.provider.preauth.PreAuthLoginTokenAuthentication;
 
 /**
- * {@link BasicLoginTokenAuthentication} implementation
+ * {@link PreAuthLoginTokenAuthentication} implementation.
  *
  * @author dereekb
  *
  */
-public class BasicLoginTokenAuthenticationImpl
-        implements BasicLoginTokenAuthentication {
+public class PreAuthLoginTokenAuthenticationImpl
+        implements PreAuthLoginTokenAuthentication {
 
 	private static final long serialVersionUID = 1L;
 
-	private final LoginToken token;
-	private final WebAuthenticationDetails details;
+	protected final LoginToken token;
+	protected final WebAuthenticationDetails details;
 
-	public BasicLoginTokenAuthenticationImpl(LoginToken token, WebAuthenticationDetails details) {
+	protected PreAuthLoginTokenAuthenticationImpl(WebAuthenticationDetails details) {
+		this.token = null;
+		this.details = details;
+	}
+
+	public PreAuthLoginTokenAuthenticationImpl(LoginToken token, WebAuthenticationDetails details) {
 		this.token = token;
 		this.details = details;
 	}
@@ -65,7 +70,7 @@ public class BasicLoginTokenAuthenticationImpl
 
 	@Override
 	public String toString() {
-		return "BasicLoginTokenAuthenticationImpl [details=" + this.details + ", token=" + this.token + "]";
+		return "PreAuthLoginTokenAuthenticationImpl [details=" + this.details + ", token=" + this.token + "]";
 	}
 
 }

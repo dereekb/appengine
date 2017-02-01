@@ -1,18 +1,15 @@
 package com.dereekb.gae.server.auth.security.token.provider.impl;
 
-import java.util.Collection;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.provider.BasicLoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticationProvider;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
+import com.dereekb.gae.server.auth.security.token.provider.preauth.PreAuthLoginTokenAuthentication;
 
 /**
  * {@link LoginTokenAuthenticationProvider} implementation.
@@ -20,36 +17,18 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
  * @author dereekb
  *
  */
-public final class LoginTokenAuthenticationProviderImpl
+public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTokenAuthenticationProvider<LoginTokenUserDetailsBuilder, LoginToken>
         implements LoginTokenAuthenticationProvider {
-
-	private static final String UNREGISTERED_DEFAULT_NAME = "Unregistered";
-
-	private LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder;
 
 	public LoginTokenAuthenticationProviderImpl(LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder)
 	        throws IllegalArgumentException {
-		this.setLoginTokenUserDetailsBuilder(loginTokenUserDetailsBuilder);
-	}
-
-	public LoginTokenUserDetailsBuilder getLoginTokenUserDetailsBuilder() {
-		return this.loginTokenUserDetailsBuilder;
-	}
-
-	public void setLoginTokenUserDetailsBuilder(LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder)
-	        throws IllegalArgumentException {
-		if (loginTokenUserDetailsBuilder == null) {
-			throw new IllegalArgumentException("Cannot be null.");
-		}
-
-		this.loginTokenUserDetailsBuilder = loginTokenUserDetailsBuilder;
+		super(loginTokenUserDetailsBuilder);
 	}
 
 	// MARK: Authentication Provider
-
 	@Override
-	public LoginTokenAuthentication authenticate(Authentication authentication) throws AuthenticationException {
-		BasicLoginTokenAuthentication auth = (BasicLoginTokenAuthentication) authentication;
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		PreAuthLoginTokenAuthentication auth = (PreAuthLoginTokenAuthentication) authentication;
 		LoginToken token = auth.getCredentials();
 		WebAuthenticationDetails details = auth.getDetails();
 		return this.authenticate(token, details);
@@ -57,82 +36,29 @@ public final class LoginTokenAuthenticationProviderImpl
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return BasicLoginTokenAuthentication.class.isAssignableFrom(authentication);
+		return PreAuthLoginTokenAuthentication.class.isAssignableFrom(authentication);
 	}
 
 	// MARK: LoginTokenAuthenticationProvider
 	@Override
 	public LoginTokenAuthentication authenticate(LoginToken loginToken,
 	                                             WebAuthenticationDetails details) {
-		return this.buildAuthentication(loginToken, details);
-	}
-
-	private LoginTokenAuthentication buildAuthentication(LoginToken loginToken,
-	                                                     WebAuthenticationDetails details) {
 		return new LoginTokenAuthenticationImpl(loginToken, details);
 	}
 
-	private class LoginTokenAuthenticationImpl
-	        implements LoginTokenAuthentication {
+	// MARK: Authentication
+	protected class LoginTokenAuthenticationImpl extends AbstractLoginTokenAuthenticationImpl<LoginTokenUserDetails> {
 
 		private static final long serialVersionUID = 1L;
 
-		private final LoginToken loginToken;
-		private final WebAuthenticationDetails details;
-
-		private LoginTokenUserDetails userDetails;
-
 		public LoginTokenAuthenticationImpl(LoginToken loginToken, WebAuthenticationDetails details)
 		        throws IllegalArgumentException {
-			if (loginToken == null) {
-				throw new IllegalArgumentException("LoginToken cannot be null.");
-			}
-
-			this.loginToken = loginToken;
-			this.details = details;
-		}
-
-		// MARK: LoginTokenAuthentication
-		@Override
-		public Collection<? extends GrantedAuthority> getAuthorities() {
-			return this.getPrincipal().getAuthorities();
+			super(loginToken, details);
 		}
 
 		@Override
-		public LoginToken getCredentials() {
-			return this.loginToken;
-		}
-
-		@Override
-		public WebAuthenticationDetails getDetails() {
-			return this.details;
-		}
-
-		@Override
-		public boolean isAuthenticated() {
-			return true; // Tokens are always authenticated.
-		}
-
-		@Override
-		public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-			throw new IllegalArgumentException("Cannot set the token as authenticated.");
-		}
-
-		@Override
-		public String getName() {
-			Long loginId = this.loginToken.getLoginId();
-			String name = (loginId != null) ? loginId.toString() : UNREGISTERED_DEFAULT_NAME;
-			return name;
-		}
-
-		@Override
-		public LoginTokenUserDetails getPrincipal() {
-			if (this.userDetails == null) {
-				this.userDetails = LoginTokenAuthenticationProviderImpl.this.loginTokenUserDetailsBuilder
-				        .buildDetails(this.loginToken);
-			}
-
-			return this.userDetails;
+		protected LoginTokenUserDetails makePrinciple(LoginToken loginToken) {
+			return LoginTokenAuthenticationProviderImpl.this.builder.buildDetails(loginToken);
 		}
 
 	}

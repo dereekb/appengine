@@ -101,11 +101,33 @@ public class LoginTokenUserDetailsBuilderImpl
 	}
 
 	// MARK: Anonymous
-	protected class AnonymousLoginTokenUserDetailsImpl extends LoginTokenUserDetailsImpl {
+	protected class AnonymousLoginTokenUserDetailsImpl extends AbstractAnonymousLoginTokenUserDetailsImpl<LoginToken> {
 
 		private static final long serialVersionUID = 1L;
 
-		private AnonymousLoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+		protected AnonymousLoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+			super(loginToken);
+		}
+
+	}
+
+	// MARK: LoginTokenUserDetails
+	protected class LoginTokenUserDetailsImpl extends AbstractLoginTokenUserDetailsImpl<LoginToken> {
+
+		private static final long serialVersionUID = 1L;
+
+		protected LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+			super(loginToken);
+		}
+
+	}
+
+	// MARK: Abstract/Internals
+	protected class AbstractAnonymousLoginTokenUserDetailsImpl<T extends LoginToken> extends AbstractLoginTokenUserDetailsImpl<T> {
+
+		private static final long serialVersionUID = 1L;
+
+		protected AbstractAnonymousLoginTokenUserDetailsImpl(T loginToken) throws IllegalArgumentException {
 			super(loginToken);
 		}
 
@@ -141,13 +163,12 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	}
 
-	// MARK: LoginTokenUserDetails
-	protected class LoginTokenUserDetailsImpl
+	protected class AbstractLoginTokenUserDetailsImpl<T extends LoginToken>
 	        implements LoginTokenUserDetails {
 
 		private static final long serialVersionUID = 1L;
 
-		protected final LoginToken loginToken;
+		protected final T loginToken;
 
 		private boolean loginLoaded = false;
 		private boolean loginPointerLoaded = false;
@@ -158,7 +179,7 @@ public class LoginTokenUserDetailsBuilderImpl
 		private Collection<? extends GrantedAuthority> authorities;
 		private Set<String> roles;
 
-		private LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+		protected AbstractLoginTokenUserDetailsImpl(T loginToken) throws IllegalArgumentException {
 			if (loginToken == null) {
 				throw new IllegalArgumentException("Token cannnot be null.");
 			}
@@ -281,7 +302,7 @@ public class LoginTokenUserDetailsBuilderImpl
 		}
 
 		@Override
-		public LoginToken getLoginToken() {
+		public T getLoginToken() {
 			return this.loginToken;
 		}
 

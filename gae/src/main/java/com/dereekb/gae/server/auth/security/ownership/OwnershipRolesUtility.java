@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.ownership;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +56,17 @@ public class OwnershipRolesUtility {
 		}
 
 		return rolesList;
+	}
+
+	// MARK: Merging
+	public static OwnershipRoles mergeRoles(OwnershipRoles primaryRoles,
+	                                        OwnershipRoles secondaryRoles) {
+
+		String primaryOwnerId = primaryRoles.getOwnerId();
+		Set<String> roles = new HashSet<String>(primaryRoles.getOwnerRoles());
+		roles.addAll(secondaryRoles.getOwnerRoles());
+
+		return new OwnershipRolesImpl(primaryOwnerId, roles);
 	}
 
 }

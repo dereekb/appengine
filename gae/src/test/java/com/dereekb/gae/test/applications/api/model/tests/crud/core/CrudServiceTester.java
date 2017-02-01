@@ -1,15 +1,14 @@
-package com.dereekb.gae.test.applications.api.model.tests.crud;
+package com.dereekb.gae.test.applications.api.model.tests.crud.core;
 
 import org.junit.Test;
 
 import com.dereekb.gae.model.crud.services.CrudService;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
-
-public abstract class CrudServiceTester<T extends UniqueModel> extends ApiApplicationTestContext {
+public abstract class CrudServiceTester<T extends UniqueModel> extends CoreApplicationTestContext {
 
 	private CrudService<T> service;
 	private GetterSetter<T> getterSetter;
@@ -17,7 +16,9 @@ public abstract class CrudServiceTester<T extends UniqueModel> extends ApiApplic
 
 	public CrudServiceTester() {}
 
-	public CrudServiceTester(CrudService<T> service, GetterSetter<T> getterSetter, TestModelGenerator<T> modelGenerator) {
+	public CrudServiceTester(CrudService<T> service,
+	        GetterSetter<T> getterSetter,
+	        TestModelGenerator<T> modelGenerator) {
 		this.service = service;
 		this.getterSetter = getterSetter;
 		this.modelGenerator = modelGenerator;

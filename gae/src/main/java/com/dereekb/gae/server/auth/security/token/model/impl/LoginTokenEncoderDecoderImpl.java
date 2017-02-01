@@ -78,14 +78,16 @@ public class LoginTokenEncoderDecoderImpl
 	// MARK: LoginTokenEncoder
 	@Override
 	public String encodeLoginToken(LoginToken loginToken) {
-
-		JwtBuilder builder = Jwts.builder().signWith(this.algorithm, this.secret);
 		Claims claims = this.buildClaims(loginToken);
+		return this.encodeAndCompactClaims(claims);
+	}
 
+	protected final String encodeAndCompactClaims(Claims claims) {
+		JwtBuilder builder = Jwts.builder().signWith(this.algorithm, this.secret);
 		return builder.setClaims(claims).compact();
 	}
 
-	private Claims buildClaims(LoginToken loginToken) {
+	protected Claims buildClaims(LoginToken loginToken) {
 		Claims claims = Jwts.claims();
 
 		claims.setSubject(loginToken.getSubject());
@@ -105,18 +107,17 @@ public class LoginTokenEncoderDecoderImpl
 		return claims;
 	}
 
-	private String encodeOwnershipRoles(OwnershipRoles ownershipRoles) {
+	protected String encodeOwnershipRoles(OwnershipRoles ownershipRoles) {
 		return OwnershipRolesUtility.encodeRoles(ownershipRoles);
 	}
 
 	// MARK: LoginTokenDecoder
 	@Override
-	public LoginToken decodeLoginToken(String token) throws TokenUnauthorizedException {
-		LoginTokenImpl loginToken = null;
+	public LoginToken decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException {
+		LoginToken loginToken = null;
 
 		try {
-			JwtParser parsers = Jwts.parser().setSigningKey(this.secret);
-			Claims claims = parsers.parseClaimsJws(token).getBody();
+			Claims claims = this.parseClaims(token);
 			loginToken = this.buildFromClaims(claims);
 		} catch (MissingClaimException | SignatureException | IncorrectClaimException e) {
 			throw new TokenUnauthorizedException("Could not decode token.", e);
@@ -127,8 +128,20 @@ public class LoginTokenEncoderDecoderImpl
 		return loginToken;
 	}
 
-	private LoginTokenImpl buildFromClaims(Claims claims) throws TokenUnauthorizedException {
+	protected final Claims parseClaims(String token) throws TokenExpiredException, TokenUnauthorizedException {
+		JwtParser parsers = Jwts.parser().setSigningKey(this.secret);
+		return parsers.parseClaimsJws(token).getBody();
+	}
+
+	protected LoginTokenImpl buildFromClaims(Claims claims) throws TokenUnauthorizedException {
 		LoginTokenImpl loginToken = new LoginTokenImpl();
+		this.initFromClaims(loginToken, claims);
+		return loginToken;
+	}
+
+	protected void initFromClaims(LoginTokenImpl loginToken,
+	                              Claims claims)
+	        throws TokenUnauthorizedException {
 
 		Number loginNumber = claims.get(LOGIN_KEY, Number.class);
 		Long login = null;
@@ -189,10 +202,9 @@ public class LoginTokenEncoderDecoderImpl
 			loginToken.setOwnershipRoles(ownershipRoles);
 		}
 
-		return loginToken;
 	}
 
-	private OwnershipRoles decodeOwnershipRoles(String encodedOwnershipRoles) {
+	protected OwnershipRoles decodeOwnershipRoles(String encodedOwnershipRoles) {
 		return OwnershipRolesUtility.decodeRoles(encodedOwnershipRoles);
 	}
 

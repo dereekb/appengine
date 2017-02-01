@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.model.tests.crud;
+package com.dereekb.gae.test.applications.api.model.tests.crud.core;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -23,8 +23,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Pre-configured {@link ScheduleReviewTask} and {@link DeleteTask} for
- * performing deletions in
- * the taskqueue.
+ * performing deletions in the taskqueue.
  * <p>
  * Generally used to queue up requests to {@link TaskQueueEditController}.
  *

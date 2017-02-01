@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.dereekb.gae.model.crud.services.CrudService;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.server.datastore.GetterSetter;
-import com.dereekb.gae.test.applications.api.model.tests.crud.CrudServiceTester;
+import com.dereekb.gae.test.applications.api.model.tests.crud.core.CrudServiceTester;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 public class StoredImageCrudTest extends CrudServiceTester<StoredImage> {
