@@ -6,6 +6,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLim
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.objectify.query.builder.AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ConfigurableObjectifyQueryRequestConfigurer;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyAbstractQueryFieldParameter;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder;
 import com.googlecode.objectify.Key;
 
@@ -37,6 +38,7 @@ public class LoginKeyQueryInitializer extends AbstractObjectifyQueryRequestLimit
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
 			LOGIN_POINTER_BUILDER.configure(request, this.getLoginPointer());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
 		}
 
 	}

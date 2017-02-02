@@ -2,7 +2,7 @@ package com.dereekb.gae.server.auth.model.login.search.query;
 
 import java.util.Map;
 
-import com.dereekb.gae.model.extension.search.query.parameters.AbstractDateModelQuery;
+import com.dereekb.gae.model.extension.search.query.parameters.AbstractOwnedDateModelQuery;
 import com.dereekb.gae.server.auth.model.login.Login;
 
 /**
@@ -11,7 +11,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
  * @author dereekb
  *
  */
-public class LoginQuery extends AbstractDateModelQuery {
+public class LoginQuery extends AbstractOwnedDateModelQuery {
 
 	// TODO: Add Groups and Roles querying to LoginQuery.
 
@@ -25,7 +25,6 @@ public class LoginQuery extends AbstractDateModelQuery {
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
-
 		super.setParameters(parameters);
 	}
 

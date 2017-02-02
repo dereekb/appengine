@@ -43,6 +43,7 @@ public class LoginPointerQueryInitializer extends AbstractObjectifyQueryRequestL
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
 			LOGIN_BUILDER.configure(request, this.getLogin());
 			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getType());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
 		}
 
 	}

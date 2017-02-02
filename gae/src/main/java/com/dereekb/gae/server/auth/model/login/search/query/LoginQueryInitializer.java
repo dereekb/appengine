@@ -26,6 +26,7 @@ public class LoginQueryInitializer extends AbstractObjectifyQueryRequestLimitedB
 		// MARK: ConfigurableObjectifyQueryRequestConfigurer
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
 			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getDate());
 		}
 

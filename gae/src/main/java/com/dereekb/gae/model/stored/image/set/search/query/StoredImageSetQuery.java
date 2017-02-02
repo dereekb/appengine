@@ -1,9 +1,9 @@
 package com.dereekb.gae.model.stored.image.set.search.query;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.search.query.parameters.AbstractOwnedModelQuery;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
@@ -17,7 +17,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeySetQueryF
  * @author dereekb
  *
  */
-public class StoredImageSetQuery
+public class StoredImageSetQuery extends AbstractOwnedModelQuery
         implements ConfigurableEncodedQueryParameters {
 
 	public static final String IMAGES_FIELD = "images";
@@ -50,13 +50,14 @@ public class StoredImageSetQuery
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = super.getParameters();
 		ParameterUtility.put(parameters, this.images);
 		return parameters;
 	}
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
+		super.setParameters(parameters);
 		this.setImages(parameters.get(IMAGES_FIELD));
 	}
 

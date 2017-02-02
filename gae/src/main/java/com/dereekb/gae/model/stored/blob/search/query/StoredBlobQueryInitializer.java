@@ -27,6 +27,8 @@ public class StoredBlobQueryInitializer extends AbstractObjectifyQueryRequestLim
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
 			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getType());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getDate());
 		}
 
 	}

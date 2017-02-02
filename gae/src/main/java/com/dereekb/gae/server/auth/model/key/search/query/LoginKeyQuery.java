@@ -1,8 +1,8 @@
 package com.dereekb.gae.server.auth.model.key.search.query;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.search.query.parameters.AbstractOwnedModelQuery;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
@@ -16,7 +16,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFiel
  * @author dereekb
  *
  */
-public class LoginKeyQuery
+public class LoginKeyQuery extends AbstractOwnedModelQuery
         implements ConfigurableEncodedQueryParameters {
 
 	public static final String LOGIN_POINTER_FIELD = "pointer";
@@ -40,7 +40,7 @@ public class LoginKeyQuery
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = super.getParameters();
 
 		ParameterUtility.put(parameters, this.loginPointer);
 
@@ -49,6 +49,7 @@ public class LoginKeyQuery
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
+		super.setParameters(parameters);
 		this.setLoginPointer(parameters.get(LOGIN_POINTER_FIELD));
 	}
 

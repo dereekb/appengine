@@ -27,6 +27,7 @@ public class StoredImageQueryInitializer extends AbstractObjectifyQueryRequestLi
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
 			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getType());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
 		}
 
 	}

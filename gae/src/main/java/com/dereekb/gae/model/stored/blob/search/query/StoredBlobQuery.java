@@ -1,12 +1,11 @@
 package com.dereekb.gae.model.stored.blob.search.query;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.search.query.parameters.AbstractOwnedDateModelQuery;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
-import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryFieldParameter;
 
 /**
@@ -15,8 +14,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryField
  * @author dereekb
  *
  */
-public class StoredBlobQuery
-        implements ConfigurableEncodedQueryParameters {
+public class StoredBlobQuery extends AbstractOwnedDateModelQuery {
 
 	public static final String TYPE_FIELD = "type";
 
@@ -47,13 +45,14 @@ public class StoredBlobQuery
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = super.getParameters();
 		ParameterUtility.put(parameters, this.type);
 		return parameters;
 	}
 
 	@Override
 	public void setParameters(Map<String, String> parameters) {
+		super.setParameters(parameters);
 		this.setType(parameters.get(TYPE_FIELD));
 	}
 

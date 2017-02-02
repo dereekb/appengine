@@ -6,6 +6,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLim
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.objectify.query.builder.AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ConfigurableObjectifyQueryRequestConfigurer;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyAbstractQueryFieldParameter;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeySetFieldParameterBuilder;
 import com.googlecode.objectify.Key;
 
@@ -41,6 +42,7 @@ public class StoredImageSetQueryInitializer extends AbstractObjectifyQueryReques
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
 			STORED_IMAGE_BUILDER.configure(request, this.getImages());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
 		}
 
 	}
