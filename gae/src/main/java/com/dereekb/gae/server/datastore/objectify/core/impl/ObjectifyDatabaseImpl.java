@@ -584,6 +584,7 @@ public class ObjectifyDatabaseImpl
 				Cursor cursor = options.getQueryCursor();
 				Integer offset = options.getOffset();
 				Integer limit = options.getLimit();
+				Integer chunk = options.getChunk();
 
 				if (limit != null) {
 					query = query.limit(limit);
@@ -595,6 +596,10 @@ public class ObjectifyDatabaseImpl
 
 				if (cursor != null) {
 					query = query.startAt(cursor);
+				}
+
+				if (chunk != null) {
+					query = query.chunk(chunk);
 				}
 
 				return query;

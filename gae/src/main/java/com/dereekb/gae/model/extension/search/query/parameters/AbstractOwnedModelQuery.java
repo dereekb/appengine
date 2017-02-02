@@ -15,7 +15,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.StringQueryFieldP
  *
  */
 public class AbstractOwnedModelQuery
-        implements ConfigurableEncodedQueryParameters {
+        implements MutableOwnedModelQuery, ConfigurableEncodedQueryParameters {
 
 	public static final String DEFAULT_OWNER_ID_FIELD = "ownerId";
 
@@ -25,10 +25,12 @@ public class AbstractOwnedModelQuery
 		return this.ownerId;
 	}
 
+	@Override
 	public void setOwnerId(String ownerIdParameter) {
 		this.ownerId = StringQueryFieldParameter.make(this.getOwnerIdField(), ownerIdParameter);
 	}
 
+	@Override
 	public void setOwnerId(StringQueryFieldParameter ownerId) {
 		this.ownerId = StringQueryFieldParameter.make(this.getOwnerIdField(), ownerId);
 	}

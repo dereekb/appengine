@@ -105,7 +105,7 @@ public abstract class ObjectifyAbstractQueryFieldParameter<T> extends AbstractQu
 
 		if (field != null) {
 
-			if (operator != null) {
+			if (operator != ExpressionOperator.NO_OP) {
 				ObjectifyConditionQueryFilter filter = new ObjectifyConditionQueryFilter(field, operator, value);
 				request.addQueryFilter(filter);
 			}

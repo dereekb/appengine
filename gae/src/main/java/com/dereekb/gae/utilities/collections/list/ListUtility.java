@@ -81,4 +81,38 @@ public class ListUtility {
 		return list;
 	}
 
+	/**
+	 * Checks that the input lists are exactly the same by checking models
+	 * order, etc.
+	 * 
+	 * @param a
+	 *            {@link List}. Never {@code null}.
+	 * @param b
+	 *            {@link List}. Never {@code null}.
+	 * @return {@code true} if both lists have the same elements and same order.
+	 */
+	public static <T> boolean checkExactOrder(List<? extends T> a,
+	                                          List<? extends T> b) {
+		if (a.size() != b.size()) {
+			return false;
+		} else if (a.size() == 0) {
+			return true;
+		} else if (a == b) {	// Same list has the same objects.
+			return true;
+		}
+
+		int count = a.size();
+
+		for (int i = 0; i < count; i += 1) {
+			T x = a.get(i);
+			T y = b.get(i);
+
+			if (x.equals(y) == false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }

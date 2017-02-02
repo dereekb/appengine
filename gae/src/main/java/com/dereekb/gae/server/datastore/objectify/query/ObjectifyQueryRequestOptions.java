@@ -16,4 +16,6 @@ public interface ObjectifyQueryRequestOptions
 
 	public Cursor getQueryCursor();
 
+	public Integer getChunk();
+
 }

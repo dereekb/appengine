@@ -16,4 +16,6 @@ public interface MutableObjectifyQueryRequestOptions
 
 	public void setQueryCursor(Cursor cursor);
 
+	public void setChunk(Integer chunk);
+
 }

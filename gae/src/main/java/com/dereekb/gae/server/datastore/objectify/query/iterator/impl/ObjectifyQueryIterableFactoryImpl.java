@@ -33,6 +33,12 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 
 	private int iterateLimit = MAX_ITERATION_LIMIT;
 
+	/**
+	 * Overrides the default chunk size used by queries. Use to tune
+	 * performance.
+	 */
+	private Integer chunkSize = null;
+
 	private ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory;
 
 	public ObjectifyQueryIterableFactoryImpl(ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory) {
@@ -57,10 +63,24 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 
 	public void setIterateLimit(int iterateLimit) throws IllegalArgumentException {
 		if (iterateLimit < 1 || iterateLimit > MAX_ITERATION_LIMIT) {
-			throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT + ".");
+			throw new IllegalArgumentException(
+			        "Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT + ".");
 		}
 
 		this.iterateLimit = iterateLimit;
+	}
+
+	public Integer getChunkSize() {
+		return this.chunkSize;
+	}
+
+	public void setChunkSize(Integer chunkSize) {
+		if (chunkSize != null && (chunkSize < 10 || chunkSize > MAX_ITERATION_LIMIT)) {
+			throw new IllegalArgumentException(
+			        "Iterate limit restricted to between 10 and " + MAX_ITERATION_LIMIT + ".");
+		}
+
+		this.chunkSize = chunkSize;
 	}
 
 	// MARK: ObjectifyQueryIterableFactory
@@ -193,6 +213,11 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 				query = this.makeQuery(null);
 			}
 
+			// Set Chunk size override.
+			if (ObjectifyQueryIterableFactoryImpl.this.chunkSize != null) {
+				query = query.chunk(ObjectifyQueryIterableFactoryImpl.this.chunkSize);
+			}
+
 			this.query = query;
 		}
 
@@ -269,8 +294,8 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>>
 
 		public void setIteratorBatchLimit(int iteratorLimit) throws IllegalArgumentException {
 			if (iteratorLimit < 1 || iteratorLimit > MAX_ITERATION_LIMIT) {
-				throw new IllegalArgumentException("Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT
-				        + ".");
+				throw new IllegalArgumentException(
+				        "Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT + ".");
 			}
 
 			this.iteratorBatchLimit = iteratorLimit;

@@ -8,6 +8,7 @@ import com.dereekb.gae.server.search.document.query.expression.ExpressionOperato
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
  * Used by classes that search with a date field.
@@ -16,7 +17,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldPar
  *
  */
 public class AbstractDateModelQuery
-        implements ConfigurableEncodedQueryParameters {
+        implements MutableDateModelQuery, ConfigurableEncodedQueryParameters {
 
 	public static final String DEFAULT_DATE_FIELD = "date";
 
@@ -26,22 +27,38 @@ public class AbstractDateModelQuery
 		return this.date;
 	}
 
+	@Override
 	public void searchDatesBefore(Date value) {
 		this.date = new DateQueryFieldParameter(this.getDateField(), value);
 	}
 
+	@Override
 	public void searchDatesAfter(Date value) {
 		this.date = new DateQueryFieldParameter(this.getDateField(), ExpressionOperator.GREATER_THAN, value);
 	}
 
-	public void orderByDatesDescending() {
-		this.date = DateQueryFieldParameter.sortByDatesDescending();
+	@Override
+	public void searchDates(Date value,
+	                        ExpressionOperator operator) {
+		this.date = new DateQueryFieldParameter(this.getDateField(), operator, value);
 	}
 
+	@Override
+	public void orderByDatesDescending() {
+		this.date = DateQueryFieldParameter.sortByDatesDescending(this.getDateField());
+	}
+
+	@Override
+	public void orderByDates(QueryResultsOrdering ordering) {
+		this.date = DateQueryFieldParameter.sortByDates(this.getDateField(), ordering);
+	}
+
+	@Override
 	public void setDate(String date) {
 		this.date = DateQueryFieldParameter.make(this.getDateField(), date);
 	}
 
+	@Override
 	public void setDate(DateQueryFieldParameter date) {
 		this.date = DateQueryFieldParameter.make(this.getDateField(), date);
 	}

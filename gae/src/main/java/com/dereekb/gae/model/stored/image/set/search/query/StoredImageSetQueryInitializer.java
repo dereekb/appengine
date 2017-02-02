@@ -34,7 +34,7 @@ public class StoredImageSetQueryInitializer extends AbstractObjectifyQueryReques
 			this.setImages(image.getModelKey());
 		}
 
-		public void setImage(Key<StoredImage> image) {
+		public void setImages(Key<StoredImage> image) {
 			this.setImages(STORED_IMAGE_BUILDER.getUtil().toModelKey(image));
 		}
 

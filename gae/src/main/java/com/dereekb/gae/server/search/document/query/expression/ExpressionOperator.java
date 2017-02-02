@@ -38,9 +38,15 @@ public enum ExpressionOperator {
 
     // Special
 	/**
-	 * Used only in special cases.
+	 * Used only in cases where is null equivalence needs to be checked.
 	 */
-	IS_NULL("=n");
+	IS_NULL("=n"),
+
+	/**
+	 * Used when no comparison operation needs to take place. Useful for
+	 * instances where ordering is needed but no value filtering.
+	 */
+	NO_OP("_");
 
 	private final String value;
 
@@ -79,6 +85,11 @@ public enum ExpressionOperator {
 			case "=n":
 				operation = IS_NULL;
 				break;
+			case "_":
+				operation = NO_OP;
+				break;
+			default:
+				throw new IllegalArgumentException("No operator available for key '" + op + "'.");
 		}
 
 		return operation;

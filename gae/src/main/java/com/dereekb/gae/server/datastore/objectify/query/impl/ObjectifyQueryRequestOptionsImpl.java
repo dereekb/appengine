@@ -17,6 +17,8 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 
 	private boolean allowCache = true;
 
+	private Integer chunk;
+
 	public ObjectifyQueryRequestOptionsImpl() {}
 
 	public ObjectifyQueryRequestOptionsImpl(SearchOptions options) {
@@ -45,6 +47,7 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 		this.setCursor(options.getCursor());
 		this.setLimit(options.getLimit());
 		this.setOffset(options.getOffset());
+		this.setChunk(options.getChunk());
 		this.setAllowCache(options.getAllowCache());
 	}
 
@@ -78,6 +81,16 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 		}
 
 		this.setCursor(cursorString);
+	}
+
+	@Override
+	public Integer getChunk() {
+		return this.chunk;
+	}
+
+	@Override
+	public void setChunk(Integer chunk) {
+		this.chunk = chunk;
 	}
 
 	@Override

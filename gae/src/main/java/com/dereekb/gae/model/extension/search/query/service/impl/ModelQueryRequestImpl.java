@@ -65,4 +65,9 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
 		this.queryCursor = queryCursor;
 	}
 
+	@Override
+	public Integer getChunk() {
+		return null; // Chunk is not accessible from this type.
+	}
+
 }

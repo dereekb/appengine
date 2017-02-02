@@ -25,11 +25,14 @@ public abstract class AbstractQueryFieldParameter<T>
 	public static final String DEFAULT_NULL_VALUE = "";
 
 	private String field;
-	private ExpressionOperator operator;
-	private T value;
+	private ExpressionOperator operator = ExpressionOperator.NO_OP;
+	private T value = null;
 
-	private QueryResultsOrdering ordering;
+	private QueryResultsOrdering ordering = null;
 
+	/**
+	 * Avoid using, as it is trusts sub classes to properly initialize.
+	 */
 	protected AbstractQueryFieldParameter() {}
 
 	protected AbstractQueryFieldParameter(AbstractQueryFieldParameter<T> parameter) throws IllegalArgumentException {
@@ -74,6 +77,10 @@ public abstract class AbstractQueryFieldParameter<T>
 		return this.operator;
 	}
 
+	public void clearOperator() {
+		this.setOperator(ExpressionOperator.NO_OP);
+	}
+
 	/**
 	 * Sets the operator.
 	 *
@@ -101,6 +108,10 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	public QueryResultsOrdering getOrdering() {
 		return this.ordering;
+	}
+
+	public void clearOrdering() {
+		this.ordering = null;
 	}
 
 	public AbstractQueryFieldParameter<T> setOrdering(QueryResultsOrdering ordering) {
@@ -171,25 +182,36 @@ public abstract class AbstractQueryFieldParameter<T>
 	}
 
 	public QueryParameter getParameterRepresentation() {
-		String value = null;
+		String parameterValue = null;
 
-		if (this.value == null) {
-
-		} else {
-			value = this.getParameterValue();
+		switch (this.operator) {
+			// Don't attempt to encode parameter value for nulls and no-ops as
+			// they'll be ignored later anyways.
+			case IS_NULL:
+			case NO_OP:
+				parameterValue = "";
+				break;
+			default:
+				parameterValue = this.getParameterValue();
+				break;
 		}
 
-		return new ParameterImpl(value, this.operator, this.ordering);
+		return new ParameterImpl(parameterValue, this.operator, this.ordering);
 	}
 
 	public void setParameterRepresentation(QueryParameter parameter) throws IllegalArgumentException {
 		this.operator = parameter.getOperator();
 		this.ordering = parameter.getOrdering();
 
-		if (this.operator == ExpressionOperator.IS_NULL) {
-			this.setNullParameterValue();
-		} else {
-			this.setParameterValue(parameter.getValue());
+		switch (this.operator) {
+			// Don't attempt to decode/set parameter value for nulls and no-ops.
+			case IS_NULL:
+			case NO_OP:
+				this.setNullParameterValue();
+				break;
+			default:
+				this.setParameterValue(parameter.getValue());
+				break;
 		}
 	}
 

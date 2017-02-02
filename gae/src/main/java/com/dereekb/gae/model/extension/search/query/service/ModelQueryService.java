@@ -1,8 +1,7 @@
 package com.dereekb.gae.model.extension.search.query.service;
 
-
 /**
- * Service for performing model queries
+ * Service for performing model queries.
  *
  * @author dereekb
  *

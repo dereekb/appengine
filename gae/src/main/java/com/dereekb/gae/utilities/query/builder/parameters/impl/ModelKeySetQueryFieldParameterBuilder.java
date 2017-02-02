@@ -13,6 +13,8 @@ import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
 
 public class ModelKeySetQueryFieldParameterBuilder {
 
+	public static final Integer MAX_KEYS_ALLOWED = 30;
+
 	private static final Set<ExpressionOperator> ALLOWED_OPERATORS = SetUtility.makeSet(ExpressionOperator.IN,
 	        ExpressionOperator.EQUAL);
 
@@ -156,6 +158,10 @@ public class ModelKeySetQueryFieldParameterBuilder {
 
 		// MARK: Override
 		public AbstractQueryFieldParameter<Set<ModelKey>> setValue(Collection<ModelKey> value) {
+			if (value.size() > MAX_KEYS_ALLOWED) {
+				throw new IllegalArgumentException("Only " + MAX_KEYS_ALLOWED + " keys are allowed for this query.");
+			}
+
 			Set<ModelKey> set = new HashSet<ModelKey>(value);
 			return this.setValue(set);
 		}
