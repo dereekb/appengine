@@ -5,6 +5,7 @@ import java.util.Map;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 
 /**
  * Abstract {@link ObjectifyQueryRequestLimitedBuilderInitializer}
@@ -18,7 +19,8 @@ public abstract class AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl
 
 	@Override
 	public void initalizeBuilder(ObjectifyQueryRequestLimitedBuilder builder,
-	                             Map<String, String> parameters) {
+	                             Map<String, String> parameters)
+	        throws IllegalQueryArgumentException {
 
 		ConfigurableObjectifyQueryRequestConfigurer configurer = this.makeConfigurer();
 
@@ -26,7 +28,6 @@ public abstract class AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl
 			configurer.setParameters(parameters);
 			configurer.configure(builder);
 		}
-
 	}
 
 	@Override

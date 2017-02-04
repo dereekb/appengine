@@ -17,9 +17,24 @@ public interface TestLoginTokenContext {
 	public String getToken();
 
 	/**
+	 * Generates a new anonymous login token.
+	 */
+	public String generateAnonymousToken();
+
+	/**
 	 * Generates an anonymous login.
 	 */
 	public void generateAnonymousLogin();
+
+	/**
+	 * Generates a new system administrator.
+	 */
+	public TestLoginTokenPair generateSystemAdmin();
+
+	/**
+	 * Generates a new system administrator.
+	 */
+	public TestLoginTokenPair generateSystemAdmin(String username);
 
 	/**
 	 * Generates a new login, and login pointer.
@@ -30,6 +45,13 @@ public interface TestLoginTokenContext {
 	 * Generates a new login, and login pointer using a specific username.
 	 */
 	public TestLoginTokenPair generateLogin(String username);
+
+	/**
+	 * Generates a new login, and login pointer using a specific username and
+	 * roles.
+	 */
+	public TestLoginTokenPair generateLogin(String username,
+	                                        Long roles);
 
 	/**
 	 * Clears the current login, be it anonymous or normal.

@@ -15,6 +15,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.googlecode.objectify.Key;
 
 /**
@@ -59,7 +60,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 
 	// MARK: ModelQueryService
 	@Override
-	public ModelQueryResponse<T> queryModels(ModelQueryRequest request) {
+	public ModelQueryResponse<T> queryModels(ModelQueryRequest request) throws IllegalQueryArgumentException {
 		Map<String, String> parameters = request.getParameters();
 		ObjectifyQueryRequestBuilder<T> builder;
 

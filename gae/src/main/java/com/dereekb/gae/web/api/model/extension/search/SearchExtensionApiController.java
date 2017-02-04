@@ -33,7 +33,7 @@ public class SearchExtensionApiController {
 	private ApiSearchDelegate delegate;
 
 	public SearchExtensionApiController(ApiSearchDelegate delegate) {
-		this.delegate = delegate;
+		this.setDelegate(delegate);
 	}
 
 	public ApiSearchDelegate getDelegate() {
@@ -41,6 +41,10 @@ public class SearchExtensionApiController {
 	}
 
 	public void setDelegate(ApiSearchDelegate delegate) {
+		if (delegate == null) {
+			throw new IllegalArgumentException("Delegate cannot be null.");
+		}
+
 		this.delegate = delegate;
 	}
 
@@ -158,6 +162,8 @@ public class SearchExtensionApiController {
 			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);
 		}

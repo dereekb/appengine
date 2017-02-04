@@ -38,6 +38,7 @@ public class TestPasswordLoginTokenContextImpl
 	private LoginPointer pointer = null;
 
 	private Long encodedRoles = null;
+	private Long encodedAdminRoles = null;
 	private Integer group = null;
 
 	private boolean defaultToAnonymous = true;
@@ -113,6 +114,14 @@ public class TestPasswordLoginTokenContextImpl
 		this.encodedRoles = encodedRoles;
 	}
 
+	public Long getEncodedAdminRoles() {
+		return this.encodedAdminRoles;
+	}
+
+	public void setEncodedAdminRoles(Long encodedAdminRoles) {
+		this.encodedAdminRoles = encodedAdminRoles;
+	}
+
 	public Integer getGroup() {
 		return this.group;
 	}
@@ -160,18 +169,39 @@ public class TestPasswordLoginTokenContextImpl
 	}
 
 	@Override
+	public String generateAnonymousToken() {
+		return this.service.encodeAnonymousLoginToken("ANONYMOUS");
+	}
+
+	@Override
 	public void generateAnonymousLogin() {
 		this.clearLogin();
 		this.setDefaultToAnonymous(true);
 	}
 
 	@Override
+	public TestLoginTokenPair generateSystemAdmin() {
+		return this.generateSystemAdmin(this.username);
+	}
+
+	@Override
+	public TestLoginTokenPair generateSystemAdmin(String username) {
+		return this.generateLogin(username, this.encodedAdminRoles);
+	}
+
+	@Override
 	public TestLoginTokenPair generateLogin() {
 		return this.generateLogin(this.username);
 	}
-	
+
 	@Override
 	public TestLoginTokenPair generateLogin(String username) {
+		return this.generateLogin(username, this.encodedRoles);
+	}
+
+	@Override
+	public TestLoginTokenPair generateLogin(String username,
+	                                        Long roles) {
 		LoginTokenPair primary = this.passwordController.create(username, this.password);
 		LoginPointer pointer = this.loginPointerRegistry.get(primary.getLoginPointerKey());
 		Login login;
@@ -186,12 +216,12 @@ public class TestPasswordLoginTokenContextImpl
 
 		login.setRoot(true);
 		login.setGroup(this.group);
-		login.setRoles(this.encodedRoles);
+		login.setRoles(roles);
 		this.loginRegistry.save(login, false);
 
 		pointer.setLogin(login.getObjectifyKey());
 		this.setLogin(pointer);
-	
+
 		return new TestLoginTokenPairImpl(login, pointer);
 	}
 
@@ -212,12 +242,13 @@ public class TestPasswordLoginTokenContextImpl
 	public void setLogin(LoginPointer pointer) {
 		this.pointer = pointer;
 	}
-	
-	private class TestLoginTokenPairImpl implements TestLoginTokenPair {
+
+	private class TestLoginTokenPairImpl
+	        implements TestLoginTokenPair {
 
 		private Login login;
 		private LoginPointer loginPointer;
-		
+
 		public TestLoginTokenPairImpl(Login login, LoginPointer loginPointer) {
 			this.login = login;
 			this.loginPointer = loginPointer;
@@ -225,14 +256,14 @@ public class TestPasswordLoginTokenContextImpl
 
 		@Override
 		public Login getLogin() {
-			return login;
+			return this.login;
 		}
 
 		@Override
 		public LoginPointer getLoginPointer() {
-			return loginPointer;
+			return this.loginPointer;
 		}
-		
+
 	}
 
 }

@@ -1,7 +1,9 @@
-package com.dereekb.gae.model.extension.search.query.parameters;
+package com.dereekb.gae.server.auth.security.model.query.impl;
 
 import java.util.Map;
 
+import com.dereekb.gae.model.extension.search.query.parameters.AbstractDateModelQuery;
+import com.dereekb.gae.server.auth.security.model.query.MutableOwnedModelQuery;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.StringQueryFieldParameter;
 
@@ -9,12 +11,18 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.StringQueryFieldP
  * Used by queries that need to query both the owner and a date.
  * 
  * @author dereekb
- *
+ * @see {@link AbstractDateModelQuery}.
  */
 public class AbstractOwnedDateModelQuery extends AbstractDateModelQuery
         implements MutableOwnedModelQuery {
 
 	private StringQueryFieldParameter ownerId;
+
+	public AbstractOwnedDateModelQuery() {}
+
+	public AbstractOwnedDateModelQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		this.setParameters(parameters);
+	}
 
 	public StringQueryFieldParameter getOwnerId() {
 		return this.ownerId;
@@ -28,6 +36,11 @@ public class AbstractOwnedDateModelQuery extends AbstractDateModelQuery
 	@Override
 	public void setOwnerId(StringQueryFieldParameter ownerId) {
 		this.ownerId = StringQueryFieldParameter.make(this.getOwnerIdField(), ownerId);
+	}
+
+	@Override
+	public void setEqualsOwnerId(String ownerId) throws IllegalArgumentException {
+		this.ownerId = StringQueryFieldParameter.makeEqualsQuery(this.getOwnerIdField(), ownerId);
 	}
 
 	protected String getOwnerIdField() {

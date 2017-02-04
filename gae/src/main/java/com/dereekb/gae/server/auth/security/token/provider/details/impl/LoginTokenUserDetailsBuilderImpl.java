@@ -12,6 +12,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGrantedAuthorityBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
+import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserType;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;
@@ -157,8 +158,18 @@ public class LoginTokenUserDetailsBuilderImpl
 		}
 
 		@Override
+		public boolean isAdministrator() {
+			return false;
+		}
+
+		@Override
 		public boolean isAnonymous() {
 			return true;
+		}
+
+		@Override
+		public LoginTokenUserType getUserType() {
+			return LoginTokenUserType.ANONYMOUS;
 		}
 
 	}
@@ -178,6 +189,8 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		private Collection<? extends GrantedAuthority> authorities;
 		private Set<String> roles;
+
+		private LoginTokenUserType userType;
 
 		protected AbstractLoginTokenUserDetailsImpl(T loginToken) throws IllegalArgumentException {
 			if (loginToken == null) {
@@ -314,6 +327,15 @@ public class LoginTokenUserDetailsBuilderImpl
 		@Override
 		public boolean isAnonymous() {
 			return false;
+		}
+
+		@Override
+		public LoginTokenUserType getUserType() {
+			if (this.userType == null) {
+				this.userType = (this.isAdministrator()) ? LoginTokenUserType.ADMINISTRATOR : LoginTokenUserType.USER;
+			}
+
+			return this.userType;
 		}
 
 	}

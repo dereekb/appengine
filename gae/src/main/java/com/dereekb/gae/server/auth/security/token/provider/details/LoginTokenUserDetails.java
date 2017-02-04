@@ -13,7 +13,7 @@ public interface LoginTokenUserDetails
         extends LoginUserDetails {
 
 	public LoginToken getLoginToken();
-	
+
 	/**
 	 * Whether or not the user is an administrator.
 	 * 
@@ -27,5 +27,12 @@ public interface LoginTokenUserDetails
 	 * @return {@code true} if the user is anonymous.
 	 */
 	public boolean isAnonymous();
+
+	/**
+	 * Returns a user type corresponding to this token.
+	 * 
+	 * @return {@link LoginTokenUserType}. Never {@code null}.
+	 */
+	public LoginTokenUserType getUserType();
 
 }

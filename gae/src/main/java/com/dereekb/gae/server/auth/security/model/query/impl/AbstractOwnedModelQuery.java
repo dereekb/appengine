@@ -1,8 +1,9 @@
-package com.dereekb.gae.model.extension.search.query.parameters;
+package com.dereekb.gae.server.auth.security.model.query.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.server.auth.security.model.query.MutableOwnedModelQuery;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
@@ -21,18 +22,29 @@ public class AbstractOwnedModelQuery
 
 	private StringQueryFieldParameter ownerId;
 
+	public AbstractOwnedModelQuery() {}
+
+	public AbstractOwnedModelQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		this.setParameters(parameters);
+	}
+
 	public StringQueryFieldParameter getOwnerId() {
 		return this.ownerId;
 	}
 
 	@Override
-	public void setOwnerId(String ownerIdParameter) {
+	public void setOwnerId(String ownerIdParameter) throws IllegalArgumentException {
 		this.ownerId = StringQueryFieldParameter.make(this.getOwnerIdField(), ownerIdParameter);
 	}
 
 	@Override
-	public void setOwnerId(StringQueryFieldParameter ownerId) {
+	public void setOwnerId(StringQueryFieldParameter ownerId) throws IllegalArgumentException {
 		this.ownerId = StringQueryFieldParameter.make(this.getOwnerIdField(), ownerId);
+	}
+
+	@Override
+	public void setEqualsOwnerId(String ownerId) throws IllegalArgumentException {
+		this.ownerId = StringQueryFieldParameter.makeEqualsQuery(this.getOwnerIdField(), ownerId);
 	}
 
 	protected String getOwnerIdField() {

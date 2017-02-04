@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.key.search.query.LoginKeyQueryInitializer.ObjectifyLoginKeyQuery;
@@ -71,6 +72,21 @@ public class LoginKeyQueryTest extends ModelQueryTest<LoginKey> {
 		Assert.assertFalse(results.isEmpty());
 		Assert.assertTrue(results.size() == pointers.size());
 		Assert.assertTrue(pointers.containsAll(results));
+	}
+
+	@Test
+	public void testRejectQueryWithAnonymousUser() throws Exception {
+
+		this.getModelGenerator().generate(20);
+
+		String token = this.testLoginTokenContext.generateAnonymousToken();
+
+		ObjectifyLoginKeyQuery query = new ObjectifyLoginKeyQuery();
+
+		ModelQueryUnitTest<ObjectifyLoginKeyQuery> test = new ModelQueryUnitTest<ObjectifyLoginKeyQuery>(query);
+		MockHttpServletResponse response = test.performSecureHttpRequest(token, null);
+
+		Assert.assertTrue(response.getStatus() == 405);
 	}
 
 }

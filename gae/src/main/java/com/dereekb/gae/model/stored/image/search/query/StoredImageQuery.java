@@ -2,9 +2,9 @@ package com.dereekb.gae.model.stored.image.search.query;
 
 import java.util.Map;
 
-import com.dereekb.gae.model.extension.search.query.parameters.AbstractOwnedModelQuery;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.model.query.impl.AbstractOwnedModelQuery;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryFieldParameter;
@@ -21,6 +21,14 @@ public class StoredImageQuery extends AbstractOwnedModelQuery
 	public static final String TYPE_FIELD = "type";
 
 	private IntegerQueryFieldParameter type;
+
+	public StoredImageQuery() {
+		super();
+	}
+
+	public StoredImageQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		super(parameters);
+	}
 
 	public IntegerQueryFieldParameter getType() {
 		return this.type;

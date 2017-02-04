@@ -220,8 +220,10 @@ public class LoginTokenImpl
 
 	@Override
 	public String toString() {
-		return "LoginTokenImpl [subject=" + this.subject + ", login=" + this.login + ", loginPointer="
-		        + this.loginPointer + ", issued=" + this.issued + ", expiration=" + this.expiration + "]";
+		return "LoginTokenImpl [subject=" + this.subject + ", anonymous=" + this.anonymous + ", login=" + this.login
+		        + ", loginPointer=" + this.loginPointer + ", roles=" + this.roles + ", issued=" + this.issued
+		        + ", expiration=" + this.expiration + ", pointerType=" + this.pointerType + ", ownershipRoles="
+		        + this.ownershipRoles + "]";
 	}
 
 }

@@ -2,9 +2,9 @@ package com.dereekb.gae.model.stored.blob.search.query;
 
 import java.util.Map;
 
-import com.dereekb.gae.model.extension.search.query.parameters.AbstractOwnedDateModelQuery;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.model.query.impl.AbstractOwnedDateModelQuery;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryFieldParameter;
 
@@ -19,6 +19,14 @@ public class StoredBlobQuery extends AbstractOwnedDateModelQuery {
 	public static final String TYPE_FIELD = "type";
 
 	private IntegerQueryFieldParameter type;
+
+	public StoredBlobQuery() {
+		super();
+	}
+
+	public StoredBlobQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		super(parameters);
+	}
 
 	public IntegerQueryFieldParameter getType() {
 		return this.type;

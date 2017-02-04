@@ -13,9 +13,15 @@
 	<bean id="loginPointerQueryService"
 		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
 		<constructor-arg index="0" ref="loginPointerRegistry" />
-		<constructor-arg index="1" ref="loginPointerQueryInitializer" />
+		<constructor-arg index="1" ref="securedLoginPointerQueryInitializer" />
 	</bean>
 
+	<bean id="securedLoginPointerQueryInitializer"
+		class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer">
+		<constructor-arg index="0" ref="loginPointerQueryInitializer" />
+		<constructor-arg index="1" ref="securityOverrideOwnedModelQueryTask" />
+	</bean>
+	
 	<bean id="loginPointerQueryInitializer"
 		class="com.dereekb.gae.server.auth.model.pointer.search.query.LoginPointerQueryInitializer">
 	</bean>

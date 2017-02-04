@@ -2,8 +2,8 @@ package com.dereekb.gae.server.auth.model.key.search.query;
 
 import java.util.Map;
 
-import com.dereekb.gae.model.extension.search.query.parameters.AbstractOwnedModelQuery;
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.security.model.query.impl.AbstractOwnedModelQuery;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
@@ -24,6 +24,14 @@ public class LoginKeyQuery extends AbstractOwnedModelQuery
 	private static final ModelKeyQueryFieldParameterBuilder LOGIN_POINTER_FIELD_BUILDER = ModelKeyQueryFieldParameterBuilder.NAME_SINGLETON;
 
 	private ModelKeyQueryFieldParameter loginPointer;
+
+	public LoginKeyQuery() {
+		super();
+	}
+
+	public LoginKeyQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		super(parameters);
+	}
 
 	public ModelKeyQueryFieldParameter getLoginPointer() {
 		return this.loginPointer;

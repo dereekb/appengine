@@ -63,7 +63,6 @@ public class LoginPointerQueryTest extends ModelQueryTest<LoginPointer> {
 		queryConfig.setLogin(a);
 
 		// No limit, should only return the 5.
-
 		ModelQueryUnitTest<ObjectifyLoginPointerQuery> test = new ModelQueryUnitTest<ObjectifyLoginPointerQuery>(
 		        queryConfig);
 		ModelQueryUnitTest<ObjectifyLoginPointerQuery>.Results results = test.performQuery();

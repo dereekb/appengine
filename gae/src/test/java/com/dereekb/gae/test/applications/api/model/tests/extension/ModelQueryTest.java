@@ -195,6 +195,17 @@ public abstract class ModelQueryTest<T extends ObjectifyModel<T>> extends ApiApp
 			return result.andReturn().getResponse();
 		}
 
+		public MockHttpServletResponse performSecureHttpRequest(String token,
+		                                                        ObjectifyQueryRequestOptions options)
+		        throws Exception {
+			MockHttpServletRequestBuilder request = this.getQueryRequestBuilder(options);
+
+			request.param("keysOnly", "true");	// Return keys only.
+
+			ResultActions result = ModelQueryTest.this.performSecureHttpRequest(request, token);
+			return result.andReturn().getResponse();
+		}
+
 		public MockHttpServletRequestBuilder getQueryRequestBuilder(ObjectifyQueryRequestOptions options) {
 			MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(this.getQueryUrl());
 

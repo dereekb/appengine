@@ -1,11 +1,15 @@
 package com.dereekb.gae.server.auth.model.pointer.search.query;
 
+import java.util.Map;
+
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.model.pointer.search.query.LoginPointerQueryInitializer.ObjectifyLoginPointerQuery;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.objectify.query.builder.AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ConfigurableObjectifyQueryRequestConfigurer;
+import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryFactory;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyAbstractQueryFieldParameter;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder;
 import com.googlecode.objectify.Key;
@@ -17,7 +21,8 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
-public class LoginPointerQueryInitializer extends AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl {
+public class LoginPointerQueryInitializer extends AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl
+        implements ObjectifyQueryFactory<ObjectifyLoginPointerQuery> {
 
 	private static final ObjectifyKeyFieldParameterBuilder<Login> LOGIN_BUILDER = ObjectifyKeyFieldParameterBuilder
 	        .make(ModelKeyType.NUMBER, Login.class);
@@ -27,8 +32,22 @@ public class LoginPointerQueryInitializer extends AbstractObjectifyQueryRequestL
 		return new ObjectifyLoginPointerQuery();
 	}
 
+	// MARK: ObjectifyQueryFactory
+	@Override
+	public ObjectifyLoginPointerQuery makeQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		return new ObjectifyLoginPointerQuery(parameters);
+	}
+
 	public static class ObjectifyLoginPointerQuery extends LoginPointerQuery
 	        implements ConfigurableObjectifyQueryRequestConfigurer {
+
+		public ObjectifyLoginPointerQuery() {
+			super();
+		}
+
+		public ObjectifyLoginPointerQuery(Map<String, String> parameters) throws IllegalArgumentException {
+			super(parameters);
+		}
 
 		public void setLogin(Login login) throws NullPointerException {
 			this.setLogin(login.getObjectifyKey());

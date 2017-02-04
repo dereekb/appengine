@@ -57,6 +57,12 @@ public class StringQueryFieldParameter extends AbstractQueryFieldParameter<Strin
 		return fieldParameter;
 	}
 
+	public static StringQueryFieldParameter makeEqualsQuery(String field,
+	                                                        String ownerId)
+	        throws IllegalArgumentException {
+		return new StringQueryFieldParameter(field, ExpressionOperator.EQUAL, ownerId);
+	}
+
 	// MARK: AbstractQueryFieldParameter
 	@Override
 	protected String getParameterValue() {

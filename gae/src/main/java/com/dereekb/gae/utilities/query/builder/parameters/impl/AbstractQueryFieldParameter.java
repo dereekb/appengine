@@ -20,6 +20,11 @@ public abstract class AbstractQueryFieldParameter<T>
         implements ConfigurableEncodedParameter {
 
 	/**
+	 * Public, temporary field to use in some cases where the field is ignored.
+	 */
+	public static final String TEMP_FIELD = "TMP";
+
+	/**
 	 * Empty string by default.
 	 */
 	public static final String DEFAULT_NULL_VALUE = "";

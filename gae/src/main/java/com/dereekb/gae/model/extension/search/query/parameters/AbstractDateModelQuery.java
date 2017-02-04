@@ -23,6 +23,12 @@ public class AbstractDateModelQuery
 
 	private DateQueryFieldParameter date;
 
+	public AbstractDateModelQuery() {}
+
+	public AbstractDateModelQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		this.setParameters(parameters);
+	}
+
 	public DateQueryFieldParameter getDate() {
 		return this.date;
 	}

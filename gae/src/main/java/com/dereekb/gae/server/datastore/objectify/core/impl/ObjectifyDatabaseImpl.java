@@ -41,6 +41,7 @@ import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQ
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -494,7 +495,7 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
-		public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters) {
+		public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters) throws IllegalQueryArgumentException {
 			ObjectifyQueryRequestBuilder<T> builder = this.makeQuery();
 
 			if (this.initializer != null && parameters != null) {

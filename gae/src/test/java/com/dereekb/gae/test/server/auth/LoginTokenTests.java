@@ -9,7 +9,6 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 
-
 public class LoginTokenTests {
 
 	private static final String SECRET = "3zRepP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=";
@@ -31,6 +30,20 @@ public class LoginTokenTests {
 		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
 		Assert.assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
 
+	}
+
+	@Test
+	public void testEncodingDecodingAnonymousToken() {
+		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SECRET);
+
+		LoginTokenImpl loginToken = new LoginTokenImpl();
+		loginToken.setAnonymous(true);
+
+		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
+		Assert.assertNotNull(encodedToken);
+
+		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken);
+		Assert.assertTrue(decodedToken.isAnonymous());
 	}
 
 }
