@@ -40,6 +40,11 @@ public class LoginQueryTest extends ModelQueryTest<Login> {
 	@Test
 	public void testQueryLatestLogins() throws Exception {
 
+		this.testLoginTokenContext.generateSystemAdmin("tqll");	// Only admins
+		                                                       	// can
+		// query all through
+		// the API.
+
 		List<Login> logins = this.getModelGenerator().generate(10);
 
 		ObjectifyLoginQuery keyQueryConfig = new ObjectifyLoginQuery();

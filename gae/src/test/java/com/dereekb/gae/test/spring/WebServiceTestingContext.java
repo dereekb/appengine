@@ -53,7 +53,7 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
 
 		if (this.springSecurityFilterChain != null && this.testLoginTokenContext != null) {
-			this.testLoginTokenContext.generateLogin();
+			this.testLoginTokenContext.generateSystemAdmin();
 			TestLocalTaskQueueCallback.waitUntilComplete();
 		}
 	}

@@ -18,6 +18,7 @@
 		<constructor-arg index="4" ref="loginRegistry" />
 		<!-- Admin Login -->
 		<property name="encodedRoles" value="1" />
+		<property name="encodedAdminRoles" value="3" />
 	</bean>
 	
 	<bean id="testSystemAuthenticationContextSetter"

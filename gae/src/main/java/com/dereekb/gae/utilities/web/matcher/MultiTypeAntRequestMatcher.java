@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.AntPathMatcher;
 
@@ -21,13 +19,10 @@ import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
  * @author dereekb
  *
  */
-public class MultiTypeAntRequestMatcher
+public class MultiTypeAntRequestMatcher extends AbstractRequestMatcher
         implements RequestMatcher {
 
 	public static final String DEFAULT_TYPE_VARIABLE = "type";
-	public static final boolean DEFAULT_CASE_SENSITIVE = false;
-
-	protected final boolean caseSensitive;
 
 	private String pattern;
 	private String variable;
@@ -54,7 +49,7 @@ public class MultiTypeAntRequestMatcher
 	}
 
 	protected MultiTypeAntRequestMatcher(String pattern, boolean caseSensitive) {
-		this.caseSensitive = caseSensitive;
+		super(caseSensitive);
 		this.setPattern(pattern);
 		this.initMatcher();
 	}
@@ -110,28 +105,8 @@ public class MultiTypeAntRequestMatcher
 		this.matcher = matcher;
 	}
 
-	// MARK: RequestMatcher
-	@Override
-	public boolean matches(HttpServletRequest request) {
-		String requestPath = this.getRequestPath(request);
-		return this.matches(requestPath);
-	}
-
-	private String getRequestPath(HttpServletRequest request) {
-		String url = request.getServletPath();
-
-		if (request.getPathInfo() != null) {
-			url += request.getPathInfo();
-		}
-
-		if (!this.caseSensitive) {
-			url = url.toLowerCase();
-		}
-
-		return url;
-	}
-
 	// MARK: Matching
+	@Override
 	public boolean matches(String path) {
 		boolean matchesPath = this.matcher.match(this.pattern, path);
 

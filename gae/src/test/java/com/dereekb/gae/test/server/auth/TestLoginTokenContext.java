@@ -27,7 +27,7 @@ public interface TestLoginTokenContext {
 	public void generateAnonymousLogin();
 
 	/**
-	 * Generates a new system administrator.
+	 * Generates a new system administrator with a random name.
 	 */
 	public TestLoginTokenPair generateSystemAdmin();
 

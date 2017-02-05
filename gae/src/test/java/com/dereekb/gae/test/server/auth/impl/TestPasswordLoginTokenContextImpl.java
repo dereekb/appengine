@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.server.auth.impl;
 
+import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
@@ -11,6 +12,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
+import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -34,6 +36,8 @@ public class TestPasswordLoginTokenContextImpl
 
 	public ObjectifyRegistry<LoginPointer> loginPointerRegistry;
 	public ObjectifyRegistry<Login> loginRegistry;
+
+	private Factory<ModelKey> nameFactory = new LongModelKeyGenerator();
 
 	private LoginPointer pointer = null;
 
@@ -181,7 +185,7 @@ public class TestPasswordLoginTokenContextImpl
 
 	@Override
 	public TestLoginTokenPair generateSystemAdmin() {
-		return this.generateSystemAdmin(this.username);
+		return this.generateSystemAdmin(this.nameFactory.make().toString());
 	}
 
 	@Override
@@ -191,7 +195,7 @@ public class TestPasswordLoginTokenContextImpl
 
 	@Override
 	public TestLoginTokenPair generateLogin() {
-		return this.generateLogin(this.username);
+		return this.generateLogin(this.nameFactory.make().toString());
 	}
 
 	@Override

@@ -42,6 +42,10 @@
 		<security:intercept-url pattern="/taskqueue/**"
 			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
 
+		<!-- LoginKey Authentication not allowed to access loginKey API. -->
+		<security:intercept-url request-matcher-ref="loginKeyObjectApiPathRequestMatcher"
+			access="!hasRole('ROLE_LOGINTYPE_API') AND !hasRole('ROLE_ANON')" />
+
 		<!-- Secured Owned Patterns -->
 		<security:intercept-url request-matcher-ref="securedModelPatternMatcher"
 			access="hasRole('ROLE_USER')" />
@@ -49,11 +53,10 @@
 		<!-- Other Extension Resources -->
 		<security:intercept-url pattern="/search"
 			access="hasRole('ROLE_USER')" />
-			
 		<security:intercept-url pattern="/upload"
 			access="hasRole('ROLE_USER')" />
 
-		<!-- Everything else protected by authentication. -->
+		<!-- Everything else protected by isAuthenticated. -->
 		<security:intercept-url pattern="/**"
 			access="isAuthenticated()" />
 
@@ -62,6 +65,13 @@
 	</security:http>
 
 	<!-- Interceptors -->
+	<bean id="loginKeyObjectApiPathRequestMatcher"
+		class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+		<constructor-arg index="0" value="/loginkey/**" />
+		<constructor-arg index="1"><null/></constructor-arg>
+		<constructor-arg index="2" value="false" />
+	</bean>
+
 	<bean id="securedModelPatternMatcher"
 		class="com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher">
 		<constructor-arg index="0" value="/{type}/{res}" />
@@ -81,6 +91,12 @@
 		<value>search</value>
 		<value>link</value>
 	</util:set>
+	
+	<bean id="securedModelQueryPatternMatcher"
+		class="com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher">
+		<constructor-arg index="0" value="/{loginkey}/query"/>
+		<constructor-arg index="1" ref="ownedModelTypes"/>
+	</bean>
 	
 	<!-- -->
 	<bean id="securityRequestMatcher"
