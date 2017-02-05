@@ -16,6 +16,8 @@ import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
  * Matcher that is for catching a URI containing a variable (such as
  * <i>/{type}/foo</i>), then matches against a set of defined types.
  * 
+ * Is case insensitive by default.
+ * 
  * @author dereekb
  *
  */
@@ -25,7 +27,7 @@ public class MultiTypeAntRequestMatcher
 	public static final String DEFAULT_TYPE_VARIABLE = "type";
 	public static final boolean DEFAULT_CASE_SENSITIVE = false;
 
-	private final boolean caseSensitive;
+	protected final boolean caseSensitive;
 
 	private String pattern;
 	private String variable;
@@ -45,10 +47,15 @@ public class MultiTypeAntRequestMatcher
 	        String variable,
 	        Collection<String> types,
 	        boolean caseSensitive) {
-		this.caseSensitive = caseSensitive;
+		this(pattern, caseSensitive);
 		this.setPattern(pattern);
 		this.setVariable(variable);
 		this.setTypes(types);
+	}
+
+	protected MultiTypeAntRequestMatcher(String pattern, boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+		this.setPattern(pattern);
 		this.initMatcher();
 	}
 
@@ -143,6 +150,12 @@ public class MultiTypeAntRequestMatcher
 	protected boolean matchesVariables(Map<String, String> pathVariables) {
 		String variableValue = pathVariables.get(this.variable);
 		return this.types.contains(variableValue);
+	}
+
+	@Override
+	public String toString() {
+		return "MultiTypeAntRequestMatcher [caseSensitive=" + this.caseSensitive + ", pattern=" + this.pattern
+		        + ", variable=" + this.variable + ", types=" + this.types + "]";
 	}
 
 }

@@ -9,7 +9,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.AntPathMatcher;
 
+import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher;
+import com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher;
 
 public class UrlMatchTest {
 
@@ -48,6 +50,33 @@ public class UrlMatchTest {
 		Assert.assertTrue(matcher.matches("/a/query"));
 		Assert.assertTrue(matcher.matches("/b/query"));
 		Assert.assertTrue(matcher.matches("/c/query"));
+
+		Assert.assertFalse(matcher.matches("/d/query"));
+		Assert.assertFalse(matcher.matches("/x/y/z"));
+		Assert.assertFalse(matcher.matches("/dfgsdfgsfdg"));
+	}
+
+	@Test
+	public void testMultiTypeMapAntRequestMatcher() {
+		String pattern = "/{a}/{x}/foo";
+
+		HashMapWithSet<String, String> map = new HashMapWithSet<String, String>();
+		// Matches against {a}
+		map.add("a", "a");
+		map.add("a", "b");
+		map.add("a", "c");
+
+		// Matches against {x}
+		map.add("x", "x");
+		map.add("x", "y");
+		map.add("x", "z");
+
+		MultiTypeMapAntRequestMatcher matcher = new MultiTypeMapAntRequestMatcher(pattern, map);
+
+		Assert.assertTrue(matcher.matches("/b/y/foo"));
+		Assert.assertTrue(matcher.matches("/b/x/foo"));
+		Assert.assertTrue(matcher.matches("/a/z/foo"));
+		Assert.assertTrue(matcher.matches("/c/x/foo"));
 
 		Assert.assertFalse(matcher.matches("/d/query"));
 		Assert.assertFalse(matcher.matches("/x/y/z"));

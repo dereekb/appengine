@@ -1,7 +1,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
@@ -39,11 +41,16 @@
 		<!-- Only the system can access the taskqueue. -->
 		<security:intercept-url pattern="/taskqueue/**"
 			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
-			
-		<!-- Only users with ownership are allowed to query. -->
-		<security:intercept-url request-matcher-ref="securedModelQueryPatternMatcher" access="hasRole('ROLE_USER')" />
-		
+
+		<!-- Secured Owned Patterns -->
+		<security:intercept-url request-matcher-ref="securedModelPatternMatcher"
+			access="hasRole('ROLE_USER')" />
+
+		<!-- Other Extension Resources -->
 		<security:intercept-url pattern="/search"
+			access="hasRole('ROLE_USER')" />
+			
+		<security:intercept-url pattern="/upload"
 			access="hasRole('ROLE_USER')" />
 
 		<!-- Everything else protected by authentication. -->
@@ -55,12 +62,26 @@
 	</security:http>
 
 	<!-- Interceptors -->
-	<bean id="securedModelQueryPatternMatcher"
-		class="com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher">
-		<constructor-arg index="0" value="/{type}/query"/>
-		<constructor-arg index="1" ref="ownedModelTypes"/>
+	<bean id="securedModelPatternMatcher"
+		class="com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher">
+		<constructor-arg index="0" value="/{type}/{res}" />
+		<constructor-arg index="1">
+			<map key-type="java.lang.String" value-type="java.util.Set">
+				<entry key="type" value-ref="ownedModelTypes" />
+				<entry key="res" value-ref="securedModelResources" />
+			</map>
+		</constructor-arg>
 	</bean>
-
+	
+	<util:set id="securedModelResources" value-type="java.lang.String">
+		<value>create</value>
+		<value>update</value>
+		<value>delete</value>
+		<value>query</value>
+		<value>search</value>
+		<value>link</value>
+	</util:set>
+	
 	<!-- -->
 	<bean id="securityRequestMatcher"
 		class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
