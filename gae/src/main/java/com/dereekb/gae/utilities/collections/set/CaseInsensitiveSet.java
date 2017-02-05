@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.collections.set;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -17,7 +18,7 @@ public class CaseInsensitiveSet extends TreeSet<String> {
 		super(String.CASE_INSENSITIVE_ORDER);
 	}
 
-	public CaseInsensitiveSet(Set<String> s) {
+	public CaseInsensitiveSet(Collection<String> s) {
 		this();
 
 		if (s != null) {

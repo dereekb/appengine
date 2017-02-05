@@ -14,7 +14,7 @@
 
 	<!-- No HTTP security for Google App Engine. -->
 	<security:http pattern="/_ah/**" security="none" />
-	
+
 	<!-- No HTTP security for oauth login. -->
 	<security:http pattern="/login/oauth/*" security="none" />
 
@@ -30,21 +30,46 @@
 
 	<security:http use-expressions="true" create-session="stateless"
 		entry-point-ref="securityEntryPoint">
+
 		<security:csrf disabled="true" />
-		<!-- API not allowed to access loginKey API. -->
-		<security:intercept-url pattern="/loginkey/**"
-			access="!hasRole('ROLE_LOGINTYPE_API')" />
-		<security:intercept-url pattern="/**"
-			access="isAuthenticated()" />
+
+		<security:custom-filter ref="authenticationFilter"
+			position="PRE_AUTH_FILTER" />
 
 		<!-- Only the system can access the taskqueue. -->
 		<security:intercept-url pattern="/taskqueue/**"
 			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
 			
-		<security:custom-filter ref="authenticationFilter"
-			position="PRE_AUTH_FILTER" />
+		<!-- Only users with ownership are allowed to query. -->
+		<security:intercept-url request-matcher-ref="securedModelQueryPatternMatcher" access="hasRole('ROLE_USER')" />
+		
+		<security:intercept-url pattern="/search"
+			access="hasRole('ROLE_USER')" />
+
+		<!-- Everything else protected by authentication. -->
+		<security:intercept-url pattern="/**"
+			access="isAuthenticated()" />
+
 		<security:access-denied-handler ref="accessDeniedHandler" />
+		<security:anonymous enabled="false" />
 	</security:http>
+
+	<!-- Interceptors -->
+	<bean id="securedModelQueryPatternMatcher"
+		class="com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher">
+		<constructor-arg index="0" value="/{type}/query"/>
+		<constructor-arg index="1" ref="ownedModelTypes"/>
+	</bean>
+
+	<!-- -->
+	<bean id="securityRequestMatcher"
+		class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+		<constructor-arg index="0" value="/**"></constructor-arg>
+		<constructor-arg index="1">
+			<null />
+		</constructor-arg>
+		<constructor-arg index="2" value="false"></constructor-arg>
+	</bean>
 
 	<bean id="securityEntryPoint"
 		class="com.dereekb.gae.server.auth.security.token.entry.TokenAuthenticationEntryPoint" />
@@ -52,7 +77,8 @@
 	<bean id="authenticationFilter"
 		class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter">
 		<constructor-arg index="0">
-			<bean class="com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl">
+			<bean
+				class="com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl">
 				<constructor-arg index="0" ref="loginTokenService" />
 				<constructor-arg index="1" ref="loginAuthenticationManager" />
 			</bean>
@@ -74,7 +100,6 @@
 	</security:authentication-manager>
 
 	<bean id="loginTokenAuthenticationProvider"
-
 		class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl">
 		<constructor-arg index="0" ref="loginTokenUserDetailsBuilder" />
 	</bean>
@@ -88,11 +113,10 @@
 	</bean>
 
 	<bean id="loginTokenGrantedAuthorityBuilder"
-
 		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl">
 		<constructor-arg index="0" ref="loginGrantedAuthorityDecoder" />
 		<constructor-arg index="1">
-			<!-- Roles given to all users -->
+			<!-- Roles given to all non-anonymous users -->
 			<array>
 				<bean
 					class="org.springframework.security.core.authority.SimpleGrantedAuthority">
@@ -128,18 +152,31 @@
 		<constructor-arg index="0" ref="loginTokenService" />
 		<constructor-arg index="1" ref="systemEncodedRoles" />
 	</bean>
-	
+
 	<bean id="systemEncodedRoles" class="java.lang.Long">
 		<constructor-arg index="0" value="3" />
 	</bean>
 
 	<!-- Security Ownership -->
+	<util:list id="ownedModelTypes">
+		<ref bean="loginType" />
+		<ref bean="loginKeyType" />
+		<ref bean="loginPointerType" />
+		<ref bean="storedBlobType" />
+		<ref bean="storedImageType" />
+		<ref bean="storedImageSetType" />
+	</util:list>
+
 	<bean id="securitySetOwnershipRolesTask"
 		class="com.dereekb.gae.server.auth.security.ownership.task.SecuritySetOwnershipRolesTask">
 	</bean>
-	
+
 	<bean id="securityOwnershipRolesFilter"
 		class="com.dereekb.gae.server.auth.security.ownership.filter.SecurityOwnershipRolesFilter">
+	</bean>
+
+	<bean id="securityOverrideOwnedModelQueryTask"
+		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideOwnedModelQueryTask">
 	</bean>
 
 	<!-- Exception Handler -->
@@ -150,5 +187,4 @@
 	<bean id="accessDeniedHandler"
 		class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl">
 	</bean>
-
 </beans>

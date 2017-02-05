@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.model.login.key;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class LoginKeyQueryTest extends ModelQueryTest<LoginKey> {
 		ModelQueryUnitTest<ObjectifyLoginKeyQuery> test = new ModelQueryUnitTest<ObjectifyLoginKeyQuery>(query);
 		MockHttpServletResponse response = test.performSecureHttpRequest(token, null);
 
-		Assert.assertTrue(response.getStatus() == 405);
+		Assert.assertTrue(response.getStatus() == HttpStatus.SC_FORBIDDEN);
 	}
 
 }
