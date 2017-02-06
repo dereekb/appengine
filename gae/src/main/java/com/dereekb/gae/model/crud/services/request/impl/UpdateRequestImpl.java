@@ -3,7 +3,8 @@ package com.dereekb.gae.model.crud.services.request.impl;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
-import com.dereekb.gae.model.crud.services.request.UpdateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.UpdateRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
@@ -31,12 +32,7 @@ public final class UpdateRequestImpl<T extends UniqueModel>
 	}
 
 	public UpdateRequestImpl(Collection<T> templates, UpdateRequestOptions options) {
-
-		if (templates == null) {
-			throw new IllegalArgumentException("Templates cannot be null.");
-		}
-
-		this.templates = templates;
+		this.setTemplates(templates);
 		this.setOptions(options);
 	}
 
@@ -46,6 +42,10 @@ public final class UpdateRequestImpl<T extends UniqueModel>
 	}
 
 	public void setTemplates(Collection<T> templates) {
+		if (templates == null) {
+			throw new IllegalArgumentException("Templates cannot be null.");
+		}
+
 		this.templates = templates;
 	}
 
@@ -55,8 +55,8 @@ public final class UpdateRequestImpl<T extends UniqueModel>
 	}
 
 	public void setOptions(UpdateRequestOptions options) {
-		if (this.options == null) {
-			options = new UpdateRequestOptions();
+		if (options == null) {
+			options = new UpdateRequestOptionsImpl();
 		}
 
 		this.options = options;

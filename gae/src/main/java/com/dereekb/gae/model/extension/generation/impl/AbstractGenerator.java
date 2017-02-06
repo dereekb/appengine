@@ -5,40 +5,29 @@ import java.util.List;
 import java.util.Random;
 
 import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
+/**
+ * Abstract {@link Generator} used for extending.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ */
 public abstract class AbstractGenerator<T>
         implements Generator<T>, Factory<T> {
 
-	private static final Integer DEFAULT_GENERATION_AMOUNT = 10;
-
-	protected Random random = new Random();
-	protected Integer generationAmount = DEFAULT_GENERATION_AMOUNT;
-
-	protected Long randomPositiveLong() {
-		return Math.abs(this.random.nextLong());
-	}
-
-	protected Integer randomPositiveInt() {
-		return Math.abs(this.random.nextInt());
-	}
-
 	public Random getRandom() {
-		return this.random;
+		return new Random();
 	}
 
-	public void setRandom(Random random) {
-		this.random = random;
+	public Random getRandom(Long seed) {
+		return new Random(seed);
 	}
 
-	public Integer getGenerationAmount() {
-		return this.generationAmount;
-	}
-
-	public void setGenerationAmount(Integer generationAmount) {
-		this.generationAmount = generationAmount;
-	}
+	public AbstractGenerator() {}
 
 	@Override
     public T make() throws FactoryMakeFailureException {
@@ -46,14 +35,28 @@ public abstract class AbstractGenerator<T>
 	}
 
 	@Override
-	public abstract T generate();
+	public T generate() {
+		return this.generate(new GeneratorArgImpl());
+	}
 
 	@Override
-    public List<T> generate(int count) {
+	public abstract T generate(GeneratorArg arg);
+
+	/**
+	 * By default, {@link AbstractGenerator} will call {@link #generate()} the
+	 * number of times specified by the {@code count} parameter.
+	 */
+	@Override
+	public List<T> generate(int count,
+	                        GeneratorArg arg) {
+		if (arg == null) {
+			arg = new GeneratorArgImpl();
+		}
+
 		List<T> models = new ArrayList<T>();
 
 		for (int i = 0; i < count; i += 1) {
-			T model = this.generate();
+			T model = this.generate(arg);
 			models.add(model);
 		}
 

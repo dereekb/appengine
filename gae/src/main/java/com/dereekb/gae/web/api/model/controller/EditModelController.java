@@ -2,8 +2,6 @@ package com.dereekb.gae.web.api.model.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +15,7 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
@@ -34,30 +33,46 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  * @param <I>
  *            Model Data Transfer Type
  */
-@Controller
-public final class EditModelController<T extends UniqueModel, I> {
+public abstract class EditModelController<T extends UniqueModel, I> {
 
-	private final EditModelControllerDelegate<T> delegate;
-	private final EditModelControllerConversionDelegate<T, I> conversionDelegate;
+	private EditModelControllerDelegate<T> delegate;
+	private EditModelControllerConversionDelegate<T, I> conversionDelegate;
 
 	public EditModelController(EditModelControllerDelegate<T> delegate,
-	        EditModelControllerConversionDelegate<T, I> conversionDelegate) {
-		this.delegate = delegate;
-		this.conversionDelegate = conversionDelegate;
+	        EditModelControllerConversionDelegate<T, I> conversionDelegate) throws IllegalArgumentException {
+		this.setDelegate(delegate);
+		this.setConversionDelegate(conversionDelegate);
 	}
 
 	public EditModelControllerDelegate<T> getDelegate() {
 		return this.delegate;
 	}
 
+	public void setDelegate(EditModelControllerDelegate<T> delegate) throws IllegalArgumentException {
+		if (delegate == null) {
+			throw new IllegalArgumentException();
+		}
+
+		this.delegate = delegate;
+	}
+
 	public EditModelControllerConversionDelegate<T, I> getConversionDelegate() {
 		return this.conversionDelegate;
 	}
 
+	public void setConversionDelegate(EditModelControllerConversionDelegate<T, I> conversionDelegate)
+	        throws IllegalArgumentException {
+		if (conversionDelegate == null) {
+			throw new IllegalArgumentException();
+		}
+
+		this.conversionDelegate = conversionDelegate;
+	}
+
+	// MARK: API
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'create')")
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public final ApiResponse create(@Valid @RequestBody ApiCreateRequest<I> request) {
+	public ApiResponse create(@Valid @RequestBody ApiCreateRequest<I> request) {
 		ApiResponse response = null;
 
 		try {
@@ -74,9 +89,8 @@ public final class EditModelController<T extends UniqueModel, I> {
 	}
 
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'update')")
 	@RequestMapping(value = { "/update", "/edit" }, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public final ApiResponse update(@Valid @RequestBody ApiUpdateRequest<I> request) {
+	public ApiResponse update(@Valid @RequestBody ApiUpdateRequest<I> request) {
 		ApiResponse response = null;
 
 		try {
@@ -85,19 +99,22 @@ public final class EditModelController<T extends UniqueModel, I> {
 			response = this.conversionDelegate.convert(updateResponse);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
+		} catch (RuntimeException e) {
+			throw new ApiRuntimeException(e);
 		}
 
 		return response;
 	}
 
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'delete')")
 	@RequestMapping(value = { "/delete", "/destroy" }, method = RequestMethod.DELETE, produces = "application/json")
-	public final ApiResponse delete(@Valid @RequestBody ApiDeleteRequest request) {
+	public ApiResponse delete(@Valid @RequestBody ApiDeleteRequest request) {
 		ApiResponse response = null;
 
 		try {
-			DeleteRequest<T> deleteRequest = this.conversionDelegate.convert(request);
+			DeleteRequest deleteRequest = this.conversionDelegate.convert(request);
 			DeleteResponse<T> deleteResponse = this.delegate.delete(deleteRequest);
 			response = this.conversionDelegate.convert(deleteResponse);
 		} catch (AtomicOperationException e) {

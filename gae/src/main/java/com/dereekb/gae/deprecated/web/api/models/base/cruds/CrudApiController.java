@@ -39,6 +39,7 @@ import com.thevisitcompany.gae.utilities.misc.range.IntegerRange;
  *
  * @author dereekb
  */
+@Deprecated
 public abstract class CrudApiController<T extends KeyedModel<K>, K, A> {
 
 	private IntegerRange samplesRange = new IntegerRange(1, 1, 20);
@@ -108,7 +109,7 @@ public abstract class CrudApiController<T extends KeyedModel<K>, K, A> {
 	@ResponseBody
 	@PreAuthorize("hasPermission(this, 'update')")
 	@RequestMapping(value = { "/update", "/edit" }, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public final UpdateResponse<A, K> update(@RequestBody @Valid ApiRequest<List<A>> request,
+	public final UpdateResponse<A, K> update(@RequestBody @Valid ApiRequest<A>> request,
 	                                         @RequestParam(required = false, defaultValue = "false") Boolean getModels) {
 		UpdateResponse<A, K> response = new UpdateResponse<A, K>();
 		List<A> data = request.getData();

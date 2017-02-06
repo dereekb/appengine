@@ -6,6 +6,10 @@ import java.util.Date;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.time.IsoTimeConverter;
+import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -15,66 +19,132 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  */
 @JsonInclude(Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class DatabaseModelData
-        implements Serializable, UniqueModel {
+        implements Serializable, UniqueModel, SimpleKeyModel {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final IsoTimeConverter DATE_CONVERTER = ThreeTenIsoTimeConverter.SINGLETON;
 
 	/**
 	 * The model's database identifier as a String.
 	 */
-	protected String identifier;
+	protected String key;
 
 	/**
-	 * Date (in Long) that the model was created.
+	 * Date that the model was created. For JSON serialization is is converted
+	 * to a string.
 	 */
-	protected Long created;
+	@JsonIgnore
+	protected Date date;
 
 	public DatabaseModelData() {}
 
-	public DatabaseModelData(String identifier) {
-		this.identifier = identifier;
+	public DatabaseModelData(String key) {
+		this.setKey(key);
 	}
 
-	public DatabaseModelData(String identifier, Long creationTime) {
-		this.identifier = identifier;
-		this.created = creationTime;
+	public DatabaseModelData(String key, Date date) {
+		this.setKey(key);
+		this.setDate(date);
 	}
 
-	public String getIdentifier() {
-		return this.identifier;
+	@Deprecated
+	public DatabaseModelData(String key, Long creationTime) {
+		this.setKey(key);
+		this.setCreated(creationTime);
 	}
 
-	public void setIdentifier(ModelKey key) {
-		this.identifier = ModelKey.readStringKey(key);
+	@Override
+	public String getKey() {
+		return this.key;
 	}
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+	@Override
+	public void setKey(String key) {
+		this.key = key;
 	}
 
-	public Long getCreated() {
-		return this.created;
+	@JsonIgnore
+	public void setModelKey(ModelKey key) {
+		this.key = ModelKey.readStringKey(key);
 	}
 
-	public void setCreated(Long creationTime) {
-		this.created = creationTime;
-	}
+	@JsonIgnore
+	public void setIdentifier(Long identifier) {
+		String idString = null;
 
-	public void setCreated(Date creationDate) {
-		Long time = null;
-
-		if (creationDate != null) {
-			time = creationDate.getTime();
+		if (identifier != null) {
+			idString = identifier.toString();
 		}
 
-		this.created = time;
+		this.key = idString;
+	}
+
+	@JsonIgnore
+	@Deprecated
+	public Long getCreated() {
+		Long time = null;
+
+		if (this.date != null) {
+			time = this.date.getTime();
+		}
+
+		return time;
+	}
+
+	@JsonIgnore
+	@Deprecated
+	public void setCreated(Long creationTime) {
+		Date date = null;
+
+		if (creationTime != null) {
+			date = new Date(creationTime);
+		}
+
+		this.setDate(date);
+	}
+
+	public String getDate() {
+		String value = null;
+
+		if (this.date != null) {
+			value = DATE_CONVERTER.convertToString(this.date);
+		}
+
+		return value;
+	}
+
+	public void setDate(String date) {
+		Date value = null;
+
+		if (date != null) {
+			value = DATE_CONVERTER.convertFromString(date);
+		}
+
+		this.date = value;
+	}
+
+	@JsonIgnore
+	public Date getDateValue() {
+		return this.date;
+	}
+
+	@JsonIgnore
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	// UniqueModel
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convert(this.identifier);
+		return ModelKey.convertNumberString(this.key);
+	}
+
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
 	}
 
 }

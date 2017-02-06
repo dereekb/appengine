@@ -1,69 +1,43 @@
 package com.dereekb.gae.web.api.shared.response;
 
 /**
- * Used in {@link ApiResponse} to contain error information.
+ * Represents an error returned by the API.
+ * <p>
+ * Response implementations should expect to be serialized as-is, so they should
+ * not contain any internal types that should not be exposed outside the system.
  *
  * @author dereekb
+ * @see {@link ApiResponse}
  */
-public final class ApiResponseError {
+public interface ApiResponseError {
 
-	private String code;
+	/**
+	 * Returns the error code.
+	 *
+	 * @return error code. Never {@code null}.
+	 */
+	public String getErrorCode();
 
-	private String title;
-	private String detail;
+	/**
+	 * Returns the error title.
+	 *
+	 * @return error title. Never {@code null}.
+	 */
+	public String getErrorTitle();
 
-	private Object data;
+	/**
+	 * Returns details about the error.
+	 *
+	 * @return details about the error, or {@code null} if not applicable.
+	 */
+	public String getErrorDetail();
 
-	public ApiResponseError() {}
-
-	public ApiResponseError(String code, String title) {
-		this.code = code;
-		this.title = title;
-	}
-
-	public ApiResponseError(String code, String title, String detail) {
-		this.code = code;
-		this.title = title;
-		this.detail = detail;
-	}
-
-	public ApiResponseError(String code, String title, String detail, Object data) {
-		this.code = code;
-		this.title = title;
-		this.detail = detail;
-		this.data = data;
-	}
-
-	public String getCode() {
-		return this.code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDetail() {
-		return this.detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public Object getData() {
-		return this.data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
+	/**
+	 * Returns any data specific to the error, if available.
+	 *
+	 * @return {@link Object} containing data, or {@code null} if not
+	 *         applicable.
+	 */
+	public Object getErrorData();
 
 }

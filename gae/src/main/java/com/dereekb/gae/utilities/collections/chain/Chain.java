@@ -1,121 +1,75 @@
 package com.dereekb.gae.utilities.collections.chain;
 
-import java.util.Iterator;
+
 
 /**
- * Singlely linked list that can iterate through itself.
- * 
- * Due to type safety, sub classes of this need to implement the getIterator() function.
- * 
+ * Special linked list implementation.
+ *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
-public abstract class Chain<T extends Chain<T>>
-        implements Iterable<T> {
-
-	protected T next;
-
-	public boolean hasNext() {
-		return (this.next != null);
-	}
-
-	public T next() {
-		return this.next;
-	}
-
-	public void setNext(T next) {
-		this.next = next;
-	}
-
-	public T chain(T ordering) throws NullPointerException, IllegalArgumentException {
-
-		if (this.next != null) {
-			this.next.chain(ordering);
-		} else {
-			this.next = ordering;
-		}
-
-		return this.self();
-	}
+public interface Chain<T>
+        extends Iterable<T> {
 
 	/**
-	 * Way for the {@link Chain} class to retrieve itself safely as the implementing type.
-	 * 
-	 * @return this
+	 * Gets the current chain link's value.
+	 *
+	 * @return value
 	 */
-	protected abstract T self();
+	public T getValue();
 
-	@Override
-	public ChainIterator iterator() {
-		ChainIterator iterator = new ChainIterator(this.self());
-		return iterator;
-	}
+	/**
+	 * @return Next {@link Chain} value, or {@code null} if the end.
+	 */
+	public Chain<T> next();
 
-	private class ChainIterator
-	        implements Iterator<T>, Iterable<T> {
+	/**
+	 * Whether or not the chain has a next value.
+	 *
+	 * @return {@code true} if not the end of a chain.
+	 */
+    public boolean hasNext();
 
-		private final T start;
-		private T current;
-		private T previous;
-		private boolean didRemoveNow = true;
+	/**
+	 * Inserts an element into the chain.
+	 *
+	 * @param element
+	 *            Element to insert.
+	 * @return {@link Chain} value created. Will be equal to {@link #next()}.
+	 * @throws NullPointerException
+	 *             thrown if the chain does not allow {@code null} values.
+	 */
+	public Chain<T> insert(T element) throws NullPointerException;
 
-		public ChainIterator(T start) {
-			this.start = start;
-			current = start;
-		}
+	/**
+	 * Adds the element to the <i>end</i> of the chain.
+	 *
+	 * @param element
+	 *            Element to add.
+	 * @return {@link Chain} value created.
+	 *
+	 * @throws NullPointerException
+	 *             thrown if the chain does not allow {@code null} values.
+	 */
+	public Chain<T> chain(T element) throws NullPointerException;
 
-		@Override
-		public boolean hasNext() {
-			return (previous == null || current.hasNext());
-		}
+	/**
+	 * Removes the next chained value, and bridges the chain together.
+	 *
+	 * @return value removed, or {@code null} if no value.
+	 */
+	public T removeNext();
 
-		@Override
-		public T next() {
-			T current = this.current;
+	/**
+	 * Removes all values after the chained value.
+	 */
+	public void breakNext();
 
-			if (previous != null) {
-				T next = current.next();
-				this.previous = current;
-				this.current = next;
-				current = next;
-			} else {
-				this.previous = current;
-			}
-
-			didRemoveNow = false;
-			return current;
-		}
-
-		@Override
-		public void remove() {
-			if (this.previous != null && (didRemoveNow == false)) {
-				T next = current.next();
-				this.previous.setNext(next);
-				didRemoveNow = true;
-			}
-		}
-
-		/**
-		 * Creates a copy of this {@link ChainIterator}, starting from the start of the chain.
-		 * 
-		 * @return
-		 */
-		public ChainIterator copy() {
-			ChainIterator iterator = new ChainIterator(this.start);
-			return iterator;
-		}
-
-		@Override
-		public Iterator<T> iterator() {
-			return this.copy();
-		}
-
-	}
-
-	@Override
-	public String toString() {
-		return "Chain [next=" + next + "]";
-	}
+	/**
+	 * @return {@link Iterable} for {@link Chain} values. Never {@code null}.
+	 */
+	public Iterable<? extends Chain<T>> chainIterable();
 
 }

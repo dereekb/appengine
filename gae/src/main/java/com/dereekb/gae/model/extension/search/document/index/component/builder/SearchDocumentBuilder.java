@@ -10,6 +10,7 @@ import com.google.appengine.api.search.Document;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface SearchDocumentBuilder<T extends UniqueSearchModel> {
 

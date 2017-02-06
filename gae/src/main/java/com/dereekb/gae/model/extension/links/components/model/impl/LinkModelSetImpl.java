@@ -6,11 +6,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelChange;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -72,20 +77,28 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 
 		for (ModelKey key : keys) {
 			LinkModel model = this.loaded.get(key);
-			models.add(model);
+
+			if (model != null) {
+				models.add(model);
+			}
 		}
 
 		return models;
 	}
 
 	@Override
-    public Set<ModelKey> getAvailableModelKeys() {
+	public Set<ModelKey> getAvailableModelKeys() {
 		return this.loadedKeys;
-    }
+	}
 
 	@Override
 	public Set<ModelKey> getMissingModelKeys() {
 		return this.missingKeys;
+	}
+
+	@Override
+	public void loadModel(ModelKey key) {
+		this.waitingKeys.add(key);
 	}
 
 	@Override
@@ -94,9 +107,28 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public void save() {
+	public void validateChanges() throws LinkSaveConditionException {
+		LinkModelSetChange changes = this.getChanges();
 		List<T> models = this.getLoadedModels();
+		this.validateChanges(models, changes);
+	}
+
+	@Override
+	public void save(boolean validate) throws LinkSaveException, LinkSaveConditionException {
+		LinkModelSetChange changes = this.getChanges();
+		List<T> models = this.getLoadedModels();
+
+		if (validate) {
+			this.validateChanges(models, changes);
+		}
+
 		this.setDelegate.saveModels(models);
+		this.setDelegate.reviewModels(models, changes);
+	}
+
+	private void validateChanges(List<T> models,
+	                             LinkModelSetChange changes) {
+		this.setDelegate.validateModels(models, changes);
 	}
 
 	// Internal
@@ -143,8 +175,27 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 	}
 
 	@Override
+	public LinkModelSetChangeImpl getChanges() {
+		Map<ModelKey, LinkModelChange> modelChanges = new HashMap<ModelKey, LinkModelChange>();
+
+		for (Entry<ModelKey, LinkModel> entry : this.loaded.entrySet()) {
+			LinkModel model = entry.getValue();
+			LinkModelChange modelChange = model.getModelChanges();
+
+			if (modelChange.hasChanges()) {
+				modelChanges.put(entry.getKey(), modelChange);
+			}
+		}
+
+		LinkModelSetChangeImpl changes = new LinkModelSetChangeImpl(this, modelChanges);
+		return changes;
+	}
+
+	@Override
 	public String toString() {
-		return "LinkModelSetImpl [typedLoaded=" + this.typedLoaded + ", allKeys=" + this.allKeys + "]";
+		return "LinkModelSetImpl [typedLoaded=" + this.typedLoaded + ", loaded=" + this.loaded + ", allKeys="
+		        + this.allKeys + ", loadedKeys=" + this.loadedKeys + ", missingKeys=" + this.missingKeys
+		        + ", waitingKeys=" + this.waitingKeys + "]";
     }
 
 }

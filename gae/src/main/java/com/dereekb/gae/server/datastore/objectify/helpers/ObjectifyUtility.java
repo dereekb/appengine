@@ -6,8 +6,15 @@ import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.googlecode.objectify.Key;
 
+/**
+ * General utility for Objectify and {@link Key} values.
+ *
+ * @author dereekb
+ * @see {@link ObjectifyKeyUtility}
+ */
 public class ObjectifyUtility {
 
 	public static <T extends ObjectifyModel<T>> List<Key<T>> readKeys(Iterable<T> models) {
@@ -41,6 +48,22 @@ public class ObjectifyUtility {
 
 		return values;
 	}
+
+	public static <T extends ObjectifyModel<T>> List<String> readKeyNames(Iterable<Key<T>> keys) {
+		List<String> values = new ArrayList<String>();
+
+		if (keys != null) {
+			for (Key<T> key : keys) {
+				String value = key.getName();
+
+				if (value != null) {
+					values.add(value);
+				}
+			}
+		}
+
+		return values;
+    }
 
 	public static <T extends ObjectifyModel<T>> Long readKeyIdentifier(Key<T> key) {
 		Long identifier = null;

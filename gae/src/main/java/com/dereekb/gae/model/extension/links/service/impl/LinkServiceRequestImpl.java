@@ -2,29 +2,39 @@ package com.dereekb.gae.model.extension.links.service.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.model.extension.links.service.LinkChange;
+import com.dereekb.gae.model.crud.task.config.impl.AtomicTaskConfigImpl;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 
 /**
  * {@link LinkServiceRequest} implementation.
  *
  * @author dereekb
  */
-public class LinkServiceRequestImpl
+public class LinkServiceRequestImpl extends AtomicTaskConfigImpl
         implements LinkServiceRequest {
 
-	private List<LinkChange> linkChanges;
+	private List<LinkSystemChange> linkChanges;
 
-	public LinkServiceRequestImpl(List<LinkChange> linkChanges) {
-		this.linkChanges = linkChanges;
+	public LinkServiceRequestImpl(List<LinkSystemChange> linkChanges) throws IllegalArgumentException {
+		this(linkChanges, false);
+	}
+
+	public LinkServiceRequestImpl(List<LinkSystemChange> linkChanges, boolean atomic) throws IllegalArgumentException {
+		super(atomic);
+		this.setLinkChanges(linkChanges);
 	}
 
 	@Override
-	public List<LinkChange> getLinkChanges() {
+	public List<LinkSystemChange> getLinkChanges() {
 		return this.linkChanges;
 	}
 
-	public void setLinkChanges(List<LinkChange> linkChanges) {
+	public void setLinkChanges(List<LinkSystemChange> linkChanges) throws IllegalArgumentException {
+		if (linkChanges == null || linkChanges.isEmpty()) {
+			throw new IllegalArgumentException("Changes must be provided.");
+		}
+
 		this.linkChanges = linkChanges;
 	}
 

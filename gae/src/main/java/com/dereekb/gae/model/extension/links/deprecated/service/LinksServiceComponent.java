@@ -22,6 +22,7 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithList;
  *
  * @author dereekb
  */
+@Deprecated
 public class LinksServiceComponent<T extends UniqueModel>
         implements OpenLinksService<T> {
 

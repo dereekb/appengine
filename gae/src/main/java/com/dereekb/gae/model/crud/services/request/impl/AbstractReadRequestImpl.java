@@ -1,19 +1,17 @@
 package com.dereekb.gae.model.crud.services.request.impl;
 
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.request.ReadRequestOptions;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 
 /**
  * Base implementation of {@link ReadRequest} that contains
  * {@link ReadRequestOptions}.
  *
  * @author dereekb
- *
- * @param <T>
  */
-public abstract class AbstractReadRequestImpl<T extends UniqueModel>
-        implements ReadRequest<T> {
+public abstract class AbstractReadRequestImpl
+        implements ReadRequest {
 
 	protected ReadRequestOptions options;
 
@@ -28,7 +26,7 @@ public abstract class AbstractReadRequestImpl<T extends UniqueModel>
 
 	public void setOptions(ReadRequestOptions options) {
 		if (options == null) {
-			options = new ReadRequestOptions();
+			options = new ReadRequestOptionsImpl();
 		}
 
 		this.options = options;

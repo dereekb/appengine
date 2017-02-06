@@ -1,11 +1,16 @@
 package com.dereekb.gae.model.geo.place.generator;
 
+import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractModelGenerator;
+import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
+import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.factory.Factory;
+import com.dereekb.gae.server.datastore.objectify.keys.generator.ObjectifyKeyGenerator;
+import com.googlecode.objectify.Key;
 
 /**
  * Implementation of {@link Generator} for {@link GeoPlace}.
@@ -14,63 +19,75 @@ import com.dereekb.gae.utilities.factory.Factory;
  */
 public final class GeoPlaceGenerator extends AbstractModelGenerator<GeoPlace> {
 
-	private Factory<String> infoTypeFactory;
-	private Factory<Point> pointFactory;
-	private Factory<Region> regionFactory;
+	private static final ObjectifyKeyGenerator<GeoPlace> PARENT_GENERATOR = ObjectifyKeyGenerator
+	        .numberKeyGenerator(GeoPlace.class);
 
-	public GeoPlaceGenerator() {};
+	private Generator<Key<GeoPlace>> parentKeyGenerator = PARENT_GENERATOR;
+	private Generator<Descriptor> descriptorGenerator;
+	private Generator<Point> pointGenerator;
+	private Generator<Region> regionGenerator;
 
-	public GeoPlaceGenerator(Factory<String> infoTypeFactory, Factory<Point> pointFactory, Factory<Region> regionFactory) {
-		this.infoTypeFactory = infoTypeFactory;
-		this.pointFactory = pointFactory;
-		this.regionFactory = regionFactory;
+	public GeoPlaceGenerator() {
+		super(LongModelKeyGenerator.GENERATOR);
+	};
+
+	public GeoPlaceGenerator(Generator<ModelKey> keyGenerator) {
+		super(keyGenerator);
+	};
+
+	public GeoPlaceGenerator(Generator<Descriptor> descriptorGenerator,
+	        Generator<Point> pointGenerator,
+	        Generator<Region> regionGenerator) {
+		this();
+		this.descriptorGenerator = descriptorGenerator;
+		this.pointGenerator = pointGenerator;
+		this.regionGenerator = regionGenerator;
 	}
 
-	public Factory<String> getInfoTypeFactory() {
-		return this.infoTypeFactory;
+	public Generator<Descriptor> getDescriptorGenerator() {
+		return this.descriptorGenerator;
 	}
 
-	public void setInfoTypeFactory(Factory<String> infoTypeFactory) {
-		this.infoTypeFactory = infoTypeFactory;
+	public void setDescriptorGenerator(Generator<Descriptor> descriptorGenerator) {
+		this.descriptorGenerator = descriptorGenerator;
 	}
 
-	public Factory<Point> getPointFactory() {
-		return this.pointFactory;
+	public Generator<Point> getPointGenerator() {
+		return this.pointGenerator;
 	}
 
-	public void setPointFactory(Factory<Point> pointFactory) {
-		this.pointFactory = pointFactory;
+	public void setPointGenerator(Generator<Point> pointGenerator) {
+		this.pointGenerator = pointGenerator;
 	}
 
-	public Factory<Region> getRegionFactory() {
-		return this.regionFactory;
+	public Generator<Region> getRegionGenerator() {
+		return this.regionGenerator;
 	}
 
-	public void setRegionFactory(Factory<Region> regionFactory) {
-		this.regionFactory = regionFactory;
+	public void setRegionGenerator(Generator<Region> regionGenerator) {
+		this.regionGenerator = regionGenerator;
 	}
 
 	@Override
-	public GeoPlace generateModel(ModelKey key) {
+	public GeoPlace generateModel(ModelKey key,
+	                              GeneratorArg arg) {
 		GeoPlace geoPlace = new GeoPlace();
+		geoPlace.setIdentifier(ModelKey.readIdentifier(key));
 
-		if (key != null) {
-			Long id = key.getId();
-			geoPlace.setIdentifier(id);
+		if (this.parentKeyGenerator != null) {
+			geoPlace.setParent(this.parentKeyGenerator.generate(arg));
 		}
 
-		if (this.pointFactory != null) {
-			geoPlace.setPoint(this.pointFactory.make());
+		if (this.pointGenerator != null) {
+			geoPlace.setPoint(this.pointGenerator.generate(arg));
 		}
 
-		if (this.regionFactory != null) {
-			geoPlace.setRegion(this.regionFactory.make());
+		if (this.regionGenerator != null) {
+			geoPlace.setRegion(this.regionGenerator.generate(arg));
 		}
 
-		if (this.infoTypeFactory != null) {
-			String infoType = this.infoTypeFactory.make();
-			geoPlace.setInfoType(infoType);
-			geoPlace.setInfoIdentifier(this.randomPositiveLong().toString());
+		if (this.descriptorGenerator != null) {
+			geoPlace.setDescriptor(this.descriptorGenerator.generate(arg));
 		}
 
 		return geoPlace;

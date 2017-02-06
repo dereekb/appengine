@@ -13,18 +13,30 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  * @param <T>
- *            Model type that implements the {@link UniqueModel} interface.
+ *            model type
  */
-public interface AtomicReadService<T extends UniqueModel> {
+public interface AtomicReadService<T extends UniqueModel>
+        extends ReadService<T> {
+
+	/**
+	 * Reads the object for the input model key.
+	 *
+	 * @param key
+	 *            {@link ModelKey}. Never {@code null}.
+	 * @return Read model. Never {@code null}.
+	 * @throws AtomicOperationException
+	 *             Thrown if the model cannot be read.
+	 */
+	public T read(ModelKey key) throws AtomicOperationException;
 
 	/**
 	 * Reads objects for their model keys.
 	 *
 	 * @param request
 	 *            Collection of {@link ModelKey} instances.
-	 * @return Collection of retrieved models.
+	 * @return {@link Collection} of retrieved models. Never {@code null}.
 	 * @throws AtomicOperationException
-	 *             Occurs when not all objects requested can be read.
+	 *             Thrown when not all objects requested can be read.
 	 */
 	public Collection<T> read(Collection<ModelKey> keys) throws AtomicOperationException;
 

@@ -18,6 +18,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class MapPoint {
 
+	public static final Integer MIN_ZOOM = 0;
+	public static final Integer MAX_ZOOM = 21;
+
 	private static final Integer DEFAULT_ZOOM = 3;
 
 	@NotNull

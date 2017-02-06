@@ -11,7 +11,7 @@ import com.thevisitcompany.gae.deprecated.web.api.ApiRequest;
  *
  * @param <T>
  */
-public class DeleteRequest<K> extends ApiRequest<List<K>> {
+public class DeleteRequest<K> extends ApiRequest<K>> {
 
 	public DeleteRequest() {
 		super();

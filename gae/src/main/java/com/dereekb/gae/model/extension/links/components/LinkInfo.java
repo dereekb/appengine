@@ -21,7 +21,7 @@ public interface LinkInfo {
 	public String getLinkName();
 
 	/**
-	 * Returns a {@link ModelKey} corresponding to the owner of this link..
+	 * Returns a {@link ModelKey} corresponding to the owner of this link.
 	 *
 	 * @return {@link ModelKey} for the parent model. Never null.
 	 */

@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.stored.blob.dto;
 
+import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelData;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.server.datastore.models.dto.DatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -13,15 +13,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class StoredBlobData extends DatabaseModelData {
+public final class StoredBlobData extends DescribedDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 
 	private String download;
 
-	private String infoType;
-
-	private String infoIdentifier;
+	@JsonInclude(Include.NON_DEFAULT)
+	private Integer type = StoredBlob.DEFAULT_BLOB_TYPE;
 
 	public String getDownload() {
 		return this.download;
@@ -31,26 +30,18 @@ public final class StoredBlobData extends DatabaseModelData {
 		this.download = download;
 	}
 
-	public String getInfoType() {
-		return this.infoType;
+	public Integer getType() {
+		return this.type;
 	}
 
-	public void setInfoType(String infoType) {
-		this.infoType = infoType;
-	}
-
-	public String getInfoIdentifier() {
-		return this.infoIdentifier;
-	}
-
-	public void setInfoIdentifier(String infoIdentifier) {
-		this.infoIdentifier = infoIdentifier;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	@Override
 	public String toString() {
-		return "StoredBlobData [download=" + this.download + ", infoType=" + this.infoType + ", infoIdentifier="
-		        + this.infoIdentifier + ", identifier=" + this.identifier + ", created=" + this.created + "]";
+		return "StoredBlobData [download=" + this.download + ", descriptor=" + this.descriptor + ", searchIdentifier="
+		        + this.searchIdentifier + ", identifier=" + this.key + ", created=" + this.date + "]";
 	}
 
 }

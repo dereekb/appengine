@@ -2,7 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.core.initializer;
 
 import java.util.List;
 
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -22,7 +22,7 @@ public class ObjectifyInitializerImpl
 	}
 
 	@Override
-	public void initializeService(ObjectifyDatabase service) {
+	public void initializeService(ObjectifyDatabaseImpl service) {
 		ObjectifyFactory factory = ObjectifyService.factory();
 
 		for (Class<?> type : this.types) {

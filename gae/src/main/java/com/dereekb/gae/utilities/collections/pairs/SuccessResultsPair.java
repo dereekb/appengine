@@ -1,10 +1,6 @@
 package com.dereekb.gae.utilities.collections.pairs;
 
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
-import com.dereekb.gae.utilities.function.staged.filter.FallableStagedFunctionObject;
-
-public class SuccessResultsPair<T> extends ResultsPair<T, Boolean>
-        implements FallableStagedFunctionObject<T> {
+public class SuccessResultsPair<T> extends ResultsPair<T, Boolean> {
 
 	public SuccessResultsPair(T source) {
 		super(source);
@@ -19,14 +15,8 @@ public class SuccessResultsPair<T> extends ResultsPair<T, Boolean>
 		this.setResult(successful);
 	}
 
-	@Override
 	public boolean hasFailed() {
 		return (this.object == false);
-	}
-
-	@Override
-	public T getFunctionObject(StagedFunctionStage stage) {
-		return this.getSource();
 	}
 
 	public static <T extends SuccessResultsPair<?>> void setResultPairsSuccess(Iterable<T> pairs,

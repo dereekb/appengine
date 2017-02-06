@@ -9,7 +9,9 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * Response returned by a {@link ReadService}.
  *
  * @author dereekb
+ *
  * @param <T>
+ *            model type
  */
 public interface ReadResponse<T> {
 

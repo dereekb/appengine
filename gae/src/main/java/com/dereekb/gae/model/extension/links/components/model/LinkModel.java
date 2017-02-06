@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelChange;
 
 /**
  * Represents a single model.
@@ -12,14 +12,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @author dereekb
  */
 public interface LinkModel
-        extends UniqueModel {
-
-	/**
-	 * Returns the model type.
-	 *
-	 * @return Model type. Never null.
-	 */
-	public String getType();
+        extends ReadOnlyLinkModel {
 
 	/**
 	 * Returns the link with the given type.
@@ -30,13 +23,23 @@ public interface LinkModel
 	 * @throws UnavailableLinkException
 	 *             thrown if the link is unavailable.
 	 */
+	@Override
 	public Link getLink(String name) throws UnavailableLinkException;
 
 	/**
 	 * Returns all links for the target model.
 	 *
-	 * @return List of all links for this model. Never null.
+	 * @return {@link Collection} of all links for this model. Never null.
 	 */
-	public Collection<Link> getLinks();
+	@Override
+	public Collection<? extends Link> getLinks();
+
+	/**
+	 * Returns a {@link LinkModelChange} containing all changes for the target
+	 * model.
+	 *
+	 * @return {@link LinkModelChange} instance. Never {@code null}.
+	 */
+	public LinkModelChange getModelChanges();
 
 }

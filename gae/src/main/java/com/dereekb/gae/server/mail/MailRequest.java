@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.mail.pairs.MailRecipient;
-import com.dereekb.gae.server.storage.file.StorableContent;
+import com.dereekb.gae.server.storage.object.file.StorableContent;
 
 /**
  * Mail request that contains a sender, a set of recipients, and optional attachments.

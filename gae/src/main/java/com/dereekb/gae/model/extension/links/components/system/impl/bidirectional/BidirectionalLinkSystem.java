@@ -1,17 +1,19 @@
 package com.dereekb.gae.model.extension.links.components.system.impl.bidirectional;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnregisteredLinkTypeException;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnrelatedLinkException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * Wraps a {@link LinkSystem} to provide bi-directional linking capabilities.
@@ -25,7 +27,7 @@ public class BidirectionalLinkSystem
 	 * {@link LinkSystem} implementation to wrap.
 	 */
 	private LinkSystem system;
-	private Map<String, BidirectionalLinkSystemEntry> entries = new HashMap<String, BidirectionalLinkSystemEntry>();
+	private final Map<String, BidirectionalLinkSystemEntry> entries = new CaseInsensitiveMap<BidirectionalLinkSystemEntry>();
 
 	public BidirectionalLinkSystem(LinkSystem system) {
 		this.system = system;
@@ -58,6 +60,11 @@ public class BidirectionalLinkSystem
 	}
 
 	// LinkSystem
+	@Override
+	public Set<String> getAvailableSetTypes() {
+		return this.system.getAvailableSetTypes();
+	}
+
 	@Override
 	public LinkModelSet loadSet(String type) throws UnregisteredLinkTypeException {
 		LinkModelSet primarySet = this.system.loadSet(type);
@@ -93,7 +100,7 @@ public class BidirectionalLinkSystem
 
 	@Override
 	public String getReverseLinkName(String primaryType,
-	                                 LinkInfo info) {
+	                                 LinkInfo info) throws NoReverseLinksException {
 		BidirectionalLinkSystemEntry entry = this.getEntry(primaryType);
 		return entry.getReverseLinkName(info);
 	}

@@ -16,20 +16,66 @@ public class TestImageByteGenerator
 	private Integer bufferSize = 0x10000;
 	private String imageType = "png";
 
+	public TestImageByteGenerator() {}
+
+	public TestImageByteGenerator(Integer width, Integer height) {
+		this.setWidth(width);
+		this.setHeight(height);
+	}
+
+	public TestImageByteGenerator(Integer width, Integer height, Integer bufferSize, String imageType) {
+		this(width, height);
+		this.setBufferSize(bufferSize);
+		this.setImageType(imageType);
+	}
+
+	public Integer getWidth() {
+		return this.width;
+	}
+
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
+
+	public Integer getHeight() {
+		return this.height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public Integer getBufferSize() {
+		return this.bufferSize;
+	}
+
+	public void setBufferSize(Integer bufferSize) {
+		this.bufferSize = bufferSize;
+	}
+
+	public String getImageType() {
+		return this.imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+
+	// MARK: TestByteDataGenerator
 	@Override
 	public byte[] generateBytes() {
 
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D graphics = image.createGraphics();
 
 		graphics.setPaint(Color.WHITE);
-		graphics.fillRect(0, 0, width, height);
+		graphics.fillRect(0, 0, this.width, this.height);
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(bufferSize);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(this.bufferSize);
 		byte[] bytes = baos.toByteArray();
 
 		try {
-			ImageIO.write(image, imageType, baos);
+			ImageIO.write(image, this.imageType, baos);
 			bytes = baos.toByteArray();
 			baos.close();
 		} catch (IOException e) {
@@ -39,36 +85,10 @@ public class TestImageByteGenerator
 		return bytes;
 	}
 
-	public Integer getWidth() {
-		return width;
-	}
-
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
-
-	public Integer getHeight() {
-		return height;
-	}
-
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
-
-	public Integer getBufferSize() {
-		return bufferSize;
-	}
-
-	public void setBufferSize(Integer bufferSize) {
-		this.bufferSize = bufferSize;
-	}
-
-	public String getImageType() {
-		return imageType;
-	}
-
-	public void setImageType(String imageType) {
-		this.imageType = imageType;
+	@Override
+	public String toString() {
+		return "TestImageByteGenerator [width=" + this.width + ", height=" + this.height + ", bufferSize="
+		        + this.bufferSize + ", imageType=" + this.imageType + "]";
 	}
 
 }

@@ -4,7 +4,7 @@ import com.dereekb.gae.web.api.model.exception.handler.ApiExceptionHandler;
 
 /**
  * Used to wrap another {@link RuntimeException} encountered by the request.
- *
+ * <p>
  * Allows {@link ApiExceptionHandler} to catch this type and not all
  * {@link RuntimeException} instances that occur.
  *

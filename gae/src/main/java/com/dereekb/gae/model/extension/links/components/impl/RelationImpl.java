@@ -11,7 +11,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * {@link Relation} implementation.
  *
  * @author dereekb
- *
  */
 public class RelationImpl
         implements Relation {
@@ -29,11 +28,16 @@ public class RelationImpl
 		this.setRelationKeys(keys);
 	}
 
+	// Relation
+	@Override
+	public String getRelationTargetType() {
+		return this.relationTargetType;
+	}
+
 	public void setRelationTargetType(String relationTargetType) {
 		this.relationTargetType = relationTargetType;
 	}
 
-	// Relation
 	@Override
 	public List<ModelKey> getRelationKeys() {
 		return this.relationKeys;
@@ -56,8 +60,9 @@ public class RelationImpl
 	}
 
 	@Override
-	public String getRelationTargetType() {
-		return this.relationTargetType;
+	public String toString() {
+		return "RelationImpl [relationTargetType=" + this.relationTargetType + ", relationKeys=" + this.relationKeys
+		        + "]";
 	}
 
 }

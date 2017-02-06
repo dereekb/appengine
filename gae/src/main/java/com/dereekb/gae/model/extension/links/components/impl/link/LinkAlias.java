@@ -4,6 +4,7 @@ import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkData;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.Relation;
+import com.dereekb.gae.model.extension.links.components.RelationResult;
 import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -35,23 +36,35 @@ public class LinkAlias
 		return this.link.getLinkTarget();
 	}
 
-	@Override
-	public void addRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
-		this.link.addRelation(change);
-	}
-
-	@Override
-	public void removeRelation(Relation change) throws RelationChangeException {
-		this.link.removeRelation(change);
-	}
-
+	// MARK: Link
 	@Override
 	public LinkData getLinkData() {
 		return this.link.getLinkData();
 	}
 
 	@Override
-	public void clearRelations() {
-		this.link.clearRelations();
+	public RelationResult setRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
+		return this.link.setRelation(change);
 	}
+
+	@Override
+	public RelationResult addRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
+		return this.link.addRelation(change);
+	}
+
+	@Override
+	public RelationResult removeRelation(Relation change) throws RelationChangeException {
+		return this.link.removeRelation(change);
+	}
+
+	@Override
+	public RelationResult clearRelations() {
+		return this.link.clearRelations();
+	}
+
+	@Override
+	public String toString() {
+		return "LinkAlias [aliasType=" + this.aliasType + ", link=" + this.link + "]";
+	}
+
 }
