@@ -92,12 +92,6 @@
 		<value>link</value>
 	</util:set>
 	
-	<bean id="securedModelQueryPatternMatcher"
-		class="com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher">
-		<constructor-arg index="0" value="/{loginkey}/query"/>
-		<constructor-arg index="1" ref="ownedModelTypes"/>
-	</bean>
-	
 	<!-- -->
 	<bean id="securityRequestMatcher"
 		class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
