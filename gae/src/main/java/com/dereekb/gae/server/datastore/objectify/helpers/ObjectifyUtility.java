@@ -13,7 +13,8 @@ import com.googlecode.objectify.Key;
  * General utility for Objectify and {@link Key} values.
  *
  * @author dereekb
- * @see {@link ObjectifyKeyUtility}
+ * 
+ * @see ObjectifyKeyUtility
  */
 public class ObjectifyUtility {
 
@@ -63,7 +64,7 @@ public class ObjectifyUtility {
 		}
 
 		return values;
-    }
+	}
 
 	public static <T extends ObjectifyModel<T>> Long readKeyIdentifier(Key<T> key) {
 		Long identifier = null;

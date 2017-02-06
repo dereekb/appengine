@@ -17,7 +17,7 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
  * Abstract class that partitions input to break into different requests.
  * 
  * @author dereekb
- * @see {@link AbstractTaskRequestBuilder} implementation.
+ * @see AbstractTaskRequestBuilder
  */
 public abstract class PartitionedTaskRequestBuilder<T> {
 

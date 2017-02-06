@@ -9,7 +9,7 @@ import com.thevisitcompany.gae.server.datastore.models.UniqueModel;
  * @author dereekb
  * @param <T>
  *            Key/Identifier type of the model.
- * @see {@link Getter}
+ * @see Getter
  * @deprecated Replaced by {@link UniqueModel}.
  */
 @Deprecated

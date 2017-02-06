@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  *
  * @author dereekb
  *
- * @see {@link LinksServiceModelRequest} to send models instead.
+ * @see LinksServiceModelRequest
  */
 public class LinksServiceKeyRequest
         implements LinksServiceRequest {

@@ -1,10 +1,9 @@
 package com.dereekb.gae.model.extension.search.document.index.component.builder.impl.derivative.old;
 
-
 /**
- * @see {@link IncludedDocumentBuilderDelegate}
  * @author dereekb
  *
+ * @see IncludedDocumentBuilderDelegate
  */
 public final class NoDerivativeTypeException extends RuntimeException {
 

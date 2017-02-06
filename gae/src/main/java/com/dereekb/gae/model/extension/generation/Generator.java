@@ -3,11 +3,12 @@ package com.dereekb.gae.model.extension.generation;
 import java.util.List;
 
 /**
- * Generator of type <T>.
+ * Model generator.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface Generator<T> {
 
@@ -36,7 +37,7 @@ public interface Generator<T> {
 	 *
 	 * @param count
 	 *            Number of instances to create.
-	 * @param seed
+	 * @param arg
 	 *            Optional {@link GeneratorArg} to use. Can be null.
 	 * @return Number of instances as count specified. Never null.
 	 */

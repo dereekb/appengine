@@ -6,7 +6,8 @@ import com.dereekb.gae.model.extension.search.document.search.model.DescriptorSe
  * {@link AbstractModelDocumentRequest} with a {@link DescriptorSearch}.
  *
  * @author dereekb
- * @see {@link AbstractDescribedModelDocumentRequestConverter}
+ * 
+ * @see AbstractDescribedModelDocumentRequestConverter
  */
 public class AbstractDescribedModelDocumentRequest extends AbstractModelDocumentRequest {
 

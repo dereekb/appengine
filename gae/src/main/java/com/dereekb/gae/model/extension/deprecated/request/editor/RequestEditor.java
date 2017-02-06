@@ -6,7 +6,7 @@ import com.dereekb.gae.model.extension.deprecated.request.service.RequestService
  * Used to create and delete similar {@link Request} for an element.
  *
  * @author dereekb
- * @see {@link RequestService} for retrieving
+ * @see RequestService
  */
 public interface RequestEditor<T> {
 

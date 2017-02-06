@@ -14,7 +14,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
  * @param <T>
  *            model type
  *
- * @see {@link ObjectifyQueryIterableFactory}
+ * @see ObjectifyQueryIterableFactory
  */
 public interface ObjectifyQueryIterable<T>
         extends ModelQueryIterable<T>, IndexedIterable<T> {

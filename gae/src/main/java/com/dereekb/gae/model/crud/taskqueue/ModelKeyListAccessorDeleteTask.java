@@ -21,8 +21,7 @@ import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueItera
  *
  * @param <T>
  *            model type
- * @see {@link TaskQueueDeleteModelTask} for a similar type that deletes the
- *      items directly.
+ * @see TaskQueueDeleteModelTask
  */
 public class ModelKeyListAccessorDeleteTask<T extends UniqueModel>
         implements Task<ModelKeyListAccessor<T>>, TaskQueueIterateTaskFactory<T> {

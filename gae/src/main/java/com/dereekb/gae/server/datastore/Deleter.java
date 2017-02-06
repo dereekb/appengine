@@ -7,8 +7,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @author dereekb
  *
- * @param <T>
- * @see {@link Setter} for deleting using a model.
+ * @see Setter
  */
 public interface Deleter {
 

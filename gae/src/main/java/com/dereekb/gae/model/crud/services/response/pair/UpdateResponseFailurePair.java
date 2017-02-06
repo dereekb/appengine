@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.exception.AttributeFailureException;
 import com.dereekb.gae.model.crud.pairs.UpdatePair;
+import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 

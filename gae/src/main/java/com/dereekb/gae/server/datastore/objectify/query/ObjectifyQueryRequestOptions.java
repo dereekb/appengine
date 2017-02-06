@@ -7,7 +7,8 @@ import com.google.appengine.api.datastore.Cursor;
  * Container for Objectify query options.
  *
  * @author dereekb
- * @see {@link ObjectifyQueryRequestBuilder}
+ * 
+ * @see ObjectifyQueryRequestBuilder
  */
 public interface ObjectifyQueryRequestOptions
         extends SearchOptions {

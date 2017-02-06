@@ -12,7 +12,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * {@link ModelKey} values and a type value.
  *
  * @author dereekb
- * @see {@link KeyedDocumentIndexService}
+ * @see KeyedDocumentIndexService
  */
 public interface TypedDocumentIndexService {
 
@@ -43,8 +43,8 @@ public interface TypedDocumentIndexService {
 	 *             Occurs when not all objects requested cannot be changed.
 	 */
 	public void changeIndexWithKeys(String modelType,
-	                                   Collection<ModelKey> keys,
-	                                   IndexAction action)
+	                                Collection<ModelKey> keys,
+	                                IndexAction action)
 	        throws UnregisteredSearchTypeException,
 	            AtomicOperationException;
 

@@ -17,7 +17,6 @@ import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
-import com.dereekb.gae.server.auth.security.login.key.KeyLoginAuthenticationService;
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusService;
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusServiceManager;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -39,8 +38,8 @@ public class RelatedLoginModelDeleteTest extends ApiApplicationTestContext {
 	@Autowired
 	private KeyLoginStatusServiceManager serviceManager;
 
-	@Autowired
-	private KeyLoginAuthenticationService authenticationService;
+	// @Autowired
+	// private KeyLoginAuthenticationService authenticationService;
 
 	@Autowired
 	@Qualifier("loginScheduleDeleteTask")

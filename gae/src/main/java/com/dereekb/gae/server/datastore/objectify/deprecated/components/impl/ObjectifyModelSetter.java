@@ -9,7 +9,8 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  * @param <T>
- * @see {@link ObjectifyModelRegistry}
+ * 
+ * @see ObjectifyModelRegistry
  */
 @Deprecated
 public final class ObjectifyModelSetter<T extends ObjectifyModel<T>> extends ObjectifyModelDatastoreComponent<T>

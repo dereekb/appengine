@@ -10,12 +10,10 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
 /**
- * Default implementation of {@link DeleteRequest}.
+ * {@link DeleteRequest} implementation.
  *
  * @author dereekb
  *
- * @param <T>
- *            model type
  */
 public class DeleteRequestImpl
         implements DeleteRequest {

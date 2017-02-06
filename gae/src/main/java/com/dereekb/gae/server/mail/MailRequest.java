@@ -8,10 +8,12 @@ import com.dereekb.gae.server.mail.pairs.MailRecipient;
 import com.dereekb.gae.server.storage.object.file.StorableContent;
 
 /**
- * Mail request that contains a sender, a set of recipients, and optional attachments.
+ * Mail request that contains a sender, a set of recipients, and optional
+ * attachments.
  * 
  * @author dereekb
- * @see {@link MailManager}
+ * 
+ * @see MailManager
  */
 public class MailRequest {
 
@@ -44,7 +46,7 @@ public class MailRequest {
 	}
 
 	public MailRecipient getSender() {
-		return sender;
+		return this.sender;
 	}
 
 	public void setSender(MailRecipient sender) {
@@ -52,7 +54,7 @@ public class MailRequest {
 	}
 
 	public Set<MailRecipient> getRecipients() {
-		return recipients;
+		return this.recipients;
 	}
 
 	public void setRecipients(Set<MailRecipient> recipients) throws NullPointerException {
@@ -64,7 +66,7 @@ public class MailRequest {
 	}
 
 	public String getSubject() {
-		return subject;
+		return this.subject;
 	}
 
 	public void setSubject(String subject) {
@@ -72,7 +74,7 @@ public class MailRequest {
 	}
 
 	public String getContent() {
-		return content;
+		return this.content;
 	}
 
 	public void setContent(String content) {
@@ -80,7 +82,7 @@ public class MailRequest {
 	}
 
 	public List<StorableContent> getAttachments() {
-		return attachments;
+		return this.attachments;
 	}
 
 	public void setAttachments(List<StorableContent> attachments) {
@@ -92,7 +94,7 @@ public class MailRequest {
 	}
 
 	public boolean isHtmlContent() {
-		return htmlContent;
+		return this.htmlContent;
 	}
 
 	public void setHtmlContent(boolean htmlContent) {

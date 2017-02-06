@@ -10,7 +10,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestMod
  * Abstract class used to hold components used by task request senders.
  * 
  * @author dereekb
- * @see {@link TaskRequestSenderImpl} for implementation.
+ * @see TaskRequestSenderImpl
  */
 public abstract class AbstractTaskRequestSender {
 

@@ -8,7 +8,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * Generic model response to a {@link SearchRequest}.
  * 
  * @author dereekb
- * @see {@link ModelSearchRequest} for model results.
+ * @see ModelSearchRequest
  */
 public interface SearchResponse {
 

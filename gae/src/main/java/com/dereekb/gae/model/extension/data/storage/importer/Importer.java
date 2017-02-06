@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.data.storage.importer;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
+import com.dereekb.gae.server.storage.object.file.StorableFile;
 
 /**
  * Imports models from saved data.
@@ -10,17 +10,19 @@ import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface Importer<T> {
 
 	/**
-	 * Imports the object collection stored in a file.
-	 *
-	 * @param object
-	 *            Objects to import.
+	 * Imports objects from the referenced file.
+	 * 
 	 * @param file
-	 *            Output File
+	 *            {@link StorableFile}. Never {@code null}.
+	 * @return {@link Collection} of objects imported. Never {@code null}.
+	 * @throws ImportException
+	 *             thrown if the import fails.
 	 */
-	public Collection<T> importObjects(StorableFileImpl file) throws ImportException;
+	public Collection<T> importObjects(StorableFile file) throws ImportException;
 
 }

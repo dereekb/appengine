@@ -9,6 +9,7 @@ import com.dereekb.gae.model.extension.data.storage.importer.ImportException;
 import com.dereekb.gae.model.extension.data.storage.importer.Importer;
 import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.object.file.StorableData;
+import com.dereekb.gae.server.storage.object.file.StorableFile;
 import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
 import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
 
@@ -20,7 +21,8 @@ public class DefaultImporterExporter<T>
 
 	@Override
 	public void exportObjects(Collection<T> objects,
-	                          StorableFileImpl file) throws ExportException {
+	                          StorableFileImpl file)
+	        throws ExportException {
 		try {
 			byte[] data = this.converter.convertToBytes(objects);
 			String type = this.converter.getByteContentType();
@@ -32,7 +34,7 @@ public class DefaultImporterExporter<T>
 	}
 
 	@Override
-	public Collection<T> importObjects(StorableFileImpl file) throws ImportException {
+	public Collection<T> importObjects(StorableFile file) throws ImportException {
 		Collection<T> objects;
 
 		try {

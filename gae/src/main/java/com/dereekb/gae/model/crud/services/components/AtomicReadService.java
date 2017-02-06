@@ -30,10 +30,10 @@ public interface AtomicReadService<T extends UniqueModel>
 	public T read(ModelKey key) throws AtomicOperationException;
 
 	/**
-	 * Reads objects for their model keys.
-	 *
-	 * @param request
-	 *            Collection of {@link ModelKey} instances.
+	 * Reads the objects for the input model keys.
+	 * 
+	 * @param keys
+	 *            Collection of {@link ModelKey}. Never {@code null}.
 	 * @return {@link Collection} of retrieved models. Never {@code null}.
 	 * @throws AtomicOperationException
 	 *             Thrown when not all objects requested can be read.

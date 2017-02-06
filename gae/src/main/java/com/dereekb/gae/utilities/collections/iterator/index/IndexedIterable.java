@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIte
  *
  * @param <T>
  *            Type to iterate.
- * @see {@link IndexedIterator}
+ * @see IndexedIterator
  */
 public interface IndexedIterable<T>
         extends Iterable<T> {

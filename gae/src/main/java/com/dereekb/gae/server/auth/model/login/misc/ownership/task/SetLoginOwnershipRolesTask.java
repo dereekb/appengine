@@ -11,8 +11,11 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * {@link IterableTask} implementation used for {@link Login} models within a
  * {@link CreateTaskImpl}.
  * 
+ * 
+ * 
  * @author dereekb
- * @see {@link NewLoginOwnershipRolesSaver} for proper saving.
+ * @deprecated Use {@link NewLoginOwnershipRolesSaver} for proper saving
+ *             instead.
  */
 @Deprecated
 public class SetLoginOwnershipRolesTask

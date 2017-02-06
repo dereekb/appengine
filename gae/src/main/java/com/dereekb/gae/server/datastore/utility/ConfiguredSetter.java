@@ -8,6 +8,7 @@ import com.dereekb.gae.server.datastore.Setter;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface ConfiguredSetter<T>
         extends Setter<T> {

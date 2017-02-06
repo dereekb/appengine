@@ -15,7 +15,8 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl.TaskReque
  *
  * @param <T>
  *            model type
- * @see {@link ScheduleCreateReviewTask} for pre-configured usage.
+ * 
+ * @see ScheduleCreateReviewTask
  */
 public class ScheduleReviewTask<T extends UniqueModel> extends TaskRequestSenderImpl<T> {
 

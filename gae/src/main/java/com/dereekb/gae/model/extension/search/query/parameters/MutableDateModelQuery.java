@@ -10,7 +10,8 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  * Query against a date value.
  * 
  * @author dereekb
- * @see {@link AbstractDateModelQuery}
+ * 
+ * @see AbstractDateModelQuery
  */
 public interface MutableDateModelQuery {
 
