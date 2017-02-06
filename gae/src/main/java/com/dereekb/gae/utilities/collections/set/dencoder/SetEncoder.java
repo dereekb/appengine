@@ -11,7 +11,7 @@ import java.util.Set;
  *            decoded type
  * @param <E>
  *            encoded type
- * @see {@link SetDecoder}
+ * @see SetDecoder
  */
 public interface SetEncoder<T, E> {
 

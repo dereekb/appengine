@@ -12,8 +12,8 @@ import com.dereekb.gae.utilities.deprecated.function.staged.components.StagedFun
  * @param <T>
  *            Type of the object used by the StagedFunction.
  * @author dereekb
- * @see {@link StagedFunctionObjectObserver} to see object observers which have access to the {@link StagedFunctionObject}.
- * @see {@link com.dereekb.gae.utilities.deprecated.function.staged.StagedFunction} for more information about
+ * See {@link StagedFunctionObjectObserver} to see object observers which have access to the {@link StagedFunctionObject}.
+ * See {@link com.dereekb.gae.utilities.deprecated.function.staged.StagedFunction} for more information about
  *      StagedFunctions.
  */
 public interface StagedFunctionObserver<T> {

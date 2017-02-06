@@ -13,7 +13,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @param <T>
  *            Model that implements the {@link UniqueModel} interface.
- * @see {@link Setter} for saving and deleting models from a source.
+ * 
+ * @see Setter
  */
 public interface Getter<T extends UniqueModel> {
 

@@ -4,7 +4,7 @@ package com.dereekb.gae.server.taskqueue.scheduler;
  *
  * @author dereekb
  *
- * @see {@link TaskRequestTiming}
+ * @see TaskRequestTiming
  */
 public enum TaskRequestTimingType {
 

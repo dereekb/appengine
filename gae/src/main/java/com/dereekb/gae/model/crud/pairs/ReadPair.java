@@ -25,7 +25,7 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 	}
 
 	@Override
-    public T getObject() {
+	public T getObject() {
 		return this.object;
 	}
 
@@ -39,7 +39,7 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 	}
 
 	/**
-	 * @Deprecated Replaced by pairsKeyMap() function in ResultsPair.
+	 * @deprecated Replaced by pairsKeyMap() function in ResultsPair.
 	 * @param pairs
 	 * @return
 	 */
@@ -79,7 +79,7 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 	 */
 	@Deprecated
 	public static <T extends UniqueModel> List<ModelKey> keysFromPairs(Iterable<ReadPair<T>> pairs,
-	                                                                        boolean success) {
+	                                                                   boolean success) {
 		List<ModelKey> keys = new ArrayList<>();
 
 		for (ReadPair<T> pair : pairs) {

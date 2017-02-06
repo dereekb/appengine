@@ -13,7 +13,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.fiel
  *
  * @author dereekb
  *
- * @see {@link WeekTimeDocumentBuilderUtility}
+ * @see WeekTimeDocumentBuilderUtility
  */
 public class WeekTimeSearch {
 

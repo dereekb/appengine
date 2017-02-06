@@ -12,7 +12,7 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  *
  * @author dereekb
  *
- * @see {@link LinksServiceKeyRequest} for using keys instead.
+ * @see LinksServiceKeyRequest
  */
 public class LinksServiceModelRequest<T>
         implements LinksServiceRequest {

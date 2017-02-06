@@ -6,7 +6,8 @@ import com.dereekb.gae.server.mail.MailManager;
  * Thrown when attempting to send a mail through a without any recipients.
  * 
  * @author dereekb
- * @see {@link MailManager}
+ * 
+ * @see MailManager
  */
 public class NoEmailSenderException extends RuntimeException {
 

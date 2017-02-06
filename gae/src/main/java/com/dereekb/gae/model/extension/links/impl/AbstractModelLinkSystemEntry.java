@@ -56,10 +56,12 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	public static interface Validator<T> {
 
 		/**
-		 * @see {@link LinkModelSetImplDelegate#validateModels(List, LinkModelSetChange)}
+		 * @see LinkModelSetImplDelegate#validateModels(List,
+		 *      LinkModelSetChange)
 		 */
 		public void validateModels(List<T> models,
-		                           LinkModelSetChange changes) throws LinkSaveConditionException;
+		                           LinkModelSetChange changes)
+		        throws LinkSaveConditionException;
 
 	}
 
@@ -74,7 +76,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	public static interface Reviewer<T> {
 
 		/**
-		 * @see {@link LinkModelSetImplDelegate#reviewModels(List, LinkModelSetChange)}
+		 * @see LinkModelSetImplDelegate#reviewModels(List, LinkModelSetChange)
 		 */
 		public void reviewModels(List<T> models,
 		                         LinkModelSetChange changes);
@@ -109,20 +111,20 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	}
 
 	public AbstractModelLinkSystemEntry(String modelType,
-            ReadService<T> readService,
+	        ReadService<T> readService,
 	        DeleteService<T> deleteService,
-            ConfiguredSetter<T> setter,
-            Map<String, LinkDeleterChangeType> deleteChangesMap) {
+	        ConfiguredSetter<T> setter,
+	        Map<String, LinkDeleterChangeType> deleteChangesMap) {
 		this.setModelType(modelType);
 		this.setReadService(readService);
 		this.setSetter(setter);
 		this.setDeleteService(deleteService);
 		this.setDeleteChangesMap(deleteChangesMap);
 		this.setReverseLinkNames(null);
-    }
+	}
 
 	@Override
-    public String getModelType() {
+	public String getModelType() {
 		return this.modelType;
 	}
 
@@ -155,21 +157,21 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	}
 
 	@Override
-    public ReadResponse<T> readModels(Collection<ModelKey> keys) {
+	public ReadResponse<T> readModels(Collection<ModelKey> keys) {
 		ReadRequest request = new KeyReadRequest(keys);
 		request.getOptions().setAtomic(false);
 		return this.readService.read(request);
-    }
+	}
 
 	@Override
-    public void saveModels(List<T> models) {
+	public void saveModels(List<T> models) {
 		this.setter.save(models);
-    }
+	}
 
 	@Override
-    public String getLinkModelType() {
+	public String getLinkModelType() {
 		return this.modelType;
-    }
+	}
 
 	public DeleteService<T> getDeleteService() {
 		return this.deleteService;
@@ -224,7 +226,8 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 
 	@Override
 	public void validateModels(List<T> models,
-	                           LinkModelSetChange changes) throws LinkSaveConditionException {
+	                           LinkModelSetChange changes)
+	        throws LinkSaveConditionException {
 		if (this.validator != null) {
 			this.validator.validateModels(models, changes);
 		}

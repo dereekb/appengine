@@ -7,7 +7,7 @@ package com.dereekb.gae.utilities.misc.bit;
  *
  * @param <T>
  *            Value type.
- * @see {@link BitContainer}
+ * @see BitContainer
  */
 public interface BitArithmetic<T> {
 

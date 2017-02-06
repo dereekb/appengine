@@ -10,8 +10,6 @@ import com.thevisitcompany.gae.model.general.validation.Phone;
  * Contains contact information.
  *
  * The phone-number is based on the E.164 standard.
- *
- * @see {@link http://en.wikipedia.org/wiki/E.164}
  */
 @Deprecated
 public class Contacts {

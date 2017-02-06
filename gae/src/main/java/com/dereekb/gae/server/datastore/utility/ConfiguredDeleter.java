@@ -8,7 +8,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * synchronously or asynchronously.
  *
  * @author dereekb
- * @see {@link Deleter}
  */
 public interface ConfiguredDeleter
         extends Deleter {

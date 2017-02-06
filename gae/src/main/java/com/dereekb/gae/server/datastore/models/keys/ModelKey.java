@@ -113,7 +113,7 @@ public final class ModelKey
 	}
 
 	/**
-	 * @see {@link #keyAsString()} for getting the key's string value.
+	 * @see #keyAsString()
 	 */
 	@Override
 	public String toString() {
@@ -470,7 +470,7 @@ public final class ModelKey
 	 *         Contains a number id if applicable, or a String id if not null.
 	 * @throws IllegalArgumentException
 	 *             if any of the input identifiers cannot be converted.
-	 * @Deprecated Is dangerous to use. Rely on a specific
+	 * @deprecated Is dangerous to use. Rely on a specific
 	 *             {@link DirectionalConverter} instead.
 	 */
 	@Deprecated

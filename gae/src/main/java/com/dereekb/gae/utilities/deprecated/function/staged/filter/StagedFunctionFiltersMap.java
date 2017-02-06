@@ -23,7 +23,8 @@ import com.dereekb.gae.utilities.filters.FilterResults;
  *            Type of the base object used in this function.
  * @param <W>
  *            Functional Wrapper of the main object that extends StagedFunctionObject.
- * @see {@link StagedFunctionObserverMap} for modifying objects instead of filtering them.
+ *            
+ * @see StagedFunctionObserverMap
  */
 public class StagedFunctionFiltersMap<T, W extends StagedFunctionObject<T>> extends StagedFunctionStageMap<StagedFunctionFilter<T>, StagedFunctionObjectFilter<T, W>>
         implements StagedFunctionFilterDelegate<T, W> {

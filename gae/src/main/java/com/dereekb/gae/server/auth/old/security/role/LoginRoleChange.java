@@ -2,11 +2,14 @@ package com.dereekb.gae.server.auth.old.security.role;
 
 import java.util.List;
 
+import com.dereekb.gae.server.auth.model.login.Login;
+
 /**
  * Interface that contains {@link Role} changes for a {@link Login}.
  *
  * @author dereekb
- * @see {@link LoginRoleWriter}
+ * 
+ * @see LoginRoleWriter
  */
 public interface LoginRoleChange {
 
