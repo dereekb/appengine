@@ -20,6 +20,10 @@ public class MultiIterableTask<T> extends MultiTask<Iterable<T>>
 		super();
 	}
 
+	public MultiIterableTask(Task<Iterable<T>> task) {
+		super(task);
+	}
+
 	public MultiIterableTask(List<Task<Iterable<T>>> tasks) {
 		super(tasks);
 	}

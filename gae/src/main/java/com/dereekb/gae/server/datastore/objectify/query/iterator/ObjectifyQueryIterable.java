@@ -4,8 +4,10 @@ import com.dereekb.gae.server.datastore.models.query.ModelQueryIterable;
 import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
 
 /**
- * {@link ModelQueryIterable} and {@link IndexedIterable} implementations used
- * by Objectify iterators.
+ * {@link ModelQueryIterable} and {@link IndexedIterable} interface extension.
+ * 
+ * Is used as a second layer iterator over query results, allowing the user to
+ * iterate over the entire database.
  *
  * @author dereekb
  *

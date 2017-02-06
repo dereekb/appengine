@@ -1,6 +1,5 @@
 package com.dereekb.gae.test.applications.api.model.tests.extension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -49,7 +48,7 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 
 	@Test
 	public void testDocumentBuilding() {
-		T model = this.make();
+		T model = this.generator.generate();
 
 		Document document = this.builder.buildSearchDocument(model);
 		Assert.assertNotNull(document);
@@ -57,7 +56,7 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 
 	@Test
 	public void testIndexing() {
-		T model = this.make();
+		T model = this.generator.generate();
 		model.setSearchIdentifier(null);
 
 		Iterable<T> set = SingleItem.withValue(model);
@@ -73,31 +72,13 @@ public abstract class ModelSearchDocumentTest<T extends SearchableUniqueModel> e
 
 	@Test
 	public void testIndexingMultiple() {
-		List<T> models = this.make(10);
+		List<T> models = this.generator.generate(10);
 
 		this.indexService.indexChange(models, IndexAction.INDEX);
 
 		for (T model : models) {
 			Assert.assertNotNull(model.getSearchIdentifier());
 		}
-	}
-
-	protected T make() {
-		if (this.generator == null) {
-			throw new RuntimeException("No generator has been set.");
-		}
-
-		return this.generator.generate();
-	}
-
-	protected List<T> make(int limit) {
-		List<T> list = new ArrayList<T>();
-
-		for (int i = 0; i < limit; i += 1) {
-			list.add(this.make());
-		}
-
-		return list;
 	}
 
 }

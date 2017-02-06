@@ -28,6 +28,34 @@ public class ObjectifyModelKeyUtil<T> {
 	}
 
 	// MARK: Key
+	/**
+	 * Creates a key from the input.
+	 * 
+	 * @param modelKey
+	 *            {@link ModelKey}. Never {@code null}.
+	 * @return {@link Key} if successful, and {@code null} otherwise.
+	 * @deprecated Does not gurantee safety. Use
+	 *             {@link ExtendedObjectifyModelKeyUtil#fromModelKey(ModelKey)}.
+	 */
+	@Deprecated
+	public Key<T> fromModelKey(ModelKey modelKey) {
+		ModelKeyType keyType = modelKey.getType();
+		Key<T> key = null;
+
+		switch (keyType) {
+			case NAME:
+				key = this.keyFromName(modelKey);
+				break;
+			case NUMBER:
+				key = this.keyFromNumber(modelKey);
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported key type.");
+		}
+
+		return key;
+	}
+
 	public Key<T> keyFromNumber(ModelKey modelKey) {
 		Key<T> key;
 
@@ -55,7 +83,8 @@ public class ObjectifyModelKeyUtil<T> {
 	}
 
 	public Key<T> keyFromString(ModelKeyType keyType,
-	                            String string) throws IllegalArgumentException {
+	                            String string)
+	        throws IllegalArgumentException {
 		Key<T> key;
 
 		switch (keyType) {
@@ -78,8 +107,25 @@ public class ObjectifyModelKeyUtil<T> {
 	}
 
 	// MARK: Static
+	public static <T> ModelKey readModelKey(Key<T> key) throws IllegalArgumentException {
+		ModelKey modelKey = null;
+
+		if (key != null) {
+			Long id = key.getId();
+
+			if (id == 0) {
+				modelKey = new ModelKey(key.getName());
+			} else {
+				modelKey = new ModelKey(id);
+			}
+		}
+
+		return modelKey;
+	}
+
 	public static <T> String readKeyString(ModelKeyType keyType,
-	                                       Key<T> key) throws IllegalArgumentException {
+	                                       Key<T> key)
+	        throws IllegalArgumentException {
 		String id;
 
 		switch (keyType) {

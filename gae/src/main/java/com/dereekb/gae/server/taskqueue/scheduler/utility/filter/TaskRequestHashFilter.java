@@ -7,8 +7,8 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTimingType;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.filter.impl.TaskRequestHashBuilderImpl;
-import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 
 /**
  * Filter that prevents repeat requests by keeping track of request hashes and

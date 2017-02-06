@@ -37,11 +37,11 @@ public class BatchBuilderImpl
 	}
 
 	public int getPartitionSize() {
-		return this.partitioner.getPartitionSize();
+		return this.partitioner.getDefaultPartitionSize();
 	}
 
 	public void setPartitionSize(int size) throws IllegalArgumentException {
-		this.partitioner.setPartitionSize(size);
+		this.partitioner.setDefaultPartitionSize(size);
 	}
 
 	// MARK: Batching

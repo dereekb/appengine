@@ -4,10 +4,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * DTO for {@link ApiLinkChangeConverter}.
@@ -41,7 +43,7 @@ public class ApiLinkChange {
 	 * A max of 50 target keys are allowed to be changed at one time.
 	 */
 	@NotEmpty
-	@Max(50)
+	@Size(max = 50)
 	private Set<String> targetKeys;
 
 	public ApiLinkChange() {}
@@ -55,7 +57,7 @@ public class ApiLinkChange {
 	public ApiLinkChange(String action, String primaryKey, String linkName, String singleTargetKey) {
 		this(action, primaryKey, linkName);
 
-		Set<String> targetKeys = new HashSet<String>();
+		Set<String> targetKeys = new HashSet<>();
 		targetKeys.add(singleTargetKey);
 		this.setTargetKeys(targetKeys);
 	}
@@ -93,13 +95,14 @@ public class ApiLinkChange {
 		return this.targetKeys;
 	}
 
+	@JsonIgnore
 	public void setTargetKeys(Set<String> targetKeys) {
 		this.targetKeys = targetKeys;
 	}
 
 	public void setTargetKeys(Collection<String> targetKeys) {
 		if (targetKeys != null) {
-			this.targetKeys = new HashSet<String>(targetKeys);
+			this.targetKeys = new HashSet<>(targetKeys);
 		} else {
 			this.targetKeys = null;
 		}

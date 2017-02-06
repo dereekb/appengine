@@ -63,7 +63,7 @@ public class StoredBlobSearchDocumentTest extends ModelSearchDocumentTest<Stored
 		StoredBlobSearchRequest request = new StoredBlobSearchRequest();
 		ModelDocumentSearchResponse<StoredBlob> response = this.searchService.search(request);
 
-		Collection<StoredBlob> results = response.getModelSearchResults();
+		Collection<StoredBlob> results = response.getModelResults();
 		Assert.assertTrue(results.containsAll(models));
 
 	}

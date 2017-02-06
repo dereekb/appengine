@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.exception.UnregisteredIterateTypeException;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -52,16 +53,21 @@ public class TaskQueueIterateController {
 
 	public TaskQueueIterateController() {}
 
-	public TaskQueueIterateController(TaskScheduler scheduler, Map<String, TaskQueueIterateControllerEntry> entries) {
+	public TaskQueueIterateController(TaskScheduler scheduler, Map<String, TaskQueueIterateControllerEntry> entries)
+	        throws IllegalArgumentException {
 		this.setScheduler(scheduler);
 		this.setEntries(entries);
 	}
 
-    public TaskScheduler getScheduler() {
+	public TaskScheduler getScheduler() {
 		return this.scheduler;
 	}
 
-	public void setScheduler(TaskScheduler scheduler) {
+	public void setScheduler(TaskScheduler scheduler) throws IllegalArgumentException {
+		if (scheduler == null) {
+			throw new IllegalArgumentException("Scheduler cannot be null.");
+		}
+
 		this.scheduler = scheduler;
 	}
 
@@ -69,8 +75,12 @@ public class TaskQueueIterateController {
 		return this.entries;
 	}
 
-	public void setEntries(Map<String, TaskQueueIterateControllerEntry> entries) {
-		this.entries = entries;
+	public void setEntries(Map<String, TaskQueueIterateControllerEntry> entries) throws IllegalArgumentException {
+		if (entries == null) {
+			throw new IllegalArgumentException("Entries cannot be null.");
+		}
+
+		this.entries = new CaseInsensitiveMap<TaskQueueIterateControllerEntry>(entries);
 	}
 
 	/**
@@ -93,7 +103,7 @@ public class TaskQueueIterateController {
 	 *            All request parameters. Never {@code null}.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/iterate/{task}", method = RequestMethod.POST, consumes = "application/octet-stream")
+	@RequestMapping(value = "{type}/iterate/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void iterate(@PathVariable("type") String modelType,
 	                    @PathVariable("task") String taskName,
 	                    @RequestHeader(value = TASK_STEP_HEADER, required = false) Integer step,
@@ -110,10 +120,15 @@ public class TaskQueueIterateController {
 		TaskQueueIterateControllerEntry entry = this.entries.get(modelType);
 
 		if (entry == null) {
-			throw new UnregisteredIterateTypeException();
+			throw new UnregisteredIterateTypeException("Unknown type: " + modelType);
 		}
 
 		return entry;
+	}
+
+	public static String pathForIterateTask(String modelType,
+	                                        String taskName) {
+		return String.format("%s/iterate/%s", modelType, taskName);
 	}
 
 	@Override
@@ -138,10 +153,10 @@ public class TaskQueueIterateController {
 		@Override
 		public void scheduleContinuation(String cursor) {
 			String path = this.getContinutationPath();
-			Collection<TaskParameter> headers = this.getContinuationHeaders(cursor);
-			Collection<TaskParameter> parameters = this.getContinuationParameters();
+			Collection<KeyedEncodedParameter> headers = this.getContinuationHeaders(cursor);
+			Collection<KeyedEncodedParameter> parameters = this.getContinuationParameters();
 
-			TaskRequestImpl request = new TaskRequestImpl(path, Method.POST);
+			TaskRequestImpl request = new TaskRequestImpl(path, Method.PUT);
 			request.setHeaders(headers);
 			request.setParameters(parameters);
 
@@ -151,23 +166,23 @@ public class TaskQueueIterateController {
 		private String getContinutationPath() {
 			String taskName = this.taskInput.getTaskName();
 			String modelType = this.taskInput.getModelType();
-			return String.format("%s/iterate/%s", modelType, taskName);
+			return pathForIterateTask(modelType, taskName);
 		}
 
-		private Collection<TaskParameter> getContinuationHeaders(String cursor) {
+		private Collection<KeyedEncodedParameter> getContinuationHeaders(String cursor) {
 			Integer step = this.taskInput.getIterationStep() + 1;
 
-			List<TaskParameter> parameters = new ArrayList<TaskParameter>();
-			parameters.add(new TaskParameterImpl(TASK_STEP_HEADER, step));
-			parameters.add(new TaskParameterImpl(CURSOR_HEADER, cursor));
+			List<KeyedEncodedParameter> parameters = new ArrayList<KeyedEncodedParameter>();
+			parameters.add(new KeyedEncodedParameterImpl(TASK_STEP_HEADER, step));
+			parameters.add(new KeyedEncodedParameterImpl(CURSOR_HEADER, cursor));
 
 			return parameters;
 		}
 
-		private Collection<TaskParameter> getContinuationParameters() {
+		private Collection<KeyedEncodedParameter> getContinuationParameters() {
 			Map<String, String> parameters = this.taskInput.getParameters();
-			List<TaskParameterImpl> impl = TaskParameterImpl.makeParametersWithMap(parameters);
-			return new ArrayList<TaskParameter>(impl);
+			List<KeyedEncodedParameterImpl> impl = KeyedEncodedParameterImpl.makeParametersWithMap(parameters);
+			return new ArrayList<KeyedEncodedParameter>(impl);
 		}
 
 	}

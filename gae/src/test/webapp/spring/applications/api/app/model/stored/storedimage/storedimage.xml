@@ -10,24 +10,33 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Type -->
-	<bean id="storedImageType" class="java.lang.String" scope="singleton">
+	<bean id="storedImageType" class="java.lang.String">
 		<constructor-arg index="0" value="StoredImage" />
 	</bean>
-	
+
+	<bean id="storedImageClass" class="java.lang.Class"
+		factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.model.stored.image.StoredImage" />
+	</bean>
+
+	<bean id="storedImageIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+		<constructor-arg index="0" value="NUMBER" />
+	</bean>
+
 	<!-- Database -->
 	<bean id="storedImageObjectifyEntry"
 		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="storedImageType" />
-		<constructor-arg index="1" type="java.lang.Class"
-			value="com.dereekb.gae.model.stored.image.StoredImage" />
-		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="1" ref="storedImageClass" />
+		<constructor-arg index="2" ref="storedImageIdType" />
+		<constructor-arg index="3" ref="storedImageQueryInitializer" />
 	</bean>
 
 	<bean id="storedImageRegistry" factory-bean="objectifyDatabase"
-		factory-method="makeRegistry" scope="singleton">
-		<constructor-arg index="0" type="java.lang.Class"
-			value="com.dereekb.gae.model.stored.image.StoredImage" />
+		factory-method="makeRegistry">
+		<constructor-arg index="0" ref="storedImageClass" />
 	</bean>
 
 	<!-- Configured Setters -->
@@ -40,15 +49,16 @@
 	</bean>
 
 	<!-- Update Scheduler -->
-	<bean id="storedImageScheduleUpdateReview" lazy-init="true" scope="singleton"
+	<bean id="storedImageScheduleUpdateReview"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
 		<constructor-arg index="0" ref="storedImageType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="storedImageUpdateConfiguredSetter" lazy-init="true" scope="singleton"
+	<bean id="storedImageUpdateConfiguredSetter"
 		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
-		<constructor-arg index="0" ref="storedImageScheduleUpdateReview" />
+		<constructor-arg index="0"
+			ref="storedImageScheduleUpdateReview" />
 		<constructor-arg index="1" ref="storedImageRegistry" />
 	</bean>
 

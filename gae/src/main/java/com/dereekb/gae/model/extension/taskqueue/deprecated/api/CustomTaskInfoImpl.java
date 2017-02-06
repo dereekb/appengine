@@ -16,20 +16,20 @@ public class CustomTaskInfoImpl
 	private String taskName;
 	private Integer taskStep;
 	private List<String> stringIdentifiers;
-	private Map<String, String> taskParameters;
+	private Map<String, String> KeyedEncodedParameters;
 
-	public CustomTaskInfoImpl(String taskName, Map<String, String> taskParameters) {
-		this(taskName, 0, null, taskParameters);
+	public CustomTaskInfoImpl(String taskName, Map<String, String> KeyedEncodedParameters) {
+		this(taskName, 0, null, KeyedEncodedParameters);
 	}
 
 	public CustomTaskInfoImpl(String taskName,
 	        Integer taskStep,
 	        List<String> stringIdentifiers,
-	        Map<String, String> taskParameters) {
+	        Map<String, String> KeyedEncodedParameters) {
 		this.taskName = taskName;
 		this.setTaskStep(taskStep);
 		this.setStringIdentifiers(stringIdentifiers);
-		this.setTaskParameters(taskParameters);
+		this.setKeyedEncodedParameters(KeyedEncodedParameters);
 	}
 
 	@Override
@@ -64,15 +64,15 @@ public class CustomTaskInfoImpl
 	}
 
 	@Override
-	public Map<String, String> getTaskParameters() {
-		return this.taskParameters;
+	public Map<String, String> getKeyedEncodedParameters() {
+		return this.KeyedEncodedParameters;
 	}
 
-	public void setTaskParameters(Map<String, String> taskParameters) {
-		if (taskParameters == null) {
-			this.taskParameters = Collections.emptyMap();
+	public void setKeyedEncodedParameters(Map<String, String> KeyedEncodedParameters) {
+		if (KeyedEncodedParameters == null) {
+			this.KeyedEncodedParameters = Collections.emptyMap();
 		} else {
-			this.taskParameters = taskParameters;
+			this.KeyedEncodedParameters = KeyedEncodedParameters;
 		}
 	}
 

@@ -13,7 +13,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.Expressio
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.BooleanField;
 import com.dereekb.gae.utilities.collections.map.StringMapReader;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Builder for {@link GeoPlaceSearch} elements.

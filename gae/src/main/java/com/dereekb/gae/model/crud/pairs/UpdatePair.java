@@ -10,8 +10,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionObject;
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 
 /**
  * A pair containing and target and a template to process an edit with.
@@ -23,8 +21,7 @@ import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
  * @param <T>
  *            Type of target being edited and used as a template.
  */
-public class UpdatePair<T extends UniqueModel> extends SuccessResultsPair<T>
-        implements StagedFunctionObject<T> {
+public class UpdatePair<T extends UniqueModel> extends SuccessResultsPair<T> {
 
 	private final T template;
 	private AttributeFailureException failureException;
@@ -68,23 +65,6 @@ public class UpdatePair<T extends UniqueModel> extends SuccessResultsPair<T>
 	}
 
 	/**
-	 * Returns the source only at the started stage in order to allow for pre-function validation and filtering on the
-	 * key.
-	 */
-	@Override
-	public T getFunctionObject(StagedFunctionStage stage) {
-		T target = null;
-
-		if (stage.after(StagedFunctionStage.FUNCTION_RUNNING)) {
-			target = this.getTarget();
-		} else {
-			target = this.getTemplate();
-		}
-
-		return target;
-	}
-
-	/**
 	 * Creates a new set of update pairs. Pairs up the same index in each input
 	 * collection.
 	 *
@@ -101,9 +81,9 @@ public class UpdatePair<T extends UniqueModel> extends SuccessResultsPair<T>
 		List<HandlerPair<T, T>> pairs = ModelKey.makePairs(targets, templates);
 		pairs = HandlerPair.filterRepeatingKeys(pairs);
 
-		List<UpdatePair<T>> updatePairs = new ArrayList<UpdatePair<T>>();
+		List<UpdatePair<T>> updatePairs = new ArrayList<>();
 		for (HandlerPair<T, T> pair : pairs) {
-			UpdatePair<T> updatePair = new UpdatePair<T>(pair);
+			UpdatePair<T> updatePair = new UpdatePair<>(pair);
 			updatePairs.add(updatePair);
 		}
 

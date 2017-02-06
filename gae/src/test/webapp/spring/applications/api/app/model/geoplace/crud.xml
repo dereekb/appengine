@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Cruds -->
-	<bean id="geoPlaceCrudService" lazy-init="true"
+	<bean id="geoPlaceCrudService"
 		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
 		<constructor-arg index="0" ref="geoPlaceCreateService" />
 		<constructor-arg index="1" ref="geoPlaceReadService" />
@@ -19,17 +19,17 @@
 	</bean>
 
 	<!-- Services -->
-	<bean id="geoPlaceCreateService" lazy-init="true"
+	<bean id="geoPlaceCreateService"
 		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
 		<constructor-arg index="0" ref="geoPlaceCreateTask" />
 	</bean>
 
-	<bean id="geoPlaceReadService" lazy-init="true"
+	<bean id="geoPlaceReadService"
 		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
 		<constructor-arg index="0" ref="geoPlaceReadTask" />
 	</bean>
 
-	<bean id="geoPlaceUpdateService" lazy-init="true"
+	<bean id="geoPlaceUpdateService"
 		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
 		<constructor-arg index="0" ref="geoPlaceReadService" />
 		<constructor-arg index="1" ref="geoPlaceUpdateTask" />
@@ -43,23 +43,25 @@
 
 	<!-- Save/Delete Tasks -->
 	<bean id="geoPlaceSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
 			ref="geoPlaceSynchronousConfiguredSetter" />
 	</bean>
 
 	<bean id="geoPlaceAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0" ref="geoPlaceAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Create -->
-	<bean id="geoPlaceCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
-		lazy-init="true">
+	<bean id="geoPlaceCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceCreateTaskDelegate" />
-		<constructor-arg index="1" ref="geoPlaceSynchronousSaveTask" />
+		<constructor-arg index="1">
+			<bean class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelMultiIterableTask">
+				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
+				<constructor-arg index="1" ref="geoPlaceSynchronousSaveTask"/>
+			</bean>
+		</constructor-arg>
 		<constructor-arg index="2">
 			<bean
 				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
@@ -70,37 +72,34 @@
 	</bean>
 
 	<bean id="geoPlaceCreateTaskDelegate"
-		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
 		<constructor-arg index="0" ref="geoPlaceFactory" />
 		<constructor-arg index="1" ref="geoPlaceAttributeUpdater" />
 	</bean>
 
 	<!-- Read -->
-	<bean id="geoPlaceReadTask" lazy-init="true"
-		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+	<bean id="geoPlaceReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
 	</bean>
 
 	<!-- Update -->
-	<bean id="geoPlaceUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl"
-		lazy-init="true">
+	<bean id="geoPlaceUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceAttributeUpdater" />
 		<constructor-arg index="1" ref="geoPlaceAsyncSaveTask" />
 		<constructor-arg index="2" ref="geoPlaceScheduleUpdateReview" />
 	</bean>
 
 	<bean id="geoPlaceAttributeUpdater"
-		class="com.dereekb.gae.model.geo.place.crud.GeoPlaceAttributeUpdater"
-		lazy-init="true">
+		class="com.dereekb.gae.model.geo.place.crud.GeoPlaceAttributeUpdater">
 	</bean>
 
 	<!-- Delete -->
 	<alias name="geoPlaceScheduleDeleteTask" alias="geoPlaceDeleteTask" />
 
 	<bean id="geoPlaceScheduleDeleteTask"
-		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
 		<constructor-arg index="0" ref="geoPlaceType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 		<property name="deleteFilter">

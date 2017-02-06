@@ -67,7 +67,7 @@ public class DocumentQueryExpressionBuilderTests {
 		expressionValue = builder.getExpressionValue();
 		Assert.assertNotNull(expressionValue);
 
-		builder.setOperator(ExpressionOperator.GreaterOrEqualTo);
+		builder.setOperator(ExpressionOperator.GREATER_OR_EQUAL_TO);
 		expressionValue = builder.getExpressionValue();
 		Assert.assertNotNull(expressionValue);
 
@@ -75,13 +75,13 @@ public class DocumentQueryExpressionBuilderTests {
 
 	@Test
 	public void testDateQueryField() {
+		Date firstDate = new Date(0);
+		DateField builder = new DateField(TEST_FIELD_NAME, firstDate, ExpressionOperator.GREATER_THAN);
 
-		Date value = new Date();
-		DateField builder = new DateField(TEST_FIELD_NAME, value);
+		Assert.assertTrue("The year should be set properly", builder.getYear() == 1970);
 
 		String expressionValue = builder.getExpressionValue();
 		Assert.assertNotNull(expressionValue);
-
 	}
 
 	@Test

@@ -7,9 +7,9 @@ import com.dereekb.gae.model.extension.search.document.search.query.impl.Abstrac
 import com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetDocumentBuilderStep;
 import com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchBuilder.StoredImageSetSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
+import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 import com.dereekb.gae.utilities.collections.map.StringMapReader;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Builder for {@link StoredImageSetSearch} elements.
@@ -88,19 +88,19 @@ public class StoredImageSetSearchBuilder extends AbstractSearchBuilderImpl<Store
 		String label = search.getLabel();
 		if (label != null) {
 			String labelName = String.format(format, this.labelField);
-			builder = builder.and(new AtomField(labelName, label));
+			builder = builder.and(new TextField(labelName, label));
 		}
 
 		String detail = search.getDetail();
 		if (detail != null) {
 			String detailName = String.format(format, this.detailField);
-			builder = builder.and(new AtomField(detailName, detail));
+			builder = builder.and(new TextField(detailName, detail));
 		}
 
 		String tags = search.getTags();
 		if (tags != null) {
 			String tagsName = String.format(format, this.tagsField);
-			builder = builder.and(new AtomField(tagsName, tags));
+			builder = builder.and(new TextField(tagsName, tags));
 		}
 
 		return builder;

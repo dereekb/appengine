@@ -1,93 +1,68 @@
 package com.dereekb.gae.server.auth.model.pointer.search.query;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.model.pointer.search.query.LoginPointerQueryInitializer.ObjectifyLoginPointerQuery;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.ConfigurableQueryParameters;
+import com.dereekb.gae.server.datastore.objectify.query.builder.AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl;
+import com.dereekb.gae.server.datastore.objectify.query.builder.ConfigurableObjectifyQueryRequestConfigurer;
+import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryFactory;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyAbstractQueryFieldParameter;
 import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyKeyFieldParameterBuilder.ObjectifyKeyFieldParameter;
 import com.googlecode.objectify.Key;
 
 /**
- * {@link ConfigurableQueryParameters} implementation for a
+ * {@link ObjectifyQueryRequestLimitedBuilderInitializer} implementation for a
  * {@link LoginPointerQuery}.
  *
  * @author dereekb
  *
  */
-public class LoginPointerQueryInitializer
-        implements ObjectifyQueryRequestLimitedBuilderInitializer {
+public class LoginPointerQueryInitializer extends AbstractObjectifyQueryRequestLimitedBuilderInitializerImpl
+        implements ObjectifyQueryFactory<ObjectifyLoginPointerQuery> {
 
-	public static final String LOGIN_FIELD = "login";
-
-	private static final ObjectifyKeyFieldParameterBuilder<LoginPointer> LOGIN_BUILDER = new ObjectifyKeyFieldParameterBuilder<LoginPointer>(
-	        ModelKeyType.NUMBER, LoginPointer.class);
+	private static final ObjectifyKeyFieldParameterBuilder<Login> LOGIN_BUILDER = ObjectifyKeyFieldParameterBuilder
+	        .make(ModelKeyType.NUMBER, Login.class);
 
 	@Override
-	public void initalizeBuilder(ObjectifyQueryRequestLimitedBuilder builder,
-	                             Map<String, String> parameters) {
-
-		LoginPointerQuery query = new LoginPointerQuery();
-
-		if (parameters != null) {
-			query.setParameters(parameters);
-			query.configure(builder);
-		}
-
+	protected ConfigurableObjectifyQueryRequestConfigurer makeConfigurer() {
+		return new ObjectifyLoginPointerQuery();
 	}
 
-	public static class LoginPointerQuery
-	        implements ConfigurableQueryParameters {
+	// MARK: ObjectifyQueryFactory
+	@Override
+	public ObjectifyLoginPointerQuery makeQuery(Map<String, String> parameters) throws IllegalArgumentException {
+		return new ObjectifyLoginPointerQuery(parameters);
+	}
 
-		private ObjectifyKeyFieldParameter<LoginPointer> parent;
+	public static class ObjectifyLoginPointerQuery extends LoginPointerQuery
+	        implements ConfigurableObjectifyQueryRequestConfigurer {
 
-		public ObjectifyKeyFieldParameter<LoginPointer> getParent() {
-			return this.parent;
+		public ObjectifyLoginPointerQuery() {
+			super();
 		}
 
-		public void setParent(Key<LoginPointer> parent) {
-			if (parent != null) {
-				this.parent = LOGIN_BUILDER.make(LOGIN_FIELD, parent);
-			} else {
-				this.parent = null;
-			}
+		public ObjectifyLoginPointerQuery(Map<String, String> parameters) throws IllegalArgumentException {
+			super(parameters);
 		}
 
-		// MARK: ConfigurableQueryParameters
-		@Override
-		public Map<String, String> getParameters() {
-			Map<String, String> parameters = new HashMap<String, String>();
-
-			if (this.parent != null) {
-				parameters.put(LOGIN_FIELD, this.parent.getParameterString());
-			}
-
-			return parameters;
+		public void setLogin(Login login) throws NullPointerException {
+			this.setLogin(login.getObjectifyKey());
 		}
 
-		@Override
-		public void setParameters(Map<String, String> parameters) {
-			String parentString = parameters.get(LOGIN_FIELD);
-
-			if (parentString != null) {
-				this.parent = LOGIN_BUILDER.make(LOGIN_FIELD, parentString);
-			} else {
-				this.parent = null;
-			}
-
+		public void setLogin(Key<Login> login) {
+			this.setLogin(LOGIN_BUILDER.getUtil().toModelKey(login));
 		}
 
+		// MARK: ConfigurableObjectifyQueryRequestConfigurer
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
-
-			if (this.parent != null) {
-				this.parent.configure(request);
-			}
-
+			LOGIN_BUILDER.configure(request, this.getLogin());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getType());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
 		}
 
 	}

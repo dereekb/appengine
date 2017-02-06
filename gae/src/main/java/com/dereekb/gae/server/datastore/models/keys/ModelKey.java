@@ -2,18 +2,23 @@ package com.dereekb.gae.server.datastore.models.keys;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
-import com.dereekb.gae.server.datastore.models.keys.exception.NullModelKeyException;
+import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
+import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.google.common.base.Joiner;
 
 /**
  * Represents a key for a model.
@@ -87,6 +92,11 @@ public final class ModelKey
 		return this;
 	}
 
+	@Override
+	public ModelKey getKeyValue() {
+		return this;
+	}
+
 	/**
 	 * @return String representation of the key value.
 	 */
@@ -133,8 +143,21 @@ public final class ModelKey
 		return this.keyAsString().equals(other.keyAsString());
 	}
 
+	public static boolean isEqual(ModelKey key,
+	                              ModelKey userKey) {
+		boolean isEqual = false;
+
+		if (key != null) {
+			isEqual = key.equals(userKey);
+		} else if (userKey == null) {
+			isEqual = true;
+		}
+
+		return isEqual;
+	}
+
 	public static List<ModelKey> readModelKeys(Iterable<? extends UniqueModel> models) {
-		List<ModelKey> values = new ArrayList<ModelKey>();
+		List<ModelKey> values = new ArrayList<>();
 
 		if (models != null) {
 			for (UniqueModel model : models) {
@@ -150,7 +173,7 @@ public final class ModelKey
 	}
 
 	public static List<String> readStringKeys(Iterable<? extends UniqueModel> models) {
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 
 		if (models != null) {
 			for (UniqueModel model : models) {
@@ -167,7 +190,7 @@ public final class ModelKey
 	}
 
 	public static List<String> keysAsStrings(Iterable<ModelKey> keys) {
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 
 		if (keys != null) {
 			for (ModelKey key : keys) {
@@ -219,11 +242,39 @@ public final class ModelKey
 		return id;
 	}
 
+	public static Long strictReadIdentifier(ModelKey key) throws InvalidModelKeyTypeException {
+		Long id = null;
+
+		if (key != null) {
+			id = key.getId();
+
+			if (id == null) {
+				throw new InvalidModelKeyTypeException();
+			}
+		}
+
+		return id;
+	}
+
 	public static String readName(ModelKey key) {
 		String name = null;
 
 		if (key != null) {
 			name = key.getName();
+		}
+
+		return name;
+	}
+
+	public static String strictReadName(ModelKey key) throws InvalidModelKeyTypeException {
+		String name = null;
+
+		if (key != null) {
+			name = key.getName();
+
+			if (name == null) {
+				throw new InvalidModelKeyTypeException();
+			}
 		}
 
 		return name;
@@ -237,6 +288,32 @@ public final class ModelKey
 		}
 
 		return keyString;
+	}
+
+	private static final String SPLITTER = ",";
+
+	public static String keysAsString(Set<ModelKey> keys) {
+		return keysAsString(keys, SPLITTER);
+	}
+
+	public static String keysAsString(Set<ModelKey> keys,
+	                                  String splitter) {
+		Joiner joiner = Joiner.on(splitter).skipNulls();
+		return joiner.join(keys);
+	}
+
+	public static List<ModelKey> convertKeysInString(ModelKeyType keyType,
+	                                                 String stringKey) {
+		return convertKeysInString(keyType, stringKey, SPLITTER);
+	}
+
+	public static List<ModelKey> convertKeysInString(ModelKeyType keyType,
+	                                                 String keys,
+	                                                 String splitter)
+	        throws IllegalArgumentException {
+		String[] values = keys.split(splitter);
+		List<String> valuesList = ListUtility.toList(values);
+		return convert(keyType, valuesList);
 	}
 
 	/**
@@ -287,7 +364,8 @@ public final class ModelKey
 	 *             if the conversion fails.
 	 */
 	public static List<ModelKey> convert(ModelKeyType keyType,
-	                                     Collection<String> values) throws ConversionFailureException {
+	                                     Collection<String> values)
+	        throws ConversionFailureException {
 		List<ModelKey> keys;
 
 		switch (keyType) {
@@ -305,7 +383,8 @@ public final class ModelKey
 	}
 
 	/**
-	 * Converts a number as a string to a {@link ModelKey}. If the string is
+	 * Converts a string number with radix 10 to a {@link ModelKey}. If the
+	 * string is
 	 * {@code null}, will return {@code null}.
 	 *
 	 * @param numberString
@@ -316,10 +395,29 @@ public final class ModelKey
 	 *             converted with {@link Long#Long(String)}.
 	 */
 	public static ModelKey convertNumberString(String numberString) throws NumberFormatException {
+		return convertNumberString(numberString, 10);
+	}
+
+	/**
+	 * Converts a number as a string to a {@link ModelKey}. If the string is
+	 * {@code null}, will return {@code null}.
+	 *
+	 * @param numberString
+	 *            String number to convert.
+	 * @param radix
+	 *            Number radix.
+	 * @return {@link ModelKey} with a Number identifier.
+	 * @throws NumberFormatException
+	 *             if the input string is not {@code null} but cannot be
+	 *             converted with {@link Long#Long(String)}.
+	 */
+	public static ModelKey convertNumberString(String numberString,
+	                                           int radix)
+	        throws NumberFormatException {
 		ModelKey key = null;
 
 		if (numberString != null) {
-			Long id = new Long(numberString);
+			Long id = Long.parseLong(numberString, radix);
 			key = new ModelKey(id);
 		}
 
@@ -377,7 +475,7 @@ public final class ModelKey
 	 */
 	@Deprecated
 	public static List<ModelKey> convert(List<String> identifiers) throws IllegalArgumentException {
-		List<ModelKey> keys = new ArrayList<ModelKey>();
+		List<ModelKey> keys = new ArrayList<>();
 
 		for (String identifier : identifiers) {
 			ModelKey key = convert(identifier);
@@ -421,14 +519,14 @@ public final class ModelKey
 	 * @param rightModels
 	 *            Models to map to the left. Will only appear once.
 	 * @return {@link List} of {@link HandlerPair} values.
-	 * @throws NullModelKeyException
+	 * @throws NullKeyException
 	 *             Thrown if any left model has no model key.
 	 */
 	public static <L extends UniqueModel, R extends UniqueModel> List<HandlerPair<L, R>> makePairs(Iterable<? extends L> leftModels,
 	                                                                                               Iterable<? extends R> rightModels)
-	        throws NullModelKeyException {
+	        throws NullKeyException {
 
-		List<HandlerPair<L, R>> pairs = new ArrayList<HandlerPair<L, R>>();
+		List<HandlerPair<L, R>> pairs = new ArrayList<>();
 		Map<ModelKey, L> leftMap = makeModelKeyMap(leftModels);
 
 		for (R right : rightModels) {
@@ -436,7 +534,7 @@ public final class ModelKey
 			L left = leftMap.get(key);
 
 			if (left != null) {
-				pairs.add(new HandlerPair<L, R>(left, right));
+				pairs.add(new HandlerPair<>(left, right));
 			}
 		}
 
@@ -449,24 +547,38 @@ public final class ModelKey
 	 * @param models
 	 *            {@link Iterable} collection. Never {@code null}.
 	 * @return {@link Map}. Never {@code null}.
-	 * @throws NullModelKeyException
+	 * @throws NullKeyException
 	 *             Thrown if a model does not have a key.
 	 */
 	public static <T extends UniqueModel> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
-	        throws NullModelKeyException {
-		Map<ModelKey, T> modelKeyMap = new HashMap<ModelKey, T>();
+	        throws NullKeyException {
+		return KeyedUtility.toMap(models);
+	}
+
+	/**
+	 * Creates a map of model keys for the input models.
+	 *
+	 * @param models
+	 *            {@link Iterable} collection. Never {@code null}.
+	 * @return {@link Set}. Never {@code null}.
+	 * @throws NullKeyException
+	 *             Thrown if a model does not have a key.
+	 */
+	public static <T extends UniqueModel> Set<ModelKey> makeModelKeySet(Iterable<? extends T> models)
+	        throws NullKeyException {
+		Set<ModelKey> keys = new HashSet<>();
 
 		for (T model : models) {
 			ModelKey key = model.getModelKey();
 
 			if (key == null) {
-				throw new NullModelKeyException();
+				throw new NullKeyException();
 			} else {
-				modelKeyMap.put(key, model);
+				keys.add(key);
 			}
 		}
 
-		return modelKeyMap;
+		return keys;
 	}
 
 }

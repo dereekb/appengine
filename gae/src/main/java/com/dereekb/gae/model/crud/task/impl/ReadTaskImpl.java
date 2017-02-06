@@ -2,6 +2,7 @@ package com.dereekb.gae.model.crud.task.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dereekb.gae.model.crud.pairs.ReadPair;
 import com.dereekb.gae.model.crud.task.ReadTask;
@@ -24,23 +25,20 @@ public class ReadTaskImpl<T extends UniqueModel>
 	private Getter<T> getter;
 	private ReadTaskConfig defaultConfig;
 
-	public ReadTaskImpl() {}
-
-	public ReadTaskImpl(Getter<T> getter) {
-		this.getter = getter;
-		this.defaultConfig = null;
+	public ReadTaskImpl(Getter<T> getter) throws IllegalArgumentException {
+		this(getter, null);
 	}
 
-	public ReadTaskImpl(Getter<T> getter, ReadTaskConfig defaultConfig) {
-		this.getter = getter;
-		this.defaultConfig = defaultConfig;
+	public ReadTaskImpl(Getter<T> getter, ReadTaskConfig defaultConfig) throws IllegalArgumentException {
+		this.setGetter(getter);
+		this.setDefaultConfig(defaultConfig);
 	}
 
 	public Getter<T> getGetter() {
 		return this.getter;
 	}
 
-	public void setGetter(Getter<T> getter) {
+	public void setGetter(Getter<T> getter) throws IllegalArgumentException {
 		if (getter == null) {
 			throw new IllegalArgumentException("Getter cannot be null.");
 		}
@@ -66,13 +64,17 @@ public class ReadTaskImpl<T extends UniqueModel>
 	public void doTask(Iterable<ReadPair<T>> input,
 	                   ReadTaskConfig configuration) {
 		Map<ModelKey, ReadPair<T>> keysMap = ReadPair.pairsKeyMap(input);
-		List<T> results = this.getter.getWithKeys(keysMap.keySet());
+		List<T> results = this.loadModels(keysMap.keySet());
 
 		for (T result : results) {
 			ModelKey modelKey = result.getModelKey();
 			ReadPair<T> pair = keysMap.get(modelKey);
 			pair.setResult(result);
 		}
+	}
+
+	protected List<T> loadModels(Set<ModelKey> set) {
+		return this.getter.getWithKeys(set);
 	}
 
 	@Override

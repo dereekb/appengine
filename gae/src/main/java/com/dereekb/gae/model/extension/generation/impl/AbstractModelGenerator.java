@@ -38,7 +38,8 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 	}
 
 	// MARK: Key Generation
-	protected ModelKey generateKey() {
+	@Override
+	public ModelKey generateKey() {
 		return this.keyGenerator.generate();
 	}
 
@@ -53,7 +54,7 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 
 	// MARK: Generation
 	@Override
-    public T generate() {
+	public T generate() {
 		return this.generateModel();
 	}
 

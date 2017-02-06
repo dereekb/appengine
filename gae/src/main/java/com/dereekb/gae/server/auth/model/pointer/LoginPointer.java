@@ -1,31 +1,38 @@
 package com.dereekb.gae.server.auth.model.pointer;
 
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.datastore.models.DatabaseModel;
+import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwned;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfEmpty;
 
 /**
  * Internal type used by {@link Login} to allow a flexible login system, and
  * specify different aliases.
- *
+ * <p>
  * The pointer is used for authentication purposes, and uses a user's email
  * address as the pointer key.
  *
  * @author dereekb
  */
-public class LoginPointer extends DatabaseModel
-        implements ObjectifyModel<LoginPointer> {
+@Cache
+@Entity
+public class LoginPointer extends OwnedDatabaseModel
+        implements ObjectifyModel<LoginPointer>, LoginOwned {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Identifier for logging in.
 	 *
-	 * Is generally an email address.
+	 * Is generally the username or an email address.
 	 */
 	@Id
 	private String identifier;
@@ -35,6 +42,30 @@ public class LoginPointer extends DatabaseModel
 	 */
 	@Index
 	private Key<Login> login;
+
+	/**
+	 * Pointer type.
+	 */
+	@Index
+	private Integer type;
+
+	/**
+	 * Password, if applicable.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String password;
+
+	/**
+	 * Pointer data, if applicable.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String data;
+
+	/**
+	 * Email address, if applicable.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String email;
 
 	public LoginPointer() {}
 
@@ -55,12 +86,66 @@ public class LoginPointer extends DatabaseModel
 	}
 
 	public ModelKey getLoginModelKey() {
-		Long id = this.login.getId();
-		return new ModelKey(id);
+		ModelKey key = null;
+
+		if (this.login != null) {
+			Long id = this.login.getId();
+			key = ModelKey.safe(id);
+		}
+
+		return key;
 	}
 
 	public void setLogin(Key<Login> loginKey) {
 		this.login = loginKey;
+	}
+
+	public LoginPointerType getLoginPointerType() {
+		return LoginPointerType.valueOf(this.type);
+	}
+
+	public void setLoginPointerType(LoginPointerType type) throws IllegalArgumentException {
+		if (type == null) {
+			this.setTypeId(null);
+		} else {
+			this.type = type.id;
+		}
+	}
+
+	public Integer getTypeId() {
+		return this.type;
+	}
+
+	public void setTypeId(Integer type) throws IllegalArgumentException {
+		if (type == null) {
+			throw new IllegalArgumentException("TypeId cannot be null.");
+		}
+
+		this.type = type;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getData() {
+		return this.data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	// Unique Model
@@ -69,8 +154,9 @@ public class LoginPointer extends DatabaseModel
 		return new ModelKey(this.identifier);
 	}
 
+	@Override
 	public void setModelKey(ModelKey key) {
-		this.identifier = ModelKey.readName(key);
+		this.identifier = ModelKey.strictReadName(key);
 	}
 
 	// Database Model
@@ -83,6 +169,12 @@ public class LoginPointer extends DatabaseModel
 	@Override
 	public Key<LoginPointer> getObjectifyKey() {
 		return Key.create(LoginPointer.class, this.identifier);
+	}
+
+	// Login Owned
+	@Override
+	public ModelKey getLoginOwnerKey() {
+		return this.getLoginModelKey();
 	}
 
 	@Override

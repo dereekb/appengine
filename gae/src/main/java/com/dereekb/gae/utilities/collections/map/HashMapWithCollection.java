@@ -31,20 +31,24 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	private final Map<K, C> map;
 
 	public HashMapWithCollection() {
-		this.map = new HashMap<K, C>();
+		this.map = this.makeMap();
 	}
 
-	public HashMapWithCollection(HashMapWithCollection<? extends K, ? extends T, ?> map) {
-		this.map = new HashMap<K, C>();
+	public HashMapWithCollection(Map<? extends K, ? extends Collection<? extends T>> map) {
+		this();
 		this.addAll(map);
 	}
 
 	public HashMapWithCollection(Iterable<MapPairing<? extends K, ? extends T>> pairings) {
-		this.map = new HashMap<K, C>();
+		this();
 		this.addAllPairings(pairings);
 	}
 
 	// MARK: Map
+	protected Map<K, C> makeMap() {
+		return new HashMap<K, C>();
+	}
+
 	@Override
 	public int size() {
 		return this.map.size();
@@ -239,7 +243,7 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 			List<? extends T> values = map.valuesForKey(key);
 			this.addAll(key, values);
 		}
-    }
+	}
 
 	/**
 	 * Adds the specified {@code object} to each of the keys specified.

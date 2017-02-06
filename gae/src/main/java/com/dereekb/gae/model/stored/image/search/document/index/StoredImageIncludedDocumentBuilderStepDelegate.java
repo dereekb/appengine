@@ -6,7 +6,6 @@ import java.util.List;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorUtility;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedDocumentBuilderStepDelegate;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.googlecode.objectify.Key;
@@ -25,14 +24,8 @@ public class StoredImageIncludedDocumentBuilderStepDelegate
         implements IncludedDocumentBuilderStepDelegate<StoredImage> {
 
 	@Override
-    public List<Descriptor> getIncludedModelDescriptors(StoredImage model) {
+	public List<Descriptor> getIncludedModelDescriptors(StoredImage model) {
 		List<Descriptor> descriptors = new ArrayList<Descriptor>();
-
-		Key<GeoPlace> geoPlace = model.getGeoPlace();
-
-		if (geoPlace != null) {
-			descriptors.add(DescriptorUtility.withKeyId(geoPlace));
-		}
 
 		Key<StoredBlob> storedBlob = model.getStoredBlob();
 
@@ -40,7 +33,7 @@ public class StoredImageIncludedDocumentBuilderStepDelegate
 			descriptors.add(DescriptorUtility.withKeyId(storedBlob));
 		}
 
-	    return descriptors;
-    }
+		return descriptors;
+	}
 
 }

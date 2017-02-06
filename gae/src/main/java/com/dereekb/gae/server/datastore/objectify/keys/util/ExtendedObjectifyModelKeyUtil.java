@@ -25,12 +25,12 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 
 	private final ObjectifyKeyConverter<T, ModelKey> converter;
 
-	public ExtendedObjectifyModelKeyUtil(Class<T> type, ModelKeyType keyType) {
+	protected ExtendedObjectifyModelKeyUtil(Class<T> type, ModelKeyType keyType) {
 		super(type);
 		this.converter = ObjectifyModelKeyUtil.converterForType(type, keyType);
 	}
 
-	public ExtendedObjectifyModelKeyUtil(Class<T> type, ObjectifyKeyConverter<T, ModelKey> converter) {
+	protected ExtendedObjectifyModelKeyUtil(Class<T> type, ObjectifyKeyConverter<T, ModelKey> converter) {
 		super(type);
 		this.converter = converter;
 	}
@@ -41,6 +41,16 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 
 	public static <T> ExtendedObjectifyModelKeyUtil<T> number(Class<T> type) {
 		return new ExtendedObjectifyModelKeyUtil<T>(type, ModelKeyType.NUMBER);
+	}
+
+	public static <T> ExtendedObjectifyModelKeyUtil<T> make(Class<T> type,
+	                                                        ModelKeyType keyType) {
+		return new ExtendedObjectifyModelKeyUtil<T>(type, keyType);
+	}
+
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return this.converter.getModelKeyType();
 	}
 
 	public ObjectifyKeyConverter<T, ModelKey> getConverter() {
@@ -61,6 +71,11 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	}
 
 	// MARK: Key
+	public Key<T> keyFromString(String string) throws IllegalArgumentException {
+		return this.keyFromString(this.getModelKeyType(), string);
+	}
+
+	@Override
 	public Key<T> fromModelKey(ModelKey modelKey) {
 		Key<T> key;
 
@@ -87,14 +102,13 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	}
 
 	// MARK: ObjectifyKeyConverter
-
 	@Override
 	public ModelKey readKey(Key<T> key) throws IllegalKeyConversionException {
 		return this.converter.readKey(key);
 	}
 
 	@Override
-	public List<ModelKey> readKeys(Iterable<Key<T>> keys) throws IllegalKeyConversionException {
+	public List<ModelKey> readKeys(Iterable<? extends Key<T>> keys) throws IllegalKeyConversionException {
 		return this.converter.readKeys(keys);
 	}
 
@@ -104,24 +118,18 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	}
 
 	@Override
-	public List<Key<T>> writeKeys(Iterable<ModelKey> elements) throws IllegalKeyConversionException {
+	public List<Key<T>> writeKeys(Iterable<? extends ModelKey> elements) throws IllegalKeyConversionException {
 		return this.converter.writeKeys(elements);
 	}
 
 	@Override
-	public List<ModelKey> convertTo(Collection<Key<T>> input) throws ConversionFailureException {
+	public List<ModelKey> convertTo(Collection<? extends Key<T>> input) throws ConversionFailureException {
 		return this.converter.convertTo(input);
 	}
 
 	@Override
-	public List<Key<T>> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+	public List<Key<T>> convertFrom(Collection<? extends ModelKey> input) throws ConversionFailureException {
 		return this.converter.convertFrom(input);
-	}
-
-	// MARK: Static
-	public static <T> ExtendedObjectifyModelKeyUtil<T> make(Class<T> type,
-	                                                        ModelKeyType keyType) {
-		return new ExtendedObjectifyModelKeyUtil<T>(type, keyType);
 	}
 
 }

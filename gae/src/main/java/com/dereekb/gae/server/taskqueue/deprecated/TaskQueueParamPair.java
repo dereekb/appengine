@@ -3,7 +3,7 @@ package com.dereekb.gae.server.taskqueue.deprecated;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.server.taskqueue.system.TaskParameter;
+import com.dereekb.gae.server.taskqueue.system.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.google.common.base.Joiner;
 
@@ -11,7 +11,7 @@ import com.google.common.base.Joiner;
  * Pair of parameters. The parameters and values cannot be changed.
  *
  * @author dereekb
- * @deprecated Replaced by {@link TaskParameter}.
+ * @deprecated Replaced by {@link KeyedEncodedParameter}.
  */
 @Deprecated
 public class TaskQueueParamPair extends HandlerPair<String, String> {

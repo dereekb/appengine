@@ -2,22 +2,24 @@ package com.dereekb.gae.server.datastore.objectify.query.builder.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.AbstractQueryFieldParameter;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.DateQueryFieldParameter;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyAbstractQueryFieldParameter;
+import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.ObjectifyDateQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.AbstractQueryFieldParameter;
 
 /**
  * {@link ObjectifyQueryRequestlimitedConfigurer} that wraps a
- * {@link DateQueryFieldParameter} and optional
+ * {@link ObjectifyDateQueryFieldParameter} and optional
  * {@link AbstractQueryFieldParameter}.
  *
  * @author dereekb
  *
  */
-public class QueryRecentDateFilter implements ObjectifyQueryRequestLimitedConfigurer {
+public class QueryRecentDateFilter
+        implements ObjectifyQueryRequestLimitedConfigurer {
 
 	public static final String DEFAULT_DATE_FIELD = "date";
 
-	private DateQueryFieldParameter date;
+	private ObjectifyDateQueryFieldParameter date;
 	private AbstractQueryFieldParameter<?> parameter;
 
 	public QueryRecentDateFilter() {
@@ -29,7 +31,7 @@ public class QueryRecentDateFilter implements ObjectifyQueryRequestLimitedConfig
 	}
 
 	public QueryRecentDateFilter(String dateField, AbstractQueryFieldParameter<?> parameter) {
-		this.date = DateQueryFieldParameter.recentDate(dateField);
+		this.date = ObjectifyDateQueryFieldParameter.recentDate(dateField);
 		this.setParameter(parameter);
 	}
 
@@ -39,11 +41,11 @@ public class QueryRecentDateFilter implements ObjectifyQueryRequestLimitedConfig
 		return filter;
 	}
 
-	public DateQueryFieldParameter getDate() {
+	public ObjectifyDateQueryFieldParameter getDate() {
 		return this.date;
 	}
 
-	public void setDate(DateQueryFieldParameter date) throws IllegalArgumentException {
+	public void setDate(ObjectifyDateQueryFieldParameter date) throws IllegalArgumentException {
 		if (date == null) {
 			throw new IllegalArgumentException("Date FieldParameter cannot be null.");
 		}
@@ -65,7 +67,7 @@ public class QueryRecentDateFilter implements ObjectifyQueryRequestLimitedConfig
 		this.date.configure(request);
 
 		if (this.parameter != null) {
-			this.parameter.configure(request);
+			ObjectifyAbstractQueryFieldParameter.configure(request, this.parameter);
 		}
 	}
 

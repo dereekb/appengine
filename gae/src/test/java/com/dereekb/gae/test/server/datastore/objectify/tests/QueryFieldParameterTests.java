@@ -3,10 +3,11 @@ package com.dereekb.gae.test.server.datastore.objectify.tests;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.QueryFieldParameterDencoder;
-import com.dereekb.gae.server.datastore.objectify.query.builder.parameters.impl.QueryFieldParameterDencoder.Parameter;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryResultsOrdering;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.ParameterImpl;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
  * {@link QueryFieldParameterDencoder} tests.
@@ -16,18 +17,18 @@ import com.dereekb.gae.server.search.document.query.expression.ExpressionOperato
  */
 public class QueryFieldParameterTests {
 
+	private static final QueryFieldParameterDencoder dencoder = new QueryFieldParameterDencoder();
+
 	@Test
 	public void testQueryFieldParameterDencoder() {
-		QueryFieldParameterDencoder dencoder = new QueryFieldParameterDencoder();
-
 		String value = "value";
-		ObjectifyQueryResultsOrdering ordering = ObjectifyQueryResultsOrdering.Ascending;
-		ExpressionOperator operator = ExpressionOperator.Equal;
+		QueryResultsOrdering ordering = QueryResultsOrdering.Ascending;
+		ExpressionOperator operator = ExpressionOperator.EQUAL;
 
-		Parameter parameters = new Parameter(value, operator, ordering);
+		QueryParameter parameters = new ParameterImpl(value, operator, ordering);
 		String encoding = dencoder.encodeString(parameters);
 
-		Parameter decoded = dencoder.decodeString(encoding);
+		QueryParameter decoded = dencoder.decodeString(encoding);
 		Assert.assertTrue(decoded.getValue().equals(value));
 		Assert.assertTrue(decoded.equals(parameters));
 
@@ -35,13 +36,35 @@ public class QueryFieldParameterTests {
 
 	@Test
 	public void testDecodingShort() {
-		QueryFieldParameterDencoder dencoder = new QueryFieldParameterDencoder();
-
-		Parameter parameter = dencoder.decodeString("=,2");
+		QueryParameter parameter = dencoder.decodeString("=,2");
 
 		Assert.assertTrue(parameter.getValue().equals("2"));
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.Equal);
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
+	}
 
+	@Test
+	public void testEncodingEqualsNull() {
+		ParameterImpl parameter = new ParameterImpl("null", ExpressionOperator.IS_NULL);
+		String encoded = dencoder.encodeString(parameter);
+		Assert.assertTrue(encoded.equals("=n,null"));
+	}
+
+	@Test
+	public void testDecodingShortEqualsNull() {
+		QueryParameter parameter = dencoder.decodeString("=n,null");
+
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IS_NULL);
+		Assert.assertTrue(parameter.getValue().equals("null"));
+	}
+
+	@Test
+	public void testDecodingCommaSeparatedValuesNull() {
+		String value = "1,2,3,4,5,6,7,8,9";
+
+		QueryParameter parameter = dencoder.decodeString("in," + value);
+
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
+		Assert.assertTrue(parameter.getValue().equals(value));
 	}
 
 }

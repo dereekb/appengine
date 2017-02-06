@@ -1,5 +1,9 @@
 package com.dereekb.gae.model.general.people.contact;
 
+import javax.validation.constraints.NotNull;
+
+import com.dereekb.gae.model.general.people.contact.validation.ValidContactAddressType;
+
 /**
  * Contact information.
  *
@@ -7,7 +11,11 @@ package com.dereekb.gae.model.general.people.contact;
  */
 public class ContactAddress {
 
+	@NotNull
+	@ValidContactAddressType
 	private Integer typeId;
+
+	@NotNull
 	private String data;
 
 	public ContactAddress() {}
@@ -26,7 +34,7 @@ public class ContactAddress {
 	}
 
 	public ContactAddressType getType() {
-		return ContactAddressType.typeForId(this.typeId);
+		return ContactAddressType.valueOf(this.typeId);
 	}
 
 	public void setType(ContactAddressType type) {

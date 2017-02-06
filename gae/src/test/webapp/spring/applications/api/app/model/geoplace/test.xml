@@ -11,16 +11,14 @@
 
 	<!-- Generator -->
 	<bean id="geoPlaceTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.TestModelGeneratorImpl"
-		scope="singleton">
+		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1" ref="geoPlaceGenerator" />
 	</bean>
 
 	<!-- Data Generator -->
 	<bean id="geoPlaceTestDataGenerator"
-		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl"
-		scope="singleton">
+		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
 		<constructor-arg index="0" ref="geoPlaceGenerator" />
 		<constructor-arg index="1" ref="geoPlaceDataBuilder" />
 	</bean>

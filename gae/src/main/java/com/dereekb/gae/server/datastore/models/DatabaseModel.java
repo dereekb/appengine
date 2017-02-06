@@ -11,13 +11,18 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  */
 public abstract class DatabaseModel
-        implements UniqueModel, KeyEquality, Serializable {
+        implements MutableUniqueModel, KeyEquality, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	protected DatabaseModel() {}
 
 	protected abstract Object getDatabaseIdentifier();
+
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
+	}
 
 	@Override
 	public final int hashCode() {
@@ -38,14 +43,14 @@ public abstract class DatabaseModel
 	@Override
 	public final boolean equals(Object obj) {
 		if (this == obj) {
-	        return true;
-        }
+			return true;
+		}
 		if (obj == null) {
-	        return false;
-        }
+			return false;
+		}
 		if (this.getClass() != obj.getClass()) {
-	        return false;
-        }
+			return false;
+		}
 
 		DatabaseModel other = (DatabaseModel) obj;
 		return this.keysEqual(other);

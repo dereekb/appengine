@@ -37,6 +37,6 @@ public interface ObjectifyKeyReader<T, E> {
 	 * @return {@link List} of converted objects.
 	 * @throws IllegalKeyConversionException
 	 */
-	public List<E> readKeys(Iterable<Key<T>> keys) throws IllegalKeyConversionException;
+	public List<E> readKeys(Iterable<? extends Key<T>> keys) throws IllegalKeyConversionException;
 
 }

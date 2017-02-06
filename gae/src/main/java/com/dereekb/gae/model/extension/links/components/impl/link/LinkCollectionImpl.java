@@ -17,6 +17,8 @@ import com.dereekb.gae.model.extension.links.components.exception.UnavailableLin
 import com.dereekb.gae.model.extension.links.components.impl.LinkDataImpl;
 import com.dereekb.gae.model.extension.links.components.impl.RelationResultImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
+import com.dereekb.gae.utilities.collections.list.SetUtility.SetDifference;
 
 /**
  * {@link Link} implementation that wraps a {@link Collection} that is retained
@@ -34,10 +36,12 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class LinkCollectionImpl<T>
         implements Link {
 
-	private LinkInfo linkInfo;
+	private final LinkInfo linkInfo;
 
 	/**
 	 * The collection reference to update.
+	 * 
+	 * Cannot be changed once set.
 	 */
 	private Collection<T> collection;
 
@@ -46,17 +50,19 @@ public class LinkCollectionImpl<T>
 	 */
 	private BidirectionalConverter<T, ModelKey> converter;
 
-	public LinkCollectionImpl(LinkInfo linkInfo, Collection<T> collection, BidirectionalConverter<T, ModelKey> converter) {
+	public LinkCollectionImpl(LinkInfo linkInfo,
+	        Collection<T> collection,
+	        BidirectionalConverter<T, ModelKey> converter) throws IllegalArgumentException {
 		this.linkInfo = linkInfo;
-		this.collection = collection;
-		this.converter = converter;
+		this.setCollection(collection);
+		this.setConverter(converter);
 	}
 
 	public Collection<T> getCollection() {
 		return this.collection;
 	}
 
-	public void setCollection(Collection<T> collection) {
+	private void setCollection(Collection<T> collection) {
 		if (collection == null) {
 			throw new IllegalArgumentException("Collection cannot be null.");
 		}
@@ -68,7 +74,7 @@ public class LinkCollectionImpl<T>
 		return this.converter;
 	}
 
-	public void setConverter(BidirectionalConverter<T, ModelKey> converter) {
+	private void setConverter(BidirectionalConverter<T, ModelKey> converter) {
 		if (converter == null) {
 			throw new IllegalArgumentException("Converter cannot be null.");
 		}
@@ -87,7 +93,6 @@ public class LinkCollectionImpl<T>
 		return this.linkInfo.getLinkModelKey();
 	}
 
-
 	@Override
 	public LinkTarget getLinkTarget() {
 		return this.linkInfo.getLinkTarget();
@@ -104,7 +109,7 @@ public class LinkCollectionImpl<T>
 	@Override
 	public RelationResult addRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
 		List<ModelKey> keys = change.getRelationKeys();
-		RelationResultImpl result = this.buildRelationResult(keys);
+		RelationResultImpl result = this.buildRelationResult(true, keys);
 
 		List<T> items = this.converter.convertFrom(keys);
 		this.collection.addAll(items);
@@ -115,7 +120,7 @@ public class LinkCollectionImpl<T>
 	@Override
 	public RelationResult removeRelation(Relation change) throws RelationChangeException {
 		List<ModelKey> keys = change.getRelationKeys();
-		RelationResultImpl result = this.buildRelationResult(keys);
+		RelationResultImpl result = this.buildRelationResult(false, keys);
 
 		List<T> items = this.converter.convertFrom(keys);
 		this.collection.removeAll(items);
@@ -123,16 +128,20 @@ public class LinkCollectionImpl<T>
 		return result;
 	}
 
-	private RelationResultImpl buildRelationResult(List<ModelKey> keys) {
+	private RelationResultImpl buildRelationResult(boolean adding,
+	                                               List<ModelKey> keys) {
 		List<ModelKey> currentKeys = this.converter.convertTo(this.collection);
+		SetDifference<ModelKey> difference = SetUtility.getDifference(keys, currentKeys);
 
-		Set<ModelKey> hits = new HashSet<ModelKey>(keys);
-		hits.removeAll(currentKeys);
+		RelationResultImpl result = null;
 
-		Set<ModelKey> redundant = new HashSet<ModelKey>(keys);
-		redundant.retainAll(currentKeys);
+		if (adding) {
+			result = new RelationResultImpl(difference.getIntersection(), difference.getCompliment());
+		} else {
+			result = new RelationResultImpl(difference.getCompliment(), difference.getIntersection());
+		}
 
-		return new RelationResultImpl(hits, redundant);
+		return result;
 	}
 
 	@Override

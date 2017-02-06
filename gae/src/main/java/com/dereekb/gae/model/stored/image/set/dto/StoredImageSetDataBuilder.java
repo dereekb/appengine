@@ -2,10 +2,9 @@ package com.dereekb.gae.model.stored.image.set.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
+import com.dereekb.gae.model.extension.search.document.dto.SearchableModelDataBuilder;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
-
 
 /**
  * {@link DirectionalConverter} for converting a {@link StoredImageSet} instance
@@ -14,22 +13,22 @@ import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
  * @author dereekb
  *
  */
-public class StoredImageSetDataBuilder extends AbstractDirectionalConverter<StoredImageSet, StoredImageSetData> {
+public class StoredImageSetDataBuilder extends SearchableModelDataBuilder<StoredImageSet, StoredImageSetData> {
+
+	public StoredImageSetDataBuilder() throws IllegalArgumentException {
+		super(StoredImageSetData.class);
+	}
 
 	@Override
 	public StoredImageSetData convertSingle(StoredImageSet input) throws ConversionFailureException {
-		StoredImageSetData data = new StoredImageSetData();
+		StoredImageSetData data = super.convertSingle(input);
 
-		// Identifier
-		data.setIdentifier(input.getModelKey());
-		data.setSearchIdentifier(input.getSearchIdentifier());
-
-		// Info
+		// Data
 		data.setLabel(input.getLabel());
 		data.setDetail(input.getDetail());
 		data.setTags(input.getTags());
 
-		// Images
+		// Links
 		data.setIcon(ObjectifyUtility.readKeyIdentifier(input.getIcon()));
 		data.setImages(ObjectifyUtility.readKeyIdentifiers(input.getImages()));
 

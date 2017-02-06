@@ -7,11 +7,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl;
 import com.dereekb.gae.model.geo.place.GeoPlace;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.TaskQueueIterateControllerEntryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-
 
 public class GeoPlaceTaskQueueIterateControllerEntryTest extends TaskQueueIterateControllerEntryTest<GeoPlace> {
 
@@ -33,10 +32,14 @@ public class GeoPlaceTaskQueueIterateControllerEntryTest extends TaskQueueIterat
 		super.setModelGenerator(modelGenerator);
 	}
 
+	@Autowired
+	@Qualifier("geoPlaceRegistry")
+	public ObjectifyRegistry<GeoPlace> geoPlaceRegistry;
+
 	@Override
 	@Autowired
-	@Qualifier("geoPlaceIterateTaskExecutorFactory")
-	public void setFactory(IterateTaskExecutorFactoryImpl<GeoPlace> factory) {
+	@Qualifier("geoPlaceRegistry")
+	public void setFactory(ObjectifyRegistry<GeoPlace> factory) {
 		super.setFactory(factory);
 	}
 
@@ -61,6 +64,11 @@ public class GeoPlaceTaskQueueIterateControllerEntryTest extends TaskQueueIterat
 			}
 
 			return generated;
+		}
+
+		@Override
+		protected List<GeoPlace> reloadModels(List<GeoPlace> input) {
+			return GeoPlaceTaskQueueIterateControllerEntryTest.this.geoPlaceRegistry.get(input);
 		}
 
 		@Override

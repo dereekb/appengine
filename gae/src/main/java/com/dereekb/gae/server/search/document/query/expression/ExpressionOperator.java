@@ -8,28 +8,49 @@ package com.dereekb.gae.server.search.document.query.expression;
  */
 public enum ExpressionOperator {
 
-	Equal("="),
+	EQUAL("="),
 
 	/**
-	 * For Geopoint locations, this specifies that the given point is outside the given radius.
+	 * For Geopoint locations, this specifies that the given point is outside
+	 * the given radius.
 	 */
-	GreaterThan(">"),
-	GreaterOrEqualTo(">="),
+	GREATER_THAN(">"),
+	GREATER_OR_EQUAL_TO(">="),
 
 	/**
-	 * For Geopoint locations, this specifies that the given point is within the given radius.
+	 * For Geopoint locations, this specifies that the given point is within the
+	 * given radius.
 	 */
-	LessThan("<"),
-	LessOrEqualTo("<="),
+	LESS_THAN("<"),
+	LESS_OR_EQUAL_TO("<="),
 
-	// Query Only
-	NotEqual("!="),
-	GreaterAndLessThanButNotEqualTo("<>"),
-	In("in");
+    // Query Only
+	NOT_EQUAL("!="),
+	GREATER_OR_LESS_BUT_NOT_EQUAL_TO("<>"),
+
+	/**
+	 * Used to check that one or more items of one collection are in another.
+	 * 
+	 * I.E. will check if EITHER object A or B are referenced within a
+	 * collection.
+	 */
+	IN("in"),
+
+    // Special
+	/**
+	 * Used only in cases where is null equivalence needs to be checked.
+	 */
+	IS_NULL("=n"),
+
+	/**
+	 * Used when no comparison operation needs to take place. Useful for
+	 * instances where ordering is needed but no value filtering.
+	 */
+	NO_OP("_");
 
 	private final String value;
 
-	ExpressionOperator(String value){
+	ExpressionOperator(String value) {
 		this.value = value;
 	}
 
@@ -38,27 +59,37 @@ public enum ExpressionOperator {
 
 		switch (op) {
 			case "=":
-				operation = Equal;
+				operation = EQUAL;
 				break;
 			case ">":
-				operation = GreaterThan;
+				operation = GREATER_THAN;
 				break;
 			case ">=":
-				operation = GreaterOrEqualTo;
+				operation = GREATER_OR_EQUAL_TO;
 				break;
 			case "<":
-				operation = LessThan;
+				operation = LESS_THAN;
 				break;
 			case "<=":
-				operation = LessOrEqualTo;
+				operation = LESS_OR_EQUAL_TO;
 				break;
 			case "!=":
-				operation = NotEqual;
+				operation = NOT_EQUAL;
 				break;
 			case "<>":
-				operation = GreaterAndLessThanButNotEqualTo;
+				operation = GREATER_OR_LESS_BUT_NOT_EQUAL_TO;
 				break;
-
+			case "in":
+				operation = IN;
+				break;
+			case "=n":
+				operation = IS_NULL;
+				break;
+			case "_":
+				operation = NO_OP;
+				break;
+			default:
+				throw new IllegalArgumentException("No operator available for key '" + op + "'.");
 		}
 
 		return operation;
@@ -73,12 +104,12 @@ public enum ExpressionOperator {
 	}
 
 	@Override
-    public String toString() {
+	public String toString() {
 		return this.value;
 	}
 
 	public boolean isComplex() {
-		return this.equals(Equal) == false;
+		return this.equals(EQUAL) == false;
 	}
 
 }

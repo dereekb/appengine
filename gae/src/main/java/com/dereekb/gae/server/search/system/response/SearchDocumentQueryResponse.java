@@ -2,8 +2,8 @@ package com.dereekb.gae.server.search.system.response;
 
 import java.util.Collection;
 
+import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.ScoredDocument;
-
 
 public interface SearchDocumentQueryResponse {
 
@@ -27,5 +27,12 @@ public interface SearchDocumentQueryResponse {
 	 *         {@code null}.
 	 */
 	public Integer getReturnedResults();
+
+	/**
+	 * Returns the cursor for the results for resuming the query later.
+	 * 
+	 * @return {@link Cursor}. {@code null} if unavailable.
+	 */
+	public Cursor getResultsCursor();
 
 }

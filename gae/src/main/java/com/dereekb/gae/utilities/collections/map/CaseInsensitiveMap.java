@@ -3,6 +3,15 @@ package com.dereekb.gae.utilities.collections.map;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ *
+ * Case insensitive {@link Map} implemented with {@link TreeMap}.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            value type
+ */
 public class CaseInsensitiveMap<T> extends TreeMap<String, T> {
 
 	private static final long serialVersionUID = 1L;

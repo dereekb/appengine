@@ -2,8 +2,8 @@ package com.dereekb.gae.model.extension.links.descriptor.filter;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.UniqueDescribedModel;
-import com.dereekb.gae.utilities.filters.AbstractFilter;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.filters.impl.AbstractFilter;
 
 /**
  * Filters values that have or do not have a {@link Descriptor} set.

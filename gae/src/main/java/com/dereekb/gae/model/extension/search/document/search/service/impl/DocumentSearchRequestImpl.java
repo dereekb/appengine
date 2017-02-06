@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.search.document.search.service.impl;
 
 import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequest;
 import com.dereekb.gae.server.search.document.query.expression.Expression;
-import com.dereekb.gae.server.search.model.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 
 /**
  * {@link DocumentSearchRequest} implementation.

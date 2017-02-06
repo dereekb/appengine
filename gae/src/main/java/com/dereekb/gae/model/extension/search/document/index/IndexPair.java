@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 
 /**
  * Indexes a model. Index change is based on the {@link IndexAction} of this
@@ -41,10 +40,10 @@ public class IndexPair<T extends UniqueSearchModel> extends SuccessResultsPair<T
 	 */
 	public static <T extends UniqueSearchModel> List<IndexPair<T>> makePairs(Iterable<T> input,
 	                                                                         IndexAction action) {
-		List<IndexPair<T>> pairs = new ArrayList<IndexPair<T>>();
+		List<IndexPair<T>> pairs = new ArrayList<>();
 
 		for (T element : input) {
-			IndexPair<T> pair = new IndexPair<T>(element, action);
+			IndexPair<T> pair = new IndexPair<>(element, action);
 			pairs.add(pair);
 		}
 
@@ -86,11 +85,6 @@ public class IndexPair<T extends UniqueSearchModel> extends SuccessResultsPair<T
 
 	public IndexAction getAction() {
 		return this.action;
-	}
-
-	@Override
-	public T getFunctionObject(StagedFunctionStage stage) {
-		return this.key;
 	}
 
 	// MARK: Unique Search Model

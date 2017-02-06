@@ -49,17 +49,17 @@ public class BidirectionalConverterImpl<I, O>
 
 	// BidirectionalConverter
 	@Override
-	public List<O> convert(Collection<I> input) throws ConversionFailureException {
+	public List<O> convert(Collection<? extends I> input) throws ConversionFailureException {
 		return this.convertTo(input);
 	}
 
 	@Override
-	public List<O> convertTo(Collection<I> input) throws ConversionFailureException {
+	public List<O> convertTo(Collection<? extends I> input) throws ConversionFailureException {
 		return this.outputConversion.convert(input);
 	}
 
 	@Override
-	public List<I> convertFrom(Collection<O> output) throws ConversionFailureException {
+	public List<I> convertFrom(Collection<? extends O> output) throws ConversionFailureException {
 		return this.inputConversion.convert(output);
 	}
 

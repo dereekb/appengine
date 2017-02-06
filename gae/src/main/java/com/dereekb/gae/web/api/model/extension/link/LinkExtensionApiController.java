@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +17,8 @@ import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
-import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
@@ -78,8 +77,7 @@ public class LinkExtensionApiController {
 	}
 
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'link')")
-	@RequestMapping(value = "/links/{type}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/{type}/link", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponseImpl link(@PathVariable("type") String primaryType,
 	                                  @Valid @RequestBody ApiLinkChangeRequest request) {
 		ApiResponseImpl response = null;
@@ -108,7 +106,7 @@ public class LinkExtensionApiController {
 	private void addMissingKeysToResponse(LinkServiceResponse linkServiceResponse,
 	                                      ApiResponseImpl response) {
 		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingKeys();
-		HashMapWithList<String, String> missingKeysMap = new HashMapWithList<String, String>();
+		HashMapWithList<String, String> missingKeysMap = new HashMapWithList<>();
 		Set<String> missingTypes = missingKeys.keySet();
 
 		if (missingTypes.isEmpty() == false) {

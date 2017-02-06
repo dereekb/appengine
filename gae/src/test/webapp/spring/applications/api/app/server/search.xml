@@ -12,17 +12,18 @@
 	<!-- Base Search System -->
 	<alias name="gcsSearchSystem" alias="searchSystem" />
 
-	<bean id="gcsSearchSystem" lazy-init="true" scope="singleton"
+	<bean id="gcsSearchSystem"
 		class="com.dereekb.gae.server.search.system.impl.GcsSearchSystemImpl">
 		<!-- Disable Async Deletion to prevent issues. -->
 		<property name="asyncDelete" value="false" />
 	</bean>
 
 	<!-- Document Search Service -->
-	<bean id="typedDocumentIndexService" lazy-init="true" scope="singleton"
+	<bean id="typedDocumentIndexService"
 		class="com.dereekb.gae.model.extension.search.document.index.service.impl.TypedDocumentIndexServiceImpl">
 		<constructor-arg index="0">
 			<map key-type="java.lang.String">
+				<entry key-ref="loginType" value-ref="loginKeyedDocumentIndexService" />
 				<entry key-ref="geoPlaceType" value-ref="geoPlaceKeyedDocumentIndexService" />
 				<entry key-ref="storedBlobType" value-ref="storedBlobKeyedDocumentIndexService" />
 				<entry key-ref="storedImageType" value-ref="storedImageKeyedDocumentIndexService" />
@@ -32,22 +33,22 @@
 	</bean>
 
 	<!-- Search Index Tasks -->
-	<bean id="typedDocumentIndexServiceIndexTask" lazy-init="true"
-		scope="singleton"
+	<bean id="typedDocumentIndexServiceIndexTask"
+
 		class="com.dereekb.gae.model.extension.search.document.index.task.ConfiguredTypedDocumentIndexServiceTask">
 		<constructor-arg index="0" ref="typedDocumentIndexService" />
 		<constructor-arg index="1" value="INDEX" />
 	</bean>
 
-	<bean id="typedDocumentIndexServiceUnindexTask" lazy-init="true"
-		scope="singleton"
+	<bean id="typedDocumentIndexServiceUnindexTask"
+
 		class="com.dereekb.gae.model.extension.search.document.index.task.ConfiguredTypedDocumentIndexServiceTask">
 		<constructor-arg index="0" ref="typedDocumentIndexService" />
 		<constructor-arg index="1" value="UNINDEX" />
 	</bean>
 
 	<!-- Models Only Search Service -->
-	<bean id="modelDocumentSearchService" lazy-init="true" scope="singleton"
+	<bean id="modelDocumentSearchService"
 		class="com.dereekb.gae.model.extension.search.document.search.service.impl.DocumentSearchServiceImpl">
 		<constructor-arg index="0" ref="searchSystem" />
 		<constructor-arg index="1">
@@ -58,18 +59,18 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="scoredDocumentLongKeyReader" lazy-init="true" scope="singleton"
+	<bean id="scoredDocumentLongKeyReader"
 		class="com.dereekb.gae.model.extension.search.document.search.utility.impl.ScoredDocumentKeyReaderImpl">
 		<constructor-arg index="0" ref="stringLongModelKeyConverter" />
 	</bean>
 
-	<bean id="scoredDocumentStringKeyReader" lazy-init="true" scope="singleton"
+	<bean id="scoredDocumentStringKeyReader"
 		class="com.dereekb.gae.model.extension.search.document.search.utility.impl.ScoredDocumentKeyReaderImpl">
 		<constructor-arg index="0" ref="stringModelKeyConverter" />
 	</bean>
 
 	<!-- Search Models -->
-	<bean id="derivativeDocumentBuilder" lazy-init="true" scope="singleton"
+	<bean id="derivativeDocumentBuilder"
 		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.impl.IncludedDocumentBuilderImpl">
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 		<constructor-arg index="1">

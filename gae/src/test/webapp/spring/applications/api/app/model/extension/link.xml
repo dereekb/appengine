@@ -40,11 +40,14 @@
 	</bean>
 
 	<!-- Entries -->
-	<util:list id="linkSystemEntries" scope="singleton">
+	<util:list id="linkSystemEntries">
 		<ref bean="geoPlaceLinkSystem" />
 		<ref bean="storedBlobLinkSystem" />
 		<ref bean="storedImageLinkSystem" />
 		<ref bean="storedImageSetLinkSystem" />
+		<ref bean="loginLinkSystem" />
+		<ref bean="loginKeyLinkSystem" />
+		<ref bean="loginPointerLinkSystem" />
 	</util:list>
-	
+
 </beans>

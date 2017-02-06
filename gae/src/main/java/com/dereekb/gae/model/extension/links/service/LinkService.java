@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.service;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
 
 /**
  * Atomic services for changing links between objects.

@@ -25,12 +25,12 @@ public class StringModelKeyConverterImpl
 
 	// Bidirectional Converter
 	@Override
-	public List<ModelKey> convertTo(Collection<String> input) throws ConversionFailureException {
+	public List<ModelKey> convertTo(Collection<? extends String> input) throws ConversionFailureException {
 		return this.convert(input);
 	}
 
 	@Override
-	public List<String> convertFrom(Collection<ModelKey> input) throws ConversionFailureException {
+	public List<String> convertFrom(Collection<? extends ModelKey> input) throws ConversionFailureException {
 		List<String> keys = new ArrayList<String>();
 
 		for (ModelKey modelKey : input) {
@@ -48,7 +48,7 @@ public class StringModelKeyConverterImpl
 
 	// Directional Converter
 	@Override
-	public List<ModelKey> convert(Collection<String> input) throws ConversionFailureException {
+	public List<ModelKey> convert(Collection<? extends String> input) throws ConversionFailureException {
 		List<ModelKey> keys = new ArrayList<ModelKey>();
 
 		try {
@@ -87,6 +87,7 @@ public class StringModelKeyConverterImpl
 	 * @return {@link ModelKey} with a {@link String} name, or {@code null} if
 	 *         the input was invalid.
 	 */
+	@Override
 	public ModelKey safeConvert(String input) {
 		ModelKey key = null;
 

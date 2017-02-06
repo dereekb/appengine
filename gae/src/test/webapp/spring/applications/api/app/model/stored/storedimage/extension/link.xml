@@ -9,13 +9,13 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="storedImageLinkTarget" lazy-init="true"
+	<bean id="storedImageLinkTarget"
 		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
 		<constructor-arg index="0" ref="storedImageType" />
-		<constructor-arg index="1" value="NUMBER" />
+		<constructor-arg index="1" ref="storedImageIdType" />
 	</bean>
 
-	<bean id="storedImageLinkSystem" lazy-init="true"
+	<bean id="storedImageLinkSystem"
 		class="com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemEntry">
 		<constructor-arg index="0" ref="storedImageCrudService" />
 		<constructor-arg index="1"
@@ -23,33 +23,23 @@
 		<!-- Reverse Links Configuration -->
 		<property name="reverseLinkNames">
 			<map key-type="java.lang.String" value-type="java.lang.String">
-				<!-- Links the "GeoPlace" link with the "StoredImage" link in the GeoPlace link delegate's config -->
-				<entry key-ref="storedImageStoredBlobLinkName" value-ref="storedImageType" />
-				<entry key-ref="storedImageGeoPlaceLinkName" value-ref="storedImageType" />
-				<entry key-ref="storedImageStoredImageSetLinkName" value-ref="storedImageSetImagesLinkName" />
+				<!-- Links the "StoredBlob" link with the "StoredImage" link in the StoredBlob 
+					link delegate's config -->
+				<entry key-ref="storedImageStoredBlobLinkName" value-ref="storedBlobStoredImageDescribedLinkName" />
 			</map>
 		</property>
 		<!-- Delete Links Configuration -->
 		<property name="deleteChangesMap">
-			<map key-type="java.lang.String" value-type="com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType">
+			<map key-type="java.lang.String"
+				value-type="com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType">
 				<entry key-ref="storedImageStoredBlobLinkName" value="DELETE" />
-				<entry key-ref="storedImageGeoPlaceLinkName" value="DELETE" />
-				<entry key-ref="storedImageStoredImageSetLinkName" value="UNLINK" />
 			</map>
 		</property>
 	</bean>
 
 	<!-- Links -->
-	<bean id="storedImageGeoPlaceLinkName" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" ref="geoPlaceType" />
-	</bean>
-	
-	<bean id="storedImageStoredBlobLinkName" class="java.lang.String" scope="singleton">
+	<bean id="storedImageStoredBlobLinkName" class="java.lang.String">
 		<constructor-arg index="0" ref="storedBlobType" />
 	</bean>
-	
-	<bean id="storedImageStoredImageSetLinkName" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" ref="storedImageSetType" />
-	</bean>
-	
+
 </beans>

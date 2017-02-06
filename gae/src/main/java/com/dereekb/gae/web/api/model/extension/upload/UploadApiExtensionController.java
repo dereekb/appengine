@@ -1,10 +1,12 @@
 package com.dereekb.gae.web.api.model.extension.upload;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +14,7 @@ import com.dereekb.gae.server.storage.upload.FileUploadUrlFactory;
 import com.dereekb.gae.server.storage.upload.exception.FileUploadFailedException;
 import com.dereekb.gae.server.storage.upload.exception.FileUploadUrlCreationException;
 import com.dereekb.gae.server.storage.upload.handler.FileUploadHandler;
+import com.dereekb.gae.web.api.model.extension.upload.exception.InvalidUploadTypeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
@@ -23,6 +26,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  *
  */
 @RestController
+@RequestMapping("/upload")
 public class UploadApiExtensionController {
 
 	private FileUploadUrlFactory urlFactory;
@@ -59,20 +63,20 @@ public class UploadApiExtensionController {
 	 *            Uploaded file type. Corresponds to the handler to use.
 	 * @return {@link ApiResponse} containing upload url.
 	 * @throws FileUploadUrlCreationException
+	 * @throws InvalidUploadTypeException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/upload/{type}", method = RequestMethod.GET, produces = "application/json")
-	public final ApiResponse makeFileUploadUrl(@PathVariable("type") String type)
-	        throws FileUploadUrlCreationException {
+	@RequestMapping(value = "/new", method = RequestMethod.POST, produces = "application/json")
+	public final ApiResponse makeFileUploadUrl(@NotNull @RequestParam("type") String type)
+	        throws FileUploadUrlCreationException,
+	            FileUploadUrlCreationException,
+	            InvalidUploadTypeException {
 		ApiResponseImpl response = new ApiResponseImpl();
 
 		String uploadUrl = this.urlFactory.makeUploadUrl(type);
 
-		// TODO: Fail is the type is unknown.
-
 		ApiResponseDataImpl urlData = new ApiResponseDataImpl("url");
 		urlData.setData(uploadUrl);
-
 		response.setData(urlData);
 
 		return response;
@@ -89,7 +93,7 @@ public class UploadApiExtensionController {
 	 *             and no new files have been created.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/upload/{type}", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/{type}", method = RequestMethod.POST, produces = "application/json")
 	public final ApiResponse uploadFiles(@PathVariable("type") String type,
 	                                     HttpServletRequest request) throws FileUploadFailedException {
 		ApiResponse response = this.handler.handleUploadRequest(type, request);

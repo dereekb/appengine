@@ -2,17 +2,17 @@ package com.dereekb.gae.web.api.model.extension.search.impl;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchResponse;
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchService;
-import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryResponse;
-import com.dereekb.gae.model.extension.search.query.search.service.ModelQueryService;
-import com.dereekb.gae.model.extension.search.query.search.service.impl.ModelQueryRequestImpl;
+import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
+import com.dereekb.gae.model.extension.search.query.service.ModelQueryService;
+import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchDelegateEntry;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchUpdateRequest;
@@ -110,19 +110,7 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 
 		R searchRequest = this.requestBuilder.convertSingle(request);
 		ModelDocumentSearchResponse<T> response = this.searchService.search(searchRequest);
-
-		boolean keysOnly = request.getKeysOnly();
-		ApiResponseData responseData = null;
-
-		if (keysOnly) {
-			Collection<ModelKey> keys = response.getKeySearchResults();
-			responseData = this.convertKeyResponse(keys);
-		} else {
-			Collection<T> models = response.getModelSearchResults();
-			responseData = this.convertModelResponse(models);
-		}
-
-		return responseData;
+		return this.buildResponseForResult(response);
 	}
 
 	@Override
@@ -131,22 +119,9 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 			throw new UnsupportedOperationException("Querying is unsupported for this type.");
 		}
 
-		boolean keysOnly = request.getKeysOnly();
-		Map<String, String> parameters = request.getParameters();
-		ModelQueryRequestImpl queryRequest = new ModelQueryRequestImpl(keysOnly, request, parameters);
+		ModelQueryRequestImpl queryRequest = new ModelQueryRequestImpl(request);
 		ModelQueryResponse<T> response = this.queryService.queryModels(queryRequest);
-
-		ApiResponseData responseData = null;
-
-		if (keysOnly) {
-			Collection<ModelKey> keys = response.getResponseKeys();
-			responseData = this.convertKeyResponse(keys);
-		} else {
-			Collection<T> models = response.getModels();
-			responseData = this.convertModelResponse(models);
-		}
-
-		return responseData;
+		return this.buildResponseForResult(response);
 	}
 
 	@Override
@@ -156,6 +131,30 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	}
 
 	// MARK: Internal
+	private ApiResponseData buildResponseForResult(ModelDocumentSearchResponse<T> response) {
+		return this.buildModelDataResponse(response);
+	}
+
+	private ApiResponseData buildResponseForResult(ModelQueryResponse<T> response) {
+		return this.buildModelDataResponse(response);
+	}
+
+	private ApiResponseData buildModelDataResponse(ModelSearchResponse<T> response) {
+		ApiResponseData responseData = null;
+
+		if (response.isKeysOnlyResponse()) {
+			Collection<ModelKey> keys = response.getKeyResults();
+			responseData = this.convertKeyResponse(keys);
+		} else {
+			Collection<T> models = response.getModelResults();
+			responseData = this.convertModelResponse(models);
+		}
+
+		// TODO: Add Cursor to response.
+
+		return responseData;
+	}
+
 	private ApiResponseData convertModelResponse(Collection<T> models) {
 		List<? extends Object> converted = this.resultConverter.convert(models);
 		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);

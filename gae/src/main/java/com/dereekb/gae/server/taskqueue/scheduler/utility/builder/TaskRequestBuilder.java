@@ -2,6 +2,7 @@ package com.dereekb.gae.server.taskqueue.scheduler.utility.builder;
 
 import java.util.List;
 
+import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 
 /**
@@ -14,6 +15,6 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
  */
 public interface TaskRequestBuilder<T> {
 
-	public List<TaskRequest> buildRequests(Iterable<T> input);
+	public List<MutableTaskRequest> buildRequests(Iterable<T> input);
 
 }

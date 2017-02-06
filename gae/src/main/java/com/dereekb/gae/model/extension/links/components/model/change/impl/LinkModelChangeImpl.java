@@ -49,7 +49,7 @@ public class LinkModelChangeImpl
 
 	@Override
 	public List<LinkChange> getLinkChanges() {
-		List<LinkChange> modelChanges = new ArrayList<LinkChange>();
+		List<LinkChange> modelChanges = new ArrayList<>();
 
 		for (LinkChange change : this.changes.values()) {
 			if (change.hasChanges()) {
@@ -61,13 +61,8 @@ public class LinkModelChangeImpl
 	}
 
 	@Override
-	public LinkChange getChangesForLink(String link) throws UnavailableLinkException {
+	public LinkChange getChangesForLink(String link) {
 		LinkChange changes = this.changes.get(link);
-
-		if (link == null) {
-			throw new UnavailableLinkException();
-		}
-
 		return changes;
 	}
 

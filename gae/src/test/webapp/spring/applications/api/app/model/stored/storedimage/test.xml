@@ -11,16 +11,14 @@
 
 	<!-- Generator -->
 	<bean id="storedImageTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.TestModelGeneratorImpl"
-		scope="singleton">
+		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
 		<constructor-arg index="0" ref="storedImageRegistry" />
 		<constructor-arg index="1" ref="storedImageGenerator" />
 	</bean>
 
 	<!-- Data Generator -->
 	<bean id="storedImageTestDataGenerator"
-		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl"
-		scope="singleton">
+		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
 		<constructor-arg index="0" ref="storedImageGenerator" />
 		<constructor-arg index="1" ref="storedImageDataBuilder" />
 	</bean>

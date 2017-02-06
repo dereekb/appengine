@@ -28,7 +28,7 @@ public class CollectionPartitionerTest {
 		PartitionerImpl partitioner = new PartitionerImpl();
 		List<Integer> items = this.generateRandomList(itemsCount);
 
-		partitioner.setPartitionSize(partitionSize);
+		partitioner.setDefaultPartitionSize(partitionSize);
 		List<List<Integer>> partitions = partitioner.makePartitionsWithCollection(items);
 
 		Assert.assertTrue(partitions.size() == (itemsCount / partitionSize));
@@ -47,7 +47,7 @@ public class CollectionPartitionerTest {
 		PartitionerImpl partitioner = new PartitionerImpl();
 		List<Integer> items = this.generateRandomList(itemsCount);
 
-		partitioner.setPartitionSize(partitionSize);
+		partitioner.setDefaultPartitionSize(partitionSize);
 		List<List<Integer>> partitions = partitioner.makePartitions(items);
 
 		Assert.assertTrue(partitions.size() == 12); // 100 / 9 = (11 + 1/9)

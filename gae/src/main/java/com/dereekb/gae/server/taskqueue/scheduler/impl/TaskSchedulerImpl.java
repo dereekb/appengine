@@ -5,10 +5,12 @@ import java.util.List;
 
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskSchedulerAuthenticator;
 import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.impl.TaskRequestConverterImpl;
 import com.dereekb.gae.utilities.collections.SingleItem;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
 import com.google.appengine.api.taskqueue.Queue;
@@ -26,6 +28,7 @@ public class TaskSchedulerImpl
         implements TaskScheduler {
 
 	private Context context;
+	private TaskSchedulerAuthenticator authenticator;
 
 	public TaskSchedulerImpl(Filter<TaskRequest> filter) {
 		this(filter, new TaskRequestConverterImpl());
@@ -67,16 +70,26 @@ public class TaskSchedulerImpl
 		this.context.setConverter(converter);
 	}
 
+	public TaskSchedulerAuthenticator getAuthenticator() {
+		return this.authenticator;
+	}
+
+	public void setAuthenticator(TaskSchedulerAuthenticator authenticator) {
+		this.authenticator = authenticator;
+	}
+
 	// MARK: TaskScheduler
 	@Override
-    public void schedule(TaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException {
+	public void schedule(TaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException {
 		this.context.schedule(request);
-    }
+	}
 
 	@Override
-    public void schedule(Collection<TaskRequest> requests) throws SubmitTaskException, TaskAlreadyExistsException {
+	public void schedule(Collection<? extends TaskRequest> requests)
+	        throws SubmitTaskException,
+	            TaskAlreadyExistsException {
 		this.context.schedule(requests);
-    }
+	}
 
 	// MARK: Context
 	public Context makeContext(TaskRequestConverter converter) {
@@ -119,10 +132,7 @@ public class TaskSchedulerImpl
 			this(null, queue, filter, converter);
 		}
 
-		protected Context(Context parent,
-		        String queue,
-		        Filter<TaskRequest> filter,
-		        TaskRequestConverter converter) {
+		protected Context(Context parent, String queue, Filter<TaskRequest> filter, TaskRequestConverter converter) {
 			this.parent = parent;
 			this.setQueue(queue);
 			this.setFilter(filter);
@@ -199,6 +209,10 @@ public class TaskSchedulerImpl
 			return converter;
 		}
 
+		public TaskSchedulerAuthenticator getAuthenticator() {
+			return TaskSchedulerImpl.this.authenticator;
+		}
+
 		// MARK: TaskScheduler
 		@Override
 		public void schedule(TaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException {
@@ -206,13 +220,18 @@ public class TaskSchedulerImpl
 		}
 
 		@Override
-		public void schedule(Collection<TaskRequest> requests) throws SubmitTaskException, TaskAlreadyExistsException {
+		public void schedule(Collection<? extends TaskRequest> requests)
+		        throws SubmitTaskException,
+		            TaskAlreadyExistsException {
 			Collection<TaskRequest> filtered = this.filter(requests);
 
 			if (filtered.isEmpty() == false) {
 				try {
 					TaskRequestConverter converter = this.getContextConverter();
 					List<TaskOptions> options = converter.convert(filtered);
+
+					options = this.authenticateOptions(options);
+
 					Queue queue = this.getTaskQueue();
 					queue.add(options);
 				} catch (Exception e) {
@@ -223,15 +242,25 @@ public class TaskSchedulerImpl
 		}
 
 		// MARK: Internal
-		private Collection<TaskRequest> filter(Collection<TaskRequest> requests) {
+		private List<TaskOptions> authenticateOptions(List<TaskOptions> options) {
+			TaskSchedulerAuthenticator authenticator = this.getAuthenticator();
+
+			if (authenticator != null) {
+				options = authenticator.authenticateOptions(options);
+			}
+
+			return options;
+		}
+
+		private Collection<TaskRequest> filter(Collection<? extends TaskRequest> requests) {
 			Filter<TaskRequest> filter = this.getContextFilter();
 
 			if (filter != null) {
 				FilterResults<TaskRequest> results = filter.filterObjects(requests);
-				requests = results.getPassingObjects();
+				return results.getPassingObjects();
+			} else {
+				return ListUtility.safeCopy(requests);
 			}
-
-			return requests;
 		}
 
 		private Queue getTaskQueue() {

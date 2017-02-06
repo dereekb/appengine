@@ -44,9 +44,14 @@ public final class LinkModelImpl<T extends UniqueModel>
 
 	// LinkModel
 	@Override
-    public ModelKey getModelKey() {
+	public ModelKey getModelKey() {
 		return this.model.getModelKey();
-    }
+	}
+
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
+	}
 
 	@Override
 	public String getType() {
@@ -59,11 +64,11 @@ public final class LinkModelImpl<T extends UniqueModel>
 		Link link = map.get(name);
 
 		if (link == null) {
-			throw new UnavailableLinkException();
+			throw UnavailableLinkException.withLink(name);
 		}
 
 		return link;
-    }
+	}
 
 	@Override
 	public Collection<Link> getLinks() {

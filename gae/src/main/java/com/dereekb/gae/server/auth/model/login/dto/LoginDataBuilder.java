@@ -2,9 +2,10 @@ package com.dereekb.gae.server.auth.model.login.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
+import com.dereekb.gae.model.extension.search.document.dto.DescribedModelDataBuilder;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
+import com.dereekb.gae.utilities.factory.Factory;
 
 /**
  * {@link DirectionalConverter} for converting a {@link Login} to
@@ -12,26 +13,27 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
  *
  * @author dereekb
  */
-public final class LoginDataBuilder extends AbstractDirectionalConverter<Login, LoginData> {
+public final class LoginDataBuilder extends DescribedModelDataBuilder<Login, LoginData> {
 
-	public LoginDataBuilder() {}
+	public LoginDataBuilder() {
+		super(LoginData.class);
+	}
 
-	// Single Directional Converter
+	public LoginDataBuilder(Factory<LoginData> factory) throws IllegalArgumentException {
+		super(factory);
+	}
+
 	@Override
-	public LoginData convertSingle(Login login) throws ConversionFailureException {
-		LoginData data = new LoginData();
-
-		// Id
-		data.setIdentifier(login.getModelKey());
-		data.setCreated(login.getDate());
-		data.setSearchIdentifier(login.getSearchIdentifier());
-
-		// Links
-		data.setPointers(ObjectifyKeyUtility.readKeyNames(login.getPointers()));
+	public LoginData convertSingle(Login input) throws ConversionFailureException {
+		LoginData data = super.convertSingle(input);
 
 		// Data
-		data.setRoles(login.getRoles());
-		data.setType(login.getType());
+		data.setDate(input.getDate());
+		data.setRoles(input.getRoles());
+		data.setGroup(input.getGroup());
+
+		// Links
+		data.setPointers(ObjectifyKeyUtility.readKeyNames(input.getPointers()));
 
 		return data;
 	}

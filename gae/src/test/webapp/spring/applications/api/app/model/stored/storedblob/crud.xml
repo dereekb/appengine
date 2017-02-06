@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Cruds -->
-	<bean id="storedBlobCrudService" lazy-init="true"
+	<bean id="storedBlobCrudService"
 		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
 		<constructor-arg index="0" ref="storedBlobCreateService" />
 		<constructor-arg index="1" ref="storedBlobReadService" />
@@ -19,17 +19,17 @@
 	</bean>
 
 	<!-- Services -->
-	<bean id="storedBlobCreateService" lazy-init="true"
+	<bean id="storedBlobCreateService"
 		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
 		<constructor-arg index="0" ref="storedBlobCreateTask" />
 	</bean>
 
-	<bean id="storedBlobReadService" lazy-init="true"
+	<bean id="storedBlobReadService"
 		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
 		<constructor-arg index="0" ref="storedBlobReadTask" />
 	</bean>
 
-	<bean id="storedBlobUpdateService" lazy-init="true"
+	<bean id="storedBlobUpdateService"
 		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
 		<constructor-arg index="0" ref="storedBlobReadService" />
 		<constructor-arg index="1" ref="storedBlobUpdateTask" />
@@ -43,23 +43,26 @@
 
 	<!-- Save/Delete Tasks -->
 	<bean id="storedBlobSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
 			ref="storedBlobSynchronousConfiguredSetter" />
 	</bean>
 
 	<bean id="storedBlobAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask"
-		lazy-init="true">
-		<constructor-arg index="0" ref="storedBlobAsyncConfiguredSetter" />
+		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
+		<constructor-arg index="0"
+			ref="storedBlobAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Create -->
-	<bean id="storedBlobCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl"
-		lazy-init="true">
+	<bean id="storedBlobCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="storedBlobCreateTaskDelegate" />
-		<constructor-arg index="1" ref="storedBlobSynchronousSaveTask" />
+		<constructor-arg index="1">
+			<bean class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelMultiIterableTask">
+				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
+				<constructor-arg index="1" ref="storedBlobSynchronousSaveTask"/>
+			</bean>
+		</constructor-arg>
 		<constructor-arg index="2">
 			<bean
 				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
@@ -70,39 +73,37 @@
 	</bean>
 
 	<bean id="storedBlobCreateTaskDelegate"
-		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl"
-		lazy-init="true">
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
 		<constructor-arg index="0" ref="storedBlobFactory" />
 		<constructor-arg index="1" ref="storedBlobAttributeUpdater" />
 	</bean>
 
 	<!-- Read -->
-	<bean id="storedBlobReadTask" lazy-init="true"
-		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
+	<bean id="storedBlobReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
 		<constructor-arg index="0" ref="storedBlobRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
 	</bean>
 
 	<!-- Update -->
-	<bean id="storedBlobUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl"
-		lazy-init="true">
+	<bean id="storedBlobUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="storedBlobAttributeUpdater" />
 		<constructor-arg index="1" ref="storedBlobAsyncSaveTask" />
-		<constructor-arg index="2" ref="storedBlobScheduleUpdateReview" />
+		<constructor-arg index="2"
+			ref="storedBlobScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedBlobAttributeUpdater"
-		class="com.dereekb.gae.model.stored.blob.crud.StoredBlobAttributeUpdater"
-		lazy-init="true">
+		class="com.dereekb.gae.model.stored.blob.crud.StoredBlobAttributeUpdater">
 	</bean>
 
 	<!-- Delete -->
-	<alias name="storedBlobScheduleDeleteTask" alias="storedBlobDeleteTask"/>
-	
+	<alias name="storedBlobScheduleDeleteTask" alias="storedBlobDeleteTask" />
+
 	<bean id="storedBlobScheduleDeleteTask"
-		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask"
-		lazy-init="true">
-		<constructor-arg index="0" ref="storedBlobType"/>
-		<constructor-arg index="1" ref="taskScheduler"/>
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
+		<constructor-arg index="0" ref="storedBlobType" />
+		<constructor-arg index="1" ref="taskScheduler" />
 		<property name="deleteFilter">
 			<bean
 				class="com.dereekb.gae.model.stored.blob.crud.StoredBlobDeleteRulesFilter">

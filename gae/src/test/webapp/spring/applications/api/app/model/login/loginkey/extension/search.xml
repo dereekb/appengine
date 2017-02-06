@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Query Services -->
+	<bean id="loginKeyQueryService"
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="loginKeyRegistry" />
+		<constructor-arg index="1" ref="securedLoginKeyQueryInitializer" />
+	</bean>
+
+	<bean id="securedLoginKeyQueryInitializer"
+		class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer">
+		<constructor-arg index="0" ref="loginKeyQueryInitializer" />
+		<constructor-arg index="1" ref="securityOverrideOwnedModelQueryTask" />
+	</bean>
+	
+	<bean id="loginKeyQueryInitializer"
+		class="com.dereekb.gae.server.auth.model.key.search.query.LoginKeyQueryInitializer">
+	</bean>
+
+</beans>

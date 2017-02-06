@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.search.document.index.IndexAction;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder;
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
@@ -20,6 +21,7 @@ import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.search.document.query.StoredImageSearchRequest;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.test.model.extension.generator.impl.WrappedTestModelGeneratorImpl;
 import com.google.appengine.api.search.Document;
 
 public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<StoredImage> {
@@ -36,7 +38,7 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 	@Autowired
 	@Qualifier("storedImageTestModelGenerator")
 	public void setGenerator(TestModelGenerator<StoredImage> generator) {
-		super.setGenerator(generator);
+		super.setGenerator(new StoredImageTestModelGenerator(generator));
 	}
 
 	@Override
@@ -59,52 +61,55 @@ public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<Store
 
 	@Test
 	public void testSearchService() {
-		List<StoredImage> models = this.make(10);
+		List<StoredImage> models = this.generator.generate(10);
 
 		this.indexService.indexChange(models, IndexAction.INDEX);
 
 		StoredImageSearchRequest request = new StoredImageSearchRequest();
 		ModelDocumentSearchResponse<StoredImage> response = this.searchService.search(request);
 
-		Collection<StoredImage> results = response.getModelSearchResults();
+		Collection<StoredImage> results = response.getModelResults();
 		Assert.assertTrue(results.containsAll(models));
 	}
 
 	// MARK: Indexing
 	@Override
-    @Test
+	@Test
 	public void testDocumentBuilding() {
-		StoredImage storedImage = this.make();
+		StoredImage storedImage = this.generator.generate();
 		super.testDocumentBuilding();
-
-		// Test with null GeoPlace
-		storedImage.setGeoPlace(null);
 
 		Document document = this.builder.buildSearchDocument(storedImage);
 		Assert.assertNotNull(document);
 	}
 
-	@Override
-	protected StoredImage make() {
-		StoredImage storedImage = this.getGenerator().generate();
-
-		GeoPlace geoPlace = this.geoPlaceGenerator.generate();
-		storedImage.setGeoPlace(geoPlace.getObjectifyKey());
-
-		StoredBlob storedBlob = this.storedBlobGenerator.generate();
-		storedImage.setStoredBlob(storedBlob.getObjectifyKey());
-
-		return storedImage;
-	}
-
 	@Test
 	public void testSearchIndexFields() {
-		StoredImage model = this.make();
+		StoredImage model = this.generator.generate();
 		Document document = this.builder.buildSearchDocument(model);
 
 		Set<String> names = document.getFieldNames();
-		Assert.assertTrue(names.contains("GP_id")); // GeoPoint ID Field
 		Assert.assertTrue(names.contains("SB_id")); // StoredBlob ID Field
+	}
+
+	// MARK: Make Override
+	private class StoredImageTestModelGenerator extends WrappedTestModelGeneratorImpl<StoredImage> {
+
+		protected StoredImageTestModelGenerator(TestModelGenerator<StoredImage> generator)
+		        throws IllegalArgumentException {
+			super(generator);
+		}
+
+		@Override
+		public StoredImage generate(GeneratorArg arg) throws IllegalArgumentException {
+			StoredImage storedImage = super.generate(arg);
+
+			StoredBlob storedBlob = StoredImageSearchDocumentTest.this.storedBlobGenerator.generate();
+			storedImage.setStoredBlob(storedBlob.getObjectifyKey());
+
+			return storedImage;
+		}
+
 	}
 
 }

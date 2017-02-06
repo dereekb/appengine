@@ -2,6 +2,7 @@ package com.dereekb.gae.server.taskqueue.scheduler;
 
 import java.util.Collection;
 
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
@@ -41,14 +42,14 @@ public interface TaskRequest {
 	 *
 	 * @return {@link Collection} of request headers.
 	 */
-	public Collection<TaskParameter> getHeaders();
+	public Collection<KeyedEncodedParameter> getHeaders();
 
 	/**
 	 * Optional collection of request parameters.
 	 *
 	 * @return {@link Collection} of request parameters.
 	 */
-	public Collection<TaskParameter> getParameters();
+	public Collection<KeyedEncodedParameter> getParameters();
 
 	/**
 	 * Returns timings for when to submit the request.

@@ -88,7 +88,6 @@ public class DeleteServiceImpl<T extends UniqueModel>
 			 * Some pairs still may be filtered out internally as part of the
 			 * function before being deleted.
 			 */
-
 			HashMapWithList<FilterResult, DeletePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
 			List<DeletePair<T>> deletedPairs = results.valuesForKey(FilterResult.PASS);
 			List<T> deletedModels = DeletePair.getKeys(deletedPairs);

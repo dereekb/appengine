@@ -6,6 +6,8 @@ import java.util.Date;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.time.IsoTimeConverter;
+import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -23,25 +25,35 @@ public abstract class DatabaseModelData
 
 	private static final long serialVersionUID = 1L;
 
+	public static final IsoTimeConverter DATE_CONVERTER = ThreeTenIsoTimeConverter.SINGLETON;
+
 	/**
 	 * The model's database identifier as a String.
 	 */
 	protected String key;
 
 	/**
-	 * Date that the model was created encoded in a Long.
+	 * Date that the model was created. For JSON serialization is is converted
+	 * to a string.
 	 */
-	protected Long created;
+	@JsonIgnore
+	protected Date date;
 
 	public DatabaseModelData() {}
 
-	public DatabaseModelData(String identifier) {
-		this.key = identifier;
+	public DatabaseModelData(String key) {
+		this.setKey(key);
 	}
 
-	public DatabaseModelData(String identifier, Long creationTime) {
-		this.key = identifier;
-		this.created = creationTime;
+	public DatabaseModelData(String key, Date date) {
+		this.setKey(key);
+		this.setDate(date);
+	}
+
+	@Deprecated
+	public DatabaseModelData(String key, Long creationTime) {
+		this.setKey(key);
+		this.setCreated(creationTime);
 	}
 
 	@Override
@@ -55,7 +67,7 @@ public abstract class DatabaseModelData
 	}
 
 	@JsonIgnore
-	public void setIdentifier(ModelKey key) {
+	public void setModelKey(ModelKey key) {
 		this.key = ModelKey.readStringKey(key);
 	}
 
@@ -70,34 +82,69 @@ public abstract class DatabaseModelData
 		this.key = idString;
 	}
 
+	@JsonIgnore
+	@Deprecated
 	public Long getCreated() {
-		return this.created;
-	}
+		Long time = null;
 
-	public void setCreated(Long creationTime) {
-		this.created = creationTime;
+		if (this.date != null) {
+			time = this.date.getTime();
+		}
+
+		return time;
 	}
 
 	@JsonIgnore
-	public void setCreated(Date creationDate) {
-		Long time = null;
+	@Deprecated
+	public void setCreated(Long creationTime) {
+		Date date = null;
 
-		if (creationDate != null) {
-			time = creationDate.getTime();
+		if (creationTime != null) {
+			date = new Date(creationTime);
 		}
 
-		this.created = time;
+		this.setDate(date);
+	}
+
+	public String getDate() {
+		String value = null;
+
+		if (this.date != null) {
+			value = DATE_CONVERTER.convertToString(this.date);
+		}
+
+		return value;
+	}
+
+	public void setDate(String date) {
+		Date value = null;
+
+		if (date != null) {
+			value = DATE_CONVERTER.convertFromString(date);
+		}
+
+		this.date = value;
+	}
+
+	@JsonIgnore
+	public Date getDateValue() {
+		return this.date;
+	}
+
+	@JsonIgnore
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	// UniqueModel
-	/**
-	 * Override in super classes to convert to expected type.
-	 */
-	@JsonIgnore
-	@Deprecated
 	@Override
 	public ModelKey getModelKey() {
-		return ModelKey.convert(this.key);
+		return ModelKey.convertNumberString(this.key);
+	}
+
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
 	}
 
 }

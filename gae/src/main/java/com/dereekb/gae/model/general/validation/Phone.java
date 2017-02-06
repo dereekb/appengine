@@ -16,11 +16,11 @@ import javax.validation.Payload;
 @Constraint(validatedBy = { PhoneValidator.class })
 public @interface Phone {
 
-	String message() default "Invalid Phone Number";
-
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
+
+	String message() default "Invalid Phone Number";
 
 	boolean fast() default true;
 

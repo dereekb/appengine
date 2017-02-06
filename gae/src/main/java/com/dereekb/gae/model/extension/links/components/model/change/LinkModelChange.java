@@ -3,7 +3,6 @@ package com.dereekb.gae.model.extension.links.components.model.change;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 
 /**
@@ -36,10 +35,10 @@ public interface LinkModelChange {
 	 * @param name
 	 *            name of the link to load.
 	 * @return {@link LinkChange} for the target link.
-	 * @throws UnavailableLinkException
-	 *             if the requested link does not exist.
+	 * @throws IllegalArgumentException
+	 *             if the input link is null.
 	 */
-	public LinkChange getChangesForLink(String name) throws UnavailableLinkException;
+	public LinkChange getChangesForLink(String name) throws IllegalArgumentException;
 
 	/**
 	 * @return {@code true} if changes have been made.

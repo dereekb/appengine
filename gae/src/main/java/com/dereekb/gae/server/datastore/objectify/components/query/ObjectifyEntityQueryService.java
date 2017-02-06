@@ -2,7 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.components.query;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryModelResponse;
 
 /**
  * Service for querying entities and keys.
@@ -19,8 +19,8 @@ public interface ObjectifyEntityQueryService<T extends ObjectifyModel<T>> {
 	 *
 	 * @param request
 	 *            {@link ObjectifyQueryRequest} implementation.
-	 * @return {@link ObjectifyQueryResponse}. Never {@code null}.
+	 * @return {@link ObjectifyQueryModelResponse}. Never {@code null}.
 	 */
-	public ObjectifyQueryResponse<T> query(ObjectifyQueryRequest<T> request);
+	public ObjectifyQueryModelResponse<T> query(ObjectifyQueryRequest<T> request);
 
 }

@@ -2,7 +2,6 @@ package com.dereekb.gae.server.datastore.objectify.core.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,18 +26,22 @@ import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryKeyResponse;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryModelResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryResponse;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyKeyInSetFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestBuilderImpl;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQueryIterableFactoryImpl;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
+import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -95,7 +98,7 @@ public class ObjectifyDatabaseImpl
 	}
 
 	// Objectify
-	private Objectify ofy() {
+	protected Objectify ofy() {
 		return ObjectifyService.ofy();
 	}
 
@@ -134,6 +137,7 @@ public class ObjectifyDatabaseImpl
 
 		private final ObjectifyKeyConverter<T, ModelKey> objectifyKeyConverter;
 		private final ObjectifyQueryRequestLimitedBuilderInitializer initializer;
+		private final ObjectifyQueryIterableFactory<T> iterableFactory;
 
 		protected ObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			ObjectifyDatabaseEntityDefinition entity = ObjectifyDatabaseImpl.this.getDefinition(type);
@@ -143,6 +147,7 @@ public class ObjectifyDatabaseImpl
 			this.keyType = entity.getEntityKeyType();
 			this.objectifyKeyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
 			this.initializer = entity.getQueryInitializer();
+			this.iterableFactory = new ObjectifyQueryIterableFactoryImpl<T>(this);
 		}
 
 		public boolean isConfiguredAsync() {
@@ -319,6 +324,11 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
+		public boolean exists(T model) {
+			return this.exists(model.getObjectifyKey());
+		}
+
+		@Override
 		public boolean exists(ModelKey key) {
 			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
 			return this.exists(objectifyKey);
@@ -452,11 +462,11 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public ObjectifyQueryIterableFactory<T> makeIterableQueryFactory() {
-			return new ObjectifyQueryIterableFactoryImpl<T>(this);
+			return this.iterableFactory;
 		}
 
 		@Override
-		public ObjectifyQueryResponse<T> query(ObjectifyQueryRequest<T> request) {
+		public ObjectifyQueryModelResponse<T> query(ObjectifyQueryRequest<T> request) {
 			ObjectifyQueryRequestExecutor executor = new ObjectifyQueryRequestExecutor(request);
 			return executor.query();
 		}
@@ -485,7 +495,7 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
-		public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters) {
+		public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters) throws IllegalQueryArgumentException {
 			ObjectifyQueryRequestBuilder<T> builder = this.makeQuery();
 
 			if (this.initializer != null && parameters != null) {
@@ -510,6 +520,35 @@ public class ObjectifyDatabaseImpl
 			return new LoadedModelKeyListAccessor<T>(this.modelTypeName, models);
 		}
 
+		// MARK: ObjectifyQueryIterableFactory
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable() {
+			return this.iterableFactory.makeIterable();
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(Cursor cursor) {
+			return this.iterableFactory.makeIterable(cursor);
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(Map<String, String> parameters,
+		                                              Cursor cursor) {
+			return this.iterableFactory.makeIterable(parameters, cursor);
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query) {
+			return this.iterableFactory.makeIterable(query);
+		}
+
+		@Override
+		public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query,
+		                                              Cursor cursor) {
+			return this.iterableFactory.makeIterable(query, cursor);
+		}
+
+		// MARK: Request Executor
 		/**
 		 * Internal implementation for executing a query.
 		 *
@@ -524,10 +563,10 @@ public class ObjectifyDatabaseImpl
 				this.request = request;
 			}
 
-			public ObjectifyQueryResponse<T> query() {
+			public ObjectifyQueryModelResponse<T> query() {
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
-				boolean cache = options.allowCache();
+				boolean cache = options.getAllowCache();
 				Query<T> query = ObjectifyDatabaseEntityImpl.this.makeQuery(cache);
 
 				query = this.applyOptions(query);
@@ -536,7 +575,7 @@ public class ObjectifyDatabaseImpl
 				filteredQuery = this.applyResultsOrdering(filteredQuery);
 
 				SimpleQuery<T> simpleQuery = this.applySimpleQueryFilters(filteredQuery);
-				ObjectifyQueryResponse<T> response = new ObjectifyQueryResponseImpl(simpleQuery);
+				ObjectifyQueryModelResponse<T> response = new ObjectifyQueryModelResponseImpl(simpleQuery);
 				return response;
 			}
 
@@ -544,14 +583,24 @@ public class ObjectifyDatabaseImpl
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
 				Cursor cursor = options.getQueryCursor();
+				Integer offset = options.getOffset();
 				Integer limit = options.getLimit();
+				Integer chunk = options.getChunk();
 
 				if (limit != null) {
 					query = query.limit(limit);
 				}
 
+				if (offset != null) {
+					query = query.offset(offset);
+				}
+
 				if (cursor != null) {
 					query = query.startAt(cursor);
+				}
+
+				if (chunk != null) {
+					query = query.chunk(chunk);
 				}
 
 				return query;
@@ -593,45 +642,74 @@ public class ObjectifyDatabaseImpl
 		}
 
 		/**
-		 * Internal {@link ObjectifyQueryResponse} implementation.
+		 * Internal {@link ObjectifyQueryModelResponse} implementation.
 		 *
 		 * @author dereekb
 		 */
-		private class ObjectifyQueryResponseImpl
-		        implements ObjectifyQueryResponse<T> {
+		private class ObjectifyQueryModelResponseImpl extends ObjectifyQueryKeyResponseImpl
+		        implements ObjectifyQueryModelResponse<T> {
 
-			private final SimpleQuery<T> query;
+			private List<T> modelsResult;
 
-			public ObjectifyQueryResponseImpl(SimpleQuery<T> query) {
-				this.query = query;
+			protected ObjectifyQueryModelResponseImpl(SimpleQuery<T> query) {
+				super(query);
 			}
 
-			// MARK: ObjectifyQueryResponse
+			// MARK: ObjectifyQueryModelResponse
+			@Override
+			public List<T> queryModels() {
+				if (this.modelsResult == null) {
+					this.modelsResult = ObjectifyDatabaseEntityImpl.this
+					        .getWithObjectifyKeys(this.queryObjectifyKeys());
+				}
+
+				return this.modelsResult;
+			}
+
+			@Override
+			public QueryResultIterator<T> queryModelsIterator() {
+				return this.queryModelsIterator();
+			}
+
+		}
+
+		private class ObjectifyQueryKeyResponseImpl
+		        implements ObjectifyQueryKeyResponse<T> {
+
+			protected final SimpleQuery<T> query;
+			private final QueryKeys<T> keysQuery;
+
+			private Result result;
+
+			protected ObjectifyQueryKeyResponseImpl(SimpleQuery<T> query) {
+				this.query = query;
+				this.keysQuery = this.query.keys();
+			}
+
+			@Override
+			public boolean hasResults() {
+				return this.getResultCount() > 0;
+			}
+
+			@Override
+			public Integer getResultCount() {
+				return this.query.count();
+			}
+
+			@Override
+			public Cursor getCursor() throws NoSearchCursorException {
+				Cursor cursor = this.getResult().getCursor();
+
+				if (cursor == null) {
+					throw new NoSearchCursorException();
+				}
+
+				return cursor;
+			}
+
 			@Override
 			public SimpleQuery<T> getQuery() {
 				return this.query;
-			}
-
-			@Override
-			public List<T> queryModels() {
-				List<T> results = this.query.list();
-
-				if (results == null) {
-					results = Collections.emptyList();
-				}
-
-				return results;
-			}
-
-			@Override
-			public List<Key<T>> queryObjectifyKeys() {
-				List<Key<T>> results = this.query.keys().list();
-
-				if (results == null) {
-					results = Collections.emptyList();
-				}
-
-				return results;
 			}
 
 			@Override
@@ -641,13 +719,52 @@ public class ObjectifyDatabaseImpl
 			}
 
 			@Override
-			public QueryResultIterable<T> queryModelsIterable() {
-				return this.query.iterable();
+			public List<Key<T>> queryObjectifyKeys() {
+				return this.getResult().getKeys();
 			}
 
 			@Override
-			public QueryResultIterable<Key<T>> queryObjectifyKeyIterable() {
-				return this.query.keys().iterable();
+			public QueryResultIterator<Key<T>> queryObjectifyKeyIterator() {
+				return this.keysQuery.iterator();
+			}
+
+			// MARK: Internal
+			private Result getResult() {
+				if (this.result == null) {
+					this.result = this.executeQuery();
+				}
+
+				return this.result;
+			}
+
+			private Result executeQuery() {
+				QueryResultIterator<Key<T>> iterator = this.queryObjectifyKeyIterator();
+
+				List<Key<T>> keys = IteratorUtility.iteratorToList(iterator);
+				Cursor cursor = iterator.getCursor();
+
+				return new Result(keys, cursor);
+			}
+
+			private class Result {
+
+				private List<Key<T>> keys;
+				private Cursor cursor;
+
+				public Result(List<Key<T>> keys, Cursor cursor) {
+					super();
+					this.keys = keys;
+					this.cursor = cursor;
+				}
+
+				public List<Key<T>> getKeys() {
+					return this.keys;
+				}
+
+				public Cursor getCursor() {
+					return this.cursor;
+				}
+
 			}
 
 		}
@@ -667,19 +784,22 @@ public class ObjectifyDatabaseImpl
 
 	@Deprecated
 	public <T> Key<T> makeKey(Class<T> type,
-	                          Long id) throws IllegalArgumentException {
+	                          Long id)
+	        throws IllegalArgumentException {
 		return Key.create(type, id);
 	}
 
 	@Deprecated
 	public <T> Key<T> makeKey(Class<T> type,
-	                          String name) throws IllegalArgumentException {
+	                          String name)
+	        throws IllegalArgumentException {
 		return Key.create(type, name);
 	}
 
 	@Deprecated
 	public <T> Key<T> makeKey(Class<T> type,
-	                          ModelKey modelKey) throws IllegalArgumentException {
+	                          ModelKey modelKey)
+	        throws IllegalArgumentException {
 		Key<T> key;
 
 		if (modelKey.getType() == ModelKeyType.NAME) {
@@ -706,7 +826,8 @@ public class ObjectifyDatabaseImpl
 	 */
 	@Deprecated
 	public <T> List<Key<T>> makeKeysFromNames(Class<T> type,
-	                                          Iterable<String> ids) throws IllegalArgumentException {
+	                                          Iterable<String> ids)
+	        throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		for (String name : ids) {
@@ -735,7 +856,8 @@ public class ObjectifyDatabaseImpl
 	 */
 	@Deprecated
 	public <T> List<Key<T>> makeKeysFromLongs(Class<T> type,
-	                                          Iterable<Long> ids) throws IllegalArgumentException {
+	                                          Iterable<Long> ids)
+	        throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		if (ids != null) {
@@ -766,7 +888,8 @@ public class ObjectifyDatabaseImpl
 	 */
 	@Deprecated
 	public <T> List<Key<T>> makeKeysFromModelKeys(Class<T> type,
-	                                              Collection<ModelKey> modelKeys) throws IllegalArgumentException {
+	                                              Collection<ModelKey> modelKeys)
+	        throws IllegalArgumentException {
 		List<Key<T>> keys = new ArrayList<Key<T>>();
 
 		if (modelKeys != null) {

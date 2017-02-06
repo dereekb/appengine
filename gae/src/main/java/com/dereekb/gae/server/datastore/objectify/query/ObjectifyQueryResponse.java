@@ -1,66 +1,45 @@
 package com.dereekb.gae.server.datastore.objectify.query;
 
-import java.util.List;
-
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.google.appengine.api.datastore.QueryResultIterable;
-import com.google.appengine.api.datastore.QueryResultIterator;
-import com.googlecode.objectify.Key;
+import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
+import com.google.appengine.api.datastore.Cursor;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
- * Pre-configured Objectify query that can return its results as a
- *
+ * Pre-configured Objectify query response accessor.
+ * 
  * @author dereekb
- *
- * @param <T>
- *            model type
+ * @see {@link ObjectifyQueryKeyResponse}
  */
-public interface ObjectifyQueryResponse<T extends ObjectifyModel<T>> {
+public interface ObjectifyQueryResponse {
 
 	/**
 	 * Returns the created query.
 	 *
 	 * @return {@link SimpleQuery} used. Never {@code null}.
 	 */
-	public SimpleQuery<T> getQuery();
+	public SimpleQuery<?> getQuery();
 
 	/**
-	 * Retrieves models that meet the query parameters.
-	 *
-	 * @return {@link List} of matching models.
+	 * Checks whether or not any results exist.
+	 * 
+	 * @return {@code true} if one or more results are available.
 	 */
-	public List<T> queryModels();
+	public boolean hasResults();
 
 	/**
-	 * Retrieves {@link Key} values of the models that meet the query
-	 * parameters.
-	 *
-	 * @return {@link List} of keys of matching models.
+	 * Returns the number of results available in the response.
+	 * 
+	 * @return {@link Integer}. Never {@code null} nor less than 0.
 	 */
-	public List<Key<T>> queryObjectifyKeys();
+	public Integer getResultCount();
 
 	/**
-	 * Retrieves {@link ModelKey} values of the models that meet the query
-	 * parameters.
-	 *
-	 * @return {@link List} of keys of matching models.
+	 * Returns the cursor of the last item for this query request.
+	 * 
+	 * @return {@link Cursor}. Never {@code null}.
+	 * @throws NoSearchCursorException
+	 *             if no cursor is available.
 	 */
-	public List<ModelKey> queryModelKeys();
-
-	/**
-	 * Retrieves a {@link QueryResultIterator} instance.
-	 *
-	 * @return {@link QueryResultIterator}. Never {@code null}.
-	 */
-	public QueryResultIterable<T> queryModelsIterable();
-
-	/**
-	 * Retrieves a {@link QueryResultIterator} instance for objectify keys.
-	 *
-	 * @return {@link QueryResultIterator}. Never {@code null}.
-	 */
-	public QueryResultIterable<Key<T>> queryObjectifyKeyIterable();
+	public Cursor getCursor() throws NoSearchCursorException;
 
 }

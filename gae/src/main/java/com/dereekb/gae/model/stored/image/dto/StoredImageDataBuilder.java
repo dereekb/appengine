@@ -2,9 +2,8 @@ package com.dereekb.gae.model.stored.image.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
+import com.dereekb.gae.model.extension.search.document.dto.SearchableModelDataBuilder;
 import com.dereekb.gae.model.stored.image.StoredImage;
-import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
@@ -13,29 +12,24 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
  *
  * @author dereekb
  */
-public class StoredImageDataBuilder extends AbstractDirectionalConverter<StoredImage, StoredImageData> {
+public class StoredImageDataBuilder extends SearchableModelDataBuilder<StoredImage, StoredImageData> {
+
+	public StoredImageDataBuilder() throws IllegalArgumentException {
+		super(StoredImageData.class);
+	}
 
 	@Override
 	public StoredImageData convertSingle(StoredImage input) throws ConversionFailureException {
-		StoredImageData data = new StoredImageData();
+		StoredImageData data = super.convertSingle(input);
 
-		// Identifier
-		data.setIdentifier(input.getModelKey());
-
-		// Info
+		// Data
 		data.setName(input.getName());
 		data.setSummary(input.getSummary());
 		data.setTags(input.getTags());
 		data.setType(input.getTypeId());
 
-		// Blob
+		// Links
 		data.setBlob(ObjectifyKeyUtility.idFromKey(input.getStoredBlob()));
-
-		// Geo Place
-		data.setGeoPlace(ObjectifyKeyUtility.idFromKey(input.getGeoPlace()));
-
-		// Image Sets
-		data.setImageSets(ObjectifyUtility.readKeyIdentifiers(input.getImageSets()));
 
 		return data;
 	}

@@ -4,19 +4,27 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
+import com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask;
+import com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
+import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
+import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.test.utility.mock.TaskRequestMockHttpRequestConverter;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
 import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditControllerEntry;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -42,11 +50,18 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	private TestModelGenerator<T> modelGenerator;
 	private ScheduleDeleteTask<T> deleteTask;
 
+	private TaskSchedulerImpl taskSchedulerImpl;
+
+	private ScheduleCreateReviewTask<T> scheduleCreateReviewTask;
+	private ScheduleUpdateReviewTask<T> scheduleUpdateReviewTask;
+
+	private TaskRequestMockHttpRequestConverter mockRequestConverter;
+
 	@Autowired
 	@Qualifier("taskQueueEditController")
 	private TaskQueueEditController controller;
 
-    public Integer getGenCount() {
+	public Integer getGenCount() {
 		return this.genCount;
 	}
 
@@ -86,6 +101,34 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		this.deleteTask = deleteTask;
 	}
 
+	public TaskSchedulerImpl getTaskSchedulerImpl() {
+		return this.taskSchedulerImpl;
+	}
+
+	@Autowired
+	public void setTaskSchedulerImpl(TaskSchedulerImpl taskSchedulerImpl) {
+		this.taskSchedulerImpl = taskSchedulerImpl;
+
+		TaskRequestConverter taskRequestConverter = taskSchedulerImpl.getConverter();
+		this.mockRequestConverter = new TaskRequestMockHttpRequestConverter(taskRequestConverter);
+	}
+
+	public ScheduleCreateReviewTask<T> getScheduleCreateReviewTask() {
+		return this.scheduleCreateReviewTask;
+	}
+
+	public void setScheduleCreateReviewTask(ScheduleCreateReviewTask<T> scheduleCreateReviewTask) {
+		this.scheduleCreateReviewTask = scheduleCreateReviewTask;
+	}
+
+	public ScheduleUpdateReviewTask<T> getScheduleUpdateReviewTask() {
+		return this.scheduleUpdateReviewTask;
+	}
+
+	public void setScheduleUpdateReviewTask(ScheduleUpdateReviewTask<T> scheduleUpdateReviewTask) {
+		this.scheduleUpdateReviewTask = scheduleUpdateReviewTask;
+	}
+
 	public TaskQueueEditController getController() {
 		return this.controller;
 	}
@@ -116,9 +159,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	 * @param setter
 	 */
 	protected void removeRelated(T model,
-	                             Setter<T> setter) {
-
-	}
+	                             Setter<T> setter) {}
 
 	/**
 	 * Creates all related models and links them together.
@@ -136,6 +177,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		List<String> keys = ModelKey.readStringKeys(models);
 
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
+
+		models = this.getterSetter.get(models);
 
 		Assert.assertTrue(this.isProperlyInitialized(models));
 	}
@@ -158,6 +201,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		return true;
 	}
 
+	// MARK: Directly
 	@Test
 	public void testEditFunction() {
 		List<T> models = this.create(true);
@@ -165,6 +209,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 		// Complete Initializing Models
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
+
+		models = this.getterSetter.get(models);
 
 		Assert.assertTrue(this.isProperlyInitialized(models));
 
@@ -183,6 +229,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		// Complete Initializing Models
 		this.controller.reviewCreate(this.modelTaskQueueType, keys);
 
+		models = this.getterSetter.get(models);
+
 		Assert.assertTrue(this.isProperlyInitialized(models));
 
 		this.controller.processDelete(this.modelTaskQueueType, keys);
@@ -193,7 +241,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	@Test
 	public void testDeleteScheduling() {
 		List<T> models = this.create(true);
-		List<TaskRequest> requests = this.deleteTask.buildRequests(models);
+		List<MutableTaskRequest> requests = this.deleteTask.getBuilder().buildRequests(models);
 
 		Assert.assertNotNull(requests);
 
@@ -201,7 +249,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 			Assert.assertNotNull(request.getPath());
 			Assert.assertTrue(request.getMethod() == Method.DELETE);
 
-			Collection<TaskParameter> parameters = request.getParameters();
+			Collection<KeyedEncodedParameter> parameters = request.getParameters();
 			Assert.assertFalse(parameters.isEmpty());
 		}
 
@@ -229,6 +277,26 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 	 */
 	protected boolean isProperlyDeleted(T model) {
 		return true;
+	}
+
+	// MARK: API Test
+	@Test
+	@Ignore
+	public void testTaskQueueApiCreateReview() throws Exception {
+
+		// NOTE: Not really a necessary test.
+
+		List<T> models = this.create(false);
+		this.scheduleCreateReviewTask.sendTasks(models);
+
+		List<? extends TaskRequest> requests = this.scheduleCreateReviewTask.getBuilder().buildRequests(models);
+
+		this.taskSchedulerImpl.schedule(requests);
+
+		TestLocalTaskQueueCallback.waitUntilComplete();
+
+		List<MockHttpServletRequestBuilder> mockRequests = this.mockRequestConverter.convert(requests);
+		this.performHttpRequests(mockRequests);
 	}
 
 }

@@ -2,9 +2,9 @@ package com.dereekb.gae.server.taskqueue.scheduler.utility.filter.impl;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.filter.TaskRequestHashBuilder;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
 /**
  * Special tool used to build hash values for {@link TaskRequest} instances to
@@ -40,10 +40,10 @@ public class TaskRequestHashBuilderImpl
 
 	public Integer getParametersHashcode(TaskRequest request) {
 		int result = 1;
-		Collection<TaskParameter> parameters = request.getParameters();
+		Collection<KeyedEncodedParameter> parameters = request.getParameters();
 
 		if (parameters != null) {
-			for (TaskParameter pair : parameters) {
+			for (KeyedEncodedParameter pair : parameters) {
 				result = result + pair.hashCode();
 			}
 		}

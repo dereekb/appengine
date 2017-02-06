@@ -32,6 +32,8 @@ public interface TaskScheduler {
 	 * @throws SubmitTaskException
 	 * @throws TaskAlreadyExistsException
 	 */
-	public void schedule(Collection<TaskRequest> requests) throws SubmitTaskException, TaskAlreadyExistsException;
+	public void schedule(Collection<? extends TaskRequest> requests)
+	        throws SubmitTaskException,
+	            TaskAlreadyExistsException;
 
 }

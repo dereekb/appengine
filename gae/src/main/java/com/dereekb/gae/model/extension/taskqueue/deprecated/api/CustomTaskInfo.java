@@ -41,6 +41,6 @@ public interface CustomTaskInfo {
 	/**
 	 * @return All parameters passed along with the request. Never null.
 	 */
-	public Map<String, String> getTaskParameters();
+	public Map<String, String> getKeyedEncodedParameters();
 
 }

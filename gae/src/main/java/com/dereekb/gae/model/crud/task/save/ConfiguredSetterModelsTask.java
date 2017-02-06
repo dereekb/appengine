@@ -18,25 +18,29 @@ import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
  *            model type
  */
 public class ConfiguredSetterModelsTask<T extends UniqueModel>
-        implements IterableTask<T> {
+        implements IterableSetterTask<T> {
 
 	private ConfiguredSetter<T> setter;
-	private SetterChangeState state = SetterChangeState.SAVE;
+	private SetterChangeState state;
 
 	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter) {
-		this.setter = setter;
+		this(setter, SetterChangeState.SAVE);
 	}
 
 	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter, SetterChangeState state) {
-		this.setter = setter;
-		this.state = state;
+		this.setSetter(setter);
+		this.setState(state);
 	}
 
 	public ConfiguredSetter<T> getSetter() {
 		return this.setter;
 	}
 
-	public void setSetter(ConfiguredSetter<T> setter) {
+	public void setSetter(ConfiguredSetter<T> setter) throws IllegalArgumentException {
+		if (setter == null) {
+			throw new IllegalArgumentException("Setter cannot be null.");
+		}
+
 		this.setter = setter;
 	}
 
@@ -57,12 +61,39 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	public void doTask(Iterable<T> input) throws FailedTaskException {
 		switch (this.state) {
 			case SAVE:
-				this.setter.save(input);
+				this.doSaveTask(input);
 				break;
 			case DELETE:
 				this.setter.delete(input);
 				break;
 		}
+	}
+
+	@Override
+	public void doTask(Iterable<T> input,
+	                   boolean async)
+	        throws FailedTaskException {
+		switch (this.state) {
+			case SAVE:
+				this.doSaveTask(input, async);
+				break;
+			case DELETE:
+				this.setter.delete(input, async);
+				break;
+		}
+	}
+
+	// MARK: IterableSaveTask
+	@Override
+	public void doSaveTask(Iterable<T> input) throws FailedTaskException {
+		this.setter.save(input);
+	}
+
+	@Override
+	public void doSaveTask(Iterable<T> input,
+	                       boolean async)
+	        throws FailedTaskException {
+		this.setter.save(input, async);
 	}
 
 	@Override

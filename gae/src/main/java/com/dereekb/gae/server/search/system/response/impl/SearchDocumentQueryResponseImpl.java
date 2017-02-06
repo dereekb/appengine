@@ -3,6 +3,7 @@ package com.dereekb.gae.server.search.system.response.impl;
 import java.util.Collection;
 
 import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
+import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.Results;
@@ -31,20 +32,22 @@ public class SearchDocumentQueryResponseImpl
 
 	@Override
 	public Collection<ScoredDocument> getDocumentResults() {
-		Results<ScoredDocument> results = this.getResults();
-		return results.getResults();
+		return this.getResults().getResults();
 	}
 
 	@Override
 	public Long getFoundResults() {
-		Results<ScoredDocument> results = this.getResults();
-		return results.getNumberFound();
+		return this.getResults().getNumberFound();
 	}
 
 	@Override
 	public Integer getReturnedResults() {
-		Results<ScoredDocument> results = this.getResults();
-		return results.getNumberReturned();
+		return this.getResults().getNumberReturned();
+	}
+
+	@Override
+	public Cursor getResultsCursor() {
+		return this.getResults().getCursor();
 	}
 
 	// MARK: Internal

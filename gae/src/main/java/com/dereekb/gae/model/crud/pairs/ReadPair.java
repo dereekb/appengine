@@ -8,11 +8,9 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.exception.NullModelKeyException;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionObject;
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
+import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
 /**
  * Defines a pair to process a read with.
@@ -20,8 +18,7 @@ import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
  * @author dereekb
  * @param <T>
  */
-public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T>
-        implements StagedFunctionObject<T> {
+public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 
 	public ReadPair(ModelKey key) {
 		super(key);
@@ -35,11 +32,6 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T>
 	@Override
 	public ModelKey getKey() {
 		return this.key;
-	}
-
-	@Override
-	public T getFunctionObject(StagedFunctionStage stage) {
-		return this.object;
 	}
 
 	public static <T extends UniqueModel> List<ModelKey> keysFromPairs(Iterable<ReadPair<T>> pairs) {
@@ -57,17 +49,17 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T>
 	}
 
 	public static <T extends UniqueModel> List<ReadPair<T>> createPairsForKeys(Iterable<ModelKey> keys)
-	        throws NullModelKeyException {
-		List<ReadPair<T>> pairs = new ArrayList<ReadPair<T>>();
-		Set<ModelKey> keysSet = new HashSet<ModelKey>();
+	        throws NullKeyException {
+		List<ReadPair<T>> pairs = new ArrayList<>();
+		Set<ModelKey> keysSet = new HashSet<>();
 
 		for (ModelKey key : keys) {
 			if (key == null) {
-				throw new NullModelKeyException("Encountered null key.");
+				throw new NullKeyException("Encountered null key.");
 			}
 
 			if (keysSet.contains(key) == false) {
-				ReadPair<T> pair = new ReadPair<T>(key);
+				ReadPair<T> pair = new ReadPair<>(key);
 				pairs.add(pair);
 				keysSet.add(key);
 			}
@@ -88,7 +80,7 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T>
 	@Deprecated
 	public static <T extends UniqueModel> List<ModelKey> keysFromPairs(Iterable<ReadPair<T>> pairs,
 	                                                                        boolean success) {
-		List<ModelKey> keys = new ArrayList<ModelKey>();
+		List<ModelKey> keys = new ArrayList<>();
 
 		for (ReadPair<T> pair : pairs) {
 			if (pair.hasResult() == success) {

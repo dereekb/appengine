@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.server.taskqueue.builder.TaskRequestBuilder;
-import com.dereekb.gae.server.taskqueue.system.TaskParameter;
+import com.dereekb.gae.server.taskqueue.system.KeyedEncodedParameter;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
-import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 
 /**
@@ -68,20 +68,20 @@ public class CustomTaskContinuationBuilder
 		step += 1;
 
 		String stepString = step.toString();
-		TaskParameter stepHeader = new TaskParameterImpl(this.stepHeader, stepString);
+		KeyedEncodedParameter stepHeader = new KeyedEncodedParameterImpl(this.stepHeader, stepString);
 
-		List<TaskParameter> headers = new ArrayList<TaskParameter>();
+		List<KeyedEncodedParameter> headers = new ArrayList<KeyedEncodedParameter>();
 		headers.add(stepHeader);
 
 		taskRequest.setParameters(headers);
 
 		// Copy Parameters
-		Map<String, String> map = input.getTaskParameters();
+		Map<String, String> map = input.getKeyedEncodedParameters();
 
-		Collection<TaskParameterImpl> taskParameters = TaskParameterImpl.makeParametersWithMap(map);
+		Collection<KeyedEncodedParameterImpl> KeyedEncodedParameters = KeyedEncodedParameterImpl.makeParametersWithMap(map);
 
-		List<TaskParameter> parameters = new ArrayList<TaskParameter>();
-		parameters.addAll(taskParameters);
+		List<KeyedEncodedParameter> parameters = new ArrayList<KeyedEncodedParameter>();
+		parameters.addAll(KeyedEncodedParameters);
 
 		taskRequest.setParameters(parameters);
 

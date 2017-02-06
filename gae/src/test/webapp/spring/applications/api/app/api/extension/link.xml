@@ -9,15 +9,20 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Exception Handler -->
+	<bean id="linkExceptionHandler"
+		class="com.dereekb.gae.web.api.model.extension.link.exception.ApiLinkExceptionHandler">
+	</bean>
+
 	<!-- Link -->
-	<bean id="linkExtensionApiController" lazy-init="true" scope="singleton"
+	<bean id="linkExtensionApiController"
 		class="com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController">
 		<constructor-arg index="0" ref="linkService" />
 		<constructor-arg index="1"
 			ref="linkExtensionApiControllerDelegate" />
 	</bean>
 
-	<bean id="linkExtensionApiControllerDelegate" lazy-init="true" scope="singleton"
+	<bean id="linkExtensionApiControllerDelegate"
 		class="com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl">
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 	</bean>

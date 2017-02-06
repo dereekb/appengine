@@ -26,7 +26,7 @@ public class WebsiteAddressGenerator extends AbstractGenerator<WebsiteAddress> {
 		Integer key = INTEGER_GENERATOR.generate(arg);
 		WebsiteAddress address = null;
 
-		WebsiteAddressType type = WebsiteAddressType.typeForId(key);
+		WebsiteAddressType type = WebsiteAddressType.valueOf(key);
 
 		switch (type) {
 			case FACEBOOK:

@@ -33,7 +33,7 @@ public class StoredImageSetDocumentBuilderStep
 	public void performStep(StoredImageSet model,
 	                        Builder builder) {
 
-		SearchDocumentBuilderUtility.addAtom(LABEL_FIELD, model.getLabel(), builder);
+		SearchDocumentBuilderUtility.addText(LABEL_FIELD, model.getLabel(), builder);
 		SearchDocumentBuilderUtility.addText(DETAIL_FIELD, model.getDetail(), builder);
 		SearchDocumentBuilderUtility.addText(TAGS_FIELD, model.getTags(), builder);
 

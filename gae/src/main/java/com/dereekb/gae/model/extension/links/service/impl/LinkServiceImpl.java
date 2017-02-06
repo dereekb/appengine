@@ -9,6 +9,8 @@ import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
@@ -53,11 +55,11 @@ public class LinkServiceImpl
 		boolean hasMissingKeys = runner.hasMissingKeys();
 
 		if (failures.isEmpty()) {
-			if (request.isAtomic() && hasMissingKeys == false) {
-				runner.saveChanges();
-			} else {
+			if (hasMissingKeys && request.isAtomic()) {
 				HashMapWithSet<String, ModelKey> missing = runner.getMissing();
 				throw new AtomicOperationException(missing.valuesSet(), AtomicOperationExceptionReason.UNAVAILABLE);
+			} else {
+				runner.saveChanges();
 			}
 		} else {
 			throw new LinkSystemChangesException(failures);

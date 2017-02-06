@@ -32,12 +32,7 @@ public final class UpdateRequestImpl<T extends UniqueModel>
 	}
 
 	public UpdateRequestImpl(Collection<T> templates, UpdateRequestOptions options) {
-
-		if (templates == null) {
-			throw new IllegalArgumentException("Templates cannot be null.");
-		}
-
-		this.templates = templates;
+		this.setTemplates(templates);
 		this.setOptions(options);
 	}
 
@@ -47,6 +42,10 @@ public final class UpdateRequestImpl<T extends UniqueModel>
 	}
 
 	public void setTemplates(Collection<T> templates) {
+		if (templates == null) {
+			throw new IllegalArgumentException("Templates cannot be null.");
+		}
+
 		this.templates = templates;
 	}
 
@@ -56,7 +55,7 @@ public final class UpdateRequestImpl<T extends UniqueModel>
 	}
 
 	public void setOptions(UpdateRequestOptions options) {
-		if (this.options == null) {
+		if (options == null) {
 			options = new UpdateRequestOptionsImpl();
 		}
 

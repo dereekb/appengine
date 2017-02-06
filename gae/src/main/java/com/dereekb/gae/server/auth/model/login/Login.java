@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
@@ -13,7 +14,10 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfNotDefault;
 
 /**
  * Default login model.
@@ -24,8 +28,8 @@ import com.googlecode.objectify.condition.IfEmpty;
  */
 @Cache
 @Entity
-public final class Login extends SearchableDatabaseModel
-        implements ObjectifyModel<Login> {
+public final class Login extends DescribedDatabaseModel
+        implements ObjectifyModel<Login>, EncodedRolesBearer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,18 +42,30 @@ public final class Login extends SearchableDatabaseModel
 	/**
 	 * Creation date of the login.
 	 */
+	@Index
 	private Date date = new Date();
 
 	/**
-	 * Indexed login type.
+	 * Whether or not this login is a root-level login.
 	 */
-	private Integer type = 0;
+	@IgnoreSave({ IfDefault.class })
+	private boolean root = true;
 
 	/**
-	 * A set of identifiers that correspond to different role types.
+	 * Login group identifier
 	 */
-	@IgnoreSave({ IfEmpty.class })
-	private Set<Integer> roles;
+	@Index({ IfNotDefault.class })
+	@IgnoreSave({ IfDefault.class })
+	private Integer group = 0;
+
+	/**
+	 * A {@link Long} that encodes all roles.
+	 * <p>
+	 * The roles identifiers will differ between systems.
+	 */
+	@Index({ IfNotDefault.class })
+	@IgnoreSave({ IfDefault.class })
+	private Long roles = 0L;
 
 	/**
 	 * Pointers for this login.
@@ -59,7 +75,20 @@ public final class Login extends SearchableDatabaseModel
 	 * This allows multiple different pointers to have access to the same login,
 	 * if such functionality is required by the system.
 	 */
-	private Set<Key<LoginPointer>> pointers;
+	@IgnoreSave({ IfEmpty.class })
+	private Set<Key<LoginPointer>> pointers = new HashSet<Key<LoginPointer>>();
+
+	/**
+	 * Parent Logins that have access to this login.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private Set<Key<Login>> parents = new HashSet<Key<Login>>();
+
+	/**
+	 * Children logins that this login has access to.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private Set<Key<Login>> children = new HashSet<Key<Login>>();
 
 	public Login() {}
 
@@ -83,21 +112,34 @@ public final class Login extends SearchableDatabaseModel
 		this.date = date;
 	}
 
-	public Integer getType() {
-		return this.type;
+	public boolean isRoot() {
+		return this.root;
 	}
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setRoot(boolean root) {
+		this.root = root;
 	}
 
-	public Set<Integer> getRoles() {
+	public Integer getGroup() {
+		return this.group;
+	}
+
+	public void setGroup(Integer group) {
+		this.group = group;
+	}
+
+	public Long getRoles() {
 		return this.roles;
 	}
 
-	public void setRoles(Set<Integer> roles) {
+	@Override
+	public Long getEncodedRoles() {
+		return this.roles;
+	}
+
+	public void setRoles(Long roles) {
 		if (roles == null) {
-			roles = new HashSet<Integer>();
+			roles = 0L;
 		}
 
 		this.roles = roles;
@@ -113,6 +155,30 @@ public final class Login extends SearchableDatabaseModel
 		}
 
 		this.pointers = pointers;
+	}
+
+	public Set<Key<Login>> getParents() {
+		return this.parents;
+	}
+
+	public void setParents(Set<Key<Login>> parents) {
+		if (parents == null) {
+			parents = new HashSet<Key<Login>>();
+		}
+
+		this.parents = parents;
+	}
+
+	public Set<Key<Login>> getChildren() {
+		return this.children;
+	}
+
+	public void setChildren(Set<Key<Login>> children) {
+		if (children == null) {
+			children = new HashSet<Key<Login>>();
+		}
+
+		this.children = children;
 	}
 
 	// Unique Model
@@ -139,7 +205,7 @@ public final class Login extends SearchableDatabaseModel
 
 	@Override
 	public String toString() {
-		return "Login [identifier=" + this.identifier + ", date=" + this.date + ", type=" + this.type + ", roles="
+		return "Login [identifier=" + this.identifier + ", date=" + this.date + ", group=" + this.group + ", roles="
 		        + this.roles + ", pointers=" + this.pointers + "]";
 	}
 

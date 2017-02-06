@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.search.document.index.IndexAction;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder;
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
@@ -20,6 +21,7 @@ import com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageS
 import com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchRequest;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.test.model.extension.generator.impl.WrappedTestModelGeneratorImpl;
 import com.google.appengine.api.search.Document;
 
 public class StoredImageSetSearchDocumentTest extends ModelSearchDocumentTest<StoredImageSet> {
@@ -28,9 +30,12 @@ public class StoredImageSetSearchDocumentTest extends ModelSearchDocumentTest<St
 	@Qualifier("storedImageTestModelGenerator")
 	private TestModelGenerator<StoredImage> storedImageGenerator;
 
+	@Override
 	@Autowired
 	@Qualifier("storedImageSetTestModelGenerator")
-	private TestModelGenerator<StoredImageSet> storedImageSetGenerator;
+	public void setGenerator(TestModelGenerator<StoredImageSet> generator) {
+		super.setGenerator(new StoredImageSetTestModelGenerator(generator));
+	}
 
 	@Override
 	@Autowired
@@ -52,22 +57,22 @@ public class StoredImageSetSearchDocumentTest extends ModelSearchDocumentTest<St
 
 	@Test
 	public void testSearchService() {
-		List<StoredImageSet> models = this.make(10);
+		List<StoredImageSet> models = this.generator.generate(10);
 
 		this.indexService.indexChange(models, IndexAction.INDEX);
 
 		StoredImageSetSearchRequest request = new StoredImageSetSearchRequest();
 		ModelDocumentSearchResponse<StoredImageSet> response = this.searchService.search(request);
 
-		Collection<StoredImageSet> results = response.getModelSearchResults();
+		Collection<StoredImageSet> results = response.getModelResults();
 		Assert.assertTrue(results.containsAll(models));
 	}
 
 	// MARK: Indexing
 	@Override
-    @Test
+	@Test
 	public void testDocumentBuilding() {
-		StoredImageSet storedImageSet = this.make();
+		StoredImageSet storedImageSet = this.generator.generate();
 		super.testDocumentBuilding();
 
 		// Test with null Icon
@@ -77,25 +82,35 @@ public class StoredImageSetSearchDocumentTest extends ModelSearchDocumentTest<St
 		Assert.assertNotNull(document);
 	}
 
-	@Override
-	protected StoredImageSet make() {
-		StoredImageSet storedImageSet = this.storedImageSetGenerator.generate();
-
-		StoredImage icon = this.storedImageGenerator.generate();
-		storedImageSet.setIcon(icon.getObjectifyKey());
-
-		return storedImageSet;
-	}
-
 	@Test
 	public void testSearchIndexFields() {
-		StoredImageSet model = this.make();
+		StoredImageSet model = this.generator.generate();
 		Document document = this.builder.buildSearchDocument(model);
 
 		Set<String> names = document.getFieldNames();
 		Assert.assertTrue(names.contains(StoredImageSetDocumentBuilderStep.LABEL_FIELD));
 		Assert.assertTrue(names.contains(StoredImageSetDocumentBuilderStep.DETAIL_FIELD));
 		Assert.assertTrue(names.contains(StoredImageSetDocumentBuilderStep.TAGS_FIELD));
+	}
+
+	// MARK: Make Override
+	private class StoredImageSetTestModelGenerator extends WrappedTestModelGeneratorImpl<StoredImageSet> {
+
+		protected StoredImageSetTestModelGenerator(TestModelGenerator<StoredImageSet> generator)
+		        throws IllegalArgumentException {
+			super(generator);
+		}
+
+		@Override
+		public StoredImageSet generate(GeneratorArg arg) throws IllegalArgumentException {
+			StoredImageSet storedImageSet = super.generate(arg);
+
+			StoredImage icon = StoredImageSetSearchDocumentTest.this.storedImageGenerator.generate();
+			storedImageSet.setIcon(icon.getObjectifyKey());
+
+			return storedImageSet;
+		}
+
 	}
 
 }

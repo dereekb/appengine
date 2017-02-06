@@ -21,8 +21,7 @@ public final class KeyedBidirectionalConverterImpl<I, O>
 	private final Map<String, DirectionalConverter<I, O>> outputConversions;
 	private final DirectionalConverter<O, I> inputConversion;
 
-	public KeyedBidirectionalConverterImpl(
-	        DirectionalConverter<I, O> outputConversion,
+	public KeyedBidirectionalConverterImpl(DirectionalConverter<I, O> outputConversion,
 	        DirectionalConverter<O, I> inputConversion) {
 		this.defaultKey = "default";
 		this.outputConversions = new HashMap<String, DirectionalConverter<I, O>>();
@@ -39,18 +38,19 @@ public final class KeyedBidirectionalConverterImpl<I, O>
 	}
 
 	@Override
-	public List<O> convertTo(Collection<I> input) throws ConversionFailureException {
+	public List<O> convertTo(Collection<? extends I> input) throws ConversionFailureException {
 		return this.convertTo(this.defaultKey, input);
 	}
 
 	@Override
-	public List<I> convertFrom(Collection<O> output) throws ConversionFailureException {
+	public List<I> convertFrom(Collection<? extends O> output) throws ConversionFailureException {
 		return this.inputConversion.convert(output);
 	}
 
 	@Override
 	public List<O> convertTo(String key,
-	                         Collection<I> input) throws ConversionFailureException {
+	                         Collection<? extends I> input)
+	        throws ConversionFailureException {
 
 		if (key == null) {
 			key = this.defaultKey;

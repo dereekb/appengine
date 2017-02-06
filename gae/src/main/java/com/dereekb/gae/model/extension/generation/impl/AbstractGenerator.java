@@ -7,7 +7,7 @@ import java.util.Random;
 import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Abstract {@link Generator} used for extending.

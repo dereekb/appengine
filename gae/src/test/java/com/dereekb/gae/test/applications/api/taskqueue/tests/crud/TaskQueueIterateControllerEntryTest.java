@@ -72,7 +72,13 @@ public abstract class TaskQueueIterateControllerEntryTest<T extends ObjectifyMod
 			List<T> models = this.generate();
 			TaskQueueIterateControllerEntryTest.this.controller.iterate(
 			        TaskQueueIterateControllerEntryTest.this.modelType, this.taskName, 0, null, this.parameters);
+
+			models = this.reloadModels(models);
 			this.checkResults(models);
+		}
+
+		protected List<T> reloadModels(List<T> input) {
+			return input;
 		}
 
 		protected void checkResults(List<T> models) {

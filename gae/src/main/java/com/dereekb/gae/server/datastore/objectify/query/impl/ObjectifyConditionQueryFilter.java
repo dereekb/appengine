@@ -16,14 +16,16 @@ public class ObjectifyConditionQueryFilter
 	private String condition;
 	private Object value;
 
-	public ObjectifyConditionQueryFilter(String condition, Object value){
+	public ObjectifyConditionQueryFilter(String condition, Object value) {
 		this.setCondition(condition);
 		this.setValue(value);
 	}
 
-	public ObjectifyConditionQueryFilter(String field,
-			ExpressionOperator operator,
-			Object value){
+	public ObjectifyConditionQueryFilter(String field, ExpressionOperator operator, Object value) {
+		if (operator == ExpressionOperator.IS_NULL) {
+			value = null;
+		}
+
 		this.setCondition(field, operator);
 		this.setValue(value);
 	}
@@ -41,9 +43,10 @@ public class ObjectifyConditionQueryFilter
 	}
 
 	public void setCondition(String field,
-	                         ExpressionOperator operator) throws IllegalArgumentException {
+	                         ExpressionOperator operator)
+	        throws IllegalArgumentException {
 		if (field == null || operator == null) {
-			throw new IllegalArgumentException("Field and operator cannot be null.");
+			throw new IllegalArgumentException("Neither field nor operator can be null.");
 		}
 
 		String condition = operator.createFilter(field);
@@ -71,4 +74,3 @@ public class ObjectifyConditionQueryFilter
 	}
 
 }
-

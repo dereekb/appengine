@@ -2,10 +2,10 @@ package com.dereekb.gae.model.extension.search.document.search.service.impl;
 
 import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchRequest;
 import com.dereekb.gae.model.extension.search.document.search.service.DocumentSearchService;
-import com.dereekb.gae.server.search.model.SearchOptions;
 import com.dereekb.gae.server.search.system.SearchDocumentQuerySystem;
 import com.dereekb.gae.server.search.system.request.impl.DocumentQueryRequestImpl;
 import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.dereekb.gae.utilities.task.Task;
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Query;

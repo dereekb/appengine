@@ -9,7 +9,7 @@ import com.dereekb.gae.server.datastore.models.query.IterableModelQuery;
 import com.dereekb.gae.server.datastore.models.query.ModelQueryIterator;
 import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.IterateTask;
 import com.google.appengine.api.datastore.Cursor;
 
@@ -136,7 +136,7 @@ public class IterateModelsTask<T>
 				throw new RuntimeException("No request set for IterateModelsTaskInstance.");
 			}
 
-			Map<String, String> parameters = this.request.getTaskParameters();
+			Map<String, String> parameters = this.request.getKeyedEncodedParameters();
 			this.iterable.setCustomParameters(parameters);
 
 			String cursorString = parameters.get(IterateModelsTask.this.cursorParam);

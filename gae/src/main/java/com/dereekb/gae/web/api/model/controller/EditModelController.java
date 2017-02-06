@@ -2,7 +2,6 @@ package com.dereekb.gae.web.api.model.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,16 +39,20 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	private EditModelControllerConversionDelegate<T, I> conversionDelegate;
 
 	public EditModelController(EditModelControllerDelegate<T> delegate,
-	        EditModelControllerConversionDelegate<T, I> conversionDelegate) {
-		this.delegate = delegate;
-		this.conversionDelegate = conversionDelegate;
+	        EditModelControllerConversionDelegate<T, I> conversionDelegate) throws IllegalArgumentException {
+		this.setDelegate(delegate);
+		this.setConversionDelegate(conversionDelegate);
 	}
 
 	public EditModelControllerDelegate<T> getDelegate() {
 		return this.delegate;
 	}
 
-	public void setDelegate(EditModelControllerDelegate<T> delegate) {
+	public void setDelegate(EditModelControllerDelegate<T> delegate) throws IllegalArgumentException {
+		if (delegate == null) {
+			throw new IllegalArgumentException();
+		}
+
 		this.delegate = delegate;
 	}
 
@@ -57,15 +60,19 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 		return this.conversionDelegate;
 	}
 
-	public void setConversionDelegate(EditModelControllerConversionDelegate<T, I> conversionDelegate) {
+	public void setConversionDelegate(EditModelControllerConversionDelegate<T, I> conversionDelegate)
+	        throws IllegalArgumentException {
+		if (conversionDelegate == null) {
+			throw new IllegalArgumentException();
+		}
+
 		this.conversionDelegate = conversionDelegate;
 	}
 
 	// MARK: API
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'create')")
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public final ApiResponse create(@Valid @RequestBody ApiCreateRequest<I> request) {
+	public ApiResponse create(@Valid @RequestBody ApiCreateRequest<I> request) {
 		ApiResponse response = null;
 
 		try {
@@ -82,9 +89,8 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	}
 
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'update')")
 	@RequestMapping(value = { "/update", "/edit" }, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public final ApiResponse update(@Valid @RequestBody ApiUpdateRequest<I> request) {
+	public ApiResponse update(@Valid @RequestBody ApiUpdateRequest<I> request) {
 		ApiResponse response = null;
 
 		try {
@@ -103,9 +109,8 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	}
 
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'delete')")
 	@RequestMapping(value = { "/delete", "/destroy" }, method = RequestMethod.DELETE, produces = "application/json")
-	public final ApiResponse delete(@Valid @RequestBody ApiDeleteRequest request) {
+	public ApiResponse delete(@Valid @RequestBody ApiDeleteRequest request) {
 		ApiResponse response = null;
 
 		try {

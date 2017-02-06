@@ -12,8 +12,9 @@ import com.dereekb.gae.model.stored.image.search.document.index.StoredImageDocum
 import com.dereekb.gae.model.stored.image.search.document.query.StoredImageSearchBuilder.StoredImageSearch;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
+import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 import com.dereekb.gae.utilities.collections.map.StringMapReader;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Builder for {@link StoredImageSearch} elements.
@@ -109,13 +110,13 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 		String name = search.getName();
 		if (name != null) {
 			String nameName = String.format(format, this.nameField);
-			builder = builder.and(new AtomField(nameName, name));
+			builder = builder.and(new TextField(nameName, name));
 		}
 
 		String tags = search.getTags();
 		if (tags != null) {
 			String tagsName = String.format(format, this.tagsField);
-			builder = builder.and(new AtomField(tagsName, tags));
+			builder = builder.and(new TextField(tagsName, tags));
 		}
 
 		String type = search.getType();
@@ -127,7 +128,7 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 		String summary = search.getSummary();
 		if (summary != null) {
 			String summaryName = String.format(format, this.summaryField);
-			builder = builder.and(new AtomField(summaryName, summary));
+			builder = builder.and(new TextField(summaryName, summary));
 		}
 
 		builder.and(search.geoPlaceSearch.makeExpression());
@@ -153,11 +154,11 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 		}
 
 		@Override
-        public void applyParameters(Map<String, String> parameters) {
+		public void applyParameters(Map<String, String> parameters) {
 			StoredImageSearchBuilder.this.applyParameters(this, parameters);
 		}
 
-        public String getName() {
+		public String getName() {
 			return this.name;
 		}
 

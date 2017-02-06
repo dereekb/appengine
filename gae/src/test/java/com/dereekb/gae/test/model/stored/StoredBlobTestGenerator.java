@@ -11,9 +11,9 @@ import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
-import com.dereekb.gae.test.model.extension.generator.TestModelGeneratorImpl;
 import com.dereekb.gae.test.model.extension.generator.data.TestByteDataGenerator;
 import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerator;
+import com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl;
 
 /**
  * Generates {@link StoredBlob} values that also have bytes attached.

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.server.taskqueue.scheduler.TaskParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskParameterImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestCopier;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSplitter;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.filter.TaskParameterFilter;
 import com.dereekb.gae.utilities.filters.FilterResults;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.utilities.misc.parameters.filter.KeyedEncodedParameterFilter;
+import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 
 /**
  * Utility class for splitting up requests at a parameter.
@@ -47,17 +47,17 @@ public class TaskRequestSplitterImpl
 	public List<TaskRequestImpl> splitRequestAtParameter(String parameter,
 	                                                     TaskRequest request) {
 
-		TaskParameterFilter filter = new TaskParameterFilter();
+		KeyedEncodedParameterFilter filter = new KeyedEncodedParameterFilter();
 		filter.setParameter(parameter);
 
-		Collection<TaskParameter> parameters = request.getParameters();
-		FilterResults<TaskParameter> filtered = filter.filterObjects(parameters);
+		Collection<KeyedEncodedParameter> parameters = request.getParameters();
+		FilterResults<KeyedEncodedParameter> filtered = filter.filterObjects(parameters);
 
 		// Retain parameters that aren't being split.
-		List<TaskParameter> passing = filtered.getPassingObjects();
-		List<TaskParameter> otherParameters = filtered.getFailingObjects();
+		List<KeyedEncodedParameter> passing = filtered.getPassingObjects();
+		List<KeyedEncodedParameter> otherParameters = filtered.getFailingObjects();
 
-		TaskParameter splitParameter = null;
+		KeyedEncodedParameter splitParameter = null;
 
 		if (passing.size() == 0) {
 			throw new IllegalArgumentException("Passed parameter '" + parameter + "' does not exist.");
@@ -66,7 +66,7 @@ public class TaskRequestSplitterImpl
 		}
 
 		// Split the parameter value.
-		String parameterValue = splitParameter.getValue();
+		String parameterValue = splitParameter.getParameterString();
 		String[] splitValues = parameterValue.split(this.splitter);
 
 		// Main copy target.
@@ -80,8 +80,8 @@ public class TaskRequestSplitterImpl
 			TaskRequestImpl splitRequest = this.taskCopier.fullyCopyRequest(copyTarget);
 
 			// Set parameters
-			TaskParameter newParameter = new TaskParameterImpl(parameter, splitValue);
-			Collection<TaskParameter> splitParameters = splitRequest.getParameters();
+			KeyedEncodedParameter newParameter = new KeyedEncodedParameterImpl(parameter, splitValue);
+			Collection<KeyedEncodedParameter> splitParameters = splitRequest.getParameters();
 			splitParameters.add(newParameter);
 
 			splitRequests.add(splitRequest);

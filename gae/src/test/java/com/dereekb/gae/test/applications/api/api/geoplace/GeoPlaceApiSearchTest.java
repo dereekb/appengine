@@ -10,14 +10,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
 import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.model.geo.place.search.query.GeoPlaceQueryInitializer.GeoPlaceQuery;
+import com.dereekb.gae.model.geo.place.search.query.GeoPlaceQueryInitializer.ObjectifyGeoPlaceQuery;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.api.tests.ApiSearchTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
-
 
 public class GeoPlaceApiSearchTest extends ApiSearchTest<GeoPlace> {
 
@@ -61,7 +60,7 @@ public class GeoPlaceApiSearchTest extends ApiSearchTest<GeoPlace> {
 		this.registry.save(children, false);
 
 		Integer limit = null;
-		GeoPlaceQuery query = new GeoPlaceQuery();
+		ObjectifyGeoPlaceQuery query = new ObjectifyGeoPlaceQuery();
 		query.setParent(parent.getObjectifyKey());
 		Map<String, String> parameters = query.getParameters();
 

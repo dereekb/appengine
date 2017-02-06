@@ -40,7 +40,6 @@ public class DifferentLinkModel
 		this.name = name;
 	}
 
-
 	public Set<Long> getSomeModelLinks() {
 		return this.someModelLinks;
 	}
@@ -65,6 +64,12 @@ public class DifferentLinkModel
 	@Override
 	public ModelKey getModelKey() {
 		return new ModelKey(this.name);
+	}
+
+	// MARK: Keyed
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
 	}
 
 }

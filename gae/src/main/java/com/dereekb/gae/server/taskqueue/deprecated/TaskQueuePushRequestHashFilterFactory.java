@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.taskqueue.deprecated;
 
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 @Deprecated
 public class TaskQueuePushRequestHashFilterFactory

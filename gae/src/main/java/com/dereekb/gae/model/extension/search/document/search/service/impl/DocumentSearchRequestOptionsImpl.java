@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.search.document.search.service.impl;
 
-import com.dereekb.gae.server.search.model.SearchOptions;
+import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
+import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 
 /**
  * {@link SearchOptions} implementation.
@@ -8,52 +9,18 @@ import com.dereekb.gae.server.search.model.SearchOptions;
  * @author dereekb
  *
  */
-public class DocumentSearchRequestOptionsImpl
-        implements SearchOptions {
+public class DocumentSearchRequestOptionsImpl extends SearchOptionsImpl {
 
-	private String cursor;
-	private Integer limit;
-	private Integer offset;
-
-	public DocumentSearchRequestOptionsImpl() {}
-
-	public DocumentSearchRequestOptionsImpl(String cursor, Integer limit, Integer offset) {
-		this.cursor = cursor;
-		this.limit = limit;
-		this.offset = offset;
+	public DocumentSearchRequestOptionsImpl() {
+		super();
 	}
 
-	@Override
-	public String getCursor() {
-		return this.cursor;
+	public DocumentSearchRequestOptionsImpl(SearchOptions options) {
+		super(options);
 	}
 
-	public void setCursor(String cursor) {
-		this.cursor = cursor;
-	}
-
-	@Override
-	public Integer getLimit() {
-		return this.limit;
-	}
-
-	public void setLimit(Integer limit) {
-		this.limit = limit;
-	}
-
-	@Override
-	public Integer getOffset() {
-		return this.offset;
-	}
-
-	public void setOffset(Integer offset) {
-		this.offset = offset;
-	}
-
-	@Override
-	public String toString() {
-		return "DocumentSearchRequestOptionsImpl [cursor=" + this.cursor + ", limit=" + this.limit + ", offset="
-		        + this.offset + "]";
+	public DocumentSearchRequestOptionsImpl(String cursor, Integer offset, Integer limit) {
+		super(cursor, offset, limit);
 	}
 
 }

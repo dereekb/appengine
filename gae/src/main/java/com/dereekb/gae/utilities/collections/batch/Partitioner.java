@@ -18,7 +18,7 @@ public interface Partitioner {
 	 *
 	 * @return Size of partitions to create.
 	 */
-	public int getPartitionSize();
+	public int getDefaultPartitionSize();
 
 	/**
 	 * Creates a partition of elements using a {@link Collection}.

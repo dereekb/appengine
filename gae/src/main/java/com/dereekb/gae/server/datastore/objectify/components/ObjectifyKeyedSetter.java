@@ -1,8 +1,17 @@
 package com.dereekb.gae.server.datastore.objectify.components;
 
 import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
+/**
+ * {@link ConfiguredSetter} for Objectify.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public interface ObjectifyKeyedSetter<T>
         extends Setter<T> {
 

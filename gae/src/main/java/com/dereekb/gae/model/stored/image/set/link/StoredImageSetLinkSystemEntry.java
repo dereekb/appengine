@@ -33,11 +33,14 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 
 	public static final String STORED_IMAGE_SET_LINK_TYPE = "StoredImageSet";
 
-	private static final ExtendedObjectifyModelKeyUtil<StoredImage> imageUtil = ExtendedObjectifyModelKeyUtil.make(
-	        StoredImage.class, ModelKeyType.NUMBER);
+	public static final String STORED_IMAGE_SET_ICON_LINK_NAME = "icon";
+	public static final String STORED_IMAGE_SET_IMAGES_LINK_NAME = "images";
 
-	private String iconLinkName = "icon";
-	private String imagesLinkName = "images";
+	private static final ExtendedObjectifyModelKeyUtil<StoredImage> imageUtil = ExtendedObjectifyModelKeyUtil
+	        .make(StoredImage.class, ModelKeyType.NUMBER);
+
+	private String iconLinkName = STORED_IMAGE_SET_ICON_LINK_NAME;
+	private String imagesLinkName = STORED_IMAGE_SET_IMAGES_LINK_NAME;
 
 	private LinkTarget iconTarget = new LinkTargetImpl(StoredImageLinkSystemEntry.STORED_IMAGE_LINK_TYPE,
 	        ModelKeyType.NUMBER);

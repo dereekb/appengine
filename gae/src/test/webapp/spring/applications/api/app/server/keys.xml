@@ -13,15 +13,12 @@
 
 	<!-- ModelKeys Converters -->
 	<bean id="longModelKeyConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl"
-		lazy-init="true" scope="singleton" />
-		
+		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl" />
+
 	<bean id="stringLongModelKeyConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl"
-		lazy-init="true" scope="singleton" />
+		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl" />
 
 	<bean id="stringModelKeyConverter"
-		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl"
-		lazy-init="true" scope="singleton" />
+		class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl" />
 
 </beans>

@@ -20,7 +20,7 @@ public class PointRadiusSearch {
 	private ExpressionOperator operator;
 
 	public PointRadiusSearch(Point point, Integer radius) {
-		this(point, radius, ExpressionOperator.LessThan);
+		this(point, radius, ExpressionOperator.LESS_THAN);
 	}
 
 	public PointRadiusSearch(Point point, Integer radius, ExpressionOperator operator) {

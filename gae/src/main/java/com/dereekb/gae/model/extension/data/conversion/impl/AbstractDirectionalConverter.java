@@ -23,11 +23,11 @@ public abstract class AbstractDirectionalConverter<I, O>
         implements DirectionalConverter<I, O>, SingleDirectionalConverter<I, O> {
 
 	@Override
-	public List<O> convert(Collection<I> input) throws ConversionFailureException {
-		return this.convert((Iterable<I>) input);
+	public List<O> convert(Collection<? extends I> input) throws ConversionFailureException {
+		return this.convertIterable(input);
 	}
 
-	public List<O> convert(Iterable<I> input) throws ConversionFailureException {
+	public List<O> convertIterable(Iterable<? extends I> input) throws ConversionFailureException {
 		List<O> convertedObjects = new ArrayList<O>();
 
 		for (I object : input) {

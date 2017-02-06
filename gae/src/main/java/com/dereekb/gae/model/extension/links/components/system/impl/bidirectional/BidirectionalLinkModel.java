@@ -43,6 +43,11 @@ public final class BidirectionalLinkModel
 	}
 
 	@Override
+	public ModelKey getKeyValue() {
+		return this.model.getKeyValue();
+	}
+
+	@Override
 	public String getType() {
 		return this.model.getType();
 	}
@@ -82,7 +87,9 @@ public final class BidirectionalLinkModel
 	// BidirectionalLinkDelegate
 	@Override
 	public List<Link> getReverseLinks(LinkInfo info,
-	                                  List<ModelKey> keys) throws NoReverseLinksException, UnavailableLinkException {
+	                                  List<ModelKey> keys)
+	        throws NoReverseLinksException,
+	            UnavailableLinkException {
 
 		String reverseLinkName = this.delegate.getReverseLinkName(info);
 		List<LinkModel> models = this.delegate.getReverseLinkModels(info, keys);

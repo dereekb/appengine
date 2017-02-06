@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.links.task;
 
 import java.util.List;
 
+import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
@@ -9,8 +10,10 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateTaskFactory;
 
 /**
  * {@link Task} that loads models referenced in a {@link ModelKeyListAccessor}
@@ -22,7 +25,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  *            model type
  */
 public class ClearLinkTask<T extends UniqueModel>
-        implements Task<ModelKeyListAccessor<T>> {
+        implements TaskQueueIterateTaskFactory<T>, Task<ModelKeyListAccessor<T>> {
 
 	private String linkName;
 	private LinkSystem system;
@@ -44,6 +47,10 @@ public class ClearLinkTask<T extends UniqueModel>
 	}
 
 	public void setLinkName(String linkName) {
+		if (linkName == null) {
+			throw new IllegalArgumentException("LinkName cannot be null.");
+		}
+
 		this.linkName = linkName;
 	}
 
@@ -52,6 +59,10 @@ public class ClearLinkTask<T extends UniqueModel>
 	}
 
 	public void setSystem(LinkSystem system) {
+		if (system == null) {
+			throw new IllegalArgumentException("System cannot be null.");
+		}
+
 		this.system = system;
 	}
 
@@ -80,10 +91,15 @@ public class ClearLinkTask<T extends UniqueModel>
 		modelSet.save(this.validate);
 	}
 
+	// MARK: TaskQueueIterateTaskFactory<T>
+	@Override
+	public Task<ModelKeyListAccessor<T>> makeTask(IterateTaskInput input) throws FactoryMakeFailureException {
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return "ClearLinkTask [linkName=" + this.linkName + ", system=" + this.system + ", validate=" + this.validate
 		        + "]";
 	}
-
 }

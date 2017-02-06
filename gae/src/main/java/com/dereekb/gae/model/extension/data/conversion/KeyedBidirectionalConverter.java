@@ -30,6 +30,7 @@ public interface KeyedBidirectionalConverter<I, O>
 	 * @throws ConversionFailureException
 	 */
 	public List<O> convertTo(String key,
-	                         Collection<I> input) throws ConversionFailureException;
+	                         Collection<? extends I> input)
+	        throws ConversionFailureException;
 
 }

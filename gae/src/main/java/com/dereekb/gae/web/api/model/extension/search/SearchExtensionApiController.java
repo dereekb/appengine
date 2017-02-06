@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangesException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
 import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
@@ -34,7 +33,7 @@ public class SearchExtensionApiController {
 	private ApiSearchDelegate delegate;
 
 	public SearchExtensionApiController(ApiSearchDelegate delegate) {
-		this.delegate = delegate;
+		this.setDelegate(delegate);
 	}
 
 	public ApiSearchDelegate getDelegate() {
@@ -42,6 +41,10 @@ public class SearchExtensionApiController {
 	}
 
 	public void setDelegate(ApiSearchDelegate delegate) {
+		if (delegate == null) {
+			throw new IllegalArgumentException("Delegate cannot be null.");
+		}
+
 		this.delegate = delegate;
 	}
 
@@ -60,7 +63,6 @@ public class SearchExtensionApiController {
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 */
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchMultiple(@RequestParam @NotEmpty String query,
 	                                        @RequestParam @NotEmpty Set<String> types,
@@ -71,8 +73,8 @@ public class SearchExtensionApiController {
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
-			request.setQuery(query);
 			request.setParameters(parameters);
+			request.setQuery(query);
 
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);
@@ -104,7 +106,6 @@ public class SearchExtensionApiController {
 	 * @return {@link ApiResponse} with all returned models.
 	 */
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/{type}/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchSingle(@PathVariable("type") String type,
 	                                      @RequestParam Map<String, String> parameters,
@@ -116,7 +117,6 @@ public class SearchExtensionApiController {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 
 			request.setParameters(parameters);
-
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);
 
@@ -143,7 +143,6 @@ public class SearchExtensionApiController {
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 */
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'query')")
 	@RequestMapping(value = "/{type}/query", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse querySingle(@PathVariable("type") String type,
 	                                     @RequestParam Map<String, String> parameters,
@@ -154,15 +153,17 @@ public class SearchExtensionApiController {
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
 
+			request.setParameters(parameters);
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);
-			request.setParameters(parameters);
 
 			response = this.delegate.query(type, request);
 		} catch (LinkSystemChangesException e) {
 			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);
 		}
@@ -172,7 +173,6 @@ public class SearchExtensionApiController {
 
 	// MARK: Update
 	@ResponseBody
-	@PreAuthorize("hasPermission(this, 'search')")
 	@RequestMapping(value = "/{type}/search/index", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponse updateIndex(@PathVariable("type") String type,
 	                                     @RequestParam List<String> keys) {

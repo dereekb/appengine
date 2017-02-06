@@ -90,6 +90,7 @@ public class ObjectifyQueryServiceImpl<T extends ObjectifyModel<T>> extends Obje
 		return this.database.makeQuery(this.type, cache);
 	}
 
+	@Deprecated
 	private class ObjectifyQueryRequestExecutor {
 
 		private final ObjectifyQueryRequest<T> request;
@@ -168,6 +169,7 @@ public class ObjectifyQueryServiceImpl<T extends ObjectifyModel<T>> extends Obje
 
 	}
 
+	@Deprecated
 	private static class ObjectifyQueryResponseImpl<T extends ObjectifyModel<T>>
 	        implements ObjectifyQueryResponse<T> {
 
@@ -202,7 +204,7 @@ public class ObjectifyQueryServiceImpl<T extends ObjectifyModel<T>> extends Obje
 		@Override
 		public List<ModelKey> queryModelKeys() {
 			List<Key<T>> objectifyKeys = this.queryObjectifyKeys();
-
+			
 			// TODO Convert keys.
 
 			return null;

@@ -9,41 +9,41 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="storedImageSetSearchIndex" class="java.lang.String" lazy-init="true" scope="singleton">
+	<bean id="storedImageSetSearchIndex" class="java.lang.String">
 		<constructor-arg index="0" ref="storedImageSetType" />
 	</bean>
-	
+
 	<!-- Index -->
 	<bean id="storedImageSetKeyedDocumentIndexService"
-		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetReadService"/>
-		<constructor-arg index="1" ref="storedImageSetDocumentIndexService"/>
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetReadService" />
+		<constructor-arg index="1"
+			ref="storedImageSetDocumentIndexService" />
 	</bean>
-	
+
 	<bean id="storedImageSetDocumentIndexService"
-		class="com.dereekb.gae.model.extension.search.document.index.service.impl.DocumentIndexServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="searchSystem"/>
-		<constructor-arg index="1" ref="storedImageSetIndexingDocumentBuilder"/>
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="searchSystem" />
+		<constructor-arg index="1"
+			ref="storedImageSetIndexingDocumentBuilder" />
+		<constructor-arg index="2"
+			ref="storedImageSetAsyncConfiguredSetter" />
 	</bean>
 
 	<!-- Search Indexing -->
 	<bean id="storedImageSetIndexingDocumentBuilder"
-		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetSearchIndex"/>
-		<constructor-arg index="1" ref="storedImageSetSearchDocumentBuilder"/>
+		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl">
+		<constructor-arg index="0" ref="storedImageSetSearchIndex" />
+		<constructor-arg index="1"
+			ref="storedImageSetSearchDocumentBuilder" />
 	</bean>
 
 	<bean id="storedImageSetSearchDocumentBuilder"
-		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder">
 		<constructor-arg index="0">
 			<bean
-				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer"
-				scope="singleton">
-				<constructor-arg index="0" ref="storedImageSetType"/>
+				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer">
+				<constructor-arg index="0" ref="storedImageSetType" />
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -51,45 +51,41 @@
 				<bean
 					class="com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetDocumentBuilderStep">
 				</bean>
-				<!--
-				<bean
-					class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedDocumentBuilderStep">
-					<constructor-arg index="0" ref="derivativeDocumentBuilder"/>
-					<constructor-arg index="1" ref="storedImageSetIncludedDocumentBuilderStepDelegate"/>
-				</bean>
-				  -->
+				<!-- <bean class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.IncludedDocumentBuilderStep"> 
+					<constructor-arg index="0" ref="derivativeDocumentBuilder"/> <constructor-arg 
+					index="1" ref="storedImageSetIncludedDocumentBuilderStepDelegate"/> </bean> -->
 			</list>
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- Derivative -->
-	<!-- 
-	<bean id="storedImageSetIncludedDocumentBuilderStepDelegate"
-		class="com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetIncludedDocumentBuilderStepDelegate"
-		scope="singleton" lazy-init="true">
-	</bean>
-	-->
+	<!-- <bean id="storedImageSetIncludedDocumentBuilderStepDelegate" class="com.dereekb.gae.model.stored.image.set.search.document.index.StoredImageSetIncludedDocumentBuilderStepDelegate" 
+		> </bean> -->
 
 	<!-- Search Services -->
 	<bean id="storedImageSetSearchService"
-		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetReadService"/>
-		<constructor-arg index="1" ref="modelDocumentSearchService"/>
+		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetReadService" />
+		<constructor-arg index="1" ref="modelDocumentSearchService" />
 		<constructor-arg index="2">
 			<bean
 				class="com.dereekb.gae.model.stored.image.set.search.document.query.StoredImageSetSearchRequestConverter">
-				<constructor-arg index="0" ref="storedImageSetSearchIndex"/>
+				<constructor-arg index="0" ref="storedImageSetSearchIndex" />
 			</bean>
 		</constructor-arg>
-		<constructor-arg index="3" ref="scoredDocumentLongKeyReader"/>	
+		<constructor-arg index="3" ref="scoredDocumentLongKeyReader" />
 	</bean>
-	
+
 	<!-- Query Services -->
 	<bean id="storedImageSetQueryService"
-		class="com.dereekb.gae.model.extension.search.query.search.service.impl.ModelQueryServiceImpl"
-		scope="singleton" lazy-init="true">
-		<constructor-arg index="0" ref="storedImageSetRegistry"/>
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetRegistry" />
+		<constructor-arg index="1"
+			ref="storedImageSetQueryInitializer" />
 	</bean>
-	
+
+	<bean id="storedImageSetQueryInitializer"
+		class="com.dereekb.gae.model.stored.image.set.search.query.StoredImageSetQueryInitializer">
+	</bean>
+
 </beans>

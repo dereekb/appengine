@@ -16,6 +16,13 @@ public interface ModelGenerator<T extends UniqueModel>
         extends Generator<T> {
 
 	/**
+	 * Generates a new model key.
+	 * 
+	 * @return {@link ModelKey}. Never {@code null}.
+	 */
+	public ModelKey generateKey();
+
+	/**
 	 * Generates a single model with the passed key. The key may also be used
 	 * for randomization purposes.
 	 *

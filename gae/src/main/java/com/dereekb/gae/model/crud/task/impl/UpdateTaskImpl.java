@@ -29,22 +29,27 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 
 	private TaskRequestSender<T> reviewTaskSender;
 
-	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask, TaskRequestSender<T> sender) {
+	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask, TaskRequestSender<T> sender)
+	        throws IllegalArgumentException {
 		this(delegate, saveTask);
 		this.setReviewTaskSender(sender);
 	}
 
-	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask) {
+	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask) throws IllegalArgumentException {
 		super(new UpdateTaskConfigImpl());
-		this.saveTask = saveTask;
-		this.delegate = delegate;
+		this.setSaveTask(saveTask);
+		this.setDelegate(delegate);
 	}
 
 	public UpdateTaskDelegate<T> getDelegate() {
 		return this.delegate;
 	}
 
-	public void setDelegate(UpdateTaskDelegate<T> delegate) {
+	public void setDelegate(UpdateTaskDelegate<T> delegate) throws IllegalArgumentException {
+		if (delegate == null) {
+			throw new IllegalArgumentException("Delegate cannot be null.");
+		}
+
 		this.delegate = delegate;
 	}
 
@@ -52,7 +57,11 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 		return this.saveTask;
 	}
 
-	public void setSaveTask(IterableTask<T> saveTask) {
+	public void setSaveTask(IterableTask<T> saveTask) throws IllegalArgumentException {
+		if (saveTask == null) {
+			throw new IllegalArgumentException("SaveTask cannot be null.");
+		}
+
 		this.saveTask = saveTask;
 	}
 
@@ -60,7 +69,11 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 		return this.reviewTaskSender;
 	}
 
-	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) {
+	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) throws IllegalArgumentException {
+		if (reviewTaskSender == null) {
+			throw new IllegalArgumentException("ReviewTaskSender cannot be null.");
+		}
+
 		this.reviewTaskSender = reviewTaskSender;
 	}
 
@@ -72,6 +85,10 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 
 		List<UpdatePair<T>> pairs = UpdatePair.pairsWithResults(input);
 		List<T> targets = UpdatePair.getSources(pairs);
+		this.reviewUpdatedTargets(targets);
+	}
+
+	protected void reviewUpdatedTargets(List<T> targets) {
 		this.saveTask.doTask(targets);
 
 		if (this.reviewTaskSender != null) {
@@ -80,8 +97,8 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 	}
 
 	@Override
-	public void usePair(UpdatePair<T> pair,
-	                    UpdateTaskConfig config) {
+	protected void usePair(UpdatePair<T> pair,
+	                       UpdateTaskConfig config) {
 		T template = pair.getTemplate();
 		T target = pair.getTarget();
 

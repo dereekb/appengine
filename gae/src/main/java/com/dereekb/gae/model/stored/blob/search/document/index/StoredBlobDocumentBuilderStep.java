@@ -38,7 +38,7 @@ public class StoredBlobDocumentBuilderStep extends AbstractDerivableDocumentBuil
 	                                         Builder builder) {
 		// Name
 		String blobName = model.getBlobName();
-		SearchDocumentBuilderUtility.addAtom(NAME_FIELD, blobName, builder);
+		SearchDocumentBuilderUtility.addText(NAME_FIELD, blobName, builder);
 
 		// Type
 		StoredBlobType blobType = model.getBlobType();

@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
-import com.dereekb.gae.server.taskqueue.system.TaskParameter;
+import com.dereekb.gae.server.taskqueue.system.KeyedEncodedParameter;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
-import com.dereekb.gae.server.taskqueue.system.impl.TaskParameterImpl;
+import com.dereekb.gae.server.taskqueue.system.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController;
 import com.google.appengine.api.datastore.Cursor;
@@ -115,7 +115,7 @@ public class IterateTaskRequestBuilder {
 		/**
 		 * Task parameters.
 		 */
-		private Collection<TaskParameter> parameters;
+		private Collection<KeyedEncodedParameter> parameters;
 
 		private Builder() {}
 
@@ -134,8 +134,8 @@ public class IterateTaskRequestBuilder {
 				this.step += 1;
 			}
 
-			List<TaskParameterImpl> parameters = TaskParameterImpl.makeParametersWithMap(input.getParameters());
-			this.parameters = new ArrayList<TaskParameter>(parameters);
+			List<KeyedEncodedParameterImpl> parameters = KeyedEncodedParameterImpl.makeParametersWithMap(input.getParameters());
+			this.parameters = new ArrayList<KeyedEncodedParameter>(parameters);
 		}
 
 		public String getModelType() {
@@ -178,11 +178,11 @@ public class IterateTaskRequestBuilder {
 			this.step = step;
 		}
 
-		public Collection<TaskParameter> getParameters() {
+		public Collection<KeyedEncodedParameter> getParameters() {
 			return this.parameters;
 		}
 
-		public void setParameters(Collection<TaskParameter> parameters) {
+		public void setParameters(Collection<KeyedEncodedParameter> parameters) {
 			this.parameters = parameters;
 		}
 
@@ -195,7 +195,7 @@ public class IterateTaskRequestBuilder {
 			request.setTimings(IterateTaskRequestBuilder.this.timing);
 			request.setMethod(IterateTaskRequestBuilder.this.method);
 
-			Collection<TaskParameter> headers = this.buildHeaders();
+			Collection<KeyedEncodedParameter> headers = this.buildHeaders();
 			request.setHeaders(headers);
 
 			request.setParameters(this.parameters);
@@ -203,18 +203,18 @@ public class IterateTaskRequestBuilder {
 			return request;
 		}
 
-		private Collection<TaskParameter> buildHeaders() {
-			List<TaskParameter> headers = new ArrayList<TaskParameter>();
+		private Collection<KeyedEncodedParameter> buildHeaders() {
+			List<KeyedEncodedParameter> headers = new ArrayList<KeyedEncodedParameter>();
 
 			if (this.cursor != null) {
 				String cursorString = this.cursor.toWebSafeString();
-				TaskParameter cursorHeader = new TaskParameterImpl(IterateTaskRequestBuilder.this.cursorHeader,
+				KeyedEncodedParameter cursorHeader = new KeyedEncodedParameterImpl(IterateTaskRequestBuilder.this.cursorHeader,
 				        cursorString);
 				headers.add(cursorHeader);
 			}
 
 			if (this.step != null) {
-				TaskParameter stepHeader = new TaskParameterImpl(IterateTaskRequestBuilder.this.stepHeader, this.step);
+				KeyedEncodedParameter stepHeader = new KeyedEncodedParameterImpl(IterateTaskRequestBuilder.this.stepHeader, this.step);
 				headers.add(stepHeader);
 			}
 

@@ -8,10 +8,19 @@ import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGette
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedSetter;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 
+/**
+ * Objectify Registry that implements various components.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public interface ObjectifyRegistry<T extends ObjectifyModel<T>>
-        extends ObjectifyKeyedGetter<T>, ObjectifyKeyedSetter<T>, ObjectifyQueryService<T>,
-        ModelKeyListAccessorFactory<T>, GetterSetter<T>, Deleter {
+        extends ObjectifyQueryIterableFactory<T>, ObjectifyKeyedGetter<T>, ObjectifyKeyedSetter<T>,
+        ObjectifyQueryService<T>, ModelKeyListAccessorFactory<T>, GetterSetter<T>, Deleter {
 
 	public ObjectifyKeyConverter<T, ModelKey> getObjectifyKeyConverter();
 

@@ -2,8 +2,6 @@ package com.dereekb.gae.model.extension.search.document.search;
 
 import java.util.List;
 
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionObject;
-import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.google.appengine.api.search.ScoredDocument;
 
 /**
@@ -14,8 +12,7 @@ import com.google.appengine.api.search.ScoredDocument;
  * @param <Q>
  *            Query type.
  */
-public final class SearchPair<Q>
-        implements StagedFunctionObject<Q> {
+public final class SearchPair<Q> {
 
 	private final Q query;
 	private List<ScoredDocument> results;
@@ -34,11 +31,6 @@ public final class SearchPair<Q>
 
 	public void setResults(List<ScoredDocument> results) {
 		this.results = results;
-	}
-
-	@Override
-	public Q getFunctionObject(StagedFunctionStage stage) {
-		return this.query;
 	}
 
 }

@@ -1,15 +1,12 @@
 package com.dereekb.gae.server.auth.model.login.dto;
 
 import java.util.List;
-import java.util.Set;
 
-import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
+import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelData;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 
 /**
  * DTO of the {@link Login} class.
@@ -18,31 +15,31 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginData extends SearchableDatabaseModelData {
+public class LoginData extends DescribedDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer type;
+	private Integer group;
 
-	private Set<Integer> roles;
+	private Long roles;
 
 	private List<String> pointers;
 
 	public LoginData() {}
 
-	public Integer getType() {
-		return this.type;
+	public Integer getGroup() {
+		return this.group;
 	}
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setGroup(Integer group) {
+		this.group = group;
 	}
 
-    public Set<Integer> getRoles() {
+	public Long getRoles() {
 		return this.roles;
 	}
 
-	public void setRoles(Set<Integer> roles) {
+	public void setRoles(Long roles) {
 		this.roles = roles;
 	}
 
@@ -54,10 +51,11 @@ public class LoginData extends SearchableDatabaseModelData {
 		this.pointers = pointers;
 	}
 
-	// UniqueModel
 	@Override
-	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.key);
+	public String toString() {
+		return "LoginData [group=" + this.group + ", roles=" + this.roles + ", pointers=" + this.pointers
+		        + ", searchIdentifier=" + this.searchIdentifier + ", key=" + this.key + ", created=" + this.date
+		        + "]";
 	}
 
 }

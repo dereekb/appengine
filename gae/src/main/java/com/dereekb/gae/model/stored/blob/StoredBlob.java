@@ -13,10 +13,10 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfNotDefault;
 import com.googlecode.objectify.condition.IfNotNull;
-import com.googlecode.objectify.condition.IfNotZero;
-import com.googlecode.objectify.condition.IfZero;
 
 /**
  * Represents a reference to a blob that is stored in the systems.
@@ -31,6 +31,8 @@ public final class StoredBlob extends DescribedDatabaseModel
 	private static final long serialVersionUID = 1L;
 
 	private static final String FILE_FORMAT = "%s.%s";
+
+	public static final Integer DEFAULT_BLOB_TYPE = StoredBlobType.DEFAULT_TYPE_ID;
 
 	/**
 	 * Database identifier.
@@ -49,9 +51,9 @@ public final class StoredBlob extends DescribedDatabaseModel
 	 *
 	 * Described by {@link StoredBlobType}.
 	 */
-	@Index({ IfNotZero.class, IfNotNull.class })
-	@IgnoreSave({ IfZero.class })
-	private Integer typeId = StoredBlobType.DEFAULT_TYPE_ID;
+	@Index({ IfNotDefault.class, IfNotNull.class })
+	@IgnoreSave({ IfDefault.class })
+	protected Integer type = DEFAULT_BLOB_TYPE;
 
 	/**
 	 * The blob's custom filename. Should not include the type ending.
@@ -95,23 +97,27 @@ public final class StoredBlob extends DescribedDatabaseModel
 	}
 
 	public Integer getTypeId() {
-		return this.typeId;
+		return this.type;
+	}
+
+	public StoredBlobType getBlobType() {
+		return StoredBlobType.valueOf(this.type);
+	}
+
+	public void setBlobType(StoredBlobType type) {
+		if (type == null) {
+			this.setTypeId(null);
+		} else {
+			this.type = type.getId();
+		}
 	}
 
 	public void setTypeId(Integer typeId) {
 		if (typeId == null) {
-			typeId = StoredBlobType.DEFAULT_TYPE_ID;
+			this.type = StoredBlob.DEFAULT_BLOB_TYPE;
+		} else {
+			this.type = StoredBlobType.valueOf(typeId).id;
 		}
-
-		this.typeId = typeId;
-	}
-
-	public StoredBlobType getBlobType() {
-		return StoredBlobType.typeForId(this.typeId);
-	}
-
-	public void setBlobType(StoredBlobType type) {
-		this.typeId = type.getId();
 	}
 
 	public String getBlobName() {
@@ -164,7 +170,7 @@ public final class StoredBlob extends DescribedDatabaseModel
 
 	@Override
 	public String toString() {
-		return "StoredBlob [identifier=" + this.identifier + ", date=" + this.date + ", typeId=" + this.typeId
+		return "StoredBlob [identifier=" + this.identifier + ", date=" + this.date + ", type=" + this.type
 		        + ", descriptorType=" + this.descriptorType + ", descriptorId=" + this.descriptorId + "]";
 	}
 

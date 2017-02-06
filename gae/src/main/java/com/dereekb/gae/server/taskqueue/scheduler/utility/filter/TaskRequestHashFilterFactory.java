@@ -2,7 +2,7 @@ package com.dereekb.gae.server.taskqueue.scheduler.utility.filter;
 
 import com.dereekb.gae.server.taskqueue.scheduler.utility.filter.impl.TaskRequestHashBuilderImpl;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * {@link Factory} for {@link TaskRequestHashFilter}.

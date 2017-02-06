@@ -1,18 +1,17 @@
 package com.dereekb.gae.web.api.model.extension.search;
 
-import java.util.Map;
-
-import com.dereekb.gae.server.search.model.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 
 /**
- * Represents a request made to the {@link SearchExtensionApiController} to search
+ * Represents a request made to the {@link SearchExtensionApiController} to
+ * search
  * for models.
  *
  * @author dereekb
  *
  */
 public interface ApiSearchReadRequest
-        extends SearchOptions {
+        extends SearchRequest {
 
 	/**
 	 * Returns the query parameter.
@@ -21,21 +20,5 @@ public interface ApiSearchReadRequest
 	 *         unless {@link getParameters} is to be used instead.
 	 */
 	public String getQuery();
-
-	/**
-	 * Whether or not to return keys instead of models
-	 *
-	 * @return {@code true} if only keys should be returned.
-	 */
-	public boolean getKeysOnly();
-
-	/**
-	 * Returns any custom parameters.
-	 * <p>
-	 * Generally used only for searching single elements.
-	 *
-	 * @return {@link Map} of parameters. {@link null} if none are specified.
-	 */
-	public Map<String, String> getParameters();
 
 }

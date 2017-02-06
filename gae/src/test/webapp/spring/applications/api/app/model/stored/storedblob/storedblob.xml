@@ -10,24 +10,32 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Type -->
-	<bean id="storedBlobType" class="java.lang.String" scope="singleton">
+	<bean id="storedBlobType" class="java.lang.String">
 		<constructor-arg index="0" value="StoredBlob" />
 	</bean>
-	
+
+	<bean id="storedBlobClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.model.stored.blob.StoredBlob" />
+	</bean>
+
+	<bean id="storedBlobIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+		<constructor-arg index="0" value="NUMBER" />
+	</bean>
+
 	<!-- Database -->
 	<bean id="storedBlobObjectifyEntry"
 		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="storedBlobType" />
-		<constructor-arg index="1" type="java.lang.Class"
-			value="com.dereekb.gae.model.stored.blob.StoredBlob" />
-		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="1" ref="storedBlobClass" />
+		<constructor-arg index="2" ref="storedBlobIdType" />
+		<constructor-arg index="3" ref="storedBlobQueryInitializer" />
 	</bean>
 
 	<bean id="storedBlobRegistry" factory-bean="objectifyDatabase"
-		factory-method="makeRegistry" scope="singleton">
-		<constructor-arg index="0" type="java.lang.Class"
-			value="com.dereekb.gae.model.stored.blob.StoredBlob" />
+		factory-method="makeRegistry">
+		<constructor-arg index="0" ref="storedBlobClass" />
 	</bean>
 
 	<!-- Configured Setters -->
@@ -40,15 +48,16 @@
 	</bean>
 
 	<!-- Update Scheduler -->
-	<bean id="storedBlobScheduleUpdateReview" lazy-init="true" scope="singleton"
+	<bean id="storedBlobScheduleUpdateReview"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
 		<constructor-arg index="0" ref="storedBlobType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="storedBlobUpdateConfiguredSetter" lazy-init="true" scope="singleton"
+	<bean id="storedBlobUpdateConfiguredSetter"
 		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
-		<constructor-arg index="0" ref="storedBlobScheduleUpdateReview" />
+		<constructor-arg index="0"
+			ref="storedBlobScheduleUpdateReview" />
 		<constructor-arg index="1" ref="storedBlobRegistry" />
 	</bean>
 

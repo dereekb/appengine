@@ -2,7 +2,6 @@ package com.dereekb.gae.model.stored.blob.dto;
 
 import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelData;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -20,6 +19,9 @@ public final class StoredBlobData extends DescribedDatabaseModelData {
 
 	private String download;
 
+	@JsonInclude(Include.NON_DEFAULT)
+	private Integer type = StoredBlob.DEFAULT_BLOB_TYPE;
+
 	public String getDownload() {
 		return this.download;
 	}
@@ -28,16 +30,18 @@ public final class StoredBlobData extends DescribedDatabaseModelData {
 		this.download = download;
 	}
 
-	// UniqueModel
-	@Override
-	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.key);
+	public Integer getType() {
+		return this.type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	@Override
 	public String toString() {
 		return "StoredBlobData [download=" + this.download + ", descriptor=" + this.descriptor + ", searchIdentifier="
-		        + this.searchIdentifier + ", identifier=" + this.key + ", created=" + this.created + "]";
+		        + this.searchIdentifier + ", identifier=" + this.key + ", created=" + this.date + "]";
 	}
 
 }

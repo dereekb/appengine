@@ -1,8 +1,8 @@
 package com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl;
 
-import java.util.List;
+import java.util.Collection;
 
-import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
+import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
 import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestBuilder;
@@ -18,35 +18,31 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  * @param <T>
  *            model type
  */
-public class TaskRequestSenderImpl<T>
+public class TaskRequestSenderImpl<T> extends AbstractTaskRequestSender
         implements TaskRequestSender<T> {
 
-	private TaskScheduler scheduler;
 	private TaskRequestBuilder<T> builder;
 
-	public TaskRequestSenderImpl() {}
+	protected TaskRequestSenderImpl() {}
 
 	public TaskRequestSenderImpl(TaskRequestBuilder<T> builder, TaskScheduler scheduler) {
-		this.builder = builder;
-		this.scheduler = scheduler;
+		super(scheduler);
+		this.setBuilder(builder);
 	}
 
 	public TaskRequestBuilder<T> getBuilder() {
 		return this.builder;
 	}
 
-	public void setBuilder(TaskRequestBuilder<T> builder) {
+	public void setBuilder(TaskRequestBuilder<T> builder) throws IllegalArgumentException {
+		if (builder == null) {
+			throw new IllegalArgumentException("Builder cannot be null");
+		}
+
 		this.builder = builder;
 	}
 
-	public TaskScheduler getSystem() {
-		return this.scheduler;
-	}
-
-	public void setSystem(TaskScheduler scheduler) {
-		this.scheduler = scheduler;
-	}
-
+	// MARK: TaskRequestSender
 	@Override
 	public void sendTask(T input) throws SubmitTaskException {
 		this.sendTasks(SingleItem.withValue(input));
@@ -54,8 +50,8 @@ public class TaskRequestSenderImpl<T>
 
 	@Override
 	public void sendTasks(Iterable<T> input) throws SubmitTaskException {
-		List<TaskRequest> requests = this.builder.buildRequests(input);
-		this.scheduler.schedule(requests);
+		Collection<MutableTaskRequest> requests = this.builder.buildRequests(input);
+		this.scheduleTasks(requests);
 	}
 
 }

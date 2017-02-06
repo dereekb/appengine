@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.links.components.impl.link;
 
+import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -23,7 +24,9 @@ public interface SingleLinkDelegate {
 	 * @param key
 	 *            {@link ModelKey} to set, or {@code null} if clearing the
 	 *            value.
+	 * @throws RelationChangeException
+	 *             thrown if the change is not allowed.
 	 */
-	public void setKey(ModelKey key);
+	public void setKey(ModelKey key) throws RelationChangeException;
 
 }

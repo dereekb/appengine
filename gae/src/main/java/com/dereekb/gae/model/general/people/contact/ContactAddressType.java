@@ -26,8 +26,8 @@ public enum ContactAddressType {
 	 */
 	EMAIL(2, "email");
 
-	private final Integer id;
-	private final String type;
+	public final Integer id;
+	public final String type;
 
 	private ContactAddressType(Integer id, String type) {
 		this.id = id;
@@ -42,8 +42,8 @@ public enum ContactAddressType {
 		return this.type;
 	}
 
-	public static ContactAddressType typeForId(Integer id) {
-		ContactAddressType type;
+	public static ContactAddressType valueOf(Integer id) {
+		ContactAddressType type = EMAIL;
 
 		switch (id) {
 			case 0:
@@ -53,9 +53,6 @@ public enum ContactAddressType {
 				type = MOBILE_PHONE;
 				break;
 			case 2:
-				type = EMAIL;
-				break;
-			default:
 				type = EMAIL;
 				break;
 		}

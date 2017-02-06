@@ -11,19 +11,16 @@
 
 	<!-- Type -->
 	<bean id="storedBlobDataBuilder"
-		class="com.dereekb.gae.model.stored.blob.dto.StoredBlobDataBuilder"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.stored.blob.dto.StoredBlobDataBuilder">
 		<constructor-arg index="0" ref="storedBlobDataBuilderDelegate" />
 	</bean>
 
 	<bean id="storedBlobDataReader"
-		class="com.dereekb.gae.model.stored.blob.dto.StoredBlobDataReader"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.stored.blob.dto.StoredBlobDataReader">
 	</bean>
 
 	<bean id="storedBlobDataConverter"
-		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl">
 		<constructor-arg index="0" ref="storedBlobDataBuilder" />
 		<constructor-arg index="1" ref="storedBlobDataReader" />
 	</bean>

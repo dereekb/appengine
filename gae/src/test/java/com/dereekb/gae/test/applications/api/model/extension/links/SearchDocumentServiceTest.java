@@ -17,7 +17,7 @@ import com.dereekb.gae.server.search.system.request.impl.DocumentModelIdentifier
 import com.dereekb.gae.server.search.system.response.SearchDocumentReadResponse;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;

@@ -2,14 +2,16 @@ package com.dereekb.gae.model.stored.image.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.model.stored.image.StoredImage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * DTO of the {@link StoredImageData} class.
+ * DTO of the {@link StoredImage} class.
  *
  * @author dereekb
  */
@@ -17,12 +19,20 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class StoredImageData extends SearchableDatabaseModelData {
 
+	public static final int MAX_NAME_LENGTH = 50;
+	public static final int MAX_SUMMARY_LENGTH = 250;
+	public static final int MAX_TYPE_LENGTH = 50;
+	public static final int MAX_TAGS_LENGTH = 200;
+
 	private static final long serialVersionUID = 1L;
 
+	@Size(max = MAX_NAME_LENGTH)
 	private String name;
 
+	@Size(max = MAX_SUMMARY_LENGTH)
 	private String summary;
 
+	@Size(max = MAX_TAGS_LENGTH)
 	private String tags;
 
 	private Integer type;
@@ -91,18 +101,12 @@ public final class StoredImageData extends SearchableDatabaseModelData {
 		this.imageSets = imageSets;
 	}
 
-	// UniqueModel
-	@Override
-	public ModelKey getModelKey() {
-		return ModelKey.convertNumberString(this.key);
-	}
-
 	@Override
 	public String toString() {
 		return "StoredImageData [name=" + this.name + ", summary=" + this.summary + ", tags=" + this.tags + ", type="
 		        + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace + ", imageSets=" + this.imageSets
 		        + ", searchIdentifier=" + this.searchIdentifier + ", identifier=" + this.key + ", created="
-		        + this.created + "]";
+		        + this.date + "]";
 	}
 
 }

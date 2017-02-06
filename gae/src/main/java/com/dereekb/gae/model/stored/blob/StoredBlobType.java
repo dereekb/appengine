@@ -34,24 +34,24 @@ public enum StoredBlobType {
 
 	public static final Integer DEFAULT_TYPE_ID = 0;
 
-	private final Integer type;
-	private final String ending;
-	private final String mimeType;
-	private final String fileType;
+	public final Integer id;
+	public final String ending;
+	public final String mimeType;
+	public final String fileType;
 
-	private StoredBlobType(Integer type, String ending, String mimeType, String fileType) {
-		this.type = type;
+	private StoredBlobType(Integer id, String ending, String mimeType, String fileType) {
+		this.id = id;
 		this.ending = ending;
 		this.mimeType = mimeType;
 		this.fileType = fileType;
 	}
 
 	public Integer getId() {
-		return this.type;
+		return this.id;
 	}
 
 	public Integer getType() {
-		return this.type;
+		return this.id;
 	}
 
 	public String getEnding() {
@@ -66,8 +66,8 @@ public enum StoredBlobType {
 		return this.fileType;
 	}
 
-	public static StoredBlobType typeForId(Integer typeId) {
-		StoredBlobType type;
+	public static StoredBlobType valueOf(Integer typeId) {
+		StoredBlobType type = BLOB;
 
 		switch (typeId) {
 			case 0:
@@ -81,9 +81,6 @@ public enum StoredBlobType {
 				break;
 			case 3:
 				type = JSON;
-				break;
-			default:
-				type = BLOB;
 				break;
 		}
 

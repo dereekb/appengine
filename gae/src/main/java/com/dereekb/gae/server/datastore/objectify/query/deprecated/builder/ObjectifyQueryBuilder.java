@@ -7,7 +7,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ExpressionOperator;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Utility class to help generate an ObjectifyQuery<T>.

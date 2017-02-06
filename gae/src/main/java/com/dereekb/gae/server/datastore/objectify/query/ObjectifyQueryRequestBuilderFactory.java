@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore.objectify.query;
 import java.util.Map;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 
 /**
  * Used for building new {@link ObjectifyQueryRequest} instances.
@@ -28,7 +29,10 @@ public interface ObjectifyQueryRequestBuilderFactory<T extends ObjectifyModel<T>
 	 * @param parameters
 	 *            Optional {@link Map} of parameters.
 	 * @return {@link ObjectifyQueryRequestBuilder}. Never {@code null}.
+	 * @throws IllegalQueryArgumentException
+	 *             if the input parameters have one or more invalid values.
 	 */
-	public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters);
+	public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters)
+	        throws IllegalQueryArgumentException;
 
 }

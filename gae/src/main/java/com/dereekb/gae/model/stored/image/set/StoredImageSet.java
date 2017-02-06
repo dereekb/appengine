@@ -12,7 +12,9 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfNotEmpty;
 import com.googlecode.objectify.condition.IfNull;
 
 /**
@@ -60,7 +62,11 @@ public final class StoredImageSet extends SearchableDatabaseModel
 
 	/**
 	 * {@link Image} in this gallery.
+	 * 
+	 * Images are indexed to allow querying all image sets that contain a given
+	 * image, at a later time.
 	 */
+	@Index({ IfNotEmpty.class })
 	@IgnoreSave({ IfEmpty.class })
 	private Set<Key<StoredImage>> images = new HashSet<Key<StoredImage>>();
 
@@ -142,8 +148,8 @@ public final class StoredImageSet extends SearchableDatabaseModel
 
 	@Override
 	public String toString() {
-		return "StoredImageSet [identifier=" + this.identifier + ", label=" + this.label + ", detail="
-		        + this.detail + ", tags=" + this.tags + ", images=" + this.images + "]";
+		return "StoredImageSet [identifier=" + this.identifier + ", label=" + this.label + ", detail=" + this.detail
+		        + ", tags=" + this.tags + ", images=" + this.images + "]";
 	}
 
 }
