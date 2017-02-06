@@ -4,7 +4,8 @@ package com.dereekb.gae.model.extension.links.service;
  * Relationship link change action.
  *
  * @author dereekb
- * @see {@link LinkSystemChange}.
+ * 
+ * @see LinkSystemChange
  */
 public enum LinkChangeAction {
 

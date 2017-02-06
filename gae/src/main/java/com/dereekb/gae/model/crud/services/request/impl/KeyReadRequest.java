@@ -10,9 +10,6 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  * Implementation of {@link ReadRequest} that uses {@link ModelKey} objects.
  *
  * @author dereekb
- *
- * @param <T>
- *            model type
  */
 public final class KeyReadRequest extends AbstractReadRequestImpl {
 

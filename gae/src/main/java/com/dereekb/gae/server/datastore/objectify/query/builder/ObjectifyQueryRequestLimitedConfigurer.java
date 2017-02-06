@@ -7,7 +7,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLim
  *
  * @author dereekb
  *
- * @see {@link ObjectifyQueryRequestConfigurer}
+ * @see ObjectifyQueryRequestConfigurer
  */
 public interface ObjectifyQueryRequestLimitedConfigurer {
 

@@ -1,7 +1,5 @@
 package com.dereekb.gae.server.datastore;
 
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-
 /**
  * Interface for saving and deleting models.
  *
@@ -9,8 +7,9 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @param <T>
  *            Model type.
- * @see {@link Getter} for retrieving models from the source.
- * @see {@link Deleter} for deleting using a {@link ModelKey}.
+ * 
+ * @see Getter
+ * @see Deleter
  */
 public interface Setter<T>
         extends Saver<T> {

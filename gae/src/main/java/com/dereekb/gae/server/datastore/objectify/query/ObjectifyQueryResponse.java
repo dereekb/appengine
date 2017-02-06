@@ -8,7 +8,8 @@ import com.googlecode.objectify.cmd.SimpleQuery;
  * Pre-configured Objectify query response accessor.
  * 
  * @author dereekb
- * @see {@link ObjectifyQueryKeyResponse}
+ * 
+ * @see ObjectifyQueryKeyResponse
  */
 public interface ObjectifyQueryResponse {
 

@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-
 /**
  * Wraps response data with a type.
  *
  * @author dereekb
- * @see {@link ApiResponse}
+ * 
+ * @see ApiResponse
  */
 @JsonInclude(Include.NON_EMPTY)
 public class ApiResponseDataImpl

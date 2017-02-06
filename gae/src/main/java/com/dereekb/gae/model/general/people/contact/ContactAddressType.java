@@ -12,7 +12,7 @@ public enum ContactAddressType {
 	 *
 	 * The information should be formatted to follow the E164 standard.
 	 *
-	 * @see {@link http://en.wikipedia.org/wiki/E.164}
+	 * @see <a href="http://en.wikipedia.org/wiki/E.164">The E164 Standardc</a>
 	 */
 	PHONE(0, "phone"),
 

@@ -4,7 +4,8 @@ package com.dereekb.gae.server.storage.object.file;
  * Item that can be stored. Contains only a filename,
  *
  * @author dereekb
- * @see {@link StorableFile}
+ * 
+ * @see StorableFile
  */
 public interface Storable {
 

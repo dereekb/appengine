@@ -5,13 +5,12 @@ import com.dereekb.gae.model.general.time.search.index.WeekSpanDocumentBuilderUt
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 
-
 /**
  * Used for searching for WeekSpan hour hex tags.
  *
  * @author dereekb
  *
- * @see {@link WeekSpanDocumentBuilderUtility}
+ * @see WeekSpanDocumentBuilderUtility
  */
 public class WeekSpanSearch {
 
@@ -27,7 +26,7 @@ public class WeekSpanSearch {
 		return this.hourHexTags;
 	}
 
-    public void setHourHexTags(String hourHexTags) {
+	public void setHourHexTags(String hourHexTags) {
 		this.hourHexTags = hourHexTags;
 	}
 

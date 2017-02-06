@@ -13,10 +13,11 @@ import com.dereekb.gae.utilities.collections.tree.map.builder.MapTreeBuilder;
 /**
  * A tree that uses a map to keep track of children and values.
  * 
- * Nodes can be set as 'wildcards', which make them include the set of all possible values.
+ * Nodes can be set as 'wildcards', which make them include the set of all
+ * possible values.
  * 
  * @author dereekb
- * @see {@link MapTreeBuilder} for building a tree from a string.
+ * @see MapTreeBuilder
  */
 public final class MapTree<T> {
 
@@ -53,12 +54,12 @@ public final class MapTree<T> {
 	}
 
 	public boolean isRoot() {
-		boolean hasNoParent = (parent == null);
+		boolean hasNoParent = (this.parent == null);
 		return (hasNoParent);
 	}
 
 	public T getValue() {
-		return value;
+		return this.value;
 	}
 
 	public boolean isWildcard() {
@@ -85,7 +86,7 @@ public final class MapTree<T> {
 	}
 
 	public Set<T> getChildrenValues() {
-		Set<T> childrenValues = children.keySet();
+		Set<T> childrenValues = this.children.keySet();
 		return childrenValues;
 	}
 
@@ -103,11 +104,13 @@ public final class MapTree<T> {
 	}
 
 	/**
-	 * Merges the given tree into this one. The value of the opposite tree is ignored while this one is kept.
+	 * Merges the given tree into this one. The value of the opposite tree is
+	 * ignored while this one is kept.
 	 * 
 	 * The children that match this one are then merged into each other as well.
 	 * 
-	 * If the other tree is a wildcard value, then this tree also becomes a wildcard.
+	 * If the other tree is a wildcard value, then this tree also becomes a
+	 * wildcard.
 	 * 
 	 * @param tree
 	 */
@@ -151,7 +154,8 @@ public final class MapTree<T> {
 	 * If this is a wildcard node, nothing is added.
 	 * 
 	 * @param value
-	 * @return The new node just added to the target, or null if the input value was null, or itself if this is a wildcard node.
+	 * @return The new node just added to the target, or null if the input value
+	 *         was null, or itself if this is a wildcard node.
 	 * @throws NullPointerException
 	 */
 	public MapTree<T> put(T value) throws NullPointerException {
@@ -172,12 +176,14 @@ public final class MapTree<T> {
 	}
 
 	/**
-	 * Adds the given child to the tree. If another child exists with the same value, it is removed.
+	 * Adds the given child to the tree. If another child exists with the same
+	 * value, it is removed.
 	 * 
 	 * Input with no value (roots) are ignored.
 	 * 
 	 * @param child
-	 * @throws NullPointerException Thrown if the input child is null.
+	 * @throws NullPointerException
+	 *             Thrown if the input child is null.
 	 */
 	public MapTree<T> put(MapTree<T> child) throws NullPointerException {
 		if (child == null) {
@@ -239,7 +245,7 @@ public final class MapTree<T> {
 	 * @return Child count.
 	 */
 	public int childCount() {
-		return children.size();
+		return this.children.size();
 	}
 
 	public boolean isEmpty() {
@@ -247,7 +253,7 @@ public final class MapTree<T> {
 	}
 
 	public boolean containsValue(T value) {
-		return (this.wildcard || children.containsKey(value));
+		return (this.wildcard || this.children.containsKey(value));
 	}
 
 	private boolean contains(Collection<T> children) {
@@ -269,16 +275,19 @@ public final class MapTree<T> {
 	/**
 	 * Checks whether or not the input tree is similar to this one.
 	 * 
-	 * A tree is similar to another if the values of both inputs match eachother, and the children of the input tree are a subset of the
+	 * A tree is similar to another if the values of both inputs match
+	 * eachother, and the children of the input tree are a subset of the
 	 * tree.
 	 * 
 	 * For example:
 	 * 'a.b' is similar to 'a.b.c', but not vice-versa.
 	 * 
-	 * A wildcard value can also be similar: 'a.*'.similarTo('a.b.c.d') will return true.
+	 * A wildcard value can also be similar: 'a.*'.similarTo('a.b.c.d') will
+	 * return true.
 	 * 
 	 * @param tree
-	 * @return True if the input tree is contained inside of this one as a child.
+	 * @return True if the input tree is contained inside of this one as a
+	 *         child.
 	 */
 	public boolean similarTo(MapTree<T> tree) {
 		boolean containsTree = false;
@@ -306,13 +315,15 @@ public final class MapTree<T> {
 	}
 
 	/**
-	 * Checks whether or not the input tree is contained inside of this tree as a child.
+	 * Checks whether or not the input tree is contained inside of this tree as
+	 * a child.
 	 * 
 	 * For example:
 	 * The tree formed by 'a.b.c' contains 'b.c', and 'b'.
 	 * 
 	 * @param tree
-	 * @return True if the input tree is contained inside of this one as a child.
+	 * @return True if the input tree is contained inside of this one as a
+	 *         child.
 	 */
 	public boolean contains(MapTree<T> tree) {
 		boolean containsTree = false;
@@ -332,13 +343,16 @@ public final class MapTree<T> {
 	}
 
 	/**
-	 * Recursively checks that the children of the input tree exist in the subset of this tree.
+	 * Recursively checks that the children of the input tree exist in the
+	 * subset of this tree.
 	 * 
-	 * If the input tree is a wildcard, it 'contains' the set of all possible entries. This means this will only contain all those children
+	 * If the input tree is a wildcard, it 'contains' the set of all possible
+	 * entries. This means this will only contain all those children
 	 * if it is also a wildcard.
 	 * 
 	 * @param tree
-	 * @return True if the input tree's children exist in the subset of this tree.
+	 * @return True if the input tree's children exist in the subset of this
+	 *         tree.
 	 * @see containsTree() function to check against the the entire tree.
 	 */
 	public boolean containsChildren(MapTree<T> tree) {
@@ -374,7 +388,8 @@ public final class MapTree<T> {
 	}
 
 	/**
-	 * Clones the tree at this point, making a new tree with this value as the root.
+	 * Clones the tree at this point, making a new tree with this value as the
+	 * root.
 	 * 
 	 * @return
 	 */

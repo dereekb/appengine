@@ -10,8 +10,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @author dereekb
  *
- * @param <T>
- *            model type
  */
 public interface DeleteRequest {
 

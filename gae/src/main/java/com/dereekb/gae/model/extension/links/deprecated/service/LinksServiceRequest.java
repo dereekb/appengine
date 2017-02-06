@@ -6,11 +6,12 @@ import com.dereekb.gae.model.extension.links.deprecated.functions.LinksAction;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- *
+ * Request for the {@link LinksService}.
+ * 
  * @author dereekb
  *
- * @see {@link LinksServiceModelRequest}
- * @see {@link LinksServiceKeyRequest}
+ * @see LinksServiceModelRequest
+ * @see LinksServiceKeyRequest
  */
 public interface LinksServiceRequest {
 

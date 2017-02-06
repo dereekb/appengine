@@ -37,14 +37,14 @@ public class TaskQueueIterateController {
 	/**
 	 * HTTP header for the step value.
 	 *
-	 * @see {@link #iterate(String, Integer, String, String, Map)}
+	 * @see #iterate(String, Integer, String, String, Map)
 	 */
 	public static final String TASK_STEP_HEADER = "TQ_ITERATE_STEP";
 
 	/**
 	 * HTTP header for the cursor value.
 	 *
-	 * @see {@link #iterate(String, Integer, String, String, Map)}
+	 * @see #iterate(String, Integer, String, String, Map)
 	 */
 	public static final String CURSOR_HEADER = "TQ_CURSOR";
 

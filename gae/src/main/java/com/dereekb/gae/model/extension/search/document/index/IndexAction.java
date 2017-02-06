@@ -1,12 +1,11 @@
 package com.dereekb.gae.model.extension.search.document.index;
 
-
 /**
  * Describes the kind of action/change to perform with the given items.
  *
  * @author dereekb
  *
- * @see {@link IndexPair}
+ * @see IndexPair
  */
 public enum IndexAction {
 

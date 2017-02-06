@@ -31,7 +31,8 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *
  * @param <T>
  *            model type
- * @see {@link TaskQueueEditController}
+ * 
+ * @see TaskQueueEditController
  */
 public class ScheduleDeleteTask<T extends UniqueModel> extends ScheduleReviewTask<T>
         implements DeleteTask<T> {
