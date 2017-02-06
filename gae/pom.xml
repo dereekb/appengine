@@ -286,10 +286,10 @@
 					<flowInitContext>
 						<masterBranchName>master</masterBranchName>
 						<developBranchName>development</developBranchName>
-						<featureBranchPrefix>feature-</featureBranchPrefix>
-						<releaseBranchPrefix>release-</releaseBranchPrefix>
-						<hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-						<versionTagPrefix>blither-</versionTagPrefix>
+						<featureBranchPrefix>feature/</featureBranchPrefix>
+						<releaseBranchPrefix>release/</releaseBranchPrefix>
+						<hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+						<versionTagPrefix>blither/</versionTagPrefix>
 					</flowInitContext>
 					<releaseBranchVersionSuffix>RC</releaseBranchVersionSuffix>
 					<noBuild>true</noBuild>
