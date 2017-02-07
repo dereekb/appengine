@@ -16,7 +16,7 @@ import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
  *
  */
 @RestController
-@RequestMapping("/login/anon")
+@RequestMapping("/login/auth/anon")
 public final class AnonymousLoginController {
 
 	private AnonymousLoginControllerDelegate delegate;

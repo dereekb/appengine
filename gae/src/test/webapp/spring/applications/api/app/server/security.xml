@@ -17,23 +17,25 @@
 	<!-- No HTTP security for Google App Engine. -->
 	<security:http pattern="/_ah/**" security="none" />
 
-	<!-- No HTTP security for oauth login. -->
-	<security:http pattern="/login/oauth/*" security="none" />
-
-	<!-- No HTTP security for key login. -->
-	<security:http pattern="/login/key" security="none" />
-
-	<!-- No HTTP security for pass login. -->
-	<!-- DEPRECATED: Do not enable this on production apps -->
-	<security:http pattern="/login/pass/*" security="none" />
-
-	<!-- No HTTP security for anonymous login. -->
-	<security:http pattern="/login/anon" security="none" />
-
+	<!-- Login Authentication Patterns -->
+	<security:http pattern="/login/auth/**"
+		create-session="never" entry-point-ref="securityEntryPoint">
+		<security:intercept-url pattern="/login/auth/anon" access="permitAll" method="POST" />
+		<!-- DEPRECATED: Do not enable password authentication on production apps -->
+		<security:intercept-url pattern="/login/auth/pass" access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/pass/*" access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/oauth/*" access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/key" access="permitAll" method="POST" />
+		<security:intercept-url pattern="/**" access="denyAll" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
+		<!-- All requests are made with anonymous users. -->
+		<security:anonymous enabled="true" />
+		<security:csrf disabled="true" />
+	</security:http>
+	
+	<!-- Application HTTP Security Patterns -->
 	<security:http use-expressions="true" create-session="stateless"
 		entry-point-ref="securityEntryPoint">
-
-		<security:csrf disabled="true" />
 
 		<security:custom-filter ref="authenticationFilter"
 			position="PRE_AUTH_FILTER" />
@@ -62,6 +64,7 @@
 
 		<security:access-denied-handler ref="accessDeniedHandler" />
 		<security:anonymous enabled="false" />
+		<security:csrf disabled="true" />
 	</security:http>
 
 	<!-- Interceptors -->

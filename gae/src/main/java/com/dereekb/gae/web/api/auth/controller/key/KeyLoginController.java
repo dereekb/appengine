@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginRejectedException;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
@@ -22,7 +23,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  *
  */
 @RestController
-@RequestMapping("/login/key")
+@RequestMapping("/login/auth/key")
 public class KeyLoginController {
 
 	private KeyLoginControllerDelegate delegate;
@@ -32,7 +33,7 @@ public class KeyLoginController {
 	}
 
 	public KeyLoginControllerDelegate getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(KeyLoginControllerDelegate delegate) {
@@ -45,7 +46,7 @@ public class KeyLoginController {
 
 	// MARK: Enable/Disable
 	/**
-	 * Enables the login for the current user.
+	 * Enables the API Key Authentication for the current user.
 	 * 
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 * @throws ApiLoginException
@@ -111,7 +112,7 @@ public class KeyLoginController {
 		} catch (KeyLoginRejectedException e) {
 			throw new ApiLoginRejectedException(e);
 		} catch (KeyLoginUnavailableException e) {
-			//Also return rejected to prevent brute-force checking for keys.
+			// Also return rejected to prevent brute-force checking for keys.
 			throw new ApiLoginRejectedException(e);
 		} catch (RuntimeException e) {
 			throw new ApiRuntimeException(e);

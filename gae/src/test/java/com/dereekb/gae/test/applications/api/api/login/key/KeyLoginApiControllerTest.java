@@ -152,7 +152,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	}
 
 	private MockHttpServletResponse mockEnableApiKey() throws Exception {
-		MockHttpServletRequestBuilder enableRequestBuilder = MockMvcRequestBuilders.put("/login/key/enable");
+		MockHttpServletRequestBuilder enableRequestBuilder = MockMvcRequestBuilders.put("/login/auth/key/enable");
 		MvcResult enableResult = this.performHttpRequest(enableRequestBuilder).andReturn();
 
 		return enableResult.getResponse();
@@ -191,7 +191,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	private MockHttpServletResponse mockApiLogin(String key,
 	                                             String verification)
 	        throws Exception {
-		MockHttpServletRequestBuilder keyLoginRequestBuilder = MockMvcRequestBuilders.post("/login/key");
+		MockHttpServletRequestBuilder keyLoginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/key");
 		keyLoginRequestBuilder.param("key", key);
 
 		if (verification != null) {

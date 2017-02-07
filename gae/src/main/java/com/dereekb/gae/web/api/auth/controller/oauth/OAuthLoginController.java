@@ -25,7 +25,7 @@ import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
  *
  */
 @RestController
-@RequestMapping("/login/oauth")
+@RequestMapping("/login/auth/oauth")
 public class OAuthLoginController {
 
 	private OAuthLoginControllerDelegate delegate;

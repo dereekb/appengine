@@ -25,7 +25,7 @@ import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
  *
  */
 @RestController
-@RequestMapping("/login/pass")
+@RequestMapping("/login/auth/pass")
 public final class PasswordLoginController {
 
 	private PasswordLoginControllerDelegate delegate;

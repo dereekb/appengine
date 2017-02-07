@@ -55,7 +55,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 	// MARK: Mock Tests
 	@Test
 	public void testInvalidAuthToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/oauth/google");
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/oauth/google");
 		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
 
@@ -79,7 +79,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testInvalidRequestType() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/oauth/UNAVAILABLE");
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/oauth/UNAVAILABLE");
 		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
 
@@ -93,7 +93,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testMissingAccessToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/oauth/google");
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/oauth/google");
 		loginRequestBuilder.accept("application/json");
 
 		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
