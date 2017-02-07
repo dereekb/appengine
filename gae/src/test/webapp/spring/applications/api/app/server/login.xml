@@ -75,9 +75,10 @@
 	</bean>
 
 	<bean id="googleOAuthService"
-		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.GoogleOAuthService">
+		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.google.GoogleOAuthService">
 		<constructor-arg index="0" ref="googleOAuthClientId" />
 		<constructor-arg index="1" ref="googleOAuthClientSecret" />
+		<!-- Update in application. -->
 		<property name="loginTokenRedirectUrl"
 			value="https://developers.google.com/oauthplayground" />
 		<property name="authTokenRedirectUrl"

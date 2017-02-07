@@ -79,7 +79,8 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testInvalidRequestType() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/oauth/UNAVAILABLE");
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		        .post("/login/auth/oauth/UNAVAILABLE");
 		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
 

@@ -7,13 +7,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.dereekb.gae.test.spring.CoreServiceTestingContext;
-import com.dereekb.gae.test.spring.WebServiceTestingContext;
+import com.dereekb.gae.test.spring.WebServiceTestingContextImpl;
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextHierarchy({ @ContextConfiguration(name = "api", locations = {
-        ApiApplicationTestContext.API_APPLICATION_XML_PATH, WebServiceTestingContext.WEB_TESTING_XML_PATH }) })
-public class ApiApplicationTestContext extends WebServiceTestingContext {
+        ApiApplicationTestContext.API_APPLICATION_XML_PATH, WebServiceTestingContextImpl.WEB_TESTING_XML_PATH }) })
+public class ApiApplicationTestContext extends WebServiceTestingContextImpl {
 
 	public static final String API_APPLICATION_XML_PATH = CoreServiceTestingContext.APPLICATION_TESTING_PATH
 	        + "api/spring.xml";

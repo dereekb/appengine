@@ -9,7 +9,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
-import com.dereekb.gae.server.auth.security.login.oauth.impl.service.GoogleOAuthService;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.google.GoogleOAuthService;
 
 
 /**

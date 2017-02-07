@@ -26,7 +26,8 @@ import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
  * @author dereekb
  *
  */
-public class WebServiceTestingContext extends CoreServiceTestingContext {
+public class WebServiceTestingContextImpl extends CoreServiceTestingContext
+        implements WebServiceTester {
 
 	public static final String WEB_TESTING_XML_PATH = BASE_TESTING_PATH + "testing-web.xml";
 
@@ -75,13 +76,15 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 	}
 
 	// MARK: Mock Requests
-	protected void performHttpRequests(List<MockHttpServletRequestBuilder> mockRequests) throws Exception {
+	@Override
+	public void performHttpRequests(List<MockHttpServletRequestBuilder> mockRequests) throws Exception {
 		for (MockHttpServletRequestBuilder request : mockRequests) {
 			this.performHttpRequest(request);
 		}
 	}
 
-	protected ResultActions performHttpRequest(MockHttpServletRequestBuilder request) throws Exception {
+	@Override
+	public ResultActions performHttpRequest(MockHttpServletRequestBuilder request) throws Exception {
 		String token = null;
 
 		if (this.testLoginTokenContext != null) {
@@ -91,8 +94,9 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 		return this.performSecureHttpRequest(request, token);
 	}
 
-	protected ResultActions performSecureHttpRequest(MockHttpServletRequestBuilder request,
-	                                                 String token)
+	@Override
+	public ResultActions performSecureHttpRequest(MockHttpServletRequestBuilder request,
+	                                              String token)
 	        throws Exception {
 		if (token != null) {
 			request.header(LoginTokenAuthenticationFilter.DEFAULT_HEADER_STRING,
@@ -102,7 +106,8 @@ public class WebServiceTestingContext extends CoreServiceTestingContext {
 		return this.mockMvcPerform(request);
 	}
 
-	protected ResultActions mockMvcPerform(RequestBuilder requestBuilder) throws Exception {
+	@Override
+	public ResultActions mockMvcPerform(RequestBuilder requestBuilder) throws Exception {
 		// Clear any context before running to prevent oddities.
 
 		SecurityContextHolder.clearContext();

@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service.google;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -21,6 +21,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthException
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.AbstractOAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.AbstractOAuthService;
 import com.dereekb.gae.utilities.data.url.ConnectionUtility;
 import com.dereekb.gae.utilities.json.JsonUtility;
 import com.dereekb.gae.utilities.json.JsonUtility.JsonObjectReader;
@@ -47,10 +48,10 @@ public class GoogleOAuthService extends AbstractOAuthService {
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String AUTHORIZATION_FORMAT = "Bearer %s";
 
-	private static final List<String> GOOGLE_OAUTH_SCOPES = Arrays.asList("https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile");
+	private static final List<String> GOOGLE_OAUTH_SCOPES = Arrays.asList(
+	        "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile");
 
-	public GoogleOAuthService(String clientId, String clientSecret)
-	        throws IllegalArgumentException {
+	public GoogleOAuthService(String clientId, String clientSecret) throws IllegalArgumentException {
 		super(GOOGLE_ACCOUNT_LOGIN_PATH, GOOGLE_AUTH_TOKEN_PATH, clientId, clientSecret, GOOGLE_OAUTH_SCOPES);
 	}
 
@@ -96,7 +97,6 @@ public class GoogleOAuthService extends AbstractOAuthService {
 		return this.getAuthorizationInfo(accessToken);
 	}
 
-
 	@Override
 	public OAuthAccessToken getAuthorizationToken(String authCode)
 	        throws OAuthAuthorizationTokenRequestException,
@@ -104,7 +104,7 @@ public class GoogleOAuthService extends AbstractOAuthService {
 
 		OAuthAccessToken result = null;
 
-		 try {
+		try {
 			AuthorizationCodeTokenRequest request = this.makeAuthorizationCodeTokenRequest(authCode);
 			TokenResponse response = request.execute();
 
@@ -154,13 +154,14 @@ public class GoogleOAuthService extends AbstractOAuthService {
 		}
 
 		/*
-		GET  HTTP/1.1
-		Host: www.googleapis.com
-		Content-length: 0
-		Authorization: Bearer ya29.Ci8mA15jelsR3ZO-QYxL5lG0APiNzX2k7WsU083XLtLRm5gvfNd5_2ytyNreU6Y2NA
+		 * GET HTTP/1.1
+		 * Host: www.googleapis.com
+		 * Content-length: 0
+		 * Authorization: Bearer ya29.Ci8mA15jelsR3ZO-
+		 * QYxL5lG0APiNzX2k7WsU083XLtLRm5gvfNd5_2ytyNreU6Y2NA
 		 */
 		HttpURLConnection connection = null;
-		GoogleOAuthUserResult result = null;
+		GoogleOAuthUserResultImpl result = null;
 
 		try {
 			connection = (HttpURLConnection) url.openConnection();
@@ -177,7 +178,7 @@ public class GoogleOAuthService extends AbstractOAuthService {
 			 * "verified_email": true }
 			 */
 			JsonElement json = ConnectionUtility.readJsonFromConnection(connection);
-			result = GoogleOAuthUserResult.fromResult(token, json);
+			result = GoogleOAuthUserResultImpl.fromResult(token, json);
 		} catch (IOException e) {
 			this.handleLoginConnectionException(e, connection);
 		} catch (Exception e) {
@@ -194,8 +195,8 @@ public class GoogleOAuthService extends AbstractOAuthService {
 	 * @author dereekb
 	 *
 	 */
-	public static class GoogleOAuthUserResult extends AbstractOAuthAuthorizationInfo
-	        implements OAuthAuthorizationInfo, OAuthLoginInfo {
+	public static class GoogleOAuthUserResultImpl extends AbstractOAuthAuthorizationInfo
+	        implements GoogleOAuthUserResult {
 
 		private static final String ID_KEY = "id";
 		private static final String EMAIL_KEY = "email";
@@ -204,13 +205,13 @@ public class GoogleOAuthService extends AbstractOAuthService {
 
 		private JsonObjectReader reader;
 
-		private GoogleOAuthUserResult(OAuthAccessToken accessToken, JsonElement json) {
+		private GoogleOAuthUserResultImpl(OAuthAccessToken accessToken, JsonElement json) {
 			super(accessToken);
 			this.setJson(json);
 		}
 
-		public static GoogleOAuthUserResult fromResult(OAuthAccessToken accessToken,
-		                                               JsonElement json)
+		public static GoogleOAuthUserResultImpl fromResult(OAuthAccessToken accessToken,
+		                                                   JsonElement json)
 		        throws OAuthInsufficientException,
 		            IllegalArgumentException {
 
@@ -224,7 +225,7 @@ public class GoogleOAuthService extends AbstractOAuthService {
 				throw new OAuthInsufficientException("This account has no identifier.");
 			}
 
-			return new GoogleOAuthUserResult(accessToken, json);
+			return new GoogleOAuthUserResultImpl(accessToken, json);
 		}
 
 		public JsonElement getJson() {
