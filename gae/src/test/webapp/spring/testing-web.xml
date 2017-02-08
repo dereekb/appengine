@@ -23,8 +23,9 @@
 	
 	<bean id="testSystemAuthenticationContextSetter"
 		class="com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter">
-		<constructor-arg index="0" ref="systemLoginTokenFactory" />
-		<constructor-arg index="1" ref="loginTokenAuthenticationProvider" />
+		<constructor-arg index="0" ref="loginTokenService" />
+		<constructor-arg index="1" ref="systemLoginTokenFactory" />
+		<constructor-arg index="2" ref="loginTokenAuthenticationProvider" />
 	</bean>
 
 </beans>

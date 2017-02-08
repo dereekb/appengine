@@ -133,12 +133,11 @@ public class SystemLoginTokenFactoryImpl
 
 	@Override
 	public String makeTokenString() throws FactoryMakeFailureException {
-		LoginToken token = this.make();
+		LoginToken token = this.makeLoginToken();
 		return this.encoder.encodeLoginToken(token);
 	}
 
-	@Override
-	public LoginTokenImpl make() throws FactoryMakeFailureException {
+	public LoginTokenImpl makeLoginToken() throws FactoryMakeFailureException {
 		LoginTokenImpl token = new LoginTokenImpl(this.pointerType);
 
 		token.setRoles(this.roles);

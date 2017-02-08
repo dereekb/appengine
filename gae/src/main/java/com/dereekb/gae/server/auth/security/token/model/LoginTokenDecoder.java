@@ -23,6 +23,6 @@ public interface LoginTokenDecoder {
 	 *             Thrown if the token was unauthorized by either not existing
 	 *             or not matching against the details.
 	 */
-	public LoginToken decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException;
+	public DecodedLoginToken decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException;
 
 }

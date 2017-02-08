@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilterDelegate;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.provider.preauth.PreAuthLoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.preauth.impl.PreAuthLoginTokenAuthenticationImpl;
@@ -56,8 +56,8 @@ public class LoginTokenAuthenticationFilterDelegateImpl
 	@Override
 	public Authentication performPreAuth(String token,
 	                                     WebAuthenticationDetails details) {
-		LoginToken loginToken = this.decoder.decodeLoginToken(token);
-		PreAuthLoginTokenAuthentication preAuth = new PreAuthLoginTokenAuthenticationImpl(loginToken, details);
+		DecodedLoginToken decodedLoginToken = this.decoder.decodeLoginToken(token);
+		PreAuthLoginTokenAuthentication preAuth = new PreAuthLoginTokenAuthenticationImpl(decodedLoginToken, details);
 		return this.authenticationManager.authenticate(preAuth);
 	}
 
