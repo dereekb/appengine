@@ -6,9 +6,7 @@ import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Service that updates existing objects.
- * <p>
- * Should be a thread-safe implementation.
+ * Thread-safe service that updates existing objects.
  *
  * @author dereekb
  *
@@ -22,10 +20,10 @@ public interface UpdateService<T extends UniqueModel> {
 	 *
 	 * @param request
 	 *            {@link UpdateRequest}. Never {@code null}.
-	 * @return {@link UpdateResponse} instance.
+	 * @return {@link UpdateResponse}. Never {@code null}.
 	 * @throws AtomicOperationException
 	 *             Occurs when not all objects requested can be updated.
 	 */
-	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException, IllegalArgumentException;
+	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException;
 
 }

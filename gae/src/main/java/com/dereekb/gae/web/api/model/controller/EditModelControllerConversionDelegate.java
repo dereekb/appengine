@@ -36,4 +36,7 @@ public interface EditModelControllerConversionDelegate<T extends UniqueModel, I>
 
 	public ApiResponse convert(DeleteResponse<T> response);
 
+	public ApiResponse convert(DeleteResponse<T> response,
+	                           boolean includeModels);
+
 }

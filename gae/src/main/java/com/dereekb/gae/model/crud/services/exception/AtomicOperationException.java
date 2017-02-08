@@ -28,8 +28,7 @@ public final class AtomicOperationException extends RuntimeException {
 		this(SingleItem.withValue(failed), reason);
 	}
 
-	public AtomicOperationException(Iterable<? extends UniqueModel> failed,
- AtomicOperationExceptionReason reason) {
+	public AtomicOperationException(Iterable<? extends UniqueModel> failed, AtomicOperationExceptionReason reason) {
 		super(String.format("Models were were unavailable for reason: %s", reason));
 		this.failed = failed;
 		this.reason = reason;

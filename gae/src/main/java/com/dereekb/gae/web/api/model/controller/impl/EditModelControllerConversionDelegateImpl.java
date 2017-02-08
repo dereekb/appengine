@@ -130,15 +130,27 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 
 	@Override
 	public ApiResponse convert(DeleteResponse<T> response) {
+		return this.convert(response, true);
+	}
 
+	@Override
+	public ApiResponse convert(DeleteResponse<T> response,
+	                           boolean includeModels) {
 		Collection<T> deleted = response.getDeletedModels();
-		List<I> converted = this.converter.convertTo(deleted);
 
 		ApiResponseImpl apiResponse = new ApiResponseImpl();
-		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
+
+		ApiResponseDataImpl data = null;
+
+		if (includeModels) {
+			List<I> converted = this.converter.convertTo(deleted);
+			data = new ApiResponseDataImpl(this.type, converted);
+		} else {
+			List<ModelKey> keys = ModelKey.readModelKeys(deleted);
+			data = new ApiResponseDataImpl(this.type, keys);
+		}
 
 		apiResponse.setData(data);
-
 		return apiResponse;
 	}
 

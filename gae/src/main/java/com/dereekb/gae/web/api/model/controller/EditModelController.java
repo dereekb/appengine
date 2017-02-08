@@ -89,7 +89,8 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = { "/update", "/edit" }, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = { "/update",
+	        "/edit" }, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public ApiResponse update(@Valid @RequestBody ApiUpdateRequest<I> request) {
 		ApiResponse response = null;
 
@@ -116,7 +117,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 		try {
 			DeleteRequest deleteRequest = this.conversionDelegate.convert(request);
 			DeleteResponse<T> deleteResponse = this.delegate.delete(deleteRequest);
-			response = this.conversionDelegate.convert(deleteResponse);
+			response = this.conversionDelegate.convert(deleteResponse, request.getReturnModels());
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {

@@ -17,6 +17,8 @@ public final class ApiDeleteRequest extends ApiRequest<String> {
 	@Valid
 	private DeleteRequestOptionsImpl options;
 
+	private boolean returnModels = false;
+
 	public ApiDeleteRequest() {
 		super();
 	}
@@ -31,6 +33,14 @@ public final class ApiDeleteRequest extends ApiRequest<String> {
 
 	public void setOptions(DeleteRequestOptionsImpl options) {
 		this.options = options;
+	}
+
+	public boolean getReturnModels() {
+		return this.returnModels;
+	}
+
+	public void setReturnModels(boolean returnModels) {
+		this.returnModels = returnModels;
 	}
 
 	@Override
