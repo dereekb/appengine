@@ -1,4 +1,4 @@
-package com.dereekb.gae.client.api.model.crud.components;
+package com.dereekb.gae.client.api.model.crud.services;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
@@ -8,7 +8,7 @@ import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Service for reading objects from a remote resource.
+ * Pre-configured system service for reading objects from a remote resource.
  * 
  * @author dereekb
  *

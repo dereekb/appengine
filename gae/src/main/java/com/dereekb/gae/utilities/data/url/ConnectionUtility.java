@@ -26,7 +26,6 @@ public class ConnectionUtility {
 	}
 
 	public static String readStringFromConnection(URLConnection connection) throws IOException {
-
 		InputStream inputStream = connection.getInputStream();
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 

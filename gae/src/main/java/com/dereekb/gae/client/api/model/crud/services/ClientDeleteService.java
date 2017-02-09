@@ -1,4 +1,4 @@
-package com.dereekb.gae.client.api.model.crud.components;
+package com.dereekb.gae.client.api.model.crud.services;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.request.ClientDeleteRequest;
@@ -10,7 +10,7 @@ import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Service for deleting models.
+ * Pre-configured system service for deleting models.
  * 
  * @author dereekb
  *

@@ -1,4 +1,4 @@
-package com.dereekb.gae.client.api.model.crud.components;
+package com.dereekb.gae.client.api.model.crud.services;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
@@ -8,7 +8,7 @@ import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Service for updating models.
+ * Pre-configured system service for updating models.
  * 
  * @author dereekb
  *

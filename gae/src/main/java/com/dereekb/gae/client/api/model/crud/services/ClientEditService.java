@@ -1,8 +1,5 @@
-package com.dereekb.gae.client.api.model.crud;
+package com.dereekb.gae.client.api.model.crud.services;
 
-import com.dereekb.gae.client.api.model.crud.components.ClientCreateService;
-import com.dereekb.gae.client.api.model.crud.components.ClientDeleteService;
-import com.dereekb.gae.client.api.model.crud.components.ClientUpdateService;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**

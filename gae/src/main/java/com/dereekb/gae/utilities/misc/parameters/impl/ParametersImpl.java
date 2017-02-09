@@ -6,7 +6,7 @@ import java.util.Map;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 
 /**
- * Simple {@link Parameters} implementation.
+ * {@link Parameters} implementation that wraps a map.
  * 
  * @author dereekb
  *
@@ -15,6 +15,10 @@ public class ParametersImpl
         implements Parameters {
 
 	private Map<String, String> parameters;
+
+	public ParametersImpl() {
+		this(new HashMap<String, String>());
+	}
 
 	public ParametersImpl(Map<String, String> parameters) {
 		this.setParameters(parameters);
@@ -31,6 +35,11 @@ public class ParametersImpl
 		}
 
 		this.parameters = parameters;
+	}
+
+	@Override
+	public String toString() {
+		return "ParametersImpl [parameters=" + this.parameters + "]";
 	}
 
 }

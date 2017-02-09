@@ -16,8 +16,10 @@ import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter;
+import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterService;
+import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
 /**
  * {@link CoreServiceTestContext} extension that adds access to a
@@ -36,6 +38,9 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 
 	@Autowired(required = false)
 	protected FilterChainProxy springSecurityFilterChain;
+
+	@Autowired(required = false)
+	protected AuthenticationParameterService authParameterService = AuthenticationParameterServiceImpl.SINGLETON;
 
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
@@ -99,8 +104,8 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	                                              String token)
 	        throws Exception {
 		if (token != null) {
-			request.header(LoginTokenAuthenticationFilter.DEFAULT_HEADER_STRING,
-			        LoginTokenAuthenticationFilter.buildTokenHeader(token));
+			KeyedEncodedParameter authParameter = this.authParameterService.buildAuthenticationParameter(token);
+			request.header(authParameter.getKeyValue(), authParameter.getParameterString());
 		}
 
 		return this.mockMvcPerform(request);
