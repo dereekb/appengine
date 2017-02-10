@@ -1,5 +1,6 @@
 package com.dereekb.gae.client.api.service.sender.security.impl;
 
+import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.ClientApiRequestSender;
@@ -72,14 +73,17 @@ public class SecuredClientApiRequestSenderImpl
 
 	// MARK: SecuredClientApiRequestSender
 	@Override
-	public ClientApiResponse sendRequest(ClientRequest request) {
+	public ClientApiResponse sendRequest(ClientRequest request)
+	        throws NoSecurityContextException,
+	            ClientConnectionException {
 		return this.sendRequest(request, this.defaultSecurity);
 	}
 
 	@Override
 	public ClientApiResponse sendRequest(ClientRequest request,
 	                                     ClientRequestSecurity security)
-	        throws NoSecurityContextException {
+	        throws NoSecurityContextException,
+	            ClientConnectionException {
 
 		if (security == null) {
 			throw new IllegalArgumentException("Security cannot be null.");

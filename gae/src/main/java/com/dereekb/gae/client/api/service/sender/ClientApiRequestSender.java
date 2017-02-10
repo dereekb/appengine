@@ -1,5 +1,6 @@
 package com.dereekb.gae.client.api.service.sender;
 
+import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 
@@ -18,6 +19,6 @@ public interface ClientApiRequestSender
 	 * @return {@link ClientApiResponse}. Never {@code null}.
 	 */
 	@Override
-	public ClientApiResponse sendRequest(ClientRequest request);
+	public ClientApiResponse sendRequest(ClientRequest request) throws ClientConnectionException;
 
 }

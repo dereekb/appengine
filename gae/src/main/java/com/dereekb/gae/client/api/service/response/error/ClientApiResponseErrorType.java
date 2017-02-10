@@ -1,5 +1,12 @@
 package com.dereekb.gae.client.api.service.response.error;
 
+/**
+ * High-level response errors that encapsulate/represent multiple different HTTP
+ * response codes.
+ * 
+ * @author dereekb
+ *
+ */
 public enum ClientApiResponseErrorType {
 
 	/**
@@ -19,7 +26,11 @@ public enum ClientApiResponseErrorType {
 
 	/**
 	 * Connection could not be made to the remote server.
+	 * 
+	 * @deprecated Connection errors are not proper response errors and have no
+	 *             HTTP status code associated with them.
 	 */
+	@Deprecated
 	CONNECTION_ERROR,
 
 	/**

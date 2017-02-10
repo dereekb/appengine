@@ -20,6 +20,8 @@ public class ErrorInfoImpl
 	private String title;
 	private String detail;
 
+	public ErrorInfoImpl() {}
+
 	public ErrorInfoImpl(String code) throws IllegalArgumentException {
 		this(code, null);
 	}

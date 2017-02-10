@@ -1,5 +1,6 @@
 package com.dereekb.gae.client.api.service.sender.security;
 
+import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.ClientApiRequestSender;
@@ -20,7 +21,9 @@ public interface SecuredClientApiRequestSender
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ClientApiResponse sendRequest(ClientRequest request);
+	public ClientApiResponse sendRequest(ClientRequest request)
+	        throws NoSecurityContextException,
+	            ClientConnectionException;
 
 	/**
 	 * Sends a synchronous HTTP request using the context described by the type.
@@ -32,9 +35,12 @@ public interface SecuredClientApiRequestSender
 	 * @return {@link ClientApiResponse}. Never {@code null}.
 	 * @throws NoSecurityContextException
 	 *             thrown if a token could not be accessed.
+	 * @throws ClientConnectionException
+	 *             thrown if the connection encounters an error.
 	 */
 	public ClientApiResponse sendRequest(ClientRequest request,
 	                                     ClientRequestSecurity sercurity)
-	        throws NoSecurityContextException;
+	        throws NoSecurityContextException,
+	            ClientConnectionException;
 
 }
