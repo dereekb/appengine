@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.service.response;
 
 /**
+ * {@link ClientApiResponse} extension that has serialized primary data.
  * 
  * @author dereekb
  *

@@ -16,9 +16,9 @@ public interface ClientResponseError {
 	/**
 	 * Returns the primary error type.
 	 * 
-	 * @return {@link ClientResponseErrorType}. Never {@code null}.
+	 * @return {@link ClientApiResponseErrorType}. Never {@code null}.
 	 */
-	public ClientResponseErrorType getErrorType();
+	public ClientApiResponseErrorType getErrorType();
 
 	/**
 	 * Returns a list of error info.
