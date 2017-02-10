@@ -116,7 +116,7 @@ public class ApiResponseImpl
 		this.addError(error);
 	}
 
-	public void setErrors(Collection<ApiResponseError> errors) {
+	public void setErrors(Collection<? extends ApiResponseError> errors) {
 		this.errors = null;
 		this.addErrors(errors);
 	}
@@ -126,7 +126,7 @@ public class ApiResponseImpl
 		this.errors.add(error);
 	}
 
-	public void addErrors(Collection<ApiResponseError> errors) {
+	public void addErrors(Collection<? extends ApiResponseError> errors) {
 		this.initializeErrors();
 		this.errors.addAll(errors);
 	}

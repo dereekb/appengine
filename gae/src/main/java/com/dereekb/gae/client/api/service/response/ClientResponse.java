@@ -3,7 +3,7 @@ package com.dereekb.gae.client.api.service.response;
 import com.dereekb.gae.client.api.service.sender.ClientRequestSender;
 
 /**
- * Response returned from a {@link ClientRequestSender}.
+ * Base response returned from a {@link ClientRequestSender}.
  * 
  * @author dereekb
  *
@@ -29,6 +29,6 @@ public interface ClientResponse {
 	 * 
 	 * @return {@link String}, or {@code null} if no data.
 	 */
-	public String getData();
+	public String getResponseData();
 
 }

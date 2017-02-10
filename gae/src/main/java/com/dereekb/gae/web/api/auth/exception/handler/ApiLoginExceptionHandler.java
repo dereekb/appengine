@@ -85,9 +85,7 @@ public class ApiLoginExceptionHandler {
 	public ApiResponseImpl handleException(NoSecurityContextException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-
-		error.setCode("MISSING_SECURITY_CONTEXT");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("MISSING_SECURITY_CONTEXT");
 		error.setTitle("Security context failure");
 
 		response.setError(error);

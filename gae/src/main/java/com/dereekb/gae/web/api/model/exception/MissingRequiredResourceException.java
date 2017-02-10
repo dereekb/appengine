@@ -53,9 +53,8 @@ public class MissingRequiredResourceException extends RuntimeException {
 	}
 
 	public static ApiResponseErrorImpl makeApiError(Collection<String> resources,
-	                                            String message) {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-		error.setCode(API_RESPONSE_ERROR_CODE);
+	                                                String message) {
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(API_RESPONSE_ERROR_CODE);
 		error.setTitle(API_RESPONSE_ERROR_TITLE);
 		error.setDetail(message);
 		error.setData(resources);

@@ -43,8 +43,7 @@ public class UnavailableTypesException extends RuntimeException
 
 	public static ApiResponseErrorImpl makeApiError(Set<String> types,
 	                                                String message) {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-		error.setCode(API_RESPONSE_ERROR_CODE);
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(API_RESPONSE_ERROR_CODE);
 		error.setTitle(API_RESPONSE_ERROR_TITLE);
 		error.setDetail(message);
 		error.setData(types);

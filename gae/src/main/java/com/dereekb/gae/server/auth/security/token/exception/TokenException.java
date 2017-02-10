@@ -33,9 +33,8 @@ public class TokenException extends AuthenticationException {
 		}
 
 		public ApiResponseErrorImpl makeResponseError() {
-			ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+			ApiResponseErrorImpl error = new ApiResponseErrorImpl(this.code);
 
-			error.setCode(this.code);
 			error.setTitle(this.title);
 
 			return error;

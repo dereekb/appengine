@@ -47,8 +47,7 @@ public class ApiExceptionHandler {
 		String causeName = cause.getClass().getSimpleName();
 		String causeMessage = cause.getMessage();
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-		error.setCode("REQUEST_READ_EXCEPTION");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("REQUEST_READ_EXCEPTION");
 		error.setTitle(causeName);
 		error.setDetail(causeMessage);
 
@@ -70,8 +69,7 @@ public class ApiExceptionHandler {
 		IllegalArgumentException cause = exception.getException();
 		String causeMessage = cause.getMessage();
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-		error.setCode("BAD_ARGUMENT_EXCEPTION");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("BAD_ARGUMENT_EXCEPTION");
 		error.setTitle("Bad Argument");
 		error.setDetail(causeMessage);
 
@@ -91,8 +89,7 @@ public class ApiExceptionHandler {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 		RuntimeException exception = e.getException();
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-		error.setCode("SERVER_EXCEPTION");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("SERVER_EXCEPTION");
 		error.setTitle(exception.getClass().getSimpleName());
 		error.setDetail(exception.getMessage());
 
@@ -108,8 +105,7 @@ public class ApiExceptionHandler {
 	public ApiResponse handleException(HttpRequestMethodNotSupportedException e) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-		error.setCode("METHOD_NOT_ALLOWED");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("METHOD_NOT_ALLOWED");
 		error.setTitle("Method Not Allowed");
 		error.setDetail(e.getMessage());
 
