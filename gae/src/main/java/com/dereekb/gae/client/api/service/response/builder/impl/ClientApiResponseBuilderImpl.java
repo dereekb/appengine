@@ -21,7 +21,29 @@ import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseE
 public class ClientApiResponseBuilderImpl
         implements ClientApiResponseBuilder {
 
-	private ClientApiResponseAccessorBuilder accessorBuilder = ClientApiResponseAccessorBuilderImpl.SINGLETON;
+	public static final ClientApiResponseBuilder SINGLETON = new ClientApiResponseBuilderImpl();
+
+	private ClientApiResponseAccessorBuilder accessorBuilder;
+
+	public ClientApiResponseBuilderImpl() {
+		this.setAccessorBuilder(ClientApiResponseAccessorBuilderImpl.SINGLETON);
+	}
+
+	public ClientApiResponseBuilderImpl(ClientApiResponseAccessorBuilder accessorBuilder) {
+		this.setAccessorBuilder(accessorBuilder);
+	}
+
+	public ClientApiResponseAccessorBuilder getAccessorBuilder() {
+		return this.accessorBuilder;
+	}
+
+	public void setAccessorBuilder(ClientApiResponseAccessorBuilder accessorBuilder) {
+		if (accessorBuilder == null) {
+			throw new IllegalArgumentException("accessorBuilder cannot be null.");
+		}
+
+		this.accessorBuilder = accessorBuilder;
+	}
 
 	// MARK: ClientApiRequestBuilder
 	@Override
@@ -39,11 +61,6 @@ public class ClientApiResponseBuilderImpl
 		public ClientApiResponseImpl(ClientResponse clientResponse) throws NotClientApiResponseException {
 			this.clientResponse = clientResponse;
 			this.apiResponseAccessor = ClientApiResponseBuilderImpl.this.accessorBuilder.buildAccessor(clientResponse);
-		}
-
-		@Override
-		public boolean isSuccessful() {
-			return this.clientResponse.isSuccessful();
 		}
 
 		@Override
@@ -83,6 +100,11 @@ public class ClientApiResponseBuilderImpl
 			        + this.apiResponseAccessor + "]";
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "ClientApiResponseBuilderImpl [accessorBuilder=" + this.accessorBuilder + "]";
 	}
 
 }

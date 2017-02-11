@@ -1,7 +1,6 @@
 package com.dereekb.gae.client.api.service.request;
 
 import com.dereekb.gae.client.api.service.sender.ClientRequestSender;
-import com.dereekb.gae.client.api.service.util.ClientRequestMethod;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 
 /**

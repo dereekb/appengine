@@ -83,6 +83,12 @@ public class ErrorInfoImpl
 		return this.detail;
 	}
 
+	// MARK: AlwaysKeyed
+	@Override
+	public String getKeyValue() {
+		return this.code;
+	}
+
 	@Override
 	public String toString() {
 		return "ErrorInfoImpl [code=" + this.code + ", title=" + this.title + ", detail=" + this.detail + "]";

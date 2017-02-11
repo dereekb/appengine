@@ -1,6 +1,4 @@
-package com.dereekb.gae.client.api.service.util;
-
-import com.dereekb.gae.client.api.service.request.ClientRequest;
+package com.dereekb.gae.client.api.service.request;
 
 /**
  * HTTP Request methods for a {@link ClientRequest}.

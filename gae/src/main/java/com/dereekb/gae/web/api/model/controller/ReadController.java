@@ -42,6 +42,9 @@ public class ReadController {
 
 	public static final String ATOMIC_PARAM = "atomic";
 	public static final String LOAD_RELATED_PARAM = "related";
+	public static final String KEYS_PARAM = "keys";
+
+	public static final long MAX_KEYS_PER_REQUEST = 40;
 
 	private boolean appendUnavailable = true;
 
@@ -90,7 +93,7 @@ public class ReadController {
 	/**
 	 * API Entry point for reading a value.
 	 *
-	 * @param ids
+	 * @param keys
 	 *            Identifiers to read. Max of 40. Never {@code null}.
 	 * @param atomic
 	 *            Whether or not to perform an atomic read request. False by
@@ -106,7 +109,7 @@ public class ReadController {
 	@ResponseBody
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = "application/json")
 	public ApiResponse readModels(@PathVariable("type") String modelType,
-	                              @Max(40) @RequestParam(required = true) List<String> ids,
+	                              @Max(MAX_KEYS_PER_REQUEST) @RequestParam(name = KEYS_PARAM, required = true) List<String> keys,
 	                              @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
 	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
 	                              @RequestParam(required = false) Set<String> relatedTypes) {
@@ -115,7 +118,7 @@ public class ReadController {
 		ReadControllerEntry entry = this.getEntryForType(modelType);
 
 		try {
-			List<ModelKey> modelKeys = this.keyTypeConverter.convertKeys(modelType, ids);
+			List<ModelKey> modelKeys = this.keyTypeConverter.convertKeys(modelType, keys);
 
 			ReadControllerEntryRequestImpl request = new ReadControllerEntryRequestImpl(modelType, atomic, modelKeys);
 			request.setLoadRelatedTypes(loadRelated);
@@ -147,8 +150,8 @@ public class ReadController {
 
 			if (missing.size() != 0) {
 				List<String> missingKeys = ModelKey.keysAsStrings(missing);
-				String message = "Some requested models are unavailable.";
-				ApiResponseErrorImpl error = MissingRequiredResourceException.makeApiError(missingKeys, message);
+				ApiResponseErrorImpl error = MissingRequiredResourceException.makeApiError(missingKeys,
+				        "Some requested models were unavailable.");
 				response.addError(error);
 			}
 		}

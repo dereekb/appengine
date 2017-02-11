@@ -1,5 +1,7 @@
 package com.dereekb.gae.client.api.service.response;
 
+import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+
 /**
  * {@link ClientApiResponse} extension that has serialized primary data.
  * 
@@ -11,6 +13,6 @@ package com.dereekb.gae.client.api.service.response;
 public interface SerializedClientApiResponse<T>
         extends ClientApiResponse {
 
-	public T getSerializedPrimaryData();
+	public T getSerializedPrimaryData() throws ClientResponseSerializationException;
 
 }

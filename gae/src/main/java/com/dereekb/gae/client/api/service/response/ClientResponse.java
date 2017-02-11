@@ -15,7 +15,7 @@ public interface ClientResponse {
 	 * 
 	 * @return {@code true} if successful.
 	 */
-	public boolean isSuccessful();
+	public boolean getSuccess();
 
 	/**
 	 * Returns the HTTP status code.

@@ -10,8 +10,11 @@ import com.dereekb.gae.utilities.misc.path.SimplePath;
  */
 public interface ClientRequestUrl {
 
-	public String getUrl();
-
-	public SimplePath getUrlPath();
+	/**
+	 * Returns the relative URL path.
+	 * 
+	 * @return {@link SimplePath}. Never {@code null}.
+	 */
+	public SimplePath getRelativeUrlPath();
 
 }

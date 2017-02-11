@@ -1,9 +1,9 @@
 package com.dereekb.gae.client.api.service.response.error;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dereekb.gae.client.api.service.response.ClientResponse;
-import com.dereekb.gae.utilities.web.error.ErrorInfo;
 
 /**
  * Error for a {@link ClientResponse}.
@@ -25,6 +25,13 @@ public interface ClientResponseError {
 	 * 
 	 * @return {@link List}. Never {@code null}, but may be empty.
 	 */
-	public List<ErrorInfo> getErrorInfo();
+	public List<ClientResponseErrorInfo> getErrorInfo();
+
+	/**
+	 * Returns a map of errors.
+	 * 
+	 * @return {@link Map}. Never {@code null}, but may be empty.
+	 */
+	public Map<String, ClientResponseErrorInfo> getErrorInfoMap();
 
 }

@@ -292,6 +292,16 @@ public final class ModelKey
 
 	private static final String SPLITTER = ",";
 
+	public static String keysAsString(Iterable<? extends UniqueModel> models) {
+		return ModelKey.keysAsString(models, SPLITTER);
+	}
+
+	public static String keysAsString(Iterable<? extends UniqueModel> models,
+	                                  String splitter) {
+		Set<ModelKey> keys = ModelKey.makeModelKeySet(models);
+		return ModelKey.keysAsString(keys, splitter);
+	}
+
 	public static String keysAsString(Set<ModelKey> keys) {
 		return keysAsString(keys, SPLITTER);
 	}

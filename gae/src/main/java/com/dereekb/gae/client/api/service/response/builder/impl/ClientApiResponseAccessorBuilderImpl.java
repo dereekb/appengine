@@ -11,6 +11,7 @@ import com.dereekb.gae.client.api.service.response.builder.ClientApiResponseAcce
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
+import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
@@ -220,10 +221,12 @@ public class ClientApiResponseAccessorBuilderImpl
 	private class JsonClientErrorsData
 	        implements ClientResponseError {
 
+		private static final String DATA_KEY = "data";
+
 		private final JsonNode errorsNode;
 		private final int statusCode;
 
-		private List<ErrorInfo> errors = null;
+		private List<ClientResponseErrorInfo> errors = null;
 
 		public JsonClientErrorsData(JsonNode errors, int statusCode) {
 			this.errorsNode = errors;
@@ -237,14 +240,20 @@ public class ClientApiResponseAccessorBuilderImpl
 		}
 
 		@Override
-		public List<ErrorInfo> getErrorInfo() {
+		public List<ClientResponseErrorInfo> getErrorInfo() {
 			if (this.errors == null) {
-				this.errors = new ArrayList<ErrorInfo>();
+				this.errors = new ArrayList<ClientResponseErrorInfo>();
 
 				try {
 					for (JsonNode node : this.errorsNode) {
-						ErrorInfo info = ClientApiResponseAccessorBuilderImpl.this.objectMapper.treeToValue(node,
-						        ErrorInfoImpl.class);
+						ClientResponseErrorInfoImpl info = ClientApiResponseAccessorBuilderImpl.this.objectMapper
+						        .treeToValue(node, ClientResponseErrorInfoImpl.class);
+
+						if (node.has(DATA_KEY)) {
+							JsonNode dataNode = node.get(DATA_KEY);
+							info.setErrorData(dataNode);
+						}
+
 						this.errors.add(info);
 					}
 				} catch (JsonProcessingException e) {
@@ -255,6 +264,32 @@ public class ClientApiResponseAccessorBuilderImpl
 			return this.errors;
 		}
 
+		@Override
+		public Map<String, ClientResponseErrorInfo> getErrorInfoMap() {
+			return KeyedUtility.toMap(this.getErrorInfo());
+		}
+
+	}
+
+	private class ClientResponseErrorInfoImpl extends ErrorInfoImpl
+	        implements ClientResponseErrorInfo {
+
+		private JsonNode errorData;
+
+		@Override
+		public JsonNode getErrorData() {
+			return this.errorData;
+		}
+
+		public void setErrorData(JsonNode errorData) {
+			this.errorData = errorData;
+		}
+
+	}
+
+	@Override
+	public String toString() {
+		return "ClientApiResponseAccessorBuilderImpl [objectMapper=" + this.objectMapper + "]";
 	}
 
 }

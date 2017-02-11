@@ -1,12 +1,17 @@
 package com.dereekb.gae.utilities.web.error;
 
+import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
+
 /**
  * Generic class for error info.
+ * <p>
+ * Is {@link AlwaysKeyed} by error code.
  * 
  * @author dereekb
  *
  */
-public interface ErrorInfo {
+public interface ErrorInfo
+        extends AlwaysKeyed<String> {
 
 	/**
 	 * Returns the error code.

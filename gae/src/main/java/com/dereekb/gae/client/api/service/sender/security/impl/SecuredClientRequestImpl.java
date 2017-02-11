@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestData;
+import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientRequest;
-import com.dereekb.gae.client.api.service.util.ClientRequestMethod;
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterBuilder;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;

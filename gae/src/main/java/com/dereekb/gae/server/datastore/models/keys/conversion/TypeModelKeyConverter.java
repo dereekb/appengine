@@ -13,9 +13,11 @@ public interface TypeModelKeyConverter {
 	public StringModelKeyConverter getConverterForType(String modelType) throws IllegalArgumentException;
 
 	public ModelKey convertKey(String modelType,
-	                           String value) throws IllegalArgumentException;
+	                           String value)
+	        throws IllegalArgumentException;
 
 	public List<ModelKey> convertKeys(String modelType,
-	                                  Collection<String> values) throws IllegalArgumentException;
+	                                  Collection<String> values)
+	        throws IllegalArgumentException;
 
 }

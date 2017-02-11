@@ -14,6 +14,7 @@ import com.dereekb.gae.client.api.service.response.builder.impl.ClientApiRespons
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
+import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException.TokenExceptionReason;
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
@@ -89,11 +90,10 @@ public class ClientApiResponseTest {
 		Assert.assertTrue(clientErrorType == ClientApiResponseErrorType.AUTHENTICATION_ERROR);
 		Assert.assertFalse(clientResponseError.getErrorInfo().isEmpty());
 
-		List<ErrorInfo> errorInfoList = clientResponseError.getErrorInfo();
+		List<ClientResponseErrorInfo> errorInfoList = clientResponseError.getErrorInfo();
 		ErrorInfo errorInfo = errorInfoList.get(0);
 
 		Assert.assertTrue(errorInfo.getErrorCode().equals(error.getErrorCode()));
-
 	}
 
 	@Test
