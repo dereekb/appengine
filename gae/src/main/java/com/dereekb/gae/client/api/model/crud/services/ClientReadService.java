@@ -4,7 +4,7 @@ import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
-import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -24,14 +24,14 @@ public interface ClientReadService<T extends UniqueModel> {
 	 *
 	 * @param request
 	 *            {@link ReadRequest}. Never {@code null}.
-	 * @return {@link ReadResponse}. Never {@code null}.
+	 * @return {@link SimpleReadResponse}. Never {@code null}.
 	 * 
 	 * @throws ClientAtomicOperationException
 	 *             thrown if one or more objects fail to be read.
 	 * @throws ClientRequestFailureException
 	 *             thrown if the request fails for any other reason.
 	 */
-	public ReadResponse<T> read(ReadRequest request)
+	public SimpleReadResponse<T> read(ReadRequest request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException;
 

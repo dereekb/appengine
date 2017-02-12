@@ -19,7 +19,8 @@ import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
  * @param <T>
  *            Template type
  */
-public final class UpdateResponseFailurePair<T> extends HandlerPair<T, AttributeUpdateFailure> {
+public final class UpdateResponseFailurePair<T> extends HandlerPair<T, AttributeUpdateFailure>
+        implements AlwaysKeyed<T> {
 
 	public UpdateResponseFailurePair(T template, AttributeUpdateFailure failure) {
 		super(template, failure);

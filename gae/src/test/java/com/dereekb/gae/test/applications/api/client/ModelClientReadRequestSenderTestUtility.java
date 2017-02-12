@@ -20,7 +20,7 @@ import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.ModelReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
-import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
@@ -45,10 +45,10 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 
 		ReadRequest readRequest = new ModelReadRequest(logins);
 
-		SerializedClientApiResponse<ReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
+		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
 		        security);
 
-		ReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
 		Collection<T> models = readResponse.getModels();
 
 		Assert.assertTrue(logins.size() == models.size());
@@ -73,14 +73,14 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 		ReadRequest readRequest = new KeyReadRequest(modelKeys, options);
 
-		SerializedClientApiResponse<ReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
+		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
 		        security);
 
-		ReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
 		Collection<T> models = readResponse.getModels();
 		Assert.assertTrue(logins.size() == models.size());
 
-		Collection<ModelKey> responseUnavailableKeys = readResponse.getUnavailable();
+		Collection<ModelKey> responseUnavailableKeys = readResponse.getFailed();
 		Assert.assertTrue(responseUnavailableKeys.size() == unavailableKeys.size());
 	}
 
@@ -99,8 +99,8 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		ReadRequest readRequest = new KeyReadRequest(unavailableKeys, options);
 
 		try {
-			SerializedClientApiResponse<ReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
-			        security);
+			SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender
+			        .sendRequest(readRequest, security);
 			response.getSerializedPrimaryData();
 			Assert.fail("Cannot serialize response data with request failure.");
 		} catch (ClientResponseSerializationException e) {

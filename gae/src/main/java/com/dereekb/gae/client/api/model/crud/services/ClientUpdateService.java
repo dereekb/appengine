@@ -4,7 +4,7 @@ import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.model.crud.services.components.UpdateService;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
-import com.dereekb.gae.model.crud.services.response.UpdateResponse;
+import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -24,13 +24,13 @@ public interface ClientUpdateService<T extends UniqueModel> {
 	 *
 	 * @param request
 	 *            {@link UpdateRequest}. Never {@code null}.
-	 * @return {@link UpdateResponse}. Never {@code null}.
+	 * @return {@link SimpleUpdateResponse}. Never {@code null}.
 	 * @throws ClientAtomicOperationException
 	 *             thrown if one or more objects fail to be updated.
 	 * @throws ClientRequestFailureException
 	 *             thrown if the request fails for any other reason.
 	 */
-	public UpdateResponse<T> update(UpdateRequest<T> request)
+	public SimpleUpdateResponse<T> update(UpdateRequest<T> request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException;
 

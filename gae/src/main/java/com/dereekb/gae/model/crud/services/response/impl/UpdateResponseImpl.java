@@ -1,9 +1,11 @@
 package com.dereekb.gae.model.crud.services.response.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -14,64 +16,56 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @param <T>
  *            model type
  */
-public class UpdateResponseImpl<T>
+public class UpdateResponseImpl<T extends UniqueModel> extends ModelServiceResponseImpl<T>
         implements UpdateResponse<T> {
 
-	private Collection<T> updatedModels;
-	private Collection<ModelKey> unavailable;
-	private Collection<UpdateResponseFailurePair<T>> failed;
+	private Collection<UpdateResponseFailurePair<T>> failurePairs;
 
-	public UpdateResponseImpl(Collection<T> updated,
+	public UpdateResponseImpl(Collection<T> models, Collection<UpdateResponseFailurePair<T>> failurePairs) {
+		super(models);
+		this.setFailurePairs(failurePairs);
+	}
+
+	public UpdateResponseImpl(Collection<T> models,
 	        Collection<ModelKey> unavailable,
-	        Collection<UpdateResponseFailurePair<T>> failed) {
-		this.setUpdatedModels(updated);
-		this.setUnavailable(unavailable);
-		this.setFailed(failed);
+	        Collection<UpdateResponseFailurePair<T>> failurePairs) {
+		super(models, unavailable);
+		this.setFailurePairs(failurePairs);
 	}
 
+	public UpdateResponseImpl(Collection<T> models,
+	        Collection<ModelKey> filtered,
+	        Collection<ModelKey> unavailable,
+	        Collection<UpdateResponseFailurePair<T>> failurePairs) {
+		super(models, filtered, unavailable);
+		this.setFailurePairs(failurePairs);
+	}
+
+	// MARK: UpdateResponse
 	@Override
-	public Collection<T> getUpdatedModels() {
-		return this.updatedModels;
+	public Collection<UpdateResponseFailurePair<T>> getFailurePairs() {
+		return this.failurePairs;
 	}
 
-	public void setUpdatedModels(Collection<T> updatedModels) {
-		if (updatedModels == null) {
-			throw new IllegalArgumentException("updatedModels cannot be null.");
+	public void setFailurePairs(Collection<UpdateResponseFailurePair<T>> failurePairs) {
+		if (failurePairs == null) {
+			throw new IllegalArgumentException("failurePairs cannot be null.");
 		}
 
-		this.updatedModels = updatedModels;
+		this.failurePairs = failurePairs;
 	}
 
+	// MARK: Override
 	@Override
-	public Collection<ModelKey> getUnavailable() {
-		return this.unavailable;
-	}
+	public List<ModelKey> getFailed() {
+		Collection<UpdateResponseFailurePair<T>> failedPairs = this.getFailurePairs();
 
-	public void setUnavailable(Collection<ModelKey> unavailable) {
-		if (unavailable == null) {
-			throw new IllegalArgumentException("unavailable cannot be null.");
-		}
+		List<ModelKey> failedPairsKeys = ModelKey.readModelKeysFromKeyed(failedPairs);
+		List<ModelKey> filteredAndUnavailable = super.getFailed();
 
-		this.unavailable = unavailable;
-	}
+		failedPairsKeys.addAll(filteredAndUnavailable);
 
-	@Override
-	public Collection<UpdateResponseFailurePair<T>> getFailed() {
-		return this.failed;
-	}
-
-	public void setFailed(Collection<UpdateResponseFailurePair<T>> failed) {
-		if (failed == null) {
-			throw new IllegalArgumentException("failed cannot be null.");
-		}
-
-		this.failed = failed;
-	}
-
-	@Override
-	public String toString() {
-		return "UpdateResponseImpl [updatedModels=" + this.updatedModels + ", unavailable=" + this.unavailable
-		        + ", failed=" + this.failed + "]";
+		return failedPairsKeys;
 	}
 
 }

@@ -15,6 +15,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelK
 import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
@@ -156,12 +158,29 @@ public final class ModelKey
 		return isEqual;
 	}
 
-	public static List<ModelKey> readModelKeys(Iterable<? extends UniqueModel> models) {
+	public static List<ModelKey> readModelKeysFromKeyed(Iterable<? extends AlwaysKeyed<? extends UniqueModel>> keyedModels) {
+		List<ModelKey> values = new ArrayList<>();
+
+		if (keyedModels != null) {
+			for (AlwaysKeyed<? extends UniqueModel> keyModel : keyedModels) {
+				UniqueModel model = keyModel.keyValue();
+				ModelKey key = model.keyValue();
+
+				if (key != null) {
+					values.add(key);
+				}
+			}
+		}
+
+		return values;
+	}
+
+	public static List<ModelKey> readModelKeys(Iterable<? extends Keyed<? extends ModelKey>> models) {
 		List<ModelKey> values = new ArrayList<>();
 
 		if (models != null) {
-			for (UniqueModel model : models) {
-				ModelKey key = model.getModelKey();
+			for (Keyed<? extends ModelKey> model : models) {
+				ModelKey key = model.keyValue();
 
 				if (key != null) {
 					values.add(key);

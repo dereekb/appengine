@@ -20,11 +20,10 @@ import com.dereekb.gae.client.api.service.response.exception.ClientResponseSeria
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
-import com.dereekb.gae.model.crud.services.response.UpdateResponse;
+import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.web.api.model.request.ApiUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <O>
  *            model dto type
  */
-public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelEditRequestSender<T, O, UpdateRequest<T>, UpdateResponse<T>>
+public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelEditRequestSender<T, O, UpdateRequest<T>, SimpleUpdateResponse<T>>
         implements ClientUpdateRequestSender<T>, ClientUpdateService<T> {
 
 	/**
@@ -63,11 +62,11 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 
 	// MARK: Client Update Request Sender
 	@Override
-	public UpdateResponse<T> update(UpdateRequest<T> request)
+	public SimpleUpdateResponse<T> update(UpdateRequest<T> request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
 
-		SerializedClientApiResponse<UpdateResponse<T>> clientResponse = this.sendRequest(request,
+		SerializedClientApiResponse<SimpleUpdateResponse<T>> clientResponse = this.sendRequest(request,
 		        this.getDefaultServiceSecurity());
 		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedPrimaryData();
@@ -100,27 +99,24 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	}
 
 	@Override
-	public UpdateResponse<T> serializeResponseData(ClientApiResponse response)
+	public SimpleUpdateResponse<T> serializeResponseData(ClientApiResponse response)
 	        throws ClientResponseSerializationException {
 		return new ClientUpdateResponseImpl(response);
 	}
 
-	private class ClientUpdateResponseImpl
-	        implements UpdateResponse<T> {
+	private class ClientUpdateResponseImpl extends AbstractClientServiceResponseImpl
+	        implements SimpleUpdateResponse<T> {
 
 		private List<T> serializedModels;
-		private List<ModelKey> serializedMissingKeys;
 		private List<UpdateResponseFailurePair<T>> serializedFailedTemplates;
 
-		private final ClientApiResponse response;
-
 		public ClientUpdateResponseImpl(ClientApiResponse response) {
-			this.response = response;
+			super(response);
 		}
 
 		// MARK: UpdateResponse
 		@Override
-		public Collection<T> getUpdatedModels() {
+		public Collection<T> getModels() {
 			if (this.serializedModels == null) {
 				ClientApiResponseData data = this.response.getPrimaryData();
 				this.serializedModels = ClientUpdateRequestSenderImpl.this.serializeModels(data);
@@ -130,17 +126,7 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		}
 
 		@Override
-		public Collection<ModelKey> getUnavailable() {
-			if (this.serializedMissingKeys == null) {
-				this.serializedMissingKeys = ClientUpdateRequestSenderImpl.this
-				        .serializeMissingResourceKeys(this.response);
-			}
-
-			return this.serializedMissingKeys;
-		}
-
-		@Override
-		public Collection<UpdateResponseFailurePair<T>> getFailed() {
+		public Collection<UpdateResponseFailurePair<T>> getFailurePairs() {
 			if (this.serializedFailedTemplates == null) {
 				this.serializedFailedTemplates = ClientUpdateRequestSenderImpl.this
 				        .serializeFailurePairs(this.response);

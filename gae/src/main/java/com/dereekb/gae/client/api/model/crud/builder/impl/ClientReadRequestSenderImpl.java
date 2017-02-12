@@ -1,7 +1,6 @@
 package com.dereekb.gae.client.api.model.crud.builder.impl;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
@@ -19,7 +18,7 @@ import com.dereekb.gae.client.api.service.response.exception.ClientResponseSeria
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
-import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -38,7 +37,7 @@ import com.dereekb.gae.web.api.model.controller.ReadController;
  *            model dto type
  * @see ReadController
  */
-public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelCrudRequestSender<T, O, ReadRequest, ReadResponse<T>>
+public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelCrudRequestSender<T, O, ReadRequest, SimpleReadResponse<T>>
         implements ClientReadRequestSender<T>, ClientReadService<T> {
 
 	/**
@@ -72,11 +71,11 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 
 	// MARK: ClientReadService
 	@Override
-	public ReadResponse<T> read(ReadRequest request)
+	public SimpleReadResponse<T> read(ReadRequest request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
 
-		SerializedClientApiResponse<ReadResponse<T>> clientResponse = this.sendRequest(request,
+		SerializedClientApiResponse<SimpleReadResponse<T>> clientResponse = this.sendRequest(request,
 		        this.getDefaultServiceSecurity());
 		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedPrimaryData();
@@ -104,21 +103,18 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	}
 
 	@Override
-	public ReadResponse<T> serializeResponseData(ClientApiResponse response)
+	public SimpleReadResponse<T> serializeResponseData(ClientApiResponse response)
 	        throws ClientResponseSerializationException {
 		return new ClientReadResponseImpl(response);
 	}
 
-	private class ClientReadResponseImpl
-	        implements ReadResponse<T> {
+	private class ClientReadResponseImpl extends AbstractClientServiceResponseImpl
+	        implements SimpleReadResponse<T> {
 
 		private List<T> serializedModels;
-		private List<ModelKey> serializedMissingKeys;
-
-		private final ClientApiResponse response;
 
 		public ClientReadResponseImpl(ClientApiResponse response) {
-			this.response = response;
+			super(response);
 		}
 
 		// MARK: ReadResponse
@@ -130,27 +126,6 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 			}
 
 			return this.serializedModels;
-		}
-
-		@Override
-		public Collection<ModelKey> getFiltered() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public Collection<ModelKey> getUnavailable() {
-			if (this.serializedMissingKeys == null) {
-				this.serializedMissingKeys = ClientReadRequestSenderImpl.this
-				        .serializeMissingResourceKeys(this.response);
-			}
-
-			return this.serializedMissingKeys;
-		}
-
-		@Override
-		public String toString() {
-			return "ClientReadResponseImpl [serializedModels=" + this.serializedModels + ", serializedMissingKeys="
-			        + this.serializedMissingKeys + ", response=" + this.response + "]";
 		}
 
 	}

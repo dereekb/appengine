@@ -158,7 +158,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 	@Override
 	public ApiResponse convert(UpdateResponse<T> response) {
 
-		Collection<T> updated = response.getUpdatedModels();
+		Collection<T> updated = response.getModels();
 
 		List<I> converted = this.converter.convertTo(updated);
 
@@ -167,7 +167,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 
 		apiResponse.setData(data);
 
-		Collection<UpdateResponseFailurePair<T>> failedPairs = response.getFailed();
+		Collection<UpdateResponseFailurePair<T>> failedPairs = response.getFailurePairs();
 		// TODO: Add error(s) for each failed pair.
 
 		for (UpdateResponseFailurePair<T> failedPair : failedPairs) {
@@ -186,7 +186,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 	@Override
 	public ApiResponse convert(DeleteResponse<T> response,
 	                           boolean includeModels) {
-		Collection<T> deleted = response.getDeletedModels();
+		Collection<T> deleted = response.getModels();
 
 		ApiResponseImpl apiResponse = new ApiResponseImpl();
 		ApiResponseDataImpl data = null;

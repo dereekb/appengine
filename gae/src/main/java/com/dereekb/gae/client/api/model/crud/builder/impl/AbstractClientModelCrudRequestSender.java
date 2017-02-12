@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.builder.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
+import com.dereekb.gae.model.crud.services.response.SimpleServiceResponse;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -269,6 +271,31 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 		}
 
 		return objectKeys;
+	}
+
+	// MARK: Utility Classes
+	protected class AbstractClientServiceResponseImpl
+	        implements SimpleServiceResponse {
+
+		private List<ModelKey> serializedUnavailableKeys;
+
+		protected final ClientApiResponse response;
+
+		public AbstractClientServiceResponseImpl(ClientApiResponse response) {
+			this.response = response;
+		}
+
+		// MARK: Get Failed
+		@Override
+		public Collection<ModelKey> getFailed() {
+			if (this.serializedUnavailableKeys == null) {
+				this.serializedUnavailableKeys = AbstractClientModelCrudRequestSender.this
+				        .serializeMissingResourceKeys(this.response);
+			}
+
+			return this.serializedUnavailableKeys;
+		}
+
 	}
 
 }
