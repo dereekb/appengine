@@ -21,14 +21,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  * @see <a href="http://jsonapi.org/format/">JSON API</a>
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_DEFAULT)
 public class ApiResponseImpl
         implements ApiResponse {
+
+	public static final boolean DEFAULT_SUCCESS = true;
 
 	/**
 	 * Whether or not the processed request was successful.
 	 */
-	protected Boolean success = true;
+	protected Boolean success = DEFAULT_SUCCESS;
 
 	/**
 	 * Primary data type.
@@ -43,6 +45,7 @@ public class ApiResponseImpl
 	/**
 	 * List of errors, if any are available.
 	 */
+	@JsonInclude(Include.NON_EMPTY)
 	private List<ApiResponseError> errors = new ArrayList<ApiResponseError>();
 
 	public ApiResponseImpl() {
@@ -55,7 +58,7 @@ public class ApiResponseImpl
 	}
 
 	public ApiResponseImpl(boolean success) {
-		this.success = success;
+		this.setSuccess(success);
 	}
 
 	@JsonInclude(Include.NON_DEFAULT)
@@ -63,6 +66,7 @@ public class ApiResponseImpl
 		return this.success;
 	}
 
+	@JsonInclude(Include.NON_DEFAULT)
 	public void setSuccess(Boolean success) {
 		this.success = success;
 	}
@@ -83,6 +87,7 @@ public class ApiResponseImpl
 		}
 	}
 
+	@JsonInclude(Include.NON_EMPTY)
 	public Map<String, ApiResponseData> getIncluded() {
 		this.initializeIncluded();
 		return this.included;
@@ -106,6 +111,7 @@ public class ApiResponseImpl
 		}
 	}
 
+	@JsonInclude(Include.NON_EMPTY)
 	public List<ApiResponseError> getErrors() {
 		this.initializeErrors();
 		return this.errors;

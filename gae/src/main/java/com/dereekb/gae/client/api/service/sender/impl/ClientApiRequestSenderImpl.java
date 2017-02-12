@@ -28,6 +28,7 @@ public class ClientApiRequestSenderImpl
 	}
 
 	public ClientApiRequestSenderImpl(ClientRequestSender sender, ClientApiResponseBuilder builder) {
+		this.setSender(sender);
 		this.setBuilder(builder);
 	}
 

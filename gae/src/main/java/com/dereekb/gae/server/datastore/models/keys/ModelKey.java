@@ -93,7 +93,7 @@ public final class ModelKey
 	}
 
 	@Override
-	public ModelKey getKeyValue() {
+	public ModelKey keyValue() {
 		return this;
 	}
 

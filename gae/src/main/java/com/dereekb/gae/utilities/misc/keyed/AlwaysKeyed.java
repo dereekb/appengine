@@ -17,6 +17,6 @@ public interface AlwaysKeyed<K>
 	 * @return key value. Never {@code null}.
 	 */
 	@Override
-	public K getKeyValue();
+	public K keyValue();
 
 }

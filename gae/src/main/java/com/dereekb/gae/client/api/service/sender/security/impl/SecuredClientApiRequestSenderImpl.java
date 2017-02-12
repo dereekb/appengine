@@ -32,6 +32,11 @@ public class SecuredClientApiRequestSenderImpl
 	private SystemLoginTokenFactory systemTokenFactory;
 
 	public SecuredClientApiRequestSenderImpl(ClientApiRequestSender sender,
+	        SystemLoginTokenFactory systemTokenFactory) {
+		this(sender, new ClientRequestSecurityImpl(), systemTokenFactory);
+	}
+
+	public SecuredClientApiRequestSenderImpl(ClientApiRequestSender sender,
 	        ClientRequestSecurity defaultSecurity,
 	        SystemLoginTokenFactory systemTokenFactory) {
 		this.setSender(sender);
@@ -45,7 +50,7 @@ public class SecuredClientApiRequestSenderImpl
 
 	public void setSender(ClientApiRequestSender sender) {
 		if (sender == null) {
-			throw new IllegalArgumentException("sender cannot be null.");
+			throw new IllegalArgumentException("Sender cannot be null.");
 		}
 
 		this.sender = sender;
@@ -57,7 +62,7 @@ public class SecuredClientApiRequestSenderImpl
 
 	public void setDefaultSecurity(ClientRequestSecurity defaultSecurity) {
 		if (defaultSecurity == null) {
-			throw new IllegalArgumentException("defaultSecurity cannot be null.");
+			throw new IllegalArgumentException("DefaultSecurity cannot be null.");
 		}
 
 		this.defaultSecurity = defaultSecurity;
@@ -69,7 +74,7 @@ public class SecuredClientApiRequestSenderImpl
 
 	public void setSystemTokenFactory(SystemLoginTokenFactory systemTokenFactory) {
 		if (systemTokenFactory == null) {
-			throw new IllegalArgumentException("systemTokenFactory cannot be null.");
+			throw new IllegalArgumentException("SystemTokenFactory cannot be null.");
 		}
 
 		this.systemTokenFactory = systemTokenFactory;

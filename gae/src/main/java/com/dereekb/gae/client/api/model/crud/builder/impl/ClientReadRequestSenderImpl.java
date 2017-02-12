@@ -62,7 +62,6 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 
 	private Class<O> dtoType;
 	private DirectionalConverter<O, T> dtoReader;
-
 	private TypeModelKeyConverter keyTypeConverter;
 
 	private String missingKeysErrorCode = MissingRequiredResourceException.API_RESPONSE_ERROR_CODE;

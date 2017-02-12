@@ -75,7 +75,7 @@ public class KeyedUtility {
 		Map<K, T> map = new HashMap<>();
 
 		for (T keyedValue : models) {
-			K key = keyedValue.getKeyValue();
+			K key = keyedValue.keyValue();
 
 			if (key == null) {
 				throw new NullKeyException();
@@ -102,10 +102,10 @@ public class KeyedUtility {
 		List<T> newParameters = new ArrayList<T>();
 
 		if (inputParameters != null) {
-			K replacementKey = replacement.getKeyValue();
+			K replacementKey = replacement.keyValue();
 
 			for (T parameter : inputParameters) {
-				K param = parameter.getKeyValue();
+				K param = parameter.keyValue();
 
 				// Filter out parameters with the same name.
 				if (param.equals(replacementKey) == false) {

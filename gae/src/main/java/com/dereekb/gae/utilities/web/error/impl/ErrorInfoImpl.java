@@ -2,6 +2,7 @@ package com.dereekb.gae.utilities.web.error.impl;
 
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  *
  */
 @JsonInclude(Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorInfoImpl
         implements ErrorInfo {
 
@@ -84,8 +86,9 @@ public class ErrorInfoImpl
 	}
 
 	// MARK: AlwaysKeyed
+	@JsonIgnore
 	@Override
-	public String getKeyValue() {
+	public String keyValue() {
 		return this.code;
 	}
 

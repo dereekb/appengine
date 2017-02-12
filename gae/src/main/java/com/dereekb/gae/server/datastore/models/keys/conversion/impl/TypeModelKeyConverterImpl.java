@@ -12,11 +12,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
- * Converter used for converting {@link String} identifiers to their
- * {@link ModelKey} value safely.
- * <p>
- * The map is case-insensitive.
- *
+ * {@link TypeModelKeyConverter} implementation.
+ * 
  * @author dereekb
  *
  */
@@ -68,7 +65,7 @@ public class TypeModelKeyConverterImpl
 
 	// MARK: TypeModelKeyConverter
 	@Override
-    public ModelKeyType typeForModelType(String modelType) {
+	public ModelKeyType typeForModelType(String modelType) {
 		ModelKeyType type = this.map.get(modelType);
 
 		if (type == null) {
@@ -80,20 +77,22 @@ public class TypeModelKeyConverterImpl
 
 	@Override
 	public StringModelKeyConverter getConverterForType(String modelType) throws IllegalArgumentException {
-	    ModelKeyType type = this.typeForModelType(modelType);
+		ModelKeyType type = this.typeForModelType(modelType);
 		return this.getDirectionalConverterForType(type);
-    }
+	}
 
 	@Override
-    public ModelKey convertKey(String modelType,
-	                           String value) throws IllegalArgumentException {
+	public ModelKey convertKey(String modelType,
+	                           String value)
+	        throws IllegalArgumentException {
 		StringModelKeyConverter converter = this.getConverterForType(modelType);
 		return converter.convertSingle(value);
 	}
 
 	@Override
-    public List<ModelKey> convertKeys(String modelType,
-	                                  Collection<String> values) throws IllegalArgumentException {
+	public List<ModelKey> convertKeys(String modelType,
+	                                  Collection<String> values)
+	        throws IllegalArgumentException {
 		StringModelKeyConverter converter = this.getConverterForType(modelType);
 		return converter.convertTo(values);
 	}

@@ -12,11 +12,12 @@ import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
+import com.dereekb.gae.client.api.service.response.error.impl.ClientResponseErrorInfoImpl;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
-import com.dereekb.gae.utilities.web.error.impl.ErrorInfoImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -122,7 +123,11 @@ public class ClientApiResponseAccessorBuilderImpl
 
 		@Override
 		public boolean getSuccess() {
-			return this.jsonNode.get(ClientApiResponseAccessorBuilderImpl.this.successKey).asBoolean(true);
+			if (this.jsonNode.has(ClientApiResponseAccessorBuilderImpl.this.successKey)) {
+				return this.jsonNode.get(ClientApiResponseAccessorBuilderImpl.this.successKey).asBoolean();
+			} else {
+				return ApiResponseImpl.DEFAULT_SUCCESS;
+			}
 		}
 
 		@Override
@@ -206,7 +211,7 @@ public class ClientApiResponseAccessorBuilderImpl
 
 		// MARK: Keyed
 		@Override
-		public String getKeyValue() {
+		public String keyValue() {
 			return this.getDataType();
 		}
 
@@ -267,22 +272,6 @@ public class ClientApiResponseAccessorBuilderImpl
 		@Override
 		public Map<String, ClientResponseErrorInfo> getErrorInfoMap() {
 			return KeyedUtility.toMap(this.getErrorInfo());
-		}
-
-	}
-
-	private class ClientResponseErrorInfoImpl extends ErrorInfoImpl
-	        implements ClientResponseErrorInfo {
-
-		private JsonNode errorData;
-
-		@Override
-		public JsonNode getErrorData() {
-			return this.errorData;
-		}
-
-		public void setErrorData(JsonNode errorData) {
-			this.errorData = errorData;
 		}
 
 	}

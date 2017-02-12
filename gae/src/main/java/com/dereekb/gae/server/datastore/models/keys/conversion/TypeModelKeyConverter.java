@@ -6,6 +6,15 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
+/**
+ * Converter used for converting {@link String} identifiers to their
+ * {@link ModelKey} value safely.
+ * <p>
+ * The map is case-insensitive.
+ *
+ * @author dereekb
+ *
+ */
 public interface TypeModelKeyConverter {
 
 	public ModelKeyType typeForModelType(String modelType);

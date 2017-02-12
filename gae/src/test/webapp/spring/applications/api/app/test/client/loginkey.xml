@@ -8,13 +8,15 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
-	<mvc:annotation-driven />
-
-	<import resource="api/api.xml" />
-	<import resource="model/model.xml" />
-	<import resource="server/server.xml" />
-	<import resource="taskqueue/taskqueue.xml" />
-	<import resource="test/test.xml" />
+	
+	<!-- Read Request Sender -->
+	<bean id="loginKeyClientReadRequestSender"
+		class="com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl">
+		<constructor-arg index="0" ref="loginKeyType" />
+		<constructor-arg index="1" ref="loginKeyDtoClass" />
+		<constructor-arg index="2" ref="loginKeyDataReader" />
+		<constructor-arg index="3" ref="modelKeyTypeConverter" />
+		<constructor-arg index="4" ref="securedClientRequestSender" />
+	</bean>
 
 </beans>

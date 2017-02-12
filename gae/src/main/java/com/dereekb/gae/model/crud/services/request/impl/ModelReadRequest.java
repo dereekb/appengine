@@ -8,12 +8,12 @@ import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
-
 /**
  * Implementation of {@link ReadRequest} that uses {@link UniqueModel} objects.
  *
  * @author dereekb
- *
+ * 
+ * @see KeyReadRequest
  */
 public final class ModelReadRequest extends AbstractReadRequestImpl {
 

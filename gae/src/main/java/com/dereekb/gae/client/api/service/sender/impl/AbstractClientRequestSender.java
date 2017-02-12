@@ -5,6 +5,7 @@ import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.response.ClientResponse;
 import com.dereekb.gae.client.api.service.sender.ClientRequestSender;
+import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 
 /**
@@ -36,9 +37,7 @@ public abstract class AbstractClientRequestSender
 		ClientRequestUrl requestUrl = request.getUrl();
 
 		SimplePath relativePath = requestUrl.getRelativeUrlPath();
-		String fullPath = this.baseUrl + relativePath.getPath();
-
-		// TODO: Watch hanging '/' in base URL.
+		String fullPath = PathUtility.buildPath(this.baseUrl, relativePath);
 
 		return this.sendRequest(fullPath, request);
 	}

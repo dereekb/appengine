@@ -29,6 +29,10 @@ public class ClientRequestSecurityImpl
 		this.setSecurityContextType(securityContextType);
 	}
 
+	public static ClientRequestSecurityImpl systemSecurity() {
+		return new ClientRequestSecurityImpl(ClientRequestSecurityContextType.SYSTEM);
+	}
+
 	// MARK: ClientRequestSecurity
 	@Override
 	public EncodedLoginToken getOverrideToken() {

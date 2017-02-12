@@ -105,7 +105,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	        throws Exception {
 		if (token != null) {
 			KeyedEncodedParameter authParameter = this.authParameterService.buildAuthenticationParameter(token);
-			request.header(authParameter.getKeyValue(), authParameter.getParameterString());
+			request.header(authParameter.keyValue(), authParameter.getParameterString());
 		}
 
 		return this.mockMvcPerform(request);

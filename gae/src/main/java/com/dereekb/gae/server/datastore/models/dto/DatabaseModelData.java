@@ -143,7 +143,7 @@ public abstract class DatabaseModelData
 	}
 
 	@Override
-	public ModelKey getKeyValue() {
+	public ModelKey keyValue() {
 		return this.getModelKey();
 	}
 
