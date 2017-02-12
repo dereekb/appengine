@@ -13,6 +13,14 @@ import com.dereekb.gae.client.api.service.response.exception.ClientResponseSeria
 public interface SerializedClientApiResponse<T>
         extends ClientApiResponse {
 
+	/**
+	 * Returns the serialized primary response data.
+	 * 
+	 * @return Serialized data. {@code null} if allowed by implementation.
+	 * @throws ClientResponseSerializationException
+	 *             thrown if there is an issue with serializing the results, or
+	 *             if the request failed.
+	 */
 	public T getSerializedPrimaryData() throws ClientResponseSerializationException;
 
 }

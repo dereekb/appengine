@@ -25,6 +25,12 @@ public enum ClientApiResponseErrorType {
 	BAD_REQUEST_ERROR,
 
 	/**
+	 * The request was not malformed, but another error occured while
+	 * processing.
+	 */
+	OTHER_BAD_RESPONSE_ERROR,
+
+	/**
 	 * Connection could not be made to the remote server.
 	 * 
 	 * @deprecated Connection errors are not proper response errors and have no
@@ -46,8 +52,10 @@ public enum ClientApiResponseErrorType {
 		} else if (statusCode >= 400) {
 			if (statusCode == 401 || statusCode == 403) {
 				errorType = ClientApiResponseErrorType.AUTHENTICATION_ERROR;
-			} else {
+			} else if (statusCode == 400) {
 				errorType = ClientApiResponseErrorType.BAD_REQUEST_ERROR;
+			} else {
+				errorType = ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR;
 			}
 		} else if (statusCode >= 200) {
 			errorType = ClientApiResponseErrorType.NO_ERROR;

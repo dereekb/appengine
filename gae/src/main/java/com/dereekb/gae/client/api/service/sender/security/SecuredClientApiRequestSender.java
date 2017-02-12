@@ -1,6 +1,8 @@
 package com.dereekb.gae.client.api.service.sender.security;
 
+import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
+import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.ClientApiRequestSender;
@@ -16,14 +18,19 @@ public interface SecuredClientApiRequestSender
         extends ClientApiRequestSender {
 
 	/**
-	 * Sends the request using the default security configuration.
-	 * 
 	 * {@inheritDoc}
+	 * 
+	 * @throws NoSecurityContextException
+	 *             thrown if a token could not be accessed.
+	 * @throws ClientAuthenticationException
+	 *             thrown if the request fails due to authentication reasons.
 	 */
 	@Override
 	public ClientApiResponse sendRequest(ClientRequest request)
 	        throws NoSecurityContextException,
-	            ClientConnectionException;
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException;
 
 	/**
 	 * Sends a synchronous HTTP request using the context described by the type.
@@ -37,10 +44,14 @@ public interface SecuredClientApiRequestSender
 	 *             thrown if a token could not be accessed.
 	 * @throws ClientConnectionException
 	 *             thrown if the connection encounters an error.
+	 * @throws ClientAuthenticationException
+	 *             thrown if the request fails due to authentication reasons.
 	 */
 	public ClientApiResponse sendRequest(ClientRequest request,
 	                                     ClientRequestSecurity sercurity)
 	        throws NoSecurityContextException,
-	            ClientConnectionException;
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException;
 
 }

@@ -1,8 +1,12 @@
 package com.dereekb.gae.client.api.service.sender.security.impl;
 
+import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
+import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
+import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
+import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.sender.ClientApiRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurityContextType;
@@ -75,7 +79,9 @@ public class SecuredClientApiRequestSenderImpl
 	@Override
 	public ClientApiResponse sendRequest(ClientRequest request)
 	        throws NoSecurityContextException,
-	            ClientConnectionException {
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
 		return this.sendRequest(request, this.defaultSecurity);
 	}
 
@@ -83,14 +89,28 @@ public class SecuredClientApiRequestSenderImpl
 	public ClientApiResponse sendRequest(ClientRequest request,
 	                                     ClientRequestSecurity security)
 	        throws NoSecurityContextException,
-	            ClientConnectionException {
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
 
 		if (security == null) {
 			throw new IllegalArgumentException("Security cannot be null.");
 		}
 
 		ClientRequest securedRequest = this.buildSecuredRequest(request, security);
-		return this.sender.sendRequest(securedRequest);
+		ClientApiResponse response = this.sender.sendRequest(securedRequest);
+
+		this.assertNoAuthenticationErrors(response);
+
+		return response;
+	}
+
+	private void assertNoAuthenticationErrors(ClientApiResponse response) throws ClientAuthenticationException {
+		ClientResponseError error = response.getError();
+
+		if (error.getErrorType() == ClientApiResponseErrorType.AUTHENTICATION_ERROR) {
+			throw new ClientAuthenticationException(response);
+		}
 	}
 
 	// MARK: Internal

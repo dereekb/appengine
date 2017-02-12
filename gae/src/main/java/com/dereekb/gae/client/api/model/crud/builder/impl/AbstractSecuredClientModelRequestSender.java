@@ -1,6 +1,8 @@
 package com.dereekb.gae.client.api.model.crud.builder.impl;
 
+import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
+import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.SecuredClientModelRequestSender;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
@@ -77,13 +79,16 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	public SerializedClientApiResponse<S> sendRequest(R request,
 	                                                  ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
-	            ClientConnectionException {
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
 
 		ClientRequest clientRequest = this.buildClientRequest(request);
 		ClientApiResponse clientResponse = this.requestSender.sendRequest(clientRequest, security);
 		return new SerializedClientApiResponseImpl(clientResponse);
 	}
 
+	// MARK: Abstract
 	/**
 	 * Builds a client request from the input data.
 	 * 
@@ -99,6 +104,8 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	 * @param response
 	 *            {@link ClientApiResponse}. Never {@code null}.
 	 * @return Serialized response data. Never {@code null}.
+	 * @throws ClientResponseSerializationException
+	 *             if the serialization fails.
 	 */
 	public abstract S serializeResponseData(ClientApiResponse response) throws ClientResponseSerializationException;
 
@@ -121,10 +128,17 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 		@Override
 		public S getSerializedPrimaryData() throws ClientResponseSerializationException {
 			if (this.serializedData == null) {
+				this.assertResponseSuccess();
 				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.response);
 			}
 
 			return this.serializedData;
+		}
+
+		protected void assertResponseSuccess() throws ClientResponseSerializationException {
+			if (this.response.getSuccess() == false) {
+				throw new ClientResponseSerializationException("Request was not successful.");
+			}
 		}
 
 	}

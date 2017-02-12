@@ -1,5 +1,7 @@
 package com.dereekb.gae.client.api.exception;
 
+import com.dereekb.gae.client.api.service.response.ClientResponse;
+
 /**
  * {@link ClientRequestFailureException} thrown when a client request fails due
  * to authentication reasons.
@@ -30,6 +32,10 @@ public class ClientAuthenticationException extends ClientRequestFailureException
 
 	public ClientAuthenticationException(Throwable cause) {
 		super(cause);
+	}
+
+	public ClientAuthenticationException(ClientResponse response) {
+		super(response);
 	}
 
 }

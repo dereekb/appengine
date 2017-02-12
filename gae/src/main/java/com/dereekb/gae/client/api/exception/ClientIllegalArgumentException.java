@@ -1,5 +1,7 @@
 package com.dereekb.gae.client.api.exception;
 
+import com.dereekb.gae.client.api.service.response.ClientResponse;
+
 /**
  * {@link ClientRequestFailureException} thrown when a client request fails due
  * to the request containing illegal arguments.
@@ -30,6 +32,10 @@ public class ClientIllegalArgumentException extends ClientRequestFailureExceptio
 
 	public ClientIllegalArgumentException(Throwable cause) {
 		super(cause);
+	}
+
+	public ClientIllegalArgumentException(ClientResponse response) {
+		super(response);
 	}
 
 }

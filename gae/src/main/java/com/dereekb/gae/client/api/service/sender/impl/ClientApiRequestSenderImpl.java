@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.service.sender.impl;
 
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
+import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.ClientResponse;
@@ -58,7 +59,8 @@ public class ClientApiRequestSenderImpl
 	@Override
 	public ClientApiResponse sendRequest(ClientRequest request)
 	        throws NotClientApiResponseException,
-	            ClientConnectionException {
+	            ClientConnectionException,
+	            ClientRequestFailureException {
 		ClientResponse response = this.sender.sendRequest(request);
 		return this.builder.buildApiResponse(response);
 	}

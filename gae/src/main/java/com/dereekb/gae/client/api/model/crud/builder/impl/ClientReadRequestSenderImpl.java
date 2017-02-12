@@ -16,7 +16,9 @@ import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestUrlImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
+import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
+import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
@@ -60,7 +62,7 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 
 	private Class<O> dtoType;
 	private DirectionalConverter<O, T> dtoReader;
-	
+
 	private TypeModelKeyConverter keyTypeConverter;
 
 	private String missingKeysErrorCode = MissingRequiredResourceException.API_RESPONSE_ERROR_CODE;
@@ -162,10 +164,28 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	public ReadResponse<T> read(ReadRequest request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
-		
-		ClientRequest clientRequest = this.sendRequest(request, )
-		
-		return null;
+
+		SerializedClientApiResponse<ReadResponse<T>> clientResponse = this.sendRequest(request,
+		        this.getDefaultServiceSecurity());
+
+		if (clientResponse.getSuccess() == false) {
+			this.assertNoAtomicOperationError(clientResponse);
+			throw new ClientRequestFailureException(clientResponse);
+		}
+
+		return clientResponse.getSerializedPrimaryData();
+	}
+
+	public void assertNoAtomicOperationError(ClientApiResponse clientResponse) throws ClientAtomicOperationException {
+		ClientResponseError error = clientResponse.getError();
+
+		if (error.getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR) {
+			List<ModelKey> missingKeys = this.serializeMissingKeys(clientResponse);
+
+			if (missingKeys.isEmpty() == false) {
+				throw new ClientAtomicOperationException(missingKeys, clientResponse);
+			}
+		}
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender
