@@ -9,25 +9,33 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
 
-public class ServiceResponse<T> {
+/**
+ * Abstract service response.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
+public class AbstractServiceResponse<T> {
 
 	protected Collection<T> models;
 	protected Collection<ModelKey> filtered;
 	protected Collection<ModelKey> unavailable;
 
-	public ServiceResponse(ServiceResponse<T> response) {
+	public AbstractServiceResponse(AbstractServiceResponse<T> response) {
 		this(response.models, response.filtered, response.unavailable);
 	}
 
-	public ServiceResponse(Collection<T> models) {
+	public AbstractServiceResponse(Collection<T> models) {
 		this(models, null, null);
 	}
 
-	public ServiceResponse(Collection<T> models, Collection<ModelKey> unavailable) {
+	public AbstractServiceResponse(Collection<T> models, Collection<ModelKey> unavailable) {
 		this(models, null, unavailable);
 	}
 
-	public ServiceResponse(Collection<T> models, Collection<ModelKey> filtered, Collection<ModelKey> unavailable) {
+	public AbstractServiceResponse(Collection<T> models, Collection<ModelKey> filtered, Collection<ModelKey> unavailable) {
 		this.setModels(models);
 		this.setFiltered(filtered);
 		this.setUnavailable(unavailable);
@@ -71,16 +79,16 @@ public class ServiceResponse<T> {
 	}
 
 	/**
-	 * Generates a new {@link ServiceResponse} using a set of
+	 * Generates a new {@link AbstractServiceResponse} using a set of
 	 * {@link ResultsPair} values.
 	 *
 	 * The pairs are iterated over and are put into three lists used to
-	 * initialize the {@link ServiceResponse}.
+	 * initialize the {@link AbstractServiceResponse}.
 	 *
 	 * @param pairs
 	 * @return
 	 */
-	public static <T, P extends ResultsPair<ModelKey, T>> ServiceResponse<T> responseForPairs(Iterable<P> pairs) {
+	public static <T, P extends ResultsPair<ModelKey, T>> AbstractServiceResponse<T> responseForPairs(Iterable<P> pairs) {
 		List<T> models = new ArrayList<T>();
 		List<ModelKey> filtered = new ArrayList<ModelKey>();
 		List<ModelKey> unavailable = new ArrayList<ModelKey>();
@@ -103,7 +111,7 @@ public class ServiceResponse<T> {
 			}
 		}
 
-		ServiceResponse<T> response = new ServiceResponse<T>(models, filtered, unavailable);
+		AbstractServiceResponse<T> response = new AbstractServiceResponse<T>(models, filtered, unavailable);
 		return response;
 	}
 }

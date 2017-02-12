@@ -18,9 +18,11 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  * @author dereekb
  *
  * @param <T>
- *            Internal Model
+ *            model type
  * @param <I>
- *            Data Transfer Model
+ *            model dto type
+ * 
+ * @see EditModelController
  */
 public interface EditModelControllerConversionDelegate<T extends UniqueModel, I> {
 

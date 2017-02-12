@@ -6,7 +6,6 @@ import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
-
 /**
  * Default implementation of {@link DeleteResponse}.
  *
@@ -14,7 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @param <T>
  */
-public final class DeleteResponseImpl<T extends UniqueModel> extends ServiceResponse<T>
+public final class DeleteResponseImpl<T extends UniqueModel> extends AbstractServiceResponse<T>
         implements DeleteResponse<T> {
 
 	public DeleteResponseImpl(Collection<T> models) {
@@ -29,10 +28,11 @@ public final class DeleteResponseImpl<T extends UniqueModel> extends ServiceResp
 		super(models, filtered, unavailable);
 	}
 
-	public DeleteResponseImpl(ServiceResponse<T> response) {
+	public DeleteResponseImpl(AbstractServiceResponse<T> response) {
 		super(response);
 	}
 
+	// MARK: DeleteResponse
 	@Override
 	public Collection<T> getDeletedModels() {
 		return this.models;

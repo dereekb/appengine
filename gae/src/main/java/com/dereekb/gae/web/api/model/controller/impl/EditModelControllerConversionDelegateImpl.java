@@ -15,12 +15,14 @@ import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
+import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
+import com.dereekb.gae.model.crud.util.AttributeUpdateFailure;
+import com.dereekb.gae.model.crud.util.impl.AttributeUpdateFailureImpl;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.web.api.model.controller.EditModelController;
 import com.dereekb.gae.web.api.model.controller.EditModelControllerConversionDelegate;
 import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
 import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
@@ -32,30 +34,69 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
- * Default implementation of {@link EditModelControllerConversionDelegate}.
+ * {@link EditModelControllerConversionDelegate} implementation.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  * @param <I>
- * @see {@link EditModelController}
+ *            model dto type
+ * 
  */
 public final class EditModelControllerConversionDelegateImpl<T extends UniqueModel, I>
         implements EditModelControllerConversionDelegate<T, I> {
 
-	private final String type;
+	private String type;
 
-	private final DirectionalConverter<String, ModelKey> keyReader;
-	private final BidirectionalConverter<T, I> converter;
+	private DirectionalConverter<String, ModelKey> keyReader;
+	private BidirectionalConverter<T, I> converter;
 
 	public EditModelControllerConversionDelegateImpl(String type,
 	        DirectionalConverter<String, ModelKey> keyReader,
-	        BidirectionalConverter<T, I> converter) {
+	        BidirectionalConverter<T, I> converter) throws IllegalArgumentException {
+		this.setType(type);
+		this.setKeyReader(keyReader);
+		this.setConverter(converter);
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) throws IllegalArgumentException {
+		if (type == null) {
+			throw new IllegalArgumentException("Type cannot be null.");
+		}
+
 		this.type = type;
+	}
+
+	public DirectionalConverter<String, ModelKey> getKeyReader() {
+		return this.keyReader;
+	}
+
+	public void setKeyReader(DirectionalConverter<String, ModelKey> keyReader) throws IllegalArgumentException {
+		if (keyReader == null) {
+			throw new IllegalArgumentException("KeyReader cannot be null.");
+		}
+
 		this.keyReader = keyReader;
+	}
+
+	public BidirectionalConverter<T, I> getConverter() {
+		return this.converter;
+	}
+
+	public void setConverter(BidirectionalConverter<T, I> converter) throws IllegalArgumentException {
+		if (converter == null) {
+			throw new IllegalArgumentException("Converter cannot be null.");
+		}
+
 		this.converter = converter;
 	}
 
+	// MARK: EditModelControllerConversionDelegate
 	@Override
 	public CreateRequest<T> convert(ApiCreateRequest<I> request) throws RequestArgumentException {
 		List<T> templates = this.convertRequestTemplateData(request);
@@ -118,12 +159,21 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 	public ApiResponse convert(UpdateResponse<T> response) {
 
 		Collection<T> updated = response.getUpdatedModels();
+
 		List<I> converted = this.converter.convertTo(updated);
 
 		ApiResponseImpl apiResponse = new ApiResponseImpl();
 		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
 
 		apiResponse.setData(data);
+
+		Collection<UpdateResponseFailurePair<T>> failedPairs = response.getFailed();
+		// TODO: Add error(s) for each failed pair.
+
+		for (UpdateResponseFailurePair<T> failedPair : failedPairs) {
+			AttributeUpdateFailure failure = failedPair.getFailure();
+			AttributeUpdateFailure copy = new AttributeUpdateFailureImpl(failure);
+		}
 
 		return apiResponse;
 	}
@@ -139,7 +189,6 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		Collection<T> deleted = response.getDeletedModels();
 
 		ApiResponseImpl apiResponse = new ApiResponseImpl();
-
 		ApiResponseDataImpl data = null;
 
 		if (includeModels) {

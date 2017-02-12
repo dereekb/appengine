@@ -27,9 +27,13 @@ public interface ReadResponse<T> {
 	public Collection<ModelKey> getFiltered();
 
 	/**
-	 * @return Returns a collection of {@link ModelKey} instances for elements
-	 *         that were not available. Should not include models returned from
-	 *         getFiltered().
+	 * Returns a collection of {@link ModelKey} instances for elements
+	 * that were not available.
+	 * 
+	 * Should not include models returned from
+	 * getFiltered().
+	 * 
+	 * @return
 	 */
 	public Collection<ModelKey> getUnavailable();
 

@@ -20,6 +20,7 @@ import com.dereekb.gae.model.crud.task.UpdateTask;
 import com.dereekb.gae.model.crud.task.config.UpdateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.UpdateTaskConfigImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.task.IterableTask;
@@ -64,7 +65,9 @@ public class UpdateServiceImpl<T extends UniqueModel>
 
 	// MARK: UpdateService
 	@Override
-	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException, IllegalArgumentException {
+	public UpdateResponse<T> update(UpdateRequest<T> request)
+	        throws AtomicOperationException,
+	            IllegalArgumentException {
 		UpdateResponse<T> updateResponse = null;
 
 		UpdateRequestOptions options = request.getOptions();
@@ -93,7 +96,9 @@ public class UpdateServiceImpl<T extends UniqueModel>
 			List<UpdatePair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
 			List<UpdateResponseFailurePair<T>> failurePairs = UpdateResponseFailurePair.createFailurePairs(errorPairs);
 
-			updateResponse = new UpdateResponseImpl<T>(updated, failurePairs);
+			Collection<ModelKey> unavailable = readResponse.getUnavailable();
+
+			updateResponse = new UpdateResponseImpl<T>(updated, unavailable, failurePairs);
 		} catch (AtomicOperationException e) {
 			throw e;
 		} catch (Exception e) {

@@ -12,7 +12,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @param <T>
  */
-public final class ReadResponseImpl<T> extends ServiceResponse<T>
+public final class ReadResponseImpl<T> extends AbstractServiceResponse<T>
         implements ReadResponse<T> {
 
 	public ReadResponseImpl(Collection<T> models) {
@@ -27,7 +27,7 @@ public final class ReadResponseImpl<T> extends ServiceResponse<T>
 		super(models, filtered, unavailable);
 	}
 
-	public ReadResponseImpl(ServiceResponse<T> response) {
+	public ReadResponseImpl(AbstractServiceResponse<T> response) {
 		super(response);
 	}
 
