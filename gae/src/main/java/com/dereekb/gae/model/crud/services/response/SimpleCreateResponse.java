@@ -3,11 +3,11 @@ package com.dereekb.gae.model.crud.services.response;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.components.CreateService;
-import com.dereekb.gae.model.crud.services.response.pair.InvalidCreateTemplatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 
 /**
- * Create response for a {@link CreateService}.
+ * Simple create response for a {@link CreateService}.
  * 
  * @author dereekb
  *
@@ -16,8 +16,14 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * 
  * @see CreateRequest
  */
-public interface CreateResponse<T extends UniqueModel>
-        extends SimpleCreateResponse<T> {
+public interface SimpleCreateResponse<T extends UniqueModel> {
+
+	/**
+	 * Returns the collection of models that were created.
+	 * 
+	 * @return {@link Collection}. Never {@code null}.
+	 */
+	public Collection<T> getCreatedModels();
 
 	/**
 	 * Returns a collection of keyed failures for templates, keyed by the index
@@ -25,7 +31,6 @@ public interface CreateResponse<T extends UniqueModel>
 	 * 
 	 * @return {@link Collection}. Never {@code null}.
 	 */
-	@Override
-	public Collection<? extends InvalidCreateTemplatePair<T>> getInvalidTemplates();
+	public Collection<? extends KeyedInvalidAttribute> getInvalidTemplates();
 
 }

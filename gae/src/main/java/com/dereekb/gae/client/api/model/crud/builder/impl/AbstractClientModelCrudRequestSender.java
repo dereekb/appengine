@@ -199,6 +199,11 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 		return this.dtoConverter.convertFrom(dtos);
 	}
 
+	public List<T> serializeModels(JsonNode jsonData) throws ClientResponseSerializationException {
+		List<O> dtos = this.serializeModelDtos(jsonData);
+		return this.dtoConverter.convertFrom(dtos);
+	}
+
 	/**
 	 * Serializes model DTOs from the input data.
 	 * 
@@ -209,10 +214,12 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	 *             if the serialization fails.
 	 */
 	public List<O> serializeModelDtos(ClientApiResponseData data) throws ClientResponseSerializationException {
-		ObjectMapper mapper = this.getObjectMapper();
-
 		JsonNode jsonData = data.getDataJsonNode();
+		return this.serializeModelDtos(jsonData);
+	}
 
+	public List<O> serializeModelDtos(JsonNode jsonData) throws ClientResponseSerializationException {
+		ObjectMapper mapper = this.getObjectMapper();
 		List<O> dtoList = new ArrayList<O>();
 
 		try {

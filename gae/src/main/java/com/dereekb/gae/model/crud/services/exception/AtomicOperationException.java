@@ -24,6 +24,11 @@ public final class AtomicOperationException extends RuntimeException {
 	private final AtomicOperationExceptionReason reason;
 	private Exception exception;
 
+	public AtomicOperationException() {
+		this.exception = null;
+		this.reason = AtomicOperationExceptionReason.ATOMIC_FAILURE;
+	}
+
 	public AtomicOperationException(UniqueModel failed, AtomicOperationExceptionReason reason) {
 		this(SingleItem.withValue(failed), reason);
 	}

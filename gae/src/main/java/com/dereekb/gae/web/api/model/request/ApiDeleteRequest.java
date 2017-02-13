@@ -2,20 +2,21 @@ package com.dereekb.gae.web.api.model.request;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
+import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.DeleteRequestOptionsImpl;
-import com.dereekb.gae.web.api.shared.request.ApiRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for deleting one or more elements via their identifiers.
  *
  * @author dereekb
  */
-public final class ApiDeleteRequest extends ApiRequest<String> {
-
-	@Valid
-	private DeleteRequestOptionsImpl options;
+@JsonInclude(Include.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public final class ApiDeleteRequest extends ApiEditRequest<String> {
 
 	private boolean returnModels = false;
 
@@ -27,12 +28,14 @@ public final class ApiDeleteRequest extends ApiRequest<String> {
 		super(ids);
 	}
 
-	public DeleteRequestOptionsImpl getOptions() {
-		return this.options;
+	@JsonIgnore
+	public DeleteRequestOptions getOptions() {
+		return new DeleteRequestOptionsImpl();
 	}
 
-	public void setOptions(DeleteRequestOptionsImpl options) {
-		this.options = options;
+	@JsonIgnore
+	public void setRequestOptions(DeleteRequestOptions options) {
+		// Do nothing...
 	}
 
 	public boolean getReturnModels() {
@@ -45,7 +48,8 @@ public final class ApiDeleteRequest extends ApiRequest<String> {
 
 	@Override
 	public String toString() {
-		return "ApiDeleteRequest [options=" + this.options + ", data=" + this.data + "]";
+		return "ApiDeleteRequest [returnModels=" + this.returnModels + ", atomic=" + this.atomic + ", data=" + this.data
+		        + "]";
 	}
 
 }

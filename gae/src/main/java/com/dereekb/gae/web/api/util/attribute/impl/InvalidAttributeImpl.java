@@ -10,22 +10,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AttributeUpdateFailureImpl
+public class InvalidAttributeImpl
         implements AttributeUpdateFailure {
 
 	private String attribute;
 	private String value;
 	private String detail;
 
-	public AttributeUpdateFailureImpl(String attribute, String value) {
+	public InvalidAttributeImpl(String attribute, String value) {
 		this(attribute, value, null);
 	}
 
-	public AttributeUpdateFailureImpl(AttributeUpdateFailure failure) {
+	public InvalidAttributeImpl(AttributeUpdateFailure failure) {
 		this(failure.getAttribute(), failure.getValue(), failure.getDetail());
 	}
 
-	public AttributeUpdateFailureImpl(String attribute, String value, String detail) {
+	public InvalidAttributeImpl(String attribute, String value, String detail) {
 		this.setAttribute(attribute);
 		this.setValue(value);
 		this.setDetail(detail);

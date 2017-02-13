@@ -35,11 +35,6 @@ public class HandlerPair<L, R> {
 		return this.object;
 	}
 
-	// MARK: Keyed
-	public L keyValue() {
-		return this.getKey();
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

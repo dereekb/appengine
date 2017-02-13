@@ -3,32 +3,32 @@ package com.dereekb.gae.web.api.util.attribute.impl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
-import com.dereekb.gae.web.api.util.attribute.KeyedAttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 
 /**
- * {@link KeyedAttributeUpdateFailure} implementation.
+ * {@link KeyedInvalidAttribute} implementation.
  * 
  * @author dereekb
  *
  */
-public class KeyedAttributeUpdateFailureImpl extends AttributeUpdateFailureImpl
-        implements KeyedAttributeUpdateFailure {
+public class KeyedInvalidAttributeImpl extends InvalidAttributeImpl
+        implements KeyedInvalidAttribute {
 
 	private ModelKey modelKey;
 
-	public KeyedAttributeUpdateFailureImpl(KeyedAttributeUpdateFailure failure) {
+	public KeyedInvalidAttributeImpl(KeyedInvalidAttribute failure) {
 		this(failure.keyValue(), failure);
 	}
 
-	public KeyedAttributeUpdateFailureImpl(UniqueModel template, AttributeUpdateFailure failure) {
+	public KeyedInvalidAttributeImpl(UniqueModel template, AttributeUpdateFailure failure) {
 		this(template.getModelKey(), failure.getAttribute(), failure.getValue(), failure.getDetail());
 	}
 
-	public KeyedAttributeUpdateFailureImpl(UniqueModel template, String attribute, String value, String detail) {
+	public KeyedInvalidAttributeImpl(UniqueModel template, String attribute, String value, String detail) {
 		this(template.getModelKey(), attribute, value, detail);
 	}
 
-	public KeyedAttributeUpdateFailureImpl(ModelKey templateKey, String attribute, String value, String detail) {
+	public KeyedInvalidAttributeImpl(ModelKey templateKey, String attribute, String value, String detail) {
 		super(attribute, value, detail);
 		this.setModelKey(templateKey);
 	}

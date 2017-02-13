@@ -3,7 +3,6 @@ package com.dereekb.gae.model.crud.task;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.utilities.task.ConfigurableTask;
 
 /**
  * Task for creating elements.
@@ -14,6 +13,6 @@ import com.dereekb.gae.utilities.task.ConfigurableTask;
  *            model type
  */
 public interface CreateTask<T extends UniqueModel>
-        extends ConfigurableTask<Iterable<CreatePair<T>>, CreateTaskConfig> {
+        extends AtomicTask<CreatePair<T>, CreateTaskConfig> {
 
 }

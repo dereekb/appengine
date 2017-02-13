@@ -56,7 +56,7 @@ public final class ModelKey
 
 	public ModelKey(Long id) throws IllegalArgumentException {
 		if (id == null || id < 0) {
-			throw new IllegalArgumentException("Invalid number key '" + id + "'. Must be non-null and greater than 0.");
+			throw new IllegalArgumentException("Invalid number key '" + id + "'. Must be non-null and non-negative.");
 		}
 
 		this.id = id;

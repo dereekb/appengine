@@ -2,14 +2,14 @@ package com.dereekb.gae.model.stored.image.crud;
 
 import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;
 import com.dereekb.gae.model.stored.image.StoredImage;
-import com.dereekb.gae.web.api.util.attribute.exception.AttributeUpdateFailureException;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 public class StoredImageAttributeUpdater
         implements UpdateTaskDelegate<StoredImage> {
 
 	@Override
 	public void updateTarget(StoredImage target,
-	                         StoredImage template) throws AttributeUpdateFailureException {
+	                         StoredImage template) throws InvalidAttributeException {
 
 		if (template.getName() != null) {
 			target.setName(template.getName());

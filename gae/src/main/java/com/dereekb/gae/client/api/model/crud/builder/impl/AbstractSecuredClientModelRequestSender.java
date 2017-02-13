@@ -85,7 +85,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 		ClientRequest clientRequest = this.buildClientRequest(request);
 		ClientApiResponse clientResponse = this.requestSender.sendRequest(clientRequest, security);
-		return new SerializedClientApiResponseImpl(clientResponse);
+		return new SerializedClientApiResponseImpl(request, clientResponse);
 	}
 
 	// MARK: Abstract
@@ -101,13 +101,17 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	/**
 	 * Serializes response data into a new object.
 	 * 
+	 * @param request
+	 *            Request. Never {@code null}.
 	 * @param response
 	 *            {@link ClientApiResponse}. Never {@code null}.
 	 * @return Serialized response data. Never {@code null}.
 	 * @throws ClientResponseSerializationException
 	 *             if the serialization fails.
 	 */
-	public abstract S serializeResponseData(ClientApiResponse response) throws ClientResponseSerializationException;
+	public abstract S serializeResponseData(R request,
+	                                        ClientApiResponse response)
+	        throws ClientResponseSerializationException;
 
 	/**
 	 * {@link SerializedClientApiResponse} implementation.
@@ -118,10 +122,24 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	protected class SerializedClientApiResponseImpl extends ClientApiResponseWrapper
 	        implements SerializedClientApiResponse<S> {
 
+		private R request;
 		private S serializedData;
 
-		public SerializedClientApiResponseImpl(ClientApiResponse response) {
+		public SerializedClientApiResponseImpl(R request, ClientApiResponse response) {
 			super(response);
+			this.request = request;
+		}
+
+		public R getRequest() {
+			return this.request;
+		}
+
+		public void setRequest(R request) {
+			if (request == null) {
+				throw new IllegalArgumentException("Request cannot be null.");
+			}
+
+			this.request = request;
 		}
 
 		// MARK: SerializedClientApiResponse
@@ -129,7 +147,8 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 		public S getSerializedPrimaryData() throws ClientResponseSerializationException {
 			if (this.serializedData == null) {
 				this.assertResponseSuccess();
-				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.response);
+				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request,
+				        this.response);
 			}
 
 			return this.serializedData;

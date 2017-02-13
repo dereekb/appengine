@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiUnsupportedOperationException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -71,8 +71,8 @@ public class ApiExceptionHandler {
 		IllegalArgumentException cause = exception.getException();
 		String causeMessage = cause.getMessage();
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl("BAD_ARGUMENT_EXCEPTION");
-		error.setTitle("Bad Argument");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("BAD_ARG_EXCEPTION");
+		error.setTitle("Illegal Argument");
 		error.setDetail(causeMessage);
 
 		response.setError(error);
@@ -88,13 +88,14 @@ public class ApiExceptionHandler {
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(ApiCaughtRuntimeException.class)
 	public ApiResponse handleException(ApiCaughtRuntimeException e) {
-		ApiResponseImpl response = new ApiResponseImpl(false);
+		return ApiResponseImpl.makeFailure(e);
+	}
 
-		ApiResponseError error = e.asResponseError();
-		response.setError(error);
-		// exception.printStackTrace();
-
-		return response;
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+	@ExceptionHandler(ApiUnsupportedOperationException.class)
+	public ApiResponse handleException(ApiUnsupportedOperationException e) {
+		return ApiResponseImpl.makeFailure(e);
 	}
 
 	/**
@@ -104,12 +105,7 @@ public class ApiExceptionHandler {
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(ApiSafeRuntimeException.class)
 	public ApiResponse handleException(ApiSafeRuntimeException e) {
-		ApiResponseImpl response = new ApiResponseImpl(false);
-
-		ApiResponseError error = e.asResponseError();
-		response.setError(error);
-
-		return response;
+		return ApiResponseImpl.makeFailure(e);
 	}
 
 	@ResponseBody

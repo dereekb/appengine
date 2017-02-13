@@ -15,7 +15,7 @@ import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptio
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.model.crud.services.response.impl.UpdateResponseImpl;
-import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
+import com.dereekb.gae.model.crud.services.response.pair.InvalidTemplatePair;
 import com.dereekb.gae.model.crud.task.UpdateTask;
 import com.dereekb.gae.model.crud.task.config.UpdateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.UpdateTaskConfigImpl;
@@ -24,7 +24,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.task.IterableTask;
-import com.dereekb.gae.web.api.util.attribute.exception.KeyedAttributeUpdateFailureException;
+import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 
 /**
  * Default implementation of {@link UpdateService} that uses a
@@ -87,21 +87,34 @@ public class UpdateServiceImpl<T extends UniqueModel>
 
 		try {
 			UpdateTaskConfig config = new UpdateTaskConfigImpl(atomic);
-			this.updateTask.doTask(pairs, config);
 
+			boolean atomicOperationFailure = false;
+
+			try {
+				this.updateTask.doTask(pairs, config);
+			} catch (AtomicOperationException e) {
+				// Task failed and no changes are saved.
+				atomicOperationFailure = true;
+			}
+
+			// Build Response
 			HashMapWithList<FilterResult, UpdatePair<T>> results = UpdatePair.filterSuccessfulPairs(pairs);
-
-			List<UpdatePair<T>> successfulPairs = results.valuesForKey(FilterResult.PASS);
-			List<T> updated = UpdatePair.getKeys(successfulPairs);
-
 			List<UpdatePair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
-			List<UpdateResponseFailurePair<T>> failurePairs = UpdateResponseFailurePair.createFailurePairs(errorPairs);
+			List<InvalidTemplatePair<T>> failurePairs = InvalidTemplatePair.makeWithUpdatePairs(errorPairs);
 
-			Collection<ModelKey> unavailable = readResponse.getUnavailable();
+			if (atomicOperationFailure) {
+				MultiKeyedInvalidAttributeException exception = new MultiKeyedInvalidAttributeException(failurePairs);
+				throw new AtomicOperationException(exception);
+			} else {
+				Collection<ModelKey> unavailable = readResponse.getUnavailable();
 
-			updateResponse = new UpdateResponseImpl<T>(updated, unavailable, failurePairs);
-		} catch (KeyedAttributeUpdateFailureException e) {
-			throw new AtomicOperationException(updateTemplates, e);
+				List<UpdatePair<T>> successfulPairs = results.valuesForKey(FilterResult.PASS);
+				List<T> updated = UpdatePair.getKeys(successfulPairs);
+
+				updateResponse = new UpdateResponseImpl<T>(updated, unavailable, failurePairs);
+			}
+		} catch (AtomicOperationException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new AtomicOperationException(updateTemplates, e);
 		}

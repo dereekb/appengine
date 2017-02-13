@@ -103,7 +103,8 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	}
 
 	@Override
-	public SimpleReadResponse<T> serializeResponseData(ClientApiResponse response)
+	public SimpleReadResponse<T> serializeResponseData(ReadRequest request,
+	                                                   ClientApiResponse response)
 	        throws ClientResponseSerializationException {
 		return new ClientReadResponseImpl(response);
 	}

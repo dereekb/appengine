@@ -1,8 +1,10 @@
 package com.dereekb.gae.test.applications.api.api.login.login;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.server.auth.model.login.Login;
@@ -21,15 +23,28 @@ public class LoginClientCrudTests extends ClientApiCrudTest<Login> {
 	@Override
 	@Autowired
 	@Qualifier("loginClientReadRequestSender")
-	public void setReadRequestSender(ClientReadRequestSender<Login> readRequestSender) {
-		super.setReadRequestSender(readRequestSender);
+	public void setReadRequestSender(ClientReadRequestSender<Login> requestSender) {
+		super.setReadRequestSender(requestSender);
 	}
 
 	@Override
 	@Autowired
 	@Qualifier("loginClientUpdateRequestSender")
-	public void setUpdateRequestSender(ClientUpdateRequestSender<Login> readRequestSender) {
-		super.setUpdateRequestSender(readRequestSender);
+	public void setUpdateRequestSender(ClientUpdateRequestSender<Login> requestSender) {
+		super.setUpdateRequestSender(requestSender);
+	}
+
+	@Override
+	@Autowired
+	@Qualifier("loginClientCreateRequestSender")
+	public void setCreateRequestSender(ClientCreateRequestSender<Login> requestSender) {
+		super.setCreateRequestSender(requestSender);
+	}
+
+	@Override
+	@Test
+	public void testSystemClientCreateIsUnavailable() throws Exception {
+		super.testSystemClientCreateIsUnavailable();
 	}
 
 }

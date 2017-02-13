@@ -11,8 +11,8 @@ import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.task.IterableTask;
-import com.dereekb.gae.web.api.util.attribute.exception.AttributeUpdateFailureException;
-import com.dereekb.gae.web.api.util.attribute.exception.KeyedAttributeUpdateFailureException;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
+import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 
 /**
  * {@link UpdateTask} implementation.
@@ -106,9 +106,9 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 		try {
 			this.delegate.updateTarget(target, template);
 			pair.setSuccessful(true);
-		} catch (AttributeUpdateFailureException e) {
+		} catch (InvalidAttributeException e) {
 			pair.setFailureException(e);
-			KeyedAttributeUpdateFailureException keyedException = new KeyedAttributeUpdateFailureException(template, e);
+			KeyedInvalidAttributeException keyedException = new KeyedInvalidAttributeException(template, e);
 			throw new AtomicFunctionException(template, keyedException);
 		}
 	}

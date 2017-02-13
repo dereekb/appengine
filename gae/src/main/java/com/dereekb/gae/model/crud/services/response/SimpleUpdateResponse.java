@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.web.api.util.attribute.KeyedAttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 
 /**
  * Simple update response.
@@ -47,6 +47,6 @@ public interface SimpleUpdateResponse<T extends UniqueModel>
 	 * 
 	 * @return {@link Collection}. Never {@code null}.
 	 */
-	public Collection<? extends KeyedAttributeUpdateFailure> getUpdateFailures();
+	public Collection<? extends KeyedInvalidAttribute> getUpdateFailures();
 
 }

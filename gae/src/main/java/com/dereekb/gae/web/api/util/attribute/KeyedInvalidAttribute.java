@@ -8,7 +8,7 @@ import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
  * 
  * @author dereekb
  */
-public interface KeyedAttributeUpdateFailure
+public interface KeyedInvalidAttribute
         extends AttributeUpdateFailure, AlwaysKeyed<UniqueModel> {
 
 }

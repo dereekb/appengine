@@ -11,8 +11,8 @@ import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
-import com.dereekb.gae.web.api.util.attribute.builder.KeyedAttributeUpdateFailureApiResponseBuilder;
-import com.dereekb.gae.web.api.util.attribute.exception.KeyedAttributeUpdateFailureException;
+import com.dereekb.gae.web.api.util.attribute.builder.KeyedInvalidAttributeApiResponseBuilder;
+import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 
 /**
  * {@link ControllerAdvice} for handling exceptions thrown by model related
@@ -41,11 +41,11 @@ public class ModelRequestExceptionHandler {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-	@ExceptionHandler(KeyedAttributeUpdateFailureException.class)
-	public ApiResponse handleException(KeyedAttributeUpdateFailureException exception) {
+	@ExceptionHandler(KeyedInvalidAttributeException.class)
+	public ApiResponse handleException(KeyedInvalidAttributeException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 
-		ApiResponseErrorImpl error = KeyedAttributeUpdateFailureApiResponseBuilder.make(exception);
+		ApiResponseErrorImpl error = KeyedInvalidAttributeApiResponseBuilder.make(exception);
 		response.setError(error);
 
 		return response;

@@ -2,7 +2,7 @@ package com.dereekb.gae.model.crud.services.response;
 
 import java.util.Collection;
 
-import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
+import com.dereekb.gae.model.crud.services.response.pair.InvalidTemplatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -19,9 +19,9 @@ public interface UpdateResponse<T extends UniqueModel>
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * Returns a collections of {@link UpdateResponseFailurePair} instead.
+	 * Returns a collections of {@link InvalidTemplatePair} instead.
 	 */
 	@Override
-	public Collection<? extends UpdateResponseFailurePair<T>> getUpdateFailures();
+	public Collection<? extends InvalidTemplatePair<T>> getUpdateFailures();
 
 }

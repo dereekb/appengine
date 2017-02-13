@@ -37,12 +37,16 @@ public class EditModelControllerDelegateImpl<T extends UniqueModel>
 
 	// EditModelControllerDelegate
 	@Override
-	public CreateResponse<T> create(CreateRequest<T> request) throws AtomicOperationException {
+	public CreateResponse<T> create(CreateRequest<T> request)
+	        throws UnsupportedOperationException,
+	            AtomicOperationException {
 		return this.service.create(request);
 	}
 
 	@Override
-	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException {
+	public UpdateResponse<T> update(UpdateRequest<T> request)
+	        throws UnsupportedOperationException,
+	            AtomicOperationException {
 		return this.service.update(request);
 	}
 

@@ -9,7 +9,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
-import com.dereekb.gae.web.api.util.attribute.KeyedAttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 
 /**
  * Used by {@link UpdateResponse} to communicate which templates failed, and for
@@ -20,10 +20,10 @@ import com.dereekb.gae.web.api.util.attribute.KeyedAttributeUpdateFailure;
  * @param <T>
  *            model type
  */
-public final class UpdateResponseFailurePair<T extends UniqueModel> extends HandlerPair<T, AttributeUpdateFailure>
-        implements KeyedAttributeUpdateFailure, AlwaysKeyed<UniqueModel> {
+public class InvalidTemplatePair<T extends UniqueModel> extends HandlerPair<T, AttributeUpdateFailure>
+        implements KeyedInvalidAttribute, AlwaysKeyed<UniqueModel> {
 
-	public UpdateResponseFailurePair(T template, AttributeUpdateFailure failure) {
+	public InvalidTemplatePair(T template, AttributeUpdateFailure failure) {
 		super(template, failure);
 	}
 
@@ -35,38 +35,43 @@ public final class UpdateResponseFailurePair<T extends UniqueModel> extends Hand
 		return this.object;
 	}
 
-	public static <T extends UniqueModel> List<UpdateResponseFailurePair<T>> createFailurePairs(Iterable<UpdatePair<T>> pairs) {
-		List<UpdateResponseFailurePair<T>> failurePairs = new ArrayList<UpdateResponseFailurePair<T>>();
+	// MARK: KeyedInvalidAttribute
+	@Override
+	public String getAttribute() {
+		return this.object.getAttribute();
+	}
+
+	@Override
+	public String getValue() {
+		return this.object.getValue();
+	}
+
+	@Override
+	public String getDetail() {
+		return this.object.getDetail();
+	}
+
+	// MARK: Keyed
+	@Override
+	public UniqueModel keyValue() {
+		return this.getKey();
+	}
+
+	// MARK: Utility
+	public static <T extends UniqueModel> List<InvalidTemplatePair<T>> makeWithUpdatePairs(Iterable<UpdatePair<T>> pairs) {
+		List<InvalidTemplatePair<T>> failurePairs = new ArrayList<InvalidTemplatePair<T>>();
 
 		for (UpdatePair<T> pair : pairs) {
 			if (pair.hasFailed()) {
 				T template = pair.getTemplate();
 				AttributeUpdateFailure e = pair.getFailureException();
 
-				UpdateResponseFailurePair<T> failurePair = new UpdateResponseFailurePair<T>(template, e);
+				InvalidTemplatePair<T> failurePair = new InvalidTemplatePair<T>(template, e);
 				failurePairs.add(failurePair);
 			}
 		}
 
 		return failurePairs;
-	}
-
-	@Override
-	public String getAttribute() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDetail() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

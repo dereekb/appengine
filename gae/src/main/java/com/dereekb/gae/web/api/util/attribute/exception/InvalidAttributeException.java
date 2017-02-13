@@ -3,8 +3,8 @@ package com.dereekb.gae.web.api.util.attribute.exception;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
-import com.dereekb.gae.web.api.util.attribute.builder.KeyedAttributeUpdateFailureApiResponseBuilder;
-import com.dereekb.gae.web.api.util.attribute.impl.AttributeUpdateFailureImpl;
+import com.dereekb.gae.web.api.util.attribute.builder.KeyedInvalidAttributeApiResponseBuilder;
+import com.dereekb.gae.web.api.util.attribute.impl.InvalidAttributeImpl;
 
 /**
  * Exception thrown when a change fails due to a field/attribute.
@@ -13,18 +13,18 @@ import com.dereekb.gae.web.api.util.attribute.impl.AttributeUpdateFailureImpl;
  * 
  * @see AttributeUpdateFailure
  */
-public class AttributeUpdateFailureException extends ApiSafeRuntimeException
+public class InvalidAttributeException extends ApiSafeRuntimeException
         implements AttributeUpdateFailure {
 
 	private static final long serialVersionUID = 1L;
 
 	private final AttributeUpdateFailure failure;
 
-	public AttributeUpdateFailureException(String attribute, String value, String detail) {
-		this.failure = new AttributeUpdateFailureImpl(attribute, value, detail);
+	public InvalidAttributeException(String attribute, String value, String detail) {
+		this.failure = new InvalidAttributeImpl(attribute, value, detail);
 	}
 
-	protected AttributeUpdateFailureException(AttributeUpdateFailure failure) {
+	protected InvalidAttributeException(AttributeUpdateFailure failure) {
 		this.failure = failure;
 	}
 
@@ -55,7 +55,7 @@ public class AttributeUpdateFailureException extends ApiSafeRuntimeException
 	// MARK: ApiSafeRuntimeException
 	@Override
 	public ApiResponseError asResponseError() {
-		return KeyedAttributeUpdateFailureApiResponseBuilder.make(this);
+		return KeyedInvalidAttributeApiResponseBuilder.make(this);
 	}
 
 }

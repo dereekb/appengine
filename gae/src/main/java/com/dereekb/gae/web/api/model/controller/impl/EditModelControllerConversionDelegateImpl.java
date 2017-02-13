@@ -15,7 +15,8 @@ import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
-import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
+import com.dereekb.gae.model.crud.services.response.pair.InvalidCreateTemplatePair;
+import com.dereekb.gae.model.crud.services.response.pair.InvalidTemplatePair;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
@@ -32,7 +33,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
-import com.dereekb.gae.web.api.util.attribute.builder.KeyedAttributeUpdateFailureApiResponseBuilder;
+import com.dereekb.gae.web.api.util.attribute.builder.KeyedInvalidAttributeApiResponseBuilder;
 
 /**
  * {@link EditModelControllerConversionDelegate} implementation.
@@ -146,9 +147,10 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 
 		apiResponse.setData(data);
 
-		Collection<T> failedTemplates = response.getFailedTemplates();
-
-		// TODO: Create new exception/error that contains failed templates.
+		// Add Attribute Failed Pairs
+		Collection<? extends InvalidCreateTemplatePair<T>> failedPairs = response.getInvalidTemplates();
+		ApiResponseErrorImpl failurePairsError = KeyedInvalidAttributeApiResponseBuilder.make(failedPairs);
+		apiResponse.addError(failurePairsError);
 
 		return apiResponse;
 	}
@@ -165,8 +167,8 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		apiResponse.setData(data);
 
 		// Add Attribute Failed Pairs
-		Collection<? extends UpdateResponseFailurePair<T>> failedPairs = response.getUpdateFailures();
-		ApiResponseErrorImpl failurePairsError = KeyedAttributeUpdateFailureApiResponseBuilder.make(failedPairs);
+		Collection<? extends InvalidTemplatePair<T>> failedPairs = response.getUpdateFailures();
+		ApiResponseErrorImpl failurePairsError = KeyedInvalidAttributeApiResponseBuilder.make(failedPairs);
 		apiResponse.addError(failurePairsError);
 
 		// Added Atomic/Missing Values

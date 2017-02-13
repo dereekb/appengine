@@ -2,11 +2,8 @@ package com.dereekb.gae.web.api.model.request;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.UpdateRequestOptionsImpl;
-import com.dereekb.gae.web.api.shared.request.ApiRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,10 +19,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiUpdateRequest<I> extends ApiRequest<I> {
-
-	@Valid
-	private UpdateRequestOptionsImpl options;
+public class ApiUpdateRequest<I> extends ApiEditRequest<I>
+        implements UpdateRequestOptions {
 
 	public ApiUpdateRequest() {}
 
@@ -33,17 +28,29 @@ public class ApiUpdateRequest<I> extends ApiRequest<I> {
 		super(elements);
 	}
 
-	public UpdateRequestOptionsImpl getOptions() {
-		return this.options;
-	}
-
-	public void setOptions(UpdateRequestOptionsImpl options) {
-		this.options = options;
+	@JsonIgnore
+	public List<I> getTemplates() {
+		return this.getData();
 	}
 
 	@JsonIgnore
-	public void setRequestOptions(UpdateRequestOptions options) {
-		this.options = new UpdateRequestOptionsImpl(options);
+	public void setTemplates(List<I> templates) {
+		this.setData(templates);
+	}
+
+	@JsonIgnore
+	public UpdateRequestOptions getOptions() {
+		return new UpdateRequestOptionsImpl(this);
+	}
+
+	@JsonIgnore
+	public void setOptions(UpdateRequestOptions options) {
+		this.atomic = options.isAtomic();
+	}
+
+	@Override
+	public String toString() {
+		return "ApiUpdateRequest [atomic=" + this.atomic + ", data=" + this.data + "]";
 	}
 
 }
