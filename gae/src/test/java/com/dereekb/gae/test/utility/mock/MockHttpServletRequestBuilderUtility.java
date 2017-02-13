@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.client.api.service.request.ClientRequest;
+import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
@@ -72,6 +74,13 @@ public class MockHttpServletRequestBuilderUtility {
 		Parameters parameters = request.getParameters();
 		if (parameters != null) {
 			addParameters(requestBuilder, parameters);
+		}
+
+		ClientRequestData data = request.getData();
+		if (data != null) {
+			String content = data.getDataString();
+			requestBuilder.content(content);
+			requestBuilder.contentType(MediaType.APPLICATION_JSON);
 		}
 
 		return requestBuilder;

@@ -19,4 +19,13 @@
 		<constructor-arg index="4" ref="securedClientRequestSender" />
 	</bean>
 
+	<bean id="loginKeyClientUpdateRequestSender"
+		class="com.dereekb.gae.client.api.model.crud.builder.impl.ClientUpdateRequestSenderImpl">
+		<constructor-arg index="0" ref="loginKeyType" />
+		<constructor-arg index="1" ref="loginKeyDtoClass" />
+		<constructor-arg index="2" ref="loginKeyDataConverter" />
+		<constructor-arg index="3" ref="modelKeyTypeConverter" />
+		<constructor-arg index="4" ref="securedClientRequestSender" />
+	</bean>
+
 </beans>

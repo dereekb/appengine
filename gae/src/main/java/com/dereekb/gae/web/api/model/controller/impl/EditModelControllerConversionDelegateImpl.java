@@ -165,7 +165,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		apiResponse.setData(data);
 
 		// Add Attribute Failed Pairs
-		Collection<? extends UpdateResponseFailurePair<T>> failedPairs = response.getFailurePairs();
+		Collection<? extends UpdateResponseFailurePair<T>> failedPairs = response.getUpdateFailures();
 		ApiResponseErrorImpl failurePairsError = KeyedAttributeUpdateFailureApiResponseBuilder.make(failedPairs);
 		apiResponse.addError(failurePairsError);
 

@@ -22,6 +22,6 @@ public interface UpdateResponse<T extends UniqueModel>
 	 * Returns a collections of {@link UpdateResponseFailurePair} instead.
 	 */
 	@Override
-	public Collection<? extends UpdateResponseFailurePair<T>> getFailurePairs();
+	public Collection<? extends UpdateResponseFailurePair<T>> getUpdateFailures();
 
 }

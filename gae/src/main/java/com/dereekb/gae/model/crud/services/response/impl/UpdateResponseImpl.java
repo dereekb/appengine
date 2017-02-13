@@ -43,7 +43,7 @@ public class UpdateResponseImpl<T extends UniqueModel> extends ModelServiceRespo
 
 	// MARK: UpdateResponse
 	@Override
-	public Collection<UpdateResponseFailurePair<T>> getFailurePairs() {
+	public Collection<UpdateResponseFailurePair<T>> getUpdateFailures() {
 		return this.failurePairs;
 	}
 
@@ -58,7 +58,7 @@ public class UpdateResponseImpl<T extends UniqueModel> extends ModelServiceRespo
 	// MARK: Override
 	@Override
 	public List<ModelKey> getFailed() {
-		Collection<UpdateResponseFailurePair<T>> failedPairs = this.getFailurePairs();
+		Collection<UpdateResponseFailurePair<T>> failedPairs = this.getUpdateFailures();
 
 		List<ModelKey> failedPairsKeys = ModelKey.readModelKeysFromKeyed(failedPairs);
 		List<ModelKey> filteredAndUnavailable = super.getFailed();

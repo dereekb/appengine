@@ -69,30 +69,32 @@ public class ClientApiResponseAccessorBuilderImpl
 	public ClientApiResponseAccessor buildAccessor(ClientResponse response) throws NotClientApiResponseException {
 		String jsonData = response.getResponseData();
 
-		if (jsonData == null) {
-			throw new NotClientApiResponseException("No body/data available on response.");
+		if (jsonData == null || jsonData.isEmpty()) {
+			throw new NotClientApiResponseException(response, "No body/data available on response.");
 		}
-
-		return this.buildAccessor(jsonData, response.getStatus());
-	}
-
-	@Override
-	public ClientApiResponseAccessor buildAccessor(String responseData) {
-		return this.buildAccessor(responseData, 200);
-	}
-
-	@Override
-	public ClientApiResponseAccessor buildAccessor(String responseData,
-	                                               int statusCode)
-	        throws NotClientApiResponseException {
-		JsonNode jsonNode;
 
 		try {
-			jsonNode = this.objectMapper.readTree(responseData);
+			return this.buildAccessorWithData(jsonData, response.getStatus());
 		} catch (IOException e) {
-			throw new NotClientApiResponseException("Client Json Parsing Failed.");
+			throw new NotClientApiResponseException(null, "Client Json Response parsing failed.", e);
 		}
+	}
 
+	/**
+	 * Builds an accessor with a default status code, generally 200 (Success).
+	 * 
+	 * @param responseData
+	 *            {@link String}. Never {@code null}.
+	 * @param statusCode
+	 *            HTTP status code.
+	 * @return {@link ClientApiResponseAccessor}. Never {@code null}.
+	 * @throws IOException
+	 *             thrown if an error occurs marshalling the input.
+	 */
+	private ClientApiResponseAccessor buildAccessorWithData(String responseData,
+	                                                        int statusCode)
+	        throws IOException {
+		JsonNode jsonNode = this.objectMapper.readTree(responseData);
 		return this.buildAccessor(jsonNode, statusCode);
 	}
 

@@ -9,13 +9,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.client.api.service.response.ClientApiResponseAccessor;
-import com.dereekb.gae.client.api.service.response.builder.ClientApiResponseAccessorBuilder;
 import com.dereekb.gae.client.api.service.response.builder.impl.ClientApiResponseAccessorBuilderImpl;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
+import com.dereekb.gae.client.api.service.response.impl.ClientResponseImpl;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException.TokenExceptionReason;
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
@@ -38,13 +38,14 @@ public class ClientApiResponseTest {
 	public void testBuildFromCleanResponse() throws JsonProcessingException {
 
 		ObjectMapper mapper = new ObjectMapper();
-		ClientApiResponseAccessorBuilder builder = new ClientApiResponseAccessorBuilderImpl(mapper);
+		ClientApiResponseAccessorBuilderImpl builder = new ClientApiResponseAccessorBuilderImpl(mapper);
 
 		ApiResponseImpl response = new ApiResponseImpl();
 
 		String responseJson = mapper.writeValueAsString(response);
 
-		ClientApiResponseAccessor accessor = builder.buildAccessor(responseJson);
+		ClientResponseImpl clientResponse = new ClientResponseImpl(200, responseJson);
+		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
 		Assert.assertTrue(accessor.getSuccess());
 
@@ -62,7 +63,7 @@ public class ClientApiResponseTest {
 	public void testBuildFromErrorResponse() throws JsonProcessingException {
 
 		ObjectMapper mapper = new ObjectMapper();
-		ClientApiResponseAccessorBuilder builder = new ClientApiResponseAccessorBuilderImpl(mapper);
+		ClientApiResponseAccessorBuilderImpl builder = new ClientApiResponseAccessorBuilderImpl(mapper);
 
 		ApiResponseImpl response = new ApiResponseImpl();
 
@@ -71,8 +72,8 @@ public class ClientApiResponseTest {
 		response.addError(error);
 
 		String responseJson = mapper.writeValueAsString(response);
-
-		ClientApiResponseAccessor accessor = builder.buildAccessor(responseJson, missingTokenHttpResponseCode);
+		ClientResponseImpl clientResponse = new ClientResponseImpl(missingTokenHttpResponseCode, responseJson);
+		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
 		Assert.assertTrue(accessor.getSuccess());
 		Assert.assertNotNull(accessor.getIncludedData());
@@ -100,7 +101,7 @@ public class ClientApiResponseTest {
 	public void testBuildFromDataResponse() throws JsonProcessingException {
 
 		ObjectMapper mapper = new ObjectMapper();
-		ClientApiResponseAccessorBuilder builder = new ClientApiResponseAccessorBuilderImpl(mapper);
+		ClientApiResponseAccessorBuilderImpl builder = new ClientApiResponseAccessorBuilderImpl(mapper);
 
 		ApiResponseImpl response = new ApiResponseImpl();
 
@@ -116,7 +117,8 @@ public class ClientApiResponseTest {
 
 		String responseJson = mapper.writeValueAsString(response);
 
-		ClientApiResponseAccessor accessor = builder.buildAccessor(responseJson);
+		ClientResponseImpl clientResponse = new ClientResponseImpl(200, responseJson);
+		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
 		Assert.assertTrue(accessor.getSuccess());
 		Assert.assertNotNull(accessor.getIncludedData());

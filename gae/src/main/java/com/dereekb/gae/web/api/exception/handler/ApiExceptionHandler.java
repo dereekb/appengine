@@ -49,7 +49,7 @@ public class ApiExceptionHandler {
 		String causeName = cause.getClass().getSimpleName();
 		String causeMessage = cause.getMessage();
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl("REQUEST_READ_EXCEPTION");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("REQUEST_MESSAGE_EXCEPTION");
 		error.setTitle(causeName);
 		error.setDetail(causeMessage);
 

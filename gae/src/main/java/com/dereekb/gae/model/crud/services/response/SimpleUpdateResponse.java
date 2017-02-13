@@ -28,7 +28,7 @@ public interface SimpleUpdateResponse<T extends UniqueModel>
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * This includes all models/keys from {@link #getFailurePairs()}.
+	 * This includes all models/keys from {@link #getUpdateFailures()}.
 	 */
 	@Override
 	public Collection<ModelKey> getFailed();
@@ -36,7 +36,7 @@ public interface SimpleUpdateResponse<T extends UniqueModel>
 	/**
 	 * Returns the result of {@link SimpleServiceResponse#getFailed()}; all keys
 	 * that were not included with
-	 * {@link SimpleUpdateResponse#getFailurePairs()}.
+	 * {@link SimpleUpdateResponse#getUpdateFailures()}.
 	 * 
 	 * @return {@link Collection}. Never {@code null}.
 	 */
@@ -47,6 +47,6 @@ public interface SimpleUpdateResponse<T extends UniqueModel>
 	 * 
 	 * @return {@link Collection}. Never {@code null}.
 	 */
-	public Collection<? extends KeyedAttributeUpdateFailure> getFailurePairs();
+	public Collection<? extends KeyedAttributeUpdateFailure> getUpdateFailures();
 
 }

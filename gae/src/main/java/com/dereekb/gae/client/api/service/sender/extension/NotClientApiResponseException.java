@@ -14,27 +14,33 @@ public class NotClientApiResponseException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NotClientApiResponseException() {
+	private ClientResponse clientResponse;
+
+	public NotClientApiResponseException(ClientResponse clientResponse) {
 		super();
+		this.setClientResponse(clientResponse);
 	}
 
-	public NotClientApiResponseException(String message,
-	        Throwable cause,
-	        boolean enableSuppression,
-	        boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public NotClientApiResponseException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public NotClientApiResponseException(String message) {
+	public NotClientApiResponseException(ClientResponse clientResponse, String message) {
 		super(message);
+		this.setClientResponse(clientResponse);
 	}
 
-	public NotClientApiResponseException(Throwable cause) {
-		super(cause);
+	public NotClientApiResponseException(ClientResponse clientResponse, String message, Throwable cause) {
+		super(message, cause);
+		this.setClientResponse(clientResponse);
+	}
+
+	public ClientResponse getClientResponse() {
+		return this.clientResponse;
+	}
+
+	public void setClientResponse(ClientResponse clientResponse) {
+		if (clientResponse == null) {
+			throw new IllegalArgumentException("clientResponse cannot be null.");
+		}
+
+		this.clientResponse = clientResponse;
 	}
 
 }

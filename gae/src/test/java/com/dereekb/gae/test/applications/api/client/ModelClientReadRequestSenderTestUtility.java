@@ -25,6 +25,14 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+/**
+ * Test utility for {@link ClientReadRequestSender}.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 
 	private final TestModelGenerator<T> testModelGenerator;
@@ -54,6 +62,9 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		Assert.assertTrue(logins.size() == models.size());
 	}
 
+	/**
+	 * Tests non atomic read requests.
+	 */
 	public void testNonAtomicSystemReadRequest(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
@@ -84,7 +95,10 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		Assert.assertTrue(responseUnavailableKeys.size() == unavailableKeys.size());
 	}
 
-	public void testAtomicSystemReadRequest(ClientRequestSecurity security)
+	/**
+	 * Tests that atomic read requests fail when expected.
+	 */
+	public void testAtomicSystemReadRequestFailures(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
