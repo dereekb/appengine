@@ -5,12 +5,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
+import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.test.applications.api.ClientApiApplicationTestContext;
 import com.dereekb.gae.test.applications.api.client.ModelClientCreateRequestSenderTestUtility;
+import com.dereekb.gae.test.applications.api.client.ModelClientDeleteRequestSenderTestUtility;
 import com.dereekb.gae.test.applications.api.client.ModelClientReadRequestSenderTestUtility;
 import com.dereekb.gae.test.applications.api.client.ModelClientUpdateRequestSenderTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
@@ -22,10 +24,12 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 	private ClientCreateRequestSender<T> createRequestSender;
 	private ClientReadRequestSender<T> readRequestSender;
 	private ClientUpdateRequestSender<T> updateRequestSender;
+	private ClientDeleteRequestSender<T> deleteRequestSender;
 
 	private ModelClientCreateRequestSenderTestUtility<T> createRequestUtility;
 	private ModelClientReadRequestSenderTestUtility<T> readRequestUtility;
 	private ModelClientUpdateRequestSenderTestUtility<T> updateRequestUtility;
+	private ModelClientDeleteRequestSenderTestUtility<T> deleteRequestUtility;
 
 	public TestModelGenerator<T> getTestLoginGenerator() {
 		return this.testModelGenerator;
@@ -59,6 +63,15 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 		this.updateRequestSender = updateRequestSender;
 	}
 
+	public ClientDeleteRequestSender<T> getDeleteRequestSender() {
+		return this.deleteRequestSender;
+	}
+
+	public void setDeleteRequestSender(ClientDeleteRequestSender<T> deleteRequestSender) {
+		this.deleteRequestSender = deleteRequestSender;
+	}
+
+	// MARK: Utilities
 	@Before
 	public void setUtilities() {
 		if (this.createRequestSender != null) {
@@ -73,6 +86,11 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 
 		if (this.updateRequestSender != null) {
 			this.updateRequestUtility = new ModelClientUpdateRequestSenderTestUtility<T>(this.updateRequestSender,
+			        this.testModelGenerator);
+		}
+
+		if (this.deleteRequestSender != null) {
+			this.deleteRequestUtility = new ModelClientDeleteRequestSenderTestUtility<T>(this.deleteRequestSender,
 			        this.testModelGenerator);
 		}
 	}
@@ -129,6 +147,14 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 		if (this.updateRequestUtility != null) {
 			this.updateRequestUtility
 			        .testMockNonAtomicUnavailableUpdateRequest(ClientRequestSecurityImpl.systemSecurity());
+		}
+	}
+
+	// MARK: Delete Tests
+	@Test
+	public void testMockDeleteRequestReturnModels() throws Exception {
+		if (this.deleteRequestUtility != null) {
+			this.deleteRequestUtility.testMockDeleteRequestReturnModels(ClientRequestSecurityImpl.systemSecurity());
 		}
 	}
 

@@ -84,13 +84,13 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		        security);
 
 		SimpleCreateResponse<T> createResponse = response.getSerializedPrimaryData();
-		Collection<T> models = createResponse.getCreatedModels();
+		Collection<T> models = createResponse.getModels();
 
 		Assert.assertFalse(models.isEmpty());
 
 		// Create again.
 		CreateResponse<T> simpleCreateResponse = this.createRequestSender.create(createRequest);
-		Assert.assertFalse(simpleCreateResponse.getCreatedModels().isEmpty());
+		Assert.assertFalse(simpleCreateResponse.getModels().isEmpty());
 	}
 
 }

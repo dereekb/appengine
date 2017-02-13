@@ -36,4 +36,13 @@
 		<constructor-arg index="4" ref="securedClientRequestSender" />
 	</bean>
 
+	<bean id="loginClientDeleteRequestSender"
+		class="com.dereekb.gae.client.api.model.crud.builder.impl.ClientDeleteRequestSenderImpl">
+		<constructor-arg index="0" ref="loginType" />
+		<constructor-arg index="1" ref="loginDtoClass" />
+		<constructor-arg index="2" ref="loginDataConverter" />
+		<constructor-arg index="3" ref="modelKeyTypeConverter" />
+		<constructor-arg index="4" ref="securedClientRequestSender" />
+	</bean>
+
 </beans>

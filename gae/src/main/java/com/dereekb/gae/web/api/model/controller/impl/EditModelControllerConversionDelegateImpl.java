@@ -139,7 +139,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 	@Override
 	public ApiResponse convert(CreateResponse<T> response) {
 
-		Collection<T> created = response.getCreatedModels();
+		Collection<T> created = response.getModels();
 		List<I> converted = this.converter.convertTo(created);
 
 		ApiResponseImpl apiResponse = new ApiResponseImpl();

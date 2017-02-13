@@ -11,6 +11,11 @@ import com.dereekb.gae.model.crud.services.request.DeleteRequest;
 public interface ClientDeleteRequest
         extends DeleteRequest {
 
+	/**
+	 * Whether or not models should be returned. Is more for performance issues.
+	 * 
+	 * @return {@code true} if models should be returned.
+	 */
 	public boolean shouldReturnModels();
 
 }

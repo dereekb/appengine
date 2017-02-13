@@ -81,8 +81,8 @@ public class CreateServiceTester<T extends UniqueModel>
 		CreateRequestImpl<T> request = new CreateRequestImpl<T>(template);
 		CreateResponse<T> response = this.createService.create(request);
 
-		Collection<ModelKey> keys = ModelKey.readModelKeys(response.getCreatedModels());
-		Collection<T> created = response.getCreatedModels();
+		Collection<ModelKey> keys = ModelKey.readModelKeys(response.getModels());
+		Collection<T> created = response.getModels();
 
 		Assert.assertTrue(keys.size() == 1);
 		Assert.assertTrue(created.size() == 1);
@@ -93,8 +93,8 @@ public class CreateServiceTester<T extends UniqueModel>
 		CreateRequestImpl<T> request = new CreateRequestImpl<T>(templates);
 		CreateResponse<T> response = this.createService.create(request);
 
-		Collection<ModelKey> keys = ModelKey.readModelKeys(response.getCreatedModels());
-		Collection<T> created = response.getCreatedModels();
+		Collection<ModelKey> keys = ModelKey.readModelKeys(response.getModels());
+		Collection<T> created = response.getModels();
 		Assert.assertTrue(keys.size() == templates.size());
 		Assert.assertTrue(created.size() == templates.size());
 	}

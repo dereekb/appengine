@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
+import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.server.auth.model.login.Login;
@@ -18,6 +19,13 @@ public class LoginClientCrudTests extends ClientApiCrudTest<Login> {
 	@Qualifier("loginTestModelGenerator")
 	public void setTestModelGenerator(TestModelGenerator<Login> testLoginGenerator) {
 		super.setTestModelGenerator(testLoginGenerator);
+	}
+
+	@Override
+	@Autowired
+	@Qualifier("loginClientCreateRequestSender")
+	public void setCreateRequestSender(ClientCreateRequestSender<Login> requestSender) {
+		super.setCreateRequestSender(requestSender);
 	}
 
 	@Override
@@ -36,11 +44,12 @@ public class LoginClientCrudTests extends ClientApiCrudTest<Login> {
 
 	@Override
 	@Autowired
-	@Qualifier("loginClientCreateRequestSender")
-	public void setCreateRequestSender(ClientCreateRequestSender<Login> requestSender) {
-		super.setCreateRequestSender(requestSender);
+	@Qualifier("loginClientDeleteRequestSender")
+	public void setDeleteRequestSender(ClientDeleteRequestSender<Login> requestSender) {
+		super.setDeleteRequestSender(requestSender);
 	}
 
+	// MARK: Create Overrides
 	@Override
 	@Test
 	public void testSystemClientCreateIsUnavailable() throws Exception {

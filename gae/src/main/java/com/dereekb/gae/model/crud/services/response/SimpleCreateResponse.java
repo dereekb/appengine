@@ -19,11 +19,11 @@ import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 public interface SimpleCreateResponse<T extends UniqueModel> {
 
 	/**
-	 * Returns the collection of models that were created.
+	 * Returns all successfully created models.
 	 * 
 	 * @return {@link Collection}. Never {@code null}.
 	 */
-	public Collection<T> getCreatedModels();
+	public Collection<T> getModels();
 
 	/**
 	 * Returns a collection of keyed failures for templates, keyed by the index

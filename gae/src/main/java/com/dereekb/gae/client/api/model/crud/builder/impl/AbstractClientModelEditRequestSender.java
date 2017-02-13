@@ -1,11 +1,13 @@
 package com.dereekb.gae.client.api.model.crud.builder.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
+import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
@@ -99,6 +101,26 @@ public abstract class AbstractClientModelEditRequestSender<T extends UniqueModel
 		}
 
 		return failures;
+	}
+
+	protected class AbstractClientServiceModelResponseImpl extends AbstractClientServiceResponseImpl {
+
+		private List<T> serializedModels;
+
+		public AbstractClientServiceModelResponseImpl(ClientApiResponse response) {
+			super(response);
+		}
+
+		// MARK: Models Response
+		public Collection<T> getModels() {
+			if (this.serializedModels == null) {
+				ClientApiResponseData data = this.response.getPrimaryData();
+				this.serializedModels = AbstractClientModelEditRequestSender.this.serializeModels(data);
+			}
+
+			return this.serializedModels;
+		}
+
 	}
 
 }

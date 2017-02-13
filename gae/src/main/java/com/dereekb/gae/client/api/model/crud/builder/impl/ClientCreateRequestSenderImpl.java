@@ -15,7 +15,6 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestDataImpl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
-import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
@@ -107,12 +106,11 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		return new ClientCreateResponseImpl(request, response);
 	}
 
-	private class ClientCreateResponseImpl extends AbstractClientServiceResponseImpl
+	private class ClientCreateResponseImpl extends AbstractClientServiceModelResponseImpl
 	        implements CreateResponse<T> {
 
 		private CreateRequest<T> request;
 
-		private List<T> serializedCreatedModels;
 		private List<? extends InvalidCreateTemplatePair<T>> serializedFailedTemplates;
 
 		public ClientCreateResponseImpl(CreateRequest<T> request, ClientApiResponse response) {
@@ -120,16 +118,7 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 			this.request = request;
 		}
 
-		@Override
-		public Collection<T> getCreatedModels() {
-			if (this.serializedCreatedModels == null) {
-				ClientApiResponseData data = this.response.getPrimaryData();
-				this.serializedCreatedModels = ClientCreateRequestSenderImpl.this.serializeModels(data);
-			}
-
-			return this.serializedCreatedModels;
-		}
-
+		// MARK: CreateResponse
 		@Override
 		public Collection<? extends InvalidCreateTemplatePair<T>> getInvalidTemplates() {
 			if (this.serializedFailedTemplates == null) {

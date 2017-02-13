@@ -14,7 +14,6 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestDataImpl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
-import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
@@ -105,10 +104,9 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		return new ClientUpdateResponseImpl(response);
 	}
 
-	private class ClientUpdateResponseImpl extends AbstractClientServiceResponseImpl
+	private class ClientUpdateResponseImpl extends AbstractClientServiceModelResponseImpl
 	        implements SimpleUpdateResponse<T> {
 
-		private List<T> serializedModels;
 		private List<KeyedInvalidAttribute> serializedFailures;
 
 		public ClientUpdateResponseImpl(ClientApiResponse response) {
@@ -116,16 +114,6 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		}
 
 		// MARK: UpdateResponse
-		@Override
-		public Collection<T> getModels() {
-			if (this.serializedModels == null) {
-				ClientApiResponseData data = this.response.getPrimaryData();
-				this.serializedModels = ClientUpdateRequestSenderImpl.this.serializeModels(data);
-			}
-
-			return this.serializedModels;
-		}
-
 		@Override
 		public Collection<ModelKey> getFailed() {
 			Collection<KeyedInvalidAttribute> failurePairs = this.getUpdateFailures();

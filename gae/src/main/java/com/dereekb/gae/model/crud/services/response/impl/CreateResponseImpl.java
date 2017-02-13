@@ -26,7 +26,7 @@ public final class CreateResponseImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public Collection<T> getCreatedModels() {
+	public Collection<T> getModels() {
 		return this.createdModels;
 	}
 
@@ -49,6 +49,12 @@ public final class CreateResponseImpl<T extends UniqueModel>
 		}
 
 		this.invalidTemplates = invalidTemplates;
+	}
+
+	@Override
+	public String toString() {
+		return "CreateResponseImpl [createdModels=" + this.createdModels + ", invalidTemplates=" + this.invalidTemplates
+		        + "]";
 	}
 
 }
