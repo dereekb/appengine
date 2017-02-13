@@ -1,10 +1,10 @@
 package com.dereekb.gae.model.crud.task.impl.delegate.impl;
 
-import com.dereekb.gae.model.crud.exception.AttributeFailureException;
 import com.dereekb.gae.model.crud.exception.InvalidTemplateException;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;
 import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;
 import com.dereekb.gae.utilities.factory.Factory;
+import com.dereekb.gae.web.api.util.attribute.exception.AttributeUpdateFailureException;
 
 /**
  * {@link CreateTaskDelegate} implementation that uses a {@link Factory} and a
@@ -51,7 +51,7 @@ public class CreateTaskDelegateImpl<T>
 
 		try {
 			this.updateDelegate.updateTarget(created, source);
-		} catch (AttributeFailureException e) {
+		} catch (AttributeUpdateFailureException e) {
 			throw new InvalidTemplateException(e);
 		}
 

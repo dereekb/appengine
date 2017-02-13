@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.controller;
+package com.dereekb.gae.web.api.model.controller.deprecated;
 
 import java.util.Collection;
 import java.util.Map;

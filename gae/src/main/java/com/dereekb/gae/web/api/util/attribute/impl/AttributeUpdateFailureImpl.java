@@ -1,6 +1,6 @@
-package com.dereekb.gae.model.crud.util.impl;
+package com.dereekb.gae.web.api.util.attribute.impl;
 
-import com.dereekb.gae.model.crud.util.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**

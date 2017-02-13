@@ -15,14 +15,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavailableException;
 import com.dereekb.gae.model.extension.inclusion.reader.InclusionReaderSetAnalysis;
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryRequestImpl;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
@@ -117,9 +119,15 @@ public class ReadController {
 		ApiResponseImpl response = null;
 		ReadControllerEntry entry = this.getEntryForType(modelType);
 
-		try {
-			List<ModelKey> modelKeys = this.keyTypeConverter.convertKeys(modelType, keys);
+		List<ModelKey> modelKeys = null;
 
+		try {
+			modelKeys = this.keyTypeConverter.convertKeys(modelType, keys);
+		} catch (ConversionFailureException e) {
+			throw new ApiIllegalArgumentException(e);
+		}
+
+		try {
 			ReadControllerEntryRequestImpl request = new ReadControllerEntryRequestImpl(modelType, atomic, modelKeys);
 			request.setLoadRelatedTypes(loadRelated);
 			request.setRelatedTypesFilter(relatedTypes);
@@ -129,12 +137,13 @@ public class ReadController {
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
 	}
 
+	// MARK: Internal
 	private ApiResponseImpl buildApiResponse(ReadControllerEntryRequest entryRequest,
 	                                         ReadControllerEntryResponse entryResponse) {
 		String modelType = entryRequest.getModelType();

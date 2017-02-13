@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.deprecated.function.delegate;
 
-import com.dereekb.gae.model.crud.exception.AttributeFailureException;
+import com.dereekb.gae.web.api.util.attribute.exception.AttributeUpdateFailureException;
 
 @Deprecated
 public interface UpdateFunctionDelegate<T> {

@@ -1,6 +1,6 @@
-package com.dereekb.gae.web.api.model.exception;
+package com.dereekb.gae.web.api.exception;
 
-import com.dereekb.gae.web.api.model.exception.handler.ApiExceptionHandler;
+import com.dereekb.gae.web.api.exception.handler.ApiExceptionHandler;
 
 /**
  * Used to wrap another {@link RuntimeException} encountered by the request.

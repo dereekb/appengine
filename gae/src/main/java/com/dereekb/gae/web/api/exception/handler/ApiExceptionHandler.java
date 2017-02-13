@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.exception.handler;
+package com.dereekb.gae.web.api.exception.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
+import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -41,7 +43,7 @@ public class ApiExceptionHandler {
 	public ApiResponseImpl handleException(HttpMessageNotReadableException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 
-		// TODO: Exposing this much info might not be as great as we'd hope.
+		// TODO: Exposing this much info might not be as great as we'd hope..?
 
 		Throwable cause = exception.getCause();
 		String causeName = cause.getClass().getSimpleName();
@@ -84,17 +86,28 @@ public class ApiExceptionHandler {
 	 */
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(ApiRuntimeException.class)
-	public ApiResponse handleException(ApiRuntimeException e) {
+	@ExceptionHandler(ApiCaughtRuntimeException.class)
+	public ApiResponse handleException(ApiCaughtRuntimeException e) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
-		RuntimeException exception = e.getException();
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl("SERVER_EXCEPTION");
-		error.setTitle(exception.getClass().getSimpleName());
-		error.setDetail(exception.getMessage());
-
+		ApiResponseError error = e.asResponseError();
 		response.setError(error);
-		exception.printStackTrace();
+		// exception.printStackTrace();
+
+		return response;
+	}
+
+	/**
+	 * Used for any safe runtime exceptions that can explain themselves.
+	 */
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(ApiSafeRuntimeException.class)
+	public ApiResponse handleException(ApiSafeRuntimeException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseError error = e.asResponseError();
+		response.setError(error);
 
 		return response;
 	}

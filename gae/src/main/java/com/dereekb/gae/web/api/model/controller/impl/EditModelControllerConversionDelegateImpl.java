@@ -16,22 +16,23 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
-import com.dereekb.gae.model.crud.util.AttributeUpdateFailure;
-import com.dereekb.gae.model.crud.util.impl.AttributeUpdateFailureImpl;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.model.controller.EditModelControllerConversionDelegate;
+import com.dereekb.gae.web.api.model.controller.exception.NoTemplateDataExeption;
+import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
 import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
 import com.dereekb.gae.web.api.model.request.ApiUpdateRequest;
-import com.dereekb.gae.web.api.shared.exception.RequestArgumentException;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
+import com.dereekb.gae.web.api.util.attribute.builder.KeyedAttributeUpdateFailureApiResponseBuilder;
 
 /**
  * {@link EditModelControllerConversionDelegate} implementation.
@@ -42,7 +43,6 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  *            model type
  * @param <I>
  *            model dto type
- * 
  */
 public final class EditModelControllerConversionDelegateImpl<T extends UniqueModel, I>
         implements EditModelControllerConversionDelegate<T, I> {
@@ -98,7 +98,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 
 	// MARK: EditModelControllerConversionDelegate
 	@Override
-	public CreateRequest<T> convert(ApiCreateRequest<I> request) throws RequestArgumentException {
+	public CreateRequest<T> convert(ApiCreateRequest<I> request) throws NoTemplateDataExeption {
 		List<T> templates = this.convertRequestTemplateData(request);
 		CreateRequestOptions options = request.getOptions();
 		CreateRequestImpl<T> serviceRequest = new CreateRequestImpl<T>(templates, options);
@@ -106,41 +106,35 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 	}
 
 	@Override
-	public UpdateRequest<T> convert(ApiUpdateRequest<I> request) throws RequestArgumentException {
+	public UpdateRequest<T> convert(ApiUpdateRequest<I> request) throws NoTemplateDataExeption {
 		List<T> templates = this.convertRequestTemplateData(request);
 		UpdateRequestOptions options = request.getOptions();
 		UpdateRequestImpl<T> serviceRequest = new UpdateRequestImpl<T>(templates, options);
 		return serviceRequest;
 	}
 
-	private List<T> convertRequestTemplateData(ApiRequest<I> request) throws RequestArgumentException {
+	private List<T> convertRequestTemplateData(ApiRequest<I> request) throws NoTemplateDataExeption {
 		List<I> input = request.getData();
 
 		if (input == null || input.isEmpty()) {
-			throw new RequestArgumentException("No Template Data", "The request was missing required model data.");
+			throw new NoTemplateDataExeption();
 		}
 
 		return this.converter.convertFrom(input);
 	}
 
 	@Override
-	public DeleteRequest convert(ApiDeleteRequest request) throws RequestArgumentException {
-
+	public DeleteRequest convert(ApiDeleteRequest request) throws ConversionFailureException {
 		List<String> data = request.getData();
 
-		List<ModelKey> keys = null;
+		List<ModelKey> keys = this.keyReader.convert(data);
 		DeleteRequestOptions options = request.getOptions();
-
-		try {
-			keys = this.keyReader.convert(data);
-		} catch (ConversionFailureException e) {
-			throw new RequestArgumentException("data", "Failed to convert identifiers from data.");
-		}
 
 		DeleteRequestImpl serviceRequest = new DeleteRequestImpl(keys, options);
 		return serviceRequest;
 	}
 
+	// MARK: Responses
 	@Override
 	public ApiResponse convert(CreateResponse<T> response) {
 
@@ -152,28 +146,33 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 
 		apiResponse.setData(data);
 
+		Collection<T> failedTemplates = response.getFailedTemplates();
+
+		// TODO: Create new exception/error that contains failed templates.
+
 		return apiResponse;
 	}
 
 	@Override
 	public ApiResponse convert(UpdateResponse<T> response) {
 
+		// Get Updated
 		Collection<T> updated = response.getModels();
-
 		List<I> converted = this.converter.convertTo(updated);
 
 		ApiResponseImpl apiResponse = new ApiResponseImpl();
 		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
-
 		apiResponse.setData(data);
 
-		Collection<UpdateResponseFailurePair<T>> failedPairs = response.getFailurePairs();
-		// TODO: Add error(s) for each failed pair.
+		// Add Attribute Failed Pairs
+		Collection<? extends UpdateResponseFailurePair<T>> failedPairs = response.getFailurePairs();
+		ApiResponseErrorImpl failurePairsError = KeyedAttributeUpdateFailureApiResponseBuilder.make(failedPairs);
+		apiResponse.addError(failurePairsError);
 
-		for (UpdateResponseFailurePair<T> failedPair : failedPairs) {
-			AttributeUpdateFailure failure = failedPair.getFailure();
-			AttributeUpdateFailure copy = new AttributeUpdateFailureImpl(failure);
-		}
+		// Added Atomic/Missing Values
+		ApiResponseErrorImpl missingKeysError = MissingRequiredResourceException
+		        .tryMakeApiErrorForModelKeys(response.getMissingKeys(), "Unavailable to update.");
+		apiResponse.addError(missingKeysError);
 
 		return apiResponse;
 	}
@@ -200,6 +199,12 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		}
 
 		apiResponse.setData(data);
+
+		// Added Atomic/Missing Values
+		ApiResponseErrorImpl missingKeysError = MissingRequiredResourceException
+		        .tryMakeApiErrorForModelKeys(response.getFailed(), "Unavailable to delete.");
+		apiResponse.addError(missingKeysError);
+
 		return apiResponse;
 	}
 

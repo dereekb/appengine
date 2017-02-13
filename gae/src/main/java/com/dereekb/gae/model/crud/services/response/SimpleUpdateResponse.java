@@ -2,7 +2,9 @@ package com.dereekb.gae.model.crud.services.response;
 
 import java.util.Collection;
 
-import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.web.api.util.attribute.KeyedAttributeUpdateFailure;
 
 /**
  * Simple update response.
@@ -12,7 +14,7 @@ import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePa
  * @param <T>
  *            model type
  */
-public interface SimpleUpdateResponse<T>
+public interface SimpleUpdateResponse<T extends UniqueModel>
         extends SimpleModelServiceResponse<T> {
 
 	/**
@@ -24,10 +26,27 @@ public interface SimpleUpdateResponse<T>
 	public Collection<T> getModels();
 
 	/**
-	 * Returns a collection of pairs that failed to be updated.
+	 * {@inheritDoc}
+	 * 
+	 * This includes all models/keys from {@link #getFailurePairs()}.
+	 */
+	@Override
+	public Collection<ModelKey> getFailed();
+
+	/**
+	 * Returns the result of {@link SimpleServiceResponse#getFailed()}; all keys
+	 * that were not included with
+	 * {@link SimpleUpdateResponse#getFailurePairs()}.
 	 * 
 	 * @return {@link Collection}. Never {@code null}.
 	 */
-	public Collection<UpdateResponseFailurePair<T>> getFailurePairs();
+	public Collection<ModelKey> getMissingKeys();
+
+	/**
+	 * Returns a collection of keyed failures.
+	 * 
+	 * @return {@link Collection}. Never {@code null}.
+	 */
+	public Collection<? extends KeyedAttributeUpdateFailure> getFailurePairs();
 
 }

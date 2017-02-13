@@ -15,8 +15,8 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
 import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
@@ -81,8 +81,10 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 			response = this.conversionDelegate.convert(createResponse);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -103,7 +105,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -120,8 +122,10 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 			response = this.conversionDelegate.convert(deleteResponse, request.getReturnModels());
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

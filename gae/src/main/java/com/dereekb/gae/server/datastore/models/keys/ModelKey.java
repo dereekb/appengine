@@ -43,6 +43,13 @@ public final class ModelKey
 	private final String name;
 	private final Long id;
 
+	private ModelKey() throws IllegalArgumentException {
+		this.id = null;
+		this.name = null;
+		this.hashCode = 0;
+		this.type = ModelKeyType.NULL;
+	}
+
 	public ModelKey(Integer id) throws IllegalArgumentException {
 		this((id != null) ? new Long(id) : null);
 	}
@@ -69,6 +76,10 @@ public final class ModelKey
 		this.type = ModelKeyType.NAME;
 	}
 
+	public static ModelKey emptyKey() {
+		return new ModelKey();
+	}
+
 	public ModelKeyType getType() {
 		return this.type;
 	}
@@ -85,8 +96,13 @@ public final class ModelKey
 		return key.type == this.type;
 	}
 
+	@Deprecated
 	public boolean isDefaultKey(ModelKey key) {
 		return key.type == ModelKeyType.DEFAULT;
+	}
+
+	public boolean isNullKey(ModelKey key) {
+		return key.type == ModelKeyType.NULL;
 	}
 
 	@Override
@@ -105,10 +121,16 @@ public final class ModelKey
 	public String keyAsString() {
 		String string;
 
-		if (this.type == ModelKeyType.NAME) {
-			string = this.name;
-		} else {
-			string = this.id.toString();
+		switch (this.type) {
+			case NAME:
+				string = this.name;
+				break;
+			case NUMBER:
+				string = this.id.toString();
+				break;
+			default:
+				string = null;
+				break;
 		}
 
 		return string;

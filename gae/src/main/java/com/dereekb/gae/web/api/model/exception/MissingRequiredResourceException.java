@@ -3,16 +3,18 @@ package com.dereekb.gae.web.api.model.exception;
 import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
- * Thrown when some resources are missing. Resources are described as strings,
- * and should be well described.
+ * Thrown when some resources are missing. Resources are keyed as strings.
  *
  * @author dereekb
  *
  */
-public class MissingRequiredResourceException extends RuntimeException {
+public class MissingRequiredResourceException extends RuntimeException
+        implements ApiResponseErrorConvertable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,8 +50,32 @@ public class MissingRequiredResourceException extends RuntimeException {
 		this.message = message;
 	}
 
-	public ApiResponseErrorImpl convertToResponse() {
+	// MARK: ApiResponseErrorConvertable
+	@Override
+	public ApiResponseErrorImpl asResponseError() {
 		return makeApiError(this.resources, this.message);
+	}
+
+	/**
+	 * Attempts to create an api response.
+	 * 
+	 * @param resourceKeys
+	 *            {@link Collection}. Never {@code null}.
+	 * @param message
+	 *            Error message.
+	 * @return {@link ApiResponseErrorImpl}, or {@code null} if the input
+	 *         collection is empty.
+	 */
+	public static ApiResponseErrorImpl tryMakeApiErrorForModelKeys(Collection<ModelKey> resourceKeys,
+	                                                               String message) {
+		ApiResponseErrorImpl error = null;
+
+		if (resourceKeys.isEmpty() == false) {
+			List<String> keys = ModelKey.readStringKeys(resourceKeys);
+			error = makeApiError(keys, message);
+		}
+
+		return error;
 	}
 
 	public static ApiResponseErrorImpl makeApiError(Collection<String> resources,

@@ -5,10 +5,11 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
-import com.dereekb.gae.model.crud.util.AttributeUpdateFailure;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
+import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.KeyedAttributeUpdateFailure;
 
 /**
  * Used by {@link UpdateResponse} to communicate which templates failed, and for
@@ -17,10 +18,10 @@ import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
  * @author dereekb
  *
  * @param <T>
- *            Template type
+ *            model type
  */
-public final class UpdateResponseFailurePair<T> extends HandlerPair<T, AttributeUpdateFailure>
-        implements AlwaysKeyed<T> {
+public final class UpdateResponseFailurePair<T extends UniqueModel> extends HandlerPair<T, AttributeUpdateFailure>
+        implements KeyedAttributeUpdateFailure, AlwaysKeyed<UniqueModel> {
 
 	public UpdateResponseFailurePair(T template, AttributeUpdateFailure failure) {
 		super(template, failure);
@@ -48,6 +49,24 @@ public final class UpdateResponseFailurePair<T> extends HandlerPair<T, Attribute
 		}
 
 		return failurePairs;
+	}
+
+	@Override
+	public String getAttribute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getDetail() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

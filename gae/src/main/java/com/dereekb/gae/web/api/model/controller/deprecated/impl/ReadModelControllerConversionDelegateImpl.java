@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.controller.impl;
+package com.dereekb.gae.web.api.model.controller.deprecated.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,6 @@ import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.web.api.model.controller.ReadModelControllerConversionDelegate;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.shared.exception.RequestArgumentException;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
@@ -31,7 +30,8 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @param <I>
  *            api output type
  */
-public final class ReadModelControllerConversionDelegateImpl<T extends UniqueModel, I>
+@Deprecated
+public class ReadModelControllerConversionDelegateImpl<T extends UniqueModel, I>
         implements ReadModelControllerConversionDelegate<T> {
 
 	private final String type;
@@ -69,8 +69,9 @@ public final class ReadModelControllerConversionDelegateImpl<T extends UniqueMod
 		return this.converter;
 	}
 
+	//MARK: ReadModelControllerConversionDelegate
 	@Override
-	public ReadRequest convert(List<String> ids) {
+	public ReadRequest convert(List<String> ids) throws RequestArgumentException {
 		List<ModelKey> keys = null;
 		ReadRequestOptions options = new ReadRequestOptionsImpl();
 

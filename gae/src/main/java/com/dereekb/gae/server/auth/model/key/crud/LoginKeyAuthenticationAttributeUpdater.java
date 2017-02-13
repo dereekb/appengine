@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.auth.model.key.crud;
 
-import com.dereekb.gae.model.crud.exception.AttributeFailureException;
 import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.login.Login;
@@ -13,6 +12,7 @@ import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusServiceManag
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGetter;
+import com.dereekb.gae.web.api.util.attribute.exception.AttributeUpdateFailureException;
 import com.googlecode.objectify.Key;
 
 /**
@@ -82,7 +82,7 @@ public class LoginKeyAuthenticationAttributeUpdater
 	@Override
 	public void updateTarget(LoginKey target,
 	                         LoginKey template)
-	        throws AttributeFailureException {
+	        throws AttributeUpdateFailureException {
 
 		// Linking is done at creation.
 		if (target.getLoginPointer() == null) {
@@ -93,7 +93,7 @@ public class LoginKeyAuthenticationAttributeUpdater
 			try {
 				authentication = LoginSecurityContext.getAuthentication();
 			} catch (NoSecurityContextException e) {
-				throw new AttributeFailureException("pointer", null, "No authentication available.");
+				throw new AttributeUpdateFailureException("pointer", null, "No authentication available.");
 			}
 
 			Key<LoginPointer> loginPointerKey = null;
@@ -104,7 +104,7 @@ public class LoginKeyAuthenticationAttributeUpdater
 				loginPointerKey = this.getKeyForCurrentUser(authentication);
 
 				if (loginPointerKey == null) {
-					throw new AttributeFailureException("pointer", null, "Login Key API not enabled for this account.");
+					throw new AttributeUpdateFailureException("pointer", null, "Login Key API not enabled for this account.");
 				}
 
 				// If the template does, then check that the current user is an
@@ -112,14 +112,14 @@ public class LoginKeyAuthenticationAttributeUpdater
 			} else if (authentication.getPrincipal().isAdministrator()) {
 				loginPointerKey = templatePointerKey;
 			} else {
-				throw new AttributeFailureException("pointer", templatePointerKey.getName(),
+				throw new AttributeUpdateFailureException("pointer", templatePointerKey.getName(),
 				        "Not permitted to set arbitrary pointer.");
 			}
 
 			if (loginPointerKey != null && this.isApiKeyPointer(loginPointerKey)) {
 				target.setLoginPointer(loginPointerKey);
 			} else {
-				throw new AttributeFailureException("pointer", templatePointerKey.getName(),
+				throw new AttributeUpdateFailureException("pointer", templatePointerKey.getName(),
 				        "Pointer is not an API key.");
 			}
 

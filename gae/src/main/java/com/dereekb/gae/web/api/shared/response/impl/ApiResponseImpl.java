@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
@@ -59,6 +60,15 @@ public class ApiResponseImpl
 
 	public ApiResponseImpl(boolean success) {
 		this.setSuccess(success);
+	}
+
+	public static ApiResponseImpl makeFailure(ApiResponseErrorConvertable errorConvertable) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseError error = errorConvertable.asResponseError();
+		response.setError(error);
+
+		return response;
 	}
 
 	@JsonInclude(Include.NON_DEFAULT)
@@ -128,8 +138,10 @@ public class ApiResponseImpl
 	}
 
 	public void addError(ApiResponseError error) {
-		this.initializeErrors();
-		this.errors.add(error);
+		if (error != null) {
+			this.initializeErrors();
+			this.errors.add(error);
+		}
 	}
 
 	public void addErrors(Collection<? extends ApiResponseError> errors) {

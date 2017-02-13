@@ -24,6 +24,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.task.IterableTask;
+import com.dereekb.gae.web.api.util.attribute.exception.KeyedAttributeUpdateFailureException;
 
 /**
  * Default implementation of {@link UpdateService} that uses a
@@ -99,8 +100,8 @@ public class UpdateServiceImpl<T extends UniqueModel>
 			Collection<ModelKey> unavailable = readResponse.getUnavailable();
 
 			updateResponse = new UpdateResponseImpl<T>(updated, unavailable, failurePairs);
-		} catch (AtomicOperationException e) {
-			throw e;
+		} catch (KeyedAttributeUpdateFailureException e) {
+			throw new AtomicOperationException(updateTemplates, e);
 		} catch (Exception e) {
 			throw new AtomicOperationException(updateTemplates, e);
 		}

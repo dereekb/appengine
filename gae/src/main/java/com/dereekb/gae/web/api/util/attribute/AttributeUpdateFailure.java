@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.crud.util;
+package com.dereekb.gae.web.api.util.attribute;
 
 /**
  * Attribute failure tuple to wrap which attribute failed updating, the invalid

@@ -24,6 +24,7 @@ import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.web.api.model.request.ApiUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -123,6 +124,21 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 			}
 
 			return this.serializedModels;
+		}
+
+		@Override
+		public Collection<ModelKey> getFailed() {
+			Collection<UpdateResponseFailurePair<T>> failurePairs = this.getFailurePairs();
+
+			List<ModelKey> keys = ModelKey.readModelKeysFromKeyed(failurePairs);
+			keys.addAll(super.getFailed());
+
+			return keys;
+		}
+
+		@Override
+		public Collection<ModelKey> getMissingKeys() {
+			return super.getFailed();
 		}
 
 		@Override

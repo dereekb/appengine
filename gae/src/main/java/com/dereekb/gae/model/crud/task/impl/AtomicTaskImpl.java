@@ -1,9 +1,7 @@
 package com.dereekb.gae.model.crud.task.impl;
 
 import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.task.ConfigurableTask;
 
 /**
@@ -50,9 +48,7 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 				this.usePair(pair, configuration);
 			} catch (AtomicFunctionException e) {
 				if (isAtomic) {
-					RuntimeException cause = e.getCause();
-					UniqueModel model = e.getModel();
-					throw new AtomicOperationException(model, cause);
+					throw e.getCause();
 				}
 			}
 		}

@@ -12,7 +12,7 @@
 	<mvc:annotation-driven />
 
 	<bean id="apiExceptionHandler"
-		class="com.dereekb.gae.web.api.model.exception.handler.ApiExceptionHandler">
+		class="com.dereekb.gae.web.api.exception.handler.ApiExceptionHandler">
 	</bean>
 
 	<bean id="modelRequestExceptionHandler"

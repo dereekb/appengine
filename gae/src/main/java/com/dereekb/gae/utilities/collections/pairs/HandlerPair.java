@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dereekb.gae.utilities.misc.keyed.Keyed;
-
 /**
  * Basic tuple.
  *
@@ -19,8 +17,7 @@ import com.dereekb.gae.utilities.misc.keyed.Keyed;
  * @param <R>
  *            Object value
  */
-public class HandlerPair<L, R>
-        implements Keyed<L> {
+public class HandlerPair<L, R> {
 
 	protected L key;
 	protected R object;
@@ -38,8 +35,7 @@ public class HandlerPair<L, R>
 		return this.object;
 	}
 
-	// MARK: AlwaysKeyed
-	@Override
+	// MARK: Keyed
 	public L keyValue() {
 		return this.getKey();
 	}

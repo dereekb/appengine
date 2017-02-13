@@ -68,4 +68,9 @@ public class UpdateResponseImpl<T extends UniqueModel> extends ModelServiceRespo
 		return failedPairsKeys;
 	}
 
+	@Override
+	public Collection<ModelKey> getMissingKeys() {
+		return super.getFailed();
+	}
+
 }

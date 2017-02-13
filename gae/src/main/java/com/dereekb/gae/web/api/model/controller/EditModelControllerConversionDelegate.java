@@ -6,7 +6,9 @@ import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.web.api.model.controller.exception.NoTemplateDataExeption;
 import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
 import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
 import com.dereekb.gae.web.api.model.request.ApiUpdateRequest;
@@ -26,12 +28,14 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  */
 public interface EditModelControllerConversionDelegate<T extends UniqueModel, I> {
 
-	public CreateRequest<T> convert(ApiCreateRequest<I> request);
+	// MARK: Requests
+	public CreateRequest<T> convert(ApiCreateRequest<I> request) throws NoTemplateDataExeption;
 
-	public UpdateRequest<T> convert(ApiUpdateRequest<I> request);
+	public UpdateRequest<T> convert(ApiUpdateRequest<I> request) throws NoTemplateDataExeption;
 
-	public DeleteRequest convert(ApiDeleteRequest request);
+	public DeleteRequest convert(ApiDeleteRequest request) throws ConversionFailureException;
 
+	// MARK: Responses
 	public ApiResponse convert(CreateResponse<T> response);
 
 	public ApiResponse convert(UpdateResponse<T> response);

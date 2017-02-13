@@ -277,7 +277,7 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	protected class AbstractClientServiceResponseImpl
 	        implements SimpleServiceResponse {
 
-		private List<ModelKey> serializedUnavailableKeys;
+		private List<ModelKey> serializedMissingKeys;
 
 		protected final ClientApiResponse response;
 
@@ -288,12 +288,12 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 		// MARK: Get Failed
 		@Override
 		public Collection<ModelKey> getFailed() {
-			if (this.serializedUnavailableKeys == null) {
-				this.serializedUnavailableKeys = AbstractClientModelCrudRequestSender.this
+			if (this.serializedMissingKeys == null) {
+				this.serializedMissingKeys = AbstractClientModelCrudRequestSender.this
 				        .serializeMissingResourceKeys(this.response);
 			}
 
-			return this.serializedUnavailableKeys;
+			return this.serializedMissingKeys;
 		}
 
 	}
