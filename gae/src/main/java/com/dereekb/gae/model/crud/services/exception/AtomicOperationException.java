@@ -37,21 +37,12 @@ public final class AtomicOperationException extends RuntimeException {
 		super(String.format("Models were were unavailable for reason: %s", reason));
 		this.failed = failed;
 		this.reason = reason;
-		this.exception = null;
-	}
-
-	public AtomicOperationException(Iterable<? extends UniqueModel> failed, Exception exception) {
-		super(exception);
-		this.reason = AtomicOperationExceptionReason.EXCEPTION;
-		this.failed = failed;
-		this.exception = exception;
 	}
 
 	public AtomicOperationException(String message, AtomicOperationExceptionReason reason) {
 		super(message);
 		this.failed = Collections.emptyList();
 		this.reason = reason;
-		this.exception = null;
 	}
 
 	public AtomicOperationException(UniqueModel failed, Exception exception) {
@@ -76,8 +67,19 @@ public final class AtomicOperationException extends RuntimeException {
 		this.exception = null;
 	}
 
-	public AtomicOperationException(Exception e) {
-		this.exception = null;
+	public AtomicOperationException(Iterable<? extends UniqueModel> failed, Exception exception) {
+		this(exception);
+		this.setFailed(failed);
+	}
+
+	public AtomicOperationException(Exception e) throws IllegalArgumentException {
+		super(e);
+
+		if (e == null) {
+			throw new IllegalArgumentException("Exception cannot be null.");
+		}
+
+		this.exception = e;
 		this.reason = AtomicOperationExceptionReason.EXCEPTION;
 	}
 
@@ -112,6 +114,12 @@ public final class AtomicOperationException extends RuntimeException {
 
 	public List<String> getUnavailableStringKeys() {
 		return ModelKey.readStringKeys(this.failed);
+	}
+
+	// MARK: Override
+	@Override
+	public Throwable getCause() {
+		return this.exception;
 	}
 
 }

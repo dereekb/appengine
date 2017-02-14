@@ -30,7 +30,7 @@ public class AtomicOperationFailureResolver {
 
 		switch (reason) {
 			case EXCEPTION:
-				Throwable cause = e.getCause();
+				Throwable cause = e.getException();
 				Class<?> causeType = cause.getClass();
 
 				// Only throw ApiSafeRuntimeException types.

@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.applications.api.api.login.key;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,21 +142,28 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		String name = "My API Key";
 		String verification = VERIFICATION_KEY;
 
-		this.mockEnableApiKey();
+		this.assertMockEnableApiKey();
 
 		String apiKeyId = this.createApiKey(name, verification, true);
 
 		MockHttpServletResponse response = this.mockApiLogin(apiKeyId, "INVALID VERIFICATION");
-		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 403);
+		Assert.assertTrue("API Key Authentication should fail.",
+		        response.getStatus() == HttpServletResponse.SC_FORBIDDEN);
 
 		response = this.mockApiLogin(apiKeyId, null);
-		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 400);
+		Assert.assertTrue("API Key Authentication should fail.",
+		        response.getStatus() == HttpServletResponse.SC_BAD_REQUEST);
+	}
+
+	private void assertMockEnableApiKey() throws Exception {
+		MockHttpServletResponse enableResponse = this.mockEnableApiKey();
+		Assert.assertTrue("Failed enabling API Key. Status: " + enableResponse.getStatus(),
+		        enableResponse.getStatus() == 200);
 	}
 
 	private MockHttpServletResponse mockEnableApiKey() throws Exception {
 		MockHttpServletRequestBuilder enableRequestBuilder = MockMvcRequestBuilders.put("/login/auth/key/enable");
 		MvcResult enableResult = this.performHttpRequest(enableRequestBuilder).andReturn();
-
 		return enableResult.getResponse();
 	}
 
