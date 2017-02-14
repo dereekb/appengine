@@ -11,7 +11,7 @@
 
 	<!-- CRUDs Controller -->
 	<bean id="loginKeyTaskQueueEditControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.crud.impl.TaskQueueEditControllerEntryImpl">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
 		<constructor-arg index="1"
 			ref="loginKeyTaskQueuePostCreateTask" />
@@ -22,7 +22,7 @@
 	</bean>
 
 	<bean id="loginKeyTaskQueuePostCreateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<!-- TODO: Send email to user stating an API key has been created. -->
@@ -31,7 +31,7 @@
 	</bean>
 
 	<bean id="loginKeyTaskQueuePostUpdateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 			</list>
@@ -39,7 +39,7 @@
 	</bean>
 
 	<bean id="loginKeyTaskQueueProcessDeleteTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
 		<constructor-arg index="1">
 			<list>
@@ -49,7 +49,7 @@
 
 	<!-- Iterate Controller -->
 	<bean id="loginKeyTaskQueueIterateControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
@@ -89,7 +89,7 @@
 		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl">
 		<constructor-arg index="0">
 			<bean
-				class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController"
+				class="com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController"
 				factory-method="pathForIterateTask">
 				<constructor-arg index="0" ref="loginKeyType" />
 				<constructor-arg index="1"

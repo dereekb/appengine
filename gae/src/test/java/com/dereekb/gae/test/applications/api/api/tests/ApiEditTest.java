@@ -14,10 +14,10 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.collections.SingleItem;
-import com.dereekb.gae.web.api.model.controller.EditModelController;
-import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
-import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
-import com.dereekb.gae.web.api.model.request.ApiUpdateRequest;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
+import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
+import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
+import com.dereekb.gae.web.api.model.crud.request.ApiUpdateRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 

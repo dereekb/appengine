@@ -16,7 +16,7 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.IterateTaskInputImpl;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.IterateTaskInputImpl;
 
 /**
  * Tests {@link IterateTaskExecutorImpl} and

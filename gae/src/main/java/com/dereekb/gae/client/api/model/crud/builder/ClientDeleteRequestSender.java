@@ -3,6 +3,7 @@ package com.dereekb.gae.client.api.model.crud.builder;
 import com.dereekb.gae.client.api.model.crud.request.ClientDeleteRequest;
 import com.dereekb.gae.client.api.model.crud.response.ClientDeleteResponse;
 import com.dereekb.gae.client.api.model.crud.services.ClientDeleteService;
+import com.dereekb.gae.client.api.model.shared.builder.SecuredClientModelRequestSender;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**

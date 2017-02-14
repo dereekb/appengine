@@ -25,7 +25,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
-import com.dereekb.gae.web.api.model.controller.ReadController;
+import com.dereekb.gae.web.api.model.crud.controller.ReadController;
 
 /**
  * {@link ClientReadRequestSender} implementation.

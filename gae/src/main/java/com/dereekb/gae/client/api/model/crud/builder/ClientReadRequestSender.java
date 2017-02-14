@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.builder;
 
 import com.dereekb.gae.client.api.model.crud.services.ClientReadService;
+import com.dereekb.gae.client.api.model.shared.builder.SecuredClientModelRequestSender;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;

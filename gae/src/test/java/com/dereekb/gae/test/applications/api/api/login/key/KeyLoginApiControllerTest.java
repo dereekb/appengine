@@ -21,7 +21,7 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.mock.auth.MockKeyLoginControllerUtility;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 import com.dereekb.gae.web.api.auth.controller.key.KeyLoginController;
-import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
+import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;

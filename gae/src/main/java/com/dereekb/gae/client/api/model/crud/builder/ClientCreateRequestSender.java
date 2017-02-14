@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.builder;
 
 import com.dereekb.gae.client.api.model.crud.services.ClientCreateService;
+import com.dereekb.gae.client.api.model.shared.builder.SecuredClientModelRequestSender;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;

@@ -19,7 +19,7 @@
 	<import resource="loginpointer.xml" />
 
 	<!-- Read Controller -->
-	<bean id="readController" class="com.dereekb.gae.web.api.model.controller.ReadController"
+	<bean id="readController" class="com.dereekb.gae.web.api.model.crud.controller.ReadController"
 		lazy-init="false">
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 		<constructor-arg index="1">

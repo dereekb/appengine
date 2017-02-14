@@ -25,7 +25,7 @@ import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
+import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**

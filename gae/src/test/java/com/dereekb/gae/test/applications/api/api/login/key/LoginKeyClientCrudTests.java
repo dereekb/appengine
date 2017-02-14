@@ -107,13 +107,11 @@ public class LoginKeyClientCrudTests extends ClientApiCrudTest<LoginKey> {
 		CreateRequest<LoginKey> createRequest = new CreateRequestImpl<LoginKey>(key);
 
 		try {
-			CreateResponse<LoginKey> response = createRequestSender.create(createRequest, security);
+			createRequestSender.create(createRequest, security);
 			Assert.fail();
 		} catch (ClientKeyedInvalidAttributeException attributeException) {
 			// Pass
 		}
-
-		// Try Again, Non-atomic
 
 	}
 

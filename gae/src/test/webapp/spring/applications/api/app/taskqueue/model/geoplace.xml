@@ -11,7 +11,7 @@
 
 	<!-- CRUDs Controller -->
 	<bean id="geoPlaceTaskQueueEditControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.crud.impl.TaskQueueEditControllerEntryImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1"
 			ref="geoPlaceTaskQueuePostCreateTask" />
@@ -22,7 +22,7 @@
 	</bean>
 
 	<bean id="geoPlaceTaskQueuePostCreateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -31,7 +31,7 @@
 	</bean>
 
 	<bean id="geoPlaceTaskQueuePostUpdateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -40,7 +40,7 @@
 	</bean>
 
 	<bean id="geoPlaceTaskQueueProcessDeleteTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1">
 			<list>
@@ -51,7 +51,7 @@
 
 	<!-- Iterate Controller -->
 	<bean id="geoPlaceTaskQueueIterateControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">

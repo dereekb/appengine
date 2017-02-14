@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
+import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractSecuredClientModelRequestSender;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestUrlImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;

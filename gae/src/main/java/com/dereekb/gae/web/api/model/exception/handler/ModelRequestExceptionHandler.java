@@ -1,7 +1,6 @@
 package com.dereekb.gae.web.api.model.exception.handler;
 
 import org.springframework.core.Ordered;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.dereekb.gae.web.api.model.controller.exception.NoTemplateDataExeption;
+import com.dereekb.gae.web.api.model.crud.exception.NoTemplateDataExeption;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
