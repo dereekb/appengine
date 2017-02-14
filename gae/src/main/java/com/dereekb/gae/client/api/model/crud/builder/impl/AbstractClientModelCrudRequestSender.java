@@ -281,6 +281,26 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	}
 
 	// MARK: Utility Classes
+	protected class AbstractClientServiceModelResponseImpl extends AbstractClientServiceResponseImpl {
+
+		private List<T> serializedModels;
+
+		public AbstractClientServiceModelResponseImpl(ClientApiResponse response) {
+			super(response);
+		}
+
+		// MARK: Models Response
+		public Collection<T> getModels() {
+			if (this.serializedModels == null) {
+				ClientApiResponseData data = this.response.getPrimaryData();
+				this.serializedModels = AbstractClientModelCrudRequestSender.this.serializeModels(data);
+			}
+
+			return this.serializedModels;
+		}
+
+	}
+
 	protected class AbstractClientServiceResponseImpl
 	        implements SimpleServiceResponse {
 

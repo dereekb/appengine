@@ -13,6 +13,10 @@ public interface WebServiceTester {
 
 	public ResultActions performHttpRequest(MockHttpServletRequestBuilder request) throws Exception;
 
+	public ResultActions performHttpRequest(MockHttpServletRequestBuilder request,
+	                                        String tokenOverride)
+	        throws Exception;
+
 	public ResultActions performSecureHttpRequest(MockHttpServletRequestBuilder request,
 	                                              String token)
 	        throws Exception;

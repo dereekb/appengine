@@ -17,7 +17,7 @@
 		<constructor-arg index="3" ref="loginPointerRegistry" />
 		<constructor-arg index="4" ref="loginRegistry" />
 		<!-- Admin Login -->
-		<property name="encodedRoles" value="1" />
+		<property name="encodedRoles" value="0" />
 		<property name="encodedAdminRoles" value="3" />
 	</bean>
 	

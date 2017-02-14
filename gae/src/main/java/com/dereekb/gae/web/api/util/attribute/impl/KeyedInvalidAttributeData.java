@@ -4,6 +4,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -15,11 +16,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  *
  */
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class KeyedInvalidAttributeData extends InvalidAttributeImpl {
 
 	private String key;
+
+	public KeyedInvalidAttributeData() {}
 
 	public KeyedInvalidAttributeData(AttributeUpdateFailure failure) {
 		super(failure);
@@ -27,7 +30,7 @@ public final class KeyedInvalidAttributeData extends InvalidAttributeImpl {
 
 	public KeyedInvalidAttributeData(KeyedInvalidAttribute failure) {
 		super(failure);
-		this.setKey(failure.keyValue());
+		this.setKeyWithModel(failure.keyValue());
 	}
 
 	public String getKey() {
@@ -38,12 +41,13 @@ public final class KeyedInvalidAttributeData extends InvalidAttributeImpl {
 		this.key = key;
 	}
 
-	public void setKey(UniqueModel uniqueModel) {
+	@JsonIgnore
+	public void setKeyWithModel(UniqueModel uniqueModel) {
 		String key = null;
 		ModelKey modelKey = uniqueModel.getModelKey();
 
 		if (modelKey != null) {
-			this.key = modelKey.toString();
+			key = modelKey.toString();
 		}
 
 		this.setKey(key);

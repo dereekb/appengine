@@ -1,13 +1,14 @@
 package com.dereekb.gae.client.api.model.crud.builder.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
-import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
+import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
@@ -57,8 +58,30 @@ public abstract class AbstractClientModelEditRequestSender<T extends UniqueModel
 		super(type, pathFormat, dtoType, dtoReader, keyTypeConverter, requestSender);
 	}
 
+	// MARK: Override
+	@Override
+	public void assertSuccessfulResponse(ClientApiResponse clientResponse) throws ClientRequestFailureException {
+		if (clientResponse.getSuccess() == false) {
+			this.assertNoInvalidAttributes(clientResponse);
+			super.assertSuccessfulResponse(clientResponse);
+		}
+	}
+
+	public void assertNoInvalidAttributes(ClientApiResponse clientResponse)
+	        throws ClientKeyedInvalidAttributeException {
+		ClientResponseError error = clientResponse.getError();
+
+		if (error.getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR) {
+			List<KeyedInvalidAttribute> invalidAttributes = this.serializeInvalidAttributes(clientResponse);
+
+			if (invalidAttributes.isEmpty() == false) {
+				throw new ClientKeyedInvalidAttributeException(invalidAttributes, clientResponse);
+			}
+		}
+	}
+
 	// MARK: Utility
-	public List<KeyedInvalidAttribute> serializeFailures(ClientApiResponse response) {
+	public List<KeyedInvalidAttribute> serializeInvalidAttributes(ClientApiResponse response) {
 		List<KeyedInvalidAttribute> failures = null;
 
 		ClientResponseError error = response.getError();
@@ -101,26 +124,6 @@ public abstract class AbstractClientModelEditRequestSender<T extends UniqueModel
 		}
 
 		return failures;
-	}
-
-	protected class AbstractClientServiceModelResponseImpl extends AbstractClientServiceResponseImpl {
-
-		private List<T> serializedModels;
-
-		public AbstractClientServiceModelResponseImpl(ClientApiResponse response) {
-			super(response);
-		}
-
-		// MARK: Models Response
-		public Collection<T> getModels() {
-			if (this.serializedModels == null) {
-				ClientApiResponseData data = this.response.getPrimaryData();
-				this.serializedModels = AbstractClientModelEditRequestSender.this.serializeModels(data);
-			}
-
-			return this.serializedModels;
-		}
-
 	}
 
 }

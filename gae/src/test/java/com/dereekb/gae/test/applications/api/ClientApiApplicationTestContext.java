@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.test.applications.api.client.MockClientRequestSender;
+import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
 
 /**
  * Abstract {@link ApiApplicationTestContext} extension that initializes the

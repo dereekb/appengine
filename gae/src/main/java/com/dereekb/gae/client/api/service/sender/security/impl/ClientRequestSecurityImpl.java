@@ -33,6 +33,10 @@ public class ClientRequestSecurityImpl
 		return new ClientRequestSecurityImpl(ClientRequestSecurityContextType.SYSTEM);
 	}
 
+	public static ClientRequestSecurity current() {
+		return new ClientRequestSecurityImpl(ClientRequestSecurityContextType.CURRENT);
+	}
+
 	// MARK: ClientRequestSecurity
 	@Override
 	public EncodedLoginToken getOverrideToken() {

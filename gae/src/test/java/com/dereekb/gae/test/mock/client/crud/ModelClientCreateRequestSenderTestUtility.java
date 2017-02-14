@@ -1,11 +1,9 @@
-package com.dereekb.gae.test.applications.api.client;
+package com.dereekb.gae.test.mock.client.crud;
 
 import java.util.Collection;
 
 import org.junit.Assert;
 
-import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
-import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
@@ -37,15 +35,12 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		this.testModelGenerator = testModelGenerator;
 	}
 
+	// MARK: Tests
 	/**
 	 * Tests trying to create a model on a type that does not support creating
 	 * models.
 	 */
-	public void testCreateIsUnavailableRequest(ClientRequestSecurity security)
-	        throws NotClientApiResponseException,
-	            ClientConnectionException,
-	            ClientAuthenticationException,
-	            ClientRequestFailureException {
+	public void testCreateIsUnavailableRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
 
 		T template = this.testModelGenerator.generate();
 		template.setModelKey(null);
@@ -70,11 +65,7 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 
 	}
 
-	public void testMockCreateRequest(ClientRequestSecurity security)
-	        throws NotClientApiResponseException,
-	            ClientConnectionException,
-	            ClientAuthenticationException,
-	            ClientRequestFailureException {
+	public void testMockCreateRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
 
 		T template = this.testModelGenerator.generate();
 		template.setModelKey(null);

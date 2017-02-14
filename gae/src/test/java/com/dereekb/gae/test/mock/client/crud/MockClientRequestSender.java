@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.client;
+package com.dereekb.gae.test.mock.client.crud;
 
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
@@ -10,7 +10,7 @@ import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientResponse;
 import com.dereekb.gae.client.api.service.response.impl.ClientResponseImpl;
 import com.dereekb.gae.client.api.service.sender.ClientRequestSender;
-import com.dereekb.gae.test.spring.WebServiceTester;
+import com.dereekb.gae.test.mock.AbstractMockWebServiceTestUtility;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 
 /**
@@ -19,24 +19,8 @@ import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
  * @author dereekb
  *
  */
-public class MockClientRequestSender
+public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
         implements ClientRequestSender {
-
-	private WebServiceTester webServiceTester;
-
-	public MockClientRequestSender() {};
-
-	public WebServiceTester getWebServiceTester() {
-		return this.webServiceTester;
-	}
-
-	public void setWebServiceTester(WebServiceTester webServiceTester) {
-		if (webServiceTester == null) {
-			throw new IllegalArgumentException("WebServiceTester cannot be null.");
-		}
-
-		this.webServiceTester = webServiceTester;
-	}
 
 	// MARK: ClientRequestSender
 	@Override
@@ -48,7 +32,7 @@ public class MockClientRequestSender
 		ClientResponse response;
 
 		try {
-			MvcResult result = this.webServiceTester.mockMvcPerform(builder).andReturn();
+			MvcResult result = this.getWebServiceTester().mockMvcPerform(builder).andReturn();
 			MockHttpServletResponse servletResponse = result.getResponse();
 
 			int status = servletResponse.getStatus();

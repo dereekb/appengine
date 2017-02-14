@@ -15,6 +15,7 @@ import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
@@ -74,9 +75,16 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	public SimpleReadResponse<T> read(ReadRequest request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
+		return this.read(request, null);
+	}
 
-		SerializedClientApiResponse<SimpleReadResponse<T>> clientResponse = this.sendRequest(request,
-		        this.getDefaultServiceSecurity());
+	@Override
+	public SimpleReadResponse<T> read(ReadRequest request,
+	                                  ClientRequestSecurity security)
+	        throws ClientAtomicOperationException,
+	            ClientRequestFailureException {
+
+		SerializedClientApiResponse<SimpleReadResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedPrimaryData();
 	}

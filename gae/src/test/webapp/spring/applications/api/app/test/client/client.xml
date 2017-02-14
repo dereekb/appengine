@@ -15,7 +15,7 @@
 	
 	<!-- Base client-request sender. -->
 	<bean id="mockClientRequestSender"
-		class="com.dereekb.gae.test.applications.api.client.MockClientRequestSender">
+		class="com.dereekb.gae.test.mock.client.crud.MockClientRequestSender">
 	</bean>
 	
 	<bean id="clientApiRequestSender"

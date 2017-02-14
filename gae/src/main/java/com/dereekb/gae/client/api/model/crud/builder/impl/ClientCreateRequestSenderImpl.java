@@ -8,6 +8,7 @@ import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.services.ClientCreateService;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
+import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
@@ -16,6 +17,7 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
@@ -66,9 +68,16 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	public CreateResponse<T> create(CreateRequest<T> request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
+		return this.create(request, null);
+	}
 
-		SerializedClientApiResponse<CreateResponse<T>> clientResponse = this.sendRequest(request,
-		        this.getDefaultServiceSecurity());
+	@Override
+	public CreateResponse<T> create(CreateRequest<T> request,
+	                                ClientRequestSecurity security)
+	        throws ClientAtomicOperationException,
+	            ClientKeyedInvalidAttributeException,
+	            ClientRequestFailureException {
+		SerializedClientApiResponse<CreateResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedPrimaryData();
 	}
@@ -131,7 +140,7 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		private List<? extends InvalidCreateTemplatePair<T>> buildInvalidTemplatePairs() {
 			List<T> templates = this.request.getTemplates();
 			List<KeyedInvalidAttribute> attributes = ClientCreateRequestSenderImpl.this
-			        .serializeFailures(this.response);
+			        .serializeInvalidAttributes(this.response);
 
 			List<InvalidCreateTemplatePair<T>> pairs = new ArrayList<InvalidCreateTemplatePair<T>>();
 

@@ -17,6 +17,7 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
 import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
@@ -37,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <O>
  *            model dto type
  */
-public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelEditRequestSender<T, O, ClientDeleteRequest, ClientDeleteResponse<T>>
+public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelCrudRequestSender<T, O, ClientDeleteRequest, ClientDeleteResponse<T>>
         implements ClientDeleteRequestSender<T>, ClientDeleteService<T> {
 
 	/**
@@ -72,8 +73,15 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	public ClientDeleteResponse<T> delete(ClientDeleteRequest request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
-		SerializedClientApiResponse<ClientDeleteResponse<T>> clientResponse = this.sendRequest(request,
-		        this.getDefaultServiceSecurity());
+		return this.delete(request, null);
+	}
+
+	@Override
+	public ClientDeleteResponse<T> delete(ClientDeleteRequest request,
+	                                      ClientRequestSecurity security)
+	        throws ClientAtomicOperationException,
+	            ClientRequestFailureException {
+		SerializedClientApiResponse<ClientDeleteResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedPrimaryData();
 	}

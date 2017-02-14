@@ -126,22 +126,7 @@ public class SecuredClientApiRequestSenderImpl
 		String tokenString = null;
 
 		if (overrideToken == null) {
-			ClientRequestSecurityContextType type = security.getSecurityContextType();
-
-			switch (type) {
-				case CURRENT:
-					DecodedLoginToken currentToken = LoginSecurityContext.getAuthentication().getCredentials();
-					tokenString = currentToken.getEncodedLoginToken();
-					break;
-				case SYSTEM:
-					tokenString = this.systemTokenFactory.makeTokenString();
-					break;
-				case NONE:
-					// No token.
-					break;
-				default:
-					break;
-			}
+			tokenString = this.getTokenForSecurity(security);
 		} else {
 			tokenString = overrideToken.getEncodedLoginToken();
 		}
@@ -153,6 +138,29 @@ public class SecuredClientApiRequestSenderImpl
 		}
 
 		return securedRequest;
+	}
+
+	protected String getTokenForSecurity(ClientRequestSecurity security) {
+		String tokenString = null;
+
+		ClientRequestSecurityContextType type = security.getSecurityContextType();
+
+		switch (type) {
+			case CURRENT:
+				DecodedLoginToken currentToken = LoginSecurityContext.getAuthentication().getCredentials();
+				tokenString = currentToken.getEncodedLoginToken();
+				break;
+			case SYSTEM:
+				tokenString = this.systemTokenFactory.makeTokenString();
+				break;
+			case NONE:
+				// No token.
+				break;
+			default:
+				break;
+		}
+
+		return tokenString;
 	}
 
 }

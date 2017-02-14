@@ -1,25 +1,29 @@
 package com.dereekb.gae.test.applications.api.api.tests;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
+import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
+import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.test.applications.api.ClientApiApplicationTestContext;
-import com.dereekb.gae.test.applications.api.client.ModelClientCreateRequestSenderTestUtility;
-import com.dereekb.gae.test.applications.api.client.ModelClientDeleteRequestSenderTestUtility;
-import com.dereekb.gae.test.applications.api.client.ModelClientReadRequestSenderTestUtility;
-import com.dereekb.gae.test.applications.api.client.ModelClientUpdateRequestSenderTestUtility;
+import com.dereekb.gae.test.mock.client.crud.ModelClientCreateRequestSenderTestUtility;
+import com.dereekb.gae.test.mock.client.crud.ModelClientDeleteRequestSenderTestUtility;
+import com.dereekb.gae.test.mock.client.crud.ModelClientReadRequestSenderTestUtility;
+import com.dereekb.gae.test.mock.client.crud.ModelClientUpdateRequestSenderTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiApplicationTestContext {
 
 	private TestModelGenerator<T> testModelGenerator;
+
+	private boolean canCreateModel = true;
 
 	private ClientCreateRequestSender<T> createRequestSender;
 	private ClientReadRequestSender<T> readRequestSender;
@@ -31,12 +35,20 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 	private ModelClientUpdateRequestSenderTestUtility<T> updateRequestUtility;
 	private ModelClientDeleteRequestSenderTestUtility<T> deleteRequestUtility;
 
-	public TestModelGenerator<T> getTestLoginGenerator() {
+	public TestModelGenerator<T> getTestModelGenerator() {
 		return this.testModelGenerator;
 	}
 
 	public void setTestModelGenerator(TestModelGenerator<T> testModelGenerator) {
 		this.testModelGenerator = testModelGenerator;
+	}
+
+	public boolean isCanCreateModel() {
+		return this.canCreateModel;
+	}
+
+	public void setCanCreateModel(boolean canCreateModel) {
+		this.canCreateModel = canCreateModel;
 	}
 
 	public ClientCreateRequestSender<T> getCreateRequestSender() {
@@ -95,34 +107,58 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 		}
 	}
 
+	public ModelClientCreateRequestSenderTestUtility<T> getCreateRequestUtility() {
+		return this.createRequestUtility;
+	}
+
+	public ModelClientReadRequestSenderTestUtility<T> getReadRequestUtility() {
+		return this.readRequestUtility;
+	}
+
+	public ModelClientUpdateRequestSenderTestUtility<T> getUpdateRequestUtility() {
+		return this.updateRequestUtility;
+	}
+
+	public ModelClientDeleteRequestSenderTestUtility<T> getDeleteRequestUtility() {
+		return this.deleteRequestUtility;
+	}
+
 	// MARK: Create Tests
 	@Test
-	@Ignore
 	public void testSystemClientCreateIsUnavailable() throws Exception {
-		if (this.createRequestUtility != null) {
-			this.createRequestUtility.testCreateIsUnavailableRequest(ClientRequestSecurityImpl.systemSecurity());
+		if (this.canCreateModel == false && this.createRequestUtility != null) {
+			this.createRequestUtility.testCreateIsUnavailableRequest(this.getRequestSecurity());
 		}
 	}
+
+	@Test
+	public void testSystemModelClientCreateRequest() throws Exception {
+		if (this.canCreateModel == true && this.createRequestUtility != null) {
+			this.createRequestUtility.testMockCreateRequest(this.getRequestSecurity());
+		}
+	}
+
+	// TODO: Add test for invalid create templates.
 
 	// MARK: Read Tests
 	@Test
 	public void testSystemModelClientReadRequest() throws Exception {
 		if (this.readRequestUtility != null) {
-			this.readRequestUtility.testMockReadRequest(ClientRequestSecurityImpl.systemSecurity());
+			this.readRequestUtility.testMockReadRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testNonAtomicSystemModelClientReadRequest() throws Exception {
 		if (this.readRequestUtility != null) {
-			this.readRequestUtility.testNonAtomicSystemReadRequest(ClientRequestSecurityImpl.systemSecurity());
+			this.readRequestUtility.testNonAtomicSystemReadRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testAtomicSystemModelClientReadRequest() throws Exception {
 		if (this.readRequestUtility != null) {
-			this.readRequestUtility.testAtomicSystemReadRequestFailures(ClientRequestSecurityImpl.systemSecurity());
+			this.readRequestUtility.testAtomicSystemReadRequestFailures(this.getRequestSecurity());
 		}
 	}
 
@@ -130,32 +166,38 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 	@Test
 	public void testAtomicSystemModelClientUpdateRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
-			this.updateRequestUtility.testMockUpdateRequest(ClientRequestSecurityImpl.systemSecurity());
+			this.updateRequestUtility.testMockUpdateRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testAtomicSystemModelClientUnavailableRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
-			this.updateRequestUtility
-			        .testMockAtomicUnavailableUpdateRequest(ClientRequestSecurityImpl.systemSecurity());
+			this.updateRequestUtility.testMockAtomicUnavailableUpdateRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testNonAtomicSystemModelClientUnavailableRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
-			this.updateRequestUtility
-			        .testMockNonAtomicUnavailableUpdateRequest(ClientRequestSecurityImpl.systemSecurity());
+			this.updateRequestUtility.testMockNonAtomicUnavailableUpdateRequest(this.getRequestSecurity());
 		}
 	}
+
+	// TODO: Add test for invalid update templates.
 
 	// MARK: Delete Tests
 	@Test
 	public void testMockDeleteRequestReturnModels() throws Exception {
 		if (this.deleteRequestUtility != null) {
-			this.deleteRequestUtility.testMockDeleteRequestReturnModels(ClientRequestSecurityImpl.systemSecurity());
+			this.deleteRequestUtility.testMockDeleteRequestReturnModels(this.getRequestSecurity());
 		}
+	}
+
+	// MARK: Utility
+	public ClientRequestSecurity getRequestSecurity() {
+		EncodedLoginToken overrideToken = new EncodedLoginTokenImpl(this.testLoginTokenContext.getToken());
+		return new ClientRequestSecurityImpl(overrideToken);
 	}
 
 }

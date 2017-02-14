@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.client;
+package com.dereekb.gae.test.mock.client.crud;
 
 import java.util.Collection;
 

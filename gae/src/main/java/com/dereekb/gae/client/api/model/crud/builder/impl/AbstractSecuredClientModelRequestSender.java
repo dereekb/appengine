@@ -68,7 +68,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 	public void setDefaultServiceSecurity(ClientRequestSecurity defaultServiceSecurity) {
 		if (defaultServiceSecurity == null) {
-			throw new IllegalArgumentException("defaultServiceSecurity cannot be null.");
+			throw new IllegalArgumentException("DefaultServiceSecurity cannot be null.");
 		}
 
 		this.defaultServiceSecurity = defaultServiceSecurity;
@@ -82,6 +82,10 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	            ClientConnectionException,
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
+
+		if (security == null) {
+			security = this.getDefaultServiceSecurity();
+		}
 
 		ClientRequest clientRequest = this.buildClientRequest(request);
 		ClientApiResponse clientResponse = this.requestSender.sendRequest(clientRequest, security);

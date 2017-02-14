@@ -1,6 +1,5 @@
 package com.dereekb.gae.test.applications.api.api.login.login;
 
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -49,11 +48,8 @@ public class LoginClientCrudTests extends ClientApiCrudTest<Login> {
 		super.setDeleteRequestSender(requestSender);
 	}
 
-	// MARK: Create Overrides
-	@Override
-	@Test
-	public void testSystemClientCreateIsUnavailable() throws Exception {
-		super.testSystemClientCreateIsUnavailable();
+	public LoginClientCrudTests() {
+		this.setCanCreateModel(false);
 	}
 
 }

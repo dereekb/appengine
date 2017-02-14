@@ -15,6 +15,7 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
@@ -64,9 +65,16 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	public SimpleUpdateResponse<T> update(UpdateRequest<T> request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
+		return this.update(request, null);
+	}
 
-		SerializedClientApiResponse<SimpleUpdateResponse<T>> clientResponse = this.sendRequest(request,
-		        this.getDefaultServiceSecurity());
+	@Override
+	public SimpleUpdateResponse<T> update(UpdateRequest<T> request,
+	                                      ClientRequestSecurity security)
+	        throws ClientAtomicOperationException,
+	            ClientRequestFailureException {
+
+		SerializedClientApiResponse<SimpleUpdateResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedPrimaryData();
 	}
@@ -132,7 +140,7 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		@Override
 		public Collection<KeyedInvalidAttribute> getUpdateFailures() {
 			if (this.serializedFailures == null) {
-				this.serializedFailures = ClientUpdateRequestSenderImpl.this.serializeFailures(this.response);
+				this.serializedFailures = ClientUpdateRequestSenderImpl.this.serializeInvalidAttributes(this.response);
 			}
 
 			return this.serializedFailures;

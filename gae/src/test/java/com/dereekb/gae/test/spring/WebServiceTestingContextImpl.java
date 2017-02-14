@@ -100,6 +100,18 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	}
 
 	@Override
+	public ResultActions performHttpRequest(MockHttpServletRequestBuilder request,
+	                                        String tokenOverride)
+	        throws Exception {
+
+		if (tokenOverride == null && this.testLoginTokenContext != null) {
+			tokenOverride = this.testLoginTokenContext.getToken();
+		}
+
+		return this.performSecureHttpRequest(request, tokenOverride);
+	}
+
+	@Override
 	public ResultActions performSecureHttpRequest(MockHttpServletRequestBuilder request,
 	                                              String token)
 	        throws Exception {
