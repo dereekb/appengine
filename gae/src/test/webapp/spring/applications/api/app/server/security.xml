@@ -63,13 +63,13 @@
 		<security:intercept-url pattern="/taskqueue/**"
 			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
 
-		<!-- LoginKey Auth Requests are rejected for anonymous and SYSTEM users. -->
+		<!-- LoginKey Auth Requests are rejected for anonymous, API Keys, and SYSTEM users. -->
 		<security:intercept-url pattern="/login/auth/key/*"
 			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON', 'ROLE_SYSTEM')" />
 
-		<!-- LoginKey Requests not allowed to access loginKey API. -->
+		<!-- LoginKey Requests are rejected for anonymous users and API Key login types. -->
 		<security:intercept-url request-matcher-ref="loginKeyObjectApiPathRequestMatcher"
-			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON', 'ROLE_SYSTEM')" />
+			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON')" />
 
 		<!-- Secured Owned Patterns -->
 		<security:intercept-url request-matcher-ref="securedModelPatternMatcher"

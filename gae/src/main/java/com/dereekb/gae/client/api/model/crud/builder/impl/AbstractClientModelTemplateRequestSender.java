@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
+ * {@link AbstractClientModelCrudRequestSender} extension used for template
+ * requests, such as Create and Update.
  * 
  * @author dereekb
  *
@@ -39,9 +41,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <S>
  *            response type
  */
-public abstract class AbstractClientModelEditRequestSender<T extends UniqueModel, O, R, S> extends AbstractClientModelCrudRequestSender<T, O, R, S> {
+public abstract class AbstractClientModelTemplateRequestSender<T extends UniqueModel, O, R, S> extends AbstractClientModelCrudRequestSender<T, O, R, S> {
 
-	public AbstractClientModelEditRequestSender(String type,
+	public AbstractClientModelTemplateRequestSender(String type,
 	        Class<O> dtoType,
 	        BidirectionalConverter<T, O> dtoReader,
 	        TypeModelKeyConverter keyTypeConverter,
@@ -49,7 +51,7 @@ public abstract class AbstractClientModelEditRequestSender<T extends UniqueModel
 		super(type, dtoType, dtoReader, keyTypeConverter, requestSender);
 	}
 
-	public AbstractClientModelEditRequestSender(String type,
+	public AbstractClientModelTemplateRequestSender(String type,
 	        String pathFormat,
 	        Class<O> dtoType,
 	        BidirectionalConverter<T, O> dtoReader,

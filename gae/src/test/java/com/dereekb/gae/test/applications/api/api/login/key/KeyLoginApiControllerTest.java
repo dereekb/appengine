@@ -90,6 +90,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	public void testAPIAuthLogin() throws Exception {
 
 		// Already Logged In. Must enable.
+		this.testLoginTokenContext.generateLogin("REGULAR_USER");
 		this.mockLoginUtil.assertMockEnableApiKey();
 
 		// Create an API Key
@@ -144,6 +145,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		String name = "My API Key";
 		String verification = VERIFICATION_KEY;
 
+		this.testLoginTokenContext.generateLogin("REGULAR_USER");
 		this.mockLoginUtil.assertMockEnableApiKey();
 
 		String apiKeyId = this.createApiKey(name, verification, true);

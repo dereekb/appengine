@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <O>
  *            model dto type
  */
-public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelEditRequestSender<T, O, UpdateRequest<T>, SimpleUpdateResponse<T>>
+public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientModelTemplateRequestSender<T, O, UpdateRequest<T>, SimpleUpdateResponse<T>>
         implements ClientUpdateRequestSender<T>, ClientUpdateService<T> {
 
 	/**
