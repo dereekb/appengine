@@ -166,4 +166,13 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 	}
 
+	protected class AbstractSerializedResponse {
+
+		protected final ClientApiResponse response;
+
+		public AbstractSerializedResponse(ClientApiResponse response) {
+			this.response = response;
+		}
+
+	}
 }

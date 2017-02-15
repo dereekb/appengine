@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
@@ -23,6 +24,7 @@ import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityMo
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityReader;
 import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
+import com.dereekb.gae.server.datastore.objectify.keys.IllegalKeyConversionException;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
@@ -127,7 +129,8 @@ public class ObjectifyDatabaseImpl
 	 *            model type
 	 */
 	protected class ObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>>
-	        implements ObjectifyDatabaseEntity<T>, ObjectifyDatabaseEntityReader<T> {
+	        implements ObjectifyKeyConverter<T, ModelKey>, ObjectifyDatabaseEntity<T>,
+	        ObjectifyDatabaseEntityReader<T> {
 
 		private boolean configuredAsync = false;
 
@@ -495,7 +498,8 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
-		public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters) throws IllegalQueryArgumentException {
+		public ObjectifyQueryRequestBuilder<T> makeQuery(Map<String, String> parameters)
+		        throws IllegalQueryArgumentException {
 			ObjectifyQueryRequestBuilder<T> builder = this.makeQuery();
 
 			if (this.initializer != null && parameters != null) {
@@ -518,6 +522,42 @@ public class ObjectifyDatabaseImpl
 		@Override
 		public ModelKeyListAccessor<T> createAccessorWithModels(Collection<T> models) {
 			return new LoadedModelKeyListAccessor<T>(this.modelTypeName, models);
+		}
+
+		// MARK: ObjectifyKeyConverter
+		@Override
+		public ModelKey readKey(Key<T> key) throws IllegalKeyConversionException, NullPointerException {
+			return this.objectifyKeyConverter.readKey(key);
+		}
+
+		@Override
+		public List<ModelKey> readKeys(Iterable<? extends Key<T>> keys) throws IllegalKeyConversionException {
+			return this.objectifyKeyConverter.readKeys(keys);
+		}
+
+		@Override
+		public Key<T> writeKey(ModelKey element) throws IllegalKeyConversionException {
+			return this.objectifyKeyConverter.writeKey(element);
+		}
+
+		@Override
+		public List<Key<T>> writeKeys(Iterable<? extends ModelKey> elements) throws IllegalKeyConversionException {
+			return this.objectifyKeyConverter.writeKeys(elements);
+		}
+
+		@Override
+		public List<ModelKey> convertTo(Collection<? extends Key<T>> input) throws ConversionFailureException {
+			return this.objectifyKeyConverter.convertTo(input);
+		}
+
+		@Override
+		public List<Key<T>> convertFrom(Collection<? extends ModelKey> input) throws ConversionFailureException {
+			return this.objectifyKeyConverter.convertFrom(input);
+		}
+
+		@Override
+		public ModelKeyType getModelKeyType() {
+			return this.objectifyKeyConverter.getModelKeyType();
 		}
 
 		// MARK: ObjectifyQueryIterableFactory

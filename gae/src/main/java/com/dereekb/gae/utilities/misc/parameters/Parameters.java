@@ -3,7 +3,7 @@ package com.dereekb.gae.utilities.misc.parameters;
 import java.util.Map;
 
 /**
- * Type that can expose it's data with string parameters.
+ * Type that can be represented by a map of parameters.
  * 
  * @author dereekb
  *
@@ -11,7 +11,7 @@ import java.util.Map;
 public interface Parameters {
 
 	/**
-	 * Gets the parameters.
+	 * Gets a map container all string encoded parameters.
 	 * 
 	 * @return {@link Map}. Never {@code null}.
 	 */

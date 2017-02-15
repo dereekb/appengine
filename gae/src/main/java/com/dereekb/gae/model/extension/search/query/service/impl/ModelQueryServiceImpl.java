@@ -75,7 +75,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		}
 
 		ExecutableObjectifyQuery<T> query = builder.buildExecutableQuery();
-		return new ResponseImpl(request.isKeysOnly(), query);
+		return new ModelQueryResponseImpl(request.isKeysOnly(), query);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 	 * @author dereekb
 	 *
 	 */
-	private class ResponseImpl
+	private class ModelQueryResponseImpl
 	        implements ModelQueryResponse<T> {
 
 		private final boolean keysQuery;
@@ -96,7 +96,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		private List<ModelKey> keys;
 		private List<Key<T>> objectifyKeys;
 
-		public ResponseImpl(boolean keysQuery, ExecutableObjectifyQuery<T> query) {
+		public ModelQueryResponseImpl(boolean keysQuery, ExecutableObjectifyQuery<T> query) {
 			this.keysQuery = keysQuery;
 			this.query = query;
 		}
@@ -114,7 +114,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 					this.models = this.query.queryModels();
 				} else {
 					this.models = ModelQueryServiceImpl.this.registry
-					        .getWithObjectifyKeys(this.getResponseObjectifyKeys());
+					        .getWithObjectifyKeys(this.getObjectifyKeyResults());
 				}
 			}
 
@@ -124,7 +124,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		@Override
 		public List<ModelKey> getKeyResults() {
 			if (this.keys == null) {
-				List<Key<T>> keys = this.getResponseObjectifyKeys();
+				List<Key<T>> keys = this.getObjectifyKeyResults();
 				this.keys = ModelQueryServiceImpl.this.registry.getObjectifyKeyConverter().convertTo(keys);
 			}
 
@@ -132,7 +132,7 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		}
 
 		@Override
-		public List<Key<T>> getResponseObjectifyKeys() {
+		public List<Key<T>> getObjectifyKeyResults() {
 			if (this.objectifyKeys == null) {
 				if (this.keysQuery) {
 					this.objectifyKeys = this.query.queryObjectifyKeys();

@@ -1,4 +1,4 @@
-package com.dereekb.gae.client.api.model.extension.search;
+package com.dereekb.gae.client.api.model.extension.search.document;
 
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchService;
 

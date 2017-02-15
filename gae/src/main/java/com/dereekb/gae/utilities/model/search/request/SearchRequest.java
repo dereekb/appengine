@@ -19,7 +19,7 @@ public interface SearchRequest
 	public boolean isKeysOnly();
 
 	/**
-	 * Gets search parameters.
+	 * Gets all search parameters.
 	 * 
 	 * @return {@link Map}. Never {@code null}.
 	 */
