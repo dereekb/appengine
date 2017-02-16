@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.api.tests;
+package com.dereekb.gae.test.applications.api.api.tests.client;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -149,38 +149,45 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 	}
 
 	@Test
-	public void testNonAtomicSystemModelClientReadRequest() throws Exception {
+	public void testNonAtomicModelClientReadRequest() throws Exception {
 		if (this.readRequestUtility != null) {
-			this.readRequestUtility.testNonAtomicSystemReadRequest(this.getRequestSecurity());
+			this.readRequestUtility.testNonAtomicReadRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
-	public void testAtomicSystemModelClientReadRequest() throws Exception {
+	public void testAtomicModelClientReadRequest() throws Exception {
 		if (this.readRequestUtility != null) {
-			this.readRequestUtility.testAtomicSystemReadRequestFailures(this.getRequestSecurity());
+			this.readRequestUtility.testAtomicReadRequestFailures(this.getRequestSecurity());
 		}
 	}
 
 	// MARK: Update Tests
 	@Test
-	public void testAtomicSystemModelClientUpdateRequest() throws Exception {
+	public void testAtomicModelClientUpdateRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockUpdateRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
-	public void testAtomicSystemModelClientUnavailableRequest() throws Exception {
+	public void testAtomicModelClientUnavailableRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockAtomicUnavailableUpdateRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
-	public void testNonAtomicSystemModelClientUnavailableRequest() throws Exception {
+	public void testNonAtomicModelClientUnavailableRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockNonAtomicUnavailableUpdateRequest(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testUpdateWithNoIdentifierClientUpdateRequest() throws Exception {
+		if (this.updateRequestUtility != null) {
+			this.updateRequestUtility.testMockUpdateRequest(this.getRequestSecurity());
 		}
 	}
 

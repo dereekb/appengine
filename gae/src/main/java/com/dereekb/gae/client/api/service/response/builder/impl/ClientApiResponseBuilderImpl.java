@@ -11,6 +11,7 @@ import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * {@link ClientApiResponseBuilder} implementation.
@@ -77,6 +78,11 @@ public class ClientApiResponseBuilderImpl
 		@Override
 		public boolean getSuccess() {
 			return this.apiResponseAccessor.getSuccess();
+		}
+
+		@Override
+		public JsonNode getApiResponseJsonNode() {
+			return this.apiResponseAccessor.getApiResponseJsonNode();
 		}
 
 		@Override

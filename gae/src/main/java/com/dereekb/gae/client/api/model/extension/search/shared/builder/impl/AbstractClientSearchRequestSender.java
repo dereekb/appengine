@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractConfiguredClientModelRequestSender;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
-import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -108,8 +107,8 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 
 		protected SearchResponseDataSerializer getDataSerializer() {
 			if (this.dataSerializer == null) {
-				ClientApiResponseData data = this.response.getPrimaryData();
-				this.dataSerializer = new SearchResponseDataSerializer(data.getDataJsonNode());
+				JsonNode responseData = this.response.getPrimaryData().getJsonNode();
+				this.dataSerializer = new SearchResponseDataSerializer(responseData);
 			}
 
 			return this.dataSerializer;

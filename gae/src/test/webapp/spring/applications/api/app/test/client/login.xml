@@ -44,5 +44,16 @@
 		<constructor-arg index="3" ref="modelKeyTypeConverter" />
 		<constructor-arg index="4" ref="securedClientRequestSender" />
 	</bean>
+	
+	<!-- Query -->
+	<bean id="loginClientQueryRequestSender"
+		class="com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl">
+		<constructor-arg index="0" ref="loginType" />
+		<constructor-arg index="1" ref="loginDtoClass" />
+		<constructor-arg index="2" ref="loginDataConverter" />
+		<constructor-arg index="3" ref="modelKeyTypeConverter" />
+		<constructor-arg index="4" ref="securedClientRequestSender" />
+		<constructor-arg index="5" ref="loginRegistry" />
+	</bean>
 
 </beans>

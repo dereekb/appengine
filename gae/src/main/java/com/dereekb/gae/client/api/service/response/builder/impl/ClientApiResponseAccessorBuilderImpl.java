@@ -133,6 +133,11 @@ public class ClientApiResponseAccessorBuilderImpl
 		}
 
 		@Override
+		public JsonNode getApiResponseJsonNode() {
+			return this.jsonNode;
+		}
+
+		@Override
 		public ClientApiResponseData getPrimaryData() throws NoClientResponseDataException {
 			if (this.primaryData == null) {
 				if (this.jsonNode.has(ClientApiResponseAccessorBuilderImpl.this.primaryDataKey)) {
@@ -204,6 +209,11 @@ public class ClientApiResponseAccessorBuilderImpl
 		@Override
 		public String getDataType() {
 			return this.dataNode.get(DATA_TYPE_KEY).asText();
+		}
+
+		@Override
+		public JsonNode getJsonNode() {
+			return this.dataNode;
 		}
 
 		@Override

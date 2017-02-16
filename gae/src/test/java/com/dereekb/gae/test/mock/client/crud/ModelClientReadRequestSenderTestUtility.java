@@ -3,6 +3,7 @@ package com.dereekb.gae.test.mock.client.crud;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 
@@ -10,8 +11,11 @@ import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
+import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
+import com.dereekb.gae.client.api.model.crud.request.impl.ClientReadRequestImpl;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
+import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
@@ -63,15 +67,41 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 	}
 
 	/**
-	 * Tests non atomic read requests.
+	 * Test that performs a read request that requests included types.
 	 */
-	public void testNonAtomicSystemReadRequest(ClientRequestSecurity security)
+	public void testMockReadRequestWithRelated(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
-		List<T> logins = this.testModelGenerator.generate(3);
+		List<T> logins = this.testModelGenerator.generate(10);
 
+		ReadRequest readRequest = new ModelReadRequest(logins);
+
+		ClientReadRequest clientReadRequest = new ClientReadRequestImpl(true, readRequest);
+		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender
+		        .sendRequest(clientReadRequest, security);
+
+		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		Collection<T> models = readResponse.getModels();
+
+		Assert.assertTrue(logins.size() == models.size());
+
+		// Can't really assert anything here.
+		Map<String, ClientApiResponseData> includedData = response.getIncludedData();
+		Assert.assertNotNull(includedData);
+	}
+
+	/**
+	 * Tests non atomic read requests.
+	 */
+	public void testNonAtomicReadRequest(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		List<T> logins = this.testModelGenerator.generate(3);
 		List<ModelKey> modelKeys = ModelKey.readModelKeys(logins);
 
 		List<ModelKey> unavailableKeys = new ArrayList<ModelKey>();
@@ -98,7 +128,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 	/**
 	 * Tests that atomic read requests fail when expected.
 	 */
-	public void testAtomicSystemReadRequestFailures(ClientRequestSecurity security)
+	public void testAtomicReadRequestFailures(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,

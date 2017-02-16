@@ -83,11 +83,22 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
 
+		ClientRequest clientRequest = this.buildClientRequest(request);
+		return this.sendRequest(request, clientRequest, security);
+	}
+
+	protected SerializedClientApiResponse<S> sendRequest(R request,
+	                                                     ClientRequest clientRequest,
+	                                                     ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
 		if (security == null) {
 			security = this.getDefaultServiceSecurity();
 		}
 
-		ClientRequest clientRequest = this.buildClientRequest(request);
 		ClientApiResponse clientResponse = this.requestSender.sendRequest(clientRequest, security);
 		return new SerializedClientApiResponseImpl(request, clientResponse);
 	}

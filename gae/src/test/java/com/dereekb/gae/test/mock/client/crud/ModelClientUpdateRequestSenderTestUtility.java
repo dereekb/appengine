@@ -163,6 +163,27 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 	}
 
+	public void testMockUpdateWithoutIdentifier(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		T model = this.testModelGenerator.generate();
+		T template = this.testModelGenerator.generate();
+		template.setModelKey(null);
+
+		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(template);
+
+		// Update again.
+		try {
+			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+			Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
+		} catch (Exception e) {
+
+		}
+	}
+
 	// TODO: Test for attribute failures.
 
 }

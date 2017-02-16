@@ -22,6 +22,13 @@ public interface ClientApiResponseData
 	public String getDataType();
 
 	/**
+	 * Returns the JSON node for the response data object itself.
+	 *
+	 * @return {@link JsonNode}. Never {@code null}.
+	 */
+	public JsonNode getJsonNode();
+
+	/**
 	 * Returns the JSON node for the data to be serialized.
 	 *
 	 * @return {@link JsonNode}. Never {@code null}.

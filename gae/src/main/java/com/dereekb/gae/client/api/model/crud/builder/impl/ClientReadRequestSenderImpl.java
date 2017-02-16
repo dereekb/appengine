@@ -3,8 +3,11 @@ package com.dereekb.gae.client.api.model.crud.builder.impl;
 import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
+import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
+import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.services.ClientReadService;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
@@ -15,6 +18,7 @@ import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
@@ -46,7 +50,7 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	 */
 	public static final String DEFAULT_PATH_FORMAT = "/%s";
 
-	private boolean loadRelated = false;
+	public static final boolean DEFAULT_LOAD_RELATED = false;
 
 	public ClientReadRequestSenderImpl(String type,
 	        Class<O> dtoType,
@@ -54,14 +58,6 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
 		super(type, dtoType, dtoReader, keyTypeConverter, requestSender);
-	}
-
-	public boolean isLoadRelated() {
-		return this.loadRelated;
-	}
-
-	public void setLoadRelated(boolean loadRelated) {
-		this.loadRelated = loadRelated;
 	}
 
 	// MARK: Abstract
@@ -91,7 +87,23 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 
 	// MARK: AbstractSecuredClientModelRequestSender
 	@Override
+	public SerializedClientApiResponse<SimpleReadResponse<T>> sendRequest(ClientReadRequest request,
+	                                                                      ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+		ClientRequest clientRequest = this.buildClientRequest(request.shouldLoadRelatedTypes(), request);
+		return this.sendRequest(request, clientRequest, security);
+	}
+
+	@Override
 	public ClientRequest buildClientRequest(ReadRequest request) {
+		return this.buildClientRequest(DEFAULT_LOAD_RELATED, request);
+	}
+
+	public ClientRequest buildClientRequest(boolean loadRelatedTypes,
+	                                        ReadRequest request) {
 
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.GET);
@@ -103,7 +115,7 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 		ParametersImpl parameters = new ParametersImpl();
 
 		parameters.addObjectParameter(ReadController.ATOMIC_PARAM, options.isAtomic());
-		parameters.addObjectParameter(ReadController.LOAD_RELATED_PARAM, this.loadRelated);
+		parameters.addObjectParameter(ReadController.LOAD_RELATED_PARAM, loadRelatedTypes);
 		parameters.addObjectParameter(ReadController.KEYS_PARAM, keys);
 
 		clientRequest.setParameters(parameters);

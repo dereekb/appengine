@@ -6,6 +6,7 @@ import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Abstract wrapper around a {@link ClientApiResponse} that forwards all
@@ -52,6 +53,11 @@ public abstract class ClientApiResponseWrapper
 	@Override
 	public String getResponseData() {
 		return this.response.getResponseData();
+	}
+
+	@Override
+	public JsonNode getApiResponseJsonNode() {
+		return this.response.getApiResponseJsonNode();
 	}
 
 	@Override
