@@ -34,9 +34,8 @@ public class UnavailableLinkException extends ApiLinkException {
 
 	@Override
 	public ApiResponseError getResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE);
 
-		error.setCode(ERROR_CODE);
 		error.setTitle(ERROR_TITLE);
 		error.setDetail(this.link);
 

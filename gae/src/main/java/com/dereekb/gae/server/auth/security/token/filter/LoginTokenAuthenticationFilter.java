@@ -20,6 +20,9 @@ import org.springframework.web.filter.GenericFilterBean;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenMissingException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterService;
+import com.dereekb.gae.server.auth.security.token.parameter.exception.InvalidAuthStringException;
+import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 
 /**
  * Authentication filter for filtering security by using a {@link LoginToken}.
@@ -29,19 +32,12 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
  */
 public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 
-	public static final String DEFAULT_BEARER_PREFIX = "Bearer ";
-	public static final String DEFAULT_HEADER_STRING = "Authorization";
-
-	private String headerString = DEFAULT_HEADER_STRING;
-	private String bearerPrefix = DEFAULT_BEARER_PREFIX;
-
-	private int bearerPrefixLength = DEFAULT_BEARER_PREFIX.length();
-
 	private final WebAuthenticationDetailsSource authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
 	private AuthenticationSuccessHandler successHandler;
 	private AuthenticationFailureHandler failureHandler;
 
+	private AuthenticationParameterService authenticationParameterService = AuthenticationParameterServiceImpl.SINGLETON;
 	private LoginTokenAuthenticationFilterDelegate delegate;
 
 	public LoginTokenAuthenticationFilter() {}
@@ -52,27 +48,6 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		this.setDelegate(delegate);
 		this.setSuccessHandler(successHandler);
 		this.setFailureHandler(failureHandler);
-	}
-
-	public String getHeaderString() {
-		return this.headerString;
-	}
-
-	public void setHeaderString(String headerString) {
-		this.headerString = headerString;
-	}
-
-	public String getBearerPrefix() {
-		return this.bearerPrefix;
-	}
-
-	public void setBearerPrefix(String bearerPrefix) throws IllegalArgumentException {
-		if (bearerPrefix == null) {
-			throw new IllegalArgumentException("Bearer prefix cannot be null.");
-		}
-
-		this.bearerPrefix = bearerPrefix;
-		this.bearerPrefixLength = this.bearerPrefix.length();
 	}
 
 	public AuthenticationSuccessHandler getSuccessHandler() {
@@ -103,6 +78,18 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		this.delegate = delegate;
 	}
 
+	public AuthenticationParameterService getAuthenticationParameterService() {
+		return this.authenticationParameterService;
+	}
+
+	public void setAuthenticationParameterService(AuthenticationParameterService authenticationParameterService) {
+		if (authenticationParameterService == null) {
+			throw new IllegalArgumentException("authenticationParameterService cannot be null.");
+		}
+
+		this.authenticationParameterService = authenticationParameterService;
+	}
+
 	// MARK: GenericFilterBean
 	@Override
 	public void doFilter(ServletRequest req,
@@ -131,13 +118,14 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 	                                               HttpServletResponse response)
 	        throws TokenMissingException {
 
-		String header = request.getHeader(this.headerString);
+		String token = null;
 
-		if (header == null || !header.startsWith(this.bearerPrefix)) {
-			throw new TokenMissingException();
+		try {
+			token = this.authenticationParameterService.readToken(request);
+		} catch (InvalidAuthStringException e) {
+			throw new TokenMissingException("Header existed but was in a bad format.");
 		}
 
-		String token = header.substring(this.bearerPrefixLength);
 		WebAuthenticationDetails details = this.authenticationDetailsSource.buildDetails(request);
 		return this.delegate.performPreAuth(token, details);
 	}
@@ -164,14 +152,6 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		if (this.failureHandler != null) {
 			this.failureHandler.onAuthenticationFailure(request, response, failed);
 		}
-	}
-
-	public static String buildTokenHeader(String token) {
-		if (token == null) {
-			throw new IllegalArgumentException("Token cannot be null.");
-		}
-
-		return LoginTokenAuthenticationFilter.DEFAULT_BEARER_PREFIX + token;
 	}
 
 }

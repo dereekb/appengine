@@ -1,14 +1,16 @@
 package com.dereekb.gae.utilities.task;
 
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+
 /**
  * Extension of {@link Task} that can be optionally configured.
  *
  * @author dereekb
  *
  * @param <T>
- *            Input type.
+ *            input type
  * @param <C>
- *            Configuration type.
+ *            configuration type
  */
 public interface ConfigurableTask<T, C>
         extends Task<T> {
@@ -18,9 +20,11 @@ public interface ConfigurableTask<T, C>
 	 *
 	 * @param input
 	 *            Task input. Never {@code null}.
+	 * @throws FailedTaskException
+	 *             If the task did not complete successfully.
 	 */
 	@Override
-	public void doTask(T input);
+	public void doTask(T input) throws FailedTaskException;
 
 	/**
 	 * Performs the task with configuration.
@@ -29,8 +33,11 @@ public interface ConfigurableTask<T, C>
 	 *            Task input. Never {@code null}.
 	 * @param configuration
 	 *            Configuration. Never {@code null}.
+	 * @throws FailedTaskException
+	 *             If the task did not complete successfully.
 	 */
 	public void doTask(T input,
-	                   C configuration);
+	                   C configuration)
+	        throws FailedTaskException;
 
 }

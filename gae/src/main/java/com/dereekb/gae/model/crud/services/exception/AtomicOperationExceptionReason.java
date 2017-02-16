@@ -13,6 +13,12 @@ public enum AtomicOperationExceptionReason {
 	UNAVAILABLE,
 
 	/**
+	 * One or more elements failed. This is similar to {@value #EXCEPTION} but
+	 * is meant to be captured.
+	 */
+	ATOMIC_FAILURE,
+
+	/**
 	 * An exception occured.
 	 */
 	EXCEPTION,

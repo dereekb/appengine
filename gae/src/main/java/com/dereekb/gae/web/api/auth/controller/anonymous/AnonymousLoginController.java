@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 
 /**
  * API used for creating an anonymous login token.
@@ -46,7 +46,7 @@ public final class AnonymousLoginController {
 		try {
 			response = this.delegate.anonymousLogin(anonymousId);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.crud.task.impl.delegate;
 
-import com.dereekb.gae.model.crud.exception.InvalidTemplateException;
 import com.dereekb.gae.model.crud.task.impl.CreateTaskImpl;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * {@link CreateTaskImpl} delegate.
@@ -18,10 +18,9 @@ public interface CreateTaskDelegate<T> {
 	 * @param source
 	 *            source model. Never {@code null}.
 	 * @return new model instance. Never {@code null}.
-	 * @throws InvalidTemplateException
-	 *             thrown if the template is rejected by the delegate, or could
-	 *             not be created.
+	 * @throws InvalidAttributeException
+	 *             thrown if the template has an invalid attribute.
 	 */
-	public T createFromSource(T source) throws InvalidTemplateException;
+	public T createFromSource(T source) throws InvalidAttributeException;
 
 }

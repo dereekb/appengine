@@ -3,7 +3,6 @@ package com.dereekb.gae.model.crud.task.impl;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
-import com.dereekb.gae.model.crud.exception.InvalidTemplateException;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.model.crud.task.CreateTask;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
@@ -12,6 +11,7 @@ import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.task.IterableTask;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * {@link CreateTask} implementation.
@@ -87,8 +87,8 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 		try {
 			T result = this.delegate.createFromSource(source);
 			pair.setResult(result);
-		} catch (InvalidTemplateException e) {
-			pair.flagFailure();
+		} catch (InvalidAttributeException e) {
+			pair.setFailureException(e);
 			throw new AtomicFunctionException(source, e);
 		}
 	}

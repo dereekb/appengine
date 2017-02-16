@@ -88,7 +88,7 @@ public class DeleteServiceTester<T extends UniqueModel>
 		DeleteRequest request = new DeleteRequestImpl(targetKey);
 		DeleteResponse<T> response = this.deleteService.delete(request);
 
-		Collection<T> deleted = response.getDeletedModels();
+		Collection<T> deleted = response.getModels();
 		Assert.assertTrue(deleted.size() == 1);
 
 		T deletedModel = deleted.iterator().next();
@@ -106,7 +106,7 @@ public class DeleteServiceTester<T extends UniqueModel>
 		DeleteRequest request = new DeleteRequestImpl(targetKeys);
 		DeleteResponse<T> response = this.deleteService.delete(request);
 
-		Collection<T> deleted = response.getDeletedModels();
+		Collection<T> deleted = response.getModels();
 		Assert.assertTrue(deleted.size() == targetKeys.size());
 
 		List<T> reread = this.getterSetter.get(targets);

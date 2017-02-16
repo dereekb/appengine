@@ -25,8 +25,8 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.utility.mock.TaskRequestMockHttpRequestConverter;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
-import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
-import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditControllerEntry;
+import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
+import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditControllerEntry;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**

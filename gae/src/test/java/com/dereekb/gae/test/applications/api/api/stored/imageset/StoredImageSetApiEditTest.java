@@ -10,7 +10,7 @@ import com.dereekb.gae.model.stored.image.set.dto.StoredImageSetData;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.test.applications.api.api.tests.ApiEditTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.web.api.model.controller.EditModelController;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
 public class StoredImageSetApiEditTest extends ApiEditTest<StoredImageSet, StoredImageSetData> {
 

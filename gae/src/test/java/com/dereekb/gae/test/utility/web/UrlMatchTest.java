@@ -47,13 +47,13 @@ public class UrlMatchTest {
 
 		MultiTypeAntRequestMatcher matcher = new MultiTypeAntRequestMatcher(pattern, types);
 
-		Assert.assertTrue(matcher.matches("/a/query"));
-		Assert.assertTrue(matcher.matches("/b/query"));
-		Assert.assertTrue(matcher.matches("/c/query"));
+		Assert.assertTrue(matcher.matchesPath("/a/query"));
+		Assert.assertTrue(matcher.matchesPath("/b/query"));
+		Assert.assertTrue(matcher.matchesPath("/c/query"));
 
-		Assert.assertFalse(matcher.matches("/d/query"));
-		Assert.assertFalse(matcher.matches("/x/y/z"));
-		Assert.assertFalse(matcher.matches("/dfgsdfgsfdg"));
+		Assert.assertFalse(matcher.matchesPath("/d/query"));
+		Assert.assertFalse(matcher.matchesPath("/x/y/z"));
+		Assert.assertFalse(matcher.matchesPath("/dfgsdfgsfdg"));
 	}
 
 	@Test
@@ -73,14 +73,14 @@ public class UrlMatchTest {
 
 		MultiTypeMapAntRequestMatcher matcher = new MultiTypeMapAntRequestMatcher(pattern, map);
 
-		Assert.assertTrue(matcher.matches("/b/y/foo"));
-		Assert.assertTrue(matcher.matches("/b/x/foo"));
-		Assert.assertTrue(matcher.matches("/a/z/foo"));
-		Assert.assertTrue(matcher.matches("/c/x/foo"));
+		Assert.assertTrue(matcher.matchesPath("/b/y/foo"));
+		Assert.assertTrue(matcher.matchesPath("/b/x/foo"));
+		Assert.assertTrue(matcher.matchesPath("/a/z/foo"));
+		Assert.assertTrue(matcher.matchesPath("/c/x/foo"));
 
-		Assert.assertFalse(matcher.matches("/d/query"));
-		Assert.assertFalse(matcher.matches("/x/y/z"));
-		Assert.assertFalse(matcher.matches("/dfgsdfgsfdg"));
+		Assert.assertFalse(matcher.matchesPath("/d/query"));
+		Assert.assertFalse(matcher.matchesPath("/x/y/z"));
+		Assert.assertFalse(matcher.matchesPath("/dfgsdfgsfdg"));
 	}
 
 }

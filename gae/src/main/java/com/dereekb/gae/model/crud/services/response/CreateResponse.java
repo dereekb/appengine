@@ -2,24 +2,30 @@ package com.dereekb.gae.model.crud.services.response;
 
 import java.util.Collection;
 
+import com.dereekb.gae.model.crud.services.components.CreateService;
+import com.dereekb.gae.model.crud.services.response.pair.InvalidCreateTemplatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
-public interface CreateResponse<T extends UniqueModel> {
+/**
+ * Create response for a {@link CreateService}.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ * 
+ * @see CreateRequest
+ */
+public interface CreateResponse<T extends UniqueModel>
+        extends SimpleCreateResponse<T> {
 
 	/**
-	 * @return Returns a collection of models that were created.
+	 * Returns a collection of keyed failures for templates, keyed by the index
+	 * in the input.
+	 * 
+	 * @return {@link Collection}. Never {@code null}.
 	 */
-	public Collection<T> getCreatedModels();
-
-	/**
-	 * @return Returns a collection of keys for the models that were created.
-	 */
-	public Collection<ModelKey> getCreatedModelKeys();
-
-	/**
-	 * @return Returns a collection of templates that failed to be created.
-	 */
-	public Collection<T> getFailedTemplates();
+	@Override
+	public Collection<? extends InvalidCreateTemplatePair<T>> getInvalidTemplates();
 
 }

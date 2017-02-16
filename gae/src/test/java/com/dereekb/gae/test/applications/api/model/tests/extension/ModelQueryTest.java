@@ -169,6 +169,9 @@ public abstract class ModelQueryTest<T extends ObjectifyModel<T>> extends ApiApp
 			Assert.assertTrue("Query failed.", response.getStatus() == 200);
 
 			String jsonContent = response.getContentAsString();
+
+			// TODO: Update to use ClientApiResponse types.
+
 			JsonElement jsonElement = ModelQueryTest.this.parser.parse(jsonContent);
 			JsonElement jsonData = jsonElement.getAsJsonObject().get("data");
 			List<String> stringResults = new ArrayList<String>();

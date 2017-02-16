@@ -17,7 +17,6 @@ import com.dereekb.gae.web.api.model.extension.search.ApiSearchDelegateEntry;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchUpdateRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
 
 /**
  * {@link ApiSearchDelegateEntry} implementation.
@@ -32,6 +31,9 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 
 	private ModelQueryService<T> queryService;
 	private ModelDocumentSearchService<T, R> searchService;
+
+	// TODO: Abstract the requestBuilder/requestConverter away into a new
+	// interface that extends or contains ModelDocumentSearchService
 
 	private SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder;
 	private DirectionalConverter<T, ? extends Object> resultConverter;
@@ -127,7 +129,7 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	@Override
 	public void updateSearchIndex(ApiSearchUpdateRequest request) {
 		// TODO Queue up indexing requests.
-		throw new UnsupportedOperationException("Incomplete function.");
+		throw new UnsupportedOperationException("Unsupported function.");
 	}
 
 	// MARK: Internal
@@ -140,7 +142,7 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	}
 
 	private ApiResponseData buildModelDataResponse(ModelSearchResponse<T> response) {
-		ApiResponseData responseData = null;
+		ApiSearchResponseData responseData = null;
 
 		if (response.isKeysOnlyResponse()) {
 			Collection<ModelKey> keys = response.getKeyResults();
@@ -150,20 +152,21 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 			responseData = this.convertModelResponse(models);
 		}
 
-		// TODO: Add Cursor to response.
+		String cursor = response.getSearchCursor();
+		responseData.setCursor(cursor);
 
 		return responseData;
 	}
 
-	private ApiResponseData convertModelResponse(Collection<T> models) {
+	private ApiSearchResponseData convertModelResponse(Collection<T> models) {
 		List<? extends Object> converted = this.resultConverter.convert(models);
-		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, converted);
+		ApiSearchResponseData data = new ApiSearchResponseData(this.type, converted);
 		return data;
 	}
 
-	private ApiResponseData convertKeyResponse(Collection<ModelKey> keys) {
+	private ApiSearchResponseData convertKeyResponse(Collection<ModelKey> keys) {
 		List<String> keyStrings = ModelKey.keysAsStrings(keys);
-		ApiResponseDataImpl data = new ApiResponseDataImpl(this.type, keyStrings);
+		ApiSearchResponseData data = new ApiSearchResponseData(this.type, keyStrings);
 		return data;
 	}
 

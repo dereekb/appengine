@@ -16,7 +16,8 @@ import com.dereekb.gae.web.api.auth.exception.ApiLoginErrorException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 
 /**
  * Controller for logging in using oAuth.
@@ -60,7 +61,7 @@ public class OAuthLoginController {
 	public final LoginTokenPair login(@PathVariable("type") String type,
 	                                  @RequestParam @NotEmpty String accessToken)
 	        throws ApiLoginException,
-	            ApiRuntimeException {
+	            ApiCaughtRuntimeException {
 		LoginTokenPair response = null;
 
 		try {
@@ -74,7 +75,7 @@ public class OAuthLoginController {
 		} catch (OAuthConnectionException e) {
 			throw new ApiLoginErrorException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

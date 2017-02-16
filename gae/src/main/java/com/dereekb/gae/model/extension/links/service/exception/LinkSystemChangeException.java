@@ -17,6 +17,8 @@ public class LinkSystemChangeException extends ApiLinkException {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String LINK_CHANGE_ERROR_CODE = "LINK_CHANGE_ERROR";
+
 	private final LinkSystemChange change;
 	private final ApiLinkException reason;
 
@@ -40,7 +42,7 @@ public class LinkSystemChangeException extends ApiLinkException {
 
 	@Override
 	public ApiResponseError getResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(LINK_CHANGE_ERROR_CODE);
 
 		ModelKey primaryKey = this.change.getPrimaryKey();
 		LinkChangeAction action = this.change.getAction();

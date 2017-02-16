@@ -18,8 +18,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.api.tests.ApiEditTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.web.api.model.controller.EditModelController;
-import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
+import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
 
 public class GeoPlaceApiEditTest extends ApiEditTest<GeoPlace, GeoPlaceData> {
 

@@ -20,8 +20,8 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRej
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
-import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 
 /**
  * API for registering a new login, or linking a login to another login.
@@ -66,7 +66,7 @@ public class LoginRegisterController {
 		} catch (TokenException e) {
 			throw e;
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -88,7 +88,7 @@ public class LoginRegisterController {
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 	}
 

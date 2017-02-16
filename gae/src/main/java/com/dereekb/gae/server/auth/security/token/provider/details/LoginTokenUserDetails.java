@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.provider.details;
 
 import com.dereekb.gae.server.auth.security.login.LoginUserDetails;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
@@ -12,7 +13,10 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 public interface LoginTokenUserDetails
         extends LoginUserDetails {
 
-	public LoginToken getLoginToken();
+	/**
+	 * @return {@link DecodedLoginToken}. Never {@code null}.
+	 */
+	public DecodedLoginToken getLoginToken();
 
 	/**
 	 * Whether or not the user is an administrator.

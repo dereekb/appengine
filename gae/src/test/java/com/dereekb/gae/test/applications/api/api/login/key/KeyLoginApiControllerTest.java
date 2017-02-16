@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.applications.api.api.login.key;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,10 @@ import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusService;
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusServiceManager;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.mock.auth.MockKeyLoginControllerUtility;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 import com.dereekb.gae.web.api.auth.controller.key.KeyLoginController;
-import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
+import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -47,6 +50,8 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	@SuppressWarnings("unused")
 	@Autowired
 	private KeyLoginController keyLoginController;
+
+	private MockKeyLoginControllerUtility mockLoginUtil = new MockKeyLoginControllerUtility(this);
 
 	// MARK: KeyLogin tests
 	@Test
@@ -85,8 +90,8 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	public void testAPIAuthLogin() throws Exception {
 
 		// Already Logged In. Must enable.
-		MockHttpServletResponse enableResponse = this.mockEnableApiKey();
-		Assert.assertTrue("Enabling login failed.", enableResponse.getStatus() == 200);
+		this.testLoginTokenContext.generateLogin("REGULAR_USER");
+		this.mockLoginUtil.assertMockEnableApiKey();
 
 		// Create an API Key
 		String name = "My API Key";
@@ -95,7 +100,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		String apiKeyId = this.createApiKey(name, verification, true);
 
 		// Login with the API Key
-		String apiKeyLoginToken = this.tryApiLogin(apiKeyId, VERIFICATION_KEY, true);
+		String apiKeyLoginToken = this.mockLoginUtil.tryApiLogin(apiKeyId, VERIFICATION_KEY, true);
 
 		// Test API Key Cannot Access /loginkey
 		MockHttpServletRequestBuilder tryApiKeyRequestBuilder = MockMvcRequestBuilders.post("/loginkey/create");
@@ -125,13 +130,13 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testIncompleteAPIAuthLogin() throws Exception {
-		MockHttpServletResponse response = this.mockApiLogin(null, "NONE");
+		MockHttpServletResponse response = this.mockLoginUtil.mockApiLoginRequest(null, "NONE");
 		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 400);
 	}
 
 	@Test
 	public void testNonexistantAPIAuthLogin() throws Exception {
-		MockHttpServletResponse response = this.mockApiLogin("101010101", "NONE");
+		MockHttpServletResponse response = this.mockLoginUtil.mockApiLoginRequest("101010101", "NONE");
 		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 403);
 	}
 
@@ -140,68 +145,18 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		String name = "My API Key";
 		String verification = VERIFICATION_KEY;
 
-		this.mockEnableApiKey();
+		this.testLoginTokenContext.generateLogin("REGULAR_USER");
+		this.mockLoginUtil.assertMockEnableApiKey();
 
 		String apiKeyId = this.createApiKey(name, verification, true);
 
-		MockHttpServletResponse response = this.mockApiLogin(apiKeyId, "INVALID VERIFICATION");
-		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 403);
+		MockHttpServletResponse response = this.mockLoginUtil.mockApiLoginRequest(apiKeyId, "INVALID VERIFICATION");
+		Assert.assertTrue("API Key Authentication should fail.",
+		        response.getStatus() == HttpServletResponse.SC_FORBIDDEN);
 
-		response = this.mockApiLogin(apiKeyId, null);
-		Assert.assertTrue("API Key Authentication should fail.", response.getStatus() == 400);
-	}
-
-	private MockHttpServletResponse mockEnableApiKey() throws Exception {
-		MockHttpServletRequestBuilder enableRequestBuilder = MockMvcRequestBuilders.put("/login/auth/key/enable");
-		MvcResult enableResult = this.performHttpRequest(enableRequestBuilder).andReturn();
-
-		return enableResult.getResponse();
-	}
-
-	private String tryApiLogin(String key,
-	                           String verification,
-	                           boolean assertSuccess)
-	        throws Exception {
-
-		MockHttpServletResponse loginResultResponse = this.mockApiLogin(key, verification);
-
-		boolean success = loginResultResponse.getStatus() == 200;
-
-		if (assertSuccess) {
-			Assert.assertTrue("API Key Authentication Failed.", success);
-		}
-
-		String apiKeyLoginToken = null;
-
-		if (success) {
-			String loginResultContent = loginResultResponse.getContentAsString();
-			JsonElement loginResultElement = this.parser.parse(loginResultContent);
-
-			apiKeyLoginToken = loginResultElement.getAsJsonObject().get("token").getAsString();
-
-			if (assertSuccess) {
-				Assert.assertFalse(loginResultContent.isEmpty());
-				Assert.assertFalse(apiKeyLoginToken.isEmpty());
-			}
-		}
-
-		return apiKeyLoginToken;
-	}
-
-	private MockHttpServletResponse mockApiLogin(String key,
-	                                             String verification)
-	        throws Exception {
-		MockHttpServletRequestBuilder keyLoginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/key");
-		keyLoginRequestBuilder.param("key", key);
-
-		if (verification != null) {
-			keyLoginRequestBuilder.param("verification", verification);
-		}
-
-		MvcResult loginResult = this.mockMvcPerform(keyLoginRequestBuilder).andReturn();
-		MockHttpServletResponse loginResultResponse = loginResult.getResponse();
-
-		return loginResultResponse;
+		response = this.mockLoginUtil.mockApiLoginRequest(apiKeyId, null);
+		Assert.assertTrue("API Key Authentication should fail.",
+		        response.getStatus() == HttpServletResponse.SC_BAD_REQUEST);
 	}
 
 	private String createApiKey(String name,

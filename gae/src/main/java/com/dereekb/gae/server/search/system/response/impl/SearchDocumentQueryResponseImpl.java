@@ -3,6 +3,7 @@ package com.dereekb.gae.server.search.system.response.impl;
 import java.util.Collection;
 
 import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.Query;
@@ -46,8 +47,14 @@ public class SearchDocumentQueryResponseImpl
 	}
 
 	@Override
-	public Cursor getResultsCursor() {
-		return this.getResults().getCursor();
+	public Cursor getResultsCursor() throws NoSearchCursorException {
+		Cursor cursor = this.getResults().getCursor();
+
+		if (cursor == null) {
+			throw new NoSearchCursorException();
+		}
+
+		return cursor;
 	}
 
 	// MARK: Internal

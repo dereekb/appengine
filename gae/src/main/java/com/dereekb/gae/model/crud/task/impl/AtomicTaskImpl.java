@@ -2,8 +2,8 @@ package com.dereekb.gae.model.crud.task.impl;
 
 import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.crud.task.AtomicTask;
 import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.task.ConfigurableTask;
 
 /**
@@ -18,7 +18,7 @@ import com.dereekb.gae.utilities.task.ConfigurableTask;
  *            configuration type
  */
 public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
-        implements ConfigurableTask<Iterable<P>, C> {
+        implements AtomicTask<P, C> {
 
 	protected C defaultConfig;
 
@@ -42,19 +42,23 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 
 	@Override
 	public void doTask(Iterable<P> input,
-	                   C configuration) {
+	                   C configuration)
+	        throws AtomicOperationException {
 		boolean isAtomic = configuration.isAtomic();
+		boolean throwAtomicException = false;
 
 		for (P pair : input) {
 			try {
 				this.usePair(pair, configuration);
 			} catch (AtomicFunctionException e) {
 				if (isAtomic) {
-					RuntimeException cause = e.getCause();
-					UniqueModel model = e.getModel();
-					throw new AtomicOperationException(model, cause);
+					throwAtomicException = true;
 				}
 			}
+		}
+
+		if (throwAtomicException) {
+			throw new AtomicOperationException();
 		}
 	}
 

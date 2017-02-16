@@ -16,12 +16,15 @@ import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 public class SearchRequestImpl extends SearchOptionsImpl
         implements MutableSearchRequest {
 
-	public static final String SEARCH_PARAMETERS = "keysOnly";
+	public static final String KEYS_ONLY_PARAMETER = "keysOnly";
 
 	private boolean keysOnly;
 	private Map<String, String> searchParameters;
 
-	public SearchRequestImpl() {}
+	public SearchRequestImpl() {
+		this.setKeysOnly(true);
+		this.setSearchParameters(null);
+	}
 
 	public SearchRequestImpl(SearchRequest request) throws IllegalArgumentException {
 		if (request == null) {
@@ -85,6 +88,7 @@ public class SearchRequestImpl extends SearchOptionsImpl
 		Map<String, String> parameters = new HashMap<String, String>(this.searchParameters);
 
 		parameters.putAll(super.getParameters());
+		parameters.put(KEYS_ONLY_PARAMETER, Boolean.toString(this.keysOnly));
 
 		return parameters;
 	}
@@ -95,7 +99,15 @@ public class SearchRequestImpl extends SearchOptionsImpl
 			throw new IllegalArgumentException("Parameters cannot be null.");
 		}
 
+		parameters = new HashMap<String, String>(parameters);
+
 		super.setParameters(parameters);
+
+		if (parameters.containsKey(KEYS_ONLY_PARAMETER)) {
+			String keysOnly = parameters.remove(KEYS_ONLY_PARAMETER);
+			this.keysOnly = new Boolean(keysOnly);
+		}
+
 		this.searchParameters = new HashMap<String, String>(parameters);
 	}
 

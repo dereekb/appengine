@@ -49,7 +49,7 @@ public final class LinkModelImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public ModelKey getKeyValue() {
+	public ModelKey keyValue() {
 		return this.getModelKey();
 	}
 

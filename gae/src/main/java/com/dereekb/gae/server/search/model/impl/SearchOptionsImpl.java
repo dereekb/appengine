@@ -103,7 +103,18 @@ public class SearchOptionsImpl
 	// MARK: Mutable Parameters
 	@Override
 	public void setParameters(Map<String, String> parameters) throws IllegalArgumentException {
-		parameters.get(CURSOR_PARAM);
+
+		if (parameters.containsKey(CURSOR_PARAM)) {
+			this.setCursor(parameters.get(CURSOR_PARAM));
+		}
+
+		if (parameters.containsKey(LIMIT_PARAM)) {
+			this.setLimit(new Integer(parameters.get(LIMIT_PARAM)));
+		}
+
+		if (parameters.containsKey(OFFSET_PARAM)) {
+			this.setOffset(new Integer(parameters.get(OFFSET_PARAM)));
+		}
 
 	}
 

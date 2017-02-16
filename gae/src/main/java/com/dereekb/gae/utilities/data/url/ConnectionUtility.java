@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLConnection;
 
+import com.dereekb.gae.utilities.json.JsonUtility;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 /**
@@ -18,15 +18,12 @@ import com.google.gson.JsonSyntaxException;
  */
 public class ConnectionUtility {
 
-	private static final JsonParser parser = new JsonParser();
-
 	public static JsonElement readJsonFromConnection(URLConnection connection) throws JsonSyntaxException, IOException {
 		String json = readStringFromConnection(connection);
-		return parser.parse(json);
+		return JsonUtility.parseJson(json);
 	}
 
 	public static String readStringFromConnection(URLConnection connection) throws IOException {
-
 		InputStream inputStream = connection.getInputStream();
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 

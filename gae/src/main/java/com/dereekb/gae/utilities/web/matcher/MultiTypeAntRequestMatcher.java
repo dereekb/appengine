@@ -107,7 +107,7 @@ public class MultiTypeAntRequestMatcher extends AbstractRequestMatcher
 
 	// MARK: Matching
 	@Override
-	public boolean matches(String path) {
+	public boolean matchesPath(String path) {
 		boolean matchesPath = this.matcher.match(this.pattern, path);
 
 		if (matchesPath) {

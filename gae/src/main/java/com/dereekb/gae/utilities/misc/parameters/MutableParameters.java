@@ -3,7 +3,7 @@ package com.dereekb.gae.utilities.misc.parameters;
 import java.util.Map;
 
 /**
- * {@link Parameters} implementation that can be modified with a {@link Map}.
+ * {@link Parameters} implementation that can be modified using a {@link Map}.
  * 
  * @author dereekb
  *

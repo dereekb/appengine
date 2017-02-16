@@ -7,6 +7,7 @@ import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
@@ -113,12 +114,12 @@ public class LoginTokenEncoderDecoderImpl
 
 	// MARK: LoginTokenDecoder
 	@Override
-	public LoginToken decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException {
-		LoginToken loginToken = null;
+	public DecodedLoginToken decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException {
+		DecodedLoginToken loginToken = null;
 
 		try {
 			Claims claims = this.parseClaims(token);
-			loginToken = this.buildFromClaims(claims);
+			loginToken = this.buildFromClaims(token, claims);
 		} catch (MissingClaimException | SignatureException | IncorrectClaimException e) {
 			throw new TokenUnauthorizedException("Could not decode token.", e);
 		} catch (ExpiredJwtException e) {
@@ -133,8 +134,10 @@ public class LoginTokenEncoderDecoderImpl
 		return parsers.parseClaimsJws(token).getBody();
 	}
 
-	protected LoginTokenImpl buildFromClaims(Claims claims) throws TokenUnauthorizedException {
-		LoginTokenImpl loginToken = new LoginTokenImpl();
+	protected DecodedLoginToken buildFromClaims(String token,
+	                                            Claims claims)
+	        throws TokenUnauthorizedException {
+		DecodedLoginTokenImpl loginToken = new DecodedLoginTokenImpl(token);
 		this.initFromClaims(loginToken, claims);
 		return loginToken;
 	}
