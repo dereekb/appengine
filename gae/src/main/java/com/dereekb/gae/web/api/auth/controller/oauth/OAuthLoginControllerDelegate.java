@@ -27,7 +27,7 @@ public interface OAuthLoginControllerDelegate {
 	 * @throws OAuthServiceUnavailableException
 	 * @throws OAuthConnectionException
 	 */
-	public LoginTokenPair login(String type,
+	public LoginTokenPair loginWithAccessToken(String type,
 	                            String accessToken)
 	        throws OAuthInsufficientException,
 	            OAuthAuthorizationTokenRequestException,

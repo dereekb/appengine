@@ -4,18 +4,11 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.List;
 
-import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
+import javax.servlet.http.HttpServletRequest;
+
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
-import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
-import com.google.api.client.auth.oauth2.BearerToken;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
-import com.google.api.client.http.BasicAuthentication;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 
 /**
  * Abstract {@link OAuthService} implementation.
@@ -40,16 +33,16 @@ public abstract class AbstractOAuthService
 	 */
 	private String serverAuthTokenUrl;
 
+	/**
+	 * OAuth State
+	 */
+	private String state;
+
 	private String clientId = null;
 	private String clientSecret = null;
 
 	private String loginTokenRedirectUrl = null;
 	private String authTokenRedirectUrl = DEFAULT_AUTH_TOKEN_REDIRECT_URL;
-
-	private String state = DEFAULT_STATE;
-
-	private String authorizationGrantType = "authorization_code";
-	private boolean allowRefreshCredentials = false;
 
 	private List<String> scopes;
 
@@ -131,22 +124,6 @@ public abstract class AbstractOAuthService
 		this.state = state;
 	}
 
-	public String getAuthorizationGrantType() {
-		return this.authorizationGrantType;
-	}
-
-	public void setAuthorizationGrantType(String authorizationGrantType) {
-		this.authorizationGrantType = authorizationGrantType;
-	}
-
-	public boolean isAllowRefreshCredentials() {
-		return this.allowRefreshCredentials;
-	}
-
-	public void setAllowRefreshCredentials(boolean allowRefreshCredentials) {
-		this.allowRefreshCredentials = allowRefreshCredentials;
-	}
-
 	public List<String> getScopes() {
 		return this.scopes;
 	}
@@ -155,90 +132,15 @@ public abstract class AbstractOAuthService
 		this.scopes = scopes;
 	}
 
-	// MARK: OAuthLoginService
-	@Override
-	public String getAuthorizationCodeRequestUrl() {
-		GoogleAuthorizationCodeRequestUrl request = this.getAuthorizationCodeRequest();
-
-		if (this.state != null) {
-			request = request.setState(DEFAULT_STATE);
-		}
-
-		String url = request.build();
-		return url;
-	}
-
-	public GoogleAuthorizationCodeRequestUrl getAuthorizationCodeRequest() {
-		return new GoogleAuthorizationCodeRequestUrl(this.serverLoginTokenUrl, this.clientId,
-		        this.loginTokenRedirectUrl,
-		        this.scopes);
-	}
-
-	// MARK: Extension
-	public abstract OAuthAccessToken getAuthorizationToken(String authCode)
-	        throws OAuthAuthorizationTokenRequestException,
-	            OAuthConnectionException;
-
 	// MARK: Internal
-	protected BasicAuthentication getClientServerAuthentication() {
-		return new BasicAuthentication(this.clientId, this.clientSecret);
-	}
+	protected String getFullRequestUrl(HttpServletRequest request) {
+		StringBuffer fullUrlBuf = request.getRequestURL();
 
-	protected AuthorizationCodeTokenRequest makeAuthorizationCodeTokenRequest(String authCode) {
-
-		GenericUrl serverUrl = new GenericUrl(this.serverAuthTokenUrl);
-		BasicAuthentication clientServerAuthentication = this.getClientServerAuthentication();
-
-		return new AuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(), serverUrl, authCode)
-		        .setRedirectUri(this.authTokenRedirectUrl).setClientAuthentication(clientServerAuthentication)
-		        .setGrantType(this.authorizationGrantType);
-	}
-
-	/**
-	 * Automatically builds a credential using the {@link OAuthAccessToken}. If
-	 * it contains a refresh token, a full {@link Credential} will be generated
-	 * using {@link #buildFullCredential()}
-	 *
-	 * @param accessToken
-	 * @return
-	 */
-	protected Credential buildCredential(OAuthAccessToken token) {
-		String accessToken = token.getAccessToken();
-		String refreshToken = token.getRefreshToken();
-		Long expiration = token.getExpiration();
-
-		Credential credential = null;
-
-		if (this.allowRefreshCredentials && refreshToken != null) {
-			credential = this.buildFullCredential(accessToken, refreshToken, expiration);
-		} else {
-			credential = this.buildAccessTokenCredential(accessToken, expiration);
+		if (request.getQueryString() != null) {
+			fullUrlBuf.append('?').append(request.getQueryString());
 		}
 
-		return credential;
-	}
-
-	protected Credential buildAccessTokenCredential(String accessToken,
-	                                                Long expiration) {
-		return new Credential(BearerToken.authorizationHeaderAccessMethod()).setAccessToken(accessToken)
-		        .setExpiresInSeconds(expiration);
-	}
-
-	protected Credential buildFullCredential(String accessToken,
-	                                         String refreshToken,
-	                                         Long expiration) {
-		GenericUrl serverUrl = new GenericUrl(this.serverAuthTokenUrl);
-		BasicAuthentication clientServerAuthentication = this.getClientServerAuthentication();
-
-		Credential credential = new Credential.Builder(BearerToken.authorizationHeaderAccessMethod())
-		        .setTransport(new NetHttpTransport()).setJsonFactory(new JacksonFactory()).setTokenServerUrl(serverUrl)
-		        .setClientAuthentication(clientServerAuthentication).build();
-
-		credential.setAccessToken(accessToken);
-		credential.setRefreshToken(refreshToken);
-		credential.setExpiresInSeconds(expiration);
-
-		return credential;
+		return fullUrlBuf.toString();
 	}
 
 	protected void handleLoginConnectionException(IOException e,
@@ -250,16 +152,6 @@ public abstract class AbstractOAuthService
 		} catch (IOException ioe) {
 			throw new OAuthConnectionException(e);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "AbstractOAuthService [serverLoginTokenUrl=" + this.serverLoginTokenUrl + ", serverAuthTokenUrl="
-		        + this.serverAuthTokenUrl + ", clientId=" + this.clientId + ", clientSecret=" + this.clientSecret
-		        + ", loginTokenRedirectUrl=" + this.loginTokenRedirectUrl + ", authTokenRedirectUrl="
-		        + this.authTokenRedirectUrl + ", state=" + this.state + ", authorizationGrantType="
-		        + this.authorizationGrantType + ", allowRefreshCredentials=" + this.allowRefreshCredentials
-		        + ", scopes=" + this.scopes + "]";
 	}
 
 }

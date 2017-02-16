@@ -27,7 +27,7 @@ import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
  */
 @RestController
 @RequestMapping("/login/auth/oauth")
-public class OAuthLoginController {
+public final class OAuthLoginController {
 
 	private OAuthLoginControllerDelegate delegate;
 
@@ -48,7 +48,12 @@ public class OAuthLoginController {
 	}
 
 	// MARK: Controller
+
+	// TODO: Need to add components for GET token response.
+
 	/**
+	 * OAuth Login used by applications that have already retrieved an access
+	 * token.
 	 *
 	 * @param type
 	 *            OAuth service/type. Example "google".
@@ -65,7 +70,7 @@ public class OAuthLoginController {
 		LoginTokenPair response = null;
 
 		try {
-			response = this.delegate.login(type, accessToken);
+			response = this.delegate.loginWithAccessToken(type, accessToken);
 		} catch (OAuthAuthorizationTokenRequestException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
 		} catch (OAuthServiceUnavailableException e) {

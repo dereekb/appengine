@@ -49,7 +49,7 @@ public class OAuthAccessTokenImpl
 		this.refreshToken = refreshToken;
 	}
 
-	public Long getExpiration() {
+	public Long getExpiresIn() {
 		return this.expiration;
 	}
 

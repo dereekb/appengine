@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.auth.controller.oauth.impl;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
@@ -47,9 +49,21 @@ public class OAuthLoginControllerDelegateImpl
 	}
 
 	// MARK: OAuthLoginControllerDelegate
-	@Override
 	public LoginTokenPair login(String type,
-	                            String accessToken)
+	                            HttpServletRequest request)
+	        throws OAuthInsufficientException,
+	            OAuthServiceUnavailableException,
+	            OAuthConnectionException {
+
+		OAuthService service = this.manager.getService(type);
+		OAuthAuthorizationInfo authInfo = service.processAuthorizationCodeResponse(request);
+
+		return this.loginWithAuthInfo(authInfo);
+	}
+
+	@Override
+	public LoginTokenPair loginWithAccessToken(String type,
+	                                           String accessToken)
 	        throws OAuthInsufficientException,
 	            OAuthServiceUnavailableException,
 	            OAuthConnectionException {
@@ -58,10 +72,13 @@ public class OAuthLoginControllerDelegateImpl
 		OAuthAccessToken token = new OAuthAccessTokenImpl(accessToken);
 		OAuthAuthorizationInfo authInfo = service.getAuthorizationInfo(token);
 
+		return this.loginWithAuthInfo(authInfo);
+	}
+
+	private LoginTokenPair loginWithAuthInfo(OAuthAuthorizationInfo authInfo) {
 		LoginPointer pointer = this.manager.login(authInfo);
 		String encodedToken = this.tokenService.encodeLoginToken(pointer);
 		LoginTokenPair pair = new LoginTokenPair(pointer.getIdentifier(), encodedToken);
-
 		return pair;
 	}
 

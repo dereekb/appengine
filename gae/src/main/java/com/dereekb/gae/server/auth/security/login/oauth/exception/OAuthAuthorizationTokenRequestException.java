@@ -10,21 +10,34 @@ public class OAuthAuthorizationTokenRequestException extends OAuthException {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer httpCode;
-	private String httpStatusMessage;
+	private String code;
+	private String type;
+	private String message;
 
-	public OAuthAuthorizationTokenRequestException() {}
+	public OAuthAuthorizationTokenRequestException(String code, String type, String message) {
+		this(code, type, message, null);
+	}
 
+	public OAuthAuthorizationTokenRequestException(String code, String type, String message, Throwable e) {
+		super(e);
+		this.setCode(code);
+		this.setType(type);
+		this.setMessage(message);
+	}
+
+	@Deprecated
 	public OAuthAuthorizationTokenRequestException(String code, String message) {
 		super(code, message);
 	}
 
+	@Deprecated
 	public OAuthAuthorizationTokenRequestException(Integer httpCode, String httpStatusMessage) {
 		super();
-		this.httpCode = httpCode;
-		this.httpStatusMessage = httpStatusMessage;
+		this.code = httpCode.toString();
+		this.message = httpStatusMessage;
 	}
 
+	@Deprecated
 	public OAuthAuthorizationTokenRequestException(String message) {
 		super(message);
 	}
@@ -33,20 +46,31 @@ public class OAuthAuthorizationTokenRequestException extends OAuthException {
 		super(cause);
 	}
 
-	public Integer getHttpCode() {
-		return this.httpCode;
+	@Override
+	public String getCode() {
+		return this.code;
 	}
 
-	public void setHttpCode(Integer httpCode) {
-		this.httpCode = httpCode;
+	@Override
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getHttpStatusMessage() {
-		return this.httpStatusMessage;
+	public String getType() {
+		return this.type;
 	}
 
-	public void setHttpStatusMessage(String httpStatusMessage) {
-		this.httpStatusMessage = httpStatusMessage;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public String getMessage() {
+		return this.message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	@Override

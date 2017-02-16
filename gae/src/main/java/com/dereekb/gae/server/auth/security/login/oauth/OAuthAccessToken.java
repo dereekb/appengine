@@ -7,6 +7,6 @@ public interface OAuthAccessToken {
 
 	public String getRefreshToken();
 
-	public Long getExpiration();
+	public Long getExpiresIn();
 
 }
