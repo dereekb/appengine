@@ -56,10 +56,10 @@ public class GoogleOAuthService extends AbstractScribeOAuthService {
 		return GOOGLE_USER_REQUEST_URL;
 	}
 
-	@Override
+	@Deprecated
 	protected void configureConnection(OAuthAccessToken token,
 	                                   HttpURLConnection connection) {
-		super.configureConnection(token, connection);
+		// super.configureConnection(token, connection);
 
 		/*
 		 * GET HTTP/1.1
