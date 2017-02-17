@@ -19,19 +19,18 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 	private ObjectifyQueryRequestLimitedBuilderInitializer queryInitializer;
 
 	public ObjectifyDatabaseEntityDefinitionImpl(String entityName, Class<?> entityType, ModelKeyType entityKeyType) {
-		this.setEntityName(entityName);
-		this.setEntityType(entityType);
-		this.setEntityKeyType(entityKeyType);
+		this(entityName, entityType, entityKeyType, null);
 	}
 
 	public ObjectifyDatabaseEntityDefinitionImpl(String entityName,
 	        Class<?> entityType,
 	        ModelKeyType entityKeyType,
 	        ObjectifyQueryRequestLimitedBuilderInitializer queryInitializer) {
-		this.entityName = entityName;
-		this.entityType = entityType;
-		this.entityKeyType = entityKeyType;
-		this.queryInitializer = queryInitializer;
+		this.setEntityName(entityName);
+		this.setEntityType(entityType);
+		this.setEntityKeyType(entityKeyType);
+		this.setQueryInitializer(queryInitializer);
+		this.validateName();
 	}
 
 	@Override
@@ -40,6 +39,10 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 	}
 
 	public void setEntityName(String entityName) {
+		if (entityName == null) {
+			throw new IllegalArgumentException("entityName cannot be null.");
+		}
+
 		this.entityName = entityName;
 	}
 
@@ -49,6 +52,10 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 	}
 
 	public void setEntityType(Class<?> entityType) {
+		if (entityType == null) {
+			throw new IllegalArgumentException("entityType cannot be null.");
+		}
+
 		this.entityType = entityType;
 	}
 
@@ -58,6 +65,10 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 	}
 
 	public void setEntityKeyType(ModelKeyType entityKeyType) {
+		if (entityKeyType == null) {
+			throw new IllegalArgumentException("entityKeyType cannot be null.");
+		}
+
 		this.entityKeyType = entityKeyType;
 	}
 
@@ -68,6 +79,13 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 
 	public void setQueryInitializer(ObjectifyQueryRequestLimitedBuilderInitializer queryInitializer) {
 		this.queryInitializer = queryInitializer;
+	}
+
+	protected void validateName() {
+		if (this.entityType.getSimpleName().equalsIgnoreCase(this.entityName) == false) {
+			throw new RuntimeException("Improperly configured ObjectifyDatabaseEntry. Has type '"
+			        + this.entityType.getSimpleName() + "' but name '" + this.entityName + "'");
+		}
 	}
 
 	@Override

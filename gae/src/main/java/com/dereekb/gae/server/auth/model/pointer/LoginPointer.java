@@ -151,7 +151,7 @@ public class LoginPointer extends OwnedDatabaseModel
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
-		return new ModelKey(this.identifier);
+		return ModelKey.safe(this.identifier);
 	}
 
 	@Override

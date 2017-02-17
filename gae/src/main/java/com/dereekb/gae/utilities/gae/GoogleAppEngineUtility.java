@@ -4,12 +4,16 @@ import com.google.appengine.api.utils.SystemProperty;
 
 public class GoogleAppEngineUtility {
 
+	public static final boolean isDevelopment = (SystemProperty.environment
+	        .value() == SystemProperty.Environment.Value.Development);
+	public static final boolean isProduction = !isDevelopment;
+
 	public static boolean isDevelopmentEnvironment() {
-		return (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development);
+		return isDevelopment;
 	}
 
 	public static boolean isProductionEnvironment() {
-		return (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production);
+		return isProduction;
 	}
 
 }

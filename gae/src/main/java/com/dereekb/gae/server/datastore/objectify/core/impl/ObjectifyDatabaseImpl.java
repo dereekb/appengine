@@ -588,6 +588,12 @@ public class ObjectifyDatabaseImpl
 			return this.iterableFactory.makeIterable(query, cursor);
 		}
 
+		@Override
+		public String toString() {
+			return "ObjectifyDatabaseEntityImpl [type=" + this.type + ", modelTypeName=" + this.modelTypeName
+			        + ", keyType=" + this.keyType + "]";
+		}
+
 		// MARK: Request Executor
 		/**
 		 * Internal implementation for executing a query.
