@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -135,6 +136,24 @@ public class ApiExceptionHandler {
 
 		BindingResult result = e.getBindingResult();
 		ValidationError error = new ValidationError(result);
+		response.setError(error);
+
+		return response;
+	}
+
+	/**
+	 * Used for capturing validation errors.
+	 */
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MissingPathVariableException.class)
+	public ApiResponse handleException(MissingPathVariableException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("MISSING_URL_VARIABLE");
+		error.setTitle("Missing URL Variable");
+		error.setDetail(e.getMessage());
+
 		response.setError(error);
 
 		return response;

@@ -15,6 +15,14 @@ public class OAuthConnectionException extends OAuthException {
 		super();
 	}
 
+	public OAuthConnectionException(String code, String message) {
+		super(code, message);
+	}
+
+	public OAuthConnectionException(String message) {
+		super(message);
+	}
+
 	public OAuthConnectionException(Throwable cause) {
 		super(cause);
 	}

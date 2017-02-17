@@ -46,8 +46,7 @@ public class ApiResponseImpl
 	/**
 	 * List of errors, if any are available.
 	 */
-	@JsonInclude(Include.NON_EMPTY)
-	private List<ApiResponseError> errors = new ArrayList<ApiResponseError>();
+	private List<ApiResponseError> errors;
 
 	public ApiResponseImpl() {
 		this(true);

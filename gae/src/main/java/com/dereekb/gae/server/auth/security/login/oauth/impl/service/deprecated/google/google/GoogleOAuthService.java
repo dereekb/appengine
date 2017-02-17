@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl.service.google;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service.google.google;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
@@ -21,7 +22,8 @@ import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthException
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.AbstractOAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
-import com.dereekb.gae.server.auth.security.login.oauth.impl.service.AbstractGoogleOAuthService;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.deprecated.google.AbstractGoogleOAuthService;
 import com.dereekb.gae.utilities.data.url.ConnectionUtility;
 import com.dereekb.gae.utilities.json.JsonUtility;
 import com.dereekb.gae.utilities.json.JsonUtility.JsonObjectReader;
@@ -38,6 +40,7 @@ import com.google.gson.JsonElement;
  * @author dereekb
  *
  */
+@Deprecated
 public class GoogleOAuthService extends AbstractGoogleOAuthService {
 
 	private static final String GOOGLE_ACCOUNT_LOGIN_PATH = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -54,8 +57,13 @@ public class GoogleOAuthService extends AbstractGoogleOAuthService {
 	private static final List<String> GOOGLE_OAUTH_SCOPES = Arrays.asList(
 	        "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile");
 
+	@Deprecated
 	public GoogleOAuthService(String clientId, String clientSecret) throws IllegalArgumentException {
-		super(GOOGLE_ACCOUNT_LOGIN_PATH, GOOGLE_AUTH_TOKEN_PATH, clientId, clientSecret, GOOGLE_OAUTH_SCOPES);
+		this(new OAuthClientConfigImpl(clientId, clientSecret));
+	}
+
+	public GoogleOAuthService(OAuthClientConfig clientConfig) throws IllegalArgumentException {
+		super(GOOGLE_ACCOUNT_LOGIN_PATH, GOOGLE_AUTH_TOKEN_PATH, clientConfig, GOOGLE_OAUTH_SCOPES);
 	}
 
 	// MARK: Abstract
@@ -91,7 +99,7 @@ public class GoogleOAuthService extends AbstractGoogleOAuthService {
 	@Override
 	public OAuthAuthorizationInfo processAuthorizationCode(String authCode) {
 		OAuthAccessToken accessToken = this.getAuthorizationToken(authCode);
-		return this.getAuthorizationInfo(accessToken);
+		return this.retrieveAuthorizationInfo(accessToken);
 	}
 
 	public OAuthAccessToken getAuthorizationToken(String authCode)
@@ -131,7 +139,7 @@ public class GoogleOAuthService extends AbstractGoogleOAuthService {
 
 	// MARK: Authorization Info
 	@Override
-	public GoogleOAuthUserResult getAuthorizationInfo(OAuthAccessToken token)
+	public GoogleOAuthUserResult retrieveAuthorizationInfo(OAuthAccessToken token)
 	        throws OAuthAuthorizationTokenRequestException,
 	            OAuthConnectionException {
 		return this.getLoginInfoFromServer(token);

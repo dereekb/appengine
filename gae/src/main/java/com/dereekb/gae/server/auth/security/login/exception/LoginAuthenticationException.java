@@ -19,6 +19,11 @@ public abstract class LoginAuthenticationException extends RuntimeException {
 		this.setCode(code);
 	}
 
+	public LoginAuthenticationException(String code, String message, Throwable cause) {
+		super(message, cause);
+		this.setCode(code);
+	}
+
 	public LoginAuthenticationException(String message) {
 		super(message);
 	}

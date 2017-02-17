@@ -1,4 +1,4 @@
-package com.dereekb.gae.utilities;
+package com.dereekb.gae.utilities.java;
 
 @Deprecated
 public class HandlerRetriever {

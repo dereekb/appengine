@@ -20,6 +20,10 @@ public class OAuthException extends LoginAuthenticationException {
 		super(code, message);
 	}
 
+	public OAuthException(String code, String message, Throwable cause) {
+		super(code, message, cause);
+	}
+
 	public OAuthException(String message) {
 		super(message);
 	}

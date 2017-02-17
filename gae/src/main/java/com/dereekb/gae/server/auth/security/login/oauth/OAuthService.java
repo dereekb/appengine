@@ -36,37 +36,48 @@ public interface OAuthService {
 	 * @return
 	 * @throws OAuthConnectionException
 	 * @throws OAuthAuthorizationTokenRequestException
+	 * 
+	 * @deprecated The client should first retrieve and decode an authorization
+	 *             code.
 	 */
+	@Deprecated
 	public OAuthAuthorizationInfo processAuthorizationCodeResponse(HttpServletRequest request)
 	        throws OAuthConnectionException,
 	            OAuthAuthorizationTokenRequestException;
 
 	/**
 	 * Used for processing an authorization code.
+	 * <p>
+	 * The authorization token is retrieved after the dialogue response. The
+	 * implementation will contact the remote server using the auth code to
+	 * retrieve actual authorization.
 	 * 
 	 * @param authToken
-	 * @return
+	 *            {@link String}. Never {@code null}.
+	 * @return {@link OAuthAuthorizationInfo}. Never {@code null}.
 	 * @throws OAuthConnectionException
+	 *             thrown if a connection issue arises while attempting to
+	 *             retrieve authorization info.
 	 * @throws OAuthAuthorizationTokenRequestException
 	 */
-	public OAuthAuthorizationInfo processAuthorizationCode(String authToken)
+	public OAuthAuthorizationInfo processAuthorizationCode(String authCode)
 	        throws OAuthConnectionException,
 	            OAuthAuthorizationTokenRequestException;
 
 	/**
-	 * Used for retrieving the actual authorization info after getting an access
-	 * token from the remote OAuth provider.
+	 * Used for retrieving the actual authorization info from the remote server
+	 * after getting a valid access token from the remote OAuth provider.
 	 * 
 	 * @param token
 	 *            {@link OAuthAccessToken}. Never {@code null}.
 	 * @return {@link OAuthAuthorizationInfo}. Never {@code null}.
-	 * @throws OAuthAuthorizationTokenRequestException
 	 * @throws OAuthConnectionException
 	 *             thrown if a connection issue arises while attempting to
 	 *             retrieve authorization info.
+	 * @throws OAuthAuthorizationTokenRequestException
 	 */
-	public OAuthAuthorizationInfo getAuthorizationInfo(OAuthAccessToken token)
-	        throws OAuthAuthorizationTokenRequestException,
-	            OAuthConnectionException;
+	public OAuthAuthorizationInfo retrieveAuthorizationInfo(OAuthAccessToken token)
+	        throws OAuthConnectionException,
+	            OAuthAuthorizationTokenRequestException;
 
 }

@@ -48,8 +48,40 @@ public final class OAuthLoginController {
 	}
 
 	// MARK: Controller
+	/**
+	 * OAuth Login used by applications that have already retrieved an access
+	 * token.
+	 *
+	 * @param type
+	 *            OAuth service/type. Example "google".
+	 * @param authCode
+	 *            OAuth authorization code.
+	 * @return {@link LoginTokenPair}. Never {@code null}.
+	 */
+	@ResponseBody
+	@RequestMapping(path = "/{type}/code", method = RequestMethod.POST, produces = "application/json")
+	public final LoginTokenPair loginWithAuthCode(@PathVariable("type") String type,
+	                                              @RequestParam("code") @NotEmpty String authCode)
+	        throws ApiLoginException,
+	            ApiCaughtRuntimeException {
+		LoginTokenPair response = null;
 
-	// TODO: Need to add components for GET token response.
+		try {
+			response = this.delegate.loginWithAuthCode(type, authCode);
+		} catch (OAuthAuthorizationTokenRequestException e) {
+			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
+		} catch (OAuthServiceUnavailableException e) {
+			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNSUPPORTED, e);
+		} catch (OAuthInsufficientException e) {
+			throw new ApiLoginInvalidException(e);
+		} catch (OAuthConnectionException e) {
+			throw new ApiLoginErrorException(e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
 
 	/**
 	 * OAuth Login used by applications that have already retrieved an access
@@ -62,9 +94,9 @@ public final class OAuthLoginController {
 	 * @return {@link LoginTokenPair}. Never {@code null}.
 	 */
 	@ResponseBody
-	@RequestMapping(path = "/{type}", method = RequestMethod.POST, produces = "application/json")
-	public final LoginTokenPair login(@PathVariable("type") String type,
-	                                  @RequestParam @NotEmpty String accessToken)
+	@RequestMapping(path = "/{type}/token", method = RequestMethod.POST, produces = "application/json")
+	public final LoginTokenPair loginWithAccessToken(@PathVariable("type") String type,
+	                                                 @RequestParam("token") @NotEmpty String accessToken)
 	        throws ApiLoginException,
 	            ApiCaughtRuntimeException {
 		LoginTokenPair response = null;

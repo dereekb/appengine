@@ -1,16 +1,15 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl.service.facebook;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook;
 
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
-import com.dereekb.gae.server.auth.security.login.oauth.impl.service.AbstractScribeOAuthService;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.AbstractScribeOAuthService;
 import com.github.scribejava.apis.FacebookApi;
 import com.github.scribejava.apis.facebook.FacebookAccessTokenErrorResponse;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -27,8 +26,8 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 
 	private static final List<String> FACEBOOK_OAUTH_SCOPES = Arrays.asList("email");
 
-	public FacebookOAuthService(String clientId, String clientSecret) throws IllegalArgumentException {
-		super(clientId, clientSecret, FACEBOOK_OAUTH_SCOPES);
+	public FacebookOAuthService(OAuthClientConfig clientConfig) throws IllegalArgumentException {
+		super(clientConfig, FACEBOOK_OAUTH_SCOPES);
 	}
 
 	// MARK: OAuthService
@@ -41,12 +40,6 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 	@Override
 	protected OAuth20Service buildScribeService(ServiceBuilder builder) {
 		return builder.build(FacebookApi.instance());
-	}
-
-	@Override
-	protected String getAuthorizationCodeFromRequest(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -64,7 +57,7 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 
 	// MARK: Authorization Info
 	@Override
-	public OAuthAuthorizationInfo getAuthorizationInfo(OAuthAccessToken token)
+	public OAuthAuthorizationInfo retrieveAuthorizationInfo(OAuthAccessToken token)
 	        throws OAuthAuthorizationTokenRequestException,
 	            OAuthConnectionException {
 

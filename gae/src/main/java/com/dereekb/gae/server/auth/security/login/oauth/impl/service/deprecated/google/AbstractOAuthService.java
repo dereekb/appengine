@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service.google;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -6,9 +6,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
 
 /**
  * Abstract {@link OAuthService} implementation.
@@ -16,6 +17,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectio
  * @author dereekb
  *
  */
+@Deprecated
 public abstract class AbstractOAuthService
         implements OAuthService {
 
@@ -38,32 +40,38 @@ public abstract class AbstractOAuthService
 	 */
 	private String state;
 
-	private String clientId = null;
-	private String clientSecret = null;
+	private OAuthClientConfig client;
 
 	private String loginTokenRedirectUrl = null;
 	private String authTokenRedirectUrl = DEFAULT_AUTH_TOKEN_REDIRECT_URL;
 
 	private List<String> scopes;
 
+	@Deprecated
 	public AbstractOAuthService(String serverLoginTokenUrl,
 	        String serverAuthTokenUrl,
 	        String clientId,
 	        String clientSecret,
 	        List<String> scopes) throws IllegalArgumentException {
-		this(serverLoginTokenUrl, serverAuthTokenUrl, clientId, clientSecret, DEFAULT_STATE, scopes);
+		this(serverLoginTokenUrl, serverAuthTokenUrl, new OAuthClientConfigImpl(clientId, clientSecret), DEFAULT_STATE,
+		        scopes);
 	}
 
 	public AbstractOAuthService(String serverLoginTokenUrl,
 	        String serverAuthTokenUrl,
-	        String clientId,
-	        String clientSecret,
+	        OAuthClientConfig clientConfig,
+	        List<String> scopes) throws IllegalArgumentException {
+		this(serverLoginTokenUrl, serverAuthTokenUrl, clientConfig, DEFAULT_STATE, scopes);
+	}
+
+	public AbstractOAuthService(String serverLoginTokenUrl,
+	        String serverAuthTokenUrl,
+	        OAuthClientConfig clientConfig,
 	        String state,
 	        List<String> scopes) throws IllegalArgumentException {
 		this.setServerLoginTokenUrl(serverLoginTokenUrl);
 		this.setServerAuthTokenUrl(serverAuthTokenUrl);
-		this.setClientId(clientId);
-		this.setClientSecret(clientSecret);
+		this.setClient(clientConfig);
 		this.setState(state);
 		this.setScopes(scopes);
 	}
@@ -84,20 +92,16 @@ public abstract class AbstractOAuthService
 		this.serverAuthTokenUrl = serverAuthTokenUrl;
 	}
 
-	public String getClientId() {
-		return this.clientId;
+	public OAuthClientConfig getClientConfig() {
+		return this.client;
 	}
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+	public void setClient(OAuthClientConfig client) throws IllegalArgumentException {
+		if (client == null) {
+			throw new IllegalArgumentException("Client cannot be null.");
+		}
 
-	public String getClientSecret() {
-		return this.clientSecret;
-	}
-
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
+		this.client = client;
 	}
 
 	public String getLoginTokenRedirectUrl() {
@@ -146,9 +150,9 @@ public abstract class AbstractOAuthService
 	protected void handleLoginConnectionException(IOException e,
 	                                              HttpURLConnection connection) {
 		try {
-			int code = connection.getResponseCode();
+			Integer code = connection.getResponseCode();
 			String message = connection.getResponseMessage();
-			throw new OAuthAuthorizationTokenRequestException(code, message);
+			throw new OAuthConnectionException(code.toString(), message);
 		} catch (IOException ioe) {
 			throw new OAuthConnectionException(e);
 		}

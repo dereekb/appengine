@@ -1,8 +1,9 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service.google;
 
 import java.util.List;
 
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.auth.oauth2.BearerToken;
@@ -19,6 +20,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
  * @author dereekb
  *
  */
+@Deprecated
 public abstract class AbstractGoogleOAuthService extends AbstractOAuthService
         implements OAuthService {
 
@@ -28,19 +30,17 @@ public abstract class AbstractGoogleOAuthService extends AbstractOAuthService
 
 	public AbstractGoogleOAuthService(String serverLoginTokenUrl,
 	        String serverAuthTokenUrl,
-	        String clientId,
-	        String clientSecret,
+	        OAuthClientConfig clientConfig,
 	        List<String> scopes) throws IllegalArgumentException {
-		super(serverLoginTokenUrl, serverAuthTokenUrl, clientId, clientSecret, scopes);
+		super(serverLoginTokenUrl, serverAuthTokenUrl, clientConfig, scopes);
 	}
 
 	public AbstractGoogleOAuthService(String serverLoginTokenUrl,
 	        String serverAuthTokenUrl,
-	        String clientId,
-	        String clientSecret,
+	        OAuthClientConfig clientConfig,
 	        String state,
 	        List<String> scopes) throws IllegalArgumentException {
-		super(serverLoginTokenUrl, serverAuthTokenUrl, clientId, clientSecret, state, scopes);
+		super(serverLoginTokenUrl, serverAuthTokenUrl, clientConfig, state, scopes);
 	}
 
 	public String getAuthorizationGrantType() {
@@ -73,13 +73,15 @@ public abstract class AbstractGoogleOAuthService extends AbstractOAuthService
 	}
 
 	public GoogleAuthorizationCodeRequestUrl getAuthorizationCodeRequest() {
-		return new GoogleAuthorizationCodeRequestUrl(this.getServerLoginTokenUrl(), this.getClientId(),
+		OAuthClientConfig config = this.getClientConfig();
+		return new GoogleAuthorizationCodeRequestUrl(this.getServerLoginTokenUrl(), config.getClientId(),
 		        this.getLoginTokenRedirectUrl(), this.getScopes());
 	}
 
 	// MARK: Internal
 	protected BasicAuthentication getClientServerAuthentication() {
-		return new BasicAuthentication(this.getClientId(), this.getClientSecret());
+		OAuthClientConfig config = this.getClientConfig();
+		return new BasicAuthentication(config.getClientId(), config.getClientSecret());
 	}
 
 	protected AuthorizationCodeTokenRequest makeAuthorizationCodeTokenRequest(String authCode) {

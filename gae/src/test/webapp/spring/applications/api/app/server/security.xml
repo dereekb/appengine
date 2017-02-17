@@ -24,12 +24,12 @@
 		<!-- DEPRECATED: Do not enable password authentication on production apps -->
 		<security:intercept-url pattern="/login/auth/pass" access="permitAll" method="POST" />
 		<security:intercept-url pattern="/login/auth/pass/*" access="permitAll" method="POST" />
-		<security:intercept-url pattern="/login/auth/oauth/*" access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/oauth/**" access="permitAll" method="POST" />
 		<security:intercept-url pattern="/login/auth/key" access="permitAll" method="POST" />
 		<security:intercept-url pattern="/**" access="denyAll" />
-		<security:access-denied-handler ref="accessDeniedHandler" />
-		<!-- All requests are made with anonymous users. -->
+		<!-- All requests are made with spring anonymous users. -->
 		<security:anonymous enabled="true" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
 		<security:csrf disabled="true" />
 	</security:http>
 	
@@ -65,13 +65,13 @@
 
 		<!-- LoginKey Auth Requests are rejected for anonymous, API Keys, and SYSTEM users. -->
 		<security:intercept-url pattern="/login/auth/key/*"
-			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON', 'ROLE_SYSTEM')" />
+			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON', 'ROLE_LOGINTYPE_SYSTEM')" />
 
 		<!-- LoginKey Requests are rejected for anonymous users and API Key login types. -->
 		<security:intercept-url request-matcher-ref="loginKeyObjectApiPathRequestMatcher"
 			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON')" />
 
-		<!-- Secured Owned Patterns -->
+		<!-- Secured Owned Model Patterns -->
 		<security:intercept-url request-matcher-ref="securedModelPatternMatcher"
 			access="hasRole('ROLE_USER')" />
 
@@ -198,8 +198,7 @@
 		<constructor-arg index="0">
 			<map key-type="java.lang.Integer" value-type="java.lang.String">
 				<!-- Map of encoded role values. -->
-				<entry key="0" value="ROLE_SYSTEM" />
-				<entry key="1" value="ROLE_ADMIN" />
+				<entry key="0" value="ROLE_ADMIN" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -211,7 +210,8 @@
 	</bean>
 
 	<bean id="systemEncodedRoles" class="java.lang.Long">
-		<constructor-arg index="0" value="3" />
+		<!-- ROLE_ADMIN -->
+		<constructor-arg index="0" value="1" />
 	</bean>
 
 	<!-- Security Ownership -->
@@ -244,4 +244,5 @@
 	<bean id="accessDeniedHandler"
 		class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl">
 	</bean>
+	
 </beans>

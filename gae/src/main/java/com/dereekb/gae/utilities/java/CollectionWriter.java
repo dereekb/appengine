@@ -1,4 +1,4 @@
-package com.dereekb.gae.utilities;
+package com.dereekb.gae.utilities.java;
 
 import java.util.Collection;
 import java.util.Iterator;

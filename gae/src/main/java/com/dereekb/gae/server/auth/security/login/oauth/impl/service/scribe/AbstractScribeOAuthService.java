@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
+package com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,12 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthUnauthorizedClientException;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.exceptions.OAuthException;
 import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.github.scribejava.core.model.OAuth2AccessTokenErrorResponse;
+import com.github.scribejava.core.model.OAuth2AccessTokenErrorResponse.ErrorCode;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.common.base.Joiner;
 
@@ -29,44 +33,31 @@ public abstract class AbstractScribeOAuthService
 
 	private static final String SCOPES_SPLITTER = " ";
 
-	private OAuth20Service scribeService = this.buildScribeService();
-
 	private String stateSecret = "/login";
 
-	private String clientKey;
-	private String clientSecret;
+	private OAuth20Service scribeService;
+
+	private OAuthClientConfig clientConfig;
 
 	private List<String> scopes;
 
-	public AbstractScribeOAuthService(String clientKey, String clientSecret, List<String> scopes) {
-		this.setClientKey(clientKey);
-		this.setClientSecret(clientSecret);
+	public AbstractScribeOAuthService(OAuthClientConfig clientConfig, List<String> scopes)
+	        throws IllegalArgumentException {
+		this.setClientConfig(clientConfig);
 		this.setScopes(scopes);
 		this.initService();
 	}
 
-	public String getClientKey() {
-		return this.clientKey;
+	public OAuthClientConfig getClientConfig() {
+		return this.clientConfig;
 	}
 
-	public void setClientKey(String clientKey) throws IllegalArgumentException {
-		if (clientKey == null) {
-			throw new IllegalArgumentException("ClientKey cannot be null.");
+	public void setClientConfig(OAuthClientConfig clientConfig) throws IllegalArgumentException {
+		if (clientConfig == null) {
+			throw new IllegalArgumentException("ClientConfig cannot be null.");
 		}
 
-		this.clientKey = clientKey;
-	}
-
-	public String getClientSecret() {
-		return this.clientSecret;
-	}
-
-	public void setClientSecret(String clientSecret) throws IllegalArgumentException {
-		if (clientSecret == null) {
-			throw new IllegalArgumentException("ClientSecret cannot be null.");
-		}
-
-		this.clientSecret = clientSecret;
+		this.clientConfig = clientConfig;
 	}
 
 	public OAuth20Service getScribeService() {
@@ -77,9 +68,9 @@ public abstract class AbstractScribeOAuthService
 		return this.scopes;
 	}
 
-	public void setScopes(List<String> scopes) {
+	public void setScopes(List<String> scopes) throws IllegalArgumentException {
 		if (scopes == null) {
-			throw new IllegalArgumentException("scopes cannot be null.");
+			throw new IllegalArgumentException("Scopes cannot be null.");
 		}
 
 		this.scopes = scopes;
@@ -93,8 +84,8 @@ public abstract class AbstractScribeOAuthService
 	protected OAuth20Service buildScribeService() {
 		ServiceBuilder builder = new ServiceBuilder();
 
-		builder.apiKey(this.clientKey);
-		builder.apiSecret(this.clientSecret);
+		builder.apiKey(this.clientConfig.getClientId());
+		builder.apiSecret(this.clientConfig.getClientSecret());
 		builder.state(this.stateSecret);
 		builder.scope(this.getScopesString());
 
@@ -124,7 +115,9 @@ public abstract class AbstractScribeOAuthService
 		return this.processAuthorizationCode(code);
 	}
 
-	protected abstract String getAuthorizationCodeFromRequest(HttpServletRequest request);
+	protected String getAuthorizationCodeFromRequest(HttpServletRequest request) {
+		throw new UnsupportedOperationException("Responses should be handled by client first.");
+	}
 
 	@Override
 	public OAuthAuthorizationInfo processAuthorizationCode(String code)
@@ -144,11 +137,24 @@ public abstract class AbstractScribeOAuthService
 		}
 
 		ScribeOAuthAccessToken accessToken = new ScribeOAuthAccessToken(scribeAccessToken);
-		return this.getAuthorizationInfo(accessToken);
+		return this.retrieveAuthorizationInfo(accessToken);
 	}
 
-	public void handleTokenOAuthException(OAuthException e) throws OAuthAuthorizationTokenRequestException {
-		throw new OAuthAuthorizationTokenRequestException(e);
+	protected void handleTokenOAuthException(OAuthException e) throws OAuthAuthorizationTokenRequestException {
+
+		if (OAuth2AccessTokenErrorResponse.class.isAssignableFrom(e.getClass())) {
+			OAuth2AccessTokenErrorResponse tokenError = (OAuth2AccessTokenErrorResponse) e;
+
+			ErrorCode errorCode = tokenError.getErrorCode();
+			String errorDescription = tokenError.getErrorDescription();
+
+			switch (errorCode) {
+				case unauthorized_client:
+					throw new OAuthUnauthorizedClientException();
+				default:
+					throw new OAuthAuthorizationTokenRequestException(errorCode.toString(), errorDescription);
+			}
+		}
 	}
 
 	/**

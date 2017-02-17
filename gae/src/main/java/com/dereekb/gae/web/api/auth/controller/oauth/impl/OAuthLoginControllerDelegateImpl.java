@@ -7,6 +7,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthServiceManager;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
@@ -49,6 +50,7 @@ public class OAuthLoginControllerDelegateImpl
 	}
 
 	// MARK: OAuthLoginControllerDelegate
+	@Deprecated
 	public LoginTokenPair login(String type,
 	                            HttpServletRequest request)
 	        throws OAuthInsufficientException,
@@ -62,6 +64,19 @@ public class OAuthLoginControllerDelegateImpl
 	}
 
 	@Override
+	public LoginTokenPair loginWithAuthCode(String type,
+	                                        String authCode)
+	        throws OAuthConnectionException,
+	            OAuthInsufficientException,
+	            OAuthAuthorizationTokenRequestException,
+	            OAuthServiceUnavailableException {
+
+		OAuthService service = this.manager.getService(type);
+		OAuthAuthorizationInfo authInfo = service.processAuthorizationCode(authCode);
+		return this.loginWithAuthInfo(authInfo);
+	}
+
+	@Override
 	public LoginTokenPair loginWithAccessToken(String type,
 	                                           String accessToken)
 	        throws OAuthInsufficientException,
@@ -70,7 +85,7 @@ public class OAuthLoginControllerDelegateImpl
 
 		OAuthService service = this.manager.getService(type);
 		OAuthAccessToken token = new OAuthAccessTokenImpl(accessToken);
-		OAuthAuthorizationInfo authInfo = service.getAuthorizationInfo(token);
+		OAuthAuthorizationInfo authInfo = service.retrieveAuthorizationInfo(token);
 
 		return this.loginWithAuthInfo(authInfo);
 	}
