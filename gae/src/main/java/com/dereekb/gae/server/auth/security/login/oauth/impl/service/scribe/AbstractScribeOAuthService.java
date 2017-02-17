@@ -1,6 +1,9 @@
 package com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -8,12 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthUnauthorizedClientException;
+import com.dereekb.gae.utilities.data.url.ConnectionUtility;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.exceptions.OAuthException;
 import com.github.scribejava.core.model.OAuth2AccessToken;
@@ -120,7 +125,14 @@ public abstract class AbstractScribeOAuthService
 	}
 
 	@Override
-	public OAuthAuthorizationInfo processAuthorizationCode(String code)
+	public OAuthAuthorizationInfo processAuthorizationCode(OAuthAuthCode code)
+	        throws OAuthConnectionException,
+	            OAuthAuthorizationTokenRequestException {
+		String authCode = code.getAuthCode();
+		return this.processAuthorizationCode(authCode);
+	}
+
+	protected OAuthAuthorizationInfo processAuthorizationCode(String code)
 	        throws OAuthConnectionException,
 	            OAuthAuthorizationTokenRequestException {
 		OAuth2AccessToken scribeAccessToken = null;
@@ -156,6 +168,63 @@ public abstract class AbstractScribeOAuthService
 			}
 		}
 	}
+
+	// MARK: Authorization Info
+	@Override
+	public OAuthAuthorizationInfo retrieveAuthorizationInfo(OAuthAccessToken token)
+	        throws OAuthAuthorizationTokenRequestException,
+	            OAuthConnectionException {
+		return this.getLoginInfoFromServer(token);
+	}
+
+	private OAuthAuthorizationInfo getLoginInfoFromServer(OAuthAccessToken token)
+	        throws OAuthAuthorizationTokenRequestException,
+	            OAuthConnectionException {
+
+		URL url = null;
+
+		try {
+			url = new URL(this.getLoginInfoRequestUrl(token));
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+
+		HttpURLConnection connection = null;
+		OAuthAuthorizationInfo result = null;
+
+		try {
+			connection = (HttpURLConnection) url.openConnection();
+			this.configureConnection(token, connection);
+			result = this.parseResultFromConnection(token, connection);
+		} catch (IOException e) {
+			throw new OAuthConnectionException(e);
+		} catch (Exception e) {
+			throw new OAuthException(e);
+		} finally {
+			connection.disconnect();
+		}
+
+		return result;
+	}
+
+	protected abstract String getLoginInfoRequestUrl(OAuthAccessToken token);
+
+	protected void configureConnection(OAuthAccessToken token,
+	                                   HttpURLConnection connection) {
+		connection.setDoOutput(true);
+		connection.setInstanceFollowRedirects(false);
+	}
+
+	protected OAuthAuthorizationInfo parseResultFromConnection(OAuthAccessToken token,
+	                                                           HttpURLConnection connection)
+	        throws Exception {
+		String data = ConnectionUtility.readStringFromConnection(connection);
+		return this.parseResultFromData(token, data);
+	}
+
+	protected abstract OAuthAuthorizationInfo parseResultFromData(OAuthAccessToken token,
+	                                                              String data)
+	        throws Exception;
 
 	/**
 	 * {@link OAuthAccessToken} implementation for ScribeJava.

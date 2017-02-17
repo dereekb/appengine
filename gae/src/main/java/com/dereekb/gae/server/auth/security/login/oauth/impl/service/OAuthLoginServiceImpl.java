@@ -18,10 +18,12 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class OAuthLoginServiceImpl
         implements OAuthLoginService {
 
+	private boolean emailRequired = false;
+
 	private LoginPointerService loginPointerService;
 
 	public OAuthLoginServiceImpl(LoginPointerService loginPointerService) {
-		this.loginPointerService = loginPointerService;
+		this.setLoginPointerService(loginPointerService);
 	}
 
 	public LoginPointerService getLoginPointerService() {
@@ -29,9 +31,22 @@ public class OAuthLoginServiceImpl
 	}
 
 	public void setLoginPointerService(LoginPointerService loginPointerService) {
+		if (loginPointerService == null) {
+			throw new IllegalArgumentException("loginPointerService cannot be null.");
+		}
+
 		this.loginPointerService = loginPointerService;
 	}
 
+	public boolean isEmailRequired() {
+		return this.emailRequired;
+	}
+
+	public void setEmailRequired(boolean emailRequired) {
+		this.emailRequired = emailRequired;
+	}
+
+	// MARK: OAuthLoginService
 	@Override
 	public LoginPointer login(OAuthAuthorizationInfo authCode) throws OAuthInsufficientException {
 		OAuthLoginInfo info = authCode.getLoginInfo();
@@ -44,8 +59,8 @@ public class OAuthLoginServiceImpl
 			throw new OAuthInsufficientException("Id was not available for login.");
 		}
 
-		if (email == null) {
-			throw new OAuthInsufficientException("Email was not available for login.");
+		if (email == null && this.emailRequired) {
+			throw new OAuthInsufficientException("Email was required and not available for login.");
 		}
 
 		ModelKey key = type.makeKey(identifier);

@@ -41,7 +41,7 @@ public enum LoginPointerType {
 
 	}
 
-	public static final String LOGIN_POINTER_FORMAT = "%s%s";
+	public static final String LOGIN_POINTER_FORMAT = "%s_%s";
 
 	public final int id;
 	public final LoginType type;

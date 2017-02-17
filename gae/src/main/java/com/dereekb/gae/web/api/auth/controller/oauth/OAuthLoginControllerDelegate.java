@@ -21,6 +21,8 @@ public interface OAuthLoginControllerDelegate {
 	 *            oauth type. Never {@code null},
 	 * @param authCode
 	 *            token string. Never {@code null}.
+	 * @param codeType
+	 *            code type. May be {@code null}.
 	 * @return {@link LoginTokenPair}. Never {@code null}.
 	 * 
 	 * @throws OAuthConnectionException
@@ -29,7 +31,8 @@ public interface OAuthLoginControllerDelegate {
 	 * @throws OAuthServiceUnavailableException
 	 */
 	public LoginTokenPair loginWithAuthCode(String type,
-	                                        String authCode)
+	                                        String authCode,
+	                                        String codeType)
 	        throws OAuthConnectionException,
 	            OAuthInsufficientException,
 	            OAuthAuthorizationTokenRequestException,

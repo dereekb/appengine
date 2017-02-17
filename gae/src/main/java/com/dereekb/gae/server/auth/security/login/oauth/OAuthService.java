@@ -53,14 +53,14 @@ public interface OAuthService {
 	 * retrieve actual authorization.
 	 * 
 	 * @param authToken
-	 *            {@link String}. Never {@code null}.
+	 *            {@link OAuthAuthCode}. Never {@code null}.
 	 * @return {@link OAuthAuthorizationInfo}. Never {@code null}.
 	 * @throws OAuthConnectionException
 	 *             thrown if a connection issue arises while attempting to
 	 *             retrieve authorization info.
 	 * @throws OAuthAuthorizationTokenRequestException
 	 */
-	public OAuthAuthorizationInfo processAuthorizationCode(String authCode)
+	public OAuthAuthorizationInfo processAuthorizationCode(OAuthAuthCode authCode)
 	        throws OAuthConnectionException,
 	            OAuthAuthorizationTokenRequestException;
 

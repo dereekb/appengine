@@ -39,8 +39,15 @@ public final class ApiCaughtRuntimeException extends RuntimeException
 	@Override
 	public ApiResponseErrorImpl asResponseError() {
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl("SERVER_EXCEPTION");
-		error.setTitle(this.exception.getClass().getSimpleName());
-		error.setDetail(this.exception.getMessage());
+
+		error.setTitle("Server Exception");
+		error.setDetail("Something went wrong.");
+
+		/*
+		 * error.setTitle(this.exception.getClass().getSimpleName());
+		 * error.setDetail(this.exception.getMessage());
+		 */
+
 		return error;
 	}
 

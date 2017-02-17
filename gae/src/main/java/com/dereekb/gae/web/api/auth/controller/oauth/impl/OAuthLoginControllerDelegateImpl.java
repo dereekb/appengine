@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthServiceManager;
@@ -12,6 +13,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectio
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAuthCodeImpl;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginControllerDelegate;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -65,14 +67,16 @@ public class OAuthLoginControllerDelegateImpl
 
 	@Override
 	public LoginTokenPair loginWithAuthCode(String type,
-	                                        String authCode)
+	                                        String authCode,
+	                                        String codeType)
 	        throws OAuthConnectionException,
 	            OAuthInsufficientException,
 	            OAuthAuthorizationTokenRequestException,
 	            OAuthServiceUnavailableException {
 
 		OAuthService service = this.manager.getService(type);
-		OAuthAuthorizationInfo authInfo = service.processAuthorizationCode(authCode);
+		OAuthAuthCode code = new OAuthAuthCodeImpl(authCode, codeType);
+		OAuthAuthorizationInfo authInfo = service.processAuthorizationCode(code);
 		return this.loginWithAuthInfo(authInfo);
 	}
 

@@ -61,13 +61,14 @@ public final class OAuthLoginController {
 	@ResponseBody
 	@RequestMapping(path = "/{type}/code", method = RequestMethod.POST, produces = "application/json")
 	public final LoginTokenPair loginWithAuthCode(@PathVariable("type") String type,
-	                                              @RequestParam("code") @NotEmpty String authCode)
+	                                              @RequestParam("code") @NotEmpty String authCode,
+	                                              @RequestParam("type") String codeType)
 	        throws ApiLoginException,
 	            ApiCaughtRuntimeException {
 		LoginTokenPair response = null;
 
 		try {
-			response = this.delegate.loginWithAuthCode(type, authCode);
+			response = this.delegate.loginWithAuthCode(type, authCode, codeType);
 		} catch (OAuthAuthorizationTokenRequestException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
 		} catch (OAuthServiceUnavailableException e) {

@@ -1,9 +1,6 @@
 package com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.google;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,13 +9,9 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.AbstractOAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.AbstractScribeOAuthService;
-import com.dereekb.gae.utilities.data.url.ConnectionUtility;
 import com.dereekb.gae.utilities.json.JsonUtility;
 import com.dereekb.gae.utilities.json.JsonUtility.JsonObjectReader;
 import com.github.scribejava.apis.GoogleApi20;
@@ -53,33 +46,20 @@ public class GoogleOAuthService extends AbstractScribeOAuthService {
 	}
 
 	// MARK: Authorization Info
-	@Override
-	public GoogleOAuthAuthorizationInfo retrieveAuthorizationInfo(OAuthAccessToken token)
-	        throws OAuthAuthorizationTokenRequestException,
-	            OAuthConnectionException {
-		return this.getLoginInfoFromServer(token);
-	}
-
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String AUTHORIZATION_FORMAT = "Bearer %s";
 
-	private static final String GOOGLE_USER_REQUEST_URI = "https://www.googleapis.com/userinfo/v2/me";
+	private static final String GOOGLE_USER_REQUEST_URL = "https://www.googleapis.com/userinfo/v2/me";
 
-	private GoogleOAuthAuthorizationInfo getLoginInfoFromServer(OAuthAccessToken token)
-	        throws OAuthAuthorizationTokenRequestException,
-	            OAuthConnectionException {
+	@Override
+	protected String getLoginInfoRequestUrl(OAuthAccessToken token) {
+		return GOOGLE_USER_REQUEST_URL;
+	}
 
-		String accessToken = token.getAccessToken();
-		String bearer = String.format(AUTHORIZATION_FORMAT, accessToken);
-		URL url;
-
-		try {
-			url = new URL(GOOGLE_USER_REQUEST_URI);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-
-		// TODO: Abstract this to the super class.
+	@Override
+	protected void configureConnection(OAuthAccessToken token,
+	                                   HttpURLConnection connection) {
+		super.configureConnection(token, connection);
 
 		/*
 		 * GET HTTP/1.1
@@ -88,34 +68,26 @@ public class GoogleOAuthService extends AbstractScribeOAuthService {
 		 * Authorization: Bearer ya29.Ci8mA15jelsR3ZO-
 		 * QYxL5lG0APiNzX2k7WsU083XLtLRm5gvfNd5_2ytyNreU6Y2NA
 		 */
-		HttpURLConnection connection = null;
-		GoogleOAuthAuthorizationInfo result = null;
+		String accessToken = token.getAccessToken();
+		String bearer = String.format(AUTHORIZATION_FORMAT, accessToken);
+		connection.setRequestProperty(AUTHORIZATION_HEADER, bearer);
+	}
 
-		try {
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setDoOutput(true);
-			connection.setRequestProperty(AUTHORIZATION_HEADER, bearer);
-			connection.setInstanceFollowRedirects(false);
+	@Override
+	protected OAuthAuthorizationInfo parseResultFromData(OAuthAccessToken token,
+	                                                     String data)
+	        throws Exception {
 
-			/*
-			 * { "family_name": "Burgman", "name": "Derek Burgman", "picture":
-			 * "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
-			 * "locale": "en", "gender": "male", "email": "dereekb@gmail.com",
-			 * "link": "https://plus.google.com/107661756513647214258",
-			 * "given_name": "Derek", "id": "107661756513647214258",
-			 * "verified_email": true }
-			 */
-			JsonElement json = ConnectionUtility.readJsonFromConnection(connection);
-			result = GoogleOAuthAuthorizationInfoImpl.fromResult(token, json);
-		} catch (IOException e) {
-			throw new OAuthConnectionException(e);
-		} catch (Exception e) {
-			throw new OAuthException(e);
-		} finally {
-			connection.disconnect();
-		}
-
-		return result;
+		/*
+		 * { "family_name": "Burgman", "name": "Derek Burgman", "picture":
+		 * "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
+		 * "locale": "en", "gender": "male", "email": "dereekb@gmail.com",
+		 * "link": "https://plus.google.com/107661756513647214258",
+		 * "given_name": "Derek", "id": "107661756513647214258",
+		 * "verified_email": true }
+		 */
+		JsonElement json = JsonUtility.parseJson(data);
+		return GoogleOAuthAuthorizationInfoImpl.fromResult(token, json);
 	}
 
 	/**
