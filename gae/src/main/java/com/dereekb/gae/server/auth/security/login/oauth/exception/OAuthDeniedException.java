@@ -6,14 +6,20 @@ package com.dereekb.gae.server.auth.security.login.oauth.exception;
  * @author dereekb
  *
  */
-public class OAuthDeniedException extends OAuthException {
+public class OAuthDeniedException extends OAuthAuthenticationException {
 
 	private static final long serialVersionUID = 1L;
 
-	public OAuthDeniedException() {}
+	public OAuthDeniedException() {
+		super();
+	}
 
-	public OAuthDeniedException(String code, String message) {
-		super(code, message);
+	public OAuthDeniedException(String message, String encodedData) {
+		super(message, encodedData);
+	}
+
+	public OAuthDeniedException(String message) {
+		super(message);
 	}
 
 }

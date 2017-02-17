@@ -8,13 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthenticationException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
-import com.dereekb.gae.web.api.auth.exception.ApiLoginErrorException;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.handler.OAuthFailureResolver;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
-import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
@@ -69,14 +66,10 @@ public final class OAuthLoginController {
 
 		try {
 			response = this.delegate.loginWithAuthCode(type, authCode, codeType);
-		} catch (OAuthAuthorizationTokenRequestException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
+		} catch (OAuthAuthenticationException e) {
+			OAuthFailureResolver.resolve(e);
 		} catch (OAuthServiceUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNSUPPORTED, e);
-		} catch (OAuthInsufficientException e) {
-			throw new ApiLoginInvalidException(e);
-		} catch (OAuthConnectionException e) {
-			throw new ApiLoginErrorException(e);
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}
@@ -104,14 +97,10 @@ public final class OAuthLoginController {
 
 		try {
 			response = this.delegate.loginWithAccessToken(type, accessToken);
-		} catch (OAuthAuthorizationTokenRequestException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
+		} catch (OAuthAuthenticationException e) {
+			OAuthFailureResolver.resolve(e);
 		} catch (OAuthServiceUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNSUPPORTED, e);
-		} catch (OAuthInsufficientException e) {
-			throw new ApiLoginInvalidException(e);
-		} catch (OAuthConnectionException e) {
-			throw new ApiLoginErrorException(e);
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}

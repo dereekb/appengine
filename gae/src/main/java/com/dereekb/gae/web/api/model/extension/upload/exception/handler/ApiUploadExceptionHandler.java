@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.model.extension.upload.exception.handler;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +21,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  *
  */
 @ControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApiUploadExceptionHandler {
 
 	@ResponseBody

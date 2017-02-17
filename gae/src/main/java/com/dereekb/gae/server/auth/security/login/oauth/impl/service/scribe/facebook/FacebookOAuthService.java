@@ -11,6 +11,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthDeniedException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.AbstractOAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.AbstractScribeOAuthService;
@@ -22,6 +23,7 @@ import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.exceptions.OAuthException;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * {@link OAuthService} implementation for Facebook OAuth.
@@ -54,11 +56,8 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 		if (FacebookAccessTokenErrorResponse.class.isAssignableFrom(e.getClass())) {
 			FacebookAccessTokenErrorResponse tokenError = (FacebookAccessTokenErrorResponse) e;
 
-			String code = tokenError.getCode();
-			String type = tokenError.getType();
-			String message = tokenError.getMessage();
-
-			throw new OAuthAuthorizationTokenRequestException(code, type, message, e);
+			String responseJson = tokenError.getRawResponse();
+			throw new OAuthAuthorizationTokenRequestException(tokenError.getMessage(), responseJson);
 		}
 	}
 
@@ -90,15 +89,12 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 	protected OAuthAuthorizationInfo parseResultFromData(OAuthAccessToken token,
 	                                                     String data)
 	        throws Exception {
-		/*
-		 * {
-		 * "id": "10152497154619532",
-		 * "name": "Derek Burgman",
-		 * "email": "dereekb@gmail.com"
-		 * }
-		 */
+
 		JsonElement json = JsonUtility.parseJson(data);
-		return new FacebookOAuthAuthorizationInfoImpl(token, json);
+
+		FacebookOAuthAuthorizationError.assertResponseIsSuccessful(json);
+
+		return FacebookOAuthAuthorizationInfoImpl.fromResult(token, json);
 	}
 
 	/**
@@ -131,6 +127,13 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 				throw new IllegalArgumentException("Json cannot be null.");
 			}
 
+			/*
+			 * {
+			 * "id": "10152497154619532",
+			 * "name": "Derek Burgman",
+			 * "email": "dereekb@gmail.com"
+			 * }
+			 */
 			String id = JsonUtility.getString(json, "id");
 
 			if (id == null) {
@@ -183,6 +186,35 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 		@Override
 		public String toString() {
 			return "FacebookOAuthUserResult [reader=" + this.reader + "]";
+		}
+
+	}
+
+	public static class FacebookOAuthAuthorizationError {
+
+		private static final String ERROR_KEY = "error";
+		private static final String ERROR_MESSAGE_KEY = "message";
+
+		protected static void assertResponseIsSuccessful(JsonElement json) {
+			JsonObject response = json.getAsJsonObject();
+
+			if (response.has(ERROR_KEY)) {
+				JsonObject error = response.get(ERROR_KEY).getAsJsonObject();
+				throw makeException(error);
+			}
+		}
+
+		public static OAuthException makeException(JsonObject element) {
+
+			/*
+			 * {"error":{
+			 * "message":"Error validating access token: Session has expired on Friday, 17-Feb-17 02:00:00 PST. The current time is Friday, 17-Feb-17 13:05:06 PST."
+			 * ,"type":"OAuthException","code":190,"error_subcode":463,
+			 * "fbtrace_id":
+			 * "Bfbt7IB3Ips"}}
+			 */
+			String message = element.get(ERROR_MESSAGE_KEY).getAsString();
+			throw new OAuthDeniedException(message, element.toString());
 		}
 
 	}

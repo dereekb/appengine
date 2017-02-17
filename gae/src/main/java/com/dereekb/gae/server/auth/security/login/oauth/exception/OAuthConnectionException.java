@@ -7,7 +7,7 @@ package com.dereekb.gae.server.auth.security.login.oauth.exception;
  * @author dereekb
  *
  */
-public class OAuthConnectionException extends OAuthException {
+public class OAuthConnectionException extends OAuthAuthenticationException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -15,16 +15,12 @@ public class OAuthConnectionException extends OAuthException {
 		super();
 	}
 
-	public OAuthConnectionException(String code, String message) {
-		super(code, message);
+	public OAuthConnectionException(String message, String encodedData) {
+		super(message, encodedData);
 	}
 
 	public OAuthConnectionException(String message) {
 		super(message);
-	}
-
-	public OAuthConnectionException(Throwable cause) {
-		super(cause);
 	}
 
 }

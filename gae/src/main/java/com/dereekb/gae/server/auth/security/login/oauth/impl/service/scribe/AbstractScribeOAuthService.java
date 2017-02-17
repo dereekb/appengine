@@ -12,6 +12,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthenticationException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthUnauthorizedClientException;
@@ -139,12 +140,12 @@ public abstract class AbstractScribeOAuthService
 		try {
 			scribeAccessToken = this.scribeService.getAccessToken(code);
 		} catch (IOException | InterruptedException | ExecutionException e) {
-			throw new OAuthConnectionException(e);
+			throw new OAuthConnectionException(e.getMessage());
 		} catch (OAuthException e) {
 			this.handleTokenOAuthException(e);
 
 			// Force throw exception if one wasn't thrown.
-			throw new OAuthAuthorizationTokenRequestException(e);
+			throw new OAuthAuthorizationTokenRequestException(e.getMessage());
 		}
 
 		ScribeOAuthAccessToken accessToken = new ScribeOAuthAccessToken(scribeAccessToken);
@@ -156,14 +157,16 @@ public abstract class AbstractScribeOAuthService
 		if (OAuth2AccessTokenErrorResponse.class.isAssignableFrom(e.getClass())) {
 			OAuth2AccessTokenErrorResponse tokenError = (OAuth2AccessTokenErrorResponse) e;
 
+			String rawResponse = tokenError.getRawResponse();
+
 			ErrorCode errorCode = tokenError.getErrorCode();
 			String errorDescription = tokenError.getErrorDescription();
 
 			switch (errorCode) {
 				case unauthorized_client:
-					throw new OAuthUnauthorizedClientException();
+					throw new OAuthUnauthorizedClientException(errorDescription, rawResponse);
 				default:
-					throw new OAuthAuthorizationTokenRequestException(errorCode.toString(), errorDescription);
+					throw new OAuthAuthorizationTokenRequestException(errorDescription, rawResponse);
 			}
 		}
 	}
@@ -192,9 +195,11 @@ public abstract class AbstractScribeOAuthService
 			String data = response.getBody();
 			result = this.parseResultFromData(token, data);
 		} catch (IOException e) {
-			throw new OAuthConnectionException(e);
+			throw new OAuthConnectionException(e.getMessage());
+		} catch (OAuthAuthenticationException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new OAuthException(e);
+			throw new OAuthAuthenticationException(e.getMessage());
 		}
 
 		return result;

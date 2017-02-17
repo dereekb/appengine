@@ -3,6 +3,8 @@ package com.dereekb.gae.web.api.exception.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -33,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  *
  */
 @ControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class ApiExceptionHandler {
 
 	/**
