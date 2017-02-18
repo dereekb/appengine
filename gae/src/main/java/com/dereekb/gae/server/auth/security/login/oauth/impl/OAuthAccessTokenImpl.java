@@ -15,10 +15,8 @@ public class OAuthAccessTokenImpl
 	private String refreshToken;
 	private Long expiration;
 
-	public OAuthAccessTokenImpl() {}
-
 	public OAuthAccessTokenImpl(String accessToken) {
-		this(accessToken, null);
+		this.setAccessToken(accessToken);
 	}
 
 	public OAuthAccessTokenImpl(String accessToken, String refreshToken) {
@@ -29,6 +27,11 @@ public class OAuthAccessTokenImpl
 		this.setAccessToken(accessToken);
 		this.setRefreshToken(refreshToken);
 		this.setExpiration(expiration);
+	}
+
+	public OAuthAccessTokenImpl(String accessToken, Long expiresIn) {
+		this.setAccessToken(accessToken);
+		this.setExpiration(expiresIn);
 	}
 
 	@Override
@@ -49,6 +52,7 @@ public class OAuthAccessTokenImpl
 		this.refreshToken = refreshToken;
 	}
 
+	@Override
 	public Long getExpiresIn() {
 		return this.expiration;
 	}

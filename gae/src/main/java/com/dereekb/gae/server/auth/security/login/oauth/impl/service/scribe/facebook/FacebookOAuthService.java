@@ -1,5 +1,10 @@
 package com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,14 +14,18 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthenticationException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthDeniedException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.AbstractOAuthAuthorizationInfo;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.AbstractScribeOAuthService;
+import com.dereekb.gae.utilities.data.url.ConnectionUtility;
 import com.dereekb.gae.utilities.json.JsonUtility;
 import com.dereekb.gae.utilities.json.JsonUtility.JsonObjectReader;
+import com.dereekb.gae.utilities.regex.RegexHelper;
 import com.github.scribejava.apis.FacebookApi;
 import com.github.scribejava.apis.facebook.FacebookAccessTokenErrorResponse;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -32,6 +41,8 @@ import com.google.gson.JsonObject;
  *
  */
 public class FacebookOAuthService extends AbstractScribeOAuthService {
+
+	public static final String SHORT_TERM_ACCESS_TOKEN_TYPE_KEY = "access_token";
 
 	private static final List<String> FACEBOOK_OAUTH_SCOPES = Arrays.asList("email");
 
@@ -68,12 +79,87 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 	            OAuthAuthorizationTokenRequestException {
 		String codeType = code.getCodeType();
 
-		if (codeType != null) {
-			// TODO: Build a long-term authentication code from a short-term
-			// code if the type matches a specific string.
+		if (codeType != null && codeType.equalsIgnoreCase(SHORT_TERM_ACCESS_TOKEN_TYPE_KEY)) {
+			OAuthAccessToken accessToken = this.processShortTermAuthorizationCode(code.getAuthCode());
+			return this.retrieveAuthorizationInfo(accessToken);
 		}
 
 		return this.processAuthorizationCode(code.getAuthCode());
+	}
+
+	private static final String FACEBOOK_SHORT_TERM_AUTH_URL_FORMAT = "https://graph.facebook.com/v2.8/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s";
+
+	public OAuthAccessToken processShortTermAuthorizationCode(String authCode) {
+
+		if (RegexHelper.containsPunctuation(authCode)) {
+			throw new IllegalArgumentException("Input auth code contained invalid characters.");
+		}
+
+		String stringUrl = this.makeShortTermAuthCodeUrl(authCode);
+		HttpURLConnection connection = null;
+
+		try {
+			URL url = new URL(stringUrl);
+
+			/*
+			 * Request:
+			 * 
+			 * https://graph.facebook.com/v2.8/oauth/access_token?grant_type=
+			 * fb_exchange_token&client_id=1815005125414904&client_secret=
+			 * ffdfeb73c8ed4958cd8c74d513022aa9&fb_exchange_token=
+			 * EAAZAyvMZCEDZCgBAA3EaYtHL1n2esv82A2ba4YSgKUHB7IglS10cZAAHRzFZC36S7GelsTSK8tNZCuE5btVdQXvhJWhiiISnlmNZAS5svGykL5PqA91ZABG8YvRPxYoz32CrpncZBogJrF1ZBy4rGStHP3pIS5bSnEYiFMe9mjTCceTmEOi1ZARfq90eGy6txGEtUcuvl9SsiSn2cPoYdEvUuNIqTnjM0olBM8ZD
+			 */
+			connection = (HttpURLConnection) url.openConnection();
+
+			connection.setRequestMethod("GET");
+			connection.setDoOutput(true);
+
+			JsonElement json = ConnectionUtility.readJsonFromConnection(connection);
+			JsonObject jsonObject = json.getAsJsonObject();
+
+			/*
+			 * Response:
+			 * 
+			 * {"access_token":
+			 * "EAAZAyvMZCEDZCgBAKPtDwPuwpdEeo2ovZCteleLoJXugggQxtYeBElJhsWKObBssV8l8ZA6GZBrpQwX7ubClqfmrFfIhlKukIJU5QEFb6u9UudNZBAAKNonaHHhysqc71B0ZB605nVZAq8QzFAWFzeCG2YbrSsuLr0YADwZC9DjJCnigZDZD"
+			 * ,"token_type":"bearer","expires_in":5184000}
+			 */
+			String accessToken = jsonObject.get("access_token").getAsString();
+			Long expiresIn = jsonObject.get("expires_in").getAsLong();
+			return new OAuthAccessTokenImpl(accessToken, expiresIn);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException();
+		} catch (OAuthAuthenticationException e) {
+			throw e;
+		} catch (IOException e) {
+
+			JsonElement json = null;
+
+			try {
+				// Try to read the error stream.
+				InputStream errorStream = connection.getErrorStream();
+				json = ConnectionUtility.readJsonFromInputStream(errorStream);
+			} catch (Exception errorException) {
+				throw new OAuthConnectionException();
+			}
+
+			throw new OAuthDeniedException("Facebook Error Response", json.toString());
+		} catch (Exception e) {
+			throw new OAuthAuthenticationException();
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
+		}
+	}
+
+	public String makeShortTermAuthCodeUrl(String accessToken) {
+		OAuthClientConfig clientConfig = this.getClientConfig();
+
+		String clientId = clientConfig.getClientId();
+		String clientSecret = clientConfig.getClientSecret();
+
+		return String.format(FACEBOOK_SHORT_TERM_AUTH_URL_FORMAT, clientId, clientSecret, accessToken);
 	}
 
 	// MARK: Authorization Info

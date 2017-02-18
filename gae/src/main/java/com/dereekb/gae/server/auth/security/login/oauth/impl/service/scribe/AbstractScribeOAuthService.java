@@ -195,7 +195,7 @@ public abstract class AbstractScribeOAuthService
 			String data = response.getBody();
 			result = this.parseResultFromData(token, data);
 		} catch (IOException e) {
-			throw new OAuthConnectionException(e.getMessage());
+			throw new OAuthConnectionException();
 		} catch (OAuthAuthenticationException e) {
 			throw e;
 		} catch (Exception e) {
