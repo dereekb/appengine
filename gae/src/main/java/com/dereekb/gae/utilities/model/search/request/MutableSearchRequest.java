@@ -2,6 +2,8 @@ package com.dereekb.gae.utilities.model.search.request;
 
 import java.util.Map;
 
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
+
 /**
  * {@link SearchRequest} extension that can be modified.
  * 
@@ -26,5 +28,13 @@ public interface MutableSearchRequest
 	 *            {@link Map}. Can be {@code null}.
 	 */
 	public void setSearchParameters(Map<String, String> searchParameters) throws IllegalArgumentException;
+
+	/**
+	 * Sets the search parameters only.
+	 * 
+	 * @param searchParameters
+	 *            {@link Parameters}. Never {@code null}.
+	 */
+	public void setSearchParameters(Parameters searchParameters);
 
 }

@@ -38,6 +38,8 @@ public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
 			int status = servletResponse.getStatus();
 			String content = servletResponse.getContentAsString();
 			response = new ClientResponseImpl(status, content);
+
+			this.getWebServiceTester().waitForTaskQueueToComplete();
 		} catch (Exception e) {
 			throw new ClientRequestFailureException(e);
 		}

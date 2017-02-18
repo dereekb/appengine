@@ -23,4 +23,9 @@ public interface WebServiceTester {
 
 	public ResultActions mockMvcPerform(RequestBuilder requestBuilder) throws Exception;
 
+	/**
+	 * Waits for any/all taskqueue requests to complete.
+	 */
+	public void waitForTaskQueueToComplete();
+
 }

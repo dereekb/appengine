@@ -16,6 +16,7 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestDataImpl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
+import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
@@ -121,6 +122,7 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	        implements ClientDeleteResponse<T> {
 
 		private final ClientDeleteRequest request;
+		private Collection<ModelKey> serializedModelKeys;
 
 		public ClientDeleteResponseImpl(ClientDeleteRequest request, ClientApiResponse response) {
 			super(response);
@@ -133,6 +135,21 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 				return super.getModels();
 			} else {
 				throw new UnsupportedOperationException("Request not configured to return models.");
+			}
+		}
+
+		@Override
+		public Collection<ModelKey> getModelKeys() {
+			if (this.request.shouldReturnModels()) {
+				Collection<T> models = super.getModels();
+				return ModelKey.readModelKeys(models);
+			} else {
+				if (this.serializedModelKeys == null) {
+					ClientApiResponseData data = this.response.getPrimaryData();
+					this.serializedModelKeys = ClientDeleteRequestSenderImpl.this.serializeKeys(data);
+				}
+
+				return this.serializedModelKeys;
 			}
 		}
 

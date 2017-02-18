@@ -134,4 +134,9 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		return actions;
 	}
 
+	@Override
+	public void waitForTaskQueueToComplete() {
+		waitUntilTaskQueueCompletes();
+	}
+
 }

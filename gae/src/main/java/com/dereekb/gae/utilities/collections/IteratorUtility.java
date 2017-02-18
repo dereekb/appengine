@@ -15,8 +15,8 @@ import java.util.Set;
  */
 public class IteratorUtility {
 
-	public static <T> List<T> iterableToList(Iterable<T> iterable) {
-		Iterator<T> iterator = null;
+	public static <T> List<T> iterableToList(Iterable<? extends T> iterable) {
+		Iterator<? extends T> iterator = null;
 
 		if (iterable != null) {
 			iterator = iterable.iterator();
@@ -25,7 +25,7 @@ public class IteratorUtility {
 		return iteratorToList(iterator);
 	}
 
-	public static <T> List<T> iteratorToList(Iterator<T> iterator) {
+	public static <T> List<T> iteratorToList(Iterator<? extends T> iterator) {
 		List<T> list;
 
 		if (iterator != null) {
@@ -42,8 +42,8 @@ public class IteratorUtility {
 		return list;
 	}
 
-	public static <T> Set<T> iterableToSet(Iterable<T> iterable) {
-		Iterator<T> iterator = null;
+	public static <T> Set<T> iterableToSet(Iterable<? extends T> iterable) {
+		Iterator<? extends T> iterator = null;
 
 		if (iterable != null) {
 			iterator = iterable.iterator();
@@ -52,7 +52,7 @@ public class IteratorUtility {
 		return iteratorToSet(iterator);
 	}
 
-	public static <T> Set<T> iteratorToSet(Iterator<T> iterator) {
+	public static <T> Set<T> iteratorToSet(Iterator<? extends T> iterator) {
 		Set<T> set;
 
 		if (iterator != null) {

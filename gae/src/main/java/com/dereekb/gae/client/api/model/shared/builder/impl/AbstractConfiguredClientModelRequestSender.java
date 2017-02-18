@@ -216,6 +216,11 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		return this.serializeKeys(keysData);
 	}
 
+	public List<ModelKey> serializeKeys(ClientApiResponseData data) throws ClientResponseSerializationException {
+		JsonNode keysArrayNode = data.getDataJsonNode();
+		return this.serializeKeys(keysArrayNode);
+	}
+
 	/**
 	 * Serializes {@link ModelKey} values from the input json node.
 	 * 
