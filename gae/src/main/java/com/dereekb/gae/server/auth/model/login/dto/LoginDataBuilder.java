@@ -28,7 +28,7 @@ public final class LoginDataBuilder extends DescribedModelDataBuilder<Login, Log
 		LoginData data = super.convertSingle(input);
 
 		// Data
-		data.setDate(input.getDate());
+		data.setDateValue(input.getDate());
 		data.setRoles(input.getRoles());
 		data.setGroup(input.getGroup());
 
