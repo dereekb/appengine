@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  * 
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_DEFAULT)
 public class ApiSearchResponseData extends ApiResponseDataImpl {
 
-	private String cursor;
+	private String cursor = null;
 
 	public ApiSearchResponseData() {
 		super();
