@@ -2,7 +2,7 @@ package com.dereekb.gae.web.api.util.attribute.impl;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 
 /**
@@ -20,7 +20,7 @@ public class KeyedInvalidAttributeImpl extends InvalidAttributeImpl
 		this(failure.keyValue(), failure);
 	}
 
-	public KeyedInvalidAttributeImpl(UniqueModel template, AttributeUpdateFailure failure) {
+	public KeyedInvalidAttributeImpl(UniqueModel template, InvalidAttribute failure) {
 		this(template.getModelKey(), failure.getAttribute(), failure.getValue(), failure.getDetail());
 	}
 

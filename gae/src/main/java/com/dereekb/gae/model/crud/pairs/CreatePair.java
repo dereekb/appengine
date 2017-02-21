@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
-import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 
 /**
  * Defines a pair to process a creation with, and return the results.
@@ -17,19 +17,19 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
  */
 public class CreatePair<T extends UniqueModel> extends ResultsPair<T, T> {
 
-	private InvalidAttributeException failureException;
+	private InvalidAttribute attributeFailure;
 
 	public CreatePair(T source) {
 		super(source);
 	}
 
-	public InvalidAttributeException getFailureException() {
-		return this.failureException;
+	public InvalidAttribute getAttributeFailure() {
+		return this.attributeFailure;
 	}
 
-	public void setFailureException(InvalidAttributeException failureException) {
+	public void setAttributeFailure(InvalidAttribute failureException) {
 		this.setResult(null);
-		this.failureException = failureException;
+		this.attributeFailure = failureException;
 	}
 
 	// MARK: Utility
@@ -42,6 +42,13 @@ public class CreatePair<T extends UniqueModel> extends ResultsPair<T, T> {
 		}
 
 		return pairs;
+	}
+
+	public static <T extends UniqueModel> void setAttributeFailureOnPairs(Iterable<CreatePair<T>> pairs,
+	                                                                      InvalidAttribute failure) {
+		for (CreatePair<T> pair : pairs) {
+			pair.setAttributeFailure(failure);
+		}
 	}
 
 }

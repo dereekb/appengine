@@ -7,7 +7,7 @@ import java.util.List;
 import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
-import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.impl.KeyedInvalidAttributeData;
 
@@ -24,7 +24,7 @@ public class KeyedInvalidAttributeApiResponseBuilder {
 	public static final String ERROR_DETAIL = "One or more input values failed due to invalid attributes.";
 
 	// MARK: ApiResponseErrorConvertable
-	public static ApiResponseError make(AttributeUpdateFailure failure) {
+	public static ApiResponseError make(InvalidAttribute failure) {
 		List<KeyedInvalidAttributeData> data = makeDataForAttributes(new SingleItem<>(failure));
 		return make(data);
 	}
@@ -50,10 +50,10 @@ public class KeyedInvalidAttributeApiResponseBuilder {
 		return impl;
 	}
 
-	public static List<KeyedInvalidAttributeData> makeDataForAttributes(Iterable<? extends AttributeUpdateFailure> failures) {
+	public static List<KeyedInvalidAttributeData> makeDataForAttributes(Iterable<? extends InvalidAttribute> failures) {
 		List<KeyedInvalidAttributeData> dataList = new ArrayList<KeyedInvalidAttributeData>();
 
-		for (AttributeUpdateFailure failure : failures) {
+		for (InvalidAttribute failure : failures) {
 			dataList.add(new KeyedInvalidAttributeData(failure));
 		}
 

@@ -6,6 +6,15 @@ import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
 
+/**
+ * {@link Getter} extension that allows retrieve of models using Objectify
+ * {@link Key} values.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public interface ObjectifyKeyedGetter<T extends ObjectifyModel<T>>
         extends Getter<T> {
 
@@ -13,7 +22,8 @@ public interface ObjectifyKeyedGetter<T extends ObjectifyModel<T>>
 	 * Checks to see if a model with the specified key exists.
 	 *
 	 * @param key
-	 * @return True if a model that corresponds to the key exists.
+	 *            {@link Key}. Never {@code null}.
+	 * @return {@code true} if the model exists.
 	 */
 	public boolean exists(Key<T> key);
 
@@ -21,7 +31,9 @@ public interface ObjectifyKeyedGetter<T extends ObjectifyModel<T>>
 	 * Gets a model with the specified key.
 	 *
 	 * @param key
-	 * @return Model of type <T> that corresponds to the key, if it exists.
+	 *            {@link Key}. Never {@code null}.
+	 * 
+	 * @return Model if it exists, or {@code null}.
 	 */
 	public T get(Key<T> key);
 
@@ -29,7 +41,8 @@ public interface ObjectifyKeyedGetter<T extends ObjectifyModel<T>>
 	 * Gets the set of models given the list of Objectify {@link Key} instances.
 	 *
 	 * @param keys
-	 * @return Models of type <T> that correspond to the keys given.
+	 *            {@link Iterable}. Never {@code null}.
+	 * @return {@link List} of models. Never {@code null}.
 	 */
 	public List<T> getWithObjectifyKeys(Iterable<Key<T>> keys);
 

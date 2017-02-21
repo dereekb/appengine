@@ -42,6 +42,25 @@ public interface ClientDeleteService<T extends UniqueModel> {
 	 * Deletes objects using the input request and default security.
 	 *
 	 * @param request
+	 *            {@link DeleteRequest}. Never {@code null}.
+	 * @param security
+	 *            {@link ClientRequestSecurity}, or {@code null}.
+	 * @return {@link SimpleDeleteResponse}. Never {@code null}.
+	 * @throws ClientAtomicOperationException
+	 *             thrown if one or more objects fail to be updated.
+	 * @throws ClientRequestFailureException
+	 *             thrown if the request fails for any other reason.
+	 * @see #delete(ClientDeleteRequest)
+	 */
+	public ClientDeleteResponse<T> delete(DeleteRequest request,
+	                                      ClientRequestSecurity security)
+	        throws ClientAtomicOperationException,
+	            ClientRequestFailureException;
+
+	/**
+	 * Deletes objects using the input request and default security.
+	 *
+	 * @param request
 	 *            {@link ClientDeleteRequest}. Never {@code null}.
 	 * @return {@link SimpleDeleteResponse}. Never {@code null}.
 	 * @throws ClientAtomicOperationException
@@ -59,6 +78,8 @@ public interface ClientDeleteService<T extends UniqueModel> {
 	 *
 	 * @param request
 	 *            {@link ClientDeleteRequest}. Never {@code null}.
+	 * @param security
+	 *            {@link ClientRequestSecurity}, or {@code null}.
 	 * @return {@link SimpleDeleteResponse}. Never {@code null}.
 	 * @throws ClientAtomicOperationException
 	 *             thrown if one or more objects fail to be updated.

@@ -44,6 +44,12 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 	public void doTask(Iterable<P> input,
 	                   C configuration)
 	        throws AtomicOperationException {
+		this.usePairs(input, configuration);
+	}
+
+	public void usePairs(Iterable<P> input,
+	                     C configuration)
+	        throws AtomicOperationException {
 		boolean isAtomic = configuration.isAtomic();
 		boolean throwAtomicException = false;
 

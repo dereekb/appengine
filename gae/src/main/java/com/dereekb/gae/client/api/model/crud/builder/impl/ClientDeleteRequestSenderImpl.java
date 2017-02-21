@@ -71,6 +71,15 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	}
 
 	@Override
+	public ClientDeleteResponse<T> delete(DeleteRequest request,
+	                                      ClientRequestSecurity security)
+	        throws ClientAtomicOperationException,
+	            ClientRequestFailureException {
+		ClientDeleteRequest clientDeleteRequest = new ClientDeleteRequestImpl(request, false);
+		return this.delete(clientDeleteRequest, security);
+	}
+
+	@Override
 	public ClientDeleteResponse<T> delete(ClientDeleteRequest request)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {

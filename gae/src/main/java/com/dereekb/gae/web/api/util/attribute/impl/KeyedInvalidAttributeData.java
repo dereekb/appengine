@@ -2,7 +2,7 @@ package com.dereekb.gae.web.api.util.attribute.impl;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * Data transfer object for a {@link AttributeUpdateFailure} and
+ * Data transfer object for a {@link InvalidAttribute} and
  * {@link KeyedInvalidAttribute}.
  * 
  * @author dereekb
@@ -24,7 +24,7 @@ public final class KeyedInvalidAttributeData extends InvalidAttributeImpl {
 
 	public KeyedInvalidAttributeData() {}
 
-	public KeyedInvalidAttributeData(AttributeUpdateFailure failure) {
+	public KeyedInvalidAttributeData(InvalidAttribute failure) {
 		super(failure);
 	}
 
