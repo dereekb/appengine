@@ -1,12 +1,12 @@
 package com.dereekb.gae.model.crud.services.request.impl;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.CreateRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.utilities.collections.SingleItem;
 
 /**
  * Default implementation of {@link CreateRequest}.
@@ -19,7 +19,7 @@ import com.dereekb.gae.utilities.collections.SingleItem;
 public final class CreateRequestImpl<T extends UniqueModel>
         implements CreateRequest<T> {
 
-	private Collection<T> templates;
+	private List<T> templates;
 	private CreateRequestOptions options;
 
 	public CreateRequestImpl(T template) {
@@ -27,15 +27,18 @@ public final class CreateRequestImpl<T extends UniqueModel>
 	}
 
 	public CreateRequestImpl(T template, CreateRequestOptions options) {
-		this(SingleItem.withValue(template), options);
+		List<T> list = new ArrayList<T>();
+		list.add(template);
+
+		this.setTemplates(list);
+		this.setOptions(options);
 	}
 
-	public CreateRequestImpl(Collection<T> templates) {
+	public CreateRequestImpl(List<T> templates) {
 		this(templates, null);
 	}
 
-	public CreateRequestImpl(Collection<T> templates, CreateRequestOptions options) {
-
+	public CreateRequestImpl(List<T> templates, CreateRequestOptions options) {
 		if (templates == null) {
 			throw new IllegalArgumentException("Templates cannot be null.");
 		}
@@ -45,11 +48,11 @@ public final class CreateRequestImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public Collection<T> getTemplates() {
+	public List<T> getTemplates() {
 		return this.templates;
 	}
 
-	public void setTemplates(Collection<T> templates) {
+	public void setTemplates(List<T> templates) {
 		this.templates = templates;
 	}
 

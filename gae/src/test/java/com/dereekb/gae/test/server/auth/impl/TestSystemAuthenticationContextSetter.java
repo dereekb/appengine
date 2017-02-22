@@ -3,21 +3,38 @@ package com.dereekb.gae.test.server.auth.impl;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenFactory;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticationProvider;
 
 public class TestSystemAuthenticationContextSetter
         implements TestAuthenticationContext {
 
+	private LoginTokenDecoder decoder;
+
 	private SystemLoginTokenFactory loginTokenFactory;
 
 	private LoginTokenAuthenticationProvider authenticationProvider;
 
-	public TestSystemAuthenticationContextSetter(SystemLoginTokenFactory loginTokenFactory,
+	public TestSystemAuthenticationContextSetter(LoginTokenDecoder decoder,
+	        SystemLoginTokenFactory loginTokenFactory,
 	        LoginTokenAuthenticationProvider authenticationProvider) {
+		this.setDecoder(decoder);
 		this.setLoginTokenFactory(loginTokenFactory);
 		this.setAuthenticationProvider(authenticationProvider);
+	}
+
+	public LoginTokenDecoder getDecoder() {
+		return this.decoder;
+	}
+
+	public void setDecoder(LoginTokenDecoder decoder) {
+		if (decoder == null) {
+			throw new IllegalArgumentException("decoder cannot be null.");
+		}
+
+		this.decoder = decoder;
 	}
 
 	public SystemLoginTokenFactory getLoginTokenFactory() {
@@ -47,7 +64,8 @@ public class TestSystemAuthenticationContextSetter
 	// MARK: TestAuthenticationContext
 	@Override
 	public void resetContext() {
-		LoginToken decodedToken = this.loginTokenFactory.make();
+		String encodedToken = this.loginTokenFactory.makeTokenString();
+		DecodedLoginToken decodedToken = this.decoder.decodeLoginToken(encodedToken);
 		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}

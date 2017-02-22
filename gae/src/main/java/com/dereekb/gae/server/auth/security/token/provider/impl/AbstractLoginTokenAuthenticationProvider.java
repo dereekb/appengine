@@ -6,7 +6,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 
@@ -19,7 +19,7 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
  * @param <T>
  *            token type
  */
-public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends LoginToken>
+public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends DecodedLoginToken>
         implements AuthenticationProvider {
 
 	private static final String UNREGISTERED_DEFAULT_NAME = "Unregistered";
@@ -48,18 +48,18 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Logi
 
 		private static final long serialVersionUID = 1L;
 
-		private final T loginToken;
+		private final T decodedLoginToken;
 		private final WebAuthenticationDetails details;
 
 		private U userDetails;
 
-		public AbstractLoginTokenAuthenticationImpl(T loginToken, WebAuthenticationDetails details)
+		public AbstractLoginTokenAuthenticationImpl(T decodedLoginToken, WebAuthenticationDetails details)
 		        throws IllegalArgumentException {
-			if (loginToken == null) {
+			if (decodedLoginToken == null) {
 				throw new IllegalArgumentException("LoginToken cannot be null.");
 			}
 
-			this.loginToken = loginToken;
+			this.decodedLoginToken = decodedLoginToken;
 			this.details = details;
 		}
 
@@ -71,7 +71,7 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Logi
 
 		@Override
 		public T getCredentials() {
-			return this.loginToken;
+			return this.decodedLoginToken;
 		}
 
 		@Override
@@ -91,7 +91,7 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Logi
 
 		@Override
 		public String getName() {
-			Long loginId = this.loginToken.getLoginId();
+			Long loginId = this.decodedLoginToken.getLoginId();
 			String name = (loginId != null) ? loginId.toString() : UNREGISTERED_DEFAULT_NAME;
 			return name;
 		}
@@ -99,13 +99,13 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Logi
 		@Override
 		public final U getPrincipal() {
 			if (this.userDetails == null) {
-				this.userDetails = this.makePrinciple(this.loginToken);
+				this.userDetails = this.makePrinciple(this.decodedLoginToken);
 			}
 
 			return this.userDetails;
 		}
 
-		protected abstract U makePrinciple(T loginToken);
+		protected abstract U makePrinciple(T decodedLoginToken);
 
 	}
 }

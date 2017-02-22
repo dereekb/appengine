@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.extension.iterate.IterateTaskExecutorTest;
-import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
 
 /**
  * Used for testing entries within the {@link TaskQueueIterateController}.

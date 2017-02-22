@@ -61,7 +61,7 @@ public class SomeLinkModel
 	}
 
 	@Override
-	public ModelKey getKeyValue() {
+	public ModelKey keyValue() {
 		return this.getModelKey();
 	}
 

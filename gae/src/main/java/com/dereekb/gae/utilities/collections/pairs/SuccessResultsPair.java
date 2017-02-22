@@ -1,5 +1,13 @@
 package com.dereekb.gae.utilities.collections.pairs;
 
+/**
+ * {@link ResultsPair} implementation that is keyed to a type and a boolean.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public class SuccessResultsPair<T> extends ResultsPair<T, Boolean> {
 
 	public SuccessResultsPair(T source) {

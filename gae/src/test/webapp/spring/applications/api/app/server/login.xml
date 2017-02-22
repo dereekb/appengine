@@ -55,7 +55,6 @@
 		<constructor-arg index="0" ref="oAuthLoginService" />
 		<constructor-arg index="1">
 			<map key-type="com.dereekb.gae.server.auth.model.pointer.LoginPointerType">
-				<entry key="OAUTH_GOOGLE" value-ref="googleOAuthService" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -63,25 +62,6 @@
 	<bean id="oAuthLoginService"
 		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl">
 		<constructor-arg index="0" ref="loginPointerService" />
-	</bean>
-
-	<bean id="googleOAuthClientId" class="java.lang.String">
-		<constructor-arg index="0"
-			value="326101736804-mgrnl6qnirj54j3q5cer8ci6lf6i1e8c.apps.googleusercontent.com" />
-	</bean>
-
-	<bean id="googleOAuthClientSecret" class="java.lang.String">
-		<constructor-arg index="0" value="hUG1RNQXv6f9qfiSesB0vbJz" />
-	</bean>
-
-	<bean id="googleOAuthService"
-		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.GoogleOAuthService">
-		<constructor-arg index="0" ref="googleOAuthClientId" />
-		<constructor-arg index="1" ref="googleOAuthClientSecret" />
-		<property name="loginTokenRedirectUrl"
-			value="https://developers.google.com/oauthplayground" />
-		<property name="authTokenRedirectUrl"
-			value="https://developers.google.com/oauthplayground" />
 	</bean>
 
 	<!-- KeyLogin Services -->

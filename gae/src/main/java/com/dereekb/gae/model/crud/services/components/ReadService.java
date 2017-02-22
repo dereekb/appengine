@@ -6,9 +6,7 @@ import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Service for reading existing objects.
- * <p>
- * Should be a thread-safe implementation.
+ * Thread-safe service for reading existing objects.
  *
  * @author dereekb
  *
@@ -22,7 +20,7 @@ public interface ReadService<T extends UniqueModel> {
 	 *
 	 * @param request
 	 *            {@link ReadRequest}. Never {@code null}.
-	 * @return {@link ReadResponse} instance.
+	 * @return {@link ReadResponse}. Never {@code null}.
 	 * @throws AtomicOperationException
 	 *             Occurs when the request specifies "atomic" and not all
 	 *             objects requested can be read.

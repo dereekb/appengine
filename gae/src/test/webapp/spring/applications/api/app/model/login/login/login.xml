@@ -19,6 +19,11 @@
 			value="com.dereekb.gae.server.auth.model.login.Login" />
 	</bean>
 
+	<bean id="loginDtoClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.server.auth.model.login.dto.LoginData" />
+	</bean>
+
 	<bean id="loginIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
 		<constructor-arg index="0" value="NUMBER" />
 	</bean>

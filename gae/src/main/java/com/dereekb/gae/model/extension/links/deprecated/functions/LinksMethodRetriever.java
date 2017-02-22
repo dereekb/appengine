@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dereekb.gae.utilities.AnnotationsRetriever;
+import com.dereekb.gae.utilities.java.AnnotationsRetriever;
 import com.dereekb.gae.utilities.cache.CachePair;
 
 /**

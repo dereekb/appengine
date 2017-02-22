@@ -12,11 +12,11 @@ public interface AlwaysKeyed<K>
         extends Keyed<K> {
 
 	/**
-	 * Returns the key value.
+	 * {@inheritDoc}
 	 * 
 	 * @return key value. Never {@code null}.
 	 */
 	@Override
-	public K getKeyValue();
+	public K keyValue();
 
 }

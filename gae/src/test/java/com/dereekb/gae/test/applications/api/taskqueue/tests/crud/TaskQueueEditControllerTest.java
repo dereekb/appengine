@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
+import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
 
 
 public class TaskQueueEditControllerTest extends ApiApplicationTestContext {

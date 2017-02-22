@@ -9,7 +9,7 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import com.dereekb.gae.server.auth.security.authentication.LoginAuthentication;
-import com.dereekb.gae.utilities.AnnotationsRetriever;
+import com.dereekb.gae.utilities.java.AnnotationsRetriever;
 
 /**
  * Entry-point for Visit Permissions Evaluations. 

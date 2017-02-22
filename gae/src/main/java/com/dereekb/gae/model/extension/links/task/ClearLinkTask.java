@@ -13,7 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateTaskFactory;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTaskFactory;
 
 /**
  * {@link Task} that loads models referenced in a {@link ModelKeyListAccessor}

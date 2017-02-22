@@ -44,6 +44,8 @@ public final class LoginKeyGenerator extends AbstractModelGenerator<LoginKey> {
 			loginKey.setLoginPointer(this.loginPointerGenerator.generate(arg));
 		}
 
+		loginKey.setVerification("VERIFICATION");
+
 		return loginKey;
 	}
 

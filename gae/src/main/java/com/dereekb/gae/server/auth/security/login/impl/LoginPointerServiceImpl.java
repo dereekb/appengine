@@ -19,8 +19,8 @@ public class LoginPointerServiceImpl
 	private GetterSetter<LoginPointer> getterSetter;
 	private TaskRequestSender<LoginPointer> reviewTask;
 
-	public LoginPointerServiceImpl(GetterSetter<LoginPointer> getterSetter,
-	        TaskRequestSender<LoginPointer> reviewTask) throws IllegalArgumentException {
+	public LoginPointerServiceImpl(GetterSetter<LoginPointer> getterSetter, TaskRequestSender<LoginPointer> reviewTask)
+	        throws IllegalArgumentException {
 		this.setGetterSetter(getterSetter);
 		this.setReviewTask(reviewTask);
 	}
@@ -52,6 +52,22 @@ public class LoginPointerServiceImpl
 	}
 
 	@Override
+	public LoginPointer getOrCreateLoginPointer(ModelKey key,
+	                                            LoginPointer template) {
+		LoginPointer pointer = this.getLoginPointer(key);
+
+		if (pointer == null) {
+			try {
+				pointer = this.createLoginPointer(key, template);
+			} catch (LoginExistsException e) {
+				throw new IllegalStateException("The pointer somehow existed but was not returned.", e);
+			}
+		}
+
+		return pointer;
+	}
+
+	@Override
 	public LoginPointer createLoginPointer(ModelKey key,
 	                                       LoginPointer template)
 	        throws LoginExistsException {
@@ -73,22 +89,6 @@ public class LoginPointerServiceImpl
 		}
 
 		return template;
-	}
-
-	@Override
-	public LoginPointer getOrCreateLoginPointer(ModelKey key,
-	                                            LoginPointer template) {
-		LoginPointer pointer = this.getLoginPointer(key);
-
-		if (pointer == null) {
-			try {
-				pointer = this.createLoginPointer(key, template);
-			} catch (LoginExistsException e) {
-				throw new IllegalStateException("The pointer somehow existed but was not returned.", e);
-			}
-		}
-
-		return pointer;
 	}
 
 	@Override

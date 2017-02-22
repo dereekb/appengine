@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<bean id="storedImageSetTaskQueueEditControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.crud.impl.TaskQueueEditControllerEntryImpl">
 		<constructor-arg index="0" ref="storedImageSetRegistry" />
 		<constructor-arg index="1"
 			ref="storedImageSetTaskQueuePostCreateTask" />
@@ -21,7 +21,7 @@
 	</bean>
 
 	<bean id="storedImageSetTaskQueuePostCreateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -30,7 +30,7 @@
 	</bean>
 
 	<bean id="storedImageSetTaskQueuePostUpdateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -39,7 +39,7 @@
 	</bean>
 
 	<bean id="storedImageSetTaskQueueProcessDeleteTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask">
 		<constructor-arg index="0" ref="storedImageSetRegistry" />
 		<constructor-arg index="1">
 			<list>
@@ -50,7 +50,7 @@
 
 	<!-- Iterate Controller -->
 	<bean id="storedImageSetTaskQueueIterateControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.TaskQueueIterateControllerEntryImpl">
 		<constructor-arg index="0" ref="storedImageSetRegistry" />
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
@@ -92,7 +92,7 @@
 		class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl">
 		<constructor-arg index="0">
 			<bean
-				class="com.dereekb.gae.web.taskqueue.controller.extension.iterate.TaskQueueIterateController"
+				class="com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController"
 				factory-method="pathForIterateTask">
 				<constructor-arg index="0" ref="storedImageSetType" />
 				<constructor-arg index="1"

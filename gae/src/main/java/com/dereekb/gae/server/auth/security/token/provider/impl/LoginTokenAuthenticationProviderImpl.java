@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticationProvider;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
@@ -17,7 +17,7 @@ import com.dereekb.gae.server.auth.security.token.provider.preauth.PreAuthLoginT
  * @author dereekb
  *
  */
-public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTokenAuthenticationProvider<LoginTokenUserDetailsBuilder, LoginToken>
+public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTokenAuthenticationProvider<LoginTokenUserDetailsBuilder, DecodedLoginToken>
         implements LoginTokenAuthenticationProvider {
 
 	public LoginTokenAuthenticationProviderImpl(LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder)
@@ -29,9 +29,9 @@ public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTok
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		PreAuthLoginTokenAuthentication auth = (PreAuthLoginTokenAuthentication) authentication;
-		LoginToken token = auth.getCredentials();
+		DecodedLoginToken loginToken = auth.getCredentials();
 		WebAuthenticationDetails details = auth.getDetails();
-		return this.authenticate(token, details);
+		return this.authenticate(loginToken, details);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTok
 
 	// MARK: LoginTokenAuthenticationProvider
 	@Override
-	public LoginTokenAuthentication authenticate(LoginToken loginToken,
+	public LoginTokenAuthentication authenticate(DecodedLoginToken loginToken,
 	                                             WebAuthenticationDetails details) {
 		return new LoginTokenAuthenticationImpl(loginToken, details);
 	}
@@ -51,13 +51,13 @@ public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTok
 
 		private static final long serialVersionUID = 1L;
 
-		public LoginTokenAuthenticationImpl(LoginToken loginToken, WebAuthenticationDetails details)
+		public LoginTokenAuthenticationImpl(DecodedLoginToken loginToken, WebAuthenticationDetails details)
 		        throws IllegalArgumentException {
 			super(loginToken, details);
 		}
 
 		@Override
-		protected LoginTokenUserDetails makePrinciple(LoginToken loginToken) {
+		protected LoginTokenUserDetails makePrinciple(DecodedLoginToken loginToken) {
 			return LoginTokenAuthenticationProviderImpl.this.builder.buildDetails(loginToken);
 		}
 

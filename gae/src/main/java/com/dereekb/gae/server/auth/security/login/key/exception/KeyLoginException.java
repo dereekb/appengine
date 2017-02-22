@@ -16,21 +16,12 @@ public class KeyLoginException extends LoginAuthenticationException {
 		super();
 	}
 
-	public KeyLoginException(String code, String message) {
-		super(code, message);
+	public KeyLoginException(String message, String encodedData) {
+		super(message, encodedData);
 	}
 
 	public KeyLoginException(String message) {
 		super(message);
-	}
-
-	public KeyLoginException(Throwable cause) {
-		super(cause);
-	}
-
-	@Override
-	public String toString() {
-		return "KeyLoginException [code=" + this.code + ", getMessage()=" + this.getMessage() + "]";
 	}
 
 }

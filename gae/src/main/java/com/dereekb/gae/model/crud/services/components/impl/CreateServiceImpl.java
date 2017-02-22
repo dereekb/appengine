@@ -6,11 +6,11 @@ import java.util.List;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.model.crud.services.components.CreateService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.impl.CreateResponseImpl;
+import com.dereekb.gae.model.crud.services.response.pair.InvalidCreateTemplatePair;
 import com.dereekb.gae.model.crud.task.CreateTask;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
@@ -19,6 +19,7 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.task.IterableTask;
+import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 
 /**
  * Default implementation of {@link CreateService} using a {@link IterableTask}
@@ -46,6 +47,7 @@ public class CreateServiceImpl<T extends UniqueModel>
 		this.createTask = createTask;
 	}
 
+	// MARK: CreateService
 	@Override
 	public CreateResponse<T> create(CreateRequest<T> request) throws AtomicOperationException {
 		CreateResponse<T> createResponse = null;
@@ -57,21 +59,31 @@ public class CreateServiceImpl<T extends UniqueModel>
 
 		try {
 			CreateTaskConfig config = new CreateTaskConfigImpl(options.isAtomic());
-			this.createTask.doTask(pairs, config);
+			boolean atomicOperationFailure = false;
 
-			HashMapWithList<FilterResult, CreatePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<CreatePair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
-			List<T> errorTemplates = CreatePair.getKeys(errorPairs);
+			try {
+				this.createTask.doTask(pairs, config);
+			} catch (AtomicOperationException e) {
+				// Task was not completed successfully.
+				atomicOperationFailure = true;
+			}
 
-			if (errorTemplates.size() > 0 && options.isAtomic()) {
-				throw new AtomicOperationException(errorTemplates, AtomicOperationExceptionReason.UNAVAILABLE);
+			List<InvalidCreateTemplatePair<T>> failurePairs = InvalidCreateTemplatePair.makeWithCreatePairs(pairs);
+
+			// Build Response
+			if (atomicOperationFailure) {
+				MultiKeyedInvalidAttributeException exception = new MultiKeyedInvalidAttributeException(failurePairs);
+				throw new AtomicOperationException(exception);
 			} else {
-				List<CreatePair<T>> successPairs = ResultsPair.pairsWithResults(pairs);
+				HashMapWithList<FilterResult, CreatePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
+
+				List<CreatePair<T>> successPairs = results.valuesForKey(FilterResult.PASS);
 				List<T> models = CreatePair.getObjects(successPairs);
-				createResponse = new CreateResponseImpl<T>(models, errorTemplates);
+
+				createResponse = new CreateResponseImpl<T>(models, failurePairs);
 			}
 		} catch (AtomicOperationException e) {
-			throw e;
+			throw e;	// Pass Atomic Operation Through
 		} catch (Exception e) {
 			throw new AtomicOperationException(templates, e);
 		}

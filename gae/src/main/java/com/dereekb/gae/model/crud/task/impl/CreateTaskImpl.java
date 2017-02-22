@@ -3,7 +3,6 @@ package com.dereekb.gae.model.crud.task.impl;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
-import com.dereekb.gae.model.crud.exception.InvalidTemplateException;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.model.crud.task.CreateTask;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
@@ -12,6 +11,8 @@ import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.task.IterableTask;
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * {@link CreateTask} implementation.
@@ -36,15 +37,19 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 
 	public CreateTaskImpl(CreateTaskDelegate<T> delegate, IterableTask<T> saveTask) {
 		super(new CreateTaskConfigImpl());
-		this.saveTask = saveTask;
-		this.delegate = delegate;
+		this.setSaveTask(saveTask);
+		this.setDelegate(delegate);
 	}
 
 	public CreateTaskDelegate<T> getDelegate() {
 		return this.delegate;
 	}
 
-	public void setDelegate(CreateTaskDelegate<T> delegate) {
+	public void setDelegate(CreateTaskDelegate<T> delegate) throws IllegalArgumentException {
+		if (delegate == null) {
+			throw new IllegalArgumentException("Delegate cannot be null.");
+		}
+
 		this.delegate = delegate;
 	}
 
@@ -52,7 +57,11 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 		return this.saveTask;
 	}
 
-	public void setSaveTask(IterableTask<T> saveTask) {
+	public void setSaveTask(IterableTask<T> saveTask) throws IllegalArgumentException {
+		if (saveTask == null) {
+			throw new IllegalArgumentException("SaveTask cannot be null.");
+		}
+
 		this.saveTask = saveTask;
 	}
 
@@ -72,7 +81,17 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 
 		// Retrieve successful pairs
 		List<T> results = CreatePair.getObjects(input);
-		this.saveTask.doTask(results);
+
+		try {
+			this.saveTask.doTask(results);
+		} catch (FailedTaskException e) {
+			Throwable cause = e.getCause();
+
+			if (cause != null) {
+				// Will be a runtime exception
+				throw (RuntimeException) cause;
+			}
+		}
 
 		if (this.reviewTaskSender != null) {
 			this.reviewTaskSender.sendTasks(results);
@@ -87,8 +106,8 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 		try {
 			T result = this.delegate.createFromSource(source);
 			pair.setResult(result);
-		} catch (InvalidTemplateException e) {
-			pair.flagFailure();
+		} catch (InvalidAttributeException e) {
+			pair.setAttributeFailure(e);
 			throw new AtomicFunctionException(source, e);
 		}
 	}

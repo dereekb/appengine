@@ -10,7 +10,7 @@ import com.dereekb.gae.server.datastore.models.query.ModelQueryIterator;
 import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
-import com.dereekb.gae.web.taskqueue.controller.extension.iterate.IterateTask;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.IterateTask;
 import com.google.appengine.api.datastore.Cursor;
 
 /**

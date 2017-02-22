@@ -2,7 +2,7 @@ package com.dereekb.gae.model.crud.deprecated.function;
 
 import com.dereekb.gae.model.crud.deprecated.function.delegate.UpdateFunctionDelegate;
 import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
-import com.dereekb.gae.model.crud.exception.AttributeFailureException;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 

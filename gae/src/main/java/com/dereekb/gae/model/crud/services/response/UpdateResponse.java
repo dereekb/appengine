@@ -2,21 +2,26 @@ package com.dereekb.gae.model.crud.services.response;
 
 import java.util.Collection;
 
-import com.dereekb.gae.model.crud.services.response.pair.UpdateResponseFailurePair;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.model.crud.services.response.pair.InvalidTemplatePair;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 
-
-public interface UpdateResponse<T> {
+/**
+ * Update service response.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
+public interface UpdateResponse<T extends UniqueModel>
+        extends ServiceResponse, SimpleUpdateResponse<T> {
 
 	/**
-	 * @return Returns a collection of models that were updated.
+	 * {@inheritDoc}
+	 * 
+	 * Returns a collections of {@link InvalidTemplatePair} instead.
 	 */
-	public Collection<T> getUpdatedModels();
-
-	/**
-	 * @return Returns a collection of {@link ModelKey} instances for elements
-	 *         that failed to be updated.
-	 */
-	public Collection<UpdateResponseFailurePair<T>> getFailed();
+	@Override
+	public Collection<? extends InvalidTemplatePair<T>> getUpdateFailures();
 
 }

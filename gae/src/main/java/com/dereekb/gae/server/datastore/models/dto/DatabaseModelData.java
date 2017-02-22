@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  *
  * @author dereekb
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class DatabaseModelData
         implements Serializable, UniqueModel, SimpleKeyModel {
@@ -36,7 +36,6 @@ public abstract class DatabaseModelData
 	 * Date that the model was created. For JSON serialization is is converted
 	 * to a string.
 	 */
-	@JsonIgnore
 	protected Date date;
 
 	public DatabaseModelData() {}
@@ -47,7 +46,7 @@ public abstract class DatabaseModelData
 
 	public DatabaseModelData(String key, Date date) {
 		this.setKey(key);
-		this.setDate(date);
+		this.setDateValue(date);
 	}
 
 	@Deprecated
@@ -103,7 +102,7 @@ public abstract class DatabaseModelData
 			date = new Date(creationTime);
 		}
 
-		this.setDate(date);
+		this.setDateValue(date);
 	}
 
 	public String getDate() {
@@ -132,7 +131,7 @@ public abstract class DatabaseModelData
 	}
 
 	@JsonIgnore
-	public void setDate(Date date) {
+	public void setDateValue(Date date) {
 		this.date = date;
 	}
 
@@ -143,7 +142,7 @@ public abstract class DatabaseModelData
 	}
 
 	@Override
-	public ModelKey getKeyValue() {
+	public ModelKey keyValue() {
 		return this.getModelKey();
 	}
 

@@ -78,22 +78,27 @@ public final class Point {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
-	        return true;
-        }
+			return true;
+		}
 		if (obj == null) {
-	        return false;
-        }
+			return false;
+		}
 		if (this.getClass() != obj.getClass()) {
-	        return false;
-        }
+			return false;
+		}
 		Point other = (Point) obj;
 		if (Double.doubleToLongBits(this.latitude) != Double.doubleToLongBits(other.latitude)) {
-	        return false;
-        }
+			return false;
+		}
 		if (Double.doubleToLongBits(this.longitude) != Double.doubleToLongBits(other.longitude)) {
-	        return false;
-        }
+			return false;
+		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Point [latitude=" + this.latitude + ", longitude=" + this.longitude + "]";
 	}
 
 }

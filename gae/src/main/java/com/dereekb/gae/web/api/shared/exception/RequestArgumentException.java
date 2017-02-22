@@ -1,13 +1,18 @@
 package com.dereekb.gae.web.api.shared.exception;
 
+import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
+import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+
 /**
  * Thrown when an argument is unusable.
  *
  * Generally used for other internal-argument validation situations.
  *
  * @author dereekb
+ * 
  */
-public final class RequestArgumentException extends RuntimeException {
+@Deprecated
+public final class RequestArgumentException extends ApiSafeRuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,6 +37,13 @@ public final class RequestArgumentException extends RuntimeException {
 
 	public String getDetail() {
 		return this.detail;
+	}
+
+	// MARK: ApiSafeRuntimeException
+	@Override
+	public ApiResponseError asResponseError() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

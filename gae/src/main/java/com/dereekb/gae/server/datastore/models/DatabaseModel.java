@@ -20,7 +20,7 @@ public abstract class DatabaseModel
 	protected abstract Object getDatabaseIdentifier();
 
 	@Override
-	public ModelKey getKeyValue() {
+	public ModelKey keyValue() {
 		return this.getModelKey();
 	}
 

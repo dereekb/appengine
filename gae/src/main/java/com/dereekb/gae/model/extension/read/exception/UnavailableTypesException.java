@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.utilities.collections.SingleItem;
-import com.dereekb.gae.web.api.model.exception.ApiResponseErrorConvertable;
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
@@ -43,8 +43,7 @@ public class UnavailableTypesException extends RuntimeException
 
 	public static ApiResponseErrorImpl makeApiError(Set<String> types,
 	                                                String message) {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
-		error.setCode(API_RESPONSE_ERROR_CODE);
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(API_RESPONSE_ERROR_CODE);
 		error.setTitle(API_RESPONSE_ERROR_TITLE);
 		error.setDetail(message);
 		error.setData(types);

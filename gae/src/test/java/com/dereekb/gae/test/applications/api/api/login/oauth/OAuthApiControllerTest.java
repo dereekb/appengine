@@ -27,6 +27,7 @@ import com.google.gson.JsonSyntaxException;
  *
  * @author dereekb
  *
+ * @see OAuthApiController
  */
 public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
@@ -55,8 +56,9 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 	// MARK: Mock Tests
 	@Test
 	public void testInvalidAuthToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/oauth/google");
-		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		        .post("/login/auth/oauth/google/token");
+		loginRequestBuilder.param("token", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
 
 		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
@@ -79,7 +81,8 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testInvalidRequestType() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/oauth/UNAVAILABLE");
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		        .post("/login/auth/oauth/UNAVAILABLE/token");
 		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
 
@@ -87,19 +90,22 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
-		Assert.assertTrue("Expected a bad request.", loginResponse.getStatus() == 400);
+		Assert.assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
+		        loginResponse.getStatus() == 400);
 		Assert.assertNotNull(loginResponseData);
 	}
 
 	@Test
 	public void testMissingAccessToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/oauth/google");
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		        .post("/login/auth/oauth/google/token");
 		loginRequestBuilder.accept("application/json");
 
 		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 
-		Assert.assertTrue("Expected a bad request.", loginResponse.getStatus() == 400);
+		Assert.assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
+		        loginResponse.getStatus() == 400);
 	}
 
 }

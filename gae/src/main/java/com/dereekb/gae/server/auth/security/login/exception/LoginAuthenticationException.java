@@ -1,7 +1,9 @@
 package com.dereekb.gae.server.auth.security.login.exception;
 
 /**
- * General authentication exception.
+ * Abstract login authentication exception.
+ * 
+ * Contains optional encoded data that can be passed to API responses.
  *
  * @author dereekb
  *
@@ -10,34 +12,25 @@ public abstract class LoginAuthenticationException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String code;
+	private String encodedData;
 
 	public LoginAuthenticationException() {}
-
-	public LoginAuthenticationException(String code, String message) {
-		super(message);
-		this.setCode(code);
-	}
 
 	public LoginAuthenticationException(String message) {
 		super(message);
 	}
 
-	public LoginAuthenticationException(Throwable cause) {
-		super(cause);
+	public LoginAuthenticationException(String message, String encodedData) {
+		super(message);
+		this.setEncodedData(encodedData);
 	}
 
-	public String getCode() {
-		return this.code;
+	public String getEncodedData() {
+		return this.encodedData;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	@Override
-	public String toString() {
-		return "SecurityException [code=" + this.code + ", getMessage()=" + this.getMessage() + "]";
+	public void setEncodedData(String encodedData) {
+		this.encodedData = encodedData;
 	}
 
 }

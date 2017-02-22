@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginRejectedException;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginRejectedException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 /**
@@ -22,7 +24,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  *
  */
 @RestController
-@RequestMapping("/login/key")
+@RequestMapping("/login/auth/key")
 public class KeyLoginController {
 
 	private KeyLoginControllerDelegate delegate;
@@ -32,7 +34,7 @@ public class KeyLoginController {
 	}
 
 	public KeyLoginControllerDelegate getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	public void setDelegate(KeyLoginControllerDelegate delegate) {
@@ -45,21 +47,21 @@ public class KeyLoginController {
 
 	// MARK: Enable/Disable
 	/**
-	 * Enables the login for the current user.
+	 * Enables the API Key Authentication for the current user.
 	 * 
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 * @throws ApiLoginException
-	 * @throws ApiRuntimeException
+	 * @throws ApiCaughtRuntimeException
 	 */
 	@ResponseBody
 	@RequestMapping(path = "/enable", method = RequestMethod.PUT, produces = "application/json")
-	public final ApiResponse enable() throws ApiRuntimeException {
+	public final ApiResponse enable() throws ApiCaughtRuntimeException {
 		ApiResponse response = null;
 
 		try {
 			response = this.delegate.enableKeyLogin();
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -71,17 +73,17 @@ public class KeyLoginController {
 	 * 
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 * @throws ApiLoginException
-	 * @throws ApiRuntimeException
+	 * @throws ApiCaughtRuntimeException
 	 */
 	@ResponseBody
 	@RequestMapping(path = "/status", method = RequestMethod.GET, produces = "application/json")
-	public final ApiResponse getStatus() throws ApiRuntimeException {
+	public final ApiResponse getStatus() throws ApiCaughtRuntimeException {
 		ApiResponse response = null;
 
 		try {
 			response = this.delegate.getKeyLoginStatus();
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -102,7 +104,7 @@ public class KeyLoginController {
 	public final LoginTokenPair login(@RequestParam @NotEmpty String key,
 	                                  @RequestParam @NotEmpty String verification)
 	        throws ApiLoginException,
-	            ApiRuntimeException {
+	            ApiCaughtRuntimeException {
 
 		LoginTokenPair response = null;
 
@@ -111,10 +113,10 @@ public class KeyLoginController {
 		} catch (KeyLoginRejectedException e) {
 			throw new ApiLoginRejectedException(e);
 		} catch (KeyLoginUnavailableException e) {
-			//Also return rejected to prevent brute-force checking for keys.
+			// Also return rejected to prevent brute-force checking for keys.
 			throw new ApiLoginRejectedException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

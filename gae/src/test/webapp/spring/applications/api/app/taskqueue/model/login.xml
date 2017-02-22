@@ -11,7 +11,7 @@
 
 	<!-- CRUDs Controller -->
 	<bean id="loginTaskQueueEditControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.crud.impl.TaskQueueEditControllerEntryImpl">
 		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1" ref="loginTaskQueuePostCreateTask" />
 		<constructor-arg index="2" ref="loginTaskQueuePostUpdateTask" />
@@ -20,7 +20,7 @@
 	</bean>
 
 	<bean id="loginTaskQueuePostCreateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -29,7 +29,7 @@
 	</bean>
 
 	<bean id="loginTaskQueuePostUpdateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -38,7 +38,7 @@
 	</bean>
 
 	<bean id="loginTaskQueueProcessDeleteTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask">
 		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1">
 			<list>

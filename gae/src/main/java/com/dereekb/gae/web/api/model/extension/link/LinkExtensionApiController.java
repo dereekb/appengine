@@ -23,7 +23,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
@@ -97,7 +97,7 @@ public class LinkExtensionApiController {
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

@@ -6,7 +6,7 @@ import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.preauth.PreAuthLoginTokenAuthentication;
 
 /**
@@ -20,15 +20,11 @@ public class PreAuthLoginTokenAuthenticationImpl
 
 	private static final long serialVersionUID = 1L;
 
-	protected final LoginToken token;
+	protected final DecodedLoginToken token;
 	protected final WebAuthenticationDetails details;
 
-	protected PreAuthLoginTokenAuthenticationImpl(WebAuthenticationDetails details) {
-		this.token = null;
-		this.details = details;
-	}
-
-	public PreAuthLoginTokenAuthenticationImpl(LoginToken token, WebAuthenticationDetails details) {
+	public PreAuthLoginTokenAuthenticationImpl(DecodedLoginToken token, WebAuthenticationDetails details)
+	        throws IllegalArgumentException {
 		this.token = token;
 		this.details = details;
 	}
@@ -44,7 +40,7 @@ public class PreAuthLoginTokenAuthenticationImpl
 	}
 
 	@Override
-	public LoginToken getCredentials() {
+	public DecodedLoginToken getCredentials() {
 		return this.token;
 	}
 

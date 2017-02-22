@@ -1,6 +1,5 @@
 package com.dereekb.gae.web.api.shared.response;
 
-
 /**
  * Data that is returned inside an {@link ApiResponse}.
  * <p>
@@ -14,7 +13,7 @@ package com.dereekb.gae.web.api.shared.response;
 public interface ApiResponseData {
 
 	/**
-	 * Returns the type of the response data.
+	 * Returns the type of the response data. The type is case-insensitive.
 	 *
 	 * @return {@link String} of the response data's type. Never {@code null}.
 	 */

@@ -18,7 +18,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
-import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
+import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**

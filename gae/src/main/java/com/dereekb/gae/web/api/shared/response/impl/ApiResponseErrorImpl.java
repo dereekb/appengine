@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.shared.response.impl;
 
+import com.dereekb.gae.utilities.web.error.impl.ErrorInfoImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,58 +13,34 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  */
 @JsonInclude(Include.NON_EMPTY)
-public class ApiResponseErrorImpl
+public class ApiResponseErrorImpl extends ErrorInfoImpl
         implements ApiResponseError {
-
-	private String code;
-
-	private String title;
-	private String detail;
 
 	private Object data;
 
-	public ApiResponseErrorImpl() {}
-
-	public ApiResponseErrorImpl(String code, String title) {
-		this.code = code;
-		this.title = title;
+	public ApiResponseErrorImpl(String code) throws IllegalArgumentException {
+		super(code);
 	}
 
-	public ApiResponseErrorImpl(String code, String title, String detail) {
-		this.code = code;
-		this.title = title;
-		this.detail = detail;
+	public ApiResponseErrorImpl(String code, String title) throws IllegalArgumentException {
+		super(code, title);
 	}
 
-	public ApiResponseErrorImpl(String code, String title, String detail, Object data) {
-		this.code = code;
-		this.title = title;
-		this.detail = detail;
-		this.data = data;
+	public ApiResponseErrorImpl(String code, String title, String detail) throws IllegalArgumentException {
+		super(code, title, detail);
 	}
 
-	public String getCode() {
-		return this.code;
+	public ApiResponseErrorImpl(String code, Object data) throws IllegalArgumentException {
+		this(code, null, null, data);
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public ApiResponseErrorImpl(String code, String title, Object data) throws IllegalArgumentException {
+		this(code, title, null, data);
 	}
 
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDetail() {
-		return this.detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
+	public ApiResponseErrorImpl(String code, String title, String detail, Object data) throws IllegalArgumentException {
+		super(code, title, detail);
+		this.setData(data);
 	}
 
 	public Object getData() {
@@ -77,32 +54,8 @@ public class ApiResponseErrorImpl
 	// MARK: ApiResponseError
 	@JsonIgnore
 	@Override
-	public String getErrorCode() {
-		return this.code;
-	}
-
-	@JsonIgnore
-	@Override
-	public String getErrorTitle() {
-		return this.title;
-	}
-
-	@JsonIgnore
-	@Override
-	public String getErrorDetail() {
-		return this.detail;
-	}
-
-	@JsonIgnore
-	@Override
 	public Object getErrorData() {
 		return this.data;
-	}
-
-	@Override
-	public String toString() {
-		return "ApiResponseErrorImpl [code=" + this.code + ", title=" + this.title + ", detail=" + this.detail
-		        + ", data=" + this.data + "]";
 	}
 
 }

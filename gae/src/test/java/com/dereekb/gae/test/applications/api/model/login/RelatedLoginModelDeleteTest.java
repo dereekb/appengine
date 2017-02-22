@@ -129,7 +129,7 @@ public class RelatedLoginModelDeleteTest extends ApiApplicationTestContext {
 			DeleteRequest request = new DeleteRequestImpl(login);
 			DeleteResponse<Login> response = this.loginCrudService.delete(request);
 
-			Assert.assertFalse(response.getDeletedModels().isEmpty());
+			Assert.assertFalse(response.getModels().isEmpty());
 		} catch (AtomicOperationException e) {
 
 			// Directly schedule it since filters may have inhibited removal.

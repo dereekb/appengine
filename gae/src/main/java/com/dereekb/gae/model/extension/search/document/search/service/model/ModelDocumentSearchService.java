@@ -15,6 +15,8 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  */
 public interface ModelDocumentSearchService<T extends UniqueModel, R> {
 
+	// TODO: Update ModelDocumentSearchService to not be parameterized by type
+
 	/**
 	 * Performs a model search.
 	 *

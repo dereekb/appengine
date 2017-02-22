@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.provider.details;
 
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-
 
 public interface LoginTokenUserDetailsBuilder {
 
@@ -11,8 +11,8 @@ public interface LoginTokenUserDetailsBuilder {
 	 *
 	 * @param loginToken
 	 *            {@link LoginToken}. Never {@code null}.
-	 * @return {@link LoginTokenUserDetails}
+	 * @return {@link LoginTokenUserDetails}. Never {@code null}.
 	 */
-	public LoginTokenUserDetails buildDetails(LoginToken loginToken);
+	public LoginTokenUserDetails buildDetails(DecodedLoginToken loginToken);
 
 }

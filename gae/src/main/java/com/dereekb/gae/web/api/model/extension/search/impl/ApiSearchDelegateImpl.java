@@ -65,15 +65,17 @@ public class ApiSearchDelegateImpl
 	// MARK: ApiSearchDelegate
 	@Override
 	public ApiResponse search(String type,
-	                          ApiSearchReadRequest request) throws UnavailableTypesException {
+	                          ApiSearchReadRequest request)
+	        throws UnavailableTypesException {
 		ApiSearchDelegateEntry entry = this.getEntry(type);
 		ApiResponseData responseData = entry.search(request);
 		return new ApiResponseImpl(responseData);
 	}
 
 	@Override
-    public ApiResponse search(Set<String> types,
-	                          ApiSearchReadRequest request) throws UnavailableTypesException {
+	public ApiResponse search(Set<String> types,
+	                          ApiSearchReadRequest request)
+	        throws UnavailableTypesException {
 		if (types != null && types.isEmpty()) {
 			throw new IllegalArgumentException("Search types cannot be empty. Set null if none specified.");
 		}
@@ -97,7 +99,8 @@ public class ApiSearchDelegateImpl
 
 	@Override
 	public ApiResponse query(String type,
-	                         ApiSearchReadRequest request) throws UnavailableTypesException {
+	                         ApiSearchReadRequest request)
+	        throws UnavailableTypesException {
 		ApiSearchDelegateEntry entry = this.getEntry(type);
 		ApiResponseData responseData = entry.query(request);
 		return new ApiResponseImpl(responseData);

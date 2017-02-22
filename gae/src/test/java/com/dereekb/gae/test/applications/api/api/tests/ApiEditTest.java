@@ -12,12 +12,13 @@ import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.api.tests.client.ClientApiCrudTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.collections.SingleItem;
-import com.dereekb.gae.web.api.model.controller.EditModelController;
-import com.dereekb.gae.web.api.model.request.ApiCreateRequest;
-import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
-import com.dereekb.gae.web.api.model.request.ApiUpdateRequest;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
+import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
+import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
+import com.dereekb.gae.web.api.model.crud.request.ApiUpdateRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
@@ -25,8 +26,10 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
  * Tests Creating, Updating, and Deleting models through the API.
  *
  * @author dereekb
- *
+ * 
+ * @deprecated Use {@link ClientApiCrudTest} instead.
  */
+@Deprecated
 public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> extends ApiApplicationTestContext {
 
 	protected Integer genCount = 5;
@@ -176,15 +179,16 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 		Assert.assertNotNull(data);
 
 		/*
-		List<ModelKey> modelKeys = ModelKey.readModelKeys(models);
-		@SuppressWarnings("unchecked")
-		List<I> resultData = (List<I>) data;
-
-		Assert.assertTrue(resultData.size() == models.size());
-		List<T> reread = this.getter.getWithKeys(modelKeys);
-
-		Assert.assertTrue(reread.isEmpty());
-		*/
+		 * List<ModelKey> modelKeys = ModelKey.readModelKeys(models);
+		 * 
+		 * @SuppressWarnings("unchecked")
+		 * List<I> resultData = (List<I>) data;
+		 * 
+		 * Assert.assertTrue(resultData.size() == models.size());
+		 * List<T> reread = this.getter.getWithKeys(modelKeys);
+		 * 
+		 * Assert.assertTrue(reread.isEmpty());
+		 */
 	}
 
 }

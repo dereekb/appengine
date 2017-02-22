@@ -35,7 +35,7 @@ public class CaseInsensitiveStringRequestMatcher extends AbstractRequestMatcher 
 
 	// MARK: AbstractRequestMatcher
 	@Override
-	public boolean matches(String path) {
+	public boolean matchesPath(String path) {
 		return this.path.equalsIgnoreCase(path);
 	}
 

@@ -3,10 +3,12 @@ package com.dereekb.gae.utilities.misc.parameters.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
+import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 
 /**
- * Simple {@link Parameters} implementation.
+ * {@link Parameters} implementation that wraps a map.
  * 
  * @author dereekb
  *
@@ -15,6 +17,10 @@ public class ParametersImpl
         implements Parameters {
 
 	private Map<String, String> parameters;
+
+	public ParametersImpl() {
+		this(new HashMap<String, String>());
+	}
 
 	public ParametersImpl(Map<String, String> parameters) {
 		this.setParameters(parameters);
@@ -31,6 +37,26 @@ public class ParametersImpl
 		}
 
 		this.parameters = parameters;
+	}
+
+	// MARK: Utility
+	public void addParameter(KeyedEncodedParameter parameter) {
+		ParameterUtility.put(this.parameters, parameter);
+	}
+
+	public void addObjectParameter(String key,
+	                               Object value) {
+		this.addParameter(key, value.toString());
+	}
+
+	public void addParameter(String key,
+	                         String value) {
+		this.parameters.put(key, value);
+	}
+
+	@Override
+	public String toString() {
+		return "ParametersImpl [parameters=" + this.parameters + "]";
 	}
 
 }

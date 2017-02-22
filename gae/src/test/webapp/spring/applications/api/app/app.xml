@@ -15,5 +15,6 @@
 	<import resource="model/model.xml" />
 	<import resource="server/server.xml" />
 	<import resource="taskqueue/taskqueue.xml" />
+	<import resource="test/test.xml" />
 
 </beans>

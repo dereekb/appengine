@@ -6,9 +6,7 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Service that creates new objects.
- * <p>
- * Should be a thread-safe implementation.
+ * Thread-safe service that creates new objects from templates.
  *
  * @author dereekb
  *
@@ -22,7 +20,7 @@ public interface CreateService<T extends UniqueModel> {
 	 *
 	 * @param request
 	 *            {@link CreateRequest}. Never {@code null}.
-	 * @return {@link CreateResponse} instance.
+	 * @return {@link CreateResponse}. Never {@code null}.
 	 * @throws AtomicOperationException
 	 *             Occurs when not all objects can be created.
 	 */

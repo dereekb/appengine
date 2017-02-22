@@ -15,6 +15,6 @@ public interface Keyed<K> {
 	 * 
 	 * @return key value. {@link null} if no key.
 	 */
-	public K getKeyValue();
+	public K keyValue();
 
 }

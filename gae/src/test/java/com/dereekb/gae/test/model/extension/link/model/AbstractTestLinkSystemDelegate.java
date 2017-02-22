@@ -20,9 +20,9 @@ import com.dereekb.gae.model.extension.links.components.system.impl.bidirectiona
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
-
 public abstract class AbstractTestLinkSystemDelegate<T extends UniqueModel>
-        implements LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>, BidirectionalLinkSystemEntry {
+        implements LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>,
+        BidirectionalLinkSystemEntry {
 
 	private boolean useSingleSet = true;
 
@@ -74,7 +74,7 @@ public abstract class AbstractTestLinkSystemDelegate<T extends UniqueModel>
 			models.add(model);
 		}
 
-		ReadResponseImpl<T> response = new ReadResponseImpl<T>(models, null);
+		ReadResponseImpl<T> response = new ReadResponseImpl<T>(models);
 		return response;
 	}
 

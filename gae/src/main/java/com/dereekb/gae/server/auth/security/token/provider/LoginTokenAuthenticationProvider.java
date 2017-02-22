@@ -3,6 +3,7 @@ package com.dereekb.gae.server.auth.security.token.provider;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
@@ -24,7 +25,7 @@ public interface LoginTokenAuthenticationProvider
 	 *
 	 * @return {@link LoginTokenAuthentication}. Never {@code null}.
 	 */
-	public LoginTokenAuthentication authenticate(LoginToken loginToken,
+	public LoginTokenAuthentication authenticate(DecodedLoginToken loginToken,
 	                                             WebAuthenticationDetails details);
 
 }

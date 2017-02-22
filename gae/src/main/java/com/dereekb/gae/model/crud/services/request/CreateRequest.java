@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.services.request;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -16,12 +16,14 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 public interface CreateRequest<T extends UniqueModel> {
 
 	/**
-	 * @return Returns the templates for the models to create. Never null.
+	 * Returns the templates for the models to create.
+	 * 
+	 * @return Non-empty {@link List}. Never {@code null}.
 	 */
-	public Collection<T> getTemplates();
+	public List<T> getTemplates();
 
 	/**
-	 * @return Returns the options. Never null.
+	 * @return {@link CreateRequestOptions}. Never {@code null}.
 	 */
 	public CreateRequestOptions getOptions();
 

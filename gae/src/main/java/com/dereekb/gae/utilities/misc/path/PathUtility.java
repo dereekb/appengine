@@ -61,4 +61,14 @@ public class PathUtility {
 		return joiner.join(components);
 	}
 
+	public static String buildPath(String basePath,
+	                               SimplePath relativePath) {
+
+		if (basePath.charAt(basePath.length() - 1) == '/') {
+			basePath = basePath.substring(0, basePath.length() - 2);
+		}
+
+		return basePath + relativePath.getPath();
+	}
+
 }
