@@ -9,8 +9,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
-import com.dereekb.gae.server.auth.security.login.oauth.impl.service.google.GoogleOAuthService;
-
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.google.GoogleOAuthService;
 
 /**
  * Tests google auth logins.
@@ -18,6 +17,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.impl.service.google.Goog
  * @author dereekb
  *
  */
+@Deprecated
 public class GoogleOAuthTests extends AbstractOAuthTests {
 
 	/**
@@ -60,7 +60,7 @@ public class GoogleOAuthTests extends AbstractOAuthTests {
 	@Test
 	public void testGetLoginInfo() {
 		OAuthAccessToken token = new OAuthAccessTokenImpl(this.TEMPORARY_ACCESS_TOKEN);
-		OAuthAuthorizationInfo authorizationInfo = this.googleOAuthService.getAuthorizationInfo(token);
+		OAuthAuthorizationInfo authorizationInfo = this.googleOAuthService.retrieveAuthorizationInfo(token);
 		Assert.assertNotNull(authorizationInfo);
 	}
 

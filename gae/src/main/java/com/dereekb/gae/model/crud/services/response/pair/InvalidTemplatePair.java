@@ -8,7 +8,7 @@ import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
-import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 
 /**
@@ -20,10 +20,10 @@ import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
  * @param <T>
  *            model type
  */
-public class InvalidTemplatePair<T extends UniqueModel> extends HandlerPair<T, AttributeUpdateFailure>
+public class InvalidTemplatePair<T extends UniqueModel> extends HandlerPair<T, InvalidAttribute>
         implements KeyedInvalidAttribute, AlwaysKeyed<UniqueModel> {
 
-	public InvalidTemplatePair(T template, AttributeUpdateFailure failure) {
+	public InvalidTemplatePair(T template, InvalidAttribute failure) {
 		super(template, failure);
 	}
 
@@ -31,7 +31,7 @@ public class InvalidTemplatePair<T extends UniqueModel> extends HandlerPair<T, A
 		return this.key;
 	}
 
-	public AttributeUpdateFailure getFailure() {
+	public InvalidAttribute getFailure() {
 		return this.object;
 	}
 
@@ -64,7 +64,7 @@ public class InvalidTemplatePair<T extends UniqueModel> extends HandlerPair<T, A
 		for (UpdatePair<T> pair : pairs) {
 			if (pair.hasFailed()) {
 				T template = pair.getTemplate();
-				AttributeUpdateFailure e = pair.getFailureException();
+				InvalidAttribute e = pair.getFailureException();
 
 				InvalidTemplatePair<T> failurePair = new InvalidTemplatePair<T>(template, e);
 				failurePairs.add(failurePair);

@@ -6,7 +6,7 @@ import java.util.List;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 
 /**
  * Used by {@link CreateResponse} to communicate which templates failed, and for
@@ -21,7 +21,7 @@ public class InvalidCreateTemplatePair<T extends UniqueModel> extends InvalidTem
 
 	private final ModelKey index;
 
-	public InvalidCreateTemplatePair(int index, T template, AttributeUpdateFailure failure) {
+	public InvalidCreateTemplatePair(int index, T template, InvalidAttribute failure) {
 		super(template, failure);
 		this.index = new ModelKey(index);
 	}
@@ -42,7 +42,7 @@ public class InvalidCreateTemplatePair<T extends UniqueModel> extends InvalidTem
 
 		int i = 0;
 		for (CreatePair<T> pair : pairs) {
-			AttributeUpdateFailure e = pair.getFailureException();
+			InvalidAttribute e = pair.getAttributeFailure();
 
 			if (e != null) {
 				T template = pair.getKey();

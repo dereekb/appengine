@@ -57,10 +57,20 @@ public abstract class AbstractRequestMatcher
 
 	// MARK: RequestMatcher
 	@Override
-	public boolean matches(HttpServletRequest request) {
-		String requestPath = this.getRequestPath(request);
+	public final boolean matches(HttpServletRequest request) {
 		String method = request.getMethod();
-		return this.matchesMethod(method) && this.matchesPath(requestPath);
+
+		if (this.matchesMethod(method) == false) {
+			return false;
+		}
+
+		String requestPath = this.getRequestPath(request);
+
+		if (this.matchesPath(requestPath) == false) {
+			return false;
+		}
+
+		return true;
 	}
 
 	// MARK: Matching

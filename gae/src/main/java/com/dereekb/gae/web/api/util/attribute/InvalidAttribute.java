@@ -7,7 +7,7 @@ package com.dereekb.gae.web.api.util.attribute;
  * @author dereekb
  *
  */
-public interface AttributeUpdateFailure {
+public interface InvalidAttribute {
 
 	/**
 	 * Returns the bad attribute.

@@ -1,5 +1,8 @@
 package com.dereekb.gae.web.api.auth.exception;
 
+import com.dereekb.gae.server.auth.security.login.exception.LoginAuthenticationException;
+import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
+import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
@@ -8,7 +11,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
  * @author dereekb
  *
  */
-public class ApiLoginException extends RuntimeException {
+public class ApiLoginException extends ApiSafeRuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,6 +30,8 @@ public class ApiLoginException extends RuntimeException {
 
 	    // Forbidden
 		INVALID_CREDENTIALS("INVALID_CREDENTIALS", "Invalid Credentials"),
+
+		EXPIRED_CREDENTIALS("EXPIRED_CREDENTIALS", "Expired Credentials"),
 
 		REJECTED("REJECTED", "Rejected Credentials");
 
@@ -49,6 +54,7 @@ public class ApiLoginException extends RuntimeException {
 	}
 
 	private LoginExceptionReason reason;
+	private String encodedData;
 
 	public ApiLoginException(LoginExceptionReason reason) {
 		this(reason, null, null);
@@ -58,12 +64,20 @@ public class ApiLoginException extends RuntimeException {
 		this(reason, message, null);
 	}
 
-	public ApiLoginException(LoginExceptionReason reason, Throwable cause) {
-		this(reason, null, cause);
+	public ApiLoginException(LoginExceptionReason reason, String message, String encodedData) {
+		super(message);
+		this.setEncodedData(encodedData);
+		this.setReason(reason);
 	}
 
-	public ApiLoginException(LoginExceptionReason reason, String message, Throwable cause) {
-		super(message, cause);
+	public ApiLoginException(LoginExceptionReason reason, LoginAuthenticationException e) {
+		super(e.getMessage(), e);
+		this.setEncodedData(e.getEncodedData());
+		this.setReason(reason);
+	}
+
+	public ApiLoginException(LoginExceptionReason reason, Exception e) {
+		super(e.getMessage(), e);
 		this.setReason(reason);
 	}
 
@@ -72,7 +86,30 @@ public class ApiLoginException extends RuntimeException {
 	}
 
 	public void setReason(LoginExceptionReason reason) {
+		if (reason == null) {
+			throw new IllegalArgumentException("Reason cannot be null.");
+		}
+
 		this.reason = reason;
+	}
+
+	public String getEncodedData() {
+		return this.encodedData;
+	}
+
+	public void setEncodedData(String encodedData) {
+		this.encodedData = encodedData;
+	}
+
+	@Override
+	public ApiResponseError asResponseError() {
+		LoginExceptionReason reason = this.getReason();
+		ApiResponseErrorImpl error = reason.makeResponseError();
+
+		error.setData(this.getEncodedData());
+		error.setDetail(this.getMessage());
+
+		return error;
 	}
 
 }

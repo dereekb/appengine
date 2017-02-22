@@ -19,12 +19,21 @@ import com.google.gson.JsonSyntaxException;
 public class ConnectionUtility {
 
 	public static JsonElement readJsonFromConnection(URLConnection connection) throws JsonSyntaxException, IOException {
-		String json = readStringFromConnection(connection);
-		return JsonUtility.parseJson(json);
+		InputStream inputStream = connection.getInputStream();
+		return readJsonFromInputStream(inputStream);
 	}
 
 	public static String readStringFromConnection(URLConnection connection) throws IOException {
 		InputStream inputStream = connection.getInputStream();
+		return readStringFromInputStream(inputStream);
+	}
+
+	public static JsonElement readJsonFromInputStream(InputStream inputStream) throws JsonSyntaxException, IOException {
+		String json = readStringFromInputStream(inputStream);
+		return JsonUtility.parseJson(json);
+	}
+
+	public static String readStringFromInputStream(InputStream inputStream) throws IOException {
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 
 		BufferedReader bufferReader = new BufferedReader(inputStreamReader);

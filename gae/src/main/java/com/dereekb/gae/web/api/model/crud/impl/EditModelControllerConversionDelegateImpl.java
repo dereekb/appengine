@@ -196,7 +196,7 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 			List<I> converted = this.converter.convertTo(deleted);
 			data = new ApiResponseDataImpl(this.type, converted);
 		} else {
-			List<ModelKey> keys = ModelKey.readModelKeys(deleted);
+			List<String> keys = ModelKey.readStringKeys(deleted);
 			data = new ApiResponseDataImpl(this.type, keys);
 		}
 

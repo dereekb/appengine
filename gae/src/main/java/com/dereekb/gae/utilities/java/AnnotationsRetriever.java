@@ -1,4 +1,4 @@
-package com.dereekb.gae.utilities;
+package com.dereekb.gae.utilities.java;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

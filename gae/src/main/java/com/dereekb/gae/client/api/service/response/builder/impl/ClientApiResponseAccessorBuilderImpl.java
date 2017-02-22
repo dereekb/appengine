@@ -227,6 +227,11 @@ public class ClientApiResponseAccessorBuilderImpl
 			return this.getDataType();
 		}
 
+		@Override
+		public String toString() {
+			return "JsonClientApiResponseData [dataNode=" + this.dataNode + "]";
+		}
+
 	}
 
 	/**

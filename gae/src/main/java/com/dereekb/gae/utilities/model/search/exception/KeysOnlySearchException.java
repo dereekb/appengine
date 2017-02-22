@@ -11,6 +11,8 @@ import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
  */
 public class KeysOnlySearchException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	public KeysOnlySearchException() {
 		super();
 	}

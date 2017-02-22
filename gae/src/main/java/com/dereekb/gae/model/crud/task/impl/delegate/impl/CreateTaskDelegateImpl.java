@@ -20,18 +20,21 @@ public class CreateTaskDelegateImpl<T>
 	private Factory<T> factory;
 	private UpdateTaskDelegate<T> updateDelegate;
 
-	public CreateTaskDelegateImpl() {}
-
-	public CreateTaskDelegateImpl(Factory<T> factory, UpdateTaskDelegate<T> updateDelegate) {
-		this.factory = factory;
-		this.updateDelegate = updateDelegate;
+	public CreateTaskDelegateImpl(Factory<T> factory, UpdateTaskDelegate<T> updateDelegate)
+	        throws IllegalArgumentException {
+		this.setFactory(factory);
+		this.setUpdateDelegate(updateDelegate);
 	}
 
 	public Factory<T> getFactory() {
 		return this.factory;
 	}
 
-	public void setFactory(Factory<T> factory) {
+	public void setFactory(Factory<T> factory) throws IllegalArgumentException {
+		if (factory == null) {
+			throw new IllegalArgumentException("Factory cannot be null.");
+		}
+
 		this.factory = factory;
 	}
 
@@ -39,7 +42,11 @@ public class CreateTaskDelegateImpl<T>
 		return this.updateDelegate;
 	}
 
-	public void setUpdateDelegate(UpdateTaskDelegate<T> updateDelegate) {
+	public void setUpdateDelegate(UpdateTaskDelegate<T> updateDelegate) throws IllegalArgumentException {
+		if (updateDelegate == null) {
+			throw new IllegalArgumentException("UpdateDelegate cannot be null.");
+		}
+
 		this.updateDelegate = updateDelegate;
 	}
 

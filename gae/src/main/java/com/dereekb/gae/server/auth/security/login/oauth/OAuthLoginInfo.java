@@ -27,14 +27,14 @@ public interface OAuthLoginInfo {
 	/**
 	 * Returns the name of the user.
 	 *
-	 * @return Name if available, or {@code null} otherwise.
+	 * @return {@link String}. May be {@code null}.
 	 */
 	public String getName();
 
 	/**
 	 * Returns the email address for the user.
 	 *
-	 * @return {@link String}. Never {@code null}.
+	 * @return {@link String}. May be {@code null}.
 	 */
 	public String getEmail();
 

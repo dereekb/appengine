@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.auth.exception;
 
+import com.dereekb.gae.server.auth.security.login.exception.LoginAuthenticationException;
+
 /**
  * Rejected login exception.
  *
@@ -12,16 +14,20 @@ public class ApiLoginRejectedException extends ApiLoginException {
 
 	private static final LoginExceptionReason REASON = LoginExceptionReason.REJECTED;
 
-	public ApiLoginRejectedException(String message, Throwable cause) {
-		super(REASON, message, cause);
+	public ApiLoginRejectedException(Exception e) {
+		super(REASON, e);
+	}
+
+	public ApiLoginRejectedException(LoginAuthenticationException e) {
+		super(REASON, e);
+	}
+
+	public ApiLoginRejectedException(String message, String encodedData) {
+		super(REASON, message, encodedData);
 	}
 
 	public ApiLoginRejectedException(String message) {
 		super(REASON, message);
-	}
-
-	public ApiLoginRejectedException(Throwable cause) {
-		super(REASON, cause);
 	}
 
 	public ApiLoginRejectedException() {

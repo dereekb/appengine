@@ -12,14 +12,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  *
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class OwnedDatabaseModelData extends DatabaseModelData
         implements MutableOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String ownerId;
+	protected String ownerId = null;
 
 	// MARK: OwnedModel
 	public String getOwner() {

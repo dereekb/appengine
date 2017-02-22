@@ -3,6 +3,7 @@ package com.dereekb.gae.server.search.model.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.model.search.request.MutableSearchRequest;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
@@ -23,7 +24,7 @@ public class SearchRequestImpl extends SearchOptionsImpl
 
 	public SearchRequestImpl() {
 		this.setKeysOnly(true);
-		this.setSearchParameters(null);
+		this.clearSearchParameters();
 	}
 
 	public SearchRequestImpl(SearchRequest request) throws IllegalArgumentException {
@@ -74,12 +75,22 @@ public class SearchRequestImpl extends SearchOptionsImpl
 	}
 
 	@Override
+	public void setSearchParameters(Parameters searchParameters) {
+		Map<String, String> parametersMap = searchParameters.getParameters();
+		this.setSearchParameters(parametersMap);
+	}
+
+	@Override
 	public void setSearchParameters(Map<String, String> searchParameters) {
 		if (searchParameters == null) {
-			searchParameters = new HashMap<String, String>();
+			this.clearSearchParameters();
+		} else {
+			this.searchParameters = searchParameters;
 		}
+	}
 
-		this.searchParameters = searchParameters;
+	public void clearSearchParameters() {
+		this.searchParameters = new HashMap<String, String>();
 	}
 
 	// MARK: Parameters

@@ -3,12 +3,15 @@ package com.dereekb.gae.web.api.exception.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  *
  */
 @ControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class ApiExceptionHandler {
 
 	/**
@@ -135,6 +139,24 @@ public class ApiExceptionHandler {
 
 		BindingResult result = e.getBindingResult();
 		ValidationError error = new ValidationError(result);
+		response.setError(error);
+
+		return response;
+	}
+
+	/**
+	 * Used for capturing validation errors.
+	 */
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MissingPathVariableException.class)
+	public ApiResponse handleException(MissingPathVariableException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("MISSING_URL_VARIABLE");
+		error.setTitle("Missing URL Variable");
+		error.setDetail(e.getMessage());
+
 		response.setError(error);
 
 		return response;

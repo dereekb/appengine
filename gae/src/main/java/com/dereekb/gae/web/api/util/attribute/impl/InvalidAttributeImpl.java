@@ -1,12 +1,12 @@
 package com.dereekb.gae.web.api.util.attribute.impl;
 
-import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * {@link AttributeUpdateFailure} implementation.
+ * {@link InvalidAttribute} implementation.
  * 
  * @author dereekb
  *
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InvalidAttributeImpl
-        implements AttributeUpdateFailure {
+        implements InvalidAttribute {
 
 	private String attribute;
 	private String value;
@@ -26,7 +26,7 @@ public class InvalidAttributeImpl
 		this(attribute, value, null);
 	}
 
-	public InvalidAttributeImpl(AttributeUpdateFailure failure) {
+	public InvalidAttributeImpl(InvalidAttribute failure) {
 		this(failure.getAttribute(), failure.getValue(), failure.getDetail());
 	}
 

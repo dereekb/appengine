@@ -3,7 +3,7 @@ package com.dereekb.gae.web.api.util.attribute.exception;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
-import com.dereekb.gae.web.api.util.attribute.AttributeUpdateFailure;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.builder.KeyedInvalidAttributeApiResponseBuilder;
 import com.dereekb.gae.web.api.util.attribute.impl.KeyedInvalidAttributeImpl;
@@ -21,7 +21,7 @@ public class KeyedInvalidAttributeException extends InvalidAttributeException
 
 	private final KeyedInvalidAttribute failure;
 
-	public KeyedInvalidAttributeException(UniqueModel template, AttributeUpdateFailure failure) {
+	public KeyedInvalidAttributeException(UniqueModel template, InvalidAttribute failure) {
 		this(template.getModelKey(), failure.getAttribute(), failure.getValue(), failure.getDetail());
 	}
 

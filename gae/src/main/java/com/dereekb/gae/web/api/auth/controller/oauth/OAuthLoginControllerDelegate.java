@@ -15,6 +15,30 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 public interface OAuthLoginControllerDelegate {
 
 	/**
+	 * Performs a login using an authentication code. This server will work to
+	 * 
+	 * @param type
+	 *            oauth type. Never {@code null},
+	 * @param authCode
+	 *            token string. Never {@code null}.
+	 * @param codeType
+	 *            code type. May be {@code null}.
+	 * @return {@link LoginTokenPair}. Never {@code null}.
+	 * 
+	 * @throws OAuthConnectionException
+	 * @throws OAuthInsufficientException
+	 * @throws OAuthAuthorizationTokenRequestException
+	 * @throws OAuthServiceUnavailableException
+	 */
+	public LoginTokenPair loginWithAuthCode(String type,
+	                                        String authCode,
+	                                        String codeType)
+	        throws OAuthConnectionException,
+	            OAuthInsufficientException,
+	            OAuthAuthorizationTokenRequestException,
+	            OAuthServiceUnavailableException;
+
+	/**
 	 * Performs a login using the access token.
 	 *
 	 * @param type
@@ -23,15 +47,16 @@ public interface OAuthLoginControllerDelegate {
 	 *            token string. Never {@code null}.
 	 * @return {@link LoginTokenPair} with valid login. Never {@code null}.
 	 *
-	 * @throws OAuthInsufficientException
-	 * @throws OAuthServiceUnavailableException
 	 * @throws OAuthConnectionException
+	 * @throws OAuthInsufficientException
+	 * @throws OAuthAuthorizationTokenRequestException
+	 * @throws OAuthServiceUnavailableException
 	 */
-	public LoginTokenPair login(String type,
-	                            String accessToken)
-	        throws OAuthInsufficientException,
+	public LoginTokenPair loginWithAccessToken(String type,
+	                                           String accessToken)
+	        throws OAuthConnectionException,
+	            OAuthInsufficientException,
 	            OAuthAuthorizationTokenRequestException,
-	            OAuthServiceUnavailableException,
-	            OAuthConnectionException;
+	            OAuthServiceUnavailableException;
 
 }

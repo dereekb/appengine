@@ -1,5 +1,7 @@
 package com.dereekb.gae.utilities.regex;
 
+import java.util.regex.Pattern;
+
 /**
  * Light helper class that contains regex values;
  *
@@ -17,11 +19,15 @@ public class RegexHelper {
 	public static final String ANYTHING = "(\\s|\\S)";
 	public static final String WHITESPACE_BEFORE_ANY_AFTER_FORMAT = "(((\\s)*(%s)+" + ANYTHING + "*))";
 	public static final String WHITESPACE_BEFORE_AND_AFTER_FUNCTION = "(\\s)*(%s)+(\\()+(\\d|\\w|\\s|,)*(\\))*(\\s)*";
-	public static final String WHITESPACE_BEFORE_AND_AFTER_ANY_FUNCTION = String.format(
-	        WHITESPACE_BEFORE_AND_AFTER_FUNCTION, ANY_DIGIT_OR_LETTER);
+	public static final String WHITESPACE_BEFORE_AND_AFTER_ANY_FUNCTION = String
+	        .format(WHITESPACE_BEFORE_AND_AFTER_FUNCTION, ANY_DIGIT_OR_LETTER);
 	public static final String OR_REGEX = "(%s)|(%s)";
 	public static final String BACKSLASH = "\\";
-	public static final String TWITTER_TEXT_USERNAME = "^(\\w{1,15})\\b$";	//15char Username w/o the @
+	public static final String TWITTER_TEXT_USERNAME = "^(\\w{1,15})\\b$";	// 15char
+	                                                                      	// Username
+	                                                                      	// w/o
+	                                                                      	// the
+	                                                                      	// @
 	public static final String EXCEPT_ALPHANUMERIC_AND_SYMBOLS = "[^(a-zA-Z0-9)(,\\.\"\')(\\s)(:!@#$%^&*)(\\-<>+=)$]";
 	public static final String PUNCTUATION = "\\p{Punct}";
 
@@ -48,6 +54,10 @@ public class RegexHelper {
 	public static final String replacePunctuation(String input,
 	                                              String replacement) {
 		return input.replaceAll(PUNCTUATION, replacement);
+	}
+
+	public static final boolean containsPunctuation(String input) {
+		return Pattern.matches(PUNCTUATION, input);
 	}
 
 }

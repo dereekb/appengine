@@ -57,11 +57,16 @@ public class ObjectifyModelKeyUtil<T> {
 	}
 
 	public Key<T> keyFromNumber(ModelKey modelKey) {
+		return keyFromNumber(this.type, modelKey);
+	}
+
+	public static <T> Key<T> keyFromNumber(Class<T> type,
+	                                       ModelKey modelKey) {
 		Key<T> key;
 
 		Long id = modelKey.getId();
 		if (id != null) {
-			key = Key.create(this.type, id);
+			key = Key.create(type, id);
 		} else {
 			key = null;
 		}
