@@ -1,9 +1,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
@@ -20,38 +18,49 @@
 	<!-- Login Authentication Patterns -->
 	<security:http request-matcher-ref="authControllersPatternMatcher"
 		create-session="never" entry-point-ref="securityEntryPoint">
-		<security:intercept-url pattern="/login/auth/anon" access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/anon"
+			access="permitAll" method="POST" />
 		<!-- DEPRECATED: Do not enable password authentication on production apps -->
-		<security:intercept-url pattern="/login/auth/pass" access="permitAll" method="POST" />
-		<security:intercept-url pattern="/login/auth/pass/*" access="permitAll" method="POST" />
-		<security:intercept-url pattern="/login/auth/oauth/**" access="permitAll" method="POST" />
-		<security:intercept-url pattern="/login/auth/key" access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/pass"
+			access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/pass/*"
+			access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/oauth/**"
+			access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/key"
+			access="permitAll" method="POST" />
 		<security:intercept-url pattern="/**" access="denyAll" />
 		<!-- All requests are made with spring anonymous users. -->
 		<security:anonymous enabled="true" />
 		<security:access-denied-handler ref="accessDeniedHandler" />
 		<security:csrf disabled="true" />
 	</security:http>
-	
-	<!-- Matches  POST requests made to the Auth Controllers. Everything else falls through. -->
+
+	<!-- Matches POST requests made to the Auth Controllers. Everything else 
+		falls through. -->
 	<bean id="authControllersPatternMatcher"
 		class="com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher">
 		<constructor-arg index="0" value="/login/auth/{type}/**" />
 		<constructor-arg index="1" ref="authTypes" />
 		<property name="methodMatcher">
-			<bean class="com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl">
+			<bean
+				class="com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl">
 				<constructor-arg index="0" value="POST" />
 			</bean>
 		</property>
 	</bean>
 
-	<util:set id="authTypes" value-type="java.lang.String">
-		<value>anon</value>
-		<value>pass</value>
-		<value>oauth</value>
-		<value>key</value>
-	</util:set>
-	
+	<bean class="java.util.HashSet" id="authTypes">
+		<constructor-arg index="0">
+			<set value-type="java.lang.String">
+				<value>anon</value>
+				<value>pass</value>
+				<value>oauth</value>
+				<value>key</value>
+			</set>
+		</constructor-arg>
+	</bean>
+
 	<!-- Application HTTP Security Patterns -->
 	<security:http use-expressions="true" create-session="stateless"
 		entry-point-ref="securityEntryPoint">
@@ -63,11 +72,13 @@
 		<security:intercept-url pattern="/taskqueue/**"
 			access="hasRole('ROLE_LOGINTYPE_SYSTEM')" />
 
-		<!-- LoginKey Auth Requests are rejected for anonymous, API Keys, and SYSTEM users. -->
+		<!-- LoginKey Auth Requests are rejected for anonymous, API Keys, and SYSTEM 
+			users. -->
 		<security:intercept-url pattern="/login/auth/key/*"
 			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON', 'ROLE_LOGINTYPE_SYSTEM')" />
 
-		<!-- LoginKey Requests are rejected for anonymous users and API Key login types. -->
+		<!-- LoginKey Requests are rejected for anonymous users and API Key login 
+			types. -->
 		<security:intercept-url request-matcher-ref="loginKeyObjectApiPathRequestMatcher"
 			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON')" />
 
@@ -94,7 +105,9 @@
 	<bean id="loginKeyObjectApiPathRequestMatcher"
 		class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
 		<constructor-arg index="0" value="/loginkey/**" />
-		<constructor-arg index="1"><null/></constructor-arg>
+		<constructor-arg index="1">
+			<null />
+		</constructor-arg>
 		<constructor-arg index="2" value="false" />
 	</bean>
 
@@ -108,7 +121,7 @@
 			</map>
 		</constructor-arg>
 	</bean>
-	
+
 	<util:set id="securedModelResources" value-type="java.lang.String">
 		<value>create</value>
 		<value>update</value>
@@ -117,7 +130,7 @@
 		<value>search</value>
 		<value>link</value>
 	</util:set>
-	
+
 	<!-- -->
 	<bean id="securityRequestMatcher"
 		class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
@@ -244,5 +257,5 @@
 	<bean id="accessDeniedHandler"
 		class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl">
 	</bean>
-	
+
 </beans>
