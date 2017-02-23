@@ -3,6 +3,8 @@ package com.dereekb.gae.web.api.exception.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.UnavailableException;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -111,6 +113,21 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(ApiSafeRuntimeException.class)
 	public ApiResponse handleException(ApiSafeRuntimeException e) {
 		return ApiResponseImpl.makeFailure(e);
+	}
+
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(UnavailableException.class)
+	public ApiResponse handleException(UnavailableException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("SERVICE_UNAVAILABLE");
+		error.setTitle("Service Unavailable");
+		error.setDetail("The service is currently unavailable due to an error.");
+
+		response.setError(error);
+
+		return response;
 	}
 
 	@ResponseBody

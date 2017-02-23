@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
+import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
@@ -13,8 +13,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
  * @author dereekb
  *
  */
-public class MissingRequiredResourceException extends RuntimeException
-        implements ApiResponseErrorConvertable {
+public class MissingRequiredResourceException extends ApiSafeRuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
