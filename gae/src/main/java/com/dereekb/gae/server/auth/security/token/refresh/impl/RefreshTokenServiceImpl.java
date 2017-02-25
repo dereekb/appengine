@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.refresh.impl;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -13,6 +14,7 @@ import com.dereekb.gae.server.auth.security.token.refresh.exception.Authenticati
 import com.dereekb.gae.server.auth.security.token.refresh.exception.RefreshTokenExpiredException;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.time.DateUtility;
 
 /**
@@ -26,9 +28,12 @@ public class RefreshTokenServiceImpl
 
 	// 60 Days Default
 	private static final Long DEFAULT_EXPIRATION_TIME = 60 * 24 * 60 * 60 * 1000L;
+	private static Set<LoginPointerType> BLACK_LISTED_TYPES = SetUtility.makeSet(LoginPointerType.ANONYMOUS,
+	        LoginPointerType.API_KEY, LoginPointerType.SYSTEM);
 
 	private Getter<Login> loginGetter;
 	private Getter<LoginPointer> loginPointerGetter;
+	private Set<LoginPointerType> typeBlackList = BLACK_LISTED_TYPES;
 
 	private Long expirationTime = DEFAULT_EXPIRATION_TIME;
 
@@ -73,6 +78,19 @@ public class RefreshTokenServiceImpl
 		this.expirationTime = expirationTime;
 	}
 
+	public Set<LoginPointerType> getTypeBlackList() {
+		return this.typeBlackList;
+	}
+
+	public void setTypeBlackList(Set<LoginPointerType> typeBlackList) {
+		if (typeBlackList == null) {
+			throw new IllegalArgumentException("TypeBlackList cannot be null.");
+		}
+
+		this.typeBlackList = typeBlackList;
+	}
+
+	// MARK: RefreshTokenService
 	@Override
 	public LoginToken makeRefreshToken(LoginToken loginToken)
 	        throws AuthenticationPurgeException,
@@ -80,6 +98,11 @@ public class RefreshTokenServiceImpl
 
 		String loginPointerId = loginToken.getLoginPointerId();
 		LoginPointer loginPointer = this.loadLoginPointer(loginPointerId);
+
+		if (this.typeBlackList.contains(loginPointer.getLoginPointerType())) {
+			throw new TokenUnauthorizedException("Cannot create refresh token with this type of token.");
+		}
+
 		Login login = this.loadLogin(loginPointer);
 
 		this.assertAuthenticationValid(login, loginToken);
