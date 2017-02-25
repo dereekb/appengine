@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
-import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
@@ -46,6 +45,12 @@ public final class Login extends DescribedDatabaseModel
 	private Date date = new Date();
 
 	/**
+	 * Authentication reset time. Used to invalidate tokens that have been
+	 * created before this timer.
+	 */
+	private Date authReset = new Date();
+
+	/**
 	 * Whether or not this login is a root-level login.
 	 */
 	@IgnoreSave({ IfDefault.class })
@@ -68,25 +73,16 @@ public final class Login extends DescribedDatabaseModel
 	private Long roles = 0L;
 
 	/**
-	 * Pointers for this login.
-	 *
-	 * Each pointer should reference this {@link Login}.
-	 *
-	 * This allows multiple different pointers to have access to the same login,
-	 * if such functionality is required by the system.
-	 */
-	@IgnoreSave({ IfEmpty.class })
-	private Set<Key<LoginPointer>> pointers = new HashSet<Key<LoginPointer>>();
-
-	/**
 	 * Parent Logins that have access to this login.
 	 */
+	@Deprecated
 	@IgnoreSave({ IfEmpty.class })
 	private Set<Key<Login>> parents = new HashSet<Key<Login>>();
 
 	/**
 	 * Children logins that this login has access to.
 	 */
+	@Deprecated
 	@IgnoreSave({ IfEmpty.class })
 	private Set<Key<Login>> children = new HashSet<Key<Login>>();
 
@@ -110,6 +106,18 @@ public final class Login extends DescribedDatabaseModel
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public Date getAuthReset() {
+		return this.authReset;
+	}
+
+	public void setAuthReset(Date authReset) {
+		if (authReset == null) {
+			throw new IllegalArgumentException("AuthReset time cannot be null.");
+		}
+
+		this.authReset = authReset;
 	}
 
 	public boolean isRoot() {
@@ -145,18 +153,6 @@ public final class Login extends DescribedDatabaseModel
 		this.roles = roles;
 	}
 
-	public Set<Key<LoginPointer>> getPointers() {
-		return this.pointers;
-	}
-
-	public void setPointers(Set<Key<LoginPointer>> pointers) {
-		if (pointers == null) {
-			pointers = new HashSet<Key<LoginPointer>>();
-		}
-
-		this.pointers = pointers;
-	}
-
 	public Set<Key<Login>> getParents() {
 		return this.parents;
 	}
@@ -187,6 +183,7 @@ public final class Login extends DescribedDatabaseModel
 		return ModelKey.safe(this.identifier);
 	}
 
+	@Override
 	public void setModelKey(ModelKey key) {
 		this.identifier = ModelKey.readIdentifier(key);
 	}
@@ -206,7 +203,7 @@ public final class Login extends DescribedDatabaseModel
 	@Override
 	public String toString() {
 		return "Login [identifier=" + this.identifier + ", date=" + this.date + ", group=" + this.group + ", roles="
-		        + this.roles + ", pointers=" + this.pointers + "]";
+		        + this.roles + "]";
 	}
 
 }

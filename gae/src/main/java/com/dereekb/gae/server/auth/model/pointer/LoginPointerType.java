@@ -18,9 +18,11 @@ public enum LoginPointerType {
 
 	API_KEY(3, LoginType.API, "K"),
 
-	OAUTH_GOOGLE(4, LoginType.OAUTH, "G"),
+	REFRESH_TOKEN(4, LoginType.REFRESH, "R"),
 
-	OAUTH_FACEBOOK(5, LoginType.OAUTH, "F");
+	OAUTH_GOOGLE(5, LoginType.OAUTH, "G"),
+
+	OAUTH_FACEBOOK(6, LoginType.OAUTH, "F");
 
 	/**
 	 * Login type/category.
@@ -34,6 +36,8 @@ public enum LoginPointerType {
 		NONE,
 
 		PASSWORD,
+
+		REFRESH,
 
 		API,
 
@@ -71,7 +75,7 @@ public enum LoginPointerType {
 	}
 
 	public static LoginPointerType valueOf(Integer id) {
-		LoginPointerType type = LoginPointerType.PASSWORD;
+		LoginPointerType type = LoginPointerType.ANONYMOUS;
 
 		switch (id) {
 			case 0:
@@ -87,9 +91,12 @@ public enum LoginPointerType {
 				type = LoginPointerType.API_KEY;
 				break;
 			case 4:
-				type = LoginPointerType.OAUTH_GOOGLE;
+				type = LoginPointerType.REFRESH_TOKEN;
 				break;
 			case 5:
+				type = LoginPointerType.OAUTH_GOOGLE;
+				break;
+			case 6:
 				type = LoginPointerType.OAUTH_FACEBOOK;
 				break;
 		}

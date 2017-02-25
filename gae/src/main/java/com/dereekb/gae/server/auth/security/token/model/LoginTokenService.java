@@ -9,7 +9,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
  *
  */
 public interface LoginTokenService
-        extends LoginTokenBuilder, LoginTokenEncoder, LoginTokenDecoder {
+        extends LoginTokenBuilder, LoginTokenEncoderDecoder {
 
 	/**
 	 * Builds and encodes a {@link LoginToken}.

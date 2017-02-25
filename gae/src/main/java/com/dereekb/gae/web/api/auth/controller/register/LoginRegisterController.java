@@ -30,7 +30,7 @@ import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
  *
  */
 @RestController
-@RequestMapping("/login/register")
+@RequestMapping("/login/auth/register")
 public class LoginRegisterController {
 
 	private LoginRegisterControllerDelegate delegate;

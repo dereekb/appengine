@@ -20,7 +20,7 @@ public class LoginDeleteRulesFilter extends AbstractFilter<Login> {
 
 	@Override
 	public FilterResult filterObject(Login object) {
-		return DESCRIBED_FILTER.filterObject(object).and(object.getPointers().isEmpty() && object.getRoles() == 0L);
+		return DESCRIBED_FILTER.filterObject(object).and(object.getRoles() == 0L);
 	}
 
 }

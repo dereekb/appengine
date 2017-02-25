@@ -99,5 +99,18 @@
 	<bean id="loginOwnershipRolesReader"
 		class="com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader">
 	</bean>
+	
+	<!-- Refresh Token Service -->
+	<bean id="refreshTokenService"
+		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="loginPointerRegistry" />
+	</bean>
+
+	<bean id="refreshTokenEncoderDecoder"
+		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder">
+		<constructor-arg index="0" ref="loginTokenSecret" />
+		<constructor-arg index="1" ref="loginTokenBuilder" />
+	</bean>
 
 </beans>

@@ -8,20 +8,16 @@ import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
-import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
-import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollectionImpl;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
-import com.googlecode.objectify.Key;
 
 /**
  * {@link LinkSystemEntry} implementation for {@link Login}.
@@ -88,14 +84,6 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	@Override
 	public List<Link> makeDefinedLinksForModel(final Login model) {
 		List<Link> links = new ArrayList<Link>();
-
-		ModelKey key = model.getModelKey();
-
-		// Pointers Link
-		LinkInfoImpl loginPointersLinkInfo = new LinkInfoImpl(this.loginPointersLinkName, key, this.loginPointerTarget);
-		LinkCollectionImpl<Key<LoginPointer>> imagesLink = new LinkCollectionImpl<Key<LoginPointer>>(
-		        loginPointersLinkInfo, model.getPointers(), loginPointerUtil);
-		links.add(imagesLink);
 
 		return links;
 	}

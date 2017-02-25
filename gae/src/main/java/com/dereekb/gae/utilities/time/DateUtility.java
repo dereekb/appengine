@@ -18,4 +18,9 @@ public class DateUtility {
 		return new Date(start + milliseconds);
 	}
 
+	public static boolean dateIsAfterDate(Date authReset,
+	                                      Date authIssued) {
+		return authReset.compareTo(authIssued) > 0;
+	}
+
 }

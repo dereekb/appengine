@@ -19,7 +19,7 @@ public interface NewLoginGenerator {
 	 * @param pointer
 	 *            {@link LoginPointer}. Can be {@code null} depending on
 	 *            implementation.
-	 * @return {@link Login}.
+	 * @return {@link Login}. Never {@code null}.
 	 */
 	public Login makeLogin(LoginPointer pointer);
 
