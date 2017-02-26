@@ -26,10 +26,16 @@ import com.dereekb.gae.utilities.time.DateUtility;
 public class RefreshTokenServiceImpl
         implements RefreshTokenService {
 
+	// 5 Seconds of Precision
+	public static final Long DEFAULT_PRECISION = 5000L;
+
 	// 60 Days Default
 	private static final Long DEFAULT_EXPIRATION_TIME = 60 * 24 * 60 * 60 * 1000L;
+
 	private static Set<LoginPointerType> BLACK_LISTED_TYPES = SetUtility.makeSet(LoginPointerType.ANONYMOUS,
 	        LoginPointerType.API_KEY, LoginPointerType.SYSTEM);
+
+	private Long timePrecision = DEFAULT_PRECISION;
 
 	private Getter<Login> loginGetter;
 	private Getter<LoginPointer> loginPointerGetter;
@@ -136,10 +142,11 @@ public class RefreshTokenServiceImpl
 	// MARK: Internal
 	private void assertAuthenticationValid(Login login,
 	                                       LoginToken loginToken) {
+		// Round due to JWT issues.
 		Date authReset = login.getAuthReset();
 		Date authIssued = loginToken.getIssued();
 
-		if (DateUtility.dateIsAfterDate(authReset, authIssued)) {
+		if (DateUtility.dateIsAfterDate(authReset, authIssued, this.timePrecision)) {
 			throw new AuthenticationPurgeException("Purged due to authentication reset.");
 		}
 	}

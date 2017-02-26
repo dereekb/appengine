@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
+import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
+import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 
@@ -43,6 +46,17 @@ public class LoginTokenController {
 	}
 
 	// MARK: Controller
+	/**
+	 * Creates a refresh token using the current authentication.
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/refresh", method = RequestMethod.GET, produces = "application/json")
+	public final LoginTokenPair makeRefreshToken() throws NoSecurityContextException {
+		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
+		String loginToken = authentication.getPrincipal().getLoginToken().getEncodedLoginToken();
+		return this.makeRefreshToken(loginToken);
+	}
+
 	/**
 	 * Creates a refresh token using the input authentication token.
 	 */

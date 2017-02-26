@@ -32,6 +32,15 @@ public interface LoginToken
 	public boolean isAnonymous();
 
 	/**
+	 * Whether or not this is a new user. Generally true if
+	 * {{@link #getLoginId()} returns {@code null}, {@link #isAnonymous()}
+	 * returns false, and the pointer type is not special.
+	 * 
+	 * @return {@code true} if it is a new user.
+	 */
+	public boolean isNewUser();
+
+	/**
 	 * Returns role codes for the user.
 	 *
 	 * @return {@link Role}. Never {@code null}.
@@ -72,7 +81,7 @@ public interface LoginToken
 	/**
 	 * Token issue date.
 	 *
-	 * @return{@link Date} token was issued. Never {@code null}.
+	 * @return {@link Date} token was issued. Never {@code null}.
 	 */
 	public Date getIssued();
 

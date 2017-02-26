@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.roles.authority.GrantedAuthorityDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginPointerGrantedAuthorityBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGrantedAuthorityBuilder;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
  * {@link LoginTokenGrantedAuthorityBuilder} implementation.
@@ -23,10 +25,15 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGra
 public class LoginTokenGrantedAuthorityBuilderImpl
         implements LoginTokenGrantedAuthorityBuilder {
 
+	public static final String DEFAULT_NEW_USER_ROLE = "ROLE_NEW_USER";
+
+	private static final GrantedAuthority newUserAuthority = new SimpleGrantedAuthority(DEFAULT_NEW_USER_ROLE);
+
 	private GrantedAuthorityDecoder grantedAuthorityDecoder;
 
 	private List<GrantedAuthority> tokenAuthorities;
 	private List<GrantedAuthority> anonymousAuthorities;
+	private List<GrantedAuthority> newUserAuthorities = ListUtility.wrap(newUserAuthority);
 
 	private LoginPointerGrantedAuthorityBuilder loginPointerAuthorityBuilder = new LoginPointerGrantedAuthorityBuilderImpl();
 
@@ -81,6 +88,18 @@ public class LoginTokenGrantedAuthorityBuilderImpl
 		this.anonymousAuthorities = anonymousAuthorities;
 	}
 
+	public List<GrantedAuthority> getNewUserAuthorities() {
+		return this.newUserAuthorities;
+	}
+
+	public void setNewUserAuthorities(List<GrantedAuthority> newUserAuthorities) {
+		if (newUserAuthorities == null) {
+			throw new IllegalArgumentException("newUserAuthorities cannot be null.");
+		}
+
+		this.newUserAuthorities = newUserAuthorities;
+	}
+
 	public LoginPointerGrantedAuthorityBuilder getLoginPointerAuthorityBuilder() {
 		return this.loginPointerAuthorityBuilder;
 	}
@@ -96,6 +115,8 @@ public class LoginTokenGrantedAuthorityBuilderImpl
 
 		if (token.isAnonymous()) {
 			authorities = new HashSet<>(this.anonymousAuthorities);
+		} else if (token.isNewUser()) {
+			authorities = new HashSet<>(this.newUserAuthorities);
 		} else {
 			Long encodedRoles = token.getRoles();
 
@@ -110,6 +131,9 @@ public class LoginTokenGrantedAuthorityBuilderImpl
 
 		LoginPointerType type = token.getPointerType();
 		authorities.addAll(this.loginPointerAuthorityBuilder.getGrantedAuthorities(type));
+
+		System.out.println(token.toString());
+		System.out.println(authorities.toString());
 
 		return authorities;
 	}

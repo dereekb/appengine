@@ -31,7 +31,10 @@ public class LoginTokenEncoderDecoderImpl extends AbstractLoginTokenEncoderDecod
 	public static final String LOGIN_POINTER_KEY = "ptr";
 	public static final String LOGIN_POINTER_TYPE_KEY = "pt";
 	public static final String OWNERSHIP_KEY = "o";
+
+	@Deprecated
 	public static final String ANONYMOUS_KEY = "anon";
+
 	public static final String ROLES_KEY = "r";
 
 	public LoginTokenEncoderDecoderImpl(String secret) {
@@ -49,11 +52,15 @@ public class LoginTokenEncoderDecoderImpl extends AbstractLoginTokenEncoderDecod
 		claims.put(LOGIN_KEY, loginToken.getLoginId());
 		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointerId());
 		claims.put(LOGIN_POINTER_TYPE_KEY, loginToken.getPointerType().getId());
-		claims.put(ROLES_KEY, loginToken.getRoles());
-		claims.put(OWNERSHIP_KEY, this.encodeOwnershipRoles(loginToken.getOwnershipRoles()));
 
-		if (loginToken.isAnonymous()) {
-			claims.put(ANONYMOUS_KEY, 1);
+		if (loginToken.getRoles() != LoginTokenImpl.DEFAULT_ROLES) {
+			claims.put(ROLES_KEY, loginToken.getRoles());
+		}
+
+		String ownershipRoles = this.encodeOwnershipRoles(loginToken.getOwnershipRoles());
+
+		if (ownershipRoles.isEmpty() == false) {
+			claims.put(OWNERSHIP_KEY, ownershipRoles);
 		}
 	}
 
@@ -115,33 +122,21 @@ public class LoginTokenEncoderDecoderImpl extends AbstractLoginTokenEncoderDecod
 			type = typeNumber.intValue();
 		}
 
-		boolean anonymous = false;
-
-		if (claims.containsKey(ANONYMOUS_KEY)) {
-			anonymous = (claims.get(ANONYMOUS_KEY, Number.class).intValue() == 1);
+		if (type != null) {
+			loginToken.setPointerType(LoginPointerType.valueOf(type));
 		}
 
 		Date expiration = loginToken.getExpiration();
 		Date issued = loginToken.getIssued();
 
-		// Login might not always be present.
+		// Must have expiration and issue times.
 		if (expiration == null || issued == null) {
-
-			// LoginPointer is required for non-anonymous types.
-			if (anonymous == false && loginPointer == null) {
-				throw new TokenUnauthorizedException("Invalid token.");
-			}
+			throw new TokenUnauthorizedException("Invalid token.");
 		}
 
 		loginToken.setLogin(login);
 		loginToken.setLoginPointer(loginPointer);
 		loginToken.setRoles(roles);
-
-		if (type != null) {
-			loginToken.setPointerType(LoginPointerType.valueOf(type));
-		}
-
-		loginToken.setAnonymous(anonymous);
 
 		String encodedOwnershipRoles = claims.get(OWNERSHIP_KEY, String.class);
 

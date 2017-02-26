@@ -38,7 +38,7 @@ public class ListUtility {
 	public static <T> List<T> wrap(T element) {
 		List<T> list;
 
-		if (element == null) {
+		if (element != null) {
 			list = new ArrayList<T>(1);
 			list.add(element);
 		} else {

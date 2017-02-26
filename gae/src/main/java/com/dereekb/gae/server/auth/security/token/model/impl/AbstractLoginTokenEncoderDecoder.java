@@ -89,6 +89,8 @@ public abstract class AbstractLoginTokenEncoderDecoder
 		claims.setIssuedAt(loginToken.getIssued());
 		claims.setExpiration(loginToken.getExpiration());
 
+		this.appendClaimsComponents(loginToken, claims);
+
 		return claims;
 	}
 
@@ -132,7 +134,6 @@ public abstract class AbstractLoginTokenEncoderDecoder
 	protected void initFromClaims(LoginTokenImpl loginToken,
 	                              Claims claims)
 	        throws TokenUnauthorizedException {
-
 		String subject = claims.getSubject();
 		Date expiration = claims.getExpiration();
 		Date issued = claims.getIssuedAt();

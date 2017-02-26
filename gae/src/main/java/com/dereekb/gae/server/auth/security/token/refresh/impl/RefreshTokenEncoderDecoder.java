@@ -3,6 +3,7 @@ package com.dereekb.gae.server.auth.security.token.refresh.impl;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.AbstractLoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
@@ -18,7 +19,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 public class RefreshTokenEncoderDecoder extends AbstractLoginTokenEncoderDecoder {
 
-	private static final LoginPointerType TYPE_OVERRIDE = LoginPointerType.REFRESH_TOKEN;
+	private static final Integer TYPE_OVERRIDE = LoginPointerType.REFRESH_TOKEN.getId();
 
 	public RefreshTokenEncoderDecoder(String secret) {
 		super(secret);
@@ -64,7 +65,6 @@ public class RefreshTokenEncoderDecoder extends AbstractLoginTokenEncoderDecoder
 			loginToken.setPointerType(LoginPointerType.valueOf(type));
 		}
 
-		loginToken.setAnonymous(false);
 		loginToken.setRoles(null);
 	}
 

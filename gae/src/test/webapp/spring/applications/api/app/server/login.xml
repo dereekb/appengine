@@ -110,7 +110,6 @@
 	<bean id="refreshTokenEncoderDecoder"
 		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder">
 		<constructor-arg index="0" ref="loginTokenSecret" />
-		<constructor-arg index="1" ref="loginTokenBuilder" />
 	</bean>
 
 </beans>

@@ -29,6 +29,8 @@
 			access="permitAll" method="POST" />
 		<security:intercept-url pattern="/login/auth/key"
 			access="permitAll" method="POST" />
+		<security:intercept-url pattern="/login/auth/token/**"
+			access="permitAll" method="POST" />
 		<security:intercept-url pattern="/**" access="denyAll" />
 		<!-- All requests are made with spring anonymous users. -->
 		<security:anonymous enabled="true" />
@@ -56,6 +58,7 @@
 				<value>anon</value>
 				<value>pass</value>
 				<value>oauth</value>
+				<value>token</value>
 				<value>key</value>
 			</set>
 		</constructor-arg>
@@ -81,6 +84,16 @@
 			types. -->
 		<security:intercept-url request-matcher-ref="loginKeyObjectApiPathRequestMatcher"
 			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON')" />
+
+		<!-- Register Patterns -->
+		<security:intercept-url pattern="/login/auth/register"
+			access="hasRole('ROLE_NEW_USER')" method="POST" />
+		<security:intercept-url pattern="/login/auth/register/token"
+			access="hasRole('ROLE_USER')" method="POST" />
+
+		<!-- Token Patterns -->
+		<security:intercept-url pattern="/login/auth/token/refresh"
+			access="hasRole('ROLE_USER')" method="GET" />
 
 		<!-- Secured Owned Model Patterns -->
 		<security:intercept-url request-matcher-ref="securedModelPatternMatcher"

@@ -92,6 +92,4 @@ public class LoginRegisterController {
 		}
 	}
 
-	// TODO: Multi-login: Create function for creating/deleting a child login.
-
 }

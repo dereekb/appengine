@@ -10,19 +10,21 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  */
 public enum LoginPointerType {
 
-	SYSTEM(0, LoginType.SYSTEM, "S"),
+    // Internal
+	SYSTEM(0, LoginType.SYSTEM, "S", true),
 
-	ANONYMOUS(1, LoginType.NONE, "A"),
+	ANONYMOUS(1, LoginType.NONE, "A", true),
 
-	PASSWORD(2, LoginType.PASSWORD, "P"),
+	API_KEY(2, LoginType.API, "K", true),
 
-	API_KEY(3, LoginType.API, "K"),
+	REFRESH_TOKEN(3, LoginType.REFRESH, "R", true),
 
-	REFRESH_TOKEN(4, LoginType.REFRESH, "R"),
+    // External
+	PASSWORD(4, LoginType.PASSWORD, "P", false),
 
-	OAUTH_GOOGLE(5, LoginType.OAUTH, "G"),
+	OAUTH_GOOGLE(5, LoginType.OAUTH, "G", false),
 
-	OAUTH_FACEBOOK(6, LoginType.OAUTH, "F");
+	OAUTH_FACEBOOK(6, LoginType.OAUTH, "F", false);
 
 	/**
 	 * Login type/category.
@@ -50,11 +52,13 @@ public enum LoginPointerType {
 	public final int id;
 	public final LoginType type;
 	public final String prefix;
+	public final boolean internal;
 
-	private LoginPointerType(int id, LoginType type, String prefix) {
+	private LoginPointerType(int id, LoginType type, String prefix, boolean internal) {
 		this.id = id;
 		this.type = type;
 		this.prefix = prefix;
+		this.internal = internal;
 	}
 
 	public int getId() {
@@ -67,6 +71,16 @@ public enum LoginPointerType {
 
 	public String getPrefix() {
 		return this.prefix;
+	}
+
+	/**
+	 * Whether or not this login pointer type is a special, internally generated
+	 * type.
+	 * 
+	 * @return {@code true} if internal pointer type.
+	 */
+	public boolean isInternalType() {
+		return this.internal;
 	}
 
 	public ModelKey makeKey(String id) {
@@ -85,13 +99,13 @@ public enum LoginPointerType {
 				type = LoginPointerType.ANONYMOUS;
 				break;
 			case 2:
-				type = LoginPointerType.PASSWORD;
-				break;
-			case 3:
 				type = LoginPointerType.API_KEY;
 				break;
-			case 4:
+			case 3:
 				type = LoginPointerType.REFRESH_TOKEN;
+				break;
+			case 4:
+				type = LoginPointerType.PASSWORD;
 				break;
 			case 5:
 				type = LoginPointerType.OAUTH_GOOGLE;

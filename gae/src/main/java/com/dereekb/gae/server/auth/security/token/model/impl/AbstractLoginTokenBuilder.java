@@ -43,7 +43,6 @@ public abstract class AbstractLoginTokenBuilder<T extends LoginTokenImpl>
 		T loginToken = this.makeLoginToken();
 
 		loginToken.setSubject(anonymousId);
-		loginToken.setAnonymous(true);
 		loginToken.setPointerType(LoginPointerType.ANONYMOUS);
 
 		return loginToken;
