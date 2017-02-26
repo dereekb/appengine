@@ -2,20 +2,27 @@ package com.dereekb.gae.web.api.auth.controller.token;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
+import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Controller for refresh tokens.
@@ -45,7 +52,7 @@ public class LoginTokenController {
 		this.delegate = delegate;
 	}
 
-	// MARK: Controller
+	// MARK: Authentication
 	/**
 	 * Creates a refresh token using the current authentication.
 	 */
@@ -57,6 +64,37 @@ public class LoginTokenController {
 		return this.makeRefreshToken(loginToken);
 	}
 
+	/**
+	 * Resets all authentication.
+	 * 
+	 * @param loginKey
+	 *            Optional key corresponding to a {@link Login}.
+	 * @return {@link ApiResponse}. Never {@code null}.
+	 * @throws NoSecurityContextException
+	 *             thrown if no security is available.
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/reset", "/reset/{login}" }, method = RequestMethod.POST, produces = "application/json")
+	public final ApiResponse resetAuthentication(@PathVariable(value = "login", required = false) String loginKey)
+	        throws NoSecurityContextException {
+		ApiResponseImpl response = null;
+
+		try {
+			ModelKey modified = this.delegate.resetAuthentication(loginKey);
+			response = new ApiResponseImpl(true);
+			response.setData(new ApiResponseDataImpl("Modified", modified.toString()));
+		} catch (NoSecurityContextException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
+	// MARK: No Authentication
 	/**
 	 * Creates a refresh token using the input authentication token.
 	 */

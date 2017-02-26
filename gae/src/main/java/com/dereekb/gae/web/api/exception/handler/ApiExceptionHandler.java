@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.dereekb.gae.utilities.time.exception.RateLimitException;
 import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
@@ -143,6 +144,13 @@ public class ApiExceptionHandler {
 		response.setError(error);
 
 		return response;
+	}
+
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
+	@ExceptionHandler(RateLimitException.class)
+	public ApiResponse handleException(RateLimitException e) {
+		return ApiResponseImpl.makeFailure(e);
 	}
 
 	// MARK: Validation

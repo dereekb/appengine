@@ -30,4 +30,17 @@ public class DateUtilityTests {
 		}
 	}
 
+	@Test
+	public void testTimeHasPassed() {
+		Long time = 5000L;	// 5 seconds
+
+		Date origin = new Date(0);
+		Date now = new Date(time * 2);	// 10 seconds
+
+		Assert.assertTrue(DateUtility.timeHasPassed(now, origin, time));
+		Assert.assertTrue(DateUtility.timeHasPassed(new Date(time), origin, time));
+		Assert.assertFalse(DateUtility.timeHasPassed(origin, origin, time));
+		Assert.assertFalse(DateUtility.timeHasPassed(new Date(time - 5), origin, time));
+	}
+
 }

@@ -1,14 +1,21 @@
 package com.dereekb.gae.web.api.auth.controller.token.impl;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
+import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
+import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
+import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.refresh.RefreshTokenService;
 import com.dereekb.gae.server.auth.security.token.refresh.exception.RefreshTokenExpiredException;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.time.exception.RateLimitException;
 import com.dereekb.gae.web.api.auth.controller.token.LoginTokenControllerDelegate;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
@@ -25,7 +32,8 @@ public class LoginTokenControllerDelegateImpl
 	private LoginTokenService loginTokenService;
 	private RefreshTokenService refreshTokenService;
 
-	public LoginTokenControllerDelegateImpl(LoginTokenService loginTokenService, RefreshTokenService refreshTokenService) {
+	public LoginTokenControllerDelegateImpl(LoginTokenService loginTokenService,
+	        RefreshTokenService refreshTokenService) {
 		this(loginTokenService, loginTokenService, refreshTokenService);
 	}
 
@@ -89,6 +97,42 @@ public class LoginTokenControllerDelegateImpl
 		LoginPointer pointer = this.refreshTokenService.loadRefreshTokenPointer(loginToken);
 		String encodedToken = this.loginTokenService.encodeLoginToken(pointer);
 		return new LoginTokenPair(encodedToken);
+	}
+
+	@Override
+	public ModelKey resetAuthentication(String loginKeyString)
+	        throws NoSecurityContextException,
+	            TokenUnauthorizedException,
+	            UnavailableModelException,
+	            RateLimitException {
+
+		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
+		LoginTokenUserDetails details = authentication.getPrincipal();
+
+		ModelKey key = null;
+
+		switch (details.getUserType()) {
+			case ADMINISTRATOR:
+				if (loginKeyString != null) {
+					key = ModelKey.convertNumberString(loginKeyString);
+				} else {
+					key = details.getLoginKey();
+				}
+				break;
+			case USER:
+				key = details.getLoginKey();
+				break;
+			default:
+				break;
+		}
+
+		if (key == null) {
+			throw new TokenUnauthorizedException();
+		}
+
+		this.refreshTokenService.resetAuthentication(key);
+
+		return key;
 	}
 
 }

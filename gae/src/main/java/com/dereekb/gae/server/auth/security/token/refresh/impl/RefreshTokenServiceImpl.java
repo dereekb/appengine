@@ -3,6 +3,7 @@ package com.dereekb.gae.server.auth.security.token.refresh.impl;
 import java.util.Date;
 import java.util.Set;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
@@ -13,9 +14,11 @@ import com.dereekb.gae.server.auth.security.token.refresh.RefreshTokenService;
 import com.dereekb.gae.server.auth.security.token.refresh.exception.AuthenticationPurgeException;
 import com.dereekb.gae.server.auth.security.token.refresh.exception.RefreshTokenExpiredException;
 import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.time.DateUtility;
+import com.dereekb.gae.utilities.time.exception.RateLimitException;
 
 /**
  * {@link RefreshTokenService} implementation.
@@ -29,6 +32,9 @@ public class RefreshTokenServiceImpl
 	// 5 Seconds of Precision
 	public static final Long DEFAULT_PRECISION = 5000L;
 
+	// 2 minute authentication reset cooldown.
+	public static final Long DEFAULT_RESET_COOLDOWN = 2 * 60 * 1000L;
+
 	// 60 Days Default
 	private static final Long DEFAULT_EXPIRATION_TIME = 60 * 24 * 60 * 60 * 1000L;
 
@@ -36,28 +42,29 @@ public class RefreshTokenServiceImpl
 	        LoginPointerType.API_KEY, LoginPointerType.SYSTEM);
 
 	private Long timePrecision = DEFAULT_PRECISION;
+	private Long resetCooldown = DEFAULT_RESET_COOLDOWN;
 
-	private Getter<Login> loginGetter;
+	private GetterSetter<Login> loginGetterSetter;
 	private Getter<LoginPointer> loginPointerGetter;
 	private Set<LoginPointerType> typeBlackList = BLACK_LISTED_TYPES;
 
 	private Long expirationTime = DEFAULT_EXPIRATION_TIME;
 
-	public RefreshTokenServiceImpl(Getter<Login> loginGetter, Getter<LoginPointer> loginPointerGetter) {
-		this.setLoginGetter(loginGetter);
+	public RefreshTokenServiceImpl(GetterSetter<Login> loginGetterSetter, Getter<LoginPointer> loginPointerGetter) {
+		this.setLoginGetterSetter(loginGetterSetter);
 		this.setLoginPointerGetter(loginPointerGetter);
 	}
 
-	public Getter<Login> getLoginGetter() {
-		return this.loginGetter;
+	public GetterSetter<Login> getLoginGetterSetter() {
+		return this.loginGetterSetter;
 	}
 
-	public void setLoginGetter(Getter<Login> loginGetter) {
-		if (loginGetter == null) {
-			throw new IllegalArgumentException("LoginGetter cannot be null.");
+	public void setLoginGetterSetter(GetterSetter<Login> loginGetterSetter) {
+		if (loginGetterSetter == null) {
+			throw new IllegalArgumentException("LoginGetterSetter cannot be null.");
 		}
 
-		this.loginGetter = loginGetter;
+		this.loginGetterSetter = loginGetterSetter;
 	}
 
 	public Getter<LoginPointer> getLoginPointerGetter() {
@@ -94,6 +101,30 @@ public class RefreshTokenServiceImpl
 		}
 
 		this.typeBlackList = typeBlackList;
+	}
+
+	public Long getTimePrecision() {
+		return this.timePrecision;
+	}
+
+	public void setTimePrecision(Long timePrecision) {
+		if (timePrecision == null) {
+			throw new IllegalArgumentException("TimePrecision cannot be null.");
+		}
+
+		this.timePrecision = timePrecision;
+	}
+
+	public Long getResetCooldown() {
+		return this.resetCooldown;
+	}
+
+	public void setResetCooldown(Long resetCooldown) {
+		if (resetCooldown == null) {
+			throw new IllegalArgumentException("ResetCooldown cannot be null.");
+		}
+
+		this.resetCooldown = resetCooldown;
 	}
 
 	// MARK: RefreshTokenService
@@ -139,6 +170,28 @@ public class RefreshTokenServiceImpl
 		return loginPointer;
 	}
 
+	@Override
+	public void resetAuthentication(ModelKey loginKey) throws UnavailableModelException, RateLimitException {
+		Login login = this.loginGetterSetter.get(loginKey);
+
+		if (login == null) {
+			throw new UnavailableModelException(loginKey);
+		}
+
+		Date lastResetDate = login.getAuthReset();
+
+		if (DateUtility.timeHasPassed(lastResetDate, this.resetCooldown) == false) {
+			throw new RateLimitException("Too early to reset authentication.");
+		}
+
+		this.resetAuthentication(login);
+	}
+
+	public void resetAuthentication(Login login) {
+		login.setAuthReset(new Date());
+		this.loginGetterSetter.save(login, true);
+	}
+
 	// MARK: Internal
 	private void assertAuthenticationValid(Login login,
 	                                       LoginToken loginToken) {
@@ -153,7 +206,7 @@ public class RefreshTokenServiceImpl
 
 	private Login loadLogin(LoginPointer loginPointer) throws AuthenticationPurgeException {
 		ModelKey loginKey = loginPointer.getLoginModelKey();
-		Login login = this.loginGetter.get(loginKey);
+		Login login = this.loginGetterSetter.get(loginKey);
 
 		if (login == null) {
 			throw new AuthenticationPurgeException("Login was purged.");

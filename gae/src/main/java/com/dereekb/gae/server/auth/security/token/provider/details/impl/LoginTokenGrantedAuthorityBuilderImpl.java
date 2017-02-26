@@ -132,9 +132,6 @@ public class LoginTokenGrantedAuthorityBuilderImpl
 		LoginPointerType type = token.getPointerType();
 		authorities.addAll(this.loginPointerAuthorityBuilder.getGrantedAuthorities(type));
 
-		System.out.println(token.toString());
-		System.out.println(authorities.toString());
-
 		return authorities;
 	}
 

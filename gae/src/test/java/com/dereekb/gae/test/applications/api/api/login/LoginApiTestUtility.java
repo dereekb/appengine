@@ -56,6 +56,31 @@ public class LoginApiTestUtility {
 		return this.getTokenFromResponse(result);
 	}
 
+	public String resetTokenAuth(String token) throws Exception {
+		return this.resetTokenAuth(token, "");
+	}
+
+	public String resetTokenAuth(String token,
+	                             String key)
+	        throws Exception {
+		MvcResult result = this.sendTokenAuthReset(token, key);
+
+		// {"data":{"type":"modified","data":"2"}}
+		String content = result.getResponse().getContentAsString();
+
+		JsonElement json = PARSER.parse(content);
+		return json.getAsJsonObject().get("data").getAsJsonObject().get("data").getAsString();
+	}
+
+	public MvcResult sendTokenAuthReset(String token,
+	                                    String key)
+	        throws Exception {
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		        .post("/login/auth/token/reset" + key);
+
+		return this.webServiceTester.performSecureHttpRequest(loginRequestBuilder, token).andReturn();
+	}
+
 	// MARK: Register
 	public String register(String token) throws Exception {
 		MockHttpServletRequestBuilder registerRequestBuilder = MockMvcRequestBuilders.post("/login/auth/register");

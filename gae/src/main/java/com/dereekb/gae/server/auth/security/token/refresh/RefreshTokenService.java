@@ -1,10 +1,14 @@
 package com.dereekb.gae.server.auth.security.token.refresh;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.refresh.exception.AuthenticationPurgeException;
 import com.dereekb.gae.server.auth.security.token.refresh.exception.RefreshTokenExpiredException;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.time.exception.RateLimitException;
 
 /**
  * Service used for creating and building refresh tokens.
@@ -41,5 +45,15 @@ public interface RefreshTokenService {
 	 * @throws RefreshTokenExpiredException
 	 */
 	public LoginPointer loadRefreshTokenPointer(LoginToken refreshToken) throws RefreshTokenExpiredException;
+
+	/**
+	 * Resets authentication for the referenced {@link Login}.
+	 * 
+	 * @throws UnavailableModelException
+	 *             thrown if the target login is not available.
+	 * @throws RateLimitException
+	 *             thrown if the authentication was recently reset.
+	 */
+	public void resetAuthentication(ModelKey loginKey) throws UnavailableModelException, RateLimitException;
 
 }
