@@ -131,7 +131,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		MockHttpServletRequestBuilder registerRequestBuilder = MockMvcRequestBuilders.post(LOGIN_REGISTER_URL);
 		MvcResult result = this.performHttpRequest(registerRequestBuilder).andReturn();
 
-		Assert.assertTrue(result.getResponse().getStatus() == HttpServletResponse.SC_UNAUTHORIZED);
+		Assert.assertTrue(result.getResponse().getStatus() == HttpServletResponse.SC_FORBIDDEN);
 
 	}
 

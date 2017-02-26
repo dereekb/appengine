@@ -110,6 +110,16 @@
 		<security:intercept-url request-matcher-ref="loginKeyObjectApiPathRequestMatcher"
 			access="!hasAnyRole('ROLE_LOGINTYPE_API', 'ROLE_ANON')" />
 
+		<!-- Secured Owned Model Patterns -->
+		<security:intercept-url request-matcher-ref="securedModelPatternMatcher"
+			access="hasRole('ROLE_USER')" />
+
+		<!-- Other Extension Resources -->
+		<security:intercept-url pattern="/search"
+			access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/upload"
+			access="hasRole('ROLE_USER')" />
+
 		<!-- Register Patterns -->
 		<security:intercept-url pattern="/login/auth/register"
 			access="hasRole('ROLE_NEW_USER')" method="POST" />
@@ -123,16 +133,6 @@
 			access="hasRole('ROLE_USER')" method="GET" />
 		<security:intercept-url pattern="/login/auth/token/reset/*"
 			access="hasRole('ROLE_ADMIN')" method="GET" />
-
-		<!-- Secured Owned Model Patterns -->
-		<security:intercept-url request-matcher-ref="securedModelPatternMatcher"
-			access="hasRole('ROLE_USER')" />
-
-		<!-- Other Extension Resources -->
-		<security:intercept-url pattern="/search"
-			access="hasRole('ROLE_USER')" />
-		<security:intercept-url pattern="/upload"
-			access="hasRole('ROLE_USER')" />
 
 		<!-- Everything else protected by isAuthenticated. -->
 		<security:intercept-url pattern="/**"
