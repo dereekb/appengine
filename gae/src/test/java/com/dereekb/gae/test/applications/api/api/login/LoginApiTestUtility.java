@@ -101,6 +101,26 @@ public class LoginApiTestUtility {
 		return this.getTokenFromResponse(result);
 	}
 
+	// MARK: OAuth
+	public String createOAuthLoginWithToken(String type,
+	                                        String token)
+	        throws Exception {
+		MvcResult result = this.sendCreateOAuthLoginWithToken(type, token);
+		return this.getTokenFromResponse(result);
+	}
+
+	public MvcResult sendCreateOAuthLoginWithToken(String type,
+	                                               String token)
+	        throws Exception {
+
+		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		        .post("/login/auth/oauth/" + type + "/token");
+		loginRequestBuilder.param("token", token);
+		loginRequestBuilder.accept("application/json");
+
+		return this.webServiceTester.mockMvcPerform(loginRequestBuilder).andReturn();
+	}
+
 	// MARK: Tokens
 	public String getTokenFromResponse(MvcResult result) throws Exception {
 		MockHttpServletResponse response = result.getResponse();

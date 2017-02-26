@@ -332,7 +332,17 @@ public class LoginTokenUserDetailsBuilderImpl
 		@Override
 		public LoginTokenUserType getUserType() {
 			if (this.userType == null) {
-				this.userType = (this.isAdministrator()) ? LoginTokenUserType.ADMINISTRATOR : LoginTokenUserType.USER;
+				LoginTokenUserType userType;
+
+				if (this.isAdministrator()) {
+					userType = LoginTokenUserType.ADMINISTRATOR;
+				} else {
+					// Is never anonymous here due to separate type.
+					userType = (this.getLoginToken().isNewUser()) ? LoginTokenUserType.NEW_USER
+					        : LoginTokenUserType.USER;
+				}
+
+				this.userType = userType;
 			}
 
 			return this.userType;
