@@ -18,8 +18,6 @@ public abstract class AbstractRequestMatcher
 
 	public static final boolean DEFAULT_CASE_SENSITIVE = false;
 
-	private boolean prependServletPath = false;
-
 	protected final boolean caseSensitive;
 	private RequestMethodMatcher methodMatcher;
 
@@ -35,14 +33,6 @@ public abstract class AbstractRequestMatcher
 	public AbstractRequestMatcher(RequestMethodMatcher methodMatcher, boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
 		this.setMethodMatcher(methodMatcher);
-	}
-
-	public boolean getPrependServletPath() {
-		return this.prependServletPath;
-	}
-
-	public void setPrependServletPath(boolean prependServletPath) {
-		this.prependServletPath = prependServletPath;
 	}
 
 	public boolean isCaseSensitive() {
@@ -92,10 +82,10 @@ public abstract class AbstractRequestMatcher
 
 	// MARK: Utility
 	private String getRequestPath(HttpServletRequest request) {
-		String url = request.getPathInfo();
+		String url = request.getServletPath();
 
-		if (this.prependServletPath) {
-			url = request.getServletPath() + url;
+		if (request.getPathInfo() != null) {
+			url += request.getPathInfo();
 		}
 
 		if (this.caseSensitive == false) {
