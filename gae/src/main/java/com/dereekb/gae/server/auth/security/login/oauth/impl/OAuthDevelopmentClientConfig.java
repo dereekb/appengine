@@ -19,9 +19,15 @@ public final class OAuthDevelopmentClientConfig
 
 	public OAuthDevelopmentClientConfig(OAuthClientConfig productionConfig, OAuthClientConfig developmentConfig)
 	        throws IllegalArgumentException {
+		this(productionConfig, developmentConfig, false);
+	}
+
+	public OAuthDevelopmentClientConfig(OAuthClientConfig productionConfig,
+	        OAuthClientConfig developmentConfig,
+	        boolean unitTestsOnly) throws IllegalArgumentException {
 		this.setProductionConfig(productionConfig);
 		this.setDevelopmentConfig(developmentConfig);
-		this.config = this.getActualConfig();
+		this.config = this.getActualConfig(unitTestsOnly);
 	}
 
 	public OAuthClientConfig getProductionConfig() {
@@ -44,12 +50,20 @@ public final class OAuthDevelopmentClientConfig
 	}
 
 	// MARK: Internal
-	private OAuthClientConfig getActualConfig() {
-		if (GoogleAppEngineUtility.isDevelopmentEnvironment()) {
-			return this.developmentConfig;
-		} else {
-			return this.productionConfig;
+	private OAuthClientConfig getActualConfig(boolean unitTestsOnly) {
+		switch (GoogleAppEngineUtility.getEnvironment()) {
+			case UNIT_TESTING:
+				return this.developmentConfig;
+			case DEVELOPMENT:
+				if (unitTestsOnly == false) {
+					return this.developmentConfig;
+				}
+				break;
+			default:
+				break;
 		}
+
+		return this.productionConfig;
 	}
 
 	private void setProductionConfig(OAuthClientConfig productionConfig) throws IllegalArgumentException {

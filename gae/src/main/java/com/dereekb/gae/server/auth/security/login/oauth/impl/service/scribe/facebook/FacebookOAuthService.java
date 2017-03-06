@@ -2,11 +2,18 @@ package com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.fac
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
@@ -30,6 +37,7 @@ import com.github.scribejava.apis.FacebookApi;
 import com.github.scribejava.apis.facebook.FacebookAccessTokenErrorResponse;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.exceptions.OAuthException;
+import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -165,10 +173,44 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 	// MARK: Authorization Info
 	private static final String FACEBOOK_USER_REQUEST_URL_PREFIX = "https://graph.facebook.com/v2.8/me?fields=id,name,email&access_token=";
 
+	private static final String FACEBOOK_APP_SECRET_HASH_ALGORITHM = "HmacSHA256";
+	private static final String FACEBOOK_APP_SECRET_PROOF_PARAM = "appsecret_proof";
+
 	@Override
 	protected String getLoginInfoRequestUrl(OAuthAccessToken token) {
 		String accessToken = token.getAccessToken();
 		return FACEBOOK_USER_REQUEST_URL_PREFIX + accessToken;
+	}
+
+	@Override
+	protected OAuthRequest buildRequest(OAuthAccessToken token) {
+		OAuthRequest request = super.buildRequest(token);
+
+		// HMAC signature
+		try {
+			String secret = this.getClientConfig().getClientSecret();
+			byte[] secretBytes = secret.getBytes("utf-8");
+			SecretKeySpec keySpec = new SecretKeySpec(secretBytes, FACEBOOK_APP_SECRET_HASH_ALGORITHM);
+
+			Mac mac = Mac.getInstance(FACEBOOK_APP_SECRET_HASH_ALGORITHM);
+			mac.init(keySpec);
+
+			String accessToken = token.getAccessToken();
+			byte[] accessTokenBytes = accessToken.getBytes("utf-8");
+
+			byte[] sig = mac.doFinal(accessTokenBytes);
+			String hex = DatatypeConverter.printHexBinary(sig).toLowerCase();
+
+			request.addParameter(FACEBOOK_APP_SECRET_PROOF_PARAM, hex);
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		} catch (InvalidKeyException e) {
+			throw new RuntimeException(e);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+
+		return request;
 	}
 
 	@Override
