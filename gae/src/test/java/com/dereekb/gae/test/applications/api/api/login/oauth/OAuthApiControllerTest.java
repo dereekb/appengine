@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
@@ -15,6 +14,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthServiceManager;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAuthorizationInfoImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthLoginInfoImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
 import com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginController;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,6 +39,8 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 	@Autowired
 	private OAuthLoginController loginController;
 
+	private LoginApiTestUtility loginTestUtility = new LoginApiTestUtility(this);
+
 	// MARK: OAuthServer tests
 	@Test
 	public void testOAuthLogin() {
@@ -55,12 +57,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 	// MARK: Mock Tests
 	@Test
 	public void testInvalidAuthToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder
-		        .post("/login/auth/oauth/google/token");
-		loginRequestBuilder.param("token", "INVALID_TOKEN");
-		loginRequestBuilder.accept("application/json");
-
-		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
+		MvcResult loginResult = this.loginTestUtility.sendCreateOAuthLoginWithToken("google", "INVALID_TOKEN");
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
@@ -80,12 +77,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testInvalidRequestType() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder
-		        .post("/login/auth/oauth/UNAVAILABLE/token");
-		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
-		loginRequestBuilder.accept("application/json");
-
-		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
+		MvcResult loginResult = this.loginTestUtility.sendCreateOAuthLoginWithToken("UNAVAILABLE", "INVALID_TOKEN");
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
@@ -96,11 +88,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testMissingAccessToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder
-		        .post("/login/auth/oauth/google/token");
-		loginRequestBuilder.accept("application/json");
-
-		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
+		MvcResult loginResult = this.loginTestUtility.sendCreateOAuthLoginWithToken("google", null);
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 
 		Assert.assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
