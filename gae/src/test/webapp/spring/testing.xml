@@ -76,7 +76,7 @@
 			<ref bean="taskQueueXmlPath" />
 		</property>
 		<property name="callbackClass"
-			value="com.dereekb.gae.test.spring.CoreServiceTestingContext.TestLocalTaskQueueCallback" />
+			value="com.dereekb.gae.test.spring.WebServiceTestingContextImpl.TestLocalTaskQueueCallback" />
 		<property name="disableAutoTaskExecution" value="false"></property>
 	</bean>
 

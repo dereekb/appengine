@@ -38,6 +38,16 @@ public class UrlMatchTest {
 	}
 
 	@Test
+	public void testWildcardPrefixAntMatcher() {
+		String pattern = "**/a/b/c/**";
+		String directPath = "/a/b/c";
+		String apiPath = "api/service/version" + directPath;
+
+		Assert.assertTrue("Should match the entire path", antMatcher.match(pattern, apiPath));
+		Assert.assertFalse("Will not match the direct path", antMatcher.match(pattern, directPath));
+	}
+
+	@Test
 	public void testMultiTypeAntRequestMatcher() {
 		String pattern = "/{type}/query";
 		Set<String> types = new HashSet<String>();

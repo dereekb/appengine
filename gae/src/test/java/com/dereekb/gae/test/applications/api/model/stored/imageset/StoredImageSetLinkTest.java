@@ -211,7 +211,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		this.storedImageCrudService.delete(deleteRequest);
 
 		// Let the TaskQueue Complete
-		TestLocalTaskQueueCallback.waitUntilComplete();
+		this.waitForTaskQueueToComplete();
 
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));

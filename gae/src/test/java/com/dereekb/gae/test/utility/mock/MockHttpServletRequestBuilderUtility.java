@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilderImpl;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
@@ -58,13 +60,19 @@ public class MockHttpServletRequestBuilderUtility {
 	}
 
 	// MARK: ClientRequest
+	@Deprecated
 	public static MockHttpServletRequestBuilder convert(ClientRequest request) {
+		return convert(request, WebServiceRequestBuilderImpl.SINGLETON);
+	}
+
+	public static MockHttpServletRequestBuilder convert(ClientRequest request,
+	                                                    WebServiceRequestBuilder serviceRequestBuilder) {
 		HttpMethod method = convert(request.getMethod());
 
 		SimplePath relativePath = request.getUrl().getRelativeUrlPath();
 		String url = relativePath.getPath();
 
-		MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.request(method, url);
+		MockHttpServletRequestBuilder requestBuilder = serviceRequestBuilder.request(method, url);
 
 		Parameters headers = request.getHeaders();
 		if (headers != null) {
@@ -87,7 +95,14 @@ public class MockHttpServletRequestBuilderUtility {
 	}
 
 	// MARK: Google App Engine Task Queue
+	@Deprecated
 	public static MockHttpServletRequestBuilder convert(URLFetchRequest arg0) throws UnsupportedEncodingException {
+		return convert(arg0, WebServiceRequestBuilderImpl.SINGLETON);
+	}
+
+	public static MockHttpServletRequestBuilder convert(URLFetchRequest arg0,
+	                                                    WebServiceRequestBuilder serviceRequestBuilder)
+	        throws UnsupportedEncodingException {
 		HttpMethod method = convert(arg0.getMethod());
 
 		// Decode to prevent the mock request from encoding an encoded

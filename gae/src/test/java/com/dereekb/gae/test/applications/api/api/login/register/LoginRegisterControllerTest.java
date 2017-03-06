@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -128,7 +127,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 
 		this.testLoginTokenContext.generateAnonymousLogin();
 
-		MockHttpServletRequestBuilder registerRequestBuilder = MockMvcRequestBuilders.post(LOGIN_REGISTER_URL);
+		MockHttpServletRequestBuilder registerRequestBuilder = this.serviceRequestBuilder.post(LOGIN_REGISTER_URL);
 		MvcResult result = this.performHttpRequest(registerRequestBuilder).andReturn();
 
 		Assert.assertTrue(result.getResponse().getStatus() == HttpServletResponse.SC_FORBIDDEN);

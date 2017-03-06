@@ -53,13 +53,15 @@ public final class OAuthLoginController {
 	 *            OAuth service/type. Example "google".
 	 * @param authCode
 	 *            OAuth authorization code.
+	 * @param codeType
+	 *            Optional code type. May be {@code null}.
 	 * @return {@link LoginTokenPair}. Never {@code null}.
 	 */
 	@ResponseBody
 	@RequestMapping(path = "/{type}/code", method = RequestMethod.POST, produces = "application/json")
 	public final LoginTokenPair loginWithAuthCode(@PathVariable("type") String type,
 	                                              @RequestParam("code") @NotEmpty String authCode,
-	                                              @RequestParam("type") String codeType)
+	                                              @RequestParam(name = "type", required = false) String codeType)
 	        throws ApiLoginException,
 	            ApiCaughtRuntimeException {
 		LoginTokenPair response = null;

@@ -6,7 +6,11 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
+
 public interface WebServiceTester {
+
+	public WebServiceRequestBuilder getRequestBuilder();
 
 	// MARK: Mock Requests
 	public void performHttpRequests(List<MockHttpServletRequestBuilder> mockRequests) throws Exception;

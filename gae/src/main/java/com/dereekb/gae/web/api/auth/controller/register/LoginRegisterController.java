@@ -6,9 +6,9 @@ import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,7 +80,10 @@ public class LoginRegisterController {
 	 */
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(path = "/tokens", method = RequestMethod.POST, produces = "application/json")
-	public final void registerLogins(@RequestParam @NotEmpty @Min(2) List<String> tokens) {
+	public final void registerLogins(@RequestBody @NotEmpty @Min(2) List<String> tokens) {
+
+		// TODO: Need to update this to use the current security.
+
 		try {
 			this.delegate.registerLogins(tokens);
 		} catch (TokenException e) {

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
@@ -56,7 +55,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 	// MARK: Mock Tests
 	@Test
 	public void testInvalidAuthToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder
 		        .post("/login/auth/oauth/google/token");
 		loginRequestBuilder.param("token", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
@@ -68,7 +67,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 		Assert.assertTrue("Expected 400 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 400);
 		Assert.assertNotNull(loginResponseData);
 
-		TestLocalTaskQueueCallback.waitUntilComplete();
+		this.waitForTaskQueueToComplete();
 
 		try {
 			JsonElement loginResponseJson = this.parser.parse(loginResponseData);
@@ -81,7 +80,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testInvalidRequestType() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder
 		        .post("/login/auth/oauth/UNAVAILABLE/token");
 		loginRequestBuilder.param("accessToken", "INVALID_TOKEN");
 		loginRequestBuilder.accept("application/json");
@@ -97,7 +96,7 @@ public class OAuthApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testMissingAccessToken() throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder
 		        .post("/login/auth/oauth/google/token");
 		loginRequestBuilder.accept("application/json");
 

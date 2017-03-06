@@ -4,10 +4,9 @@ import org.junit.Assert;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.dereekb.gae.test.spring.CoreServiceTestingContext.TestLocalTaskQueueCallback;
 import com.dereekb.gae.test.spring.WebServiceTester;
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -42,13 +41,15 @@ public class LoginApiTestUtility {
 
 	// MARK: Refresh Token
 	public String getRefreshToken(String token) throws Exception {
-		MockHttpServletRequestBuilder registerRequestBuilder = MockMvcRequestBuilders.get("/login/auth/token/refresh");
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder registerRequestBuilder = serviceRequestBuilder.get("/login/auth/token/refresh");
 		MvcResult result = this.webServiceTester.performSecureHttpRequest(registerRequestBuilder, token).andReturn();
 		return this.getTokenFromResponse(result);
 	}
 
 	public String authWithRefreshToken(String token) throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/token/login");
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder.post("/login/auth/token/login");
 		loginRequestBuilder.content(token);
 		loginRequestBuilder.contentType("application/json");
 
@@ -75,15 +76,15 @@ public class LoginApiTestUtility {
 	public MvcResult sendTokenAuthReset(String token,
 	                                    String key)
 	        throws Exception {
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
-		        .post("/login/auth/token/reset" + key);
-
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder.post("/login/auth/token/reset" + key);
 		return this.webServiceTester.performSecureHttpRequest(loginRequestBuilder, token).andReturn();
 	}
 
 	// MARK: Register
 	public String register(String token) throws Exception {
-		MockHttpServletRequestBuilder registerRequestBuilder = MockMvcRequestBuilders.post("/login/auth/register");
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder registerRequestBuilder = serviceRequestBuilder.post("/login/auth/register");
 		MvcResult result = this.webServiceTester.performSecureHttpRequest(registerRequestBuilder, token).andReturn();
 		return this.getTokenFromResponse(result);
 	}
@@ -92,7 +93,8 @@ public class LoginApiTestUtility {
 	public String createPasswordLogin(String username,
 	                                  String password)
 	        throws Exception {
-		MockHttpServletRequestBuilder createRequestBuilder = MockMvcRequestBuilders.post("/login/auth/pass/create");
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder createRequestBuilder = serviceRequestBuilder.post("/login/auth/pass/create");
 		createRequestBuilder.param("username", username);
 		createRequestBuilder.param("password", password);
 		createRequestBuilder.accept("application/json");
@@ -113,7 +115,8 @@ public class LoginApiTestUtility {
 	                                               String token)
 	        throws Exception {
 
-		MockHttpServletRequestBuilder loginRequestBuilder = MockMvcRequestBuilders
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder
 		        .post("/login/auth/oauth/" + type + "/token");
 		loginRequestBuilder.param("token", token);
 		loginRequestBuilder.accept("application/json");
@@ -133,7 +136,7 @@ public class LoginApiTestUtility {
 		Assert.assertTrue("Expected 200 but got " + response.getStatus() + ".", response.getStatus() == 200);
 		Assert.assertNotNull(createResponseData);
 
-		TestLocalTaskQueueCallback.waitUntilComplete();
+		this.webServiceTester.waitForTaskQueueToComplete();
 
 		JsonElement createResponseJson = PARSER.parse(createResponseData);
 		JsonObject object = createResponseJson.getAsJsonObject();
