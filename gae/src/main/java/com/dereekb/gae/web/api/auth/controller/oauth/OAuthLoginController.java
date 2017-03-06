@@ -46,8 +46,8 @@ public final class OAuthLoginController {
 
 	// MARK: Controller
 	/**
-	 * OAuth Login used by applications that have already retrieved an access
-	 * token.
+	 * OAuth Login used by applications that have only received an
+	 * authorization code.
 	 *
 	 * @param type
 	 *            OAuth service/type. Example "google".
@@ -58,7 +58,7 @@ public final class OAuthLoginController {
 	 * @return {@link LoginTokenPair}. Never {@code null}.
 	 */
 	@ResponseBody
-	@RequestMapping(path = "/{type}/code", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(path = "/{type}/code", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
 	public final LoginTokenPair loginWithAuthCode(@PathVariable("type") String type,
 	                                              @RequestParam("code") @NotEmpty String authCode,
 	                                              @RequestParam(name = "type", required = false) String codeType)
@@ -90,7 +90,7 @@ public final class OAuthLoginController {
 	 * @return {@link LoginTokenPair}. Never {@code null}.
 	 */
 	@ResponseBody
-	@RequestMapping(path = "/{type}/token", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(path = "/{type}/token", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
 	public final LoginTokenPair loginWithAccessToken(@PathVariable("type") String type,
 	                                                 @RequestParam("token") @NotEmpty String accessToken)
 	        throws ApiLoginException,

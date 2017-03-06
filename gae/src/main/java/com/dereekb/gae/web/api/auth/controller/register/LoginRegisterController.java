@@ -79,7 +79,7 @@ public class LoginRegisterController {
 	 * Returns a new {@link LoginTokenPair}.
 	 */
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(path = "/tokens", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(path = "/tokens", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public final void registerLogins(@RequestBody @NotEmpty @Min(2) List<String> tokens) {
 
 		// TODO: Need to update this to use the current security.

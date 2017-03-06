@@ -50,8 +50,8 @@ public class LoginApiTestUtility {
 	public String authWithRefreshToken(String token) throws Exception {
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder.post("/login/auth/token/login");
-		loginRequestBuilder.content(token);
-		loginRequestBuilder.contentType("application/json");
+		loginRequestBuilder.param("refreshToken", token);
+		loginRequestBuilder.contentType("application/x-www-form-urlencoded");
 
 		MvcResult result = this.webServiceTester.mockMvcPerform(loginRequestBuilder).andReturn();
 		return this.getTokenFromResponse(result);
@@ -119,6 +119,35 @@ public class LoginApiTestUtility {
 		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder
 		        .post("/login/auth/oauth/" + type + "/token");
 		loginRequestBuilder.param("token", token);
+		loginRequestBuilder.contentType("application/x-www-form-urlencoded");
+		loginRequestBuilder.accept("application/json");
+
+		return this.webServiceTester.mockMvcPerform(loginRequestBuilder).andReturn();
+	}
+
+	public String createOAuthLoginWithCode(String type,
+	                                       String authCode,
+	                                       String codeType)
+	        throws Exception {
+		MvcResult result = this.sendCreateOAuthLoginWithCode(type, authCode, codeType);
+		return this.getTokenFromResponse(result);
+	}
+
+	public MvcResult sendCreateOAuthLoginWithCode(String serviceType,
+	                                              String authCode,
+	                                              String codeType)
+	        throws Exception {
+
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder
+		        .post("/login/auth/oauth/" + serviceType + "/token");
+		loginRequestBuilder.param("code", authCode);
+
+		if (codeType != null) {
+			loginRequestBuilder.param("type", codeType);
+		}
+
+		loginRequestBuilder.contentType("application/x-www-form-urlencoded");
 		loginRequestBuilder.accept("application/json");
 
 		return this.webServiceTester.mockMvcPerform(loginRequestBuilder).andReturn();
@@ -131,14 +160,15 @@ public class LoginApiTestUtility {
 	}
 
 	public String getTokenFromResponse(MockHttpServletResponse response) throws Exception {
-		String createResponseData = response.getContentAsString();
+		String responseData = response.getContentAsString();
 
-		Assert.assertTrue("Expected 200 but got " + response.getStatus() + ".", response.getStatus() == 200);
-		Assert.assertNotNull(createResponseData);
+		Assert.assertTrue("Expected 200 but got " + response.getStatus() + ". " + responseData,
+		        response.getStatus() == 200);
+		Assert.assertNotNull(responseData);
 
 		this.webServiceTester.waitForTaskQueueToComplete();
 
-		JsonElement createResponseJson = PARSER.parse(createResponseData);
+		JsonElement createResponseJson = PARSER.parse(responseData);
 		JsonObject object = createResponseJson.getAsJsonObject();
 		String token = object.get("token").getAsString();
 

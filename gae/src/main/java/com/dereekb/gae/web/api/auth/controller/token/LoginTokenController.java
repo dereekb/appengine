@@ -3,9 +3,9 @@ package com.dereekb.gae.web.api.auth.controller.token;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -99,12 +99,12 @@ public class LoginTokenController {
 	 * Creates a refresh token using the input authentication token.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/refresh", method = RequestMethod.POST, produces = "application/json")
-	public final LoginTokenPair makeRefreshToken(@RequestBody @NotNull String token) {
+	@RequestMapping(value = "/refresh", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
+	public final LoginTokenPair makeRefreshToken(@RequestParam("accessToken") @NotNull String accessToken) {
 		LoginTokenPair response = null;
 
 		try {
-			EncodedLoginToken encodedToken = new EncodedLoginTokenImpl(token);
+			EncodedLoginToken encodedToken = new EncodedLoginTokenImpl(accessToken);
 			response = this.delegate.makeRefreshToken(encodedToken);
 		} catch (TokenException e) {
 			throw e;
@@ -119,8 +119,8 @@ public class LoginTokenController {
 	 * Authenticate using a refresh token.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
-	public final LoginTokenPair login(@RequestBody @NotNull String refreshToken) {
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
+	public final LoginTokenPair login(@RequestParam("refreshToken") @NotNull String refreshToken) {
 		LoginTokenPair response = null;
 
 		try {
