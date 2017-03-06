@@ -140,7 +140,7 @@ public class LoginApiTestUtility {
 
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder
-		        .post("/login/auth/oauth/" + serviceType + "/token");
+		        .post("/login/auth/oauth/" + serviceType + "/code");
 		loginRequestBuilder.param("code", authCode);
 
 		if (codeType != null) {

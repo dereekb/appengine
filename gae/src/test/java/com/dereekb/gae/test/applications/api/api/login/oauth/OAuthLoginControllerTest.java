@@ -26,9 +26,9 @@ import com.google.gson.JsonSyntaxException;
  *
  * @author dereekb
  *
- * @see OAuthApiController
+ * @see OAuthLoginController
  */
-public class OAuthApiControllerTest extends ApiApplicationTestContext {
+public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 
 	private JsonParser parser = new JsonParser();
 
