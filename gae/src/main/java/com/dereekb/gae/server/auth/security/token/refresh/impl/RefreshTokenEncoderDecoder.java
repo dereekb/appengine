@@ -33,6 +33,8 @@ public class RefreshTokenEncoderDecoder extends AbstractLoginTokenEncoderDecoder
 	@Override
 	protected void appendClaimsComponents(LoginToken loginToken,
 	                                      Claims claims) {
+		// Export login key for external use. Is not decoded below though.
+		claims.put(LoginTokenEncoderDecoderImpl.LOGIN_KEY, loginToken.getLoginId());
 		claims.put(LoginTokenEncoderDecoderImpl.LOGIN_POINTER_KEY, loginToken.getLoginPointerId());
 		claims.put(LoginTokenEncoderDecoderImpl.LOGIN_POINTER_TYPE_KEY, TYPE_OVERRIDE);
 	}
