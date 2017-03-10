@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
@@ -14,6 +16,10 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 
 	private static final String TEST_USERNAME = "tokenUsername";
 	private static final String TEST_PASSWORD = "tokenPassword";
+
+	@Autowired
+	@Qualifier("refreshTokenEncoderDecoder")
+	private RefreshTokenEncoderDecoder refreshEncoderDecoder;
 
 	@Autowired
 	@Qualifier("refreshTokenService")
@@ -31,6 +37,8 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 
 		// Get a refresh token.
 		String refreshToken = testUtility.getRefreshToken(fullUserToken);
+		DecodedLoginToken decodedRefreshToken = this.refreshEncoderDecoder.decodeLoginToken(refreshToken);
+		Assert.assertNotNull(decodedRefreshToken.getLoginId());
 
 		// Authenticate with the token.
 		String reauthToken = testUtility.authWithRefreshToken(refreshToken);
@@ -57,6 +65,7 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		} catch (AssertionError e) {
 			// Don't throw assertion error.
 		}
+
 	}
 
 	@Test

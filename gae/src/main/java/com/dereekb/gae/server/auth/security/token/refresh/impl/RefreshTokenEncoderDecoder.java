@@ -47,12 +47,14 @@ public class RefreshTokenEncoderDecoder extends AbstractLoginTokenEncoderDecoder
 		super.initFromClaims(loginToken, claims);
 
 		// Only decode the login pointer and type here.
+		Number login = claims.get(LoginTokenEncoderDecoderImpl.LOGIN_KEY, Number.class);
 		String loginPointer = claims.get(LoginTokenEncoderDecoderImpl.LOGIN_POINTER_KEY, String.class);
 
-		if (loginPointer == null) {
+		if (login == null || loginPointer == null) {
 			throw new TokenUnauthorizedException("Invalid refresh token.");
 		}
 
+		loginToken.setLogin(login.longValue());
 		loginToken.setLoginPointer(loginPointer);
 
 		Number typeNumber = claims.get(LoginTokenEncoderDecoderImpl.LOGIN_POINTER_TYPE_KEY, Number.class);

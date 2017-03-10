@@ -133,6 +133,7 @@ public class RefreshTokenServiceImpl
 	        throws AuthenticationPurgeException,
 	            TokenUnauthorizedException {
 
+		Long loginId = loginToken.getLoginId();
 		String loginPointerId = loginToken.getLoginPointerId();
 		LoginPointer loginPointer = this.loadLoginPointer(loginPointerId);
 
@@ -146,6 +147,7 @@ public class RefreshTokenServiceImpl
 
 		LoginTokenImpl refreshToken = new LoginTokenImpl();
 
+		refreshToken.setLogin(loginId);
 		refreshToken.setSubject(loginToken.getSubject());
 		refreshToken.setPointerType(LoginPointerType.REFRESH_TOKEN);
 		refreshToken.setLoginPointer(loginPointerId);
