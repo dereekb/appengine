@@ -91,7 +91,7 @@ public abstract class AbstractClientModelTemplateRequestSender<T extends UniqueM
 		ClientResponseErrorInfo failedPairsInfo = errorInfoMap.get(KeyedInvalidAttributeApiResponseBuilder.ERROR_CODE);
 
 		if (failedPairsInfo != null) {
-			failures = this.serializeFailuresFromErrorInfoData(failedPairsInfo);
+			failures = this.serializeInvalidAttributes(failedPairsInfo);
 		} else {
 			failures = Collections.emptyList();
 		}
@@ -99,12 +99,12 @@ public abstract class AbstractClientModelTemplateRequestSender<T extends UniqueM
 		return failures;
 	}
 
-	public List<KeyedInvalidAttribute> serializeFailuresFromErrorInfoData(ClientResponseErrorInfo keysErrorInfo) {
+	public List<KeyedInvalidAttribute> serializeInvalidAttributes(ClientResponseErrorInfo keysErrorInfo) {
 		JsonNode pairsData = keysErrorInfo.getErrorData();
-		return this.serializeFailures(pairsData);
+		return this.serializeInvalidAttributes(pairsData);
 	}
 
-	public List<KeyedInvalidAttribute> serializeFailures(JsonNode keysArrayNode) {
+	public List<KeyedInvalidAttribute> serializeInvalidAttributes(JsonNode keysArrayNode) {
 		List<KeyedInvalidAttribute> failures = new ArrayList<KeyedInvalidAttribute>();
 
 		TypeModelKeyConverter typeKeyConverter = this.getKeyTypeConverter();

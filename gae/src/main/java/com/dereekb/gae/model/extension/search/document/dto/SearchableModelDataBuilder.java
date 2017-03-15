@@ -33,7 +33,7 @@ public class SearchableModelDataBuilder<M extends SearchableDatabaseModel, D ext
 		D data = super.convertSingle(input);
 
 		// Search ID
-		data.setSearchIdentifier(input.getSearchIdentifier());
+		data.setSearchId(input.getSearchIdentifier());
 
 		return data;
 	}

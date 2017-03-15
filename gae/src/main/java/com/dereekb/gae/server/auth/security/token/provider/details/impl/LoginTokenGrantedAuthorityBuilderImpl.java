@@ -112,12 +112,16 @@ public class LoginTokenGrantedAuthorityBuilderImpl
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities(LoginToken token) {
 		Set<GrantedAuthority> authorities = null;
+		LoginPointerType type = token.getPointerType();
 
 		if (token.isAnonymous()) {
 			authorities = new HashSet<>(this.anonymousAuthorities);
 		} else if (token.isNewUser()) {
 			authorities = new HashSet<>(this.newUserAuthorities);
-		} else {
+		} else if (type != LoginPointerType.REFRESH_TOKEN) {
+			// TODO: Consider updating to better expose strategy for handling
+			// different types.
+
 			Long encodedRoles = token.getRoles();
 
 			if (encodedRoles != null) {
@@ -129,7 +133,6 @@ public class LoginTokenGrantedAuthorityBuilderImpl
 			authorities.addAll(this.tokenAuthorities);
 		}
 
-		LoginPointerType type = token.getPointerType();
 		authorities.addAll(this.loginPointerAuthorityBuilder.getGrantedAuthorities(type));
 
 		return authorities;

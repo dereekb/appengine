@@ -33,6 +33,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
+@Deprecated
 public class LoginAuthenticationFilter extends GenericFilterBean {
 
 	private static final String HOME_URL = "/";

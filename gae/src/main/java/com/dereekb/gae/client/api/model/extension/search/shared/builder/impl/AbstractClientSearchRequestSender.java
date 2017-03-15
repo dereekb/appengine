@@ -77,10 +77,12 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 
 		@Override
 		public Collection<T> getModelResults() throws KeysOnlySearchException {
-			if (this.isKeysOnlyResponse()) {
-				throw new KeysOnlySearchException();
-			} else {
-				this.modelResults = this.getDataSerializer().getModelResults();
+			if (this.modelResults == null) {
+				if (this.isKeysOnlyResponse()) {
+					throw new KeysOnlySearchException();
+				} else {
+					this.modelResults = this.getDataSerializer().getModelResults();
+				}
 			}
 
 			return this.modelResults;

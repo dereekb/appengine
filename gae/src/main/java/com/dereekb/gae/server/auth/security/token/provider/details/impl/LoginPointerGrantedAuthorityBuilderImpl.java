@@ -15,7 +15,8 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginPointerG
  * @author dereekb
  *
  */
-public class LoginPointerGrantedAuthorityBuilderImpl implements LoginPointerGrantedAuthorityBuilder {
+public class LoginPointerGrantedAuthorityBuilderImpl
+        implements LoginPointerGrantedAuthorityBuilder {
 
 	private static final String DEFAULT_NAME_FORMAT = "ROLE_LOGIN_%s";
 	private static final String DEFAULT_TYPE_FORMAT = "ROLE_LOGINTYPE_%s";
@@ -24,24 +25,25 @@ public class LoginPointerGrantedAuthorityBuilderImpl implements LoginPointerGran
 	private String typeFormat = DEFAULT_TYPE_FORMAT;
 
 	public LoginPointerGrantedAuthorityBuilderImpl() {}
-	
-	public LoginPointerGrantedAuthorityBuilderImpl(String nameFormat, String typeFormat) throws IllegalArgumentException {
+
+	public LoginPointerGrantedAuthorityBuilderImpl(String nameFormat, String typeFormat)
+	        throws IllegalArgumentException {
 		this.setNameFormat(nameFormat);
 		this.setTypeFormat(typeFormat);
 	}
-	
+
 	public String getNameFormat() {
 		return this.nameFormat;
 	}
-	
+
 	public void setNameFormat(String nameFormat) throws IllegalArgumentException {
 		if (nameFormat == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		this.nameFormat = nameFormat;
 	}
-	
+
 	public String getTypeFormat() {
 		return this.typeFormat;
 	}
@@ -50,23 +52,23 @@ public class LoginPointerGrantedAuthorityBuilderImpl implements LoginPointerGran
 		if (typeFormat == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		this.typeFormat = typeFormat;
 	}
 
 	@Override
 	public Set<GrantedAuthority> getGrantedAuthorities(LoginPointerType type) {
-		
+
 		String nameString = type.toString();
 		String typeString = type.getType().toString();
-		
-		String nameRole = String.format(nameFormat, nameString);
-		String typeRole = String.format(typeFormat, typeString);
-		
+
+		String nameRole = String.format(this.nameFormat, nameString);
+		String typeRole = String.format(this.typeFormat, typeString);
+
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(nameRole));
 		authorities.add(new SimpleGrantedAuthority(typeRole));
-		
+
 		return authorities;
 	}
 

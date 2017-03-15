@@ -33,7 +33,7 @@ public class SearchableModelDataReader<M extends SearchableDatabaseModel, D exte
 		M model = super.convertSingle(input);
 
 		// Owner ID
-		model.setSearchIdentifier(input.getSearchIdentifier());
+		model.setSearchIdentifier(input.getSearchId());
 
 		return model;
 	}
