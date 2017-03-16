@@ -24,6 +24,7 @@ public class LoginTokenTests {
 		loginToken.setLoginPointer("pointer");
 		loginToken.setExpiration(new Date(new Date().getTime() + (60 * 1000)));
 		loginToken.setIssued(new Date());
+		loginToken.setRefreshAllowed(true);
 
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
 		Assert.assertNotNull(encodedToken);
@@ -31,7 +32,7 @@ public class LoginTokenTests {
 		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken);
 		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
 		Assert.assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
-
+		Assert.assertTrue(decodedToken.isRefreshAllowed());
 	}
 
 	@Test

@@ -43,8 +43,11 @@ public interface RefreshTokenService {
 	 * @return {@link LoginPointer}. Never {@code null}.
 	 * 
 	 * @throws RefreshTokenExpiredException
+	 * @throws TokenUnauthorizedException
 	 */
-	public LoginPointer loadRefreshTokenPointer(LoginToken refreshToken) throws RefreshTokenExpiredException;
+	public LoginPointer loadRefreshTokenPointer(LoginToken refreshToken)
+	        throws RefreshTokenExpiredException,
+	            TokenUnauthorizedException;
 
 	/**
 	 * Resets authentication for the referenced {@link Login}.

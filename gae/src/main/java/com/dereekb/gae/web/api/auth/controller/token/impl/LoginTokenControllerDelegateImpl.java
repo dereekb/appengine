@@ -28,6 +28,8 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 public class LoginTokenControllerDelegateImpl
         implements LoginTokenControllerDelegate {
 
+	private static final boolean ALLOW_REFRESH = false;
+
 	private LoginTokenEncoderDecoder refreshTokenEncoderDecoder;
 	private LoginTokenService loginTokenService;
 	private RefreshTokenService refreshTokenService;
@@ -95,7 +97,7 @@ public class LoginTokenControllerDelegateImpl
 		DecodedLoginToken loginToken = this.refreshTokenEncoderDecoder
 		        .decodeLoginToken(refreshToken.getEncodedLoginToken());
 		LoginPointer pointer = this.refreshTokenService.loadRefreshTokenPointer(loginToken);
-		String encodedToken = this.loginTokenService.encodeLoginToken(pointer);
+		String encodedToken = this.loginTokenService.encodeLoginToken(pointer, ALLOW_REFRESH);
 		return new LoginTokenPair(encodedToken);
 	}
 

@@ -25,8 +25,11 @@ public interface LoginTokenBuilder {
 	 * 
 	 * @param pointer
 	 *            {@link LoginPointer}. Never {@code null}.
+	 * @param refreshAllowed
+	 *            whether or not refreshing is allowed with the result token.
 	 * @return {@link LoginToken}. Never {@code null}.
 	 */
-	public LoginToken buildLoginToken(LoginPointer pointer);
+	public LoginToken buildLoginToken(LoginPointer pointer,
+	                                  boolean refreshAllowed);
 
 }

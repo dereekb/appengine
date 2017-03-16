@@ -89,4 +89,29 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		Assert.assertTrue(result.getResponse().getStatus() == 429);
 	}
 
+	@Test
+	public void testRefreshTokenLimiting() throws Exception {
+
+		// Create a password LoginPointer/Token
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
+
+		// Register
+		String fullUserToken = testUtility.register(token);
+
+		// Get a refresh token.
+		String refreshToken = testUtility.getRefreshToken(fullUserToken);
+
+		// Authenticate with the token.
+		String reauthToken = testUtility.authWithRefreshToken(refreshToken);
+
+		// Reset Authentication
+		try {
+			testUtility.getRefreshToken(reauthToken);
+			Assert.fail();
+		} catch (AssertionError e) {
+
+		}
+	}
+
 }

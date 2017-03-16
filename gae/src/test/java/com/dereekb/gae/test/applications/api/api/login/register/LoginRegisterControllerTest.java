@@ -104,7 +104,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		Login login = this.registerService.register(pointer);
 		pointer.setLogin(login.getObjectifyKey());
 
-		String primaryToken = this.loginTokenService.encodeLoginToken(pointer);
+		String primaryToken = this.loginTokenService.encodeLoginToken(pointer, true);
 
 		String[] usernames = new String[] { "A", "B", "C" };
 		List<String> tokens = new ArrayList<>();

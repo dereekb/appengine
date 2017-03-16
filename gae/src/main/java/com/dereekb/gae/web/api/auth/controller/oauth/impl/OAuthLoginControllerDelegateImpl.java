@@ -27,6 +27,7 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 public class OAuthLoginControllerDelegateImpl
         implements OAuthLoginControllerDelegate {
 
+	private boolean refreshAllowed = true;
 	private OAuthServiceManager manager;
 	private LoginTokenService tokenService;
 
@@ -49,6 +50,14 @@ public class OAuthLoginControllerDelegateImpl
 
 	public void setTokenService(LoginTokenService tokenService) {
 		this.tokenService = tokenService;
+	}
+
+	public boolean isRefreshAllowed() {
+		return this.refreshAllowed;
+	}
+
+	public void setRefreshAllowed(boolean refreshAllowed) {
+		this.refreshAllowed = refreshAllowed;
 	}
 
 	// MARK: OAuthLoginControllerDelegate
@@ -96,7 +105,7 @@ public class OAuthLoginControllerDelegateImpl
 
 	private LoginTokenPair loginWithAuthInfo(OAuthAuthorizationInfo authInfo) {
 		LoginPointer pointer = this.manager.login(authInfo);
-		String encodedToken = this.tokenService.encodeLoginToken(pointer);
+		String encodedToken = this.tokenService.encodeLoginToken(pointer, this.refreshAllowed);
 		LoginTokenPair pair = new LoginTokenPair(pointer.getIdentifier(), encodedToken);
 		return pair;
 	}

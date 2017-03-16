@@ -143,10 +143,12 @@ public class RefreshTokenServiceImpl
 
 		Login login = this.loadLogin(loginPointer);
 
+		this.assertRefreshIsAllowed(loginToken);
 		this.assertAuthenticationValid(login, loginToken);
 
 		LoginTokenImpl refreshToken = new LoginTokenImpl();
 
+		refreshToken.setRefreshAllowed(false);
 		refreshToken.setLogin(loginId);
 		refreshToken.setSubject(loginToken.getSubject());
 		refreshToken.setPointerType(LoginPointerType.REFRESH_TOKEN);
@@ -157,7 +159,9 @@ public class RefreshTokenServiceImpl
 	}
 
 	@Override
-	public LoginPointer loadRefreshTokenPointer(LoginToken refreshToken) throws RefreshTokenExpiredException {
+	public LoginPointer loadRefreshTokenPointer(LoginToken refreshToken)
+	        throws RefreshTokenExpiredException,
+	            TokenUnauthorizedException {
 		LoginPointer loginPointer = null;
 
 		try {
@@ -170,6 +174,12 @@ public class RefreshTokenServiceImpl
 		}
 
 		return loginPointer;
+	}
+
+	private void assertRefreshIsAllowed(LoginToken refreshToken) throws TokenUnauthorizedException {
+		if (refreshToken.isRefreshAllowed() == false) {
+			throw new TokenUnauthorizedException("This token is not authorized for refreshing.");
+		}
 	}
 
 	@Override
@@ -196,7 +206,8 @@ public class RefreshTokenServiceImpl
 
 	// MARK: Internal
 	private void assertAuthenticationValid(Login login,
-	                                       LoginToken loginToken) {
+	                                       LoginToken loginToken)
+	        throws AuthenticationPurgeException {
 		// Round due to JWT issues.
 		Date authReset = login.getAuthReset();
 		Date authIssued = loginToken.getIssued();

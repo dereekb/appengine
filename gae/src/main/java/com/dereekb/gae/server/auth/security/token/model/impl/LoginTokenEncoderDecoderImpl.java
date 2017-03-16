@@ -144,7 +144,6 @@ public class LoginTokenEncoderDecoderImpl extends AbstractLoginTokenEncoderDecod
 			OwnershipRoles ownershipRoles = this.decodeOwnershipRoles(encodedOwnershipRoles);
 			loginToken.setOwnershipRoles(ownershipRoles);
 		}
-
 	}
 
 	protected OwnershipRoles decodeOwnershipRoles(String encodedOwnershipRoles) {

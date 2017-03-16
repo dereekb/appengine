@@ -26,7 +26,6 @@ public interface LoginToken
 	public String getSubject();
 
 	/**
-	 *
 	 * @return {@code true} if it is an Anoynmous login.
 	 */
 	public boolean isAnonymous();
@@ -39,6 +38,13 @@ public interface LoginToken
 	 * @return {@code true} if it is a new user.
 	 */
 	public boolean isNewUser();
+
+	/**
+	 * Whether or not this token can be used to create a new refresh token.
+	 * 
+	 * @return {@code true} if can create a new refresh token.
+	 */
+	public boolean isRefreshAllowed();
 
 	/**
 	 * Returns role codes for the user.

@@ -71,8 +71,10 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 	}
 
 	@Override
-	public T buildLoginToken(LoginPointer pointer) {
+	public T buildLoginToken(LoginPointer pointer,
+	                         boolean refreshAllowed) {
 		T loginToken = this.makeLoginToken();
+		loginToken.setRefreshAllowed(refreshAllowed);
 
 		this.initLoginToken(loginToken, pointer);
 

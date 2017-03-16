@@ -53,14 +53,16 @@ public class LoginTokenServiceImpl extends LoginTokenEncoderDecoderImpl
 	}
 
 	@Override
-	public String encodeLoginToken(LoginPointer pointer) {
-		LoginToken token = this.buildLoginToken(pointer);
+	public String encodeLoginToken(LoginPointer pointer,
+	                               boolean refreshAllowed) {
+		LoginToken token = this.buildLoginToken(pointer, refreshAllowed);
 		return this.encodeLoginToken(token);
 	}
 
 	@Override
-	public LoginToken buildLoginToken(LoginPointer pointer) {
-		return this.builder.buildLoginToken(pointer);
+	public LoginToken buildLoginToken(LoginPointer pointer,
+	                                  boolean refreshAllowed) {
+		return this.builder.buildLoginToken(pointer, refreshAllowed);
 	}
 
 	@Override

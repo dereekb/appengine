@@ -27,6 +27,7 @@ public interface LoginTokenService
 	 *            {@link LoginPointer}. Never {@code null}.
 	 * @return Encoded string token. Never {@code null}.
 	 */
-	public String encodeLoginToken(LoginPointer pointer);
+	public String encodeLoginToken(LoginPointer pointer,
+	                               boolean refreshAllowed);
 
 }

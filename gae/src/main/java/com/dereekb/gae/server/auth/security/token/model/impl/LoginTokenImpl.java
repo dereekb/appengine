@@ -36,6 +36,11 @@ public class LoginTokenImpl
 	private String loginPointer;
 
 	/**
+	 * Refresh token ability.
+	 */
+	private boolean refreshAllowed = false;
+
+	/**
 	 * Set of roles.
 	 */
 	private Long roles = DEFAULT_ROLES;
@@ -83,6 +88,7 @@ public class LoginTokenImpl
 		this.setExpiration(loginToken.getExpiration());
 		this.setPointerType(loginToken.getPointerType());
 		this.setOwnershipRoles(loginToken.getOwnershipRoles());
+		this.setRefreshAllowed(loginToken.isRefreshAllowed());
 	}
 
 	@Override
@@ -126,6 +132,15 @@ public class LoginTokenImpl
 
 	public void setLoginPointer(String loginPointer) {
 		this.loginPointer = loginPointer;
+	}
+
+	@Override
+	public boolean isRefreshAllowed() {
+		return this.refreshAllowed;
+	}
+
+	public void setRefreshAllowed(boolean refreshAllowed) {
+		this.refreshAllowed = refreshAllowed;
 	}
 
 	@Override

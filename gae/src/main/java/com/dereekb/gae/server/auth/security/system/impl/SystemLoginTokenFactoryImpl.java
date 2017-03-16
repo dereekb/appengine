@@ -124,6 +124,7 @@ public class SystemLoginTokenFactoryImpl
 		LoginTokenImpl token = new LoginTokenImpl(this.pointerType);
 
 		token.setRoles(this.roles);
+		token.setRefreshAllowed(false);
 		token.setExpiration(this.expirationTime);
 
 		return token;

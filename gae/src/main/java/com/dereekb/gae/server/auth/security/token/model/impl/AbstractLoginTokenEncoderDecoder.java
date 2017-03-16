@@ -32,6 +32,8 @@ import io.jsonwebtoken.SignatureException;
 public abstract class AbstractLoginTokenEncoderDecoder
         implements LoginTokenEncoderDecoder {
 
+	public static final String REFRESH_KEY = "e";
+
 	private static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureAlgorithm.HS256;
 
 	private String secret;
@@ -89,6 +91,10 @@ public abstract class AbstractLoginTokenEncoderDecoder
 		claims.setIssuedAt(loginToken.getIssued());
 		claims.setExpiration(loginToken.getExpiration());
 
+		if (loginToken.isRefreshAllowed()) {
+			claims.put(REFRESH_KEY, true);
+		}
+
 		this.appendClaimsComponents(loginToken, claims);
 
 		return claims;
@@ -137,10 +143,15 @@ public abstract class AbstractLoginTokenEncoderDecoder
 		String subject = claims.getSubject();
 		Date expiration = claims.getExpiration();
 		Date issued = claims.getIssuedAt();
+		Boolean refreshAllowed = claims.get(REFRESH_KEY, Boolean.class);
 
 		loginToken.setSubject(subject);
 		loginToken.setExpiration(expiration);
 		loginToken.setIssued(issued);
+
+		if (refreshAllowed != null) {
+			loginToken.setRefreshAllowed(refreshAllowed);
+		}
 	}
 
 }
