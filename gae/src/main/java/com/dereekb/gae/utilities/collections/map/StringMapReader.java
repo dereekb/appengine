@@ -41,7 +41,7 @@ public class StringMapReader extends MapReader<String> {
 
 		if (value != null) {
 			try {
-				longValue = new Long(value);
+				longValue = Long.valueOf(value);
 			} catch (Exception e) {
 
 			}

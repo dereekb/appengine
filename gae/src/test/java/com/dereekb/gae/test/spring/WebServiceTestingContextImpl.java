@@ -101,7 +101,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	@Override
 	@Before
 	public void setUpCoreServices() {
-		this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
+		// this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
 		super.setUpCoreServices();
 	}
 
@@ -201,37 +201,40 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		public static WebServiceRequestBuilder serviceRequestBuilder;
 
 		public static final AtomicLong atomicCounter = new AtomicLong(0L);
-		private static final LocalTaskQueueTestConfig.TaskCountDownLatch countDownLatch = new LocalTaskQueueTestConfig.TaskCountDownLatch(
-		        0);
+
+		private static final int MAX_WAITS = 20;
 
 		public static final void safeWaitForLatch() throws InterruptedException {
+			int waits = 0;
+
 			System.out.println("Waiting for latch....");
 
 			waitForLatch();
 
-			while (atomicCounter.get() != 0L) {
+			while (atomicCounter.get() != 0) {
+				waits += 1;
 				System.out.println("Still waiting...");
 				waitForLatch();
+
+				if (waits >= MAX_WAITS) {
+					System.out.println("Reached maximum wait limit.");
+					break;
+				}
 			}
 		}
 
 		private static final void waitForLatch() throws InterruptedException {
 			Thread.sleep(200);
-			countDownLatch.await();
 		}
 
 		private static final void increaseLatchCounter() {
 			Long count = atomicCounter.incrementAndGet();
-
 			System.out.println(String.format("Latch increasing to %s.", count));
-
-			countDownLatch.reset(count.intValue());
 		}
 
 		private static final void decreaseLatchCounter() {
 			Long count = atomicCounter.decrementAndGet();
 			System.out.println(String.format("Latch decreased to %s.", count));
-			countDownLatch.countDown();
 		}
 
 		@Override

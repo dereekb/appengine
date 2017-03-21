@@ -35,8 +35,8 @@ public class RefreshTokenServiceImpl
 	// 2 minute authentication reset cooldown.
 	public static final Long DEFAULT_RESET_COOLDOWN = 2 * 60 * 1000L;
 
-	// 60 Days Default
-	private static final Long DEFAULT_EXPIRATION_TIME = 60 * 24 * 60 * 60 * 1000L;
+	// 90 Days Default
+	private static final Long DEFAULT_EXPIRATION_TIME = 90 * 24 * 60 * 60 * 1000L;
 
 	private static Set<LoginPointerType> BLACK_LISTED_TYPES = SetUtility.makeSet(LoginPointerType.ANONYMOUS,
 	        LoginPointerType.API_KEY, LoginPointerType.SYSTEM);
@@ -132,6 +132,8 @@ public class RefreshTokenServiceImpl
 	public LoginToken makeRefreshToken(LoginToken loginToken)
 	        throws AuthenticationPurgeException,
 	            TokenUnauthorizedException {
+
+		// TODO: Add options to specify refresh time limit.
 
 		Long loginId = loginToken.getLoginId();
 		String loginPointerId = loginToken.getLoginPointerId();

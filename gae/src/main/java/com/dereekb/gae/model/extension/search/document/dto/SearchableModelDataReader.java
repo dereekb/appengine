@@ -4,7 +4,7 @@ import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
-import com.dereekb.gae.server.datastore.models.dto.DatabaseModelDataReader;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelDataReader;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**
@@ -18,7 +18,7 @@ import com.dereekb.gae.utilities.factory.Factory;
  * @param <D>
  *            dto type
  */
-public class SearchableModelDataReader<M extends SearchableDatabaseModel, D extends SearchableDatabaseModelData> extends DatabaseModelDataReader<M, D> {
+public class SearchableModelDataReader<M extends SearchableDatabaseModel, D extends SearchableDatabaseModelData> extends OwnedDatabaseModelDataReader<M, D> {
 
 	public SearchableModelDataReader(Class<M> type) {
 		super(type);
@@ -32,7 +32,7 @@ public class SearchableModelDataReader<M extends SearchableDatabaseModel, D exte
 	public M convertSingle(D input) throws ConversionFailureException {
 		M model = super.convertSingle(input);
 
-		// Owner ID
+		// Search ID
 		model.setSearchIdentifier(input.getSearchId());
 
 		return model;

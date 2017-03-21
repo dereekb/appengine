@@ -4,7 +4,8 @@ import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
 /**
- * Basic wrapper that wraps a {@link Setter} instance and a boolean.
+ * Basic wrapper that wraps a {@link Setter} instance and whether or not to save
+ * asynchronously or not.
  *
  * @author dereekb
  *
@@ -14,23 +15,29 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 public class ConfiguredSetterImpl<T>
         implements ConfiguredSetter<T> {
 
+	public static final boolean DEFAULT_ASYNC_STATE = true;
+
 	private Setter<T> setter;
-	private boolean asynchronous = true;
+	private boolean asynchronous;
 
 	public ConfiguredSetterImpl(Setter<T> setter) {
-		this.setter = setter;
+		this(setter, DEFAULT_ASYNC_STATE);
 	}
 
-	public ConfiguredSetterImpl(Setter<T> setter, boolean asynchronous) {
-		this.setter = setter;
-		this.asynchronous = asynchronous;
+	public ConfiguredSetterImpl(Setter<T> setter, boolean asynchronous) throws IllegalArgumentException {
+		this.setSetter(setter);
+		this.setAsynchronous(asynchronous);
 	}
 
 	public Setter<T> getSetter() {
 		return this.setter;
 	}
 
-	public void setSetter(Setter<T> setter) {
+	public void setSetter(Setter<T> setter) throws IllegalArgumentException {
+		if (setter == null) {
+			throw new IllegalArgumentException("setter cannot be null.");
+		}
+
 		this.setter = setter;
 	}
 

@@ -3,13 +3,12 @@ package com.dereekb.gae.model.extension.search.document.dto;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
-import com.dereekb.gae.server.datastore.models.dto.DatabaseModelDataBuilder;
-import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelData;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelDataBuilder;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**
- * {@link DatabaseModelDataBuilder} extension for
- * {@link OwnedDatabaseModelData}.
+ * {@link OwnedDatabaseModelDataBuilder} extension for
+ * {@link SearchableDatabaseModelData}.
  * 
  * @author dereekb
  *
@@ -18,7 +17,7 @@ import com.dereekb.gae.utilities.factory.Factory;
  * @param <D>
  *            dto type
  */
-public class SearchableModelDataBuilder<M extends SearchableDatabaseModel, D extends SearchableDatabaseModelData> extends DatabaseModelDataBuilder<M, D> {
+public class SearchableModelDataBuilder<M extends SearchableDatabaseModel, D extends SearchableDatabaseModelData> extends OwnedDatabaseModelDataBuilder<M, D> {
 
 	public SearchableModelDataBuilder(Class<D> type) throws IllegalArgumentException {
 		super(type);
