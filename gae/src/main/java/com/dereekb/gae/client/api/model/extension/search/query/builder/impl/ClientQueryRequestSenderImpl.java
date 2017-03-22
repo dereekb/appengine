@@ -7,6 +7,7 @@ import java.util.Map;
 import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.ClientQueryRequestSender;
+import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
 import com.dereekb.gae.client.api.model.extension.search.shared.builder.impl.AbstractClientSearchRequestSender;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
@@ -18,11 +19,11 @@ import com.dereekb.gae.client.api.service.response.exception.ClientResponseSeria
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
-import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
+import com.dereekb.gae.server.search.model.impl.SearchRequestImpl;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.googlecode.objectify.Key;
@@ -37,7 +38,7 @@ import com.googlecode.objectify.Key;
  * @param <O>
  *            model dto type
  */
-public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientSearchRequestSender<T, O, SearchRequest, ModelQueryResponse<T>>
+public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends AbstractClientSearchRequestSender<T, O, SearchRequest, ClientModelQueryResponse<T>>
         implements ClientQueryRequestSender<T> {
 
 	/**
@@ -78,19 +79,19 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 
 	// MARK: ClientQueryRequestSender
 	@Override
-	public ModelQueryResponse<T> query(SearchRequest request)
+	public ClientModelQueryResponse<T> query(SearchRequest request)
 	        throws ClientIllegalArgumentException,
 	            ClientRequestFailureException {
 		return this.query(request, null);
 	}
 
 	@Override
-	public ModelQueryResponse<T> query(SearchRequest request,
-	                                   ClientRequestSecurity security)
+	public ClientModelQueryResponse<T> query(SearchRequest request,
+	                                         ClientRequestSecurity security)
 	        throws ClientIllegalArgumentException,
 	            ClientRequestFailureException {
 
-		SerializedClientApiResponse<ModelQueryResponse<T>> clientResponse = this.sendRequest(request, security);
+		SerializedClientApiResponse<ClientModelQueryResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedPrimaryData();
 	}
@@ -111,19 +112,29 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 	}
 
 	@Override
-	public ModelQueryResponse<T> serializeResponseData(SearchRequest request,
-	                                                   ClientApiResponse response)
+	public ClientModelQueryResponse<T> serializeResponseData(SearchRequest request,
+	                                                         ClientApiResponse response,
+	                                                         ClientRequestSecurity security)
 	        throws ClientResponseSerializationException {
-		return new ClientQueryResponseImpl(request, response);
+		return new ClientQueryResponseImpl(request, response, security);
+	}
+
+	@Override
+	public ClientModelQueryResponse<T> serializeResponseData(SearchRequest request,
+	                                                         ClientApiResponse response)
+	        throws ClientResponseSerializationException {
+		throw new UnsupportedOperationException("Security is required.");
 	}
 
 	private class ClientQueryResponseImpl extends AbstractClientSearchResponse
-	        implements ModelQueryResponse<T> {
+	        implements ClientModelQueryResponse<T> {
 
 		private List<Key<T>> objectifyKeyResults;
 
-		public ClientQueryResponseImpl(SearchRequest request, ClientApiResponse response) {
-			super(request, response);
+		public ClientQueryResponseImpl(SearchRequest request,
+		        ClientApiResponse response,
+		        ClientRequestSecurity security) {
+			super(request, response, security);
 		}
 
 		@Override
@@ -134,6 +145,30 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 			}
 
 			return this.objectifyKeyResults;
+		}
+
+		// MARK: ClientModelQueryResponse
+		@Override
+		public boolean hasNextQuery() {
+			// Assume it has more if this response isn't empty.
+			return this.hasResults() && this.getSearchCursor() != null;
+		}
+
+		@Override
+		public ClientModelQueryResponse<T> performNextQuery()
+		        throws UnsupportedOperationException,
+		            ClientIllegalArgumentException,
+		            ClientRequestFailureException {
+
+			if (this.hasNextQuery() == false) {
+				throw new UnsupportedOperationException("This is the last query.");
+			} else if (this.getSecurity() == null) {
+				throw new UnsupportedOperationException("There is no security set.");
+			}
+
+			SearchRequestImpl searchRequest = new SearchRequestImpl(this.getRequest());
+			searchRequest.setCursor(this.getSearchCursor());
+			return ClientQueryRequestSenderImpl.this.query(searchRequest, this.getSecurity());
 		}
 
 	}

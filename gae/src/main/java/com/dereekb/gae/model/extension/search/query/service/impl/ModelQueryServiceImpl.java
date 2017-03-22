@@ -108,6 +108,11 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		}
 
 		@Override
+		public boolean hasResults() {
+			return this.query.hasResults();
+		}
+
+		@Override
 		public Collection<T> getModelResults() {
 			if (this.models == null) {
 				if (this.keysQuery == false) {

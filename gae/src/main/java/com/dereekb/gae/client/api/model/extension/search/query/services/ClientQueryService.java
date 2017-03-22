@@ -2,6 +2,7 @@ package com.dereekb.gae.client.api.model.extension.search.query.services;
 
 import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryRequest;
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
@@ -30,7 +31,7 @@ public interface ClientQueryService<T extends UniqueModel> {
 	 * @throws ClientRequestFailureException
 	 *             thrown if the request fails for any other reason.
 	 */
-	public ModelQueryResponse<T> query(SearchRequest request)
+	public ClientModelQueryResponse<T> query(SearchRequest request)
 	        throws ClientIllegalArgumentException,
 	            ClientRequestFailureException;
 
@@ -48,8 +49,8 @@ public interface ClientQueryService<T extends UniqueModel> {
 	 * @throws ClientRequestFailureException
 	 *             thrown if the request fails for any other reason.
 	 */
-	public ModelQueryResponse<T> query(SearchRequest request,
-	                                   ClientRequestSecurity security)
+	public ClientModelQueryResponse<T> query(SearchRequest request,
+	                                         ClientRequestSecurity security)
 	        throws ClientIllegalArgumentException,
 	            ClientRequestFailureException;
 
