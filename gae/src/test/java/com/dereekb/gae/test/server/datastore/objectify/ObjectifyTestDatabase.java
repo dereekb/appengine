@@ -56,7 +56,7 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 
 	@Override
 	protected Objectify ofy() {
-		return ObjectifyService.ofy().cache(false);
+		return super.ofy().cache(false);
 	}
 
 	protected class TestObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>> extends ObjectifyDatabaseEntityImpl<T> {

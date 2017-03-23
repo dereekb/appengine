@@ -647,6 +647,10 @@ public class ObjectifyDatabaseImpl
 					query = query.chunk(chunk);
 				}
 
+				if (options.getAllowHybrid() == false) {
+					query = query.hybrid(false);
+				}
+
 				return query;
 			}
 

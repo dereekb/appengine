@@ -40,9 +40,15 @@
 	</bean>
 
 	<bean id="localDatastoreServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig"
-		init-method="setApplyAllHighRepJobPolicy">
+		init-method="setApplyAllHighRepJobPolicy"
+		factory-bean='localDatastoreServiceTestConfigFactory'
+		factory-method="make">
+	</bean>
+
+	<bean id="localDatastoreServiceTestConfigFactory"
+		class="com.dereekb.gae.test.spring.google.LocalDatastoreServiceTestConfigFactory">
 		<property name="noStorage" value="true" />
+		<property name="noIndexAutoGen" value="true" />
 	</bean>
 
 	<bean id="localSearchServiceTestConfig"

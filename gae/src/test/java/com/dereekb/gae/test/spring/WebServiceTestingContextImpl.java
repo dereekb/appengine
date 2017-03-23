@@ -200,21 +200,22 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 
 		public static WebServiceRequestBuilder serviceRequestBuilder;
 
-		public static final AtomicLong atomicCounter = new AtomicLong(0L);
+		public static final AtomicLong ATOMIC_COUNTER = new AtomicLong(0L);
 
 		private static final int MAX_WAITS = 20;
+		private static final int WAIT_TIME = 200;
 
 		public static final void safeWaitForLatch() throws InterruptedException {
 			int waits = 0;
 
 			System.out.println("Waiting for latch....");
 
-			waitForLatch();
+			waitForLatch(0);
 
-			while (atomicCounter.get() != 0) {
+			while (ATOMIC_COUNTER.get() != 0) {
 				waits += 1;
 				System.out.println("Still waiting...");
-				waitForLatch();
+				waitForLatch(waits);
 
 				if (waits >= MAX_WAITS) {
 					System.out.println("Reached maximum wait limit.");
@@ -223,19 +224,21 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 			}
 		}
 
-		private static final void waitForLatch() throws InterruptedException {
-			Thread.sleep(200);
+		private static final void waitForLatch(int waits) throws InterruptedException {
+			Thread.sleep(WAIT_TIME + (waits * WAIT_TIME));
 		}
 
 		private static final void increaseLatchCounter() {
-			Long count = atomicCounter.incrementAndGet();
+			Long count = ATOMIC_COUNTER.incrementAndGet();
 			System.out.println(String.format("Latch increasing to %s.", count));
 		}
 
 		private static final void decreaseLatchCounter() {
-			Long count = atomicCounter.decrementAndGet();
+			Long count = ATOMIC_COUNTER.decrementAndGet();
 			System.out.println(String.format("Latch decreased to %s.", count));
 		}
+
+		private static final int TASKQUEUE_TASK_WAIT_TIME = 10;
 
 		@Override
 		public int execute(URLFetchRequest arg0) {
@@ -254,6 +257,12 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 				e.printStackTrace();
 				decreaseLatchCounter();
 				return 0;
+			}
+
+			try {
+				Thread.sleep(ATOMIC_COUNTER.get() * TASKQUEUE_TASK_WAIT_TIME);
+			} catch (InterruptedException e1) {
+
 			}
 
 			// Start Objectify service for the thread.
