@@ -46,7 +46,7 @@ public class SavingDocumentIndexServiceImpl<T extends UniqueSearchModel> extends
 		try {
 			super.doTask(input);
 			List<T> models = IndexPair.getKeys(input);
-			this.setter.save(models);
+			this.setter.update(models);
 		} catch (FailedTaskException e) {
 			throw e;
 		}

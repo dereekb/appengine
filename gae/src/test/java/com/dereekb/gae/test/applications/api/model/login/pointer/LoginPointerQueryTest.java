@@ -53,11 +53,11 @@ public class LoginPointerQueryTest extends ModelQueryTest<LoginPointer> {
 
 		List<LoginPointer> aPointers = this.getModelGenerator().generate(count);
 		LoginModelTestUtilities.setPointerLogins(a, aPointers);
-		this.getRegistry().save(aPointers, false);
+		this.getRegistry().update(aPointers);
 
 		List<LoginPointer> bPointers = this.getModelGenerator().generate(count);
 		LoginModelTestUtilities.setPointerLogins(b, bPointers);
-		this.getRegistry().save(bPointers, false);
+		this.getRegistry().update(bPointers);
 
 		ObjectifyLoginPointerQuery queryConfig = new ObjectifyLoginPointerQuery();
 		queryConfig.setLogin(a);
@@ -81,11 +81,11 @@ public class LoginPointerQueryTest extends ModelQueryTest<LoginPointer> {
 
 		List<LoginPointer> pointers = this.getModelGenerator().generate(count);
 		LoginModelTestUtilities.setPointerTypes(testType, pointers);
-		this.getRegistry().save(pointers, false);
+		this.getRegistry().update(pointers);
 
 		List<LoginPointer> extraPointers = this.getModelGenerator().generate(count);
 		LoginModelTestUtilities.setPointerTypes(LoginPointerType.PASSWORD, extraPointers);
-		this.getRegistry().save(extraPointers, false);
+		this.getRegistry().update(extraPointers);
 
 		ObjectifyLoginPointerQuery queryConfig = new ObjectifyLoginPointerQuery();
 		queryConfig.setType(testType);

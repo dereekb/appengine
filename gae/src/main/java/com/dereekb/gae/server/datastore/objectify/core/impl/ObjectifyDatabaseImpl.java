@@ -185,11 +185,19 @@ public class ObjectifyDatabaseImpl
 		}
 
 		// MARK: ObjectifyDatabaseEntityReader
-		private ObjectifyDatabaseEntityReader<T> reader = new ObjectifyDatabaseEntityReaderImpl();
+		protected ObjectifyDatabaseEntityReader<T> reader = new ObjectifyDatabaseEntityReaderImpl();
 
 		@Override
 		public ObjectifyDatabaseEntityReader<T> getReader() {
 			return this.reader;
+		}
+
+		protected void setReader(ObjectifyDatabaseEntityReader<T> reader) {
+			if (reader == null) {
+				throw new IllegalArgumentException("reader cannot be null.");
+			}
+
+			this.reader = reader;
 		}
 
 		protected class ObjectifyDatabaseEntityReaderImpl
@@ -230,7 +238,7 @@ public class ObjectifyDatabaseImpl
 		}
 
 		// MARK: ObjectifyDatabaseEntityModifier
-		private ObjectifyDatabaseEntityWriter<T> writer = new ObjectifyDatabaseEntityWriterImpl();
+		protected ObjectifyDatabaseEntityWriter<T> writer = new ObjectifyDatabaseEntityWriterImpl();
 
 		@Override
 		public ObjectifyDatabaseEntityWriter<T> getWriter() {
@@ -315,11 +323,19 @@ public class ObjectifyDatabaseImpl
 		}
 
 		// MARK: Getter
-		private final ObjectifyDatabaseGetter getter = new ObjectifyDatabaseGetter();
+		protected ObjectifyDatabaseGetter getter = new ObjectifyDatabaseGetter();
 
 		@Override
 		public ObjectifyKeyedGetter<T> getter() {
 			return this.getter;
+		}
+
+		protected void setGetter(ObjectifyDatabaseGetter getter) {
+			if (getter == null) {
+				throw new IllegalArgumentException("getter cannot be null.");
+			}
+
+			this.getter = getter;
 		}
 
 		protected class ObjectifyDatabaseGetter
@@ -327,6 +343,27 @@ public class ObjectifyDatabaseImpl
 
 			private ObjectifyDatabaseEntityReader<T> reader;
 
+			public ObjectifyDatabaseGetter() {
+				this(ObjectifyDatabaseEntityImpl.this.getReader());
+			}
+
+			public ObjectifyDatabaseGetter(ObjectifyDatabaseEntityReader<T> reader) {
+				this.setReader(reader);
+			}
+
+			public ObjectifyDatabaseEntityReader<T> getReader() {
+				return this.reader;
+			}
+
+			public void setReader(ObjectifyDatabaseEntityReader<T> reader) {
+				if (reader == null) {
+					throw new IllegalArgumentException("reader cannot be null.");
+				}
+
+				this.reader = reader;
+			}
+
+			// MARK: Getter
 			@Override
 			public boolean exists(T model) throws UninitializedModelException {
 				ModelKey key = model.getModelKey();
@@ -528,22 +565,45 @@ public class ObjectifyDatabaseImpl
 			// MARK: Storer
 			@Override
 			public void store(T entity) throws StoreKeyedEntityException {
-				if (entity.getModelKey() == null) {
-					this.source.put(entity).now();
-				} else {
-					throw new StoreKeyedEntityException(entity);
-				}
+				this.assertEntityIsAllowedForStore(entity);
+				this.source.put(entity).now();
 			}
 
 			@Override
 			public void store(Iterable<T> entities) throws StoreKeyedEntityException {
 				for (T entity : entities) {
-					if (entity.getModelKey() != null) {
-						throw new StoreKeyedEntityException(entity);
-					}
+					this.assertEntityIsAllowedForStore(entity);
 				}
 
 				this.source.put(entities).now();
+			}
+
+			@Override
+			public void forceStore(T entity) {
+				this.source.put(entity).now();
+			}
+
+			@Override
+			public void forceStore(Iterable<T> entities) {
+				this.source.put(entities).now();
+			}
+
+			private void assertEntityIsAllowedForStore(T entity) {
+				ModelKey key = entity.getModelKey();
+
+				if (this.keyIsAllowedForStorage(key) == false) {
+					throw new StoreKeyedEntityException(entity);
+				}
+			}
+
+			private boolean keyIsAllowedForStorage(ModelKey key) {
+				if (key == null) {
+					return true;
+				} else if (key.getType() == ModelKeyType.NAME) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 
 			@Override
@@ -647,16 +707,14 @@ public class ObjectifyDatabaseImpl
 			this.setter.store(entities);
 		}
 
-		@Deprecated
 		@Override
-		public void save(T entity) {
-			throw new UnsupportedOperationException();
+		public void forceStore(T entity) {
+			this.setter.forceStore(entity);
 		}
 
-		@Deprecated
 		@Override
-		public void save(Iterable<T> entities) {
-			throw new UnsupportedOperationException();
+		public void forceStore(Iterable<T> entities) {
+			this.setter.forceStore(entities);
 		}
 
 		@Override

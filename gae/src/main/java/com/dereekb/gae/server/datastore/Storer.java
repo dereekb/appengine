@@ -15,6 +15,9 @@ public interface Storer<T> {
 	/**
 	 * Stores a new entity.
 	 * 
+	 * If the entity has a key attached to it, the implementation has the choice
+	 * to throw an exception or accept it.
+	 * 
 	 * When the function returns, the entity will have an identifier.
 	 * 
 	 * @param entity

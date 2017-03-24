@@ -11,7 +11,7 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
  */
 public enum SetterChangeState {
 
-	SAVE,
+	UPDATE,
 
 	DELETE
 

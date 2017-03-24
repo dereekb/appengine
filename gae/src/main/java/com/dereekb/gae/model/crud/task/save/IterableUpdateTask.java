@@ -11,13 +11,14 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * @param <T>
  *            model type
  */
-public interface IterableSaveTask<T>
+public interface IterableUpdateTask<T>
         extends IterableTask<T> {
 
-	public void doSaveTask(Iterable<T> input) throws FailedTaskException;
+	public void doUpdateTask(Iterable<T> input) throws FailedTaskException;
 
-	public void doSaveTask(Iterable<T> input,
-	                       boolean async)
+	@Deprecated
+	public void doUpdateTask(Iterable<T> input,
+	                         boolean async)
 	        throws FailedTaskException;
 
 }

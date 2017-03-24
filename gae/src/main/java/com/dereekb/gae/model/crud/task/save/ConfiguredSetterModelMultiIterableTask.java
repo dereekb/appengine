@@ -85,17 +85,17 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 
 	// MARK: Saver Task
 	@Override
-	public void doSaveTask(Iterable<T> input) throws FailedTaskException {
+	public void doUpdateTask(Iterable<T> input) throws FailedTaskException {
 		super.doTask(input);
-		this.setterTask.doSaveTask(input);
+		this.setterTask.doUpdateTask(input);
 	}
 
 	@Override
-	public void doSaveTask(Iterable<T> input,
+	public void doUpdateTask(Iterable<T> input,
 	                       boolean async)
 	        throws FailedTaskException {
 		super.doTask(input);
-		this.setterTask.doSaveTask(input, async);
+		this.setterTask.doUpdateTask(input, async);
 	}
 
 	@Override

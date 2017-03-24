@@ -165,7 +165,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 
 	@Override
 	public void saveModels(List<T> models) {
-		this.setter.save(models);
+		this.setter.update(models);
 	}
 
 	@Override

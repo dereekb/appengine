@@ -54,7 +54,7 @@ public class ImageUploadHandler extends StoredBlobUploadHandlerDelegateImpl<Stor
 	public StoredImage createDescriptor(StoredBlob blob) throws RuntimeException {
 		StoredImage image = this.buildImageForBlob(blob);
 
-		this.imageSetter.save(image, false);
+		this.imageSetter.store(image);
 
 		return image;
 	}

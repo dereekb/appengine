@@ -61,7 +61,7 @@ public class LoginKeyQueryTest extends ModelQueryTest<LoginKey> {
 			pointers.add(key);
 		}
 
-		this.getRegistry().save(keys, false);
+		this.getRegistry().update(keys);
 
 		ObjectifyLoginKeyQuery keyQueryConfig = new ObjectifyLoginKeyQuery();
 		keyQueryConfig.setLoginPointer(pointerKey);

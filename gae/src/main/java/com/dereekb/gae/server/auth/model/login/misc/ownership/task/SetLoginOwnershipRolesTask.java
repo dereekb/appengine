@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.model.login.misc.ownership.task;
 
 import com.dereekb.gae.model.crud.task.impl.CreateTaskImpl;
-import com.dereekb.gae.model.crud.task.save.IterableSaveTask;
+import com.dereekb.gae.model.crud.task.save.IterableUpdateTask;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader;
 import com.dereekb.gae.utilities.task.IterableTask;
@@ -19,22 +19,22 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  */
 @Deprecated
 public class SetLoginOwnershipRolesTask
-        implements IterableSaveTask<Login> {
+        implements IterableUpdateTask<Login> {
 
-	private IterableSaveTask<Login> saveTask;
+	private IterableUpdateTask<Login> saveTask;
 	private LoginOwnershipRolesReader ownershipRolesReader;
 
-	public SetLoginOwnershipRolesTask(IterableSaveTask<Login> saveTask,
+	public SetLoginOwnershipRolesTask(IterableUpdateTask<Login> saveTask,
 	        LoginOwnershipRolesReader ownershipRolesReader) {
 		this.setSaveTask(saveTask);
 		this.setOwnershipRolesReader(ownershipRolesReader);
 	}
 
-	public IterableSaveTask<Login> getSaveTask() {
+	public IterableUpdateTask<Login> getSaveTask() {
 		return this.saveTask;
 	}
 
-	public void setSaveTask(IterableSaveTask<Login> saveTask) throws IllegalArgumentException {
+	public void setSaveTask(IterableUpdateTask<Login> saveTask) throws IllegalArgumentException {
 		if (saveTask == null) {
 			throw new IllegalArgumentException("SaveTask cannot be null.");
 		}
@@ -58,27 +58,27 @@ public class SetLoginOwnershipRolesTask
 	// MARK: IterableTask
 	@Override
 	public void doTask(Iterable<Login> input) throws FailedTaskException {
-		this.doSaveTask(input);
+		this.doUpdateTask(input);
 	}
 
 	// MARK: IterableSaveTask
 	@Override
-	public void doSaveTask(Iterable<Login> input) throws FailedTaskException {
-		this.doSaveTask(input, true);
+	public void doUpdateTask(Iterable<Login> input) throws FailedTaskException {
+		this.doUpdateTask(input, true);
 	}
 
 	@Override
-	public void doSaveTask(Iterable<Login> input,
+	public void doUpdateTask(Iterable<Login> input,
 	                       boolean async)
 	        throws FailedTaskException {
-		this.saveTask.doSaveTask(input, false);
+		this.saveTask.doUpdateTask(input, false);
 
 		for (Login login : input) {
 			String ownerId = this.ownershipRolesReader.makeOwnerId(login);
 			login.setOwnerId(ownerId);
 		}
 
-		this.saveTask.doSaveTask(input, async);
+		this.saveTask.doUpdateTask(input, async);
 	}
 
 	@Override

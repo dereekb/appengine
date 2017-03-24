@@ -68,7 +68,7 @@ public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 
 		// Clear any generated links
 		child.setParent(null);
-		this.geoPlaceRegistry.save(child, false);
+		this.geoPlaceRegistry.update(child);
 
 		// Start Test Linking
 		this.linkModels(this.geoPlaceLinkType, child, this.geoPlaceParentLinkName, parent);

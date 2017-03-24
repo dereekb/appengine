@@ -17,10 +17,18 @@ import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.api.tests.ApiEditTest;
+import com.dereekb.gae.test.applications.api.api.tests.client.ClientApiCrudTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
 
+/**
+ * 
+ * @author dereekb
+ * 
+ * @deprecated Replaced with {@link ClientApiCrudTest}.
+ */
+@Deprecated
 public class GeoPlaceApiEditTest extends ApiEditTest<GeoPlace, GeoPlaceData> {
 
 	@Autowired
@@ -73,7 +81,7 @@ public class GeoPlaceApiEditTest extends ApiEditTest<GeoPlace, GeoPlaceData> {
 		geoPlace.setDescriptorId("id");
 		geoPlace.setDescriptorType("type");
 
-		this.geoPlaceRegistry.save(geoPlace, false);
+		this.geoPlaceRegistry.update(geoPlace);
 
 		Assert.assertNotNull(geoPlace.getDescriptor());
 
@@ -88,7 +96,7 @@ public class GeoPlaceApiEditTest extends ApiEditTest<GeoPlace, GeoPlaceData> {
 		}
 
 		geoPlace.setDescriptor(null);
-		this.geoPlaceRegistry.save(geoPlace, false);
+		this.geoPlaceRegistry.update(geoPlace);
 
 		try {
 			this.controller.delete(request);

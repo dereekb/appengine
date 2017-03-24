@@ -56,14 +56,14 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 	@Override
 	public T generate() {
 		T model = this.generator.generate();
-		this.setter.save(model, false);
+		this.setter.forceStore(model);
 		return model;
 	}
 
 	@Override
 	public T generate(GeneratorArg arg) {
 		T model = this.generator.generate(arg);
-		this.setter.save(model, false);
+		this.setter.forceStore(model);
 		return model;
 	}
 
@@ -76,7 +76,7 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 	public List<T> generate(int count,
 	                        GeneratorArg arg) {
 		List<T> models = this.generator.generate(count, arg);
-		this.setter.save(models, false);
+		this.setter.forceStore(models);
 		return models;
 	}
 
@@ -88,14 +88,14 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 	@Override
 	public T generateModel(ModelKey identifier) {
 		T model = this.generator.generateModel(identifier);
-		this.setter.save(model, false);
+		this.setter.forceStore(model);
 		return model;
 	}
 
 	@Override
 	public List<T> generateModels(Iterable<ModelKey> identifiers) {
 		List<T> models = this.generator.generateModels(identifiers);
-		this.setter.save(models, false);
+		this.setter.forceStore(models);
 		return models;
 	}
 

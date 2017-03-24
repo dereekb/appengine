@@ -222,7 +222,7 @@ public class TestPasswordLoginTokenContextImpl
 		login.setRoot(true);
 		login.setGroup(this.group);
 		login.setRoles(roles);
-		this.loginRegistry.save(login, false);
+		this.loginRegistry.update(login);
 
 		pointer.setLogin(login.getObjectifyKey());
 		this.setLogin(pointer);

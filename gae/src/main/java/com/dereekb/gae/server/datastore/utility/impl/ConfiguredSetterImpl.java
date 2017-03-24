@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore.utility.impl;
 import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;
 import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
 /**
@@ -14,7 +15,6 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
  * @param <T>
  *            model type
  */
-@Deprecated
 public class ConfiguredSetterImpl<T>
         implements ConfiguredSetter<T> {
 
@@ -54,16 +54,6 @@ public class ConfiguredSetterImpl<T>
 
 	// MARK: ConfiguredSetter
 	@Override
-	public final void save(T entity) {
-		this.save(entity, this.asynchronous);
-	}
-
-	@Override
-	public final void save(Iterable<T> entities) {
-		this.save(entities, this.asynchronous);
-	}
-
-	@Override
 	public final void delete(T entity) {
 		this.delete(entity, this.asynchronous);
 	}
@@ -95,15 +85,13 @@ public class ConfiguredSetterImpl<T>
 	}
 
 	@Override
-	public void save(T entity,
-	                 boolean async) {
-		this.setter.save(entity, async);
+	public void forceStore(T entity) {
+		this.setter.forceStore(entity);
 	}
 
 	@Override
-	public void save(Iterable<T> entities,
-	                 boolean async) {
-		this.setter.save(entities, async);
+	public void forceStore(Iterable<T> entities) {
+		this.setter.forceStore(entities);
 	}
 
 	@Override
@@ -116,6 +104,18 @@ public class ConfiguredSetterImpl<T>
 	public void delete(Iterable<T> entities,
 	                   boolean async) {
 		this.setter.delete(entities, async);
+	}
+
+	@Override
+	public void deleteWithKey(ModelKey key,
+	                          boolean async) {
+		this.setter.deleteWithKey(key, async);
+	}
+
+	@Override
+	public void deleteWithKeys(Iterable<ModelKey> keys,
+	                           boolean async) {
+		this.setter.deleteWithKeys(keys, async);
 	}
 
 	@Override

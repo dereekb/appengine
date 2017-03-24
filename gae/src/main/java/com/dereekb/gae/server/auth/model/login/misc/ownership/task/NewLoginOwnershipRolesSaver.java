@@ -2,32 +2,34 @@ package com.dereekb.gae.server.auth.model.login.misc.ownership.task;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader;
-import com.dereekb.gae.server.datastore.Updater;
+import com.dereekb.gae.server.datastore.Saver;
+import com.dereekb.gae.server.datastore.Storer;
+import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;
 
 /**
- * {@link Updater} implementation used for attaching ownership roles to created
- * {@link Login} values.
+ * {@link Saver} implementation used for attaching ownership roles after
+ * creating {@link Login} values.
  * 
  * @author dereekb
  *
  */
 public class NewLoginOwnershipRolesSaver
-        implements Updater<Login> {
+        implements Storer<Login> {
 
-	private Updater<Login> loginSaver;
+	private Saver<Login> loginSaver;
 	private LoginOwnershipRolesReader ownershipRolesReader;
 
-	public NewLoginOwnershipRolesSaver(Updater<Login> loginSaver, LoginOwnershipRolesReader ownershipRolesReader)
+	public NewLoginOwnershipRolesSaver(Saver<Login> loginSaver, LoginOwnershipRolesReader ownershipRolesReader)
 	        throws IllegalArgumentException {
 		this.setLoginSaver(loginSaver);
 		this.setOwnershipRolesReader(ownershipRolesReader);
 	}
 
-	public Updater<Login> getLoginSaver() {
+	public Saver<Login> getLoginSaver() {
 		return this.loginSaver;
 	}
 
-	public void setLoginSaver(Updater<Login> loginSaver) throws IllegalArgumentException {
+	public void setLoginSaver(Saver<Login> loginSaver) throws IllegalArgumentException {
 		if (loginSaver == null) {
 			throw new IllegalArgumentException("loginSaver cannot be null.");
 		}
@@ -48,29 +50,33 @@ public class NewLoginOwnershipRolesSaver
 		this.ownershipRolesReader = ownershipRolesReader;
 	}
 
-	// MARK: Saver
+	// MARK: Storer
 	@Override
-	public void save(Login entity,
-	                 boolean async) {
-		this.loginSaver.save(entity, false);
+	public void store(Login entity) throws StoreKeyedEntityException {
+		this.loginSaver.store(entity);
 
 		String ownerId = this.ownershipRolesReader.makeOwnerId(entity);
 		entity.setOwnerId(ownerId);
 
-		this.loginSaver.save(entity, async);
+		this.loginSaver.update(entity);
 	}
 
 	@Override
-	public void save(Iterable<Login> entities,
-	                 boolean async) {
-		this.loginSaver.save(entities, false);
+	public void store(Iterable<Login> entities) throws StoreKeyedEntityException {
+		this.loginSaver.store(entities);
 
 		for (Login login : entities) {
 			String ownerId = this.ownershipRolesReader.makeOwnerId(login);
 			login.setOwnerId(ownerId);
 		}
 
-		this.loginSaver.save(entities, async);
+		this.loginSaver.update(entities);
+	}
+
+	@Override
+	public String toString() {
+		return "NewLoginOwnershipRolesSaver [loginSaver=" + this.loginSaver + ", ownershipRolesReader="
+		        + this.ownershipRolesReader + "]";
 	}
 
 }

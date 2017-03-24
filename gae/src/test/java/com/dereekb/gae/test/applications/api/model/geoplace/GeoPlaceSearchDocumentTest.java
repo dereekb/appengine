@@ -82,7 +82,7 @@ public class GeoPlaceSearchDocumentTest extends ModelSearchDocumentTest<GeoPlace
 		Date date = new Date(10); // Set for later query test.
 		model.setDate(date);
 
-		this.geoPlaceRegistry.save(model, false);
+		this.geoPlaceRegistry.update(model);
 
 		Assert.assertNotNull(date);
 		this.indexService.indexChange(models, IndexAction.INDEX);

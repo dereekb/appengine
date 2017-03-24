@@ -164,7 +164,7 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 			blob.setBlobName(this.info.getFilename());
 			blob.setDate(this.info.getCreationDate());
 
-			StoredBlobUploadHandler.this.storedBlobSetter.save(blob, false);
+			StoredBlobUploadHandler.this.storedBlobSetter.store(blob);
 
 			return blob;
 		}
@@ -182,7 +182,7 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 			this.storedBlob.setDescriptor(this.descriptor);
 			this.storedBlob.setFilePath(filePath);
 
-			StoredBlobUploadHandler.this.storedBlobSetter.save(this.storedBlob);
+			StoredBlobUploadHandler.this.storedBlobSetter.update(this.storedBlob);
 		}
 
 		/**

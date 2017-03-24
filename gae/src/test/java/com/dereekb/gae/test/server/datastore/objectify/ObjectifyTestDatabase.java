@@ -5,13 +5,11 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntity;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityModifier;
 import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Ref;
 
 /**
  * Extension of {@link ObjectifyDatabaseImpl} used for testing.
@@ -55,7 +53,7 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 	}
 
 	@Override
-	protected Objectify ofy() {
+	public Objectify ofy() {
 		return super.ofy().cache(false);
 	}
 
@@ -63,6 +61,7 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 
 		protected TestObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			super(type);
+			this.reader = new TestObjectifyDatabaseEntityReader();
 		}
 
 		@Override
@@ -70,30 +69,21 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 			return ObjectifyTestDatabase.this.isAsync(super.isConfiguredAsync());
 		}
 
-		// MARK: ObjectifyDatabaseEntityModifier
-		@Override
-		public ObjectifyDatabaseEntityModifier<T> getModifier(boolean async) {
-			async = ObjectifyTestDatabase.this.isAsync(async);
-			return new ObjectifyDatabaseEntityModifierImpl(async);
-		}
-
 		// MARK: Reader
-		@Override
-		public T get(Key<T> key) {
-			resync();
-			return super.get(key);
-		}
+		private class TestObjectifyDatabaseEntityReader extends ObjectifyDatabaseEntityReaderImpl {
 
-		@Override
-		public List<T> keysGet(Iterable<Key<T>> list) {
-			resync();
-			return super.keysGet(list);
-		}
+			@Override
+			public T get(Key<T> key) {
+				resync();
+				return super.get(key);
+			}
 
-		@Override
-		public List<T> refsGet(Iterable<Ref<T>> list) {
-			resync();
-			return super.refsGet(list);
+			@Override
+			public List<T> keysGet(Iterable<Key<T>> list) {
+				resync();
+				return super.keysGet(list);
+			}
+
 		}
 
 	}

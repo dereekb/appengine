@@ -7,7 +7,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
 
 /**
- * {@link IterableTask} for saving or deleting models.
+ * {@link IterableTask} for updating or deleting models.
  * <p>
  * Is generally used in conjunction with a {@link MultiIterableTask} or similar
  * type to save after other tasks have been completed on the input.
@@ -24,7 +24,7 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	private SetterChangeState state;
 
 	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter) {
-		this(setter, SetterChangeState.SAVE);
+		this(setter, SetterChangeState.UPDATE);
 	}
 
 	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter, SetterChangeState state) {
@@ -60,8 +60,8 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	@Override
 	public void doTask(Iterable<T> input) throws FailedTaskException {
 		switch (this.state) {
-			case SAVE:
-				this.doSaveTask(input);
+			case UPDATE:
+				this.doUpdateTask(input);
 				break;
 			case DELETE:
 				this.setter.delete(input);
@@ -69,13 +69,14 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void doTask(Iterable<T> input,
 	                   boolean async)
 	        throws FailedTaskException {
 		switch (this.state) {
-			case SAVE:
-				this.doSaveTask(input, async);
+			case UPDATE:
+				this.doUpdateTask(input, async);
 				break;
 			case DELETE:
 				this.setter.delete(input, async);
@@ -85,15 +86,15 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 
 	// MARK: IterableSaveTask
 	@Override
-	public void doSaveTask(Iterable<T> input) throws FailedTaskException {
-		this.setter.save(input);
+	public void doUpdateTask(Iterable<T> input) throws FailedTaskException {
+		this.setter.update(input);
 	}
 
 	@Override
-	public void doSaveTask(Iterable<T> input,
-	                       boolean async)
+	public void doUpdateTask(Iterable<T> input,
+	                         boolean async)
 	        throws FailedTaskException {
-		this.setter.save(input, async);
+		this.setter.update(input);
 	}
 
 	@Override

@@ -137,7 +137,7 @@ public class LoginRegisterServiceImpl
 			pointer.setOwnerId(ownerId);
 		}
 
-		this.loginPointerGetterSetter.save(pointers, true);
+		this.loginPointerGetterSetter.update(pointers);
 	}
 
 	private void assertPointersAreUnclaimed(Key<Login> newLogin,

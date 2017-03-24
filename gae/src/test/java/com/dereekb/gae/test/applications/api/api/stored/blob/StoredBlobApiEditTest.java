@@ -21,6 +21,12 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
 
+/**
+ * 
+ * @author dereekb
+ * @deprecated Use Client api tests instead.
+ */
+@Deprecated
 public class StoredBlobApiEditTest extends ApiEditTest<StoredBlob, StoredBlobData> {
 
 	@Autowired
@@ -73,7 +79,7 @@ public class StoredBlobApiEditTest extends ApiEditTest<StoredBlob, StoredBlobDat
 		storedBlob.setDescriptorId("id");
 		storedBlob.setDescriptorType("type");
 
-		this.storedBlobRegistry.save(storedBlob, false);
+		this.storedBlobRegistry.update(storedBlob);
 
 		Assert.assertNotNull(storedBlob.getDescriptor());
 
@@ -88,7 +94,7 @@ public class StoredBlobApiEditTest extends ApiEditTest<StoredBlob, StoredBlobDat
 		}
 
 		storedBlob.setDescriptor(null);
-		this.storedBlobRegistry.save(storedBlob, false);
+		this.storedBlobRegistry.update(storedBlob);
 
 		try {
 			this.controller.delete(request);
