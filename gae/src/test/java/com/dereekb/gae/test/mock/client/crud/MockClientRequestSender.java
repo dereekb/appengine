@@ -24,6 +24,17 @@ import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
         implements ClientRequestSender {
 
+	// True by default to simplify taskqueue tests.
+	private boolean waitForTaskQueue = true;
+
+	public boolean isWaitForTaskQueue() {
+		return this.waitForTaskQueue;
+	}
+
+	public void setWaitForTaskQueue(boolean waitForTaskQueue) {
+		this.waitForTaskQueue = waitForTaskQueue;
+	}
+
 	// MARK: ClientRequestSender
 	@Override
 	public ClientResponse sendRequest(ClientRequest request)
@@ -44,7 +55,9 @@ public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
 			String content = servletResponse.getContentAsString();
 			response = new ClientResponseImpl(status, content);
 
-			webServiceTester.waitForTaskQueueToComplete();
+			if (this.waitForTaskQueue) {
+				webServiceTester.waitForTaskQueueToComplete();
+			}
 		} catch (Exception e) {
 			throw new ClientRequestFailureException(e);
 		}

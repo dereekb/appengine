@@ -94,4 +94,13 @@ public interface Getter<T extends UniqueModel> {
 	 */
 	public List<T> getWithKeys(Iterable<ModelKey> keys);
 
+	/**
+	 * Creates a new getter with the configuration.
+	 * 
+	 * @param config
+	 *            {@link GetterConfiguration}. Never {@code null}.
+	 * @return {@link Getter}. Never {@code null}.
+	 */
+	// public Getter<T> withConfiguration(GetterConfiguration config);
+
 }

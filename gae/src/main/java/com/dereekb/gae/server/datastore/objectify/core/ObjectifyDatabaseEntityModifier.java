@@ -14,6 +14,7 @@ import com.googlecode.objectify.Ref;
  */
 public interface ObjectifyDatabaseEntityModifier<T extends ObjectifyModel<T>> {
 
+	@Deprecated
 	public boolean isAsyncronous();
 
 	// MARK: Put

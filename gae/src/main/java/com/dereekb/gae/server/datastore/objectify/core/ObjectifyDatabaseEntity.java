@@ -17,7 +17,7 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
  *            model type
  */
 public interface ObjectifyDatabaseEntity<T extends ObjectifyModel<T>>
-        extends ObjectifyRegistry<T>, ConfiguredSetter<T>, ConfiguredDeleter {
+        extends ObjectifyRegistry<T> {
 
 	public ObjectifyDatabaseEntityReader<T> getReader();
 
