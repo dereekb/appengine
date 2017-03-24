@@ -4,7 +4,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.NewLoginGenerator;
 import com.dereekb.gae.server.auth.security.login.NewLoginGeneratorDelegate;
-import com.dereekb.gae.server.datastore.Saver;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
@@ -16,15 +16,15 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
 public class NewLoginGeneratorImpl
         implements NewLoginGenerator, NewLoginGeneratorDelegate {
 
-	private Saver<Login> loginSaver;
+	private Updater<Login> loginSaver;
 	private TaskRequestSender<Login> reviewTask;
 	private NewLoginGeneratorDelegate delegate = this;
 
-	public NewLoginGeneratorImpl(Saver<Login> loginSaver, TaskRequestSender<Login> reviewTask) {
+	public NewLoginGeneratorImpl(Updater<Login> loginSaver, TaskRequestSender<Login> reviewTask) {
 		this(loginSaver, reviewTask, null);
 	}
 
-	public NewLoginGeneratorImpl(Saver<Login> loginSaver,
+	public NewLoginGeneratorImpl(Updater<Login> loginSaver,
 	        TaskRequestSender<Login> reviewTask,
 	        NewLoginGeneratorDelegate delegate) {
 		this.setLoginSaver(loginSaver);
@@ -32,11 +32,11 @@ public class NewLoginGeneratorImpl
 		this.setDelegate(delegate);
 	}
 
-	public Saver<Login> getLoginSaver() {
+	public Updater<Login> getLoginSaver() {
 		return this.loginSaver;
 	}
 
-	public void setLoginSaver(Saver<Login> loginSaver) throws IllegalArgumentException {
+	public void setLoginSaver(Updater<Login> loginSaver) throws IllegalArgumentException {
 		if (loginSaver == null) {
 			throw new IllegalArgumentException("LoginSaver cannot be null.");
 		}

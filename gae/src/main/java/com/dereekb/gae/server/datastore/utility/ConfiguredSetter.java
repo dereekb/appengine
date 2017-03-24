@@ -1,6 +1,8 @@
 package com.dereekb.gae.server.datastore.utility;
 
 import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.Storer;
+import com.dereekb.gae.server.datastore.Updater;
 
 /**
  * Setter that is already configured to save synchronously or asynchronously.
@@ -9,7 +11,10 @@ import com.dereekb.gae.server.datastore.Setter;
  *
  * @param <T>
  *            model type
+ * 
+ * @deprecated use {@link Storer} or {@link Updater} methods instead.
  */
+@Deprecated
 public interface ConfiguredSetter<T>
         extends Setter<T> {
 
@@ -19,6 +24,7 @@ public interface ConfiguredSetter<T>
 	 * @param entity
 	 *            Entity model to save to a source.
 	 */
+	@Deprecated
 	public void save(T entity);
 
 	/**
@@ -28,6 +34,7 @@ public interface ConfiguredSetter<T>
 	 * @param entities
 	 *            Iterable list of models to save to a source.
 	 */
+	@Deprecated
 	public void save(Iterable<T> entities);
 
 	/**

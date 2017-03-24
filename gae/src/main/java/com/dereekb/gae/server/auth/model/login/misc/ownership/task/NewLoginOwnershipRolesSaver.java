@@ -2,32 +2,32 @@ package com.dereekb.gae.server.auth.model.login.misc.ownership.task;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader;
-import com.dereekb.gae.server.datastore.Saver;
+import com.dereekb.gae.server.datastore.Updater;
 
 /**
- * {@link Saver} implementation used for attaching ownership roles to created
+ * {@link Updater} implementation used for attaching ownership roles to created
  * {@link Login} values.
  * 
  * @author dereekb
  *
  */
 public class NewLoginOwnershipRolesSaver
-        implements Saver<Login> {
+        implements Updater<Login> {
 
-	private Saver<Login> loginSaver;
+	private Updater<Login> loginSaver;
 	private LoginOwnershipRolesReader ownershipRolesReader;
 
-	public NewLoginOwnershipRolesSaver(Saver<Login> loginSaver, LoginOwnershipRolesReader ownershipRolesReader)
+	public NewLoginOwnershipRolesSaver(Updater<Login> loginSaver, LoginOwnershipRolesReader ownershipRolesReader)
 	        throws IllegalArgumentException {
 		this.setLoginSaver(loginSaver);
 		this.setOwnershipRolesReader(ownershipRolesReader);
 	}
 
-	public Saver<Login> getLoginSaver() {
+	public Updater<Login> getLoginSaver() {
 		return this.loginSaver;
 	}
 
-	public void setLoginSaver(Saver<Login> loginSaver) throws IllegalArgumentException {
+	public void setLoginSaver(Updater<Login> loginSaver) throws IllegalArgumentException {
 		if (loginSaver == null) {
 			throw new IllegalArgumentException("loginSaver cannot be null.");
 		}

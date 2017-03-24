@@ -1,11 +1,10 @@
 package com.dereekb.gae.server.datastore.objectify.components;
 
 import com.dereekb.gae.server.datastore.Setter;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
 /**
- * {@link ConfiguredSetter} for Objectify.
+ * {@link Setter} extension for Objectify.
  * 
  * @author dereekb
  *

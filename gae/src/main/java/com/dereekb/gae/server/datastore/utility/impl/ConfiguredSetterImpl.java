@@ -1,6 +1,8 @@
 package com.dereekb.gae.server.datastore.utility.impl;
 
 import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;
+import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
 /**
@@ -12,6 +14,7 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class ConfiguredSetterImpl<T>
         implements ConfiguredSetter<T> {
 
@@ -71,6 +74,26 @@ public class ConfiguredSetterImpl<T>
 	}
 
 	// MARK: Setter
+	@Override
+	public void update(T entity) throws UpdateUnkeyedEntityException {
+		this.setter.update(entity);
+	}
+
+	@Override
+	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		this.setter.update(entities);
+	}
+
+	@Override
+	public void store(T entity) throws StoreKeyedEntityException {
+		this.setter.store(entity);
+	}
+
+	@Override
+	public void store(Iterable<T> entities) throws StoreKeyedEntityException {
+		this.setter.store(entities);
+	}
+
 	@Override
 	public void save(T entity,
 	                 boolean async) {
