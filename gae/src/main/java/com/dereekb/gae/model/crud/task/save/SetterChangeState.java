@@ -7,8 +7,10 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
  *
  * @author dereekb
  * 
+ * @deprecated
  * @see ConfiguredSetterModelsTask
  */
+@Deprecated
 public enum SetterChangeState {
 
 	/**

@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.crud.task.save;
+package com.dereekb.gae.server.datastore.task;
 
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
@@ -11,9 +11,9 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * @param <T>
  *            model type
  */
-public interface IterableStoreTask<T>
+public interface IterableDeleteTask<T>
         extends IterableTask<T> {
 
-	public void doStoreTask(Iterable<T> input) throws FailedTaskException;
+	public void doDeleteTask(Iterable<T> input) throws FailedTaskException;
 
 }

@@ -12,13 +12,13 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
  * @param <T>
  *            model type
  */
-public class TaskConfiguredUpdater<T>
+public class TaskConfiguredUpdaterImpl<T>
         implements Updater<T> {
 
 	private Updater<T> updater;
 	private TaskRequestSender<T> taskRequestSender;
 
-	public TaskConfiguredUpdater(TaskRequestSender<T> taskRequestSender, Updater<T> updater) {
+	public TaskConfiguredUpdaterImpl(TaskRequestSender<T> taskRequestSender, Updater<T> updater) {
 		this.setTaskRequestSender(taskRequestSender);
 		this.setUpdater(updater);
 	}

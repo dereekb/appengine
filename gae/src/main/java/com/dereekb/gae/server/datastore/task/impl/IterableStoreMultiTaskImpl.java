@@ -1,9 +1,9 @@
-package com.dereekb.gae.model.crud.task.save.impl;
+package com.dereekb.gae.server.datastore.task.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.model.crud.task.save.IterableStoreTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.task.IterableStoreTask;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.task.impl.MultiIterableTask;

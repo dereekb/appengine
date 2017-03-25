@@ -5,8 +5,8 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskValidator;
-import com.dereekb.gae.model.crud.task.save.IterableStoreTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.task.IterableStoreTask;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**

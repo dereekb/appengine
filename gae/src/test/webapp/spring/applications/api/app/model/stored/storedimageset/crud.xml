@@ -59,7 +59,7 @@
 		<constructor-arg index="0"
 			ref="storedImageSetCreateTaskDelegate" />
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.model.crud.task.save.impl.IterableStoreMultiTaskImpl">
+			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
 				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
 				<constructor-arg index="1" ref="storedImageSetSynchronousSaveTask"/>
 			</bean>
