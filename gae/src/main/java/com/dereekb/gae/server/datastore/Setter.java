@@ -9,7 +9,7 @@ package com.dereekb.gae.server.datastore;
  *            Model type.
  * 
  * @see Getter
- * @see Deleter
+ * @see KeyDeleter
  */
 public interface Setter<T>
-        extends ForceStorer<T>, Saver<T>, ModelDeleter<T>, Deleter {}
+        extends ForceStorer<T>, Saver<T>, Deleter<T> {}

@@ -7,14 +7,13 @@ package com.dereekb.gae.server.datastore;
  *
  * @param <T>
  *            model type
- * @see Deleter
+ * @see KeyDeleter
  */
 public interface ModelDeleter<T> {
 
 	/**
 	 * Deletes an entity synchronously. If the entity does not have an
-	 * identifier, the
-	 * function does nothing.
+	 * identifier, the function does nothing.
 	 *
 	 * @param entity
 	 *            Entity model to delete from a source.
@@ -27,32 +26,27 @@ public interface ModelDeleter<T> {
 	 *
 	 * @param entities
 	 *            Iterable list of models to delete from a source.
-	 * @param async
-	 *            Whether or not to delete asynchronously.
 	 */
 	public void delete(Iterable<T> entities);
 
 	/**
-	 * Deletes an entity. If the entity does not have an identifier, the
-	 * function does nothing.
+	 * Deletes an entity asynchronously. If the entity does not have an
+	 * identifier, the function does nothing.
 	 *
 	 * @param entity
 	 *            Entity model to delete from a source.
 	 * @param async
 	 *            Whether or not to delete asynchronously.
 	 */
-	public void delete(T entity,
-	                   Boolean async);
+	public void deleteAsync(T entity);
 
 	/**
-	 * Deletes a list of entities. Entities without identifiers are ignored.
-	 *
+	 * Deletes a list of entities asynchronously. Entities without identifiers
+	 * are ignored.
+	 * 
 	 * @param entities
 	 *            Iterable list of models to delete from a source.
-	 * @param async
-	 *            Whether or not to delete asynchronously.
 	 */
-	public void delete(Iterable<T> entities,
-	                   Boolean async);
+	public void deleteAsync(Iterable<T> entities);
 
 }

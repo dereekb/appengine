@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.crud.task.save;
 
+import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
@@ -16,27 +16,30 @@ import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
  *
  * @param <T>
  *            model type
+ * @deprecated Dangerous, as it could be used in multiple places, but really
+ *             only configured to allow a single task to work.
  */
+@Deprecated
 public class ConfiguredSetterModelsTask<T extends UniqueModel>
         implements IterableSetterTask<T> {
 
-	private ConfiguredSetter<T> setter;
+	private Setter<T> setter;
 	private SetterChangeState state;
 
-	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter) {
+	public ConfiguredSetterModelsTask(Setter<T> setter) {
 		this(setter, SetterChangeState.UPDATE);
 	}
 
-	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter, SetterChangeState state) {
+	public ConfiguredSetterModelsTask(Setter<T> setter, SetterChangeState state) {
 		this.setSetter(setter);
 		this.setState(state);
 	}
 
-	public ConfiguredSetter<T> getSetter() {
+	public Setter<T> getSetter() {
 		return this.setter;
 	}
 
-	public void setSetter(ConfiguredSetter<T> setter) throws IllegalArgumentException {
+	public void setSetter(Setter<T> setter) throws IllegalArgumentException {
 		if (setter == null) {
 			throw new IllegalArgumentException("Setter cannot be null.");
 		}
@@ -102,22 +105,8 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	}
 
 	@Override
-	public void doUpdateTask(Iterable<T> input,
-	                         boolean async)
-	        throws FailedTaskException {
-		this.setter.update(input, async);
-	}
-
-	@Override
 	public void doDeleteTask(Iterable<T> input) throws FailedTaskException {
 		this.setter.delete(input);
-	}
-
-	@Override
-	public void doDeleteTask(Iterable<T> input,
-	                         boolean async)
-	        throws FailedTaskException {
-		this.setter.delete(input, async);
 	}
 
 	@Override

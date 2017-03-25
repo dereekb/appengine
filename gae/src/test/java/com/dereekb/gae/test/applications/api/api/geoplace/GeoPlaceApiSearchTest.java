@@ -57,7 +57,7 @@ public class GeoPlaceApiSearchTest extends ApiSearchTest<GeoPlace> {
 			child.setParent(parent.getObjectifyKey());
 		}
 
-		this.registry.update(children, false);
+		this.registry.update(children);
 
 		Integer limit = null;
 		ObjectifyGeoPlaceQuery query = new ObjectifyGeoPlaceQuery();

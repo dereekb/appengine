@@ -26,9 +26,9 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystemEntry;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceEntry;
+import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
@@ -85,7 +85,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	protected String modelType;
 
 	protected ReadService<T> readService;
-	protected ConfiguredSetter<T> setter;
+	protected Setter<T> setter;
 
 	protected Reviewer<T> reviewer;
 	protected Validator<T> validator;
@@ -106,14 +106,14 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	public AbstractModelLinkSystemEntry(String modelType,
 	        ReadService<T> readService,
 	        DeleteService<T> deleteService,
-	        ConfiguredSetter<T> setter) {
+	        Setter<T> setter) {
 		this(modelType, readService, deleteService, setter, null);
 	}
 
 	public AbstractModelLinkSystemEntry(String modelType,
 	        ReadService<T> readService,
 	        DeleteService<T> deleteService,
-	        ConfiguredSetter<T> setter,
+	        Setter<T> setter,
 	        Map<String, LinkDeleterChangeType> deleteChangesMap) {
 		this.setModelType(modelType);
 		this.setReadService(readService);
@@ -140,11 +140,11 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 		this.readService = service;
 	}
 
-	public ConfiguredSetter<T> getSetter() {
+	public Setter<T> getSetter() {
 		return this.setter;
 	}
 
-	public void setSetter(ConfiguredSetter<T> setter) {
+	public void setSetter(Setter<T> setter) {
 		this.setter = setter;
 	}
 

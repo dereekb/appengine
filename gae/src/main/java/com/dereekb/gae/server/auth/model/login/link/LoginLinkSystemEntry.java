@@ -15,9 +15,9 @@ import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSy
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry;
+import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
 /**
  * {@link LinkSystemEntry} implementation for {@link Login}.
@@ -37,25 +37,25 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	private LinkTarget loginPointerTarget = new LinkTargetImpl(LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE,
 	        ModelKeyType.NAME);
 
-	public LoginLinkSystemEntry(CrudService<Login> crudService, ConfiguredSetter<Login> setter) {
+	public LoginLinkSystemEntry(CrudService<Login> crudService, Setter<Login> setter) {
 		super(LOGIN_LINK_TYPE, crudService, crudService, setter);
 	}
 
 	public LoginLinkSystemEntry(CrudService<Login> crudService,
-	        ConfiguredSetter<Login> setter,
+	        Setter<Login> setter,
 	        List<DescribedModelLinkInfo> info) {
 		super(LOGIN_LINK_TYPE, crudService, crudService, setter, info);
 	}
 
 	public LoginLinkSystemEntry(ReadService<Login> readService,
 	        DeleteService<Login> deleteService,
-	        ConfiguredSetter<Login> setter) {
+	        Setter<Login> setter) {
 		super(LOGIN_LINK_TYPE, readService, deleteService, setter);
 	}
 
 	public LoginLinkSystemEntry(ReadService<Login> readService,
 	        DeleteService<Login> deleteService,
-	        ConfiguredSetter<Login> setter,
+	        Setter<Login> setter,
 	        List<DescribedModelLinkInfo> info) {
 		super(LOGIN_LINK_TYPE, readService, deleteService, setter, info);
 	}
@@ -84,6 +84,8 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	@Override
 	public List<Link> makeDefinedLinksForModel(final Login model) {
 		List<Link> links = new ArrayList<Link>();
+
+		// No Links.
 
 		return links;
 	}

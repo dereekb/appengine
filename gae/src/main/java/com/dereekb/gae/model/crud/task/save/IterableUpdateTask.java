@@ -16,8 +16,4 @@ public interface IterableUpdateTask<T>
 
 	public void doUpdateTask(Iterable<T> input) throws FailedTaskException;
 
-	public void doUpdateTask(Iterable<T> input,
-	                         boolean async)
-	        throws FailedTaskException;
-
 }

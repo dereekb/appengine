@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify;
 
-import com.dereekb.gae.server.datastore.Deleter;
+import com.dereekb.gae.server.datastore.KeyDeleter;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
@@ -23,7 +23,7 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 public interface ObjectifyRegistry<T extends ObjectifyModel<T>>
         extends ObjectifyQueryIterableFactory<T>, ObjectifyKeyedGetter<T>, ObjectifyKeyedSetter<T>,
         ObjectifyQueryService<T>, ModelKeyListAccessorFactory<T>, ConfiguredSetter<T>, ConfiguredDeleter,
-        GetterSetter<T>, Deleter {
+        GetterSetter<T>, KeyDeleter {
 
 	public ObjectifyKeyConverter<T, ModelKey> getObjectifyKeyConverter();
 

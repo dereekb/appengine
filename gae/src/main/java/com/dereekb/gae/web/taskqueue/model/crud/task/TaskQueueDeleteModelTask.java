@@ -2,9 +2,9 @@ package com.dereekb.gae.web.taskqueue.model.crud.task;
 
 import java.util.List;
 
+import com.dereekb.gae.server.datastore.KeyDeleter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
-import com.dereekb.gae.server.datastore.utility.ConfiguredDeleter;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
@@ -18,25 +18,26 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  */
 public class TaskQueueDeleteModelTask<T extends UniqueModel> extends TaskQueueModelTask<T> {
 
-	private ConfiguredDeleter deleter;
+	private KeyDeleter deleter;
 
-	public TaskQueueDeleteModelTask(ConfiguredDeleter deleter) {
+	public TaskQueueDeleteModelTask(KeyDeleter deleter) {
 		this(deleter, null);
 	}
 
-	public TaskQueueDeleteModelTask(ConfiguredDeleter deleter, List<Task<ModelKeyListAccessor<T>>> tasks) {
+	public TaskQueueDeleteModelTask(KeyDeleter deleter, List<Task<ModelKeyListAccessor<T>>> tasks) {
 		super(tasks);
 		this.setDeleter(deleter);
 	}
 
-	public ConfiguredDeleter getDeleter() {
+	public KeyDeleter getDeleter() {
 		return this.deleter;
 	}
 
-	public void setDeleter(ConfiguredDeleter deleter) {
+	public void setDeleter(KeyDeleter deleter) {
 		this.deleter = deleter;
 	}
 
+	// MARK: Task
 	@Override
 	public void doTask(ModelKeyListAccessor<T> input) throws FailedTaskException {
 		super.doTask(input);

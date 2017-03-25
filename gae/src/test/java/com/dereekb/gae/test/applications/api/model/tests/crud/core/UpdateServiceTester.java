@@ -93,7 +93,7 @@ public class UpdateServiceTester<T extends UniqueModel>
 	private void testUpdatingAtomicUnavailable() {
 		T template = this.modelGenerator.generate();
 		ModelKey key = template.getModelKey();
-		this.getterSetter.delete(template, false);
+		this.getterSetter.delete(template);
 
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(template);
 
@@ -108,7 +108,7 @@ public class UpdateServiceTester<T extends UniqueModel>
 
 	private void testUpdatingNonAtomicUnavailable() {
 		T template = this.modelGenerator.generate();
-		this.getterSetter.delete(template, false);
+		this.getterSetter.delete(template);
 
 		UpdateRequestOptionsImpl options = new UpdateRequestOptionsImpl(false);
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(template, options);

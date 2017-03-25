@@ -50,27 +50,26 @@ public class TaskConfiguredUpdater<T>
 	// MARK: Updater
 	@Override
 	public void update(T entity) throws UpdateUnkeyedEntityException {
-		this.update(entity, null);
-	}
-
-	@Override
-	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.update(entities, null);
-	}
-
-	@Override
-	public void update(T entity,
-	                   Boolean async)
-	        throws UpdateUnkeyedEntityException {
-		this.updater.update(entity, async);
+		this.updater.update(entity);
 		this.taskRequestSender.sendTask(entity);
 	}
 
 	@Override
-	public void update(Iterable<T> entities,
-	                   Boolean async)
-	        throws UpdateUnkeyedEntityException {
-		this.updater.update(entities, async);
+	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		this.updater.update(entities);
+		this.taskRequestSender.sendTasks(entities);
+	}
+
+	@Override
+	public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
+		this.updater.updateAsync(entity);
+		this.taskRequestSender.sendTask(entity);
+
+	}
+
+	@Override
+	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		this.updater.updateAsync(entities);
 		this.taskRequestSender.sendTasks(entities);
 	}
 

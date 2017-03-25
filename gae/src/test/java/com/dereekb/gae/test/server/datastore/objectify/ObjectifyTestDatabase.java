@@ -10,6 +10,7 @@ import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImp
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
 
 /**
  * Extension of {@link ObjectifyDatabaseImpl} used for testing.
@@ -61,7 +62,12 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 
 		protected TestObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			super(type);
-			this.reader = new TestObjectifyDatabaseEntityReader();
+		}
+
+		@Override
+		protected void resetReaderWriter() {
+			this.setReader(new TestObjectifyDatabaseEntityReader());
+			this.writer = new ObjectifyDatabaseEntityWriterImpl();
 		}
 
 		// MARK: Reader
@@ -79,6 +85,11 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 				return super.keysGet(list);
 			}
 
+			@Override
+			public List<T> refsGet(Iterable<Ref<T>> list) {
+				resync();
+				return super.refsGet(list);
+			}
 		}
 
 	}

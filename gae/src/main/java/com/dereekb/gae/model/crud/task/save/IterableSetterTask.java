@@ -10,7 +10,9 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  *
  * @param <T>
  *            model type
+ * @deprecated Use the more specific tasks directly.
  */
+@Deprecated
 public interface IterableSetterTask<T>
         extends IterableDeleteTask<T>, IterableUpdateTask<T>, IterableStoreTask<T> {
 

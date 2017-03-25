@@ -16,9 +16,4 @@ public interface IterableDeleteTask<T>
 
 	public void doDeleteTask(Iterable<T> input) throws FailedTaskException;
 
-	@Deprecated
-	public void doDeleteTask(Iterable<T> input,
-	                         boolean async)
-	        throws FailedTaskException;
-
 }

@@ -20,6 +20,7 @@ import com.dereekb.gae.utilities.task.impl.MultiTask;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> extends MultiIterableTask<T>
         implements IterableSetterTask<T> {
 
@@ -97,12 +98,11 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 		this.setterTask.doUpdateTask(input);
 	}
 
-	@Override
 	public void doUpdateTask(Iterable<T> input,
 	                         boolean async)
 	        throws FailedTaskException {
 		super.doTask(input);
-		this.setterTask.doUpdateTask(input, async);
+		this.setterTask.doUpdateTask(input);
 	}
 
 	// MARK: Deleter Task
@@ -112,12 +112,11 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 		this.setterTask.doDeleteTask(input);
 	}
 
-	@Override
 	public void doDeleteTask(Iterable<T> input,
 	                         boolean async)
 	        throws FailedTaskException {
 		super.doTask(input);
-		this.setterTask.doDeleteTask(input, async);
+		this.setterTask.doDeleteTask(input);
 	}
 
 	@Override

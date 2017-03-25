@@ -9,7 +9,9 @@ import com.dereekb.gae.server.datastore.ModelDeleter;
  *
  * @param <T>
  *            model type
+ * @deprecated {@link ModelDeleter} already pre-configured.
  */
+@Deprecated
 public interface ConfiguredModelDeleter<T>
         extends ModelDeleter<T> {
 
@@ -20,6 +22,7 @@ public interface ConfiguredModelDeleter<T>
 	 * @param entity
 	 *            Entity model to delete from a source.
 	 */
+	@Override
 	public void delete(T entity);
 
 	/**
@@ -28,6 +31,7 @@ public interface ConfiguredModelDeleter<T>
 	 * @param entities
 	 *            Iterable list of models to delete from a source.
 	 */
+	@Override
 	public void delete(Iterable<T> entities);
 
 }
