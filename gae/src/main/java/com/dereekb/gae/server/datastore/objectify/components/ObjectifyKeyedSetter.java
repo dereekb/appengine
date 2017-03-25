@@ -1,11 +1,10 @@
 package com.dereekb.gae.server.datastore.objectify.components;
 
 import com.dereekb.gae.server.datastore.Setter;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
 /**
- * {@link ConfiguredSetter} for Objectify.
+ * {@link Setter} extension for Objectify.
  * 
  * @author dereekb
  *
@@ -16,23 +15,35 @@ public interface ObjectifyKeyedSetter<T>
         extends Setter<T> {
 
 	/**
+	 * Synchronously deletes a model using a key.
+	 *
+	 * @param key
+	 *            Objectify Key. Never {@code null}.
+	 */
+	public void delete(Key<T> key);
+
+	/**
+	 * Synchronously deletes an iterable list of models using their keys.
+	 *
+	 * @param keys
+	 *            {@link Iterable}. Never {@code null}.
+	 */
+	public void deleteWithObjectifyKeys(Iterable<Key<T>> keys);
+
+	/**
 	 * Deletes a model using a key.
 	 *
 	 * @param key
-	 * @param async
-	 *            Whether or not to save asynchronously.
+	 *            Objectify Key. Never {@code null}.
 	 */
-	public void delete(Key<T> key,
-	                   boolean async);
+	public void deleteAsync(Key<T> key);
 
 	/**
 	 * Deletes an iterable list of models using their keys.
 	 *
 	 * @param keys
-	 * @param async
-	 *            Whether or not to save asynchronously.
+	 *            {@link Iterable}. Never {@code null}.
 	 */
-	public void deleteWithObjectifyKeys(Iterable<Key<T>> keys,
-	                                    boolean async);
+	public void deleteWithObjectifyKeysAsync(Iterable<Key<T>> keys);
 
 }

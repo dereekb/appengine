@@ -39,13 +39,9 @@
 	</bean>
 
 	<!-- Configured Setters -->
-	<alias name="storedBlobRegistry" alias="storedBlobAsyncConfiguredSetter" />
-
-	<bean id="storedBlobSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
-		<constructor-arg index="0" ref="storedBlobRegistry" />
-		<constructor-arg index="1" value="false" />
-	</bean>
+	<alias name="storedBlobRegistry" alias="storedBlobStorer" />
+	<alias name="storedBlobRegistry" alias="storedBlobUpdater" />
+	<alias name="storedBlobRegistry" alias="storedBlobDeleter" />
 
 	<!-- Update Scheduler -->
 	<bean id="storedBlobScheduleUpdateReview"
@@ -54,8 +50,8 @@
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="storedBlobUpdateConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
+	<bean id="storedBlobTaskConfiguredUpdater"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl">
 		<constructor-arg index="0"
 			ref="storedBlobScheduleUpdateReview" />
 		<constructor-arg index="1" ref="storedBlobRegistry" />

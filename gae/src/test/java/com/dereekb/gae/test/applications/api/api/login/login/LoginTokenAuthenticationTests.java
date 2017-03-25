@@ -70,7 +70,7 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 		Login login = this.registerService.register(pointer);
 
 		login.setRoles(0b0111L);
-		this.loginRegistry.save(login, false);
+		this.loginRegistry.forceStore(login);
 
 		LoginTokenPair tokenPair = this.passwordController.login(TEST_USERNAME, TEST_PASSWORD);
 		String token = tokenPair.getToken();

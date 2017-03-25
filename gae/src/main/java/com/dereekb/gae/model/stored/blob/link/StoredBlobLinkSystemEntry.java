@@ -11,7 +11,7 @@ import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModel
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
+import com.dereekb.gae.server.datastore.Updater;
 
 /**
  * {@link LinkSystemEntry} implementation for {@link StoredBlob}.
@@ -24,22 +24,22 @@ public class StoredBlobLinkSystemEntry extends AbstractDescriptiveModelLinkSyste
 	public static final String STORED_BLOB_LINK_TYPE = "StoredBlob";
 
 	public StoredBlobLinkSystemEntry(CrudService<StoredBlob> crudService,
-	        ConfiguredSetter<StoredBlob> setter,
+	        Updater<StoredBlob> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(STORED_BLOB_LINK_TYPE, crudService, crudService, setter, info);
+		super(STORED_BLOB_LINK_TYPE, crudService, crudService, updater, info);
 	}
 
 	public StoredBlobLinkSystemEntry(ReadService<StoredBlob> readService,
 	        DeleteService<StoredBlob> deleteService,
-	        ConfiguredSetter<StoredBlob> setter) {
-		super(STORED_BLOB_LINK_TYPE, readService, deleteService, setter);
+	        Updater<StoredBlob> updater) {
+		super(STORED_BLOB_LINK_TYPE, readService, deleteService, updater);
 	}
 
 	public StoredBlobLinkSystemEntry(ReadService<StoredBlob> readService,
 	        DeleteService<StoredBlob> deleteService,
-	        ConfiguredSetter<StoredBlob> setter,
+	        Updater<StoredBlob> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(STORED_BLOB_LINK_TYPE, readService, deleteService, setter, info);
+		super(STORED_BLOB_LINK_TYPE, readService, deleteService, updater, info);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class StoredBlobLinkSystemEntry extends AbstractDescriptiveModelLinkSyste
 	@Override
 	public String toString() {
 		return "StoredBlobLinkSystemEntry [descriptiveLinkInfo=" + this.descriptiveLinkInfo + ", modelType="
-		        + this.modelType + ", indexService=" + this.readService + ", setter=" + this.setter + ", reviewer="
+		        + this.modelType + ", indexService=" + this.readService + ", updater=" + this.updater + ", reviewer="
 		        + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames=" + this.getReverseLinkNames()
 		        + "]";
 	}

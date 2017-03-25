@@ -19,7 +19,7 @@
 		class="com.dereekb.gae.model.geo.place.link.GeoPlaceLinkSystemEntry">
 		<constructor-arg index="0" ref="geoPlaceCrudService" />
 		<constructor-arg index="1"
-			ref="geoPlaceUpdateConfiguredSetter" />
+			ref="geoPlaceTaskConfiguredUpdater" />
 		<constructor-arg index="2">
 			<list>
 				<bean

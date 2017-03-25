@@ -203,7 +203,7 @@ public class RefreshTokenServiceImpl
 
 	public void resetAuthentication(Login login) {
 		login.setAuthReset(new Date());
-		this.loginGetterSetter.save(login, true);
+		this.loginGetterSetter.update(login);
 	}
 
 	// MARK: Internal

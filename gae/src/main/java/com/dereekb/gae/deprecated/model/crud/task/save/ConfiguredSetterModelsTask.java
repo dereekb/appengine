@@ -1,13 +1,14 @@
 package com.dereekb.gae.model.crud.task.save;
 
+import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
+import com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl;
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
 
 /**
- * {@link IterableTask} for saving or deleting models.
+ * {@link IterableTask} for updating or deleting models.
  * <p>
  * Is generally used in conjunction with a {@link MultiIterableTask} or similar
  * type to save after other tasks have been completed on the input.
@@ -16,27 +17,32 @@ import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
  *
  * @param <T>
  *            model type
+ * @deprecated Dangerous, as it could be used in multiple places, but really
+ *             only configured to allow a single task to work. Use
+ *             {@link IterableSetterTaskImpl} if you don't need to use
+ *             {@link IterableTask}.
  */
+@Deprecated
 public class ConfiguredSetterModelsTask<T extends UniqueModel>
         implements IterableSetterTask<T> {
 
-	private ConfiguredSetter<T> setter;
+	private Setter<T> setter;
 	private SetterChangeState state;
 
-	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter) {
-		this(setter, SetterChangeState.SAVE);
+	public ConfiguredSetterModelsTask(Setter<T> setter) {
+		this(setter, SetterChangeState.UPDATE);
 	}
 
-	public ConfiguredSetterModelsTask(ConfiguredSetter<T> setter, SetterChangeState state) {
+	public ConfiguredSetterModelsTask(Setter<T> setter, SetterChangeState state) {
 		this.setSetter(setter);
 		this.setState(state);
 	}
 
-	public ConfiguredSetter<T> getSetter() {
+	public Setter<T> getSetter() {
 		return this.setter;
 	}
 
-	public void setSetter(ConfiguredSetter<T> setter) throws IllegalArgumentException {
+	public void setSetter(Setter<T> setter) throws IllegalArgumentException {
 		if (setter == null) {
 			throw new IllegalArgumentException("Setter cannot be null.");
 		}
@@ -60,45 +66,54 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	@Override
 	public void doTask(Iterable<T> input) throws FailedTaskException {
 		switch (this.state) {
-			case SAVE:
-				this.doSaveTask(input);
+			case STORE:
+				this.doStoreTask(input);
+				break;
+			case UPDATE:
+				this.doUpdateTask(input);
 				break;
 			case DELETE:
-				this.setter.delete(input);
+				this.doDeleteTask(input);
 				break;
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void doTask(Iterable<T> input,
 	                   boolean async)
 	        throws FailedTaskException {
 		switch (this.state) {
-			case SAVE:
-				this.doSaveTask(input, async);
+			case STORE:
+				this.doStoreTask(input);
+				break;
+			case UPDATE:
+				this.doUpdateTask(input);
 				break;
 			case DELETE:
-				this.setter.delete(input, async);
+				this.doDeleteTask(input);
 				break;
 		}
 	}
 
-	// MARK: IterableSaveTask
+	// MARK: IterableSetterTask
 	@Override
-	public void doSaveTask(Iterable<T> input) throws FailedTaskException {
-		this.setter.save(input);
+	public void doStoreTask(Iterable<T> input) throws FailedTaskException {
+		this.setter.store(input);
 	}
 
 	@Override
-	public void doSaveTask(Iterable<T> input,
-	                       boolean async)
-	        throws FailedTaskException {
-		this.setter.save(input, async);
+	public void doUpdateTask(Iterable<T> input) throws FailedTaskException {
+		this.setter.update(input);
+	}
+
+	@Override
+	public void doDeleteTask(Iterable<T> input) throws FailedTaskException {
+		this.setter.delete(input);
 	}
 
 	@Override
 	public String toString() {
 		return "SaveModelMultiTask [setter=" + this.setter + "]";
 	}
-
 }

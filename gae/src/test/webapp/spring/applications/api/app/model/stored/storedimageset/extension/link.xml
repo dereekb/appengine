@@ -19,7 +19,7 @@
 		class="com.dereekb.gae.model.stored.image.set.link.StoredImageSetLinkSystemEntry">
 		<constructor-arg index="0" ref="storedImageSetCrudService" />
 		<constructor-arg index="1"
-			ref="storedImageSetUpdateConfiguredSetter" />
+			ref="storedImageSetTaskConfiguredUpdater" />
 		<!-- Reverse Links Configuration -->
 		<property name="reverseLinkNames">
 			<map key-type="java.lang.String" value-type="java.lang.String">

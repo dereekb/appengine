@@ -10,9 +10,9 @@ import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
 import com.dereekb.gae.utilities.task.impl.MultiTask;
 
 /**
- * {@link MultiTask} for saving or deleting models.
+ * {@link MultiTask} for storing, updating or deleting models.
  * <p>
- * Performs all tasks, then saves or deletes the input using a
+ * Performs all tasks, then stores, updates or deletes the input using a
  * {@link ConfiguredSetter}.
  *
  * @author dereekb
@@ -20,6 +20,7 @@ import com.dereekb.gae.utilities.task.impl.MultiTask;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> extends MultiIterableTask<T>
         implements IterableSetterTask<T> {
 
@@ -75,6 +76,7 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 		this.setterTask.doTask(input);
 	}
 
+	@Deprecated
 	@Override
 	public void doTask(Iterable<T> input,
 	                   boolean async)
@@ -85,17 +87,36 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 
 	// MARK: Saver Task
 	@Override
-	public void doSaveTask(Iterable<T> input) throws FailedTaskException {
+	public void doStoreTask(Iterable<T> input) throws FailedTaskException {
 		super.doTask(input);
-		this.setterTask.doSaveTask(input);
+		this.setterTask.doStoreTask(input);
 	}
 
 	@Override
-	public void doSaveTask(Iterable<T> input,
-	                       boolean async)
+	public void doUpdateTask(Iterable<T> input) throws FailedTaskException {
+		super.doTask(input);
+		this.setterTask.doUpdateTask(input);
+	}
+
+	public void doUpdateTask(Iterable<T> input,
+	                         boolean async)
 	        throws FailedTaskException {
 		super.doTask(input);
-		this.setterTask.doSaveTask(input, async);
+		this.setterTask.doUpdateTask(input);
+	}
+
+	// MARK: Deleter Task
+	@Override
+	public void doDeleteTask(Iterable<T> input) throws FailedTaskException {
+		super.doTask(input);
+		this.setterTask.doDeleteTask(input);
+	}
+
+	public void doDeleteTask(Iterable<T> input,
+	                         boolean async)
+	        throws FailedTaskException {
+		super.doTask(input);
+		this.setterTask.doDeleteTask(input);
 	}
 
 	@Override

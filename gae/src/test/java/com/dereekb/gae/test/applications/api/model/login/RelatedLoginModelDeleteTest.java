@@ -88,7 +88,7 @@ public class RelatedLoginModelDeleteTest extends ApiApplicationTestContext {
 		keyA.setLoginPointer(pointer.getObjectifyKey());
 
 		List<LoginKey> otherKeys = this.loginKeyGenerator.generate(5);
-		this.loginKeyRegistry.save(keyA, true);
+		this.loginKeyRegistry.update(keyA);
 
 		// Delete Login Pointer
 		DeleteRequest request = new DeleteRequestImpl(pointer);

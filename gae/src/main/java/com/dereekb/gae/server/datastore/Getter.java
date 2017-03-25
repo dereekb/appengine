@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore;
 import java.util.List;
 import java.util.Set;
 
+import com.dereekb.gae.server.datastore.exception.UninitializedModelException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -24,8 +25,10 @@ public interface Getter<T extends UniqueModel> {
 	 * @param model
 	 *            Model. Never {@code null}.
 	 * @return {@code true} if the model exists, false otherwise.
+	 * @throws UninitializedModelException
+	 *             thrown when a model without an identifier is provided.
 	 */
-	public boolean exists(T model);
+	public boolean exists(T model) throws UninitializedModelException;
 
 	/**
 	 * Checks that the model exists.
@@ -33,63 +36,65 @@ public interface Getter<T extends UniqueModel> {
 	 * @param key
 	 *            Identifier of the model. Never {@code null}.
 	 * @return {@code true} if the object exists, false otherwise.
+	 * @throws IllegalArgumentException
+	 *             thrown when a {@code null} model key is provided.
 	 */
-	public boolean exists(ModelKey key);
+	public boolean exists(ModelKey key) throws IllegalArgumentException;
 
 	/**
-	 * Checks that all the target models exist.
+	 * Checks that a corresponding model for each key exists.
 	 *
 	 * @param keys
-	 *            Iterable list of keys. Never {@code null}.
+	 *            {@link Iterable}. Never {@code null}.
 	 * @return {@code true} if all objects exist with the specified keys.
 	 */
-	public boolean allExist(Iterable<ModelKey> keys);
+	public boolean allExist(Iterable<ModelKey> keys) throws IllegalArgumentException;
 
 	/**
 	 * Returns a set of keys of objects that exist in the database with the
 	 * input keys.
 	 *
 	 * @param keys
-	 *            Iterable list of keys.
-	 * @return Set of keys that correspond to existing items.
+	 *            {@link Iterable}. Never {@code null}.
+	 * @return {@link Set}. Never {@code null}.
 	 */
-	public Set<ModelKey> exists(Iterable<ModelKey> keys);
+	public Set<ModelKey> getExisting(Iterable<ModelKey> keys) throws IllegalArgumentException;
 
 	/**
 	 * Retrieves the database model that corresponds to the input key.
 	 *
 	 * @param key
-	 *            Identifier of the model.
-	 * @return Model that correponds to the input key, or null if no model
-	 *         exists with that key.
+	 *            {@link ModelKey}. Never {@code null}.
+	 * @return Model, or {@code null} if it doesn't exist.
 	 */
-	public T get(ModelKey key);
+	public T get(ModelKey key) throws IllegalArgumentException;
 
 	/**
-	 * Retrieves the database copy of the input model.
+	 * Retrieves the database value of the input model, if it exists.
 	 *
 	 * @param model
-	 *            Single model.
-	 * @return Model read from the source, or null if it does not exist, or the
-	 *         input model has a null key.
+	 *            Model. Never {@code null}.
+	 * @return Model, or {@code null} if it doesn't exist.
 	 */
-	public T get(T model);
+	public T get(T model) throws UninitializedModelException;
 
 	/**
-	 * Retrieves database copies of the specified models. Models that don't have
-	 * an key are ignored.
+	 * Retrieves database value of the specified models.
 	 *
 	 * @param models
-	 *            Iterable list of models.
+	 *            {@link Iterable}. Never {@code null}.
+	 * 
 	 * @return A list of models that could be read from the source.
+	 * @throws UninitializedModelException
+	 *             if one or more models do not have an identifier.
 	 */
-	public List<T> get(Iterable<T> models);
+	public List<T> get(Iterable<T> models) throws UninitializedModelException;
 
 	/**
 	 * Retrieves items with the given keys.
 	 *
 	 * @param keys
-	 *            Iterable list of keys.
+	 *            {@link Iterable}. Never {@code null}.
 	 * @return A list of models that could be read from the source.
 	 */
 	public List<T> getWithKeys(Iterable<ModelKey> keys);

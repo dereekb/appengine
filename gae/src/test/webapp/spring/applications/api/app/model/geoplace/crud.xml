@@ -42,24 +42,22 @@
 	</bean>
 
 	<!-- Save/Delete Tasks -->
-	<bean id="geoPlaceSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="geoPlaceSynchronousConfiguredSetter" />
+	<bean id="geoPlaceSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="geoPlaceRegistry" />
 	</bean>
-
-	<bean id="geoPlaceAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0" ref="geoPlaceAsyncConfiguredSetter" />
-	</bean>
+	
+	<alias name="geoPlaceSetterTask" alias="geoPlaceStorerTask" />
+	<alias name="geoPlaceSetterTask" alias="geoPlaceUpdaterTask" />
+	<alias name="geoPlaceSetterTask" alias="geoPlaceDeleterTask" />
 
 	<!-- Create -->
 	<bean id="geoPlaceCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceCreateTaskDelegate" />
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelMultiIterableTask">
+			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
 				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
-				<constructor-arg index="1" ref="geoPlaceSynchronousSaveTask"/>
+				<constructor-arg index="1" ref="geoPlaceStorerTask"/>
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -87,7 +85,7 @@
 	<!-- Update -->
 	<bean id="geoPlaceUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="geoPlaceAttributeUpdater" />
-		<constructor-arg index="1" ref="geoPlaceAsyncSaveTask" />
+		<constructor-arg index="1" ref="geoPlaceUpdaterTask" />
 		<constructor-arg index="2" ref="geoPlaceScheduleUpdateReview" />
 	</bean>
 

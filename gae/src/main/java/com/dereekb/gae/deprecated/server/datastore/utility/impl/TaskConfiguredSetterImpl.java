@@ -1,16 +1,21 @@
 package com.dereekb.gae.server.datastore.utility.impl;
 
 import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
- * {@link ConfiguredSetterImpl} extension that allows sending
+ * {@link ConfiguredSetterImpl} extension that sends a task for updated
+ * entities.
  *
  * @author dereekb
  *
  * @param <T>
  *            model type
+ * @deprecated replaced with {@link TaskConfiguredUpdaterImpl} or
+ *             {@link TaskConfiguredDeleterImpl}.
  */
+@Deprecated
 public class TaskConfiguredSetterImpl<T> extends ConfiguredSetterImpl<T> {
 
 	private TaskRequestSender<T> taskRequestSender;
@@ -41,16 +46,14 @@ public class TaskConfiguredSetterImpl<T> extends ConfiguredSetterImpl<T> {
 
 	// MARK: Setter
 	@Override
-	public void save(T entity,
-	                 boolean async) {
-		super.save(entity, async);
+	public void update(T entity) throws UpdateUnkeyedEntityException {
+		super.update(entity);
 		this.taskRequestSender.sendTask(entity);
 	}
 
 	@Override
-	public void save(Iterable<T> entities,
-	                 boolean async) {
-		super.save(entities, async);
+	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		super.update(entities);
 		this.taskRequestSender.sendTasks(entities);
 	}
 

@@ -9,7 +9,8 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
  * @author dereekb
  *
  */
-public interface ObjectifyDatabase {
+public interface ObjectifyDatabase
+        extends ObjectifySource {
 
 	public <T extends ObjectifyModel<T>> ObjectifyDatabaseEntity<T> getDatabaseEntity(Class<T> type);
 

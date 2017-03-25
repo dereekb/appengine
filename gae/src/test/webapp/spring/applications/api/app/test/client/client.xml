@@ -16,6 +16,8 @@
 	<!-- Base client-request sender. -->
 	<bean id="mockClientRequestSender"
 		class="com.dereekb.gae.test.mock.client.crud.MockClientRequestSender">
+		<!-- TODO: Update tests to allow this to be false. -->
+		<property name="waitForTaskQueue" value="true"/>
 	</bean>
 	
 	<bean id="clientApiRequestSender"

@@ -73,8 +73,8 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		// Clear any generated links
 		storedImageSet.setIcon(null);
 		storedImageSet.setImages(null);
-		this.storedImageSetRegistry.save(storedImageSet, false);
-		this.storedImageRegistry.save(imagesInSet, false);
+		this.storedImageSetRegistry.update(storedImageSet);
+		this.storedImageRegistry.update(imagesInSet);
 
 		// Start Test Linking
 		this.linkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetIconLinkName, storedImage);
@@ -104,9 +104,8 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
 		// Clear any generated links
 		storedImageSet.setImages(null);
-		this.storedImageSetRegistry.save(storedImageSet, false);
-
-		this.storedImageRegistry.save(storedImage, false);
+		this.storedImageSetRegistry.update(storedImageSet);
+		this.storedImageRegistry.update(storedImage);
 
 		// Start Test Linking
 		this.linkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetImagesLinkName,
@@ -134,7 +133,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
 		// Clear any generated links
 		storedImageSet.setImages(null);
-		this.storedImageSetRegistry.save(storedImageSet, false);
+		this.storedImageSetRegistry.update(storedImageSet);
 
 		List<ModelKey> keys = ModelKey.readModelKeys(storedImages);
 
@@ -167,8 +166,8 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		// Clear any generated links
 		storedImageSet.setIcon(null);
 		storedImageSet.setImages(null);
-		this.storedImageSetRegistry.save(storedImageSet, false);
-		this.storedImageRegistry.save(imagesInSet, false);
+		this.storedImageSetRegistry.update(storedImageSet);
+		this.storedImageRegistry.update(imagesInSet);
 
 		// Link Together
 		this.linkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetIconLinkName, storedImage);
@@ -201,7 +200,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
 		// Clear any generated links
 		storedImageSet.setImages(null);
-		this.storedImageSetRegistry.save(storedImageSet, false);
+		this.storedImageSetRegistry.update(storedImageSet);
 
 		// Link Together
 		this.linkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetImagesLinkName, storedImage);
