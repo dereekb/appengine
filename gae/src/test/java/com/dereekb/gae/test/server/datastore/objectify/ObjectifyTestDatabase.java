@@ -64,11 +64,6 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 			this.reader = new TestObjectifyDatabaseEntityReader();
 		}
 
-		@Override
-		public boolean isConfiguredAsync() {
-			return ObjectifyTestDatabase.this.isAsync(super.isConfiguredAsync());
-		}
-
 		// MARK: Reader
 		private class TestObjectifyDatabaseEntityReader extends ObjectifyDatabaseEntityReaderImpl {
 

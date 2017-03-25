@@ -8,9 +8,9 @@ import com.dereekb.gae.model.crud.task.CreateTask;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;
+import com.dereekb.gae.model.crud.task.save.IterableStoreTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
-import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
@@ -26,18 +26,18 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
         implements CreateTask<T> {
 
 	private CreateTaskDelegate<T> delegate;
-	private IterableTask<T> saveTask;
+	private IterableStoreTask<T> storeTask;
 
 	private TaskRequestSender<T> reviewTaskSender;
 
-	public CreateTaskImpl(CreateTaskDelegate<T> delegate, IterableTask<T> saveTask, TaskRequestSender<T> sender) {
-		this(delegate, saveTask);
+	public CreateTaskImpl(CreateTaskDelegate<T> delegate, IterableStoreTask<T> storeTask, TaskRequestSender<T> sender) {
+		this(delegate, storeTask);
 		this.setReviewTaskSender(sender);
 	}
 
-	public CreateTaskImpl(CreateTaskDelegate<T> delegate, IterableTask<T> saveTask) {
+	public CreateTaskImpl(CreateTaskDelegate<T> delegate, IterableStoreTask<T> storeTask) {
 		super(new CreateTaskConfigImpl());
-		this.setSaveTask(saveTask);
+		this.setSaveTask(storeTask);
 		this.setDelegate(delegate);
 	}
 
@@ -53,16 +53,16 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 		this.delegate = delegate;
 	}
 
-	public IterableTask<T> getSaveTask() {
-		return this.saveTask;
+	public IterableStoreTask<T> getSaveTask() {
+		return this.storeTask;
 	}
 
-	public void setSaveTask(IterableTask<T> saveTask) throws IllegalArgumentException {
-		if (saveTask == null) {
+	public void setSaveTask(IterableStoreTask<T> storeTask) throws IllegalArgumentException {
+		if (storeTask == null) {
 			throw new IllegalArgumentException("SaveTask cannot be null.");
 		}
 
-		this.saveTask = saveTask;
+		this.storeTask = storeTask;
 	}
 
 	public TaskRequestSender<T> getReviewTaskSender() {
@@ -83,7 +83,7 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 		List<T> results = CreatePair.getObjects(input);
 
 		try {
-			this.saveTask.doTask(results);
+			this.storeTask.doStoreTask(results);
 		} catch (FailedTaskException e) {
 			Throwable cause = e.getCause();
 
@@ -114,7 +114,7 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 
 	@Override
 	public String toString() {
-		return "CreateTaskImpl [saveTask=" + this.saveTask + ", delegate=" + this.delegate + ", defaultConfig="
+		return "CreateTaskImpl [storeTask=" + this.storeTask + ", delegate=" + this.delegate + ", defaultConfig="
 		        + this.defaultConfig + "]";
 	}
 

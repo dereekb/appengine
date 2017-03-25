@@ -4,19 +4,20 @@ import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
- * {@link IterableTask} used for updating models.
+ * {@link IterableTask} used for storing new models.
  * 
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
-public interface IterableUpdateTask<T>
+public interface IterableDeleteTask<T>
         extends IterableTask<T> {
 
-	public void doUpdateTask(Iterable<T> input) throws FailedTaskException;
+	public void doDeleteTask(Iterable<T> input) throws FailedTaskException;
 
-	public void doUpdateTask(Iterable<T> input,
+	@Deprecated
+	public void doDeleteTask(Iterable<T> input,
 	                         boolean async)
 	        throws FailedTaskException;
 

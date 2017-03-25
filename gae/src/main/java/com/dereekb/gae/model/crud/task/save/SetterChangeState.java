@@ -11,8 +11,19 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
  */
 public enum SetterChangeState {
 
+	/**
+	 * Store new models.
+	 */
+	STORE,
+
+	/**
+	 * Update existing models.
+	 */
 	UPDATE,
 
+	/**
+	 * Delete existing models.
+	 */
 	DELETE
 
 }

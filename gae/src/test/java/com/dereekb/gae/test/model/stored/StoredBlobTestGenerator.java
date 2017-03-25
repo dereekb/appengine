@@ -72,7 +72,7 @@ public class StoredBlobTestGenerator extends TestModelGeneratorImpl<StoredBlob> 
 	public StoredBlob generate() {
 		StoredBlob model = this.generator.generate();
 		this.makeStored(model);
-		this.setter.store(model);
+		this.setter.forceStore(model);
 		return model;
 	}
 
@@ -80,7 +80,7 @@ public class StoredBlobTestGenerator extends TestModelGeneratorImpl<StoredBlob> 
 	public StoredBlob generate(GeneratorArg arg) {
 		StoredBlob model = this.generator.generate(arg);
 		this.makeStored(model);
-		this.setter.store(model);
+		this.setter.forceStore(model);
 		return model;
 	}
 
@@ -89,7 +89,7 @@ public class StoredBlobTestGenerator extends TestModelGeneratorImpl<StoredBlob> 
 	                                 GeneratorArg arg) {
 		List<StoredBlob> models = this.generator.generate(count, arg);
 		this.makeStored(models);
-		this.setter.store(models);
+		this.setter.forceStore(models);
 		return models;
 	}
 
@@ -97,7 +97,7 @@ public class StoredBlobTestGenerator extends TestModelGeneratorImpl<StoredBlob> 
 	public StoredBlob generateModel(ModelKey identifier) {
 		StoredBlob model = this.generator.generateModel(identifier);
 		this.makeStored(model);
-		this.setter.store(model);
+		this.setter.forceStore(model);
 		return model;
 	}
 
@@ -105,7 +105,7 @@ public class StoredBlobTestGenerator extends TestModelGeneratorImpl<StoredBlob> 
 	public List<StoredBlob> generateModels(Iterable<ModelKey> identifiers) {
 		List<StoredBlob> models = this.generator.generateModels(identifiers);
 		this.makeStored(models);
-		this.setter.store(models);
+		this.setter.forceStore(models);
 		return models;
 	}
 

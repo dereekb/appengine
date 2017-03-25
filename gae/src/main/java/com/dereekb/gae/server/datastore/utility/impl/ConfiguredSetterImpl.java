@@ -18,16 +18,16 @@ import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 public class ConfiguredSetterImpl<T>
         implements ConfiguredSetter<T> {
 
-	public static final boolean DEFAULT_ASYNC_STATE = true;
+	public static final Boolean DEFAULT_ASYNC_STATE = true;
 
 	private Setter<T> setter;
-	private boolean asynchronous;
+	private Boolean asynchronous;
 
 	public ConfiguredSetterImpl(Setter<T> setter) {
 		this(setter, DEFAULT_ASYNC_STATE);
 	}
 
-	public ConfiguredSetterImpl(Setter<T> setter, boolean asynchronous) throws IllegalArgumentException {
+	public ConfiguredSetterImpl(Setter<T> setter, Boolean asynchronous) throws IllegalArgumentException {
 		this.setSetter(setter);
 		this.setAsynchronous(asynchronous);
 	}
@@ -44,11 +44,11 @@ public class ConfiguredSetterImpl<T>
 		this.setter = setter;
 	}
 
-	public boolean isAsynchronous() {
+	public Boolean isAsynchronous() {
 		return this.asynchronous;
 	}
 
-	public void setAsynchronous(boolean asynchronous) {
+	public void setAsynchronous(Boolean asynchronous) {
 		this.asynchronous = asynchronous;
 	}
 
@@ -75,6 +75,20 @@ public class ConfiguredSetterImpl<T>
 	}
 
 	@Override
+	public void update(T entity,
+	                   Boolean async)
+	        throws UpdateUnkeyedEntityException {
+		this.setter.update(entity, async);
+	}
+
+	@Override
+	public void update(Iterable<T> entities,
+	                   Boolean async)
+	        throws UpdateUnkeyedEntityException {
+		this.setter.update(entities, async);
+	}
+
+	@Override
 	public void store(T entity) throws StoreKeyedEntityException {
 		this.setter.store(entity);
 	}
@@ -96,25 +110,36 @@ public class ConfiguredSetterImpl<T>
 
 	@Override
 	public void delete(T entity,
-	                   boolean async) {
+	                   Boolean async) {
 		this.setter.delete(entity, async);
 	}
 
 	@Override
 	public void delete(Iterable<T> entities,
-	                   boolean async) {
+	                   Boolean async) {
 		this.setter.delete(entities, async);
 	}
 
 	@Override
+	public void deleteWithKey(ModelKey key) {
+		this.setter.deleteWithKey(key);
+	}
+
+	@Override
+	public void deleteWithKeys(Iterable<ModelKey> keys) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void deleteWithKey(ModelKey key,
-	                          boolean async) {
+	                          Boolean async) {
 		this.setter.deleteWithKey(key, async);
 	}
 
 	@Override
 	public void deleteWithKeys(Iterable<ModelKey> keys,
-	                           boolean async) {
+	                           Boolean async) {
 		this.setter.deleteWithKeys(keys, async);
 	}
 

@@ -60,11 +60,14 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	@Override
 	public void doTask(Iterable<T> input) throws FailedTaskException {
 		switch (this.state) {
+			case STORE:
+				this.doStoreTask(input);
+				break;
 			case UPDATE:
 				this.doUpdateTask(input);
 				break;
 			case DELETE:
-				this.setter.delete(input);
+				this.doDeleteTask(input);
 				break;
 		}
 	}
@@ -75,16 +78,24 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	                   boolean async)
 	        throws FailedTaskException {
 		switch (this.state) {
+			case STORE:
+				this.doStoreTask(input);
+				break;
 			case UPDATE:
-				this.doUpdateTask(input, async);
+				this.doUpdateTask(input);
 				break;
 			case DELETE:
-				this.setter.delete(input, async);
+				this.doDeleteTask(input);
 				break;
 		}
 	}
 
-	// MARK: IterableSaveTask
+	// MARK: IterableSetterTask
+	@Override
+	public void doStoreTask(Iterable<T> input) throws FailedTaskException {
+		this.setter.store(input);
+	}
+
 	@Override
 	public void doUpdateTask(Iterable<T> input) throws FailedTaskException {
 		this.setter.update(input);
@@ -94,12 +105,23 @@ public class ConfiguredSetterModelsTask<T extends UniqueModel>
 	public void doUpdateTask(Iterable<T> input,
 	                         boolean async)
 	        throws FailedTaskException {
-		this.setter.update(input);
+		this.setter.update(input, async);
+	}
+
+	@Override
+	public void doDeleteTask(Iterable<T> input) throws FailedTaskException {
+		this.setter.delete(input);
+	}
+
+	@Override
+	public void doDeleteTask(Iterable<T> input,
+	                         boolean async)
+	        throws FailedTaskException {
+		this.setter.delete(input, async);
 	}
 
 	@Override
 	public String toString() {
 		return "SaveModelMultiTask [setter=" + this.setter + "]";
 	}
-
 }

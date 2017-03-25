@@ -10,11 +10,9 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  *
  * @param <T>
  *            model type
- * @deprecated use {@link IterableUpdateTask} directly.
  */
-@Deprecated
 public interface IterableSetterTask<T>
-        extends IterableUpdateTask<T> {
+        extends IterableDeleteTask<T>, IterableUpdateTask<T>, IterableStoreTask<T> {
 
 	@Deprecated
 	public void doTask(Iterable<T> input,

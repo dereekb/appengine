@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 public interface Updater<T> {
 
 	/**
-	 * Updates the input entity.
+	 * Updates the input entity synchronously.
 	 * 
 	 * @param entity
 	 *            Entity. Never {@code null}.
@@ -25,7 +25,7 @@ public interface Updater<T> {
 	public void update(T entity) throws UpdateUnkeyedEntityException;
 
 	/**
-	 * Updates the input entities.
+	 * Updates the input entities synchronously.
 	 * 
 	 * @param entities
 	 *            Entities. Never {@code null}.
@@ -34,5 +34,35 @@ public interface Updater<T> {
 	 *             created via {@link Storer}.
 	 */
 	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException;
+
+	/**
+	 * Updates the input entity.
+	 * 
+	 * @param entity
+	 *            Entity. Never {@code null}.
+	 * @param async
+	 *            Whether or not to perform action asynchronously.
+	 * @throws UpdateUnkeyedEntityException
+	 *             thrown if attempting to update a model that has not yet been
+	 *             created via {@link Storer}.
+	 */
+	public void update(T entity,
+	                   Boolean async)
+	        throws UpdateUnkeyedEntityException;
+
+	/**
+	 * Updates the input entities.
+	 * 
+	 * @param entities
+	 *            Entities. Never {@code null}.
+	 * @param async
+	 *            Whether or not to perform action asynchronously.
+	 * @throws UpdateUnkeyedEntityException
+	 *             thrown if attempting to update a model that has not yet been
+	 *             created via {@link Storer}.
+	 */
+	public void update(Iterable<T> entities,
+	                   Boolean async)
+	        throws UpdateUnkeyedEntityException;
 
 }

@@ -10,9 +10,9 @@ import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
 import com.dereekb.gae.utilities.task.impl.MultiTask;
 
 /**
- * {@link MultiTask} for saving or deleting models.
+ * {@link MultiTask} for storing, updating or deleting models.
  * <p>
- * Performs all tasks, then saves or deletes the input using a
+ * Performs all tasks, then stores, updates or deletes the input using a
  * {@link ConfiguredSetter}.
  *
  * @author dereekb
@@ -75,6 +75,7 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 		this.setterTask.doTask(input);
 	}
 
+	@Deprecated
 	@Override
 	public void doTask(Iterable<T> input,
 	                   boolean async)
@@ -85,6 +86,12 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 
 	// MARK: Saver Task
 	@Override
+	public void doStoreTask(Iterable<T> input) throws FailedTaskException {
+		super.doTask(input);
+		this.setterTask.doStoreTask(input);
+	}
+
+	@Override
 	public void doUpdateTask(Iterable<T> input) throws FailedTaskException {
 		super.doTask(input);
 		this.setterTask.doUpdateTask(input);
@@ -92,10 +99,25 @@ public class ConfiguredSetterModelMultiIterableTask<T extends UniqueModel> exten
 
 	@Override
 	public void doUpdateTask(Iterable<T> input,
-	                       boolean async)
+	                         boolean async)
 	        throws FailedTaskException {
 		super.doTask(input);
 		this.setterTask.doUpdateTask(input, async);
+	}
+
+	// MARK: Deleter Task
+	@Override
+	public void doDeleteTask(Iterable<T> input) throws FailedTaskException {
+		super.doTask(input);
+		this.setterTask.doDeleteTask(input);
+	}
+
+	@Override
+	public void doDeleteTask(Iterable<T> input,
+	                         boolean async)
+	        throws FailedTaskException {
+		super.doTask(input);
+		this.setterTask.doDeleteTask(input, async);
 	}
 
 	@Override

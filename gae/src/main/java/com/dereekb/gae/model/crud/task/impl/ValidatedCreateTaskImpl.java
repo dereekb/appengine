@@ -5,13 +5,13 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskDelegate;
 import com.dereekb.gae.model.crud.task.impl.delegate.CreateTaskValidator;
+import com.dereekb.gae.model.crud.task.save.IterableStoreTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
-import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
  * {@link CreateTaskImpl} extension that adds an additional validation
- * {@link IterableTask} before attempting to save.
+ * {@link IterableStoreTask} before attempting to save.
  * 
  * @author dereekb
  *
@@ -23,17 +23,17 @@ public class ValidatedCreateTaskImpl<T extends UniqueModel> extends CreateTaskIm
 	private CreateTaskValidator<T> validateTask;
 
 	public ValidatedCreateTaskImpl(CreateTaskDelegate<T> delegate,
-	        IterableTask<T> saveTask,
+	        IterableStoreTask<T> storeTask,
 	        CreateTaskValidator<T> validateTask) {
-		super(delegate, saveTask);
+		super(delegate, storeTask);
 		this.setValidateTask(validateTask);
 	}
 
 	public ValidatedCreateTaskImpl(CreateTaskDelegate<T> delegate,
-	        IterableTask<T> saveTask,
+	        IterableStoreTask<T> storeTask,
 	        TaskRequestSender<T> sender,
 	        CreateTaskValidator<T> validateTask) {
-		super(delegate, saveTask, sender);
+		super(delegate, storeTask, sender);
 		this.setValidateTask(validateTask);
 	}
 

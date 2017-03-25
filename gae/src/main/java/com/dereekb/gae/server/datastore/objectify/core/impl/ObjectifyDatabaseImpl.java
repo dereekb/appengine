@@ -138,8 +138,6 @@ public class ObjectifyDatabaseImpl
 	protected class ObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>>
 	        implements ObjectifyKeyConverter<T, ModelKey>, ObjectifyDatabaseEntity<T> {
 
-		private boolean configuredAsync = false;
-
 		private final Class<T> type;
 		private final String modelTypeName;
 		private final ModelKeyType keyType;
@@ -157,14 +155,6 @@ public class ObjectifyDatabaseImpl
 			this.objectifyKeyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
 			this.initializer = entity.getQueryInitializer();
 			this.iterableFactory = new ObjectifyQueryIterableFactoryImpl<T>(this);
-		}
-
-		public boolean isConfiguredAsync() {
-			return this.configuredAsync;
-		}
-
-		public void setConfiguredAsync(boolean configuredAsync) {
-			this.configuredAsync = configuredAsync;
 		}
 
 		public Class<T> getType() {
@@ -540,9 +530,25 @@ public class ObjectifyDatabaseImpl
 			// MARK: Updater
 			@Override
 			public void update(T entity) throws UpdateUnkeyedEntityException {
+				this.update(entity, false);
+			}
+
+			@Override
+			public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+				this.update(entities, false);
+			}
+
+			@Override
+			public void update(T entity,
+			                   Boolean async)
+			        throws UpdateUnkeyedEntityException {
 				if (entity.getModelKey() != null) {
 					if (this.getter.exists(entity)) {
-						this.source.put(entity);
+						Result<?> result = this.source.put(entity);
+
+						if (async == null || !async) {
+							result.now();
+						}
 					}
 				} else {
 					throw new UpdateUnkeyedEntityException();
@@ -550,7 +556,9 @@ public class ObjectifyDatabaseImpl
 			}
 
 			@Override
-			public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+			public void update(Iterable<T> entities,
+			                   Boolean async)
+			        throws UpdateUnkeyedEntityException {
 				for (T entity : entities) {
 					if (entity.getModelKey() == null) {
 						throw new UpdateUnkeyedEntityException();
@@ -559,7 +567,11 @@ public class ObjectifyDatabaseImpl
 
 				GetterUtility<T> utility = new GetterUtility<T>(this.getter);
 				List<T> existing = utility.filterExisting(entities);
-				this.source.put(existing);
+				Result<?> result = this.source.put(existing);
+
+				if (async == null || !async) {
+					result.now();
+				}
 			}
 
 			// MARK: Storer
@@ -606,36 +618,57 @@ public class ObjectifyDatabaseImpl
 				}
 			}
 
+			// MARK: Deleter
+			@Override
+			public void delete(T entity) {
+				this.delete(entity, false);
+			}
+
+			@Override
+			public void delete(Iterable<T> entities) {
+				this.delete(entities, false);
+			}
+
+			@Override
+			public void deleteWithKey(ModelKey key) {
+				this.deleteWithKey(key, false);
+			}
+
+			@Override
+			public void deleteWithKeys(Iterable<ModelKey> keys) {
+				this.deleteWithKeys(keys, false);
+			}
+
 			@Override
 			public void delete(T entity,
-			                   boolean async) {
+			                   Boolean async) {
 				Result<Void> result = this.source.delete(entity);
 
-				if (!async) {
+				if (async == null || !async) {
 					result.now();
 				}
 			}
 
 			@Override
 			public void delete(Iterable<T> entities,
-			                   boolean async) {
+			                   Boolean async) {
 				Result<Void> result = this.source.delete(entities);
 
-				if (!async) {
+				if (async == null || !async) {
 					result.now();
 				}
 			}
 
 			@Override
 			public void deleteWithKey(ModelKey key,
-			                          boolean async) {
+			                          Boolean async) {
 				Key<T> objectifyKey = ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter.writeKey(key);
 				this.delete(objectifyKey, async);
 			}
 
 			@Override
 			public void deleteWithKeys(Iterable<ModelKey> keys,
-			                           boolean async) {
+			                           Boolean async) {
 				List<Key<T>> objectifyKeys = ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter.writeKeys(keys);
 				this.deleteWithObjectifyKeys(objectifyKeys, async);
 			}
@@ -643,20 +676,20 @@ public class ObjectifyDatabaseImpl
 			// MARK: ObjectifyDeleter
 			@Override
 			public void delete(Key<T> key,
-			                   boolean async) {
+			                   Boolean async) {
 				Result<Void> result = this.source.deleteWithKey(key);
 
-				if (!async) {
+				if (async == null || !async) {
 					result.now();
 				}
 			}
 
 			@Override
 			public void deleteWithObjectifyKeys(Iterable<Key<T>> keys,
-			                                    boolean async) {
+			                                    Boolean async) {
 				Result<Void> result = this.source.deleteWithKeys(keys);
 
-				if (!async) {
+				if (async == null || !async) {
 					result.now();
 				}
 			}
@@ -665,25 +698,25 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public void delete(Key<T> key,
-		                   boolean async) {
+		                   Boolean async) {
 			this.setter.delete(key, async);
 		}
 
 		@Override
 		public void deleteWithObjectifyKeys(Iterable<Key<T>> keys,
-		                                    boolean async) {
+		                                    Boolean async) {
 			this.setter.deleteWithObjectifyKeys(keys, async);
 		}
 
 		@Override
 		public void delete(T entity,
-		                   boolean async) {
+		                   Boolean async) {
 			this.setter.delete(entity, async);
 		}
 
 		@Override
 		public void delete(Iterable<T> entities,
-		                   boolean async) {
+		                   Boolean async) {
 			this.setter.delete(entities, async);
 		}
 
@@ -695,6 +728,20 @@ public class ObjectifyDatabaseImpl
 		@Override
 		public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
 			this.setter.update(entities);
+		}
+
+		@Override
+		public void update(T entity,
+		                   Boolean async)
+		        throws UpdateUnkeyedEntityException {
+			this.setter.update(entity, async);
+		}
+
+		@Override
+		public void update(Iterable<T> entities,
+		                   Boolean async)
+		        throws UpdateUnkeyedEntityException {
+			this.setter.update(entities, async);
 		}
 
 		@Override
@@ -719,33 +766,33 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public void delete(T entity) {
-			this.setter.delete(entity, this.configuredAsync);
+			this.setter.delete(entity);
 		}
 
 		@Override
 		public void delete(Iterable<T> entities) {
-			this.setter.delete(entities, this.configuredAsync);
+			this.setter.delete(entities);
 		}
 
 		@Override
 		public void deleteWithKey(ModelKey key) {
-			this.setter.deleteWithKey(key, this.configuredAsync);
+			this.setter.deleteWithKey(key);
 		}
 
 		@Override
 		public void deleteWithKeys(Iterable<ModelKey> keys) {
-			this.setter.deleteWithKeys(keys, this.configuredAsync);
+			this.setter.deleteWithKeys(keys);
 		}
 
 		@Override
 		public void deleteWithKey(ModelKey key,
-		                          boolean async) {
+		                          Boolean async) {
 			this.setter.deleteWithKey(key, async);
 		}
 
 		@Override
 		public void deleteWithKeys(Iterable<ModelKey> keys,
-		                           boolean async) {
+		                           Boolean async) {
 			this.setter.deleteWithKeys(keys, async);
 		}
 

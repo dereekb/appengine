@@ -22,7 +22,7 @@ public interface ObjectifyKeyedSetter<T>
 	 *            Whether or not to save asynchronously.
 	 */
 	public void delete(Key<T> key,
-	                   boolean async);
+	                   Boolean async);
 
 	/**
 	 * Deletes an iterable list of models using their keys.
@@ -32,6 +32,6 @@ public interface ObjectifyKeyedSetter<T>
 	 *            Whether or not to save asynchronously.
 	 */
 	public void deleteWithObjectifyKeys(Iterable<Key<T>> keys,
-	                                    boolean async);
+	                                    Boolean async);
 
 }

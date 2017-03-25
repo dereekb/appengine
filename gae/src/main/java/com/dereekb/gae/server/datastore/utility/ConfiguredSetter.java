@@ -3,31 +3,18 @@ package com.dereekb.gae.server.datastore.utility;
 import com.dereekb.gae.server.datastore.Setter;
 
 /**
- * Setter that is already configured to delete synchronously or asynchronously.
+ * Setter that is already configured perform changes synchronously or
+ * asynchronously.
  *
  * @author dereekb
  *
  * @param <T>
  *            model type
+ * 
+ * @deprecated Setters already provide pre-configured results.
  */
+@Deprecated
 public interface ConfiguredSetter<T>
-        extends Setter<T> {
-
-	/**
-	 * Deletes an entity. If the entity does not have an identifier, the
-	 * function does nothing.
-	 *
-	 * @param entity
-	 *            Entity model to delete from a source.
-	 */
-	public void delete(T entity);
-
-	/**
-	 * Deletes a list of entities. Entities without identifiers are ignored.
-	 *
-	 * @param entities
-	 *            Iterable list of models to delete from a source.
-	 */
-	public void delete(Iterable<T> entities);
+        extends ConfiguredModelDeleter<T>, Setter<T> {
 
 }

@@ -15,8 +15,8 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
 public class TaskConfiguredUpdater<T>
         implements Updater<T> {
 
-	private TaskRequestSender<T> taskRequestSender;
 	private Updater<T> updater;
+	private TaskRequestSender<T> taskRequestSender;
 
 	public TaskConfiguredUpdater(TaskRequestSender<T> taskRequestSender, Updater<T> updater) {
 		this.setTaskRequestSender(taskRequestSender);
@@ -50,13 +50,27 @@ public class TaskConfiguredUpdater<T>
 	// MARK: Updater
 	@Override
 	public void update(T entity) throws UpdateUnkeyedEntityException {
-		this.updater.update(entity);
-		this.taskRequestSender.sendTask(entity);
+		this.update(entity, null);
 	}
 
 	@Override
 	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.updater.update(entities);
+		this.update(entities, null);
+	}
+
+	@Override
+	public void update(T entity,
+	                   Boolean async)
+	        throws UpdateUnkeyedEntityException {
+		this.updater.update(entity, async);
+		this.taskRequestSender.sendTask(entity);
+	}
+
+	@Override
+	public void update(Iterable<T> entities,
+	                   Boolean async)
+	        throws UpdateUnkeyedEntityException {
+		this.updater.update(entities, async);
 		this.taskRequestSender.sendTasks(entities);
 	}
 

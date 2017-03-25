@@ -14,13 +14,13 @@ public class ConfiguredDeleterImpl
         implements ConfiguredDeleter {
 
 	private Deleter deleter;
-	private boolean asynchronous = true;
+	private Boolean asynchronous = true;
 
 	public ConfiguredDeleterImpl(Deleter deleter) {
 		this.deleter = deleter;
 	}
 
-	public ConfiguredDeleterImpl(Deleter deleter, boolean asynchronous) {
+	public ConfiguredDeleterImpl(Deleter deleter, Boolean asynchronous) {
 		this.deleter = deleter;
 		this.asynchronous = asynchronous;
 	}
@@ -33,11 +33,11 @@ public class ConfiguredDeleterImpl
 		this.deleter = deleter;
 	}
 
-	public boolean isAsynchronous() {
+	public Boolean isAsynchronous() {
 		return this.asynchronous;
 	}
 
-	public void setAsynchronous(boolean asynchronous) {
+	public void setAsynchronous(Boolean asynchronous) {
 		this.asynchronous = asynchronous;
 	}
 
@@ -53,13 +53,13 @@ public class ConfiguredDeleterImpl
 
 	@Override
 	public void deleteWithKey(ModelKey key,
-	                          boolean async) {
+	                          Boolean async) {
 		this.deleter.deleteWithKey(key, async);
 	}
 
 	@Override
 	public void deleteWithKeys(Iterable<ModelKey> keys,
-	                           boolean async) {
+	                           Boolean async) {
 		this.deleter.deleteWithKeys(keys, async);
 	}
 
