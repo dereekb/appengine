@@ -39,17 +39,14 @@
 	</bean>
 
 	<!-- Save/Delete Tasks -->
-	<bean id="loginPointerSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="loginPointerStorer" />
+	<bean id="loginPointerSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="loginPointerRegistry" />
 	</bean>
-
-	<bean id="loginPointerAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="loginPointerUpdater" />
-	</bean>
+	
+	<alias name="loginPointerSetterTask" alias="loginPointerStorerTask" />
+	<alias name="loginPointerSetterTask" alias="loginPointerUpdaterTask" />
+	<alias name="loginPointerSetterTask" alias="loginPointerDeleterTask" />
 
 	<!-- Create -->
 	<bean id="loginPointerScheduleCreateReview"
@@ -75,7 +72,7 @@
 	<!-- Update -->
 	<bean id="loginPointerUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="loginPointerAttributeUpdater" />
-		<constructor-arg index="1" ref="loginPointerAsyncSaveTask" />
+		<constructor-arg index="1" ref="loginPointerUpdaterTask" />
 		<constructor-arg index="2"
 			ref="loginPointerScheduleUpdateReview" />
 	</bean>

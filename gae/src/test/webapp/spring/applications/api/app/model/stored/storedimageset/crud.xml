@@ -42,17 +42,14 @@
 	</bean>
 
 	<!-- Save/Delete Tasks -->
-	<bean id="storedImageSetSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="storedImageSetStorer" />
+	<bean id="storedImageSetSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="storedImageSetRegistry" />
 	</bean>
-
-	<bean id="storedImageSetAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="storedImageSetUpdater" />
-	</bean>
+	
+	<alias name="storedImageSetSetterTask" alias="storedImageSetStorerTask" />
+	<alias name="storedImageSetSetterTask" alias="storedImageSetUpdaterTask" />
+	<alias name="storedImageSetSetterTask" alias="storedImageSetDeleterTask" />
 
 	<!-- Create -->
 	<bean id="storedImageSetCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
@@ -61,7 +58,7 @@
 		<constructor-arg index="1">
 			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
 				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
-				<constructor-arg index="1" ref="storedImageSetSynchronousSaveTask"/>
+				<constructor-arg index="1" ref="storedImageSetStorerTask"/>
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -91,7 +88,7 @@
 	<bean id="storedImageSetUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0"
 			ref="storedImageSetAttributeUpdater" />
-		<constructor-arg index="1" ref="storedImageSetAsyncSaveTask" />
+		<constructor-arg index="1" ref="storedImageSetUpdaterTask" />
 		<constructor-arg index="2"
 			ref="storedImageSetScheduleUpdateReview" />
 	</bean>
