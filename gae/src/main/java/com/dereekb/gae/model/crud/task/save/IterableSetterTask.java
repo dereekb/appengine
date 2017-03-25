@@ -17,7 +17,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  */
 @Deprecated
 public interface IterableSetterTask<T>
-        extends IterableDeleteTask<T>, IterableUpdateTask<T>, IterableStoreTask<T> {
+        extends IterableDeleteTask<T>, IterableUpdateTask<T>, IterableStoreTask<T>, IterableTask<T> {
 
 	@Deprecated
 	public void doTask(Iterable<T> input,

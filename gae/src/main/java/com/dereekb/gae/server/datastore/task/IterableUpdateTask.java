@@ -11,8 +11,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * @param <T>
  *            model type
  */
-public interface IterableUpdateTask<T>
-        extends IterableTask<T> {
+public interface IterableUpdateTask<T> {
 
 	public void doUpdateTask(Iterable<T> input) throws FailedTaskException;
 

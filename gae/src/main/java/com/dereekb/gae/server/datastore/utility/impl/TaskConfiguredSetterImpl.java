@@ -12,6 +12,8 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
  *
  * @param <T>
  *            model type
+ * @deprecated replaced with {@link TaskConfiguredUpdaterImpl} or
+ *             {@link TaskConfiguredDeleterImpl}.
  */
 @Deprecated
 public class TaskConfiguredSetterImpl<T> extends ConfiguredSetterImpl<T> {

@@ -11,8 +11,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * @param <T>
  *            model type
  */
-public interface IterableDeleteTask<T>
-        extends IterableTask<T> {
+public interface IterableDeleteTask<T> {
 
 	public void doDeleteTask(Iterable<T> input) throws FailedTaskException;
 

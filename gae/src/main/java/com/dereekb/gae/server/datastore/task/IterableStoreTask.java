@@ -11,8 +11,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * @param <T>
  *            model type
  */
-public interface IterableStoreTask<T>
-        extends IterableTask<T> {
+public interface IterableStoreTask<T> {
 
 	public void doStoreTask(Iterable<T> input) throws FailedTaskException;
 

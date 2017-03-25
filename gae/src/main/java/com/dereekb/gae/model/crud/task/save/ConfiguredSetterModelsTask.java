@@ -2,6 +2,7 @@ package com.dereekb.gae.model.crud.task.save;
 
 import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl;
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
@@ -17,7 +18,9 @@ import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
  * @param <T>
  *            model type
  * @deprecated Dangerous, as it could be used in multiple places, but really
- *             only configured to allow a single task to work.
+ *             only configured to allow a single task to work. Use
+ *             {@link IterableSetterTaskImpl} if you don't need to use
+ *             {@link IterableTask}.
  */
 @Deprecated
 public class ConfiguredSetterModelsTask<T extends UniqueModel>

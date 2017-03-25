@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.task.IterableStoreTask;
+import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
@@ -18,7 +19,7 @@ import com.dereekb.gae.utilities.task.impl.MultiIterableTask;
  *            model type
  */
 public class IterableStoreMultiTaskImpl<T extends UniqueModel> extends MultiIterableTask<T>
-        implements IterableStoreTask<T> {
+        implements IterableStoreTask<T>, IterableTask<T> {
 
 	private IterableStoreTask<T> storeTask;
 
