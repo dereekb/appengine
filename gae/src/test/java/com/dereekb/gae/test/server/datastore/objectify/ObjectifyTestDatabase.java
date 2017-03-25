@@ -20,32 +20,8 @@ import com.googlecode.objectify.Ref;
  */
 public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 
-	private Boolean asyncOverride;
-
 	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition> entities) {
 		super(entities);
-	}
-
-	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition> entities, Boolean asyncOverride) {
-		super(entities);
-		this.asyncOverride = asyncOverride;
-	}
-
-	public Boolean getAsyncOverride() {
-		return this.asyncOverride;
-	}
-
-	public void setAsyncOverride(Boolean asyncOverride) {
-		this.asyncOverride = asyncOverride;
-	}
-
-	private boolean isAsync(boolean value) {
-
-		if (this.asyncOverride != null) {
-			value = this.asyncOverride;
-		}
-
-		return value;
 	}
 
 	@Override

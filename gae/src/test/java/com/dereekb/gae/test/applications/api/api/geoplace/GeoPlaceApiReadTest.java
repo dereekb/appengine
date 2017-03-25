@@ -7,6 +7,7 @@ import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.test.applications.api.api.tests.ApiReadTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Deprecated
 public class GeoPlaceApiReadTest extends ApiReadTest<GeoPlace> {
 
 	@Override

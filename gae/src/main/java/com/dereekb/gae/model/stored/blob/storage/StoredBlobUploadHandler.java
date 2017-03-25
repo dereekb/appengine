@@ -6,8 +6,8 @@ import java.util.Arrays;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobType;
+import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.dereekb.gae.server.storage.accessor.StorageSystem;
 import com.dereekb.gae.server.storage.download.DownloadKeyService;
 import com.dereekb.gae.server.storage.object.file.StorableContent;
@@ -28,7 +28,7 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 
 	private StoredBlobType blobType;
 	private StorageSystem storageSystem;
-	private ConfiguredSetter<StoredBlob> storedBlobSetter;
+	private Setter<StoredBlob> storedBlobSetter;
 	private StoredBlobUploadHandlerDelegate<T> delegate;
 	private DownloadKeyService downloadKeyService;
 
@@ -36,7 +36,7 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 
 	public StoredBlobUploadHandler(StoredBlobType blobType,
 	        StorageSystem storageSystem,
-	        ConfiguredSetter<StoredBlob> storedBlobSetter,
+	        Setter<StoredBlob> storedBlobSetter,
 	        StoredBlobUploadHandlerDelegate<T> delegate,
 	        DownloadKeyService downloadKeyService) {
 		this.blobType = blobType;
@@ -62,11 +62,11 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 		this.storageSystem = storageSystem;
 	}
 
-	public ConfiguredSetter<StoredBlob> getStoredBlobSetter() {
+	public Setter<StoredBlob> getStoredBlobSetter() {
 		return this.storedBlobSetter;
 	}
 
-	public void setStoredBlobSetter(ConfiguredSetter<StoredBlob> storedBlobSetter) {
+	public void setStoredBlobSetter(Setter<StoredBlob> storedBlobSetter) {
 		this.storedBlobSetter = storedBlobSetter;
 	}
 
@@ -172,7 +172,7 @@ public class StoredBlobUploadHandler<T extends Descriptor>
 		/**
 		 * Updates the stored blob to use the saved element.
 		 * <p>
-		 * Saving occurs based on how the {@link ConfiguredSetter} is
+		 * Saving occurs based on how the {@link Setter} is
 		 * configured.
 		 * </p>
 		 */

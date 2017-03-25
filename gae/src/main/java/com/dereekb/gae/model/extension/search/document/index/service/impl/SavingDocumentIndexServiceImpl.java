@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.search.document.index.IndexPair;
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocumentSetBuilder;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.search.UniqueSearchModel;
 import com.dereekb.gae.server.search.system.SearchDocumentSystem;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
@@ -19,25 +19,25 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  */
 public class SavingDocumentIndexServiceImpl<T extends UniqueSearchModel> extends DocumentIndexServiceImpl<T> {
 
-	private ConfiguredSetter<T> setter;
+	private Updater<T> updater;
 
 	public SavingDocumentIndexServiceImpl(SearchDocumentSystem indexService,
 	        IndexingDocumentSetBuilder<T> builder,
-	        ConfiguredSetter<T> setter) throws IllegalArgumentException {
+	        Updater<T> updater) throws IllegalArgumentException {
 		super(indexService, builder);
-		this.setSetter(setter);
+		this.setSetter(updater);
 	}
 
-	public ConfiguredSetter<T> getSetter() {
-		return this.setter;
+	public Updater<T> getSetter() {
+		return this.updater;
 	}
 
-	public void setSetter(ConfiguredSetter<T> setter) throws IllegalArgumentException {
-		if (setter == null) {
+	public void setSetter(Updater<T> updater) throws IllegalArgumentException {
+		if (updater == null) {
 			throw new IllegalArgumentException("Setter cannot be null.");
 		}
 
-		this.setter = setter;
+		this.updater = updater;
 	}
 
 	// MARK: Override
@@ -46,7 +46,7 @@ public class SavingDocumentIndexServiceImpl<T extends UniqueSearchModel> extends
 		try {
 			super.doTask(input);
 			List<T> models = IndexPair.getKeys(input);
-			this.setter.update(models);
+			this.updater.update(models);
 		} catch (FailedTaskException e) {
 			throw e;
 		}
@@ -54,7 +54,7 @@ public class SavingDocumentIndexServiceImpl<T extends UniqueSearchModel> extends
 
 	@Override
 	public String toString() {
-		return "SavingDocumentIndexServiceImpl [setter=" + this.setter + ", toString()=" + super.toString() + "]";
+		return "SavingDocumentIndexServiceImpl [updater=" + this.updater + ", toString()=" + super.toString() + "]";
 	}
 
 }

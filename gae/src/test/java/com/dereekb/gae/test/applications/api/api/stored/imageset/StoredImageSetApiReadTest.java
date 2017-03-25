@@ -7,6 +7,7 @@ import com.dereekb.gae.model.stored.image.set.StoredImageSet;
 import com.dereekb.gae.test.applications.api.api.tests.ApiReadTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Deprecated
 public class StoredImageSetApiReadTest extends ApiReadTest<StoredImageSet> {
 
 	@Override
