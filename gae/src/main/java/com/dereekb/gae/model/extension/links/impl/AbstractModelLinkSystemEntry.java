@@ -26,7 +26,7 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystemEntry;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterChangeType;
 import com.dereekb.gae.model.extension.links.deleter.LinkDeleterServiceEntry;
-import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
@@ -85,7 +85,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	protected String modelType;
 
 	protected ReadService<T> readService;
-	protected Setter<T> setter;
+	protected Updater<T> updater;
 
 	protected Reviewer<T> reviewer;
 	protected Validator<T> validator;
@@ -106,18 +106,18 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	public AbstractModelLinkSystemEntry(String modelType,
 	        ReadService<T> readService,
 	        DeleteService<T> deleteService,
-	        Setter<T> setter) {
-		this(modelType, readService, deleteService, setter, null);
+	        Updater<T> updater) {
+		this(modelType, readService, deleteService, updater, null);
 	}
 
 	public AbstractModelLinkSystemEntry(String modelType,
 	        ReadService<T> readService,
 	        DeleteService<T> deleteService,
-	        Setter<T> setter,
+	        Updater<T> updater,
 	        Map<String, LinkDeleterChangeType> deleteChangesMap) {
 		this.setModelType(modelType);
 		this.setReadService(readService);
-		this.setSetter(setter);
+		this.setUpdater(updater);
 		this.setDeleteService(deleteService);
 		this.setDeleteChangesMap(deleteChangesMap);
 		this.setReverseLinkNames(null);
@@ -140,12 +140,12 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 		this.readService = service;
 	}
 
-	public Setter<T> getSetter() {
-		return this.setter;
+	public Updater<T> getUpdater() {
+		return this.updater;
 	}
 
-	public void setSetter(Setter<T> setter) {
-		this.setter = setter;
+	public void setUpdater(Updater<T> updater) {
+		this.updater = updater;
 	}
 
 	public final Map<String, String> getReverseLinkNames() {
@@ -165,7 +165,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 
 	@Override
 	public void saveModels(List<T> models) {
-		this.setter.update(models);
+		this.updater.update(models);
 	}
 
 	@Override

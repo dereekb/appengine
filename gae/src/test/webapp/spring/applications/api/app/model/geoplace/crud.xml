@@ -45,12 +45,12 @@
 	<bean id="geoPlaceSynchronousSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="geoPlaceSynchronousConfiguredSetter" />
+			ref="geoPlaceStorer" />
 	</bean>
 
 	<bean id="geoPlaceAsyncSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0" ref="geoPlaceAsyncConfiguredSetter" />
+		<constructor-arg index="0" ref="geoPlaceUpdater" />
 	</bean>
 
 	<!-- Create -->

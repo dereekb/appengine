@@ -42,13 +42,13 @@
 	<bean id="loginPointerSynchronousSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="loginPointerSynchronousConfiguredSetter" />
+			ref="loginPointerStorer" />
 	</bean>
 
 	<bean id="loginPointerAsyncSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="loginPointerAsyncConfiguredSetter" />
+			ref="loginPointerUpdater" />
 	</bean>
 
 	<!-- Create -->

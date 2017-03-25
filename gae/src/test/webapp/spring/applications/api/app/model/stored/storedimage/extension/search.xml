@@ -27,7 +27,7 @@
 		<constructor-arg index="1"
 			ref="storedImageIndexingDocumentBuilder" />
 		<constructor-arg index="2"
-			ref="storedImageAsyncConfiguredSetter" />
+			ref="storedImageUpdater" />
 	</bean>
 
 	<!-- Search Indexing -->

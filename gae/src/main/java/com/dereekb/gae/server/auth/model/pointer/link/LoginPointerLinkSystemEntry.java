@@ -16,10 +16,10 @@ import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemEntry;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
 /**
@@ -32,15 +32,15 @@ public class LoginPointerLinkSystemEntry extends AbstractModelLinkSystemEntry<Lo
 
 	public static final String LOGIN_POINTER_LINK_TYPE = "LoginPointer";
 
-	private static final ExtendedObjectifyModelKeyUtil<Login> loginUtil = ExtendedObjectifyModelKeyUtil.make(
-	        Login.class, ModelKeyType.NUMBER);
+	private static final ExtendedObjectifyModelKeyUtil<Login> loginUtil = ExtendedObjectifyModelKeyUtil
+	        .make(Login.class, ModelKeyType.NUMBER);
 
 	private String loginLinkName = LoginLinkSystemEntry.LOGIN_LINK_TYPE;
 
 	private LinkTarget loginTarget = new LinkTargetImpl(LoginLinkSystemEntry.LOGIN_LINK_TYPE, ModelKeyType.NUMBER);
 
-	public LoginPointerLinkSystemEntry(CrudService<LoginPointer> crudService, ConfiguredSetter<LoginPointer> setter) {
-		super(LOGIN_POINTER_LINK_TYPE, crudService, crudService, setter);
+	public LoginPointerLinkSystemEntry(CrudService<LoginPointer> crudService, Updater<LoginPointer> updater) {
+		super(LOGIN_POINTER_LINK_TYPE, crudService, crudService, updater);
 	}
 
 	// MARK: AbstractModelLinkSystemEntry
@@ -76,7 +76,7 @@ public class LoginPointerLinkSystemEntry extends AbstractModelLinkSystemEntry<Lo
 	@Override
 	public String toString() {
 		return "LoginPointerLinkSystemEntry [loginLinkName=" + this.loginLinkName + ", loginTarget=" + this.loginTarget
-		        + ", modelType=" + this.modelType + ", readService=" + this.readService + ", setter=" + this.setter
+		        + ", modelType=" + this.modelType + ", readService=" + this.readService + ", updater=" + this.updater
 		        + ", reviewer=" + this.reviewer + ", validator=" + this.validator + ", deleteService="
 		        + this.deleteService + ", deleteChangesMap=" + this.deleteChangesMap + "]";
 	}

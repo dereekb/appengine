@@ -17,10 +17,10 @@ import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDele
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.model.geo.place.GeoPlace;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
 /**
@@ -33,29 +33,29 @@ public class GeoPlaceLinkSystemEntry extends AbstractDescriptiveModelLinkSystemE
 
 	public static final String GEO_PLACE_LINK_TYPE = "GeoPlace";
 
-	private static final ExtendedObjectifyModelKeyUtil<GeoPlace> geoPlaceUtil = ExtendedObjectifyModelKeyUtil.make(
-	        GeoPlace.class, ModelKeyType.NUMBER);
+	private static final ExtendedObjectifyModelKeyUtil<GeoPlace> geoPlaceUtil = ExtendedObjectifyModelKeyUtil
+	        .make(GeoPlace.class, ModelKeyType.NUMBER);
 
 	private String parentLinkName = "parent";
 	private LinkTarget parentTarget = new LinkTargetImpl(GEO_PLACE_LINK_TYPE, ModelKeyType.NUMBER);
 
 	public GeoPlaceLinkSystemEntry(CrudService<GeoPlace> crudService,
-	        ConfiguredSetter<GeoPlace> setter,
+	        Updater<GeoPlace> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(GEO_PLACE_LINK_TYPE, crudService, crudService, setter, info);
+		super(GEO_PLACE_LINK_TYPE, crudService, crudService, updater, info);
 	}
 
 	public GeoPlaceLinkSystemEntry(ReadService<GeoPlace> readService,
 	        DeleteService<GeoPlace> deleteService,
-	        ConfiguredSetter<GeoPlace> setter) {
-		super(GEO_PLACE_LINK_TYPE, readService, deleteService, setter);
+	        Updater<GeoPlace> updater) {
+		super(GEO_PLACE_LINK_TYPE, readService, deleteService, updater);
 	}
 
 	public GeoPlaceLinkSystemEntry(ReadService<GeoPlace> readService,
 	        DeleteService<GeoPlace> deleteService,
-	        ConfiguredSetter<GeoPlace> setter,
+	        Updater<GeoPlace> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(GEO_PLACE_LINK_TYPE, readService, deleteService, setter, info);
+		super(GEO_PLACE_LINK_TYPE, readService, deleteService, updater, info);
 	}
 
 	public String getParentLinkName() {
@@ -108,7 +108,7 @@ public class GeoPlaceLinkSystemEntry extends AbstractDescriptiveModelLinkSystemE
 	@Override
 	public String toString() {
 		return "GeoPlaceLinkSystemEntry [descriptiveLinkInfo=" + this.descriptiveLinkInfo + ", modelType="
-		        + this.modelType + ", indexService=" + this.readService + ", setter=" + this.setter + ", reviewer="
+		        + this.modelType + ", indexService=" + this.readService + ", updater=" + this.updater + ", reviewer="
 		        + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames=" + this.getReverseLinkNames()
 		        + "]";
 	}

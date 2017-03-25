@@ -15,7 +15,7 @@ import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSy
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry;
-import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
 
@@ -37,27 +37,27 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	private LinkTarget loginPointerTarget = new LinkTargetImpl(LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE,
 	        ModelKeyType.NAME);
 
-	public LoginLinkSystemEntry(CrudService<Login> crudService, Setter<Login> setter) {
-		super(LOGIN_LINK_TYPE, crudService, crudService, setter);
+	public LoginLinkSystemEntry(CrudService<Login> crudService, Updater<Login> updater) {
+		super(LOGIN_LINK_TYPE, crudService, crudService, updater);
 	}
 
 	public LoginLinkSystemEntry(CrudService<Login> crudService,
-	        Setter<Login> setter,
+	        Updater<Login> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(LOGIN_LINK_TYPE, crudService, crudService, setter, info);
+		super(LOGIN_LINK_TYPE, crudService, crudService, updater, info);
 	}
 
 	public LoginLinkSystemEntry(ReadService<Login> readService,
 	        DeleteService<Login> deleteService,
-	        Setter<Login> setter) {
-		super(LOGIN_LINK_TYPE, readService, deleteService, setter);
+	        Updater<Login> updater) {
+		super(LOGIN_LINK_TYPE, readService, deleteService, updater);
 	}
 
 	public LoginLinkSystemEntry(ReadService<Login> readService,
 	        DeleteService<Login> deleteService,
-	        Setter<Login> setter,
+	        Updater<Login> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(LOGIN_LINK_TYPE, readService, deleteService, setter, info);
+		super(LOGIN_LINK_TYPE, readService, deleteService, updater, info);
 	}
 
 	public String getLoginPointersLinkName() {
@@ -94,7 +94,7 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	public String toString() {
 		return "LoginLinkSystemEntry [loginPointersLinkName=" + this.loginPointersLinkName + ", loginPointerTarget="
 		        + this.loginPointerTarget + ", modelType=" + this.modelType + ", readService=" + this.readService
-		        + ", setter=" + this.setter + ", reviewer=" + this.reviewer + ", validator=" + this.validator
+		        + ", updater=" + this.updater + ", reviewer=" + this.reviewer + ", validator=" + this.validator
 		        + ", deleteService=" + this.deleteService + ", deleteChangesMap=" + this.deleteChangesMap + "]";
 	}
 

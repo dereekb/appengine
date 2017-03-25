@@ -42,16 +42,22 @@
 	</bean>
 
 	<!-- Save/Delete Tasks -->
+	<bean id="storedImageSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0"
+			ref="storedImageRegistry" />
+	</bean>
+
 	<bean id="storedImageSynchronousSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="storedImageSynchronousConfiguredSetter" />
+			ref="storedImageStorer" />
 	</bean>
 
 	<bean id="storedImageAsyncSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="storedImageAsyncConfiguredSetter" />
+			ref="storedImageUpdater" />
 	</bean>
 
 	<!-- Create -->

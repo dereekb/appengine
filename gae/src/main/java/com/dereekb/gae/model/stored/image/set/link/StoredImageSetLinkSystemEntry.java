@@ -17,10 +17,10 @@ import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemEntry;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
 /**
@@ -47,9 +47,8 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	private LinkTarget imagesTarget = new LinkTargetImpl(StoredImageLinkSystemEntry.STORED_IMAGE_LINK_TYPE,
 	        ModelKeyType.NUMBER);
 
-	public StoredImageSetLinkSystemEntry(CrudService<StoredImageSet> crudService,
-	        ConfiguredSetter<StoredImageSet> setter) {
-		super(STORED_IMAGE_SET_LINK_TYPE, crudService, crudService, setter);
+	public StoredImageSetLinkSystemEntry(CrudService<StoredImageSet> crudService, Updater<StoredImageSet> updater) {
+		super(STORED_IMAGE_SET_LINK_TYPE, crudService, crudService, updater);
 	}
 
 	public String getIconLinkName() {
@@ -125,7 +124,7 @@ public class StoredImageSetLinkSystemEntry extends AbstractModelLinkSystemEntry<
 	public String toString() {
 		return "StoredImageSetLinkSystemEntry [iconLinkName=" + this.iconLinkName + ", imagesLinkName="
 		        + this.imagesLinkName + ", iconTarget=" + this.iconTarget + ", imagesTarget=" + this.imagesTarget
-		        + ", modelType=" + this.modelType + ", readService=" + this.readService + ", setter=" + this.setter
+		        + ", modelType=" + this.modelType + ", readService=" + this.readService + ", updater=" + this.updater
 		        + ", reviewer=" + this.reviewer + ", validator=" + this.validator + ", deleteService="
 		        + this.deleteService + ", deleteChangesMap=" + this.deleteChangesMap + "]";
 	}

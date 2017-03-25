@@ -45,12 +45,12 @@
 	<bean id="loginKeySynchronousSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="loginKeySynchronousConfiguredSetter" />
+			ref="loginKeyStorer" />
 	</bean>
 
 	<bean id="loginKeyAsyncSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0" ref="loginKeyAsyncConfiguredSetter" />
+		<constructor-arg index="0" ref="loginKeyUpdater" />
 	</bean>
 
 	<!-- Create -->

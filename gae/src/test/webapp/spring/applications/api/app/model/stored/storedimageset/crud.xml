@@ -45,13 +45,13 @@
 	<bean id="storedImageSetSynchronousSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="storedImageSetSynchronousConfiguredSetter" />
+			ref="storedImageSetStorer" />
 	</bean>
 
 	<bean id="storedImageSetAsyncSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="storedImageSetAsyncConfiguredSetter" />
+			ref="storedImageSetUpdater" />
 	</bean>
 
 	<!-- Create -->

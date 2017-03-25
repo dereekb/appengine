@@ -45,13 +45,13 @@
 	<bean id="storedBlobSynchronousSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="storedBlobSynchronousConfiguredSetter" />
+			ref="storedBlobStorer" />
 	</bean>
 
 	<bean id="storedBlobAsyncSaveTask"
 		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
 		<constructor-arg index="0"
-			ref="storedBlobAsyncConfiguredSetter" />
+			ref="storedBlobUpdater" />
 	</bean>
 
 	<!-- Create -->
