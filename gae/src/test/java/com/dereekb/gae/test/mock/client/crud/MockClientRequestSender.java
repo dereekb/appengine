@@ -25,7 +25,7 @@ public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
         implements ClientRequestSender {
 
 	// True by default to simplify taskqueue tests.
-	private boolean waitForTaskQueue = true;
+	private boolean waitForTaskQueue = false;
 
 	public boolean isWaitForTaskQueue() {
 		return this.waitForTaskQueue;
