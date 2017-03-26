@@ -2,6 +2,7 @@ package com.dereekb.gae.client.api.model.crud.builder.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
@@ -10,6 +11,8 @@ import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.services.ClientReadService;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
+import com.dereekb.gae.client.api.model.shared.request.RelatedTypesRequest;
+import com.dereekb.gae.client.api.model.shared.request.impl.RelatedTypesRequestImpl;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
@@ -28,6 +31,7 @@ import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
 import com.dereekb.gae.web.api.model.crud.controller.ReadController;
 
@@ -50,7 +54,7 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	 */
 	public static final String DEFAULT_PATH_FORMAT = "/%s";
 
-	public static final boolean DEFAULT_LOAD_RELATED = false;
+	public static final RelatedTypesRequest DEFAULT_RELATED_REQUEST = new RelatedTypesRequestImpl(false);
 
 	public ClientReadRequestSenderImpl(String type,
 	        Class<O> dtoType,
@@ -93,17 +97,17 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	            ClientConnectionException,
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
-		ClientRequest clientRequest = this.buildClientRequest(request.shouldLoadRelatedTypes(), request);
+		ClientRequest clientRequest = this.buildClientRequest(request, request);
 		return this.sendRequest(request, clientRequest, security);
 	}
 
 	@Override
 	public ClientRequest buildClientRequest(ReadRequest request) {
-		return this.buildClientRequest(DEFAULT_LOAD_RELATED, request);
+		return this.buildClientRequest(request, DEFAULT_RELATED_REQUEST);
 	}
 
-	public ClientRequest buildClientRequest(boolean loadRelatedTypes,
-	                                        ReadRequest request) {
+	public ClientRequest buildClientRequest(ReadRequest request,
+	                                        RelatedTypesRequest typesRequest) {
 
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.GET);
@@ -115,7 +119,18 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 		ParametersImpl parameters = new ParametersImpl();
 
 		parameters.addObjectParameter(ReadController.ATOMIC_PARAM, options.isAtomic());
-		parameters.addObjectParameter(ReadController.LOAD_RELATED_PARAM, loadRelatedTypes);
+
+		if (typesRequest != null) {
+			parameters.addObjectParameter(ReadController.LOAD_RELATED_PARAM, typesRequest.shouldLoadRelatedTypes());
+
+			Set<String> filter = typesRequest.getRelatedTypesFilter();
+
+			if (filter != null) {
+				String filterString = StringUtility.joinValues(filter);
+				parameters.addObjectParameter(ReadController.RELATED_FILTER_PARAM, filterString);
+			}
+		}
+
 		parameters.addObjectParameter(ReadController.KEYS_PARAM, keys);
 
 		clientRequest.setParameters(parameters);

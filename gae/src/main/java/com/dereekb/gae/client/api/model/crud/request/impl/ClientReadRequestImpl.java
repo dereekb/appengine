@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.request.impl;
 
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
+import com.dereekb.gae.client.api.model.shared.request.impl.RelatedTypesRequestImpl;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -11,11 +12,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public class ClientReadRequestImpl
+public class ClientReadRequestImpl extends RelatedTypesRequestImpl
         implements ClientReadRequest {
 
-	private boolean loadRelatedTypes;
 	private ReadRequest readRequest;
+
+	public ClientReadRequestImpl(ReadRequest readRequest) throws IllegalArgumentException {
+		this(false, readRequest);
+	}
 
 	public ClientReadRequestImpl(boolean loadRelatedTypes, ReadRequest readRequest) throws IllegalArgumentException {
 		this.setLoadRelatedTypes(loadRelatedTypes);
@@ -46,18 +50,9 @@ public class ClientReadRequestImpl
 	}
 
 	@Override
-	public boolean shouldLoadRelatedTypes() {
-		return this.loadRelatedTypes;
-	}
-
-	public void setLoadRelatedTypes(boolean loadRelatedTypes) {
-		this.loadRelatedTypes = loadRelatedTypes;
-	}
-
-	@Override
 	public String toString() {
-		return "ClientReadRequestImpl [loadRelatedTypes=" + this.loadRelatedTypes + ", readRequest=" + this.readRequest
-		        + "]";
+		return "ClientReadRequestImpl [readRequest=" + this.readRequest + ", loadRelatedTypes=" + this.loadRelatedTypes
+		        + ", relatedTypesFilter=" + this.relatedTypesFilter + "]";
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavailableException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
 
 /**
  * Results returned by {@link ModelInclusionReader}.
@@ -27,7 +28,7 @@ public interface InclusionReaderSetAnalysis {
 	 * @return A {@link Set} containing every available related type. Never
 	 *         {@code null}.
 	 */
-	public Set<String> getRelatedTypes();
+	public CaseInsensitiveSet getRelatedTypes();
 
 	/**
 	 * Returns all target keys for the specified type from each of the models in

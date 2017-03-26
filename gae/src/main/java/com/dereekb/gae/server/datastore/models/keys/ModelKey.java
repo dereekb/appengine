@@ -15,12 +15,12 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelK
 import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
-import com.google.common.base.Joiner;
 
 /**
  * Represents a key for a model.
@@ -349,8 +349,7 @@ public final class ModelKey
 
 	public static String keysAsString(Set<ModelKey> keys,
 	                                  String splitter) {
-		Joiner joiner = Joiner.on(splitter).skipNulls();
-		return joiner.join(keys);
+		return StringUtility.joinValues(splitter, keys);
 	}
 
 	public static List<ModelKey> convertKeysInString(ModelKeyType keyType,

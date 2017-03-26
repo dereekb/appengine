@@ -5,13 +5,15 @@ import java.util.Iterator;
 
 /**
  * Utility for helping write out a collection of objects.
+ * 
  * @author dereekb
- *
+ * @deprecated use {@link Joiner}.
  */
+@Deprecated
 public class CollectionWriter {
 
 	private static String DEFAULT_SEPARATOR = ", ";
-	
+
 	private final String separator;
 
 	public CollectionWriter() {
@@ -26,18 +28,18 @@ public class CollectionWriter {
 		String string = "";
 		StringBuilder builder = new StringBuilder();
 		Iterator<? extends Object> iterator = objects.iterator();
-		
+
 		while (iterator.hasNext()) {
 			Object object = iterator.next();
 			builder.append(object);
-			
+
 			if (iterator.hasNext()) {
-				builder.append(separator);
+				builder.append(this.separator);
 			}
 		}
-		
+
 		string = builder.toString();
 		return string;
 	}
-	
+
 }
