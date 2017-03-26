@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.model.crud.utility.JsonModelResultsSerializer;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestUrlImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
@@ -35,7 +36,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <S>
  *            serialized response type
  */
-public abstract class AbstractConfiguredClientModelRequestSender<T extends UniqueModel, O, R, S> extends AbstractSecuredClientModelRequestSender<R, S> {
+public abstract class AbstractConfiguredClientModelRequestSender<T extends UniqueModel, O, R, S> extends AbstractSecuredClientModelRequestSender<R, S>
+        implements JsonModelResultsSerializer<T, O> {
 
 	private String type;
 	private String pathFormat;
@@ -163,11 +165,13 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	 * @throws ClientResponseSerializationException
 	 *             if the serialization fails.
 	 */
+	@Override
 	public List<T> serializeModels(ClientApiResponseData data) throws ClientResponseSerializationException {
 		List<O> dtos = this.serializeModelDtos(data);
 		return this.dtoConverter.convertFrom(dtos);
 	}
 
+	@Override
 	public List<T> serializeModels(JsonNode jsonData) throws ClientResponseSerializationException {
 		List<O> dtos = this.serializeModelDtos(jsonData);
 		return this.dtoConverter.convertFrom(dtos);
@@ -182,11 +186,13 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	 * @throws ClientResponseSerializationException
 	 *             if the serialization fails.
 	 */
+	@Override
 	public List<O> serializeModelDtos(ClientApiResponseData data) throws ClientResponseSerializationException {
 		JsonNode jsonData = data.getDataJsonNode();
 		return this.serializeModelDtos(jsonData);
 	}
 
+	@Override
 	public List<O> serializeModelDtos(JsonNode jsonData) throws ClientResponseSerializationException {
 		ObjectMapper mapper = this.getObjectMapper();
 		List<O> dtoList = new ArrayList<O>();
@@ -216,6 +222,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		return this.serializeKeys(keysData);
 	}
 
+	@Override
 	public List<ModelKey> serializeKeys(ClientApiResponseData data) throws ClientResponseSerializationException {
 		JsonNode keysArrayNode = data.getDataJsonNode();
 		return this.serializeKeys(keysArrayNode);
@@ -228,6 +235,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	 *            {@link JsonNode}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}, but can be empty.
 	 */
+	@Override
 	public List<ModelKey> serializeKeys(JsonNode keysArrayNode) throws ClientResponseSerializationException {
 		List<ModelKey> objectKeys = null;
 		ObjectMapper mapper = this.getObjectMapper();
