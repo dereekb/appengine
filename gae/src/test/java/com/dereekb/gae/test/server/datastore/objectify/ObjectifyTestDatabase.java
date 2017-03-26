@@ -11,6 +11,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.cmd.Query;
 
 /**
  * Extension of {@link ObjectifyDatabaseImpl} used for testing.
@@ -66,6 +67,13 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 				resync();
 				return super.refsGet(list);
 			}
+
+			@Override
+			public Query<T> makeQuery(boolean allowCache) {
+				resync();
+				return super.makeQuery(allowCache);
+			}
+
 		}
 
 	}
