@@ -13,6 +13,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
+import com.dereekb.gae.server.datastore.models.keys.exception.UninitializedModelKeyException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -35,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreType;
 public final class ModelKey
         implements UniqueModel {
 
-	public static final Long DEFAULT_KEY = 0L;
+	public static final Long UNINITIALIZED_KEY = 0L;
 
 	private final int hashCode;
 	private final ModelKeyType type;
@@ -103,6 +104,10 @@ public final class ModelKey
 
 	public boolean isNullKey(ModelKey key) {
 		return key.type == ModelKeyType.NULL;
+	}
+
+	public boolean isInitialized() {
+		return this.type == ModelKeyType.NAME || this.id != UNINITIALIZED_KEY;
 	}
 
 	@Override
@@ -629,6 +634,22 @@ public final class ModelKey
 		}
 
 		return keys;
+	}
+
+	public static void assertAreAllInitializedKeys(List<ModelKey> modelKeys) throws UninitializedModelKeyException {
+		if (areAllInitialized(modelKeys) == false) {
+			throw new UninitializedModelKeyException();
+		}
+	}
+
+	public static boolean areAllInitialized(Iterable<ModelKey> modelKeys) {
+		for (ModelKey key : modelKeys) {
+			if (key.isInitialized() == false) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

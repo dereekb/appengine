@@ -1,6 +1,7 @@
 package com.dereekb.gae.web.api.exception.resolver;
 
 import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 
 public class RuntimeExceptionResolver {
@@ -18,8 +19,12 @@ public class RuntimeExceptionResolver {
 	}
 
 	public static void resolve(RuntimeException cause) throws RuntimeException {
-		if (ApiSafeRuntimeException.class.isAssignableFrom(cause.getClass())) {
+		Class<?> causeClass = cause.getClass();
+
+		if (ApiSafeRuntimeException.class.isAssignableFrom(causeClass)) {
 			throw cause;
+		} else if (IllegalArgumentException.class.isAssignableFrom(causeClass)) {
+			throw new ApiIllegalArgumentException((IllegalArgumentException) cause);
 		} else {
 			throw ApiCaughtRuntimeException.make(cause);
 		}

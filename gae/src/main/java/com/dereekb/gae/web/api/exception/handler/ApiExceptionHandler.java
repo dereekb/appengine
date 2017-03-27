@@ -80,7 +80,7 @@ public class ApiExceptionHandler {
 		String causeMessage = cause.getMessage();
 
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl("BAD_ARG_EXCEPTION");
-		error.setTitle("Illegal Argument");
+		error.setTitle("Bad Request Argument");
 		error.setDetail(causeMessage);
 
 		response.setError(error);

@@ -11,7 +11,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
  * Converter used for converting {@link String} identifiers to their
  * {@link ModelKey} value safely.
  * <p>
- * The map is case-insensitive.
+ * The type map is case-insensitive.
  *
  * @author dereekb
  *

@@ -11,7 +11,7 @@ public final class IllegalKeyConversionException extends IllegalArgumentExceptio
 	private static final long serialVersionUID = 1L;
 
 	public IllegalKeyConversionException() {
-		super();
+		super("One or more keys were illegal.");
 	}
 
 	public IllegalKeyConversionException(String message, Throwable cause) {
