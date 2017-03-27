@@ -6,8 +6,24 @@ package com.dereekb.gae.server.datastore.objectify.keys;
  * @author dereekb
  * @see ObjectifyKeyConverter
  */
-public final class IllegalKeyConversionException extends RuntimeException {
+public final class IllegalKeyConversionException extends IllegalArgumentException {
 
 	private static final long serialVersionUID = 1L;
+
+	public IllegalKeyConversionException() {
+		super();
+	}
+
+	public IllegalKeyConversionException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public IllegalKeyConversionException(String s) {
+		super(s);
+	}
+
+	public IllegalKeyConversionException(Throwable cause) {
+		super(cause);
+	}
 
 }

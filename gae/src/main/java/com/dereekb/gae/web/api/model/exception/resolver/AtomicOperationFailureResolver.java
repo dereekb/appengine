@@ -30,22 +30,16 @@ public class AtomicOperationFailureResolver {
 
 		switch (reason) {
 			case EXCEPTION:
-				Throwable cause = e.getException();
-				Class<?> causeType = cause.getClass();
-
-				// Only throw ApiSafeRuntimeException types.
-				if (RuntimeException.class.isAssignableFrom(causeType.getClass())) {
-					RuntimeException rtCause = (RuntimeException) cause;
-					RuntimeExceptionResolver.resolve(rtCause);
-				} else {
-					throw e;
-				}
+				Exception cause = e.getException();
+				RuntimeExceptionResolver.resolveException(cause);
+				break;
+			case FILTERED:
 			case UNSPECIFIED:
 			case UNAVAILABLE:
 				List<String> unavailable = e.getUnavailableStringKeys();
 				throw new MissingRequiredResourceException(unavailable);
-			default:
-				throw new RuntimeException("Could not resolve AtomicOperationException.");
+			case ATOMIC_FAILURE:
+				throw new RuntimeException("Internal atomic failure.");
 		}
 
 	}

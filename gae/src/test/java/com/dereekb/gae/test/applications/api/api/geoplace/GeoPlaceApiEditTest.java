@@ -21,6 +21,7 @@ import com.dereekb.gae.test.applications.api.api.tests.client.ClientApiCrudTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
+import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 
 /**
  * 
@@ -90,9 +91,9 @@ public class GeoPlaceApiEditTest extends ApiEditTest<GeoPlace, GeoPlaceData> {
 		try {
 			this.controller.delete(request);
 			Assert.fail();
-		} catch (AtomicOperationException e) {
-			Assert.assertFalse(e.getUnavailableStringKeys().isEmpty());
-			Assert.assertTrue(e.getUnavailableStringKeys().containsAll(stringIdentifiers));
+		} catch (MissingRequiredResourceException e) {
+			Assert.assertFalse(e.getResources().isEmpty());
+			Assert.assertTrue(e.getResources().containsAll(stringIdentifiers));
 		}
 
 		geoPlace.setDescriptor(null);
