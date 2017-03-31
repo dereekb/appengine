@@ -62,7 +62,7 @@ public class AbstractOwnedDateModelQuery extends AbstractDateModelQuery
 	}
 
 	protected void setOwnerIdParameters(Map<String, String> parameters) {
-		this.setOwnerId(parameters.get(this));
+		this.setOwnerId(parameters.get(this.getOwnerIdField()));
 	}
 
 }

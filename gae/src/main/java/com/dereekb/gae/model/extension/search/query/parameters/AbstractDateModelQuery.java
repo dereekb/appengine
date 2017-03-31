@@ -53,11 +53,6 @@ public class AbstractDateModelQuery
 		this.date = DateQueryFieldParameter.searchOldestFirst(this.getDateField());
 	}
 
-	public void searchNewestDescending() {
-		this.date = new DateQueryFieldParameter(this.getDateField(), ExpressionOperator.GREATER_THAN,
-		        new Date(Long.MIN_VALUE));
-	}
-
 	@Override
 	public void searchDates(Date value,
 	                        ExpressionOperator operator) {
