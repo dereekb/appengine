@@ -59,6 +59,10 @@ public class PositiveLongGenerator extends AbstractGenerator<Long> {
 		return randomPositiveLong(min.longValue(), max.longValue());
 	}
 
+	public static Long randomPositiveLong(Long max) {
+		return randomPositiveLong(0L, max);
+	}
+
 	public static Long randomPositiveLong(Long min,
 	                                      Long max) {
 		return (randomPositiveLong() + min) % max;

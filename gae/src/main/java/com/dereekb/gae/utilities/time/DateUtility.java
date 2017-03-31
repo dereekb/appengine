@@ -1,8 +1,51 @@
 package com.dereekb.gae.utilities.time;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DateUtility {
+
+	public static final String MIN_DATE_KEY = "min";
+	public static final String MAX_DATE_KEY = "max";
+	public static final String EPOCH_KEY = "epoch";
+	public static final String NOW_KEY = "now";
+
+	private static final Map<Long, String> DATE_KEY_VALUE_MAP = new HashMap<Long, String>();
+
+	static {
+		DATE_KEY_VALUE_MAP.put(Long.MIN_VALUE, MIN_DATE_KEY);
+		DATE_KEY_VALUE_MAP.put(Long.MAX_VALUE, MAX_DATE_KEY);
+		DATE_KEY_VALUE_MAP.put(0L, EPOCH_KEY);
+	}
+
+	public static String getKeyForDate(Date date) {
+		Long dateValue = (date != null) ? date.getTime() : null;
+		return DATE_KEY_VALUE_MAP.get(dateValue);
+	}
+
+	public static Date getDateForKey(String key) {
+		Date date = null;
+
+		if (key != null && key.length() < 6) {
+			switch (key) {
+				case EPOCH_KEY:
+					date = new Date(0L);
+					break;
+				case NOW_KEY:
+					date = new Date();
+					break;
+				case MIN_DATE_KEY:
+					date = new Date(Long.MIN_VALUE);
+					break;
+				case MAX_DATE_KEY:
+					date = new Date(Long.MAX_VALUE);
+					break;
+			}
+		}
+
+		return date;
+	}
 
 	public static Date getDateIn(Long milliseconds) {
 		return getDateIn(System.currentTimeMillis(), milliseconds);
