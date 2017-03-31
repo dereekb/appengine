@@ -22,10 +22,6 @@ public interface MutableDateModelQuery {
 	public void searchDates(Date value,
 	                        ExpressionOperator operator);
 
-	public void searchNewestFirst();
-
-	public void searchOldestFirst();
-
 	public void orderByDatesDescending();
 
 	public void orderByDates(QueryResultsOrdering ordering);
