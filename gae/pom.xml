@@ -396,7 +396,7 @@
 						<featureBranchPrefix>feature/</featureBranchPrefix>
 						<releaseBranchPrefix>release/</releaseBranchPrefix>
 						<hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
-						<versionTagPrefix />
+						<versionTagPrefix>v</versionTagPrefix>
 					</flowInitContext>
 					<releaseBranchVersionSuffix>RC</releaseBranchVersionSuffix>
 					<noDeploy>true</noDeploy>
