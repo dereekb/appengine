@@ -35,6 +35,7 @@ public class ApiSearchExceptionHandler {
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl("INDEX_UNAVAILABLE");
 		error.setTitle("Index Unavailable");
 		error.setDetail("The requested indexes for the submitted query are not available.");
+		response.setError(error);
 
 		return response;
 	}
