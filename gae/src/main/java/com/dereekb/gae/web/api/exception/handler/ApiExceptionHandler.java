@@ -2,6 +2,8 @@ package com.dereekb.gae.web.api.exception.handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.UnavailableException;
 
@@ -42,6 +44,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class ApiExceptionHandler {
 
+	private static final Logger LOG = Logger.getLogger(ApiExceptionHandler.class.getName());
+
 	/**
 	 * Used when the POST body cannot be parsed correctly.
 	 */
@@ -60,7 +64,6 @@ public class ApiExceptionHandler {
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl("REQUEST_MESSAGE_EXCEPTION");
 		error.setTitle(causeName);
 		error.setDetail(causeMessage);
-
 		response.setError(error);
 
 		return response;
@@ -96,6 +99,11 @@ public class ApiExceptionHandler {
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(ApiCaughtRuntimeException.class)
 	public ApiResponse handleException(ApiCaughtRuntimeException e) {
+		RuntimeException exception = e.getException();
+
+		// Log the error.
+		LOG.log(Level.WARNING, "API Caught Runtime Error", exception);
+
 		return ApiResponseImpl.makeFailure(e);
 	}
 
