@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.web.api.model.extension.upload.UploadApiExtensionController;
@@ -28,7 +27,7 @@ public class UploadControllerTest extends ApiApplicationTestContext {
 	// MARK: Mock
 	@Test
 	public void testMockInvalidUploadTypes() throws Exception {
-		MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/upload/new");
+		MockHttpServletRequestBuilder requestBuilder = this.serviceRequestBuilder.post("/upload/new");
 		requestBuilder.param("type", "INVALID_TYPE");
 
 		MvcResult result = this.performHttpRequest(requestBuilder).andReturn();

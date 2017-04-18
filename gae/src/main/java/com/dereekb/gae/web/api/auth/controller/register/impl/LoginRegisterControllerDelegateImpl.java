@@ -30,6 +30,7 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 public class LoginRegisterControllerDelegateImpl
         implements LoginRegisterControllerDelegate {
 
+	private boolean refreshAllowed = true;
 	private LoginRegisterService registerService;
 	private LoginTokenService tokenService;
 
@@ -87,7 +88,7 @@ public class LoginRegisterControllerDelegateImpl
 		// encoding.
 		pointer.setLogin(login.getObjectifyKey());
 
-		String token = this.tokenService.encodeLoginToken(pointer);
+		String token = this.tokenService.encodeLoginToken(pointer, this.refreshAllowed);
 		return LoginTokenPair.build(pointer, token);
 	}
 

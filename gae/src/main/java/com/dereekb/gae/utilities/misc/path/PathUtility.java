@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 import com.google.common.base.Joiner;
 
 /**
@@ -59,6 +60,11 @@ public class PathUtility {
 	                               String divider) {
 		Joiner joiner = Joiner.on(divider).skipNulls();
 		return joiner.join(components);
+	}
+
+	public static String buildPath(String basePath,
+	                               String relativePath) {
+		return buildPath(basePath, new SimplePathImpl(relativePath));
 	}
 
 	public static String buildPath(String basePath,

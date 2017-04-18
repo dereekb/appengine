@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;
+import com.dereekb.gae.server.datastore.exception.UninitializedModelException;
+import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
@@ -17,11 +21,14 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAc
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistryFactory;
+import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGetter;
+import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedSetter;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntity;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityModifier;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityReader;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityWriter;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifySource;
 import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.IllegalKeyConversionException;
@@ -41,14 +48,13 @@ import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryI
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQueryIterableFactoryImpl;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.server.datastore.utility.GetterUtility;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
@@ -100,7 +106,8 @@ public class ObjectifyDatabaseImpl
 	}
 
 	// Objectify
-	protected Objectify ofy() {
+	@Override
+	public Objectify ofy() {
 		return ObjectifyService.ofy();
 	}
 
@@ -129,10 +136,7 @@ public class ObjectifyDatabaseImpl
 	 *            model type
 	 */
 	protected class ObjectifyDatabaseEntityImpl<T extends ObjectifyModel<T>>
-	        implements ObjectifyKeyConverter<T, ModelKey>, ObjectifyDatabaseEntity<T>,
-	        ObjectifyDatabaseEntityReader<T> {
-
-		private boolean configuredAsync = false;
+	        implements ObjectifyKeyConverter<T, ModelKey>, ObjectifyDatabaseEntity<T> {
 
 		private final Class<T> type;
 		private final String modelTypeName;
@@ -151,14 +155,8 @@ public class ObjectifyDatabaseImpl
 			this.objectifyKeyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
 			this.initializer = entity.getQueryInitializer();
 			this.iterableFactory = new ObjectifyQueryIterableFactoryImpl<T>(this);
-		}
 
-		public boolean isConfiguredAsync() {
-			return this.configuredAsync;
-		}
-
-		public void setConfiguredAsync(boolean configuredAsync) {
-			this.configuredAsync = configuredAsync;
+			this.resetAccessors();
 		}
 
 		public Class<T> getType() {
@@ -178,291 +176,687 @@ public class ObjectifyDatabaseImpl
 			return this.objectifyKeyConverter;
 		}
 
+		protected void resetAccessors() {
+			this.resetReaderWriter();
+			this.resetGetterSetters();
+		}
+
+		protected void resetReaderWriter() {
+			this.reader = new ObjectifyDatabaseEntityReaderImpl();
+			this.writer = new ObjectifyDatabaseEntityWriterImpl();
+		}
+
+		protected void resetGetterSetters() {
+			this.getter = new ObjectifyDatabaseGetter();
+			this.setter = new ObjectifyDatabaseSetter();
+		}
+
 		// MARK: ObjectifyDatabaseEntityReader
+		private ObjectifyDatabaseEntityReader<T> reader;
+
 		@Override
 		public ObjectifyDatabaseEntityReader<T> getReader() {
-			return this;
+			return this.reader;
 		}
 
-		@Override
-		public T get(Key<T> key) {
-			Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-			return objectify.load().key(key).now();
+		protected void setReader(ObjectifyDatabaseEntityReader<T> reader) {
+			if (reader == null) {
+				throw new IllegalArgumentException("reader cannot be null.");
+			}
+
+			this.reader = reader;
 		}
 
-		@Override
-		public List<T> keysGet(Iterable<Key<T>> list) {
-			Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-			Map<Key<T>, T> results = objectify.load().keys(list);
-			return new ArrayList<T>(results.values());
-		}
+		protected class ObjectifyDatabaseEntityReaderImpl
+		        implements ObjectifyDatabaseEntityReader<T> {
 
-		@Override
-		public List<T> refsGet(Iterable<Ref<T>> list) {
-			Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-			Map<Key<T>, T> results = objectify.load().refs(list);
-			return new ArrayList<T>(results.values());
-		}
-
-		@Override
-		public boolean exists(Key<T> key) {
-			return (this.get(key) != null);
-		}
-
-		@Override
-		public Query<T> makeQuery(boolean allowCache) {
-			Objectify objectify = ObjectifyDatabaseImpl.this.ofy().cache(allowCache);
-			Query<T> query = objectify.load().type(this.type);
-			return query;
-		}
-
-		// MARK: ObjectifyDatabaseEntityModifier
-		@Override
-		public ObjectifyDatabaseEntityModifier<T> getModifier(boolean async) {
-			return new ObjectifyDatabaseEntityModifierImpl(async);
-		}
-
-		protected class ObjectifyDatabaseEntityModifierImpl
-		        implements ObjectifyDatabaseEntityModifier<T> {
-
-			private final boolean async;
-
-			public ObjectifyDatabaseEntityModifierImpl(boolean async) {
-				this.async = async;
+			@Override
+			public boolean exists(Key<T> key) {
+				return (this.get(key) != null);
 			}
 
 			@Override
-			public boolean isAsyncronous() {
-				return this.async;
+			public T get(Key<T> key) {
+				Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
+				return objectify.load().key(key).now();
+			}
+
+			@Override
+			public List<T> keysGet(Iterable<Key<T>> list) {
+				Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
+				Map<Key<T>, T> results = objectify.load().keys(list);
+				return new ArrayList<T>(results.values());
+			}
+
+			@Override
+			public List<T> refsGet(Iterable<Ref<T>> list) {
+				Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
+				Map<Key<T>, T> results = objectify.load().refs(list);
+				return new ArrayList<T>(results.values());
+			}
+
+			@Override
+			public Query<T> makeQuery(boolean allowCache) {
+				Objectify objectify = ObjectifyDatabaseImpl.this.ofy().cache(allowCache);
+				Query<T> query = objectify.load().type(ObjectifyDatabaseEntityImpl.this.type);
+				return query;
+			}
+
+		}
+
+		// MARK: ObjectifyDatabaseEntityModifier
+		protected ObjectifyDatabaseEntityWriter<T> writer;
+
+		@Override
+		public ObjectifyDatabaseEntityWriter<T> getWriter() {
+			return this.writer;
+		}
+
+		protected class ObjectifyDatabaseEntityWriterImpl
+		        implements ObjectifyDatabaseEntityWriter<T> {
+
+			private final ObjectifySource source;
+
+			public ObjectifyDatabaseEntityWriterImpl() {
+				this(ObjectifyDatabaseImpl.this);
+			}
+
+			public ObjectifyDatabaseEntityWriterImpl(ObjectifySource source) {
+				this.source = source;
 			}
 
 			// MARK: Put
 			@Override
-			public void put(T entity) {
-				Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-				Result<Key<T>> result = objectify.save().entity(entity);
-
-				if (this.async == false) {
-					result.now();
+			public Result<Key<T>> put(T entity) {
+				if (entity == null) {
+					throw new IllegalArgumentException();
 				}
+
+				Objectify objectify = this.source.ofy();
+				return objectify.save().entity(entity);
 			}
 
 			@Override
-			public void put(Iterable<T> entities) {
-				Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-				Result<Map<Key<T>, T>> result = objectify.save().entities(entities);
-
-				if (this.async == false) {
-					result.now();
+			public Result<Map<Key<T>, T>> put(Iterable<T> entities) {
+				if (entities == null) {
+					throw new IllegalArgumentException();
 				}
+
+				Objectify objectify = this.source.ofy();
+				return objectify.save().entities(entities);
 			}
 
 			// MARK: Delete
 			@Override
-			public void delete(T entity) {
-				if (entity != null) {
-					Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-					Result<Void> result = objectify.delete().entity(entity);
-
-					if (this.async == false) {
-						result.now();
-					}
+			public Result<Void> delete(T entity) {
+				if (entity == null) {
+					throw new IllegalArgumentException();
 				}
+
+				Objectify objectify = this.source.ofy();
+				return objectify.delete().entity(entity);
 			}
 
 			@Override
-			public void delete(Key<T> key) {
-				if (key != null) {
-					Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-					Result<Void> result = objectify.delete().key(key);
-
-					if (this.async == false) {
-						result.now();
-					}
+			public Result<Void> deleteWithKey(Key<T> key) {
+				if (key == null) {
+					throw new IllegalArgumentException();
 				}
+
+				Objectify objectify = this.source.ofy();
+				return objectify.delete().key(key);
 			}
 
 			@Override
-			public void delete(Ref<T> ref) {
-				if (ref != null) {
-					Key<T> key = ref.getKey();
-					Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-					Result<Void> result = objectify.delete().key(key);
-
-					if (this.async == false) {
-						result.now();
-					}
+			public Result<Void> delete(Iterable<T> list) {
+				if (list == null) {
+					throw new IllegalArgumentException();
 				}
+
+				Objectify objectify = this.source.ofy();
+				return objectify.delete().entities(list);
 			}
 
 			@Override
-			public void delete(Iterable<T> list) {
-				if (list != null) {
-					Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-					Result<Void> result = objectify.delete().entities(list);
-
-					if (this.async == false) {
-						result.now();
-					}
+			public Result<Void> deleteWithKeys(Iterable<Key<T>> list) {
+				if (list == null) {
+					throw new IllegalArgumentException();
 				}
+
+				Objectify objectify = this.source.ofy();
+				return objectify.delete().keys(list);
+			}
+
+		}
+
+		// MARK: Getter
+		protected ObjectifyDatabaseGetter getter;
+
+		@Override
+		public ObjectifyKeyedGetter<T> getter() {
+			return this.getter;
+		}
+
+		protected void setGetter(ObjectifyDatabaseGetter getter) {
+			if (getter == null) {
+				throw new IllegalArgumentException("getter cannot be null.");
+			}
+
+			this.getter = getter;
+		}
+
+		protected class ObjectifyDatabaseGetter
+		        implements ObjectifyKeyedGetter<T> {
+
+			private ObjectifyDatabaseEntityReader<T> reader;
+
+			public ObjectifyDatabaseGetter() {
+				this(ObjectifyDatabaseEntityImpl.this.getReader());
+			}
+
+			public ObjectifyDatabaseGetter(ObjectifyDatabaseEntityReader<T> reader) {
+				this.setReader(reader);
+			}
+
+			public ObjectifyDatabaseEntityReader<T> getReader() {
+				return this.reader;
+			}
+
+			public void setReader(ObjectifyDatabaseEntityReader<T> reader) {
+				if (reader == null) {
+					throw new IllegalArgumentException("reader cannot be null.");
+				}
+
+				this.reader = reader;
+			}
+
+			// MARK: Getter
+			@Override
+			public boolean exists(T model) throws UninitializedModelException {
+				ModelKey key = model.getModelKey();
+
+				if (key == null) {
+					throw new UninitializedModelException();
+				}
+
+				return this.exists(key);
 			}
 
 			@Override
-			public void deleteWithKeys(Iterable<Key<T>> list) {
-				if (list != null) {
-					Objectify objectify = ObjectifyDatabaseImpl.this.ofy();
-					Result<Void> result = objectify.delete().keys(list);
-
-					if (this.async == false) {
-						result.now();
-					}
+			public boolean exists(ModelKey key) throws IllegalArgumentException {
+				if (key == null) {
+					throw new IllegalArgumentException();
 				}
+
+				Key<T> objectifyKey = ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter.writeKey(key);
+				return this.reader.exists(objectifyKey);
 			}
 
+			@Override
+			public boolean allExist(Iterable<ModelKey> keys) throws IllegalArgumentException {
+				Set<ModelKey> modelKeys = IteratorUtility.iterableToSet(keys);
+				List<T> models = this.getWithKeys(modelKeys);
+				return (modelKeys.size() == models.size());
+			}
+
+			@Override
+			public Set<ModelKey> getExisting(Iterable<ModelKey> keys) throws IllegalArgumentException {
+				List<T> models = this.getWithKeys(keys);
+				List<ModelKey> keyList = ModelKey.readModelKeys(models);
+				return new HashSet<ModelKey>(keyList);
+			}
+
+			@Override
+			public T get(ModelKey key) throws IllegalArgumentException {
+				Key<T> objectifyKey = ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter.writeKey(key);
+				return this.reader.get(objectifyKey);
+			}
+
+			@Override
+			public T get(T model) throws UninitializedModelException {
+				Key<T> key = model.getObjectifyKey();
+
+				if (key == null) {
+					throw new UninitializedModelException();
+				}
+
+				return this.reader.get(key);
+			}
+
+			@Override
+			public List<T> get(Iterable<T> models) throws UninitializedModelException {
+				List<Key<T>> keys = ObjectifyUtility.readKeys(models);
+				return this.reader.keysGet(keys);
+			}
+
+			@Override
+			public List<T> getWithKeys(Iterable<ModelKey> keys) {
+				List<ModelKey> modelKeys = IteratorUtility.iterableToList(keys);
+				List<Key<T>> objectifyKeys = ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter
+				        .convertFrom(modelKeys);
+				return this.reader.keysGet(objectifyKeys);
+			}
+
+			// MARK: Objectify Keyed Getter
+			@Override
+			public boolean exists(Key<T> key) {
+				return this.reader.exists(key);
+			}
+
+			@Override
+			public T get(Key<T> key) {
+				return this.reader.get(key);
+			}
+
+			@Override
+			public List<T> getWithObjectifyKeys(Iterable<Key<T>> keys) {
+				return this.reader.keysGet(keys);
+			}
+
+		}
+
+		@Override
+		public boolean exists(Key<T> key) {
+			return this.getter.exists(key);
+		}
+
+		@Override
+		public T get(Key<T> key) {
+			return this.getter.get(key);
 		}
 
 		@Override
 		public List<T> getWithObjectifyKeys(Iterable<Key<T>> keys) {
-			return this.keysGet(keys);
+			return this.getter.getWithObjectifyKeys(keys);
 		}
 
 		@Override
-		public boolean exists(T model) {
-			return this.exists(model.getObjectifyKey());
+		public boolean exists(T model) throws UninitializedModelException {
+			return this.getter.exists(model);
 		}
 
 		@Override
-		public boolean exists(ModelKey key) {
-			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
-			return this.exists(objectifyKey);
+		public boolean exists(ModelKey key) throws IllegalArgumentException {
+			return this.getter.exists(key);
 		}
 
 		@Override
-		public boolean allExist(Iterable<ModelKey> keys) {
-			Set<ModelKey> modelKeys = IteratorUtility.iterableToSet(keys);
-			List<T> models = this.getWithKeys(modelKeys);
-			return (modelKeys.size() == models.size());
+		public boolean allExist(Iterable<ModelKey> keys) throws IllegalArgumentException {
+			return this.getter.allExist(keys);
 		}
 
 		@Override
-		public Set<ModelKey> exists(Iterable<ModelKey> keys) {
-			List<T> models = this.getWithKeys(keys);
-			List<ModelKey> keyList = ModelKey.readModelKeys(models);
-			return new HashSet<ModelKey>(keyList);
+		public Set<ModelKey> getExisting(Iterable<ModelKey> keys) throws IllegalArgumentException {
+			return this.getter.getExisting(keys);
 		}
 
 		@Override
-		public T get(ModelKey key) {
-			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
-			return this.get(objectifyKey);
+		public T get(ModelKey key) throws IllegalArgumentException {
+			return this.getter.get(key);
 		}
 
 		@Override
-		public T get(T model) {
-			T result = null;
-			Key<T> key = model.getObjectifyKey();
-
-			if (key != null) {
-				result = this.get(key);
-			}
-
-			return result;
+		public T get(T model) throws UninitializedModelException {
+			return this.getter.get(model);
 		}
 
 		@Override
-		public List<T> get(Iterable<T> models) {
-			List<Key<T>> keys = ObjectifyUtility.readKeys(models);
-			return this.keysGet(keys);
+		public List<T> get(Iterable<T> models) throws UninitializedModelException {
+			return this.getter.get(models);
 		}
 
 		@Override
 		public List<T> getWithKeys(Iterable<ModelKey> keys) {
-			List<ModelKey> modelKeys = IteratorUtility.iterableToList(keys);
-			List<Key<T>> objectifyKeys = this.objectifyKeyConverter.convertFrom(modelKeys);
-			return this.keysGet(objectifyKeys);
+			return this.getter.getWithKeys(keys);
+		}
+
+		// MARK: Setter
+		protected ObjectifyDatabaseSetter setter;
+
+		@Override
+		public ObjectifyKeyedSetter<T> setter() {
+			return this.setter;
+		}
+
+		protected class ObjectifyDatabaseSetter
+		        implements ObjectifyKeyedSetter<T> {
+
+			private Getter<T> getter = ObjectifyDatabaseEntityImpl.this;
+			private ObjectifyDatabaseEntityWriter<T> source;
+
+			public ObjectifyDatabaseSetter() {
+				this(ObjectifyDatabaseEntityImpl.this.getWriter());
+			}
+
+			public ObjectifyDatabaseSetter(ObjectifyDatabaseEntityWriter<T> source) {
+				this.setSource(source);
+			}
+
+			public ObjectifyDatabaseEntityWriter<T> getSource() {
+				return this.source;
+			}
+
+			public void setSource(ObjectifyDatabaseEntityWriter<T> source) {
+				if (source == null) {
+					throw new IllegalArgumentException("source cannot be null.");
+				}
+
+				this.source = source;
+			}
+
+			// MARK: Updater
+			@Override
+			public void update(T entity) throws UpdateUnkeyedEntityException {
+				this.update(entity, false);
+			}
+
+			@Override
+			public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+				this.update(entities, false);
+			}
+
+			@Override
+			public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
+				this.update(entity, true);
+			}
+
+			@Override
+			public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+				this.update(entities, true);
+			}
+
+			protected void update(T entity,
+			                      boolean async)
+			        throws UpdateUnkeyedEntityException {
+				if (entity.getModelKey() != null) {
+					if (this.getter.exists(entity)) {
+						Result<?> result = this.source.put(entity);
+
+						if (!async) {
+							result.now();
+						}
+					}
+				} else {
+					throw new UpdateUnkeyedEntityException();
+				}
+			}
+
+			protected void update(Iterable<T> entities,
+			                      boolean async)
+			        throws UpdateUnkeyedEntityException {
+				for (T entity : entities) {
+					if (entity.getModelKey() == null) {
+						throw new UpdateUnkeyedEntityException();
+					}
+				}
+
+				GetterUtility<T> utility = new GetterUtility<T>(this.getter);
+				List<T> existing = utility.filterExisting(entities);
+				Result<?> result = this.source.put(existing);
+
+				if (!async) {
+					result.now();
+				}
+			}
+
+			// MARK: Storer
+			@Override
+			public void store(T entity) throws StoreKeyedEntityException {
+				this.assertEntityIsAllowedForStore(entity);
+				this.source.put(entity).now();
+			}
+
+			@Override
+			public void store(Iterable<T> entities) throws StoreKeyedEntityException {
+				for (T entity : entities) {
+					this.assertEntityIsAllowedForStore(entity);
+				}
+
+				this.source.put(entities).now();
+			}
+
+			@Override
+			public void forceStore(T entity) {
+				this.source.put(entity).now();
+			}
+
+			@Override
+			public void forceStore(Iterable<T> entities) {
+				this.source.put(entities).now();
+			}
+
+			private void assertEntityIsAllowedForStore(T entity) {
+				ModelKey key = entity.getModelKey();
+
+				if (this.keyIsAllowedForStorage(key) == false) {
+					throw new StoreKeyedEntityException(entity);
+				}
+			}
+
+			private boolean keyIsAllowedForStorage(ModelKey key) {
+				if (key == null) {
+					return true;
+				} else if (key.getType() == ModelKeyType.NAME) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			// MARK: Deleter
+			@Override
+			public void delete(T entity) {
+				this.delete(entity, false);
+			}
+
+			@Override
+			public void delete(Iterable<T> entities) {
+				this.delete(entities, false);
+			}
+
+			@Override
+			public void deleteAsync(T entity) {
+				this.delete(entity, true);
+			}
+
+			@Override
+			public void deleteAsync(Iterable<T> entities) {
+				this.delete(entities, true);
+			}
+
+			@Override
+			public void deleteWithKey(ModelKey key) {
+				this.deleteWithKey(key, false);
+			}
+
+			@Override
+			public void deleteWithKeys(Iterable<ModelKey> keys) {
+				this.deleteWithKeys(keys, false);
+			}
+
+			@Override
+			public void deleteWithKeyAsync(ModelKey key) {
+				this.deleteWithKey(key, true);
+			}
+
+			@Override
+			public void deleteWithKeysAsync(Iterable<ModelKey> keys) {
+				this.deleteWithKeys(keys, true);
+			}
+
+			protected void delete(T entity,
+			                      boolean async) {
+				Result<Void> result = this.source.delete(entity);
+
+				if (!async) {
+					result.now();
+				}
+			}
+
+			protected void delete(Iterable<T> entities,
+			                      boolean async) {
+				Result<Void> result = this.source.delete(entities);
+
+				if (!async) {
+					result.now();
+				}
+			}
+
+			protected void deleteWithKey(ModelKey key,
+			                             boolean async) {
+				Key<T> objectifyKey = ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter.writeKey(key);
+				this.delete(objectifyKey, async);
+			}
+
+			protected void deleteWithKeys(Iterable<ModelKey> keys,
+			                              boolean async) {
+				List<Key<T>> objectifyKeys = ObjectifyDatabaseEntityImpl.this.objectifyKeyConverter.writeKeys(keys);
+				this.deleteWithObjectifyKeys(objectifyKeys, async);
+			}
+
+			// MARK: ObjectifyDeleter
+
+			@Override
+			public void delete(Key<T> key) {
+				this.delete(key, false);
+			}
+
+			@Override
+			public void deleteWithObjectifyKeys(Iterable<Key<T>> keys) {
+				this.deleteWithObjectifyKeys(keys, false);
+			}
+
+			@Override
+			public void deleteAsync(Key<T> key) {
+				this.delete(key, true);
+			}
+
+			@Override
+			public void deleteWithObjectifyKeysAsync(Iterable<Key<T>> keys) {
+				this.deleteWithObjectifyKeys(keys, true);
+			}
+
+			protected void delete(Key<T> key,
+			                      boolean async) {
+				Result<Void> result = this.source.deleteWithKey(key);
+
+				if (!async) {
+					result.now();
+				}
+			}
+
+			protected void deleteWithObjectifyKeys(Iterable<Key<T>> keys,
+			                                       boolean async) {
+				Result<Void> result = this.source.deleteWithKeys(keys);
+
+				if (!async) {
+					result.now();
+				}
+			}
+
 		}
 
 		@Override
-		public void delete(Key<T> key,
-		                   boolean async) {
-			this.getModifier(async).delete(key);
+		public void delete(Key<T> key) {
+			this.setter.delete(key);
 		}
 
 		@Override
-		public void deleteWithObjectifyKeys(Iterable<Key<T>> keys,
-		                                    boolean async) {
-			this.getModifier(async).deleteWithKeys(keys);
+		public void deleteWithObjectifyKeys(Iterable<Key<T>> keys) {
+			this.setter.deleteWithObjectifyKeys(keys);
 		}
 
 		@Override
-		public void save(T entity,
-		                 boolean async) {
-			this.getModifier(async).put(entity);
+		public void deleteAsync(Key<T> key) {
+			this.setter.delete(key);
 		}
 
 		@Override
-		public void save(Iterable<T> entities,
-		                 boolean async) {
-			this.getModifier(async).put(entities);
+		public void deleteWithObjectifyKeysAsync(Iterable<Key<T>> keys) {
+			this.setter.deleteWithObjectifyKeys(keys);
 		}
 
 		@Override
-		public void save(T entity) {
-			this.save(entity, this.isConfiguredAsync());
+		public void deleteAsync(T entity) {
+			this.setter.deleteAsync(entity);
 		}
 
 		@Override
-		public void save(Iterable<T> entities) {
-			this.save(entities, this.isConfiguredAsync());
+		public void deleteAsync(Iterable<T> entities) {
+			this.setter.deleteAsync(entities);
+		}
+
+		@Override
+		public void update(T entity) throws UpdateUnkeyedEntityException {
+			this.setter.update(entity);
+		}
+
+		@Override
+		public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+			this.setter.update(entities);
+		}
+
+		@Override
+		public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
+			this.setter.updateAsync(entity);
+		}
+
+		@Override
+		public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+			this.setter.update(entities);
+		}
+
+		@Override
+		public void store(T entity) throws StoreKeyedEntityException {
+			this.setter.store(entity);
+		}
+
+		@Override
+		public void store(Iterable<T> entities) throws StoreKeyedEntityException {
+			this.setter.store(entities);
+		}
+
+		@Override
+		public void forceStore(T entity) {
+			this.setter.forceStore(entity);
+		}
+
+		@Override
+		public void forceStore(Iterable<T> entities) {
+			this.setter.forceStore(entities);
 		}
 
 		@Override
 		public void delete(T entity) {
-			this.delete(entity, this.isConfiguredAsync());
+			this.setter.delete(entity);
 		}
 
 		@Override
 		public void delete(Iterable<T> entities) {
-			this.delete(entities, this.isConfiguredAsync());
+			this.setter.delete(entities);
 		}
 
 		@Override
 		public void deleteWithKey(ModelKey key) {
-			this.deleteWithKey(key, this.isConfiguredAsync());
+			this.setter.deleteWithKey(key);
 		}
 
 		@Override
 		public void deleteWithKeys(Iterable<ModelKey> keys) {
-			this.deleteWithKeys(keys, this.isConfiguredAsync());
+			this.setter.deleteWithKeys(keys);
 		}
 
 		@Override
-		public void delete(T entity,
-		                   boolean async) {
-			this.getModifier(async).delete(entity);
+		public void deleteWithKeyAsync(ModelKey key) {
+			this.setter.deleteWithKey(key);
 		}
 
 		@Override
-		public void delete(Iterable<T> entities,
-		                   boolean async) {
-			this.getModifier(async).delete(entities);
+		public void deleteWithKeysAsync(Iterable<ModelKey> keys) {
+			this.setter.deleteWithKeys(keys);
 		}
 
-		@Override
-		public void deleteWithKey(ModelKey key,
-		                          boolean async) {
-			Key<T> objectifyKey = this.objectifyKeyConverter.writeKey(key);
-			this.getModifier(async).delete(objectifyKey);
-		}
-
-		@Override
-		public void deleteWithKeys(Iterable<ModelKey> keys,
-		                           boolean async) {
-			List<ModelKey> modelKeys = IteratorUtility.iterableToList(keys);
-			List<Key<T>> objectifyKeys = this.objectifyKeyConverter.convertFrom(modelKeys);
-			this.getModifier(async).deleteWithKeys(objectifyKeys);
-		}
-
+		// MARK: Queries
 		@Override
 		public ObjectifyQueryIterableFactory<T> makeIterableQueryFactory() {
 			return this.iterableFactory;
@@ -613,7 +1007,7 @@ public class ObjectifyDatabaseImpl
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
 				boolean cache = options.getAllowCache();
-				Query<T> query = ObjectifyDatabaseEntityImpl.this.makeQuery(cache);
+				Query<T> query = ObjectifyDatabaseEntityImpl.this.reader.makeQuery(cache);
 
 				query = this.applyOptions(query);
 
@@ -647,6 +1041,10 @@ public class ObjectifyDatabaseImpl
 
 				if (chunk != null) {
 					query = query.chunk(chunk);
+				}
+
+				if (options.getAllowHybrid() == false) {
+					query = query.hybrid(false);
 				}
 
 				return query;
@@ -815,304 +1213,6 @@ public class ObjectifyDatabaseImpl
 
 		}
 
-	}
-
-	// Make
-	@Deprecated
-	public <T> Ref<T> makeRef(Key<T> key) {
-		return Ref.create(key);
-	}
-
-	@Deprecated
-	public <T> Ref<T> makeRef(T value) {
-		return Ref.create(value);
-	}
-
-	@Deprecated
-	public <T> Key<T> makeKey(Class<T> type,
-	                          Long id)
-	        throws IllegalArgumentException {
-		return Key.create(type, id);
-	}
-
-	@Deprecated
-	public <T> Key<T> makeKey(Class<T> type,
-	                          String name)
-	        throws IllegalArgumentException {
-		return Key.create(type, name);
-	}
-
-	@Deprecated
-	public <T> Key<T> makeKey(Class<T> type,
-	                          ModelKey modelKey)
-	        throws IllegalArgumentException {
-		Key<T> key;
-
-		if (modelKey.getType() == ModelKeyType.NAME) {
-			key = this.makeKey(type, modelKey.getName());
-		} else {
-			key = this.makeKey(type, modelKey.getId());
-		}
-
-		return key;
-	}
-
-	/**
-	 * Creates Objectify {@link Key}s from the input names.
-	 *
-	 * Does not check/filter repeat values.
-	 *
-	 * @param type
-	 *            Class type that the key references.
-	 * @param ids
-	 *            Identifiers/Names to use
-	 * @return List of keys of the input type.
-	 * @throws IllegalArgumentException
-	 *             Thrown if an invalid name is input.
-	 */
-	@Deprecated
-	public <T> List<Key<T>> makeKeysFromNames(Class<T> type,
-	                                          Iterable<String> ids)
-	        throws IllegalArgumentException {
-		List<Key<T>> keys = new ArrayList<Key<T>>();
-
-		for (String name : ids) {
-			Key<T> newKey = Key.create(type, name);
-			keys.add(newKey);
-		}
-
-		return keys;
-	}
-
-	/**
-	 * Creates a list of Objectify {@link Key} values from the input long
-	 * identifiers.
-	 *
-	 * Does not check/filter repeat values.
-	 *
-	 * @param type
-	 *            Class type that the key references.
-	 * @param ids
-	 *            Identifiers to use.
-	 * @return List of keys of the input type that correspond with the input
-	 *         values.
-	 * @throws IllegalArgumentException
-	 *             Thrown if an invalid identifier is input. Zero is an invalid
-	 *             identifier.
-	 */
-	@Deprecated
-	public <T> List<Key<T>> makeKeysFromLongs(Class<T> type,
-	                                          Iterable<Long> ids)
-	        throws IllegalArgumentException {
-		List<Key<T>> keys = new ArrayList<Key<T>>();
-
-		if (ids != null) {
-			for (Long id : ids) {
-				Key<T> newKey = this.makeKey(type, id);
-				keys.add(newKey);
-			}
-		}
-
-		return keys;
-	}
-
-	/**
-	 * Creates a list of Objectify {@link Key} values from the input
-	 * {@link ModelKey} keys.
-	 *
-	 * Does not check/filter repeat values.
-	 *
-	 * @param type
-	 *            Class type that the key references.
-	 * @param ids
-	 *            Identifiers to use.
-	 * @return List of keys of the input type that correspond with the input
-	 *         values.
-	 * @throws IllegalArgumentException
-	 *             Thrown if an invalid identifier is input. Zero is an invalid
-	 *             identifier.
-	 */
-	@Deprecated
-	public <T> List<Key<T>> makeKeysFromModelKeys(Class<T> type,
-	                                              Collection<ModelKey> modelKeys)
-	        throws IllegalArgumentException {
-		List<Key<T>> keys = new ArrayList<Key<T>>();
-
-		if (modelKeys != null) {
-			for (ModelKey modelKey : modelKeys) {
-				Key<T> newKey = this.makeKey(type, modelKey);
-				keys.add(newKey);
-			}
-		}
-
-		return keys;
-	}
-
-	// Get
-	@Deprecated
-	public <T> T get(Class<T> type,
-	                 Long id) {
-		Key<T> key = Key.create(type, id);
-		return this.ofy().load().key(key).now();
-	}
-
-	@Deprecated
-	public <T> T get(Class<T> type,
-	                 String name) {
-		Key<T> key = Key.create(type, name);
-		return this.ofy().load().key(key).now();
-	}
-
-	@Deprecated
-	public <T> T get(Key<T> key) {
-		return this.ofy().load().key(key).now();
-	}
-
-	@Deprecated
-	public <T> List<T> get(Iterable<Key<T>> list) {
-		Map<Key<T>, T> results = this.ofy().load().keys(list);
-		List<T> values = new ArrayList<T>(results.values());
-		return values;
-	}
-
-	@Deprecated
-	public <T> List<T> getWithRefs(Iterable<Ref<T>> list) {
-		Map<Key<T>, T> results = this.ofy().load().refs(list);
-		List<T> values = new ArrayList<T>(results.values());
-		return values;
-	}
-
-	@Deprecated
-	public <T> List<T> getWithKeys(Iterable<Key<T>> list) {
-		Map<Key<T>, T> results = this.ofy().load().keys(list);
-		List<T> values = new ArrayList<T>(results.values());
-		return values;
-	}
-
-	// Add/Put
-	@Deprecated
-	public <T> void put(T entity,
-	                    boolean async) {
-		Result<Key<T>> result = this.ofy().save().entity(entity);
-
-		if (async == false) {
-			result.now();
-		}
-	}
-
-	@Deprecated
-	public <T> void put(Iterable<T> entities,
-	                    boolean async) {
-		Result<Map<Key<T>, T>> result = this.ofy().save().entities(entities);
-
-		if (async == false) {
-			result.now();
-		}
-	}
-
-	// Delete
-	@Deprecated
-	public <T> void delete(T entity,
-	                       boolean async) {
-		if (entity != null) {
-			Result<Void> result = this.ofy().delete().entity(entity);
-
-			if (async == false) {
-				result.now();
-			}
-		}
-	}
-
-	@Deprecated
-	public <T> void delete(Key<T> key,
-	                       boolean async) {
-		if (key != null) {
-			Result<Void> result = this.ofy().delete().key(key);
-
-			if (async == false) {
-				result.now();
-			}
-		}
-	}
-
-	@Deprecated
-	public <T> void delete(Ref<T> ref,
-	                       boolean async) {
-		if (ref != null) {
-			Key<T> key = ref.getKey();
-			Result<Void> result = this.ofy().delete().key(key);
-
-			if (async == false) {
-				result.now();
-			}
-		}
-	}
-
-	@Deprecated
-	public <T> void delete(Iterable<T> list,
-	                       boolean async) {
-		if (list != null) {
-			Result<Void> result = this.ofy().delete().entities(list);
-
-			if (async == false) {
-				result.now();
-			}
-		}
-	}
-
-	@Deprecated
-	public <T> void deleteWithKeys(Iterable<Key<T>> list,
-	                               boolean async) {
-		if (list != null) {
-			Result<Void> result = this.ofy().delete().keys(list);
-
-			if (async == false) {
-				result.now();
-			}
-		}
-	}
-
-	// Exists
-	@Deprecated
-	public boolean exists(Key<?> key) {
-		boolean exists = false;
-
-		try {
-			this.ofy().load().key(key).safe();
-			exists = true;
-		} catch (NotFoundException e) {
-			exists = false;
-		}
-
-		return exists;
-	}
-
-	// Query
-	@Deprecated
-	public <T> Query<T> makeQuery(Class<T> type,
-	                              boolean cache) {
-		Objectify objectify = this.ofy().cache(cache);
-		Query<T> query = objectify.load().type(type);
-		return query;
-	}
-
-	@Deprecated
-	public <T> List<Key<T>> queryKeys(SimpleQuery<T> query) {
-		QueryKeys<T> queryKeys = query.keys();
-		List<Key<T>> keys = queryKeys.list();
-		return keys;
-	}
-
-	@Deprecated
-	public <T> List<T> queryEntities(SimpleQuery<T> query) {
-		List<T> entities = query.list();
-		return entities;
-	}
-
-	@Deprecated
-	public <T> QueryResultIterator<T> queryIterable(SimpleQuery<T> query) {
-		QueryResultIterable<T> iterable = query.iterable();
-		return iterable.iterator();
 	}
 
 }

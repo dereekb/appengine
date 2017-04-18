@@ -11,8 +11,25 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
  */
 public interface LoginTokenBuilder {
 
+	/**
+	 * Builds an anonymous login token using the input id.
+	 * 
+	 * @param anonymousId
+	 *            Optional anonymous identifier. May be {@code null}.
+	 * @return {@link LoginToken}. Never {@code null}.
+	 */
 	public LoginToken buildAnonymousLoginToken(String anonymousId);
 
-	public LoginToken buildLoginToken(LoginPointer pointer);
+	/**
+	 * Builds a token from the input {@link LoginPointer}.
+	 * 
+	 * @param pointer
+	 *            {@link LoginPointer}. Never {@code null}.
+	 * @param refreshAllowed
+	 *            whether or not refreshing is allowed with the result token.
+	 * @return {@link LoginToken}. Never {@code null}.
+	 */
+	public LoginToken buildLoginToken(LoginPointer pointer,
+	                                  boolean refreshAllowed);
 
 }

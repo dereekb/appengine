@@ -11,6 +11,8 @@ import com.dereekb.gae.client.api.service.response.ClientResponse;
 import com.dereekb.gae.client.api.service.response.impl.ClientResponseImpl;
 import com.dereekb.gae.client.api.service.sender.ClientRequestSender;
 import com.dereekb.gae.test.mock.AbstractMockWebServiceTestUtility;
+import com.dereekb.gae.test.spring.WebServiceTester;
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 
 /**
@@ -22,13 +24,27 @@ import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
         implements ClientRequestSender {
 
+	// True by default to simplify taskqueue tests.
+	private boolean waitForTaskQueue = false;
+
+	public boolean isWaitForTaskQueue() {
+		return this.waitForTaskQueue;
+	}
+
+	public void setWaitForTaskQueue(boolean waitForTaskQueue) {
+		this.waitForTaskQueue = waitForTaskQueue;
+	}
+
 	// MARK: ClientRequestSender
 	@Override
 	public ClientResponse sendRequest(ClientRequest request)
 	        throws ClientConnectionException,
 	            ClientRequestFailureException {
 
-		MockHttpServletRequestBuilder builder = MockHttpServletRequestBuilderUtility.convert(request);
+		WebServiceTester webServiceTester = this.getWebServiceTester();
+		WebServiceRequestBuilder webServiceRequestBuilder = webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder builder = MockHttpServletRequestBuilderUtility.convert(request,
+		        webServiceRequestBuilder);
 		ClientResponse response;
 
 		try {
@@ -39,7 +55,9 @@ public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
 			String content = servletResponse.getContentAsString();
 			response = new ClientResponseImpl(status, content);
 
-			this.getWebServiceTester().waitForTaskQueueToComplete();
+			if (this.waitForTaskQueue) {
+				webServiceTester.waitForTaskQueueToComplete();
+			}
 		} catch (Exception e) {
 			throw new ClientRequestFailureException(e);
 		}

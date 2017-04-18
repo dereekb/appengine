@@ -17,6 +17,8 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 
 	private boolean allowCache = true;
 
+	private boolean allowHybrid = true;
+
 	private Integer chunk;
 
 	public ObjectifyQueryRequestOptionsImpl() {}
@@ -59,6 +61,16 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 	@Override
 	public void setAllowCache(boolean allowCache) {
 		this.allowCache = allowCache;
+	}
+
+	@Override
+	public boolean getAllowHybrid() {
+		return this.allowHybrid;
+	}
+
+	@Override
+	public void setAllowHybrid(boolean allowHybrid) {
+		this.allowHybrid = allowHybrid;
 	}
 
 	@Override

@@ -40,14 +40,9 @@
 	</bean>
 
 	<!-- Configured Setters -->
-	<alias name="loginPointerRegistry" alias="loginPointerAsyncConfiguredSetter" />
-	<alias name="loginPointerRegistry" alias="loginPointerAsyncConfiguredDeleter" />
-
-	<bean id="loginPointerSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
-		<constructor-arg index="0" ref="loginPointerRegistry" />
-		<constructor-arg index="1" value="false" />
-	</bean>
+	<alias name="loginPointerRegistry" alias="loginPointerStorer" />
+	<alias name="loginPointerRegistry" alias="loginPointerUpdater" />
+	<alias name="loginPointerRegistry" alias="loginPointerDeleter" />
 
 	<!-- Update Scheduler -->
 	<bean id="loginPointerScheduleUpdateReview"
@@ -56,8 +51,8 @@
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="loginPointerUpdateConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
+	<bean id="loginPointerTaskConfiguredUpdater"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl">
 		<constructor-arg index="0"
 			ref="loginPointerScheduleUpdateReview" />
 		<constructor-arg index="1" ref="loginPointerRegistry" />

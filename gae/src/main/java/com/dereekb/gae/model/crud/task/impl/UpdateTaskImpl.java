@@ -9,8 +9,8 @@ import com.dereekb.gae.model.crud.task.config.UpdateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.UpdateTaskConfigImpl;
 import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.task.IterableUpdateTask;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
-import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 
@@ -26,19 +26,20 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
         implements UpdateTask<T> {
 
 	private UpdateTaskDelegate<T> delegate;
-	private IterableTask<T> saveTask;
+	private IterableUpdateTask<T> updateTask;
 
 	private TaskRequestSender<T> reviewTaskSender;
 
-	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask, TaskRequestSender<T> sender)
+	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableUpdateTask<T> updateTask, TaskRequestSender<T> sender)
 	        throws IllegalArgumentException {
-		this(delegate, saveTask);
+		this(delegate, updateTask);
 		this.setReviewTaskSender(sender);
 	}
 
-	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask) throws IllegalArgumentException {
+	public UpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableUpdateTask<T> updateTask)
+	        throws IllegalArgumentException {
 		super(new UpdateTaskConfigImpl());
-		this.setSaveTask(saveTask);
+		this.setUpdateTask(updateTask);
 		this.setDelegate(delegate);
 	}
 
@@ -54,16 +55,16 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 		this.delegate = delegate;
 	}
 
-	public IterableTask<T> getSaveTask() {
-		return this.saveTask;
+	public IterableUpdateTask<T> getUpdateTask() {
+		return this.updateTask;
 	}
 
-	public void setSaveTask(IterableTask<T> saveTask) throws IllegalArgumentException {
-		if (saveTask == null) {
-			throw new IllegalArgumentException("SaveTask cannot be null.");
+	public void setUpdateTask(IterableUpdateTask<T> updateTask) throws IllegalArgumentException {
+		if (updateTask == null) {
+			throw new IllegalArgumentException("UpdateTask cannot be null.");
 		}
 
-		this.saveTask = saveTask;
+		this.updateTask = updateTask;
 	}
 
 	public TaskRequestSender<T> getReviewTaskSender() {
@@ -90,7 +91,7 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 	}
 
 	protected void reviewUpdatedTargets(List<T> targets) {
-		this.saveTask.doTask(targets);
+		this.updateTask.doUpdateTask(targets);
 
 		if (this.reviewTaskSender != null) {
 			this.reviewTaskSender.sendTasks(targets);
@@ -115,7 +116,7 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 
 	@Override
 	public String toString() {
-		return "UpdateTaskImpl [saveTask=" + this.saveTask + ", delegate=" + this.delegate + ", defaultConfig="
+		return "UpdateTaskImpl [updateTask=" + this.updateTask + ", delegate=" + this.delegate + ", defaultConfig="
 		        + this.defaultConfig + "]";
 	}
 

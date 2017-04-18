@@ -23,6 +23,13 @@ public interface ModelSearchResponse<T>
 	public boolean isKeysOnlyResponse();
 
 	/**
+	 * Whether or not the response has one or more results.
+	 * 
+	 * @return {@code true} if one or more values were returned.
+	 */
+	public boolean hasResults();
+
+	/**
 	 * Returns the model search results.
 	 *
 	 * @return {@link Collection} of results. Never {@code null}.

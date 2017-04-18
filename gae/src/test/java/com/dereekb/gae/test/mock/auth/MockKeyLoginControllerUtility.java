@@ -6,11 +6,11 @@ import org.junit.Assert;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.test.mock.AbstractMockWebServiceTestUtility;
 import com.dereekb.gae.test.mock.MockWebServiceTestUtility;
 import com.dereekb.gae.test.spring.WebServiceTester;
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.web.api.auth.controller.key.KeyLoginController;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -52,9 +52,10 @@ public class MockKeyLoginControllerUtility extends AbstractMockWebServiceTestUti
 	}
 
 	public MockHttpServletResponse mockEnableApiKey(String overrideToken) throws Exception {
-		MockHttpServletRequestBuilder enableRequestBuilder = MockMvcRequestBuilders.put("/login/auth/key/enable");
 
 		WebServiceTester tester = this.getWebServiceTester();
+		WebServiceRequestBuilder serviceRequestBuilder = tester.getRequestBuilder();
+		MockHttpServletRequestBuilder enableRequestBuilder = serviceRequestBuilder.put("/login/auth/key/enable");
 		MvcResult enableResult = tester.performHttpRequest(enableRequestBuilder, overrideToken).andReturn();
 		return enableResult.getResponse();
 	}
@@ -94,14 +95,17 @@ public class MockKeyLoginControllerUtility extends AbstractMockWebServiceTestUti
 	public MockHttpServletResponse mockApiLoginRequest(String key,
 	                                                   String verification)
 	        throws Exception {
-		MockHttpServletRequestBuilder keyLoginRequestBuilder = MockMvcRequestBuilders.post("/login/auth/key");
+
+		WebServiceTester tester = this.getWebServiceTester();
+		WebServiceRequestBuilder serviceRequestBuilder = tester.getRequestBuilder();
+
+		MockHttpServletRequestBuilder keyLoginRequestBuilder = serviceRequestBuilder.post("/login/auth/key");
 		keyLoginRequestBuilder.param("key", key);
 
 		if (verification != null) {
 			keyLoginRequestBuilder.param("verification", verification);
 		}
 
-		WebServiceTester tester = this.getWebServiceTester();
 		MvcResult loginResult = tester.mockMvcPerform(keyLoginRequestBuilder).andReturn();
 		MockHttpServletResponse loginResultResponse = loginResult.getResponse();
 		return loginResultResponse;

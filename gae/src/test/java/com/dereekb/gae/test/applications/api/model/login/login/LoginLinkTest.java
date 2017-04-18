@@ -1,7 +1,6 @@
 package com.dereekb.gae.test.applications.api.model.login.login;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -11,6 +10,7 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkServiceTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Ignore
 public class LoginLinkTest extends AbstractLinkServiceTest {
 
 	@Autowired
@@ -36,36 +36,5 @@ public class LoginLinkTest extends AbstractLinkServiceTest {
 	@Autowired
 	@Qualifier("loginPointerRegistry")
 	private ObjectifyRegistry<LoginPointer> loginPointerRegistry;
-
-	@Test
-	public void testLinkingToLoginPointer() {
-		Login login = this.loginGenerator.generate();
-		LoginPointer loginPointer = this.loginPointerGenerator.generate();
-
-		// Clear any generated links
-		login.setPointers(null);
-		this.loginRegistry.save(login, false);
-
-		loginPointer.setLogin(null);
-		this.loginPointerRegistry.save(loginPointer, false);
-
-		// Start Test Linking
-		this.linkModels(this.loginLinkType, login, this.loginLoginPointerLinkName, loginPointer);
-
-		login = this.loginRegistry.get(login);
-		loginPointer = this.loginPointerRegistry.get(loginPointer);
-
-		Assert.assertNotNull(loginPointer.getLogin());
-		Assert.assertTrue(loginPointer.getLogin().equals(login.getObjectifyKey()));
-		Assert.assertTrue(login.getPointers().contains(loginPointer.getObjectifyKey()));
-
-		// Test Unlinking
-		this.unlinkModels(this.loginLinkType, login, this.loginLoginPointerLinkName, loginPointer);
-		login = this.loginRegistry.get(login);
-		loginPointer = this.loginPointerRegistry.get(loginPointer);
-
-		Assert.assertNull(loginPointer.getLogin());
-		Assert.assertFalse(login.getPointers().contains(loginPointer.getObjectifyKey()));
-	}
 
 }

@@ -1,8 +1,8 @@
 package com.dereekb.gae.client.api.model.extension.search.query.builder;
 
+import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
 import com.dereekb.gae.client.api.model.extension.search.query.services.ClientQueryService;
 import com.dereekb.gae.client.api.model.shared.builder.SecuredClientModelRequestSender;
-import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 
@@ -16,6 +16,6 @@ import com.dereekb.gae.utilities.model.search.request.SearchRequest;
  *            model type
  */
 public interface ClientQueryRequestSender<T extends UniqueModel>
-        extends ClientQueryService<T>, SecuredClientModelRequestSender<SearchRequest, ModelQueryResponse<T>> {
+        extends ClientQueryService<T>, SecuredClientModelRequestSender<SearchRequest, ClientModelQueryResponse<T>> {
 
 }

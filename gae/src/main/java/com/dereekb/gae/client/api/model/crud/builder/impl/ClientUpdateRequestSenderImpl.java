@@ -127,7 +127,7 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 			Collection<KeyedInvalidAttribute> failurePairs = this.getUpdateFailures();
 
 			List<ModelKey> keys = ModelKey.readModelKeysFromKeyed(failurePairs);
-			keys.addAll(super.getFailed());
+			keys.addAll(this.getMissingKeys());
 
 			return keys;
 		}

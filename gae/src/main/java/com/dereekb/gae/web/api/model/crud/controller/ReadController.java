@@ -43,7 +43,8 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 public class ReadController {
 
 	public static final String ATOMIC_PARAM = "atomic";
-	public static final String LOAD_RELATED_PARAM = "related";
+	public static final String LOAD_RELATED_PARAM = "getRelated";
+	public static final String RELATED_FILTER_PARAM = "relatedFilter";
 	public static final String KEYS_PARAM = "keys";
 
 	public static final long MAX_KEYS_PER_REQUEST = 40;
@@ -114,7 +115,8 @@ public class ReadController {
 	                              @Max(MAX_KEYS_PER_REQUEST) @RequestParam(name = KEYS_PARAM, required = true) List<String> keys,
 	                              @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
 	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
-	                              @RequestParam(required = false) Set<String> relatedTypes) {
+	                              @RequestParam(name = RELATED_FILTER_PARAM, required = false) Set<String> relatedTypes)
+	        throws UnavailableTypesException {
 
 		ApiResponseImpl response = null;
 		ReadControllerEntry entry = this.getEntryForType(modelType);
@@ -204,7 +206,8 @@ public class ReadController {
 
 	private ReadControllerEntryResponse read(String modelType,
 	                                         boolean atomic,
-	                                         Collection<ModelKey> keys) {
+	                                         Collection<ModelKey> keys)
+	        throws UnavailableTypesException {
 		ReadControllerEntry entry = this.getEntryForType(modelType);
 		ReadControllerEntryRequestImpl request = new ReadControllerEntryRequestImpl(modelType, atomic, keys);
 		request.setLoadRelatedTypes(false);

@@ -42,25 +42,22 @@
 	</bean>
 
 	<!-- Save/Delete Tasks -->
-	<bean id="storedBlobSynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="storedBlobSynchronousConfiguredSetter" />
+	<bean id="storedBlobSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="storedBlobRegistry" />
 	</bean>
-
-	<bean id="storedBlobAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="storedBlobAsyncConfiguredSetter" />
-	</bean>
+	
+	<alias name="storedBlobSetterTask" alias="storedBlobStorerTask" />
+	<alias name="storedBlobSetterTask" alias="storedBlobUpdaterTask" />
+	<alias name="storedBlobSetterTask" alias="storedBlobDeleterTask" />
 
 	<!-- Create -->
 	<bean id="storedBlobCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="storedBlobCreateTaskDelegate" />
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelMultiIterableTask">
+			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
 				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
-				<constructor-arg index="1" ref="storedBlobSynchronousSaveTask"/>
+				<constructor-arg index="1" ref="storedBlobStorerTask"/>
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -88,7 +85,7 @@
 	<!-- Update -->
 	<bean id="storedBlobUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="storedBlobAttributeUpdater" />
-		<constructor-arg index="1" ref="storedBlobAsyncSaveTask" />
+		<constructor-arg index="1" ref="storedBlobUpdaterTask" />
 		<constructor-arg index="2"
 			ref="storedBlobScheduleUpdateReview" />
 	</bean>

@@ -110,7 +110,8 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		this.taskSchedulerImpl = taskSchedulerImpl;
 
 		TaskRequestConverter taskRequestConverter = taskSchedulerImpl.getConverter();
-		this.mockRequestConverter = new TaskRequestMockHttpRequestConverter(taskRequestConverter);
+		this.mockRequestConverter = new TaskRequestMockHttpRequestConverter(taskRequestConverter,
+		        this.serviceRequestBuilder);
 	}
 
 	public ScheduleCreateReviewTask<T> getScheduleCreateReviewTask() {
@@ -293,7 +294,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 		this.taskSchedulerImpl.schedule(requests);
 
-		TestLocalTaskQueueCallback.waitUntilComplete();
+		this.waitForTaskQueueToComplete();
 
 		List<MockHttpServletRequestBuilder> mockRequests = this.mockRequestConverter.convert(requests);
 		this.performHttpRequests(mockRequests);

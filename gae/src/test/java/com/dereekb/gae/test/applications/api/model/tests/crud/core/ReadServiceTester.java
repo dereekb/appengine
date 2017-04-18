@@ -69,7 +69,8 @@ public class ReadServiceTester<T extends UniqueModel>
 	}
 
 	/**
-	 * Tests function indexService by searching with a list containing two of the
+	 * Tests function indexService by searching with a list containing two of
+	 * the
 	 * input key.
 	 *
 	 * The expected result is a single item.
@@ -111,7 +112,8 @@ public class ReadServiceTester<T extends UniqueModel>
 	}
 
 	/**
-	 * Tests reading nothing. The indexService should not fail, but also not return
+	 * Tests reading nothing. The indexService should not fail, but also not
+	 * return
 	 * anything.
 	 */
 	private void testReadingNothing() {
@@ -154,7 +156,7 @@ public class ReadServiceTester<T extends UniqueModel>
 
 		List<T> tempModels = this.getModelGenerator().generate(3);
 		List<ModelKey> keys = ModelKey.readModelKeys(tempModels);
-		this.getterSetter.delete(tempModels, false);
+		this.getterSetter.delete(tempModels);
 
 		// Request is set to atomic read.
 		try {

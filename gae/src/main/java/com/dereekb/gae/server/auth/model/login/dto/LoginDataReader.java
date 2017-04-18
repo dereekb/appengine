@@ -1,11 +1,11 @@
 package com.dereekb.gae.server.auth.model.login.dto;
 
+import java.util.Date;
+
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.search.document.dto.DescribedModelDataReader;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
-import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**
@@ -15,9 +15,6 @@ import com.dereekb.gae.utilities.factory.Factory;
  * @author dereekb
  */
 public final class LoginDataReader extends DescribedModelDataReader<Login, LoginData> {
-
-	private static final ObjectifyKeyUtility<LoginPointer> LOGIN_POINTER_KEY_UTIL = ObjectifyKeyUtility
-	        .make(LoginPointer.class);
 
 	public LoginDataReader() {
 		super(Login.class);
@@ -36,8 +33,10 @@ public final class LoginDataReader extends DescribedModelDataReader<Login, Login
 		model.setRoles(input.getRoles());
 		model.setGroup(input.getGroup());
 
-		// Links
-		model.setPointers(LOGIN_POINTER_KEY_UTIL.setFromStrings(input.getPointers()));
+		Date authReset = input.getAuthResetValue();
+		if (authReset != null) {
+			model.setAuthReset(authReset);
+		}
 
 		return model;
 	}

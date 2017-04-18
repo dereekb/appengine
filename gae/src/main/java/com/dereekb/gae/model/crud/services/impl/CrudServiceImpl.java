@@ -32,6 +32,10 @@ public class CrudServiceImpl<T extends UniqueModel>
 	private UpdateService<T> updateService;
 	private DeleteService<T> deleteService;
 
+	public CrudServiceImpl(ReadService<T> readService) {
+		this(null, readService, null, null);
+	}
+
 	public CrudServiceImpl(CreateService<T> createService,
 	        ReadService<T> readService,
 	        UpdateService<T> updateService,

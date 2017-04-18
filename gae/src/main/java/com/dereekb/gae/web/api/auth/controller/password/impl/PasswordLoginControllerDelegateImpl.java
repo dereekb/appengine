@@ -18,6 +18,7 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 public class PasswordLoginControllerDelegateImpl
         implements PasswordLoginControllerDelegate {
 
+	private boolean refreshAllowed = true;
 	private PasswordLoginService loginService;
 	private LoginTokenService tokenService;
 
@@ -51,6 +52,14 @@ public class PasswordLoginControllerDelegateImpl
 		this.tokenService = tokenService;
 	}
 
+	public boolean isRefreshAllowed() {
+		return this.refreshAllowed;
+	}
+
+	public void setRefreshAllowed(boolean refreshAllowed) {
+		this.refreshAllowed = refreshAllowed;
+	}
+
 	// MARK: PasswordLoginControllerDelegate
 	@Override
 	public LoginTokenPair createLogin(PasswordLoginPair pair) throws LoginExistsException {
@@ -65,14 +74,14 @@ public class PasswordLoginControllerDelegateImpl
 		LoginPointer loginPointer = this.loginService.login(pair);
 
 		String loginPointerId = loginPointer.getIdentifier();
-		String loginToken = this.tokenService.encodeLoginToken(loginPointer);
+		String loginToken = this.tokenService.encodeLoginToken(loginPointer, this.refreshAllowed);
 
 		return new LoginTokenPair(loginPointerId, loginToken);
 	}
 
 	private LoginTokenPair buildToken(LoginPointer loginPointer) {
 		String loginPointerId = loginPointer.getIdentifier();
-		String loginToken = this.tokenService.encodeLoginToken(loginPointer);
+		String loginToken = this.tokenService.encodeLoginToken(loginPointer, false);
 		return new LoginTokenPair(loginPointerId, loginToken);
 	}
 

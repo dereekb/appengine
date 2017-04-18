@@ -43,7 +43,7 @@ public final class CreateRequestImpl<T extends UniqueModel>
 			throw new IllegalArgumentException("Templates cannot be null.");
 		}
 
-		this.templates = templates;
+		this.setTemplates(templates);
 		this.setOptions(options);
 	}
 

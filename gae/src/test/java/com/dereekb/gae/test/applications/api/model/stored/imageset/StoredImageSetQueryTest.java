@@ -89,7 +89,7 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 			set.setImages(imageSet);
 		}
 
-		this.getRegistry().save(imageSets, false);
+		this.getRegistry().update(imageSets);
 
 		ObjectifyStoredImageSetQuery queryConfig = new ObjectifyStoredImageSetQuery();
 		queryConfig.setImages(imageA);
@@ -137,7 +137,7 @@ public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 			set.setImages(imageSet);
 		}
 
-		this.getRegistry().save(imageSets, false);
+		this.getRegistry().update(imageSets);
 
 		ObjectifyStoredImageSetQuery queryConfig = new ObjectifyStoredImageSetQuery();
 

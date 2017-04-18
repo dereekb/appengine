@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.google.appengine.api.datastore.GeoPt;
 
 /**
  * Represents a geographical point in the world.
@@ -42,6 +43,28 @@ public final class Point {
 
 	public Point(Point location) {
 		this(location.getLatitude(), location.getLongitude());
+	}
+
+	public static Point fromGeoPt(GeoPt pt) {
+		if (pt != null) {
+			return new Point(pt.getLatitude(), pt.getLongitude());
+		} else {
+			return null;
+		}
+	}
+
+	public static GeoPt makeGeoPt(Point point) {
+		if (point != null) {
+			return point.toGeoPt();
+		} else {
+			return null;
+		}
+	}
+
+	public GeoPt toGeoPt() {
+		Double lat = this.getLatitude();
+		Double lon = this.getLongitude();
+		return new GeoPt(lat.floatValue(), lon.floatValue());
 	}
 
 	/**

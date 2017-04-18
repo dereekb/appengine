@@ -64,10 +64,10 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
 		// Clear any generated links
 		storedBlob.setDescriptor(null);
-		this.storedBlobRegistry.save(storedBlob, false);
+		this.storedBlobRegistry.update(storedBlob);
 
 		storedImage.setStoredBlob(null);
-		this.storedImageRegistry.save(storedImage, false);
+		this.storedImageRegistry.update(storedImage);
 
 		// Start Test Linking
 		this.linkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageStoredBlobLinkName,
@@ -97,10 +97,10 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
 		// Clear all generated links
 		storedBlob.setDescriptor(null);
-		this.storedBlobRegistry.save(storedBlob, false);
+		this.storedBlobRegistry.update(storedBlob);
 
 		storedImage.setStoredBlob(null);
-		this.storedImageRegistry.save(storedImage, false);
+		this.storedImageRegistry.update(storedImage);
 
 		// Link Together
 		this.linkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageStoredBlobLinkName,

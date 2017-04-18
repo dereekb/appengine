@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.login.Login;
@@ -103,7 +102,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		String apiKeyLoginToken = this.mockLoginUtil.tryApiLogin(apiKeyId, VERIFICATION_KEY, true);
 
 		// Test API Key Cannot Access /loginkey
-		MockHttpServletRequestBuilder tryApiKeyRequestBuilder = MockMvcRequestBuilders.post("/loginkey/create");
+		MockHttpServletRequestBuilder tryApiKeyRequestBuilder = this.serviceRequestBuilder.post("/loginkey/create");
 		tryApiKeyRequestBuilder.accept("application/json");
 
 		ApiCreateRequest<LoginKey> tryRequest = new ApiCreateRequest<LoginKey>();
@@ -194,7 +193,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	                                                 String verification)
 	        throws Exception {
 
-		MockHttpServletRequestBuilder createApiKeyRequestBuilder = MockMvcRequestBuilders.post("/loginkey/create");
+		MockHttpServletRequestBuilder createApiKeyRequestBuilder = this.serviceRequestBuilder.post("/loginkey/create");
 		createApiKeyRequestBuilder.accept("application/json");
 
 		LoginKey newKey = new LoginKey();

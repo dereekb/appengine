@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
@@ -210,7 +209,7 @@ public abstract class ModelQueryTest<T extends ObjectifyModel<T>> extends ApiApp
 		}
 
 		public MockHttpServletRequestBuilder getQueryRequestBuilder(ObjectifyQueryRequestOptions options) {
-			MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(this.getQueryUrl());
+			MockHttpServletRequestBuilder builder = ModelQueryTest.this.serviceRequestBuilder.get(this.getQueryUrl());
 
 			MockHttpServletRequestBuilderUtility.addParameters(builder, this.query);
 

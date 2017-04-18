@@ -16,10 +16,10 @@ import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
 /**
@@ -32,15 +32,16 @@ public class LoginKeyLinkSystemEntry extends AbstractModelLinkSystemEntry<LoginK
 
 	public static final String LOGIN_KEY_LINK_TYPE = "LoginKey";
 
-	private static final ExtendedObjectifyModelKeyUtil<LoginPointer> loginPointerUtil = ExtendedObjectifyModelKeyUtil.make(
-			LoginPointer.class, ModelKeyType.NAME);
+	private static final ExtendedObjectifyModelKeyUtil<LoginPointer> loginPointerUtil = ExtendedObjectifyModelKeyUtil
+	        .make(LoginPointer.class, ModelKeyType.NAME);
 
 	private String loginPointerLinkName = LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE;
 
-	private LinkTarget loginPointerTarget = new LinkTargetImpl(LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE, ModelKeyType.NAME);
+	private LinkTarget loginPointerTarget = new LinkTargetImpl(LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE,
+	        ModelKeyType.NAME);
 
-	public LoginKeyLinkSystemEntry(CrudService<LoginKey> crudService, ConfiguredSetter<LoginKey> setter) {
-		super(LOGIN_KEY_LINK_TYPE, crudService, crudService, setter);
+	public LoginKeyLinkSystemEntry(CrudService<LoginKey> crudService, Updater<LoginKey> updater) {
+		super(LOGIN_KEY_LINK_TYPE, crudService, crudService, updater);
 	}
 
 	// MARK: AbstractModelLinkSystemEntry

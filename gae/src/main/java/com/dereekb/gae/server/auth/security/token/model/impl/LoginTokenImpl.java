@@ -18,17 +18,12 @@ import com.dereekb.gae.utilities.time.DateUtility;
 public class LoginTokenImpl
         implements LoginToken {
 
-	private static final Long DEFAULT_ROLES = 0L;
+	public static final Long DEFAULT_ROLES = 0L;
 
 	/**
 	 * Optional subject
 	 */
 	private String subject;
-
-	/**
-	 * Anonymous login or not.
-	 */
-	private boolean anonymous = false;
 
 	/**
 	 * {@link Login} identifier
@@ -39,6 +34,11 @@ public class LoginTokenImpl
 	 * {@link LoginPointer} identifier
 	 */
 	private String loginPointer;
+
+	/**
+	 * Refresh token ability.
+	 */
+	private boolean refreshAllowed = false;
 
 	/**
 	 * Set of roles.
@@ -81,7 +81,6 @@ public class LoginTokenImpl
 		}
 
 		this.setSubject(loginToken.getSubject());
-		this.setAnonymous(loginToken.isAnonymous());
 		this.setLogin(loginToken.getLoginId());
 		this.setLoginPointer(loginToken.getLoginPointerId());
 		this.setRoles(loginToken.getEncodedRoles());
@@ -89,6 +88,7 @@ public class LoginTokenImpl
 		this.setExpiration(loginToken.getExpiration());
 		this.setPointerType(loginToken.getPointerType());
 		this.setOwnershipRoles(loginToken.getOwnershipRoles());
+		this.setRefreshAllowed(loginToken.isRefreshAllowed());
 	}
 
 	@Override
@@ -107,12 +107,13 @@ public class LoginTokenImpl
 	}
 
 	@Override
-	public boolean isAnonymous() {
-		return this.anonymous;
+	public boolean isNewUser() {
+		return this.login == null && !this.pointerType.isInternalType();
 	}
 
-	public void setAnonymous(boolean anonymous) {
-		this.anonymous = anonymous;
+	@Override
+	public boolean isAnonymous() {
+		return (this.pointerType.equals(LoginPointerType.ANONYMOUS));
 	}
 
 	@Override
@@ -131,6 +132,15 @@ public class LoginTokenImpl
 
 	public void setLoginPointer(String loginPointer) {
 		this.loginPointer = loginPointer;
+	}
+
+	@Override
+	public boolean isRefreshAllowed() {
+		return this.refreshAllowed;
+	}
+
+	public void setRefreshAllowed(boolean refreshAllowed) {
+		this.refreshAllowed = refreshAllowed;
 	}
 
 	@Override
@@ -220,10 +230,10 @@ public class LoginTokenImpl
 
 	@Override
 	public String toString() {
-		return "LoginTokenImpl [subject=" + this.subject + ", anonymous=" + this.anonymous + ", login=" + this.login
-		        + ", loginPointer=" + this.loginPointer + ", roles=" + this.roles + ", issued=" + this.issued
-		        + ", expiration=" + this.expiration + ", pointerType=" + this.pointerType + ", ownershipRoles="
-		        + this.ownershipRoles + "]";
+		return "LoginTokenImpl [subject=" + this.subject + ", login=" + this.login + ", loginPointer="
+		        + this.loginPointer + ", roles=" + this.roles + ", issued=" + this.issued + ", expiration="
+		        + this.expiration + ", pointerType=" + this.pointerType + ", ownershipRoles=" + this.ownershipRoles
+		        + "]";
 	}
 
 }

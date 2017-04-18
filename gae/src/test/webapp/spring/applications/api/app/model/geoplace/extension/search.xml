@@ -25,7 +25,7 @@
 		<constructor-arg index="0" ref="searchSystem" />
 		<constructor-arg index="1"
 			ref="geoPlaceIndexingDocumentBuilder" />
-		<constructor-arg index="2" ref="geoPlaceAsyncConfiguredSetter" />
+		<constructor-arg index="2" ref="geoPlaceUpdater" />
 	</bean>
 
 	<!-- Search Indexing -->

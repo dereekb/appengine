@@ -175,6 +175,11 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 		}
 
 		@Override
+		public boolean hasResults() {
+			return this.response.getReturnedResults() > 0;
+		}
+
+		@Override
 		public String getSearchCursor() {
 			try {
 				return this.getResultsCursor().toWebSafeString();

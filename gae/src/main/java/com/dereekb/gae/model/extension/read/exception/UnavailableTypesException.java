@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.utilities.collections.SingleItem;
-import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
+import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
@@ -14,8 +14,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
  *
  * @author dereekb
  */
-public class UnavailableTypesException extends RuntimeException
-        implements ApiResponseErrorConvertable {
+public class UnavailableTypesException extends ApiSafeRuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

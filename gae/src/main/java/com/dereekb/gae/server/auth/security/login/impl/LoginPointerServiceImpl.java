@@ -82,7 +82,7 @@ public class LoginPointerServiceImpl
 		}
 
 		template.setModelKey(key);
-		this.getterSetter.save(template, false);
+		this.getterSetter.store(template);
 
 		if (this.reviewTask != null) {
 			this.reviewTask.sendTask(template);

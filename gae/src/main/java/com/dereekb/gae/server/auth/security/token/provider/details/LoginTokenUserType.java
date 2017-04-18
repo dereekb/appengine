@@ -10,6 +10,8 @@ public enum LoginTokenUserType {
 
 	ANONYMOUS,
 
+	NEW_USER,
+
 	USER,
 
 	/**

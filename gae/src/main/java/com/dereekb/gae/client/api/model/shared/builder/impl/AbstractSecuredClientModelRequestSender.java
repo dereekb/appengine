@@ -120,6 +120,28 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	 *            Request. Never {@code null}.
 	 * @param response
 	 *            {@link ClientApiResponse}. Never {@code null}.
+	 * @param security
+	 *            {@link ClientRequestSecurity}. Never {@code null}.
+	 * @return Serialized response data. Never {@code null}.
+	 * @throws ClientResponseSerializationException
+	 *             if the serialization fails.
+	 */
+	public S serializeResponseData(R request,
+	                               ClientApiResponse response,
+	                               ClientRequestSecurity security)
+	        throws ClientResponseSerializationException {
+
+		// By default does not include security.
+		return this.serializeResponseData(request, response);
+	}
+
+	/**
+	 * Serializes response data into a new object.
+	 * 
+	 * @param request
+	 *            Request. Never {@code null}.
+	 * @param response
+	 *            {@link ClientApiResponse}. Never {@code null}.
 	 * @return Serialized response data. Never {@code null}.
 	 * @throws ClientResponseSerializationException
 	 *             if the serialization fails.
@@ -139,10 +161,16 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 		private R request;
 		private S serializedData;
+		private ClientRequestSecurity security;
 
 		public SerializedClientApiResponseImpl(R request, ClientApiResponse response) {
+			this(request, response, null);
+		}
+
+		public SerializedClientApiResponseImpl(R request, ClientApiResponse response, ClientRequestSecurity security) {
 			super(response);
-			this.request = request;
+			this.setRequest(request);
+			this.setSecurity(security);
 		}
 
 		public R getRequest() {
@@ -157,13 +185,21 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 			this.request = request;
 		}
 
+		public ClientRequestSecurity getSecurity() {
+			return this.security;
+		}
+
+		public void setSecurity(ClientRequestSecurity security) {
+			this.security = security;
+		}
+
 		// MARK: SerializedClientApiResponse
 		@Override
 		public S getSerializedPrimaryData() throws ClientResponseSerializationException {
 			if (this.serializedData == null) {
 				this.assertResponseSuccess();
 				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request,
-				        this.response);
+				        this.response, this.security);
 			}
 
 			return this.serializedData;
@@ -180,9 +216,23 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	protected class AbstractSerializedResponse {
 
 		protected final ClientApiResponse response;
+		protected ClientRequestSecurity security;
 
 		public AbstractSerializedResponse(ClientApiResponse response) {
+			this(response, null);
+		}
+
+		public AbstractSerializedResponse(ClientApiResponse response, ClientRequestSecurity security) {
 			this.response = response;
+			this.setSecurity(security);
+		}
+
+		public ClientRequestSecurity getSecurity() {
+			return this.security;
+		}
+
+		public void setSecurity(ClientRequestSecurity security) {
+			this.security = security;
 		}
 
 	}

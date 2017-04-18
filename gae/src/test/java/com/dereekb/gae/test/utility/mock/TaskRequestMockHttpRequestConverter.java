@@ -4,13 +4,14 @@ import java.util.Collection;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestReader;
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
+import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilderImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
@@ -23,9 +24,12 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 public class TaskRequestMockHttpRequestConverter extends AbstractDirectionalConverter<TaskRequest, MockHttpServletRequestBuilder> {
 
 	private TaskRequestConverter converter;
+	private WebServiceRequestBuilder requestBuilder;
 
-	public TaskRequestMockHttpRequestConverter(TaskRequestConverter converter) throws IllegalArgumentException {
+	public TaskRequestMockHttpRequestConverter(TaskRequestConverter converter, WebServiceRequestBuilder requestBuilder)
+	        throws IllegalArgumentException {
 		this.setConverter(converter);
+		this.setRequestBuilder(requestBuilder);
 	}
 
 	public TaskRequestConverter getConverter() {
@@ -40,10 +44,23 @@ public class TaskRequestMockHttpRequestConverter extends AbstractDirectionalConv
 		this.converter = converter;
 	}
 
+	public WebServiceRequestBuilder getRequestBuilder() {
+		return this.requestBuilder;
+	}
+
+	public void setRequestBuilder(WebServiceRequestBuilder requestBuilder) {
+		if (requestBuilder == null) {
+			throw new IllegalArgumentException("requestBuilder cannot be null.");
+		}
+
+		this.requestBuilder = requestBuilder;
+	}
+
+	// MARK: Converter
 	@Override
 	public MockHttpServletRequestBuilder convertSingle(TaskRequest input) throws ConversionFailureException {
 		TaskRequestReader reader = this.converter.makeReader(input);
-		MockHttpServletRequestBuilder builder = makeBuilder(reader);
+		MockHttpServletRequestBuilder builder = makeBuilder(reader, this.requestBuilder);
 
 		appendHeaders(builder, input.getHeaders());
 		appendParameters(builder, input.getParameters());
@@ -51,34 +68,18 @@ public class TaskRequestMockHttpRequestConverter extends AbstractDirectionalConv
 		return builder;
 	}
 
+	@Deprecated
 	public static MockHttpServletRequestBuilder makeBuilder(TaskRequestReader reader) {
-		Method method = reader.getMethod();
-		String url = reader.getFullRequestUri();
-		return makeBuilder(method, url);
+		return makeBuilder(reader, WebServiceRequestBuilderImpl.SINGLETON);
 	}
 
-	public static MockHttpServletRequestBuilder makeBuilder(Method method,
-	                                                        String url) {
-		MockHttpServletRequestBuilder builder = null;
+	public static MockHttpServletRequestBuilder makeBuilder(TaskRequestReader reader,
+	                                                        WebServiceRequestBuilder builder) {
+		Method method = reader.getMethod();
+		HttpMethod httpMethod = convertMethod(method);
 
-		switch (method) {
-			case DELETE:
-				builder = MockMvcRequestBuilders.delete(url);
-				break;
-			case GET:
-				builder = MockMvcRequestBuilders.get(url);
-				break;
-			case POST:
-				builder = MockMvcRequestBuilders.post(url);
-				break;
-			case PUT:
-				builder = MockMvcRequestBuilders.put(url);
-				break;
-			default:
-				break;
-		}
-
-		return builder;
+		String url = reader.getFullRequestUri();
+		return builder.request(httpMethod, url);
 	}
 
 	public static HttpMethod convertMethod(Method method) {

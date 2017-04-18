@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractConfiguredClientModelRequestSender;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
+import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -65,8 +66,18 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 		private Collection<ModelKey> modelKeyResults;
 
 		public AbstractClientSearchResponse(SearchRequest request, ClientApiResponse response) {
-			super(response);
+			this(request, response, null);
+		}
+
+		public AbstractClientSearchResponse(SearchRequest request,
+		        ClientApiResponse response,
+		        ClientRequestSecurity security) {
+			super(response, security);
 			this.request = request;
+		}
+
+		public SearchRequest getRequest() {
+			return this.request;
 		}
 
 		// MARK: ModelQueryResponse
@@ -76,11 +87,18 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 		}
 
 		@Override
+		public boolean hasResults() {
+			return this.getDataSerializer().hasResults();
+		}
+
+		@Override
 		public Collection<T> getModelResults() throws KeysOnlySearchException {
-			if (this.isKeysOnlyResponse()) {
-				throw new KeysOnlySearchException();
-			} else {
-				this.modelResults = this.getDataSerializer().getModelResults();
+			if (this.modelResults == null) {
+				if (this.isKeysOnlyResponse()) {
+					throw new KeysOnlySearchException();
+				} else {
+					this.modelResults = this.getDataSerializer().getModelResults();
+				}
 			}
 
 			return this.modelResults;
@@ -125,6 +143,11 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 
 		public SearchResponseDataSerializer(JsonNode data) {
 			this.data = data;
+		}
+
+		public boolean hasResults() {
+			JsonNode dataNode = this.data.get(DATA_KEY);
+			return dataNode.has(0);	// Has atleast one value.
 		}
 
 		public Collection<T> getModelResults() throws KeysOnlySearchException {

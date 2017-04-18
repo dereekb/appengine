@@ -39,8 +39,8 @@ public final class AnonymousLoginController {
 
 	// MARK: Controller
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
-	public final LoginTokenPair login(@RequestParam(required = false) String anonymousId) {
+	@RequestMapping(method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
+	public final LoginTokenPair login(@RequestParam(name = "id", required = false) String anonymousId) {
 		LoginTokenPair response = null;
 
 		try {

@@ -3,6 +3,8 @@ package com.dereekb.gae.web.api.exception.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.UnavailableException;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -12,11 +14,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.dereekb.gae.utilities.time.exception.RateLimitException;
 import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
@@ -76,7 +80,7 @@ public class ApiExceptionHandler {
 		String causeMessage = cause.getMessage();
 
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl("BAD_ARG_EXCEPTION");
-		error.setTitle("Illegal Argument");
+		error.setTitle("Bad Request Argument");
 		error.setDetail(causeMessage);
 
 		response.setError(error);
@@ -113,6 +117,21 @@ public class ApiExceptionHandler {
 	}
 
 	@ResponseBody
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(UnavailableException.class)
+	public ApiResponse handleException(UnavailableException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("SERVICE_UNAVAILABLE");
+		error.setTitle("Service Unavailable");
+		error.setDetail("The service is currently unavailable due to an error.");
+
+		response.setError(error);
+
+		return response;
+	}
+
+	@ResponseBody
 	@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ApiResponse handleException(HttpRequestMethodNotSupportedException e) {
@@ -125,6 +144,13 @@ public class ApiExceptionHandler {
 		response.setError(error);
 
 		return response;
+	}
+
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
+	@ExceptionHandler(RateLimitException.class)
+	public ApiResponse handleException(RateLimitException e) {
+		return ApiResponseImpl.makeFailure(e);
 	}
 
 	// MARK: Validation
@@ -145,7 +171,7 @@ public class ApiExceptionHandler {
 	}
 
 	/**
-	 * Used for capturing validation errors.
+	 * Used for capturing path variable exceptions.
 	 */
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -155,6 +181,24 @@ public class ApiExceptionHandler {
 
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl("MISSING_URL_VARIABLE");
 		error.setTitle("Missing URL Variable");
+		error.setDetail(e.getMessage());
+
+		response.setError(error);
+
+		return response;
+	}
+
+	/**
+	 * Used for capturing missing request parameter exceptions.
+	 */
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	public ApiResponse handleException(MissingServletRequestParameterException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("MISSING_REQUEST_VARIABLE");
+		error.setTitle("Missing Request Variable '" + e.getParameterName() + "'");
 		error.setDetail(e.getMessage());
 
 		response.setError(error);

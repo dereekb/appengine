@@ -39,14 +39,9 @@
 	</bean>
 
 	<!-- Configured Setters -->
-	<alias name="geoPlaceRegistry" alias="geoPlaceAsyncConfiguredSetter" />
-	<alias name="geoPlaceRegistry" alias="geoPlaceAsyncConfiguredDeleter" />
-
-	<bean id="geoPlaceSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
-		<constructor-arg index="0" ref="geoPlaceRegistry" />
-		<constructor-arg index="1" value="false" />
-	</bean>
+	<alias name="geoPlaceRegistry" alias="geoPlaceStorer" />
+	<alias name="geoPlaceRegistry" alias="geoPlaceUpdater" />
+	<alias name="geoPlaceRegistry" alias="geoPlaceDeleter" />
 
 	<!-- Update Scheduler -->
 	<bean id="geoPlaceScheduleUpdateReview"
@@ -55,8 +50,8 @@
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="geoPlaceUpdateConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
+	<bean id="geoPlaceTaskConfiguredUpdater"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl">
 		<constructor-arg index="0" ref="geoPlaceScheduleUpdateReview" />
 		<constructor-arg index="1" ref="geoPlaceRegistry" />
 	</bean>

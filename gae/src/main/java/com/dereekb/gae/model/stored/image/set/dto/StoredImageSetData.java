@@ -83,7 +83,7 @@ public final class StoredImageSetData extends SearchableDatabaseModelData {
 	@Override
 	public String toString() {
 		return "StoredImageSetData [label=" + this.label + ", detail=" + this.detail + ", tags=" + this.tags
-		        + ", icon=" + this.icon + ", images=" + this.images + ", searchIdentifier=" + this.searchIdentifier
+		        + ", icon=" + this.icon + ", images=" + this.images + ", searchIdentifier=" + this.searchId
 		        + ", identifier=" + this.key + ", created=" + this.date + "]";
 	}
 

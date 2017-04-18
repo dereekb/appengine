@@ -17,10 +17,23 @@
 	</bean>
 
 	<bean id="loginRegisterControllerDelegate"
-
 		class="com.dereekb.gae.web.api.auth.controller.register.impl.LoginRegisterControllerDelegateImpl">
 		<constructor-arg index="0" ref="loginRegisterService" />
 		<constructor-arg index="1" ref="loginTokenService" />
+	</bean>
+
+	<!-- Refresh Token Controller -->
+	<bean id="loginTokenController"
+		class="com.dereekb.gae.web.api.auth.controller.token.LoginTokenController">
+		<constructor-arg index="0"
+			ref="loginTokenControllerDelegate" />
+	</bean>
+
+	<bean id="loginTokenControllerDelegate"
+		class="com.dereekb.gae.web.api.auth.controller.token.impl.LoginTokenControllerDelegateImpl">
+		<constructor-arg index="0" ref="refreshTokenEncoderDecoder" />
+		<constructor-arg index="1" ref="loginTokenService" />
+		<constructor-arg index="2" ref="refreshTokenService" />
 	</bean>
 
 	<!-- Anonymous Login Controller -->
@@ -44,7 +57,6 @@
 	</bean>
 
 	<bean id="passwordLoginControllerDelegate"
-
 		class="com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginControllerDelegateImpl">
 		<constructor-arg index="0" ref="passwordLoginService" />
 		<constructor-arg index="1" ref="loginTokenService" />
@@ -57,7 +69,6 @@
 	</bean>
 
 	<bean id="oAuthLoginControllerDelegate"
-
 		class="com.dereekb.gae.web.api.auth.controller.oauth.impl.OAuthLoginControllerDelegateImpl">
 		<constructor-arg index="0" ref="oAuthServiceManager" />
 		<constructor-arg index="1" ref="loginTokenService" />
@@ -70,7 +81,6 @@
 	</bean>
 
 	<bean id="keyLoginControllerDelegate"
-
 		class="com.dereekb.gae.web.api.auth.controller.key.impl.KeyLoginControllerDelegateImpl">
 		<constructor-arg index="0" ref="loginTokenService" />
 		<constructor-arg index="1" ref="keyLoginStatusServiceManager" />

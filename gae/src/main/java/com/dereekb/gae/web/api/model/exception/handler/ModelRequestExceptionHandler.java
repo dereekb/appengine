@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.web.api.model.crud.exception.NoTemplateDataExeption;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
@@ -25,6 +26,14 @@ import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttribu
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ModelRequestExceptionHandler {
+
+	// MARK: UnavailableTypesException
+	@ResponseBody
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(UnavailableTypesException.class)
+	public ApiResponse handleException(UnavailableTypesException exception) {
+		return ApiResponseImpl.makeFailure(exception);
+	}
 
 	// MARK: Atomic Operations
 	@ResponseBody

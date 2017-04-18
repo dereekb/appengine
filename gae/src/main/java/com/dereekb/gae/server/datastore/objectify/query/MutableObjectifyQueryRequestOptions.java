@@ -14,6 +14,8 @@ public interface MutableObjectifyQueryRequestOptions
 
 	public void setAllowCache(boolean cache);
 
+	public void setAllowHybrid(boolean allowHybrid);
+
 	public void setQueryCursor(Cursor cursor);
 
 	public void setChunk(Integer chunk);

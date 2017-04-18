@@ -18,6 +18,8 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
         implements ModelQueryRequest {
 
 	private boolean allowCache;
+	private boolean allowHybrid;
+
 	private Cursor queryCursor;
 
 	public ModelQueryRequestImpl() {
@@ -54,6 +56,15 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
 
 	public void setAllowCache(boolean allowCache) {
 		this.allowCache = allowCache;
+	}
+
+	@Override
+	public boolean getAllowHybrid() {
+		return this.allowHybrid;
+	}
+
+	public void setAllowHybrid(boolean allowHybrid) {
+		this.allowHybrid = allowHybrid;
 	}
 
 	@Override

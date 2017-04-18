@@ -1,13 +1,13 @@
 package com.dereekb.gae.model.extension.inclusion.reader.impl;
 
 import java.util.Collection;
-import java.util.Set;
 
 import com.dereekb.gae.model.extension.inclusion.exception.InclusionTypeUnavailableException;
 import com.dereekb.gae.model.extension.inclusion.reader.ModelInclusionReaderAnalysis;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
+import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
 
 /**
  * {@link ModelInclusionReaderAnalysis} implementation.
@@ -21,10 +21,34 @@ public class ModelInclusionReaderAnalysisImpl<T extends UniqueModel>
         implements ModelInclusionReaderAnalysis<T> {
 
 	private T model;
-	private HashMapWithSet<String, ModelKey> relatedKeys;
+	private CaseInsensitiveMapWithSet<ModelKey> relatedKeys;
 
-	public ModelInclusionReaderAnalysisImpl(T model, HashMapWithSet<String, ModelKey> relatedKeys) {
+	public ModelInclusionReaderAnalysisImpl(T model, CaseInsensitiveMapWithSet<ModelKey> relatedKeys) {
 		this.model = model;
+		this.relatedKeys = relatedKeys;
+	}
+
+	public T getModel() {
+		return this.model;
+	}
+
+	public void setModel(T model) {
+		if (model == null) {
+			throw new IllegalArgumentException("model cannot be null.");
+		}
+
+		this.model = model;
+	}
+
+	public CaseInsensitiveMapWithSet<ModelKey> getRelatedKeys() {
+		return this.relatedKeys;
+	}
+
+	public void setRelatedKeys(CaseInsensitiveMapWithSet<ModelKey> relatedKeys) {
+		if (relatedKeys == null) {
+			throw new IllegalArgumentException("relatedKeys cannot be null.");
+		}
+
 		this.relatedKeys = relatedKeys;
 	}
 
@@ -35,7 +59,7 @@ public class ModelInclusionReaderAnalysisImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public Set<String> getRelatedTypes() {
+	public CaseInsensitiveSet getRelatedTypes() {
 		return this.relatedKeys.keySet();
 	}
 
@@ -45,7 +69,7 @@ public class ModelInclusionReaderAnalysisImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public HashMapWithSet<String, ModelKey> getRelationMap() {
+	public CaseInsensitiveMapWithSet<ModelKey> getRelationMap() {
 		return this.relatedKeys;
 	}
 
