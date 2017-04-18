@@ -9,6 +9,11 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Search Exception Handler -->
+	<bean id="apiSearchExceptionHandler"
+		class="com.dereekb.gae.web.api.model.extension.search.exception.ApiSearchExceptionHandler">
+	</bean>
+
 	<!-- Search Controller -->
 	<bean id="searchExtensionApiController"
 		class="com.dereekb.gae.web.api.model.extension.search.SearchExtensionApiController">

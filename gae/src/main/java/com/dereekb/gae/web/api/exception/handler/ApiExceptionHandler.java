@@ -44,7 +44,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class ApiExceptionHandler {
 
-	private static final Logger LOG = Logger.getLogger(ApiExceptionHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ApiExceptionHandler.class.getName());
 
 	/**
 	 * Used when the POST body cannot be parsed correctly.
@@ -102,7 +102,7 @@ public class ApiExceptionHandler {
 		RuntimeException exception = e.getException();
 
 		// Log the error.
-		LOG.log(Level.WARNING, "API Caught Runtime Error", exception);
+		LOGGER.log(Level.WARNING, "API Caught Runtime Error", exception);
 
 		return ApiResponseImpl.makeFailure(e);
 	}
