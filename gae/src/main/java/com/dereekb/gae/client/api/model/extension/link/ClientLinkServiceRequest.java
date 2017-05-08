@@ -15,11 +15,20 @@ public interface ClientLinkServiceRequest {
 	/**
 	 * Whether or not to change links atomically.
 	 * 
-	 * @return {@code boolean}.
+	 * @return {@code true} if atomic.
 	 */
 	public boolean isAtomic();
 
 	/**
+	 * Returns the model type.
+	 * 
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getType();
+
+	/**
+	 * Returns the list of changes to perform.
+	 * 
 	 * @return List of changes. Never {@code null}.
 	 */
 	public List<ApiLinkChange> getChanges();

@@ -1,7 +1,9 @@
 package com.dereekb.gae.web.api.model.extension.link.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -51,6 +53,10 @@ public class ApiLinkChangeImpl
 
 	public ApiLinkChangeImpl() {}
 
+	public ApiLinkChangeImpl(ApiLinkChange change) throws NullPointerException {
+		this(change.getAction(), change.getPrimaryKey(), change.getLinkName(), change.getTargetKeys());
+	}
+
 	protected ApiLinkChangeImpl(String action, String primaryKey, String linkName) {
 		this.setAction(action);
 		this.setPrimaryKey(primaryKey);
@@ -70,6 +76,7 @@ public class ApiLinkChangeImpl
 		this.setTargetKeys(targetKeys);
 	}
 
+	@Override
 	public String getAction() {
 		return this.action;
 	}
@@ -78,6 +85,7 @@ public class ApiLinkChangeImpl
 		this.action = action;
 	}
 
+	@Override
 	public String getPrimaryKey() {
 		return this.primaryKey;
 	}
@@ -86,6 +94,7 @@ public class ApiLinkChangeImpl
 		this.primaryKey = primaryKey;
 	}
 
+	@Override
 	public String getLinkName() {
 		return this.linkName;
 	}
@@ -94,6 +103,7 @@ public class ApiLinkChangeImpl
 		this.linkName = linkName;
 	}
 
+	@Override
 	public Set<String> getTargetKeys() {
 		return this.targetKeys;
 	}
@@ -109,6 +119,17 @@ public class ApiLinkChangeImpl
 		} else {
 			this.targetKeys = null;
 		}
+	}
+
+	// MARK: Utility
+	public static List<ApiLinkChangeImpl> makeFromChanges(Iterable<? extends ApiLinkChange> changes) {
+		List<ApiLinkChangeImpl> newChanges = new ArrayList<ApiLinkChangeImpl>();
+
+		for (ApiLinkChange change : changes) {
+			newChanges.add(new ApiLinkChangeImpl(change));
+		}
+
+		return newChanges;
 	}
 
 	@Override

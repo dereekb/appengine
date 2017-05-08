@@ -36,7 +36,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		this.modelType = modelType;
 	}
 
-	protected void performRequest(ApiRequest<ApiLinkChange> request) {
+	protected void performRequest(ApiRequest<ApiLinkChangeImpl> request) {
 		ApiLinkChangeRequest changeRequest = new ApiLinkChangeRequest(request.getData());
 		this.performRequest(changeRequest);
 	}

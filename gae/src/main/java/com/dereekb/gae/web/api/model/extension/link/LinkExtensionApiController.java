@@ -27,6 +27,7 @@ import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
+import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeResponse;
 
@@ -92,7 +93,8 @@ public class LinkExtensionApiController {
 
 		try {
 			boolean atomic = request.isAtomic();
-			List<ApiLinkChange> submittedChanges = request.getData();
+
+			List<ApiLinkChangeImpl> submittedChanges = request.getData();
 			List<LinkSystemChange> changes = this.converter.convert(primaryType, submittedChanges);
 
 			LinkServiceRequest linkServiceRequest = new LinkServiceRequestImpl(changes, atomic);
