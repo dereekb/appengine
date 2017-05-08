@@ -34,7 +34,7 @@ public enum LinkChangeAction {
 		return this.action;
 	}
 
-	public static LinkChangeAction withString(String action) throws IllegalArgumentException {
+	public static LinkChangeAction fromString(String action) throws IllegalArgumentException {
 		LinkChangeAction result;
 
 		switch (action) {

@@ -5,11 +5,13 @@ import java.util.List;
 import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
+import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException.ClientAtomicOperationExceptionUtility;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequest;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceResponse;
 import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkServiceChangeException;
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractSecuredClientModelRequestSender;
+import com.dereekb.gae.client.api.model.shared.utility.ClientModelKeySerializer;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
@@ -41,7 +43,11 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 	private static final String DEFAULT_PATH_FORMAT = "/%s/link";
 
 	private String pathFormat = DEFAULT_PATH_FORMAT;
+
 	private TypeModelKeyConverter keyTypeConverter;
+
+	private ClientModelKeySerializer keySerializer;
+	private ClientAtomicOperationExceptionUtility atomicOperationUtility;
 
 	public ClientLinkRequestSenderImpl(SecuredClientApiRequestSender requestSender,
 	        TypeModelKeyConverter keyTypeConverter) throws IllegalArgumentException {
@@ -59,6 +65,8 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 		}
 
 		this.keyTypeConverter = keyTypeConverter;
+		this.keySerializer = new ClientModelKeySerializer(keyTypeConverter);
+		this.atomicOperationUtility = new ClientAtomicOperationExceptionUtility(this.keySerializer);
 	}
 
 	// MARK: ClientLinkServiceRequestSender
@@ -80,7 +88,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 	            ClientRequestFailureException {
 
 		SerializedClientApiResponse<ClientLinkServiceResponse> clientResponse = this.sendRequest(request, security);
-		this.assertSuccessfulResponse(clientResponse);
+		this.assertSuccessfulResponse(request, clientResponse);
 		return clientResponse.getSerializedPrimaryData();
 	}
 
@@ -100,7 +108,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 	public ClientLinkServiceResponse serializeResponseData(ClientLinkServiceRequest request,
 	                                                       ClientApiResponse response)
 	        throws ClientResponseSerializationException {
-		return new ClientLinkServiceResponseImpl(response);
+		return new ClientLinkServiceResponseImpl(request, response);
 	}
 
 	// MARK: Utility
@@ -120,8 +128,12 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 		return requestData;
 	}
 
-	public void assertSuccessfulResponse(SerializedClientApiResponse<ClientLinkServiceResponse> clientResponse) {
+	public void assertSuccessfulResponse(ClientLinkServiceRequest request,
+	                                     SerializedClientApiResponse<ClientLinkServiceResponse> clientResponse)
+	        throws ClientRequestFailureException {
 		if (clientResponse.getSuccess() == false) {
+			this.atomicOperationUtility.assertNoAtomicOperationError(request.getType(), clientResponse);
+
 			// TODO: Handle and throw the following:
 			/*
 			 * ClientLinkServiceChangeException,
@@ -129,21 +141,28 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 			 * ClientAtomicOperationException,
 			 * ClientRequestFailureException
 			 */
+
+			throw new ClientRequestFailureException(clientResponse);
 		}
 	}
 
 	private class ClientLinkServiceResponseImpl
 	        implements ClientLinkServiceResponse {
 
-		private ClientApiResponse response;
+		private final ClientLinkServiceRequest request;
+		private final ClientApiResponse response;
 
-		public ClientLinkServiceResponseImpl(ClientApiResponse response) {
+		public ClientLinkServiceResponseImpl(ClientLinkServiceRequest request, ClientApiResponse response) {
+			this.request = request;
 			this.response = response;
 		}
 
 		// MARK: ClientLinkServiceResponse
+
+		// TODO: Add elements from missing resource errors.
+
 		@Override
-		public HashMapWithSet<String, ModelKey> getMissingKeys() {
+		public HashMapWithSet<String, ModelKey> getMissingKeysSet() {
 			// TODO Auto-generated method stub
 			return null;
 		}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException.LinkSystemChangeErrorData;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException.LinkSystemChangeApiResponseError;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
@@ -16,7 +16,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
  */
 public class LinkSystemChangeSetException extends ApiLinkException {
 
-	public static final String LINK_CHANGE_SET_ERROR_CODE = "LINK_CHANGE_SET_ERROR";
+	public static final String API_ERROR_CODE = "LINK_CHANGE_ERROR_SET";
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,15 +36,15 @@ public class LinkSystemChangeSetException extends ApiLinkException {
 
 	// MARK: ApiLinkException
 	@Override
-	public ApiResponseError getResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl(LINK_CHANGE_SET_ERROR_CODE);
+	public ApiResponseError asResponseError() {
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(API_ERROR_CODE);
 		error.setTitle("Link Change Errors");
 		error.setDetail("One or more errors occured while performing link changes.");
 
-		List<LinkSystemChangeErrorData> data = new ArrayList<LinkSystemChangeErrorData>();
+		List<LinkSystemChangeApiResponseError> data = new ArrayList<LinkSystemChangeApiResponseError>();
 
 		for (LinkSystemChangeException exception : this.exceptions) {
-			data.add(exception.getApiErrorData());
+			data.add(exception.asResponseError());
 		}
 
 		error.setData(data);

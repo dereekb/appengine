@@ -79,7 +79,7 @@ public class LinkServiceImpl
 
 		// MARK: LinkServiceResponse
 		@Override
-		public HashMapWithSet<String, ModelKey> getMissingKeys() {
+		public HashMapWithSet<String, ModelKey> getMissingKeysSet() {
 			return this.runner.getMissing();
 		}
 

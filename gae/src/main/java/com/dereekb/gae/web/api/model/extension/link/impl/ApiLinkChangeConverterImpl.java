@@ -48,7 +48,7 @@ public class ApiLinkChangeConverterImpl
 			LinkSystemChangeImpl change = new LinkSystemChangeImpl();
 
 			String actionString = inputChange.getAction();
-			LinkChangeAction action = LinkChangeAction.withString(actionString);
+			LinkChangeAction action = LinkChangeAction.fromString(actionString);
 			change.setAction(action);
 
 			change.setPrimaryType(primaryType);

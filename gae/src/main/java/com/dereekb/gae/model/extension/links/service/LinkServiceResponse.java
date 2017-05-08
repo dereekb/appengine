@@ -18,6 +18,6 @@ public interface LinkServiceResponse {
 	 *
 	 * @return {@link HashMapWithSet}. Never {@code null}.
 	 */
-	public HashMapWithSet<String, ModelKey> getMissingKeys();
+	public HashMapWithSet<String, ModelKey> getMissingKeysSet();
 
 }

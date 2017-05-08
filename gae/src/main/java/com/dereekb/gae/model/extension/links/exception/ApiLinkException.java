@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.links.exception;
 
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 
 /**
@@ -9,7 +10,8 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseError;
  * @author dereekb
  *
  */
-public abstract class ApiLinkException extends LinkException {
+public abstract class ApiLinkException extends LinkException
+        implements ApiResponseErrorConvertable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +34,5 @@ public abstract class ApiLinkException extends LinkException {
 	public ApiLinkException(Throwable cause) {
 		super(cause);
 	}
-
-	public abstract ApiResponseError getResponseError();
 
 }

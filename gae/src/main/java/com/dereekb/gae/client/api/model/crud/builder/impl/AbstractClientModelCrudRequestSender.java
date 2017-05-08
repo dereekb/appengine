@@ -1,25 +1,20 @@
 package com.dereekb.gae.client.api.model.crud.builder.impl;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
+import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException.ClientAtomicOperationExceptionUtility;
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractConfiguredClientModelRequestSender;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
-import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
-import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
-import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.response.SimpleServiceResponse;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 
 /**
  * Abstract client model request sender for all types.
@@ -39,6 +34,8 @@ import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
  */
 public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel, O, R, S> extends AbstractConfiguredClientModelRequestSender<T, O, R, S> {
 
+	private ClientAtomicOperationExceptionUtility atomicOperationUtility;
+
 	public AbstractClientModelCrudRequestSender(String type,
 	        Class<O> dtoType,
 	        BidirectionalConverter<T, O> dtoConverter,
@@ -54,8 +51,10 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
 		super(type, pathFormat, dtoType, dtoConverter, keyTypeConverter, requestSender);
+		this.atomicOperationUtility = new ClientAtomicOperationExceptionUtility(this.getKeySerializer());
 	}
 
+	// MARK: Utility
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -72,51 +71,12 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 		}
 	}
 
-	/**
-	 * Asserts that the request was successful and there is no atomic operation
-	 * error.
-	 * 
-	 * @param clientResponse
-	 *            {@link ClientApiResponse}. Never {@code null}.
-	 * @throws ClientAtomicOperationException
-	 *             asserted exception.
-	 */
 	public void assertNoAtomicOperationError(ClientApiResponse clientResponse) throws ClientAtomicOperationException {
-		ClientResponseError error = clientResponse.getError();
-
-		if (error.getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR) {
-			List<ModelKey> missingKeys = this.serializeMissingResourceKeys(clientResponse);
-
-			if (missingKeys.isEmpty() == false) {
-				throw new ClientAtomicOperationException(missingKeys, clientResponse);
-			}
-		}
+		this.atomicOperationUtility.assertNoAtomicOperationError(this.getType(), clientResponse);
 	}
 
-	/**
-	 * Serializes keys from the error associated with the atomic operation
-	 * exception,
-	 * {@link MissingRequiredResourceException#API_RESPONSE_ERROR_CODE}.
-	 * 
-	 * @param response
-	 *            {@link ClientApiResponse}. Never {@code null}.
-	 * @return {@link List}. Never {@code null}.
-	 */
 	public List<ModelKey> serializeMissingResourceKeys(ClientApiResponse response) {
-		List<ModelKey> objectKeys = null;
-
-		ClientResponseError error = response.getError();
-		Map<String, ClientResponseErrorInfo> errorInfoMap = error.getErrorInfoMap();
-		ClientResponseErrorInfo missingKeysInfo = errorInfoMap
-		        .get(MissingRequiredResourceException.API_RESPONSE_ERROR_CODE);
-
-		if (missingKeysInfo != null) {
-			objectKeys = this.serializeKeysFromErrorInfoData(missingKeysInfo);
-		} else {
-			objectKeys = Collections.emptyList();
-		}
-
-		return objectKeys;
+		return this.atomicOperationUtility.serializeMissingResourceKeys(this.getType(), response);
 	}
 
 	// MARK: Utility Classes

@@ -22,6 +22,8 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 @ControllerAdvice
 public class ApiLinkExceptionHandler {
 
+	// TODO: Consider deprecating this instead.
+
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(LinkSystemChangeSetException.class)
@@ -31,7 +33,7 @@ public class ApiLinkExceptionHandler {
 		List<LinkSystemChangeException> changes = exception.getExceptions();
 
 		for (LinkSystemChangeException changeException : changes) {
-			ApiResponseError error = changeException.getResponseError();
+			ApiResponseError error = changeException.asResponseError();
 			response.addError(error);
 		}
 

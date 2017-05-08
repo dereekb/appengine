@@ -24,6 +24,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
+import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
@@ -103,7 +104,7 @@ public class LinkExtensionApiController {
 			response = new ApiLinkChangeResponse(true);
 			this.addMissingKeysToResponse(linkServiceResponse, response);
 		} catch (LinkSystemChangeSetException e) {
-			throw e;
+			throw new WrappedApiUnprocessableEntityException(e);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (IllegalArgumentException e) {
@@ -117,7 +118,7 @@ public class LinkExtensionApiController {
 
 	private void addMissingKeysToResponse(LinkServiceResponse linkServiceResponse,
 	                                      ApiLinkChangeResponse response) {
-		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingKeys();
+		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingKeysSet();
 		HashMapWithList<String, String> missingKeysMap = new HashMapWithList<>();
 		Set<String> missingTypes = missingKeys.keySet();
 

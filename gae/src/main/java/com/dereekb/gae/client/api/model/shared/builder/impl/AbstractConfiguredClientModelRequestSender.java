@@ -17,7 +17,6 @@ import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +46,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	private BidirectionalConverter<T, O> dtoConverter;
 	private TypeModelKeyConverter keyTypeConverter;
 
-	protected TypedClientModelKeySerializer keySerializer;
+	private TypedClientModelKeySerializer keySerializer;
 
 	public AbstractConfiguredClientModelRequestSender(String type,
 	        String pathFormat,
@@ -70,6 +69,8 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		this.setDtoType(dtoType);
 		this.setDtoConverter(dtoConverter);
 		this.setKeyTypeConverter(keyTypeConverter);
+
+		this.resetKeySerializer();
 	}
 
 	public String getType() {
@@ -132,6 +133,24 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		this.keyTypeConverter = keyTypeConverter;
 	}
 
+	protected TypedClientModelKeySerializer getKeySerializer() {
+		return this.keySerializer;
+	}
+
+	protected void resetKeySerializer() {
+		TypedClientModelKeySerializer serializer = new TypedClientModelKeySerializer(this.type, this.keyTypeConverter,
+		        this.getObjectMapper());
+		this.setKeySerializer(serializer);
+	}
+
+	protected void setKeySerializer(TypedClientModelKeySerializer keySerializer) {
+		if (keySerializer == null) {
+			throw new IllegalArgumentException("keySerializer cannot be null.");
+		}
+
+		this.keySerializer = keySerializer;
+	}
+
 	// MARK: Abstract
 	protected abstract String getDefaultPathFormat();
 
@@ -155,6 +174,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		}
 	}
 
+	// MARK: Model Serialization
 	/**
 	 * Serializes models from the input data.
 	 * 
@@ -208,65 +228,20 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		return dtoList;
 	}
 
-	/**
-	 * Serializes {@link ModelKey} values from the input error info.
-	 * 
-	 * @param keysErrorInfo
-	 *            {@link ClientResponseErrorInfo}. Never {@code null}.
-	 * @return {@link List}. Never {@code null}, but can be empty.
-	 */
+	// MARK: Key Serialization
 	public List<ModelKey> serializeKeysFromErrorInfoData(ClientResponseErrorInfo keysErrorInfo)
 	        throws ClientResponseSerializationException {
-		JsonNode keysData = keysErrorInfo.getErrorData();
-		return this.serializeKeys(keysData);
+		return this.keySerializer.serializeKeysFromErrorInfoData(keysErrorInfo);
 	}
 
 	@Override
 	public List<ModelKey> serializeKeys(ClientApiResponseData data) throws ClientResponseSerializationException {
-		JsonNode keysArrayNode = data.getDataJsonNode();
-		return this.serializeKeys(keysArrayNode);
+		return this.keySerializer.serializeKeys(data);
 	}
 
-	/**
-	 * Serializes {@link ModelKey} values from the input json node.
-	 * 
-	 * @param keysArrayNode
-	 *            {@link JsonNode}. Never {@code null}.
-	 * @return {@link List}. Never {@code null}, but can be empty.
-	 * 
-	 * @throws ClientResponseSerializationException
-	 */
 	@Override
 	public List<ModelKey> serializeKeys(JsonNode keysArrayNode) throws ClientResponseSerializationException {
-		return this.serializeKeys(this.type, keysArrayNode);
-	}
-
-	/**
-	 * Serializes {@link ModelKey} values from the input json node.
-	 * 
-	 * @param type
-	 *            Model type.
-	 * @param keysArrayNode
-	 *            {@link JsonNode}. Never {@code null}.
-	 * @return {@link List}. Never {@code null}, but can be empty.
-	 * 
-	 * @throws ClientResponseSerializationException
-	 */
-	public List<ModelKey> serializeKeys(String type,
-	                                    JsonNode keysArrayNode)
-	        throws ClientResponseSerializationException {
-		List<ModelKey> objectKeys = null;
-		ObjectMapper mapper = this.getObjectMapper();
-
-		try {
-			String[] keys = mapper.treeToValue(keysArrayNode, String[].class);
-			List<String> keysList = ListUtility.toList(keys);
-			objectKeys = this.keyTypeConverter.convertKeys(type, keysList);
-		} catch (JsonProcessingException e) {
-			throw new ClientResponseSerializationException(e);
-		}
-
-		return objectKeys;
+		return this.keySerializer.serializeKeys(keysArrayNode);
 	}
 
 }

@@ -31,11 +31,11 @@ public class LinkSystemChangeImpl
 	        ModelKey primaryKey,
 	        String linkName,
 	        Set<String> targetStringKeys) {
-		this.action = action;
-		this.primaryType = primaryType;
-		this.primaryKey = primaryKey;
-		this.linkName = linkName;
-		this.targetStringKeys = targetStringKeys;
+		this.setAction(action);
+		this.setPrimaryType(primaryType);
+		this.setPrimaryKey(primaryKey);
+		this.setLinkName(linkName);
+		this.setTargetStringKeys(targetStringKeys);
 	}
 
 	@Override
