@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController;
+import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
 import com.google.gson.Gson;
 
@@ -47,7 +47,7 @@ public class LinkExtensionApiControllerTest extends ApiApplicationTestContext {
 		requestBuilder.contentType("application/json");
 
 		ApiLinkChangeRequest request = new ApiLinkChangeRequest();
-		ApiLinkChange change = new ApiLinkChange();
+		ApiLinkChangeImpl change = new ApiLinkChangeImpl();
 		change.setAction("link");
 		change.setPrimaryKey("123");
 		change.setLinkName("parent");

@@ -17,18 +17,18 @@ import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
+import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeResponse;
 
 /**
  * Controller for accessing a {@link LinkService}.
@@ -42,11 +42,6 @@ public class LinkExtensionApiController {
 	private LinkService service;
 	private ApiLinkChangeConverter converter;
 
-	public LinkExtensionApiController(LinkService service, ApiLinkChangeConverter converter) {
-		this.service = service;
-		this.converter = converter;
-	}
-
 	/**
 	 * Convenience constructor that uses the passed
 	 * {@link TypeModelKeyConverter} to create a
@@ -56,8 +51,12 @@ public class LinkExtensionApiController {
 	 * @param keyTypeConverter
 	 */
 	public LinkExtensionApiController(LinkService service, TypeModelKeyConverter keyTypeConverter) {
-		this.service = service;
-		this.converter = new ApiLinkChangeConverterImpl(keyTypeConverter);
+		this(service, new ApiLinkChangeConverterImpl(keyTypeConverter));
+	}
+
+	public LinkExtensionApiController(LinkService service, ApiLinkChangeConverter converter) {
+		this.setService(service);
+		this.setConverter(converter);
 	}
 
 	public LinkService getService() {
@@ -65,6 +64,10 @@ public class LinkExtensionApiController {
 	}
 
 	public void setService(LinkService service) {
+		if (service == null) {
+			throw new IllegalArgumentException("service cannot be null.");
+		}
+
 		this.service = service;
 	}
 
@@ -73,14 +76,19 @@ public class LinkExtensionApiController {
 	}
 
 	public void setConverter(ApiLinkChangeConverter converter) {
+		if (converter == null) {
+			throw new IllegalArgumentException("converter cannot be null.");
+		}
+
 		this.converter = converter;
 	}
 
+	// MARK: API
 	@ResponseBody
 	@RequestMapping(value = "/{type}/link", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public final ApiResponseImpl link(@PathVariable("type") String primaryType,
-	                                  @Valid @RequestBody ApiLinkChangeRequest request) {
-		ApiResponseImpl response = null;
+	public final ApiLinkChangeResponse link(@PathVariable("type") String primaryType,
+	                                        @Valid @RequestBody ApiLinkChangeRequest request) {
+		ApiLinkChangeResponse response = null;
 
 		try {
 			boolean atomic = request.isAtomic();
@@ -90,12 +98,14 @@ public class LinkExtensionApiController {
 			LinkServiceRequest linkServiceRequest = new LinkServiceRequestImpl(changes, atomic);
 			LinkServiceResponse linkServiceResponse = this.service.updateLinks(linkServiceRequest);
 
-			response = new ApiResponseImpl(true);
+			response = new ApiLinkChangeResponse(true);
 			this.addMissingKeysToResponse(linkServiceResponse, response);
-		} catch (LinkSystemChangesException e) {
+		} catch (LinkSystemChangeSetException e) {
 			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}
@@ -104,7 +114,7 @@ public class LinkExtensionApiController {
 	}
 
 	private void addMissingKeysToResponse(LinkServiceResponse linkServiceResponse,
-	                                      ApiResponseImpl response) {
+	                                      ApiLinkChangeResponse response) {
 		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingKeys();
 		HashMapWithList<String, String> missingKeysMap = new HashMapWithList<>();
 		Set<String> missingTypes = missingKeys.keySet();
@@ -116,11 +126,7 @@ public class LinkExtensionApiController {
 				missingKeysMap.addAll(type, stringKeys);
 			}
 
-			ApiResponseDataImpl responseData = new ApiResponseDataImpl();
-			responseData.setData(missingKeysMap.getRawMap());
-			responseData.setType("MissingKeys");
-
-			response.addIncluded(responseData);
+			response.setMissingLinkKeys(missingKeysMap.getRawMap());
 		}
 	}
 

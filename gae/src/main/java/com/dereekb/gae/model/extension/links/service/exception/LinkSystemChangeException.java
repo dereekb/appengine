@@ -43,17 +43,21 @@ public class LinkSystemChangeException extends ApiLinkException {
 	@Override
 	public ApiResponseError getResponseError() {
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl(LINK_CHANGE_ERROR_CODE);
+		error.setTitle("Link Change Error");
+		error.setDetail("An error occured while performing link changes.");
 
-		ModelKey primaryKey = this.change.getPrimaryKey();
-		LinkChangeAction action = this.change.getAction();
-		String link = this.change.getLinkName();
-
-		ApiResponseError reasonError = this.reason.getResponseError();
-		ErrorData data = new ErrorData(action, link, primaryKey, reasonError);
-
+		LinkSystemChangeErrorData data = this.getApiErrorData();
 		error.setData(data);
 
 		return error;
+	}
+
+	public LinkSystemChangeErrorData getApiErrorData() {
+		ApiResponseError reasonError = this.reason.getResponseError();
+		ModelKey primaryKey = this.change.getPrimaryKey();
+		LinkChangeAction action = this.change.getAction();
+		String link = this.change.getLinkName();
+		return new LinkSystemChangeErrorData(action, link, primaryKey, reasonError);
 	}
 
 	@Override
@@ -61,7 +65,7 @@ public class LinkSystemChangeException extends ApiLinkException {
 		return "LinkSystemChangeException [change=" + this.change + ", reason=" + this.reason + "]";
 	}
 
-	public static class ErrorData {
+	public static class LinkSystemChangeErrorData {
 
 		private String action;
 		private String link;
@@ -69,8 +73,8 @@ public class LinkSystemChangeException extends ApiLinkException {
 
 		private ApiResponseError reason;
 
-		public ErrorData(LinkChangeAction action, String link, ModelKey key, ApiResponseError reason) {
-			this.action = action.getAction();
+		public LinkSystemChangeErrorData(LinkChangeAction action, String link, ModelKey key, ApiResponseError reason) {
+			this.action = action.getActionName();
 			this.link = link;
 			this.key = key.toString();
 			this.reason = reason;

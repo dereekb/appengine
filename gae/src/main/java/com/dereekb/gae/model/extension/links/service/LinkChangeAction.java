@@ -30,7 +30,7 @@ public enum LinkChangeAction {
 		this.action = action;
 	}
 
-	public String getAction() {
+	public String getActionName() {
 		return this.action;
 	}
 

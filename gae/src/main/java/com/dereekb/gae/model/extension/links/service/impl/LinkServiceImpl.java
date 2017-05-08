@@ -10,7 +10,7 @@ import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
@@ -40,7 +40,7 @@ public class LinkServiceImpl
 	// MARK: LinkService
 	@Override
 	public LinkServiceImplResponse updateLinks(LinkServiceRequest request)
-	        throws LinkSystemChangesException,
+	        throws LinkSystemChangeSetException,
 	            AtomicOperationException {
 		List<LinkSystemChange> changes = request.getLinkChanges();
 		LinkSystemChangesRunner runner = new LinkSystemChangesRunner(this.system);
@@ -62,7 +62,7 @@ public class LinkServiceImpl
 				runner.saveChanges();
 			}
 		} else {
-			throw new LinkSystemChangesException(failures);
+			throw new LinkSystemChangeSetException(failures);
 		}
 
 		return new LinkServiceImplResponse(runner);

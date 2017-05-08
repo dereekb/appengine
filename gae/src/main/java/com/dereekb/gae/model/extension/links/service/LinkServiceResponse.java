@@ -3,7 +3,12 @@ package com.dereekb.gae.model.extension.links.service;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
-
+/**
+ * Response returned from a {@link LinkService}.
+ * 
+ * @author dereekb
+ *
+ */
 public interface LinkServiceResponse {
 
 	/**
