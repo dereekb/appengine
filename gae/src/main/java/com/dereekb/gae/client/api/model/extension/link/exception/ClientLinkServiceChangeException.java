@@ -35,23 +35,23 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 
 	private static final long serialVersionUID = 1L;
 
-	private ClientLinkSystemChangeErrorSet error;
+	private ClientLinkSystemChangeErrorSet errorSet;
 
 	public ClientLinkServiceChangeException(ClientResponse response, ClientLinkSystemChangeErrorSet error) {
 		super(response);
-		this.setError(error);
+		this.setErrorSet(error);
 	}
 
-	protected ClientLinkSystemChangeErrorSet getError() {
-		return this.error;
+	public ClientLinkSystemChangeErrorSet getErrorSet() {
+		return this.errorSet;
 	}
 
-	protected void setError(ClientLinkSystemChangeErrorSet error) {
-		if (error == null) {
-			throw new IllegalArgumentException("error cannot be null.");
+	public void setErrorSet(ClientLinkSystemChangeErrorSet errorSet) {
+		if (errorSet == null) {
+			throw new IllegalArgumentException("errorSet cannot be null.");
 		}
 
-		this.error = error;
+		this.errorSet = errorSet;
 	}
 
 	/**
@@ -201,11 +201,11 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 		        implements ClientLinkSystemChangeErrorSet {
 
 			private String type;
-			private List<ClientLinkSystemChangeError> errors;
+			private List<ClientLinkSystemChangeError> errors = new ArrayList<>();
 
 			public ClientLinkSystemChangeErrorSetImpl(String type, List<ClientLinkSystemChangeError> errors) {
 				this.setType(type);
-				this.addAllErrors(errors);
+				this.setErrors(errors);
 			}
 
 			@Override
@@ -226,8 +226,12 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 				return this.errors;
 			}
 
-			private void addAllErrors(List<ClientLinkSystemChangeError> errors) {
-				this.errors.addAll(errors);
+			public void setErrors(List<ClientLinkSystemChangeError> errors) {
+				if (errors == null) {
+					throw new IllegalArgumentException("errors cannot be null.");
+				}
+
+				this.errors = errors;
 			}
 
 		}

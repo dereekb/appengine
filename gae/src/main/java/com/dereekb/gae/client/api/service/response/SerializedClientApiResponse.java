@@ -14,13 +14,15 @@ public interface SerializedClientApiResponse<T>
         extends ClientApiResponse {
 
 	/**
-	 * Returns the serialized primary response data.
+	 * Returns the serialized primary response.
 	 * 
-	 * @return Serialized data. {@code null} if allowed by implementation.
+	 * @return Serialized response object. May be {@code null} if allowed by
+	 *         implementation.
+	 * 
 	 * @throws ClientResponseSerializationException
 	 *             thrown if there is an issue with serializing the results, or
 	 *             if the request failed.
 	 */
-	public T getSerializedPrimaryData() throws ClientResponseSerializationException;
+	public T getSerializedResponse() throws ClientResponseSerializationException;
 
 }

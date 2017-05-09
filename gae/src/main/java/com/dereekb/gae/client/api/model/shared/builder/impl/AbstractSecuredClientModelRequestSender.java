@@ -195,7 +195,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 		// MARK: SerializedClientApiResponse
 		@Override
-		public S getSerializedPrimaryData() throws ClientResponseSerializationException {
+		public S getSerializedResponse() throws ClientResponseSerializationException {
 			if (this.serializedData == null) {
 				this.assertResponseSuccess();
 				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request,

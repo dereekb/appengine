@@ -92,7 +92,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 
 		SerializedClientApiResponse<ClientLinkServiceResponse> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(request, clientResponse);
-		return clientResponse.getSerializedPrimaryData();
+		return clientResponse.getSerializedResponse();
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender

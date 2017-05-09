@@ -79,7 +79,7 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	            ClientRequestFailureException {
 		SerializedClientApiResponse<CreateResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
-		return clientResponse.getSerializedPrimaryData();
+		return clientResponse.getSerializedResponse();
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender

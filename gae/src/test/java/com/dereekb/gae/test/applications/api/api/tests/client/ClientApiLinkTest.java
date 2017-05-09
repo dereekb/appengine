@@ -62,4 +62,18 @@ public abstract class ClientApiLinkTest<T extends MutableUniqueModel> extends Cl
 		}
 	}
 
+	@Test
+	public void testSystemClientLinkAtomicRequest() throws Exception {
+		if (this.linkRequestUtility != null) {
+			this.linkRequestUtility.testSystemClientLinkAtomicRequest(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testSystemClientLinkNonAtomicRequest() throws Exception {
+		if (this.linkRequestUtility != null) {
+			this.linkRequestUtility.testSystemClientLinkNonAtomicRequest(this.getRequestSecurity());
+		}
+	}
+
 }
