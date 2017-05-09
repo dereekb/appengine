@@ -80,8 +80,9 @@ public class LinkSystemChangeImpl
 	}
 
 	public void setTargetStringKeys(Set<String> targetStringKeys) {
-		if (targetStringKeys == null || targetStringKeys.isEmpty()) {
-			throw new IllegalArgumentException();
+		if (this.action != LinkChangeAction.CLEAR && (targetStringKeys == null || targetStringKeys.isEmpty())) {
+			throw new IllegalArgumentException(
+			        "Link Change Target Keys cannot be null or empty when the action is '" + this.action + "'.");
 		}
 
 		this.targetStringKeys = targetStringKeys;

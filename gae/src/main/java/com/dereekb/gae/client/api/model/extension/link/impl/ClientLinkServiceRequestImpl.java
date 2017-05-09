@@ -57,8 +57,8 @@ public class ClientLinkServiceRequestImpl
 	}
 
 	public void setChanges(List<ApiLinkChange> changes) {
-		if (changes == null) {
-			throw new IllegalArgumentException("changes cannot be null.");
+		if (changes == null || changes.isEmpty()) {
+			throw new IllegalArgumentException("changes cannot be null or empty.");
 		}
 
 		this.changes = changes;

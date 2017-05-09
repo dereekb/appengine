@@ -9,8 +9,6 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChangeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -47,7 +45,7 @@ public class ApiLinkChangeImpl
 	 *
 	 * A max of 50 target keys are allowed to be changed at one time.
 	 */
-	@NotEmpty
+	// @NotEmpty // A "clear" request will have no target keys provided.
 	@Size(max = 50)
 	private Set<String> targetKeys;
 

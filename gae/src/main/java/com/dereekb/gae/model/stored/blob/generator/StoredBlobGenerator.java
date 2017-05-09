@@ -24,7 +24,7 @@ public class StoredBlobGenerator extends AbstractModelGenerator<StoredBlob> {
 	private Generator<Descriptor> descriptorGenerator;
 
 	public StoredBlobGenerator() {
-		super(LongModelKeyGenerator.GENERATOR);
+		super(StoredBlob.class, LongModelKeyGenerator.GENERATOR);
 	}
 
 	public Generator<Descriptor> getDescriptorGenerator() {

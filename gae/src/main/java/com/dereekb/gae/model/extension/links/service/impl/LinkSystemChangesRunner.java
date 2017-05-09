@@ -157,16 +157,16 @@ public class LinkSystemChangesRunner {
 				} else {
 					String targetName = change.getLinkName();
 
-					Link modelLink = linkModel.getLink(targetName);
-					LinkChangeAction action = change.getAction();
-
-					Set<String> targetStringKeys = change.getTargetStringKeys();
-					ModelKeyType keyType = modelLink.getLinkTarget().getTargetKeyType();
-					Collection<ModelKey> targetKeys = ModelKey.convert(keyType, targetStringKeys);
-
-					Relation relation = new RelationImpl(targetKeys);
-
 					try {
+						Link modelLink = linkModel.getLink(targetName);
+						LinkChangeAction action = change.getAction();
+
+						Set<String> targetStringKeys = change.getTargetStringKeys();
+						ModelKeyType keyType = modelLink.getLinkTarget().getTargetKeyType();
+						Collection<ModelKey> targetKeys = ModelKey.convert(keyType, targetStringKeys);
+
+						Relation relation = new RelationImpl(targetKeys);
+
 						switch (action) {
 							case LINK:
 								modelLink.addRelation(relation);

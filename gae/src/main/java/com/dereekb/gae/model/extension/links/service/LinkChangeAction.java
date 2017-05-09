@@ -37,7 +37,7 @@ public enum LinkChangeAction {
 	public static LinkChangeAction fromString(String action) throws IllegalArgumentException {
 		LinkChangeAction result;
 
-		switch (action) {
+		switch (action.toLowerCase()) {
 			case "set":
 			case "add":
 			case "link":
@@ -49,6 +49,7 @@ public enum LinkChangeAction {
 				break;
 			case "clear":
 				result = LinkChangeAction.CLEAR;
+				break;
 			default:
 				throw new IllegalArgumentException("Unknown change action.");
 		}

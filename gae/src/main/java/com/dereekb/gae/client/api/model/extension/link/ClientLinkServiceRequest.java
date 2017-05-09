@@ -29,7 +29,7 @@ public interface ClientLinkServiceRequest {
 	/**
 	 * Returns the list of changes to perform.
 	 * 
-	 * @return List of changes. Never {@code null}.
+	 * @return List of changes. Never {@code null}, nor empty.
 	 */
 	public List<ApiLinkChange> getChanges();
 

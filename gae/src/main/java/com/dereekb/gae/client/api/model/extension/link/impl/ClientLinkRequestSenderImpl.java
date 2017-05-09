@@ -27,6 +27,7 @@ import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,8 +51,8 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 	private ClientAtomicOperationExceptionUtility atomicOperationUtility;
 	private ClientLinkServiceChangeExceptionUtility linkChangeExceptionUtility;
 
-	public ClientLinkRequestSenderImpl(SecuredClientApiRequestSender requestSender,
-	        TypeModelKeyConverter keyTypeConverter) throws IllegalArgumentException {
+	public ClientLinkRequestSenderImpl(TypeModelKeyConverter keyTypeConverter,
+	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
 		super(requestSender);
 		this.setKeyTypeConverter(keyTypeConverter);
 	}
@@ -123,7 +124,8 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 
 		ObjectMapper mapper = this.getObjectMapper();
 
-		List<ApiLinkChangeImpl> data = ApiLinkChangeImpl.makeFromChanges(request.getChanges());
+		List<ApiLinkChange> changes = request.getChanges();
+		List<ApiLinkChangeImpl> data = ApiLinkChangeImpl.makeFromChanges(changes);
 		ApiLinkChangeRequest changeRequest = new ApiLinkChangeRequest(data, request.isAtomic());
 
 		ClientRequestDataImpl requestData = ClientRequestDataImpl.make(mapper, changeRequest);
