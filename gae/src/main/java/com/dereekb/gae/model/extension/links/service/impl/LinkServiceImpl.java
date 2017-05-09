@@ -56,7 +56,7 @@ public class LinkServiceImpl
 
 		if (failures.isEmpty()) {
 			if (hasMissingKeys && request.isAtomic()) {
-				HashMapWithSet<String, ModelKey> missing = runner.getMissing();
+				HashMapWithSet<String, ModelKey> missing = runner.getMissingPrimaryKeys();
 				throw new AtomicOperationException(missing.valuesSet(), AtomicOperationExceptionReason.UNAVAILABLE);
 			} else {
 				runner.saveChanges();
@@ -79,8 +79,8 @@ public class LinkServiceImpl
 
 		// MARK: LinkServiceResponse
 		@Override
-		public HashMapWithSet<String, ModelKey> getMissingKeysSet() {
-			return this.runner.getMissing();
+		public HashMapWithSet<String, ModelKey> getMissingPrimaryKeysSet() {
+			return this.runner.getMissingPrimaryKeys();
 		}
 
 	}

@@ -12,8 +12,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * {@link ApiResponseImpl} that contains missing keys on failures.
  * 
  * @author dereekb
- *
+ * 
+ * @deprecated Use {@link ApiResponseImpl} instead.
  */
+@Deprecated
 @JsonInclude(Include.NON_DEFAULT)
 public class ApiLinkChangeResponse extends ApiResponseImpl {
 

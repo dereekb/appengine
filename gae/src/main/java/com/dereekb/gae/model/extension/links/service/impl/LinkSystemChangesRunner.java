@@ -99,7 +99,7 @@ public class LinkSystemChangesRunner {
 		boolean hasMissing = false;
 
 		for (LinkChangesRunnerInstance instance : this.instances.values()) {
-			if (instance.missingKeys.isEmpty() == false) {
+			if (instance.missingPrimaryKeys.isEmpty() == false) {
 				hasMissing = true;
 				break;
 			}
@@ -108,12 +108,12 @@ public class LinkSystemChangesRunner {
 		return hasMissing;
 	}
 
-	public HashMapWithSet<String, ModelKey> getMissing() {
+	public HashMapWithSet<String, ModelKey> getMissingPrimaryKeys() {
 		HashMapWithSet<String, ModelKey> missing = new HashMapWithSet<>();
 
 		for (LinkChangesRunnerInstance instance : this.instances.values()) {
-			if (instance.missingKeys.isEmpty() == false) {
-				missing.addAll(instance.type, instance.missingKeys);
+			if (instance.missingPrimaryKeys.isEmpty() == false) {
+				missing.addAll(instance.type, instance.missingPrimaryKeys);
 			}
 		}
 
@@ -138,8 +138,8 @@ public class LinkSystemChangesRunner {
 		private final List<LinkSystemChange> changes;
 		private final LinkModelSet linkSet;
 
-		private List<ModelKey> missingKeys = new ArrayList<>();
-		private List<LinkSystemChangeException> failures = new ArrayList<>();
+		private List<ModelKey> missingPrimaryKeys = new ArrayList<ModelKey>();
+		private List<LinkSystemChangeException> failures = new ArrayList<LinkSystemChangeException>();
 
 		public LinkChangesRunnerInstance(String type, List<LinkSystemChange> changes) {
 			this.type = type;
@@ -149,11 +149,11 @@ public class LinkSystemChangesRunner {
 
 		public void run() {
 			for (LinkSystemChange change : this.changes) {
-				ModelKey key = change.getPrimaryKey();
-				LinkModel linkModel = this.linkSet.getModelForKey(key);
+				ModelKey primaryKey = change.getPrimaryKey();
+				LinkModel linkModel = this.linkSet.getModelForKey(primaryKey);
 
 				if (linkModel == null) {
-					this.missingKeys.add(key);
+					this.missingPrimaryKeys.add(primaryKey);
 				} else {
 					String targetName = change.getLinkName();
 
@@ -192,7 +192,7 @@ public class LinkSystemChangesRunner {
 
 		private LinkModelSet loadSet() {
 			LinkModelSet linkSet = LinkSystemChangesRunner.this.system.loadSet(this.type);
-			List<ModelKey> keys = new ArrayList<>();
+			List<ModelKey> keys = new ArrayList<ModelKey>();
 
 			for (LinkSystemChange change : this.changes) {
 				ModelKey key = change.getPrimaryKey();

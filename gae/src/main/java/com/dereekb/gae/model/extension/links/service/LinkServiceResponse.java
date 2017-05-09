@@ -12,12 +12,12 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 public interface LinkServiceResponse {
 
 	/**
-	 * Returns a map containing all missing keys.
+	 * Returns a map containing all missing primary keys.
 	 * <p>
 	 * Sets are keyed by model type.
 	 *
 	 * @return {@link HashMapWithSet}. Never {@code null}.
 	 */
-	public HashMapWithSet<String, ModelKey> getMissingKeysSet();
+	public HashMapWithSet<String, ModelKey> getMissingPrimaryKeysSet();
 
 }

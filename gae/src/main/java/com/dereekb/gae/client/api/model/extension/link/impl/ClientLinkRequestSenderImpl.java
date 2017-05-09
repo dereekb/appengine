@@ -10,6 +10,7 @@ import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequest;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceResponse;
 import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkServiceChangeException;
+import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkServiceChangeException.ClientLinkServiceChangeExceptionUtility;
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractSecuredClientModelRequestSender;
 import com.dereekb.gae.client.api.model.shared.utility.ClientModelKeySerializer;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
@@ -26,7 +27,6 @@ import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,6 +48,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 
 	private ClientModelKeySerializer keySerializer;
 	private ClientAtomicOperationExceptionUtility atomicOperationUtility;
+	private ClientLinkServiceChangeExceptionUtility linkChangeExceptionUtility;
 
 	public ClientLinkRequestSenderImpl(SecuredClientApiRequestSender requestSender,
 	        TypeModelKeyConverter keyTypeConverter) throws IllegalArgumentException {
@@ -67,6 +68,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 		this.keyTypeConverter = keyTypeConverter;
 		this.keySerializer = new ClientModelKeySerializer(keyTypeConverter);
 		this.atomicOperationUtility = new ClientAtomicOperationExceptionUtility(this.keySerializer);
+		this.linkChangeExceptionUtility = new ClientLinkServiceChangeExceptionUtility(this.keyTypeConverter);
 	}
 
 	// MARK: ClientLinkServiceRequestSender
@@ -132,22 +134,19 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 	                                     SerializedClientApiResponse<ClientLinkServiceResponse> clientResponse)
 	        throws ClientRequestFailureException {
 		if (clientResponse.getSuccess() == false) {
-			this.atomicOperationUtility.assertNoAtomicOperationError(request.getType(), clientResponse);
+			String type = request.getType();
 
-			// TODO: Handle and throw the following:
-			/*
-			 * ClientLinkServiceChangeException,
-			 * ClientIllegalArgumentException,
-			 * ClientAtomicOperationException,
-			 * ClientRequestFailureException
-			 */
-
+			this.atomicOperationUtility.assertNoAtomicOperationError(type, clientResponse);
+			this.linkChangeExceptionUtility.assertNoAtomicOperationError(type, clientResponse);
+			ClientIllegalArgumentException.assertNoIllegalArgumentException(clientResponse);
 			throw new ClientRequestFailureException(clientResponse);
 		}
 	}
 
 	private class ClientLinkServiceResponseImpl
 	        implements ClientLinkServiceResponse {
+
+		private List<ModelKey> missing;
 
 		private final ClientLinkServiceRequest request;
 		private final ClientApiResponse response;
@@ -158,13 +157,14 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 		}
 
 		// MARK: ClientLinkServiceResponse
-
-		// TODO: Add elements from missing resource errors.
-
 		@Override
-		public HashMapWithSet<String, ModelKey> getMissingKeysSet() {
-			// TODO Auto-generated method stub
-			return null;
+		public List<ModelKey> getMissing() {
+			if (this.missing == null) {
+				this.missing = ClientLinkRequestSenderImpl.this.atomicOperationUtility
+				        .serializeMissingResourceKeys(this.request.getType(), this.response);
+			}
+
+			return this.missing;
 		}
 
 	}

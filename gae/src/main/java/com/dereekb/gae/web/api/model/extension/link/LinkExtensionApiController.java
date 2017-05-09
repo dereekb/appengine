@@ -21,16 +21,18 @@ import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeS
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
+import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
-import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeResponse;
+import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Controller for accessing a {@link LinkService}.
@@ -88,9 +90,9 @@ public class LinkExtensionApiController {
 	// MARK: API
 	@ResponseBody
 	@RequestMapping(value = "/{type}/link", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public final ApiLinkChangeResponse link(@PathVariable("type") String primaryType,
-	                                        @Valid @RequestBody ApiLinkChangeRequest request) {
-		ApiLinkChangeResponse response = null;
+	public final ApiResponse link(@PathVariable("type") String primaryType,
+	                              @Valid @RequestBody ApiLinkChangeRequest request) {
+		ApiResponseImpl response = null;
 
 		try {
 			boolean atomic = request.isAtomic();
@@ -101,8 +103,8 @@ public class LinkExtensionApiController {
 			LinkServiceRequest linkServiceRequest = new LinkServiceRequestImpl(changes, atomic);
 			LinkServiceResponse linkServiceResponse = this.service.updateLinks(linkServiceRequest);
 
-			response = new ApiLinkChangeResponse(true);
-			this.addMissingKeysToResponse(linkServiceResponse, response);
+			response = new ApiResponseImpl(true);
+			this.addMissingKeysToResponse(primaryType, linkServiceResponse, response);
 		} catch (LinkSystemChangeSetException e) {
 			throw new WrappedApiUnprocessableEntityException(e);
 		} catch (AtomicOperationException e) {
@@ -116,20 +118,16 @@ public class LinkExtensionApiController {
 		return response;
 	}
 
-	private void addMissingKeysToResponse(LinkServiceResponse linkServiceResponse,
-	                                      ApiLinkChangeResponse response) {
-		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingKeysSet();
-		HashMapWithList<String, String> missingKeysMap = new HashMapWithList<>();
-		Set<String> missingTypes = missingKeys.keySet();
+	private void addMissingKeysToResponse(String primaryType,
+	                                      LinkServiceResponse linkServiceResponse,
+	                                      ApiResponseImpl apiResponse) {
+		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingPrimaryKeysSet();
+		Set<ModelKey> missingPrimaryKeys = missingKeys.get(primaryType);
 
-		if (missingTypes.isEmpty() == false) {
-			for (String type : missingTypes) {
-				Set<ModelKey> keys = missingKeys.get(type);
-				List<String> stringKeys = ModelKey.readStringKeys(keys);
-				missingKeysMap.addAll(type, stringKeys);
-			}
-
-			response.setMissingLinkKeys(missingKeysMap.getRawMap());
+		if (missingPrimaryKeys.isEmpty() == false) {
+			ApiResponseErrorImpl missingKeysError = MissingRequiredResourceException
+			        .tryMakeApiErrorForModelKeys(missingPrimaryKeys, "Unavailable to change links.");
+			apiResponse.addError(missingKeysError);
 		}
 	}
 
