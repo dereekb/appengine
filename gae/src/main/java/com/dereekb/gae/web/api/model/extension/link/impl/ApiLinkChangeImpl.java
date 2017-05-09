@@ -106,12 +106,12 @@ public class ApiLinkChangeImpl
 		return this.targetKeys;
 	}
 
-	@JsonIgnore
 	public void setTargetKeys(Set<String> targetKeys) {
 		this.targetKeys = targetKeys;
 	}
 
-	public void setTargetKeys(Collection<String> targetKeys) {
+	@JsonIgnore
+	public void setTargetKeysWithCollection(Collection<String> targetKeys) {
 		if (targetKeys != null) {
 			this.targetKeys = new HashSet<>(targetKeys);
 		} else {

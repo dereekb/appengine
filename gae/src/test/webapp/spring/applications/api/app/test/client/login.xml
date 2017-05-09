@@ -56,11 +56,4 @@
 		<constructor-arg index="5" ref="loginRegistry" />
 	</bean>
 
-	<!-- Link -->
-	<bean id="loginClientLinkRequestSender"
-		class="com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkRequestSenderImpl">
-		<constructor-arg index="0" ref="modelKeyTypeConverter" />
-		<constructor-arg index="1" ref="securedClientRequestSender" />
-	</bean>
-
 </beans>

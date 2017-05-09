@@ -69,7 +69,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		ApiLinkChangeImpl targetChange = new ApiLinkChangeImpl();
 		targetChange.setAction(action.getActionName());
 		targetChange.setLinkName(linkName);
-		targetChange.setTargetKeys(ModelKey.readStringKeys(targetModels));
+		targetChange.setTargetKeysWithCollection(ModelKey.readStringKeys(targetModels));
 		targetChange.setPrimaryKey(primaryModel.getModelKey().keyAsString());
 
 		changes.add(targetChange);

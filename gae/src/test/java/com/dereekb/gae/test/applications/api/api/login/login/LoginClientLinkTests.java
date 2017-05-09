@@ -19,7 +19,7 @@ public class LoginClientLinkTests extends ClientApiLinkTest<Login> {
 
 	@Override
 	@Autowired
-	@Qualifier("loginClientLinkRequestSender")
+	@Qualifier("clientLinkRequestSender")
 	public void setLinkRequestSender(ClientLinkServiceRequestSender linkRequestSender) {
 		super.setLinkRequestSender(linkRequestSender);
 	}

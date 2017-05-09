@@ -49,28 +49,31 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	private TypedClientModelKeySerializer keySerializer;
 
 	public AbstractConfiguredClientModelRequestSender(String type,
-	        String pathFormat,
 	        Class<O> dtoType,
 	        BidirectionalConverter<T, O> dtoConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		this(type, dtoType, dtoConverter, keyTypeConverter, requestSender);
-		this.setPathFormat(pathFormat);
+		this(type, null, dtoType, dtoConverter, keyTypeConverter, requestSender);
 	}
 
 	public AbstractConfiguredClientModelRequestSender(String type,
+	        String pathFormat,
 	        Class<O> dtoType,
 	        BidirectionalConverter<T, O> dtoConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
 		super(requestSender);
 		this.setType(type);
-		this.setPathFormat(this.getDefaultPathFormat());
 		this.setDtoType(dtoType);
 		this.setDtoConverter(dtoConverter);
 		this.setKeyTypeConverter(keyTypeConverter);
-
 		this.resetKeySerializer();
+
+		if (pathFormat == null) {
+			pathFormat = this.getDefaultPathFormat();
+		}
+
+		this.setPathFormat(pathFormat);
 	}
 
 	public String getType() {

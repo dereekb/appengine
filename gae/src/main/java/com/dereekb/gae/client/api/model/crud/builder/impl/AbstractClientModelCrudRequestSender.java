@@ -41,7 +41,7 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	        BidirectionalConverter<T, O> dtoConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		super(type, dtoType, dtoConverter, keyTypeConverter, requestSender);
+		this(type, null, dtoType, dtoConverter, keyTypeConverter, requestSender);
 	}
 
 	public AbstractClientModelCrudRequestSender(String type,

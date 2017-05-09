@@ -81,8 +81,8 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(primaryKey);
 		linkChange.setChangeAction(LinkChangeAction.CLEAR);
-		linkChange.setLinkName("LINK_NAME");	// Should fail before getting
-		                                    	// here anyways.
+		linkChange.setLinkName("LINK_NAME");	// Should fail before this is a
+		                                    	// problem.
 
 		changes.add(linkChange);
 
@@ -107,8 +107,8 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(primaryKey);
 		linkChange.setChangeAction(LinkChangeAction.CLEAR);
-		linkChange.setLinkName("LINK_NAME");	// Should fail before getting
-		                                    	// here anyways.
+		linkChange.setLinkName("LINK_NAME");	// Should fail before this is a
+		                                    	// problem.
 
 		changes.add(linkChange);
 

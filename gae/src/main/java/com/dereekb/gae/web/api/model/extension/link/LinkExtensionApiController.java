@@ -124,7 +124,7 @@ public class LinkExtensionApiController {
 		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingPrimaryKeysSet();
 		Set<ModelKey> missingPrimaryKeys = missingKeys.get(primaryType);
 
-		if (missingPrimaryKeys.isEmpty() == false) {
+		if (missingPrimaryKeys != null && missingPrimaryKeys.isEmpty() == false) {
 			ApiResponseErrorImpl missingKeysError = MissingRequiredResourceException
 			        .tryMakeApiErrorForModelKeys(missingPrimaryKeys, "Unavailable to change links.");
 			apiResponse.addError(missingKeysError);

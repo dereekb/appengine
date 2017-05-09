@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 
@@ -68,6 +69,10 @@ public class ClientApiLinkChange
 		}
 
 		this.linkName = linkName;
+	}
+
+	public void setTargetKey(ModelKey modelKey) {
+		this.setTargetKeys(SetUtility.makeSet(modelKey));
 	}
 
 	public void setTargetKeys(Set<ModelKey> targetKeys) {

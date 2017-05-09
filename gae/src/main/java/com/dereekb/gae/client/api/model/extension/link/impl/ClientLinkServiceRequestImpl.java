@@ -3,6 +3,7 @@ package com.dereekb.gae.client.api.model.extension.link.impl;
 import java.util.List;
 
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequest;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 
 /**
@@ -14,13 +15,23 @@ import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 public class ClientLinkServiceRequestImpl
         implements ClientLinkServiceRequest {
 
+	public static final boolean DEFAULT_ATOMICITY = true;
+
 	private boolean atomic;
 
 	private String type;
 	private List<ApiLinkChange> changes;
 
+	public ClientLinkServiceRequestImpl(String type, ApiLinkChange change) {
+		this(type, change, DEFAULT_ATOMICITY);
+	}
+
+	public ClientLinkServiceRequestImpl(String type, ApiLinkChange change, boolean atomic) {
+		this(type, ListUtility.wrap(change), atomic);
+	}
+
 	public ClientLinkServiceRequestImpl(String type, List<ApiLinkChange> changes) {
-		this(type, changes, true);
+		this(type, changes, DEFAULT_ATOMICITY);
 	}
 
 	public ClientLinkServiceRequestImpl(String type, List<ApiLinkChange> changes, boolean atomic) {
