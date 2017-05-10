@@ -115,7 +115,7 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		return new ClientCreateResponseImpl(request, response);
 	}
 
-	private class ClientCreateResponseImpl extends AbstractClientServiceModelResponseImpl
+	protected class ClientCreateResponseImpl extends AbstractClientServiceModelResponseImpl
 	        implements CreateResponse<T> {
 
 		private CreateRequest<T> request;

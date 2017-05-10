@@ -1,5 +1,6 @@
 package com.dereekb.gae.client.api.model.extension.link.impl;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class ClientApiLinkChange
 
 	private String linkName;
 
-	private Set<ModelKey> targetKeys;
+	private Set<ModelKey> targetKeys = Collections.emptySet();
 
 	public ClientApiLinkChange() {}
 
@@ -36,6 +37,11 @@ public class ClientApiLinkChange
 		this.setPrimary(primary);
 		this.setLinkName(linkName);
 		this.setTargetKeys(targetKeys);
+	}
+
+	public static ClientApiLinkChange clear(ModelKey primaryKey,
+	                                        String linkName) {
+		return new ClientApiLinkChange(LinkChangeAction.CLEAR, primaryKey, linkName, null);
 	}
 
 	// MARK: Accessors
@@ -77,7 +83,7 @@ public class ClientApiLinkChange
 
 	public void setTargetKeys(Set<ModelKey> targetKeys) {
 		if (targetKeys == null) {
-			throw new IllegalArgumentException("targetKeys cannot be null.");
+			targetKeys = Collections.emptySet();
 		}
 
 		this.targetKeys = targetKeys;
