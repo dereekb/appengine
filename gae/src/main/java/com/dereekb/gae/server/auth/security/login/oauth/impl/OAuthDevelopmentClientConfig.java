@@ -51,7 +51,7 @@ public final class OAuthDevelopmentClientConfig
 
 	// MARK: Internal
 	private OAuthClientConfig getActualConfig(boolean unitTestsOnly) {
-		switch (GoogleAppEngineUtility.getEnvironment()) {
+		switch (GoogleAppEngineUtility.getEnvironmentType()) {
 			case UNIT_TESTING:
 				return this.developmentConfig;
 			case DEVELOPMENT:
