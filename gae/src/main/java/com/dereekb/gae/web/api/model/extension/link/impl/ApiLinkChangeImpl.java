@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChangeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * DTO for {@link ApiLinkChangeConverter}.
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author dereekb
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiLinkChangeImpl
         implements ApiLinkChange {
 

@@ -139,7 +139,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 			String type = request.getType();
 
 			this.atomicOperationUtility.assertNoAtomicOperationError(type, clientResponse);
-			this.linkChangeExceptionUtility.assertNoAtomicOperationError(type, clientResponse);
+			this.linkChangeExceptionUtility.assertNoClientLinkSystemChangeError(type, clientResponse);
 			ClientIllegalArgumentException.assertNoIllegalArgumentException(clientResponse);
 			throw new ClientRequestFailureException(clientResponse);
 		}

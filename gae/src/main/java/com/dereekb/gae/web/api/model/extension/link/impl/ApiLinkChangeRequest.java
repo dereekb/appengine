@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * API Request for link changes.
@@ -11,6 +14,8 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
  * @author dereekb
  * @see {@link LinkExtensionApiController}
  */
+@JsonInclude(Include.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiLinkChangeRequest extends ApiRequest<ApiLinkChangeImpl> {
 
 	private boolean atomic = true;

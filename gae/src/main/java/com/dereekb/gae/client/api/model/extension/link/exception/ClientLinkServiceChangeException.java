@@ -103,8 +103,8 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 		 * @throws ClientLinkServiceChangeException
 		 *             asserted exception.
 		 */
-		public void assertNoAtomicOperationError(String type,
-		                                         ClientApiResponse clientResponse)
+		public void assertNoClientLinkSystemChangeError(String type,
+		                                                ClientApiResponse clientResponse)
 		        throws ClientLinkServiceChangeException {
 			ClientResponseError error = clientResponse.getError();
 
