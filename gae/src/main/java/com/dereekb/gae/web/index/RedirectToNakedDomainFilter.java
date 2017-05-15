@@ -1,6 +1,8 @@
 package com.dereekb.gae.web.index;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RedirectToNakedDomainFilter
         implements Filter {
+
+	public static final String SPLITTER = "\\.";
 
 	private int statusCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
 	private String redirectUrl;
@@ -53,17 +57,45 @@ public class RedirectToNakedDomainFilter
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 
-		String serverName = req.getServerName();
-		String[] splits = serverName.split(".");
-
 		// Redirect all non-naked to the redirect url.
-		if (splits.length > 1) {
+		if (this.shouldRedirect(req)) {
 			resp.setStatus(this.statusCode);
 			resp.setHeader("Location", this.redirectUrl);
 			return;
 		}
 
 		chain.doFilter(request, response);
+	}
+
+	protected boolean shouldRedirect(HttpServletRequest req) {
+		String serverName = this.getRequestDomainName(req);
+		String[] splits = serverName.split(SPLITTER, 3);	// www, google.com
+		return splits.length > 2;	// Triggers on everything except google.com -> "google", "com"
+	}
+	
+	/*
+	protected String getRequestSubdomain(HttpServletRequest req) {
+		String serverName = this.getRequestDomainName(req);
+		String[] splits = serverName.split(SPLITTER);
+		
+		if (splits.length > 2) {
+			
+		} else {
+			return null;
+		}
+	}
+	*/
+
+	protected String getRequestDomainName(HttpServletRequest req) {
+		String domain;
+
+		try {
+			domain = new URI(req.getRequestURL().toString()).getHost();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+
+		return domain;
 	}
 
 	/*
