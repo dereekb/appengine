@@ -25,13 +25,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.dereekb.gae.utilities.time.exception.RateLimitException;
 import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.exception.ApiUnsupportedOperationException;
+import com.dereekb.gae.web.api.exception.WrappedApiBadRequestException;
+import com.dereekb.gae.web.api.exception.WrappedApiErrorException;
+import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * Handles exceptions related to the API Requests, such as a request not being
@@ -70,25 +75,21 @@ public class ApiExceptionHandler {
 	}
 
 	/**
-	 * Used for caught {@link ApiIllegalArgumentException} to pass along bad
-	 * arguments back to the user.
+	 * Used to catch various exceptions and return an error back to the user.
 	 */
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(ApiIllegalArgumentException.class)
-	public ApiResponseImpl handleException(ApiIllegalArgumentException exception) {
-		ApiResponseImpl response = new ApiResponseImpl(false);
+	@ExceptionHandler({ ApiIllegalArgumentException.class, WrappedApiBadRequestException.class,
+	        WrappedApiErrorException.class })
+	public ApiResponseImpl handleException(ApiResponseErrorConvertable e) {
+		return ApiResponseImpl.makeFailure(e);
+	}
 
-		IllegalArgumentException cause = exception.getException();
-		String causeMessage = cause.getMessage();
-
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl("BAD_ARG_EXCEPTION");
-		error.setTitle("Bad Request Argument");
-		error.setDetail(causeMessage);
-
-		response.setError(error);
-
-		return response;
+	@ResponseBody
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler(WrappedApiUnprocessableEntityException.class)
+	public ApiResponse handleException(WrappedApiUnprocessableEntityException exception) {
+		return ApiResponseImpl.makeFailure(exception);
 	}
 
 	/**
@@ -159,6 +160,26 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(RateLimitException.class)
 	public ApiResponse handleException(RateLimitException e) {
 		return ApiResponseImpl.makeFailure(e);
+	}
+
+	// MARK: Serialization
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(JsonMappingException.class)
+	public ApiResponse handleException(JsonMappingException e) {
+
+		// Log the error.
+		LOGGER.log(Level.WARNING, "Json Mapping Error", e);
+
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("JSON_MAPPING_ERROR");
+		error.setTitle("Json Mapping Error");
+		error.setDetail("An error occured while mapping JSON.");
+
+		response.setError(error);
+
+		return response;
 	}
 
 	// MARK: Validation

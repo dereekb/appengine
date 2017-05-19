@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.utility.JsonModelResultsSerializer;
+import com.dereekb.gae.client.api.model.shared.utility.TypedClientModelKeySerializer;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestUrlImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
@@ -16,7 +17,6 @@ import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,17 +46,14 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	private BidirectionalConverter<T, O> dtoConverter;
 	private TypeModelKeyConverter keyTypeConverter;
 
+	private TypedClientModelKeySerializer keySerializer;
+
 	public AbstractConfiguredClientModelRequestSender(String type,
 	        Class<O> dtoType,
 	        BidirectionalConverter<T, O> dtoConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		super(requestSender);
-		this.setType(type);
-		this.setPathFormat(this.getDefaultPathFormat());
-		this.setDtoType(dtoType);
-		this.setDtoConverter(dtoConverter);
-		this.setKeyTypeConverter(keyTypeConverter);
+		this(type, null, dtoType, dtoConverter, keyTypeConverter, requestSender);
 	}
 
 	public AbstractConfiguredClientModelRequestSender(String type,
@@ -67,10 +64,16 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
 		super(requestSender);
 		this.setType(type);
-		this.setPathFormat(pathFormat);
 		this.setDtoType(dtoType);
 		this.setDtoConverter(dtoConverter);
 		this.setKeyTypeConverter(keyTypeConverter);
+		this.resetKeySerializer();
+
+		if (pathFormat == null) {
+			pathFormat = this.getDefaultPathFormat();
+		}
+
+		this.setPathFormat(pathFormat);
 	}
 
 	public String getType() {
@@ -133,6 +136,24 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		this.keyTypeConverter = keyTypeConverter;
 	}
 
+	protected TypedClientModelKeySerializer getKeySerializer() {
+		return this.keySerializer;
+	}
+
+	protected void resetKeySerializer() {
+		TypedClientModelKeySerializer serializer = new TypedClientModelKeySerializer(this.type, this.keyTypeConverter,
+		        this.getObjectMapper());
+		this.setKeySerializer(serializer);
+	}
+
+	protected void setKeySerializer(TypedClientModelKeySerializer keySerializer) {
+		if (keySerializer == null) {
+			throw new IllegalArgumentException("keySerializer cannot be null.");
+		}
+
+		this.keySerializer = keySerializer;
+	}
+
 	// MARK: Abstract
 	protected abstract String getDefaultPathFormat();
 
@@ -156,6 +177,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		}
 	}
 
+	// MARK: Model Serialization
 	/**
 	 * Serializes models from the input data.
 	 * 
@@ -209,46 +231,20 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		return dtoList;
 	}
 
-	/**
-	 * Serializes {@link ModelKey} values from the input error info.
-	 * 
-	 * @param keysErrorInfo
-	 *            {@link ClientResponseErrorInfo}. Never {@code null}.
-	 * @return {@link List}. Never {@code null}, but can be empty.
-	 */
+	// MARK: Key Serialization
 	public List<ModelKey> serializeKeysFromErrorInfoData(ClientResponseErrorInfo keysErrorInfo)
 	        throws ClientResponseSerializationException {
-		JsonNode keysData = keysErrorInfo.getErrorData();
-		return this.serializeKeys(keysData);
+		return this.keySerializer.serializeKeysFromErrorInfoData(keysErrorInfo);
 	}
 
 	@Override
 	public List<ModelKey> serializeKeys(ClientApiResponseData data) throws ClientResponseSerializationException {
-		JsonNode keysArrayNode = data.getDataJsonNode();
-		return this.serializeKeys(keysArrayNode);
+		return this.keySerializer.serializeKeys(data);
 	}
 
-	/**
-	 * Serializes {@link ModelKey} values from the input json node.
-	 * 
-	 * @param keysArrayNode
-	 *            {@link JsonNode}. Never {@code null}.
-	 * @return {@link List}. Never {@code null}, but can be empty.
-	 */
 	@Override
 	public List<ModelKey> serializeKeys(JsonNode keysArrayNode) throws ClientResponseSerializationException {
-		List<ModelKey> objectKeys = null;
-		ObjectMapper mapper = this.getObjectMapper();
-
-		try {
-			String[] keys = mapper.treeToValue(keysArrayNode, String[].class);
-			List<String> keysList = ListUtility.toList(keys);
-			objectKeys = this.keyTypeConverter.convertKeys(this.type, keysList);
-		} catch (JsonProcessingException e) {
-			throw new ClientResponseSerializationException(e);
-		}
-
-		return objectKeys;
+		return this.keySerializer.serializeKeys(keysArrayNode);
 	}
 
 }

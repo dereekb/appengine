@@ -59,7 +59,9 @@ public interface Link
 	 * Clears all relations from this link.
 	 *
 	 * @return {@link RelationResult} for this change.
+	 * @throws RelationChangeException
+	 *             if the relation cannot be changed.
 	 */
-	public RelationResult clearRelations();
+	public RelationResult clearRelations() throws RelationChangeException;
 
 }

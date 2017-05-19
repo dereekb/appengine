@@ -97,6 +97,17 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		this.converter = converter;
 	}
 
+	// MARK: BidirectionalConverter
+	@Override
+	public List<I> convertTo(Collection<? extends T> input) throws ConversionFailureException {
+		return this.converter.convertTo(input);
+	}
+
+	@Override
+	public List<T> convertFrom(Collection<? extends I> input) throws ConversionFailureException {
+		return this.converter.convertFrom(input);
+	}
+
 	// MARK: EditModelControllerConversionDelegate
 	@Override
 	public CreateRequest<T> convert(ApiCreateRequest<I> request) throws NoTemplateDataExeption {

@@ -7,10 +7,6 @@ import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
-import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
-import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
-import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
-import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.test.applications.api.ClientApiApplicationTestContext;
 import com.dereekb.gae.test.mock.client.crud.ModelClientCreateRequestSenderTestUtility;
@@ -19,7 +15,15 @@ import com.dereekb.gae.test.mock.client.crud.ModelClientReadRequestSenderTestUti
 import com.dereekb.gae.test.mock.client.crud.ModelClientUpdateRequestSenderTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
-public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiApplicationTestContext {
+/**
+ * Abstract testing class used for testing CRUD requests on a model.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
+public abstract class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiApplicationTestContext {
 
 	private TestModelGenerator<T> testModelGenerator;
 
@@ -200,11 +204,4 @@ public class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiAp
 			this.deleteRequestUtility.testMockDeleteRequestReturnModels(this.getRequestSecurity());
 		}
 	}
-
-	// MARK: Utility
-	public ClientRequestSecurity getRequestSecurity() {
-		EncodedLoginToken overrideToken = new EncodedLoginTokenImpl(this.testLoginTokenContext.getToken());
-		return new ClientRequestSecurityImpl(overrideToken);
-	}
-
 }

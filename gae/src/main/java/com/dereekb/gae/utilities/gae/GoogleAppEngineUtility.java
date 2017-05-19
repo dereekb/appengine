@@ -1,10 +1,15 @@
 package com.dereekb.gae.utilities.gae;
 
+import java.util.Map;
+
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.api.utils.SystemProperty.Environment.Value;
+import com.google.apphosting.api.ApiProxy;
+import com.google.apphosting.api.ApiProxy.Environment;
 
 public class GoogleAppEngineUtility {
 
+	// MARK: Environment
 	/**
 	 * Returns true only if the environment is undefined.
 	 */
@@ -25,22 +30,22 @@ public class GoogleAppEngineUtility {
 		return !isDevelopmentEnvironment();
 	}
 
-	public static Environment getEnvironment() {
+	public static EnvironmentType getEnvironmentType() {
 		Value value = SystemProperty.environment.value();
-		Environment environment;
+		EnvironmentType environment;
 
 		if (value == null) {
-			environment = Environment.UNIT_TESTING;
+			environment = EnvironmentType.UNIT_TESTING;
 		} else if (value == SystemProperty.Environment.Value.Development) {
-			environment = Environment.DEVELOPMENT;
+			environment = EnvironmentType.DEVELOPMENT;
 		} else {
-			environment = Environment.PRODUCTION;
+			environment = EnvironmentType.PRODUCTION;
 		}
 
 		return environment;
 	}
 
-	public static enum Environment {
+	public static enum EnvironmentType {
 
 		UNIT_TESTING,
 
@@ -48,6 +53,21 @@ public class GoogleAppEngineUtility {
 
 		PRODUCTION
 
+	}
+
+	// MARK: Request
+	public static final String REQUEST_LOG_ID_ATTR_KEY = "com.google.appengine.runtime.request_log_id";
+
+	public static String getRequestLogId() {
+		return (String) getApiEnvironmentAttributes().get(REQUEST_LOG_ID_ATTR_KEY);
+	}
+
+	public static Map<String, Object> getApiEnvironmentAttributes() {
+		return getApiEnvironment().getAttributes();
+	}
+
+	public static Environment getApiEnvironment() {
+		return ApiProxy.getCurrentEnvironment();
 	}
 
 }

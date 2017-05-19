@@ -86,7 +86,7 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 
 		SerializedClientApiResponse<SimpleReadResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
-		return clientResponse.getSerializedPrimaryData();
+		return clientResponse.getSerializedResponse();
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender

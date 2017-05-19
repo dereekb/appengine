@@ -16,17 +16,25 @@ public enum ClientApiResponseErrorType {
 
 	/**
 	 * The request failed due to authentication reasons.
+	 * 
+	 * Codes 401 and 403
 	 */
 	AUTHENTICATION_ERROR,
 
 	/**
 	 * The request was malformed and/or had an illegal argument.
+	 * 
+	 * Code 400
 	 */
 	BAD_REQUEST_ERROR,
 
 	/**
-	 * The request was not malformed, but another error occured while
+	 * The request was not malformed, but another error occurred while
 	 * processing.
+	 * 
+	 * All 400 Codes not covered by other enum types.
+	 * 
+	 * Example: 415 Unprocessable Entity
 	 */
 	OTHER_BAD_RESPONSE_ERROR,
 
@@ -41,6 +49,8 @@ public enum ClientApiResponseErrorType {
 
 	/**
 	 * Server encountered an error.
+	 * 
+	 * All 500 Error Codes.
 	 */
 	SERVER_ERROR;
 

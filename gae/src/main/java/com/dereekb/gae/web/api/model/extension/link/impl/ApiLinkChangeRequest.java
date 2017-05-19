@@ -2,9 +2,11 @@ package com.dereekb.gae.web.api.model.extension.link.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * API Request for link changes.
@@ -12,7 +14,9 @@ import com.dereekb.gae.web.api.shared.request.ApiRequest;
  * @author dereekb
  * @see {@link LinkExtensionApiController}
  */
-public class ApiLinkChangeRequest extends ApiRequest<ApiLinkChange> {
+@JsonInclude(Include.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ApiLinkChangeRequest extends ApiRequest<ApiLinkChangeImpl> {
 
 	private boolean atomic = true;
 
@@ -20,13 +24,13 @@ public class ApiLinkChangeRequest extends ApiRequest<ApiLinkChange> {
 		super();
 	};
 
-	public ApiLinkChangeRequest(List<ApiLinkChange> data) {
+	public ApiLinkChangeRequest(List<ApiLinkChangeImpl> data) {
 		super(data);
 	}
 
-	public ApiLinkChangeRequest(List<ApiLinkChange> data, boolean atomic) {
+	public ApiLinkChangeRequest(List<ApiLinkChangeImpl> data, boolean atomic) {
 		this.setData(data);
-		this.atomic = atomic;
+		this.setAtomic(atomic);
 	}
 
 	public boolean isAtomic() {

@@ -24,6 +24,7 @@ public interface ApiLinkChangeConverter {
 	 * @throws ConversionFailureException
 	 */
 	public List<LinkSystemChange> convert(String primaryType,
-	                                      Collection<ApiLinkChange> input) throws ConversionFailureException;
+	                                      Collection<? extends ApiLinkChange> input)
+	        throws ConversionFailureException;
 
 }

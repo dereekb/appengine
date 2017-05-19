@@ -93,7 +93,7 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 
 		SerializedClientApiResponse<ClientModelQueryResponse<T>> clientResponse = this.sendRequest(request, security);
 		this.assertSuccessfulResponse(clientResponse);
-		return clientResponse.getSerializedPrimaryData();
+		return clientResponse.getSerializedResponse();
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender

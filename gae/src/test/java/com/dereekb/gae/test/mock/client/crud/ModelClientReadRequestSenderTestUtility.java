@@ -60,7 +60,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
 		        security);
 
-		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 
 		Assert.assertTrue(logins.size() == models.size());
@@ -82,7 +82,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender
 		        .sendRequest(clientReadRequest, security);
 
-		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 
 		Assert.assertTrue(logins.size() == models.size());
@@ -117,7 +117,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
 		        security);
 
-		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 		Assert.assertTrue(logins.size() == models.size());
 
@@ -145,7 +145,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		try {
 			SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender
 			        .sendRequest(readRequest, security);
-			response.getSerializedPrimaryData();
+			response.getSerializedResponse();
 			Assert.fail("Cannot serialize response data with request failure.");
 		} catch (ClientResponseSerializationException e) {
 

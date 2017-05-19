@@ -24,7 +24,7 @@ public final class StoredImageGenerator extends AbstractModelGenerator<StoredIma
 	public int setsToGenerate = 1;
 
 	public StoredImageGenerator() {
-		super(LongModelKeyGenerator.GENERATOR);
+		super(StoredImage.class, LongModelKeyGenerator.GENERATOR);
 	}
 
 	public int getSetsToGenerate() {

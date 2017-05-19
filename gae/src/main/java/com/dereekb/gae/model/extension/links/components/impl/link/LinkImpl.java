@@ -21,7 +21,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public final class LinkImpl
+public class LinkImpl
         implements Link {
 
 	private LinkInfo linkInfo;
@@ -44,8 +44,7 @@ public final class LinkImpl
 		return this.linkDelegate;
 	}
 
-
-    public void setLinkDelegate(LinkImplDelegate linkDelegate) {
+	public void setLinkDelegate(LinkImplDelegate linkDelegate) {
 		this.linkDelegate = linkDelegate;
 	}
 
@@ -64,6 +63,7 @@ public final class LinkImpl
 		return this.linkInfo.getLinkTarget();
 	}
 
+	// MARK: Link Impl
 	@Override
 	public RelationResultImpl setRelation(Relation change) throws RelationChangeException, UnavailableLinkException {
 		List<ModelKey> keys = this.linkDelegate.keys();

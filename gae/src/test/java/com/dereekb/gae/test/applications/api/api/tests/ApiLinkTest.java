@@ -15,6 +15,7 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController;
+import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
@@ -35,7 +36,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		this.modelType = modelType;
 	}
 
-	protected void performRequest(ApiRequest<ApiLinkChange> request) {
+	protected void performRequest(ApiRequest<ApiLinkChangeImpl> request) {
 		ApiLinkChangeRequest changeRequest = new ApiLinkChangeRequest(request.getData());
 		this.performRequest(changeRequest);
 	}
@@ -51,24 +52,24 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 	}
 
 	protected ApiRequest<ApiLinkChange> buildRequest(LinkChangeAction action,
-	                                                       String linkName,
-	                                                     String targetType,
-	                                                     T primaryModel,
-	                                                     UniqueModel targetModel) {
+	                                                 String linkName,
+	                                                 String targetType,
+	                                                 T primaryModel,
+	                                                 UniqueModel targetModel) {
 		return this.buildRequest(action, linkName, targetType, primaryModel, SingleItem.withValue(targetModel));
 	}
 
 	protected ApiRequest<ApiLinkChange> buildRequest(LinkChangeAction action,
-	                                                       String linkName,
-	                                                       String targetType,
-	                                                       T primaryModel,
-	                                                       Collection<? extends UniqueModel> targetModels) {
+	                                                 String linkName,
+	                                                 String targetType,
+	                                                 T primaryModel,
+	                                                 Collection<? extends UniqueModel> targetModels) {
 
 		List<ApiLinkChange> changes = new ArrayList<>();
-		ApiLinkChange targetChange = new ApiLinkChange();
-		targetChange.setAction(action.getAction());
+		ApiLinkChangeImpl targetChange = new ApiLinkChangeImpl();
+		targetChange.setAction(action.getActionName());
 		targetChange.setLinkName(linkName);
-		targetChange.setTargetKeys(ModelKey.readStringKeys(targetModels));
+		targetChange.setTargetKeysWithCollection(ModelKey.readStringKeys(targetModels));
 		targetChange.setPrimaryKey(primaryModel.getModelKey().keyAsString());
 
 		changes.add(targetChange);

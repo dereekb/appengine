@@ -25,11 +25,11 @@ public final class LoginPointerGenerator extends AbstractModelGenerator<LoginPoi
 	private Generator<Key<Login>> loginKeyGenerator = LOGIN_GENERATOR;
 
 	public LoginPointerGenerator() {
-		super(StringModelKeyGenerator.GENERATOR);
+		this(StringModelKeyGenerator.GENERATOR);
 	};
 
 	public LoginPointerGenerator(Generator<ModelKey> keyGenerator) {
-		super(keyGenerator);
+		super(LoginPointer.class, keyGenerator);
 	};
 
 	@Override

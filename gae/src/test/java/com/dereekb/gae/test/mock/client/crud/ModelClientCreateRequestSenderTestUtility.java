@@ -74,7 +74,7 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<CreateResponse<T>> response = this.createRequestSender.sendRequest(createRequest,
 		        security);
 
-		SimpleCreateResponse<T> createResponse = response.getSerializedPrimaryData();
+		SimpleCreateResponse<T> createResponse = response.getSerializedResponse();
 		Collection<T> models = createResponse.getModels();
 
 		Assert.assertFalse(models.isEmpty());

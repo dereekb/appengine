@@ -18,11 +18,11 @@ public final class LoginGenerator extends AbstractModelGenerator<Login> {
 	private Generator<Descriptor> descriptorGenerator;
 
 	public LoginGenerator() {
-		super(LongModelKeyGenerator.GENERATOR);
+		this(LongModelKeyGenerator.GENERATOR);
 	};
 
 	public LoginGenerator(Generator<ModelKey> keyGenerator) {
-		super(keyGenerator);
+		super(Login.class, keyGenerator);
 	};
 
 	@Override

@@ -13,6 +13,7 @@ import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseE
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
+import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -95,12 +96,22 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
 
+		ClientApiResponse clientResponse = this.sendRequest(clientRequest, security);
+		return new SerializedClientApiResponseImpl(request, clientResponse);
+	}
+
+	protected ClientApiResponse sendRequest(ClientRequest clientRequest,
+	                                        ClientRequestSecurity security)
+	        throws NoSecurityContextException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
 		if (security == null) {
 			security = this.getDefaultServiceSecurity();
 		}
 
 		ClientApiResponse clientResponse = this.requestSender.sendRequest(clientRequest, security);
-		return new SerializedClientApiResponseImpl(request, clientResponse);
+		return clientResponse;
 	}
 
 	// MARK: Abstract
@@ -195,7 +206,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 		// MARK: SerializedClientApiResponse
 		@Override
-		public S getSerializedPrimaryData() throws ClientResponseSerializationException {
+		public S getSerializedResponse() throws ClientResponseSerializationException {
 			if (this.serializedData == null) {
 				this.assertResponseSuccess();
 				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request,

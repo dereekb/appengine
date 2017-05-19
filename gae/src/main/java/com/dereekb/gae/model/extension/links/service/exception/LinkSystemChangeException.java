@@ -1,19 +1,28 @@
 package com.dereekb.gae.model.extension.links.service.exception;
 
+import java.util.Set;
+
 import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
+import com.dereekb.gae.model.extension.links.exception.LinkException;
 import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.web.error.impl.ErrorInfoImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Thrown when a {@link LinkSystemChange} cannot be completed.
+ * 
+ * Wraps an internal {@link ApiLinkException} with {@link LinkSystemChange}
+ * data.
  *
  * @author dereekb
  *
  */
-public class LinkSystemChangeException extends ApiLinkException {
+public class LinkSystemChangeException extends LinkException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,8 +37,8 @@ public class LinkSystemChangeException extends ApiLinkException {
 
 	public LinkSystemChangeException(LinkSystemChange change, ApiLinkException reason, String message) {
 		super(message);
-		this.reason = reason;
 		this.change = change;
+		this.reason = reason;
 	}
 
 	public LinkSystemChange getChange() {
@@ -40,20 +49,9 @@ public class LinkSystemChangeException extends ApiLinkException {
 		return this.reason;
 	}
 
-	@Override
-	public ApiResponseError getResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl(LINK_CHANGE_ERROR_CODE);
-
-		ModelKey primaryKey = this.change.getPrimaryKey();
-		LinkChangeAction action = this.change.getAction();
-		String link = this.change.getLinkName();
-
-		ApiResponseError reasonError = this.reason.getResponseError();
-		ErrorData data = new ErrorData(action, link, primaryKey, reasonError);
-
-		error.setData(data);
-
-		return error;
+	// MARK: ApiResponseErrorConvertable
+	public LinkSystemChangeApiResponseError asResponseError() {
+		return LinkSystemChangeApiResponseError.make(this.change, this.reason);
 	}
 
 	@Override
@@ -61,19 +59,44 @@ public class LinkSystemChangeException extends ApiLinkException {
 		return "LinkSystemChangeException [change=" + this.change + ", reason=" + this.reason + "]";
 	}
 
-	public static class ErrorData {
+	/**
+	 * {@link ApiResponseError} produced by a {@link LinkSystemChangeException}.
+	 * 
+	 * @author dereekb
+	 *
+	 */
+	@JsonInclude(Include.NON_EMPTY)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class LinkSystemChangeApiResponseError extends ErrorInfoImpl
+	        implements ApiResponseError {
 
 		private String action;
 		private String link;
 		private String key;
+		private Set<String> targetKeys;
 
-		private ApiResponseError reason;
+		public LinkSystemChangeApiResponseError() {}
 
-		public ErrorData(LinkChangeAction action, String link, ModelKey key, ApiResponseError reason) {
-			this.action = action.getAction();
-			this.link = link;
-			this.key = key.toString();
-			this.reason = reason;
+		public static LinkSystemChangeApiResponseError make(LinkSystemChange change,
+		                                                    ApiLinkException exceptionReason) {
+			LinkSystemChangeApiResponseError error = new LinkSystemChangeApiResponseError();
+
+			LinkChangeAction action = change.getAction();
+			ModelKey key = change.getPrimaryKey();
+			String link = change.getLinkName();
+
+			error.setAction(action.getActionName());
+			error.setLink(link);
+			error.setKey(key.toString());
+			error.setTargetKeys(change.getTargetStringKeys());
+
+			ApiResponseError reason = exceptionReason.asResponseError();
+
+			error.setTitle(reason.getErrorTitle());
+			error.setCode(reason.getErrorCode());
+			error.setDetail(reason.getErrorDetail());
+
+			return error;
 		}
 
 		public String getAction() {
@@ -100,12 +123,17 @@ public class LinkSystemChangeException extends ApiLinkException {
 			this.key = key;
 		}
 
-		public ApiResponseError getReason() {
-			return this.reason;
+		public Set<String> getTargetKeys() {
+			return this.targetKeys;
 		}
 
-		public void setReason(ApiResponseError reason) {
-			this.reason = reason;
+		public void setTargetKeys(Set<String> targetKeys) {
+			this.targetKeys = targetKeys;
+		}
+
+		@Override
+		public Object getErrorData() {
+			return null;
 		}
 
 	}

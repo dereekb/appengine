@@ -29,11 +29,11 @@ import com.dereekb.gae.utilities.model.search.request.MutableSearchRequest;
 public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueModel> {
 
 	private final TestModelGenerator<T> testModelGenerator;
-	private final ClientQueryRequestSender<T> createRequestSender;
+	private final ClientQueryRequestSender<T> queryRequestSender;
 
-	public ModelClientQueryRequestSenderTestUtility(ClientQueryRequestSender<T> createRequestSender,
+	public ModelClientQueryRequestSenderTestUtility(ClientQueryRequestSender<T> queryRequestSender,
 	        TestModelGenerator<T> testModelGenerator) {
-		this.createRequestSender = createRequestSender;
+		this.queryRequestSender = queryRequestSender;
 		this.testModelGenerator = testModelGenerator;
 	}
 
@@ -48,7 +48,7 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 		queryRequest.setLimit(limit);
 		queryRequest.setKeysOnly(false);	// Return Models
 
-		ModelQueryResponse<T> firstResponse = this.createRequestSender.query(queryRequest, security);
+		ModelQueryResponse<T> firstResponse = this.queryRequestSender.query(queryRequest, security);
 		Collection<T> firstResultModels = null;
 
 		try {
@@ -68,7 +68,7 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 		// Set the search cursor
 		queryRequest.setCursor(searchCursor);
 
-		ModelQueryResponse<T> secondResponse = this.createRequestSender.query(queryRequest, security);
+		ModelQueryResponse<T> secondResponse = this.queryRequestSender.query(queryRequest, security);
 		Collection<ModelKey> secondResultKeys = secondResponse.getKeyResults();
 
 		Set<ModelKey> secondResultKeySet = new HashSet<ModelKey>(secondResultKeys);
@@ -87,7 +87,7 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 		queryRequest.setLimit(limit);
 		queryRequest.setKeysOnly(true);	// Return Models
 
-		ModelQueryResponse<T> firstResponse = this.createRequestSender.query(queryRequest, security);
+		ModelQueryResponse<T> firstResponse = this.queryRequestSender.query(queryRequest, security);
 
 		try {
 			firstResponse.getModelResults();

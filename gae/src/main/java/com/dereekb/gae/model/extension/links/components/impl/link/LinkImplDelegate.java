@@ -16,6 +16,9 @@ public interface LinkImplDelegate {
 	/**
 	 * @return {@link List} of {@link ModelKey} values within this link. Never
 	 *         {@code null}.
+	 * 
+	 * @throws RelationChangeException
+	 *             if the change fails.
 	 */
 	public List<ModelKey> keys();
 
@@ -24,6 +27,9 @@ public interface LinkImplDelegate {
 	 *
 	 * @param key
 	 * @return {@code true} if this change was not redundant.
+	 * 
+	 * @throws RelationChangeException
+	 *             if the change fails.
 	 */
 	public boolean add(ModelKey key) throws RelationChangeException;
 
@@ -32,13 +38,19 @@ public interface LinkImplDelegate {
 	 *
 	 * @param key
 	 * @return {@code true} if this change was not redundant.
+	 * 
+	 * @throws RelationChangeException
+	 *             if the change fails.
 	 */
 	public boolean remove(ModelKey key) throws RelationChangeException;
 
 	/**
 	 * @return {@link Set} of {@link ModelKey} values cleared. Never
 	 *         {@code null}.
+	 * 
+	 * @throws RelationChangeException
+	 *             if the change fails.
 	 */
-	public Set<ModelKey> clear();
+	public Set<ModelKey> clear() throws RelationChangeException;
 
 }
