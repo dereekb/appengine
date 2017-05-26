@@ -8,7 +8,6 @@ import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdateType;
 import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdater;
 import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.utilities.collections.batch.Partitioner;
@@ -29,8 +28,7 @@ import com.googlecode.objectify.Work;
  * @param <R>
  *            "one" model type
  */
-public abstract class AbstractOneToManyUpdater<T extends UniqueModel, R extends UniqueModel>
-        implements RelatedModelUpdater<T> {
+public abstract class AbstractOneToManyUpdater<T extends UniqueModel, R extends UniqueModel> extends AbstractUpdater<T> {
 
 	private Getter<T> modelGetter;
 
@@ -48,29 +46,6 @@ public abstract class AbstractOneToManyUpdater<T extends UniqueModel, R extends 
 		}
 
 		this.modelGetter = modelGetter;
-	}
-
-	// MARK: RelatedModelUpdater
-	@Override
-	public RelatedModelUpdaterResult updateRelations(RelatedModelUpdateType change,
-	                                                 Iterable<T> models) {
-		Instance<T> instance = this.makeInstance(change);
-		return instance.performChanges(models);
-	}
-
-	/**
-	 * Creates a new {@link Instance}.
-	 * 
-	 * @param change
-	 *            {@link RelatedModelUpdateType}. Never {@code null}.
-	 * @return {@link RelatedModelUpdaterResult}. Never {@code null}.
-	 */
-	protected abstract Instance<T> makeInstance(RelatedModelUpdateType change);
-
-	protected interface Instance<T> {
-
-		public RelatedModelUpdaterResult performChanges(Iterable<T> models);
-
 	}
 
 	/**
@@ -110,7 +85,10 @@ public abstract class AbstractOneToManyUpdater<T extends UniqueModel, R extends 
 	protected abstract class AbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>>
 	        implements Instance<T> {
 
-		// Changer used for building the changes.
+		/**
+		 * This batch size limit is related to the Google App Engine
+		 * transactional limit of 25 entities/transaction.
+		 */
 		protected final int INSTANCE_BATCH_SIZE = 10;
 		protected final Partitioner PARTITIONER = new PartitionerImpl(this.INSTANCE_BATCH_SIZE);
 
@@ -120,7 +98,7 @@ public abstract class AbstractOneToManyUpdater<T extends UniqueModel, R extends 
 			List<C> changes = new ArrayList<C>();
 			HashMapWithList<ModelKey, T> map = this.buildRelationMap(models);
 
-			// Perform changes for each overview independently.
+			// Perform changes for each relation object independently.
 			for (Entry<ModelKey, List<T>> entry : map.entrySet()) {
 				C change = this.performChangesForRelationKey(entry.getKey(), entry.getValue());
 				changes.add(change);
