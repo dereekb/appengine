@@ -17,7 +17,8 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
 /**
- * {@link RelatedModelUpdater} implementation used for a one-to-many relation.
+ * {@link RelatedModelUpdater} implementation used for a one-to-many relation
+ * with the input model type being the "many".
  * <p>
  * Modified elements are reloaded before attempting to be modified.
  * 
@@ -28,11 +29,11 @@ import com.googlecode.objectify.Work;
  * @param <R>
  *            "one" model type
  */
-public abstract class AbstractOneToManyUpdater<T extends UniqueModel, R extends UniqueModel> extends AbstractUpdater<T> {
+public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends UniqueModel> extends AbstractUpdater<T> {
 
 	private Getter<T> modelGetter;
 
-	public AbstractOneToManyUpdater(Getter<T> modelGetter) {
+	public AbstractManyToOneUpdater(Getter<T> modelGetter) {
 		this.setModelGetter(modelGetter);
 	}
 
@@ -200,7 +201,7 @@ public abstract class AbstractOneToManyUpdater<T extends UniqueModel, R extends 
 
 				@Override
 				public C run() {
-					List<T> reloadedPartition = AbstractOneToManyUpdater.this.modelGetter.get(partition);
+					List<T> reloadedPartition = AbstractManyToOneUpdater.this.modelGetter.get(partition);
 					List<T> filteredPartition = AbstractInstance.this.filterPartitionModels(reloadedPartition);
 					return AbstractInstance.this.performModelChangesWithPartition(relationKey, filteredPartition);
 				}

@@ -196,7 +196,7 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 
 					// Attempts to load the models.
 					R relationModel = AbstractOneToOneUpdater.this.relationModelGetter.get(relationModelKey);
-					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(inputModelKey);
+					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(value);
 
 					RelationChangesInputImpl input = new RelationChangesInputImpl(inputModelKey, relationModelKey,
 					        inputModel, relationModel);
