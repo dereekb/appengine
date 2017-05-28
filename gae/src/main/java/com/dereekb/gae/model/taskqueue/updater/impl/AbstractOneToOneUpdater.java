@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.taskqueue.updater.impl;
+package com.dereekb.gae.model.taskqueue.updater.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdater;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdaterResult;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 

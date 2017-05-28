@@ -1,12 +1,12 @@
-package com.dereekb.gae.server.taskqueue.updater.task;
+package com.dereekb.gae.model.taskqueue.updater.task;
 
 import java.util.List;
 
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdateType;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterFactory;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdateType;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdater;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdaterFactory;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 

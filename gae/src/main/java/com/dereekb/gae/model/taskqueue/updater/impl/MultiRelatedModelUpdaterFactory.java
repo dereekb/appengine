@@ -1,13 +1,13 @@
-package com.dereekb.gae.server.taskqueue.updater.impl;
+package com.dereekb.gae.model.taskqueue.updater.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdateType;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterFactory;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdateType;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdater;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdaterFactory;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdaterResult;
 
 /**
  * {@link RelatedModelUpdaterFactory} implementation that wraps several other

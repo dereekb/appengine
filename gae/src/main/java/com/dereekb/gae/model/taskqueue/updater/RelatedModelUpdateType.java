@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.taskqueue.updater;
+package com.dereekb.gae.model.taskqueue.updater;
 
 /**
  * Types of changes for a {@link RelatedModelUpdater}.

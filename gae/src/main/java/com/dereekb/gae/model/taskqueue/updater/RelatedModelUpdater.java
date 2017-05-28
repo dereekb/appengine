@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.taskqueue.updater;
+package com.dereekb.gae.model.taskqueue.updater;
 
 /**
  * Used for updating a relation between the input model type and all other

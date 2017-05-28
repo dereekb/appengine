@@ -1,9 +1,9 @@
-package com.dereekb.gae.server.taskqueue.updater.impl;
+package com.dereekb.gae.model.taskqueue.updater.impl;
 
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdateType;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdateType;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdater;
-import com.dereekb.gae.server.taskqueue.updater.RelatedModelUpdaterResult;
 
 /**
  * Abstract {@link RelatedModelUpdater} implementation that uses an internally
