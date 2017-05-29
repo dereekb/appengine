@@ -80,9 +80,10 @@ public class ObjectifyUtility {
 	 * Creates a new key.
 	 *
 	 * @param type
+	 *            {@link Class}. Never {@code null}.
 	 * @param identifier
-	 * @return New key for the identifier. Returns null if no identifier is
-	 *         passed.
+	 *            {@link Long}. May be {@code null}.
+	 * @return {@link Key}. {@code null} if identifer was also null.
 	 */
 	public static <T extends ObjectifyModel<T>> Key<T> createKey(Class<T> type,
 	                                                             Long identifier) {
@@ -90,6 +91,26 @@ public class ObjectifyUtility {
 
 		if (identifier != null) {
 			key = Key.create(type, identifier);
+		}
+
+		return key;
+	}
+
+	/**
+	 * Creates a new key.
+	 *
+	 * @param type
+	 *            {@link Class}. Never {@code null}.
+	 * @param name
+	 *            {@link String}. May be {@code null}.
+	 * @return {@link Key}. {@code null} if identifier was also null.
+	 */
+	public static <T extends ObjectifyModel<T>> Key<T> createKey(Class<T> type,
+	                                                             String name) {
+		Key<T> key = null;
+
+		if (name != null) {
+			key = Key.create(type, name);
 		}
 
 		return key;
