@@ -79,4 +79,39 @@ public class ModelKeyTest {
 		Assert.assertTrue(number.getType().equals(ModelKeyType.NUMBER));
 	}
 
+	@Test
+	public void testModelKeyCompositeGeneration() {
+		Long a = 100L;
+		Long b = 200L;
+
+		String name = ModelKey.makeCompositeName(a, b);
+		Assert.assertNotNull(name);
+		Assert.assertTrue(name.equals("100_200"));
+	}
+
+	@Test
+	public void testModelKeyCompositeGenerationNullChecking() {
+		Long a = 100L;
+		Long b = null;
+
+		try {
+			ModelKey.makeCompositeName(a, b);
+			Assert.fail("Name generation should have failed.");
+		} catch (NullPointerException e) {
+
+		}
+	}
+
+	@Test
+	public void testModelKeyCompositeGenerationLengthChecking() {
+		Long a = 100L;
+
+		try {
+			ModelKey.makeCompositeName(a);
+			Assert.fail("Name generation should have failed.");
+		} catch (IllegalArgumentException e) {
+
+		}
+	}
+
 }

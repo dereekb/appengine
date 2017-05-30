@@ -652,4 +652,49 @@ public final class ModelKey
 		return true;
 	}
 
+	private static final String COMPOSITE_NAME_SEPARATOR = "_";
+
+	/**
+	 * Creates a new composite name from the input.
+	 * 
+	 * @param components
+	 *            Components array. Never {@code null}. Must be longer than 1
+	 *            element. No elements should be {@code null}.
+	 * @return {@link String}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             Thrown if less than 2 elements are input.
+	 * @throws NullPointerException
+	 *             Thrown if any input component is null.
+	 */
+	public static String makeCompositeName(Object... components) throws IllegalArgumentException, NullPointerException {
+		if (components.length < 2) {
+			throw new IllegalArgumentException("Composite names must be generated with 2 or more elements.");
+		}
+
+		ListUtility.assertNoNulls(components);
+
+		return StringUtility.joinValues(COMPOSITE_NAME_SEPARATOR, components);
+	}
+
+	/**
+	 * Does {{@link #makeCompositeName(Object...)} and wraps the value in a
+	 * {@link MdoelKey}.
+	 * 
+	 * 
+	 * @param components
+	 *            Components array. Never {@code null}. Must be longer than 1
+	 *            element. No elements should be {@code null}.
+	 * @return {@link ModelKey}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             Thrown if less than 2 elements are input.
+	 * @throws NullPointerException
+	 *             Thrown if any input component is null.
+	 */
+	public static ModelKey makeCompositeKey(Object... components)
+	        throws IllegalArgumentException,
+	            NullPointerException {
+		String name = makeCompositeName(components);
+		return new ModelKey(name);
+	}
+
 }

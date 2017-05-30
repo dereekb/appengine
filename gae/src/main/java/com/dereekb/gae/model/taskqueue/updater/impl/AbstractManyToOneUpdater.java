@@ -13,6 +13,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.batch.Partitioner;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.filters.Filter;
+import com.dereekb.gae.utilities.filters.FilterResults;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
@@ -80,6 +82,114 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 		 *            Relation model. Never {@code null}.
 		 */
 		public void applyChanges(R relationModel);
+
+	}
+
+	protected abstract class AbstractInstanceChange<C extends InstanceChange<R, C>>
+	        implements InstanceChange<R, C> {
+
+		private final ModelKey relationKey;
+
+		public AbstractInstanceChange(ModelKey relationKey) {
+			this.relationKey = relationKey;
+		}
+
+		@Override
+		public ModelKey getRelationKey() {
+			return this.relationKey;
+		}
+
+	}
+
+	/**
+	 * {@link AbstractInstance} extension that
+	 * 
+	 * @author dereekb
+	 *
+	 * @param <O>
+	 *            output type
+	 * @param <C>
+	 *            changes type
+	 */
+	protected abstract class FilteredOneByOneAbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>> extends OneByOneAbstractInstance<O, C> {
+
+		private final Filter<T> filter;
+
+		public FilteredOneByOneAbstractInstance(Filter<T> filter) {
+			super();
+			this.filter = filter;
+		}
+
+		// MARK: AbstractInstance
+		@Override
+		protected C performModelChangesWithPartition(ModelKey relationKey,
+		                                             List<T> partition) {
+			FilterResults<T> results = this.filterModels(partition);
+			List<T> applicable = results.getPassingObjects();
+
+			C changes = super.performModelChangesWithPartition(relationKey, applicable);
+			this.updateChangesForFilteredModels(changes, results);
+
+			return changes;
+		}
+
+		protected FilterResults<T> filterModels(List<T> partition) {
+			return this.filter.filterObjects(partition);
+		}
+
+		protected void updateChangesForFilteredModels(C changes,
+		                                              FilterResults<T> results) {
+			// Do nothing by default.
+		}
+
+	}
+
+	/**
+	 * {@link AbstractInstance} extension that updates a single Changes object
+	 * using the models, one by one.
+	 * <p>
+	 * Models that are updated are saved.
+	 * 
+	 * @author dereekb
+	 *
+	 * @param <O>
+	 *            output type
+	 * @param <C>
+	 *            changes type
+	 */
+	protected abstract class OneByOneAbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>> extends AbstractInstance<O, C> {
+
+		// MARK: AbstractInstance
+		@Override
+		protected C performModelChangesWithPartition(ModelKey relationKey,
+		                                             List<T> partition) {
+			C changes = this.makeInitialInstanceModelChange(relationKey);
+			List<T> updated = new ArrayList<T>(partition.size());
+
+			for (T model : partition) {
+				if (this.updateChangesWithModel(changes, model)) {
+					updated.add(model);
+				}
+			}
+
+			this.saveUpdatedModels(updated);
+
+			return changes;
+		}
+
+		/**
+		 * Updates the input changes, and the optionally, the input model.
+		 * 
+		 * @param changes
+		 *            Changes. Never {@code null}.
+		 * @param model
+		 *            Model. Never {@code null}.
+		 * @return {@code true} if the input model was modified.
+		 */
+		protected abstract boolean updateChangesWithModel(C changes,
+		                                                  T model);
+
+		protected abstract void saveUpdatedModels(List<T> updated);
 
 	}
 
@@ -220,6 +330,16 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 			return partition;
 		}
 
+		/**
+		 * Prepares all necessary changes. Updates to elements in the partition
+		 * may be performed if necessary.
+		 * 
+		 * @param relationKey
+		 *            {@link ModelKey} for the relation. Never {@code null}.
+		 * @param partition
+		 *            Partition of models. Never {@code null}.
+		 * @return Changes object. Never {@code null}.
+		 */
 		protected abstract C performModelChangesWithPartition(ModelKey relationKey,
 		                                                      List<T> partition);
 

@@ -95,10 +95,18 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 
 		/**
 		 * Loads all intermediary models for the input.
+		 * <p>
+		 * This is performed outside of a transaction.
 		 * 
 		 * @param models
 		 *            {@link Iterable}. Never {@code null}.
 		 * @return {@link List} of models. Never {@code null}.
+		 * @throws NoChangesAvailableException
+		 *             thrown if there are no models available and no
+		 *             changes should occur. In some cases the implementation
+		 *             will prefer to attempt changes anyways without
+		 *             intermediary models, in which case this exception would
+		 *             not be thrown.
 		 */
 		protected abstract List<N> loadIntermediaries(Iterable<T> models) throws NoChangesAvailableException;
 
@@ -118,9 +126,13 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 
 		/**
 		 * Returns a collection of expected related models.
+		 * <p>
+		 * This is performed outside of a transaction.
 		 * 
 		 * @param model
+		 *            Model. Never {@code null}.
 		 * @param intermediaryModels
+		 *            {@link List}. Never {@code null}.
 		 * @return {@link Collection}. Never {@code null}.
 		 */
 		protected abstract Collection<ModelKey> getRelatedModelKeys(T model,

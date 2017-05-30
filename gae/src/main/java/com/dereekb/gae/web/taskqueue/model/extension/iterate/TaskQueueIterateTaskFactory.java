@@ -8,7 +8,7 @@ import com.dereekb.gae.utilities.task.Task;
 
 /**
  * Factory that generates a {@link Task} with {@link ModelKeyListAccessor} based
- * on the input.
+ * on the input {@link IterateTaskInput}.
  * 
  * @author dereekb
  *
