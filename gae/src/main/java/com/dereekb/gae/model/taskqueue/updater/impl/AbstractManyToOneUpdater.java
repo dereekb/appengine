@@ -1,8 +1,11 @@
 package com.dereekb.gae.model.taskqueue.updater.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
@@ -49,6 +52,142 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 		}
 
 		this.modelGetter = modelGetter;
+	}
+
+	/**
+	 * {@link AbstractInstance} extension that iterates over each model
+	 * individually, filtering out ones that don't matter, and updating the
+	 * changes.
+	 * 
+	 * @author dereekb
+	 *
+	 * @param <O>
+	 *            output type
+	 * @param <C>
+	 *            changes type
+	 */
+	protected abstract class FilteredOneByOneAbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>> extends OneByOneAbstractInstance<O, C> {
+
+		private final Filter<T> filter;
+
+		public FilteredOneByOneAbstractInstance(Filter<T> filter) {
+			super();
+			this.filter = filter;
+		}
+
+		// MARK: AbstractInstance
+		@Override
+		protected C performModelChangesWithPartition(ModelKey relationKey,
+		                                             List<T> partition) {
+			FilterResults<T> results = this.filterModels(partition);
+			List<T> applicable = results.getPassingObjects();
+
+			C changes = super.performModelChangesWithPartition(relationKey, applicable);
+			this.updateChangesForFilteredModels(changes, results);
+
+			return changes;
+		}
+
+		protected FilterResults<T> filterModels(List<T> partition) {
+			return this.filter.filterObjects(partition);
+		}
+
+		protected void updateChangesForFilteredModels(C changes,
+		                                              FilterResults<T> results) {
+			// Do nothing by default.
+		}
+
+	}
+
+	protected abstract class AbstractOneByOneInstanceChange<C extends AbstractOneByOneInstanceChange<C>> extends AbstractInstanceChange<C> {
+
+		protected final List<ModelKey> skippedValues = new ArrayList<ModelKey>();
+		protected final List<ModelKey> updatedValues = new ArrayList<ModelKey>();
+		protected final Set<ModelKey> removedValues = new HashSet<ModelKey>();
+
+		public AbstractOneByOneInstanceChange(ModelKey relationKey) {
+			super(relationKey);
+		}
+
+		public AbstractOneByOneInstanceChange(AbstractOneByOneInstanceChange<C> change) {
+			super(change);
+			this.skippedValues.addAll(change.skippedValues);
+			this.updatedValues.addAll(change.updatedValues);
+			this.removedValues.addAll(change.removedValues);
+		}
+
+		public List<ModelKey> getSkippedValues() {
+			return this.skippedValues;
+		}
+
+		public List<ModelKey> getUpdatedValues() {
+			return this.updatedValues;
+		}
+
+		public Set<ModelKey> getRemovedValues() {
+			return this.removedValues;
+		}
+
+		protected void addUpdatedValue(T updated) {
+			this.updatedValues.add(updated.getModelKey());
+		}
+
+		protected void addRemovedValue(T removed) {
+			this.removedValues.add(removed.getModelKey());
+		}
+
+		public void addSkippedValues(Collection<T> skipped) {
+			this.skippedValues.addAll(ModelKey.readModelKeys(skipped));
+		}
+
+	}
+
+	/**
+	 * {@link AbstractInstance} extension that updates a single Changes object
+	 * using the models, one by one.
+	 * <p>
+	 * Models that are updated are saved.
+	 * 
+	 * @author dereekb
+	 *
+	 * @param <O>
+	 *            output type
+	 * @param <C>
+	 *            changes type
+	 */
+	protected abstract class OneByOneAbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>> extends AbstractInstance<O, C> {
+
+		// MARK: AbstractInstance
+		@Override
+		protected C performModelChangesWithPartition(ModelKey relationKey,
+		                                             List<T> partition) {
+			C changes = this.makeInitialInstanceModelChange(relationKey);
+			List<T> updated = new ArrayList<T>(partition.size());
+
+			for (T model : partition) {
+				if (this.updateChangesWithModel(changes, model)) {
+					updated.add(model);
+				}
+			}
+
+			this.saveUpdatedModels(updated);
+			return changes;
+		}
+
+		/**
+		 * Updates the input changes, and the optionally, the input model.
+		 * 
+		 * @param changes
+		 *            Changes. Never {@code null}.
+		 * @param model
+		 *            Model. Never {@code null}.
+		 * @return {@code true} if the input model was modified.
+		 */
+		protected abstract boolean updateChangesWithModel(C changes,
+		                                                  T model);
+
+		protected abstract void saveUpdatedModels(List<T> updated);
+
 	}
 
 	/**
@@ -104,97 +243,6 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 		public ModelKey getRelationKey() {
 			return this.relationKey;
 		}
-
-	}
-
-	/**
-	 * {@link AbstractInstance} extension that
-	 * 
-	 * @author dereekb
-	 *
-	 * @param <O>
-	 *            output type
-	 * @param <C>
-	 *            changes type
-	 */
-	protected abstract class FilteredOneByOneAbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>> extends OneByOneAbstractInstance<O, C> {
-
-		private final Filter<T> filter;
-
-		public FilteredOneByOneAbstractInstance(Filter<T> filter) {
-			super();
-			this.filter = filter;
-		}
-
-		// MARK: AbstractInstance
-		@Override
-		protected C performModelChangesWithPartition(ModelKey relationKey,
-		                                             List<T> partition) {
-			FilterResults<T> results = this.filterModels(partition);
-			List<T> applicable = results.getPassingObjects();
-
-			C changes = super.performModelChangesWithPartition(relationKey, applicable);
-			this.updateChangesForFilteredModels(changes, results);
-
-			return changes;
-		}
-
-		protected FilterResults<T> filterModels(List<T> partition) {
-			return this.filter.filterObjects(partition);
-		}
-
-		protected void updateChangesForFilteredModels(C changes,
-		                                              FilterResults<T> results) {
-			// Do nothing by default.
-		}
-
-	}
-
-	/**
-	 * {@link AbstractInstance} extension that updates a single Changes object
-	 * using the models, one by one.
-	 * <p>
-	 * Models that are updated are saved.
-	 * 
-	 * @author dereekb
-	 *
-	 * @param <O>
-	 *            output type
-	 * @param <C>
-	 *            changes type
-	 */
-	protected abstract class OneByOneAbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>> extends AbstractInstance<O, C> {
-
-		// MARK: AbstractInstance
-		@Override
-		protected C performModelChangesWithPartition(ModelKey relationKey,
-		                                             List<T> partition) {
-			C changes = this.makeInitialInstanceModelChange(relationKey);
-			List<T> updated = new ArrayList<T>(partition.size());
-
-			for (T model : partition) {
-				if (this.updateChangesWithModel(changes, model)) {
-					updated.add(model);
-				}
-			}
-
-			this.saveUpdatedModels(updated);
-			return changes;
-		}
-
-		/**
-		 * Updates the input changes, and the optionally, the input model.
-		 * 
-		 * @param changes
-		 *            Changes. Never {@code null}.
-		 * @param model
-		 *            Model. Never {@code null}.
-		 * @return {@code true} if the input model was modified.
-		 */
-		protected abstract boolean updateChangesWithModel(C changes,
-		                                                  T model);
-
-		protected abstract void saveUpdatedModels(List<T> updated);
 
 	}
 
