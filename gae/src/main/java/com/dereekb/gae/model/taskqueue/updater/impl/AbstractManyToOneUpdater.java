@@ -80,8 +80,10 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 		 * 
 		 * @param relationModel
 		 *            Relation model. Never {@code null}.
+		 * @return {@code true} if the relation model was modified and must be
+		 *         saved.
 		 */
-		public void applyChanges(R relationModel);
+		public boolean applyChanges(R relationModel);
 
 	}
 
@@ -89,6 +91,10 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 	        implements InstanceChange<R, C> {
 
 		private final ModelKey relationKey;
+
+		public AbstractInstanceChange(InstanceChange<R, C> change) {
+			this(change.getRelationKey());
+		}
 
 		public AbstractInstanceChange(ModelKey relationKey) {
 			this.relationKey = relationKey;
@@ -173,7 +179,6 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 			}
 
 			this.saveUpdatedModels(updated);
-
 			return changes;
 		}
 
@@ -278,8 +283,21 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 		 *            Changes. Never {@code null}.
 		 * @return Changes. Never {@code null}.
 		 */
-		protected abstract C performRelationModelUpdate(R relation,
-		                                                C changes);
+		protected C performRelationModelUpdate(R relation,
+		                                       C changes) {
+			if (changes.applyChanges(relation)) {
+				this.saveUpdatedRelationModel(relation);
+			}
+
+			return changes;
+		}
+
+		/**
+		 * Saves the relation model changes.
+		 * 
+		 * @param relation
+		 */
+		protected abstract void saveUpdatedRelationModel(R relation);
 
 		// MARK: Internal - Model Changes
 		protected final C buildInstanceModelChanges(ModelKey relationKey,

@@ -18,6 +18,10 @@ public class LongCountSyncModelAccessor<T extends MutableCountSyncModel<T, Long>
 		super(model);
 	}
 
+	public static <T extends MutableCountSyncModel<T, Long>> LongCountSyncModelAccessor<T> make(T model) {
+		return new LongCountSyncModelAccessor<T>(model);
+	}
+
 	// MARK: AbstractCountSyncModelAccessor
 	@Override
 	public Long getDefaultCount() {

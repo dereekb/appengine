@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.misc.delta.impl;
 
+import com.dereekb.gae.utilities.misc.delta.CountSyncModel;
 import com.dereekb.gae.utilities.misc.delta.CountSyncModelAccessor;
 import com.dereekb.gae.utilities.misc.delta.MutableCountSyncModel;
 
@@ -45,6 +46,10 @@ public abstract class AbstractCountSyncModelAccessor<T extends MutableCountSyncM
 	@Override
 	public boolean hasDeltaChange() {
 		return this.getDelta() != null;
+	}
+
+	public static boolean hasDeltaChange(CountSyncModel<?> model) {
+		return model.getDelta() != null;
 	}
 
 	@Override
