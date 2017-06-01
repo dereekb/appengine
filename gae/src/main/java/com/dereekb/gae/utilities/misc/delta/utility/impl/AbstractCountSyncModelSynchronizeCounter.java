@@ -2,8 +2,8 @@ package com.dereekb.gae.utilities.misc.delta.utility.impl;
 
 import com.dereekb.gae.utilities.misc.delta.CountSyncModelAccessor;
 import com.dereekb.gae.utilities.misc.delta.MutableCountSyncModel;
-import com.dereekb.gae.utilities.misc.delta.impl.AbstractCountSyncModelAccessor;
 import com.dereekb.gae.utilities.misc.delta.utility.CountSyncModelSynchronizeCounter;
+import com.dereekb.gae.utilities.misc.delta.utility.CountSyncModelUtility;
 import com.dereekb.gae.utilities.misc.numbers.Calculator;
 
 /**
@@ -43,7 +43,7 @@ public class AbstractCountSyncModelSynchronizeCounter<T extends MutableCountSync
 	// MARK: CountSyncModelSynchronizeCounter
 	@Override
 	public void synchronize(T model) {
-		if (AbstractCountSyncModelAccessor.hasDeltaChange(model)) {
+		if (CountSyncModelUtility.hasDeltaChange(model)) {
 			CountSyncModelAccessor<T, N> accessor = model.getCountAccessor();
 			N delta = accessor.getDelta();
 

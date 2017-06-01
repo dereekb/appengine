@@ -3,6 +3,7 @@ package com.dereekb.gae.model.taskqueue.updater.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.server.datastore.Getter;
@@ -10,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.batch.Partitioner;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
+import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
@@ -30,11 +32,11 @@ import com.googlecode.objectify.Work;
  * @param <T>
  *            "one" model type
  * @param <Q>
- *            queried model type
+ *            intermediary model type
  * @param <R>
  *            "many" model type
  */
-public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends UniqueModel, N extends UniqueModel, R extends UniqueModel> extends AbstractUpdater<T> {
+public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends UniqueModel, N, R extends UniqueModel> extends AbstractUpdater<T> {
 
 	private Getter<R> relatedModelGetter;
 
@@ -79,11 +81,11 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 			List<C> changes = new ArrayList<C>();
 
 			try {
-				List<N> intermediaryModels = this.loadIntermediaries(models);
+				HashMapWithList<T, N> intermediaryMap = this.loadIntermediaries(models);
 
 				// Update each model independently.
-				for (T model : models) {
-					C change = this.performSafeChangesForRelation(model, intermediaryModels);
+				for (Entry<T, List<N>> entry : intermediaryMap.entrySet()) {
+					C change = this.performSafeChangesForRelation(entry.getKey(), entry.getValue());
 					changes.add(change);
 				}
 			} catch (NoChangesAvailableException e) {
@@ -108,7 +110,8 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 		 *             intermediary models, in which case this exception would
 		 *             not be thrown.
 		 */
-		protected abstract List<N> loadIntermediaries(Iterable<T> models) throws NoChangesAvailableException;
+		protected abstract HashMapWithList<T, N> loadIntermediaries(Iterable<T> models)
+		        throws NoChangesAvailableException;
 
 		private C performSafeChangesForRelation(final T model,
 		                                        final List<N> intermediaryModels) {

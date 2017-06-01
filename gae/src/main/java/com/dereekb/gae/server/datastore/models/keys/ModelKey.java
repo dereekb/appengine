@@ -655,25 +655,32 @@ public final class ModelKey
 	private static final String COMPOSITE_NAME_SEPARATOR = "_";
 
 	/**
-	 * Creates a new composite name from the input.
+	 * Makes multiple composite keys, using the initial key as a
 	 * 
-	 * @param components
-	 *            Components array. Never {@code null}. Must be longer than 1
-	 *            element. No elements should be {@code null}.
-	 * @return {@link String}. Never {@code null}.
-	 * @throws IllegalArgumentException
-	 *             Thrown if less than 2 elements are input.
+	 * @param root
+	 *            The root {@link ModelKey}. Never {@code null}.
+	 * @param subkeys
+	 *            {@link List}. Never {@code null}, and its contents should
+	 *            never be {@code null} either.
+	 * @return {@link List}. Never {@code null}.
 	 * @throws NullPointerException
-	 *             Thrown if any input component is null.
+	 *             Thrown if any input subkey is null.
 	 */
-	public static String makeCompositeName(Object... components) throws IllegalArgumentException, NullPointerException {
-		if (components.length < 2) {
-			throw new IllegalArgumentException("Composite names must be generated with 2 or more elements.");
+	public static List<ModelKey> makeCompositeKeys(ModelKey root,
+	                                               Iterable<ModelKey> subkeys) {
+		List<ModelKey> compositeKeys = new ArrayList<ModelKey>();
+
+		for (ModelKey key : subkeys) {
+			if (key == null) {
+				throw new NullPointerException();
+			}
+
+			String name = safeMakeCompositeName(root, subkeys);
+			ModelKey composite = new ModelKey(name);
+			compositeKeys.add(composite);
 		}
 
-		ListUtility.assertNoNulls(components);
-
-		return StringUtility.joinValues(COMPOSITE_NAME_SEPARATOR, components);
+		return compositeKeys;
 	}
 
 	/**
@@ -695,6 +702,32 @@ public final class ModelKey
 	            NullPointerException {
 		String name = makeCompositeName(components);
 		return new ModelKey(name);
+	}
+
+	/**
+	 * Creates a new composite name from the input.
+	 * 
+	 * @param components
+	 *            Components array. Never {@code null}. Must be longer than 1
+	 *            element. No elements should be {@code null}.
+	 * @return {@link String}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             Thrown if less than 2 elements are input.
+	 * @throws NullPointerException
+	 *             Thrown if any input component is null.
+	 */
+	public static String makeCompositeName(Object... components) throws IllegalArgumentException, NullPointerException {
+		if (components.length < 2) {
+			throw new IllegalArgumentException("Composite names must be generated with 2 or more elements.");
+		}
+
+		ListUtility.assertNoNulls(components);
+
+		return safeMakeCompositeName(components);
+	}
+
+	private static String safeMakeCompositeName(Object... components) {
+		return StringUtility.joinValues(COMPOSITE_NAME_SEPARATOR, components);
 	}
 
 }
