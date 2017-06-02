@@ -655,7 +655,8 @@ public final class ModelKey
 	private static final String COMPOSITE_NAME_SEPARATOR = "_";
 
 	/**
-	 * Makes multiple composite keys, using the initial key as a
+	 * Makes multiple composite keys, using the initial key as a root and the
+	 * subkeys as the second component.
 	 * 
 	 * @param root
 	 *            The root {@link ModelKey}. Never {@code null}.
@@ -668,6 +669,10 @@ public final class ModelKey
 	 */
 	public static List<ModelKey> makeCompositeKeys(ModelKey root,
 	                                               Iterable<ModelKey> subkeys) {
+		if (root == null) {
+			throw new NullPointerException("Root cannot be null.");
+		}
+
 		List<ModelKey> compositeKeys = new ArrayList<ModelKey>();
 
 		for (ModelKey key : subkeys) {
@@ -676,6 +681,39 @@ public final class ModelKey
 			}
 
 			String name = safeMakeCompositeName(root, subkeys);
+			ModelKey composite = new ModelKey(name);
+			compositeKeys.add(composite);
+		}
+
+		return compositeKeys;
+	}
+
+	/**
+	 * Makes multiple composite keys, using the input keys as the roots and the
+	 * subkey as the second component.
+	 * 
+	 * @param roots
+	 *            {@link List}. Never {@code null}, and its contents should
+	 *            never be {@code null} either.
+	 * @param subkey
+	 *            Subkey {@link ModelKey}. Never {@code null}.
+	 * @throws NullPointerException
+	 *             Thrown if any input subkey is null.
+	 */
+	public static List<ModelKey> makeCompositeKeys(List<ModelKey> roots,
+	                                               ModelKey subkey) {
+		if (subkey == null) {
+			throw new NullPointerException("Subkey cannot be null.");
+		}
+
+		List<ModelKey> compositeKeys = new ArrayList<ModelKey>();
+
+		for (ModelKey root : roots) {
+			if (root == null) {
+				throw new NullPointerException();
+			}
+
+			String name = safeMakeCompositeName(root, subkey);
 			ModelKey composite = new ModelKey(name);
 			compositeKeys.add(composite);
 		}

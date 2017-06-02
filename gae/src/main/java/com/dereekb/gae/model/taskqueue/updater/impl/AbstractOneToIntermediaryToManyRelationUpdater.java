@@ -56,6 +56,64 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 		this.relatedModelGetter = relatedModelGetter;
 	}
 
+	protected abstract class OneByOneAbstractInstance<O extends RelatedModelUpdaterResult, C> extends AbstractInstance<O, C> {
+
+		@Override
+		protected C performChangesForRelationPartition(RelationChangesInput<T, R> input) {
+			C changes = this.makeInitialChangesModel();
+
+			T model = input.getInputModel();
+			List<R> relations = input.getRelationModels();
+
+			List<R> updated = new ArrayList<R>();
+
+			for (R relation : relations) {
+				if (this.performChangesForRelation(model, relation, changes)) {
+					updated.add(relation);
+				}
+			}
+
+			return changes;
+		}
+
+		/**
+		 * Performs the changes for the input relation, and updates the input
+		 * changes model if necessary.
+		 * 
+		 * @param model
+		 *            Input model. Never {@code null}.
+		 * @param relation
+		 *            Relation model. Never {@code null}.
+		 * @param changes
+		 *            Changes model. Never {@code null}.
+		 */
+		protected abstract boolean performChangesForRelation(T model,
+		                                                     R relation,
+		                                                     C changes);
+
+		/**
+		 * Makes a new changes model.
+		 * 
+		 * @return Changes model. Never {@code null}.
+		 */
+		protected abstract C makeInitialChangesModel();
+
+		/**
+		 * Saves the updated models.
+		 * 
+		 * @param model
+		 *            Input model. Never {@code null}.
+		 * @param updated
+		 *            {@link List}. Never {@code null}.
+		 * @param changes
+		 *            Changes model. Never {@code null}.
+		 */
+		protected abstract void saveChanges(T model,
+		                                    List<R> updated,
+		                                    C changes);
+
+	}
+
 	protected abstract class AbstractInstance<O extends RelatedModelUpdaterResult, C>
 	        implements Instance<T> {
 
@@ -147,6 +205,7 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 
 				@Override
 				public C run() {
+
 					// Load all available related types.
 					List<R> relatedModels = AbstractOneToIntermediaryToManyRelationUpdater.this.relatedModelGetter
 					        .getWithKeys(relatedModelKeys);
