@@ -51,7 +51,7 @@ public abstract class AbstractCountSyncModelAccessor<T extends MutableCountSyncM
 	@Override
 	public N getNonNullDelta() {
 		N delta = this.getDelta();
-		return (delta != null) ? delta : this.getNonNullDelta();
+		return (delta != null) ? delta : this.getNonNullDeltaValue();
 	}
 
 	@Override
