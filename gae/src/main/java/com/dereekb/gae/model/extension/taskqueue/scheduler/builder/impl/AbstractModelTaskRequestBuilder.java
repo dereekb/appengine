@@ -21,16 +21,16 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl.Partition
  * @param <T>
  *            model type
  * 
- * @see AbstractModelTaskRequestBuilder for model task building.
+ * @see AbstractModelKeyTaskRequestBuilder for key-only task building.
  */
-public abstract class AbstractModelKeyTaskRequestBuilder<T extends UniqueModel> extends PartitionedTaskRequestBuilder<ModelKey>
+public abstract class AbstractModelTaskRequestBuilder<T extends UniqueModel> extends PartitionedTaskRequestBuilder<T>
         implements TaskRequestBuilder<T>, ListAccessorTaskRequestBuilder<T> {
 
-	public AbstractModelKeyTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
+	public AbstractModelTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
 		super(baseRequest);
 	}
 
-	public AbstractModelKeyTaskRequestBuilder(boolean asIndividualRequests, TaskRequest baseRequest)
+	public AbstractModelTaskRequestBuilder(boolean asIndividualRequests, TaskRequest baseRequest)
 	        throws IllegalArgumentException {
 		super(asIndividualRequests, baseRequest);
 	}
@@ -38,14 +38,14 @@ public abstract class AbstractModelKeyTaskRequestBuilder<T extends UniqueModel> 
 	// MARK: TaskRequestBuilder
 	@Override
 	public List<MutableTaskRequest> buildRequests(Iterable<T> input) {
-		return this.buildRequestsWithInput(ModelKey.readModelKeys(input));
+		return this.buildRequestsWithInput(input);
 	}
 
 	// MARK: ListAccessorTaskRequestBuilder
 	@Override
 	public List<MutableTaskRequest> buildRequests(ModelKeyListAccessor<T> input) {
-		List<ModelKey> modelKeys = input.getModelKeys();
-		return this.buildRequestsWithInput(modelKeys);
+		List<T> models = input.getModels();
+		return this.buildRequestsWithInput(models);
 	}
 
 }

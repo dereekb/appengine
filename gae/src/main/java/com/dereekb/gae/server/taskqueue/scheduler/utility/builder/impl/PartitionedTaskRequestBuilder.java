@@ -8,6 +8,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestBuilder;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestCopier;
 import com.dereekb.gae.utilities.collections.batch.Partitioner;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
@@ -15,6 +16,9 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
 /**
  * Abstract class that partitions input to break into different requests.
+ * <p>
+ * Does not implement {@link TaskRequestBuilder} directly as the
+ * sub-implementations may differ about the generic value.
  * 
  * @author dereekb
  * @see AbstractTaskRequestBuilder
