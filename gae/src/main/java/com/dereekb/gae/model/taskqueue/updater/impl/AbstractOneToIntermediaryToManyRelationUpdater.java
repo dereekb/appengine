@@ -73,6 +73,8 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 				}
 			}
 
+			this.saveChanges(model, updated, changes);
+
 			return changes;
 		}
 

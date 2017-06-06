@@ -675,12 +675,12 @@ public final class ModelKey
 
 		List<ModelKey> compositeKeys = new ArrayList<ModelKey>();
 
-		for (ModelKey key : subkeys) {
-			if (key == null) {
+		for (ModelKey subkey : subkeys) {
+			if (subkey == null) {
 				throw new NullPointerException();
 			}
 
-			String name = safeMakeCompositeName(root, subkeys);
+			String name = safeMakeCompositeName(root, subkey);
 			ModelKey composite = new ModelKey(name);
 			compositeKeys.add(composite);
 		}
