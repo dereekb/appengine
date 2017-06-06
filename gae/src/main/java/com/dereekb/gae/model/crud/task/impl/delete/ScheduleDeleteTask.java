@@ -81,7 +81,7 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends ScheduleReviewTas
 	                   DeleteTaskConfig configuration) {
 		Collection<T> objects = DeletePair.getSources(input);
 
-		Collection<T> deletableObjects;
+		Collection<T> deletableObjects = null;
 
 		if (this.deleteFilter != null) {
 			FilterResults<T> results = this.deleteFilter.filterObjects(objects);
