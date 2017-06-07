@@ -3,12 +3,10 @@ package com.dereekb.gae.client.api.model.shared.builder.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.utility.JsonModelResultsSerializer;
 import com.dereekb.gae.client.api.model.shared.utility.TypedClientModelKeySerializer;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestUrlImpl;
-import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
@@ -161,20 +159,6 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	public ClientRequestUrl makeRequestUrl() {
 		String formattedPath = String.format(this.pathFormat, this.type);
 		return new ClientRequestUrlImpl(formattedPath);
-	}
-
-	/**
-	 * Asserts that the request was successful.
-	 * 
-	 * @param clientResponse
-	 *            {@link ClientApiResponse}. Never {@code null}.
-	 * @throws ClientRequestFailureException
-	 *             asserted exception.
-	 */
-	public void assertSuccessfulResponse(ClientApiResponse clientResponse) throws ClientRequestFailureException {
-		if (clientResponse.getSuccess() == false) {
-			throw new ClientRequestFailureException(clientResponse);
-		}
 	}
 
 	// MARK: Model Serialization

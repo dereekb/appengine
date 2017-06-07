@@ -4,6 +4,7 @@ import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
+import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.crud.services.ClientReadService;
 import com.dereekb.gae.client.api.model.shared.builder.SecuredClientModelRequestSender;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
@@ -26,6 +27,17 @@ public interface ClientReadRequestSender<T extends UniqueModel>
         extends ClientReadService<T>, SecuredClientModelRequestSender<ReadRequest, SimpleReadResponse<T>> {
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SerializedClientReadApiResponse<T> sendRequest(ReadRequest request,
+	                                                      ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException;
+
+	/**
 	 * Sends a request and returns a serialized response. If the
 	 * {@link ClientReadRequest} requests related types be returned, the data
 	 * will be accessible via
@@ -45,8 +57,8 @@ public interface ClientReadRequestSender<T extends UniqueModel>
 	 * @throws ClientRequestFailureException
 	 *             thrown if the request fails due to any other reason.
 	 */
-	public SerializedClientApiResponse<SimpleReadResponse<T>> sendRequest(ClientReadRequest request,
-	                                                                      ClientRequestSecurity security)
+	public SerializedClientReadApiResponse<T> sendRequest(ClientReadRequest request,
+	                                                      ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
