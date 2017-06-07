@@ -377,12 +377,23 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 
 				@Override
 				public C run() {
-					List<T> reloadedPartition = AbstractManyToOneUpdater.this.modelGetter.get(partition);
+					List<T> reloadedPartition = AbstractInstance.this.reloadPartition(partition);
 					List<T> filteredPartition = AbstractInstance.this.filterPartitionModels(reloadedPartition);
 					return AbstractInstance.this.performModelChangesWithPartition(relationKey, filteredPartition);
 				}
 
 			});
+		}
+
+		/**
+		 * Reloads the models partition for a transaction.
+		 * 
+		 * @param partition
+		 *            {@link List}. Never {@code null}.
+		 * @return {@link List}. Never {@code null}.
+		 */
+		protected List<T> reloadPartition(final List<T> partition) {
+			return AbstractManyToOneUpdater.this.modelGetter.get(partition);
 		}
 
 		/**

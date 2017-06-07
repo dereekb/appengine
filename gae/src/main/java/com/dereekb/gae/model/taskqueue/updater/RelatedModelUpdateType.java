@@ -16,6 +16,11 @@ public enum RelatedModelUpdateType {
 	/**
 	 * Should remove the models from this relation.
 	 */
-	REMOVE
+	REMOVE,
+
+	/**
+	 * Should delete the models entirely, and remove the relation.
+	 */
+	DELETE
 
 }
