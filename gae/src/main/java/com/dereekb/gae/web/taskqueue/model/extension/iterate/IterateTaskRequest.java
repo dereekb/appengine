@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.Cursor;
 public interface IterateTaskRequest {
 
 	/**
+	 * Returns the task input.
 	 *
 	 * @return {@link IterateTaskInput}. Never {@code null}.
 	 */

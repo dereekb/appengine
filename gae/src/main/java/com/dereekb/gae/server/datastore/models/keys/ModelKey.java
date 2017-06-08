@@ -577,15 +577,15 @@ public final class ModelKey
 	 * @throws NullKeyException
 	 *             Thrown if any left model has no model key.
 	 */
-	public static <L extends UniqueModel, R extends UniqueModel> List<HandlerPair<L, R>> makePairs(Iterable<? extends L> leftModels,
-	                                                                                               Iterable<? extends R> rightModels)
+	public static <L extends Keyed<ModelKey>, R extends Keyed<ModelKey>> List<HandlerPair<L, R>> makePairs(Iterable<? extends L> leftModels,
+	                                                                                                       Iterable<? extends R> rightModels)
 	        throws NullKeyException {
 
 		List<HandlerPair<L, R>> pairs = new ArrayList<>();
 		Map<ModelKey, L> leftMap = makeModelKeyMap(leftModels);
 
 		for (R right : rightModels) {
-			ModelKey key = right.getModelKey();
+			ModelKey key = right.keyValue();
 			L left = leftMap.get(key);
 
 			if (left != null) {
@@ -605,7 +605,7 @@ public final class ModelKey
 	 * @throws NullKeyException
 	 *             Thrown if a model does not have a key.
 	 */
-	public static <T extends UniqueModel> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
+	public static <T extends Keyed<ModelKey>> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
 	        throws NullKeyException {
 		return KeyedUtility.toMap(models);
 	}

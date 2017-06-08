@@ -57,6 +57,7 @@ public final class TaskQueueEditController {
 		this.entries = new CaseInsensitiveMap<TaskQueueEditControllerEntry>(entries);
 	}
 
+	// CRUD
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "/{type}/" + CREATE_PATH, method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewCreate(@PathVariable("type") String modelType,
@@ -76,7 +77,8 @@ public final class TaskQueueEditController {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/{type}/" + DELETE_PATH, method = RequestMethod.DELETE, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/"
+	        + DELETE_PATH, method = RequestMethod.DELETE, consumes = "application/octet-stream")
 	public void processDelete(@PathVariable("type") String modelType,
 	                          @RequestParam("keys") List<String> identifiers) {
 		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);

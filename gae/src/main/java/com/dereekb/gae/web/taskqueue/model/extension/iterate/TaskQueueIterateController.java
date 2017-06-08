@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
@@ -34,6 +36,10 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 @RequestMapping("/taskqueue")
 public class TaskQueueIterateController {
 
+	public static final String ITERATE_PATH = "iterate";
+
+	public static final String SEQUENCE_PATH = "sequence";
+
 	/**
 	 * HTTP header for the step value.
 	 *
@@ -49,13 +55,16 @@ public class TaskQueueIterateController {
 	public static final String CURSOR_HEADER = "TQ_CURSOR";
 
 	private TaskScheduler scheduler;
+	private TypeModelKeyConverter keyTypeConverter;
 	private Map<String, TaskQueueIterateControllerEntry> entries;
 
 	public TaskQueueIterateController() {}
 
-	public TaskQueueIterateController(TaskScheduler scheduler, Map<String, TaskQueueIterateControllerEntry> entries)
-	        throws IllegalArgumentException {
+	public TaskQueueIterateController(TaskScheduler scheduler,
+	        TypeModelKeyConverter keyTypeConverter,
+	        Map<String, TaskQueueIterateControllerEntry> entries) throws IllegalArgumentException {
 		this.setScheduler(scheduler);
+		this.setKeyTypeConverter(keyTypeConverter);
 		this.setEntries(entries);
 	}
 
@@ -69,6 +78,18 @@ public class TaskQueueIterateController {
 		}
 
 		this.scheduler = scheduler;
+	}
+
+	public TypeModelKeyConverter getKeyTypeConverter() {
+		return this.keyTypeConverter;
+	}
+
+	public void setKeyTypeConverter(TypeModelKeyConverter keyTypeConverter) {
+		if (keyTypeConverter == null) {
+			throw new IllegalArgumentException("keyTypeConverter cannot be null.");
+		}
+
+		this.keyTypeConverter = keyTypeConverter;
 	}
 
 	public Map<String, TaskQueueIterateControllerEntry> getEntries() {
@@ -113,7 +134,37 @@ public class TaskQueueIterateController {
 		TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
 		IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, cursor, step, parameters);
 		IterateTaskRequestImpl request = new IterateTaskRequestImpl(input);
-		entry.performTask(request);
+		entry.performIterateTask(request);
+	}
+
+	/**
+	 * Performs an sequence task using a
+	 * {@link TaskQueueIterateControllerEntry} that corresponds to the input
+	 * {@code modelType} value.
+	 *
+	 * @param modelType
+	 *            The model type. Never {@code null}.
+	 * @param taskName
+	 *            The task name to use. Never {@code null}.
+	 * @param identifiers
+	 *            Keys in the sequence.
+	 * @param parameters
+	 *            All request parameters. Never {@code null}.
+	 */
+	@ResponseStatus(value = HttpStatus.OK)
+	@RequestMapping(value = "{type}/sequence/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	public void sequence(@PathVariable("type") String modelType,
+	                     @PathVariable("task") String taskName,
+	                     @RequestParam("keys") List<String> identifiers,
+	                     @RequestParam Map<String, String> parameters) {
+
+		TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
+		IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, null, 0, parameters);
+
+		List<ModelKey> sequence = this.keyTypeConverter.convertKeys(modelType, identifiers);
+
+		SequenceTaskRequestImpl request = new SequenceTaskRequestImpl(input, sequence);
+		entry.performSequenceTask(request);
 	}
 
 	private TaskQueueIterateControllerEntry getEntryForType(String modelType) throws UnregisteredIterateTypeException {
@@ -131,23 +182,21 @@ public class TaskQueueIterateController {
 		return String.format("%s/iterate/%s", modelType, taskName);
 	}
 
+	public static String pathForSequenceTask(String modelType,
+	                                         String taskName) {
+		return String.format("%s/sequence/%s", modelType, taskName);
+	}
+
 	@Override
 	public String toString() {
 		return "TaskQueueIterateController [entries=" + this.entries + "]";
 	}
 
-	private class IterateTaskRequestImpl
+	private class IterateTaskRequestImpl extends AbstractTaskRequest
 	        implements IterateTaskRequest {
 
-		private final IterateTaskInput taskInput;
-
 		public IterateTaskRequestImpl(IterateTaskInputImpl taskInput) {
-			this.taskInput = taskInput;
-		}
-
-		@Override
-		public IterateTaskInput getTaskInput() {
-			return this.taskInput;
+			super(taskInput);
 		}
 
 		@Override
@@ -185,6 +234,36 @@ public class TaskQueueIterateController {
 			return new ArrayList<KeyedEncodedParameter>(impl);
 		}
 
+	}
+
+	private class SequenceTaskRequestImpl extends AbstractTaskRequest
+	        implements SequenceTaskRequest {
+
+		private final List<ModelKey> sequence;
+
+		public SequenceTaskRequestImpl(IterateTaskInputImpl taskInput, List<ModelKey> sequence) {
+			super(taskInput);
+			this.sequence = sequence;
+		}
+
+		@Override
+		public List<ModelKey> getSequence() {
+			return this.sequence;
+		}
+
+	}
+
+	private abstract class AbstractTaskRequest {
+
+		protected final IterateTaskInput taskInput;
+
+		public AbstractTaskRequest(IterateTaskInputImpl taskInput) {
+			this.taskInput = taskInput;
+		}
+
+		public IterateTaskInput getTaskInput() {
+			return this.taskInput;
+		}
 	}
 
 }
