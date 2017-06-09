@@ -189,10 +189,6 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 		}
 
 		public void setRequest(R request) {
-			if (request == null) {
-				throw new IllegalArgumentException("Request cannot be null.");
-			}
-
 			this.request = request;
 		}
 
@@ -208,12 +204,16 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 		@Override
 		public S getSerializedResponse() throws ClientRequestFailureException, ClientResponseSerializationException {
 			if (this.serializedData == null) {
-				this.assertResponseSuccess();
-				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request,
-				        this.response, this.security);
+				this.serializedData = this.serializeResponse();
 			}
 
 			return this.serializedData;
+		}
+
+		protected S serializeResponse() throws ClientResponseSerializationException, ClientRequestFailureException {
+			this.assertResponseSuccess();
+			return AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request, this.response,
+			        this.security);
 		}
 
 		protected void assertResponseSuccess()

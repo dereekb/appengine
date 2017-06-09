@@ -79,7 +79,6 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	            ClientRequestFailureException {
 
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> clientResponse = this.sendRequest(request, security);
-		this.assertSuccessfulResponse(clientResponse);
 		return clientResponse.getSerializedResponse();
 	}
 
@@ -128,7 +127,7 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		return new ClientUpdateResponseImpl(response);
 	}
 
-	private class SerializedClientUpdateApiResponseImpl extends SerializedClientApiResponseImpl
+	protected class SerializedClientUpdateApiResponseImpl extends SerializedClientApiResponseImpl
 	        implements SerializedClientUpdateApiResponse<T> {
 
 		public SerializedClientUpdateApiResponseImpl(UpdateRequest<T> request,
@@ -139,7 +138,7 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 
 	}
 
-	private class ClientUpdateResponseImpl extends AbstractClientServiceModelResponseImpl
+	protected class ClientUpdateResponseImpl extends AbstractClientServiceModelResponseImpl
 	        implements SimpleUpdateResponse<T> {
 
 		private List<KeyedInvalidAttribute> serializedFailures;
