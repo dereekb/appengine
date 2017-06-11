@@ -88,7 +88,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		try {
 			response.getSerializedResponse();
 			Assert.fail("Should not have succeeeded.");
-		} catch (ClientResponseSerializationException e) {
+		} catch (ClientRequestFailureException e) {
 			// Pass
 		}
 
