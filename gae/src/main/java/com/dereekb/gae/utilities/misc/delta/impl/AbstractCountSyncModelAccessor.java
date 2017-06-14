@@ -3,6 +3,7 @@ package com.dereekb.gae.utilities.misc.delta.impl;
 import com.dereekb.gae.utilities.misc.delta.CountSyncModelAccessor;
 import com.dereekb.gae.utilities.misc.delta.MutableCountSyncModel;
 import com.dereekb.gae.utilities.misc.delta.utility.CountSyncModelUtility;
+import com.dereekb.gae.utilities.misc.numbers.Calculator;
 
 /**
  * Abstract implementation of {@link CountSyncModelAccessor}.
@@ -35,7 +36,7 @@ public abstract class AbstractCountSyncModelAccessor<T extends MutableCountSyncM
 
 	@Override
 	public N getSynchronizedCount() {
-		return this.getDifference(this.getCount(), this.getNonNullDelta());
+		return this.getCalculator().subtract(this.getCount(), this.getNonNullDelta());
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public abstract class AbstractCountSyncModelAccessor<T extends MutableCountSyncM
 	@Override
 	public N getNonNullDelta() {
 		N delta = this.getDelta();
-		return (delta != null) ? delta : this.getNonNullDeltaValue();
+		return (delta != null) ? delta : this.getNonNullDefaultDeltaValue();
 	}
 
 	@Override
@@ -86,7 +87,9 @@ public abstract class AbstractCountSyncModelAccessor<T extends MutableCountSyncM
 	// MARK: Internal
 	public abstract N getDefaultCount();
 
-	protected abstract N getNonNullDeltaValue();
+	protected N getNonNullDefaultDeltaValue() {
+		return this.getCalculator().zero();
+	}
 
 	protected void updateCountAndDelta(N count) {
 		if (count.equals(this.getCount())) {
@@ -94,13 +97,17 @@ public abstract class AbstractCountSyncModelAccessor<T extends MutableCountSyncM
 		}
 
 		N original = this.getSynchronizedCount();
-		N delta = this.getDifference(count, original);
 
 		this.model.setRawCount(count);
-		this.model.setRawDelta(delta);
+
+		if (count.equals(original)) {
+			this.clearDelta();	// No more delta
+		} else {
+			N delta = this.getCalculator().subtract(count, original);
+			this.model.setRawDelta(delta);
+		}
 	}
 
-	protected abstract N getDifference(N a,
-	                                   N b);
+	protected abstract Calculator<N> getCalculator();
 
 }

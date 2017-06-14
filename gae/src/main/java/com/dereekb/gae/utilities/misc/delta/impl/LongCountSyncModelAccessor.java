@@ -1,6 +1,8 @@
 package com.dereekb.gae.utilities.misc.delta.impl;
 
 import com.dereekb.gae.utilities.misc.delta.MutableCountSyncModel;
+import com.dereekb.gae.utilities.misc.numbers.Calculator;
+import com.dereekb.gae.utilities.misc.numbers.impl.LongCalculator;
 
 /**
  * {@link AbstractCountSyncModelAccessor} implementation for {@link Long}.
@@ -28,21 +30,15 @@ public class LongCountSyncModelAccessor<T extends MutableCountSyncModel<T, Long>
 		return DEFAULT_COUNT;
 	}
 
-	@Override
-	public Long getNonNullDeltaValue() {
-		return 0L;
-	}
-
-	@Override
-	protected Long getDifference(Long a,
-	                             Long b) {
-		return a - b;
-	}
-
 	// MARK: Utility
 	public static <T extends MutableCountSyncModel<T, Long>> void initModelCount(T model) {
 		model.setRawCount(DEFAULT_COUNT);
 		model.setRawDelta(DEFAULT_COUNT);
+	}
+
+	@Override
+	protected Calculator<Long> getCalculator() {
+		return LongCalculator.SINGLETON;
 	}
 
 }

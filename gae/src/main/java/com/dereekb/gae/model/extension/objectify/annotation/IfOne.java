@@ -12,7 +12,7 @@ public class IfOne extends ValueIf<Number> {
 
 	@Override
 	public boolean matchesValue(Number value) {
-		return value != null && value.doubleValue() == 0;
+		return value != null && value.doubleValue() == 1;
 	}
 
 }
