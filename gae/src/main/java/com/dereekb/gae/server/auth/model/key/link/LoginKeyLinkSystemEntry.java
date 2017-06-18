@@ -9,6 +9,7 @@ import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkImpl;
+import com.dereekb.gae.model.extension.links.components.impl.link.ReadOnlyLinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
@@ -53,7 +54,7 @@ public class LoginKeyLinkSystemEntry extends AbstractModelLinkSystemEntry<LoginK
 
 		// Login Pointer Link
 		LinkInfoImpl loginPointerLinkInfo = new LinkInfoImpl(this.loginPointerLinkName, key, this.loginPointerTarget);
-		LinkImpl loginPointerLink = new LinkImpl(loginPointerLinkInfo, new SingleLink(new SingleLinkDelegate() {
+		LinkImpl loginPointerLink = new ReadOnlyLinkImpl(loginPointerLinkInfo, new SingleLink(new SingleLinkDelegate() {
 
 			@Override
 			public ModelKey getKey() {
