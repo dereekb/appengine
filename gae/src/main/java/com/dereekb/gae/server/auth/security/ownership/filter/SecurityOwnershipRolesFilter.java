@@ -7,9 +7,8 @@ import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticat
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.datastore.models.owner.OwnedModel;
 import com.dereekb.gae.utilities.filters.Filter;
-import com.dereekb.gae.utilities.filters.FilterDelegate;
 import com.dereekb.gae.utilities.filters.FilterResult;
-import com.dereekb.gae.utilities.filters.FilterResults;
+import com.dereekb.gae.utilities.filters.impl.AbstractFactoryFilter;
 import com.dereekb.gae.utilities.filters.impl.FilterImpl;
 
 /**
@@ -19,28 +18,11 @@ import com.dereekb.gae.utilities.filters.impl.FilterImpl;
  * @author dereekb
  *
  */
-public class SecurityOwnershipRolesFilter
-        implements Filter<OwnedModel> {
-
-	// MARK: Filter
-	@Override
-	public FilterResult filterObject(OwnedModel object) {
-		return makeFilter().filterObject(object);
-	}
-
-	@Override
-	public FilterResults<OwnedModel> filterObjects(Iterable<? extends OwnedModel> objects) {
-		return makeFilter().filterObjects(objects);
-	}
-
-	@Override
-	public <W> FilterResults<W> filterObjectsWithDelegate(Iterable<? extends W> sources,
-	                                                      FilterDelegate<OwnedModel, W> delegate) {
-		return makeFilter().filterObjectsWithDelegate(sources, delegate);
-	}
+public class SecurityOwnershipRolesFilter extends AbstractFactoryFilter<OwnedModel> {
 
 	// MARK: Internal
-	private static Filter<OwnedModel> makeFilter() {
+	@Override
+	public Filter<OwnedModel> makeFilter() {
 		Filter<OwnedModel> filter = null;
 		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
 		LoginTokenUserDetails principle = authentication.getPrincipal();

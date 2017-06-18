@@ -1,17 +1,32 @@
 package com.dereekb.gae.utilities.data;
 
+import java.util.List;
+
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.google.common.base.Joiner;
 
 public class StringUtility {
 
 	private static final String DEFAULT_SEPARATOR = ",";
 
-	public static String joinValues(Iterable<?> objects) {
+	public static String joinValues(Object... objects) throws IllegalArgumentException {
+		return joinValues(DEFAULT_SEPARATOR, objects);
+	}
+
+	public static String joinValues(Iterable<?> objects) throws IllegalArgumentException {
 		return joinValues(DEFAULT_SEPARATOR, objects);
 	}
 
 	public static String joinValues(String separator,
-	                                Iterable<?> objects) {
+	                                Object... objects)
+	        throws IllegalArgumentException {
+		List<Object> list = ListUtility.toList(objects);
+		return joinValues(separator, list);
+	}
+
+	public static String joinValues(String separator,
+	                                Iterable<?> objects)
+	        throws IllegalArgumentException {
 		if (separator == null) {
 			throw new IllegalArgumentException("Separator cannot be null.");
 		}

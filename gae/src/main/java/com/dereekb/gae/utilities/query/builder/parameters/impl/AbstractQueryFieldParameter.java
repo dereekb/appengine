@@ -71,7 +71,7 @@ public abstract class AbstractQueryFieldParameter<T>
 		this.setFilter(field, operator, value);
 	}
 
-	public void setComparison(ExpressionOperator operator,
+	public void setAsComparison(ExpressionOperator operator,
 	                          T value)
 	        throws IllegalArgumentException {
 		this.setOperator(operator);

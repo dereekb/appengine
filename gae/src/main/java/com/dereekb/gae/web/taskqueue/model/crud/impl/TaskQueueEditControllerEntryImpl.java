@@ -98,6 +98,6 @@ public class TaskQueueEditControllerEntryImpl<T extends UniqueModel>
 		return "TaskQueueEditControllerEntryImpl [accessorFactory=" + this.accessorFactory + ", postCreateTask="
 		        + this.postCreateTask + ", postUpdateTask=" + this.postUpdateTask + ", deleteTask=" + this.deleteTask
 		        + "]";
-    }
+	}
 
 }

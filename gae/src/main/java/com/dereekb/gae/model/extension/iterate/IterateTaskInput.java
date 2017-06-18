@@ -25,6 +25,12 @@ public interface IterateTaskInput {
 	public String getModelType();
 
 	/**
+	 * @return Parameters for the request that are used for iteration
+	 *         configuration. Never {@code null}.
+	 */
+	public Map<String, String> getParameters();
+
+	/**
 	 * Step of the iteration.
 	 *
 	 * @return A non-null positive integer.
@@ -37,11 +43,5 @@ public interface IterateTaskInput {
 	 * @return Query cursor value. {@code null} if not set.
 	 */
 	public String getStepCursor();
-
-	/**
-	 * @return Parameters for the request that are used for iteration
-	 *         configuration. Never {@code null}.
-	 */
-	public Map<String, String> getParameters();
 
 }

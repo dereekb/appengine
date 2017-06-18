@@ -18,6 +18,13 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestBui
  */
 public interface ListAccessorTaskRequestBuilder<T extends UniqueModel> {
 
+	/**
+	 * Builds a list of {@link MutableTaskRequest} instances.
+	 * 
+	 * @param input
+	 *            {@link ModelKeyListAccessor}. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 */
 	public List<MutableTaskRequest> buildRequests(ModelKeyListAccessor<T> input);
 
 }

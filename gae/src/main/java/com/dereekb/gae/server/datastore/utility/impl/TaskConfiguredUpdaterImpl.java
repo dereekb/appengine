@@ -1,7 +1,11 @@
 package com.dereekb.gae.server.datastore.utility.impl;
 
+import java.util.Set;
+
 import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
+import com.dereekb.gae.server.datastore.utility.StagedUpdater;
+import com.dereekb.gae.server.datastore.utility.StagedUpdaterFactory;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
@@ -13,7 +17,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
  *            model type
  */
 public class TaskConfiguredUpdaterImpl<T>
-        implements Updater<T> {
+        implements Updater<T>, StagedUpdaterFactory<T> {
 
 	private Updater<T> updater;
 	private TaskRequestSender<T> taskRequestSender;
@@ -64,13 +68,32 @@ public class TaskConfiguredUpdaterImpl<T>
 	public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
 		this.updater.updateAsync(entity);
 		this.taskRequestSender.sendTask(entity);
-
 	}
 
 	@Override
 	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
 		this.updater.updateAsync(entities);
 		this.taskRequestSender.sendTasks(entities);
+	}
+
+	// MARK: StagedUpdaterFactory
+	@Override
+	public StagedUpdater<T> makeUpdater() {
+		return new StagedUpdaterImpl();
+	}
+
+	private class StagedUpdaterImpl extends AbstractStagedUpdater<T> {
+
+		public StagedUpdaterImpl() {
+			super(TaskConfiguredUpdaterImpl.this.updater);
+		}
+
+		// MARK: AbstractStagedUpdater
+		@Override
+		protected void finishUpdateWithEntities(Set<T> entities) {
+			TaskConfiguredUpdaterImpl.this.taskRequestSender.sendTasks(entities);
+		}
+
 	}
 
 	@Override

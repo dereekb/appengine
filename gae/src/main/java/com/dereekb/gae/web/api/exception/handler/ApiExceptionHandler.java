@@ -60,16 +60,21 @@ public class ApiExceptionHandler {
 	public ApiResponseImpl handleException(HttpMessageNotReadableException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 
-		// TODO: Exposing this much info might not be as great as we'd hope..?
+		// Log the error.
+		LOGGER.log(Level.WARNING, "HTTP Message Read Exception", exception);
+
+		String title = "Request Message Exception";
 
 		Throwable cause = exception.getCause();
-		String causeName = cause.getClass().getSimpleName();
-		String causeMessage = cause.getMessage();
+
+		if (cause != null) {
+			String causeName = cause.getClass().getSimpleName();
+			title = title + " (" + causeName + ")";
+		}
 
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl("REQUEST_MESSAGE_EXCEPTION");
-		error.setTitle(causeName);
-		error.setDetail(causeMessage);
-		response.setError(error);
+		error.setTitle(title);
+		error.setDetail("The server failed to completely parse the request message.");
 
 		return response;
 	}

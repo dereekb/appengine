@@ -16,7 +16,7 @@ public final class ThreeTenIsoTimeConverter {
 	public static final IsoTimeConverter INSTANT_CONVERTER = new InstantConverter();
 	public static final IsoTimeConverter LOCAL_TIME_CONVERTER = new LocalDateTimeConverter();
 
-	public static final IsoTimeConverter SINGLETON = LOCAL_TIME_CONVERTER;
+	public static final IsoTimeConverter SINGLETON = INSTANT_CONVERTER;
 
 	private static class InstantConverter
 	        implements IsoTimeConverter {
@@ -53,6 +53,14 @@ public final class ThreeTenIsoTimeConverter {
 
 	}
 
+	/**
+	 * @deprecated Is locked to the UTC timezone only, compared to
+	 *             {@link InstantConverter}.
+	 * 
+	 * @author dereekb
+	 *
+	 */
+	@Deprecated
 	public static final class LocalDateTimeConverter
 	        implements IsoTimeConverter {
 

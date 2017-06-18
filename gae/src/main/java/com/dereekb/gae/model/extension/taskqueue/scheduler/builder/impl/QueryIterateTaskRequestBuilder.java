@@ -8,13 +8,13 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameters;
 
 /**
- * {@link AbstractQueryIterateTaskRequestBuilder} implementation that uses a
+ * {@link AbstractKeyQueryIterateTaskRequestBuilder} implementation that uses a
  * delegate to build the request.
  * 
  * @author dereekb
  *
  */
-public class QueryIterateTaskRequestBuilder<T extends UniqueModel> extends AbstractQueryIterateTaskRequestBuilder<T> {
+public class QueryIterateTaskRequestBuilder<T extends UniqueModel> extends AbstractKeyQueryIterateTaskRequestBuilder<T> {
 
 	private QueryIterateTaskRequestBuilderDelegate delegate;
 

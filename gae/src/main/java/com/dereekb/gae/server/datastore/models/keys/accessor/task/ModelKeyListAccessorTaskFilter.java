@@ -83,7 +83,6 @@ public class ModelKeyListAccessorTaskFilter<T extends UniqueModel>
 			        passedObjects);
 			this.task.doTask(filteredAccessor);
 		}
-
 	}
 
 	@Override

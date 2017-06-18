@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.taskqueue.model.extension.iterate.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskExecutor;
@@ -7,13 +8,16 @@ import com.dereekb.gae.model.extension.iterate.IterateTaskExecutorFactory;
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedException;
 import com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.IterateTaskRequest;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.SequenceTaskRequest;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateControllerEntry;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTaskFactory;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.exception.InvalidIterateTaskException;
@@ -29,19 +33,34 @@ public class TaskQueueIterateControllerEntryImpl<T extends ObjectifyModel<T>>
         implements TaskQueueIterateControllerEntry {
 
 	private IterateTaskExecutorFactory<T> executorFactory;
+	private ModelKeyListAccessorFactory<T> accessorFactory;
 	private Map<String, TaskQueueIterateTaskFactory<T>> tasks;
 
 	public TaskQueueIterateControllerEntryImpl() {}
 
 	public TaskQueueIterateControllerEntryImpl(ObjectifyRegistry<T> registry,
 	        Map<String, TaskQueueIterateTaskFactory<T>> tasks) throws IllegalArgumentException {
-		this(new IterateTaskExecutorFactoryImpl<T>(registry), tasks);
+		this(new IterateTaskExecutorFactoryImpl<T>(registry), tasks, registry);
 	}
 
 	public TaskQueueIterateControllerEntryImpl(IterateTaskExecutorFactory<T> executorFactory,
-	        Map<String, TaskQueueIterateTaskFactory<T>> tasks) throws IllegalArgumentException {
+	        Map<String, TaskQueueIterateTaskFactory<T>> tasks,
+	        ModelKeyListAccessorFactory<T> accessorFactory) throws IllegalArgumentException {
+		this.setAccessorFactory(accessorFactory);
 		this.setExecutorFactory(executorFactory);
 		this.setTasks(tasks);
+	}
+
+	public ModelKeyListAccessorFactory<T> getAccessorFactory() {
+		return this.accessorFactory;
+	}
+
+	public void setAccessorFactory(ModelKeyListAccessorFactory<T> accessorFactory) {
+		if (accessorFactory == null) {
+			throw new IllegalArgumentException("accessorFactory cannot be null.");
+		}
+
+		this.accessorFactory = accessorFactory;
 	}
 
 	public IterateTaskExecutorFactory<T> getExecutorFactory() {
@@ -70,7 +89,7 @@ public class TaskQueueIterateControllerEntryImpl<T extends ObjectifyModel<T>>
 
 	// MARK: TaskQueueIterateControllerEntry
 	@Override
-	public void performTask(IterateTaskRequest request)
+	public void performIterateTask(IterateTaskRequest request)
 	        throws UnknownIterateTaskException,
 	            InvalidIterateTaskException {
 		IterateTaskInput input = request.getTaskInput();
@@ -83,6 +102,19 @@ public class TaskQueueIterateControllerEntryImpl<T extends ObjectifyModel<T>>
 			String cursor = e.getCursor();
 			request.scheduleContinuation(cursor);
 		}
+	}
+
+	@Override
+	public void performSequenceTask(SequenceTaskRequest request)
+	        throws UnknownIterateTaskException,
+	            InvalidIterateTaskException {
+		IterateTaskInput input = request.getTaskInput();
+		Task<ModelKeyListAccessor<T>> task = this.getTask(input);
+
+		List<ModelKey> sequence = request.getSequence();
+		ModelKeyListAccessor<T> accessor = this.accessorFactory.createAccessor(sequence);
+
+		task.doTask(accessor);
 	}
 
 	public Task<ModelKeyListAccessor<T>> getTask(IterateTaskInput input)

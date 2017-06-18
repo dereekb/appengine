@@ -1,6 +1,7 @@
 package com.dereekb.gae.test.applications.api.model.stored.image;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,13 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkServiceTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+/**
+ * 
+ * @author dereekb
+ * 
+ * @deprecated Replace with client tests.
+ */
+@Deprecated
 public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
 	@Autowired
@@ -57,6 +65,8 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 	@Qualifier("storedBlobTestModelGenerator")
 	private TestModelGenerator<StoredBlob> storedBlobGenerator;
 
+	@Ignore
+	@Deprecated
 	@Test
 	public void testLinkingToStoredBlob() {
 		StoredBlob storedBlob = this.storedBlobGenerator.generate();
@@ -90,6 +100,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 	}
 
+	@Ignore
 	@Test
 	public void testLinkDeleter() {
 		StoredImage storedImage = this.storedImageGenerator.generate();

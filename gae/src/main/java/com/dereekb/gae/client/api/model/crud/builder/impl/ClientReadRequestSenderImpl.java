@@ -9,6 +9,7 @@ import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
+import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.crud.services.ClientReadService;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.shared.request.RelatedTypesRequest;
@@ -18,7 +19,6 @@ import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
-import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
@@ -83,22 +83,33 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	                                  ClientRequestSecurity security)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
-
-		SerializedClientApiResponse<SimpleReadResponse<T>> clientResponse = this.sendRequest(request, security);
-		this.assertSuccessfulResponse(clientResponse);
+		SerializedClientReadApiResponse<T> clientResponse = this.sendRequest(request, security);
 		return clientResponse.getSerializedResponse();
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender
 	@Override
-	public SerializedClientApiResponse<SimpleReadResponse<T>> sendRequest(ClientReadRequest request,
-	                                                                      ClientRequestSecurity security)
+	public SerializedClientReadApiResponse<T> sendRequest(ReadRequest request,
+	                                                      ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+		ClientRequest clientRequest = this.buildClientRequest(request);
+		ClientApiResponse clientResponse = this.sendRequest(clientRequest, security);
+		return new SerializedClientReadApiResponseImpl(request, clientResponse, security);
+	}
+
+	@Override
+	public SerializedClientReadApiResponse<T> sendRequest(ClientReadRequest request,
+	                                                      ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
 		ClientRequest clientRequest = this.buildClientRequest(request, request);
-		return this.sendRequest(request, clientRequest, security);
+		ClientApiResponse clientResponse = this.sendRequest(clientRequest, security);
+		return new SerializedClientReadApiResponseImpl(request, clientResponse, security);
 	}
 
 	@Override
@@ -142,6 +153,17 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 	                                                   ClientApiResponse response)
 	        throws ClientResponseSerializationException {
 		return new ClientReadResponseImpl(response);
+	}
+
+	private class SerializedClientReadApiResponseImpl extends SerializedClientApiResponseImpl
+	        implements SerializedClientReadApiResponse<T> {
+
+		public SerializedClientReadApiResponseImpl(ReadRequest request,
+		        ClientApiResponse response,
+		        ClientRequestSecurity security) {
+			super(request, response, security);
+		}
+
 	}
 
 	private class ClientReadResponseImpl extends AbstractClientServiceResponseImpl

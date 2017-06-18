@@ -577,15 +577,15 @@ public final class ModelKey
 	 * @throws NullKeyException
 	 *             Thrown if any left model has no model key.
 	 */
-	public static <L extends UniqueModel, R extends UniqueModel> List<HandlerPair<L, R>> makePairs(Iterable<? extends L> leftModels,
-	                                                                                               Iterable<? extends R> rightModels)
+	public static <L extends Keyed<ModelKey>, R extends Keyed<ModelKey>> List<HandlerPair<L, R>> makePairs(Iterable<? extends L> leftModels,
+	                                                                                                       Iterable<? extends R> rightModels)
 	        throws NullKeyException {
 
 		List<HandlerPair<L, R>> pairs = new ArrayList<>();
 		Map<ModelKey, L> leftMap = makeModelKeyMap(leftModels);
 
 		for (R right : rightModels) {
-			ModelKey key = right.getModelKey();
+			ModelKey key = right.keyValue();
 			L left = leftMap.get(key);
 
 			if (left != null) {
@@ -605,7 +605,7 @@ public final class ModelKey
 	 * @throws NullKeyException
 	 *             Thrown if a model does not have a key.
 	 */
-	public static <T extends UniqueModel> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
+	public static <T extends Keyed<ModelKey>> Map<ModelKey, T> makeModelKeyMap(Iterable<? extends T> models)
 	        throws NullKeyException {
 		return KeyedUtility.toMap(models);
 	}
@@ -650,6 +650,122 @@ public final class ModelKey
 		}
 
 		return true;
+	}
+
+	private static final String COMPOSITE_NAME_SEPARATOR = "_";
+
+	/**
+	 * Makes multiple composite keys, using the initial key as a root and the
+	 * subkeys as the second component.
+	 * 
+	 * @param root
+	 *            The root {@link ModelKey}. Never {@code null}.
+	 * @param subkeys
+	 *            {@link List}. Never {@code null}, and its contents should
+	 *            never be {@code null} either.
+	 * @return {@link List}. Never {@code null}.
+	 * @throws NullPointerException
+	 *             Thrown if any input subkey is null.
+	 */
+	public static List<ModelKey> makeCompositeKeys(ModelKey root,
+	                                               Iterable<ModelKey> subkeys) {
+		if (root == null) {
+			throw new NullPointerException("Root cannot be null.");
+		}
+
+		List<ModelKey> compositeKeys = new ArrayList<ModelKey>();
+
+		for (ModelKey subkey : subkeys) {
+			if (subkey == null) {
+				throw new NullPointerException();
+			}
+
+			String name = safeMakeCompositeName(root, subkey);
+			ModelKey composite = new ModelKey(name);
+			compositeKeys.add(composite);
+		}
+
+		return compositeKeys;
+	}
+
+	/**
+	 * Makes multiple composite keys, using the input keys as the roots and the
+	 * subkey as the second component.
+	 * 
+	 * @param roots
+	 *            {@link List}. Never {@code null}, and its contents should
+	 *            never be {@code null} either.
+	 * @param subkey
+	 *            Subkey {@link ModelKey}. Never {@code null}.
+	 * @throws NullPointerException
+	 *             Thrown if any input subkey is null.
+	 */
+	public static List<ModelKey> makeCompositeKeys(List<ModelKey> roots,
+	                                               ModelKey subkey) {
+		if (subkey == null) {
+			throw new NullPointerException("Subkey cannot be null.");
+		}
+
+		List<ModelKey> compositeKeys = new ArrayList<ModelKey>();
+
+		for (ModelKey root : roots) {
+			if (root == null) {
+				throw new NullPointerException();
+			}
+
+			String name = safeMakeCompositeName(root, subkey);
+			ModelKey composite = new ModelKey(name);
+			compositeKeys.add(composite);
+		}
+
+		return compositeKeys;
+	}
+
+	/**
+	 * Does {{@link #makeCompositeName(Object...)} and wraps the value in a
+	 * {@link MdoelKey}.
+	 * 
+	 * 
+	 * @param components
+	 *            Components array. Never {@code null}. Must be longer than 1
+	 *            element. No elements should be {@code null}.
+	 * @return {@link ModelKey}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             Thrown if less than 2 elements are input.
+	 * @throws NullPointerException
+	 *             Thrown if any input component is null.
+	 */
+	public static ModelKey makeCompositeKey(Object... components)
+	        throws IllegalArgumentException,
+	            NullPointerException {
+		String name = makeCompositeName(components);
+		return new ModelKey(name);
+	}
+
+	/**
+	 * Creates a new composite name from the input.
+	 * 
+	 * @param components
+	 *            Components array. Never {@code null}. Must be longer than 1
+	 *            element. No elements should be {@code null}.
+	 * @return {@link String}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             Thrown if less than 2 elements are input.
+	 * @throws NullPointerException
+	 *             Thrown if any input component is null.
+	 */
+	public static String makeCompositeName(Object... components) throws IllegalArgumentException, NullPointerException {
+		if (components.length < 2) {
+			throw new IllegalArgumentException("Composite names must be generated with 2 or more elements.");
+		}
+
+		ListUtility.assertNoNulls(components);
+
+		return safeMakeCompositeName(components);
+	}
+
+	private static String safeMakeCompositeName(Object... components) {
+		return StringUtility.joinValues(COMPOSITE_NAME_SEPARATOR, components);
 	}
 
 }
