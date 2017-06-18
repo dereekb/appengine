@@ -12,9 +12,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<appengine.target.version>1.9.53</appengine.target.version>
-		<spring.target.version>4.3.6.RELEASE</spring.target.version>
-		<spring-security.target.version>4.2.1.RELEASE</spring-security.target.version>
-		<jackson.target.version>2.8.6</jackson.target.version>
+		<spring.target.version>4.3.8.RELEASE</spring.target.version>
+		<spring-security.target.version>4.2.2.RELEASE</spring-security.target.version>
+		<jackson.target.version>2.8.7</jackson.target.version>
 	</properties>
 
 	<dependencies>
