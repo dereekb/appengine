@@ -1,6 +1,7 @@
 package com.dereekb.gae.test.applications.api.model.stored.image;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -64,6 +65,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 	@Qualifier("storedBlobTestModelGenerator")
 	private TestModelGenerator<StoredBlob> storedBlobGenerator;
 
+	@Ignore
 	@Deprecated
 	@Test
 	public void testLinkingToStoredBlob() {
@@ -98,6 +100,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 	}
 
+	@Ignore
 	@Test
 	public void testLinkDeleter() {
 		StoredImage storedImage = this.storedImageGenerator.generate();
