@@ -19,27 +19,13 @@ public class SingleLink
         implements LinkImplDelegate {
 
 	private final SingleLinkDelegate delegate;
-	private boolean allowUnsafeReplacement = false;
 
 	public SingleLink(SingleLinkDelegate delegate) {
 		this.delegate = delegate;
 	}
 
-	public SingleLink(SingleLinkDelegate delegate, boolean allowUnsafeReplacement) {
-		this.delegate = delegate;
-		this.setAllowUnsafeReplacement(allowUnsafeReplacement);
-	}
-
 	public SingleLinkDelegate getDelegate() {
 		return this.delegate;
-	}
-
-	public boolean isAllowUnsafeReplacement() {
-		return this.allowUnsafeReplacement;
-	}
-
-	public void setAllowUnsafeReplacement(boolean allowUnsafeReplacement) {
-		this.allowUnsafeReplacement = allowUnsafeReplacement;
 	}
 
 	// MARK: LinkImplDelegate
@@ -67,7 +53,7 @@ public class SingleLink
 		boolean redundant = false;
 		ModelKey currentKey = this.delegate.getKey();
 
-		if (currentKey == null || this.allowUnsafeReplacement) {
+		if (currentKey == null) {
 			this.delegate.setKey(key);
 		} else if (currentKey.equals(key) == false) {
 			throw new RelationChangeException(currentKey, null, "Must clear this link before setting it.");

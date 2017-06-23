@@ -26,6 +26,7 @@ public interface LinkImplDelegate {
 	 * Adds the {@link ModelKey} to the link.
 	 *
 	 * @param key
+	 *            {@link ModelKey}. Never {@code null}.
 	 * @return {@code true} if this change was not redundant.
 	 * 
 	 * @throws RelationChangeException
@@ -37,6 +38,7 @@ public interface LinkImplDelegate {
 	 * Removes the {@link ModelKey} to the link.
 	 *
 	 * @param key
+	 *            {@link ModelKey}. Never {@code null}.
 	 * @return {@code true} if this change was not redundant.
 	 * 
 	 * @throws RelationChangeException
