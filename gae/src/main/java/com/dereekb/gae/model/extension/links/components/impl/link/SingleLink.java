@@ -24,6 +24,11 @@ public class SingleLink
 		this.delegate = delegate;
 	}
 
+	public SingleLinkDelegate getDelegate() {
+		return this.delegate;
+	}
+
+	// MARK: LinkImplDelegate
 	@Override
 	public List<ModelKey> keys() {
 		ModelKey key = this.delegate.getKey();
