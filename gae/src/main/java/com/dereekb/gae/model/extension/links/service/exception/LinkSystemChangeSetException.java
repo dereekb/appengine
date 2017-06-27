@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException.LinkSystemChangeApiResponseError;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
@@ -22,6 +23,8 @@ public class LinkSystemChangeSetException extends ApiLinkException {
 
 	private List<LinkSystemChangeException> exceptions;
 
+	private transient List<LinkSystemChange> failedChanges;
+
 	public LinkSystemChangeSetException(List<LinkSystemChangeException> exceptions) {
 		this.exceptions = exceptions;
 	}
@@ -32,6 +35,21 @@ public class LinkSystemChangeSetException extends ApiLinkException {
 
 	public void setExceptions(List<LinkSystemChangeException> exceptions) {
 		this.exceptions = exceptions;
+	}
+
+	// MARK: Help
+	public List<LinkSystemChange> getFailedLinkChanges() {
+		if (this.failedChanges == null) {
+			List<LinkSystemChange> failedChanges = new ArrayList<LinkSystemChange>();
+
+			for (LinkSystemChangeException failure : this.exceptions) {
+				failedChanges.add(failure.getChange());
+			}
+
+			this.failedChanges = failedChanges;
+		}
+
+		return this.failedChanges;
 	}
 
 	// MARK: ApiLinkException

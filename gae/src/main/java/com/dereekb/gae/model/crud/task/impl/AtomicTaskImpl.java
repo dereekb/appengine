@@ -47,8 +47,8 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 		this.usePairs(input, configuration);
 	}
 
-	public void usePairs(Iterable<P> input,
-	                     C configuration)
+	protected void usePairs(Iterable<P> input,
+	                        C configuration)
 	        throws AtomicOperationException {
 		boolean isAtomic = configuration.isAtomic();
 		boolean throwAtomicException = false;
@@ -69,6 +69,7 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 	}
 
 	protected abstract void usePair(P pair,
-	                                C config);
+	                                C config)
+	        throws AtomicFunctionException;
 
 }

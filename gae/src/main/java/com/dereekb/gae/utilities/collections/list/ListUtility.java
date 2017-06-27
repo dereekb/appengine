@@ -195,4 +195,21 @@ public class ListUtility {
 		}
 	}
 
+	/**
+	 * Flattens a list of lists.
+	 * 
+	 * @param lists
+	 *            {@link List}. Never {@code null}.
+	 * @return {@link List}.
+	 */
+	public static <T> List<T> flatten(List<List<T>> lists) {
+		List<T> flattened = new ArrayList<T>();
+
+		for (List<T> list : lists) {
+			flattened.addAll(list);
+		}
+
+		return flattened;
+	}
+
 }

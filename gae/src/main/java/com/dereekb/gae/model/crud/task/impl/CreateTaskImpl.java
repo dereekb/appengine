@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.exception.AtomicFunctionException;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.task.CreateTask;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
@@ -76,12 +77,18 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 	// MARK: Create Task
 	@Override
 	public void doTask(Iterable<CreatePair<T>> input,
-	                   CreateTaskConfig configuration) {
+	                   CreateTaskConfig configuration)
+	        throws AtomicOperationException {
 		super.doTask(input, configuration);
 
 		// Retrieve successful pairs
 		List<T> results = CreatePair.getObjects(input);
 
+		this.tryStoreResults(results);
+		this.trySendReviewTasks(results);
+	}
+
+	private void tryStoreResults(List<T> results) throws RuntimeException {
 		try {
 			this.storeTask.doStoreTask(results);
 		} catch (FailedTaskException e) {
@@ -92,15 +99,17 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 				throw (RuntimeException) cause;
 			}
 		}
+	}
 
+	private void trySendReviewTasks(List<T> results) {
 		if (this.reviewTaskSender != null) {
 			this.reviewTaskSender.sendTasks(results);
 		}
 	}
 
 	@Override
-	public void usePair(CreatePair<T> pair,
-	                    CreateTaskConfig config) {
+	protected void usePair(CreatePair<T> pair,
+	                       CreateTaskConfig config) {
 		T source = pair.getSource();
 
 		try {
@@ -111,6 +120,8 @@ public class CreateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Create
 			throw new AtomicFunctionException(source, e);
 		}
 	}
+
+	// MARK: Internal
 
 	@Override
 	public String toString() {
