@@ -127,7 +127,7 @@ public class LoginTokenAuthenticationFilter extends GenericFilterBean {
 		}
 
 		WebAuthenticationDetails details = this.authenticationDetailsSource.buildDetails(request);
-		return this.delegate.performPreAuth(token, details);
+		return this.delegate.performPreAuth(token, details, request);
 	}
 
 	protected void successfulAuthentication(HttpServletRequest request,

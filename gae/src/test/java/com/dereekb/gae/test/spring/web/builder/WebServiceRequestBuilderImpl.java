@@ -9,6 +9,8 @@ public class WebServiceRequestBuilderImpl
 
 	public static final WebServiceRequestBuilder SINGLETON = new WebServiceRequestBuilderImpl();
 
+	private boolean secure = true;
+
 	// MARK: WebServiceRequestBuilder
 	@Override
 	public MockHttpServletRequestBuilder get(String urlTemplate,
@@ -38,7 +40,8 @@ public class WebServiceRequestBuilderImpl
 	public MockHttpServletRequestBuilder request(HttpMethod method,
 	                                             String urlTemplate,
 	                                             Object... uriVars) {
-
-		return MockMvcRequestBuilders.request(method, urlTemplate, uriVars);
+		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.request(method, urlTemplate, uriVars);
+		builder.secure(this.secure);
+		return builder;
 	}
 }

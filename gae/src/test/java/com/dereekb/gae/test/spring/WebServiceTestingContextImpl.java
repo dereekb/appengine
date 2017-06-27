@@ -1,7 +1,6 @@
 package com.dereekb.gae.test.spring;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -82,7 +81,8 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 			// Make sure all requests come from the servlet path specified:
 
 			if (this.defaultSecurityServletPath != null) {
-				mockMvcBuilder = mockMvcBuilder.defaultRequest(get("/").servletPath(this.defaultSecurityServletPath));
+				mockMvcBuilder = mockMvcBuilder.defaultRequest(
+				        this.serviceRequestBuilder.get("/").servletPath(this.defaultSecurityServletPath));
 			}
 
 			mockMvcBuilder = mockMvcBuilder.apply(springSecurity(this.springSecurityFilterChain));

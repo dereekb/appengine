@@ -19,8 +19,8 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 public class SystemLoginTokenFactoryImpl
         implements SystemLoginTokenFactory {
 
-	// 20 minute expiration, long enough for the taskqueue
-	public static final Long DEFAULT_EXPIRATION_TIME = 20 * 60 * 1000L;
+	// 30 day expiration, more than long enough for the taskqueue.
+	public static final Long DEFAULT_EXPIRATION_TIME = 30 * 24 * 60 * 60 * 1000L;
 	public static final String DEFAULT_SUBJECT = "SYSTEM TOKEN";
 	public static final Long DEFAULT_ROLES = 0L;
 

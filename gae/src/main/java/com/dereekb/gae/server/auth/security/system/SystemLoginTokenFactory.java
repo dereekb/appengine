@@ -7,7 +7,8 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
  * Factory for creating encoded login token instances that are used by the
  * server itself.
  * 
- * Server tokens are short-lived.
+ * Server tokens are long-lived and only acceptable from google-app-engine
+ * requests server-side.
  * 
  * @author dereekb
  *

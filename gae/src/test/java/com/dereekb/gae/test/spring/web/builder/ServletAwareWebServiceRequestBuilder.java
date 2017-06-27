@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
@@ -26,6 +25,8 @@ public class ServletAwareWebServiceRequestBuilder extends WebServiceRequestBuild
 
 	private String defaultServletPath = "";
 	private Map<String, String> servletMappings = Collections.emptyMap();
+
+	private WebServiceRequestBuilder requestBuilder = WebServiceRequestBuilderImpl.SINGLETON;
 
 	public PathMatcher getPathMatcher() {
 		return this.pathMatcher;
@@ -63,6 +64,18 @@ public class ServletAwareWebServiceRequestBuilder extends WebServiceRequestBuild
 		this.servletMappings = new CaseInsensitiveMap<String>(servletMappings);
 	}
 
+	public WebServiceRequestBuilder getRequestBuilder() {
+		return this.requestBuilder;
+	}
+
+	public void setRequestBuilder(WebServiceRequestBuilder requestBuilder) {
+		if (requestBuilder == null) {
+			throw new IllegalArgumentException("requestBuilder cannot be null.");
+		}
+
+		this.requestBuilder = requestBuilder;
+	}
+
 	// MARK: WebServiceRequestBuilder
 	@Override
 	public MockHttpServletRequestBuilder request(HttpMethod method,
@@ -74,7 +87,7 @@ public class ServletAwareWebServiceRequestBuilder extends WebServiceRequestBuild
 			urlTemplate = PathUtility.buildPath(servletPath, urlTemplate);
 		}
 
-		return MockMvcRequestBuilders.request(method, urlTemplate, uriVars).servletPath(servletPath);
+		return this.requestBuilder.request(method, urlTemplate, uriVars).servletPath(servletPath);
 	}
 
 	// MARK: Internal

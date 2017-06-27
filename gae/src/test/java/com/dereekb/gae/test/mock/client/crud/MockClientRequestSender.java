@@ -45,6 +45,7 @@ public class MockClientRequestSender extends AbstractMockWebServiceTestUtility
 		WebServiceRequestBuilder webServiceRequestBuilder = webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder builder = MockHttpServletRequestBuilderUtility.convert(request,
 		        webServiceRequestBuilder);
+
 		ClientResponse response;
 
 		try {
