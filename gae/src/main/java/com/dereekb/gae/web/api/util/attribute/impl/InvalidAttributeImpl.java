@@ -1,12 +1,14 @@
 package com.dereekb.gae.web.api.util.attribute.impl;
 
+import com.dereekb.gae.utilities.web.error.ErrorInfo;
+import com.dereekb.gae.utilities.web.error.impl.ErrorInfoImpl;
 import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * {@link InvalidAttribute} implementation.
  * 
  * @author dereekb
  *
@@ -19,6 +21,7 @@ public class InvalidAttributeImpl
 	private String attribute;
 	private String value;
 	private String detail;
+	private ErrorInfoImpl error;
 
 	public InvalidAttributeImpl() {}
 
@@ -27,13 +30,20 @@ public class InvalidAttributeImpl
 	}
 
 	public InvalidAttributeImpl(InvalidAttribute failure) {
-		this(failure.getAttribute(), failure.getValue(), failure.getDetail());
+		this(failure.getAttribute(), failure.getValue(), failure.getDetail(), failure.getError());
 	}
 
 	public InvalidAttributeImpl(String attribute, String value, String detail) {
 		this.setAttribute(attribute);
 		this.setValue(value);
 		this.setDetail(detail);
+	}
+
+	public InvalidAttributeImpl(String attribute, String value, String detail, ErrorInfo error) {
+		this.setAttribute(attribute);
+		this.setValue(value);
+		this.setDetail(detail);
+		this.setErrorInfo(error);
 	}
 
 	@Override
@@ -68,9 +78,27 @@ public class InvalidAttributeImpl
 	}
 
 	@Override
+	public ErrorInfoImpl getError() {
+		return this.error;
+	}
+
+	public void setError(ErrorInfoImpl error) {
+		this.error = error;
+	}
+
+	@JsonIgnore
+	public void setErrorInfo(ErrorInfo error) {
+		if (error instanceof ErrorInfoImpl) {
+			this.error = (ErrorInfoImpl) error;
+		} else {
+			this.setError(new ErrorInfoImpl(error));
+		}
+	}
+
+	@Override
 	public String toString() {
-		return "AttributeUpdateFailureImpl [attribute=" + this.attribute + ", value=" + this.value + ", detail="
-		        + this.detail + "]";
+		return "InvalidAttributeImpl [attribute=" + this.attribute + ", value=" + this.value + ", detail=" + this.detail
+		        + ", error=" + this.error + "]";
 	}
 
 }

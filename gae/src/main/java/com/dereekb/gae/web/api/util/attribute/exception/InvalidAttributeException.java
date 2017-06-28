@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.util.attribute.exception;
 
+import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
@@ -45,6 +46,11 @@ public class InvalidAttributeException extends ApiSafeRuntimeException
 	@Override
 	public String getDetail() {
 		return this.failure.getDetail();
+	}
+
+	@Override
+	public ErrorInfo getError() {
+		return this.failure.getError();
 	}
 
 	@Override

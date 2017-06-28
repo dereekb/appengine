@@ -137,12 +137,14 @@ public class BidirectionalLink
 	 *             if the required links are unavailable.
 	 */
 	private List<Link> loadReverseLinks(Relation change,
-	                                    boolean required) throws NoReverseLinksException, UnavailableLinkException {
+	                                    boolean required)
+	        throws NoReverseLinksException,
+	            UnavailableLinkException {
 		List<ModelKey> keys = change.getRelationKeys();
 		List<Link> reverseLinks = this.delegate.getReverseLinks(this, keys);
 
 		if (required && keys.size() != reverseLinks.size()) {
-			throw new UnavailableLinkException("Required reverse links were not available for change: " + change);
+			throw new UnavailableLinkException("A required reverse link was not available for change.");
 		}
 
 		return reverseLinks;

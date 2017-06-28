@@ -24,6 +24,10 @@ public class ErrorInfoImpl
 
 	public ErrorInfoImpl() {}
 
+	public ErrorInfoImpl(ErrorInfo info) {
+		this(info.getErrorCode(), info.getErrorTitle(), info.getErrorDetail());
+	}
+
 	public ErrorInfoImpl(String code) throws IllegalArgumentException {
 		this(code, null);
 	}

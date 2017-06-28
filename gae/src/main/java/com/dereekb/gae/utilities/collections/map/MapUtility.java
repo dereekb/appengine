@@ -22,4 +22,19 @@ public class MapUtility {
 		return values;
 	}
 
+	public static <T, K> void putIntoMapMultipleTimes(Map<K, T> map,
+	                                                  List<K> keys,
+	                                                  T value) {
+		for (K key : keys) {
+			map.put(key, value);
+		}
+	}
+
+	public static <T, K> void removeAll(Map<K, T> map,
+	                                    List<K> keys) {
+		for (K key : keys) {
+			map.remove(key);
+		}
+	}
+
 }

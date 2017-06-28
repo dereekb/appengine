@@ -1,5 +1,6 @@
 package com.dereekb.gae.client.api.model.extension.link.impl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -79,6 +80,16 @@ public class ClientApiLinkChange
 
 	public void setTargetKey(ModelKey modelKey) {
 		this.setTargetKeys(SetUtility.makeSet(modelKey));
+	}
+
+	public void setTargetKeys(Collection<ModelKey> targetKeys) {
+		Set<ModelKey> keysSet = null;
+
+		if (targetKeys != null) {
+			keysSet = new HashSet<ModelKey>(targetKeys);
+		}
+
+		this.setTargetKeys(keysSet);
 	}
 
 	public void setTargetKeys(Set<ModelKey> targetKeys) {

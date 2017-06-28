@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.util.attribute;
 
+import com.dereekb.gae.utilities.web.error.ErrorInfo;
+
 /**
  * Attribute failure tuple to wrap which attribute failed updating, the invalid
  * value, and the details about why it failed.
@@ -29,5 +31,13 @@ public interface InvalidAttribute {
 	 * @return {@link String}.
 	 */
 	public String getDetail();
+
+	/**
+	 * Returns an associated {@link ErrorInfo} with this attribute, if
+	 * available.
+	 * 
+	 * @return {@link ErrorInfo}.
+	 */
+	public ErrorInfo getError();
 
 }
