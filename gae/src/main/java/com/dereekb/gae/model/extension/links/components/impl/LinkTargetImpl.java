@@ -24,6 +24,14 @@ public class LinkTargetImpl
 		this.targetKeyType = targetKeyType;
 	}
 
+	public static LinkTargetImpl number(String targetType) {
+		return new LinkTargetImpl(targetType, ModelKeyType.NUMBER);
+	}
+
+	public static LinkTargetImpl name(String targetType) {
+		return new LinkTargetImpl(targetType, ModelKeyType.NAME);
+	}
+
 	@Override
 	public String getTargetType() {
 		return this.targetType;
