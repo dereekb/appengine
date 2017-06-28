@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.utilities.collections.list.ListUtility;
@@ -9,6 +10,25 @@ public class StringUtility {
 
 	private static final String DEFAULT_SEPARATOR = ",";
 
+	// MARK: Strins
+	/**
+	 * Converts a list of values to their {@link #toString()} value.
+	 * 
+	 * @param values
+	 *            {@link List}. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public static <T> List<String> toStringList(List<T> values) {
+		List<String> stringList = new ArrayList<String>();
+
+		for (T value : values) {
+			stringList.add(value.toString());
+		}
+
+		return stringList;
+	}
+
+	// MARK: Join
 	public static String joinValues(Object... objects) throws IllegalArgumentException {
 		return joinValues(DEFAULT_SEPARATOR, objects);
 	}

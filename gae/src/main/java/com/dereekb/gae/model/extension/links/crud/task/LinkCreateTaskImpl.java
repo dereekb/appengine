@@ -155,8 +155,12 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 		List<List<LinkSystemChange>> pairChanges = LinkCreateTaskPair.getObjects(linkPairs);
 		List<LinkSystemChange> changes = ListUtility.flatten(pairChanges);
 
-		LinkServiceRequestImpl request = new LinkServiceRequestImpl(changes, configuration.isAtomic());
-		return this.linkService.updateLinks(request);
+		if (changes.isEmpty() == false) {
+			LinkServiceRequestImpl request = new LinkServiceRequestImpl(changes, configuration.isAtomic());
+			return this.linkService.updateLinks(request);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

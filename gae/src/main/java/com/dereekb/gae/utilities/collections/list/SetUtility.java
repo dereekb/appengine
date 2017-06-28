@@ -6,6 +6,14 @@ import java.util.Set;
 
 public class SetUtility {
 
+	public static <T> Set<T> wrap(T value) {
+		Set<T> set = new HashSet<T>();
+
+		set.add(value);
+
+		return set;
+	}
+
 	@SafeVarargs
 	public static <T> Set<T> makeSet(T... objects) {
 		Set<T> set = new HashSet<T>();
