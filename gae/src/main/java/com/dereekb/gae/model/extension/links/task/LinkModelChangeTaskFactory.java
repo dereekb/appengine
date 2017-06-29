@@ -102,7 +102,7 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 	 * @author dereekb
 	 *
 	 */
-	public class LinkModelChangeTask
+	protected class LinkModelChangeTask
 	        implements Task<ModelKeyListAccessor<T>> {
 
 		private final String modelType;

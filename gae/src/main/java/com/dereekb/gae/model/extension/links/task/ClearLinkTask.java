@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.extension.links.task;
 
 import java.util.List;
+import java.util.Set;
 
-import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
@@ -10,10 +10,10 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
-import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
+import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelKeyListAccessorTask;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTaskFactory;
 
 /**
  * {@link Task} that loads models referenced in a {@link ModelKeyListAccessor}
@@ -24,46 +24,56 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTas
  * @param <T>
  *            model type
  */
-public class ClearLinkTask<T extends UniqueModel>
-        implements TaskQueueIterateTaskFactory<T>, Task<ModelKeyListAccessor<T>> {
+public class ClearLinkTask<T extends UniqueModel> extends AbstractModelKeyListAccessorTask<T> {
 
-	private String linkName;
-	private LinkSystem system;
+	public static final boolean DEFAULT_VALIDATE = true;
 
-	private boolean validate;
+	private Set<String> linkNames;
+	private LinkSystem LinkSystem;
 
-	public ClearLinkTask(String linkName, LinkSystem system) {
-		this(linkName, system, true);
+	private boolean validate = DEFAULT_VALIDATE;
+
+	public ClearLinkTask(String linkName, LinkSystem LinkSystem) {
+		this.setLinkName(linkName);
+		this.setLinkSystem(LinkSystem);
 	}
 
-	public ClearLinkTask(String linkName, LinkSystem system, boolean validate) {
-		this.setLinkName(linkName);
-		this.setSystem(system);
+	public ClearLinkTask(Set<String> linkNames, LinkSystem LinkSystem) {
+		this(linkNames, LinkSystem, DEFAULT_VALIDATE);
+	}
+
+	public ClearLinkTask(Set<String> linkNames, LinkSystem LinkSystem, boolean validate) {
+		this.setLinkNames(linkNames);
+		this.setLinkSystem(LinkSystem);
 		this.setValidate(validate);
 	}
 
-	public String getLinkName() {
-		return this.linkName;
+	public Set<String> getLinkNames() {
+		return this.linkNames;
 	}
 
 	public void setLinkName(String linkName) {
-		if (linkName == null) {
-			throw new IllegalArgumentException("LinkName cannot be null.");
-		}
-
-		this.linkName = linkName;
+		this.setLinkNames(SetUtility.wrap(linkName));
 	}
 
-	public LinkSystem getSystem() {
-		return this.system;
-	}
-
-	public void setSystem(LinkSystem system) {
-		if (system == null) {
-			throw new IllegalArgumentException("System cannot be null.");
+	public void setLinkNames(Set<String> linkNames) {
+		if (linkNames == null) {
+			throw new IllegalArgumentException("linkNames cannot be null.");
 		}
 
-		this.system = system;
+		this.linkNames = linkNames;
+	}
+
+	public LinkSystem getLinkSystem() {
+		return this.LinkSystem;
+	}
+
+	public void setLinkSystem(LinkSystem LinkSystem) {
+		if (LinkSystem == null) {
+			throw new IllegalArgumentException("LinkSystem cannot be null.");
+		}
+
+		this.LinkSystem = LinkSystem;
 	}
 
 	public boolean isValidate() {
@@ -80,26 +90,22 @@ public class ClearLinkTask<T extends UniqueModel>
 		String modelType = input.getModelType();
 		List<ModelKey> keys = input.getModelKeys();
 
-		LinkModelSet modelSet = this.system.loadSet(modelType, keys);
+		LinkModelSet modelSet = this.LinkSystem.loadSet(modelType, keys);
 		List<LinkModel> linkModels = modelSet.getModelsForKeys(keys);
 
 		for (LinkModel model : linkModels) {
-			Link link = model.getLink(this.linkName);
-			link.clearRelations();
+			for (String linkName : this.linkNames) {
+				Link link = model.getLink(linkName);
+				link.clearRelations();
+			}
 		}
 
 		modelSet.save(this.validate);
 	}
 
-	// MARK: TaskQueueIterateTaskFactory<T>
-	@Override
-	public Task<ModelKeyListAccessor<T>> makeTask(IterateTaskInput input) throws FactoryMakeFailureException {
-		return this;
-	}
-
 	@Override
 	public String toString() {
-		return "ClearLinkTask [linkName=" + this.linkName + ", system=" + this.system + ", validate=" + this.validate
-		        + "]";
+		return "ClearLinkTask [linkNames=" + this.linkNames + ", LinkSystem=" + this.LinkSystem + ", validate="
+		        + this.validate + "]";
 	}
 }
