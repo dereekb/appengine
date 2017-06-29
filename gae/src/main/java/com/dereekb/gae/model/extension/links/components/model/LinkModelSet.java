@@ -23,7 +23,7 @@ public interface LinkModelSet {
 	/**
 	 * @return {@link Set} of all model keys loaded in this set.
 	 */
-	public Set<ModelKey> getModelKeys();
+	public Set<ModelKey> getAllRequestedModelKeys();
 
 	/**
 	 * @return {@link List} of all {@link LinkModel} instances loaded in the

@@ -37,7 +37,6 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 	private List<LinkModelImpl<T>> typedLoaded = new ArrayList<LinkModelImpl<T>>();
 	private Map<ModelKey, LinkModel> loaded = new HashMap<ModelKey, LinkModel>();
 
-	private Set<ModelKey> allKeys = new HashSet<ModelKey>();
 	private Set<ModelKey> loadedKeys = new HashSet<ModelKey>();
 	private Set<ModelKey> missingKeys = new HashSet<ModelKey>();
 
@@ -55,8 +54,11 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public Set<ModelKey> getModelKeys() {
-		return new HashSet<ModelKey>(this.allKeys);
+	public Set<ModelKey> getAllRequestedModelKeys() {
+		Set<ModelKey> allKeys = new HashSet<ModelKey>(this.loadedKeys);
+		allKeys.addAll(this.waitingKeys);
+		allKeys.addAll(this.missingKeys);
+		return allKeys;
 	}
 
 	@Override
@@ -209,9 +211,8 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 
 	@Override
 	public String toString() {
-		return "LinkModelSetImpl [typedLoaded=" + this.typedLoaded + ", loaded=" + this.loaded + ", allKeys="
-		        + this.allKeys + ", loadedKeys=" + this.loadedKeys + ", missingKeys=" + this.missingKeys
-		        + ", waitingKeys=" + this.waitingKeys + "]";
+		return "LinkModelSetImpl [typedLoaded=" + this.typedLoaded + ", loaded=" + this.loaded + ", loadedKeys="
+		        + this.loadedKeys + ", missingKeys=" + this.missingKeys + ", waitingKeys=" + this.waitingKeys + "]";
 	}
 
 }

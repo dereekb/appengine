@@ -33,12 +33,7 @@ public final class BidirectionalLinkModelSet
 	private final LinkModelSet primarySet;
 
 	/**
-	 * Set of sets that have already been requested.
-	 */
-	private CaseInsensitiveSet loadedSecondarySets = new CaseInsensitiveSet();
-
-	/**
-	 * All loaded secondary sets.
+	 * Secondary LinkModelSet types. Includes the primary set.
 	 */
 	private CaseInsensitiveMap<LinkModelSet> secondarySets = new CaseInsensitiveMap<LinkModelSet>();
 
@@ -63,7 +58,7 @@ public final class BidirectionalLinkModelSet
 	}
 
 	public CaseInsensitiveSet getLoadedSecondarySets() {
-		return this.loadedSecondarySets;
+		return this.secondarySets.keySet();
 	}
 
 	public CaseInsensitiveMap<LinkModelSet> getSecondarySets() {
@@ -88,8 +83,8 @@ public final class BidirectionalLinkModelSet
 
 	// LinkModelSet
 	@Override
-	public Set<ModelKey> getModelKeys() {
-		return this.primarySet.getModelKeys();
+	public Set<ModelKey> getAllRequestedModelKeys() {
+		return this.primarySet.getAllRequestedModelKeys();
 	}
 
 	@Override
@@ -203,9 +198,7 @@ public final class BidirectionalLinkModelSet
 		LinkTarget target = info.getLinkTarget();
 		String targetType = target.getTargetType();
 
-		if (this.loadedSecondarySets.contains(targetType) == false) {
-			this.loadedSecondarySets.add(targetType);
-
+		if (this.secondarySets.containsKey(targetType) == false) {
 			try {
 				set = this.delegate.loadTargetTypeSet(this.setModelType, info);
 				this.secondarySets.put(targetType, set);
@@ -243,8 +236,7 @@ public final class BidirectionalLinkModelSet
 
 	@Override
 	public String toString() {
-		return "BidirectionalLinkModelSet [setModelType=" + this.setModelType + ", primarySet=" + this.primarySet
-		        + ", loadedSecondarySets=" + this.loadedSecondarySets + "]";
+		return "BidirectionalLinkModelSet [setModelType=" + this.setModelType + ", primarySet=" + this.primarySet + "]";
 	}
 
 }
