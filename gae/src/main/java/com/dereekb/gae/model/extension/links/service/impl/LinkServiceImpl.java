@@ -12,6 +12,7 @@ import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
@@ -79,7 +80,7 @@ public class LinkServiceImpl
 
 		// MARK: LinkServiceResponse
 		@Override
-		public HashMapWithSet<String, ModelKey> getMissingPrimaryKeysSet() {
+		public CaseInsensitiveMapWithSet<ModelKey> getMissingPrimaryKeysSet() {
 			return this.runner.getMissingPrimaryKeys();
 		}
 

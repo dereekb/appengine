@@ -1,7 +1,9 @@
 package com.dereekb.gae.utilities.collections.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * {@link HashMapWithCollection} extension that uses {@link ArrayList}.
@@ -30,6 +32,10 @@ public class HashMapWithList<T, U> extends HashMapWithCollection<T, U, List<U>> 
 
 	public HashMapWithList(Iterable<MapPairing<? extends T, ? extends U>> pairings) {
 		super(pairings);
+	}
+
+	protected HashMapWithList(Map<? extends T, ? extends Collection<? extends U>> map) {
+		super(map);
 	}
 
 }

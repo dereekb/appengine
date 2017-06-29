@@ -45,14 +45,15 @@ public interface LinkModelSet {
 	 * @param keys
 	 *            collection of {@link ModelKey} of models to load.
 	 * @return List of available {@link LinkModel} instances that have been
-	 *         loaded in this set. Never null.
+	 *         loaded in this set. Never {@code null}.
 	 */
 	public List<LinkModel> getModelsForKeys(Collection<ModelKey> keys);
 
 	/**
 	 * Returns the list of {@link LinkModel} keys that are available.
 	 *
-	 * @return list of keys corresponding to the available models. Never null.
+	 * @return list of keys corresponding to the available models. Never
+	 *         {@code null}.
 	 */
 	public Set<ModelKey> getAvailableModelKeys();
 
@@ -60,7 +61,8 @@ public interface LinkModelSet {
 	 * Returns the list of {@link LinkModel} keys that were missing from the
 	 * request.
 	 *
-	 * @return list of keys corresponding to the missing models. Never null.
+	 * @return list of keys corresponding to the missing models. Never
+	 *         {@code null}.
 	 */
 	public Set<ModelKey> getMissingModelKeys();
 
@@ -84,7 +86,7 @@ public interface LinkModelSet {
 	 * Returns all link changes made to this set.
 	 *
 	 * @return {@link LinkModelSetChange} containing changes made to this set.
-	 *         Never null.
+	 *         Never {@code null}.
 	 */
 	public LinkModelSetChange getChanges();
 

@@ -44,6 +44,10 @@ public abstract class AtomicTaskImpl<P, C extends AtomicTaskConfig>
 	public void doTask(Iterable<P> input,
 	                   C configuration)
 	        throws AtomicOperationException {
+		if (configuration == null) {
+			configuration = this.defaultConfig;
+		}
+
 		this.usePairs(input, configuration);
 	}
 

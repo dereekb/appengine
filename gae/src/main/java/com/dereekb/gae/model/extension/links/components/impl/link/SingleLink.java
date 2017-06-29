@@ -45,40 +45,42 @@ public class SingleLink
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * Sets the new value, ONLY if the current key is {@code null}. Throws a
 	 * {@link RelationChangeException} otherwise.
 	 */
 	@Override
 	public boolean add(ModelKey key) throws RelationChangeException {
-		boolean redundant = false;
+		boolean modified = false;
 		ModelKey currentKey = this.delegate.getKey();
 
 		if (currentKey == null) {
 			this.delegate.setKey(key);
+			modified = true;
 		} else if (currentKey.equals(key) == false) {
 			throw new RelationChangeException(currentKey, null, "Must clear this link before setting it.");
-		} else {
-			redundant = true;
 		}
 
-		return redundant;
+		return modified;
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * Removes the current key, ONLY if it matches the current key value.
 	 */
 	@Override
 	public boolean remove(ModelKey key) throws RelationChangeException {
-		boolean redundant = false;
+		boolean modified = false;
 		ModelKey currentKey = this.delegate.getKey();
 
 		if (currentKey.equals(key)) {
 			this.delegate.setKey(null);
-		} else {
-			redundant = true;
+			modified = true;
 		}
 
-		return redundant;
+		return modified;
 	}
 
 	/**

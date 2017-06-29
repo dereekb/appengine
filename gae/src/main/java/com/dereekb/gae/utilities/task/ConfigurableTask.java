@@ -32,7 +32,8 @@ public interface ConfigurableTask<T, C>
 	 * @param input
 	 *            Task input. Never {@code null}.
 	 * @param configuration
-	 *            Configuration. Never {@code null}.
+	 *            Configuration. May be {@code null} depending on the
+	 *            implementation.
 	 * @throws FailedTaskException
 	 *             If the task did not complete successfully.
 	 */

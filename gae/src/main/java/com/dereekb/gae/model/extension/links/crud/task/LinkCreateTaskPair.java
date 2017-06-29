@@ -21,4 +21,9 @@ public class LinkCreateTaskPair<T extends UniqueModel> extends HandlerPair<Creat
 		super(key, object);
 	}
 
+	@Override
+	public String toString() {
+		return "LinkCreateTaskPair [key=" + this.key + ", object=" + this.object + "]";
+	}
+
 }

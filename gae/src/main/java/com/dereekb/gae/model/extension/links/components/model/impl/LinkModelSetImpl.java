@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.links.components.model.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -136,8 +137,10 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 	 * Loads all models that haven't yet been loaded.
 	 */
 	private void loadValues() {
-		if (this.waitingKeys.isEmpty() == false) {
-			ReadResponse<T> response = this.setDelegate.readModels(this.waitingKeys);
+		Set<ModelKey> unloadedKeys = this.makeUnloadedKeysSet();
+
+		if (unloadedKeys.isEmpty() == false) {
+			ReadResponse<T> response = this.setDelegate.readModels(unloadedKeys);
 			Collection<T> models = response.getModels();
 
 			for (T model : models) {
@@ -146,13 +149,26 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 				this.loaded.put(key, linkModel);
 				this.typedLoaded.add(linkModel);
 				this.loadedKeys.add(key);
-				this.waitingKeys.remove(key);
+				unloadedKeys.remove(key);
 			}
 
 			this.missingKeys.addAll(this.waitingKeys);
 			this.waitingKeys = new HashSet<ModelKey>();
 		}
 	};
+
+	private Set<ModelKey> makeUnloadedKeysSet() {
+		if (this.waitingKeys.isEmpty()) {
+			return Collections.emptySet();
+		} else {
+			Set<ModelKey> waitingKeys = new HashSet<ModelKey>(this.waitingKeys);
+
+			waitingKeys.removeAll(this.loadedKeys);
+			waitingKeys.removeAll(this.missingKeys);
+
+			return waitingKeys;
+		}
+	}
 
 	private LinkModelImpl<T> loadLinkModel(T model) {
 		LinkModelImpl<T> linkModel = null;
@@ -196,6 +212,6 @@ public final class LinkModelSetImpl<T extends UniqueModel>
 		return "LinkModelSetImpl [typedLoaded=" + this.typedLoaded + ", loaded=" + this.loaded + ", allKeys="
 		        + this.allKeys + ", loadedKeys=" + this.loadedKeys + ", missingKeys=" + this.missingKeys
 		        + ", waitingKeys=" + this.waitingKeys + "]";
-    }
+	}
 
 }

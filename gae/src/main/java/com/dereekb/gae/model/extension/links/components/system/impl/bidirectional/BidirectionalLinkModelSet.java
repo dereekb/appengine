@@ -3,10 +3,7 @@ package com.dereekb.gae.model.extension.links.components.system.impl.bidirection
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
@@ -19,6 +16,8 @@ import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnrelatedLinkException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
 
 /**
  * {@link LinkModelSet} implementation for {@link BidirectionalLinkSystem}.
@@ -36,12 +35,12 @@ public final class BidirectionalLinkModelSet
 	/**
 	 * Set of sets that have already been requested.
 	 */
-	private Set<String> loadedSecondarySets = new HashSet<String>();
+	private CaseInsensitiveSet loadedSecondarySets = new CaseInsensitiveSet();
 
 	/**
 	 * All loaded secondary sets.
 	 */
-	private Map<String, LinkModelSet> secondarySets = new HashMap<String, LinkModelSet>();
+	private CaseInsensitiveMap<LinkModelSet> secondarySets = new CaseInsensitiveMap<LinkModelSet>();
 
 	public BidirectionalLinkModelSet(String setModelType,
 	        BidirectionalLinkModelSetDelegate delegate,
@@ -58,22 +57,21 @@ public final class BidirectionalLinkModelSet
 		this.setModelType = setModelType;
 		this.delegate = delegate;
 		this.primarySet = primarySet;
+
+		// Add the primary set to the secondary sets.
+		this.secondarySets.put(setModelType, primarySet);
 	}
 
-	public Set<String> getLoadedSecondarySets() {
+	public CaseInsensitiveSet getLoadedSecondarySets() {
 		return this.loadedSecondarySets;
 	}
 
-	public void setLoadedSecondarySets(Set<String> loadedSecondarySets) {
-		this.loadedSecondarySets = loadedSecondarySets;
-	}
-
-	public Map<String, LinkModelSet> getSecondarySets() {
+	public CaseInsensitiveMap<LinkModelSet> getSecondarySets() {
 		return this.secondarySets;
 	}
 
-	public void setSecondarySets(Map<String, LinkModelSet> secondarySets) {
-		this.secondarySets = secondarySets;
+	public String getSetModelType() {
+		return this.setModelType;
 	}
 
 	public String getSetType() {
@@ -153,8 +151,7 @@ public final class BidirectionalLinkModelSet
 		}
 
 		try {
-			this.primarySet.save(false);
-
+			// Primary set is included in secondary sets
 			for (LinkModelSet set : this.secondarySets.values()) {
 				set.save(false);
 			}

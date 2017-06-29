@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 
 /**
@@ -15,7 +17,8 @@ import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
  * @param <T>
  *            model type
  */
-public class CreatePair<T extends UniqueModel> extends ResultsPair<T, T> {
+public class CreatePair<T extends UniqueModel> extends ResultsPair<T, T>
+        implements Keyed<ModelKey> {
 
 	private InvalidAttribute attributeFailure;
 
@@ -30,6 +33,18 @@ public class CreatePair<T extends UniqueModel> extends ResultsPair<T, T> {
 	public void setAttributeFailure(InvalidAttribute failureException) {
 		this.setResult(null);
 		this.attributeFailure = failureException;
+	}
+
+	// MARK: Keyed
+	@Override
+	public ModelKey keyValue() {
+		T result = this.getResult();
+
+		if (result != null) {
+			return result.getModelKey();
+		} else {
+			return null;
+		}
 	}
 
 	// MARK: Utility

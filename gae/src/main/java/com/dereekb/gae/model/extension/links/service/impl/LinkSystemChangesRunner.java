@@ -2,7 +2,6 @@ package com.dereekb.gae.model.extension.links.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,8 +19,9 @@ import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
-import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithList;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
 
 /**
  * Utility class for processing {@link LinkSystemChange} changes.
@@ -32,8 +32,8 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 public class LinkSystemChangesRunner {
 
 	private final LinkSystem system;
-	private final Map<String, LinkModelSet> sets = new HashMap<>();
-	private final Map<String, LinkChangesRunnerInstance> instances = new HashMap<>();
+	private final CaseInsensitiveMap<LinkModelSet> sets = new CaseInsensitiveMap<LinkModelSet>();
+	private final CaseInsensitiveMap<LinkChangesRunnerInstance> instances = new CaseInsensitiveMap<LinkChangesRunnerInstance>();
 
 	private boolean waitingSave = false;
 
@@ -55,7 +55,7 @@ public class LinkSystemChangesRunner {
 			throw new RuntimeException("Previous changes are still waiting to be saved.");
 		}
 
-		HashMapWithList<String, LinkSystemChange> changeMap = this.divideChanges(changes);
+		CaseInsensitiveMapWithList<LinkSystemChange> changeMap = this.divideChanges(changes);
 
 		for (String type : changeMap.keySet()) {
 			List<LinkSystemChange> changeList = changeMap.valuesForKey(type);
@@ -108,8 +108,8 @@ public class LinkSystemChangesRunner {
 		return hasMissing;
 	}
 
-	public HashMapWithSet<String, ModelKey> getMissingPrimaryKeys() {
-		HashMapWithSet<String, ModelKey> missing = new HashMapWithSet<>();
+	public CaseInsensitiveMapWithSet<ModelKey> getMissingPrimaryKeys() {
+		CaseInsensitiveMapWithSet<ModelKey> missing = new CaseInsensitiveMapWithSet<>();
 
 		for (LinkChangesRunnerInstance instance : this.instances.values()) {
 			if (instance.missingPrimaryKeys.isEmpty() == false) {
@@ -121,8 +121,8 @@ public class LinkSystemChangesRunner {
 	}
 
 	// Internal
-	private HashMapWithList<String, LinkSystemChange> divideChanges(List<LinkSystemChange> changes) {
-		HashMapWithList<String, LinkSystemChange> map = new HashMapWithList<>();
+	private CaseInsensitiveMapWithList<LinkSystemChange> divideChanges(List<LinkSystemChange> changes) {
+		CaseInsensitiveMapWithList<LinkSystemChange> map = new CaseInsensitiveMapWithList<LinkSystemChange>();
 
 		for (LinkSystemChange change : changes) {
 			String type = change.getPrimaryType();
