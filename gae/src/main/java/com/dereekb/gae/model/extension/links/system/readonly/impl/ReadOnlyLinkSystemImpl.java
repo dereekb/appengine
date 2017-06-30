@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.readonly.impl;
 
+import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
@@ -38,6 +40,11 @@ public class ReadOnlyLinkSystemImpl
 	@Override
 	public CaseInsensitiveSet getAvailableSetTypes() {
 		return this.entries.keySet();
+	}
+
+	@Override
+	public LinkModelInfo loadLinkModelInfo(String type) throws UnavailableLinkModelException {
+		return this.getEntry(type).loadLinkModelInfo();
 	}
 
 	@Override
