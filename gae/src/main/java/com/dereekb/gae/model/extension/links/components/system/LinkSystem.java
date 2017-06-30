@@ -3,13 +3,12 @@ package com.dereekb.gae.model.extension.links.components.system;
 import java.util.Collection;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnregisteredLinkTypeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * System responsible for loading {@link LinkModel}
+ * System responsible for loading {@link LinkModelSet}.
  *
  * @author dereekb
  *
@@ -29,9 +28,11 @@ public interface LinkSystem {
 	 * @param type
 	 *            Type to load.
 	 * @return {@link LinkModelSet} instance. Never null.
-	 * @throws {@link UnregisteredLinkTypeException} if the requested type is
-	 *         unavailable.
+	 * @throws {@link
+	 *             UnregisteredLinkTypeException} if the requested type is
+	 *             unavailable.
 	 */
+	@Deprecated
 	public LinkModelSet loadSet(String type) throws UnregisteredLinkTypeException;
 
 	/**
@@ -43,10 +44,13 @@ public interface LinkSystem {
 	 * @param keys
 	 *            Keys to add load in the set.
 	 * @return {@link LinkModelSet} instance. Never null.
-	 * @throws {@link UnregisteredLinkTypeException} thrown if the requested
-	 *         type is unavailable.
+	 * @throws {@link
+	 *             UnregisteredLinkTypeException} thrown if the requested
+	 *             type is unavailable.
 	 */
+	@Deprecated
 	public LinkModelSet loadSet(String type,
-	                            Collection<ModelKey> keys) throws UnregisteredLinkTypeException;
+	                            Collection<ModelKey> keys)
+	        throws UnregisteredLinkTypeException;
 
 }

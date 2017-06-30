@@ -1,8 +1,7 @@
 package com.dereekb.gae.model.extension.links.components;
 
-
 /**
- * Read-only {@link Link}.
+ * Read-only {@link LinkInfo}.
  *
  * @author dereekb
  */

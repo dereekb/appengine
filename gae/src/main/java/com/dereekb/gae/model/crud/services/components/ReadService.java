@@ -3,7 +3,6 @@ package com.dereekb.gae.model.crud.services.components;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * Thread-safe service for reading existing objects.
@@ -13,7 +12,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @param <T>
  *            model type
  */
-public interface ReadService<T extends UniqueModel> {
+public interface ReadService<T> {
 
 	/**
 	 * Reads objects using the input request.

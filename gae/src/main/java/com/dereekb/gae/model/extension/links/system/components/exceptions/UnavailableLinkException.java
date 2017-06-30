@@ -1,16 +1,15 @@
-package com.dereekb.gae.model.extension.links.components.exception;
+package com.dereekb.gae.model.extension.links.system.components.exceptions;
 
 import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
- * Thrown when a {@link Link} is unavailable.
+ * Thrown when a requested link is unavailable.
  *
  * @author dereekb
  *
  */
-@Deprecated
 public class UnavailableLinkException extends ApiLinkException {
 
 	private static final long serialVersionUID = 1L;
@@ -20,19 +19,28 @@ public class UnavailableLinkException extends ApiLinkException {
 
 	private String link;
 
-	public UnavailableLinkException(String link) {
-		this(link, null);
-	}
-
 	public UnavailableLinkException(String link, String message) {
 		super(message);
-		this.link = link;
+		this.setLink(link);
 	}
 
 	public static UnavailableLinkException withLink(String link) {
 		return new UnavailableLinkException(link, "The link '" + link + "' was unavalble.");
 	}
 
+	public String getLink() {
+		return this.link;
+	}
+
+	public void setLink(String link) {
+		if (link == null) {
+			throw new IllegalArgumentException("link cannot be null.");
+		}
+
+		this.link = link;
+	}
+
+	// MARK: ApiLinkException
 	@Override
 	public ApiResponseError asResponseError() {
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE);
