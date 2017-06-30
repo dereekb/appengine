@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.links.components.exception.UnavailableLin
  * @author dereekb
  *
  */
+@Deprecated
 public interface Link
         extends ReadOnlyLink {
 

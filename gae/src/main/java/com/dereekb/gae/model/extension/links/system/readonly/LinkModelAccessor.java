@@ -16,8 +16,7 @@ public interface LinkModelAccessor
         extends TypedLinkSystemComponent {
 
 	/**
-	 * Loads a lost of {@link LinkModel} implementations for requested
-	 * models.
+	 * Loads links for the requested models.
 	 * 
 	 * @param keys
 	 *            {@link ReadRequest}. Never {@code null}.
@@ -27,6 +26,6 @@ public interface LinkModelAccessor
 	 *             Occurs when the request specifies "atomic" and not all
 	 *             objects requested can be read.
 	 */
-	public ReadResponse<LinkModel> readLinkModels(ReadRequest request) throws AtomicOperationException;
+	public ReadResponse<? extends LinkModel> readLinkModels(ReadRequest request) throws AtomicOperationException;
 
 }

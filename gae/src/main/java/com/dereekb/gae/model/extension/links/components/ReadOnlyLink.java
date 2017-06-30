@@ -5,6 +5,7 @@ package com.dereekb.gae.model.extension.links.components;
  *
  * @author dereekb
  */
+@Deprecated
 public interface ReadOnlyLink
         extends LinkInfo {
 

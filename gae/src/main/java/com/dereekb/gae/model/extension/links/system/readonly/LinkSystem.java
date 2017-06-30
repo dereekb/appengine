@@ -11,7 +11,7 @@ import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkMod
  * @author dereekb
  *
  */
-public interface ReadOnlyLinkSystem {
+public interface LinkSystem {
 
 	/**
 	 * Returns a {@link Set} containing all available types.

@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.links.system.components;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Used for building a {@link LinkModel} for the input model.
+ * Used for building {@link LinkModel} instances.
  * 
  * @author dereekb
  *

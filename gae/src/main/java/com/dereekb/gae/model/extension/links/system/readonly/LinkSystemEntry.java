@@ -10,7 +10,7 @@ import com.dereekb.gae.model.extension.links.system.components.TypedLinkSystemCo
  * @author dereekb
  *
  */
-public interface ReadOnlyLinkSystemEntry
+public interface LinkSystemEntry
         extends TypedLinkSystemComponent {
 
 	/**
@@ -18,6 +18,6 @@ public interface ReadOnlyLinkSystemEntry
 	 *
 	 * @return {@link LinkModelSet} for this type.
 	 */
-	public LinkModelAccessor makeReadOnlyLinkModelAccessor();
+	public LinkModelAccessor makeLinkModelAccessor();
 
 }
