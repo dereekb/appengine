@@ -12,6 +12,7 @@ import com.dereekb.gae.utilities.collections.SingleItem;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkDeleterServiceRequestImpl
         implements LinkDeleterServiceRequest {
 

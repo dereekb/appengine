@@ -1,12 +1,12 @@
 package com.dereekb.gae.model.extension.links.deleter;
 
-
 /**
  * Different changes possible when modifying a link.
  * 
  * @author dereekb
  *
  */
+@Deprecated
 public enum LinkDeleterChangeType {
 
 	/**

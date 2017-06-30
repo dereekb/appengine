@@ -91,6 +91,8 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 	protected Validator<T> validator;
 
 	protected DeleteService<T> deleteService;
+
+	@Deprecated
 	protected Map<String, LinkDeleterChangeType> deleteChangesMap;
 
 	/**
@@ -181,11 +183,13 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 		this.deleteService = deleteService;
 	}
 
+	@Deprecated
 	@Override
 	public Map<String, LinkDeleterChangeType> getDeleteChangesMap() {
 		return this.deleteChangesMap;
 	}
 
+	@Deprecated
 	public void setDeleteChangesMap(Map<String, LinkDeleterChangeType> deleteChangesMap) {
 		if (deleteChangesMap == null) {
 			deleteChangesMap = new HashMap<String, LinkDeleterChangeType>();

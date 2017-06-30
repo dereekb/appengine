@@ -18,6 +18,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @param <T>
  *            model type
  */
+@Deprecated
 public class LinkDeleterServiceEntryImpl<T extends UniqueModel>
         implements LinkDeleterServiceEntry {
 

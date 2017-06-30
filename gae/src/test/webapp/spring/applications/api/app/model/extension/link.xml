@@ -26,13 +26,6 @@
 		<constructor-arg index="1" ref="linkSystemEntries" />
 	</bean>
 
-	<!-- Deleter -->
-	<bean id="linkDeleterService"
-		class="com.dereekb.gae.model.extension.links.deleter.impl.LinkDeleterServiceImpl">
-		<constructor-arg index="0" ref="bidirectionalLinkService" />
-		<constructor-arg index="1" ref="linkSystemEntries" />
-	</bean>
-
 	<!-- Primary System -->
 	<bean id="basicLinkSystem"
 		class="com.dereekb.gae.model.extension.links.components.system.impl.SimpleLinkSystem">

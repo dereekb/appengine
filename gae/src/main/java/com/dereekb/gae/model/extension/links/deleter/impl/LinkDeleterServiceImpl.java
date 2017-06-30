@@ -26,6 +26,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkDeleterServiceImpl
         implements LinkDeleterService {
 
@@ -83,8 +84,7 @@ public class LinkDeleterServiceImpl
 		return this.defaultChangeType;
 	}
 
-
-    public void setDefaultChangeType(LinkDeleterChangeType defaultChangeType) {
+	public void setDefaultChangeType(LinkDeleterChangeType defaultChangeType) {
 		this.defaultChangeType = defaultChangeType;
 	}
 
@@ -121,14 +121,14 @@ public class LinkDeleterServiceImpl
 			this.set = LinkDeleterServiceImpl.this.linkSystem.loadSet(modelType, keys);
 			this.changeMap = this.entry.getDeleteChangesMap();
 			this.toDelete = new HashMap<String, Set<ModelKey>>();
-        }
+		}
 
 		public void deleteLinks() {
 			Collection<LinkModel> models = this.set.getLinkModels();
 
 			for (LinkModel model : models) {
-	            this.deleteLinksForModel(model);
-            }
+				this.deleteLinksForModel(model);
+			}
 
 			this.set.save(LinkDeleterServiceImpl.this.validateSetChanges);
 			this.performDeletes();
@@ -165,7 +165,7 @@ public class LinkDeleterServiceImpl
 				entry.deleteModels(keys);
 			}
 
-        }
+		}
 
 		private class ModelInstance {
 
