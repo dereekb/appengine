@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationChangesException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 
 /**
@@ -28,6 +29,6 @@ public interface LinkModificationSystemInstance {
 	/**
 	 * Run to apply all submitted changes.
 	 */
-	public void applyChanges();
+	public void applyChanges() throws FailedLinkModificationChangesException;
 
 }

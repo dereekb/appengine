@@ -11,7 +11,8 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Unavai
  * 
  * @see LinkModel for an instance that represents an existing model.
  */
-public interface LinkModelInfo {
+public interface LinkModelInfo
+        extends TypedLinkSystemComponent {
 
 	/**
 	 * Returns the set of all links names.

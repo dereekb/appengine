@@ -2,20 +2,25 @@ package com.dereekb.gae.model.extension.links.system.modification.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.Relation;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationImpl;
+import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
@@ -23,6 +28,9 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeTyp
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithList;
+import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.collections.map.MapUtility;
 
 /**
  * {@link LinkModificationSystem} implementation.
@@ -34,6 +42,7 @@ public class LinkModificationSystemImpl
         implements LinkModificationSystem {
 
 	private LinkSystem linkSystem;
+	private LinkModificationSystemDelegate delegate;
 
 	public LinkSystem getLinkSystem() {
 		return this.linkSystem;
@@ -45,6 +54,18 @@ public class LinkModificationSystemImpl
 		}
 
 		this.linkSystem = linkSystem;
+	}
+
+	public LinkModificationSystemDelegate getDelegate() {
+		return this.delegate;
+	}
+
+	public void setDelegate(LinkModificationSystemDelegate delegate) {
+		if (delegate == null) {
+			throw new IllegalArgumentException("delegate cannot be null.");
+		}
+
+		this.delegate = delegate;
 	}
 
 	// MARK: LinkModificationSystem
@@ -88,8 +109,7 @@ public class LinkModificationSystemImpl
 				throw new TooManyChangeKeysException(request);
 			}
 
-			// TODO: Validate further for the request. (If there are multiple
-			// keys for a single key, throw an exception, etc.)
+			// TODO: Validate further for the request.
 		}
 
 	}
@@ -118,20 +138,15 @@ public class LinkModificationSystemImpl
 		MutableLinkChange change = MutableLinkChangeImpl.make(request.getLinkChangeType(), request.getKeys());
 
 		LinkModification primaryModification = new LinkModificationImpl(request.getPrimaryKey(), info, change);
-		List<LinkModification> secondaryModifications = null;
-
-		try {
-			Relation relation = info.getRelationInfo();
-			secondaryModifications = this.buildSecondaryModifications(relation, request);
-		} catch (NoRelationException e) {
-
-			// No relation. Create no additional components.
-			secondaryModifications = Collections.emptyList();
-		}
-
-		return new RequestChanges(primaryModification, secondaryModifications);
+		return new RequestChanges(primaryModification);
 	}
 
+	/**
+	 * @deprecated Attempting to predict "required future changes" is dangerous.
+	 *             Just let them be built naturally from the results.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	private List<LinkModification> buildSecondaryModifications(Relation relation,
 	                                                           LinkModificationSystemRequest request) {
 		boolean isOptional = false;
@@ -142,10 +157,13 @@ public class LinkModificationSystemImpl
 		 * Removal requests that cannot load the target model are ignored will
 		 * not caused the transaction changes to fail.
 		 */
-		MutableLinkChangeType linkChangeType = request.getLinkChangeType();
+		MutableLinkChangeType primaryLinkChangeType = request.getLinkChangeType();
+		MutableLinkChangeType linkChangeType = null;
 
-		switch (linkChangeType) {
+		switch (primaryLinkChangeType) {
 			case ADD:
+				isOptional = false;
+				break;
 			case SET:
 				isOptional = false;
 				break;
@@ -160,6 +178,7 @@ public class LinkModificationSystemImpl
 		List<LinkModification> modifications = null;
 
 		switch (relation.getRelationSize()) {
+			// Bi-directional
 			case MANY_TO_MANY:
 			case MANY_TO_ONE:
 			case ONE_TO_MANY:
@@ -177,6 +196,7 @@ public class LinkModificationSystemImpl
 				}
 
 				break;
+			// None
 			case ONE_TO_NONE:
 				// Do nothing.
 				modifications = Collections.emptyList();
@@ -188,14 +208,12 @@ public class LinkModificationSystemImpl
 		return null;
 	}
 
-	protected class RequestChanges {
+	protected static class RequestChanges {
 
 		private LinkModification primaryModification;
-		private List<LinkModification> secondaryModifications;
 
-		public RequestChanges(LinkModification primaryModification, List<LinkModification> secondaryModifications) {
+		public RequestChanges(LinkModification primaryModification) {
 			this.setPrimaryModification(primaryModification);
-			this.setSecondaryModifications(secondaryModifications);
 		}
 
 		public LinkModification getPrimaryModification() {
@@ -210,12 +228,14 @@ public class LinkModificationSystemImpl
 			this.primaryModification = primaryModification;
 		}
 
-		public List<LinkModification> getSecondaryModifications() {
-			return this.secondaryModifications;
-		}
+		public static List<LinkModification> getAllModificationsFromChanges(Iterable<RequestChanges> changes) {
+			List<LinkModification> modifications = new ArrayList<LinkModification>();
 
-		public void setSecondaryModifications(List<LinkModification> secondaryModifications) {
-			this.secondaryModifications = secondaryModifications;
+			for (RequestChanges change : changes) {
+				modifications.add(change.getPrimaryModification());
+			}
+
+			return modifications;
 		}
 
 	}
@@ -238,22 +258,92 @@ public class LinkModificationSystemImpl
 	// MARK: Runner
 	protected class LinkModificationSystemChangesRunner {
 
-		private List<RequestChanges> requestChanges;
-		private List<LinkModification> queue = new ArrayList<LinkModification>();
+		private List<RequestChanges> inputRequestChanges;
+		private LinkModificationSystemDelegateInstance instance;
 
-		public LinkModificationSystemChangesRunner(List<RequestChanges> requestChanges) {
-			this.requestChanges = requestChanges;
+		public LinkModificationSystemChangesRunner(List<RequestChanges> inputRequestChanges) {
+			this.inputRequestChanges = inputRequestChanges;
 		}
 
 		public void run() {
+			if (this.instance != null) {
+				// TODO: Throw specific exception.
+				throw new RuntimeException();
+			} else {
+				this.instance = LinkModificationSystemImpl.this.delegate.makeInstance();
+			}
 
+			List<LinkModification> modifications = RequestChanges
+			        .getAllModificationsFromChanges(this.inputRequestChanges);
+
+			try {
+				this.run(modifications);
+				this.instance.commitChanges();
+			} catch (Exception e) {
+				this.instance.revertChanges();
+				// TODO: Throw failed.exception.
+			}
 		}
 
-	}
+		protected void run(List<LinkModification> modifications) {
+			List<LinkModification> synchronizationChanges = new ArrayList<LinkModification>();
+			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
+			        .buildTypeChangesMap(modifications);
 
-	protected List<LinkModification> generateRequests() {
-		// TODO Auto-generated method stub
-		return null;
+			for (Entry<String, HashMapWithList<ModelKey, LinkModification>> typeEntry : typeChangesMap.entrySet()) {
+				List<LinkModification> changes = this.runModificationsForType(typeEntry.getKey(), typeEntry.getValue());
+				synchronizationChanges.addAll(changes);
+			}
+
+			/*
+			 * TODO: Going to have to figure out the best way to prevent
+			 * redundant changes from happening and taking up CPU time.
+			 * 
+			 * For instance, if A has already been updated to reference A, then
+			 * B is updated and returns that A needs to be updated, this needs
+			 * to be marked as redundant and ignored.
+			 * 
+			 * Realistically though, this might not be too complex to be worth
+			 * it. Would have to build a map of changes made then use
+			 * it to filter out redundant requests, which isn't that
+			 * difficult I suppose.
+			 */
+
+			// Run Synchronization Changes
+			this.run(synchronizationChanges);
+		}
+
+		protected List<LinkModification> runModificationsForType(String type,
+		                                                         HashMapWithList<ModelKey, LinkModification> keyedMap) {
+			LinkModificationResultSet resultSet = LinkModificationSystemImpl.this.delegate
+			        .performModificationsForType(type, keyedMap);
+			return this.buildSynchronizationChangesFromResult(resultSet);
+		}
+
+		protected List<LinkModification> buildSynchronizationChangesFromResult(LinkModificationResultSet resultSet) {
+			return null;	// TODO:
+		}
+
+		// MARK: Internal
+		private Map<String, HashMapWithList<ModelKey, LinkModification>> buildTypeChangesMap(List<LinkModification> modifications) {
+			CaseInsensitiveMapWithList<LinkModification> typesMap = new CaseInsensitiveMapWithList<LinkModification>();
+
+			for (LinkModification modification : modifications) {
+				String type = modification.getLinkModelType();
+				typesMap.add(type, modification);
+			}
+
+			Map<String, HashMapWithList<ModelKey, LinkModification>> typeKeyedMap = new HashMap<String, HashMapWithList<ModelKey, LinkModification>>();
+
+			for (Entry<String, List<LinkModification>> typesEntry : typesMap.entrySet()) {
+				HashMapWithList<ModelKey, LinkModification> keyedMap = MapUtility
+				        .makeHashMapWithList(typesEntry.getValue());
+				typeKeyedMap.put(typesEntry.getKey(), keyedMap);
+			}
+
+			return typeKeyedMap;
+		}
+
 	}
 
 }

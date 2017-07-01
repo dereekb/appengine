@@ -1,13 +1,13 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 /**
- * {@link LinkModificationSystem} entry that generates a
- * {@link LinkModificationSystemEntryInstance}.
+ * {@link LinkModificationSystem} delegate that generates a
+ * {@link LinkModificationSystemDelegateInstance}.
  * 
  * @author dereekb
  *
  */
-public interface LinkModificationSystemEntry {
+public interface LinkModificationSystemDelegate {
 
 	/**
 	 * Generates a new instance of changes.
@@ -15,6 +15,6 @@ public interface LinkModificationSystemEntry {
 	 * @return {@link LinkModificationSystemDelegateInstance}. Never
 	 *         {@code null}.
 	 */
-	public LinkModificationSystemEntryInstance makeInstance();
+	public LinkModificationSystemDelegateInstance makeInstance();
 
 }

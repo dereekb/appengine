@@ -87,4 +87,10 @@ public class LinkModificationImpl
 		return this.key;
 	}
 
+	// MARK: TypedLinkSystemComponent
+	@Override
+	public String getLinkModelType() {
+		return this.link.getLinkModelType();
+	}
+
 }

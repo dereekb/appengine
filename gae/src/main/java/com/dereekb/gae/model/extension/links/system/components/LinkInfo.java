@@ -10,7 +10,8 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRela
  *
  * @see Link for an instance that represents an existing model's link.
  */
-public interface LinkInfo {
+public interface LinkInfo
+        extends TypedLinkSystemComponent {
 
 	/**
 	 * Returns the associated link type.
