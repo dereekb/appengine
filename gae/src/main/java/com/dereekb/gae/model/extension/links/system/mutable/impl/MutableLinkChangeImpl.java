@@ -6,6 +6,7 @@ import java.util.List;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
  * {@link MutableLinkChange} implementation.
@@ -46,6 +47,24 @@ public class MutableLinkChangeImpl
 	public static MutableLinkChangeImpl clear() throws IllegalArgumentException {
 		List<ModelKey> keys = Collections.emptyList();
 		return new MutableLinkChangeImpl(MutableLinkChangeType.CLEAR, keys);
+	}
+
+	public static MutableLinkChangeImpl make(MutableLinkChangeType linkChangeType,
+	                                         ModelKey key) {
+		return make(linkChangeType, ListUtility.wrap(key));
+	}
+
+	public static MutableLinkChangeImpl make(MutableLinkChangeType linkChangeType,
+	                                         List<ModelKey> keys) {
+		if (linkChangeType == null) {
+			throw new IllegalArgumentException("linkChangeType cannot be null.");
+		}
+
+		if (keys == null) {
+			throw new IllegalArgumentException("keys cannot be null.");
+		}
+
+		return new MutableLinkChangeImpl(linkChangeType, keys);
 	}
 
 	protected MutableLinkChangeImpl(MutableLinkChangeType linkChangeType, List<ModelKey> keys) {

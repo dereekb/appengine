@@ -5,7 +5,6 @@ package com.dereekb.gae.model.extension.links.system.components;
  * 
  * @author dereekb
  */
-@Deprecated
 public enum RelationSize {
 
 	/**
