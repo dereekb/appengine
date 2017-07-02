@@ -7,11 +7,13 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
+import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLink;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
+import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 
 /**
  * {@link LinkModificationSystemModelChangeBuilder} implementation that uses the
@@ -36,13 +38,13 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 			case ADD:
 				return new AddRelationChange(linkModification);
 			case CLEAR:
-				return CLEAR_SINGLETON;
+				return new ClearRelationChange(linkModification);
 			case REMOVE:
-				return REMOVE_SINGLETON;
+				return new RemoveRelationChange(linkModification);
 			case SET:
-				return SET_SINGLETON;
+				return new SetRelationChange(linkModification);
 			default:
-				throw new RuntimeException();
+				throw new ConversionFailureException();
 		}
 	}
 
@@ -53,30 +55,28 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 			super(linkModification);
 		}
 
-		@Override
-		public LinkModificationSystemModelChangeInstance makeChange(MutableLinkModel linkModel) {
-			return new Instance(linkModel);
+	}
+
+	protected class ClearRelationChange extends AbstractLinkModificationSystemModelChange {
+
+		public ClearRelationChange(LinkModification linkModification) {
+			super(linkModification);
 		}
 
-		protected class Instance extends AbstractInstance {
+	}
 
-			public Instance(MutableLinkModel linkModel) {
-				super(linkModel);
-			}
+	protected class RemoveRelationChange extends AbstractLinkModificationSystemModelChange {
 
-			// MARK: LinkModificationSystemModelChangeInstance
-			@Override
-			protected LinkModificationResult makeLinkModificationResult(MutableLinkChangeResult result) {
-				// TODO Auto-generated method stub
-				return null;
-			}
+		public RemoveRelationChange(LinkModification linkModification) {
+			super(linkModification);
+		}
 
-			@Override
-			protected void undoChange(MutableLinkChangeResult result) {
-				// TODO Auto-generated method stub
+	}
 
-			}
+	protected class SetRelationChange extends AbstractLinkModificationSystemModelChange {
 
+		public SetRelationChange(LinkModification linkModification) {
+			super(linkModification);
 		}
 
 	}
@@ -95,15 +95,21 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 			return this.linkModification.getLink().getLinkName();
 		}
 
+		// MARK: LinkModificationSystemModelChange
+		@Override
+		public LinkModificationSystemModelChangeInstance makeChange(MutableLinkModel linkModel) {
+			return new Instance(linkModel);
+		}
+
 		// MARK: Instance
-		protected abstract class AbstractInstance
+		protected class Instance
 		        implements LinkModificationSystemModelChangeInstance {
 
 			private final MutableLinkModel linkModel;
 
 			private MutableLinkChangeResult result;
 
-			public AbstractInstance(MutableLinkModel linkModel) {
+			public Instance(MutableLinkModel linkModel) {
 				this.linkModel = linkModel;
 			}
 
@@ -115,30 +121,41 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 			// MARK: LinkModificationSystemModelChangeInstance
 			@Override
 			public LinkModificationResult applyChange() {
+				MutableLink link = this.loadMutableLink();
+
 				if (this.result == null) {
-					MutableLink link = this.loadMutableLink();
 					MutableLinkChange change = AbstractLinkModificationSystemModelChange.this.linkModification
 					        .getChange();
 					this.result = link.modifyKeys(change);
-					return this.makeLinkModificationResult(this.result);
-				} else {
-					// TODO: Replace with specific exception.
-					throw new RuntimeException();
 				}
+
+				return this.makeLinkModificationResult(link, this.result);
 			}
 
 			@Override
 			public void undoChange() {
+				// If no result, there is nothing to undo.
 				if (this.result != null) {
-
-					// If no result, there is nothing to undo.
-					this.undoChange(this.result);
+					MutableLink link = this.loadMutableLink();
+					this.undoChange(link, this.result);
+					this.result = null;
 				}
 			}
 
-			protected abstract LinkModificationResult makeLinkModificationResult(MutableLinkChangeResult result);
+			// MARK: LinkModificationSystemModelChangeInstance
+			protected LinkModificationResult makeLinkModificationResult(MutableLink link,
+			                                                            MutableLinkChangeResult result) {
+				return new LinkModificationResultImpl(true,
+				        AbstractLinkModificationSystemModelChange.this.linkModification, result);
+			}
 
-			protected abstract void undoChange(MutableLinkChangeResult result);
+			protected void undoChange(MutableLink link,
+			                          MutableLinkChangeResult result) {
+				MutableLinkChange undoChange = MutableLinkChangeImpl
+				        .makeUndo(AbstractLinkModificationSystemModelChange.this.linkModification.getChange(), result);
+				MutableLink mutableLink = this.loadMutableLink();
+				mutableLink.modifyKeys(undoChange);
+			}
 
 		}
 

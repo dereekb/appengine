@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.mutable;
 
-import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -22,8 +22,8 @@ public interface MutableLinkChange {
 	/**
 	 * Returns the keys to change.
 	 * 
-	 * @return {@link List}. Never {@code null}.
+	 * @return {@link Set}. Never {@code null}.
 	 */
-	public List<ModelKey> getKeys();
+	public Set<ModelKey> getKeys();
 
 }

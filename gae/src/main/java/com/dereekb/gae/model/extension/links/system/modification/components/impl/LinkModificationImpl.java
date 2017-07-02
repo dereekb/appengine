@@ -1,6 +1,7 @@
-package com.dereekb.gae.model.extension.links.system.modification.components;
+package com.dereekb.gae.model.extension.links.system.modification.components.impl;
 
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 

@@ -19,6 +19,6 @@ public abstract interface LinkModificationSystemChangeInstance {
 	/**
 	 * All changes made within this instance are reverted.
 	 */
-	public void revertChanges();
+	public void undoChanges();
 
 }

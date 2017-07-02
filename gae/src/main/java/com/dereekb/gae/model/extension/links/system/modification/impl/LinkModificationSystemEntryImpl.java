@@ -20,6 +20,7 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelInstance;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
+import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultSetImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessorPair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -35,13 +36,14 @@ import com.dereekb.gae.utilities.task.Task;
  * @author dereekb
  *
  */
-public class AbstractLinkModificationSystemEntry<T extends UniqueModel>
+public class LinkModificationSystemEntryImpl<T extends UniqueModel>
         implements LinkModificationSystemEntry {
 
 	private MutableLinkModelAccessor<T> accessor;
-	private LinkModificationSystemModelChangeBuilder changeBuilder = LinkModificationSystemModelChangeBuilderImpl.SINGLETON;
 
 	private Task<T> reviewTask;
+
+	private LinkModificationSystemModelChangeBuilder changeBuilder = LinkModificationSystemModelChangeBuilderImpl.SINGLETON;
 
 	// MARK: LinkModificationSystemEntry
 	@Override
@@ -68,7 +70,7 @@ public class AbstractLinkModificationSystemEntry<T extends UniqueModel>
 				resultSets.add(resultSet);
 			}
 
-			return null;	// TODO: Return changes as a single set.
+			return LinkModificationResultSetImpl.make(resultSets);
 		}
 
 		private LinkModificationResultSet makeChangesToModel(ModelKey key,
@@ -95,7 +97,7 @@ public class AbstractLinkModificationSystemEntry<T extends UniqueModel>
 		}
 
 		protected List<LinkModificationSystemModelChange> buildChangesForModifications(List<LinkModification> modifications) {
-			return AbstractLinkModificationSystemEntry.this.changeBuilder.convert(modifications);
+			return LinkModificationSystemEntryImpl.this.changeBuilder.convert(modifications);
 		}
 
 		// MARK: Internal
@@ -105,7 +107,7 @@ public class AbstractLinkModificationSystemEntry<T extends UniqueModel>
 			newKeys.removeAll(this.unavailableModels);
 
 			ReadRequest readRequest = new KeyReadRequest(newKeys, false);
-			ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = AbstractLinkModificationSystemEntry.this.accessor
+			ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = LinkModificationSystemEntryImpl.this.accessor
 			        .readMutableLinkModels(readRequest);
 
 			Collection<ModelKey> failed = response.getFailed();
@@ -118,7 +120,7 @@ public class AbstractLinkModificationSystemEntry<T extends UniqueModel>
 		}
 
 		protected LinkModificationSystemModelInstance<T> makeInstanceForAccessorPair(MutableLinkModelAccessorPair<T> pair) {
-			return new LinkModificationSystemModelInstanceImpl<T>();
+			return new LinkModificationSystemModelInstanceImpl<T>(pair.getModel(), pair.getMutableLinkModel());
 		}
 
 		// MARK: AbstractLinkModificationSystemChangeInstance

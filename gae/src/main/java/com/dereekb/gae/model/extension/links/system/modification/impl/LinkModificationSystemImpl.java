@@ -20,8 +20,8 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationImpl;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
+import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationImpl;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
@@ -111,7 +111,8 @@ public class LinkModificationSystemImpl
 			}
 
 			// TODO: Assert that only 1 change is occurring per model's link.
-			// I.E. do not allow multiple changes to the same link on the same model, as it
+			// I.E. do not allow multiple changes to the same link on the same
+			// model, as it
 			// is unsafe.
 
 			// TODO: Validate further for the request.
@@ -287,7 +288,7 @@ public class LinkModificationSystemImpl
 				this.run(modifications);
 				this.instance.commitChanges();
 			} catch (Exception e) {
-				this.instance.revertChanges();
+				this.instance.undoChanges();
 				// TODO: Throw failed.exception.
 			}
 		}

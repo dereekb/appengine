@@ -27,7 +27,10 @@ public interface LinkModificationSystemModelInstance<T extends UniqueModel>
 	/**
 	 * Applies all queue'd changes.
 	 * <p>
-	 * All completed changes will then be retained for {@link #revertChanges()}.
+	 * All completed changes will then be retained for {@link #undoChanges()}.
+	 * <p>
+	 * If called again in the future for newly queue'd changes, it will return a
+	 * new {@link LinkModificationResultSet} along with all prior changes.
 	 * 
 	 * @return {@link LinkModificationResultSet}.
 	 */

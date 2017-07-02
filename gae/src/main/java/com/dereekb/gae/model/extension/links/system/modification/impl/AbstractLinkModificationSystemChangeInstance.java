@@ -20,9 +20,9 @@ public abstract class AbstractLinkModificationSystemChangeInstance
 	}
 
 	@Override
-	public void revertChanges() {
+	public void undoChanges() {
 		for (LinkModificationSystemChangeInstance instance : this.getInstances()) {
-			instance.revertChanges();
+			instance.undoChanges();
 		}
 	}
 
