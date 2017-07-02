@@ -14,6 +14,13 @@ public interface LinkInfo
         extends TypedLinkSystemComponent {
 
 	/**
+	 * Returns the link name.
+	 * 
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getLinkName();
+
+	/**
 	 * Returns the associated link type.
 	 * 
 	 * @return {@link String}. Never {@code null}.

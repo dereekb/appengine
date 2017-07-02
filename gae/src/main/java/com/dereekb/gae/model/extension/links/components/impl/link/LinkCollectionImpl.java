@@ -131,7 +131,7 @@ public class LinkCollectionImpl<T>
 	private RelationResultImpl buildRelationResult(boolean adding,
 	                                               List<ModelKey> keys) {
 		List<ModelKey> currentKeys = this.converter.convertTo(this.collection);
-		SetDifference<ModelKey> difference = SetUtility.getDifference(keys, currentKeys);
+		SetDifference<ModelKey> difference = SetUtility.makeSetDifference(keys, currentKeys);
 
 		RelationResultImpl result = null;
 

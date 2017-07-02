@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
@@ -39,7 +40,7 @@ public class LinkModificationSystemDelegateImpl
 	}
 
 	// MARK: LinkModificationSystemDelegateInstance
-	protected class LinkModificationSystemDelegateInstanceImpl
+	protected class LinkModificationSystemDelegateInstanceImpl extends AbstractLinkModificationSystemChangeInstance
 	        implements LinkModificationSystemDelegateInstance {
 
 		private CaseInsensitiveMap<LinkModificationSystemEntryInstance> entryInstances = new CaseInsensitiveMap<LinkModificationSystemEntryInstance>();
@@ -52,20 +53,6 @@ public class LinkModificationSystemDelegateImpl
 			return entryInstance.performModifications(keyedMap);
 		}
 
-		@Override
-		public void commitChanges() {
-			for (LinkModificationSystemEntryInstance instance : this.entryInstances.values()) {
-				instance.commitChanges();
-			}
-		}
-
-		@Override
-		public void revertChanges() {
-			for (LinkModificationSystemEntryInstance instance : this.entryInstances.values()) {
-				instance.revertChanges();
-			}
-		}
-
 		// MARK: Internal
 		private LinkModificationSystemEntryInstance getEntryInstance(String type) {
 			LinkModificationSystemEntryInstance instance = this.entryInstances.get(type);
@@ -75,6 +62,12 @@ public class LinkModificationSystemDelegateImpl
 			}
 
 			return instance;
+		}
+
+		// MARK: AbstractLinkModificationSystemChangeInstance
+		@Override
+		public Iterable<? extends LinkModificationSystemChangeInstance> getInstances() {
+			return this.entryInstances.values();
 		}
 
 	}

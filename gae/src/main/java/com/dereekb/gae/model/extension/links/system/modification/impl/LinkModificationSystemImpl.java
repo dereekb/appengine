@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.Relation;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationChangesMap;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
@@ -82,7 +83,7 @@ public class LinkModificationSystemImpl
 
 		// MARK: LinkModificationSystemInstance
 		@Override
-		public void addRequest(LinkModificationSystemRequest request)
+		public void queueRequest(LinkModificationSystemRequest request)
 		        throws UnavailableLinkException,
 		            UnavailableLinkModelException,
 		            InvalidLinkModificationSystemRequestException {
@@ -108,6 +109,10 @@ public class LinkModificationSystemImpl
 			if (linkInfo.getLinkSize() == LinkSize.ONE && request.getKeys().size() > 1) {
 				throw new TooManyChangeKeysException(request);
 			}
+
+			// TODO: Assert that only 1 change is occurring per model's link.
+			// I.E. do not allow multiple changes to the same link on the same model, as it
+			// is unsafe.
 
 			// TODO: Validate further for the request.
 		}
@@ -261,6 +266,8 @@ public class LinkModificationSystemImpl
 		private List<RequestChanges> inputRequestChanges;
 		private LinkModificationSystemDelegateInstance instance;
 
+		private LinkModificationChangesMap changesMap = new LinkModificationChangesMapImpl();
+
 		public LinkModificationSystemChangesRunner(List<RequestChanges> inputRequestChanges) {
 			this.inputRequestChanges = inputRequestChanges;
 		}
@@ -286,7 +293,10 @@ public class LinkModificationSystemImpl
 		}
 
 		protected void run(List<LinkModification> modifications) {
+			modifications = this.changesMap.filterRedundantChanges(modifications);
+
 			List<LinkModification> synchronizationChanges = new ArrayList<LinkModification>();
+
 			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
 			        .buildTypeChangesMap(modifications);
 
@@ -315,13 +325,14 @@ public class LinkModificationSystemImpl
 
 		protected List<LinkModification> runModificationsForType(String type,
 		                                                         HashMapWithList<ModelKey, LinkModification> keyedMap) {
-			LinkModificationResultSet resultSet = LinkModificationSystemImpl.this.delegate
-			        .performModificationsForType(type, keyedMap);
+			LinkModificationResultSet resultSet = this.instance.performModificationsForType(type, keyedMap);
+			this.changesMap.addResultSet(resultSet);
 			return this.buildSynchronizationChangesFromResult(resultSet);
 		}
 
 		protected List<LinkModification> buildSynchronizationChangesFromResult(LinkModificationResultSet resultSet) {
-			return null;	// TODO:
+
+			return null;	// TODO: get synchronization changes.
 		}
 
 		// MARK: Internal

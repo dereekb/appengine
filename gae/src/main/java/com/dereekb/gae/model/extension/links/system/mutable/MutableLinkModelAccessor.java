@@ -9,11 +9,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * Thread-safe service for reading {@link MutableLinkModel} instances.
  * 
  * @author dereekb
- *
- * @deprecated Just use a {@link MutableLinkModelBuilder} instead and load
- *             before.
  */
-@Deprecated
 public interface MutableLinkModelAccessor<T extends UniqueModel> {
 
 	/**

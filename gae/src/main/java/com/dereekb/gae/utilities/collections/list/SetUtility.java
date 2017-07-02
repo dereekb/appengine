@@ -25,7 +25,7 @@ public class SetUtility {
 		return set;
 	}
 
-	public static <T> SetDifferenceImpl<T> getDifference(Collection<? extends T> a,
+	public static <T> SetDifferenceImpl<T> makeSetDifference(Collection<? extends T> a,
 	                                                     Collection<? extends T> b) {
 		return new SetDifferenceImpl<T>(a, b);
 	}

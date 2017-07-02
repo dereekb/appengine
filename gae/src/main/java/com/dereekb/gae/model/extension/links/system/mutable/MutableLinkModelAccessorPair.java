@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.mutable;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 
 /**
@@ -11,12 +12,9 @@ import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
  *
  * @param <T>
  *            model
- * 
- * @deprecated See {@link MutableLinkModelAccessor}.
  */
-@Deprecated
 public interface MutableLinkModelAccessorPair<T extends UniqueModel>
-        extends AlwaysKeyed<T> {
+        extends AlwaysKeyed<ModelKey> {
 
 	/**
 	 * Returns the model.
