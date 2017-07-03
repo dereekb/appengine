@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
@@ -13,13 +14,13 @@ import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.Relation;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
-import com.dereekb.gae.model.extension.links.system.modification.LinkModificationChangesMap;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
+import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationImpl;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
@@ -267,15 +268,13 @@ public class LinkModificationSystemImpl
 		private List<RequestChanges> inputRequestChanges;
 		private LinkModificationSystemDelegateInstance instance;
 
-		private LinkModificationChangesMap changesMap = new LinkModificationChangesMapImpl();
-
 		public LinkModificationSystemChangesRunner(List<RequestChanges> inputRequestChanges) {
 			this.inputRequestChanges = inputRequestChanges;
 		}
 
 		public void run() {
 			if (this.instance != null) {
-				// TODO: Throw specific exception.
+				// TODO: Throw specific exception for already being run.
 				throw new RuntimeException();
 			} else {
 				this.instance = LinkModificationSystemImpl.this.delegate.makeInstance();
@@ -285,55 +284,64 @@ public class LinkModificationSystemImpl
 			        .getAllModificationsFromChanges(this.inputRequestChanges);
 
 			try {
-				this.run(modifications);
+				this.runPrimaryChanges(modifications);
 				this.instance.commitChanges();
 			} catch (Exception e) {
 				this.instance.undoChanges();
-				// TODO: Throw failed.exception.
+				// TODO: Throw specific failed exception.
 			}
 		}
 
-		protected void run(List<LinkModification> modifications) {
-			modifications = this.changesMap.filterRedundantChanges(modifications);
-
+		protected void runPrimaryChanges(List<LinkModification> modifications) {
 			List<LinkModification> synchronizationChanges = new ArrayList<LinkModification>();
 
 			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
 			        .buildTypeChangesMap(modifications);
 
 			for (Entry<String, HashMapWithList<ModelKey, LinkModification>> typeEntry : typeChangesMap.entrySet()) {
-				List<LinkModification> changes = this.runModificationsForType(typeEntry.getKey(), typeEntry.getValue());
-				synchronizationChanges.addAll(changes);
+				LinkModificationResultSet resultSet = this.runModificationsForType(typeEntry.getKey(),
+				        typeEntry.getValue());
+				List<LinkModification> newSynchronizationChanges = this
+				        .buildSynchronizationChangesFromResult(resultSet);
+				synchronizationChanges.addAll(newSynchronizationChanges);
 			}
 
-			/*
-			 * TODO: Going to have to figure out the best way to prevent
-			 * redundant changes from happening and taking up CPU time.
-			 * 
-			 * For instance, if A has already been updated to reference A, then
-			 * B is updated and returns that A needs to be updated, this needs
-			 * to be marked as redundant and ignored.
-			 * 
-			 * Realistically though, this might not be too complex to be worth
-			 * it. Would have to build a map of changes made then use
-			 * it to filter out redundant requests, which isn't that
-			 * difficult I suppose.
-			 */
-
-			// Run Synchronization Changes
-			this.run(synchronizationChanges);
+			this.runSynchronizationChanges(synchronizationChanges);
 		}
 
-		protected List<LinkModification> runModificationsForType(String type,
-		                                                         HashMapWithList<ModelKey, LinkModification> keyedMap) {
+		private void runSynchronizationChanges(List<LinkModification> synchronizationChanges) {
+			// synchronizationChanges =
+			// this.changesMap.filterRedundantChanges(synchronizationChanges);
+
+			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
+			        .buildTypeChangesMap(synchronizationChanges);
+
+			for (Entry<String, HashMapWithList<ModelKey, LinkModification>> typeEntry : typeChangesMap.entrySet()) {
+				this.runModificationsForType(typeEntry.getKey(), typeEntry.getValue());
+			}
+		}
+
+		protected LinkModificationResultSet runModificationsForType(String type,
+		                                                            HashMapWithList<ModelKey, LinkModification> keyedMap) {
 			LinkModificationResultSet resultSet = this.instance.performModificationsForType(type, keyedMap);
-			this.changesMap.addResultSet(resultSet);
-			return this.buildSynchronizationChangesFromResult(resultSet);
+			// this.changesMap.addResultSet(resultSet);
+			return resultSet;
 		}
 
 		protected List<LinkModification> buildSynchronizationChangesFromResult(LinkModificationResultSet resultSet) {
+			Set<LinkModificationResult> results = resultSet.getResults();
+			List<LinkModification> allModifications = new ArrayList<LinkModification>();
 
-			return null;	// TODO: get synchronization changes.
+			for (LinkModificationResult result : results) {
+				List<LinkModification> modifications = this.buildSynchronizationChangeFromResult(result);
+				allModifications.addAll(modifications);
+			}
+
+			return allModifications;
+		}
+
+		protected List<LinkModification> buildSynchronizationChangeFromResult(LinkModificationResult result) {
+			return LinkModificationImpl.makeSynchronizationLinkModifications(result);
 		}
 
 		// MARK: Internal

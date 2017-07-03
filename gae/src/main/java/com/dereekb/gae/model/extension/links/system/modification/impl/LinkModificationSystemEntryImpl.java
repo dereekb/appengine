@@ -117,7 +117,6 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	/**
 	 * A set of {@link ModificationBatch} instances.
 	 * 
-	 * 
 	 * @author dereekb
 	 *
 	 */
