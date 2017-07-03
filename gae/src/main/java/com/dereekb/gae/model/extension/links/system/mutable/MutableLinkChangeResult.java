@@ -15,6 +15,7 @@ public interface MutableLinkChangeResult {
 
 	/**
 	 * Returns {@link ModelKey} values for all successful/non-redundant changes.
+	 * If the set is not empty then the model was modified.
 	 * <p>
 	 * For {@link MutableLinkChangeType#SET}, this describes values that were
 	 * removed, since all values in the {@link Relation} are also considered

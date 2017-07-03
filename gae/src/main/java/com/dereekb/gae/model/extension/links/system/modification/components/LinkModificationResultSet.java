@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.modification.components;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Used as a container for {@link LinkModificationResult} instances.
@@ -11,9 +11,15 @@ import java.util.List;
 public interface LinkModificationResultSet {
 
 	/**
-	 * 
-	 * @return {@link List}. Never {@code null}.
+	 * @return {@code true} if the model was modified.
 	 */
-	public List<LinkModificationResult> getResults();
+	public boolean isModelModified();
+
+	/**
+	 * Set of results.
+	 * 
+	 * @return {@link Set}. Never {@code null}.
+	 */
+	public Set<LinkModificationResult> getResults();
 
 }

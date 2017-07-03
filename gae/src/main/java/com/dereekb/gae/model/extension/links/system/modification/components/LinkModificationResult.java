@@ -12,6 +12,11 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeRes
 public interface LinkModificationResult {
 
 	/**
+	 * Whether or not the model was modified.
+	 */
+	public boolean isModelModified();
+
+	/**
 	 * Whether or not the change was performed successfully.
 	 * 
 	 * @return {@code true} if successful.

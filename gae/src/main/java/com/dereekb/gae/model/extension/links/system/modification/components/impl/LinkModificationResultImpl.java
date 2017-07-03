@@ -26,11 +26,6 @@ public class LinkModificationResultImpl
 		this.setLinkChangeResult(linkChangeResult);
 	}
 
-	@Override
-	public boolean isSuccessful() {
-		return this.isSuccessful;
-	}
-
 	public void setSuccessful(boolean isSuccessful) {
 		this.isSuccessful = isSuccessful;
 	}
@@ -53,6 +48,16 @@ public class LinkModificationResultImpl
 
 	// MARK: LinkModificationResult
 	@Override
+	public boolean isSuccessful() {
+		return this.isSuccessful;
+	}
+
+	@Override
+	public boolean isModelModified() {
+		return this.isSuccessful() && this.linkChangeResult.getModified().isEmpty() == false;
+	}
+
+	@Override
 	public LinkModification getLinkModification() {
 		return this.linkModification;
 	}
@@ -61,5 +66,4 @@ public class LinkModificationResultImpl
 	public MutableLinkChangeResult getLinkChangeResult() {
 		return this.linkChangeResult;
 	}
-
 }

@@ -1,20 +1,21 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessorPair;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**
- * {@link LinkModificationSystemChangeInstance} that wraps a model and takes in
- * changes that are applied and can be undone.
+ * {@link LinkModificationSystemChangeInstance} that wraps a set of queued
+ * {@link LinkModificationSystemModelChange} changes and modifies an input model
+ * when requested.
  * 
  * @author dereekb
  *
  * @param <T>
  *            model type
+ * @deprecated Use {@link LinkModificationSystemModelChangeInstanceSet} instead.
  */
-public interface LinkModificationSystemModelInstance<T extends UniqueModel>
-        extends MutableLinkModelAccessorPair<T>, LinkModificationSystemChangeInstance {
+@Deprecated
+public interface LinkModificationSystemModelChangesInstance {
 
 	/**
 	 * Queues a model change.
@@ -25,7 +26,7 @@ public interface LinkModificationSystemModelInstance<T extends UniqueModel>
 	public void queueChange(LinkModificationSystemModelChange change);
 
 	/**
-	 * Applies all queue'd changes.
+	 * Applies all queue'd changes to the input link model.
 	 * <p>
 	 * All completed changes will then be retained for {@link #undoChanges()}.
 	 * <p>
@@ -34,6 +35,11 @@ public interface LinkModificationSystemModelInstance<T extends UniqueModel>
 	 * 
 	 * @return {@link LinkModificationResultSet}.
 	 */
-	public LinkModificationResultSet applyChanges();
+	public LinkModificationResultSet applyChanges(MutableLinkModel linkModel);
+
+	/**
+	 * All changes
+	 */
+	public void undoChanges(MutableLinkModel linkModel);
 
 }

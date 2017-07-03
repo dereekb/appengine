@@ -1,9 +1,12 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**
- * A change instance for a single model that can be safely undone.
+ * A change instance for a single model that can applied and undone.
+ * <p>
+ * Should be used by a {@link LinkModificationSystemModelChangeInstanceSet}.
  * 
  * @author dereekb
  *
@@ -15,7 +18,7 @@ public interface LinkModificationSystemModelChangeInstance {
 	 * <p>
 	 * If the change has already been applied, nothing will happen.
 	 * 
-	 * @return {@link LinkModificationResult}.
+	 * @return {@link LinkModificationResult}. Never {@code null}.
 	 */
 	public LinkModificationResult applyChange();
 
@@ -23,7 +26,11 @@ public interface LinkModificationSystemModelChangeInstance {
 	 * Reverts the change on the model.
 	 * <p>
 	 * If {@link #applyChange()} has not yet been called, nothing will happen.
+	 * 
+	 * @param linkModel
+	 *            {@link MutableLinkModel}. Can be {@code null}.
+	 * @return {@code true} if the model was modified.
 	 */
-	public void undoChange();
+	public boolean undoChange(MutableLinkModel linkModel);
 
 }

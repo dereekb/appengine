@@ -1,10 +1,14 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChange;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeBuilder;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultImpl;
@@ -28,6 +32,12 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 	public static final LinkModificationSystemModelChangeBuilderImpl SINGLETON = new LinkModificationSystemModelChangeBuilderImpl();
 
 	// MARK: LinkModificationSystemModelChangeBuilder
+	@Override
+	public LinkModificationSystemModelChangeSet makeChangeSet(Collection<LinkModification> modifications) {
+		List<LinkModificationSystemModelChange> changes = this.convert(modifications);
+		return new LinkModificationSystemModelChangeSetImpl(changes);
+	}
+
 	@Override
 	public LinkModificationSystemModelChange convertSingle(LinkModification linkModification)
 	        throws ConversionFailureException {
@@ -97,6 +107,11 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 
 		// MARK: LinkModificationSystemModelChange
 		@Override
+		public boolean isOptional() {
+			return this.linkModification.isOptional();
+		}
+
+		@Override
 		public LinkModificationSystemModelChangeInstance makeChange(MutableLinkModel linkModel) {
 			return new Instance(linkModel);
 		}
@@ -113,15 +128,15 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 				this.linkModel = linkModel;
 			}
 
-			protected MutableLink loadMutableLink() {
-				MutableLink link = this.linkModel.getLink(AbstractLinkModificationSystemModelChange.this.getLinkName());
-				return link;
+			protected MutableLink loadMutableLink(MutableLinkModel linkModel) {
+				String linkName = AbstractLinkModificationSystemModelChange.this.getLinkName();
+				return linkModel.getLink(linkName);
 			}
 
 			// MARK: LinkModificationSystemModelChangeInstance
 			@Override
 			public LinkModificationResult applyChange() {
-				MutableLink link = this.loadMutableLink();
+				MutableLink link = this.loadMutableLink(this.linkModel);
 
 				if (this.result == null) {
 					MutableLinkChange change = AbstractLinkModificationSystemModelChange.this.linkModification
@@ -133,12 +148,13 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 			}
 
 			@Override
-			public void undoChange() {
-				// If no result, there is nothing to undo.
-				if (this.result != null) {
-					MutableLink link = this.loadMutableLink();
-					this.undoChange(link, this.result);
-					this.result = null;
+			public boolean undoChange(MutableLinkModel linkModel) {
+				if (this.result == null) {
+					return false;
+				} else {
+					MutableLink link = this.loadMutableLink(linkModel);
+					MutableLinkChangeResult result = this.undoChange(link, this.result);
+					return result.getModified().isEmpty() == false;
 				}
 			}
 
@@ -149,12 +165,11 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 				        AbstractLinkModificationSystemModelChange.this.linkModification, result);
 			}
 
-			protected void undoChange(MutableLink link,
-			                          MutableLinkChangeResult result) {
-				MutableLinkChange undoChange = MutableLinkChangeImpl
-				        .makeUndo(AbstractLinkModificationSystemModelChange.this.linkModification.getChange(), result);
-				MutableLink mutableLink = this.loadMutableLink();
-				mutableLink.modifyKeys(undoChange);
+			protected MutableLinkChangeResult undoChange(MutableLink link,
+			                                             MutableLinkChangeResult result) {
+				MutableLinkChange change = AbstractLinkModificationSystemModelChange.this.linkModification.getChange();
+				MutableLinkChange undoChange = MutableLinkChangeImpl.makeUndo(change, result);
+				return link.modifyKeys(undoChange);
 			}
 
 		}

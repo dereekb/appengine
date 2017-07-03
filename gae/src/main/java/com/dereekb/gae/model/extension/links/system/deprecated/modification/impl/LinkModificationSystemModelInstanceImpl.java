@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChange;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstance;
-import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangesInstance;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultSetImpl;
@@ -14,15 +14,16 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * {@link LinkModificationSystemModelInstance} implementation.
+ * {@link LinkModificationSystemModelChangesInstance} implementation.
  * 
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
+@Deprecated
 public class LinkModificationSystemModelInstanceImpl<T extends UniqueModel>
-        implements LinkModificationSystemModelInstance<T> {
+        implements LinkModificationSystemModelChangesInstance<T> {
 
 	private T model;
 	private MutableLinkModel mutableLinkModel;
