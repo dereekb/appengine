@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
@@ -31,7 +30,8 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessorPair;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelBuilder;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemEntry;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderAccessorDelegate;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkInfoSystem;
@@ -51,21 +51,21 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 public class MutableLinkSystemBuilderImpl
         implements LinkInfoSystem {
 
-	private CaseInsensitiveMap<MutableLinkSystemEntry> entriesMap;
+	private CaseInsensitiveMap<MutableLinkSystemBuilderEntry> entriesMap;
 
 	private CaseInsensitiveMap<LinkModelInfo> linkModelInfoMap = new CaseInsensitiveMap<LinkModelInfo>();
 
-	public MutableLinkSystemBuilderImpl(Map<String, MutableLinkSystemEntry> entriesMap)
+	public MutableLinkSystemBuilderImpl(Map<String, MutableLinkSystemBuilderEntry> entriesMap)
 	        throws IllegalArgumentException {
 		this.setEntriesMap(entriesMap);
 	}
 
-	public void setEntriesMap(Map<String, MutableLinkSystemEntry> entriesMap) throws IllegalArgumentException {
+	public void setEntriesMap(Map<String, MutableLinkSystemBuilderEntry> entriesMap) throws IllegalArgumentException {
 		if (entriesMap == null) {
 			throw new IllegalArgumentException("entriesMap cannot be null.");
 		}
 
-		this.entriesMap = new CaseInsensitiveMap<MutableLinkSystemEntry>(entriesMap);
+		this.entriesMap = new CaseInsensitiveMap<MutableLinkSystemBuilderEntry>(entriesMap);
 	}
 
 	// MARK: LinkInfoSystem
@@ -87,7 +87,7 @@ public class MutableLinkSystemBuilderImpl
 	}
 
 	private LinkModelInfo makeLinkModelInfo(String type) throws UnavailableLinkModelException {
-		MutableLinkSystemEntry entry = this.getEntryForType(type);
+		MutableLinkSystemBuilderEntry entry = this.getEntryForType(type);
 		return new LinkModelInfoImpl(entry);
 	}
 
@@ -148,10 +148,9 @@ public class MutableLinkSystemBuilderImpl
 	 * 
 	 * @return {@link MutableLinkModelAccessor}. Never {@code null}.
 	 */
-	public <T extends UniqueModel> MutableLinkModelAccessor<T> makeAccessor(String linkType,
-	                                                                        ReadService<T> readService)
+	public <T extends UniqueModel> MutableLinkModelAccessor<T> makeAccessor(MutableLinkSystemBuilderAccessorDelegate<T> delegate)
 	        throws UnavailableLinkModelException {
-		return new MutableLinkModelAccessorImpl<T>(linkType, readService);
+		return new MutableLinkModelAccessorImpl<T>(delegate);
 	}
 
 	/**
@@ -166,23 +165,13 @@ public class MutableLinkSystemBuilderImpl
 	        implements LinkModelAccessor, MutableLinkModelAccessor<T>, MutableLinkModelBuilder<T> {
 
 		private final String linkType;
-		private final MutableLinkSystemEntry linkSystemEntry;
-		private ReadService<T> readService;
+		// private final MutableLinkSystemBuilderEntry linkSystemEntry;
+		private final MutableLinkSystemBuilderAccessorDelegate<T> delegate;
 
-		public MutableLinkModelAccessorImpl(String linkType, ReadService<T> readService)
-		        throws UnavailableLinkModelException, IllegalArgumentException {
-			this.linkType = linkType;
-			this.linkSystemEntry = MutableLinkSystemBuilderImpl.this.getEntryForType(linkType);
-			this.linkSystemEntry.getLinkModelType();
-			this.setReadService(readService);
-		}
-
-		public void setReadService(ReadService<T> readService) throws IllegalArgumentException {
-			if (readService == null) {
-				throw new IllegalArgumentException("readService cannot be null.");
-			}
-
-			this.readService = readService;
+		public MutableLinkModelAccessorImpl(MutableLinkSystemBuilderAccessorDelegate<T> delegate) {
+			this.linkType = delegate.getLinkModelType();
+			this.delegate = delegate;
+			// this.linkSystemEntry = MutableLinkSystemBuilderImpl.this.getEntryForType(this.linkType);
 		}
 
 		// MARK: LinkModelAccessor
@@ -193,7 +182,7 @@ public class MutableLinkSystemBuilderImpl
 
 		@Override
 		public ReadResponse<? extends LinkModel> readLinkModels(ReadRequest request) throws AtomicOperationException {
-			ReadResponse<T> response = this.readService.read(request);
+			ReadResponse<T> response = this.delegate.getReadService().read(request);
 			return new LinkModelReadResponse(response);
 		}
 
@@ -303,8 +292,8 @@ public class MutableLinkSystemBuilderImpl
 			@Override
 			public MutableLink getLink(String linkName) throws UnavailableLinkException {
 				LinkInfo info = this.getLinkModelInfo().getLinkInfo(linkName);
-				MutableLinkAccessor accessor = MutableLinkModelAccessorImpl.this.linkSystemEntry
-				        .makeLinkAccessor(linkName);
+				MutableLinkAccessor accessor = MutableLinkModelAccessorImpl.this.delegate.makeLinkAccessor(linkName,
+				        this.model);
 				return new MutableLinkImpl(info, accessor);
 			}
 
@@ -355,8 +344,7 @@ public class MutableLinkSystemBuilderImpl
 		@Override
 		public ReadResponse<? extends MutableLinkModelAccessorPair<T>> readMutableLinkModels(ReadRequest request)
 		        throws AtomicOperationException {
-
-			ReadResponse<T> response = this.readService.read(request);
+			ReadResponse<T> response = this.delegate.getReadService().read(request);
 			return new PairReadResponse(response);
 		}
 
@@ -431,8 +419,8 @@ public class MutableLinkSystemBuilderImpl
 	}
 
 	// MARK: Internal
-	public MutableLinkSystemEntry getEntryForType(String type) throws UnavailableLinkModelException {
-		MutableLinkSystemEntry entry = this.entriesMap.get(type);
+	public MutableLinkSystemBuilderEntry getEntryForType(String type) throws UnavailableLinkModelException {
+		MutableLinkSystemBuilderEntry entry = this.entriesMap.get(type);
 
 		if (entry == null) {
 			throw UnavailableLinkModelException.makeForType(type);
@@ -450,12 +438,12 @@ public class MutableLinkSystemBuilderImpl
 	private class LinkModelInfoImpl
 	        implements LinkModelInfo {
 
-		private final MutableLinkSystemEntry linkSystemEntry;
+		private final MutableLinkSystemBuilderEntry linkSystemEntry;
 		private final LimitedLinkModelInfo limitedLinkModel;
 
 		private CaseInsensitiveMap<LinkInfoImpl> linksMap = new CaseInsensitiveMap<LinkInfoImpl>();
 
-		public LinkModelInfoImpl(MutableLinkSystemEntry linkSystemEntry) {
+		public LinkModelInfoImpl(MutableLinkSystemBuilderEntry linkSystemEntry) {
 			this.linkSystemEntry = linkSystemEntry;
 			this.limitedLinkModel = linkSystemEntry.loadLinkModelInfo();
 		}

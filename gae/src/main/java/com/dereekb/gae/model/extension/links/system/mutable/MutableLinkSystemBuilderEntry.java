@@ -3,7 +3,6 @@ package com.dereekb.gae.model.extension.links.system.mutable;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.TypedLinkSystemComponent;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 
 /**
  * {@link MutableLinkSystem} entry.
@@ -11,7 +10,7 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Unavai
  * @author dereekb
  *
  */
-public interface MutableLinkSystemEntry
+public interface MutableLinkSystemBuilderEntry
         extends TypedLinkSystemComponent {
 
 	/**
@@ -27,16 +26,5 @@ public interface MutableLinkSystemEntry
 	 * @return {@link BidirectionalLinkNameMap}. Never {@code null}.
 	 */
 	public BidirectionalLinkNameMap getBidirectionalMap();
-
-	/**
-	 * Creates a new link accessor for the specified type.
-	 * 
-	 * @param linkName
-	 *            {@link String}. Never {@code null}.
-	 * @return {@link MutableLinkAccessor}. Never {@code null}.
-	 * @throws UnavailableLinkException
-	 *             thrown if the link is unavailable
-	 */
-	public MutableLinkAccessor makeLinkAccessor(String linkName) throws UnavailableLinkException;
 
 }

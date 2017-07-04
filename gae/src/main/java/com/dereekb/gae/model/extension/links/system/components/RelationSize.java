@@ -35,6 +35,15 @@ public enum RelationSize {
 	 */
 	MANY_TO_MANY;
 
+	/**
+	 * Makes a relation size from two links.
+	 * 
+	 * @param linkInfoImpl
+	 *            {@link LinkInfo}. Never {@code null}.
+	 * @param reverseLinkInfo
+	 *            {@link LinkInfo}. Never {@code null}.
+	 * @return {@link RelationSize}. Never {@code null}.
+	 */
 	public static RelationSize fromLinkInfo(LinkInfo linkInfoImpl,
 	                                        LinkInfo reverseLinkInfo) {
 

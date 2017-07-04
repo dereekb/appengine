@@ -12,6 +12,8 @@ import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseL
 public class EmptyBidirectionalLinkNameMapImpl
         implements BidirectionalLinkNameMap {
 
+	public static final BidirectionalLinkNameMap SINGLETON = new EmptyBidirectionalLinkNameMapImpl();
+
 	@Override
 	public boolean isBidirectionallyLinked(String linkName) {
 		return false;
