@@ -3,7 +3,6 @@ package com.dereekb.gae.model.extension.links.system.readonly.impl;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
-import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkSystemImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystemEntry;

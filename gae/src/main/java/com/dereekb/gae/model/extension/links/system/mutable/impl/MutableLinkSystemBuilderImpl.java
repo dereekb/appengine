@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.links.system.mutable.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
@@ -16,10 +17,12 @@ import com.dereekb.gae.model.extension.links.system.components.LinkModel;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.Relation;
+import com.dereekb.gae.model.extension.links.system.components.RelationSize;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
+import com.dereekb.gae.model.extension.links.system.mutable.BidirectionalLinkNameMap;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLink;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
@@ -30,6 +33,8 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAcce
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelBuilder;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseLinksException;
+import com.dereekb.gae.model.extension.links.system.readonly.LinkInfoSystem;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -37,18 +42,33 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
- * {@link LinkSystem} implementation.
+ * {@link LinkInfoSystem} implementation that also provides functions for
+ * building other components.
  * 
  * @author dereekb
  *
  */
-public class MutableLinkSystemImpl
-        implements LinkSystem {
+public class MutableLinkSystemBuilderImpl
+        implements LinkInfoSystem {
 
 	private CaseInsensitiveMap<MutableLinkSystemEntry> entriesMap;
-	private CaseInsensitiveMap<LinkModelInfo> linkModelInfoMap;
 
-	// MARK: LinkSystem
+	private CaseInsensitiveMap<LinkModelInfo> linkModelInfoMap = new CaseInsensitiveMap<LinkModelInfo>();
+
+	public MutableLinkSystemBuilderImpl(Map<String, MutableLinkSystemEntry> entriesMap)
+	        throws IllegalArgumentException {
+		this.setEntriesMap(entriesMap);
+	}
+
+	public void setEntriesMap(Map<String, MutableLinkSystemEntry> entriesMap) throws IllegalArgumentException {
+		if (entriesMap == null) {
+			throw new IllegalArgumentException("entriesMap cannot be null.");
+		}
+
+		this.entriesMap = new CaseInsensitiveMap<MutableLinkSystemEntry>(entriesMap);
+	}
+
+	// MARK: LinkInfoSystem
 	@Override
 	public Set<String> getAvailableSetTypes() {
 		return this.entriesMap.keySet();
@@ -71,9 +91,55 @@ public class MutableLinkSystemImpl
 		return new LinkModelInfoImpl(entry);
 	}
 
-	@Override
-	public LinkModelAccessor loadAccessor(String type) throws UnavailableLinkModelAccessorException {
-		return null;
+	// MARK: LinkSystem
+	public LinkSystem makeLinkSystem(Map<String, ? extends LinkModelAccessor> linkModelAccessors) {
+		return new LinkSystemImpl(linkModelAccessors);
+	}
+
+	/**
+	 * {@link LinkSystem} implementation.
+	 * 
+	 * @author dereekb
+	 *
+	 */
+	private class LinkSystemImpl
+	        implements LinkSystem {
+
+		private CaseInsensitiveMap<? extends LinkModelAccessor> linkModelAccessors;
+
+		public LinkSystemImpl(Map<String, ? extends LinkModelAccessor> linkModelAccessors) {
+			this.setLinkModelAccessors(linkModelAccessors);
+		}
+
+		public void setLinkModelAccessors(Map<String, ? extends LinkModelAccessor> linkModelAccessors) {
+			if (linkModelAccessors == null) {
+				throw new IllegalArgumentException("linkModelAccessors cannot be null.");
+			}
+
+			this.linkModelAccessors = new CaseInsensitiveMap<LinkModelAccessor>();
+		}
+
+		@Override
+		public Set<String> getAvailableSetTypes() {
+			return MutableLinkSystemBuilderImpl.this.getAvailableSetTypes();
+		}
+
+		@Override
+		public LinkModelInfo loadLinkModelInfo(String type) throws UnavailableLinkModelException {
+			return MutableLinkSystemBuilderImpl.this.loadLinkModelInfo(type);
+		}
+
+		@Override
+		public LinkModelAccessor loadAccessor(String type) throws UnavailableLinkModelAccessorException {
+			LinkModelAccessor accessor = this.linkModelAccessors.get(type);
+
+			if (accessor == null) {
+				throw new UnavailableLinkModelAccessorException();
+			}
+
+			return accessor;
+		}
+
 	}
 
 	// MARK: Mutable Accessors
@@ -106,7 +172,7 @@ public class MutableLinkSystemImpl
 		public MutableLinkModelAccessorImpl(String linkType, ReadService<T> readService)
 		        throws UnavailableLinkModelException, IllegalArgumentException {
 			this.linkType = linkType;
-			this.linkSystemEntry = MutableLinkSystemImpl.this.getEntryForType(linkType);
+			this.linkSystemEntry = MutableLinkSystemBuilderImpl.this.getEntryForType(linkType);
 			this.linkSystemEntry.getLinkModelType();
 			this.setReadService(readService);
 		}
@@ -216,7 +282,7 @@ public class MutableLinkSystemImpl
 			// MARK: MutableLinkModel
 			@Override
 			public LinkModelInfo getLinkModelInfo() {
-				return MutableLinkSystemImpl.this.loadLinkModelInfo(MutableLinkModelAccessorImpl.this.linkType);
+				return MutableLinkSystemBuilderImpl.this.loadLinkModelInfo(MutableLinkModelAccessorImpl.this.linkType);
 			}
 
 			@Override
@@ -456,25 +522,60 @@ public class MutableLinkSystemImpl
 			@Override
 			public Relation getRelationInfo() throws NoRelationException {
 				if (this.relationSource == null) {
-
+					this.relationSource = this.buildRelationSource();
 				}
 
 				return this.relationSource.getRelationInfo();
 			}
 
 			protected RelationSource buildRelationSource() {
+				BidirectionalLinkNameMap map = LinkModelInfoImpl.this.linkSystemEntry.getBidirectionalMap();
 
+				try {
+					String reverseLinkModelType = this.getLinkModelType();
+					LinkModelInfo reverseLinkModel = MutableLinkSystemBuilderImpl.this
+					        .loadLinkModelInfo(reverseLinkModelType);
+
+					String reverseLinkName = map.getReverseLinkName(this.getLinkName());
+					LinkInfo reverseLinkInfo = reverseLinkModel.getLinkInfo(reverseLinkName);
+
+					return new RelationSourceImpl(reverseLinkInfo);
+				} catch (NoReverseLinksException e) {
+					return NonexistantRelationSource.SINGLETON;
+				} catch (UnavailableLinkModelException e) {
+					// TODO: Throw and exception or handle this somehow...
+					throw e;
+				}
 			}
 
-		}
+			private class RelationSourceImpl
+			        implements RelationSource, Relation {
 
-		private class RelationSourceImpl
-		        implements RelationSource {
+				private final LinkInfo reverseLinkInfo;
+				private final RelationSize relationSize;
 
-			@Override
-			public Relation getRelationInfo() throws NoRelationException {
-				// TODO Auto-generated method stub
-				return null;
+				public RelationSourceImpl(LinkInfo reverseLinkInfo) {
+					this.reverseLinkInfo = reverseLinkInfo;
+					this.relationSize = RelationSize.fromLinkInfo(LinkInfoImpl.this, reverseLinkInfo);
+				}
+
+				// MARK: RelationSource
+				@Override
+				public Relation getRelationInfo() throws NoRelationException {
+					return this;
+				}
+
+				// MARK: Relation
+				@Override
+				public RelationSize getRelationSize() {
+					return this.relationSize;
+				}
+
+				@Override
+				public LinkInfo getRelationLink() {
+					return this.reverseLinkInfo;
+				}
+
 			}
 
 		}
@@ -489,6 +590,8 @@ public class MutableLinkSystemImpl
 
 	private static class NonexistantRelationSource
 	        implements RelationSource {
+
+		public static final NonexistantRelationSource SINGLETON = new NonexistantRelationSource();
 
 		@Override
 		public Relation getRelationInfo() throws NoRelationException {

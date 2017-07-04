@@ -33,6 +33,23 @@ public enum RelationSize {
 	/**
 	 * The link has many keys attached to it.
 	 */
-	MANY_TO_MANY
+	MANY_TO_MANY;
+
+	public static RelationSize fromLinkInfo(LinkInfo linkInfoImpl,
+	                                        LinkInfo reverseLinkInfo) {
+
+		LinkSize fromLinkSize = linkInfoImpl.getLinkSize();
+		LinkSize toLinkSize = reverseLinkInfo.getLinkSize();
+
+		RelationSize size;
+
+		if (fromLinkSize == LinkSize.ONE) {
+			size = (toLinkSize == LinkSize.ONE) ? RelationSize.ONE_TO_ONE : RelationSize.ONE_TO_MANY;
+		} else {
+			size = (toLinkSize == LinkSize.ONE) ? RelationSize.MANY_TO_ONE : RelationSize.MANY_TO_MANY;
+		}
+
+		return size;
+	}
 
 }
