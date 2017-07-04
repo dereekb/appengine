@@ -1,10 +1,10 @@
 package com.dereekb.gae.model.extension.links.components.system.impl.bidirectional;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
-import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnregisteredLinkTypeException;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnrelatedLinkException;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseLinksException;
 
 /**
  * Delegate for {@link BidirectionalLinkModelSet}.

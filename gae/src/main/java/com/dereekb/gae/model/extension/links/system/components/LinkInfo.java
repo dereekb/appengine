@@ -11,32 +11,14 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRela
  * @see Link for an instance that represents an existing model's link.
  */
 public interface LinkInfo
-        extends TypedLinkSystemComponent {
-
-	/**
-	 * Returns the link name.
-	 * 
-	 * @return {@link String}. Never {@code null}.
-	 */
-	public String getLinkName();
-
-	/**
-	 * Returns the associated link type.
-	 * 
-	 * @return {@link String}. Never {@code null}.
-	 */
-	public String getLinkType();
-
-	/**
-	 * @return {@link LinkSize}. Never {@code null}.
-	 */
-	public LinkSize getLinkSize();
+        extends LimitedLinkInfo, TypedLinkSystemComponent {
 
 	/**
 	 * Returns the model that is associated with this link.
 	 * 
 	 * @return {@link LinkModel}. Never {@code null}.
 	 */
+	@Override
 	public LinkModelInfo getLinkModelInfo();
 
 	/**

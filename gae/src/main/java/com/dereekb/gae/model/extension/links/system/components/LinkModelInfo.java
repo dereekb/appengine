@@ -1,7 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.components;
 
-import java.util.Set;
-
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 
 /**
@@ -12,14 +10,7 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Unavai
  * @see LinkModel for an instance that represents an existing model.
  */
 public interface LinkModelInfo
-        extends TypedLinkSystemComponent {
-
-	/**
-	 * Returns the set of all links names.
-	 * 
-	 * @return {@link Set}. Never {@code null}.
-	 */
-	public Set<String> getLinkNames();
+        extends LimitedLinkModelInfo {
 
 	/**
 	 * Returns the {@link LinkInfo} for the requested link.

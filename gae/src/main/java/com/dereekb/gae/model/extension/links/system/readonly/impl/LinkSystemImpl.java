@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.links.system.readonly.impl;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
+import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkSystemImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystemEntry;
@@ -13,14 +14,15 @@ import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
  * {@link LinkSystem} implementation.
  * 
  * @author dereekb
- *
+ * @deprecated Just use {@link MutableLinkSystemImpl} instead.
  */
-public class ReadOnlyLinkSystemImpl
+@Deprecated
+public class LinkSystemImpl
         implements LinkSystem {
 
 	private CaseInsensitiveMap<LinkSystemEntry> entries;
 
-	public ReadOnlyLinkSystemImpl(CaseInsensitiveMap<LinkSystemEntry> entries) {
+	public LinkSystemImpl(CaseInsensitiveMap<LinkSystemEntry> entries) {
 		this.setEntries(entries);
 	}
 
@@ -44,7 +46,8 @@ public class ReadOnlyLinkSystemImpl
 
 	@Override
 	public LinkModelInfo loadLinkModelInfo(String type) throws UnavailableLinkModelException {
-		return this.getEntry(type).loadLinkModelInfo();
+
+		return null; // this.getEntry(type).loadLinkModelInfo();
 	}
 
 	@Override

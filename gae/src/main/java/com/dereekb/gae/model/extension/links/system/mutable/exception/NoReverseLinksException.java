@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.links.components.exception;
+package com.dereekb.gae.model.extension.links.system.mutable.exception;
 
 import com.dereekb.gae.model.extension.links.exception.LinkException;
 

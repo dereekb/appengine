@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.components.system.impl.bidirectional;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
-import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseLinksException;
 
 /**
  * Entry for a {@link BidirectionalLinkSystem} that describes how elements in a

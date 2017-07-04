@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
-import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.change.LinkModelChange;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseLinksException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**

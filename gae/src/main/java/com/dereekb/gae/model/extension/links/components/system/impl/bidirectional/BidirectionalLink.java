@@ -8,10 +8,10 @@ import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.Relation;
 import com.dereekb.gae.model.extension.links.components.RelationResult;
-import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseLinksException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**

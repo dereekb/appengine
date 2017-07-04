@@ -2,8 +2,9 @@ package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationChangesException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.MultipleLinkModificationQueueException;
 
 /**
@@ -33,7 +34,14 @@ public interface LinkModificationSystemInstance {
 
 	/**
 	 * Run to apply all submitted changes.
+	 * 
+	 * @throws FailedLinkModificationSystemChangeException
+	 *             thrown if an issue is encountered while applying changes.
+	 * @throws LinkModificationSystemRunnerAlreadyRunException
+	 *             thrown if {@link #applyChanges()} has already been called.
 	 */
-	public void applyChanges() throws FailedLinkModificationChangesException;
+	public void applyChanges()
+	        throws FailedLinkModificationSystemChangeException,
+	            LinkModificationSystemRunnerAlreadyRunException;
 
 }

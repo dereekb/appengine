@@ -1,7 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.Set;
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
-import com.dereekb.gae.model.extension.links.system.components.Relation;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
@@ -23,10 +21,11 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationImpl;
+import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -93,7 +92,9 @@ public class LinkModificationSystemImpl
 		}
 
 		@Override
-		public void applyChanges() {
+		public void applyChanges()
+		        throws FailedLinkModificationSystemChangeException,
+		            LinkModificationSystemRunnerAlreadyRunException {
 			LinkModificationSystemChangesRunner runner = LinkModificationSystemImpl.this.makeRunner(this.requests);
 			runner.run();
 		}
@@ -112,9 +113,8 @@ public class LinkModificationSystemImpl
 			}
 
 			// TODO: Assert that only 1 change is occurring per model's link.
-			// I.E. do not allow multiple changes to the same link on the same
-			// model, as it
-			// is unsafe.
+			// Do not allow multiple changes to the same link on the same
+			// model, as it is unsafe.
 
 			// TODO: Validate further for the request.
 		}
@@ -146,73 +146,6 @@ public class LinkModificationSystemImpl
 
 		LinkModification primaryModification = new LinkModificationImpl(request.getPrimaryKey(), info, change);
 		return new RequestChanges(primaryModification);
-	}
-
-	/**
-	 * @deprecated Attempting to predict "required future changes" is dangerous.
-	 *             Just let them be built naturally from the results.
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	private List<LinkModification> buildSecondaryModifications(Relation relation,
-	                                                           LinkModificationSystemRequest request) {
-		boolean isOptional = false;
-
-		/*
-		 * Set isOptional based on changes being made.
-		 * 
-		 * Removal requests that cannot load the target model are ignored will
-		 * not caused the transaction changes to fail.
-		 */
-		MutableLinkChangeType primaryLinkChangeType = request.getLinkChangeType();
-		MutableLinkChangeType linkChangeType = null;
-
-		switch (primaryLinkChangeType) {
-			case ADD:
-				isOptional = false;
-				break;
-			case SET:
-				isOptional = false;
-				break;
-			case CLEAR:
-			case REMOVE:
-				isOptional = true;
-				break;
-			default:
-				break;
-		}
-
-		List<LinkModification> modifications = null;
-
-		switch (relation.getRelationSize()) {
-			// Bi-directional
-			case MANY_TO_MANY:
-			case MANY_TO_ONE:
-			case ONE_TO_MANY:
-			case ONE_TO_ONE:
-				// Perform "mirrored" changes on all children.
-				modifications = new ArrayList<LinkModification>();
-
-				LinkInfo relationLink = relation.getRelationLink();
-				MutableLinkChange relationChange = MutableLinkChangeImpl.make(linkChangeType, request.getPrimaryKey());
-
-				for (ModelKey key : request.getKeys()) {
-					LinkModification modification = new LinkModificationImpl(key, relationLink, relationChange,
-					        isOptional);
-					modifications.add(modification);
-				}
-
-				break;
-			// None
-			case ONE_TO_NONE:
-				// Do nothing.
-				modifications = Collections.emptyList();
-				break;
-			default:
-				throw new UnsupportedOperationException("Unknown relation change type.");
-		}
-
-		return null;
 	}
 
 	protected static class RequestChanges {
@@ -272,10 +205,11 @@ public class LinkModificationSystemImpl
 			this.inputRequestChanges = inputRequestChanges;
 		}
 
-		public void run() {
+		public void run()
+		        throws FailedLinkModificationSystemChangeException,
+		            LinkModificationSystemRunnerAlreadyRunException {
 			if (this.instance != null) {
-				// TODO: Throw specific exception for already being run.
-				throw new RuntimeException();
+				throw new LinkModificationSystemRunnerAlreadyRunException();
 			} else {
 				this.instance = LinkModificationSystemImpl.this.delegate.makeInstance();
 			}
@@ -287,6 +221,7 @@ public class LinkModificationSystemImpl
 				this.runPrimaryChanges(modifications);
 				this.instance.commitChanges();
 			} catch (Exception e) {
+				// throws FailedLinkModificationSystemChangeException
 				this.instance.undoChanges();
 				// TODO: Throw specific failed exception.
 			}

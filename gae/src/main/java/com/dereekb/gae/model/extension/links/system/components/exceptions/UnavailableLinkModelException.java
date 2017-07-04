@@ -10,6 +10,10 @@ public class UnavailableLinkModelException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
+	public static UnavailableLinkModelException makeForType(String type) {
+		return new UnavailableLinkModelException();
+	}
+
 	// TODO: ...
 
 }
