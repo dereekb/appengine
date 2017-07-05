@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResultDynamicInfo;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -119,6 +120,10 @@ public class LinkModificationImpl
 			MutableLinkChangeType originalChangeType = linkModification.getChange().getLinkChangeType();
 
 			MutableLinkChangeResult linkChangeResult = result.getLinkChangeResult();
+			MutableLinkChangeResultDynamicInfo dynamicChangeInfo = linkChangeResult.getDynamicChangeInfo();
+
+			// TODO: Update to use the dynamic change information.
+
 			Set<ModelKey> modified = linkChangeResult.getModified();
 			LinkInfo relationLinkInfo = relation.getRelationLink();
 

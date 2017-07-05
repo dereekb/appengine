@@ -9,14 +9,17 @@ import java.util.Set;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.extension.links.system.components.DynamicLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModel;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
+import com.dereekb.gae.model.extension.links.system.components.LinkType;
 import com.dereekb.gae.model.extension.links.system.components.Relation;
 import com.dereekb.gae.model.extension.links.system.components.RelationSize;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
@@ -171,7 +174,8 @@ public class MutableLinkSystemBuilderImpl
 		public MutableLinkModelAccessorImpl(MutableLinkSystemBuilderAccessorDelegate<T> delegate) {
 			this.linkType = delegate.getLinkModelType();
 			this.delegate = delegate;
-			// this.linkSystemEntry = MutableLinkSystemBuilderImpl.this.getEntryForType(this.linkType);
+			// this.linkSystemEntry =
+			// MutableLinkSystemBuilderImpl.this.getEntryForType(this.linkType);
 		}
 
 		// MARK: LinkModelAccessor
@@ -336,6 +340,11 @@ public class MutableLinkSystemBuilderImpl
 					return this.accessor.modifyKeys(change);
 				}
 
+				@Override
+				public DynamicLinkInfo getDynamicLinkInfo() {
+					return this.accessor.getDynamicLinkInfo();
+				}
+
 			}
 
 		}
@@ -488,8 +497,13 @@ public class MutableLinkSystemBuilderImpl
 			}
 
 			@Override
-			public String getLinkType() {
+			public LinkType getLinkType() {
 				return this.limitedLinkInfo.getLinkType();
+			}
+
+			@Override
+			public String getRelationLinkType() throws DynamicLinkInfoException {
+				return this.limitedLinkInfo.getRelationLinkType();
 			}
 
 			@Override
@@ -508,7 +522,7 @@ public class MutableLinkSystemBuilderImpl
 			}
 
 			@Override
-			public Relation getRelationInfo() throws NoRelationException {
+			public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException {
 				if (this.relationSource == null) {
 					this.relationSource = this.buildRelationSource();
 				}
@@ -516,8 +530,12 @@ public class MutableLinkSystemBuilderImpl
 				return this.relationSource.getRelationInfo();
 			}
 
-			protected RelationSource buildRelationSource() {
+			protected RelationSource buildRelationSource() throws DynamicLinkInfoException, NoRelationException {
 				BidirectionalLinkNameMap map = LinkModelInfoImpl.this.linkSystemEntry.getBidirectionalMap();
+
+				if (this.getLinkType() == LinkType.DYNAMIC) {
+					return DynamicRelationSource.SINGLETON;
+				}
 
 				try {
 					String reverseLinkModelType = this.getLinkModelType();
@@ -549,7 +567,7 @@ public class MutableLinkSystemBuilderImpl
 
 				// MARK: RelationSource
 				@Override
-				public Relation getRelationInfo() throws NoRelationException {
+				public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException {
 					return this;
 				}
 
@@ -572,7 +590,7 @@ public class MutableLinkSystemBuilderImpl
 
 	private static interface RelationSource {
 
-		public Relation getRelationInfo() throws NoRelationException;
+		public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException;
 
 	}
 
@@ -582,8 +600,20 @@ public class MutableLinkSystemBuilderImpl
 		public static final NonexistantRelationSource SINGLETON = new NonexistantRelationSource();
 
 		@Override
-		public Relation getRelationInfo() throws NoRelationException {
+		public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException {
 			throw new NoRelationException();
+		}
+
+	}
+
+	private static class DynamicRelationSource
+	        implements RelationSource {
+
+		public static final DynamicRelationSource SINGLETON = new DynamicRelationSource();
+
+		@Override
+		public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException {
+			throw new DynamicLinkInfoException();
 		}
 
 	}

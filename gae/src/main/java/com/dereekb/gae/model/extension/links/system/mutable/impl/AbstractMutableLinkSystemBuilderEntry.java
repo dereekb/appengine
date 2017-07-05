@@ -8,6 +8,8 @@ import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
+import com.dereekb.gae.model.extension.links.system.components.LinkType;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.mutable.BidirectionalLinkNameMap;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
@@ -32,6 +34,11 @@ public abstract class AbstractMutableLinkSystemBuilderEntry<T>
 	private LimitedLinkModelInfoImpl linkModelInfo = new LimitedLinkModelInfoImpl();
 	private BidirectionalLinkNameMap map = EmptyBidirectionalLinkNameMapImpl.SINGLETON;
 
+	public AbstractMutableLinkSystemBuilderEntry(ReadService<T> readService) {
+		this.setReadService(readService);
+	}
+
+	// MARK: Accessors
 	@Override
 	public ReadService<T> getReadService() {
 		return this.readService;
@@ -45,7 +52,6 @@ public abstract class AbstractMutableLinkSystemBuilderEntry<T>
 		this.readService = readService;
 	}
 
-	// MARK: Accessors
 	public void setBidirectionalLinkNames(Map<String, String> linkNames) {
 		if (linkNames == null) {
 			this.map = EmptyBidirectionalLinkNameMapImpl.SINGLETON;
@@ -148,8 +154,13 @@ public abstract class AbstractMutableLinkSystemBuilderEntry<T>
 			}
 
 			@Override
-			public String getLinkType() {
+			public LinkType getLinkType() {
 				return this.data.getLinkType();
+			}
+
+			@Override
+			public String getRelationLinkType() throws DynamicLinkInfoException {
+				return this.data.getRelationLinkType();
 			}
 
 			@Override

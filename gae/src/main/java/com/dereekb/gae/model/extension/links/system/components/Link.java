@@ -8,7 +8,7 @@ package com.dereekb.gae.model.extension.links.system.components;
  *
  */
 public interface Link
-        extends LinkAccessor {
+        extends DynamicLinkInfoAccessor, LinkAccessor {
 
 	/**
 	 * Returns meta data about this link.

@@ -55,4 +55,11 @@ public interface MutableLinkChangeResult {
 	 */
 	public Set<ModelKey> getRedundant();
 
+	/**
+	 * Returns the dynamic information for this change.
+	 * 
+	 * @return {@link MutableLinkChangeResultDynamicInfo}. Never {@code null}.
+	 */
+	public MutableLinkChangeResultDynamicInfo getDynamicChangeInfo();
+
 }

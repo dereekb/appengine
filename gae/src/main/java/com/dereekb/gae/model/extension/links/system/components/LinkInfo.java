@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.components;
 
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 
 /**
@@ -27,7 +28,9 @@ public interface LinkInfo
 	 * @return {@link Relation}. Never {@code null}.
 	 * @throws NoRelationException
 	 *             If there is no relation available.
+	 * @throws DynamicLinkInfoException
+	 *             if {@link #getLinkType()} returns {@link LinkType#DYNAMIC}.
 	 */
-	public Relation getRelationInfo() throws NoRelationException;
+	public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException;
 
 }
