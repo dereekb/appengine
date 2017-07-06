@@ -19,4 +19,11 @@ public interface LinkAccessor {
 	 */
 	public Set<ModelKey> getLinkedModelKeys();
 
+	/**
+	 * Returns the dynamic information for this link.
+	 * 
+	 * @return {@link DynamicLinkAccessorInfo}. Never {@code null}.
+	 */
+	public DynamicLinkAccessorInfo getDynamicLinkAccessorInfo();
+
 }

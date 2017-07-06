@@ -29,4 +29,20 @@ public interface BidirectionalLinkNameMap {
 	 */
 	public String getReverseLinkName(String linkName) throws NoReverseLinksException;
 
+	/**
+	 * Returns the reverse name for a dynamic link.
+	 * 
+	 * @param dynamicLinkName
+	 *            Dynamic link name
+	 * @param relationLinkType
+	 *            The reverse link type
+	 * @return Name of the reverse link that is expected on the other type.
+	 *
+	 * @throws NoReverseLinksException
+	 *             if there is no reverse link.
+	 */
+	public String getDynamicReverseLinkName(String dynamicLinkName,
+	                                        String relationLinkType)
+	        throws NoReverseLinksException;
+
 }

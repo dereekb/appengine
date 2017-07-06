@@ -1,17 +1,17 @@
 package com.dereekb.gae.model.extension.links.system.mutable.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.model.extension.links.system.components.DynamicLinkInfo;
+import com.dereekb.gae.model.crud.services.response.impl.AbstractReadResponseWrapper;
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.model.extension.links.system.components.DynamicLinkAccessorInfo;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkModelInfo;
+import com.dereekb.gae.model.extension.links.system.components.Link;
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModel;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
@@ -23,6 +23,8 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Dynami
 import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.components.impl.AbstractWrappedLink;
+import com.dereekb.gae.model.extension.links.system.components.impl.AbstractWrappedLinkModel;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
 import com.dereekb.gae.model.extension.links.system.mutable.BidirectionalLinkNameMap;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLink;
@@ -140,7 +142,73 @@ public class MutableLinkSystemBuilderImpl
 				throw new UnavailableLinkModelAccessorException();
 			}
 
-			return accessor;
+			return new LinkModelAccessorWrapper(accessor);
+		}
+
+		private class LinkModelAccessorWrapper
+		        implements LinkModelAccessor {
+
+			private final LinkModelAccessor accessor;
+
+			public LinkModelAccessorWrapper(LinkModelAccessor accessor) {
+				this.accessor = accessor;
+			}
+
+			// MARK: LinkModelAccessor
+			@Override
+			public String getLinkModelType() {
+				return this.accessor.getLinkModelType();
+			}
+
+			@Override
+			public ReadResponse<? extends LinkModel> readLinkModels(ReadRequest request)
+			        throws AtomicOperationException {
+				ReadResponse<? extends LinkModel> response = this.accessor.readLinkModels(request);
+				return new ReadResponseWrapper(response);
+			}
+
+			private class ReadResponseWrapper extends AbstractReadResponseWrapper<LinkModel, LinkModel> {
+
+				public ReadResponseWrapper(ReadResponse<? extends LinkModel> response) {
+					super(response);
+				}
+
+				@Override
+				public LinkModel convertSingle(LinkModel input) throws ConversionFailureException {
+					return new LinkModelWrapper(input);
+				}
+
+			}
+
+			private class LinkModelWrapper extends AbstractWrappedLinkModel {
+
+				public LinkModelWrapper(LinkModel linkModel) {
+					super(linkModel);
+				}
+
+				// MARK: AbstractWrappedLinkModel
+				@Override
+				public Link getLink(String linkName) throws UnavailableLinkException {
+					Link link = this.linkModel.getLink(linkName);
+					return new LinkWrapper(link);
+				}
+
+				private class LinkWrapper extends AbstractWrappedLink {
+					
+					public LinkWrapper(Link link) {
+						super(link);
+					}
+					
+					// MARK: 
+					@Override
+					public DynamicLinkAccessorInfo getDynamicLinkAccessorInfo() {
+						return new DynamicLinkAccessorInfoImpl(this.link);
+					}
+
+				}
+
+			}
+
 		}
 
 	}
@@ -168,14 +236,11 @@ public class MutableLinkSystemBuilderImpl
 	        implements LinkModelAccessor, MutableLinkModelAccessor<T>, MutableLinkModelBuilder<T> {
 
 		private final String linkType;
-		// private final MutableLinkSystemBuilderEntry linkSystemEntry;
 		private final MutableLinkSystemBuilderAccessorDelegate<T> delegate;
 
 		public MutableLinkModelAccessorImpl(MutableLinkSystemBuilderAccessorDelegate<T> delegate) {
 			this.linkType = delegate.getLinkModelType();
 			this.delegate = delegate;
-			// this.linkSystemEntry =
-			// MutableLinkSystemBuilderImpl.this.getEntryForType(this.linkType);
 		}
 
 		// MARK: LinkModelAccessor
@@ -191,62 +256,15 @@ public class MutableLinkSystemBuilderImpl
 		}
 
 		// MARK: LinkModelReadResponse
-		private class LinkModelReadResponse extends AbstractReadResponse<LinkModel> {
-
-			private Collection<LinkModel> linkModels;
+		private class LinkModelReadResponse extends AbstractReadResponseWrapper<LinkModel, T> {
 
 			public LinkModelReadResponse(ReadResponse<T> response) {
 				super(response);
 			}
 
-			// MARK: ReadResponse
 			@Override
-			public Collection<LinkModel> getModels() {
-				if (this.linkModels == null) {
-					this.linkModels = this.makeModels();
-				}
-
-				return this.linkModels;
-			}
-
-			// MARK: Internal
-			private Collection<LinkModel> makeModels() {
-				Collection<T> models = this.response.getModels();
-				List<LinkModel> linkModels = new ArrayList<LinkModel>();
-
-				for (T model : models) {
-					LinkModel linkModel = MutableLinkModelAccessorImpl.this.makeMutableLinkModel(model);
-					linkModels.add(linkModel);
-				}
-
-				return linkModels;
-			}
-
-		}
-
-		protected abstract class AbstractReadResponse<R>
-		        implements ReadResponse<R> {
-
-			protected final ReadResponse<T> response;
-
-			public AbstractReadResponse(ReadResponse<T> response) {
-				this.response = response;
-			}
-
-			// MARK: ReadResponse
-			@Override
-			public Collection<ModelKey> getFiltered() {
-				return this.response.getFiltered();
-			}
-
-			@Override
-			public Collection<ModelKey> getUnavailable() {
-				return this.response.getUnavailable();
-			}
-
-			@Override
-			public Collection<ModelKey> getFailed() {
-				return this.response.getFailed();
+			public LinkModel convertSingle(T input) throws ConversionFailureException {
+				return MutableLinkModelAccessorImpl.this.makeMutableLinkModel(input);
 			}
 
 		}
@@ -341,8 +359,8 @@ public class MutableLinkSystemBuilderImpl
 				}
 
 				@Override
-				public DynamicLinkInfo getDynamicLinkInfo() {
-					return this.accessor.getDynamicLinkInfo();
+				public DynamicLinkAccessorInfo getDynamicLinkAccessorInfo() {
+					return new DynamicLinkAccessorInfoImpl(this);
 				}
 
 			}
@@ -357,9 +375,7 @@ public class MutableLinkSystemBuilderImpl
 			return new PairReadResponse(response);
 		}
 
-		private class PairReadResponse extends AbstractReadResponse<MutableLinkModelAccessorPairImpl> {
-
-			private Collection<MutableLinkModelAccessorPairImpl> pairs;
+		private class PairReadResponse extends AbstractReadResponseWrapper<MutableLinkModelAccessorPairImpl, T> {
 
 			public PairReadResponse(ReadResponse<T> response) {
 				super(response);
@@ -367,23 +383,9 @@ public class MutableLinkSystemBuilderImpl
 
 			// MARK: ReadResponse
 			@Override
-			public Collection<MutableLinkModelAccessorPairImpl> getModels() {
-				if (this.pairs == null) {
-					this.pairs = this.makePairs();
-				}
-
-				return this.pairs;
-			}
-
-			private Collection<MutableLinkModelAccessorPairImpl> makePairs() {
-				List<MutableLinkModelAccessorPairImpl> pairs = new ArrayList<MutableLinkModelAccessorPairImpl>();
-
-				for (T model : this.response.getModels()) {
-					MutableLinkModelAccessorPairImpl pair = new MutableLinkModelAccessorPairImpl(model);
-					pairs.add(pair);
-				}
-
-				return pairs;
+			public MutableLinkModelAccessorPairImpl convertSingle(T input)
+			        throws ConversionFailureException {
+				return new MutableLinkModelAccessorPairImpl(input);
 			}
 
 		}
@@ -545,7 +547,7 @@ public class MutableLinkSystemBuilderImpl
 					String reverseLinkName = map.getReverseLinkName(this.getLinkName());
 					LinkInfo reverseLinkInfo = reverseLinkModel.getLinkInfo(reverseLinkName);
 
-					return new RelationSourceImpl(reverseLinkInfo);
+					return new RelationSourceImpl(this, reverseLinkInfo);
 				} catch (NoReverseLinksException e) {
 					return NonexistantRelationSource.SINGLETON;
 				} catch (UnavailableLinkModelException e) {
@@ -554,36 +556,87 @@ public class MutableLinkSystemBuilderImpl
 				}
 			}
 
-			private class RelationSourceImpl
-			        implements RelationSource, Relation {
+		}
 
-				private final LinkInfo reverseLinkInfo;
-				private final RelationSize relationSize;
+	}
 
-				public RelationSourceImpl(LinkInfo reverseLinkInfo) {
-					this.reverseLinkInfo = reverseLinkInfo;
-					this.relationSize = RelationSize.fromLinkInfo(LinkInfoImpl.this, reverseLinkInfo);
+	private class DynamicLinkAccessorInfoImpl implements DynamicLinkAccessorInfo {
+		
+		private final Link link;
+
+		public DynamicLinkAccessorInfoImpl(Link link) {
+			this.link = link;
+		}
+
+		// MARK: DynamicLinkAccessorInfo
+		@Override
+		public String getRelationLinkType() {
+			DynamicLinkAccessorInfo info = this.link.getDynamicLinkAccessorInfo();
+			return info.getRelationLinkType();
+		}
+
+		@Override
+		public Relation getRelationInfo() throws UnsupportedOperationException, NoRelationException {
+			LinkInfo linkInfo = this.link.getLinkInfo();
+			
+			String linkName = linkInfo.getLinkName();
+			String linkModelType = this.getRelationLinkType();
+			MutableLinkSystemBuilderEntry entry = MutableLinkSystemBuilderImpl.this.entriesMap.get(linkModelType);
+			
+			BidirectionalLinkNameMap map = entry.getBidirectionalMap();
+			
+			String reverseLinkName = null;
+			String relationLinkType = this.getRelationLinkType();
+			
+
+			try {
+				if (linkInfo.getLinkType() == LinkType.DYNAMIC) {
+					reverseLinkName = map.getDynamicReverseLinkName(linkName, relationLinkType);
+				} else {
+					reverseLinkName = map.getReverseLinkName(linkName);
 				}
 
-				// MARK: RelationSource
-				@Override
-				public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException {
-					return this;
-				}
+				LinkModelInfo reverseLinkModel = MutableLinkSystemBuilderImpl.this
+				        .loadLinkModelInfo(relationLinkType);
+				LinkInfo reverseLinkInfo = reverseLinkModel.getLinkInfo(reverseLinkName);
 
-				// MARK: Relation
-				@Override
-				public RelationSize getRelationSize() {
-					return this.relationSize;
-				}
-
-				@Override
-				public LinkInfo getRelationLink() {
-					return this.reverseLinkInfo;
-				}
-
+				return new RelationSourceImpl(linkInfo, reverseLinkInfo);
+			} catch (NoReverseLinksException e) {
+				throw new NoRelationException(e);
+			} catch (UnavailableLinkModelException e) {
+				// TODO: Throw and exception or handle this somehow...
+				throw e;
 			}
+		}
+		
+	}
 
+	private class RelationSourceImpl
+	        implements RelationSource, Relation {
+
+		private final LinkInfo reverseLinkInfo;
+		private final RelationSize relationSize;
+
+		public RelationSourceImpl(LinkInfo linkInfo, LinkInfo reverseLinkInfo) {
+			this.reverseLinkInfo = reverseLinkInfo;
+			this.relationSize = RelationSize.fromLinkInfo(linkInfo, reverseLinkInfo);
+		}
+
+		// MARK: RelationSource
+		@Override
+		public Relation getRelationInfo() throws DynamicLinkInfoException, NoRelationException {
+			return this;
+		}
+
+		// MARK: Relation
+		@Override
+		public RelationSize getRelationSize() {
+			return this.relationSize;
+		}
+
+		@Override
+		public LinkInfo getRelationLink() {
+			return this.reverseLinkInfo;
 		}
 
 	}

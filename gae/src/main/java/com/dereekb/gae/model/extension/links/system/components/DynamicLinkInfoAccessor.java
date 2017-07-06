@@ -7,6 +7,7 @@ package com.dereekb.gae.model.extension.links.system.components;
  *
  * @see Link
  */
+@Deprecated
 public interface DynamicLinkInfoAccessor {
 
 	/**
@@ -19,4 +20,5 @@ public interface DynamicLinkInfoAccessor {
 	 * @return {@link DynamicLinkInfo}. Never {@code null}.
 	 */
 	public DynamicLinkInfo getDynamicLinkInfo();
+
 }

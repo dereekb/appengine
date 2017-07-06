@@ -3,14 +3,12 @@ package com.dereekb.gae.model.extension.links.system.components;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 
 /**
- * Link information for links with a {@link LinkType#DYNAMIC} link type.
+ * Dynamic information about a {@link DynamicLinkAccessor}.
  * 
  * @author dereekb
- * @deprecated Was designed improperly. Belongs under {@link LinkAccessor}.
+ *
  */
-@Deprecated
-public interface DynamicLinkInfo
-        extends LinkAccessor {
+public interface DynamicLinkAccessorInfo {
 
 	/**
 	 * Returns the associated link type.
@@ -25,7 +23,10 @@ public interface DynamicLinkInfo
 	 * @return {@link Relation}. Never {@code null}.
 	 * @throws NoRelationException
 	 *             If there is no relation available.
+	 * @throws UnsupportedOperationException
+	 *             thrown if the link does not have sufficient information for a
+	 *             relation.
 	 */
-	public Relation getRelationInfo() throws NoRelationException;
+	public Relation getRelationInfo() throws UnsupportedOperationException, NoRelationException;
 
 }

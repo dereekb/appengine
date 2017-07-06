@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.mutable;
 
-import com.dereekb.gae.model.extension.links.system.components.DynamicLinkInfoAccessor;
 import com.dereekb.gae.model.extension.links.system.components.LinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
 
@@ -11,7 +10,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLin
  *
  */
 public interface MutableLinkAccessor
-        extends DynamicLinkInfoAccessor, LinkAccessor {
+        extends LinkAccessor {
 
 	/**
 	 * Performs a link change.
