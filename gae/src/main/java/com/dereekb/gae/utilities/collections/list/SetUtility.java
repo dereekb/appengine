@@ -9,7 +9,9 @@ public class SetUtility {
 	public static <T> Set<T> wrap(T value) {
 		Set<T> set = new HashSet<T>();
 
-		set.add(value);
+		if (value != null) {
+			set.add(value);
+		}
 
 		return set;
 	}
@@ -34,6 +36,16 @@ public class SetUtility {
 	                                 Collection<? extends T> b) {
 		Set<T> set = new HashSet<T>(a);
 		set.addAll(b);
+		return set;
+	}
+
+	public static <T> Set<T> copy(Set<T> input) {
+		Set<T> set = new HashSet<T>();
+		
+		if (input == null) {
+			set.addAll(input);
+		}
+		
 		return set;
 	}
 

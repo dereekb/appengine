@@ -24,4 +24,11 @@ public class EmptyBidirectionalLinkNameMapImpl
 		throw new NoReverseLinksException(linkName);
 	}
 
+	@Override
+	public String getDynamicReverseLinkName(String dynamicLinkName,
+	                                        String relationLinkType)
+	        throws NoReverseLinksException {
+		throw new NoReverseLinksException(dynamicLinkName, relationLinkType);
+	}
+
 }

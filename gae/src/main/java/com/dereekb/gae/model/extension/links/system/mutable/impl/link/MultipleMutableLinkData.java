@@ -2,89 +2,84 @@ package com.dereekb.gae.model.extension.links.system.mutable.impl.link;
 
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.system.components.DynamicLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.LinkType;
-import com.dereekb.gae.model.extension.links.system.components.Relation;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 
-public class MultipleMutableLinkData<T>
-        implements MutableLinkData<T> {
+/**
+ * {@link MutableLinkData} implementation for a model with a set representing a
+ * link.
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
+public class MultipleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 
-	private String linkName;
-	private String relationLinkType;
+	private MultipleMutableLinkDataDelegate<T> delegate;
 
-	// MARK: MutableLinkData
-	@Override
-	public String getLinkName() {
-		return this.linkName;
+	public MultipleMutableLinkData(String linkName,
+	        String relationLinkType,
+	        MultipleMutableLinkDataDelegate<T> delegate) {
+		super(linkName, relationLinkType);
+		this.delegate = delegate;
 	}
 
+	// MARK: MutableLinkData
 	@Override
 	public LinkType getLinkType() {
 		return LinkType.STATIC;
 	}
 
 	@Override
-	public String getRelationLinkType() throws DynamicLinkInfoException {
-		return this.relationLinkType;
-	}
-
-	@Override
 	public LinkSize getLinkSize() {
-		return LinkSize.ONE;
+		return LinkSize.MANY;
 	}
 
 	@Override
 	public MutableLinkAccessor makeLinkAccessor(T model) {
-		return new SingleLinkMutableLinkAccessor(model);
+		return new Accessor(model);
 	}
 
-	private class SingleLinkMutableLinkAccessor
-	        implements MutableLinkAccessor, DynamicLinkInfo {
+	private class Accessor extends AbstractLinkMutableLinkAccessor {
 
-		private final T model;
-
-		public SingleLinkMutableLinkAccessor(T model) {
-			this.model = model;
-		}
-
-		// MARK: MutableLinkAccessor
-		@Override
-		public DynamicLinkInfo getDynamicLinkInfo() {
-			return this;
+		public Accessor(T model) {
+			super(model);
 		}
 
 		@Override
 		public Set<ModelKey> getLinkedModelKeys() {
-			// TODO Auto-generated method stub
-			return null;
+			Set<ModelKey> modelKeys = MultipleMutableLinkData.this.delegate.readLinkedModelKeys(this.model);
+			return SetUtility.copy(modelKeys);
 		}
 
 		@Override
-		public MutableLinkChangeResult modifyKeys(MutableLinkChange change) throws MutableLinkChangeException {
-			// TODO Auto-generated method stub
-			return null;
-		}
+		protected void applyLinkChange(MutableLinkChange change) throws MutableLinkChangeException {
 
-		// MARK: DynamicLinkInfo
-		@Override
-		public String getRelationLinkType() {
-			return SingleMutableLinkData.this.getRelationLinkType();
+			switch (change.getLinkChangeType()) {
+				case ADD:
+					
+					break;
+				case CLEAR:
+					
+					break;
+				case REMOVE:
+					
+					break;
+				case SET:
+					
+					break;
+				default:
+					throw new UnsupportedOperationException();
+			}
 		}
-
-		@Override
-		public Relation getRelationInfo() throws NoRelationException {
-			throw new UnsupportedOperationException();
-		}
-
+	
 	}
 
 }

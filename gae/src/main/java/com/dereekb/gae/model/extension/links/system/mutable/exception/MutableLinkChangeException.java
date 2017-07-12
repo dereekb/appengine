@@ -1,7 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.mutable.exception;
 
 import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
-import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
@@ -19,25 +18,11 @@ public class MutableLinkChangeException extends ApiLinkException {
 	public static final String ERROR_CODE = "CHANGE_FAILURE";
 	public static final String ERROR_TITLE = "Link Change Failure";
 
-	private LinkInfo linkInfo;
 	private MutableLinkChange linkChange;
 
-	public MutableLinkChangeException(LinkInfo linkInfo, MutableLinkChange linkChange) {
+	public MutableLinkChangeException(MutableLinkChange linkChange) {
 		super();
-		this.setLinkInfo(linkInfo);
 		this.setLinkChange(linkChange);
-	}
-
-	public LinkInfo getLinkInfo() {
-		return this.linkInfo;
-	}
-
-	public void setLinkInfo(LinkInfo linkInfo) {
-		if (linkInfo == null) {
-			throw new IllegalArgumentException("linkInfo cannot be null.");
-		}
-
-		this.linkInfo = linkInfo;
 	}
 
 	public MutableLinkChange getLinkChange() {
@@ -62,7 +47,7 @@ public class MutableLinkChangeException extends ApiLinkException {
 
 	@Override
 	public String toString() {
-		return "MutableLinkChangeException [linkInfo=" + this.linkInfo + ", linkChange=" + this.linkChange + "]";
+		return "MutableLinkChangeException [linkChange=" + this.linkChange + "]";
 	}
 
 }

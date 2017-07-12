@@ -6,11 +6,11 @@ import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.LinkType;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.IllegalLinkChangeException;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 
 /**
  * {@link MutableLinkData} implementation for a model with a single link.
@@ -42,28 +42,45 @@ public class SingleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 
 	@Override
 	public MutableLinkAccessor makeLinkAccessor(T model) {
-		return new SingleLinkMutableLinkAccessor(model);
+		return new Accessor(model);
 	}
 
-	protected class SingleLinkMutableLinkAccessor extends AbstractLinkMutableLinkAccessor {
+	protected class Accessor extends AbstractLinkMutableLinkAccessor {
 
-		public SingleLinkMutableLinkAccessor(T model) {
+		public Accessor(T model) {
 			super(model);
 		}
 		
 		// MARK: AbstractLinkMutableLinkAccessor
 		@Override
-		public MutableLinkChangeResult modifyKeys(MutableLinkChange change) throws MutableLinkChangeException {
-			Set<ModelKey> keys = change.getKeys();
-			MutableLinkChangeType linkChangeType = change.getLinkChangeType();
-			
-			return null;
-		}
-
-		@Override
 		public Set<ModelKey> getLinkedModelKeys() {
-			// TODO Auto-generated method stub
-			return null;
+			ModelKey key = SingleMutableLinkData.this.delegate.readLinkedModelKey(this.model);
+			return SetUtility.wrap(key);
+		}
+		
+		@Override
+		protected void applyLinkChange(MutableLinkChange change) throws MutableLinkChangeException {
+			
+			switch (change.getLinkChangeType()) {
+				case ADD:
+				case REMOVE:
+					// Cannot perform Add or Remove on a single link..?
+					// Issue is with the reverse, this becomes bad...
+					throw new IllegalLinkChangeException(change);
+				case SET:
+					Set<ModelKey> modelKeys = change.getKeys();
+					
+					if (modelKeys.isEmpty() == false) {
+						ModelKey key = modelKeys.iterator().next();
+						SingleMutableLinkData.this.delegate.setLinkedModelKey(this.model, key);
+						break;
+					}
+				case CLEAR:
+					SingleMutableLinkData.this.delegate.setLinkedModelKey(this.model, null);
+					break;
+				default:
+					throw new UnsupportedOperationException();
+			}
 		}
 
 	}

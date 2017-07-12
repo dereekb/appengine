@@ -114,6 +114,11 @@ public class MutableLinkChangeImpl
 	}
 
 	@Override
+	public String getDynamicLinkModelType() {
+		return null;
+	}
+	
+	@Override
 	public String toString() {
 		return "MutableLinkChangeImpl [linkChangeType=" + this.linkChangeType + ", keys=" + this.keys + "]";
 	}

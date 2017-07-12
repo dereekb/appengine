@@ -111,6 +111,8 @@ public class LinkModificationSystemImpl
 			if (linkInfo.getLinkSize() == LinkSize.ONE && request.getKeys().size() > 1) {
 				throw new TooManyChangeKeysException(request);
 			}
+			
+			// TODO: Assert only SET or CLEAR is sent for LinkSize.ONE
 
 			// TODO: Assert that only 1 change is occurring per model's link.
 			// Do not allow multiple changes to the same link on the same
@@ -276,7 +278,7 @@ public class LinkModificationSystemImpl
 		}
 
 		protected List<LinkModification> buildSynchronizationChangeFromResult(LinkModificationResult result) {
-			return LinkModificationImpl.makeSynchronizationLinkModifications(result);
+			return LinkModificationSynchronizationBuilder.makeSynchronizationLinkModifications(result);
 		}
 
 		// MARK: Internal

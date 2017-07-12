@@ -258,7 +258,7 @@ public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
 		String reverseLinkName = this.reverseLinkNames.get(linkName);
 
 		if (reverseLinkName == null) {
-			throw new NoReverseLinksException();
+			throw new NoReverseLinksException(reverseLinkName);
 		}
 
 		return reverseLinkName;

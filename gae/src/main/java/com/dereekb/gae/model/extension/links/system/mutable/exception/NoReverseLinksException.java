@@ -12,27 +12,26 @@ public class NoReverseLinksException extends LinkException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NoReverseLinksException() {
+	private String linkName;
+	private String dynamicLinkType;
+
+	public NoReverseLinksException(String linkName) {
 		super();
+		this.linkName = linkName;
+	}
+	
+	public NoReverseLinksException(String linkName, String dynamicLinkType) {
+		super();
+		this.linkName = linkName;
+		this.dynamicLinkType = dynamicLinkType;
 	}
 
-	public NoReverseLinksException(String message,
-	        Throwable cause,
-	        boolean enableSuppression,
-	        boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
+	public String getLinkName() {
+		return this.linkName;
 	}
-
-	public NoReverseLinksException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public NoReverseLinksException(String message) {
-		super(message);
-	}
-
-	public NoReverseLinksException(Throwable cause) {
-		super(cause);
+	
+	public String getDynamicLinkType() {
+		return this.dynamicLinkType;
 	}
 
 }

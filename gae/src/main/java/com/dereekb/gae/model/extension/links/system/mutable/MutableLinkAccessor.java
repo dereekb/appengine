@@ -1,6 +1,8 @@
 package com.dereekb.gae.model.extension.links.system.mutable;
 
 import com.dereekb.gae.model.extension.links.system.components.LinkAccessor;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.IllegalLinkChangeException;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.LinkChangeLinkSizeException;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
 
 /**
@@ -18,9 +20,11 @@ public interface MutableLinkAccessor
 	 * @param change
 	 *            {@link MutableLinkChange}. Never {@code null}.
 	 * @return {@link MutableLinkChangeResult}. Never {@code null}.
+	 * 
+	 * @throws IllegalLinkChangeException
+	 * @throws LinkChangeLinkSizeException
 	 * @throws MutableLinkChangeException
-	 *             if the change fails.
 	 */
-	public MutableLinkChangeResult modifyKeys(MutableLinkChange change) throws MutableLinkChangeException;
+	public MutableLinkChangeResult modifyKeys(MutableLinkChange change) throws IllegalLinkChangeException, LinkChangeLinkSizeException, MutableLinkChangeException;
 
 }

@@ -2,7 +2,6 @@ package com.dereekb.gae.model.extension.links.system.mutable;
 
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.components.Relation;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -17,10 +16,7 @@ public interface MutableLinkChangeResult {
 	 * Returns {@link ModelKey} values for all successful/non-redundant changes.
 	 * If the set is not empty then the model was modified.
 	 * <p>
-	 * For {@link MutableLinkChangeType#SET}, this describes values that were
-	 * removed, since all values in the {@link Relation} are also considered
-	 * hits as they're set. This will include the values returned from
-	 * {@link #getRedundant()}.
+	 * For {@link MutableLinkChangeType#SET}, this describes the original set being replaced.
 	 * <p>
 	 * For {@link MutableLinkChangeType#ADD}, this describes values that were
 	 * set to be added, and were not already linked.
@@ -39,7 +35,7 @@ public interface MutableLinkChangeResult {
 	 * Returns {@link ModelKey} values for all redundant changes.
 	 * <p>
 	 * For {@link MutableLinkChangeType#SET}, this describes values that were
-	 * already set before being cleared.
+	 * already set before being set again.
 	 * <p>
 	 * For {@link MutableLinkChangeType#ADD}, this describes values that were
 	 * set to be added, but were already linked.
