@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.LinkType;
+import com.dereekb.gae.model.extension.links.system.components.SimpleLinkInfo;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
@@ -24,8 +25,21 @@ public class SingleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 
 	private SingleMutableLinkDataDelegate<T> delegate;
 
+	public SingleMutableLinkData(SimpleLinkInfo linkInfo, SingleMutableLinkDataDelegate<T> delegate) {
+		super(linkInfo);
+		this.delegate = delegate;
+	}
+	
 	public SingleMutableLinkData(String linkName, String relationLinkType, SingleMutableLinkDataDelegate<T> delegate) {
 		super(linkName, relationLinkType);
+		this.delegate = delegate;
+	}
+	
+	protected SingleMutableLinkDataDelegate<T> getDelegate() {
+		return this.delegate;
+	}
+
+	protected void setDelegate(SingleMutableLinkDataDelegate<T> delegate) {
 		this.delegate = delegate;
 	}
 
@@ -72,15 +86,19 @@ public class SingleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 					
 					if (modelKeys.isEmpty() == false) {
 						ModelKey key = modelKeys.iterator().next();
-						SingleMutableLinkData.this.delegate.setLinkedModelKey(this.model, key);
+						this.setLinkedModelKeyForChange(change, key);
 						break;
 					}
 				case CLEAR:
-					SingleMutableLinkData.this.delegate.setLinkedModelKey(this.model, null);
+					this.setLinkedModelKeyForChange(change, null);
 					break;
 				default:
 					throw new UnsupportedOperationException();
 			}
+		}
+		
+		protected void setLinkedModelKeyForChange(MutableLinkChange change, ModelKey key) {
+			SingleMutableLinkData.this.delegate.setLinkedModelKey(this.model, key);
 		}
 
 	}

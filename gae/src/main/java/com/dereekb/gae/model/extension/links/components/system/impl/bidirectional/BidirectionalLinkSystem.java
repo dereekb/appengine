@@ -20,6 +20,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
  *
  * @author dereekb
  */
+@Deprecated
 public class BidirectionalLinkSystem
         implements LinkSystem, BidirectionalLinkModelSetDelegate {
 

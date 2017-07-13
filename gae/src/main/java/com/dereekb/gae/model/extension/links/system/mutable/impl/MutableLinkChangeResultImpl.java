@@ -60,7 +60,27 @@ public class MutableLinkChangeResultImpl implements MutableLinkChangeResult {
 		return instance;
 	}
 
-	// MARK: Change
+	// MARK: Accessors
+	public MutableLinkChange getChange() {
+		return this.change;
+	}
+
+	
+	public Set<ModelKey> getBeforeChangeSet() {
+		return this.beforeChangeSet;
+	}
+
+	
+	public Set<ModelKey> getAfterChangeSet() {
+		return this.afterChangeSet;
+	}
+
+	
+	public Instance getInstance() {
+		return this.instance;
+	}
+
+	// MARK: MutableLinkChangeResult
 	@Override
 	public Set<ModelKey> getModified() {
 		return this.instance.getModified();

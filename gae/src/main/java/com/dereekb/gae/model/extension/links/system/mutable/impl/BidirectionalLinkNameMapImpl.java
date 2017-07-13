@@ -23,9 +23,14 @@ public class BidirectionalLinkNameMapImpl
 	 */
 	private CaseInsensitiveMap<CaseInsensitiveMap<String>> dynamicLinkMap;
 
-	
 	public BidirectionalLinkNameMapImpl(Map<String, String> linkNames) {
 		this.setLinkMap(linkNames);
+		this.dynamicLinkMap = new CaseInsensitiveMap<CaseInsensitiveMap<String>>();
+	}
+
+	public BidirectionalLinkNameMapImpl(Map<String, String> linkNames, Map<String, ? extends Map<String, String>> dynamicLinkNames) {
+		this.setLinkMap(linkNames);
+		this.setDynamicLinkMap(dynamicLinkNames);
 	}
 
 	public Map<String, String> getLinkMap() {

@@ -13,6 +13,6 @@ public interface SingleMutableLinkDataDelegate<T> {
 
 	public ModelKey readLinkedModelKey(T model);
 
-	public void setLinkedModelKey(T model, ModelKey key);
+	public void setLinkedModelKey(T model, ModelKey modelKey);
 	
 }

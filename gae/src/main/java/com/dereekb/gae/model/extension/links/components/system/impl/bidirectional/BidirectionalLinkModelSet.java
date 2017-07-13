@@ -25,6 +25,7 @@ import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
  * @author dereekb
  *
  */
+@Deprecated
 public final class BidirectionalLinkModelSet
         implements LinkModelSet, BidirectionalLinkModelDelegate {
 

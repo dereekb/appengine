@@ -33,6 +33,7 @@ import com.dereekb.gae.utilities.collections.list.SetUtility.SetDifference;
  * @param <T>
  *            reference type
  */
+@Deprecated
 public class LinkCollectionImpl<T>
         implements Link {
 

@@ -20,6 +20,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
  * @see {@link BidirectionalLinkSystem} for making sure both elements change at
  *      once.
  */
+@Deprecated
 public class SimpleLinkSystem
         implements LinkSystem {
 

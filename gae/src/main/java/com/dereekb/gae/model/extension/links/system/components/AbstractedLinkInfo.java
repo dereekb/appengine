@@ -1,7 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.components;
 
-import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
-
 /**
  * Abstracted link information.
  * 
@@ -9,14 +7,7 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Dynami
  * 
  * @see LimitedLinkInfo
  */
-public interface AbstractedLinkInfo {
-
-	/**
-	 * Returns the link name.
-	 * 
-	 * @return {@link String}. Never {@code null}.
-	 */
-	public String getLinkName();
+public interface AbstractedLinkInfo extends SimpleLinkInfo {
 
 	/**
 	 * Returns the type of link.
@@ -24,15 +15,6 @@ public interface AbstractedLinkInfo {
 	 * @return {@link LinkType}. Never {@code null}.
 	 */
 	public LinkType getLinkType();
-
-	/**
-	 * Returns the associated link type.
-	 * 
-	 * @return {@link String}. Never {@code null}.
-	 * @throws DynamicLinkInfoException
-	 *             if {@link #getLinkType()} return {@link LinkType#DYNAMIC}.
-	 */
-	public String getRelationLinkType() throws DynamicLinkInfoException;
 
 	/**
 	 * @return {@link LinkSize}. Never {@code null}.

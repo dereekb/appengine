@@ -41,6 +41,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
  * @param <T>
  *            model type
  */
+@Deprecated
 public abstract class AbstractModelLinkSystemEntry<T extends UniqueModel>
         implements LinkAccessor<T>, LinkDeleterServiceEntry, LinkSystemEntry, LinkModelImplDelegate<T>,
         LinkModelSetImplDelegate<T>, BidirectionalLinkSystemEntry {

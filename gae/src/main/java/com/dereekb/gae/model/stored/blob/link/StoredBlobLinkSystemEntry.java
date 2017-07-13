@@ -19,6 +19,7 @@ import com.dereekb.gae.server.datastore.Updater;
  * @author dereekb
  *
  */
+@Deprecated
 public class StoredBlobLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntry<StoredBlob> {
 
 	public static final String STORED_BLOB_LINK_TYPE = "StoredBlob";

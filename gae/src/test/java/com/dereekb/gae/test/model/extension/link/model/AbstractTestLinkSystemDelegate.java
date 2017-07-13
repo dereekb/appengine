@@ -20,6 +20,7 @@ import com.dereekb.gae.model.extension.links.components.system.impl.bidirectiona
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
+@Deprecated
 public abstract class AbstractTestLinkSystemDelegate<T extends UniqueModel>
         implements LinkSystemEntry, LinkModelImplDelegate<T>, LinkModelSetImplDelegate<T>,
         BidirectionalLinkSystemEntry {

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.components.DynamicLinkAccessorInfo;
 import com.dereekb.gae.model.extension.links.system.components.Relation;
+import com.dereekb.gae.model.extension.links.system.components.SimpleLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
@@ -26,6 +27,12 @@ public abstract class AbstractMutableLinkData<T>
 
 	private String linkName;
 	private String relationLinkType;
+
+	public AbstractMutableLinkData(SimpleLinkInfo linkInfo) {
+		super();
+		this.linkName = linkInfo.getLinkName();
+		this.relationLinkType = linkInfo.getRelationLinkType();
+	}
 
 	public AbstractMutableLinkData(String linkName, String relationLinkType) {
 		super();

@@ -28,7 +28,9 @@ import com.dereekb.gae.test.model.extension.link.model.SomeLinkModelDelegate;
  *
  * @author dereekb
  *
+ * @deprecated {@link SimpleLinkSystem} is deprecated.
  */
+@Deprecated
 public class SimpleLinkSystemTest {
 
 	private SimpleLinkSystem buildSystem() {

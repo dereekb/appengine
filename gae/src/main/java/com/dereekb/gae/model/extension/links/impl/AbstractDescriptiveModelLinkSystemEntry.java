@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.descriptor.UniqueDescribedModel;
 import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
+@Deprecated
 public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDescribedModel> extends AbstractModelLinkSystemEntry<T> {
 
 	protected List<DescribedModelLinkInfo> descriptiveLinkInfo;

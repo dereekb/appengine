@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.server.datastore.models.exception.UnknownModelTypeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
@@ -66,18 +67,18 @@ public class TypeModelKeyConverterImpl
 
 	// MARK: TypeModelKeyConverter
 	@Override
-	public ModelKeyType typeForModelType(String modelType) {
+	public ModelKeyType typeForModelType(String modelType) throws UnknownModelTypeException {
 		ModelKeyType type = this.map.get(modelType);
 
 		if (type == null) {
-			throw new IllegalArgumentException("Invalid type passed.");
+			throw new UnknownModelTypeException(modelType);
 		}
 
 		return type;
 	}
 
 	@Override
-	public StringModelKeyConverter getConverterForType(String modelType) throws IllegalArgumentException {
+	public StringModelKeyConverter getConverterForType(String modelType) throws UnknownModelTypeException {
 		ModelKeyType type = this.typeForModelType(modelType);
 		return this.getDirectionalConverterForType(type);
 	}
@@ -85,7 +86,7 @@ public class TypeModelKeyConverterImpl
 	@Override
 	public ModelKey convertKey(String modelType,
 	                           String value)
-	        throws ConversionFailureException {
+	        throws UnknownModelTypeException, ConversionFailureException {
 		StringModelKeyConverter converter = this.getConverterForType(modelType);
 		return converter.convertSingle(value);
 	}
@@ -93,7 +94,7 @@ public class TypeModelKeyConverterImpl
 	@Override
 	public List<ModelKey> convertKeys(String modelType,
 	                                  Collection<String> values)
-	        throws ConversionFailureException {
+	        throws UnknownModelTypeException, ConversionFailureException {
 		StringModelKeyConverter converter = this.getConverterForType(modelType);
 		return converter.convertTo(values);
 	}

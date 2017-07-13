@@ -20,6 +20,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @author dereekb
  */
+@Deprecated
 public class BidirectionalLink
         implements Link, LinkInfo {
 
