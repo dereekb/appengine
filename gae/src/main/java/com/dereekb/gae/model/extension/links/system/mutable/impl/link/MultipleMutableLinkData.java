@@ -1,9 +1,11 @@
 package com.dereekb.gae.model.extension.links.system.mutable.impl.link;
 
+import java.util.Collections;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.LinkType;
+import com.dereekb.gae.model.extension.links.system.components.SimpleLinkInfo;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
@@ -23,6 +25,12 @@ import com.dereekb.gae.utilities.collections.list.SetUtility;
 public class MultipleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 
 	private MultipleMutableLinkDataDelegate<T> delegate;
+
+	public MultipleMutableLinkData(SimpleLinkInfo linkInfo,
+	        MultipleMutableLinkDataDelegate<T> delegate) {
+		super(linkInfo);
+		this.delegate = delegate;
+	}
 
 	public MultipleMutableLinkData(String linkName,
 	        String relationLinkType,
@@ -61,25 +69,38 @@ public class MultipleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 
 		@Override
 		protected void applyLinkChange(MutableLinkChange change) throws MutableLinkChangeException {
-
+			Set<ModelKey> newKeys = null;
+			
 			switch (change.getLinkChangeType()) {
 				case ADD:
-					
-					break;
-				case CLEAR:
-					
+					Set<ModelKey> linkedKeysA = this.getLinkedModelKeys();
+					linkedKeysA.addAll(change.getKeys());
+					newKeys = linkedKeysA;
 					break;
 				case REMOVE:
-					
+					Set<ModelKey> linkedKeysR = this.getLinkedModelKeys();
+					linkedKeysR.removeAll(change.getKeys());
+					newKeys = linkedKeysR;
+					break;
+				case CLEAR:
+					newKeys = Collections.emptySet();
 					break;
 				case SET:
-					
+					newKeys = change.getKeys();
 					break;
 				default:
 					throw new UnsupportedOperationException();
 			}
+			
+			// Set the keys.
+			MultipleMutableLinkData.this.delegate.setLinkedModelKeys(this.model, newKeys);
 		}
 	
+	}
+
+	@Override
+	public String toString() {
+		return "MultipleMutableLinkData [delegate=" + this.delegate + "]";
 	}
 
 }

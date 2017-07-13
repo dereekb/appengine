@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.stored.image.set;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -116,12 +117,12 @@ public final class StoredImageSet extends SearchableDatabaseModel
 		return this.images;
 	}
 
-	public void setImages(Set<Key<StoredImage>> images) {
+	public void setImages(Collection<Key<StoredImage>> images) {
+		this.images = new HashSet<Key<StoredImage>>();
+		
 		if (images == null) {
-			images = new HashSet<Key<StoredImage>>();
+			this.images.addAll(images);
 		}
-
-		this.images = images;
 	}
 
 	// Unique Model
@@ -130,6 +131,7 @@ public final class StoredImageSet extends SearchableDatabaseModel
 		return ModelKey.safe(this.identifier);
 	}
 
+	@Override
 	public void setModelKey(ModelKey key) {
 		this.identifier = ModelKey.readIdentifier(key);
 	}

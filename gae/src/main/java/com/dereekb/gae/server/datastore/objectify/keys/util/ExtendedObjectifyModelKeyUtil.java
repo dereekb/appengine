@@ -2,7 +2,9 @@ package com.dereekb.gae.server.datastore.objectify.keys.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -100,7 +102,13 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 
 		return list;
 	}
-
+	
+	// MARK: Set
+	public Set<ModelKey> setFromKeys(Set<Key<T>> keys) {
+		List<ModelKey> modelKeyList = this.convertTo(keys);
+		return new HashSet<ModelKey>(modelKeyList);
+	}
+	
 	// MARK: ObjectifyKeyConverter
 	@Override
 	public ModelKey readKey(Key<T> key) throws IllegalKeyConversionException {
@@ -130,6 +138,11 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 	@Override
 	public List<Key<T>> convertFrom(Collection<? extends ModelKey> input) throws ConversionFailureException {
 		return this.converter.convertFrom(input);
+	}
+
+	@Override
+	public String toString() {
+		return "ExtendedObjectifyModelKeyUtil [converter=" + this.converter + "]";
 	}
 
 }

@@ -103,4 +103,9 @@ public class SingleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 
 	}
 
+	@Override
+	public String toString() {
+		return "SingleMutableLinkData [delegate=" + this.delegate + "]";
+	}
+
 }
