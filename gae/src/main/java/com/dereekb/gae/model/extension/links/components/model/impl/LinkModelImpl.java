@@ -20,6 +20,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @param <T>
  */
+@Deprecated
 public final class LinkModelImpl<T extends UniqueModel>
         implements LinkModel {
 

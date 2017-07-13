@@ -11,6 +11,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
  * @author dereekb
  *
  */
+@Deprecated
 public class IllegalRelationChangeException extends RelationChangeException {
 
 	private static final long serialVersionUID = 1L;

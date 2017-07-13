@@ -28,6 +28,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
+@Deprecated
 public final class LinkModelSetImpl<T extends UniqueModel>
         implements LinkModelSet {
 

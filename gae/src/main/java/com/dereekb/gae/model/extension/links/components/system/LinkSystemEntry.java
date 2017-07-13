@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
  * @author dereekb
  *
  */
+@Deprecated
 public interface LinkSystemEntry {
 
 	/**

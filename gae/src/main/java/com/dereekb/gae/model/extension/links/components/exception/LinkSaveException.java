@@ -10,6 +10,7 @@ import com.dereekb.gae.model.extension.links.exception.LinkException;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkSaveException extends LinkException {
 
 	private static final long serialVersionUID = 1L;

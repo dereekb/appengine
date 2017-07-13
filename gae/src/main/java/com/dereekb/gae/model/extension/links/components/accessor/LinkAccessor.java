@@ -12,9 +12,11 @@ import com.dereekb.gae.model.extension.links.components.Link;
  * @param <T>
  *            model type
  */
+@Deprecated
 public interface LinkAccessor<T>
         extends LinkReader<T> {
 
+	@Override
 	public List<? extends Link> getLinks(T model);
 
 }

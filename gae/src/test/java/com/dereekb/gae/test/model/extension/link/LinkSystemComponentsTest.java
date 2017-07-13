@@ -14,6 +14,7 @@ import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollection
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 
+@Deprecated
 public class LinkSystemComponentsTest {
 
 	private BidirectionalConverter<String, ModelKey> stringConverter = StringModelKeyConverterImpl.CONVERTER;

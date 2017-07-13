@@ -11,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkInfoImpl
         implements LinkInfo {
 

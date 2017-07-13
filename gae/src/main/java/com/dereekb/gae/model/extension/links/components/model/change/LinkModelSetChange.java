@@ -11,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
+@Deprecated
 public interface LinkModelSetChange {
 
 	/**

@@ -17,6 +17,7 @@ import com.dereekb.gae.utilities.collections.parent.objectify.ObjectifyParentRea
  * @param <T>
  *            model type
  */
+@Deprecated
 public class LoopProtectedSingleLinkDelegate<T extends ObjectifyChild<T>>
         implements SingleLinkDelegate {
 

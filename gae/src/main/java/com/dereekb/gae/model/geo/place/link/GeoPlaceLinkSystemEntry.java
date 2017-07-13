@@ -29,6 +29,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
+@Deprecated
 public class GeoPlaceLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntry<GeoPlace> {
 
 	public static final String GEO_PLACE_LINK_TYPE = "GeoPlace";

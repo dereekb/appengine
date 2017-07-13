@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.links.components.Link;
  *
  * @param <T>
  */
+@Deprecated
 public interface LinkModelImplDelegate<T> {
 
 	/**

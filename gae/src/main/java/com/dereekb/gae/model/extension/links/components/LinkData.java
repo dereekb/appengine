@@ -8,6 +8,7 @@ package com.dereekb.gae.model.extension.links.components;
  *
  * @author dereekb
  */
+@Deprecated
 public interface LinkData
         extends LinkInfo, Relation {
 

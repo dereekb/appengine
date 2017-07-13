@@ -9,6 +9,7 @@ import com.dereekb.gae.model.extension.links.components.LinkInfo;
  * @author dereekb
  *
  */
+@Deprecated
 public class UnknownReverseLinkException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

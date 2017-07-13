@@ -29,6 +29,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
+@Deprecated
 public class LoginKeyLinkSystemEntry extends AbstractModelLinkSystemEntry<LoginKey> {
 
 	public static final String LOGIN_KEY_LINK_TYPE = "LoginKey";

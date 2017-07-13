@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.components.ReadOnlyLink;
  * @param <T>
  *            model type
  */
+@Deprecated
 public interface LinkReader<T> {
 
 	public List<? extends ReadOnlyLink> getLinks(T model);

@@ -17,6 +17,7 @@ import com.dereekb.gae.model.extension.links.components.model.change.LinkModelCh
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkModelChangeImpl
         implements LinkModelChange {
 

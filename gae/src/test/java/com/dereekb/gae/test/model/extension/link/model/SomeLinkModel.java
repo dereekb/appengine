@@ -6,6 +6,7 @@ import java.util.Set;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
+@Deprecated
 public class SomeLinkModel
         implements UniqueModel {
 

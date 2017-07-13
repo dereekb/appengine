@@ -6,6 +6,7 @@ package com.dereekb.gae.model.extension.links.components.exception;
  * @author dereekb
  *
  */
+@Deprecated
 public enum LinkExceptionReason {
 
 	/**

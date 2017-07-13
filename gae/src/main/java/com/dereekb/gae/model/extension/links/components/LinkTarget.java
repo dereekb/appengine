@@ -8,6 +8,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
  *
  * @author dereekb
  */
+@Deprecated
 public interface LinkTarget {
 
 	/**

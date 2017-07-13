@@ -22,6 +22,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkModelInclusionReaderImpl<T extends UniqueModel>
         implements ModelInclusionReader<T> {
 

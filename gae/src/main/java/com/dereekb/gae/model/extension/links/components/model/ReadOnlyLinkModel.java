@@ -6,6 +6,7 @@ import com.dereekb.gae.model.extension.links.components.ReadOnlyLink;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
+@Deprecated
 public interface ReadOnlyLinkModel
         extends UniqueModel {
 

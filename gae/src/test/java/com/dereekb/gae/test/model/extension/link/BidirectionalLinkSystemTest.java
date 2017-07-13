@@ -21,6 +21,7 @@ import com.dereekb.gae.test.model.extension.link.model.DifferentLinkModelDelegat
 import com.dereekb.gae.test.model.extension.link.model.SomeLinkModel;
 import com.dereekb.gae.test.model.extension.link.model.SomeLinkModelDelegate;
 
+@Deprecated
 public class BidirectionalLinkSystemTest {
 
 	private BidirectionalLinkSystem buildSystem(boolean useSingleSet) {

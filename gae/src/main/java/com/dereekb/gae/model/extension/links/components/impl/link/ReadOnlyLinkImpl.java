@@ -14,6 +14,7 @@ import com.dereekb.gae.model.extension.links.components.impl.RelationResultImpl;
  * @author dereekb
  *
  */
+@Deprecated
 public class ReadOnlyLinkImpl extends LinkImpl {
 
 	public ReadOnlyLinkImpl(LinkInfo linkInfo, LinkImplDelegate linkDelegate) {

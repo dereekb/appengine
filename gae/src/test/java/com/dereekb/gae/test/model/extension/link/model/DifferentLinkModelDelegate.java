@@ -15,6 +15,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl;
 
 
+@Deprecated
 public class DifferentLinkModelDelegate extends AbstractTestLinkSystemDelegate<DifferentLinkModel> {
 
 	public DifferentLinkModelDelegate() {

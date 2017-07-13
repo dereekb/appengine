@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.links.components.model.change.LinkModelCh
  *
  * @author dereekb
  */
+@Deprecated
 public interface LinkModel
         extends ReadOnlyLinkModel {
 

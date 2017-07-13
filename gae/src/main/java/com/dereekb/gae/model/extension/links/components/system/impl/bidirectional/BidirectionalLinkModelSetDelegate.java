@@ -12,6 +12,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.exception.NoReverseL
  * @author dereekb
  *
  */
+@Deprecated
 public interface BidirectionalLinkModelSetDelegate {
 
 	/**

@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.links.components.model.LinkModel;
  * @author dereekb
  *
  */
+@Deprecated
 public interface LinkModelChange {
 
 	/**

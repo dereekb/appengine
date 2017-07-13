@@ -16,6 +16,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyCon
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 
 
+@Deprecated
 public class SomeLinkModelDelegate extends AbstractTestLinkSystemDelegate<SomeLinkModel> {
 
 	public SomeLinkModelDelegate() {
