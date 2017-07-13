@@ -29,6 +29,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
+@Deprecated
 public class LoginPointerLinkSystemEntry extends AbstractModelLinkSystemEntry<LoginPointer> {
 
 	public static final String LOGIN_POINTER_LINK_TYPE = "LoginPointer";

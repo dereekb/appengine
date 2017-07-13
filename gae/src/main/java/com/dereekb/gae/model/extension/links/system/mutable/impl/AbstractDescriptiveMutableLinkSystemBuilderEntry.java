@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.links.system.components.LinkType;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkDataAssertionDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkDataDelegate;
 import com.dereekb.gae.server.datastore.models.exception.UnknownModelTypeException;
@@ -31,7 +32,7 @@ public abstract class AbstractDescriptiveMutableLinkSystemBuilderEntry<T extends
 	
 	private String descriptorLinkName = DEFAULT_DESCRIPTOR_LINK_NAME;
 
-	private final MutableLinkData<T> descriptorLinkData = new DescriptorLinkData();
+	private final DescriptorLinkData descriptorLinkData = new DescriptorLinkData();
 	
 	private TypeModelKeyConverter typeKeyConverter;
 	
@@ -63,6 +64,14 @@ public abstract class AbstractDescriptiveMutableLinkSystemBuilderEntry<T extends
 	
 		this.typeKeyConverter = typeKeyConverter;
 	}
+	
+	public MutableLinkDataAssertionDelegate<T> getDescriptorLinkAssertionDelegate() {
+		return this.descriptorLinkData.getAssertionDelegate();
+	}
+
+	public void setDescriptorLinkAssertionDelegate(MutableLinkDataAssertionDelegate<T> assertionDelegate) {
+		this.descriptorLinkData.setAssertionDelegate(assertionDelegate);
+	}
 
 	// MARK: AbstractMutableLinkSystemBuilderEntry
 	@Override
@@ -81,7 +90,7 @@ public abstract class AbstractDescriptiveMutableLinkSystemBuilderEntry<T extends
 	protected abstract List<MutableLinkData<T>> makeDefinedLinkData();
 
 	protected List<MutableLinkData<T>> makeDescriptiveLinkData() {
-		return ListUtility.wrap(this.descriptorLinkData);
+		return ListUtility.wrap((MutableLinkData<T>) this.descriptorLinkData);
 	}
 	
 	// MARK: Internal

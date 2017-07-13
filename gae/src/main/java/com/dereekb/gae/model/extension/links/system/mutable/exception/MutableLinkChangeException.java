@@ -21,7 +21,11 @@ public class MutableLinkChangeException extends ApiLinkException {
 	private MutableLinkChange linkChange;
 
 	public MutableLinkChangeException(MutableLinkChange linkChange) {
-		super();
+		this(linkChange, null);
+	}
+
+	public MutableLinkChangeException(MutableLinkChange linkChange, String message) {
+		super(message);
 		this.setLinkChange(linkChange);
 	}
 

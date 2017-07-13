@@ -29,7 +29,7 @@ public class SingleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 		super(linkInfo);
 		this.delegate = delegate;
 	}
-	
+
 	public SingleMutableLinkData(String linkName, String relationLinkType, SingleMutableLinkDataDelegate<T> delegate) {
 		super(linkName, relationLinkType);
 		this.delegate = delegate;

@@ -25,6 +25,7 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyMod
  * @author dereekb
  *
  */
+@Deprecated
 public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntry<Login> {
 
 	public static final String LOGIN_LINK_TYPE = "Login";

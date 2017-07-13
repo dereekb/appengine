@@ -31,6 +31,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
+@Deprecated
 public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<StoredImage> {
 
 	public static final String STORED_IMAGE_LINK_TYPE = "StoredImage";

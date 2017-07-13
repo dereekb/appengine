@@ -5,23 +5,23 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
- * Specific {@link MutableLinkChangeException} for invalid link changes.
+ * Specific {@link IllegalLinkChangeException} for read-only links.
  * 
  * @author dereekb
  *
  */
-public class IllegalLinkChangeException extends MutableLinkChangeException {
+public class ReadOnlyLinkChangeException extends IllegalLinkChangeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String ERROR_CODE = "ILLEGAL_LINK_CHANGE";
-	public static final String ERROR_TITLE = "Illegal Link Change";
+	public static final String ERROR_CODE = "READ_ONLY_LINK_CHANGE";
+	public static final String ERROR_TITLE = "Illegal Read Only Link Change";
 
-	public IllegalLinkChangeException(MutableLinkChange linkChange) {
+	public ReadOnlyLinkChangeException(MutableLinkChange linkChange) {
 		super(linkChange);
 	}
 
-	public IllegalLinkChangeException(MutableLinkChange linkChange, String message) {
+	public ReadOnlyLinkChangeException(MutableLinkChange linkChange, String message) {
 		super(linkChange, message);
 	}
 

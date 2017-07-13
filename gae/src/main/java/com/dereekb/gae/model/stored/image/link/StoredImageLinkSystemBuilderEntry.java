@@ -8,7 +8,9 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.system.components.SimpleLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.impl.SimpleLinkInfoImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkDataAssertionDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractMutableLinkSystemBuilderEntry;
+import com.dereekb.gae.model.extension.links.system.mutable.impl.assertions.AdminOnlyMutableLinkDataAssertionDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkDataDelegate;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
@@ -27,7 +29,7 @@ import com.googlecode.objectify.Key;
  */
 public class StoredImageLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilderEntry<StoredImage> {
 
-	public static final String STORED_IMAGE_LINK_TYPE = "StoredImage";
+	public static final String LINK_MODEL_TYPE = "StoredImage";
 
 	private static final ExtendedObjectifyModelKeyUtil<StoredBlob> blobUtil = ExtendedObjectifyModelKeyUtil
 	        .make(StoredBlob.class, ModelKeyType.NUMBER);
@@ -53,7 +55,7 @@ public class StoredImageLinkSystemBuilderEntry extends AbstractMutableLinkSystem
 	// MARK: AbstractMutableLinkSystemBuilderEntry
 	@Override
 	public String getLinkModelType() {
-		return STORED_IMAGE_LINK_TYPE;
+		return LINK_MODEL_TYPE;
 	}
 
 	@Override
@@ -77,6 +79,9 @@ public class StoredImageLinkSystemBuilderEntry extends AbstractMutableLinkSystem
 			}
 			
 		});
+		
+		MutableLinkDataAssertionDelegate<StoredImage> adminDelegate = AdminOnlyMutableLinkDataAssertionDelegate.make();
+		blobLinkData.setAssertionDelegate(adminDelegate);
 		
 		linkData.add(blobLinkData);
 		
