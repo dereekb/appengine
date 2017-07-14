@@ -9,7 +9,11 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
+import com.dereekb.gae.model.extension.generation.impl.keys.StringModelKeyGenerator;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
@@ -407,7 +411,7 @@ public final class ModelKey
 	}
 
 	/**
-	 * Convenience function for converting
+	 * Convenience function for converting.
 	 *
 	 * @param keyType
 	 *            {@link ModelKeyType} of values.
@@ -420,21 +424,48 @@ public final class ModelKey
 	 */
 	public static List<ModelKey> convert(ModelKeyType keyType,
 	                                     Collection<String> values)
-	        throws ConversionFailureException {
-		List<ModelKey> keys;
-
+	        throws IllegalArgumentException, ConversionFailureException {
+		return converterForKeyType(keyType).convert(values);
+	}
+	
+	/**
+	 * Returns the {@link StringModelKeyConverter} for the input key type.
+	 * 
+	 * @param keyType
+	 *            {@link ModelKeyType} of values.
+	 * @return {@link StringModelKeyConverter}. Never {@code null}.
+	 * @throws IllegalArgumentException if the input key type is unsupported.
+	 */
+	public static StringModelKeyConverter converterForKeyType(ModelKeyType keyType)
+	        throws IllegalArgumentException {
 		switch (keyType) {
 			case NAME:
-				keys = StringModelKeyConverterImpl.CONVERTER.convert(values);
-				break;
+				return StringModelKeyConverterImpl.CONVERTER;
 			case NUMBER:
-				keys = StringLongModelKeyConverterImpl.CONVERTER.convert(values);
-				break;
+				return StringLongModelKeyConverterImpl.CONVERTER;
 			default:
 				throw new IllegalArgumentException("Invalid key type specified.");
 		}
-
-		return keys;
+	}
+	
+	/**
+	 * Returns the {@link Generator} for the input key type.
+	 * 
+	 * @param keyType
+	 *            {@link ModelKeyType} of values.
+	 * @return {@link Generator}. Never {@code null}.
+	 * @throws IllegalArgumentException if the input key type is unsupported.
+	 */
+	public static Generator<ModelKey> generatorForKeyType(ModelKeyType keyType)
+	        throws IllegalArgumentException {
+		switch (keyType) {
+			case NAME:
+				return StringModelKeyGenerator.GENERATOR;
+			case NUMBER:
+				return LongModelKeyGenerator.GENERATOR;
+			default:
+				throw new IllegalArgumentException("Invalid key type specified.");
+		}
 	}
 
 	/**

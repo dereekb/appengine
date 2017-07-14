@@ -42,7 +42,7 @@ public class CoreServiceTestingContext {
 	@Autowired
 	protected LocalServiceTestHelper helper;
 
-	@Autowired
+	@Autowired(required=false)
 	protected TestAuthenticationContext authContext;
 
 	@Before
@@ -55,7 +55,9 @@ public class CoreServiceTestingContext {
 
 	@Before
 	public final void resetAuthContext() {
-		this.authContext.resetContext();
+		if (this.authContext != null) {
+			this.authContext.resetContext();
+		}
 	}
 
 	@After

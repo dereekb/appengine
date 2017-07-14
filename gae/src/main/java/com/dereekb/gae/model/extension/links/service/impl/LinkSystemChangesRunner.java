@@ -29,6 +29,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkSystemChangesRunner {
 
 	private final LinkSystem system;

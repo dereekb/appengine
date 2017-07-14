@@ -27,6 +27,7 @@ import com.dereekb.gae.model.extension.links.system.components.impl.AbstractWrap
 import com.dereekb.gae.model.extension.links.system.components.impl.AbstractWrappedLinkModel;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
 import com.dereekb.gae.model.extension.links.system.mutable.BidirectionalLinkNameMap;
+import com.dereekb.gae.model.extension.links.system.mutable.FullLinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLink;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
@@ -34,7 +35,6 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeRes
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessorPair;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelBuilder;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderAccessorDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
@@ -121,7 +121,7 @@ public class MutableLinkSystemBuilderImpl
 				throw new IllegalArgumentException("linkModelAccessors cannot be null.");
 			}
 
-			this.linkModelAccessors = new CaseInsensitiveMap<LinkModelAccessor>();
+			this.linkModelAccessors = new CaseInsensitiveMap<LinkModelAccessor>(linkModelAccessors);
 		}
 
 		@Override
@@ -219,7 +219,7 @@ public class MutableLinkSystemBuilderImpl
 	 * 
 	 * @return {@link MutableLinkModelAccessor}. Never {@code null}.
 	 */
-	public <T extends UniqueModel> MutableLinkModelAccessor<T> makeAccessor(MutableLinkSystemBuilderAccessorDelegate<T> delegate)
+	public <T extends UniqueModel> FullLinkModelAccessor<T> makeAccessor(MutableLinkSystemBuilderAccessorDelegate<T> delegate)
 	        throws UnavailableLinkModelException {
 		return new MutableLinkModelAccessorImpl<T>(delegate);
 	}
@@ -233,7 +233,7 @@ public class MutableLinkSystemBuilderImpl
 	 *            model type
 	 */
 	private class MutableLinkModelAccessorImpl<T extends UniqueModel>
-	        implements LinkModelAccessor, MutableLinkModelAccessor<T>, MutableLinkModelBuilder<T> {
+	        implements FullLinkModelAccessor<T> {
 
 		private final String linkType;
 		private final MutableLinkSystemBuilderAccessorDelegate<T> delegate;

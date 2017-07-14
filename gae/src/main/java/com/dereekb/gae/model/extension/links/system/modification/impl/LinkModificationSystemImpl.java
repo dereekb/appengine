@@ -45,6 +45,12 @@ public class LinkModificationSystemImpl
 	private LinkSystem linkSystem;
 	private LinkModificationSystemDelegate delegate;
 
+	public LinkModificationSystemImpl(LinkSystem linkSystem, LinkModificationSystemDelegate delegate) {
+		super();
+		this.setLinkSystem(linkSystem);
+		this.setDelegate(delegate);
+	}
+
 	public LinkSystem getLinkSystem() {
 		return this.linkSystem;
 	}

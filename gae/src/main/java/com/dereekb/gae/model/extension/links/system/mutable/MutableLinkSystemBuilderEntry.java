@@ -3,9 +3,10 @@ package com.dereekb.gae.model.extension.links.system.mutable;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.TypedLinkSystemComponent;
+import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkSystemBuilderImpl;
 
 /**
- * {@link MutableLinkSystem} entry.
+ * {@link MutableLinkSystemBuilderImpl} entry.
  * 
  * @author dereekb
  *
