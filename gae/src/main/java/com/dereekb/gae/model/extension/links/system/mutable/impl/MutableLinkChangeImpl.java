@@ -97,9 +97,9 @@ public class MutableLinkChangeImpl
 		}
 	}
 
-	protected MutableLinkChangeImpl(MutableLinkChangeType linkChangeType, Collection<ModelKey> keys2) {
+	protected MutableLinkChangeImpl(MutableLinkChangeType linkChangeType, Collection<ModelKey> keys) {
 		this.linkChangeType = linkChangeType;
-		this.keys = new HashSet<ModelKey>(this.keys);
+		this.keys = new HashSet<ModelKey>(keys);
 	}
 
 	// MARK: MutableLinkChange

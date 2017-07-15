@@ -18,7 +18,7 @@ import com.dereekb.gae.model.extension.links.components.impl.LinkDataImpl;
 import com.dereekb.gae.model.extension.links.components.impl.RelationResultImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
-import com.dereekb.gae.utilities.collections.list.SetUtility.SetDifference;
+import com.dereekb.gae.utilities.collections.list.SetUtility.SetInfo;
 
 /**
  * {@link Link} implementation that wraps a {@link Collection} that is retained
@@ -132,7 +132,7 @@ public class LinkCollectionImpl<T>
 	private RelationResultImpl buildRelationResult(boolean adding,
 	                                               List<ModelKey> keys) {
 		List<ModelKey> currentKeys = this.converter.convertTo(this.collection);
-		SetDifference<ModelKey> difference = SetUtility.makeSetDifference(keys, currentKeys);
+		SetInfo<ModelKey> difference = SetUtility.makeSetInfo(keys, currentKeys);
 
 		RelationResultImpl result = null;
 

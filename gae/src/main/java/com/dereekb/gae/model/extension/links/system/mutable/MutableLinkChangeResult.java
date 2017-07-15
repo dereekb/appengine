@@ -11,12 +11,26 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  */
 public interface MutableLinkChangeResult {
+	
+	/**
+	 * Returns the "before" set.
+	 * 
+	 * @return {@link set}.
+	 */
+	public Set<ModelKey> getOriginalSet();
+	
+	/**
+	 * Returns the "after" set.
+	 * 
+	 * @return
+	 */
+	public Set<ModelKey> getResultSet();
 
 	/**
 	 * Returns {@link ModelKey} values for all successful/non-redundant changes.
 	 * If the set is not empty then the model was modified.
 	 * <p>
-	 * For {@link MutableLinkChangeType#SET}, this describes the original set being replaced.
+	 * For {@link MutableLinkChangeType#SET}, this describes values being added and removed, but not redundant values. To find removed values, take compliment of this value and the change's keys.
 	 * <p>
 	 * For {@link MutableLinkChangeType#ADD}, this describes values that were
 	 * set to be added, and were not already linked.

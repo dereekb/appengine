@@ -82,6 +82,16 @@ public class MutableLinkChangeResultImpl implements MutableLinkChangeResult {
 
 	// MARK: MutableLinkChangeResult
 	@Override
+	public Set<ModelKey> getOriginalSet() {
+		return this.beforeChangeSet;
+	}
+
+	@Override
+	public Set<ModelKey> getResultSet() {
+		return this.afterChangeSet;
+	}
+	
+	@Override
 	public Set<ModelKey> getModified() {
 		return this.instance.getModified();
 	}
@@ -104,6 +114,16 @@ public class MutableLinkChangeResultImpl implements MutableLinkChangeResult {
 		private Set<ModelKey> modified;
 		private Set<ModelKey> redundant;
 
+		@Override
+		public Set<ModelKey> getOriginalSet() {
+			return MutableLinkChangeResultImpl.this.beforeChangeSet;
+		}
+
+		@Override
+		public Set<ModelKey> getResultSet() {
+			return MutableLinkChangeResultImpl.this.afterChangeSet;
+		}
+		
 		@Override
 		public Set<ModelKey> getModified() {
 			if (this.modified == null) {
@@ -137,16 +157,16 @@ public class MutableLinkChangeResultImpl implements MutableLinkChangeResult {
 
 		@Override
 		protected Set<ModelKey> computeModified() {
-			// Keys that were not in the original set.
+			// Keys that are unique to the change's set.
 			Set<ModelKey> changeKeys = MutableLinkChangeResultImpl.this.change.getKeys();
-			return SetUtility.makeSetDifference(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getCompliment();
+			return SetUtility.makeSetInfo(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getCompliment();
 		}
 
 		@Override
 		protected Set<ModelKey> computeRedundant() {
 			// Keys that were in both sets initially.
 			Set<ModelKey> changeKeys = MutableLinkChangeResultImpl.this.change.getKeys();
-			return SetUtility.makeSetDifference(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getIntersection();
+			return SetUtility.makeSetInfo(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getIntersection();
 		}
 
 	}
@@ -157,32 +177,26 @@ public class MutableLinkChangeResultImpl implements MutableLinkChangeResult {
 		protected Set<ModelKey> computeModified() {
 			// Keys that were in both sets initially.
 			Set<ModelKey> changeKeys = MutableLinkChangeResultImpl.this.change.getKeys();
-			return SetUtility.makeSetDifference(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getIntersection();
+			return SetUtility.makeSetInfo(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getIntersection();
 		}
 
 		@Override
 		protected Set<ModelKey> computeRedundant() {
 			// Keys that were requested to be removed, but not in the original set.
 			Set<ModelKey> changeKeys = MutableLinkChangeResultImpl.this.change.getKeys();
-			return SetUtility.makeSetDifference(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getCompliment();
+			return SetUtility.makeSetInfo(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getCompliment();
 		}
 
 	}
 
-	private class SetInstance extends Instance {
+	private class SetInstance extends AddInstance {
 
 		@Override
 		protected Set<ModelKey> computeModified() {
-			return MutableLinkChangeResultImpl.this.beforeChangeSet;
-			
-		}
-
-		@Override
-		protected Set<ModelKey> computeRedundant() {
 			Set<ModelKey> changeKeys = MutableLinkChangeResultImpl.this.change.getKeys();
-			return SetUtility.makeSetDifference(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getIntersection();
+			return SetUtility.makeSetInfo(MutableLinkChangeResultImpl.this.beforeChangeSet, changeKeys).getDifference();
 		}
-
+		
 	}
 
 	private class ClearInstance extends Instance {
