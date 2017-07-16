@@ -53,6 +53,51 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	private TaskRequestSender<T> reviewTaskSender;
 
 	private LinkModificationSystemModelChangeBuilder changeBuilder = LinkModificationSystemModelChangeBuilderImpl.SINGLETON;
+	
+	public LinkModificationSystemEntryImpl(MutableLinkModelAccessor<T> accessor,
+	        Updater<T> updater,
+	        TaskRequestSender<T> reviewTaskSender) {
+		super();
+		this.setAccessor(accessor);
+		this.setUpdater(updater);
+		this.setReviewTaskSender(reviewTaskSender);
+	}
+
+	public MutableLinkModelAccessor<T> getAccessor() {
+		return this.accessor;
+	}
+	
+	public void setAccessor(MutableLinkModelAccessor<T> accessor) {
+		if (accessor == null) {
+			throw new IllegalArgumentException("accessor cannot be null.");
+		}
+	
+		this.accessor = accessor;
+	}
+	
+	public Updater<T> getUpdater() {
+		return this.updater;
+	}
+	
+	public void setUpdater(Updater<T> updater) {
+		if (updater == null) {
+			throw new IllegalArgumentException("updater cannot be null.");
+		}
+	
+		this.updater = updater;
+	}
+
+	public TaskRequestSender<T> getReviewTaskSender() {
+		return this.reviewTaskSender;
+	}
+	
+	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) {
+		if (reviewTaskSender == null) {
+			throw new IllegalArgumentException("reviewTaskSender cannot be null.");
+		}
+	
+		this.reviewTaskSender = reviewTaskSender;
+	}
 
 	// MARK: LinkModificationSystemEntry
 	@Override

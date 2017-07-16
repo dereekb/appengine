@@ -33,7 +33,7 @@ public class TestLinkModelB extends DatabaseModel implements ObjectifyModel<Test
 	/**
 	 * Parent-Child bidirectional link with {@link TestLinkModelA}.
 	 */
-	private Set<ModelKey> parentKeys;
+	private Set<ModelKey> parentKeys = new HashSet<ModelKey>();
 		
 	public String getIdentifier() {
 		return this.identifier;

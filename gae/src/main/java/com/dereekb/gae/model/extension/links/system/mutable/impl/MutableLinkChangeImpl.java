@@ -20,8 +20,8 @@ import com.dereekb.gae.utilities.collections.list.SetUtility;
 public class MutableLinkChangeImpl
         implements MutableLinkChange {
 
-	private MutableLinkChangeType linkChangeType;
-	private Set<ModelKey> keys;
+	protected final MutableLinkChangeType linkChangeType;
+	protected final Set<ModelKey> keys;
 
 	public static MutableLinkChangeImpl add(Collection<ModelKey> keys) throws IllegalArgumentException {
 		if (keys == null || keys.isEmpty()) {
@@ -58,16 +58,10 @@ public class MutableLinkChangeImpl
 	}
 
 	public static MutableLinkChangeImpl make(MutableLinkChangeType linkChangeType,
-	                                         Set<ModelKey> keys) {
-		if (linkChangeType == null) {
-			throw new IllegalArgumentException("linkChangeType cannot be null.");
-		}
-
-		if (keys == null) {
-			throw new IllegalArgumentException("keys cannot be null.");
-		}
-
-		return new MutableLinkChangeImpl(linkChangeType, keys);
+	                                         Collection<ModelKey> keys) {
+		MutableLinkChangeImpl change = new MutableLinkChangeImpl(linkChangeType, keys);
+		change.assertKeysAndType();
+		return change;
 	}
 
 	/**
@@ -100,6 +94,16 @@ public class MutableLinkChangeImpl
 	protected MutableLinkChangeImpl(MutableLinkChangeType linkChangeType, Collection<ModelKey> keys) {
 		this.linkChangeType = linkChangeType;
 		this.keys = new HashSet<ModelKey>(keys);
+	}
+
+	protected void assertKeysAndType() {
+		if (this.linkChangeType == null) {
+			throw new IllegalArgumentException("linkChangeType cannot be null.");
+		}
+
+		if (this.keys == null) {
+			throw new IllegalArgumentException("keys cannot be null.");
+		}
 	}
 
 	// MARK: MutableLinkChange

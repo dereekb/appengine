@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
+import java.util.Map;
+
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
@@ -21,6 +23,23 @@ public class LinkModificationSystemDelegateImpl
         implements LinkModificationSystemDelegate {
 
 	private CaseInsensitiveMap<LinkModificationSystemEntry> systemEntries;
+
+	public LinkModificationSystemDelegateImpl(Map<String, LinkModificationSystemEntry> systemEntries) {
+		super();
+		this.setSystemEntries(systemEntries);
+	}
+
+	public Map<String, LinkModificationSystemEntry> getSystemEntries() {
+		return this.systemEntries;
+	}
+
+	public void setSystemEntries(Map<String, LinkModificationSystemEntry> systemEntries) {
+		if (systemEntries == null) {
+			throw new IllegalArgumentException("systemEntries cannot be null.");
+		}
+	
+		this.systemEntries = new CaseInsensitiveMap<LinkModificationSystemEntry>(systemEntries);
+	}
 
 	// MARK: LinkModificationSystemDelegate
 	@Override

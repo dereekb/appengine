@@ -540,11 +540,12 @@ public class MutableLinkSystemBuilderImpl
 				}
 
 				try {
-					String reverseLinkModelType = this.getLinkModelType();
+					String reverseLinkModelType = this.getRelationLinkType();
 					LinkModelInfo reverseLinkModel = MutableLinkSystemBuilderImpl.this
 					        .loadLinkModelInfo(reverseLinkModelType);
 
-					String reverseLinkName = map.getReverseLinkName(this.getLinkName());
+					String linkName = this.getLinkName();
+					String reverseLinkName = map.getReverseLinkName(linkName);
 					LinkInfo reverseLinkInfo = reverseLinkModel.getLinkInfo(reverseLinkName);
 
 					return new RelationSourceImpl(this, reverseLinkInfo);

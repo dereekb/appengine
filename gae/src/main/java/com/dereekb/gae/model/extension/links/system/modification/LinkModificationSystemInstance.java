@@ -40,7 +40,7 @@ public interface LinkModificationSystemInstance {
 	 * @throws LinkModificationSystemRunnerAlreadyRunException
 	 *             thrown if {@link #applyChanges()} has already been called.
 	 */
-	public void applyChanges()
+	public LinkModificationSystemChangesResult applyChanges()
 	        throws FailedLinkModificationSystemChangeException,
 	            LinkModificationSystemRunnerAlreadyRunException;
 

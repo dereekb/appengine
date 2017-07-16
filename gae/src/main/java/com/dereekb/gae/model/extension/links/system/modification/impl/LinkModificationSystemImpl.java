@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangesResult;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
@@ -98,11 +99,11 @@ public class LinkModificationSystemImpl
 		}
 
 		@Override
-		public void applyChanges()
+		public LinkModificationSystemChangesResult applyChanges()
 		        throws FailedLinkModificationSystemChangeException,
 		            LinkModificationSystemRunnerAlreadyRunException {
 			LinkModificationSystemChangesRunner runner = LinkModificationSystemImpl.this.makeRunner(this.requests);
-			runner.run();
+			return runner.run();
 		}
 
 		// MARK: Internal
@@ -213,7 +214,7 @@ public class LinkModificationSystemImpl
 			this.inputRequestChanges = inputRequestChanges;
 		}
 
-		public void run()
+		public LinkModificationSystemChangesResult run()
 		        throws FailedLinkModificationSystemChangeException,
 		            LinkModificationSystemRunnerAlreadyRunException {
 			if (this.instance != null) {
@@ -232,7 +233,10 @@ public class LinkModificationSystemImpl
 				// throws FailedLinkModificationSystemChangeException
 				this.instance.undoChanges();
 				// TODO: Throw specific failed exception.
+				throw new RuntimeException(e);
 			}
+			
+			return null; // TODO: Return response
 		}
 
 		protected void runPrimaryChanges(List<LinkModification> modifications) {
