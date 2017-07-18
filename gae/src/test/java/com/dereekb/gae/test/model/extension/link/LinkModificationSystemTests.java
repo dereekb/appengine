@@ -35,6 +35,7 @@ import com.dereekb.gae.test.model.extension.link.model.TestLinkModelB;
 import com.dereekb.gae.test.model.extension.link.model.TestLinkModelBLinkSystemBuilderEntry;
 import com.dereekb.gae.test.spring.CoreServiceTestingContext;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 
 /**
  * Unit tests for {@link LinkModificationSystemImpl}.
@@ -313,6 +314,63 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		for (TestLinkModelA child : children) {
 			Assert.assertTrue(child.getPrimaryKey() == null);
 		}
+		
+	}
+	/**
+	 * Tests linking and unlinking a one to many relation.
+	 * 
+	 * @throws InvalidLinkModificationSystemRequestException 
+	 * @throws MultipleLinkModificationQueueException 
+	 * @throws UnavailableLinkModelException 
+	 * @throws UnavailableLinkException 
+	 * @throws FailedLinkModificationSystemChangeException 
+	 * @throws LinkModificationSystemRunnerAlreadyRunException 
+	 */
+	@Test
+	public void testBidirectionalOneToOneLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, MultipleLinkModificationQueueException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
+
+		// Generate Models
+		TestLinkModelA a = linkSystemInfo.aEntityGenerator.generate();
+		TestLinkModelB b = linkSystemInfo.bEntityGenerator.generate();
+
+		// Link Models
+		ModelKey aModelKey = a.getModelKey();
+		ModelKey bModelKey = b.getModelKey();
+		
+		MutableLinkChange linkAToBChange = MutableLinkChangeImpl.set(SetUtility.wrap(bModelKey));
+
+		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, linkAToBChange);
+
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+		instance.queueRequest(linkRequest);
+		
+		LinkModificationSystemChangesResult result = instance.applyChanges();
+
+		// Assert models were linked
+		a = this.testSystem.testLinkSystem.aEntity.get(a);
+		b = this.testSystem.testLinkSystem.bEntity.get(b);
+
+		Assert.assertTrue(a.getThirdKey().equals(b.getModelKey()));
+		Assert.assertTrue(b.getMainKey().equals(a.getModelKey()));
+		
+		// Unlink Models
+		MutableLinkChange unlinkAToBChange = MutableLinkChangeImpl.clear();
+
+		LinkModificationSystemRequest unlinkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, unlinkAToBChange);
+
+		instance = this.testSystem.linkModificationSystem.makeInstance();
+		instance.queueRequest(unlinkRequest);
+		
+		result = instance.applyChanges();
+
+		// Assert models were unlinked
+		a = this.testSystem.testLinkSystem.aEntity.get(a);
+		b = this.testSystem.testLinkSystem.bEntity.get(b);
+
+		Assert.assertTrue(a.getThirdKey() == null);
+		Assert.assertTrue(b.getMainKey() == null);
 		
 	}
 }

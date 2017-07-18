@@ -74,6 +74,8 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 		        TestLinkModelALinkSystemBuilderEntry.PRIMARY_LINK_NAME);
 		aBiLinks.put(TestLinkModelALinkSystemBuilderEntry.B_CHILDREN_LINK_NAME,
 		        TestLinkModelBLinkSystemBuilderEntry.PARENTS_LINK_NAME);
+		aBiLinks.put(TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME,
+		        TestLinkModelBLinkSystemBuilderEntry.MAIN_LINK_NAME);
 
 		aLinkSystemEntry.setBidirectionalLinkNames(aBiLinks);
 
@@ -89,6 +91,9 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 
 		bBiLinks.put(TestLinkModelBLinkSystemBuilderEntry.PARENTS_LINK_NAME,
 		        TestLinkModelALinkSystemBuilderEntry.B_CHILDREN_LINK_NAME);
+
+		bBiLinks.put(TestLinkModelBLinkSystemBuilderEntry.MAIN_LINK_NAME,
+		        TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME);
 
 		bLinkSystemEntry.setBidirectionalLinkNames(bBiLinks);
 

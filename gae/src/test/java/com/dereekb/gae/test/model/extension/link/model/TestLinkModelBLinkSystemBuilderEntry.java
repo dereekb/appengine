@@ -11,6 +11,8 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractMutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.MultipleMutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.MultipleMutableLinkDataDelegate;
+import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkData;
+import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkDataDelegate;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilderEntry<TestLinkModelB> {
@@ -18,12 +20,14 @@ public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSys
 	public static final String LINK_MODEL_TYPE = TestLinkModelB.MODEL_ENTITY_NAME;
 
 	public static final String PARENTS_LINK_NAME = "parents"; 
+	public static final String MAIN_LINK_NAME = "main"; 
 	
 	public TestLinkModelBLinkSystemBuilderEntry(ReadService<TestLinkModelB> readService) {
 		super(readService);
 	}
-	
+
 	private SimpleLinkInfo parentLinkInfo = new SimpleLinkInfoImpl(PARENTS_LINK_NAME, TestLinkModelALinkSystemBuilderEntry.LINK_MODEL_TYPE);
+	private SimpleLinkInfo mainLinkInfo = new SimpleLinkInfoImpl(MAIN_LINK_NAME, TestLinkModelALinkSystemBuilderEntry.LINK_MODEL_TYPE);
 
 	// MARK: AbstractMutableLinkSystemBuilderEntry
 	@Override
@@ -52,6 +56,24 @@ public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSys
 		});
 		
 		linkData.add(parentsLinkData);
+
+		// Main
+		SingleMutableLinkData<TestLinkModelB> mainLinkData = new SingleMutableLinkData<TestLinkModelB>(this.mainLinkInfo, new SingleMutableLinkDataDelegate<TestLinkModelB>() {
+
+			@Override
+			public ModelKey readLinkedModelKey(TestLinkModelB model) {
+				return model.getMainKey();
+			}
+
+			@Override
+			public void setLinkedModelKey(TestLinkModelB model,
+			                              ModelKey modelKey) {
+				model.setMainKey(modelKey);
+			}
+			
+		});
+		
+		linkData.add(mainLinkData);
 		
 		return linkData;
 	}

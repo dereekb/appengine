@@ -213,7 +213,7 @@ public class LinkModificationSynchronizationBuilder {
 						MutableLinkChange clearChange = MutableLinkChangeImpl.make(MutableLinkChangeType.CLEAR,
 						        originalKey);
 						List<LinkModification> clearSync = this.makeSynchronizationLinkModificationForKeys(clearChange,
-						        relationLinkInfo, modified);
+						        relationLinkInfo, allRemoved);
 
 						List<LinkModification> syncChanges = new ArrayList<LinkModification>(setSync);
 						syncChanges.addAll(clearSync);

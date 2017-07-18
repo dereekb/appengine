@@ -51,6 +51,11 @@ public class TestLinkModelA extends DatabaseModel implements ObjectifyModel<Test
 	 * Parent-Child bidirectional link with {@link TestLinkModelB}.
 	 */
 	private Set<String> bChildKeys = new HashSet<String>();
+
+	/**
+	 * Bidirectional link with a {@link TestLinkModelB}.
+	 */
+	private String thirdKey;
 	
 	public Long getIdentifier() {
 		return this.identifier;
@@ -98,6 +103,14 @@ public class TestLinkModelA extends DatabaseModel implements ObjectifyModel<Test
 		if (bChildKeys != null) {
 			this.bChildKeys.addAll(StringModelKeyConverterImpl.CONVERTER.convertFrom(bChildKeys));
 		}
+	}
+
+	public ModelKey getThirdKey() {
+		return ModelKey.safe(this.thirdKey);
+	}
+	
+	public void setThirdKey(ModelKey thirdKey) {
+		this.thirdKey = ModelKey.readName(thirdKey);
 	}
 
 	// Unique Model

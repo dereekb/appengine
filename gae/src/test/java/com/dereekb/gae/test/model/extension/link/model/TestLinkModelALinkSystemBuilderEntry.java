@@ -23,6 +23,7 @@ public class TestLinkModelALinkSystemBuilderEntry extends AbstractMutableLinkSys
 	public static final String A_CHILDREN_LINK_NAME = "aChildren"; 
 	public static final String SECONDARY_LINK_NAME = "secondary"; 
 	public static final String B_CHILDREN_LINK_NAME = "bChildren"; 
+	public static final String THIRD_LINK_NAME = "third"; 
 	
 	public TestLinkModelALinkSystemBuilderEntry(ReadService<TestLinkModelA> readService) {
 		super(readService);
@@ -32,6 +33,7 @@ public class TestLinkModelALinkSystemBuilderEntry extends AbstractMutableLinkSys
 	private SimpleLinkInfo aChildrenLinkInfo = new SimpleLinkInfoImpl(A_CHILDREN_LINK_NAME, LINK_MODEL_TYPE);
 	private SimpleLinkInfo secondaryLinkInfo = new SimpleLinkInfoImpl(SECONDARY_LINK_NAME, TestLinkModelBLinkSystemBuilderEntry.LINK_MODEL_TYPE);
 	private SimpleLinkInfo bChildrenLinkInfo = new SimpleLinkInfoImpl(B_CHILDREN_LINK_NAME, TestLinkModelBLinkSystemBuilderEntry.LINK_MODEL_TYPE);
+	private SimpleLinkInfo thirdLinkInfo = new SimpleLinkInfoImpl(THIRD_LINK_NAME, TestLinkModelBLinkSystemBuilderEntry.LINK_MODEL_TYPE);
 	
 	// MARK: AbstractMutableLinkSystemBuilderEntry
 	@Override
@@ -115,6 +117,24 @@ public class TestLinkModelALinkSystemBuilderEntry extends AbstractMutableLinkSys
 		});
 		
 		linkData.add(bChildrenLinkData);
+
+		// Third
+		SingleMutableLinkData<TestLinkModelA> thirdLinkData = new SingleMutableLinkData<TestLinkModelA>(this.thirdLinkInfo, new SingleMutableLinkDataDelegate<TestLinkModelA>() {
+
+			@Override
+			public ModelKey readLinkedModelKey(TestLinkModelA model) {
+				return model.getThirdKey();
+			}
+
+			@Override
+			public void setLinkedModelKey(TestLinkModelA model,
+			                              ModelKey modelKey) {
+				model.setThirdKey(modelKey);
+			}
+			
+		});
+		
+		linkData.add(thirdLinkData);
 		
 		return linkData;
 	}

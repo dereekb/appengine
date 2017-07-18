@@ -35,6 +35,11 @@ public class TestLinkModelB extends DatabaseModel implements ObjectifyModel<Test
 	 * Parent-Child bidirectional link with {@link TestLinkModelA}.
 	 */
 	private Set<Long> parentKeys = new HashSet<Long>();
+
+	/**
+	 * Bidirectional link with {@link TestLinkModelA}.
+	 */
+	private Long mainKey = null;
 		
 	public String getIdentifier() {
 		return this.identifier;
@@ -54,6 +59,14 @@ public class TestLinkModelB extends DatabaseModel implements ObjectifyModel<Test
 		if (parentKeys != null) {
 			this.parentKeys.addAll(LongModelKeyConverterImpl.SINGLETON.convertFrom(parentKeys));
 		}
+	}
+
+	public ModelKey getMainKey() {
+		return ModelKey.safe(this.mainKey);
+	}
+	
+	public void setMainKey(ModelKey mainKey) {
+		this.mainKey = ModelKey.readIdentifier(mainKey);
 	}
 
 	// Unique Model
