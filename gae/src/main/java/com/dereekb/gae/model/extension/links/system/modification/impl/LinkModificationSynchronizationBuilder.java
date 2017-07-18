@@ -120,11 +120,16 @@ public class LinkModificationSynchronizationBuilder {
 						return this.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modified);
 					case SET:
 						// Add and Remove items to properly synchronize.
+						Set<ModelKey> changeKeys = linkModification.getChange().getKeys();
 
-						Set<ModelKey> allAdded = new HashSet<ModelKey>(linkModification.getChange().getKeys());
+						Set<ModelKey> allAdded = new HashSet<ModelKey>(changeKeys);
 						Set<ModelKey> alreadyLinked = linkChangeResult.getRedundant();
-						allAdded.removeAll(alreadyLinked);	// Don't update links to
-						                                  	// already linked.
+						
+						// Don't update links to already linked.
+						allAdded.removeAll(alreadyLinked);
+						
+						Set<ModelKey> allRemoved = new HashSet<ModelKey>(linkChangeResult.getOriginalSet());
+						allRemoved.removeAll(changeKeys);
 
 						MutableLinkChange addChange = MutableLinkChangeImpl.make(MutableLinkChangeType.ADD, originalKey);
 						List<LinkModification> addSync = this.makeSynchronizationLinkModificationForKeys(addChange,
@@ -133,7 +138,7 @@ public class LinkModificationSynchronizationBuilder {
 						MutableLinkChange removeChange = MutableLinkChangeImpl.make(MutableLinkChangeType.REMOVE,
 						        originalKey);
 						List<LinkModification> removeSync = this.makeSynchronizationLinkModificationForKeys(removeChange,
-						        relationLinkInfo, modified);
+						        relationLinkInfo, allRemoved);
 
 						List<LinkModification> syncChanges = new ArrayList<LinkModification>(addSync);
 						syncChanges.addAll(removeSync);
@@ -188,11 +193,16 @@ public class LinkModificationSynchronizationBuilder {
 						return this.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modified);
 					case SET:
 						// Set new, and clear old.
-						Set<ModelKey> allAdded = new HashSet<ModelKey>(linkModification.getChange().getKeys());
+						Set<ModelKey> changeKeys = linkModification.getChange().getKeys();
+
+						Set<ModelKey> allAdded = new HashSet<ModelKey>(changeKeys);
 						Set<ModelKey> alreadyLinked = linkChangeResult.getRedundant();
 						
 						// Don't update links to already linked.
 						allAdded.removeAll(alreadyLinked);
+
+						Set<ModelKey> allRemoved = new HashSet<ModelKey>(linkChangeResult.getOriginalSet());
+						allRemoved.removeAll(changeKeys);
 
 						// Set New Links
 						MutableLinkChange setChange = MutableLinkChangeImpl.make(MutableLinkChangeType.SET, originalKey);

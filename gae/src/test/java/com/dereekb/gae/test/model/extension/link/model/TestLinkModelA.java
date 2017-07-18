@@ -5,6 +5,8 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.test.model.extension.link.LinkSystemTests;
@@ -33,22 +35,22 @@ public class TestLinkModelA extends DatabaseModel implements ObjectifyModel<Test
 	/**
 	 * Parent-Child bidirectional link with {@link TestLinkModelA}.
 	 */
-	private ModelKey primaryKey;
+	private Long primaryKey;
 
 	/**
 	 * Parent-Child bidirectional link with {@link TestLinkModelA}.
 	 */
-	private Set<ModelKey> aChildKeys = new HashSet<ModelKey>();
+	private Set<Long> aChildKeys = new HashSet<Long>();
 	
 	/**
 	 * One-way link with {@link TestLinkModelB}.
 	 */
-	private ModelKey secondaryKey;
+	private String secondaryKey;
 	
 	/**
 	 * Parent-Child bidirectional link with {@link TestLinkModelB}.
 	 */
-	private Set<ModelKey> bChildKeys = new HashSet<ModelKey>();
+	private Set<String> bChildKeys = new HashSet<String>();
 	
 	public Long getIdentifier() {
 		return this.identifier;
@@ -59,42 +61,42 @@ public class TestLinkModelA extends DatabaseModel implements ObjectifyModel<Test
 	}
 	
 	public ModelKey getPrimaryKey() {
-		return this.primaryKey;
+		return ModelKey.safe(this.primaryKey);
 	}
 	
 	public void setPrimaryKey(ModelKey primaryKey) {
-		this.primaryKey = primaryKey;
+		this.primaryKey = ModelKey.readIdentifier(primaryKey);
 	}
 
 	public Set<ModelKey> getaChildKeys() {
-		return this.aChildKeys;
+		return new HashSet<ModelKey>(LongModelKeyConverterImpl.SINGLETON.convert(this.aChildKeys));
 	}
 
 	public void setaChildKeys(Set<ModelKey> aChildKeys) {
-		this.aChildKeys = new HashSet<ModelKey>();
+		this.aChildKeys = new HashSet<Long>();
 		
 		if (aChildKeys != null) {
-			this.aChildKeys.addAll(aChildKeys);
+			this.aChildKeys.addAll(LongModelKeyConverterImpl.SINGLETON.convertFrom(aChildKeys));
 		}
 	}
 
 	public ModelKey getSecondaryKey() {
-		return this.secondaryKey;
+		return ModelKey.safe(this.secondaryKey);
 	}
 	
 	public void setSecondaryKey(ModelKey secondaryKey) {
-		this.secondaryKey = secondaryKey;
+		this.secondaryKey = ModelKey.readName(secondaryKey);
 	}
 
 	public Set<ModelKey> getbChildKeys() {
-		return this.bChildKeys;
+		return new HashSet<ModelKey>(StringModelKeyConverterImpl.CONVERTER.convert(this.bChildKeys));
 	}
 
 	public void setbChildKeys(Set<ModelKey> bChildKeys) {
-		this.bChildKeys = new HashSet<ModelKey>();
+		this.bChildKeys = new HashSet<String>();
 		
 		if (bChildKeys != null) {
-			this.bChildKeys.addAll(bChildKeys);
+			this.bChildKeys.addAll(StringModelKeyConverterImpl.CONVERTER.convertFrom(bChildKeys));
 		}
 	}
 

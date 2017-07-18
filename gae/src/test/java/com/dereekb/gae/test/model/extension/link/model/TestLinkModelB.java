@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.test.model.extension.link.LinkSystemTests;
@@ -33,7 +34,7 @@ public class TestLinkModelB extends DatabaseModel implements ObjectifyModel<Test
 	/**
 	 * Parent-Child bidirectional link with {@link TestLinkModelA}.
 	 */
-	private Set<ModelKey> parentKeys = new HashSet<ModelKey>();
+	private Set<Long> parentKeys = new HashSet<Long>();
 		
 	public String getIdentifier() {
 		return this.identifier;
@@ -44,14 +45,14 @@ public class TestLinkModelB extends DatabaseModel implements ObjectifyModel<Test
 	}
 
 	public Set<ModelKey> getParentKeys() {
-		return this.parentKeys;
+		return new HashSet<ModelKey>(LongModelKeyConverterImpl.SINGLETON.convert(this.parentKeys));
 	}
 	
 	public void setParentKeys(Set<ModelKey> parentKeys) {
-		this.parentKeys = new HashSet<ModelKey>();
+		this.parentKeys = new HashSet<Long>();
 		
 		if (parentKeys != null) {
-			this.parentKeys.addAll(parentKeys);
+			this.parentKeys.addAll(LongModelKeyConverterImpl.SINGLETON.convertFrom(parentKeys));
 		}
 	}
 

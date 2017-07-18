@@ -212,6 +212,11 @@ public class MutableLinkChangeResultImpl implements MutableLinkChangeResult {
 		}
 
 	}
-	
+
+	@Override
+	public String toString() {
+		return "MutableLinkChangeResultImpl [change=" + this.change + ", beforeChangeSet=" + this.beforeChangeSet
+		        + ", afterChangeSet=" + this.afterChangeSet + ", instance=" + this.instance + "]";
+	}
 	
 }

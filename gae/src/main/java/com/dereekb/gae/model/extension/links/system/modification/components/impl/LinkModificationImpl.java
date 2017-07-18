@@ -112,4 +112,10 @@ public class LinkModificationImpl
 		return modifications;
 	}
 
+	@Override
+	public String toString() {
+		return "LinkModificationImpl [optional=" + this.optional + ", key=" + this.key + ", link=" + this.link
+		        + ", change=" + this.change + "]";
+	}
+
 }

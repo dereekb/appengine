@@ -23,7 +23,7 @@ public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSys
 		super(readService);
 	}
 	
-	private SimpleLinkInfo parentLinkInfo = new SimpleLinkInfoImpl(PARENTS_LINK_NAME, TestLinkModelBLinkSystemBuilderEntry.LINK_MODEL_TYPE);
+	private SimpleLinkInfo parentLinkInfo = new SimpleLinkInfoImpl(PARENTS_LINK_NAME, TestLinkModelALinkSystemBuilderEntry.LINK_MODEL_TYPE);
 
 	// MARK: AbstractMutableLinkSystemBuilderEntry
 	@Override

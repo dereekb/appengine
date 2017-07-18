@@ -262,12 +262,14 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 						ModelKey key = linkModel.getModelKey();
 
 						LinkModificationSystemModelChangeSet changes = ModificationBatch.this.changeInstances.get(key);
+						
 						LinkModificationSystemModelChangeInstanceSet instanceSet = changes.makeChangeSet(linkModel);
 						instanceMap.put(key, instanceSet);
 
 						// Apply Change To Model
 						LinkModificationResultSet resultSet = instanceSet.applyChanges();
 
+						
 						// If a Change was made,
 						// then add it to the models to be saved.
 						if (resultSet.isModelModified()) {
