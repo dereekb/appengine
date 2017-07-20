@@ -101,11 +101,12 @@ public class LinkModificationImpl
 	// MARK: Utility
 	public static List<LinkModification> makeSynchronizationLinkModificationForKeys(MutableLinkChange syncChange,
 	                                                                                 LinkInfo relationLinkInfo,
-	                                                                                 Set<ModelKey> modelKeys) {
+	                                                                                 Set<ModelKey> modelKeys,
+	                                                                                 boolean optional) {
 		List<LinkModification> modifications = new ArrayList<LinkModification>();
 
 		for (ModelKey modelKey : modelKeys) {			
-			LinkModification modification = new LinkModificationImpl(modelKey, relationLinkInfo, syncChange);
+			LinkModification modification = new LinkModificationImpl(modelKey, relationLinkInfo, syncChange, optional);
 			modifications.add(modification);
 		}
 

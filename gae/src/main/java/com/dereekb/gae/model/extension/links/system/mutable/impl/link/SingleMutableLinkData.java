@@ -92,6 +92,8 @@ public class SingleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 				case CLEAR:
 					this.setLinkedModelKeyForChange(change, null);
 					break;
+				case NONE: 
+					return;	// Do nothing.
 				default:
 					throw new UnsupportedOperationException();
 			}

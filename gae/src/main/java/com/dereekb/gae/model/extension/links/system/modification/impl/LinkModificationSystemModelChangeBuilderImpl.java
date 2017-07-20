@@ -168,7 +168,7 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 			protected MutableLinkChangeResult undoChange(MutableLink link,
 			                                             MutableLinkChangeResult result) {
 				MutableLinkChange change = AbstractLinkModificationSystemModelChange.this.linkModification.getChange();
-				MutableLinkChange undoChange = MutableLinkChangeImpl.makeUndo(change, result);
+				MutableLinkChange undoChange = MutableLinkChangeImpl.makeUndo(link, change, result);
 				return link.modifyKeys(undoChange);
 			}
 

@@ -9,7 +9,6 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
-import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
@@ -18,6 +17,8 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequestValidator;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequestValidatorInstance;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
@@ -27,6 +28,7 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.Inval
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
+import com.dereekb.gae.model.extension.links.system.mutable.exception.LinkChangeLinkSizeException;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -41,7 +43,7 @@ import com.dereekb.gae.utilities.collections.map.MapUtility;
  *
  */
 public class LinkModificationSystemImpl
-        implements LinkModificationSystem {
+        implements LinkModificationSystem, LinkModificationSystemRequestValidator {
 
 	private LinkSystem linkSystem;
 	private LinkModificationSystemDelegate delegate;
@@ -87,7 +89,8 @@ public class LinkModificationSystemImpl
 	        implements LinkModificationSystemInstance {
 
 		private final List<LinkModificationSystemRequest> requests = new ArrayList<LinkModificationSystemRequest>();
-
+		private final LinkModificationSystemRequestValidatorInstance validator = LinkModificationSystemImpl.this.makeValidatorInstance();
+		
 		// MARK: LinkModificationSystemInstance
 		@Override
 		public void queueRequest(LinkModificationSystemRequest request)
@@ -111,21 +114,7 @@ public class LinkModificationSystemImpl
 		        throws UnavailableLinkModelException,
 		            UnavailableLinkException,
 		            TooManyChangeKeysException {
-
-			LinkInfo linkInfo = LinkModificationSystemImpl.this.getLinkInfoForRequest(request);
-
-			// Throw if multiple items are passed to a single item link.
-			if (linkInfo.getLinkSize() == LinkSize.ONE && request.getKeys().size() > 1) {
-				throw new TooManyChangeKeysException(request);
-			}
-			
-			// TODO: Assert only SET or CLEAR is sent for LinkSize.ONE
-
-			// TODO: Assert that only 1 change is occurring per model's link.
-			// Do not allow multiple changes to the same link on the same
-			// model, as it is unsafe.
-
-			// TODO: Validate further for the request.
+			this.validator.validateRequest(request);
 		}
 
 	}
@@ -311,6 +300,77 @@ public class LinkModificationSystemImpl
 			return typeKeyedMap;
 		}
 
+	}
+
+	// MARK: LinkModificationSystemRequestValidator
+	@Override
+	public LinkModificationSystemRequestValidatorInstance makeValidatorInstance() {
+		return new LinkModificationSystemRequestValidatorInstanceImpl();
+	}
+	
+	protected class LinkModificationSystemRequestValidatorInstanceImpl implements LinkModificationSystemRequestValidatorInstance {
+
+		
+		@Override
+		public void validateRequest(LinkModificationSystemRequest request)
+		        throws UnavailableLinkModelException,
+		            UnavailableLinkException,
+		            TooManyChangeKeysException {
+
+			LinkInfo linkInfo = LinkModificationSystemImpl.this.getLinkInfoForRequest(request);
+
+			switch (linkInfo.getLinkSize()) {
+				case MANY:
+					this.validateManyLink(linkInfo, request);
+					break;
+				case ONE:
+					this.validateOneLink(linkInfo, request);
+					break;
+				default:
+					throw new UnsupportedOperationException();
+			}
+			
+			// TODO: Assert that only 1 change is occurring per model's link.
+			// Do not allow multiple changes to the same link on the same
+			// model, as it is unsafe.
+
+		}
+
+		// MARK: One
+		private void validateOneLink(LinkInfo linkInfo,
+		                             LinkModificationSystemRequest request) throws TooManyChangeKeysException, LinkChangeLinkSizeException {
+			this.assertOneLinkKeysCount(request);
+			this.assertOneLinkChangeSize(request);
+		}
+
+		protected void assertOneLinkKeysCount(LinkModificationSystemRequest request) throws TooManyChangeKeysException {
+
+			// Assert there is only one request being made per model's link.
+			if (request.getKeys().size() > 1) {
+				throw new TooManyChangeKeysException(request);
+			}
+			
+		}
+		
+		protected void assertOneLinkChangeSize(LinkModificationSystemRequest request) throws LinkChangeLinkSizeException {
+			switch (request.getLinkChangeType()) {
+				case ADD:
+				case REMOVE:
+					throw new LinkChangeLinkSizeException(request);
+				case SET:
+				case CLEAR:
+				default:
+					break;
+			}
+		}
+
+		// MARK: Many
+		private void validateManyLink(LinkInfo linkInfo,
+		                              LinkModificationSystemRequest request) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 }

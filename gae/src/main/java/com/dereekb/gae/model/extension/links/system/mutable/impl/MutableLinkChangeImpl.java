@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.dereekb.gae.model.extension.links.system.components.Link;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
@@ -72,7 +73,10 @@ public class MutableLinkChangeImpl
 	 * @param result
 	 *            {@link MutableLinkChangeResult}. Never {@code null}.
 	 * @return {@link MutableLinkChangeImpl}. Never {@code null}.
+	 * 
+	 * @deprecated Not enough information is available to this function to properly execute undo in some cases.
 	 */
+	@Deprecated
 	public static MutableLinkChangeImpl makeUndo(MutableLinkChange change,
 	                                             MutableLinkChangeResult result) {
 		MutableLinkChangeType type = change.getLinkChangeType();
@@ -89,6 +93,22 @@ public class MutableLinkChangeImpl
 			default:
 				throw new UnsupportedOperationException();
 		}
+	}
+
+	/**
+	 * Makes a reverse change for a {@link MutableLinkChange}.
+	 * 
+	 * @param change
+	 *            {@link MutableLinkChange}. Never {@code null}.
+	 * @param result
+	 *            {@link MutableLinkChangeResult}. Never {@code null}.
+	 * @return {@link MutableLinkChangeImpl}. Never {@code null}.
+	 */
+	public static MutableLinkChange makeUndo(Link currentLink,
+	                                         MutableLinkChange previousChange,
+	                                         MutableLinkChangeResult result) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	protected MutableLinkChangeImpl(MutableLinkChangeType linkChangeType, Collection<ModelKey> keys) {

@@ -18,7 +18,7 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.MultipleLinkModificationQueueException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemDelegateImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemEntryImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemImpl;
@@ -104,14 +104,14 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * Tests linking and unlinking the many to many relation.
 	 * 
 	 * @throws InvalidLinkModificationSystemRequestException 
-	 * @throws MultipleLinkModificationQueueException 
+	 * @throws ConflictingLinkModificationSystemRequestException 
 	 * @throws UnavailableLinkModelException 
 	 * @throws UnavailableLinkException 
 	 * @throws FailedLinkModificationSystemChangeException 
 	 * @throws LinkModificationSystemRunnerAlreadyRunException 
 	 */
 	@Test
-	public void testBidirectionalManyToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, MultipleLinkModificationQueueException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testBidirectionalManyToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -212,14 +212,14 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * Tests linking and unlinking a one to many relation.
 	 * 
 	 * @throws InvalidLinkModificationSystemRequestException 
-	 * @throws MultipleLinkModificationQueueException 
+	 * @throws ConflictingLinkModificationSystemRequestException 
 	 * @throws UnavailableLinkModelException 
 	 * @throws UnavailableLinkException 
 	 * @throws FailedLinkModificationSystemChangeException 
 	 * @throws LinkModificationSystemRunnerAlreadyRunException 
 	 */
 	@Test
-	public void testBidirectionalOneToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, MultipleLinkModificationQueueException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testBidirectionalOneToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -316,18 +316,19 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		}
 		
 	}
+	
 	/**
 	 * Tests linking and unlinking a one to many relation.
 	 * 
 	 * @throws InvalidLinkModificationSystemRequestException 
-	 * @throws MultipleLinkModificationQueueException 
+	 * @throws ConflictingLinkModificationSystemRequestException 
 	 * @throws UnavailableLinkModelException 
 	 * @throws UnavailableLinkException 
 	 * @throws FailedLinkModificationSystemChangeException 
 	 * @throws LinkModificationSystemRunnerAlreadyRunException 
 	 */
 	@Test
-	public void testBidirectionalOneToOneLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, MultipleLinkModificationQueueException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testBidirectionalOneToOneLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -373,4 +374,97 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		Assert.assertTrue(b.getMainKey() == null);
 		
 	}
+
+	/**
+	 * Test unlinking from a model that has been deleted.
+	 */
+	@Test
+	public void testOptionalUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
+
+		// Generate Models
+		TestLinkModelA a = linkSystemInfo.aEntityGenerator.generate();
+		TestLinkModelB b = linkSystemInfo.bEntityGenerator.generate();
+
+		// Link Models
+		ModelKey aModelKey = a.getModelKey();
+		ModelKey bModelKey = b.getModelKey();
+		
+		MutableLinkChange linkAToBChange = MutableLinkChangeImpl.set(SetUtility.wrap(bModelKey));
+
+		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, linkAToBChange);
+
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+		instance.queueRequest(linkRequest);
+		
+		LinkModificationSystemChangesResult result = instance.applyChanges();
+
+		// Assert models were linked
+		a = this.testSystem.testLinkSystem.aEntity.get(a);
+		b = this.testSystem.testLinkSystem.bEntity.get(b);
+
+		Assert.assertTrue(a.getThirdKey().equals(b.getModelKey()));
+		Assert.assertTrue(b.getMainKey().equals(a.getModelKey()));
+		
+		// Delete Model B directly.
+		this.testSystem.testLinkSystem.bEntity.delete(b);
+
+		// Assert/show model a is still linked
+		a = this.testSystem.testLinkSystem.aEntity.get(a);
+
+		Assert.assertTrue(a.getThirdKey().equals(b.getModelKey()));
+		
+		// Unlink Models
+		MutableLinkChange unlinkAToBChange = MutableLinkChangeImpl.clear();
+
+		LinkModificationSystemRequest unlinkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, unlinkAToBChange);
+
+		instance = this.testSystem.linkModificationSystem.makeInstance();
+		instance.queueRequest(unlinkRequest);
+		
+		result = instance.applyChanges();
+
+		// Assert models were unlinked
+		a = this.testSystem.testLinkSystem.aEntity.get(a);
+
+		Assert.assertTrue(a.getThirdKey() == null);
+	}
+
+	@Test
+	public void testLinkingToUnavailableModelFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+	}
+
+	@Test
+	public void testAttemptingToLinkManyToSizeOneLinkFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testAttemptingToUseAddOrRemoveOnSizeOneLinkFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+	}
+
+	/**
+	 * Test that only a single change to a model's link is requested.
+	 * 
+	 * I.E. Two changes to the primary link on the same TestModelA cannot be performed.
+	 */
+	@Test
+	public void testAttemptingToUsePerformMultipleConcurrentSameModelLinkModificationsFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+	}
+
+	/**
+	 * Performs an undo after performing the changes to see if the change properly reverses.
+	 */
+	@Test
+	public void testUndoForOneToOneLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+	}
+
 }

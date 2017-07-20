@@ -88,6 +88,8 @@ public class MultipleMutableLinkData<T> extends AbstractMutableLinkData<T> {
 				case SET:
 					newKeys = change.getKeys();
 					break;
+				case NONE: 
+					return;	// Do nothing.
 				default:
 					throw new UnsupportedOperationException();
 			}

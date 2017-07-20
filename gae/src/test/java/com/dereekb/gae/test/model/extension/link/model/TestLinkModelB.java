@@ -53,7 +53,7 @@ public class TestLinkModelB extends DatabaseModel implements ObjectifyModel<Test
 		return new HashSet<ModelKey>(LongModelKeyConverterImpl.SINGLETON.convert(this.parentKeys));
 	}
 	
-	public void setParentKeys(Set<ModelKey> parentKeys) {
+	public void setParentKeys(Set<ModelKey> parentKeys) { 
 		this.parentKeys = new HashSet<Long>();
 		
 		if (parentKeys != null) {

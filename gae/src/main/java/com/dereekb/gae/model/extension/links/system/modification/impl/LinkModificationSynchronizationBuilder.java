@@ -85,8 +85,9 @@ public class LinkModificationSynchronizationBuilder {
 			// MARK: Internal
 			protected List<LinkModification> makeSynchronizationLinkModificationForKeys(MutableLinkChange syncChange,
 			                                                                                 LinkInfo relationLinkInfo,
-			                                                                                 Set<ModelKey> modelKeys) {
-				return LinkModificationImpl.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modelKeys);
+			                                                                                 Set<ModelKey> modelKeys, 
+			                                                                                 boolean optional) {
+				return LinkModificationImpl.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modelKeys, optional);
 			}
 		}
 
@@ -117,7 +118,8 @@ public class LinkModificationSynchronizationBuilder {
 						MutableLinkChangeType syncChangeType = originalChangeType;
 						MutableLinkChange syncChange = MutableLinkChangeImpl.make(syncChangeType, originalKey);
 						
-						return this.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modified);
+						boolean optional = (syncChangeType == MutableLinkChangeType.REMOVE);
+						return this.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modified, optional);
 					case SET:
 						// Add and Remove items to properly synchronize.
 						Set<ModelKey> changeKeys = linkModification.getChange().getKeys();
@@ -133,12 +135,12 @@ public class LinkModificationSynchronizationBuilder {
 
 						MutableLinkChange addChange = MutableLinkChangeImpl.make(MutableLinkChangeType.ADD, originalKey);
 						List<LinkModification> addSync = this.makeSynchronizationLinkModificationForKeys(addChange,
-						        relationLinkInfo, allAdded);
+						        relationLinkInfo, allAdded, false);
 
 						MutableLinkChange removeChange = MutableLinkChangeImpl.make(MutableLinkChangeType.REMOVE,
 						        originalKey);
 						List<LinkModification> removeSync = this.makeSynchronizationLinkModificationForKeys(removeChange,
-						        relationLinkInfo, allRemoved);
+						        relationLinkInfo, allRemoved, true);
 
 						List<LinkModification> syncChanges = new ArrayList<LinkModification>(addSync);
 						syncChanges.addAll(removeSync);
@@ -181,16 +183,16 @@ public class LinkModificationSynchronizationBuilder {
 						// Set Added Links
 						Set<ModelKey> added = linkChangeResult.getModified();
 						MutableLinkChange addedSetChange = MutableLinkChangeImpl.make(MutableLinkChangeType.SET, originalKey);
-						return this.makeSynchronizationLinkModificationForKeys(addedSetChange, relationLinkInfo, added);
+						return this.makeSynchronizationLinkModificationForKeys(addedSetChange, relationLinkInfo, added, false);
 					case REMOVE:
 						// Clear Removed Links
 						Set<ModelKey> removed = linkChangeResult.getModified();
 						MutableLinkChange removedClearChange = MutableLinkChangeImpl.make(MutableLinkChangeType.CLEAR, originalKey);
-						return this.makeSynchronizationLinkModificationForKeys(removedClearChange, relationLinkInfo, removed);
+						return this.makeSynchronizationLinkModificationForKeys(removedClearChange, relationLinkInfo, removed, true);
 					case CLEAR:
 						// Clear the linked reversals.
 						MutableLinkChange syncChange = MutableLinkChangeImpl.make(originalChangeType, originalKey);
-						return this.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modified);
+						return this.makeSynchronizationLinkModificationForKeys(syncChange, relationLinkInfo, modified, true);
 					case SET:
 						// Set new, and clear old.
 						Set<ModelKey> changeKeys = linkModification.getChange().getKeys();
@@ -207,13 +209,13 @@ public class LinkModificationSynchronizationBuilder {
 						// Set New Links
 						MutableLinkChange setChange = MutableLinkChangeImpl.make(MutableLinkChangeType.SET, originalKey);
 						List<LinkModification> setSync = this.makeSynchronizationLinkModificationForKeys(setChange,
-						        relationLinkInfo, allAdded);
+						        relationLinkInfo, allAdded, false);
 
 						// Clear Old Links
 						MutableLinkChange clearChange = MutableLinkChangeImpl.make(MutableLinkChangeType.CLEAR,
 						        originalKey);
 						List<LinkModification> clearSync = this.makeSynchronizationLinkModificationForKeys(clearChange,
-						        relationLinkInfo, allRemoved);
+						        relationLinkInfo, allRemoved, true);
 
 						List<LinkModification> syncChanges = new ArrayList<LinkModification>(setSync);
 						syncChanges.addAll(clearSync);

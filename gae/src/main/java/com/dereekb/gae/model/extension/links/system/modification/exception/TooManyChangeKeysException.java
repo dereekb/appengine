@@ -13,9 +13,11 @@ public class TooManyChangeKeysException extends InvalidLinkModificationSystemReq
 	private static final long serialVersionUID = 1L;
 
 	public TooManyChangeKeysException(LinkModificationSystemRequest request) {
-
+		super(request);
 	}
 
-	// TODO: ...
+	public TooManyChangeKeysException(String message, LinkModificationSystemRequest request) {
+		super(message, request);
+	}
 
 }

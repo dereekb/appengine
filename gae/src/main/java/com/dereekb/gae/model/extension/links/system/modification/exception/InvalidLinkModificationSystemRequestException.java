@@ -1,37 +1,24 @@
 package com.dereekb.gae.model.extension.links.system.modification.exception;
 
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+
 /**
- * Abstract {@link Exception} thrown by {@link LinkModificationSystemInterface}
+ * {@link LinkModificationSystemRequestException} thrown by {@link LinkModificationSystemInterface}
  * for invalid requests.
  * 
  * @author dereekb
  *
  */
-public class InvalidLinkModificationSystemRequestException extends Exception {
+public class InvalidLinkModificationSystemRequestException extends LinkModificationSystemRequestException {
 
 	private static final long serialVersionUID = 1L;
 
-	public InvalidLinkModificationSystemRequestException() {
-		super();
+	public InvalidLinkModificationSystemRequestException(LinkModificationSystemRequest request) {
+		super(request);
 	}
 
-	public InvalidLinkModificationSystemRequestException(String message,
-	        Throwable cause,
-	        boolean enableSuppression,
-	        boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public InvalidLinkModificationSystemRequestException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public InvalidLinkModificationSystemRequestException(String message) {
-		super(message);
-	}
-
-	public InvalidLinkModificationSystemRequestException(Throwable cause) {
-		super(cause);
+	public InvalidLinkModificationSystemRequestException(String message, LinkModificationSystemRequest request) {
+		super(message, request);
 	}
 
 }

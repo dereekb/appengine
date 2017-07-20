@@ -5,7 +5,7 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Unavai
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.MultipleLinkModificationQueueException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 
 /**
  * {@link LinkModificationSystem} instance that can perform changes on models.
@@ -23,13 +23,13 @@ public interface LinkModificationSystemInstance {
 	 * @param request
 	 *            {@link LinkModificationSystemRequest}. Never {@code null}.
 	 * @throws UnavailableLinkException
-	 * @throws MultipleLinkModificationQueueException
+	 * @throws ConflictingLinkModificationSystemRequestException
 	 * @throws InvalidLinkModificationSystemRequestException
 	 */
 	public void queueRequest(LinkModificationSystemRequest request)
 	        throws UnavailableLinkException,
 	            UnavailableLinkModelException,
-	            MultipleLinkModificationQueueException,
+	            ConflictingLinkModificationSystemRequestException,
 	            InvalidLinkModificationSystemRequestException;
 
 	/**

@@ -14,6 +14,11 @@ public enum MutableLinkChangeType {
 
 	SET,
 
-	CLEAR
+	CLEAR,
+	
+	/**
+	 * Special change type used in cases where a change must be submitted but no actual changes should take place. 
+	 */
+	NONE
 
 }
