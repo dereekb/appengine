@@ -10,17 +10,6 @@ public class FailedLinkModificationSystemChangeException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public FailedLinkModificationSystemChangeException() {
-		super();
-	}
-
-	public FailedLinkModificationSystemChangeException(String message,
-	        Throwable cause,
-	        boolean enableSuppression,
-	        boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
 	public FailedLinkModificationSystemChangeException(String message, Throwable cause) {
 		super(message, cause);
 	}

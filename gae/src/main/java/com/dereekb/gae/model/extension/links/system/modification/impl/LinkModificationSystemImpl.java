@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
@@ -46,6 +49,8 @@ import com.dereekb.gae.utilities.collections.map.MapUtility;
  */
 public class LinkModificationSystemImpl
         implements LinkModificationSystem, LinkModificationSystemRequestValidator {
+
+	private static final Logger LOGGER = Logger.getLogger(LinkModificationSystemImpl.class.getName());
 
 	private LinkSystem linkSystem;
 	private LinkModificationSystemDelegate delegate;
@@ -104,13 +109,19 @@ public class LinkModificationSystemImpl
 		}
 
 		@Override
-		public LinkModificationSystemChangesResult applyChanges()
+		public LinkModificationSystemChangesResult applyChangesAndCommit()
 		        throws FailedLinkModificationSystemChangeException,
 		            LinkModificationSystemRunnerAlreadyRunException {
 			return this.applyChanges(true);
 		}
 
 		@Override
+		public LinkModificationSystemChangesResult applyChanges()
+		        throws FailedLinkModificationSystemChangeException,
+		            LinkModificationSystemRunnerAlreadyRunException {
+			return this.applyChanges(false);
+		}
+
 		public LinkModificationSystemChangesResult applyChanges(boolean autoCommit)
 		        throws FailedLinkModificationSystemChangeException,
 		            LinkModificationSystemRunnerAlreadyRunException {
@@ -227,16 +238,22 @@ public class LinkModificationSystemImpl
 			        .getAllModificationsFromChanges(this.inputRequestChanges);
 
 			try {
-				this.runPrimaryChanges(modifications);
+				this.runModifications(modifications);
 				
 				if (this.autoCommitChanges) {
 					this.instance.commitChanges();
 				}
-			} catch (Exception e) {
-				// throws FailedLinkModificationSystemChangeException
-				this.instance.undoChanges();	// TODO: If this fails, catch and log it.
-				// TODO: Throw specific failed exception.
-				throw new RuntimeException(e);
+			} catch (RuntimeException e) {
+				
+				try {
+					// If this fails, log it.
+					this.instance.undoChanges();
+				} catch (Exception ee) {
+					LOGGER.log(Level.SEVERE, "LinkModificationSystem Undo failed...", e);
+					throw ee;
+				}
+				
+				throw new FailedLinkModificationSystemChangeException(e);
 			}
 			
 			return new LinkModificationSystemChangesResultImpl();
@@ -256,7 +273,7 @@ public class LinkModificationSystemImpl
 
 		}
 
-		protected void runPrimaryChanges(List<LinkModification> modifications) {
+		protected void runModifications(List<LinkModification> modifications)  throws UnavailableModelException {
 			List<LinkModification> synchronizationChanges = new ArrayList<LinkModification>();
 
 			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
@@ -273,10 +290,7 @@ public class LinkModificationSystemImpl
 			this.runSynchronizationChanges(synchronizationChanges);
 		}
 
-		private void runSynchronizationChanges(List<LinkModification> synchronizationChanges) {
-			// synchronizationChanges =
-			// this.changesMap.filterRedundantChanges(synchronizationChanges);
-
+		private void runSynchronizationChanges(List<LinkModification> synchronizationChanges) throws UnavailableModelException {
 			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
 			        .buildTypeChangesMap(synchronizationChanges);
 
@@ -286,9 +300,8 @@ public class LinkModificationSystemImpl
 		}
 
 		protected LinkModificationResultSet runModificationsForType(String type,
-		                                                            HashMapWithList<ModelKey, LinkModification> keyedMap) {
+		                                                            HashMapWithList<ModelKey, LinkModification> keyedMap) throws UnavailableModelException {
 			LinkModificationResultSet resultSet = this.instance.performModificationsForType(type, keyedMap);
-			// this.changesMap.addResultSet(resultSet);
 			return resultSet;
 		}
 

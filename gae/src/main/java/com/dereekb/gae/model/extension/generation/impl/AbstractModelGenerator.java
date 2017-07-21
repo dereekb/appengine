@@ -51,6 +51,11 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 		return this.keyGenerator.generate();
 	}
 
+	@Override
+	public List<ModelKey> generateKeys(int count) {
+		return this.generateKeys(count, null);
+	}
+
 	protected ModelKey generateKey(GeneratorArg arg) {
 		return this.keyGenerator.generate(arg);
 	}

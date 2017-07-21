@@ -1,8 +1,10 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
+import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 
@@ -26,6 +28,6 @@ public interface LinkModificationSystemDelegateInstance
 	 * @return {@link LinkModificationResult}. Never {@code null}.
 	 */
 	public LinkModificationResultSet performModificationsForType(String type,
-	                                                             HashMapWithList<ModelKey, LinkModification> keyedMap);
+	                                                             HashMapWithList<ModelKey, LinkModification> keyedMap) throws UndoChangesAlreadyExecutedException, UnavailableModelException;
 
 }

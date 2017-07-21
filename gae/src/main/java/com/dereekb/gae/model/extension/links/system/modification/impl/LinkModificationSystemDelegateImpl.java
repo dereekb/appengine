@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.links.system.modification.impl;
 
 import java.util.Map;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
@@ -9,6 +10,7 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstance;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
+import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
@@ -66,8 +68,7 @@ public class LinkModificationSystemDelegateImpl
 
 		@Override
 		public LinkModificationResultSet performModificationsForType(String type,
-		                                                             HashMapWithList<ModelKey, LinkModification> keyedMap) {
-
+		                                                             HashMapWithList<ModelKey, LinkModification> keyedMap) throws UndoChangesAlreadyExecutedException, UnavailableModelException {
 			LinkModificationSystemEntryInstance entryInstance = this.getEntryInstance(type);
 			return entryInstance.performModifications(keyedMap);
 		}

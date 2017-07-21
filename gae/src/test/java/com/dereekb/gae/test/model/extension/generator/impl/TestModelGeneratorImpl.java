@@ -59,6 +59,11 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 	}
 
 	@Override
+	public List<ModelKey> generateKeys(int count) {
+		return this.generator.generateKeys(count);
+	}
+
+	@Override
 	public T generate() {
 		T model = this.generator.generate();
 		this.setter.forceStore(model);

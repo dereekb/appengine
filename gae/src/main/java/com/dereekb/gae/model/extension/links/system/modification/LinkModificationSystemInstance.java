@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
@@ -23,12 +24,14 @@ public interface LinkModificationSystemInstance {
 	 * @param request
 	 *            {@link LinkModificationSystemRequest}. Never {@code null}.
 	 * @throws UnavailableLinkException
+	 * @throws ChangesAlreadyExecutedException
 	 * @throws ConflictingLinkModificationSystemRequestException
 	 * @throws InvalidLinkModificationSystemRequestException
 	 */
 	public void queueRequest(LinkModificationSystemRequest request)
 	        throws UnavailableLinkException,
 	            UnavailableLinkModelException,
+	            ChangesAlreadyExecutedException,
 	            ConflictingLinkModificationSystemRequestException,
 	            InvalidLinkModificationSystemRequestException;
 
@@ -38,9 +41,9 @@ public interface LinkModificationSystemInstance {
 	 * @throws FailedLinkModificationSystemChangeException
 	 *             thrown if an issue is encountered while applying changes.
 	 * @throws LinkModificationSystemRunnerAlreadyRunException
-	 *             thrown if {@link #applyChanges()} has already been called.
+	 *             thrown if {@link #applyChangesAndCommit()} has already been called.
 	 */
-	public LinkModificationSystemChangesResult applyChanges()
+	public LinkModificationSystemChangesResult applyChangesAndCommit()
 	        throws FailedLinkModificationSystemChangeException,
 	            LinkModificationSystemRunnerAlreadyRunException;
 
@@ -50,9 +53,9 @@ public interface LinkModificationSystemInstance {
 	 * @throws FailedLinkModificationSystemChangeException
 	 *             thrown if an issue is encountered while applying changes.
 	 * @throws LinkModificationSystemRunnerAlreadyRunException
-	 *             thrown if {@link #applyChanges()} has already been called.
+	 *             thrown if {@link #applyChangesAndCommit()} has already been called.
 	 */
-	public LinkModificationSystemChangesResult applyChanges(boolean autoCommit)
+	public LinkModificationSystemChangesResult applyChanges()
 	        throws FailedLinkModificationSystemChangeException,
 	            LinkModificationSystemRunnerAlreadyRunException;
 
