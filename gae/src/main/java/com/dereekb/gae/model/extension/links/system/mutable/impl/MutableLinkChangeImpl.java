@@ -40,6 +40,14 @@ public class MutableLinkChangeImpl
 		return new MutableLinkChangeImpl(MutableLinkChangeType.REMOVE, keys);
 	}
 
+	public static MutableLinkChangeImpl setOrClear(Collection<ModelKey> keys) throws IllegalArgumentException {
+		if (keys != null && keys.isEmpty()) {
+			return clear();
+		} else {
+			return set(keys);
+		}
+	}
+
 	public static MutableLinkChangeImpl set(Collection<ModelKey> keys) throws IllegalArgumentException {
 		if (keys == null || keys.isEmpty()) {
 			throw new IllegalArgumentException("Keys cannot be null or empty.");
@@ -48,9 +56,14 @@ public class MutableLinkChangeImpl
 		return new MutableLinkChangeImpl(MutableLinkChangeType.SET, keys);
 	}
 
-	public static MutableLinkChangeImpl clear() throws IllegalArgumentException {
+	public static MutableLinkChangeImpl clear() {
 		Set<ModelKey> keys = Collections.emptySet();
 		return new MutableLinkChangeImpl(MutableLinkChangeType.CLEAR, keys);
+	}
+
+	public static MutableLinkChange none() {
+		Set<ModelKey> keys = Collections.emptySet();
+		return new MutableLinkChangeImpl(MutableLinkChangeType.NONE, keys);
 	}
 
 	public static MutableLinkChangeImpl make(MutableLinkChangeType linkChangeType,
@@ -73,42 +86,11 @@ public class MutableLinkChangeImpl
 	 * @param result
 	 *            {@link MutableLinkChangeResult}. Never {@code null}.
 	 * @return {@link MutableLinkChangeImpl}. Never {@code null}.
-	 * 
-	 * @deprecated Not enough information is available to this function to properly execute undo in some cases.
-	 */
-	@Deprecated
-	public static MutableLinkChangeImpl makeUndo(MutableLinkChange change,
-	                                             MutableLinkChangeResult result) {
-		MutableLinkChangeType type = change.getLinkChangeType();
-
-		switch (type) {
-			case ADD:
-				return MutableLinkChangeImpl.remove(result.getModified());
-			case CLEAR:
-				return MutableLinkChangeImpl.set(result.getModified());
-			case REMOVE:
-				return MutableLinkChangeImpl.add(result.getModified());
-			case SET:
-				return MutableLinkChangeImpl.remove(result.getModified());
-			default:
-				throw new UnsupportedOperationException();
-		}
-	}
-
-	/**
-	 * Makes a reverse change for a {@link MutableLinkChange}.
-	 * 
-	 * @param change
-	 *            {@link MutableLinkChange}. Never {@code null}.
-	 * @param result
-	 *            {@link MutableLinkChangeResult}. Never {@code null}.
-	 * @return {@link MutableLinkChangeImpl}. Never {@code null}.
 	 */
 	public static MutableLinkChange makeUndo(Link currentLink,
 	                                         MutableLinkChange previousChange,
 	                                         MutableLinkChangeResult result) {
-		// TODO Auto-generated method stub
-		return null;
+		return MutableLinkChangeUndoBuilderImpl.SINGLETON.makeUndo(currentLink, previousChange, result);
 	}
 
 	protected MutableLinkChangeImpl(MutableLinkChangeType linkChangeType, Collection<ModelKey> keys) {

@@ -20,6 +20,9 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultSetImpl;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessorPair;
@@ -109,14 +112,21 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	protected class LinkModificationSystemEntryInstanceImpl
 	        implements LinkModificationSystemEntryInstance {
 
+		private boolean undoneChanges = false;
 		private List<ModificationBatchSet> batchSets = new ArrayList<ModificationBatchSet>();
 
 		// MARK: LinkModificationSystemEntryInstance
 		@Override
-		public LinkModificationResultSet performModifications(HashMapWithList<ModelKey, LinkModification> keyedMap) {
+		public LinkModificationResultSet performModifications(HashMapWithList<ModelKey, LinkModification> keyedMap) throws UnavailableModelException {
+			if (this.undoneChanges) {
+				throw new UndoChangesAlreadyExecutedException();
+			}
+			
 			ModificationBatchSet batchSet = this.makeBatchSetForChanges(keyedMap);
 
-			return batchSet.performChangesInTransactions();
+			this.batchSets.add(batchSet);
+			
+			return batchSet.performChangesWithinTransactions();
 		}
 
 		private ModificationBatchSet makeBatchSetForChanges(HashMapWithList<ModelKey, LinkModification> keyed) {
@@ -140,6 +150,10 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 		@Override
 		public void commitChanges() {
+			if (this.undoneChanges) {
+				throw new UndoChangesAlreadyExecutedException();
+			}
+			
 			Set<T> modified = new HashSet<T>();
 
 			for (ModificationBatchSet batchSet : this.batchSets) {
@@ -151,7 +165,13 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 		}
 
 		@Override
-		public void undoChanges() {
+		public void undoChanges() throws UndoChangesAlreadyExecutedException, NoUndoChangesException {
+			if (this.undoneChanges) {
+				throw new UndoChangesAlreadyExecutedException();
+			}
+			
+			this.undoneChanges = true;
+			
 			for (ModificationBatchSet batchSet : this.batchSets) {
 				batchSet.undoChanges();
 			}
@@ -161,34 +181,58 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 	/**
 	 * A set of {@link ModificationBatch} instances.
+	 * <p>
+	 * Is not designed to be reusable. Calling functions again will return previous results if available.
 	 * 
 	 * @author dereekb
 	 *
 	 */
 	private class ModificationBatchSet {
 
-		private List<ModificationBatch> batches;
+		private final List<ModificationBatch> batches;
+		
+		private LinkModificationResultSetImpl result;
+		private RuntimeException exception;
 
 		public ModificationBatchSet(List<ModificationBatch> batches) {
 			this.batches = batches;
 		}
 
 		// MARK: Actions
-		public LinkModificationResultSet performChangesInTransactions() throws UnavailableModelException {
-			LinkModificationResultSetImpl result = new LinkModificationResultSetImpl();
-
-			for (ModificationBatch batch : this.batches) {
-				ModificationBatchResult batchResult = batch.performChanges();
-				LinkModificationResultSet resultSet = batchResult.getResultSet();
-				result.addResultSet(resultSet);
+		public LinkModificationResultSet performChangesWithinTransactions() throws UnavailableModelException {
+			// This function should really only be called once. Cache results.
+			if (this.result != null) {
+				return this.result;
+			} else if (this.exception != null) {
+				throw this.exception;
+			}
+			
+			try {
+				LinkModificationResultSetImpl result = new LinkModificationResultSetImpl();
+	
+				for (ModificationBatch batch : this.batches) {
+					ModificationBatchResult batchResult = batch.performChanges();
+					LinkModificationResultSet resultSet = batchResult.getResultSet();
+					result.addResultSet(resultSet);
+				}
+				
+				this.result = result;
+			} catch (UnavailableModelException e) {
+				this.exception = e;
+				throw e;
 			}
 
-			return result;
+			return this.result;
 		}
 
 		public void undoChanges() {
+			// Always try to undo changes.
 			for (ModificationBatch batch : this.batches) {
-				batch.undoChanges();
+				try {
+					batch.undoChanges();
+				} catch (NoUndoChangesException e) {
+					
+				}
 			}
 		}
 
@@ -218,6 +262,10 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 		public ModificationBatchResult getBatchResult() {
 			return this.batchResult;
 		}
+		
+		public boolean hasPerformedChanges() {
+			return this.batchResult != null;
+		}
 
 		// MARK: Internal
 		public void addModificationSet(ModelKey key,
@@ -227,8 +275,11 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			this.changeInstances.put(key, changeSet);
 		}
 
-		public ModificationBatchResult performChanges() throws UnavailableModelException {
-
+		public ModificationBatchResult performChanges() throws ChangesAlreadyExecutedException, UnavailableModelException {
+			if (this.hasPerformedChanges()) {
+				throw new ChangesAlreadyExecutedException();
+			}
+			
 			Set<ModelKey> keys = ModificationBatch.this.changeInstances.keySet();
 			final ReadRequest request = new KeyReadRequest(keys, false);
 
@@ -295,7 +346,10 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			return this.batchResult;
 		}
 
-		public void undoChanges() {
+		public void undoChanges() throws NoUndoChangesException {
+			if (this.hasPerformedChanges() == false) {
+				throw new NoUndoChangesException();
+			}
 
 			List<T> modifiedModels = this.batchResult.getModifiedModels();
 			List<ModelKey> modifiedModelKeys = ModelKey.readModelKeys(modifiedModels);
@@ -332,6 +386,8 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 				}
 
 			});
+			
+			this.batchResult = null;	// Clear batch result.
 		}
 
 		protected void assertUnavailableModelsAreOptional(Collection<ModelKey> missingModels)

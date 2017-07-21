@@ -1,6 +1,9 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
-
-public interface LinkModificationSystemChangesResult {
-
-}
+/**
+ * {@link LinkModificationSystemInstance} result.
+ * 
+ * @author dereekb
+ *
+ */
+public interface LinkModificationSystemChangesResult extends LinkModificationSystemChangeInstance { }

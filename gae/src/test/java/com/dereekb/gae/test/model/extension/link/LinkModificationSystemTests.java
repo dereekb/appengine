@@ -15,10 +15,10 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemDelegateImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemEntryImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemImpl;
@@ -460,10 +460,62 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	}
 
 	/**
-	 * Performs an undo after performing the changes to see if the change properly reverses.
+	 * Performs an undo after performing the changes to a one to one link to see if the change properly reverses.
 	 */
 	@Test
 	public void testUndoForOneToOneLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+
+		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
+
+		// Generate Models
+		TestLinkModelA a = linkSystemInfo.aEntityGenerator.generate();
+		TestLinkModelB b = linkSystemInfo.bEntityGenerator.generate();
+
+		// Link Models
+		ModelKey aModelKey = a.getModelKey();
+		ModelKey bModelKey = b.getModelKey();
+		
+		MutableLinkChange linkAToBChange = MutableLinkChangeImpl.set(SetUtility.wrap(bModelKey));
+
+		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, linkAToBChange);
+
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+		instance.queueRequest(linkRequest);
+		
+		LinkModificationSystemChangesResult result = instance.applyChanges(false);
+
+		// Assert models were linked
+		a = this.testSystem.testLinkSystem.aEntity.get(a);
+		b = this.testSystem.testLinkSystem.bEntity.get(b);
+
+		Assert.assertTrue(a.getThirdKey().equals(b.getModelKey()));
+		Assert.assertTrue(b.getMainKey().equals(a.getModelKey()));
+		
+		// Undo the changes
+		result.undoChanges();
+
+		// Assert models were unlinked
+		a = this.testSystem.testLinkSystem.aEntity.get(a);
+		b = this.testSystem.testLinkSystem.bEntity.get(b);
+
+		Assert.assertTrue(a.getThirdKey() == null);
+		Assert.assertTrue(b.getMainKey() == null);
+		
+	}
+
+	/**
+	 * Performs an undo after performing the changes to a one to many link to see if the change properly reverses.
+	 */
+	@Test
+	public void testUndoForOneToManyLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+	}
+	
+	/**
+	 * Performs an undo after performing the changes to a many to many link to see if the change properly reverses.
+	 */
+	@Test
+	public void testUndoForManyToManyLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
 		
 	}
 

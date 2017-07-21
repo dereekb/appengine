@@ -23,10 +23,12 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationImpl;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyComittedException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.LinkChangeLinkSizeException;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
@@ -105,7 +107,14 @@ public class LinkModificationSystemImpl
 		public LinkModificationSystemChangesResult applyChanges()
 		        throws FailedLinkModificationSystemChangeException,
 		            LinkModificationSystemRunnerAlreadyRunException {
-			LinkModificationSystemChangesRunner runner = LinkModificationSystemImpl.this.makeRunner(this.requests);
+			return this.applyChanges(true);
+		}
+
+		@Override
+		public LinkModificationSystemChangesResult applyChanges(boolean autoCommit)
+		        throws FailedLinkModificationSystemChangeException,
+		            LinkModificationSystemRunnerAlreadyRunException {
+			LinkModificationSystemChangesRunner runner = LinkModificationSystemImpl.this.makeRunner(this.requests, autoCommit);
 			return runner.run();
 		}
 
@@ -119,7 +128,7 @@ public class LinkModificationSystemImpl
 
 	}
 
-	protected LinkModificationSystemChangesRunner makeRunner(List<LinkModificationSystemRequest> requests) {
+	protected LinkModificationSystemChangesRunner makeRunner(List<LinkModificationSystemRequest> requests, boolean autoCommit) {
 		List<RequestChanges> requestChanges = new ArrayList<RequestChanges>();
 
 		for (LinkModificationSystemRequest request : requests) {
@@ -127,7 +136,7 @@ public class LinkModificationSystemImpl
 			requestChanges.add(requestChange);
 		}
 
-		return new LinkModificationSystemChangesRunner(requestChanges);
+		return new LinkModificationSystemChangesRunner(requestChanges, autoCommit);
 	}
 
 	/**
@@ -196,11 +205,13 @@ public class LinkModificationSystemImpl
 	// MARK: Runner
 	protected class LinkModificationSystemChangesRunner {
 
+		private final boolean autoCommitChanges;
 		private List<RequestChanges> inputRequestChanges;
 		private LinkModificationSystemDelegateInstance instance;
 
-		public LinkModificationSystemChangesRunner(List<RequestChanges> inputRequestChanges) {
+		public LinkModificationSystemChangesRunner(List<RequestChanges> inputRequestChanges, boolean autoCommit) {
 			this.inputRequestChanges = inputRequestChanges;
+			this.autoCommitChanges = autoCommit;
 		}
 
 		public LinkModificationSystemChangesResult run()
@@ -217,15 +228,32 @@ public class LinkModificationSystemImpl
 
 			try {
 				this.runPrimaryChanges(modifications);
-				this.instance.commitChanges();
+				
+				if (this.autoCommitChanges) {
+					this.instance.commitChanges();
+				}
 			} catch (Exception e) {
 				// throws FailedLinkModificationSystemChangeException
-				this.instance.undoChanges();
+				this.instance.undoChanges();	// TODO: If this fails, catch and log it.
 				// TODO: Throw specific failed exception.
 				throw new RuntimeException(e);
 			}
 			
-			return null; // TODO: Return response
+			return new LinkModificationSystemChangesResultImpl();
+		}
+		
+		private class LinkModificationSystemChangesResultImpl implements LinkModificationSystemChangesResult {
+
+			@Override
+			public void commitChanges() throws ChangesAlreadyComittedException {
+				LinkModificationSystemChangesRunner.this.instance.commitChanges();
+			}
+			
+			@Override
+			public void undoChanges() throws UndoChangesAlreadyExecutedException {
+				LinkModificationSystemChangesRunner.this.instance.undoChanges();
+			}
+
 		}
 
 		protected void runPrimaryChanges(List<LinkModification> modifications) {
@@ -333,7 +361,7 @@ public class LinkModificationSystemImpl
 			// TODO: Assert that only 1 change is occurring per model's link.
 			// Do not allow multiple changes to the same link on the same
 			// model, as it is unsafe.
-
+			
 		}
 
 		// MARK: One

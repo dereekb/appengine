@@ -2,10 +2,10 @@ package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 
 /**
  * {@link LinkModificationSystem} instance that can perform changes on models.
@@ -41,6 +41,18 @@ public interface LinkModificationSystemInstance {
 	 *             thrown if {@link #applyChanges()} has already been called.
 	 */
 	public LinkModificationSystemChangesResult applyChanges()
+	        throws FailedLinkModificationSystemChangeException,
+	            LinkModificationSystemRunnerAlreadyRunException;
+
+	/**
+	 * Run to apply all submitted changes.
+	 * 
+	 * @throws FailedLinkModificationSystemChangeException
+	 *             thrown if an issue is encountered while applying changes.
+	 * @throws LinkModificationSystemRunnerAlreadyRunException
+	 *             thrown if {@link #applyChanges()} has already been called.
+	 */
+	public LinkModificationSystemChangesResult applyChanges(boolean autoCommit)
 	        throws FailedLinkModificationSystemChangeException,
 	            LinkModificationSystemRunnerAlreadyRunException;
 

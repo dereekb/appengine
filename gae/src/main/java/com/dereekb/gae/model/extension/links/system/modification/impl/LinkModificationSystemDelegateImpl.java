@@ -78,6 +78,7 @@ public class LinkModificationSystemDelegateImpl
 
 			if (instance == null) {
 				instance = LinkModificationSystemDelegateImpl.this.makeInstanceForType(type);
+				this.entryInstances.put(type, instance);
 			}
 
 			return instance;

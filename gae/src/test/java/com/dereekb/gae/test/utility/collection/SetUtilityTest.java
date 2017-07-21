@@ -86,4 +86,34 @@ public class SetUtilityTest {
 		Assert.assertTrue(setDifference.contains(4));
 	}
 
+	@Test()
+	public void testIsEquivalent() {
+
+		Set<Integer> setA = new HashSet<Integer>();
+
+		setA.add(1);
+		setA.add(2);
+		setA.add(3);
+
+		Set<Integer> setB = new HashSet<Integer>();
+
+		setB.add(2);
+		setB.add(3);
+		setB.add(4);
+
+		Set<Integer> setC = new HashSet<Integer>(setA);
+
+		Assert.assertFalse(SetUtility.isEquivalent(setA, setB));
+		Assert.assertTrue(SetUtility.isEquivalent(setA, setA));
+		
+		Assert.assertTrue(SetUtility.isEquivalent(setA, setC));
+		Assert.assertTrue(SetUtility.isEquivalent(setC, setA));
+		
+		setC.add(4);
+		
+		Assert.assertFalse(SetUtility.isEquivalent(setA, setC));
+		Assert.assertFalse(SetUtility.isEquivalent(setC, setA));
+		
+	}
+
 }

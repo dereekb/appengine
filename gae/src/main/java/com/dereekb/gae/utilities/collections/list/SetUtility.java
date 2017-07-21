@@ -49,6 +49,11 @@ public class SetUtility {
 		return set;
 	}
 
+	public static <T> boolean isEquivalent(Set<T> a,
+	                                   Set<T> b) {
+		return a.size() == b.size() && a.containsAll(b);
+	}
+
 	public static class SetDifferenceImpl<T>
 	        implements SetInfo<T> {
 
