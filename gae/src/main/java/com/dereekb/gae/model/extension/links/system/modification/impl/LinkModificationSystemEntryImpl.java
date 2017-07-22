@@ -104,6 +104,19 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 	// MARK: LinkModificationSystemEntry
 	@Override
+	public void assertModelsExist(Set<ModelKey> keys) throws UnavailableModelException {
+		ReadRequest readRequest = new KeyReadRequest(keys, false);
+		
+		ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = this.accessor.readMutableLinkModels(readRequest);
+		
+		Collection<ModelKey> failed = response.getFailed();
+		
+		if (failed.isEmpty() == false) {
+			throw new UnavailableModelException(failed);
+		}
+	}
+
+	@Override
 	public LinkModificationSystemEntryInstance makeInstance() {
 		return new LinkModificationSystemEntryInstanceImpl();
 	}

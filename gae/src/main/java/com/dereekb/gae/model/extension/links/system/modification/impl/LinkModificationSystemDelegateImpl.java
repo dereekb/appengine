@@ -1,8 +1,15 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
+import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
@@ -11,8 +18,10 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 
 /**
@@ -45,19 +54,71 @@ public class LinkModificationSystemDelegateImpl
 
 	// MARK: LinkModificationSystemDelegate
 	@Override
+	public void testModifications(List<LinkModification> modifications) throws UnavailableLinkModelException, UnavailableModelException, UnavailableLinkException {
+		CaseInsensitiveMapWithSet<ModelKey> keysMap = new CaseInsensitiveMapWithSet<ModelKey>();
+		
+		for (LinkModification modification : modifications) {
+			String mainType = modification.getLinkModelType();
+			ModelKey mainKey = modification.getKey();
+			
+			keysMap.add(mainType, mainKey);	// Add the main key.
+			
+			MutableLinkChange mutableLinkChange = modification.getChange();
+			
+			switch (mutableLinkChange.getLinkChangeType()) {
+				case SET:
+				case ADD:
+					LinkInfo link = modification.getLink();
+					Set<ModelKey> targetKeys = mutableLinkChange.getKeys();
+					
+					try {
+						String reverseModelType = link.getRelationLinkType();
+						
+						// Add all to the reverse.
+						keysMap.addAll(reverseModelType, targetKeys);
+					} catch (DynamicLinkInfoException e) {
+						// Ignore dynamic links.
+					}
+					break;
+				case REMOVE:
+				case CLEAR:
+					// Reverse is optional. Don't worry about loading these.
+					break;
+				case NONE:
+				default:
+					break;	
+			}
+		}
+		
+		// Using the keys map, assert all models exist.
+		for (Entry<String, Set<ModelKey>> entry : keysMap.entrySet()) {
+			String modelType = entry.getKey();
+			Set<ModelKey> keys = entry.getValue();
+			
+			LinkModificationSystemEntry systemEntry = this.getEntryForType(modelType);
+			systemEntry.assertModelsExist(keys);
+		}
+	}
+
+	@Override
 	public LinkModificationSystemDelegateInstance makeInstance() {
 		return new LinkModificationSystemDelegateInstanceImpl();
 	}
 
 	// MARK: Internal
-	protected LinkModificationSystemEntryInstance makeInstanceForType(String type) {
-		LinkModificationSystemEntry entry = this.systemEntries.get(type);
-
-		if (entry == null) {
-			throw new RuntimeException(); 	// TODO: Replace this.
-		}
-
+	protected LinkModificationSystemEntryInstance makeInstanceForType(String type) throws UnavailableLinkModelException {
+		LinkModificationSystemEntry entry = this.getEntryForType(type);
 		return entry.makeInstance();
+	}
+	
+	protected LinkModificationSystemEntry getEntryForType(String type) throws UnavailableLinkModelException {
+		LinkModificationSystemEntry entry = this.systemEntries.get(type);
+		
+		if (entry == null) {
+			throw UnavailableLinkModelException.makeForType(type);
+		}
+		
+		return entry;
 	}
 
 	// MARK: LinkModificationSystemDelegateInstance

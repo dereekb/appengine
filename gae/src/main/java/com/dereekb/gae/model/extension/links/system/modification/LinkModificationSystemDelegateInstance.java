@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
@@ -26,8 +27,12 @@ public interface LinkModificationSystemDelegateInstance
 	 * @param keyedMap
 	 *            {@link HashMapWithList}. Never {@code null}.
 	 * @return {@link LinkModificationResult}. Never {@code null}.
+	 * 
+	 * @throws UndoChangesAlreadyExecutedException thrown if {@link #undoChanges()} has already been called.
+	 * @throws UnavailableLinkModelException thrown if the input type is unavailable.
+	 * @throws UnavailableModelException thrown if a requested model does not exist.
 	 */
 	public LinkModificationResultSet performModificationsForType(String type,
-	                                                             HashMapWithList<ModelKey, LinkModification> keyedMap) throws UndoChangesAlreadyExecutedException, UnavailableModelException;
+	                                                             HashMapWithList<ModelKey, LinkModification> keyedMap) throws UndoChangesAlreadyExecutedException, UnavailableLinkModelException, UnavailableModelException;
 
 }

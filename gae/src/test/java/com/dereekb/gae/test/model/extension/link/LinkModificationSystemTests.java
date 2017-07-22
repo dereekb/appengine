@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangesResult;
@@ -433,6 +434,34 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	}
 
 	/**
+	 * Test unlinking from a model that has been deleted does not result in an UnavailableLinkModelException exception.
+	 */
+	@Test
+	public void testLinkingUnavailableModels() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+		
+		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
+
+		// Link Models
+		ModelKey aModelKey = linkSystemInfo.aEntityGenerator.generateKey();
+		ModelKey bModelKey = linkSystemInfo.bEntityGenerator.generateKey();
+		
+		MutableLinkChange linkAToBChange = MutableLinkChangeImpl.set(SetUtility.wrap(bModelKey));
+
+		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, linkAToBChange);
+
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+		instance.queueRequest(linkRequest);
+		
+		try {
+			LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+			Assert.fail();
+		} catch (FailedLinkModificationSystemChangeException e) {
+			Throwable cause = e.getCause();
+			Assert.assertTrue(UnavailableModelException.class.isAssignableFrom(cause.getClass()));
+		}
+	}
+
+	/**
 	 * 
 	 * @throws UnavailableLinkException
 	 * @throws UnavailableLinkModelException
@@ -470,6 +499,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		
 		try {
 			LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+			Assert.fail();
 		} catch (FailedLinkModificationSystemChangeException e) {
 			
 		}
@@ -515,6 +545,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		
 		try {
 			instance.queueRequest(linkRequest);
+			Assert.fail();
 		} catch (InvalidLinkModificationSystemRequestException e) {
 			
 		}
@@ -552,6 +583,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 
 		try {
 			instance.queueRequest(linkRequest);
+			Assert.fail();
 		} catch (LinkChangeLinkSizeException e) {
 			
 		}
@@ -565,8 +597,32 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 */
 	@Test
 	public void testAttemptingToUsePerformMultipleConcurrentSameModelLinkModificationsFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemRunnerAlreadyRunException, FailedLinkModificationSystemChangeException {
+
+		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
+
+		// Generate Models
+		TestLinkModelA a = linkSystemInfo.aEntityGenerator.generate();
+		TestLinkModelB b = linkSystemInfo.bEntityGenerator.generate();
+
+		// Link Models
+		ModelKey aModelKey = a.getModelKey();
+		ModelKey bModelKey = b.getModelKey();
 		
-		// TODO...
+		MutableLinkChange linkAToBChange = MutableLinkChangeImpl.set(SetUtility.wrap(bModelKey));
+
+		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, linkAToBChange);
+
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+		
+		// Attempt to queue twice
+		instance.queueRequest(linkRequest);
+		
+		try {
+			instance.queueRequest(linkRequest);
+			Assert.fail("Queuing request should have failed.");
+		} catch (ConflictingLinkModificationSystemRequestException e) {
+			
+		}
 	}
 
 	/**

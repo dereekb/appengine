@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.links.system.modification.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,6 +28,7 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationImpl;
 import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyComittedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
@@ -103,7 +105,8 @@ public class LinkModificationSystemImpl
 		public void queueRequest(LinkModificationSystemRequest request)
 		        throws UnavailableLinkException,
 		            UnavailableLinkModelException,
-		            InvalidLinkModificationSystemRequestException {
+		            InvalidLinkModificationSystemRequestException, 
+		            ConflictingLinkModificationSystemRequestException {
 			this.validateRequest(request);
 			this.requests.add(request);
 		}
@@ -133,7 +136,7 @@ public class LinkModificationSystemImpl
 		private void validateRequest(LinkModificationSystemRequest request)
 		        throws UnavailableLinkModelException,
 		            UnavailableLinkException,
-		            TooManyChangeKeysException {
+		            TooManyChangeKeysException, ConflictingLinkModificationSystemRequestException {
 			this.validator.validateRequest(request);
 		}
 
@@ -244,7 +247,6 @@ public class LinkModificationSystemImpl
 					this.instance.commitChanges();
 				}
 			} catch (RuntimeException e) {
-				
 				try {
 					// If this fails, log it.
 					this.instance.undoChanges();
@@ -273,11 +275,13 @@ public class LinkModificationSystemImpl
 
 		}
 
-		protected void runModifications(List<LinkModification> modifications)  throws UnavailableModelException {
-			List<LinkModification> synchronizationChanges = new ArrayList<LinkModification>();
-
+		protected void runModifications(List<LinkModification> modifications) throws UnavailableModelException {
+			this.testModifications(modifications);
+			
 			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
 			        .buildTypeChangesMap(modifications);
+
+			List<LinkModification> synchronizationChanges = new ArrayList<LinkModification>();
 
 			for (Entry<String, HashMapWithList<ModelKey, LinkModification>> typeEntry : typeChangesMap.entrySet()) {
 				LinkModificationResultSet resultSet = this.runModificationsForType(typeEntry.getKey(),
@@ -299,6 +303,17 @@ public class LinkModificationSystemImpl
 			}
 		}
 
+		/**
+		 * Tests that all input modifications are possible.
+		 * <p>
+		 * Mainly Set and Add are tested.
+		 * 
+		 * @param modifications {@link List}. Never {@code null}.
+		 */
+		private void testModifications(List<LinkModification> modifications) throws UnavailableModelException {
+			LinkModificationSystemImpl.this.delegate.testModifications(modifications);
+		}
+		
 		protected LinkModificationResultSet runModificationsForType(String type,
 		                                                            HashMapWithList<ModelKey, LinkModification> keyedMap) throws UnavailableModelException {
 			LinkModificationResultSet resultSet = this.instance.performModificationsForType(type, keyedMap);
@@ -351,12 +366,13 @@ public class LinkModificationSystemImpl
 	
 	protected class LinkModificationSystemRequestValidatorInstanceImpl implements LinkModificationSystemRequestValidatorInstance {
 
+		private Set<String> linkHashes = new HashSet<String>();
 		
 		@Override
 		public void validateRequest(LinkModificationSystemRequest request)
 		        throws UnavailableLinkModelException,
 		            UnavailableLinkException,
-		            TooManyChangeKeysException {
+		            TooManyChangeKeysException, ConflictingLinkModificationSystemRequestException {
 
 			LinkInfo linkInfo = LinkModificationSystemImpl.this.getLinkInfoForRequest(request);
 
@@ -371,10 +387,7 @@ public class LinkModificationSystemImpl
 					throw new UnsupportedOperationException();
 			}
 			
-			// TODO: Assert that only 1 change is occurring per model's link.
-			// Do not allow multiple changes to the same link on the same
-			// model, as it is unsafe.
-			
+			this.addAndAssertRequestUniqueLinkHash(request);
 		}
 
 		// MARK: One
@@ -408,8 +421,26 @@ public class LinkModificationSystemImpl
 		// MARK: Many
 		private void validateManyLink(LinkInfo linkInfo,
 		                              LinkModificationSystemRequest request) {
-			// TODO Auto-generated method stub
 			
+			// Nothing special to validate...
+			
+		}
+		
+		// MARK: Shared
+		protected void addAndAssertRequestUniqueLinkHash(LinkModificationSystemRequest request) throws ConflictingLinkModificationSystemRequestException {
+			String uniqueLinkId = this.makeUniqueLinkId(request);
+			
+			if (this.linkHashes.contains(uniqueLinkId)) {
+				throw new ConflictingLinkModificationSystemRequestException(request);
+			} else {
+				this.linkHashes.add(uniqueLinkId);
+			}
+		}
+
+		private String makeUniqueLinkId(LinkModificationSystemRequest request) {
+			ModelKey key = request.getPrimaryKey();
+			String linkName = request.getLinkName();
+			return key.getName() + "_" + linkName;
 		}
 		
 	}

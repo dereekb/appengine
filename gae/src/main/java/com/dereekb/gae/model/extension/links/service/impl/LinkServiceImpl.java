@@ -21,6 +21,7 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkServiceImpl
         implements LinkService {
 

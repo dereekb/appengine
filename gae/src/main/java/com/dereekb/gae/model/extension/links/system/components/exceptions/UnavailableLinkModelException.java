@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.components.exceptions;
 
 /**
- * THrown when a requested link model type is unavailable.
+ * Thrown when a requested link model type is unavailable.
  * 
  * @author dereekb
  *
@@ -13,7 +13,5 @@ public class UnavailableLinkModelException extends RuntimeException {
 	public static UnavailableLinkModelException makeForType(String type) {
 		return new UnavailableLinkModelException();
 	}
-
-	// TODO: ...
 
 }
