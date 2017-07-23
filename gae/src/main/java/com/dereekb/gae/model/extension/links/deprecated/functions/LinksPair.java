@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.function.staged.filter.FallableStagedFunctionObject;
 

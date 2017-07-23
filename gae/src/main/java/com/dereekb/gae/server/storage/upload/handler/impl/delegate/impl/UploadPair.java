@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.storage.upload.handler.impl.delegate.UploadedFileResult;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFile;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
 
 /**
  * {@link ResultsPair} that contains an {@link UploadedFile} and the

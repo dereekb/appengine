@@ -7,7 +7,7 @@ import com.dereekb.gae.model.crud.exception.CancelDeleteException;
 import com.dereekb.gae.model.crud.pairs.DeletePair;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 import com.dereekb.gae.utilities.function.staged.filter.FilteredStagedFunction;
 
 /**

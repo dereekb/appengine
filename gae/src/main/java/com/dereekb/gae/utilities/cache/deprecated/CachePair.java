@@ -1,6 +1,6 @@
 package com.dereekb.gae.utilities.cache;
 
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 
 /**
  * Base class for caching a given value with a key.

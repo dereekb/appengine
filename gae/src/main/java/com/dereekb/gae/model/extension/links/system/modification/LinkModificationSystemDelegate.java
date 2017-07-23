@@ -2,11 +2,6 @@ package com.dereekb.gae.model.extension.links.system.modification;
 
 import java.util.List;
 
-import com.dereekb.gae.model.exception.UnavailableModelException;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
-
 /**
  * {@link LinkModificationSystem} delegate that generates a
  * {@link LinkModificationSystemDelegateInstance}.
@@ -17,18 +12,14 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 public interface LinkModificationSystemDelegate {
 
 	/**
-	 * Asserts that the provided modifications are possible/acceptable at that instant.
+	 * Performs some pre-modification tests to see if models exist, etc.
 	 * <p>
-	 * Checks to see whether or not target models exist/are readable.
+	 * Modifies the input {@link MutableLinkModificationPair} instances with success or failure.
 	 * 
-	 * @param modifications {@link List}. Never {@code null}.
-	 * 
-	 * @throws UnavailableLinkModelException
-	 * @throws UnavailableModelException
-	 * @throws UnavailableLinkException
+	 * @param inputRequestChanges {@link List}. Never {@code null}.
 	 */
-	public void testModifications(List<LinkModification> modifications) throws UnavailableLinkModelException, UnavailableModelException, UnavailableLinkException;
-
+	public void preTestModifications(List<MutableLinkModificationPair> inputRequestChanges);
+	
 	/**
 	 * Generates a new instance of changes.
 	 * 

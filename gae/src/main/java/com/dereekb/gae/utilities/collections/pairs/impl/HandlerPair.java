@@ -1,4 +1,4 @@
-package com.dereekb.gae.utilities.collections.pairs;
+package com.dereekb.gae.utilities.collections.pairs.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.dereekb.gae.utilities.collections.pairs.Pair;
 
 /**
  * Basic tuple.
@@ -17,7 +19,7 @@ import java.util.Set;
  * @param <R>
  *            Object value
  */
-public class HandlerPair<L, R> {
+public class HandlerPair<L, R> implements Pair<L, R> {
 
 	protected L key;
 	protected R object;
@@ -27,10 +29,12 @@ public class HandlerPair<L, R> {
 		this.object = object;
 	}
 
+	@Override
 	public L getKey() {
 		return this.key;
 	}
 
+	@Override
 	public R getObject() {
 		return this.object;
 	}
@@ -49,10 +53,11 @@ public class HandlerPair<L, R> {
 		return "HandlerPair [key=" + this.key + ", object=" + this.object + "]";
 	}
 
-	public static <L, R> List<L> getKeys(Iterable<? extends HandlerPair<L, R>> pairs) {
+	// MARK: Utility
+	public static <L, R> List<L> getKeys(Iterable<? extends Pair<L, R>> pairs) {
 		List<L> keys = new ArrayList<L>();
 
-		for (HandlerPair<L, R> pair : pairs) {
+		for (Pair<L, R> pair : pairs) {
 			L key = pair.getKey();
 
 			if (key != null) {
@@ -63,10 +68,10 @@ public class HandlerPair<L, R> {
 		return keys;
 	}
 
-	public static <L, R> List<R> getObjects(Iterable<? extends HandlerPair<L, R>> pairs) {
+	public static <L, R> List<R> getObjects(Iterable<? extends Pair<L, R>> pairs) {
 		List<R> results = new ArrayList<R>();
 
-		for (HandlerPair<L, R> pair : pairs) {
+		for (Pair<L, R> pair : pairs) {
 			R result = pair.getObject();
 
 			if (result != null) {
@@ -77,10 +82,10 @@ public class HandlerPair<L, R> {
 		return results;
 	}
 
-	public static <L, R> Integer countNullObjects(Iterable<? extends HandlerPair<L, R>> pairs) {
+	public static <L, R> Integer countNullObjects(Iterable<? extends Pair<L, R>> pairs) {
 		Integer nullCount = 0;
 
-		for (HandlerPair<L, R> pair : pairs) {
+		for (Pair<L, R> pair : pairs) {
 			R result = pair.getObject();
 
 			if (result == null) {
@@ -91,7 +96,7 @@ public class HandlerPair<L, R> {
 		return nullCount;
 	}
 
-	public static <L, R, T extends HandlerPair<L, R>> Map<L, T> getObjectsMap(Iterable<T> pairs) {
+	public static <L, R, T extends Pair<L, R>> Map<L, T> getObjectsMap(Iterable<T> pairs) {
 		Map<L, T> map = new HashMap<L, T>();
 
 		for (T pair : pairs) {
@@ -102,7 +107,7 @@ public class HandlerPair<L, R> {
 		return map;
 	}
 
-	public static <L, T extends HandlerPair<L, ?>> List<T> filterRepeatingKeys(Iterable<? extends T> pairs) {
+	public static <L, T extends Pair<L, ?>> List<T> filterRepeatingKeys(Iterable<? extends T> pairs) {
 		Set<L> keysUsed = new HashSet<L>();
 
 		List<T> filtered = new ArrayList<T>();

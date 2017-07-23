@@ -14,7 +14,7 @@ public class InvalidLinkSizeLinkModificationSystemRequestException extends Inval
 	private static final long serialVersionUID = 1L;
 
 	public InvalidLinkSizeLinkModificationSystemRequestException(LinkModificationSystemRequest request) {
-		super(request);
+		super(request, "Invalid link size.");
 	}
 
 	public InvalidLinkSizeLinkModificationSystemRequestException(LinkModificationSystemRequest request,

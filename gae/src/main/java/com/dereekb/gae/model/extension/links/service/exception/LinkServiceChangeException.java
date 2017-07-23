@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  *
  * @author dereekb
  */
-public class LinkSystemChangeException extends RuntimeException {
+public class LinkServiceChangeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,11 +28,11 @@ public class LinkSystemChangeException extends RuntimeException {
 	private final LinkModificationSystemRequest change;
 	private final ApiLinkSystemException reason;
 
-	public LinkSystemChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason) {
+	public LinkServiceChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason) {
 		this(change, reason, null);
 	}
 
-	public LinkSystemChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason, String message) {
+	public LinkServiceChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason, String message) {
 		super(message);
 		this.change = change;
 		this.reason = reason;
@@ -57,7 +57,7 @@ public class LinkSystemChangeException extends RuntimeException {
 	}
 
 	/**
-	 * {@link ApiResponseError} produced by a {@link LinkSystemChangeException}.
+	 * {@link ApiResponseError} produced by a {@link LinkServiceChangeException}.
 	 * 
 	 * @author dereekb
 	 *

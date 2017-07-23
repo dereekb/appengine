@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.taskqueue.task.iterate.deprecated;
 
-import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 import com.dereekb.gae.utilities.function.staged.factory.AbstractFilteredStagedFunctionFactory;
 
 @Deprecated

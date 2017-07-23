@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
@@ -16,6 +17,13 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.LinkM
  */
 public interface LinkModificationSystemInstance {
 
+	/**
+	 * Returns the options configuration for this instance.
+	 * 
+	 * @return {@link LinkModificationSystemInstance}.
+	 */
+	public LinkModificationSystemInstanceOptions getOptions();
+	
 	/**
 	 * Adds a new request to be performed on this instance.
 	 * <p>
@@ -37,26 +45,18 @@ public interface LinkModificationSystemInstance {
 
 	/**
 	 * Run to apply all submitted changes.
+	 * <p>
+	 * Changes are automatically committed if configured as such by the options.
 	 * 
-	 * @throws FailedLinkModificationSystemChangeException
-	 *             thrown if an issue is encountered while applying changes.
-	 * @throws LinkModificationSystemInstanceAlreadyRunException
-	 *             thrown if {@link #applyChangesAndCommit()} has already been called.
-	 */
-	public LinkModificationSystemChangesResult applyChangesAndCommit()
-	        throws FailedLinkModificationSystemChangeException,
-	            LinkModificationSystemInstanceAlreadyRunException;
-
-	/**
-	 * Run to apply all submitted changes.
-	 * 
+	 * @throws AtomicOperationException thrown if one or more requests fails and this is configured to execute atomically.
 	 * @throws FailedLinkModificationSystemChangeException
 	 *             thrown if an issue is encountered while applying changes.
 	 * @throws LinkModificationSystemInstanceAlreadyRunException
 	 *             thrown if {@link #applyChangesAndCommit()} has already been called.
 	 */
 	public LinkModificationSystemChangesResult applyChanges()
-	        throws FailedLinkModificationSystemChangeException,
+	        throws AtomicOperationException,
+	        	FailedLinkModificationSystemChangeException,
 	            LinkModificationSystemInstanceAlreadyRunException;
 
 }

@@ -1,7 +1,9 @@
-package com.dereekb.gae.utilities.collections.pairs;
+package com.dereekb.gae.utilities.collections.pairs.impl;
+
+import com.dereekb.gae.utilities.collections.pairs.MutableSuccessPair;
 
 /**
- * {@link ResultsPair} implementation that is keyed to a type and a boolean.
+ * {@link MutableSuccessPair} implementation.
  * 
  * @author dereekb
  *

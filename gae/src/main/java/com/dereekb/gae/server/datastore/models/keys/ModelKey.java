@@ -19,7 +19,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelK
 import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
 import com.dereekb.gae.server.datastore.models.keys.exception.UninitializedModelKeyException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 import com.dereekb.gae.utilities.misc.keyed.Keyed;

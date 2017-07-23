@@ -15,7 +15,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
-import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
 import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;

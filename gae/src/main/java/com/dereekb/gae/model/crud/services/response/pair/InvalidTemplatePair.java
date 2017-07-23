@@ -6,7 +6,7 @@ import java.util.List;
 import com.dereekb.gae.model.crud.pairs.UpdatePair;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;

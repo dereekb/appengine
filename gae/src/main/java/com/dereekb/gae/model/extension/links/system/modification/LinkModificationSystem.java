@@ -16,5 +16,13 @@ public interface LinkModificationSystem {
 	 * @return {@link LinkModificationSystemInstance}. Never {@code null}.
 	 */
 	public LinkModificationSystemInstance makeInstance();
+	
+	/**
+	 * Generates a new {@link LinkModificationSystemInstance} with the input options.
+	 * 
+	 * @param options {@link LinkModificationSystemInstanceOptions}. Can be {@code null}.
+	 * @return {@link LinkModificationSystemInstance}. Never {@code null}.
+	 */
+	public LinkModificationSystemInstance makeInstance(LinkModificationSystemInstanceOptions options);
 
 }

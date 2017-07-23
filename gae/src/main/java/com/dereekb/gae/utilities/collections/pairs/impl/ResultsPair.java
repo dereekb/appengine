@@ -1,4 +1,4 @@
-package com.dereekb.gae.utilities.collections.pairs;
+package com.dereekb.gae.utilities.collections.pairs.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +8,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.collections.pairs.MutableResultPair;
+import com.dereekb.gae.utilities.collections.pairs.ResultPair;
+import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
 import com.dereekb.gae.utilities.filters.FilterResult;
 
 /**
- * Abstract object pair.
+ * Abstract {@link MutableResultPair} implementation.
  *
  * @author dereekb
  *
@@ -21,7 +24,7 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  * @param <R>
  *            "Results" object. The object being edited generally.
  */
-public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
+public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements MutableResultPair<S, R> {
 
 	private ResultsPairState state = ResultsPairState.NEW;
 
@@ -42,10 +45,12 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		return this.object;
 	}
 
+	@Override
 	public ResultsPairState getState() {
 		return this.state;
 	}
 
+	@Override
 	public boolean hasResult() {
 		return (this.object != null);
 	}
@@ -53,10 +58,12 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 	/**
 	 * Shortcut for calling {@link #setResult(Object)} using null.
 	 */
+	@Override
 	public void flagFailure() {
 		this.setResult(null);
 	}
 
+	@Override
 	public void setResult(R result) {
 		if (this.object == null) {
 			if (result != null) {
@@ -75,6 +82,7 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		}
 	}
 
+	@Override
 	public void clearResult() {
 		if (this.object != null) {
 			this.object = null;
@@ -82,27 +90,28 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		}
 	}
 
-	public static <S, R> List<S> getSources(Iterable<? extends ResultsPair<S, R>> pairs) {
-		return HandlerPair.getKeys(pairs);
-	}
-
-	public static <S, R> List<R> getResults(Iterable<? extends ResultsPair<S, R>> pairs) {
-		return HandlerPair.getObjects(pairs);
-	}
-
 	@Override
 	public String toString() {
 		return "ResultsPair [source=" + this.key + ", result=" + this.object + "]";
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> List<P> pairsWithResults(Iterable<P> pairs) {
+	// MARK: Utility
+	public static <S, R> List<S> getSources(Iterable<? extends ResultPair<S, R>> pairs) {
+		return HandlerPair.getKeys(pairs);
+	}
+
+	public static <S, R> List<R> getResults(Iterable<? extends ResultPair<S, R>> pairs) {
+		return HandlerPair.getObjects(pairs);
+	}
+
+	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithResults(Iterable<P> pairs) {
 		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
 		states.add(ResultsPairState.SUCCESS);
 		states.add(ResultsPairState.REPLACED);
 		return pairsWithStates(pairs, states);
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> List<P> pairsWithoutResults(Iterable<P> pairs) {
+	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithoutResults(Iterable<P> pairs) {
 		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
 		states.add(ResultsPairState.NEW);
 		states.add(ResultsPairState.CLEARED);
@@ -110,7 +119,7 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		return pairsWithStates(pairs, states);
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> List<P> pairsWithState(Iterable<P> pairs,
+	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithState(Iterable<P> pairs,
 	                                                                         ResultsPairState state) {
 		List<P> withState = new ArrayList<P>();
 
@@ -123,7 +132,7 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		return withState;
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> List<P> pairsWithStates(Iterable<P> pairs,
+	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithStates(Iterable<P> pairs,
 	                                                                          Set<ResultsPairState> states) {
 		List<P> withState = new ArrayList<P>();
 
@@ -138,14 +147,14 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		return withState;
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> HashMapWithList<FilterResult, P> filterSuccessfulPairs(Iterable<P> pairs) {
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<FilterResult, P> filterSuccessfulPairs(Iterable<P> pairs) {
 		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
 		states.add(ResultsPairState.SUCCESS);
 		states.add(ResultsPairState.REPLACED);
 		return filterPairsWithStates(pairs, states);
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> HashMapWithList<FilterResult, P> filterFailedPairs(Iterable<P> pairs) {
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<FilterResult, P> filterFailedPairs(Iterable<P> pairs) {
 		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
 		states.add(ResultsPairState.NEW);
 		states.add(ResultsPairState.CLEARED);
@@ -153,7 +162,7 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		return filterPairsWithStates(pairs, states);
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> HashMapWithList<FilterResult, P> filterPairsWithStates(Iterable<P> pairs,
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<FilterResult, P> filterPairsWithStates(Iterable<P> pairs,
 	                                                                                                         Set<ResultsPairState> states) {
 		HashMapWithList<FilterResult, P> map = new HashMapWithList<FilterResult, P>();
 
@@ -170,7 +179,7 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 		return map;
 	}
 
-	public static <S, R, P extends ResultsPair<S, R>> HashMapWithList<ResultsPairState, P> pairsByState(Iterable<P> pairs) {
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<ResultsPairState, P> pairsByState(Iterable<P> pairs) {
 		HashMapWithList<ResultsPairState, P> map = new HashMapWithList<ResultsPairState, P>();
 
 		for (P pair : pairs) {
@@ -184,10 +193,10 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 	 * Generates a map of each results pair keyed by their own key.
 	 *
 	 * @param pairs
-	 * @return Map keyed by {@link ResultsPair} key, with values of
-	 *         {@link ResultsPair}.
+	 * @return Map keyed by {@link ResultPair} key, with values of
+	 *         {@link ResultPair}.
 	 */
-	public static <S, R, P extends ResultsPair<S, R>> Map<S, P> pairsKeyMap(Iterable<P> pairs) {
+	public static <S, R, P extends ResultPair<S, R>> Map<S, P> pairsKeyMap(Iterable<P> pairs) {
 		Map<S, P> map = new HashMap<S, P>();
 
 		for (P pair : pairs) {
@@ -199,14 +208,14 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 	}
 
 	/**
-	 * Generates a map that shows which {@link ResultsPair} have results and
+	 * Generates a map that shows which {@link ResultPair} have results and
 	 * those that do not.
 	 *
 	 * @param pairs
 	 * @return {@link HashMapWithList} keyed by whether or not results are
 	 *         contained, and lists of pairs for each.
 	 */
-	public static <S, R, P extends ResultsPair<S, R>> HashMapWithList<Boolean, P> containsResultsMap(Iterable<P> pairs) {
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<Boolean, P> containsResultsMap(Iterable<P> pairs) {
 		HashMapWithList<Boolean, P> map = new HashMapWithList<Boolean, P>();
 
 		for (P pair : pairs) {
@@ -217,14 +226,14 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> {
 	}
 
 	/**
-	 * Generates a map that shows which {@link ResultsPair} keys have generated
+	 * Generates a map that shows which {@link ResultPair} keys have generated
 	 * results.
 	 *
 	 * @param pairs
 	 * @return {@link HashMapWithList} keyed by whether or not results are
 	 *         contained, and lists of keys for each.
 	 */
-	public static <S, R, P extends ResultsPair<S, R>> HashMapWithList<Boolean, S> successfulKeysMap(Iterable<P> pairs) {
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<Boolean, S> successfulKeysMap(Iterable<P> pairs) {
 		HashMapWithList<Boolean, S> map = new HashMapWithList<Boolean, S>();
 
 		for (P pair : pairs) {

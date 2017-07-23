@@ -17,7 +17,7 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;

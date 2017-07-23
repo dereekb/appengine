@@ -22,9 +22,11 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstanceOptions;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequestValidator;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequestValidatorInstance;
+import com.dereekb.gae.model.extension.links.system.modification.MutableLinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
@@ -45,6 +47,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.map.MapUtility;
+import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 
 /**
  * {@link LinkModificationSystem} implementation.
@@ -60,6 +63,8 @@ public class LinkModificationSystemImpl
 	private LinkSystem linkSystem;
 	private LinkModificationSystemDelegate delegate;
 
+	private LinkModificationSystemInstanceOptions defaultOptions = new LinkModificationSystemInstanceOptionsImpl();
+	
 	public LinkModificationSystemImpl(LinkSystem linkSystem, LinkModificationSystemDelegate delegate) {
 		super();
 		this.setLinkSystem(linkSystem);
@@ -91,19 +96,40 @@ public class LinkModificationSystemImpl
 	}
 
 	// MARK: LinkModificationSystem
+
 	@Override
 	public LinkModificationSystemInstance makeInstance() {
-		return new LinkModificationSystemInstanceImpl();
+		return this.makeInstance(null);
+	}
+
+	@Override
+	public LinkModificationSystemInstance makeInstance(LinkModificationSystemInstanceOptions options) {
+		if (options == null) {
+			options = this.defaultOptions;
+		}
+		
+		return new LinkModificationSystemInstanceImpl(options);
 	}
 
 	// MARK: Instance
 	protected class LinkModificationSystemInstanceImpl
 	        implements LinkModificationSystemInstance {
 
+		private final LinkModificationSystemInstanceOptions options;
+		
 		private final List<LinkModificationSystemRequest> requests = new ArrayList<LinkModificationSystemRequest>();
 		private final LinkModificationSystemRequestValidatorInstance validator = LinkModificationSystemImpl.this.makeValidatorInstance();
 		
+		public LinkModificationSystemInstanceImpl(LinkModificationSystemInstanceOptions options) {
+			this.options = options;
+		}
+
 		// MARK: LinkModificationSystemInstance
+		@Override
+		public LinkModificationSystemInstanceOptions getOptions() {
+			return this.options;
+		}
+		
 		@Override
 		public void queueRequest(LinkModificationSystemRequest request)
 		        throws UnavailableLinkException,
@@ -113,24 +139,12 @@ public class LinkModificationSystemImpl
 			this.validateRequest(request);
 			this.requests.add(request);
 		}
-
-		@Override
-		public LinkModificationSystemChangesResult applyChangesAndCommit()
-		        throws FailedLinkModificationSystemChangeException,
-		            LinkModificationSystemInstanceAlreadyRunException {
-			return this.applyChanges(true);
-		}
-
+		
 		@Override
 		public LinkModificationSystemChangesResult applyChanges()
 		        throws FailedLinkModificationSystemChangeException,
 		            LinkModificationSystemInstanceAlreadyRunException {
-			return this.applyChanges(false);
-		}
-
-		public LinkModificationSystemChangesResult applyChanges(boolean autoCommit)
-		        throws FailedLinkModificationSystemChangeException,
-		            LinkModificationSystemInstanceAlreadyRunException {
+			boolean autoCommit = this.options.isAutoCommit();
 			LinkModificationSystemChangesRunner runner = LinkModificationSystemImpl.this.makeRunner(this.requests, autoCommit);
 			return runner.run();
 		}
@@ -171,8 +185,8 @@ public class LinkModificationSystemImpl
 		Collection<ModelKey> keys = this.convertKeysForRequest(info, request);
 		MutableLinkChange change = MutableLinkChangeImpl.make(request.getLinkChangeType(), keys);
 
-		LinkModification primaryModification = new LinkModificationImpl(primaryKey, info, change);
-		return new RequestChanges(primaryModification);
+		LinkModification modification = new LinkModificationImpl(primaryKey, info, change);
+		return new RequestChanges(modification, request);
 	}
 	
 	private ModelKey convertPrimaryKeyForRequest(LinkInfo info,
@@ -201,34 +215,32 @@ public class LinkModificationSystemImpl
 		return convertedKeys;
 	}
 
-	protected static class RequestChanges {
+	protected static class RequestChanges extends SuccessResultsPair<LinkModification> implements MutableLinkModificationPair  {
 
-		private LinkModification primaryModification;
+		private LinkModification modification;
+		private LinkModificationSystemRequest request;
 
-		public RequestChanges(LinkModification primaryModification) {
-			this.setPrimaryModification(primaryModification);
+		public RequestChanges(LinkModification modification, LinkModificationSystemRequest request) {
+			super(modification);
+			this.setRequest(request);
+		}
+		
+		@Override
+		public LinkModification getModification() {
+			return this.modification;
 		}
 
-		public LinkModification getPrimaryModification() {
-			return this.primaryModification;
+		@Override
+		public LinkModificationSystemRequest getRequest() {
+			return this.request;
 		}
-
-		public void setPrimaryModification(LinkModification primaryModification) {
-			if (primaryModification == null) {
-				throw new IllegalArgumentException("primaryModification cannot be null.");
+		
+		public void setRequest(LinkModificationSystemRequest request) {
+			if (request == null) {
+				throw new IllegalArgumentException("request cannot be null.");
 			}
-
-			this.primaryModification = primaryModification;
-		}
-
-		public static List<LinkModification> getAllModificationsFromChanges(Iterable<RequestChanges> changes) {
-			List<LinkModification> modifications = new ArrayList<LinkModification>();
-
-			for (RequestChanges change : changes) {
-				modifications.add(change.getPrimaryModification());
-			}
-
-			return modifications;
+		
+			this.request = request;
 		}
 
 	}
@@ -269,11 +281,8 @@ public class LinkModificationSystemImpl
 				this.instance = LinkModificationSystemImpl.this.delegate.makeInstance();
 			}
 
-			List<LinkModification> modifications = RequestChanges
-			        .getAllModificationsFromChanges(this.inputRequestChanges);
-
 			try {
-				this.runModifications(modifications);
+				this.runModifications();
 				
 				if (this.autoCommitChanges) {
 					this.instance.commitChanges();
@@ -307,8 +316,8 @@ public class LinkModificationSystemImpl
 
 		}
 
-		protected void runModifications(List<LinkModification> modifications) throws UnavailableModelException {
-			this.testModifications(modifications);
+		protected void runModifications() throws UnavailableModelException {
+			this.preTestModifications(this.inputRequestChanges);
 			
 			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
 			        .buildTypeChangesMap(modifications);
@@ -340,10 +349,10 @@ public class LinkModificationSystemImpl
 		 * <p>
 		 * Mainly Set and Add are tested.
 		 * 
-		 * @param modifications {@link List}. Never {@code null}.
+		 * @param inputRequestChanges {@link List}. Never {@code null}.
 		 */
-		private void testModifications(List<LinkModification> modifications) throws UnavailableModelException {
-			LinkModificationSystemImpl.this.delegate.testModifications(modifications);
+		protected void preTestModifications(List<RequestChanges> inputRequestChanges) throws UnavailableModelException {
+			LinkModificationSystemImpl.this.delegate.preTestModifications(inputRequestChanges);
 		}
 		
 		protected LinkModificationResultSet runModificationsForType(String type,

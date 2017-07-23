@@ -3,37 +3,37 @@ package com.dereekb.gae.model.extension.links.service.exception;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException.LinkSystemChangeApiResponseError;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException.LinkSystemChangeApiResponseError;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
- * Contains a set of {@link LinkSystemChangeException} instances to be thrown
+ * Contains a set of {@link LinkServiceChangeException} instances to be thrown
  * together in this container.
  *
  * @author dereekb
  */
-public class LinkSystemChangeSetException extends ApiLinkSystemException {
+public class LinkServiceChangeSetException extends ApiLinkSystemException {
 
 	public static final String API_ERROR_CODE = "LINK_CHANGE_ERROR_SET";
 
 	private static final long serialVersionUID = 1L;
 
-	private List<LinkSystemChangeException> exceptions;
+	private List<LinkServiceChangeException> exceptions;
 
 	private transient List<LinkModificationSystemRequest> failedChanges;
 
-	public LinkSystemChangeSetException(List<LinkSystemChangeException> exceptions) {
+	public LinkServiceChangeSetException(List<LinkServiceChangeException> exceptions) {
 		this.exceptions = exceptions;
 	}
 
-	public List<LinkSystemChangeException> getExceptions() {
+	public List<LinkServiceChangeException> getExceptions() {
 		return this.exceptions;
 	}
 
-	public void setExceptions(List<LinkSystemChangeException> exceptions) {
+	public void setExceptions(List<LinkServiceChangeException> exceptions) {
 		this.exceptions = exceptions;
 	}
 
@@ -42,7 +42,7 @@ public class LinkSystemChangeSetException extends ApiLinkSystemException {
 		if (this.failedChanges == null) {
 			List<LinkModificationSystemRequest> failedChanges = new ArrayList<LinkModificationSystemRequest>();
 
-			for (LinkSystemChangeException failure : this.exceptions) {
+			for (LinkServiceChangeException failure : this.exceptions) {
 				failedChanges.add(failure.getChange());
 			}
 
@@ -61,7 +61,7 @@ public class LinkSystemChangeSetException extends ApiLinkSystemException {
 
 		List<LinkSystemChangeApiResponseError> data = new ArrayList<LinkSystemChangeApiResponseError>();
 
-		for (LinkSystemChangeException exception : this.exceptions) {
+		for (LinkServiceChangeException exception : this.exceptions) {
 			data.add(exception.asResponseError());
 		}
 

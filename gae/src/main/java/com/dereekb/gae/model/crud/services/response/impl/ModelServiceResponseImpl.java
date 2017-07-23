@@ -7,8 +7,8 @@ import java.util.List;
 import com.dereekb.gae.model.crud.services.response.ModelServiceResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
 
 /**
  * {@link ServiceResponseImpl} extension for

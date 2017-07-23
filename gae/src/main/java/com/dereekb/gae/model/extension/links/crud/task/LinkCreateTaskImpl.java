@@ -11,8 +11,8 @@ import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
@@ -149,7 +149,7 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 			// Generally this shouldn't occur, but caught just in-case.
 			this.undoDeleter.delete(created);
 			throw e;
-		} catch (LinkSystemChangeSetException e) {
+		} catch (LinkServiceChangeSetException e) {
 
 			// If the atomic operation fails, delete all created items to undo.
 			this.undoDeleter.delete(created);
@@ -161,9 +161,9 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 	}
 
 	private void setPairFailuresForChangeSetException(List<LinkCreateTaskPair<T>> pairs,
-	                                                  LinkSystemChangeSetException e) {
+	                                                  LinkServiceChangeSetException e) {
 
-		List<LinkSystemChangeException> exceptions = e.getExceptions();
+		List<LinkServiceChangeException> exceptions = e.getExceptions();
 
 		Map<LinkModificationSystemRequest, LinkCreateTaskPair<T>> pairsMap = new HashMap<LinkModificationSystemRequest, LinkCreateTaskPair<T>>();
 
@@ -171,7 +171,7 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 			MapUtility.putIntoMapMultipleTimes(pairsMap, pair.getObject(), pair);
 		}
 
-		for (LinkSystemChangeException exception : exceptions) {
+		for (LinkServiceChangeException exception : exceptions) {
 			LinkModificationSystemRequest change = exception.getChange();
 
 			LinkCreateTaskPair<T> pair = pairsMap.get(change);

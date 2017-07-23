@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.mail.pairs;
 
 import com.dereekb.gae.server.mail.MailRequest;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 
 /**
  * Mail Recipient pair that contains an email address and an optional name with it.

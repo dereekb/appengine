@@ -23,6 +23,7 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.LinkM
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemDelegateImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemEntryImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemImpl;
+import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemInstanceOptionsImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.exception.LinkChangeLinkSizeException;
@@ -131,7 +132,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(linkRequest);
 		
-		LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+		LinkModificationSystemChangesResult result = instance.applyChanges();
 
 		// Assert models were linked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -152,7 +153,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(unlinkRequest);
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were unlinked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -175,7 +176,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 			instance.queueRequest(linkParentRequest);
 		}
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were linked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -196,7 +197,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(clearRequest);
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were unlinked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -239,7 +240,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(linkRequest);
 		
-		LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+		LinkModificationSystemChangesResult result = instance.applyChanges();
 
 		// Assert models were linked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -260,7 +261,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(unlinkRequest);
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were unlinked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -284,7 +285,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 			instance.queueRequest(linkParentRequest);
 		}
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were linked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -305,7 +306,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(clearRequest);
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were unlinked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -349,7 +350,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(linkRequest);
 		
-		LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+		LinkModificationSystemChangesResult result = instance.applyChanges();
 
 		// Assert models were linked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -366,7 +367,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(unlinkRequest);
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were unlinked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -400,7 +401,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(linkRequest);
 		
-		LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+		LinkModificationSystemChangesResult result = instance.applyChanges();
 
 		// Assert models were linked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -425,7 +426,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance = this.testSystem.linkModificationSystem.makeInstance();
 		instance.queueRequest(unlinkRequest);
 		
-		result = instance.applyChangesAndCommit();
+		result = instance.applyChanges();
 
 		// Assert models were unlinked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -453,7 +454,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance.queueRequest(linkRequest);
 		
 		try {
-			LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+			LinkModificationSystemChangesResult result = instance.applyChanges();
 			Assert.fail();
 		} catch (FailedLinkModificationSystemChangeException e) {
 			Throwable cause = e.getCause();
@@ -498,7 +499,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		instance.queueRequest(unavailableLinkRequest);
 		
 		try {
-			LinkModificationSystemChangesResult result = instance.applyChangesAndCommit();
+			LinkModificationSystemChangesResult result = instance.applyChanges();
 			Assert.fail();
 		} catch (FailedLinkModificationSystemChangeException e) {
 			
@@ -644,11 +645,14 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		MutableLinkChange linkAToBChange = MutableLinkChangeImpl.set(SetUtility.wrap(bModelKey));
 
 		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.THIRD_LINK_NAME, linkAToBChange);
-
-		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
-		instance.queueRequest(linkRequest);
 		
-		LinkModificationSystemChangesResult result = instance.applyChanges();	//Don't automatically commit.
+		LinkModificationSystemInstanceOptionsImpl options = new LinkModificationSystemInstanceOptionsImpl();
+		options.setAutoCommit(false);	//Don't automatically commit.
+		
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance(options);
+		instance.queueRequest(linkRequest);
+
+		LinkModificationSystemChangesResult result = instance.applyChanges();
 
 		// Assert models were linked
 		a = this.testSystem.testLinkSystem.aEntity.get(a);
@@ -688,7 +692,10 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 
 		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.A_CHILDREN_LINK_NAME, linkAChildrenToAChange);
 
-		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+		LinkModificationSystemInstanceOptionsImpl options = new LinkModificationSystemInstanceOptionsImpl();
+		options.setAutoCommit(false);	//Don't automatically commit.
+		
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance(options);
 		instance.queueRequest(linkRequest);
 		
 		LinkModificationSystemChangesResult result = instance.applyChanges();	//Don't automatically commit.
@@ -737,7 +744,10 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 
 		LinkModificationSystemRequest linkRequest = new LinkModificationSystemRequestImpl(TestLinkModelA.MODEL_ENTITY_NAME, aModelKey, TestLinkModelALinkSystemBuilderEntry.B_CHILDREN_LINK_NAME, linkBChildrenToAChange);
 
-		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+		LinkModificationSystemInstanceOptionsImpl options = new LinkModificationSystemInstanceOptionsImpl();
+		options.setAutoCommit(false);	//Don't automatically commit.
+		
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance(options);
 		instance.queueRequest(linkRequest);
 		
 		LinkModificationSystemChangesResult result = instance.applyChanges();

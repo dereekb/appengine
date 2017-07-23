@@ -17,7 +17,7 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
@@ -80,7 +80,7 @@ public class LinkExtensionApiController {
 
 			response = new ApiResponseImpl(true);
 			this.addMissingKeysToResponse(primaryType, linkServiceResponse, response);
-		} catch (LinkSystemChangeSetException e) {
+		} catch (LinkServiceChangeSetException e) {
 			throw new WrappedApiUnprocessableEntityException(e);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);

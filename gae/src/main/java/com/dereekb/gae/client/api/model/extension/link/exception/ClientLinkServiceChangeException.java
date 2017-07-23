@@ -11,8 +11,8 @@ import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorT
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException.LinkSystemChangeApiResponseError;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException.LinkSystemChangeApiResponseError;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link ClientRequestFailureException} used for wrapping a
- * {@link LinkSystemChangeSetException} client side.
+ * {@link LinkServiceChangeSetException} client side.
  * 
  * @author dereekb
  *
@@ -53,7 +53,7 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 	}
 
 	/**
-	 * Used for serializing a {@link LinkSystemChangeSetException} from errors.
+	 * Used for serializing a {@link LinkServiceChangeSetException} from errors.
 	 * 
 	 * @author dereekb
 	 *
@@ -119,7 +119,7 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 		/**
 		 * Serializes keys from the error associated with the link change error
 		 * set codes,
-		 * {@link LinkSystemChangeSetException#API_ERROR_CODE}.
+		 * {@link LinkServiceChangeSetException#API_ERROR_CODE}.
 		 * 
 		 * @param response
 		 *            {@link ClientApiResponse}. Never {@code null}.
@@ -131,7 +131,7 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 
 			ClientResponseError error = response.getError();
 			Map<String, ClientResponseErrorInfo> errorInfoMap = error.getErrorInfoMap();
-			ClientResponseErrorInfo errorInfo = errorInfoMap.get(LinkSystemChangeSetException.API_ERROR_CODE);
+			ClientResponseErrorInfo errorInfo = errorInfoMap.get(LinkServiceChangeSetException.API_ERROR_CODE);
 
 			if (errorInfo != null) {
 				errorSet = this.serializeClientLinkSystemChangeErrorSet(type, errorInfo);

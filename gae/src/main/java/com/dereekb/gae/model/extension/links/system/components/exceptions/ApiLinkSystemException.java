@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.links.system.components.exceptions;
 import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 
 /**
- * {@link LinkSystemException} that implements {@link ApiResponseErrorConvertable}.
+ * External {@link LinkSystemException} that implements {@link ApiResponseErrorConvertable}.
  * 
  * @author dereekb
  *

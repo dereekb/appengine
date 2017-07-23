@@ -15,6 +15,7 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstance;
+import com.dereekb.gae.model.extension.links.system.modification.MutableLinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
@@ -54,8 +55,10 @@ public class LinkModificationSystemDelegateImpl
 
 	// MARK: LinkModificationSystemDelegate
 	@Override
-	public void testModifications(List<LinkModification> modifications) throws UnavailableLinkModelException, UnavailableModelException, UnavailableLinkException {
+	public void preTestModifications(List<MutableLinkModificationPair> inputRequestChanges)throws UnavailableLinkModelException, UnavailableModelException, UnavailableLinkException {
 		CaseInsensitiveMapWithSet<ModelKey> keysMap = new CaseInsensitiveMapWithSet<ModelKey>();
+		
+		// throws UnavailableLinkModelException, UnavailableModelException, UnavailableLinkException
 		
 		for (LinkModification modification : modifications) {
 			String mainType = modification.getLinkModelType();

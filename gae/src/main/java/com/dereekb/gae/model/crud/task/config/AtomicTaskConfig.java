@@ -8,6 +8,13 @@ package com.dereekb.gae.model.crud.task.config;
  */
 public interface AtomicTaskConfig {
 
+	/**
+	 * Whether or not to execute atomically.
+	 * <p>
+	 * If true, all changes must be successful, or nothing happens.
+	 * 
+	 * @return {@code true} if atomic.
+	 */
 	public boolean isAtomic();
 
 }

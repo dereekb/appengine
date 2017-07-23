@@ -5,7 +5,7 @@ import java.util.List;
 import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 
 /**
  * Pair used by {@link LinkCreateTaskImpl}.

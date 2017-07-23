@@ -7,8 +7,8 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
@@ -19,6 +19,7 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.Confl
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemInstanceOptionsImpl;
 
 /**
  * {@link LinkService} implementation using the {@link LinkModificationSystem}.
@@ -46,20 +47,22 @@ public class LinkServiceImpl
 	// MARK: LinkService
 	@Override
 	public LinkServiceResponse updateLinks(LinkServiceRequest serviceRequest)
-	        throws LinkSystemChangeSetException,
+	        throws LinkServiceChangeSetException,
 	            AtomicOperationException {
 
+		LinkModificationSystemInstanceOptionsImpl options = new LinkModificationSystemInstanceOptionsImpl();
+		options.setAtomic(serviceRequest.isAtomic());
+		
+		LinkModificationSystemInstance instance = this.system.makeInstance(options);
+		
 		List<LinkModificationSystemRequest> linkChanges = serviceRequest.getChangeRequests();
-		
-		LinkModificationSystemInstance instance = this.system.makeInstance();
-		
-		List<LinkSystemChangeException> requestExceptions = new ArrayList<LinkSystemChangeException>();
+		List<LinkServiceChangeException> requestExceptions = new ArrayList<LinkServiceChangeException>();
 		
 		for (LinkModificationSystemRequest request : linkChanges) {
 			try {
 				instance.queueRequest(request);	// Queue Requests
 			} catch (UnavailableLinkException | UnavailableLinkModelException | ConflictingLinkModificationSystemRequestException | InvalidLinkModificationSystemRequestException e) {
-				LinkSystemChangeException changeException = new LinkSystemChangeException(request, e);
+				LinkServiceChangeException changeException = new LinkServiceChangeException(request, e);
 				requestExceptions.add(changeException);
 			} catch (ChangesAlreadyExecutedException e) {
 				// Won't occur here...
@@ -67,11 +70,11 @@ public class LinkServiceImpl
 		}
 		
 		if (requestExceptions.isEmpty() == false) {
-			throw new LinkSystemChangeSetException(requestExceptions);
+			throw new LinkServiceChangeSetException(requestExceptions);
 		}
 		
 		try {
-			instance.applyChangesAndCommit();
+			instance.applyChanges();
 		} catch (LinkModificationSystemInstanceAlreadyRunException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

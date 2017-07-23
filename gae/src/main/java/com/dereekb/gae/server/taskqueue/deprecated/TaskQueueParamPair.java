@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.server.taskqueue.system.KeyedEncodedParameter;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.google.common.base.Joiner;
 
 /**
