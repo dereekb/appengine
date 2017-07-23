@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
@@ -25,6 +26,6 @@ public interface LinkModificationSystemModelChangeBuilder
 	 *            {@link Collection}. Never {@code null}.
 	 * @return {@link LinkModificationSystemModelChangeSet}. Never {@code null}.
 	 */
-	public LinkModificationSystemModelChangeSet makeChangeSet(Collection<LinkModification> modifications);
+	public LinkModificationSystemModelChangeSet makeChangeSet(List<LinkModification> modifications);
 
 }

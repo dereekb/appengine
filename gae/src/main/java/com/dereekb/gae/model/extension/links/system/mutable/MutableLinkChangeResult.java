@@ -15,14 +15,14 @@ public interface MutableLinkChangeResult {
 	/**
 	 * Returns the "before" set.
 	 * 
-	 * @return {@link set}.
+	 * @return {@link Set}. Never {@code null}.
 	 */
 	public Set<ModelKey> getOriginalSet();
 	
 	/**
 	 * Returns the "after" set.
 	 * 
-	 * @return
+	 * @return {@link Set}. Never {@code null}.
 	 */
 	public Set<ModelKey> getResultSet();
 

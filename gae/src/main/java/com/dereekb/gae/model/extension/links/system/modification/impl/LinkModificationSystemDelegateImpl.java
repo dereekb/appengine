@@ -5,17 +5,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPreTestPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstance;
-import com.dereekb.gae.model.extension.links.system.modification.MutableLinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
@@ -24,6 +23,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.collections.map.TwoDimensionalCaseInsensitiveMapWithSet;
 
 /**
  * {@link LinkModificationSystemDelegate} implementation.
@@ -55,16 +55,22 @@ public class LinkModificationSystemDelegateImpl
 
 	// MARK: LinkModificationSystemDelegate
 	@Override
-	public void preTestModifications(List<MutableLinkModificationPair> inputRequestChanges)throws UnavailableLinkModelException, UnavailableModelException, UnavailableLinkException {
+	public void preTestModifications(List<LinkModificationPreTestPair> testPairs) {
 		CaseInsensitiveMapWithSet<ModelKey> keysMap = new CaseInsensitiveMapWithSet<ModelKey>();
+
+		TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair> primaryKeysMap = new TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair>();
+		TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair> secondaryKeysMap = new TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair>();
 		
-		// throws UnavailableLinkModelException, UnavailableModelException, UnavailableLinkException
-		
-		for (LinkModification modification : modifications) {
+		for (LinkModificationPreTestPair pair : testPairs) {
+			LinkModification modification = pair.getLinkModification();
+			
 			String mainType = modification.getLinkModelType();
 			ModelKey mainKey = modification.getKey();
 			
 			keysMap.add(mainType, mainKey);	// Add the main key.
+			
+			// Add to the primary map
+			primaryKeysMap.add(mainType, mainKey, pair);
 			
 			MutableLinkChange mutableLinkChange = modification.getChange();
 			
@@ -79,6 +85,9 @@ public class LinkModificationSystemDelegateImpl
 						
 						// Add all to the reverse.
 						keysMap.addAll(reverseModelType, targetKeys);
+						
+						// Add all to the secondary map.
+						secondaryKeysMap.addAll(reverseModelType, targetKeys, pair);
 					} catch (DynamicLinkInfoException e) {
 						// Ignore dynamic links.
 					}
@@ -99,7 +108,7 @@ public class LinkModificationSystemDelegateImpl
 			Set<ModelKey> keys = entry.getValue();
 			
 			LinkModificationSystemEntry systemEntry = this.getEntryForType(modelType);
-			systemEntry.assertModelsExist(keys);
+			systemEntry.filterModelsExist(keys);
 		}
 	}
 
@@ -132,7 +141,9 @@ public class LinkModificationSystemDelegateImpl
 
 		@Override
 		public LinkModificationResultSet performModificationsForType(String type,
-		                                                             HashMapWithList<ModelKey, LinkModification> keyedMap) throws UndoChangesAlreadyExecutedException, UnavailableModelException {
+		                                                             HashMapWithList<ModelKey, LinkModificationPair> keyedMap)
+		        throws UndoChangesAlreadyExecutedException,
+		            UnavailableLinkModelException {
 			LinkModificationSystemEntryInstance entryInstance = this.getEntryInstance(type);
 			return entryInstance.performModifications(keyedMap);
 		}

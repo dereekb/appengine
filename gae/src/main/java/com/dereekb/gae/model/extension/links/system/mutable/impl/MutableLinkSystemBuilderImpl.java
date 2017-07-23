@@ -1,10 +1,12 @@
 package com.dereekb.gae.model.extension.links.system.mutable.impl;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
+import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.AbstractReadResponseWrapper;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
@@ -369,6 +371,13 @@ public class MutableLinkSystemBuilderImpl
 		}
 
 		// MARK: MutableLinkModelAccessor
+		@Override
+		public ReadResponse<ModelKey> readExistingModels(Collection<ModelKey> modelKeys) {
+			ReadRequest readRequest = new KeyReadRequest(modelKeys, false);
+			ReadResponse<T> response = this.delegate.getReadService().read(readRequest);
+			return null;
+		}
+		
 		@Override
 		public ReadResponse<? extends MutableLinkModelAccessorPair<T>> readMutableLinkModels(ReadRequest request)
 		        throws AtomicOperationException {

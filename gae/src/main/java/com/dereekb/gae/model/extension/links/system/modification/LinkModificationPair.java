@@ -1,24 +1,23 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
-import com.dereekb.gae.utilities.collections.pairs.SuccessPair;
+import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 
 /**
- * {@link SuccessPair} for {@link LinkModification}. 
+ * Pair for {@link LinkModification} and its result.
  *
  * @author dereekb
  *
  */
-public interface LinkModificationPair extends SuccessPair<LinkModification> {
-
-	/**
-	 * @return {@link LinkModification}. Never {@code null}.
-	 */
-	public LinkModification getModification();
+public interface LinkModificationPair extends AlwaysKeyed<ModelKey>, LinkModificationReference {
 	
 	/**
-	 * @return {@link LinkModificationSystemRequest}. Never {@code null}.
+	 * Sets the result.
+	 * 
+	 * @param result {@link LinkModificationResult}. Never {@code null}.
 	 */
-	public LinkModificationSystemRequest getRequest();
+	public void setLinkModificationResult(LinkModificationResult result);
 	
 }

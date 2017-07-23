@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.modification.components;
 
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationReference;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
 
 /**
@@ -9,7 +10,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeRes
  * @author dereekb
  *
  */
-public interface LinkModificationResult {
+public interface LinkModificationResult extends LinkModificationReference {
 
 	/**
 	 * Whether or not the model was modified.
@@ -24,13 +25,7 @@ public interface LinkModificationResult {
 	public boolean isSuccessful();
 
 	/**
-	 * Returns the original modification request.
-	 * 
-	 * @return {@link LinkModification}. Never {@code null}.
-	 */
-	public LinkModification getLinkModification();
-
-	/**
+	 * Returns the result.
 	 * 
 	 * @return {@link MutableLinkChangeResult}. Never {@code null} if
 	 *         {{@link #isSuccessful()} returns {@code true}.

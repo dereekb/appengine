@@ -13,12 +13,10 @@ public interface LinkModificationSystemDelegate {
 
 	/**
 	 * Performs some pre-modification tests to see if models exist, etc.
-	 * <p>
-	 * Modifies the input {@link MutableLinkModificationPair} instances with success or failure.
 	 * 
 	 * @param inputRequestChanges {@link List}. Never {@code null}.
 	 */
-	public void preTestModifications(List<MutableLinkModificationPair> inputRequestChanges);
+	public void preTestModifications(List<LinkModificationPreTestPair> testPairs);
 	
 	/**
 	 * Generates a new instance of changes.

@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
@@ -33,7 +32,7 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 
 	// MARK: LinkModificationSystemModelChangeBuilder
 	@Override
-	public LinkModificationSystemModelChangeSet makeChangeSet(Collection<LinkModification> modifications) {
+	public LinkModificationSystemModelChangeSet makeChangeSet(List<LinkModification> modifications) {
 		List<LinkModificationSystemModelChange> changes = this.convert(modifications);
 		return new LinkModificationSystemModelChangeSetImpl(changes);
 	}

@@ -2,8 +2,8 @@ package com.dereekb.gae.model.extension.links.system.modification;
 
 import java.util.Set;
 
-import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.filters.FilterResults;
 
 /**
  * {@link LinkModificationSystem} entry that generates a
@@ -15,14 +15,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public interface LinkModificationSystemEntry {
 
 	/**
-	 * Asserts that all models for the input keys are available.
+	 * Filters models for the the input keys that are available.
 	 * 
 	 * @param keys {@link Set}. Never {@code null}.
 	 * 
-	 * @throws UnavailableModelException thrown if one or more models are unavailable.
+	 * @return {@link FilterResults}. Never {@code null}.
 	 */
-	public void assertModelsExist(Set<ModelKey> keys) throws UnavailableModelException;
-	
+	public FilterResults<ModelKey> filterModelsExist(Set<ModelKey> keys);
+
 	/**
 	 * Generates a new instance of changes.
 	 * 
@@ -30,6 +30,5 @@ public interface LinkModificationSystemEntry {
 	 *         {@code null}.
 	 */
 	public LinkModificationSystemEntryInstance makeInstance();
-
 
 }

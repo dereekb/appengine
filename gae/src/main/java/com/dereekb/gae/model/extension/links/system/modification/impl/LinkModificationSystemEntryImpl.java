@@ -12,12 +12,12 @@ import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.exception.UnavailableModelException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeBuilder;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstanceSet;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeSet;
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultSetImpl;
 import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
@@ -33,6 +33,8 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
 import com.dereekb.gae.utilities.collections.batch.Partitioner;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.filters.FilterResults;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
@@ -104,16 +106,17 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 	// MARK: LinkModificationSystemEntry
 	@Override
-	public void assertModelsExist(Set<ModelKey> keys) throws UnavailableModelException {
-		ReadRequest readRequest = new KeyReadRequest(keys, false);
+	public FilterResults<ModelKey> filterModelsExist(Set<ModelKey> keys) {
 		
-		ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = this.accessor.readMutableLinkModels(readRequest);
+		ReadResponse<ModelKey> response = this.accessor.readExistingModels(keys);
+		
+		FilterResults<ModelKey> filterResults = new FilterResults<ModelKey>();
+		filterResults.addAll(FilterResult.PASS, response.getModels());
 		
 		Collection<ModelKey> failed = response.getFailed();
+		filterResults.addAll(FilterResult.FAIL, failed);
 		
-		if (failed.isEmpty() == false) {
-			throw new UnavailableModelException(failed);
-		}
+		return filterResults;
 	}
 
 	@Override
@@ -130,7 +133,9 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 		// MARK: LinkModificationSystemEntryInstance
 		@Override
-		public LinkModificationResultSet performModifications(HashMapWithList<ModelKey, LinkModification> keyedMap) throws UnavailableModelException {
+		public LinkModificationResultSet performModifications(HashMapWithList<ModelKey, LinkModificationPair> keyedMap, boolean atomic)
+		        throws UndoChangesAlreadyExecutedException,
+		            UnavailableModelException {
 			if (this.undoneChanges) {
 				throw new UndoChangesAlreadyExecutedException();
 			}
@@ -139,19 +144,20 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 			this.batchSets.add(batchSet);
 			
-			return batchSet.performChangesWithinTransactions();
+			return batchSet.performChangesWithinTransactions(atomic);
 		}
 
-		private ModificationBatchSet makeBatchSetForChanges(HashMapWithList<ModelKey, LinkModification> keyed) {
+		private ModificationBatchSet makeBatchSetForChanges(HashMapWithList<ModelKey, LinkModificationPair> keyedMap) {
 			List<List<ModelKey>> keyBatches = LinkModificationSystemEntryImpl.this.PARTITIONER
-			        .makePartitions(keyed.keySet());
+			        .makePartitions(keyedMap.keySet());
 			List<ModificationBatch> batches = new ArrayList<ModificationBatch>(keyBatches.size());
 
 			for (List<ModelKey> keyBatch : keyBatches) {
 				ModificationBatch batch = new ModificationBatch();
 
+				// Get all modifications for a specific model key.
 				for (ModelKey key : keyBatch) {
-					List<LinkModification> modifications = keyed.get(key);
+					List<LinkModificationPair> modifications = keyedMap.get(key);
 					batch.addModificationSet(key, modifications);
 				}
 
@@ -282,7 +288,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 		// MARK: Internal
 		public void addModificationSet(ModelKey key,
-		                               List<LinkModification> modifications) {
+		                               List<LinkModificationPair> modifications) {
 			LinkModificationSystemModelChangeSet changeSet = LinkModificationSystemEntryImpl.this.changeBuilder
 			        .makeChangeSet(modifications);
 			this.changeInstances.put(key, changeSet);

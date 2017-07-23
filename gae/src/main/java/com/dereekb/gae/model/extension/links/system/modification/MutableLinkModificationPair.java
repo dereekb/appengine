@@ -9,4 +9,5 @@ import com.dereekb.gae.utilities.collections.pairs.MutableSuccessPair;
  * @author dereekb
  *
  */
+@Deprecated
 public interface MutableLinkModificationPair extends LinkModificationPair, MutableSuccessPair<LinkModification> { }

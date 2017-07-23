@@ -14,6 +14,7 @@ import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.ReadRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.crud.services.response.impl.ExistsReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
 import com.dereekb.gae.model.crud.task.ReadTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -68,6 +69,12 @@ public class ReadServiceImpl<T extends UniqueModel>
 	}
 
 	// MARK: ReadService
+	@Override
+	public ReadResponse<ModelKey> exists(ReadRequest request) throws AtomicOperationException {
+		ReadResponse<T> readResponse = this.read(request);
+		return new ExistsReadResponse(readResponse);
+	}
+	
 	@Override
 	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 		ReadResponse<T> readResponse = null;
