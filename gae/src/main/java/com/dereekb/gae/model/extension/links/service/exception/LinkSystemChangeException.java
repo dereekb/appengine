@@ -2,11 +2,9 @@ package com.dereekb.gae.model.extension.links.service.exception;
 
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
-import com.dereekb.gae.model.extension.links.exception.LinkException;
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.utilities.web.error.impl.ErrorInfoImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,38 +12,37 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * Thrown when a {@link LinkSystemChange} cannot be completed.
+ * Thrown when a {@link LinkModificationSystemRequest} cannot be completed.
  * 
- * Wraps an internal {@link ApiLinkException} with {@link LinkSystemChange}
+ * Wraps an internal {@link ApiLinkSystemException} with {@link LinkModificationSystemRequest}
  * data.
  *
  * @author dereekb
- *
  */
-public class LinkSystemChangeException extends LinkException {
+public class LinkSystemChangeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String LINK_CHANGE_ERROR_CODE = "LINK_CHANGE_ERROR";
 
-	private final LinkSystemChange change;
-	private final ApiLinkException reason;
+	private final LinkModificationSystemRequest change;
+	private final ApiLinkSystemException reason;
 
-	public LinkSystemChangeException(LinkSystemChange change, ApiLinkException reason) {
+	public LinkSystemChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason) {
 		this(change, reason, null);
 	}
 
-	public LinkSystemChangeException(LinkSystemChange change, ApiLinkException reason, String message) {
+	public LinkSystemChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason, String message) {
 		super(message);
 		this.change = change;
 		this.reason = reason;
 	}
 
-	public LinkSystemChange getChange() {
+	public LinkModificationSystemRequest getChange() {
 		return this.change;
 	}
 
-	public ApiLinkException getReason() {
+	public ApiLinkSystemException getReason() {
 		return this.reason;
 	}
 
@@ -77,18 +74,18 @@ public class LinkSystemChangeException extends LinkException {
 
 		public LinkSystemChangeApiResponseError() {}
 
-		public static LinkSystemChangeApiResponseError make(LinkSystemChange change,
-		                                                    ApiLinkException exceptionReason) {
+		public static LinkSystemChangeApiResponseError make(LinkModificationSystemRequest change,
+		                                                    ApiLinkSystemException exceptionReason) {
 			LinkSystemChangeApiResponseError error = new LinkSystemChangeApiResponseError();
 
-			LinkChangeAction action = change.getAction();
-			ModelKey key = change.getPrimaryKey();
+			MutableLinkChangeType action = change.getLinkChangeType();
+			String key = change.getPrimaryKey();
 			String link = change.getLinkName();
 
 			error.setAction(action.getActionName());
 			error.setLink(link);
 			error.setKey(key.toString());
-			error.setTargetKeys(change.getTargetStringKeys());
+			error.setTargetKeys(change.getKeys());
 
 			ApiResponseError reason = exceptionReason.asResponseError();
 

@@ -5,8 +5,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * Thrown in some cases where a specific (same {@link ModelKey})
- * {@link MutableLinkModel} or related
- * type is expected.
+ * {@link MutableLinkModel} or related type is expected.
  * 
  * @author dereekb
  *

@@ -8,7 +8,8 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
+
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
@@ -51,7 +52,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		}
 	}
 
-	protected ApiRequest<ApiLinkChange> buildRequest(LinkChangeAction action,
+	protected ApiRequest<ApiLinkChange> buildRequest(MutableLinkChangeType action,
 	                                                 String linkName,
 	                                                 String targetType,
 	                                                 T primaryModel,
@@ -59,7 +60,7 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 		return this.buildRequest(action, linkName, targetType, primaryModel, SingleItem.withValue(targetModel));
 	}
 
-	protected ApiRequest<ApiLinkChange> buildRequest(LinkChangeAction action,
+	protected ApiRequest<ApiLinkChange> buildRequest(MutableLinkChangeType action,
 	                                                 String linkName,
 	                                                 String targetType,
 	                                                 T primaryModel,

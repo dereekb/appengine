@@ -44,6 +44,7 @@ import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
@@ -471,6 +472,11 @@ public class MutableLinkSystemBuilderImpl
 		}
 
 		@Override
+		public ModelKeyType getModelKeyType() {
+			return this.limitedLinkModel.getModelKeyType();
+		}
+		
+		@Override
 		public LinkInfo getLinkInfo(String linkName) throws UnavailableLinkException {
 			LinkInfoImpl linkInfo = this.linksMap.get(linkName);
 
@@ -487,6 +493,8 @@ public class MutableLinkSystemBuilderImpl
 		        implements LinkInfo {
 
 			private final LimitedLinkInfo limitedLinkInfo;
+			
+			private ModelKeyType keyType = null;
 			private RelationSource relationSource;
 
 			public LinkInfoImpl(LimitedLinkInfo limitedLinkInfo) {
@@ -516,6 +524,22 @@ public class MutableLinkSystemBuilderImpl
 			@Override
 			public String getLinkModelType() {
 				return LinkModelInfoImpl.this.getLinkModelType();
+			}
+
+			@Override
+			public ModelKeyType getModelKeyType() throws DynamicLinkInfoException {
+				if (this.keyType == null) {
+					try {
+						String reverseLinkModelType = this.getRelationLinkType();
+						LinkModelInfo reverseLinkModel = MutableLinkSystemBuilderImpl.this
+						        .loadLinkModelInfo(reverseLinkModelType);
+						this.keyType = reverseLinkModel.getModelKeyType();
+					} catch (UnavailableLinkModelException e) {
+						this.keyType = ModelKeyType.NAME;	// Default to a name.
+					}
+				}
+				
+				return this.keyType;
 			}
 
 			@Override

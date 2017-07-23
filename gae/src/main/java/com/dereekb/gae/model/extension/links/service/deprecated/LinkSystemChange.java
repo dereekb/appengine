@@ -2,19 +2,24 @@ package com.dereekb.gae.model.extension.links.service;
 
 import java.util.Set;
 
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * Represents a change in the system.
  *
  * @author dereekb
+ * 
+ * @deprecated Replaced by {@link LinkModificationSystemRequest}.
  */
+@Deprecated
 public interface LinkSystemChange {
 
 	/**
-	 * @return {@link LinkChangeAction} to perform.
+	 * @return {@link MutableLinkChangeType} to perform.
 	 */
-	public LinkChangeAction getAction();
+	public MutableLinkChangeType getAction();
 
 	/**
 	 * The type of the model to change.
@@ -24,14 +29,14 @@ public interface LinkSystemChange {
 	public String getPrimaryType();
 
 	/**
-	 * The {@link ModelKey} corresponding to the primary model to modify.
+	 * The key corresponding to the primary model to modify.
 	 * <p>
 	 * For example, if we wanted to change a model that had the name "x", this
-	 * would return a {@link ModelKey} with the name "x".
+	 * would return "x".
 	 *
-	 * @return {@link ModelKey} corresponding to the primary model to modify.
+	 * @return {@link String} corresponding to the primary model to modify.
 	 */
-	public ModelKey getPrimaryKey();
+	public String getPrimaryKey();
 
 	/**
 	 * The name of the link in the primary model to change.

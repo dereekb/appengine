@@ -76,6 +76,11 @@ public class StoredImageSetLinkSystemBuilderEntry extends AbstractMutableLinkSys
 	}
 
 	@Override
+	public ModelKeyType getModelKeyType() {
+		return ModelKeyType.NUMBER;
+	}
+
+	@Override
 	protected List<MutableLinkData<StoredImageSet>> makeLinkData() {
 		List<MutableLinkData<StoredImageSet>> linkData = new ArrayList<MutableLinkData<StoredImageSet>>();
 

@@ -1,90 +1,86 @@
 package com.dereekb.gae.model.extension.links.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
-import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
 
 /**
- * {@link LinkService} implementation.
- *
+ * {@link LinkService} implementation using the {@link LinkModificationSystem}.
+ * 
  * @author dereekb
  *
  */
-@Deprecated
 public class LinkServiceImpl
         implements LinkService {
 
-	private LinkSystem system;
+	private LinkModificationSystem system;
 
-	public LinkServiceImpl(LinkSystem system) {
-		this.system = system;
-	}
-
-	public LinkSystem getSystem() {
+	public LinkModificationSystem getSystem() {
 		return this.system;
 	}
 
-	public void setSystem(LinkSystem system) {
+	public void setSystem(LinkModificationSystem system) {
+		if (system == null) {
+			throw new IllegalArgumentException("System cannot be null.");
+		}
+
 		this.system = system;
 	}
 
 	// MARK: LinkService
 	@Override
-	public LinkServiceImplResponse updateLinks(LinkServiceRequest request)
+	public LinkServiceResponse updateLinks(LinkServiceRequest serviceRequest)
 	        throws LinkSystemChangeSetException,
 	            AtomicOperationException {
-		List<LinkSystemChange> changes = request.getLinkChanges();
-		LinkSystemChangesRunner runner = new LinkSystemChangesRunner(this.system);
 
-		try {
-			runner.runChanges(changes);
-		} catch (Exception e) {
-			throw new AtomicOperationException(e);
-		}
-
-		List<LinkSystemChangeException> failures = runner.getFailures();
-		boolean hasMissingKeys = runner.hasMissingKeys();
-
-		if (failures.isEmpty()) {
-			if (hasMissingKeys && request.isAtomic()) {
-				HashMapWithSet<String, ModelKey> missing = runner.getMissingPrimaryKeys();
-				throw new AtomicOperationException(missing.valuesSet(), AtomicOperationExceptionReason.UNAVAILABLE);
-			} else {
-				runner.saveChanges();
+		List<LinkModificationSystemRequest> linkChanges = serviceRequest.getChangeRequests();
+		
+		LinkModificationSystemInstance instance = this.system.makeInstance();
+		
+		List<LinkSystemChangeException> requestExceptions = new ArrayList<LinkSystemChangeException>();
+		
+		for (LinkModificationSystemRequest request : linkChanges) {
+			try {
+				instance.queueRequest(request);	// Queue Requests
+			} catch (UnavailableLinkException | UnavailableLinkModelException | ConflictingLinkModificationSystemRequestException | InvalidLinkModificationSystemRequestException e) {
+				LinkSystemChangeException changeException = new LinkSystemChangeException(request, e);
+				requestExceptions.add(changeException);
+			} catch (ChangesAlreadyExecutedException e) {
+				// Won't occur here...
 			}
-		} else {
-			throw new LinkSystemChangeSetException(failures);
 		}
-
-		return new LinkServiceImplResponse(runner);
-	}
-
-	public static class LinkServiceImplResponse
-	        implements LinkServiceResponse {
-
-		private final LinkSystemChangesRunner runner;
-
-		public LinkServiceImplResponse(LinkSystemChangesRunner runner) {
-			this.runner = runner;
+		
+		if (requestExceptions.isEmpty() == false) {
+			throw new LinkSystemChangeSetException(requestExceptions);
 		}
-
-		// MARK: LinkServiceResponse
-		@Override
-		public CaseInsensitiveMapWithSet<ModelKey> getMissingPrimaryKeysSet() {
-			return this.runner.getMissingPrimaryKeys();
+		
+		try {
+			instance.applyChangesAndCommit();
+		} catch (LinkModificationSystemInstanceAlreadyRunException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FailedLinkModificationSystemChangeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		
+		return null;
 	}
 
 }

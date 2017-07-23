@@ -22,10 +22,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 public class TypeModelKeyConverterImpl
         implements TypeModelKeyConverter {
 
-	private final static StringModelKeyConverter LONG_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
-	private final static StringModelKeyConverter STRING_CONVERTER = StringModelKeyConverterImpl.CONVERTER;
-
-	private Map<String, ModelKeyType> map;
+	private CaseInsensitiveMap<ModelKeyType> map;
 
 	public TypeModelKeyConverterImpl(Map<String, ModelKeyType> map) {
 		this.setMap(map);
@@ -44,25 +41,12 @@ public class TypeModelKeyConverterImpl
 		return this.getConverterForType(modelType);
 	}
 
-	public SingleDirectionalConverter<String, ModelKey> getSingleConverterForType(ModelKeyType type) {
-		return this.getDirectionalConverterForType(type);
+	public static SingleDirectionalConverter<String, ModelKey> getSingleConverterForType(ModelKeyType type) {
+		return getDirectionalConverterForType(type);
 	}
 
-	public StringModelKeyConverter getDirectionalConverterForType(ModelKeyType type) {
-		StringModelKeyConverter converter = null;
-
-		switch (type) {
-			case NAME:
-				converter = STRING_CONVERTER;
-				break;
-			case NUMBER:
-				converter = LONG_CONVERTER;
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid type passed.");
-		}
-
-		return converter;
+	public static StringModelKeyConverter getDirectionalConverterForType(ModelKeyType keyType) {
+		return ModelKey.converterForKeyType(keyType);
 	}
 
 	// MARK: TypeModelKeyConverter
@@ -80,7 +64,7 @@ public class TypeModelKeyConverterImpl
 	@Override
 	public StringModelKeyConverter getConverterForType(String modelType) throws UnknownModelTypeException {
 		ModelKeyType type = this.typeForModelType(modelType);
-		return this.getDirectionalConverterForType(type);
+		return getDirectionalConverterForType(type);
 	}
 
 	@Override

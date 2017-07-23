@@ -6,7 +6,7 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.Chang
 import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
 
 /**
  * {@link LinkModificationSystem} instance that can perform changes on models.
@@ -40,23 +40,23 @@ public interface LinkModificationSystemInstance {
 	 * 
 	 * @throws FailedLinkModificationSystemChangeException
 	 *             thrown if an issue is encountered while applying changes.
-	 * @throws LinkModificationSystemRunnerAlreadyRunException
+	 * @throws LinkModificationSystemInstanceAlreadyRunException
 	 *             thrown if {@link #applyChangesAndCommit()} has already been called.
 	 */
 	public LinkModificationSystemChangesResult applyChangesAndCommit()
 	        throws FailedLinkModificationSystemChangeException,
-	            LinkModificationSystemRunnerAlreadyRunException;
+	            LinkModificationSystemInstanceAlreadyRunException;
 
 	/**
 	 * Run to apply all submitted changes.
 	 * 
 	 * @throws FailedLinkModificationSystemChangeException
 	 *             thrown if an issue is encountered while applying changes.
-	 * @throws LinkModificationSystemRunnerAlreadyRunException
+	 * @throws LinkModificationSystemInstanceAlreadyRunException
 	 *             thrown if {@link #applyChangesAndCommit()} has already been called.
 	 */
 	public LinkModificationSystemChangesResult applyChanges()
 	        throws FailedLinkModificationSystemChangeException,
-	            LinkModificationSystemRunnerAlreadyRunException;
+	            LinkModificationSystemInstanceAlreadyRunException;
 
 }

@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractDescriptiveMutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 
 /**
@@ -28,6 +29,11 @@ public class StoredBlobLinkSystemBuilderEntry extends AbstractDescriptiveMutable
 	@Override
 	public String getLinkModelType() {
 		return STORED_BLOB_LINK_TYPE;
+	}
+
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return ModelKeyType.NAME;
 	}
 
 	@Override

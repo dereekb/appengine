@@ -14,6 +14,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.impl.link.MultipleMu
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkDataDelegate;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilderEntry<TestLinkModelB> {
 
@@ -33,6 +34,11 @@ public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSys
 	@Override
 	public String getLinkModelType() {
 		return LINK_MODEL_TYPE;
+	}
+
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return ModelKeyType.NAME;
 	}
 
 	@Override

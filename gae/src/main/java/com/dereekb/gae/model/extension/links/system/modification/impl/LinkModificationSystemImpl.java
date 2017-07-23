@@ -1,6 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
+import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
@@ -31,14 +33,15 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.Chang
 import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemRunnerAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkSizeLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
-import com.dereekb.gae.model.extension.links.system.mutable.exception.LinkChangeLinkSizeException;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.map.MapUtility;
@@ -114,20 +117,20 @@ public class LinkModificationSystemImpl
 		@Override
 		public LinkModificationSystemChangesResult applyChangesAndCommit()
 		        throws FailedLinkModificationSystemChangeException,
-		            LinkModificationSystemRunnerAlreadyRunException {
+		            LinkModificationSystemInstanceAlreadyRunException {
 			return this.applyChanges(true);
 		}
 
 		@Override
 		public LinkModificationSystemChangesResult applyChanges()
 		        throws FailedLinkModificationSystemChangeException,
-		            LinkModificationSystemRunnerAlreadyRunException {
+		            LinkModificationSystemInstanceAlreadyRunException {
 			return this.applyChanges(false);
 		}
 
 		public LinkModificationSystemChangesResult applyChanges(boolean autoCommit)
 		        throws FailedLinkModificationSystemChangeException,
-		            LinkModificationSystemRunnerAlreadyRunException {
+		            LinkModificationSystemInstanceAlreadyRunException {
 			LinkModificationSystemChangesRunner runner = LinkModificationSystemImpl.this.makeRunner(this.requests, autoCommit);
 			return runner.run();
 		}
@@ -161,12 +164,41 @@ public class LinkModificationSystemImpl
 	 * @param request
 	 * @return
 	 */
-	protected RequestChanges makeChangesForRequest(LinkModificationSystemRequest request) {
+	protected RequestChanges makeChangesForRequest(LinkModificationSystemRequest request) throws InvalidLinkModificationSystemRequestException {
 		LinkInfo info = this.getLinkInfoForRequest(request);
-		MutableLinkChange change = MutableLinkChangeImpl.make(request.getLinkChangeType(), request.getKeys());
+		
+		ModelKey primaryKey = this.convertPrimaryKeyForRequest(info, request);
+		Collection<ModelKey> keys = this.convertKeysForRequest(info, request);
+		MutableLinkChange change = MutableLinkChangeImpl.make(request.getLinkChangeType(), keys);
 
-		LinkModification primaryModification = new LinkModificationImpl(request.getPrimaryKey(), info, change);
+		LinkModification primaryModification = new LinkModificationImpl(primaryKey, info, change);
 		return new RequestChanges(primaryModification);
+	}
+	
+	private ModelKey convertPrimaryKeyForRequest(LinkInfo info,
+	                                             LinkModificationSystemRequest request) throws InvalidLinkModificationSystemRequestException {
+		
+		LinkModelInfo linkModelInfo = info.getLinkModelInfo();
+		ModelKeyType keyType = linkModelInfo.getModelKeyType();
+		String primaryKeyString = request.getPrimaryKey();
+		
+		return ModelKey.convert(keyType, primaryKeyString);
+	}
+
+	private Collection<ModelKey> convertKeysForRequest(LinkInfo info, LinkModificationSystemRequest request) throws InvalidLinkModificationSystemRequestException {
+		ModelKeyType keyType = info.getModelKeyType();
+		Set<String> keyStrings = request.getKeys();
+
+		Collection<ModelKey> convertedKeys = null;
+		
+		try {
+			convertedKeys = ModelKey.convert(keyType, keyStrings);
+		} catch (ConversionFailureException e) {
+			String message = "Invalid Model Key: " + e.getMessage();
+			throw new InvalidLinkModificationSystemRequestException(request, message);
+		}
+		
+		return convertedKeys;
 	}
 
 	protected static class RequestChanges {
@@ -230,9 +262,9 @@ public class LinkModificationSystemImpl
 
 		public LinkModificationSystemChangesResult run()
 		        throws FailedLinkModificationSystemChangeException,
-		            LinkModificationSystemRunnerAlreadyRunException {
+		            LinkModificationSystemInstanceAlreadyRunException {
 			if (this.instance != null) {
-				throw new LinkModificationSystemRunnerAlreadyRunException();
+				throw new LinkModificationSystemInstanceAlreadyRunException();
 			} else {
 				this.instance = LinkModificationSystemImpl.this.delegate.makeInstance();
 			}
@@ -392,7 +424,7 @@ public class LinkModificationSystemImpl
 
 		// MARK: One
 		private void validateOneLink(LinkInfo linkInfo,
-		                             LinkModificationSystemRequest request) throws TooManyChangeKeysException, LinkChangeLinkSizeException {
+		                             LinkModificationSystemRequest request) throws TooManyChangeKeysException, InvalidLinkSizeLinkModificationSystemRequestException {
 			this.assertOneLinkKeysCount(request);
 			this.assertOneLinkChangeSize(request);
 		}
@@ -406,11 +438,11 @@ public class LinkModificationSystemImpl
 			
 		}
 		
-		protected void assertOneLinkChangeSize(LinkModificationSystemRequest request) throws LinkChangeLinkSizeException {
+		protected void assertOneLinkChangeSize(LinkModificationSystemRequest request) throws InvalidLinkSizeLinkModificationSystemRequestException {
 			switch (request.getLinkChangeType()) {
 				case ADD:
 				case REMOVE:
-					throw new LinkChangeLinkSizeException(request);
+					throw new InvalidLinkSizeLinkModificationSystemRequestException(request);
 				case SET:
 				case CLEAR:
 				default:
@@ -438,9 +470,9 @@ public class LinkModificationSystemImpl
 		}
 
 		private String makeUniqueLinkId(LinkModificationSystemRequest request) {
-			ModelKey key = request.getPrimaryKey();
+			String key = request.getPrimaryKey();
 			String linkName = request.getLinkName();
-			return key.getName() + "_" + linkName;
+			return key + "_" + linkName;
 		}
 		
 	}

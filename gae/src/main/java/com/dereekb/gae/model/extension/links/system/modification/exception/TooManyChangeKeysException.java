@@ -16,8 +16,8 @@ public class TooManyChangeKeysException extends InvalidLinkModificationSystemReq
 		super(request);
 	}
 
-	public TooManyChangeKeysException(String message, LinkModificationSystemRequest request) {
-		super(message, request);
+	public TooManyChangeKeysException(LinkModificationSystemRequest request, String message) {
+		super(request, message);
 	}
 
 }

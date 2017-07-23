@@ -8,7 +8,7 @@ package com.dereekb.gae.model.extension.links.system.components;
  * @see LimitedLinkInfo
  */
 public interface AbstractedLinkInfo extends SimpleLinkInfo {
-
+	
 	/**
 	 * Returns the type of link.
 	 * 

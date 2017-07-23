@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.extension.links.system.components;
 
-import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRelationException;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 /**
  * A reference on a type to another type.
@@ -13,11 +13,18 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.NoRela
  */
 public interface LinkInfo
         extends LimitedLinkInfo, TypedLinkSystemComponent {
+	
+	/**
+	 * Returns the model key type that this link stores.
+	 * 
+	 * @return {@link ModelKeyType}. Never {@code null}.
+	 */
+	public ModelKeyType getModelKeyType() throws DynamicLinkInfoException;
 
 	/**
 	 * Returns the model that is associated with this link.
 	 * 
-	 * @return {@link LinkModel}. Never {@code null}.
+	 * @return {@link LinkModelInfo}. Never {@code null}.
 	 */
 	@Override
 	public LinkModelInfo getLinkModelInfo();

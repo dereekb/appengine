@@ -47,6 +47,11 @@ public class LoginKeyLinkSystemBuilderEntry extends AbstractMutableLinkSystemBui
 	}
 
 	@Override
+	public ModelKeyType getModelKeyType() {
+		return ModelKeyType.NUMBER;
+	}
+
+	@Override
 	protected List<MutableLinkData<LoginKey>> makeLinkData() {
 		List<MutableLinkData<LoginKey>> linkData = new ArrayList<MutableLinkData<LoginKey>>();
 

@@ -17,6 +17,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessorF
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderAccessorDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
@@ -66,6 +67,8 @@ public abstract class AbstractMutableLinkSystemBuilderEntry<T>
 		return this.linkModelInfo;
 	}
 
+	public abstract ModelKeyType getModelKeyType();
+	
 	@Override
 	public BidirectionalLinkNameMap getBidirectionalMap() {
 		return this.map;
@@ -88,10 +91,15 @@ public abstract class AbstractMutableLinkSystemBuilderEntry<T>
 
 		// MARK: LimitedLinkModelInfo
 		@Override
+		public ModelKeyType getModelKeyType() {
+			return AbstractMutableLinkSystemBuilderEntry.this.getModelKeyType();
+		}
+		
+		@Override
 		public String getLinkModelType() {
 			return AbstractMutableLinkSystemBuilderEntry.this.getLinkModelType();
 		}
-
+		
 		@Override
 		public Set<String> getLinkNames() {
 			return this.getLinksMap().keySet();

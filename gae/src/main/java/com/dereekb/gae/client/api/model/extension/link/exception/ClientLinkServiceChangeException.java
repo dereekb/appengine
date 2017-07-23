@@ -11,13 +11,11 @@ import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorT
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
-import com.dereekb.gae.model.extension.links.components.exception.LinkExceptionReason;
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException.LinkSystemChangeApiResponseError;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
-import com.dereekb.gae.model.extension.links.service.impl.LinkSystemChangeImpl;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -181,16 +179,15 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 
 		public ClientLinkSystemChangeErrorImpl makeChangeError(String type,
 		                                                       LinkSystemChangeApiResponseError error) {
-			LinkSystemChangeImpl change = new LinkSystemChangeImpl();
+			LinkModificationSystemRequestImpl change = new LinkModificationSystemRequestImpl();
 
 			String primaryKeyString = error.getKey();
-			ModelKey primaryKey = this.keyConverter.convertKey(type, primaryKeyString);
 
-			change.setAction(LinkChangeAction.fromString(error.getAction()));
-			change.setPrimaryType(type);
-			change.setPrimaryKey(primaryKey);
+			change.setLinkChangeType(MutableLinkChangeType.fromString(error.getAction()));
+			change.setLinkModelType(type);
+			change.setPrimaryKey(primaryKeyString);
 			change.setLinkName(error.getLink());
-			change.setTargetStringKeys(error.getTargetKeys());
+			change.setKeys(error.getTargetKeys());
 
 			LinkExceptionReason reason = LinkExceptionReason.fromErrorCode(error.getErrorCode());
 			return new ClientLinkSystemChangeErrorImpl(change, reason);
@@ -240,16 +237,16 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 		private static class ClientLinkSystemChangeErrorImpl
 		        implements ClientLinkSystemChangeError {
 
-			private LinkSystemChange change;
+			private LinkModificationSystemRequest change;
 			private LinkExceptionReason reason;
 
-			public ClientLinkSystemChangeErrorImpl(LinkSystemChange change, LinkExceptionReason reason) {
+			public ClientLinkSystemChangeErrorImpl(LinkModificationSystemRequest change, LinkExceptionReason reason) {
 				this.change = change;
 				this.reason = reason;
 			}
 
 			@Override
-			public LinkSystemChange getChange() {
+			public LinkModificationSystemRequest getChange() {
 				return this.change;
 			}
 

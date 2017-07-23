@@ -1,12 +1,12 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
-import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -20,26 +20,42 @@ public class LinkModificationSystemRequestImpl
 
 	private String linkName;
 	private String linkModelType;
-	private ModelKey primaryKey;
 
-	private MutableLinkChange change;
+	private String primaryKey;
+	private MutableLinkChangeType linkChangeType;
+	private String dynamicLinkModelType;
+	private Set<String> keys;
 
-	public LinkModificationSystemRequestImpl(String linkModelType,
+	public LinkModificationSystemRequestImpl() {};
+	
+	public LinkModificationSystemRequestImpl(String linkName,
 	        ModelKey primaryKey,
-	        String linkName,
-	        MutableLinkChangeType linkChangeType,
-	        Collection<ModelKey> keys) throws IllegalArgumentException {
-		this(linkModelType, primaryKey, linkName, MutableLinkChangeImpl.make(linkChangeType, keys));
+	        String linkModelType,
+	        MutableLinkChange linkChange) throws IllegalArgumentException {
+		this(linkName, linkModelType, ModelKey.readStringKey(primaryKey), linkChange.getLinkChangeType(),
+		        ModelKey.keysAsStrings(linkChange.getKeys()), linkChange.getDynamicLinkModelType());
 	}
 
-	public LinkModificationSystemRequestImpl(String linkModelType,
-	        ModelKey primaryKey,
-	        String linkName,
-	        MutableLinkChange change) throws IllegalArgumentException {
-		this.setPrimaryKey(primaryKey);
-		this.setLinkModelType(linkModelType);
+	public LinkModificationSystemRequestImpl(String linkName,
+	        String linkModelType,
+	        String primaryKey,
+	        MutableLinkChangeType linkChangeType,
+	        Collection<String> keys) throws IllegalArgumentException {
+		this(linkName, linkModelType, primaryKey, linkChangeType, keys, null);
+	}
+
+	public LinkModificationSystemRequestImpl(String linkName,
+	        String linkModelType,
+	        String primaryKey,
+	        MutableLinkChangeType linkChangeType,
+	        Collection<String> keys,
+	        String dynamicLinkModelType) throws IllegalArgumentException {
 		this.setLinkName(linkName);
-		this.setChange(change);
+		this.setLinkModelType(linkModelType);
+		this.setPrimaryKey(primaryKey);
+		this.setLinkChangeType(linkChangeType);
+		this.setKeys(keys);
+		this.setDynamicLinkModelType(dynamicLinkModelType);
 	}
 
 	@Override
@@ -69,11 +85,11 @@ public class LinkModificationSystemRequestImpl
 	}
 
 	@Override
-	public ModelKey getPrimaryKey() {
+	public String getPrimaryKey() {
 		return this.primaryKey;
 	}
 
-	public void setPrimaryKey(ModelKey primaryKey) {
+	public void setPrimaryKey(String primaryKey) {
 		if (primaryKey == null) {
 			throw new IllegalArgumentException("primaryKey cannot be null.");
 		}
@@ -81,31 +97,39 @@ public class LinkModificationSystemRequestImpl
 		this.primaryKey = primaryKey;
 	}
 
-	public MutableLinkChange getChange() {
-		return this.change;
-	}
-
-	public void setChange(MutableLinkChange change) {
-		if (change == null) {
-			throw new IllegalArgumentException("change cannot be null.");
-		}
-
-		this.change = change;
-	}
-
 	@Override
 	public MutableLinkChangeType getLinkChangeType() {
-		return this.change.getLinkChangeType();
+		return this.linkChangeType;
 	}
 
-	@Override
-	public Set<ModelKey> getKeys() {
-		return this.change.getKeys();
+	public void setLinkChangeType(MutableLinkChangeType linkChangeType) {
+		if (linkChangeType == null) {
+			throw new IllegalArgumentException("linkChangeType cannot be null.");
+		}
+
+		this.linkChangeType = linkChangeType;
 	}
 
 	@Override
 	public String getDynamicLinkModelType() {
-		return this.change.getDynamicLinkModelType();
+		return this.dynamicLinkModelType;
+	}
+
+	public void setDynamicLinkModelType(String dynamicLinkModelType) {
+		this.dynamicLinkModelType = dynamicLinkModelType;
+	}
+
+	@Override
+	public Set<String> getKeys() {
+		return this.keys;
+	}
+
+	public void setKeys(Collection<String> keys) {
+		if (keys == null) {
+			throw new IllegalArgumentException("keys cannot be null.");
+		}
+
+		this.keys = new HashSet<String>(keys);
 	}
 
 }

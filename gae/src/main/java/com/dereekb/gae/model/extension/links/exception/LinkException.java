@@ -6,6 +6,7 @@ package com.dereekb.gae.model.extension.links.exception;
  * @author dereekb
  *
  */
+@Deprecated
 public class LinkException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.links.service;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 
 /**
  * Request for {@link LinkService}.
@@ -15,8 +16,8 @@ public interface LinkServiceRequest
 	/**
 	 * Returns the list of link changes to make.
 	 *
-	 * @return list of link changes to make. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
 	 */
-	public List<LinkSystemChange> getLinkChanges();
+	public List<LinkModificationSystemRequest> getChangeRequests();
 
 }

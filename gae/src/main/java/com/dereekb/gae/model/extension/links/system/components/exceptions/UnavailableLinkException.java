@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.components.exceptions;
 
-import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
@@ -10,7 +9,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
  * @author dereekb
  *
  */
-public class UnavailableLinkException extends ApiLinkException {
+public class UnavailableLinkException extends ApiLinkSystemException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,9 +42,8 @@ public class UnavailableLinkException extends ApiLinkException {
 	// MARK: ApiLinkException
 	@Override
 	public ApiResponseError asResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE);
-
-		error.setTitle(ERROR_TITLE);
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE, ERROR_TITLE);
+		
 		error.setDetail(this.link);
 
 		return error;

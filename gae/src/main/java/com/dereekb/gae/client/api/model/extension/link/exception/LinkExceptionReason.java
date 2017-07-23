@@ -1,16 +1,19 @@
-package com.dereekb.gae.model.extension.links.components.exception;
+package com.dereekb.gae.client.api.model.extension.link.exception;
 
 /**
  * Exception reasons that describe how a link exception occured.
+ * <p>
+ * Each reason corresponds with an error code from another exception class.
  * 
  * @author dereekb
  *
  */
-@Deprecated
 public enum LinkExceptionReason {
 
 	/**
 	 * The requested link was unavailable.
+	 * 
+	 * @see UnavailableLinkException.
 	 */
 	LINK_UNAVAILABLE,
 

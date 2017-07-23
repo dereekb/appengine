@@ -3,9 +3,9 @@ package com.dereekb.gae.model.extension.links.service.exception;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException.LinkSystemChangeApiResponseError;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
@@ -15,7 +15,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
  *
  * @author dereekb
  */
-public class LinkSystemChangeSetException extends ApiLinkException {
+public class LinkSystemChangeSetException extends ApiLinkSystemException {
 
 	public static final String API_ERROR_CODE = "LINK_CHANGE_ERROR_SET";
 
@@ -23,7 +23,7 @@ public class LinkSystemChangeSetException extends ApiLinkException {
 
 	private List<LinkSystemChangeException> exceptions;
 
-	private transient List<LinkSystemChange> failedChanges;
+	private transient List<LinkModificationSystemRequest> failedChanges;
 
 	public LinkSystemChangeSetException(List<LinkSystemChangeException> exceptions) {
 		this.exceptions = exceptions;
@@ -38,9 +38,9 @@ public class LinkSystemChangeSetException extends ApiLinkException {
 	}
 
 	// MARK: Help
-	public List<LinkSystemChange> getFailedLinkChanges() {
+	public List<LinkModificationSystemRequest> getFailedLinkChanges() {
 		if (this.failedChanges == null) {
-			List<LinkSystemChange> failedChanges = new ArrayList<LinkSystemChange>();
+			List<LinkModificationSystemRequest> failedChanges = new ArrayList<LinkModificationSystemRequest>();
 
 			for (LinkSystemChangeException failure : this.exceptions) {
 				failedChanges.add(failure.getChange());

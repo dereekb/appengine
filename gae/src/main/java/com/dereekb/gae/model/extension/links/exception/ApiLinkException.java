@@ -10,6 +10,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseError;
  * @author dereekb
  *
  */
+@Deprecated
 public abstract class ApiLinkException extends LinkException
         implements ApiResponseErrorConvertable {
 

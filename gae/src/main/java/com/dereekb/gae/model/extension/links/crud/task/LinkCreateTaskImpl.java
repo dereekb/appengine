@@ -9,13 +9,13 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.task.CreateTask;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
-import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
@@ -165,14 +165,14 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 
 		List<LinkSystemChangeException> exceptions = e.getExceptions();
 
-		Map<LinkSystemChange, LinkCreateTaskPair<T>> pairsMap = new HashMap<LinkSystemChange, LinkCreateTaskPair<T>>();
+		Map<LinkModificationSystemRequest, LinkCreateTaskPair<T>> pairsMap = new HashMap<LinkModificationSystemRequest, LinkCreateTaskPair<T>>();
 
 		for (LinkCreateTaskPair<T> pair : pairs) {
 			MapUtility.putIntoMapMultipleTimes(pairsMap, pair.getObject(), pair);
 		}
 
 		for (LinkSystemChangeException exception : exceptions) {
-			LinkSystemChange change = exception.getChange();
+			LinkModificationSystemRequest change = exception.getChange();
 
 			LinkCreateTaskPair<T> pair = pairsMap.get(change);
 
@@ -183,10 +183,10 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 
 				InvalidAttributeImpl invalidAttribute = new InvalidAttributeImpl();
 
-				ApiLinkException reason = exception.getReason();
+				ApiLinkSystemException reason = exception.getReason();
 
 				invalidAttribute.setAttribute(change.getLinkName());
-				invalidAttribute.setValue(change.getTargetStringKeys().toString());
+				invalidAttribute.setValue(change.getKeys().toString());
 				invalidAttribute.setDetail("An error occured while trying to link models.");
 				invalidAttribute.setErrorInfo(reason.asResponseError());
 
@@ -198,8 +198,8 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 
 	private LinkServiceResponse performLinkChanges(List<LinkCreateTaskPair<T>> linkPairs,
 	                                               CreateTaskConfig configuration) {
-		List<List<LinkSystemChange>> pairChanges = LinkCreateTaskPair.getObjects(linkPairs);
-		List<LinkSystemChange> changes = ListUtility.flatten(pairChanges);
+		List<List<LinkModificationSystemRequest>> pairChanges = LinkCreateTaskPair.getObjects(linkPairs);
+		List<LinkModificationSystemRequest> changes = ListUtility.flatten(pairChanges);
 
 		if (changes.isEmpty() == false) {
 			LinkServiceRequestImpl request = new LinkServiceRequestImpl(changes, configuration.isAtomic());

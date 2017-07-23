@@ -14,7 +14,8 @@ import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
+
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -30,7 +31,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
  *
  */
 @Deprecated
-public class LinkSystemChangesRunner {
+public class LinkServiceLinkSystemChangesRunner {
 
 	private final LinkSystem system;
 	private final CaseInsensitiveMap<LinkModelSet> sets = new CaseInsensitiveMap<LinkModelSet>();
@@ -38,7 +39,7 @@ public class LinkSystemChangesRunner {
 
 	private boolean waitingSave = false;
 
-	public LinkSystemChangesRunner(LinkSystem system) {
+	public LinkServiceLinkSystemChangesRunner(LinkSystem system) {
 		this.system = system;
 	}
 
@@ -192,7 +193,7 @@ public class LinkSystemChangesRunner {
 		}
 
 		private LinkModelSet loadSet() {
-			LinkModelSet linkSet = LinkSystemChangesRunner.this.system.loadSet(this.type);
+			LinkModelSet linkSet = LinkServiceLinkSystemChangesRunner.this.system.loadSet(this.type);
 			List<ModelKey> keys = new ArrayList<ModelKey>();
 
 			for (LinkSystemChange change : this.changes) {

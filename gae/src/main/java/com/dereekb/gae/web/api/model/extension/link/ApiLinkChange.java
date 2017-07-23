@@ -2,7 +2,7 @@ package com.dereekb.gae.web.api.model.extension.link;
 
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 
 /**
  * DTO for {@link ApiLinkChangeConverter}.
@@ -13,7 +13,7 @@ import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
 public interface ApiLinkChange {
 
 	/**
-	 * Returns the string name of the {@link LinkChangeAction}.
+	 * Returns the string name of the {@link MutableLinkChangeType}.
 	 * 
 	 * @return {@link string}. Never {@code null}.
 	 */

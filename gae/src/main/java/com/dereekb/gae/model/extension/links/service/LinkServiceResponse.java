@@ -12,6 +12,8 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
  */
 public interface LinkServiceResponse {
 
+	public boolean isChangeAttempted();
+	
 	/**
 	 * Returns a map containing all missing primary keys.
 	 * <p>

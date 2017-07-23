@@ -12,7 +12,7 @@
 	<!-- SERVICE -->
 	<!-- Link Service -->
 	<bean id="linkService"
-		class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl">
+		class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceLinkSystemImpl">
 		<constructor-arg index="0" ref="linkSystem" />
 	</bean>
 

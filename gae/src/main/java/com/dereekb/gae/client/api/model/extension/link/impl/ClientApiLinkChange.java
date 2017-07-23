@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
+
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
@@ -19,7 +20,7 @@ import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 public class ClientApiLinkChange
         implements ApiLinkChange {
 
-	private LinkChangeAction changeAction;
+	private MutableLinkChangeType changeAction;
 
 	private ModelKey primary;
 
@@ -29,7 +30,7 @@ public class ClientApiLinkChange
 
 	public ClientApiLinkChange() {}
 
-	public ClientApiLinkChange(LinkChangeAction changeAction,
+	public ClientApiLinkChange(MutableLinkChangeType changeAction,
 	        ModelKey primary,
 	        String linkName,
 	        Set<ModelKey> targetKeys) {
@@ -42,15 +43,15 @@ public class ClientApiLinkChange
 
 	public static ClientApiLinkChange clear(ModelKey primaryKey,
 	                                        String linkName) {
-		return new ClientApiLinkChange(LinkChangeAction.CLEAR, primaryKey, linkName, null);
+		return new ClientApiLinkChange(MutableLinkChangeType.CLEAR, primaryKey, linkName, null);
 	}
 
 	// MARK: Accessors
-	public LinkChangeAction getChangeAction() {
+	public MutableLinkChangeType getChangeAction() {
 		return this.changeAction;
 	}
 
-	public void setChangeAction(LinkChangeAction changeAction) {
+	public void setChangeAction(MutableLinkChangeType changeAction) {
 		if (changeAction == null) {
 			throw new IllegalArgumentException("changeAction cannot be null.");
 		}

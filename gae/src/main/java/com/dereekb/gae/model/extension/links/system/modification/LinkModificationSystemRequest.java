@@ -1,7 +1,9 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
+import java.util.Set;
+
 import com.dereekb.gae.model.extension.links.system.components.TypedLinkSystemComponent;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -11,7 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  */
 public interface LinkModificationSystemRequest
-        extends MutableLinkChange, TypedLinkSystemComponent {
+        extends TypedLinkSystemComponent {
 
 	/**
 	 * Returns the link name.
@@ -25,6 +27,27 @@ public interface LinkModificationSystemRequest
 	 * 
 	 * @return {@link ModelKey}. Never {@code null}.
 	 */
-	public ModelKey getPrimaryKey();
+	public String getPrimaryKey();
 
+	/**
+	 * Returns the type of change to perform.
+	 * 
+	 * @return {@link MutableLinkChangeType}. Never {@code null}.
+	 */
+	public MutableLinkChangeType getLinkChangeType();
+
+	/**
+	 * Returns the type of the keys being linked for a dynamic request.
+	 * 
+	 * @return {@link String}. May be {@code null} for non-dynamic link changes.
+	 */
+	public String getDynamicLinkModelType();
+
+	/**
+	 * Returns the keys to change.
+	 * 
+	 * @return {@link Set}. Never {@code null}.
+	 */
+	public Set<String> getKeys();
+	
 }

@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractMutableLinkSystemBuilderEntry;
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 /**
  * {@link LinkSystemEntry} implementation for {@link Login}.
@@ -27,6 +28,11 @@ public class LoginLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilde
 	@Override
 	public String getLinkModelType() {
 		return LOGIN_LINK_TYPE;
+	}
+
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return ModelKeyType.NUMBER;
 	}
 
 	@Override

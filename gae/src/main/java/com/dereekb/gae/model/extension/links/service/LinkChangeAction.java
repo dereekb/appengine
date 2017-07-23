@@ -10,11 +10,6 @@ package com.dereekb.gae.model.extension.links.service;
 public enum LinkChangeAction {
 
 	/**
-	 * Clears all relationships in the specified link.
-	 */
-	CLEAR("clear"),
-
-	/**
 	 * Creates a relationship between targets.
 	 */
 	LINK("link"),
@@ -22,7 +17,17 @@ public enum LinkChangeAction {
 	/**
 	 * Removes the relationship between targets.
 	 */
-	UNLINK("unlink");
+	UNLINK("unlink"),
+
+	/**
+	 * Clears the existing relationship before establishing new relationships between targets.
+	 */
+	SET("set"),
+	
+	/**
+	 * Clears all relationships in the specified link.
+	 */
+	CLEAR("clear");
 
 	private final String action;
 
@@ -39,6 +44,8 @@ public enum LinkChangeAction {
 
 		switch (action.toLowerCase()) {
 			case "set":
+				result = LinkChangeAction.SET;
+				break;
 			case "add":
 			case "link":
 				result = LinkChangeAction.LINK;

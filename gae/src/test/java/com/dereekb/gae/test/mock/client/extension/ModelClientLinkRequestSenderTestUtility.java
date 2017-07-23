@@ -12,11 +12,12 @@ import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceResponse
 import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkServiceChangeException;
 import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkSystemChangeError;
 import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkSystemChangeErrorSet;
+import com.dereekb.gae.client.api.model.extension.link.exception.LinkExceptionReason;
 import com.dereekb.gae.client.api.model.extension.link.impl.ClientApiLinkChange;
 import com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkServiceRequestImpl;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
-import com.dereekb.gae.model.extension.links.components.exception.LinkExceptionReason;
-import com.dereekb.gae.model.extension.links.service.LinkChangeAction;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
+
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
@@ -51,7 +52,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(model.getModelKey());
-		linkChange.setChangeAction(LinkChangeAction.CLEAR);
+		linkChange.setChangeAction(MutableLinkChangeType.CLEAR);
 		linkChange.setLinkName("NON_EXISTANT_LINK_NAME");
 
 		changes.add(linkChange);
@@ -80,7 +81,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(primaryKey);
-		linkChange.setChangeAction(LinkChangeAction.CLEAR);
+		linkChange.setChangeAction(MutableLinkChangeType.CLEAR);
 		linkChange.setLinkName("LINK_NAME");	// Should fail before this is a
 		                                    	// problem.
 
@@ -106,7 +107,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(primaryKey);
-		linkChange.setChangeAction(LinkChangeAction.CLEAR);
+		linkChange.setChangeAction(MutableLinkChangeType.CLEAR);
 		linkChange.setLinkName("LINK_NAME");	// Should fail before this is a
 		                                    	// problem.
 
