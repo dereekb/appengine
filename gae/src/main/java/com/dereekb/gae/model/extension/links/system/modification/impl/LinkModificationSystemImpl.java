@@ -238,7 +238,7 @@ public class LinkModificationSystemImpl
 		private LinkModificationPreTestResultImpl testResult = new LinkModificationPreTestResultImpl();
 		
 		private LinkModificationPairImpl primaryPair;
-		private List<LinkModificationPairImpl> secondaryPairs;
+		private List<LinkModificationPairImpl> secondaryPairs = new ArrayList<LinkModificationPairImpl>();
 
 		public RequestInstance(LinkModification modification, LinkModificationSystemRequest request) {
 			this.modification = modification;
@@ -277,6 +277,17 @@ public class LinkModificationSystemImpl
 			return this.secondaryPairs;
 		}
 
+		public List<LinkModificationPair> addSecondaryPairs(List<LinkModification> syncModifications) {
+			List<LinkModificationPair> pairs = new ArrayList<LinkModificationPair>();
+			
+			for (LinkModification modification : syncModifications) {
+				LinkModificationPair pair =this.addSecondaryPair(modification);
+				pairs.add(pair);
+			}
+			
+			return pairs;
+		}
+
 		public LinkModificationPair addSecondaryPair(LinkModification modification) {
 			LinkModificationPairImpl secondary = new LinkModificationPairImpl(modification);
 			
@@ -284,6 +295,19 @@ public class LinkModificationSystemImpl
 			
 			return secondary;
 		}		
+
+		public boolean isSecondaryResultsSuccessful() {
+			boolean successful = true;
+			
+			for (LinkModificationPairImpl pair : this.secondaryPairs) {
+				if (pair.isSuccessful() == false) {
+					successful = false;
+					break;
+				}
+			}
+			
+			return successful;
+		}
 		
 		private class LinkModificationPairImpl implements LinkModificationPair, LinkModificationResult {
 			
@@ -503,7 +527,7 @@ public class LinkModificationSystemImpl
 			
 			// Assert all primary changes passed if atomic.
 			if (this.atomic) {
-				this.assertAllPrimaryModifcationsPassed(primaryFilterResults);
+				this.assertAllPrimaryModificationsPassed(primaryFilterResults);
 			}
 			
 			passingRequests = primaryFilterResults.getPassingObjects();
@@ -515,49 +539,13 @@ public class LinkModificationSystemImpl
 			
 			// Assert all sync changes passed if atomic.
 			if (this.atomic) {
-				this.assertAllSecondaryModifcationsPassed(secondaryFilterResults);
+				this.assertAllSecondaryModificationsPassed(secondaryFilterResults);
 			}
 
 			passingRequests = secondaryFilterResults.getPassingObjects();
 			
-			
 			return new ArrayList<LinkModificationSystemResult>(this.inputRequestChanges);
-			
-			/*
-			this.runSynchronizationModificationsForRequestInstances();
-			
-			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
-			        .buildTypeChangesMap(modifications);
-
-			List<LinkModification> synchronizationChanges = new ArrayList<LinkModification>();
-
-			for (Entry<String, HashMapWithList<ModelKey, LinkModification>> typeEntry : typeChangesMap.entrySet()) {
-				
-				LinkModificationResultSet resultSet = this.runModificationsForType(typeEntry.getKey(),
-				        typeEntry.getValue());
-				
-				
-				
-				List<LinkModification> newSynchronizationChanges = this
-				        .buildSynchronizationChangesFromResult(resultSet);
-				synchronizationChanges.addAll(newSynchronizationChanges);
-			}
-
-			this.runSynchronizationChanges(synchronizationChanges);
-			*/
 		}
-
-		/*
-		@Deprecated
-		private void runSynchronizationChanges(List<LinkModification> synchronizationChanges) throws UnavailableModelException {
-			Map<String, HashMapWithList<ModelKey, LinkModification>> typeChangesMap = this
-			        .buildTypeChangesMap(synchronizationChanges);
-
-			for (Entry<String, HashMapWithList<ModelKey, LinkModification>> typeEntry : typeChangesMap.entrySet()) {
-				this.runModificationsForType(typeEntry.getKey(), typeEntry.getValue());
-			}
-		}
-		*/
 
 		// MARK: Pre Tests
 		/**
@@ -618,23 +606,39 @@ public class LinkModificationSystemImpl
 			return results;
 		}
 
-		private void assertAllPrimaryModifcationsPassed(FilterResults<RequestInstance> filterResults) {
+		private void assertAllPrimaryModificationsPassed(FilterResults<RequestInstance> filterResults) {
 			// TODO Auto-generated method stub
 			
 		}
 		
-		// MARK: Synchronization Modifcations
+		// MARK: Synchronization Modifications
 		private void runSynchronizationChangesForRequestInstances(List<RequestInstance> passingRequests) {
-			// TODO Auto-generated method stub
+			List<LinkModificationPair> secondaryPairs = new ArrayList<LinkModificationPair>();
+
+			for (RequestInstance request : this.inputRequestChanges) {
+				LinkModificationResult result = request.getPrimaryResult();
+				
+				List<LinkModification> syncModifications = this.buildSynchronizationChangeFromResult(result);
+				List<LinkModificationPair> syncPairs = request.addSecondaryPairs(syncModifications);
+				
+				secondaryPairs.addAll(syncPairs);
+			}
+
+			this.runModifications(secondaryPairs);
+		}
+
+		private FilterResults<RequestInstance> filterSuccessfulSecondaryModifications(List<RequestInstance> inputRequestChanges) {
+			FilterResults<RequestInstance> results = new FilterResults<RequestInstance>();
 			
+			for (RequestInstance request : this.inputRequestChanges) {
+				boolean secondaryResultsAllSuccessful = request.isSecondaryResultsSuccessful();
+				results.addWithBoolean(secondaryResultsAllSuccessful, request);
+			}
+			
+			return results;
 		}
 
-		private FilterResults<RequestInstance> filterSuccessfulSecondaryModifications(List<RequestInstance> inputRequestChanges2) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		private void assertAllSecondaryModifcationsPassed(FilterResults<RequestInstance> secondaryFilterResults) {
+		private void assertAllSecondaryModificationsPassed(FilterResults<RequestInstance> secondaryFilterResults) {
 
 			// TODO: Assert and throw atomic operation exception if fails.
 			
@@ -652,22 +656,6 @@ public class LinkModificationSystemImpl
 		protected LinkModificationResultSet runModificationsForType(String type,
 		                                                            HashMapWithList<ModelKey, LinkModificationPair> hashMapWithList) throws UnavailableModelException {
 			return this.instance.performModificationsForType(type, hashMapWithList, this.atomic);
-		}
-
-		protected List<LinkModification> buildSynchronizationChangesFromResult(LinkModificationResultSet resultSet) {
-			Set<LinkModificationResult> results = resultSet.getResults();
-			List<LinkModification> allModifications = new ArrayList<LinkModification>();
-
-			for (LinkModificationResult result : results) {
-				List<LinkModification> modifications = this.buildSynchronizationChangeFromResult(result);
-				allModifications.addAll(modifications);
-			}
-
-			return allModifications;
-		}
-
-		protected List<LinkModification> buildSynchronizationChangeFromResult(LinkModificationResult result) {
-			return LinkModificationSynchronizationBuilder.makeSynchronizationLinkModifications(result);
 		}
 
 		// MARK: Internal
@@ -689,6 +677,10 @@ public class LinkModificationSystemImpl
 			}
 
 			return typeKeyedMap;
+		}
+		
+		protected List<LinkModification> buildSynchronizationChangeFromResult(LinkModificationResult result) {
+			return LinkModificationSynchronizationBuilder.makeSynchronizationLinkModifications(result);
 		}
 
 	}

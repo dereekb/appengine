@@ -149,6 +149,9 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	}
 
 	// MARK: HashMapWithCollection
+	public void initForKey(K key) {
+		this.getOrBuildCollectionForKey(key);
+	}
 
 	/**
 	 * Returns all elements for the specified {@code key} value. Returns an

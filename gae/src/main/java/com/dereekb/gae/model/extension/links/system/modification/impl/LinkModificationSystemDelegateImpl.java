@@ -1,5 +1,8 @@
 package com.dereekb.gae.model.extension.links.system.modification.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +13,7 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Dynami
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPreTestPair;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPreTestResultInfo;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
@@ -23,7 +27,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.map.TwoDimensionalCaseInsensitiveMapWithSet;
+import com.dereekb.gae.utilities.filters.FilterResults;
 
 /**
  * {@link LinkModificationSystemDelegate} implementation.
@@ -55,13 +59,14 @@ public class LinkModificationSystemDelegateImpl
 
 	// MARK: LinkModificationSystemDelegate
 	@Override
-	public void preTestModifications(List<LinkModificationPreTestPair> testPairs) {
+	public void preTestModifications(List<LinkModificationPreTestPair> pairs) {
 		CaseInsensitiveMapWithSet<ModelKey> keysMap = new CaseInsensitiveMapWithSet<ModelKey>();
-
-		TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair> primaryKeysMap = new TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair>();
-		TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair> secondaryKeysMap = new TwoDimensionalCaseInsensitiveMapWithSet<ModelKey, LinkModificationPreTestPair>();
+		List<TestPair> testPairs = new ArrayList<TestPair>();
 		
-		for (LinkModificationPreTestPair pair : testPairs) {
+		for (LinkModificationPreTestPair pair : pairs) {
+			TestPair testPair = new TestPair(pair);
+			testPairs.add(testPair);
+			
 			LinkModification modification = pair.getLinkModification();
 			
 			String mainType = modification.getLinkModelType();
@@ -69,8 +74,8 @@ public class LinkModificationSystemDelegateImpl
 			
 			keysMap.add(mainType, mainKey);	// Add the main key.
 			
-			// Add to the primary map
-			primaryKeysMap.add(mainType, mainKey, pair);
+			// Update Test Pair
+			testPair.setMainKey(mainType, mainKey);
 			
 			MutableLinkChange mutableLinkChange = modification.getChange();
 			
@@ -85,9 +90,9 @@ public class LinkModificationSystemDelegateImpl
 						
 						// Add all to the reverse.
 						keysMap.addAll(reverseModelType, targetKeys);
-						
-						// Add all to the secondary map.
-						secondaryKeysMap.addAll(reverseModelType, targetKeys, pair);
+
+						// Update Test Pair
+						testPair.setSecondaryKeys(reverseModelType, targetKeys);
 					} catch (DynamicLinkInfoException e) {
 						// Ignore dynamic links.
 					}
@@ -102,16 +107,76 @@ public class LinkModificationSystemDelegateImpl
 			}
 		}
 		
-		// Using the keys map, assert all models exist.
+		// Find which models exist.
+		CaseInsensitiveMapWithSet<ModelKey> existsMap = new CaseInsensitiveMapWithSet<ModelKey>();
+
 		for (Entry<String, Set<ModelKey>> entry : keysMap.entrySet()) {
 			String modelType = entry.getKey();
 			Set<ModelKey> keys = entry.getValue();
-			
+
 			LinkModificationSystemEntry systemEntry = this.getEntryForType(modelType);
-			systemEntry.filterModelsExist(keys);
+			FilterResults<ModelKey> keyResults = systemEntry.filterModelsExist(keys);
+			
+			// Add Existing
+			List<ModelKey> existing = keyResults.getPassingObjects();
+			existsMap.addAll(modelType, existing);
+			
+			// Update Unavailable
+			//List<ModelKey> unavailable = keyResults.getFailingObjects();			
+		}
+		
+		// Update Pairs
+		for (TestPair testPair : testPairs) {
+			testPair.updateWithExistsMap(existsMap);
 		}
 	}
 
+	private class TestPair {
+		
+		private final LinkModificationPreTestPair pair;
+		
+		private String mainType;
+		private ModelKey mainKey;
+		
+		private String secondaryType;
+		private Set<ModelKey> secondaryKeys = Collections.emptySet();
+		
+		public TestPair(LinkModificationPreTestPair pair) {
+			this.pair = pair;
+		}
+
+		public void setMainKey(String mainType,
+		                       ModelKey mainKey) {
+			this.mainType = mainType;
+			this.mainKey = mainKey;
+		}
+
+		public void setSecondaryKeys(String secondaryType, 
+		                             Set<ModelKey> secondaryKeys) {
+			this.secondaryType = secondaryType;
+			this.secondaryKeys = new HashSet<ModelKey>(secondaryKeys);
+		}
+		
+		public void updateWithExistsMap(CaseInsensitiveMapWithSet<ModelKey> existsMap) {
+			Set<ModelKey> primaryExisting = existsMap.get(this.mainType);
+			
+			boolean isMissingPrimaryKey = primaryExisting.contains(this.mainKey) == false;
+			
+			if (this.secondaryType != null) {
+				Set<ModelKey> secondaryExisting = existsMap.get(this.secondaryType);
+				
+				// Remove from secondary keys.
+				this.secondaryKeys.removeAll(secondaryExisting);
+				
+			}
+			
+			// Create Result Info
+			LinkModificationPreTestResultInfo resultInfo = new LinkModificationPreTestResultInfoImpl(isMissingPrimaryKey, this.secondaryKeys);
+			this.pair.setResultInfo(resultInfo);
+		}
+		
+	}
+	
 	@Override
 	public LinkModificationSystemDelegateInstance makeInstance() {
 		return new LinkModificationSystemDelegateInstanceImpl();
