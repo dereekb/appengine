@@ -650,12 +650,12 @@ public final class ModelKey
 	 * @throws NullKeyException
 	 *             Thrown if a model does not have a key.
 	 */
-	public static <T extends UniqueModel> Set<ModelKey> makeModelKeySet(Iterable<? extends T> models)
+	public static <T extends Keyed<ModelKey>> Set<ModelKey> makeModelKeySet(Iterable<? extends T> models)
 	        throws NullKeyException {
 		Set<ModelKey> keys = new HashSet<>();
 
 		for (T model : models) {
-			ModelKey key = model.getModelKey();
+			ModelKey key = model.keyValue();
 
 			if (key == null) {
 				throw new NullKeyException();

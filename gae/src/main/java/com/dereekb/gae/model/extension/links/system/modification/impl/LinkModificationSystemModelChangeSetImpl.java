@@ -7,10 +7,7 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstanceSet;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeSet;
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
-import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultSetImpl;
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModelMismatchException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**
@@ -76,8 +73,6 @@ public class LinkModificationSystemModelChangeSetImpl
 		private final MutableLinkModel linkModel;
 		private List<LinkModificationSystemModelChangeInstance> instances;
 
-		private LinkModificationResultSet resultSet;
-
 		public LinkModificationSystemModelChangeInstanceSetImpl(MutableLinkModel linkModel) {
 			super();
 			this.linkModel = linkModel;
@@ -90,19 +85,33 @@ public class LinkModificationSystemModelChangeSetImpl
 		}
 
 		@Override
-		public LinkModificationResultSet applyChanges() {
-			if (this.resultSet == null) {
-				LinkModificationResultSetImpl resultSet = new LinkModificationResultSetImpl();
+		public boolean applyChanges() {
+			List<LinkModificationSystemModelChangeInstance> instances = this.getInstances();
 
-				for (LinkModificationSystemModelChangeInstance instance : this.getInstances()) {
-					LinkModificationResult result = instance.applyChange();
-					resultSet.addResult(result);
-				}
+			boolean modified = false;
 
-				this.resultSet = resultSet;
+			for (LinkModificationSystemModelChangeInstance instance : instances) {
+				modified = modified || instance.applyChange().isModelModified();
 			}
 
-			return this.resultSet;
+			return modified;
+		}
+
+		@Override
+		public boolean undoChanges() {
+			List<LinkModificationSystemModelChangeInstance> instances = this.getInstances();
+
+			boolean modified = false;
+
+			for (LinkModificationSystemModelChangeInstance instance : instances) {
+				try {
+					modified = modified || instance.undoChange().isModelModified();
+				} catch (NoUndoChangesException e) {
+					// Continue loop.
+				}
+			}
+
+			return modified;
 		}
 
 		protected List<LinkModificationSystemModelChangeInstance> getInstances() {
@@ -111,27 +120,6 @@ public class LinkModificationSystemModelChangeSetImpl
 			}
 
 			return this.instances;
-		}
-
-		@Override
-		public boolean undoChanges(MutableLinkModel linkModel) throws LinkModelMismatchException {
-			if (linkModel == null) {
-				linkModel = this.linkModel;
-			} else if (this.linkModel.getModelKey().equals(linkModel.getModelKey()) == false) {
-				throw new LinkModelMismatchException();
-			}
-
-			if (this.instances != null) {
-				boolean modified = false;
-
-				for (LinkModificationSystemModelChangeInstance instance : this.getInstances()) {
-					modified = modified || instance.undoChange(linkModel);
-				}
-
-				return modified;
-			} else {
-				return false;
-			}
 		}
 
 	}

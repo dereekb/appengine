@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModelMismatchException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
@@ -29,9 +28,9 @@ public interface LinkModificationSystemModelChangeInstanceSet {
 	 * <p>
 	 * Is only effective at being called once.
 	 * 
-	 * @return {@link LinkModificationResultSet}. Never {@code null}.
+	 * @return {@code true} if the model was modified.
 	 */
-	public LinkModificationResultSet applyChanges();
+	public boolean applyChanges();
 
 	/**
 	 * Reverts the changes made in this instance to the input link model, or to
@@ -47,6 +46,6 @@ public interface LinkModificationSystemModelChangeInstanceSet {
 	 *             thrown if the input model does not match the previously
 	 *             changed model.
 	 */
-	public boolean undoChanges(MutableLinkModel linkModel) throws LinkModelMismatchException;
+	public boolean undoChanges();
 
 }

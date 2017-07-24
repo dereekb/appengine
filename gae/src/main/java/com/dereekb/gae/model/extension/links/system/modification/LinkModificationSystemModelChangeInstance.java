@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
-import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
+import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
 
 /**
  * An idempotent change instance for a single model that can applied and undone.
@@ -23,14 +23,13 @@ public interface LinkModificationSystemModelChangeInstance {
 	public LinkModificationResult applyChange();
 
 	/**
-	 * Reverts the change on the model.
+	 * Reverts the change on the model. The internal {@link LinkModificationPair} is updated.
 	 * <p>
-	 * If {@link #applyChange()} has not yet been called, nothing will happen.
+	 * If a change has not yet occured, nothing will happen.
 	 * 
-	 * @param linkModel
-	 *            {@link MutableLinkModel}. Can be {@code null}.
-	 * @return {@code true} if the model was modified.
+	 * @return {@link LinkModificationResult}. Never {@code null}.
+	 * @throws NoUndoChangesException thrown if no undo is applicable.
 	 */
-	public boolean undoChange(MutableLinkModel linkModel);
+	public LinkModificationResult undoChange() throws NoUndoChangesException;
 
 }

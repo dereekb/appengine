@@ -43,6 +43,7 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.Inval
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationPairUtility;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
@@ -454,12 +455,12 @@ public class LinkModificationSystemImpl
 				results = this.runModifications();
 				
 				if (this.autoCommitChanges) {
-					this.instance.commitChanges();
+					this.commitChanges();
 				}
 			} catch (RuntimeException e) {
 				try {
 					// If this fails, log it.
-					this.instance.undoChanges();
+					this.undoChanges();
 				} catch (Exception ee) {
 					LOGGER.log(Level.SEVERE, "LinkModificationSystem Undo failed...", e);
 					throw ee;
@@ -487,12 +488,12 @@ public class LinkModificationSystemImpl
 
 			@Override
 			public void commitChanges() throws ChangesAlreadyComittedException {
-				LinkModificationSystemChangesRunner.this.instance.commitChanges();
+				LinkModificationSystemChangesRunner.this.commitChanges();
 			}
 			
 			@Override
 			public void undoChanges() throws UndoChangesAlreadyExecutedException {
-				LinkModificationSystemChangesRunner.this.instance.undoChanges();
+				LinkModificationSystemChangesRunner.this.undoChanges();
 			}
 
 		}
@@ -541,16 +542,23 @@ public class LinkModificationSystemImpl
 				failedRequests.addAll(primaryFilterResults.getFailingObjects());
 				failedRequests.addAll(secondaryFilterResults.getFailingObjects());
 				
-				this.undoFailedRequests(failedRequests);
+				this.undoRequests(failedRequests);
 			}
 			
 			// All Failing Requests must be undone.
 			return new ArrayList<LinkModificationSystemResult>(this.inputRequestChanges);
 		}
+		
+		private void undoChanges() {
+			this.undoRequests(this.inputRequestChanges);
+		}
 
-		private void undoFailedRequests(List<RequestInstance> failedRequests) {
+		private void undoRequests(List<RequestInstance> failedRequests) {
 			// TODO Auto-generated method stub
-			
+		}
+		
+		private void commitChanges() {
+			// TODO Auto-generated method stub
 		}
 
 		// MARK: Pre Tests
@@ -676,19 +684,37 @@ public class LinkModificationSystemImpl
 		}
 
 		// MARK: Internal
-		private CaseInsensitiveMapWithList<LinkModificationPair> buildTypeModificationsMap(List<LinkModificationPair> modifications) {
-			// TODO Auto-generated method stub
-			return null;
+		private CaseInsensitiveMapWithList<LinkModificationPair> buildTypeModificationsMap(List<LinkModificationPair> linkModificationPairs) {
+			return LinkModificationPairUtility.buildTypeChangesMap(linkModificationPairs);
 		}
 
 		private LinkModificationSystemEntryInstanceConfig makeEntryInstanceConfig(List<LinkModificationPair> list) {
-			// TODO Auto-generated method stub
-			return null;
+			return new LinkModificationSystemEntryInstanceConfigImpl(list);
 		}
-
 		
 		protected List<LinkModification> buildSynchronizationChangeFromResult(LinkModificationResult result) {
 			return LinkModificationSynchronizationBuilder.makeSynchronizationLinkModifications(result);
+		}
+		
+		private class LinkModificationSystemEntryInstanceConfigImpl implements LinkModificationSystemEntryInstanceConfig {
+
+			private final List<LinkModificationPair> modificationPairs;
+			
+			public LinkModificationSystemEntryInstanceConfigImpl(List<LinkModificationPair> modificationPairs) {
+				this.modificationPairs = modificationPairs;
+			}
+			
+			// MARK: LinkModificationSystemEntryInstanceConfigImpl
+			@Override
+			public boolean isAtomic() {
+				return LinkModificationSystemChangesRunner.this.atomic;
+			}
+
+			@Override
+			public List<LinkModificationPair> getModificationPairs() {
+				return this.modificationPairs;
+			}
+			
 		}
 
 	}

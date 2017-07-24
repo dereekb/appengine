@@ -8,21 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairState;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstanceConfig;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeBuilder;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstanceSet;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeSet;
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
-import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultSetImpl;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
 import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationPairUtility;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessor;
@@ -38,7 +36,6 @@ import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
 
 /**
  * Abstract {@link LinkModificationSystemEntry} implementation for changes on
@@ -130,7 +127,6 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	        implements LinkModificationSystemEntryInstance {
 		
 		private LinkModificationSystemEntryInstanceConfig config;
-		private transient ModificationBatchSet batchSet;
 		
 		public LinkModificationSystemEntryInstanceImpl(LinkModificationSystemEntryInstanceConfig config) {
 			super();
@@ -169,7 +165,26 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 		}
 		
 		// MARK: Batch Sets
-		protected abstract class AbstractModificationBatchSet {
+		protected abstract class AbstractModicationRunner {
+
+			protected final List<LinkModificationPair> filterApplicablePairs() {
+				List<LinkModificationPair> pairs = LinkModificationSystemEntryInstanceImpl.this.config.getModificationPairs();
+				List<LinkModificationPair> filteredPairs = new ArrayList<LinkModificationPair>();
+				
+				for (LinkModificationPair pair : pairs) {
+					if (this.isApplicableForModification(pair)) {
+						filteredPairs.add(pair);
+					}
+				}
+				
+				return filteredPairs;
+			}
+
+			protected abstract boolean isApplicableForModification(LinkModificationPair pair);
+			
+		}
+		
+		protected abstract class AbstractModificationBatchSet extends AbstractModicationRunner {
 			
 			private final List<ModificationBatch> batches;
 			
@@ -201,193 +216,167 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 				
 				return batches;
 			}
+			
+			public final void doAction() {
+				this.doActionOnModel(this.batches);
+			}
+			
+			protected abstract void doActionOnModel(List<ModificationBatch> batches);
 
-			private final List<LinkModificationPair> filterApplicablePairs() {
-				List<LinkModificationPair> pairs = LinkModificationSystemEntryInstanceImpl.this.config.getModificationPairs();
-				List<LinkModificationPair> filteredPairs = new ArrayList<LinkModificationPair>();
+			protected void assertUnavailableModelsAreOptional(Collection<ModelKey> missingModels, Map<ModelKey, LinkModificationSystemModelChangeSet> changeInstances)
+			        throws AtomicOperationException {
+				Set<ModelKey> nonOptionalKeys = new HashSet<ModelKey>();
 				
-				for (LinkModificationPair pair : pairs) {
-					if (this.isApplicableForModification(pair)) {
-						filteredPairs.add(pair);
+				for (ModelKey key : missingModels) {
+					LinkModificationSystemModelChangeSet changeSet = changeInstances.get(key);
+
+					if (changeSet.isOptional() == false) {
+						 nonOptionalKeys.add(key);
 					}
 				}
 				
-				return filteredPairs;
-			}
-
-			protected abstract boolean isApplicableForModification(LinkModificationPair pair);
-			
-			public final void doAction() {
-				this.doAction(this.batches);
-			}
-			
-			protected abstract void doAction(List<ModificationBatch> batches);
-			
-		}
-
-		protected class DoChangesModificationBatchSet extends AbstractModificationBatchSet {
-
-			@Override
-			protected boolean isApplicableForModification(LinkModificationPair pair) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			protected void doAction(List<LinkModificationSystemEntryImpl<T>.ModificationBatch> batches) {
-				// TODO Auto-generated method stub
-				
+				if (nonOptionalKeys.isEmpty() == false) {
+					throw new AtomicOperationException(nonOptionalKeys, AtomicOperationExceptionReason.UNAVAILABLE);
+				}
 			}
 			
 		}
-
-		protected class CommitChangesModificationBatchSet extends AbstractModificationBatchSet {
-
-			@Override
-			protected boolean isApplicableForModification(LinkModificationPair pair) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			protected void doAction(List<LinkModificationSystemEntryImpl<T>.ModificationBatch> batches) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		}
-
-		protected class UndoChangesModificationBatchSet extends AbstractModificationBatchSet {
-
-			@Override
-			protected boolean isApplicableForModification(LinkModificationPair pair) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			protected void doAction(List<LinkModificationSystemEntryImpl<T>.ModificationBatch> batches) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		}
-	
 		
-		/*
-		// MARK: LinkModificationSystemEntryInstance
-		@Override
-		public LinkModificationResultSet performModifications(HashMapWithList<ModelKey, LinkModificationPair> keyedMap, boolean atomic)
-		        throws UndoChangesAlreadyExecutedException,
-		            UnavailableModelException {
-			if (this.undoneChanges) {
-				throw new UndoChangesAlreadyExecutedException();
+		protected abstract class AbstractChangesDoChangesModificationBatchSet extends AbstractModificationBatchSet {
+			
+			@Override
+			protected final void doActionOnModel(List<ModificationBatch> batches) {
+				for (ModificationBatch batch : batches) {
+					this.doAction(batch);
+				}
 			}
 			
-			ModificationBatchSet batchSet = this.makeBatchSetForChanges(keyedMap);
+			private void doAction(ModificationBatch batch) {
+				final Map<ModelKey, LinkModificationSystemModelChangeSet> changeInstances = batch.getChangeInstances();
 
-			this.batchSets.add(batchSet);
+				List<ModelKey> modifiedModelKeys = ModelKey.readModelKeys(changeInstances.keySet());
+				final ReadRequest request = new KeyReadRequest(modifiedModelKeys, false);
+
+				ObjectifyService.ofy().transactNew(new VoidWork() {
+
+					@Override
+					public void vrun() {
+						
+						ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = LinkModificationSystemEntryImpl.this.accessor
+						        .readMutableLinkModels(request);
+
+						Collection<ModelKey> failed = response.getFailed();
+
+						// Assert unavailable models are optional, otherwise thrown an exception.
+						if (failed.isEmpty() == false) {
+							AbstractChangesDoChangesModificationBatchSet.this.assertUnavailableModelsAreOptional(failed, changeInstances);
+						}
+
+						List<T> modifiedModels = new ArrayList<T>();
+
+						for (MutableLinkModelAccessorPair<T> pair : response.getModels()) {
+							MutableLinkModel linkModel = pair.getMutableLinkModel();
+							ModelKey modelKey = linkModel.getModelKey();
+
+							LinkModificationSystemModelChangeSet changeSet = changeInstances.get(modelKey);
+							LinkModificationSystemModelChangeInstanceSet instanceSet = changeSet.makeInstanceWithModel(linkModel);
+							
+							boolean modified = AbstractChangesDoChangesModificationBatchSet.this.doActionOnModel(instanceSet);
+
+							if (modified) {
+								modifiedModels.add(pair.getModel());
+							}
+						}
+
+						// Save all models
+						LinkModificationSystemEntryImpl.this.updater.update(modifiedModels);
+					}
+
+				});
+			}
+
+			protected abstract boolean doActionOnModel(LinkModificationSystemModelChangeInstanceSet instanceSet);
 			
-			return batchSet.performChangesWithinTransactions(atomic);
 		}
 
-		@Override
-		public void commitChanges() {
-			if (this.undoneChanges) {
-				throw new UndoChangesAlreadyExecutedException();
-			}
-			
-			Set<T> modified = new HashSet<T>();
+		protected class DoChangesModificationBatchSet extends AbstractChangesDoChangesModificationBatchSet {
 
-			for (ModificationBatchSet batchSet : this.batchSets) {
-				Set<T> batchKeys = batchSet.getAllModifiedModels();
-				modified.addAll(batchKeys);
-			}
-
-			LinkModificationSystemEntryImpl.this.reviewTaskSender.sendTasks(modified);
-		}
-
-		@Override
-		public void undoChanges() throws UndoChangesAlreadyExecutedException, NoUndoChangesException {
-			if (this.undoneChanges) {
-				throw new UndoChangesAlreadyExecutedException();
-			}
-			
-			this.undoneChanges = true;
-			
-			for (ModificationBatchSet batchSet : this.batchSets) {
-				batchSet.undoChanges();
-			}
-		}
-		*/
-	}
-
-	/**
-	 * A set of {@link ModificationBatch} instances.
-	 * <p>
-	 * Is not designed to be reusable. Calling functions again will return previous results if available.
-	 * 
-	 * @author dereekb
-	 *
-	 */
-	@Deprecated
-	private class ModificationBatchSet {
-
-		private final List<ModificationBatch> batches;
-
-		public ModificationBatchSet(List<ModificationBatch> batches) {
-			this.batches = batches;
-		}
-
-		// MARK: Actions
-		public LinkModificationResultSet performChangesWithinTransactions(boolean atomic) throws UnavailableModelException {
-			
-			// This function should really only be called once. Cache results.
-			if (this.result != null) {
-				return this.result;
-			} else if (this.exception != null) {
-				throw this.exception;
-			}
-			
-			try {
-				LinkModificationResultSetImpl result = new LinkModificationResultSetImpl();
-	
-				for (ModificationBatch batch : this.batches) {
-					ModificationBatchResult batchResult = batch.performChanges();
-					LinkModificationResultSet resultSet = batchResult.getResultSet();
-					result.addResultSet(resultSet);
+			@Override
+			protected boolean isApplicableForModification(LinkModificationPair pair) {
+				boolean isApplicable = false;
+				
+				switch (pair.getState()) {
+					case INIT:
+					case UNDONE:
+						isApplicable = true;
+						break;
+					case SUCCESS:
+					default:
+						isApplicable = false;
+						break;
 				}
 				
-				this.result = result;
-			} catch (UnavailableModelException e) {
-				this.exception = e;
-				throw e;
+				return isApplicable;
 			}
 
-			return this.result;
+			@Override
+			protected boolean doActionOnModel(LinkModificationSystemModelChangeInstanceSet instanceSet) {
+				return instanceSet.applyChanges();
+			}
+			
 		}
 
-		public void undoChanges() {
-			// Always try to undo changes.
-			for (ModificationBatch batch : this.batches) {
-				try {
-					batch.undoChanges();
-				} catch (NoUndoChangesException e) {
-					
+		protected class UndoChangesModificationBatchSet extends AbstractChangesDoChangesModificationBatchSet {
+
+			@Override
+			protected boolean isApplicableForModification(LinkModificationPair pair) {
+				boolean isApplicable = false;
+				
+				switch (pair.getState()) {
+					case INIT:
+					case UNDONE:
+						isApplicable = false;
+						break;
+					case SUCCESS:
+					default:
+						isApplicable = true;
+						break;
 				}
+				
+				return isApplicable;
 			}
+
+			@Override
+			protected boolean doActionOnModel(LinkModificationSystemModelChangeInstanceSet instanceSet) {
+				return instanceSet.undoChanges();
+			}
+			
 		}
 
-		// MARK: Internal
-		public Set<T> getAllModifiedModels() {
-			Set<T> models = new HashSet<T>();
+		protected class CommitChangesModificationBatchSet extends AbstractModicationRunner {
 
-			for (ModificationBatch batch : this.batches) {
-				ModificationBatchResult batchResult = batch.getBatchResult();
-				models.addAll(batchResult.getModifiedModels());
+			@Override
+			protected boolean isApplicableForModification(LinkModificationPair pair) {
+				return pair.getState() == LinkModificationPairState.SUCCESS;
 			}
 
-			return models;
+			public void doAction() {
+				List<LinkModificationPair> pairs = this.filterApplicablePairs();
+				Set<ModelKey> keys = ModelKey.makeModelKeySet(pairs);
+
+				ReadRequest request = new KeyReadRequest(keys, false);
+				ReadResponse<? extends MutableLinkModelAccessorPair<T>> readResponse = LinkModificationSystemEntryImpl.this.accessor.readMutableLinkModels(request);
+				
+				List<T> models = new ArrayList<T>();
+				
+				for (MutableLinkModelAccessorPair<T> readPair : readResponse.getModels()) {
+					T model = readPair.getModel();
+					models.add(model);
+				}
+				
+				LinkModificationSystemEntryImpl.this.reviewTaskSender.sendTasks(models);
+			}
+			
 		}
 
 	}
@@ -395,194 +384,21 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	private class ModificationBatch {
 
 		private Map<ModelKey, LinkModificationSystemModelChangeSet> changeInstances = new HashMap<ModelKey, LinkModificationSystemModelChangeSet>();
-		private ModificationBatchResult batchResult;
 
 		public ModificationBatch() {
 			super();
 		}
 
-		public ModificationBatchResult getBatchResult() {
-			return this.batchResult;
+		public Map<ModelKey, LinkModificationSystemModelChangeSet> getChangeInstances() {
+			return this.changeInstances;
 		}
 		
-		public boolean hasPerformedChanges() {
-			return this.batchResult != null;
-		}
-
 		// MARK: Internal
 		public void addModificationSet(ModelKey key,
 		                               List<LinkModificationPair> modifications) {
 			LinkModificationSystemModelChangeSet changeSet = LinkModificationSystemEntryImpl.this.changeBuilder
 			        .makeChangeSet(modifications);
 			this.changeInstances.put(key, changeSet);
-		}
-
-		public ModificationBatchResult performChanges() throws ChangesAlreadyExecutedException, UnavailableModelException {
-			if (this.hasPerformedChanges()) {
-				throw new ChangesAlreadyExecutedException();
-			}
-			
-			Set<ModelKey> keys = ModificationBatch.this.changeInstances.keySet();
-			final ReadRequest request = new KeyReadRequest(keys, false);
-
-			// Perform the changes in a transaction
-			this.batchResult = ObjectifyService.ofy().transactNew(new Work<ModificationBatchResult>() {
-
-				@Override
-				public ModificationBatchResult run() {
-
-					// Load Models
-					ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = LinkModificationSystemEntryImpl.this.accessor
-					        .readMutableLinkModels(request);
-					Collection<ModelKey> failed = response.getFailed();
-
-					// Assert unavailable models are
-					if (failed.isEmpty() == false) {
-						ModificationBatch.this.assertUnavailableModelsAreOptional(failed);
-					}
-
-					Collection<? extends MutableLinkModelAccessorPair<T>> pairs = response.getModels();
-
-					List<T> modifiedModels = new ArrayList<T>();
-					Set<ModelKey> unmodifiedModels = new HashSet<ModelKey>();
-					Map<ModelKey, LinkModificationSystemModelChangeInstanceSet> instanceMap = new HashMap<ModelKey, LinkModificationSystemModelChangeInstanceSet>();
-
-					// Apply Changes per model
-					LinkModificationResultSetImpl totalResultSet = new LinkModificationResultSetImpl();
-
-					for (MutableLinkModelAccessorPair<T> pair : pairs) {
-						MutableLinkModel linkModel = pair.getMutableLinkModel();
-						ModelKey key = linkModel.getModelKey();
-
-						LinkModificationSystemModelChangeSet changes = ModificationBatch.this.changeInstances.get(key);
-						
-						LinkModificationSystemModelChangeInstanceSet instanceSet = changes.makeInstanceWithModel(linkModel);
-						instanceMap.put(key, instanceSet);
-
-						// Apply Change To Model
-						LinkModificationResultSet resultSet = instanceSet.applyChanges();
-						
-						// If a Change was made,
-						// then add it to the models to be saved.
-						if (resultSet.isModelModified()) {
-							T model = pair.getModel();
-							modifiedModels.add(model);
-						} else {
-							unmodifiedModels.add(key);
-						}
-
-						// Update Set
-						totalResultSet.addResultSet(resultSet);
-					}
-
-					// Save all models
-					LinkModificationSystemEntryImpl.this.updater.update(modifiedModels);
-
-					// Return results set.
-					return new ModificationBatchResult(totalResultSet, instanceMap, modifiedModels, unmodifiedModels);
-				}
-
-			});
-
-			return this.batchResult;
-		}
-
-		public void undoChanges() throws NoUndoChangesException {
-			if (this.hasPerformedChanges() == false) {
-				throw new NoUndoChangesException();
-			}
-
-			List<T> modifiedModels = this.batchResult.getModifiedModels();
-			List<ModelKey> modifiedModelKeys = ModelKey.readModelKeys(modifiedModels);
-			final ReadRequest request = new KeyReadRequest(modifiedModelKeys, false);
-
-			ObjectifyService.ofy().transactNew(new VoidWork() {
-
-				@Override
-				public void vrun() {
-					Map<ModelKey, LinkModificationSystemModelChangeInstanceSet> map = ModificationBatch.this.batchResult
-					        .getInstanceMap();
-
-					ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = LinkModificationSystemEntryImpl.this.accessor
-					        .readMutableLinkModels(request);
-
-					List<T> modifiedModels = new ArrayList<T>();
-
-					for (MutableLinkModelAccessorPair<T> pair : response.getModels()) {
-						MutableLinkModel linkModel = pair.getMutableLinkModel();
-						ModelKey modelKey = linkModel.getModelKey();
-
-						LinkModificationSystemModelChangeInstanceSet instanceSet = map.get(modelKey);
-						boolean modified = instanceSet.undoChanges(linkModel);
-
-						if (modified) {
-							modifiedModels.add(pair.getModel());
-						}
-					}
-
-					// Save all models
-					LinkModificationSystemEntryImpl.this.updater.update(modifiedModels);
-
-					// TODO: Consider logging models that failed being loaded for undo...
-				}
-
-			});
-			
-			this.batchResult = null;	// Clear batch result.
-		}
-
-		protected void assertUnavailableModelsAreOptional(Collection<ModelKey> missingModels)
-		        throws UnavailableModelException {
-			for (ModelKey key : missingModels) {
-				LinkModificationSystemModelChangeSet changeSet = this.changeInstances.get(key);
-
-				if (changeSet.isOptional() == false) {
-					throw new UnavailableModelException(key);
-				}
-			}
-
-		}
-
-	}
-
-	/**
-	 * Contains results from {@link ModificationBatch#performChanges()}.
-	 * 
-	 * @author dereekb
-	 *
-	 */
-	protected class ModificationBatchResult {
-
-		private final LinkModificationResultSet resultSet;
-		private final Map<ModelKey, LinkModificationSystemModelChangeInstanceSet> instanceMap;
-		private final List<T> modifiedModels;
-		private final Set<ModelKey> unmodifiedModels;
-
-		public ModificationBatchResult(LinkModificationResultSet resultSet,
-		        Map<ModelKey, LinkModificationSystemModelChangeInstanceSet> instanceMap,
-		        List<T> modifiedModels,
-		        Set<ModelKey> unmodifiedModels) {
-			super();
-			this.resultSet = resultSet;
-			this.instanceMap = instanceMap;
-			this.modifiedModels = modifiedModels;
-			this.unmodifiedModels = unmodifiedModels;
-		}
-
-		public LinkModificationResultSet getResultSet() {
-			return this.resultSet;
-		}
-
-		public Map<ModelKey, LinkModificationSystemModelChangeInstanceSet> getInstanceMap() {
-			return this.instanceMap;
-		}
-
-		public List<T> getModifiedModels() {
-			return this.modifiedModels;
-		}
-
-		public Set<ModelKey> getUnmodifiedModels() {
-			return this.unmodifiedModels;
 		}
 
 	}

@@ -14,14 +14,8 @@ import com.dereekb.gae.utilities.collections.map.MapUtility;
 
 public class LinkModificationPairUtility {
 
-	public static Map<String, HashMapWithList<ModelKey, LinkModificationPair>> buildTypeChangesMap(List<LinkModificationPair> linkModificationPairs) {
-		CaseInsensitiveMapWithList<LinkModificationPair> typesMap = new CaseInsensitiveMapWithList<LinkModificationPair>();
-
-		for (LinkModificationPair modificationPair : linkModificationPairs) {
-			LinkModification modification = modificationPair.getLinkModification();
-			String type = modification.getLinkModelType();
-			typesMap.add(type, modificationPair);
-		}
+	public static Map<String, HashMapWithList<ModelKey, LinkModificationPair>> buildTypeAndKeyedChangesMap(List<LinkModificationPair> linkModificationPairs) {
+		CaseInsensitiveMapWithList<LinkModificationPair> typesMap = buildTypeChangesMap(linkModificationPairs);
 
 		Map<String, HashMapWithList<ModelKey, LinkModificationPair>> typeKeyedMap = new HashMap<String, HashMapWithList<ModelKey, LinkModificationPair>>();
 
@@ -31,6 +25,18 @@ public class LinkModificationPairUtility {
 		}
 
 		return typeKeyedMap;
+	}
+
+	public static CaseInsensitiveMapWithList<LinkModificationPair> buildTypeChangesMap(List<LinkModificationPair> linkModificationPairs) {
+		CaseInsensitiveMapWithList<LinkModificationPair> typesMap = new CaseInsensitiveMapWithList<LinkModificationPair>();
+
+		for (LinkModificationPair modificationPair : linkModificationPairs) {
+			LinkModification modification = modificationPair.getLinkModification();
+			String type = modification.getLinkModelType();
+			typesMap.add(type, modificationPair);
+		}
+
+		return typesMap;
 	}
 
 	public static HashMapWithList<ModelKey, LinkModificationPair> buildKeyedChangesMap(List<LinkModificationPair> linkModificationPairs) {

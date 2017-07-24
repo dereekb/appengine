@@ -13,6 +13,7 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultImpl;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModelMismatchException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLink;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
@@ -195,7 +196,7 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 					
 					// Update the pair.
 					LinkModificationResult linkModificationResult = this.makeLinkModificationResult(link, changeResult);
-					
+					 
 					this.result = linkModificationResult;
 					AbstractLinkModificationSystemModelChange.this.setLinkModificationResult(linkModificationResult);
 				}
@@ -204,28 +205,25 @@ public class LinkModificationSystemModelChangeBuilderImpl extends AbstractDirect
 			}
 
 			@Override
-			public boolean undoChange(MutableLinkModel linkModel) {
+			public LinkModificationResult undoChange() throws NoUndoChangesException {
 				
 				// Check the pair, not the instance for the previous result.
 				MutableLinkChangeResult changeResult = this.getMutableLinkChangeResult();
 				MutableLinkChangeResult undoChangeResult = null;
 				
 				if (changeResult == null) {
-					return false;	// Nothing changed/to change.
+					throw new NoUndoChangesException();
 				} else if (this.undoResult == null) {
-					
-					MutableLink link = this.loadMutableLink(linkModel);
+					MutableLink link = this.loadMutableLink(this.linkModel);
 					undoChangeResult = this.undoChange(link, changeResult);
 					
 					LinkModificationResult linkModificationUndoResult = this.makeLinkModificationResult(link, undoChangeResult);
-					this.undoResult = linkModificationUndoResult;
 					
+					this.undoResult = linkModificationUndoResult;
 					AbstractLinkModificationSystemModelChange.this.setLinkModificationUndoResult(linkModificationUndoResult);		
-				} else {
-					undoChangeResult = this.undoResult.getLinkChangeResult();
 				}
 				
-				return undoChangeResult.getModified().isEmpty() == false;
+				return this.undoResult;
 			}
 
 			// MARK: Internal

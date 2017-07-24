@@ -20,6 +20,8 @@ public interface LinkModificationResult extends LinkModificationReference {
 	/**
 	 * Whether or not the change was performed successfully.
 	 * 
+	 * TODO: Consider deprecating this...
+	 * 
 	 * @return {@code true} if successful.
 	 */
 	public boolean isSuccessful();
