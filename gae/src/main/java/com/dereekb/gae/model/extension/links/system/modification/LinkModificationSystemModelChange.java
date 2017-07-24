@@ -1,9 +1,14 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
+import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModelMismatchException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**
  * Abstract change that can be applied to models.
+ * <p>
+ * This is designed to be created on an idempotent loop,
+ * and as such all created {@link LinkModificationSystemModelChangeInstance}
+ * should also perform their actions idempotently.
  * 
  * @author dereekb
  *
@@ -19,13 +24,25 @@ public interface LinkModificationSystemModelChange {
 	public boolean isOptional();
 
 	/**
+	 * Returns the linked modification pair.
+	 * 
+	 * @return {@link LinkModificationPair}. Never {@code null}.
+	 */
+	public LinkModificationPair getPair();
+
+	/**
 	 * Makes a change for the input model.
 	 * 
 	 * @param linkModel
 	 *            {@link MutableLinkModel}. Never {@code null}.
 	 * @return {@link LinkModificationSystemModelChangeInstance}. Never
 	 *         {@code null}.
+	 * 
+	 * @throws LinkModelMismatchException
+	 *             thrown if the input model is not the same as the expected
+	 *             model.
 	 */
-	public LinkModificationSystemModelChangeInstance makeChange(MutableLinkModel linkModel);
+	public LinkModificationSystemModelChangeInstance makeChangeInstance(MutableLinkModel linkModel)
+	        throws LinkModelMismatchException;
 
 }

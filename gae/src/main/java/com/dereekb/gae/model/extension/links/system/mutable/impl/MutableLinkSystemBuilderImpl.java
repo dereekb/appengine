@@ -373,9 +373,8 @@ public class MutableLinkSystemBuilderImpl
 		// MARK: MutableLinkModelAccessor
 		@Override
 		public ReadResponse<ModelKey> readExistingModels(Collection<ModelKey> modelKeys) {
-			ReadRequest readRequest = new KeyReadRequest(modelKeys, false);
-			ReadResponse<T> response = this.delegate.getReadService().read(readRequest);
-			return null;
+			ReadRequest request = new KeyReadRequest(modelKeys, false);
+			return this.delegate.getReadService().exists(request);
 		}
 		
 		@Override

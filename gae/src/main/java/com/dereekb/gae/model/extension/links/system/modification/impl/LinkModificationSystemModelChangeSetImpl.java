@@ -55,7 +55,7 @@ public class LinkModificationSystemModelChangeSetImpl
 	}
 
 	@Override
-	public LinkModificationSystemModelChangeInstanceSet makeChangeSet(MutableLinkModel linkModel) {
+	public LinkModificationSystemModelChangeInstanceSet makeInstanceWithModel(MutableLinkModel linkModel) {
 		return new LinkModificationSystemModelChangeInstanceSetImpl(linkModel);
 	}
 
@@ -63,7 +63,7 @@ public class LinkModificationSystemModelChangeSetImpl
 		List<LinkModificationSystemModelChangeInstance> instances = new ArrayList<LinkModificationSystemModelChangeInstance>();
 
 		for (LinkModificationSystemModelChange change : this.changes) {
-			LinkModificationSystemModelChangeInstance instance = change.makeChange(linkModel);
+			LinkModificationSystemModelChangeInstance instance = change.makeChangeInstance(linkModel);
 			instances.add(instance);
 		}
 

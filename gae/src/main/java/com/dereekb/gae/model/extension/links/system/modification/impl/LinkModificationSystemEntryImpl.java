@@ -218,7 +218,8 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 		}
 
 		// MARK: Actions
-		public LinkModificationResultSet performChangesWithinTransactions() throws UnavailableModelException {
+		public LinkModificationResultSet performChangesWithinTransactions(boolean atomic) throws UnavailableModelException {
+			
 			// This function should really only be called once. Cache results.
 			if (this.result != null) {
 				return this.result;
@@ -333,12 +334,11 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 						LinkModificationSystemModelChangeSet changes = ModificationBatch.this.changeInstances.get(key);
 						
-						LinkModificationSystemModelChangeInstanceSet instanceSet = changes.makeChangeSet(linkModel);
+						LinkModificationSystemModelChangeInstanceSet instanceSet = changes.makeInstanceWithModel(linkModel);
 						instanceMap.put(key, instanceSet);
 
 						// Apply Change To Model
 						LinkModificationResultSet resultSet = instanceSet.applyChanges();
-
 						
 						// If a Change was made,
 						// then add it to the models to be saved.

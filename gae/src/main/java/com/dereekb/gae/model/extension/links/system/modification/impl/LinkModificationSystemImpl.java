@@ -19,6 +19,7 @@ import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairState;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPreTestPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPreTestResult;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPreTestResultInfo;
@@ -287,7 +288,11 @@ public class LinkModificationSystemImpl
 		private class LinkModificationPairImpl implements LinkModificationPair, LinkModificationResult {
 			
 			private final LinkModification modification;
+
+			private LinkModificationPairState state = LinkModificationPairState.INIT;
+			
 			private LinkModificationResult result;
+			private LinkModificationResult undoResult;
 
 			public LinkModificationPairImpl(LinkModification modification) {
 				this.modification = modification;
@@ -301,9 +306,45 @@ public class LinkModificationSystemImpl
 			
 			@Override
 			public void setLinkModificationResult(LinkModificationResult result) {
+				if (result != null) {
+					if (result.isSuccessful()) {
+						this.state = LinkModificationPairState.SUCCESS;
+					} else {
+						this.state = LinkModificationPairState.FAILED;
+					}
+				} else {
+					this.state = LinkModificationPairState.INIT;
+				}
+				
 				this.result = result;
 			}
 
+			@Override
+			public LinkModificationPairState getState() {
+				return this.state;
+			}
+
+			@Override
+			public LinkModificationResult getLinkModificationResult() {
+				return this.result;
+			}
+
+			@Override
+			public LinkModificationResult getUndoResult() {
+				return this.undoResult;
+			}
+
+			@Override
+			public void setUndoResult(LinkModificationResult result) {
+				this.state = LinkModificationPairState.UNDONE;
+				this.undoResult = result;
+			}
+
+			@Override
+			public ModelKey keyValue() {
+				return this.modification.keyValue();
+			}
+			
 			// MARK: LinkModificationResult
 			@Override
 			public boolean isModelModified() {
@@ -320,12 +361,6 @@ public class LinkModificationSystemImpl
 				return this.result.getLinkChangeResult();
 			}
 
-			// MARK: AlwaysKeyed
-			@Override
-			public ModelKey keyValue() {
-				return this.modification.keyValue();
-			}
-			
 		}
 		
 		private class LinkModificationPreTestResultImpl implements LinkModificationPreTestResult, LinkModificationPreTestPair {
@@ -460,7 +495,8 @@ public class LinkModificationSystemImpl
 			}
 			
 			List<RequestInstance> passingRequests = filterResults.getPassingObjects();
-			
+
+			// Do Primary Changes
 			this.runPrimaryModificationsForRequestInstances(passingRequests);
 
 			FilterResults<RequestInstance> primaryFilterResults = this.filterSuccessfulPrimaryModifications(this.inputRequestChanges);
@@ -472,11 +508,12 @@ public class LinkModificationSystemImpl
 			
 			passingRequests = primaryFilterResults.getPassingObjects();
 			
+			// Do Synchronization Changes
 			this.runSynchronizationChangesForRequestInstances(passingRequests);
 			
 			FilterResults<RequestInstance> secondaryFilterResults = this.filterSuccessfulSecondaryModifications(this.inputRequestChanges);
 			
-			// Assert all primary changes passed if atomic.
+			// Assert all sync changes passed if atomic.
 			if (this.atomic) {
 				this.assertAllSecondaryModifcationsPassed(secondaryFilterResults);
 			}
@@ -614,7 +651,7 @@ public class LinkModificationSystemImpl
 
 		protected LinkModificationResultSet runModificationsForType(String type,
 		                                                            HashMapWithList<ModelKey, LinkModificationPair> hashMapWithList) throws UnavailableModelException {
-			return this.instance.performModificationsForType(type, hashMapWithList);
+			return this.instance.performModificationsForType(type, hashMapWithList, this.atomic);
 		}
 
 		protected List<LinkModification> buildSynchronizationChangesFromResult(LinkModificationResultSet resultSet) {

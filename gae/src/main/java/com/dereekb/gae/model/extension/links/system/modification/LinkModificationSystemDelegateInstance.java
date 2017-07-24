@@ -30,6 +30,6 @@ public interface LinkModificationSystemDelegateInstance
 	 * @throws UnavailableLinkModelException thrown if the input type is unavailable.
 	 */
 	public LinkModificationResultSet performModificationsForType(String type,
-	                                                             HashMapWithList<ModelKey, LinkModificationPair> keyedMap) throws UndoChangesAlreadyExecutedException, UnavailableLinkModelException;
+	                                                             HashMapWithList<ModelKey, LinkModificationPair> keyedMap, boolean atomic) throws UndoChangesAlreadyExecutedException, UnavailableLinkModelException;
 
 }

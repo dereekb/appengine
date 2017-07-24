@@ -4,7 +4,7 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**
- * A change instance for a single model that can applied and undone.
+ * An idempotent change instance for a single model that can applied and undone.
  * <p>
  * Should be used by a {@link LinkModificationSystemModelChangeInstanceSet}.
  * 
@@ -14,7 +14,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 public interface LinkModificationSystemModelChangeInstance {
 
 	/**
-	 * Applies the change to the model.
+	 * Applies the change to the model. The internal {@link LinkModificationPair} is updated.
 	 * <p>
 	 * If the change has already been applied, nothing will happen.
 	 * 

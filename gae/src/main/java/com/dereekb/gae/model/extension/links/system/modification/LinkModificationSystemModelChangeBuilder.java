@@ -15,17 +15,16 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
  * 
  */
 public interface LinkModificationSystemModelChangeBuilder
-        extends DirectionalConverter<LinkModification, LinkModificationSystemModelChange>,
-        SingleDirectionalConverter<LinkModification, LinkModificationSystemModelChange> {
+        extends DirectionalConverter<LinkModificationPair, LinkModificationSystemModelChange>,
+        SingleDirectionalConverter<LinkModificationPair, LinkModificationSystemModelChange> {
 
 	/**
-	 * Makes a change set for the converted values of the input
-	 * {@link LinkModification} list.
+	 * Makes a change set for the converted values of the input {@link LinkModificationPair} list.
 	 * 
 	 * @param modifications
 	 *            {@link Collection}. Never {@code null}.
 	 * @return {@link LinkModificationSystemModelChangeSet}. Never {@code null}.
 	 */
-	public LinkModificationSystemModelChangeSet makeChangeSet(List<LinkModification> modifications);
+	public LinkModificationSystemModelChangeSet makeChangeSet(List<LinkModificationPair> modifications);
 
 }

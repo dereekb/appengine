@@ -28,25 +28,27 @@ public class LinkModificationSystemRequestImpl
 
 	public LinkModificationSystemRequestImpl() {};
 	
-	public LinkModificationSystemRequestImpl(String linkName,
+	public LinkModificationSystemRequestImpl(String linkModelType,
 	        ModelKey primaryKey,
-	        String linkModelType,
+            String linkName,
 	        MutableLinkChange linkChange) throws IllegalArgumentException {
-		this(linkName, linkModelType, ModelKey.readStringKey(primaryKey), linkChange.getLinkChangeType(),
+		this(linkModelType, ModelKey.readStringKey(primaryKey), linkName, linkChange.getLinkChangeType(),
 		        ModelKey.keysAsStrings(linkChange.getKeys()), linkChange.getDynamicLinkModelType());
 	}
 
-	public LinkModificationSystemRequestImpl(String linkName,
+	public LinkModificationSystemRequestImpl(
 	        String linkModelType,
 	        String primaryKey,
+	        String linkName,
 	        MutableLinkChangeType linkChangeType,
 	        Collection<String> keys) throws IllegalArgumentException {
-		this(linkName, linkModelType, primaryKey, linkChangeType, keys, null);
+		this(linkModelType, primaryKey, linkName, linkChangeType, keys, null);
 	}
 
-	public LinkModificationSystemRequestImpl(String linkName,
+	public LinkModificationSystemRequestImpl(
 	        String linkModelType,
 	        String primaryKey,
+	        String linkName,
 	        MutableLinkChangeType linkChangeType,
 	        Collection<String> keys,
 	        String dynamicLinkModelType) throws IllegalArgumentException {

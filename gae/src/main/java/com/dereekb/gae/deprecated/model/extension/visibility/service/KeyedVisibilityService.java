@@ -16,7 +16,7 @@ public interface KeyedVisibilityService {
 	 * Changes the visibility of the models for each of the keys. The visibility
 	 * change may not be reflected immediately.
 	 *
-	 * Visibility changes are indempotent.
+	 * Visibility changes are idempotent.
 	 *
 	 * @param keys
 	 *            Keys of models to change.

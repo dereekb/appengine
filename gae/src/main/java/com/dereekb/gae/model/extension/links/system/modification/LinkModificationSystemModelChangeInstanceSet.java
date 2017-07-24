@@ -7,6 +7,9 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 /**
  * Set of {@link LinkModificationSystemModelChangeInstance} values wrapped
  * together with a single model.
+ * <p>
+ * The instance is designed to be created on an idempotent loop, 
+ * and as such should only use the provided link model.
  * 
  * @author dereekb
  * 

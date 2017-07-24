@@ -141,11 +141,11 @@ public class LinkModificationSystemDelegateImpl
 
 		@Override
 		public LinkModificationResultSet performModificationsForType(String type,
-		                                                             HashMapWithList<ModelKey, LinkModificationPair> keyedMap)
+		                                                             HashMapWithList<ModelKey, LinkModificationPair> keyedMap, boolean atomic)
 		        throws UndoChangesAlreadyExecutedException,
 		            UnavailableLinkModelException {
 			LinkModificationSystemEntryInstance entryInstance = this.getEntryInstance(type);
-			return entryInstance.performModifications(keyedMap);
+			return entryInstance.performModifications(keyedMap, atomic);
 		}
 
 		// MARK: Internal
