@@ -2,10 +2,8 @@ package com.dereekb.gae.model.extension.links.system.modification.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
@@ -26,7 +24,8 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangesResult;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegate;
-import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemDelegateInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstanceConfig;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstanceOptions;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
@@ -35,7 +34,6 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
-import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationImpl;
 import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyComittedException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
@@ -52,8 +50,6 @@ import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithList;
-import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.map.MapUtility;
 import com.dereekb.gae.utilities.filters.FilterResults;
 
 /**
@@ -440,8 +436,8 @@ public class LinkModificationSystemImpl
 
 		private final boolean atomic;
 		private final boolean autoCommitChanges;
+		
 		private List<RequestInstance> inputRequestChanges;
-		private LinkModificationSystemDelegateInstance instance;
 
 		public LinkModificationSystemChangesRunner(List<RequestInstance> inputRequestChanges, boolean atomic, boolean autoCommit) {
 			this.inputRequestChanges = inputRequestChanges;
@@ -452,12 +448,6 @@ public class LinkModificationSystemImpl
 		public LinkModificationSystemChangesResult run()
 		        throws FailedLinkModificationSystemChangeException,
 		            LinkModificationSystemInstanceAlreadyRunException {
-			if (this.instance != null) {
-				throw new LinkModificationSystemInstanceAlreadyRunException();
-			} else {
-				this.instance = LinkModificationSystemImpl.this.delegate.makeInstance();
-			}
-
 			List<LinkModificationSystemResult> results = null;
 			
 			try {
@@ -544,7 +534,23 @@ public class LinkModificationSystemImpl
 
 			passingRequests = secondaryFilterResults.getPassingObjects();
 			
+			// If not atomic, undo all failed requests.
+			if (this.atomic == false) {
+				List<RequestInstance> failedRequests = new ArrayList<RequestInstance>();
+
+				failedRequests.addAll(primaryFilterResults.getFailingObjects());
+				failedRequests.addAll(secondaryFilterResults.getFailingObjects());
+				
+				this.undoFailedRequests(failedRequests);
+			}
+			
+			// All Failing Requests must be undone.
 			return new ArrayList<LinkModificationSystemResult>(this.inputRequestChanges);
+		}
+
+		private void undoFailedRequests(List<RequestInstance> failedRequests) {
+			// TODO Auto-generated method stub
+			
 		}
 
 		// MARK: Pre Tests
@@ -578,9 +584,12 @@ public class LinkModificationSystemImpl
 		}
 		
 		protected void assertAllPassedPreTestResults(FilterResults<RequestInstance> filterResults) throws AtomicOperationException {
+			List<RequestInstance> failedInstances = filterResults.getFailingObjects();
 			
-			// TODO: Assert and throw atomic operation exception if fails.
-			
+			if (failedInstances.isEmpty() == false) {
+				// TODO: Have a specific exception here...
+				throw new AtomicOperationException();
+			}
 		}
 		
 		// MARK: Primary Modifications
@@ -607,8 +616,12 @@ public class LinkModificationSystemImpl
 		}
 
 		private void assertAllPrimaryModificationsPassed(FilterResults<RequestInstance> filterResults) {
-			// TODO Auto-generated method stub
+			List<RequestInstance> failedInstances = filterResults.getFailingObjects();
 			
+			if (failedInstances.isEmpty() == false) {
+				// TODO: Have a specific exception here...
+				throw new AtomicOperationException();
+			}
 		}
 		
 		// MARK: Synchronization Modifications
@@ -638,46 +651,41 @@ public class LinkModificationSystemImpl
 			return results;
 		}
 
-		private void assertAllSecondaryModificationsPassed(FilterResults<RequestInstance> secondaryFilterResults) {
-
-			// TODO: Assert and throw atomic operation exception if fails.
+		private void assertAllSecondaryModificationsPassed(FilterResults<RequestInstance> filterResults) {
+			List<RequestInstance> failedInstances = filterResults.getFailingObjects();
 			
+			if (failedInstances.isEmpty() == false) {
+				// TODO: Have a specific exception here...
+				throw new AtomicOperationException();
+			}
 		}
 		
 		protected void runModifications(List<LinkModificationPair> modifications) {
-			Map<String, HashMapWithList<ModelKey, LinkModificationPair>> typeChangesMap = this
-			        .buildTypeChangesMap(modifications);
+			CaseInsensitiveMapWithList<LinkModificationPair> typeChangesMap = this.buildTypeModificationsMap(modifications);
 
-			for (Entry<String, HashMapWithList<ModelKey, LinkModificationPair>> typeEntry : typeChangesMap.entrySet()) {
+			for (Entry<String, List<LinkModificationPair>> typeEntry : typeChangesMap.entrySet()) {
 				this.runModificationsForType(typeEntry.getKey(), typeEntry.getValue());
 			}
 		}
 
-		protected LinkModificationResultSet runModificationsForType(String type,
-		                                                            HashMapWithList<ModelKey, LinkModificationPair> hashMapWithList) throws UnavailableModelException {
-			return this.instance.performModificationsForType(type, hashMapWithList, this.atomic);
+		protected void runModificationsForType(String type,
+		                                       List<LinkModificationPair> list) throws UnavailableModelException {
+			LinkModificationSystemEntryInstanceConfig config = this.makeEntryInstanceConfig(list);
+			LinkModificationSystemEntryInstance instance = LinkModificationSystemImpl.this.delegate.makeInstanceForType(type, config);
+			instance.applyChanges();
 		}
 
 		// MARK: Internal
-		private Map<String, HashMapWithList<ModelKey, LinkModificationPair>> buildTypeChangesMap(List<LinkModificationPair> linkModificationPairs) {
-			CaseInsensitiveMapWithList<LinkModificationPair> typesMap = new CaseInsensitiveMapWithList<LinkModificationPair>();
-
-			for (LinkModificationPair modificationPair : linkModificationPairs) {
-				LinkModification modification = modificationPair.getLinkModification();
-				String type = modification.getLinkModelType();
-				typesMap.add(type, modificationPair);
-			}
-
-			Map<String, HashMapWithList<ModelKey, LinkModificationPair>> typeKeyedMap = new HashMap<String, HashMapWithList<ModelKey, LinkModificationPair>>();
-
-			for (Entry<String, List<LinkModificationPair>> typesEntry : typesMap.entrySet()) {
-				HashMapWithList<ModelKey, LinkModificationPair> keyedMap = MapUtility
-				        .makeHashMapWithList(typesEntry.getValue());
-				typeKeyedMap.put(typesEntry.getKey(), keyedMap);
-			}
-
-			return typeKeyedMap;
+		private CaseInsensitiveMapWithList<LinkModificationPair> buildTypeModificationsMap(List<LinkModificationPair> modifications) {
+			// TODO Auto-generated method stub
+			return null;
 		}
+
+		private LinkModificationSystemEntryInstanceConfig makeEntryInstanceConfig(List<LinkModificationPair> list) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 		
 		protected List<LinkModification> buildSynchronizationChangeFromResult(LinkModificationResult result) {
 			return LinkModificationSynchronizationBuilder.makeSynchronizationLinkModifications(result);

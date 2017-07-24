@@ -26,9 +26,11 @@ public interface LinkModificationSystemEntry {
 	/**
 	 * Generates a new instance of changes.
 	 * 
+	 * @param config {@link LinkModificationSystemEntryInstanceConfig}. Never {@code null}.
+	 * 
 	 * @return {@link LinkModificationSystemDelegateInstance}. Never
 	 *         {@code null}.
 	 */
-	public LinkModificationSystemEntryInstance makeInstance();
+	public LinkModificationSystemEntryInstance makeInstance(LinkModificationSystemEntryInstanceConfig config);
 
 }

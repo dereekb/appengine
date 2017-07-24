@@ -15,6 +15,7 @@ import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntryInstanceConfig;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeBuilder;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstanceSet;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeSet;
@@ -22,7 +23,7 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultSetImpl;
 import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationPairUtility;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModelAccessorPair;
@@ -120,17 +121,160 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public LinkModificationSystemEntryInstance makeInstance() {
-		return new LinkModificationSystemEntryInstanceImpl();
+	public LinkModificationSystemEntryInstance makeInstance(LinkModificationSystemEntryInstanceConfig config) {
+		return new LinkModificationSystemEntryInstanceImpl(config);
 	}
 
 	// MARK: Internal
 	protected class LinkModificationSystemEntryInstanceImpl
 	        implements LinkModificationSystemEntryInstance {
+		
+		private LinkModificationSystemEntryInstanceConfig config;
+		private transient ModificationBatchSet batchSet;
+		
+		public LinkModificationSystemEntryInstanceImpl(LinkModificationSystemEntryInstanceConfig config) {
+			super();
+			this.config = config;
+		}
 
-		private boolean undoneChanges = false;
-		private List<ModificationBatchSet> batchSets = new ArrayList<ModificationBatchSet>();
+		public LinkModificationSystemEntryInstanceConfig getConfig() {
+			return this.config;
+		}
 
+		public void setConfig(LinkModificationSystemEntryInstanceConfig config) {
+			if (config == null) {
+				throw new IllegalArgumentException("config cannot be null.");
+			}
+		
+			this.config = config;
+		}
+
+		// MARK: LinkModificationSystemEntryInstance
+		@Override
+		public void applyChanges() {
+			DoChangesModificationBatchSet doChanges = new DoChangesModificationBatchSet();
+			doChanges.doAction();
+		}
+
+		@Override
+		public void commitChanges() {
+			CommitChangesModificationBatchSet commitChanges = new CommitChangesModificationBatchSet();
+			commitChanges.doAction();
+		}
+
+		@Override
+		public void undoChanges() {
+			UndoChangesModificationBatchSet undoChanges = new UndoChangesModificationBatchSet();
+			undoChanges.doAction();
+		}
+		
+		// MARK: Batch Sets
+		protected abstract class AbstractModificationBatchSet {
+			
+			private final List<ModificationBatch> batches;
+			
+			public AbstractModificationBatchSet() {
+				this.batches = this.makeBatches();
+			}
+
+			private final List<ModificationBatch> makeBatches() {
+				List<LinkModificationPair> applicablePairs = this.filterApplicablePairs();
+
+				HashMapWithList<ModelKey, LinkModificationPair> keyedMap = LinkModificationPairUtility.buildKeyedChangesMap(applicablePairs);
+				
+				List<List<ModelKey>> keyBatches = LinkModificationSystemEntryImpl.this.PARTITIONER
+				        .makePartitions(keyedMap.keySet());
+
+				List<ModificationBatch> batches = new ArrayList<ModificationBatch>(keyBatches.size());
+
+				for (List<ModelKey> keyBatch : keyBatches) {
+					ModificationBatch batch = new ModificationBatch();
+
+					// Get all modifications for a specific model key.
+					for (ModelKey key : keyBatch) {
+						List<LinkModificationPair> modifications = keyedMap.get(key);
+						batch.addModificationSet(key, modifications);
+					}
+
+					batches.add(batch);
+				}
+				
+				return batches;
+			}
+
+			private final List<LinkModificationPair> filterApplicablePairs() {
+				List<LinkModificationPair> pairs = LinkModificationSystemEntryInstanceImpl.this.config.getModificationPairs();
+				List<LinkModificationPair> filteredPairs = new ArrayList<LinkModificationPair>();
+				
+				for (LinkModificationPair pair : pairs) {
+					if (this.isApplicableForModification(pair)) {
+						filteredPairs.add(pair);
+					}
+				}
+				
+				return filteredPairs;
+			}
+
+			protected abstract boolean isApplicableForModification(LinkModificationPair pair);
+			
+			public final void doAction() {
+				this.doAction(this.batches);
+			}
+			
+			protected abstract void doAction(List<ModificationBatch> batches);
+			
+		}
+
+		protected class DoChangesModificationBatchSet extends AbstractModificationBatchSet {
+
+			@Override
+			protected boolean isApplicableForModification(LinkModificationPair pair) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			protected void doAction(List<LinkModificationSystemEntryImpl<T>.ModificationBatch> batches) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		}
+
+		protected class CommitChangesModificationBatchSet extends AbstractModificationBatchSet {
+
+			@Override
+			protected boolean isApplicableForModification(LinkModificationPair pair) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			protected void doAction(List<LinkModificationSystemEntryImpl<T>.ModificationBatch> batches) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		}
+
+		protected class UndoChangesModificationBatchSet extends AbstractModificationBatchSet {
+
+			@Override
+			protected boolean isApplicableForModification(LinkModificationPair pair) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			protected void doAction(List<LinkModificationSystemEntryImpl<T>.ModificationBatch> batches) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		}
+	
+		
+		/*
 		// MARK: LinkModificationSystemEntryInstance
 		@Override
 		public LinkModificationResultSet performModifications(HashMapWithList<ModelKey, LinkModificationPair> keyedMap, boolean atomic)
@@ -145,26 +289,6 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			this.batchSets.add(batchSet);
 			
 			return batchSet.performChangesWithinTransactions(atomic);
-		}
-
-		private ModificationBatchSet makeBatchSetForChanges(HashMapWithList<ModelKey, LinkModificationPair> keyedMap) {
-			List<List<ModelKey>> keyBatches = LinkModificationSystemEntryImpl.this.PARTITIONER
-			        .makePartitions(keyedMap.keySet());
-			List<ModificationBatch> batches = new ArrayList<ModificationBatch>(keyBatches.size());
-
-			for (List<ModelKey> keyBatch : keyBatches) {
-				ModificationBatch batch = new ModificationBatch();
-
-				// Get all modifications for a specific model key.
-				for (ModelKey key : keyBatch) {
-					List<LinkModificationPair> modifications = keyedMap.get(key);
-					batch.addModificationSet(key, modifications);
-				}
-
-				batches.add(batch);
-			}
-
-			return new ModificationBatchSet(batches);
 		}
 
 		@Override
@@ -195,7 +319,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 				batchSet.undoChanges();
 			}
 		}
-
+		*/
 	}
 
 	/**
@@ -206,12 +330,10 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	 * @author dereekb
 	 *
 	 */
+	@Deprecated
 	private class ModificationBatchSet {
 
 		private final List<ModificationBatch> batches;
-		
-		private LinkModificationResultSetImpl result;
-		private RuntimeException exception;
 
 		public ModificationBatchSet(List<ModificationBatch> batches) {
 			this.batches = batches;
@@ -401,7 +523,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 					// Save all models
 					LinkModificationSystemEntryImpl.this.updater.update(modifiedModels);
 
-					// TODO: Consider logging models that failed being loaded.
+					// TODO: Consider logging models that failed being loaded for undo...
 				}
 
 			});

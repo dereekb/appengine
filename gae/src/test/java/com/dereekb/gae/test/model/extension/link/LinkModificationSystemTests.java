@@ -375,7 +375,6 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 
 		Assert.assertTrue(a.getThirdKey() == null);
 		Assert.assertTrue(b.getMainKey() == null);
-		
 	}
 
 	/**

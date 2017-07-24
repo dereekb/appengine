@@ -8,6 +8,7 @@ import java.util.Set;
  * @author dereekb
  *
  */
+@Deprecated
 public interface LinkModificationResultSet {
 
 	/**

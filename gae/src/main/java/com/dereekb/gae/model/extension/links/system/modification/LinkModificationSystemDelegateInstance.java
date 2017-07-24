@@ -12,8 +12,10 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithList;
  * {@link LinkModificationSystemDelegate}.
  * 
  * @author dereekb
- *
+ * 
+ * @deprecated Instances like this are no longer necessary.
  */
+@Deprecated
 public interface LinkModificationSystemDelegateInstance
         extends LinkModificationSystemChangeInstance {
 
