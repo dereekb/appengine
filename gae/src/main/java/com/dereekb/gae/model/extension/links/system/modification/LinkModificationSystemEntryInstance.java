@@ -23,5 +23,12 @@ public interface LinkModificationSystemEntryInstance {
 	 * Reverts changes to {@link LinkModificationPair} values that have state {@link LinkModificationPairState#SUCCESS}.
 	 */
 	public void undoChanges();
+
+	/**
+	 * Convenience function that calls one of the other functions.
+	 * 
+	 * @param changeType {@link LinkModificationChangeType}. Never {@code null}.
+	 */
+	public void runChanges(LinkModificationChangeType changeType);
 	
 }

@@ -13,6 +13,7 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionRea
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationChangeType;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairState;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
@@ -163,7 +164,24 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			UndoChangesModificationBatchSet undoChanges = new UndoChangesModificationBatchSet();
 			undoChanges.doAction();
 		}
-		
+
+		@Override
+		public void runChanges(LinkModificationChangeType changeType) {
+			switch (changeType) {
+				case COMMIT:
+					this.commitChanges();
+					break;
+				case DO:
+					this.applyChanges();
+					break;
+				case UNDO:
+					this.undoChanges();
+					break;
+				default:
+					throw new UnsupportedOperationException();
+			}
+		}
+
 		// MARK: Batch Sets
 		protected abstract class AbstractModicationRunner {
 

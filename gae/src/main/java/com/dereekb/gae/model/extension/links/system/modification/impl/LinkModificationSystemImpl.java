@@ -16,6 +16,7 @@ import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationChangeType;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairState;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPreTestPair;
@@ -234,6 +235,8 @@ public class LinkModificationSystemImpl
 		
 		private LinkModificationPreTestResultImpl testResult = new LinkModificationPreTestResultImpl();
 		
+		private boolean isSuccessful = false;
+		
 		private LinkModificationPairImpl primaryPair;
 		private List<LinkModificationPairImpl> secondaryPairs = new ArrayList<LinkModificationPairImpl>();
 
@@ -242,6 +245,14 @@ public class LinkModificationSystemImpl
 			this.request = request;
 			
 			this.primaryPair = new LinkModificationPairImpl(modification);
+		}
+		
+		public boolean isSuccessful() {
+			return this.isSuccessful;
+		}
+
+		public void setSuccessful(boolean isSuccessful) {
+			this.isSuccessful = isSuccessful;
 		}
 
 		// MARK: LinkModificationSystemResult
@@ -540,8 +551,13 @@ public class LinkModificationSystemImpl
 			}
 
 			passingRequests = secondaryFilterResults.getPassingObjects();
+
+			// Update successful instances
+			for (RequestInstance passingRequest : passingRequests) {
+				passingRequest.setSuccessful(true);
+			}
 			
-			// If not atomic, undo all failed requests.
+			// If not atomic, undo all failed requests before returning.
 			if (this.atomic == false) {
 				List<RequestInstance> failedRequests = new ArrayList<RequestInstance>();
 
@@ -551,20 +567,15 @@ public class LinkModificationSystemImpl
 				this.undoRequests(failedRequests);
 			}
 			
-			// All Failing Requests must be undone.
 			return new ArrayList<LinkModificationSystemResult>(this.inputRequestChanges);
 		}
 		
 		private void undoChanges() {
 			this.undoRequests(this.inputRequestChanges);
 		}
-
-		private void undoRequests(List<RequestInstance> failedRequests) {
-			// TODO Auto-generated method stub
-		}
 		
 		private void commitChanges() {
-			// TODO Auto-generated method stub
+			this.commitChanges(this.inputRequestChanges);
 		}
 
 		// MARK: Pre Tests
@@ -615,7 +626,7 @@ public class LinkModificationSystemImpl
 				primaryPairs.add(primaryPair);
 			}
 
-			this.runModifications(primaryPairs);
+			this.runModifications(primaryPairs, LinkModificationChangeType.DO);
 		}
 
 		private FilterResults<RequestInstance> filterSuccessfulPrimaryModifications(List<RequestInstance> inputRequestChanges) {
@@ -651,7 +662,7 @@ public class LinkModificationSystemImpl
 				secondaryPairs.addAll(syncPairs);
 			}
 
-			this.runModifications(secondaryPairs);
+			this.runModifications(secondaryPairs, LinkModificationChangeType.DO);
 		}
 
 		private FilterResults<RequestInstance> filterSuccessfulSecondaryModifications(List<RequestInstance> inputRequestChanges) {
@@ -674,21 +685,49 @@ public class LinkModificationSystemImpl
 			}
 		}
 		
-		protected void runModifications(List<LinkModificationPair> modifications) {
+		protected void runModifications(List<LinkModificationPair> modifications,
+	                                       LinkModificationChangeType changeType) {
 			CaseInsensitiveMapWithList<LinkModificationPair> typeChangesMap = this.buildTypeModificationsMap(modifications);
 
 			for (Entry<String, List<LinkModificationPair>> typeEntry : typeChangesMap.entrySet()) {
-				this.runModificationsForType(typeEntry.getKey(), typeEntry.getValue());
+				this.runModificationsForType(typeEntry.getKey(), typeEntry.getValue(), changeType);
 			}
 		}
 
 		protected void runModificationsForType(String type,
-		                                       List<LinkModificationPair> list) throws UnavailableModelException {
+		                                       List<LinkModificationPair> list,
+		                                       LinkModificationChangeType changeType) throws UnavailableModelException {
 			LinkModificationSystemEntryInstanceConfig config = this.makeEntryInstanceConfig(list);
 			LinkModificationSystemEntryInstance instance = LinkModificationSystemImpl.this.delegate.makeInstanceForType(type, config);
-			instance.applyChanges();
+			instance.runChanges(changeType);
+		}
+		
+		// MARK: Undo
+		private void undoRequests(List<RequestInstance> requests) {
+			List<LinkModificationPair> allPairs = this.readAllPairs(requests, false);
+			this.runModifications(allPairs, LinkModificationChangeType.UNDO);
 		}
 
+		// MARK: Commit Changes
+		private void commitChanges(List<RequestInstance> requests) {
+			List<LinkModificationPair> allPairs = this.readAllPairs(requests, true);
+			this.runModifications(allPairs, LinkModificationChangeType.COMMIT);
+		}
+		
+		private List<LinkModificationPair> readAllPairs(List<RequestInstance> requests,
+		                                                boolean successfulOnly) {
+			List<LinkModificationPair> allPairs = new ArrayList<LinkModificationPair>();
+
+			for (RequestInstance request : requests) {
+				if (!successfulOnly || request.isSuccessful()) {
+					allPairs.add(request.getPrimaryPair());
+					allPairs.addAll(request.getSecondaryPairs());
+				}
+			}
+
+			return allPairs;
+		}
+		
 		// MARK: Internal
 		private CaseInsensitiveMapWithList<LinkModificationPair> buildTypeModificationsMap(List<LinkModificationPair> linkModificationPairs) {
 			return LinkModificationPairUtility.buildTypeChangesMap(linkModificationPairs);
