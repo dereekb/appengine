@@ -7,6 +7,7 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstanceSet;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeSet;
+import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
@@ -91,7 +92,8 @@ public class LinkModificationSystemModelChangeSetImpl
 			boolean modified = false;
 
 			for (LinkModificationSystemModelChangeInstance instance : instances) {
-				modified = modified || instance.applyChange().isModelModified();
+				LinkModificationResult result = instance.applyChange();
+				modified = modified || result.isModelModified();
 			}
 
 			return modified;
@@ -105,7 +107,8 @@ public class LinkModificationSystemModelChangeSetImpl
 
 			for (LinkModificationSystemModelChangeInstance instance : instances) {
 				try {
-					modified = modified || instance.undoChange().isModelModified();
+					LinkModificationResult result = instance.undoChange();
+					modified = modified || result.isModelModified();
 				} catch (NoUndoChangesException e) {
 					// Continue loop.
 				}

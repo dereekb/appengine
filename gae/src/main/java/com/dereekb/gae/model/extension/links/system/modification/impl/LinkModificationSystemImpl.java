@@ -369,17 +369,23 @@ public class LinkModificationSystemImpl
 			// MARK: LinkModificationResult
 			@Override
 			public boolean isModelModified() {
-				return this.result.isModelModified();
+				return (this.result != null) ? this.result.isModelModified() : false;
 			}
 
 			@Override
 			public boolean isSuccessful() {
-				return this.result.isSuccessful();
+				return (this.result != null) ? this.result.isSuccessful() : false;
 			}
 
 			@Override
 			public MutableLinkChangeResult getLinkChangeResult() {
-				return this.result.getLinkChangeResult();
+				return (this.result != null) ? this.result.getLinkChangeResult() : null;
+			}
+
+			@Override
+			public String toString() {
+				return "LinkModificationPairImpl [modification=" + this.modification + ", state=" + this.state
+				        + ", result=" + this.result + ", undoResult=" + this.undoResult + "]";
 			}
 
 		}
@@ -604,7 +610,7 @@ public class LinkModificationSystemImpl
 		private void runPrimaryModificationsForRequestInstances(List<RequestInstance> passingRequests) {
 			List<LinkModificationPair> primaryPairs = new ArrayList<LinkModificationPair>();
 
-			for (RequestInstance request : this.inputRequestChanges) {
+			for (RequestInstance request : passingRequests) {
 				LinkModificationPair primaryPair = request.getPrimaryPair();
 				primaryPairs.add(primaryPair);
 			}
@@ -612,10 +618,10 @@ public class LinkModificationSystemImpl
 			this.runModifications(primaryPairs);
 		}
 
-		private FilterResults<RequestInstance> filterSuccessfulPrimaryModifications(List<RequestInstance> inputRequestChanges2) {
+		private FilterResults<RequestInstance> filterSuccessfulPrimaryModifications(List<RequestInstance> inputRequestChanges) {
 			FilterResults<RequestInstance> results = new FilterResults<RequestInstance>();
 			
-			for (RequestInstance request : this.inputRequestChanges) {
+			for (RequestInstance request : inputRequestChanges) {
 				LinkModificationResult result = request.getPrimaryResult();
 				results.addWithBoolean(result.isSuccessful(), request);
 			}
@@ -636,7 +642,7 @@ public class LinkModificationSystemImpl
 		private void runSynchronizationChangesForRequestInstances(List<RequestInstance> passingRequests) {
 			List<LinkModificationPair> secondaryPairs = new ArrayList<LinkModificationPair>();
 
-			for (RequestInstance request : this.inputRequestChanges) {
+			for (RequestInstance request : passingRequests) {
 				LinkModificationResult result = request.getPrimaryResult();
 				
 				List<LinkModification> syncModifications = this.buildSynchronizationChangeFromResult(result);
@@ -651,7 +657,7 @@ public class LinkModificationSystemImpl
 		private FilterResults<RequestInstance> filterSuccessfulSecondaryModifications(List<RequestInstance> inputRequestChanges) {
 			FilterResults<RequestInstance> results = new FilterResults<RequestInstance>();
 			
-			for (RequestInstance request : this.inputRequestChanges) {
+			for (RequestInstance request : inputRequestChanges) {
 				boolean secondaryResultsAllSuccessful = request.isSecondaryResultsSuccessful();
 				results.addWithBoolean(secondaryResultsAllSuccessful, request);
 			}
