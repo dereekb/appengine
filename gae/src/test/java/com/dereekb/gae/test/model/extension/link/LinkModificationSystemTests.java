@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dereekb.gae.model.exception.UnavailableModelException;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangesResult;
@@ -19,6 +19,7 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkSizeLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemDelegateImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemEntryImpl;
@@ -26,7 +27,6 @@ import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModifi
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemInstanceOptionsImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
-import com.dereekb.gae.model.extension.links.system.mutable.exception.LinkChangeLinkSizeException;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
@@ -455,9 +455,15 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		try {
 			LinkModificationSystemChangesResult result = instance.applyChanges();
 			Assert.fail();
-		} catch (FailedLinkModificationSystemChangeException e) {
-			Throwable cause = e.getCause();
-			Assert.assertTrue(UnavailableModelException.class.isAssignableFrom(cause.getClass()));
+		} catch (AtomicOperationException e) {
+			//Assert.assertTrue(e.getReason() == AtomicOperationExceptionReason.UNAVAILABLE);
+			
+			// TODO: Assert a specific type of exception...
+			
+			//Throwable cause = e.getCause();
+			//Assert.assertTrue(UnavailableModelException.class.isAssignableFrom(cause.getClass()));
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 
@@ -500,7 +506,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		try {
 			LinkModificationSystemChangesResult result = instance.applyChanges();
 			Assert.fail();
-		} catch (FailedLinkModificationSystemChangeException e) {
+		} catch (AtomicOperationException e) {
 			
 		}
 		
@@ -584,7 +590,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		try {
 			instance.queueRequest(linkRequest);
 			Assert.fail();
-		} catch (LinkChangeLinkSizeException e) {
+		} catch (InvalidLinkSizeLinkModificationSystemRequestException e) {
 			
 		}
 		

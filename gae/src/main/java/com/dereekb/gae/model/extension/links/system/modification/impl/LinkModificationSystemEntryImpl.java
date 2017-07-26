@@ -257,6 +257,15 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 					throw new AtomicOperationException(nonOptionalKeys, AtomicOperationExceptionReason.UNAVAILABLE);
 				}
 			}
+
+			protected void skipInstancesForModels(Collection<ModelKey> keys,
+			                                      Map<ModelKey, LinkModificationSystemModelChangeSet> changeInstances) {
+				for (ModelKey key : keys) {
+					LinkModificationSystemModelChangeSet changeSet = changeInstances.get(key);
+					changeSet.setSkipped();
+				}
+			}
+
 			
 		}
 		
@@ -288,6 +297,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 						// Assert unavailable models are optional, otherwise thrown an exception.
 						if (failed.isEmpty() == false) {
 							AbstractChangesDoChangesModificationBatchSet.this.assertUnavailableModelsAreOptional(failed, changeInstances);
+							AbstractChangesDoChangesModificationBatchSet.this.skipInstancesForModels(failed, changeInstances);
 						}
 
 						List<T> modifiedModels = new ArrayList<T>();

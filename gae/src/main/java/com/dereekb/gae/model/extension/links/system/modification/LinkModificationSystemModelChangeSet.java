@@ -17,6 +17,11 @@ public interface LinkModificationSystemModelChangeSet {
 	 * @return {@code true} if all changes are optional.
 	 */
 	public boolean isOptional();
+	
+	/**
+	 * Sets all pairs within this change set as skipped.
+	 */
+	public void setSkipped();
 
 	/**
 	 * Creates a new instance that is linked to the specific model.

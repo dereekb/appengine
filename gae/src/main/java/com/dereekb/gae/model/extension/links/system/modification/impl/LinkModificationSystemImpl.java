@@ -308,7 +308,7 @@ public class LinkModificationSystemImpl
 			boolean successful = true;
 			
 			for (LinkModificationPairImpl pair : this.secondaryPairs) {
-				if (pair.isSuccessful() == false) {
+				if (pair.isSuccessful() == false && pair.isOptional() == false) {
 					successful = false;
 					break;
 				}
@@ -373,10 +373,21 @@ public class LinkModificationSystemImpl
 			}
 
 			@Override
+			public void setSkipped() {
+				if (this.state == LinkModificationPairState.INIT) {
+					this.state = LinkModificationPairState.SKIPPED;
+				}
+			}
+
+			@Override
 			public ModelKey keyValue() {
 				return this.modification.keyValue();
 			}
-			
+
+			public boolean isOptional() {
+				return this.modification.isOptional();
+			}
+
 			// MARK: LinkModificationResult
 			@Override
 			public boolean isModelModified() {
@@ -474,21 +485,26 @@ public class LinkModificationSystemImpl
 				if (this.autoCommitChanges) {
 					this.commitChanges();
 				}
+			} catch (AtomicOperationException e) {
+				throw e;	// Throw e.
 			} catch (RuntimeException e) {
-				try {
-					// If this fails, log it.
-					this.undoChanges();
-				} catch (Exception ee) {
-					LOGGER.log(Level.SEVERE, "LinkModificationSystem Undo failed...", e);
-					throw ee;
-				}
-				
+				this.tryUndoForException(e);
 				throw new FailedLinkModificationSystemChangeException(e);
 			}
 			
 			return new LinkModificationSystemChangesResultImpl(results);
 		}
 		
+		private void tryUndoForException(RuntimeException e) {
+			try {
+				this.undoChanges();
+			} catch (Exception ee) {
+				// If this fails, log it.
+				LOGGER.log(Level.SEVERE, "LinkModificationSystem Undo failed...", e);
+				throw ee;
+			}
+		}
+
 		private class LinkModificationSystemChangesResultImpl implements LinkModificationSystemChangesResult {
 
 			private List<LinkModificationSystemResult> results;

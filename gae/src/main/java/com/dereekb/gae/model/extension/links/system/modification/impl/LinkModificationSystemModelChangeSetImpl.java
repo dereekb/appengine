@@ -3,6 +3,7 @@ package com.dereekb.gae.model.extension.links.system.modification.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChange;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstanceSet;
@@ -51,6 +52,14 @@ public class LinkModificationSystemModelChangeSetImpl
 
 		return this.isOptional;
 	}
+
+	@Override
+	public void setSkipped() {
+		for (LinkModificationSystemModelChange change : this.changes) {
+			LinkModificationPair pair = change.getPair();
+			pair.setSkipped();
+		}
+	} 
 
 	@Override
 	public LinkModificationSystemModelChangeInstanceSet makeInstanceWithModel(MutableLinkModel linkModel) {

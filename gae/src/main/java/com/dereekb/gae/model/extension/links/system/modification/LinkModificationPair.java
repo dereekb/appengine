@@ -48,4 +48,9 @@ public interface LinkModificationPair extends AlwaysKeyed<ModelKey>, LinkModific
 	 */
 	public void setUndoResult(LinkModificationResult result);
 
+	/**
+	 * Sets the state as skipped.
+	 */
+	public void setSkipped();
+
 }

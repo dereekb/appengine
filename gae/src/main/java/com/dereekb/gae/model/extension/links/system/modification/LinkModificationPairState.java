@@ -14,6 +14,11 @@ public enum LinkModificationPairState {
 	INIT,
 	
 	/**
+	 * If the change was skipped.
+	 */
+	SKIPPED,
+	
+	/**
 	 * If the change was successful.
 	 */
 	SUCCESS,
