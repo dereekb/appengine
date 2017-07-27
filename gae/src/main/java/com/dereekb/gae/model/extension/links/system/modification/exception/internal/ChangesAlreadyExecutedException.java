@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.links.system.modification.exception;
+package com.dereekb.gae.model.extension.links.system.modification.exception.internal;
 
 /**
  * Thrown in cases where changes have already been performed.
@@ -6,30 +6,30 @@ package com.dereekb.gae.model.extension.links.system.modification.exception;
  * @author dereekb
  *
  */
-public class ChangesAlreadyComittedException extends RuntimeException {
+public class ChangesAlreadyExecutedException extends InternalLinkModificationSystemException {
 
 	private static final long serialVersionUID = 1L;
 
-	public ChangesAlreadyComittedException() {
+	public ChangesAlreadyExecutedException() {
 		super();
 	}
 
-	public ChangesAlreadyComittedException(String message,
+	public ChangesAlreadyExecutedException(String message,
 	        Throwable cause,
 	        boolean enableSuppression,
 	        boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public ChangesAlreadyComittedException(String message, Throwable cause) {
+	public ChangesAlreadyExecutedException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public ChangesAlreadyComittedException(String message) {
+	public ChangesAlreadyExecutedException(String message) {
 		super(message);
 	}
 
-	public ChangesAlreadyComittedException(Throwable cause) {
+	public ChangesAlreadyExecutedException(Throwable cause) {
 		super(cause);
 	}
 

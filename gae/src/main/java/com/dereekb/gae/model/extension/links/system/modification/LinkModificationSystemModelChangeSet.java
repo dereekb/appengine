@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModelMismatchException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.LinkModelMismatchException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**
@@ -17,11 +17,19 @@ public interface LinkModificationSystemModelChangeSet {
 	 * @return {@code true} if all changes are optional.
 	 */
 	public boolean isOptional();
-	
+
 	/**
 	 * Sets all pairs within this change set as skipped.
 	 */
 	public void setSkipped();
+
+	/**
+	 * Sets all pairs within this change set as failed.
+	 * 
+	 * @param failure
+	 *            {@link LinkModificationPairFailure}. Never {@code null}.
+	 */
+	public void setFailure(LinkModificationPairFailure failure);
 
 	/**
 	 * Creates a new instance that is linked to the specific model.

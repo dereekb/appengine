@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.links.system.modification;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResultSet;
-import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UndoChangesAlreadyExecutedException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 

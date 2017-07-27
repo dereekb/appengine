@@ -1,11 +1,12 @@
-package com.dereekb.gae.model.extension.links.system.modification.exception;
+package com.dereekb.gae.model.extension.links.system.modification.exception.request;
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
  * {@link LinkModificationSystemRequestException} thrown by {@link LinkModificationSystemInterface}
- * for invalid requests.
+ * for invalid requests (requests that can be trivially checked for 
  * 
  * @author dereekb
  *
@@ -25,10 +26,15 @@ public class InvalidLinkModificationSystemRequestException extends LinkModificat
 		super(request, message);
 	}
 
+	// MARK: ApiLinkSystemException
 	@Override
 	public ApiResponseError asResponseError() {
-		// TODO Auto-generated method stub
-		return null;
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE, ERROR_TITLE);
+		
+	
+		
+		
+		return error;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.links.system.modification.exception;
+package com.dereekb.gae.model.extension.links.system.modification.exception.internal;
 
 /**
  * Thrown in cases where there is no undo action to perform.
@@ -6,7 +6,7 @@ package com.dereekb.gae.model.extension.links.system.modification.exception;
  * @author dereekb
  *
  */
-public class NoUndoChangesException extends RuntimeException {
+public class NoUndoChangesException extends InternalLinkModificationSystemException {
 
 	private static final long serialVersionUID = 1L;
 

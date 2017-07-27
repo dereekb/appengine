@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  */
 public interface LinkModificationSystemRequest
         extends TypedLinkSystemComponent {
-
+	
 	/**
 	 * Returns the link name.
 	 * 

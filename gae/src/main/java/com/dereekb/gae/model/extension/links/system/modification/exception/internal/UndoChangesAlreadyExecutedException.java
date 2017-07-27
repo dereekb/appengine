@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.links.system.modification.exception;
+package com.dereekb.gae.model.extension.links.system.modification.exception.internal;
 
 /**
  * Thrown in cases where undo changes have already been performed.
@@ -6,7 +6,7 @@ package com.dereekb.gae.model.extension.links.system.modification.exception;
  * @author dereekb
  *
  */
-public class UndoChangesAlreadyExecutedException extends RuntimeException {
+public class UndoChangesAlreadyExecutedException extends InternalLinkModificationSystemException {
 
 	private static final long serialVersionUID = 1L;
 

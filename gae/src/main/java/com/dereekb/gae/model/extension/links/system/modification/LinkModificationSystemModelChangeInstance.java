@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
-import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.NoUndoChangesException;
 
 /**
  * An idempotent change instance for a single model that can applied and undone.

@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemChangesResult;
@@ -16,11 +15,12 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemEntry;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkSizeLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.failure.LinkModificationFailedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.LinkModificationSystemInstanceAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UnexpectedLinkModificationSystemChangeException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkSizeLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemDelegateImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemEntryImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemImpl;
@@ -110,11 +110,11 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * @throws ConflictingLinkModificationSystemRequestException 
 	 * @throws UnavailableLinkModelException 
 	 * @throws UnavailableLinkException 
-	 * @throws FailedLinkModificationSystemChangeException 
+	 * @throws UnexpectedLinkModificationSystemChangeException 
 	 * @throws LinkModificationSystemInstanceAlreadyRunException 
 	 */
 	@Test
-	public void testBidirectionalManyToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testBidirectionalManyToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -218,11 +218,11 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * @throws ConflictingLinkModificationSystemRequestException 
 	 * @throws UnavailableLinkModelException 
 	 * @throws UnavailableLinkException 
-	 * @throws FailedLinkModificationSystemChangeException 
+	 * @throws UnexpectedLinkModificationSystemChangeException 
 	 * @throws LinkModificationSystemInstanceAlreadyRunException 
 	 */
 	@Test
-	public void testBidirectionalOneToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testBidirectionalOneToManyLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -327,11 +327,11 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * @throws ConflictingLinkModificationSystemRequestException 
 	 * @throws UnavailableLinkModelException 
 	 * @throws UnavailableLinkException 
-	 * @throws FailedLinkModificationSystemChangeException 
+	 * @throws UnexpectedLinkModificationSystemChangeException 
 	 * @throws LinkModificationSystemInstanceAlreadyRunException 
 	 */
 	@Test
-	public void testBidirectionalOneToOneLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testBidirectionalOneToOneLinkingAndUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -381,7 +381,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * Test unlinking from a model that has been deleted does not result in an UnavailableLinkModelException exception.
 	 */
 	@Test
-	public void testOptionalUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testOptionalUnlinking() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -437,7 +437,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * Test unlinking from a model that has been deleted does not result in an UnavailableLinkModelException exception.
 	 */
 	@Test
-	public void testLinkingUnavailableModels() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testLinkingUnavailableModels() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 		
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -455,13 +455,8 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		try {
 			LinkModificationSystemChangesResult result = instance.applyChanges();
 			Assert.fail();
-		} catch (AtomicOperationException e) {
-			//Assert.assertTrue(e.getReason() == AtomicOperationExceptionReason.UNAVAILABLE);
-			
-			// TODO: Assert a specific type of exception...
-			
-			//Throwable cause = e.getCause();
-			//Assert.assertTrue(UnavailableModelException.class.isAssignableFrom(cause.getClass()));
+		} catch (LinkModificationFailedException e) {
+			Assert.assertTrue(e.getFailedRequests().contains(linkRequest));
 		} catch (Exception e) {
 			throw e;
 		}
@@ -474,10 +469,10 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * @throws ConflictingLinkModificationSystemRequestException
 	 * @throws InvalidLinkModificationSystemRequestException
 	 * @throws LinkModificationSystemInstanceAlreadyRunException
-	 * @throws FailedLinkModificationSystemChangeException
+	 * @throws UnexpectedLinkModificationSystemChangeException
 	 */
 	@Test
-	public void testLinkingToUnavailableModelFailsAndUndoIsProcessed() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testLinkingToUnavailableModelFailsAndUndoIsProcessed() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -506,8 +501,9 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		try {
 			LinkModificationSystemChangesResult result = instance.applyChanges();
 			Assert.fail();
-		} catch (AtomicOperationException e) {
-			
+		} catch (LinkModificationFailedException e) {
+			Assert.assertFalse(e.getFailedRequests().contains(childrenLinkRequest));
+			Assert.assertTrue(e.getFailedRequests().contains(unavailableLinkRequest));
 		}
 		
 		// Assert models were not linked after failure.
@@ -519,7 +515,6 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		for (TestLinkModelA child : children) {
 			Assert.assertTrue(child.getPrimaryKey() == null);
 		}
-		
 	}
 
 	/**
@@ -529,10 +524,10 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * @throws ConflictingLinkModificationSystemRequestException
 	 * @throws InvalidLinkModificationSystemRequestException
 	 * @throws LinkModificationSystemInstanceAlreadyRunException
-	 * @throws FailedLinkModificationSystemChangeException
+	 * @throws UnexpectedLinkModificationSystemChangeException
 	 */
 	@Test
-	public void testAttemptingToLinkManyToSizeOneLinkFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testAttemptingToLinkManyToSizeOneLinkFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -565,10 +560,10 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * @throws ConflictingLinkModificationSystemRequestException
 	 * @throws InvalidLinkModificationSystemRequestException
 	 * @throws LinkModificationSystemInstanceAlreadyRunException
-	 * @throws FailedLinkModificationSystemChangeException
+	 * @throws UnexpectedLinkModificationSystemChangeException
 	 */
 	@Test
-	public void testAttemptingToUseAddOrRemoveOnSizeOneLinkFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testAttemptingToUseAddOrRemoveOnSizeOneLinkFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -602,7 +597,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * I.E. Two changes to the primary link on the same TestModelA cannot be performed.
 	 */
 	@Test
-	public void testAttemptingToUsePerformMultipleConcurrentSameModelLinkModificationsFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testAttemptingToUsePerformMultipleConcurrentSameModelLinkModificationsFails() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -635,7 +630,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * Performs an undo after performing the changes to a one to one link to see if the change properly reverses.
 	 */
 	@Test
-	public void testUndoForOneToOneLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testUndoForOneToOneLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -682,7 +677,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * Performs an undo after performing the changes to a one to many link to see if the change properly reverses.
 	 */
 	@Test
-	public void testUndoForOneToManyLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testUndoForOneToManyLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 
@@ -734,7 +729,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	 * Performs an undo after performing the changes to a many to many link to see if the change properly reverses.
 	 */
 	@Test
-	public void testUndoForManyToManyLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, FailedLinkModificationSystemChangeException {
+	public void testUndoForManyToManyLink() throws UnavailableLinkException, UnavailableLinkModelException, ConflictingLinkModificationSystemRequestException, InvalidLinkModificationSystemRequestException, LinkModificationSystemInstanceAlreadyRunException, UnexpectedLinkModificationSystemChangeException {
 
 		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
 

@@ -222,12 +222,12 @@ public final class ModelKey
 		return values;
 	}
 
-	public static List<String> readStringKeys(Iterable<? extends UniqueModel> models) {
+	public static List<String> readStringKeys(Iterable<? extends Keyed<ModelKey>> models) {
 		List<String> ids = new ArrayList<>();
 
 		if (models != null) {
-			for (UniqueModel model : models) {
-				ModelKey key = model.getModelKey();
+			for (Keyed<ModelKey> model : models) {
+				ModelKey key = model.keyValue();
 
 				if (key != null) {
 					String id = key.keyAsString();

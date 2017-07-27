@@ -14,11 +14,11 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Unavai
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.ChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.LinkModificationSystemInstanceAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UnexpectedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemInstanceOptionsImpl;
 
 /**
@@ -78,7 +78,7 @@ public class LinkServiceImpl
 		} catch (LinkModificationSystemInstanceAlreadyRunException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (FailedLinkModificationSystemChangeException e) {
+		} catch (UnexpectedLinkModificationSystemChangeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

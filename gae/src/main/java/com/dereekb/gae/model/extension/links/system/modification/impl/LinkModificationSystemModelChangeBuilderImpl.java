@@ -12,8 +12,8 @@ import com.dereekb.gae.model.extension.links.system.modification.LinkModificatio
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
 import com.dereekb.gae.model.extension.links.system.modification.components.impl.LinkModificationResultImpl;
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModelMismatchException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.LinkModelMismatchException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.NoUndoChangesException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLink;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;

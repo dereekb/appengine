@@ -2,8 +2,8 @@ package com.dereekb.gae.model.extension.links.system.modification;
 
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.TooManyChangeKeysException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.TooManyChangeKeysException;
 
 /**
  * {@link LinkModificationSystemRequestValidator} instance.

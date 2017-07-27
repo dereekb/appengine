@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.links.system.modification.exception;
+package com.dereekb.gae.model.extension.links.system.modification.exception.internal;
 
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;

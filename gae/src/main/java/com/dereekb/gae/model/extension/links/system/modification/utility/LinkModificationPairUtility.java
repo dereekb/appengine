@@ -6,10 +6,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairFailureReason;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairState;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModification;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.utilities.collections.map.MapUtility;
 
 public class LinkModificationPairUtility {
@@ -43,6 +46,22 @@ public class LinkModificationPairUtility {
 		HashMapWithList<ModelKey, LinkModificationPair> keyedMap = MapUtility
 		        .makeHashMapWithList(linkModificationPairs);
 		return keyedMap;
+	}
+	
+	public static HashMapWithSet<LinkModificationPairFailureReason, LinkModificationPair> buildPairFailureReasonsMap(Iterable<? extends LinkModificationPair> pairs) {
+		
+		HashMapWithSet<LinkModificationPairFailureReason, LinkModificationPair> pairReasons = new HashMapWithSet<LinkModificationPairFailureReason, LinkModificationPair>(); 
+
+		for (LinkModificationPair pair : pairs) {
+			if (pair.getState() == LinkModificationPairState.FAILED) {
+				LinkModificationPairFailureReason reason = pair.getFailure().getReason();
+				pairReasons.add(reason, pair);
+			} else {
+				pairReasons.add(LinkModificationPairFailureReason.NONE, pair);
+			}
+		}
+		
+		return pairReasons;
 	}
 	
 }

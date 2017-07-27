@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.links.system.modification.exception;
+package com.dereekb.gae.model.extension.links.system.modification.exception.request;
 
 import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;

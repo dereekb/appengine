@@ -1,13 +1,13 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyExecutedException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.ConflictingLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.FailedLinkModificationSystemChangeException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.InvalidLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModificationSystemInstanceAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.failure.LinkModificationFailedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.ChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.LinkModificationSystemInstanceAlreadyRunException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UnexpectedLinkModificationSystemChangeException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkModificationSystemRequestException;
 
 /**
  * {@link LinkModificationSystem} instance that can perform changes on models.
@@ -23,7 +23,7 @@ public interface LinkModificationSystemInstance {
 	 * @return {@link LinkModificationSystemInstance}.
 	 */
 	public LinkModificationSystemInstanceOptions getOptions();
-	
+
 	/**
 	 * Adds a new request to be performed on this instance.
 	 * <p>
@@ -48,15 +48,18 @@ public interface LinkModificationSystemInstance {
 	 * <p>
 	 * Changes are automatically committed if configured as such by the options.
 	 * 
-	 * @throws AtomicOperationException thrown if one or more requests fails and this is configured to execute atomically.
-	 * @throws FailedLinkModificationSystemChangeException
+	 * @throws LinkModificationFailedException
+	 *             thrown if one or more requests fails and this is configured
+	 *             to execute atomically.
+	 * @throws UnexpectedLinkModificationSystemChangeException
 	 *             thrown if an issue is encountered while applying changes.
 	 * @throws LinkModificationSystemInstanceAlreadyRunException
-	 *             thrown if {@link #applyChangesAndCommit()} has already been called.
+	 *             thrown if {@link #applyChangesAndCommit()} has already been
+	 *             called.
 	 */
 	public LinkModificationSystemChangesResult applyChanges()
-	        throws AtomicOperationException,
-	        	FailedLinkModificationSystemChangeException,
+	        throws LinkModificationFailedException,
+	            UnexpectedLinkModificationSystemChangeException,
 	            LinkModificationSystemInstanceAlreadyRunException;
 
 }

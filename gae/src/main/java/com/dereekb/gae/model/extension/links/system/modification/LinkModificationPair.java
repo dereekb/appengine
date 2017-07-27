@@ -11,11 +11,12 @@ import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
  * @author dereekb
  *
  */
-public interface LinkModificationPair extends AlwaysKeyed<ModelKey>, LinkModificationReference {
+public interface LinkModificationPair
+        extends AlwaysKeyed<ModelKey>, LinkModificationReference {
 
 	/**
 	 * Returns the pair state.
-	 *  
+	 * 
 	 * @return {@link LinkModificationPairState}. Never {@code null}.
 	 */
 	public LinkModificationPairState getState();
@@ -30,7 +31,8 @@ public interface LinkModificationPair extends AlwaysKeyed<ModelKey>, LinkModific
 	/**
 	 * Sets the result.
 	 * 
-	 * @param result {@link LinkModificationResult}. Never {@code null}.
+	 * @param result
+	 *            {@link LinkModificationResult}. Never {@code null}.
 	 */
 	public void setLinkModificationResult(LinkModificationResult result);
 
@@ -44,7 +46,8 @@ public interface LinkModificationPair extends AlwaysKeyed<ModelKey>, LinkModific
 	/**
 	 * Sets the undo result.
 	 * 
-	 * @param result {@link LinkModificationResult}. Never {@code null}.
+	 * @param result
+	 *            {@link LinkModificationResult}. Never {@code null}.
 	 */
 	public void setUndoResult(LinkModificationResult result);
 
@@ -52,5 +55,21 @@ public interface LinkModificationPair extends AlwaysKeyed<ModelKey>, LinkModific
 	 * Sets the state as skipped.
 	 */
 	public void setSkipped();
+
+	/**
+	 * Returns the failure if {@link #getState()} returns
+	 * {@link LinkModificationPairState#FAILED}.
+	 * 
+	 * @return {@link LinkModificationPairFailure}. Never {@code null} if failed.
+	 */
+	public LinkModificationPairFailure getFailure();
+
+	/**
+	 * Sets the state as failed.
+	 * 
+	 * @param failure
+	 *            {@link LinkModificationPairFailure}. Never {@code null}.
+	 */
+	public void setFailure(LinkModificationPairFailure failure);
 
 }

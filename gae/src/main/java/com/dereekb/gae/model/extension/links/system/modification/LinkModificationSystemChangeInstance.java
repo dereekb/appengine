@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
-import com.dereekb.gae.model.extension.links.system.modification.exception.ChangesAlreadyComittedException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.UndoChangesAlreadyExecutedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.ChangesAlreadyComittedException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UndoChangesAlreadyExecutedException;
 
 /**
  * Abstract interface that can mark all changes as completed, or queue up an

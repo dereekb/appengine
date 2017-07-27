@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
-import com.dereekb.gae.model.extension.links.system.modification.exception.LinkModelMismatchException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.LinkModelMismatchException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**

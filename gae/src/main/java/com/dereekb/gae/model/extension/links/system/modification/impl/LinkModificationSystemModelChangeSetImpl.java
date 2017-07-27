@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairFailure;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChange;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeInstanceSet;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemModelChangeSet;
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
-import com.dereekb.gae.model.extension.links.system.modification.exception.NoUndoChangesException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.internal.NoUndoChangesException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkModel;
 
 /**
@@ -60,6 +61,14 @@ public class LinkModificationSystemModelChangeSetImpl
 			pair.setSkipped();
 		}
 	} 
+
+	@Override
+	public void setFailure(LinkModificationPairFailure failure) {
+		for (LinkModificationSystemModelChange change : this.changes) {
+			LinkModificationPair pair = change.getPair();
+			pair.setFailure(failure);
+		}
+	}
 
 	@Override
 	public LinkModificationSystemModelChangeInstanceSet makeInstanceWithModel(MutableLinkModel linkModel) {

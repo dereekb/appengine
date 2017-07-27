@@ -57,7 +57,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	private TaskRequestSender<T> reviewTaskSender;
 
 	private LinkModificationSystemModelChangeBuilder changeBuilder = LinkModificationSystemModelChangeBuilderImpl.SINGLETON;
-	
+
 	public LinkModificationSystemEntryImpl(MutableLinkModelAccessor<T> accessor,
 	        Updater<T> updater,
 	        TaskRequestSender<T> reviewTaskSender) {
@@ -70,51 +70,51 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	public MutableLinkModelAccessor<T> getAccessor() {
 		return this.accessor;
 	}
-	
+
 	public void setAccessor(MutableLinkModelAccessor<T> accessor) {
 		if (accessor == null) {
 			throw new IllegalArgumentException("accessor cannot be null.");
 		}
-	
+
 		this.accessor = accessor;
 	}
-	
+
 	public Updater<T> getUpdater() {
 		return this.updater;
 	}
-	
+
 	public void setUpdater(Updater<T> updater) {
 		if (updater == null) {
 			throw new IllegalArgumentException("updater cannot be null.");
 		}
-	
+
 		this.updater = updater;
 	}
 
 	public TaskRequestSender<T> getReviewTaskSender() {
 		return this.reviewTaskSender;
 	}
-	
+
 	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) {
 		if (reviewTaskSender == null) {
 			throw new IllegalArgumentException("reviewTaskSender cannot be null.");
 		}
-	
+
 		this.reviewTaskSender = reviewTaskSender;
 	}
 
 	// MARK: LinkModificationSystemEntry
 	@Override
 	public FilterResults<ModelKey> filterModelsExist(Set<ModelKey> keys) {
-		
+
 		ReadResponse<ModelKey> response = this.accessor.readExistingModels(keys);
-		
+
 		FilterResults<ModelKey> filterResults = new FilterResults<ModelKey>();
 		filterResults.addAll(FilterResult.PASS, response.getModels());
-		
+
 		Collection<ModelKey> failed = response.getFailed();
 		filterResults.addAll(FilterResult.FAIL, failed);
-		
+
 		return filterResults;
 	}
 
@@ -126,9 +126,9 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 	// MARK: Internal
 	protected class LinkModificationSystemEntryInstanceImpl
 	        implements LinkModificationSystemEntryInstance {
-		
+
 		private LinkModificationSystemEntryInstanceConfig config;
-		
+
 		public LinkModificationSystemEntryInstanceImpl(LinkModificationSystemEntryInstanceConfig config) {
 			super();
 			this.config = config;
@@ -142,13 +142,13 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			if (config == null) {
 				throw new IllegalArgumentException("config cannot be null.");
 			}
-		
+
 			this.config = config;
 		}
 
 		// MARK: LinkModificationSystemEntryInstance
 		@Override
-		public void applyChanges() {
+		public void applyChanges() throws AtomicOperationException {
 			DoChangesModificationBatchSet doChanges = new DoChangesModificationBatchSet();
 			doChanges.doAction();
 		}
@@ -166,7 +166,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 		}
 
 		@Override
-		public void runChanges(LinkModificationChangeType changeType) {
+		public void runChanges(LinkModificationChangeType changeType) throws AtomicOperationException {
 			switch (changeType) {
 				case COMMIT:
 					this.commitChanges();
@@ -186,26 +186,27 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 		protected abstract class AbstractModicationRunner {
 
 			protected final List<LinkModificationPair> filterApplicablePairs() {
-				List<LinkModificationPair> pairs = LinkModificationSystemEntryInstanceImpl.this.config.getModificationPairs();
+				List<LinkModificationPair> pairs = LinkModificationSystemEntryInstanceImpl.this.config
+				        .getModificationPairs();
 				List<LinkModificationPair> filteredPairs = new ArrayList<LinkModificationPair>();
-				
+
 				for (LinkModificationPair pair : pairs) {
 					if (this.isApplicableForModification(pair)) {
 						filteredPairs.add(pair);
 					}
 				}
-				
+
 				return filteredPairs;
 			}
 
 			protected abstract boolean isApplicableForModification(LinkModificationPair pair);
-			
+
 		}
-		
+
 		protected abstract class AbstractModificationBatchSet extends AbstractModicationRunner {
-			
+
 			private final List<ModificationBatch> batches;
-			
+
 			public AbstractModificationBatchSet() {
 				this.batches = this.makeBatches();
 			}
@@ -213,8 +214,9 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			private final List<ModificationBatch> makeBatches() {
 				List<LinkModificationPair> applicablePairs = this.filterApplicablePairs();
 
-				HashMapWithList<ModelKey, LinkModificationPair> keyedMap = LinkModificationPairUtility.buildKeyedChangesMap(applicablePairs);
-				
+				HashMapWithList<ModelKey, LinkModificationPair> keyedMap = LinkModificationPairUtility
+				        .buildKeyedChangesMap(applicablePairs);
+
 				List<List<ModelKey>> keyBatches = LinkModificationSystemEntryImpl.this.PARTITIONER
 				        .makePartitions(keyedMap.keySet());
 
@@ -231,29 +233,37 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 					batches.add(batch);
 				}
-				
+
 				return batches;
 			}
-			
+
 			public final void doAction() {
 				this.doActionOnModel(this.batches);
 			}
-			
+
 			protected abstract void doActionOnModel(List<ModificationBatch> batches);
 
-			protected void assertUnavailableModelsAreOptional(Collection<ModelKey> missingModels, Map<ModelKey, LinkModificationSystemModelChangeSet> changeInstances)
+			protected void assertAndFailNonOptionalRequests(Collection<ModelKey> missingModels,
+			                                                Map<ModelKey, LinkModificationSystemModelChangeSet> changeInstances)
 			        throws AtomicOperationException {
 				Set<ModelKey> nonOptionalKeys = new HashSet<ModelKey>();
-				
+
 				for (ModelKey key : missingModels) {
 					LinkModificationSystemModelChangeSet changeSet = changeInstances.get(key);
 
 					if (changeSet.isOptional() == false) {
-						 nonOptionalKeys.add(key);
+						
+						// Add failed to set.
+						nonOptionalKeys.add(key);
+
+						// Fail the change set.
+						changeSet.setFailure(LinkModificationPairFailureImpl.unavailable());
 					}
 				}
-				
-				if (nonOptionalKeys.isEmpty() == false) {
+
+				boolean atomic = LinkModificationSystemEntryInstanceImpl.this.config.isAtomic();
+
+				if (nonOptionalKeys.isEmpty() == false && atomic) {
 					throw new AtomicOperationException(nonOptionalKeys, AtomicOperationExceptionReason.UNAVAILABLE);
 				}
 			}
@@ -266,18 +276,17 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 				}
 			}
 
-			
 		}
-		
+
 		protected abstract class AbstractChangesDoChangesModificationBatchSet extends AbstractModificationBatchSet {
-			
+
 			@Override
 			protected final void doActionOnModel(List<ModificationBatch> batches) {
 				for (ModificationBatch batch : batches) {
 					this.doAction(batch);
 				}
 			}
-			
+
 			private void doAction(ModificationBatch batch) {
 				final Map<ModelKey, LinkModificationSystemModelChangeSet> changeInstances = batch.getChangeInstances();
 
@@ -288,16 +297,18 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 
 					@Override
 					public void vrun() {
-						
+
 						ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = LinkModificationSystemEntryImpl.this.accessor
 						        .readMutableLinkModels(request);
 
 						Collection<ModelKey> failed = response.getFailed();
 
 						// Assert unavailable models are optional, otherwise thrown an exception.
-						if (failed.isEmpty() == false) {
-							AbstractChangesDoChangesModificationBatchSet.this.assertUnavailableModelsAreOptional(failed, changeInstances);
-							AbstractChangesDoChangesModificationBatchSet.this.skipInstancesForModels(failed, changeInstances);
+						if (failed.isEmpty() == false && this.doAvailabilityAssertions()) {
+							AbstractChangesDoChangesModificationBatchSet.this.assertAndFailNonOptionalRequests(failed,
+							        changeInstances);
+							AbstractChangesDoChangesModificationBatchSet.this.skipInstancesForModels(failed,
+							        changeInstances);
 						}
 
 						List<T> modifiedModels = new ArrayList<T>();
@@ -307,9 +318,11 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 							ModelKey modelKey = linkModel.getModelKey();
 
 							LinkModificationSystemModelChangeSet changeSet = changeInstances.get(modelKey);
-							LinkModificationSystemModelChangeInstanceSet instanceSet = changeSet.makeInstanceWithModel(linkModel);
-							
-							boolean modified = AbstractChangesDoChangesModificationBatchSet.this.doActionOnModel(instanceSet);
+							LinkModificationSystemModelChangeInstanceSet instanceSet = changeSet
+							        .makeInstanceWithModel(linkModel);
+
+							boolean modified = AbstractChangesDoChangesModificationBatchSet.this
+							        .doActionOnModel(instanceSet);
 
 							if (modified) {
 								modifiedModels.add(pair.getModel());
@@ -320,11 +333,15 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 						LinkModificationSystemEntryImpl.this.updater.update(modifiedModels);
 					}
 
+					protected boolean doAvailabilityAssertions() {
+						return true;
+					}
+
 				});
 			}
 
 			protected abstract boolean doActionOnModel(LinkModificationSystemModelChangeInstanceSet instanceSet);
-			
+
 		}
 
 		protected class DoChangesModificationBatchSet extends AbstractChangesDoChangesModificationBatchSet {
@@ -332,7 +349,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			@Override
 			protected boolean isApplicableForModification(LinkModificationPair pair) {
 				boolean isApplicable = false;
-				
+
 				switch (pair.getState()) {
 					case INIT:
 					case UNDONE:
@@ -343,7 +360,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 						isApplicable = false;
 						break;
 				}
-				
+
 				return isApplicable;
 			}
 
@@ -351,7 +368,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			protected boolean doActionOnModel(LinkModificationSystemModelChangeInstanceSet instanceSet) {
 				return instanceSet.applyChanges();
 			}
-			
+
 		}
 
 		protected class UndoChangesModificationBatchSet extends AbstractChangesDoChangesModificationBatchSet {
@@ -359,7 +376,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			@Override
 			protected boolean isApplicableForModification(LinkModificationPair pair) {
 				boolean isApplicable = false;
-				
+
 				switch (pair.getState()) {
 					case INIT:
 					case UNDONE:
@@ -370,7 +387,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 						isApplicable = true;
 						break;
 				}
-				
+
 				return isApplicable;
 			}
 
@@ -378,7 +395,11 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 			protected boolean doActionOnModel(LinkModificationSystemModelChangeInstanceSet instanceSet) {
 				return instanceSet.undoChanges();
 			}
-			
+
+			protected boolean doAvailabilityAssertions() {
+				return false;	// Don't assert availability.
+			}
+
 		}
 
 		protected class CommitChangesModificationBatchSet extends AbstractModicationRunner {
@@ -393,18 +414,19 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 				Set<ModelKey> keys = ModelKey.makeModelKeySet(pairs);
 
 				ReadRequest request = new KeyReadRequest(keys, false);
-				ReadResponse<? extends MutableLinkModelAccessorPair<T>> readResponse = LinkModificationSystemEntryImpl.this.accessor.readMutableLinkModels(request);
-				
+				ReadResponse<? extends MutableLinkModelAccessorPair<T>> readResponse = LinkModificationSystemEntryImpl.this.accessor
+				        .readMutableLinkModels(request);
+
 				List<T> models = new ArrayList<T>();
-				
+
 				for (MutableLinkModelAccessorPair<T> readPair : readResponse.getModels()) {
 					T model = readPair.getModel();
 					models.add(model);
 				}
-				
+
 				LinkModificationSystemEntryImpl.this.reviewTaskSender.sendTasks(models);
 			}
-			
+
 		}
 
 	}
@@ -420,7 +442,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 		public Map<ModelKey, LinkModificationSystemModelChangeSet> getChangeInstances() {
 			return this.changeInstances;
 		}
-		
+
 		// MARK: Internal
 		public void addModificationSet(ModelKey key,
 		                               List<LinkModificationPair> modifications) {
