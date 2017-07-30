@@ -2,11 +2,10 @@ package com.dereekb.gae.model.extension.links.system.modification.exception.requ
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
  * {@link LinkModificationSystemRequestException} thrown by {@link LinkModificationSystemInterface}
- * for invalid requests (requests that can be trivially checked for 
+ * for invalid requests (requests that can be trivially checked for validity).
  * 
  * @author dereekb
  *
@@ -29,12 +28,7 @@ public class InvalidLinkModificationSystemRequestException extends LinkModificat
 	// MARK: ApiLinkSystemException
 	@Override
 	public ApiResponseError asResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE, ERROR_TITLE);
-		
-	
-		
-		
-		return error;
+		return super.makeResponseError(ERROR_CODE, ERROR_TITLE);
 	}
 
 }

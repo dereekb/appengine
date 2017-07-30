@@ -14,21 +14,21 @@ public class ConflictingLinkModificationSystemRequestException extends LinkModif
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String ERROR_CODE = "CONFLICTING_LINK_MODIFICATION";
+	public static final String ERROR_TITLE = "Conflicting Link Modification";
+
 	public ConflictingLinkModificationSystemRequestException(LinkModificationSystemRequest request) {
 		super(request);
 	}
-
+ 
 	public ConflictingLinkModificationSystemRequestException(LinkModificationSystemRequest request, String message) {
 		super(request, message);
 	}
 
-	// MARK: ApiResponseErrorConvertable
+	// MARK: ApiLinkSystemException
 	@Override
 	public ApiResponseError asResponseError() {
-		
-		
-		
-		return null;
+		return super.makeResponseError(ERROR_CODE, ERROR_TITLE);
 	}
 	
 }

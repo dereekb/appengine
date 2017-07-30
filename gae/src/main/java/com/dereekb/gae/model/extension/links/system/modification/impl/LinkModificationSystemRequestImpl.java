@@ -17,6 +17,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  */
 public class LinkModificationSystemRequestImpl
         implements LinkModificationSystemRequest {
+	
+	private ModelKey requestKey;
 
 	private String linkName;
 	private String linkModelType;
@@ -132,6 +134,19 @@ public class LinkModificationSystemRequestImpl
 		}
 
 		this.keys = new HashSet<String>(keys);
+	}
+
+	@Override
+	public ModelKey keyValue() {
+		return this.requestKey;
+	}
+
+	public ModelKey getRequestKey() {
+		return this.requestKey;
+	}
+	
+	public void setRequestKey(ModelKey requestKey) {
+		this.requestKey = requestKey;
 	}
 
 }

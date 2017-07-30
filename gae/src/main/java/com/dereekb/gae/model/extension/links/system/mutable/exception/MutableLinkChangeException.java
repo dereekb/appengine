@@ -1,17 +1,17 @@
 package com.dereekb.gae.model.extension.links.system.mutable.exception;
 
-import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
- * {@link ApiLinkException} thrown if modifying a link fails.
+ * {@link ApiLinkSystemException} thrown if modifying a link fails.
  * 
  * @author dereekb
  *
  */
-public class MutableLinkChangeException extends ApiLinkException {
+public class MutableLinkChangeException extends ApiLinkSystemException {
 
 	private static final long serialVersionUID = 1L;
 

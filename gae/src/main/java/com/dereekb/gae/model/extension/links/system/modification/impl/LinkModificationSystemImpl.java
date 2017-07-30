@@ -45,12 +45,13 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.inter
 import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UndoChangesAlreadyExecutedException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UnexpectedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.IllegalLinkChangeLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkSizeLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.request.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationPairUtility;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -957,7 +958,7 @@ public class LinkModificationSystemImpl
 		private void validateOneLink(LinkInfo linkInfo,
 		                             LinkModificationSystemRequest request)
 		        throws TooManyChangeKeysException,
-		            InvalidLinkSizeLinkModificationSystemRequestException {
+		            IllegalLinkChangeLinkModificationSystemRequestException {
 			this.assertOneLinkKeysCount(request);
 			this.assertOneLinkChangeSize(request);
 		}
@@ -972,11 +973,12 @@ public class LinkModificationSystemImpl
 		}
 
 		protected void assertOneLinkChangeSize(LinkModificationSystemRequest request)
-		        throws InvalidLinkSizeLinkModificationSystemRequestException {
-			switch (request.getLinkChangeType()) {
+		        throws IllegalLinkChangeLinkModificationSystemRequestException {
+			MutableLinkChangeType changeType = request.getLinkChangeType();
+			switch (changeType) {
 				case ADD:
 				case REMOVE:
-					throw new InvalidLinkSizeLinkModificationSystemRequestException(request);
+					throw new IllegalLinkChangeLinkModificationSystemRequestException(request, changeType.toString() + " not allowed for this size link.");
 				case SET:
 				case CLEAR:
 				default:

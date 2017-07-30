@@ -5,6 +5,7 @@ import java.util.Set;
 import com.dereekb.gae.model.extension.links.system.components.TypedLinkSystemComponent;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
 
 /**
  * {@link LinkModificationSystemInstance} request to a model's links.
@@ -13,7 +14,15 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  */
 public interface LinkModificationSystemRequest
-        extends TypedLinkSystemComponent {
+        extends TypedLinkSystemComponent, Keyed<ModelKey> {
+	
+	/**
+	 * Returns a unique optional key for this request.
+	 * 
+	 * @return {@link ModelKey}. Can be {@code null}.
+	 */
+	@Override
+	public ModelKey keyValue();
 	
 	/**
 	 * Returns the link name.

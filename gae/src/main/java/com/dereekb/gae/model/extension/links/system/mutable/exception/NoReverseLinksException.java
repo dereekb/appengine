@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.mutable.exception;
 
-import com.dereekb.gae.model.extension.links.exception.LinkException;
+import com.dereekb.gae.model.extension.links.system.components.exceptions.LinkSystemException;
 
 /**
  * Thrown when a {@link Link} is unavailable.
@@ -8,7 +8,7 @@ import com.dereekb.gae.model.extension.links.exception.LinkException;
  * @author dereekb
  *
  */
-public class NoReverseLinksException extends LinkException {
+public class NoReverseLinksException extends LinkSystemException {
 
 	private static final long serialVersionUID = 1L;
 

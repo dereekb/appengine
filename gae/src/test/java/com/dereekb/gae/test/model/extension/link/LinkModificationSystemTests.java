@@ -20,7 +20,8 @@ import com.dereekb.gae.model.extension.links.system.modification.exception.inter
 import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UnexpectedLinkModificationSystemChangeException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkSizeLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.IllegalLinkChangeLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.TooManyChangeKeysException;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemDelegateImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemEntryImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemImpl;
@@ -547,7 +548,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		try {
 			instance.queueRequest(linkRequest);
 			Assert.fail();
-		} catch (InvalidLinkModificationSystemRequestException e) {
+		} catch (TooManyChangeKeysException e) {
 			
 		}
 		
@@ -585,7 +586,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		try {
 			instance.queueRequest(linkRequest);
 			Assert.fail();
-		} catch (InvalidLinkSizeLinkModificationSystemRequestException e) {
+		} catch (IllegalLinkChangeLinkModificationSystemRequestException e) {
 			
 		}
 		

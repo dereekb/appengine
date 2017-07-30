@@ -6,12 +6,12 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
- * Specific {@link MutableLinkChangeException} for links with size {@link LinkSize#ONE} that are modified with more than one key.
+ * Specific {@link MutableLinkChangeException} for links with size {@link LinkSize#ONE} that attempt to be modified with more than one key.
  * 
  * @author dereekb
  *
  */
-public class LinkChangeLinkSizeException extends MutableLinkChangeException {
+public class LinkChangeLinkSizeException extends IllegalLinkChangeException {
 
 	private static final long serialVersionUID = 1L;
 
