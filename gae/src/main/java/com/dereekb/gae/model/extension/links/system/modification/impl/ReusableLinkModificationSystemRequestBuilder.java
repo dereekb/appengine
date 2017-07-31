@@ -145,7 +145,7 @@ public class ReusableLinkModificationSystemRequestBuilder {
 		 * 
 		 * @return {@link RequestBuilderGroup}. Never {@code null}.
 		 */
-		public RequestBuilderGroup makeForPrimaryKeys(Collection<String> primaryKeys);
+		public RequestBuilderGroup makeForPrimaryKeys(Collection<String> primaryKeys) throws IllegalArgumentException;
 
 		/**
 		 * Creates a new group for the input link names.
@@ -603,9 +603,9 @@ public class ReusableLinkModificationSystemRequestBuilder {
 			this.setPrimaryKeys(primaryKeys);
 		}
 
-		public void setPrimaryKeys(Collection<String> primaryKeys) {
-			if (primaryKeys == null) {
-				throw new IllegalArgumentException("primaryKeys cannot be null.");
+		public void setPrimaryKeys(Collection<String> primaryKeys) throws IllegalArgumentException {
+			if (primaryKeys == null || primaryKeys.isEmpty()) {
+				throw new IllegalArgumentException("primaryKeys cannot be null or empty.");
 			}
 
 			this.primaryKeys = new HashSet<String>(primaryKeys);

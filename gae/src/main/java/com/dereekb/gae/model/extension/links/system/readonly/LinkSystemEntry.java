@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.readonly;
 
-import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.system.components.LimitedLinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.TypedLinkSystemComponent;
@@ -23,9 +22,9 @@ public interface LinkSystemEntry
 	public LimitedLinkModelInfo loadLinkModelInfo();
 
 	/**
-	 * Builds a new {@link LinkModelSet} for this type.
+	 * Builds a new {@link LinkModelAccessor} for this type.
 	 *
-	 * @return {@link LinkModelSet} for this type. Never {@code null}.
+	 * @return {@link LinkModelAccessor} for this type. Never {@code null}.
 	 */
 	public LinkModelAccessor makeLinkModelAccessor();
 

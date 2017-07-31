@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
-import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.system.components.SimpleLinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.impl.SimpleLinkInfoImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractMutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.MultipleMutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.MultipleMutableLinkDataDelegate;
@@ -23,7 +23,7 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyMod
 import com.googlecode.objectify.Key;
 
 /**
- * {@link LinkSystemEntry} implementation for {@link StoredImageSet}.
+ * {@link MutableLinkSystemBuilderEntry} implementation for {@link StoredImageSet}.
  *
  * @author dereekb
  *

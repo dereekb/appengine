@@ -4,14 +4,14 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.components.ReadService;
-import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractMutableLinkSystemBuilderEntry;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 /**
- * {@link LinkSystemEntry} implementation for {@link Login}.
+ * {@link MutableLinkSystemBuilderEntry} implementation for {@link Login}.
  *
  * @author dereekb
  *

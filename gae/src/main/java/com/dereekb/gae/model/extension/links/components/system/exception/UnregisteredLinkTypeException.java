@@ -1,9 +1,9 @@
 package com.dereekb.gae.model.extension.links.components.system.exception;
 
-import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
 
 /**
- * Thrown by {@link LinkSystem} with an unavailable type is requested.
+ * Thrown by {@link MutableLinkSystemBuilderEntry} with an unavailable type is requested.
  *
  * @author dereekb
  *

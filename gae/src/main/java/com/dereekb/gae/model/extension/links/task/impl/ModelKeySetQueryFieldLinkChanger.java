@@ -4,14 +4,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
-import com.dereekb.gae.model.extension.links.components.Link;
-import com.dereekb.gae.model.extension.links.components.Relation;
-import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
-import com.dereekb.gae.model.extension.links.components.model.LinkModel;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.impl.ReusableLinkModificationSystemRequestBuilder;
+import com.dereekb.gae.model.extension.links.system.modification.impl.ReusableLinkModificationSystemRequestBuilder.RequestBuilderGroup;
+import com.dereekb.gae.model.extension.links.system.modification.impl.ReusableLinkModificationSystemRequestBuilder.RequestBuilderItem;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.task.LinkModelChangeTaskFactory.ModelLinkChangeTaskDelegate;
 import com.dereekb.gae.model.extension.links.task.LinkModelChangeTaskFactoryDelegate;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeySetQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
@@ -23,7 +25,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  *
  */
 public class ModelKeySetQueryFieldLinkChanger
-        implements LinkModelChangeTaskFactoryDelegate {
+        implements LinkModelChangeTaskFactoryDelegate<Object> {
 
 	private String linkName;
 	private String queryParameter;
@@ -80,7 +82,7 @@ public class ModelKeySetQueryFieldLinkChanger
 
 	// MARK: LinkModelChangeTaskFactoryDelegate
 	@Override
-	public ModelLinkChangeTaskDelegate makeTaskDelegate(IterateTaskInput input) throws IllegalArgumentException {
+	public ModelLinkChangeTaskDelegate<Object> makeTaskDelegate(IterateTaskInput input) throws IllegalArgumentException {
 
 		Map<String, String> parameters = input.getParameters();
 		String parameter = parameters.get(this.queryParameter);
@@ -92,19 +94,30 @@ public class ModelKeySetQueryFieldLinkChanger
 
 	// MARK: Delegate
 	private class Delegate
-	        implements ModelLinkChangeTaskDelegate {
+	        implements ModelLinkChangeTaskDelegate<Object> {
 
-		private final List<ModelKey> keys;
+		private final List<String> keys;
 
 		private Delegate(List<ModelKey> keys) {
-			this.keys = keys;
+			this.keys = ModelKey.readStringKeys(keys);
 		}
 
+		// MARK: ModelLinkChangeTaskDelegate
 		@Override
-		public void modifyLinkModel(LinkModel model) throws FailedTaskException {
-			Link link = model.getLink(ModelKeySetQueryFieldLinkChanger.this.linkName);
-			Relation relation = new RelationImpl(this.keys);
-			link.removeRelation(relation);
+		public List<LinkModificationSystemRequest> makeRequestsForModels(ModelKeyListAccessor<Object> input)
+		        throws FailedTaskException {
+			
+			String linkModelType = input.getModelType();
+			List<ModelKey> primaryKeys = input.getModelKeys();
+			
+			RequestBuilderItem builder = ReusableLinkModificationSystemRequestBuilder.make(linkModelType);
+			
+			builder.setLinkName(linkModelType);
+			builder.setLinkChangeType(MutableLinkChangeType.REMOVE);
+			builder.setKeys(this.keys);
+			
+			RequestBuilderGroup builderGroup = builder.makeForPrimaryKeys(ModelKey.readStringKeys(primaryKeys));
+			return builderGroup.makeRequests();
 		}
 
 		@Override

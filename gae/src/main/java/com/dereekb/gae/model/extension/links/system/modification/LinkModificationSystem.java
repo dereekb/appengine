@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.modification;
 
+import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
+
 /**
  * Thread-safe system that safely performs changes on models.
  * <p>
@@ -8,7 +10,7 @@ package com.dereekb.gae.model.extension.links.system.modification;
  * @author dereekb
  *
  */
-public interface LinkModificationSystem {
+public interface LinkModificationSystem extends LinkSystem {
 
 	/**
 	 * Generates a new {@link LinkModificationSystemInstance}.

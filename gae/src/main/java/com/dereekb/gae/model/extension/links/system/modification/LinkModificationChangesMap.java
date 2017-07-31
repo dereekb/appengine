@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
  * @author dereekb
  *
  */
+@Deprecated
 public interface LinkModificationChangesMap {
 
 	/**

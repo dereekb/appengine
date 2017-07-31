@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.extension.links.system.readonly;
 
-import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
 
 /**
@@ -13,7 +12,7 @@ public interface LinkSystem
         extends LinkInfoSystem {
 
 	/**
-	 * Loads a {@link LinkModelSet} with the given type.
+	 * Loads a {@link LinkModelAccessor} with the given type.
 	 *
 	 * @param type
 	 *            {@link String}. Never {@code null}.

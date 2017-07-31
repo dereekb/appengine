@@ -16,6 +16,7 @@ import com.dereekb.gae.model.extension.links.system.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkModelException;
+import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationChangeType;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPair;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationPairFailure;
@@ -53,6 +54,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
+import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
@@ -109,7 +111,6 @@ public class LinkModificationSystemImpl
 	}
 
 	// MARK: LinkModificationSystem
-
 	@Override
 	public LinkModificationSystemInstance makeInstance() {
 		return this.makeInstance(null);
@@ -122,6 +123,22 @@ public class LinkModificationSystemImpl
 		}
 
 		return new LinkModificationSystemInstanceImpl(options);
+	}
+	
+	// MARK: LinkSystem
+	@Override
+	public LinkModelAccessor loadAccessor(String type) throws UnavailableLinkModelAccessorException {
+		return this.linkSystem.loadAccessor(type);
+	}
+
+	@Override
+	public Set<String> getAvailableSetTypes() {
+		return this.linkSystem.getAvailableSetTypes();
+	}
+
+	@Override
+	public LinkModelInfo loadLinkModelInfo(String type) throws UnavailableLinkModelException {
+		return this.linkSystem.loadLinkModelInfo(type);
 	}
 
 	// MARK: Instance

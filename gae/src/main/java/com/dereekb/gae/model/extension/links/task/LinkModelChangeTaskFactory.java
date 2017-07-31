@@ -3,11 +3,12 @@ package com.dereekb.gae.model.extension.links.task;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
-import com.dereekb.gae.model.extension.links.components.model.LinkModel;
-import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
-import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstanceOptions;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemUtility;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.task.Task;
@@ -26,22 +27,22 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTas
 public class LinkModelChangeTaskFactory<T extends UniqueModel>
         implements TaskQueueIterateTaskFactory<T> {
 
-	private LinkSystem system;
-	private LinkModelChangeTaskFactoryDelegate delegate;
+	private LinkModificationSystem system;
+	private LinkModelChangeTaskFactoryDelegate<T> delegate;
 
-	private boolean validate;
+	private LinkModificationSystemInstanceOptions options;
 
-	public LinkModelChangeTaskFactory(LinkSystem system, LinkModelChangeTaskFactoryDelegate delegate) {
+	public LinkModelChangeTaskFactory(LinkModificationSystem system, LinkModelChangeTaskFactoryDelegate<T> delegate) {
 		super();
 		this.setSystem(system);
 		this.setDelegate(delegate);
 	}
 
-	public LinkModelChangeTaskFactoryDelegate getDelegate() {
+	public LinkModelChangeTaskFactoryDelegate<T> getDelegate() {
 		return this.delegate;
 	}
 
-	public void setDelegate(LinkModelChangeTaskFactoryDelegate delegate) throws IllegalArgumentException {
+	public void setDelegate(LinkModelChangeTaskFactoryDelegate<T> delegate) throws IllegalArgumentException {
 		if (delegate == null) {
 			throw new IllegalArgumentException("Delegate cannot be null.");
 		}
@@ -49,30 +50,30 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 		this.delegate = delegate;
 	}
 
-	public LinkSystem getSystem() {
+	public LinkModificationSystem getSystem() {
 		return this.system;
 	}
 
-	public void setSystem(LinkSystem system) throws IllegalArgumentException {
+	public void setSystem(LinkModificationSystem system) throws IllegalArgumentException {
 		if (system == null) {
-			throw new IllegalArgumentException("LinkSystem cannot be null.");
+			throw new IllegalArgumentException("LinkModificationSystem cannot be null.");
 		}
 
 		this.system = system;
 	}
 
-	public boolean isValidate() {
-		return this.validate;
+	public LinkModificationSystemInstanceOptions getOptions() {
+		return this.options;
 	}
 
-	public void setValidate(boolean validate) {
-		this.validate = validate;
+	public void setOptions(LinkModificationSystemInstanceOptions options) {
+		this.options = options;
 	}
 
 	// MARK: TaskQueueIterateTaskFactory
 	@Override
 	public Task<ModelKeyListAccessor<T>> makeTask(IterateTaskInput input) throws FactoryMakeFailureException {
-		ModelLinkChangeTaskDelegate taskDelegate = this.delegate.makeTaskDelegate(input);
+		ModelLinkChangeTaskDelegate<T> taskDelegate = this.delegate.makeTaskDelegate(input);
 		return new LinkModelChangeTask(input.getModelType(), taskDelegate);
 	}
 
@@ -82,17 +83,17 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 	 * @author dereekb
 	 *
 	 */
-	public interface ModelLinkChangeTaskDelegate {
+	public interface ModelLinkChangeTaskDelegate<T> {
 
 		/**
-		 * Changes the input {@link LinkModel}.
+		 * Creates requests for the input {@link ModelKeyListAccessor}.
 		 * 
-		 * @param model
-		 *            {@link LinkModel}. Never {@code null}.
+		 * @param input {@link ModelKeyListAccessor}. Never {@code null}.
+		 * @return {@link List}. Never {@code null}.
 		 * @throws FailedTaskException
-		 *             thrown if the link change cannot be done.
+		 *             thrown if the requests cannot be made.
 		 */
-		public void modifyLinkModel(LinkModel model) throws FailedTaskException;
+		public List<LinkModificationSystemRequest> makeRequestsForModels(ModelKeyListAccessor<T> input) throws FailedTaskException;
 
 	}
 
@@ -106,9 +107,9 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 	        implements Task<ModelKeyListAccessor<T>> {
 
 		private final String modelType;
-		private final ModelLinkChangeTaskDelegate delegate;
+		private final ModelLinkChangeTaskDelegate<T> delegate;
 
-		public LinkModelChangeTask(String modelType, ModelLinkChangeTaskDelegate delegate) {
+		public LinkModelChangeTask(String modelType, ModelLinkChangeTaskDelegate<T> delegate) {
 			super();
 			this.modelType = modelType;
 			this.delegate = delegate;
@@ -117,17 +118,14 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 		// MARK: Task
 		@Override
 		public void doTask(ModelKeyListAccessor<T> input) throws FailedTaskException {
-			List<ModelKey> keys = input.getModelKeys();
-
-			LinkModelSet modelSet = LinkModelChangeTaskFactory.this.system.loadSet(this.modelType, keys);
-			List<LinkModel> linkModels = modelSet.getModelsForKeys(keys);
-
 			try {
-				for (LinkModel model : linkModels) {
-					this.delegate.modifyLinkModel(model);
-				}
-
-				modelSet.save(LinkModelChangeTaskFactory.this.validate);
+				List<LinkModificationSystemRequest> requests = this.delegate.makeRequestsForModels(input);
+				
+				LinkModificationSystemInstance instance = LinkModelChangeTaskFactory.this.system.makeInstance(LinkModelChangeTaskFactory.this.options);
+				
+				LinkModificationSystemUtility.queueRequests(requests, instance);
+				
+				instance.applyChanges();
 			} catch (FailedTaskException e) {
 				throw e;
 			} catch (RuntimeException e) {
@@ -144,8 +142,8 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 
 	@Override
 	public String toString() {
-		return "LinkModelChangeTaskFactory [system=" + this.system + ", delegate=" + this.delegate + ", validate="
-		        + this.validate + "]";
+		return "LinkModelChangeTaskFactory [system=" + this.system + ", delegate=" + this.delegate + ", options="
+		        + this.options + "]";
 	}
 
 }
