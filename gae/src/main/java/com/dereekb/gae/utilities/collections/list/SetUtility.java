@@ -39,7 +39,7 @@ public class SetUtility {
 		return set;
 	}
 
-	public static <T> Set<T> copy(Set<T> input) {
+	public static <T> Set<T> copy(Collection<? extends T> input) {
 		Set<T> set = new HashSet<T>();
 		
 		if (input != null) {

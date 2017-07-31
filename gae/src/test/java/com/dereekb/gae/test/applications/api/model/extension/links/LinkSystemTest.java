@@ -12,13 +12,14 @@ import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.model.extension.link.LinkSystemTests;
 
 /**
  * Tests the configured {@link LinkService}.
  *
  * @author dereekb
  *
- * @deprecated Replaced by {@link LinkSystemTests}
+ * @deprecated Replaced by {@link LinkSystemTests}.
  */
 @Deprecated
 public class LinkSystemTest extends ApiApplicationTestContext {

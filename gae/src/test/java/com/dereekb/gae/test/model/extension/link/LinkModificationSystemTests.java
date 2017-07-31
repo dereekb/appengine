@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.model.extension.link;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,12 @@ import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModifi
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemInstanceOptionsImpl;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
+import com.dereekb.gae.model.extension.links.system.modification.impl.ReusableLinkModificationSystemRequestBuilder;
+import com.dereekb.gae.model.extension.links.system.modification.impl.ReusableLinkModificationSystemRequestBuilder.RequestBuilderGroup;
+import com.dereekb.gae.model.extension.links.system.modification.impl.ReusableLinkModificationSystemRequestBuilder.RequestBuilderItem;
+import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemUtility;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChange;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChangeImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
@@ -771,6 +777,87 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 		children = this.testSystem.testLinkSystem.bEntity.get(children);
 		
 		Assert.assertTrue(a.getbChildKeys().isEmpty());
+		
+		for (TestLinkModelB child : children) {
+			Assert.assertTrue(child.getParentKeys().isEmpty());
+		}
+		
+	}
+	
+	// MARK: Utilities
+	@Test
+	public void testBuildingRequestsWithReusableLinkModificationSystemRequestBuilder() {
+
+		LinkSystemCreationInfo linkSystemInfo = this.testSystem.testLinkSystem;
+
+		// Generate Models
+		String modelType = TestLinkModelA.MODEL_ENTITY_NAME;
+		String linkName = TestLinkModelALinkSystemBuilderEntry.B_CHILDREN_LINK_NAME;
+
+		List<TestLinkModelA> parents = linkSystemInfo.aEntityGenerator.generate(5);
+		List<TestLinkModelB> children = linkSystemInfo.bEntityGenerator.generate(5);
+
+		List<String> primaryStringKeys = ModelKey.readStringKeys(parents);
+		List<String> secondaryStringKeys = ModelKey.readStringKeys(children);
+
+		RequestBuilderItem builder = ReusableLinkModificationSystemRequestBuilder.make(modelType);
+		
+		builder.setLinkChangeType(MutableLinkChangeType.ADD);
+		builder.setKeys(secondaryStringKeys);
+		builder.setLinkName(linkName);
+
+		RequestBuilderGroup builderGroup = builder.makeForPrimaryKeys(primaryStringKeys);
+		List<LinkModificationSystemRequest> requests = builderGroup.makeRequests();
+		
+		Assert.assertTrue(requests.size() == primaryStringKeys.size());
+
+		LinkModificationSystemInstance instance = this.testSystem.linkModificationSystem.makeInstance();
+
+		LinkModificationSystemUtility.queueRequests(requests, instance);
+		
+		@SuppressWarnings("unused")
+		LinkModificationSystemChangesResult result = instance.applyChanges();
+
+		// Assert models were linked
+		parents = this.testSystem.testLinkSystem.aEntity.get(parents);
+		children = this.testSystem.testLinkSystem.bEntity.get(children);
+		
+		for (TestLinkModelA parent : parents) {
+			Assert.assertTrue(parent.getbChildKeys().size() == parents.size());
+		}
+		
+		for (TestLinkModelB child : children) {
+			Assert.assertTrue(child.getParentKeys().size() == parents.size());
+		}
+		
+		// Unlink Models
+		builder = ReusableLinkModificationSystemRequestBuilder.make(modelType);
+		
+		builder.setLinkChangeType(MutableLinkChangeType.CLEAR);
+		
+		List<String> linkNames = new ArrayList<String>();
+		linkNames.add(TestLinkModelALinkSystemBuilderEntry.B_CHILDREN_LINK_NAME);
+		linkNames.add(TestLinkModelALinkSystemBuilderEntry.A_CHILDREN_LINK_NAME);
+		linkNames.add(TestLinkModelALinkSystemBuilderEntry.PRIMARY_LINK_NAME);
+
+		builderGroup = builder.makeForPrimaryKeys(primaryStringKeys).makeForLinkNames(linkNames);
+		List<LinkModificationSystemRequest> unlinkRequests = builderGroup.makeRequests();
+
+		Assert.assertTrue(unlinkRequests.size() == (primaryStringKeys.size() * linkNames.size()));
+
+		instance = this.testSystem.linkModificationSystem.makeInstance();
+
+		LinkModificationSystemUtility.queueRequests(unlinkRequests, instance);
+		
+		result = instance.applyChanges();
+
+		// Assert models were unlinked
+		parents = this.testSystem.testLinkSystem.aEntity.get(parents);
+		children = this.testSystem.testLinkSystem.bEntity.get(children);
+		
+		for (TestLinkModelA parent : parents) {
+			Assert.assertTrue(parent.getbChildKeys().isEmpty());
+		}
 		
 		for (TestLinkModelB child : children) {
 			Assert.assertTrue(child.getParentKeys().isEmpty());

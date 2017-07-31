@@ -93,6 +93,10 @@ public class LinkModificationSystemRequestImpl
 		return this.primaryKey;
 	}
 
+	public void setPrimaryKey(ModelKey key) {
+		this.setPrimaryKey(ModelKey.readStringKey(key));
+	}
+
 	public void setPrimaryKey(String primaryKey) {
 		if (primaryKey == null) {
 			throw new IllegalArgumentException("primaryKey cannot be null.");
