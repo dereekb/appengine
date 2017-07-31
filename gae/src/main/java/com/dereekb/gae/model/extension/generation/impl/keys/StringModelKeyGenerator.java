@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.generation.impl.keys;
 
+import com.dereekb.gae.model.extension.generation.Generator;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -14,17 +15,32 @@ import com.dereekb.gae.utilities.misc.random.StringLongGenerator;
  */
 public class StringModelKeyGenerator extends AbstractGenerator<ModelKey> {
 
-	public static final StringModelKeyGenerator GENERATOR = new StringModelKeyGenerator();
+	public static final Generator<ModelKey> GENERATOR = new StringModelKeyGenerator();
 
+	public String prefix = "K";
+
+	public String getPrefix() {
+		return this.prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		if (prefix == null) {
+			throw new IllegalArgumentException("prefix cannot be null.");
+		}
+
+		this.prefix = prefix;
+	}
+
+	// MARK: AbstractGenerator
 	@Override
 	public ModelKey generate() {
-		String key = StringLongGenerator.GENERATOR.generate();
+		String key = this.prefix + StringLongGenerator.GENERATOR.generate();
 		return new ModelKey(key);
 	}
 
 	@Override
 	public ModelKey generate(GeneratorArg arg) {
-		String key = StringLongGenerator.GENERATOR.generate(arg);
+		String key = this.prefix + StringLongGenerator.GENERATOR.generate(arg);
 		return new ModelKey(key);
 	}
 

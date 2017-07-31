@@ -18,7 +18,9 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
  *
  * @author dereekb
  *
+ * @deprecated Replaced by {@link LinkSystemTests}
  */
+@Deprecated
 public class LinkSystemTest extends ApiApplicationTestContext {
 
 	@Autowired
