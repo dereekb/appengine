@@ -13,8 +13,10 @@ import com.dereekb.gae.model.extension.links.system.mutable.impl.link.MultipleMu
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.MultipleMutableLinkDataDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkDataDelegate;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilderEntry<TestLinkModelB> {
 
@@ -25,6 +27,12 @@ public class TestLinkModelBLinkSystemBuilderEntry extends AbstractMutableLinkSys
 	
 	public TestLinkModelBLinkSystemBuilderEntry(ReadService<TestLinkModelB> readService) {
 		super(readService);
+	}
+
+	public TestLinkModelBLinkSystemBuilderEntry(ReadService<TestLinkModelB> readService,
+	        Updater<TestLinkModelB> updater,
+	        TaskRequestSender<TestLinkModelB> reviewTaskSender) {
+		super(readService, updater, reviewTaskSender);
 	}
 
 	private SimpleLinkInfo parentLinkInfo = new SimpleLinkInfoImpl(PARENTS_LINK_NAME, TestLinkModelALinkSystemBuilderEntry.LINK_MODEL_TYPE);

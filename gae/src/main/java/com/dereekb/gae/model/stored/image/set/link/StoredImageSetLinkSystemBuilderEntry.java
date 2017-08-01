@@ -17,9 +17,11 @@ import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMuta
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemBuilderEntry;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.googlecode.objectify.Key;
 
 /**
@@ -40,11 +42,14 @@ public class StoredImageSetLinkSystemBuilderEntry extends AbstractMutableLinkSys
 
 	private SimpleLinkInfo iconLinkInfo = new SimpleLinkInfoImpl(STORED_IMAGE_SET_ICON_LINK_NAME, StoredImageLinkSystemBuilderEntry.LINK_MODEL_TYPE);
 	private SimpleLinkInfo imagesLinkInfo = new SimpleLinkInfoImpl(STORED_IMAGE_SET_IMAGES_LINK_NAME, StoredImageLinkSystemBuilderEntry.LINK_MODEL_TYPE);
-
-	public StoredImageSetLinkSystemBuilderEntry(ReadService<StoredImageSet> readService) {
-		super(readService);
-	}
 	
+	public StoredImageSetLinkSystemBuilderEntry(ReadService<StoredImageSet> readService,
+	        Updater<StoredImageSet> updater,
+	        TaskRequestSender<StoredImageSet> reviewTaskSender) {
+		super(readService, updater, reviewTaskSender);
+	}
+
+	// MARK: Accessors
 	public SimpleLinkInfo getIconLinkInfo() {
 		return this.iconLinkInfo;
 	}

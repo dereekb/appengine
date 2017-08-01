@@ -1,6 +1,8 @@
 package com.dereekb.gae.model.extension.links.system.mutable.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,11 +65,27 @@ public class MutableLinkSystemBuilderImpl
 
 	private CaseInsensitiveMap<LinkModelInfo> linkModelInfoMap = new CaseInsensitiveMap<LinkModelInfo>();
 
+	public MutableLinkSystemBuilderImpl(List<? extends MutableLinkSystemBuilderEntry> entries)
+	        throws IllegalArgumentException {
+		this.setEntriesMap(entries);
+	}
+
 	public MutableLinkSystemBuilderImpl(Map<String, MutableLinkSystemBuilderEntry> entriesMap)
 	        throws IllegalArgumentException {
 		this.setEntriesMap(entriesMap);
 	}
 
+	private void setEntriesMap(List<? extends MutableLinkSystemBuilderEntry> entries) {
+		Map<String, MutableLinkSystemBuilderEntry> entriesMap = new HashMap<String, MutableLinkSystemBuilderEntry>();
+		
+		for (MutableLinkSystemBuilderEntry entry : entries) {
+			String type = entry.getLinkModelType();
+			entriesMap.put(type, entry);
+		}
+		
+		this.setEntriesMap(entriesMap);
+	}
+	
 	public void setEntriesMap(Map<String, MutableLinkSystemBuilderEntry> entriesMap) throws IllegalArgumentException {
 		if (entriesMap == null) {
 			throw new IllegalArgumentException("entriesMap cannot be null.");

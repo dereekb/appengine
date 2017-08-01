@@ -10,37 +10,34 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- SERVICE -->
-	<!-- Link Service -->
 	<bean id="linkService"
-		class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceLinkSystemImpl">
+		class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl">
 		<constructor-arg index="0" ref="linkSystem" />
 	</bean>
 
 	<!-- SYSTEM -->
-	<!-- Bidirectional Link System -->
-	<alias alias="linkSystem" name="bidirectionalLinkService" />
-
-	<bean id="bidirectionalLinkService" lazy-init="false"
-		class="com.dereekb.gae.model.extension.links.components.system.impl.bidirectional.BidirectionalLinkSystem">
-		<constructor-arg index="0" ref="basicLinkSystem" />
-		<constructor-arg index="1" ref="linkSystemEntries" />
+	<bean id="linkModificationSystem" lazy-init="false"
+		factory-bean="linkModificationSystemBuilder" factory-method="makeLinkModifictionSystem">
 	</bean>
 
-	<!-- Primary System -->
-	<bean id="basicLinkSystem"
-		class="com.dereekb.gae.model.extension.links.components.system.impl.SimpleLinkSystem">
+	<bean id="linkSystem" lazy-init="false"
+		factory-bean="linkModificationSystemBuilder" factory-method="makeLinkSystem">
+	</bean>
+
+	<!-- LinkInfoSystem -->
+	<bean id="linkModificationSystemBuilder"
+		class="com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemBuilder">
 		<constructor-arg index="0" ref="linkSystemEntries" />
 	</bean>
 
 	<!-- Entries -->
 	<util:list id="linkSystemEntries">
-		<ref bean="geoPlaceLinkSystem" />
-		<ref bean="storedBlobLinkSystem" />
-		<ref bean="storedImageLinkSystem" />
-		<ref bean="storedImageSetLinkSystem" />
-		<ref bean="loginLinkSystem" />
-		<ref bean="loginKeyLinkSystem" />
-		<ref bean="loginPointerLinkSystem" />
+		<ref bean="storedBlobLinkSystemEntry" />
+		<ref bean="storedImageLinkSystemEntry" />
+		<ref bean="storedImageSetLinkSystemEntry" />
+		<ref bean="loginLinkSystemEntry" />
+		<ref bean="loginKeyLinkSystemEntry" />
+		<ref bean="loginPointerLinkSystemEntry" />
 	</util:list>
 
 </beans>

@@ -9,28 +9,11 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="loginLinkTarget"
-		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
-		<constructor-arg index="0" ref="loginType" />
-		<constructor-arg index="1" ref="loginIdType" />
-	</bean>
-
-	<bean id="loginLinkSystem"
-		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemEntry">
+	<bean id="loginLinkSystemEntry"
+		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemBuilderEntry">
 		<constructor-arg index="0" ref="loginCrudService" />
-		<constructor-arg index="1" ref="loginTaskConfiguredUpdater" />
-		<!-- Reverse Links Configuration -->
-		<property name="reverseLinkNames">
-			<map key-type="java.lang.String" value-type="java.lang.String">
-				<entry key-ref="loginLoginPointerLinkName" value-ref="loginPointerLoginLinkName" />
-			</map>
-		</property>
-		<!-- Delete Links Configuration -->
+		<constructor-arg index="1" ref="loginUpdater" />
+		<constructor-arg index="2" ref="loginScheduleUpdateReview" />
 	</bean>
-
-	<!-- Links -->
-	<bean id="loginLoginPointerLinkName" class="java.lang.String">
-		<constructor-arg index="0" ref="loginPointerType" />
-	</bean>
-
+	
 </beans>

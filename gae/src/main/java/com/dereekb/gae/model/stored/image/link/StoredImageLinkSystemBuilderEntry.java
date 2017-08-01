@@ -16,9 +16,11 @@ import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMuta
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.link.StoredBlobLinkSystemBuilderEntry;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.googlecode.objectify.Key;
 
 /**
@@ -36,10 +38,13 @@ public class StoredImageLinkSystemBuilderEntry extends AbstractMutableLinkSystem
 	
 	private SimpleLinkInfo blobLinkInfo = new SimpleLinkInfoImpl(StoredBlobLinkSystemBuilderEntry.STORED_BLOB_LINK_TYPE);
 
-	public StoredImageLinkSystemBuilderEntry(ReadService<StoredImage> readService) {
-		super(readService);
+	public StoredImageLinkSystemBuilderEntry(ReadService<StoredImage> readService,
+	        Updater<StoredImage> updater,
+	        TaskRequestSender<StoredImage> reviewTaskSender) {
+		super(readService, updater, reviewTaskSender);
 	}
-	
+
+	// MARK: Accessors
 	public SimpleLinkInfo getBlobLinkInfo() {
 		return this.blobLinkInfo;
 	}

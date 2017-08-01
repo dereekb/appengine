@@ -9,37 +9,11 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="storedImageLinkTarget"
-		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
-		<constructor-arg index="0" ref="storedImageType" />
-		<constructor-arg index="1" ref="storedImageIdType" />
-	</bean>
-
-	<bean id="storedImageLinkSystem"
-		class="com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemEntry">
+	<bean id="storedImageLinkSystemEntry"
+		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemBuilderEntry">
 		<constructor-arg index="0" ref="storedImageCrudService" />
-		<constructor-arg index="1"
-			ref="storedImageTaskConfiguredUpdater" />
-		<!-- Reverse Links Configuration -->
-		<property name="reverseLinkNames">
-			<map key-type="java.lang.String" value-type="java.lang.String">
-				<!-- Links the "StoredBlob" link with the "StoredImage" link in the StoredBlob 
-					link delegate's config -->
-				<entry key-ref="storedImageStoredBlobLinkName" value-ref="storedBlobStoredImageDescribedLinkName" />
-			</map>
-		</property>
-		<!-- Delete Links Configuration -->
-		<property name="deleteChangesMap">
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.model.extension.links.deprecated.deleter.LinkDeleterChangeType">
-				<entry key-ref="storedImageStoredBlobLinkName" value="DELETE" />
-			</map>
-		</property>
-	</bean>
-
-	<!-- Links -->
-	<bean id="storedImageStoredBlobLinkName" class="java.lang.String">
-		<constructor-arg index="0" ref="storedBlobType" />
+		<constructor-arg index="1" ref="storedImageUpdater" />
+		<constructor-arg index="2" ref="storedImageScheduleUpdateReview" />
 	</bean>
 
 </beans>

@@ -8,7 +8,9 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractMutableLinkSystemBuilderEntry;
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
  * {@link MutableLinkSystemBuilderEntry} implementation for {@link Login}.
@@ -20,8 +22,10 @@ public class LoginLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilde
 
 	public static final String LOGIN_LINK_TYPE = "Login";
 
-	public LoginLinkSystemBuilderEntry(ReadService<Login> readService) {
-		super(readService);
+	public LoginLinkSystemBuilderEntry(ReadService<Login> readService,
+	        Updater<Login> updater,
+	        TaskRequestSender<Login> reviewTaskSender) {
+		super(readService, updater, reviewTaskSender);
 	}
 
 	// MARK: AbstractModelLinkSystemEntry

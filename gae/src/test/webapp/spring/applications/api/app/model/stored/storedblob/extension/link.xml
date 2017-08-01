@@ -9,41 +9,15 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="storedBlobLinkTarget"
-		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
-		<constructor-arg index="0" ref="storedBlobType" />
-		<constructor-arg index="1" ref="storedBlobIdType" />
-	</bean>
-
-	<bean id="storedBlobLinkSystem"
-		class="com.dereekb.gae.model.stored.blob.link.StoredBlobLinkSystemEntry">
+	<bean id="storedBlobLinkSystemEntry"
+		class="com.dereekb.gae.model.stored.blob.link.StoredBlobLinkSystemBuilderEntry">
 		<constructor-arg index="0" ref="storedBlobCrudService" />
-		<constructor-arg index="1"
-			ref="storedBlobTaskConfiguredUpdater" />
-		<!-- Derivative Links -->
-		<constructor-arg index="2">
-			<list>
-				<bean
-					class="com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo">
-					<constructor-arg index="0"
-						ref="storedBlobStoredImageDescribedLinkName" />
-					<constructor-arg index="1" ref="storedImageLinkTarget" />
-				</bean>
-			</list>
-		</constructor-arg>
-		<!-- Reverse Links Configuration -->
-		<property name="reverseLinkNames">
-			<map key-type="java.lang.String" value-type="java.lang.String">
-				<!-- Links the "storedImage" derivative link with the StoredBlob link. -->
-				<entry key-ref="storedBlobStoredImageDescribedLinkName"
-					value-ref="storedImageStoredBlobLinkName" />
-			</map>
-		</property>
-	</bean>
-
-	<!-- Described Links -->
-	<bean id="storedBlobStoredImageDescribedLinkName" class="java.lang.String">
-		<constructor-arg index="0" ref="storedImageType" />
+		<constructor-arg index="1" ref="storedBlobUpdater" />
+		<constructor-arg index="2"
+			ref="storedBlobScheduleUpdateReview" />
+		<constructor-arg index="3"
+			ref="modelKeyTypeConverter" />
+		<!-- TODO: Derivative links? -->
 	</bean>
 
 </beans>

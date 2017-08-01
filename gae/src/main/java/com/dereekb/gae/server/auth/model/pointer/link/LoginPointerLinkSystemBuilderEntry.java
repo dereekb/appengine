@@ -16,9 +16,11 @@ import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMuta
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemBuilderEntry;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.googlecode.objectify.Key;
 
 /**
@@ -36,8 +38,10 @@ public class LoginPointerLinkSystemBuilderEntry extends AbstractMutableLinkSyste
 
 	private SimpleLinkInfo loginLinkInfo = new SimpleLinkInfoImpl(LoginLinkSystemBuilderEntry.LOGIN_LINK_TYPE);
 	
-	public LoginPointerLinkSystemBuilderEntry(ReadService<LoginPointer> readService) {
-		super(readService);
+	public LoginPointerLinkSystemBuilderEntry(ReadService<LoginPointer> readService,
+	        Updater<LoginPointer> updater,
+	        TaskRequestSender<LoginPointer> reviewTaskSender) {
+		super(readService, updater, reviewTaskSender);
 	}
 
 	// MARK: AbstractMutableLinkSystemBuilderEntry

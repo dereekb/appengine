@@ -8,8 +8,10 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.AbstractDescriptiveMutableLinkSystemBuilderEntry;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
  * {@link MutableLinkSystemBuilderEntry} implementation for {@link StoredBlob}.
@@ -22,8 +24,10 @@ public class StoredBlobLinkSystemBuilderEntry extends AbstractDescriptiveMutable
 	public static final String STORED_BLOB_LINK_TYPE = "StoredBlob";
 
 	public StoredBlobLinkSystemBuilderEntry(ReadService<StoredBlob> readService,
+	        Updater<StoredBlob> updater,
+	        TaskRequestSender<StoredBlob> reviewTaskSender,
 	        TypeModelKeyConverter typeKeyConverter) {
-		super(readService, typeKeyConverter);
+		super(readService, updater, reviewTaskSender, typeKeyConverter);
 	}
 
 	@Override

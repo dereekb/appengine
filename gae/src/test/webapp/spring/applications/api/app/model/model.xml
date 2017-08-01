@@ -14,7 +14,6 @@
 	<import resource="login/login/login.xml" />
 	<import resource="login/loginkey/loginkey.xml" />
 	<import resource="login/loginpointer/loginpointer.xml" />
-	<import resource="geoplace/geoplace.xml" />
 	<import resource="stored/storedblob/storedblob.xml" />
 	<import resource="stored/storedimage/storedimage.xml" />
 	<import resource="stored/storedimageset/storedimageset.xml" />
@@ -29,7 +28,6 @@
 		<constructor-arg index="0">
 			<map key-type="java.lang.String"
 				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceIdType" />
 				<entry key-ref="storedBlobType" value-ref="storedBlobIdType" />
 				<entry key-ref="storedImageType" value-ref="storedImageIdType" />
 				<entry key-ref="storedImageSetType" value-ref="storedImageSetIdType" />

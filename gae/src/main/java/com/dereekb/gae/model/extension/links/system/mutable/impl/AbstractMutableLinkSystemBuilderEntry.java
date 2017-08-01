@@ -11,13 +11,16 @@ import com.dereekb.gae.model.extension.links.system.components.LinkSize;
 import com.dereekb.gae.model.extension.links.system.components.LinkType;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.DynamicLinkInfoException;
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
+import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemBuilderEntry;
 import com.dereekb.gae.model.extension.links.system.mutable.BidirectionalLinkNameMap;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessor;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkAccessorFactory;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderAccessorDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkSystemBuilderEntry;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
@@ -29,14 +32,53 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
  *            model type
  */
 public abstract class AbstractMutableLinkSystemBuilderEntry<T>
-        implements MutableLinkSystemBuilderEntry, MutableLinkSystemBuilderAccessorDelegate<T> {
+        implements LinkModificationSystemBuilderEntry<T>, MutableLinkSystemBuilderEntry, MutableLinkSystemBuilderAccessorDelegate<T> {
 
 	private ReadService<T> readService;
 	private LimitedLinkModelInfoImpl linkModelInfo = new LimitedLinkModelInfoImpl();
 	private BidirectionalLinkNameMap map = EmptyBidirectionalLinkNameMapImpl.SINGLETON;
 
+	private Updater<T> updater;
+	private TaskRequestSender<T> reviewTaskSender;
+
 	public AbstractMutableLinkSystemBuilderEntry(ReadService<T> readService) {
 		this.setReadService(readService);
+	}
+
+	public AbstractMutableLinkSystemBuilderEntry(ReadService<T> readService,
+	        Updater<T> updater,
+	        TaskRequestSender<T> reviewTaskSender) {
+		super();
+		this.setReadService(readService);
+		this.setUpdater(updater);
+		this.setReviewTaskSender(reviewTaskSender);
+	}
+
+	// MARK: LinkModificationSystemBuilderEntry
+	@Override
+	public Updater<T> getUpdater() {
+		return this.updater;
+	}
+
+	public void setUpdater(Updater<T> updater) {
+		if (updater == null) {
+			throw new IllegalArgumentException("updater cannot be null.");
+		}
+	
+		this.updater = updater;
+	}
+
+	@Override
+	public TaskRequestSender<T> getReviewTaskSender() {
+		return this.reviewTaskSender;
+	}
+	
+	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) {
+		if (reviewTaskSender == null) {
+			throw new IllegalArgumentException("reviewTaskSender cannot be null.");
+		}
+	
+		this.reviewTaskSender = reviewTaskSender;
 	}
 
 	// MARK: Accessors
@@ -59,6 +101,14 @@ public abstract class AbstractMutableLinkSystemBuilderEntry<T>
 		} else {
 			this.map = new BidirectionalLinkNameMapImpl(linkNames);
 		}
+	}
+	
+	public void setBidirectionaLinkMap(BidirectionalLinkNameMap map) {
+		if (map == null) {
+			throw new IllegalArgumentException("map cannot be null.");
+		}
+		
+		this.map = map;
 	}
 
 	// MARK: MutableLinkSystemBuilderEntry

@@ -14,9 +14,11 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkDataAssertionDelegate;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkData;
 import com.dereekb.gae.model.extension.links.system.mutable.impl.link.SingleMutableLinkDataDelegate;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.exception.UnknownModelTypeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
@@ -36,8 +38,11 @@ public abstract class AbstractDescriptiveMutableLinkSystemBuilderEntry<T extends
 	
 	private TypeModelKeyConverter typeKeyConverter;
 	
-	public AbstractDescriptiveMutableLinkSystemBuilderEntry(ReadService<T> readService, TypeModelKeyConverter typeKeyConverter) {
-		super(readService);
+	public AbstractDescriptiveMutableLinkSystemBuilderEntry(ReadService<T> readService,
+	        Updater<T> updater,
+	        TaskRequestSender<T> reviewTaskSender,
+	        TypeModelKeyConverter typeKeyConverter) {
+		super(readService, updater, reviewTaskSender);
 		this.setTypeKeyConverter(typeKeyConverter);
 	}
 

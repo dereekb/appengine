@@ -9,39 +9,11 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="storedImageSetLinkTarget"
-		class="com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl">
-		<constructor-arg index="0" ref="storedImageType" />
-		<constructor-arg index="1" ref="storedImageIdType" />
-	</bean>
-
-	<bean id="storedImageSetLinkSystem"
-		class="com.dereekb.gae.model.stored.image.set.link.StoredImageSetLinkSystemEntry">
+	<bean id="storedImageSetLinkSystemEntry"
+		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemBuilderEntry">
 		<constructor-arg index="0" ref="storedImageSetCrudService" />
-		<constructor-arg index="1"
-			ref="storedImageSetTaskConfiguredUpdater" />
-		<!-- Reverse Links Configuration -->
-		<property name="reverseLinkNames">
-			<map key-type="java.lang.String" value-type="java.lang.String">
-
-			</map>
-		</property>
-		<!-- Delete Links Configuration -->
-		<property name="deleteChangesMap">
-			<map key-type="java.lang.String"
-				value-type="com.dereekb.gae.model.extension.links.deprecated.deleter.LinkDeleterChangeType">
-				<entry key-ref="storedImageSetImagesLinkName" value="UNLINK" />
-			</map>
-		</property>
-	</bean>
-
-	<!-- Links -->
-	<bean id="storedImageSetIconLinkName" class="java.lang.String">
-		<constructor-arg index="0" value="icon" />
-	</bean>
-
-	<bean id="storedImageSetImagesLinkName" class="java.lang.String">
-		<constructor-arg index="0" value="images" />
+		<constructor-arg index="1" ref="storedImageSetUpdater" />
+		<constructor-arg index="2" ref="storedImageSetScheduleUpdateReview" />
 	</bean>
 
 </beans>
