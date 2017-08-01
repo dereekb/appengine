@@ -1,0 +1,95 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="loginSearchIndex" class="java.lang.String">
+		<constructor-arg index="0" ref="loginType" />
+	</bean>
+
+	<!-- Index -->
+	<bean id="loginKeyedDocumentIndexService"
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="loginReadService" />
+		<constructor-arg index="1" ref="loginDocumentIndexService" />
+	</bean>
+
+	<bean id="loginDocumentIndexService"
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="searchSystem" />
+		<constructor-arg index="1" ref="loginIndexingDocumentBuilder" />
+		<constructor-arg index="2" ref="loginUpdater" />
+	</bean>
+
+	<!-- Search Indexing -->
+	<bean id="loginIndexingDocumentBuilder"
+		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl">
+		<constructor-arg index="0" ref="loginSearchIndex" />
+		<constructor-arg index="1" ref="loginSearchDocumentBuilder" />
+	</bean>
+
+	<bean id="loginSearchDocumentBuilder"
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder">
+		<constructor-arg index="0">
+			<bean
+				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer">
+				<constructor-arg index="0" ref="loginType" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<list>
+				<bean
+					class="com.dereekb.gae.server.auth.model.login.search.document.index.LoginDocumentBuilderStep">
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<!-- Derivative Indexing -->
+	<bean id="loginIncludedDocumentBuilderStep"
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.server.auth.model.login.search.document.index.LoginIncludedDocumentBuilderStep" />
+		</constructor-arg>
+	</bean>
+
+	<!-- Search Services -->
+	<bean id="loginSearchService"
+		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl">
+		<constructor-arg index="0" ref="loginReadService" />
+		<constructor-arg index="1" ref="modelDocumentSearchService" />
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.server.auth.model.login.search.document.query.LoginSearchRequestConverter">
+				<constructor-arg index="0" ref="loginSearchIndex" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="3" ref="scoredDocumentLongKeyReader" />
+	</bean>
+
+	<!-- Query Services -->
+	<bean id="loginQueryService"
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="securedLoginQueryInitializer" />
+	</bean>
+
+	<bean id="securedLoginQueryInitializer"
+		class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer">
+		<constructor-arg index="0" ref="loginQueryInitializer" />
+		<constructor-arg index="1" ref="securityOverrideOwnedModelQueryTask" />
+	</bean>
+
+	<bean id="loginQueryInitializer"
+		class="com.dereekb.gae.server.auth.model.login.search.query.LoginQueryInitializer">
+	</bean>
+
+</beans>

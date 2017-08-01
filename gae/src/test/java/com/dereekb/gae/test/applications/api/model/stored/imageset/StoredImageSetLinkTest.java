@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +23,13 @@ import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkS
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
+/**
+ * 
+ * @author dereekb
+ * 
+ * @deprecated Replace with client tests.
+ */
+@Ignore
 @Deprecated
 public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 

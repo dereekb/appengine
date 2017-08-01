@@ -21,6 +21,7 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
  * 
  * @deprecated Replace with client tests.
  */
+@Ignore
 @Deprecated
 public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
