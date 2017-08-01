@@ -40,6 +40,15 @@ public class LinkModificationSystemRequestImpl
 
 	public LinkModificationSystemRequestImpl(
 	        String linkModelType,
+	        ModelKey primaryKey,
+	        String linkName,
+	        MutableLinkChangeType linkChangeType,
+	        Collection<String> keys) throws IllegalArgumentException {
+		this(linkModelType, ModelKey.readStringKey(primaryKey), linkName, linkChangeType, keys, null);
+	}
+
+	public LinkModificationSystemRequestImpl(
+	        String linkModelType,
 	        String primaryKey,
 	        String linkName,
 	        MutableLinkChangeType linkChangeType,
