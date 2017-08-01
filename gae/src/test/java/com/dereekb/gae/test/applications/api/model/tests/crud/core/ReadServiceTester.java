@@ -26,7 +26,10 @@ import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
  * @author dereekb
  *
  * @param <T>
+ * 
+ * @deprecated Use client tests instead.
  */
+@Deprecated
 public class ReadServiceTester<T extends UniqueModel>
         implements RunnableTest {
 

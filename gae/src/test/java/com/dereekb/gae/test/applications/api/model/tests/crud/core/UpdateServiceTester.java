@@ -15,6 +15,7 @@ import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.test.mock.client.crud.ModelClientUpdateRequestSenderTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.runnable.RunnableTest;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
@@ -25,7 +26,10 @@ import com.dereekb.gae.utilities.collections.IteratorUtility;
  * @author dereekb
  *
  * @param <T>
+ * 
+ * @deprecated Use {@link ModelClientUpdateRequestSenderTestUtility} instead.
  */
+@Deprecated
 public class UpdateServiceTester<T extends UniqueModel>
         implements RunnableTest {
 

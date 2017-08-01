@@ -2,10 +2,13 @@ package com.dereekb.gae.web.api.exception.handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.UnavailableException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -205,6 +208,22 @@ public class ApiExceptionHandler {
 	}
 
 	/**
+	 * Used for capturing validation errors.
+	 */
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ApiResponse handleException(ConstraintViolationException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+		ConstraintError error = new ConstraintError(violations);
+		response.setError(error);
+
+		return response;
+	}
+
+	/**
 	 * Used for capturing path variable exceptions.
 	 */
 	@ResponseBody
@@ -239,6 +258,42 @@ public class ApiExceptionHandler {
 
 		return response;
 	}
+	
+	public static class ConstraintError extends ApiResponseErrorImpl {
+
+		private static final String ERROR_TITLE = "Constraint Error";
+		private static final String ERROR_DETAIL_FORMAT = "Invalid Request. Contains %s error(s).";
+
+		public ConstraintError() {
+			super(ValidationError.ERROR_CODE, ERROR_TITLE);
+		}
+
+		public ConstraintError(Set<ConstraintViolation<?>> violations) {
+			this();
+			this.buildUsingViolations(violations);
+		}
+
+		private void buildUsingViolations(Set<ConstraintViolation<?>> violations) {
+			List<FieldValidationIssue> issues = new ArrayList<>();
+
+			for (ConstraintViolation<?> violation : violations) {
+				FieldValidationIssue issue = new FieldValidationIssue();
+				
+				issue.setValue("n/a");
+				issue.setMessage(violation.getMessage());
+				
+				issues.add(issue);
+			}
+
+			super.setData(issues);
+			this.setErrorCount(violations.size());
+		}
+
+		private void setErrorCount(Integer errorCount) {
+			super.setDetail(String.format(ERROR_DETAIL_FORMAT, errorCount));
+		}
+
+	}
 
 	public static class ValidationError extends ApiResponseErrorImpl {
 
@@ -251,7 +306,7 @@ public class ApiExceptionHandler {
 		}
 
 		public ValidationError(BindingResult bindingResult) {
-			super(ERROR_CODE, ERROR_TITLE);
+			this();
 			this.buildUsingBindingResult(bindingResult);
 		}
 

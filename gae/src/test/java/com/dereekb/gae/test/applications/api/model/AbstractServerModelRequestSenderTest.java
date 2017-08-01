@@ -132,6 +132,20 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 		}
 	}
 
+	@Test
+	public void testReadNothing() throws Exception {
+		if (this.readRequestUtility != null) {
+			this.readRequestUtility.testReadNothing(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testReadMoreThanMax() throws Exception {
+		if (this.readRequestUtility != null) {
+			this.readRequestUtility.testReadMoreThanMax(this.getRequestSecurity());
+		}
+	}
+
 	// MARK: Update Tests
 	@Test
 	public void testAtomicModelClientUpdateRequest() throws Exception {
@@ -158,6 +172,13 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 	public void testUpdateWithNoIdentifierClientUpdateRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockUpdateRequest(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testEmptyMockUpdateClientUpdateRequest() throws Exception {
+		if (this.updateRequestUtility != null) {
+			this.updateRequestUtility.testEmptyMockUpdate(this.getRequestSecurity());
 		}
 	}
 

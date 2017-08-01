@@ -10,7 +10,11 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<mvc:annotation-driven />
+	
+	<!-- Enable Validation On API Controllers -->
+	<bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
 
+	<!-- Exception Handlers -->
 	<bean id="apiExceptionHandler"
 		class="com.dereekb.gae.web.api.exception.handler.ApiExceptionHandler">
 	</bean>

@@ -5,9 +5,19 @@ import org.junit.Test;
 import com.dereekb.gae.model.crud.services.CrudService;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.test.applications.api.model.AbstractServerModelRequestSenderTest;
 import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+/**
+ * 
+ * @author dereekb
+ *
+ * @param <T>
+ * 
+ * @deprecated Use {@link AbstractServerModelRequestSenderTest} instead.
+ */
+@Deprecated
 public abstract class CrudServiceTester<T extends UniqueModel> extends CoreApplicationTestContext {
 
 	private CrudService<T> service;

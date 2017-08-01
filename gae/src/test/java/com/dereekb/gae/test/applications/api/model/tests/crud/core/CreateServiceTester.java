@@ -20,7 +20,10 @@ import com.dereekb.gae.test.runnable.RunnableTest;
  * @author dereekb
  *
  * @param <T>
+ * 
+ * @deprecated Use client tests instead.
  */
+@Deprecated
 public class CreateServiceTester<T extends UniqueModel>
         implements RunnableTest {
 

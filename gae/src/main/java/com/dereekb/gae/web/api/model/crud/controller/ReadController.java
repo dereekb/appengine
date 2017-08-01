@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +40,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @author dereekb
  *
  */
+@Validated
 @RestController
 public class ReadController {
 
@@ -47,7 +49,9 @@ public class ReadController {
 	public static final String RELATED_FILTER_PARAM = "relatedFilter";
 	public static final String KEYS_PARAM = "keys";
 
-	public static final long MAX_KEYS_PER_REQUEST = 40;
+	public static final int MAX_KEYS_PER_REQUEST = 40;
+	
+	private static final String INVALID_KEYS_MESSAGE = "Must submit between 1 and " + MAX_KEYS_PER_REQUEST + " keys.";
 
 	private boolean appendUnavailable = true;
 
@@ -112,7 +116,7 @@ public class ReadController {
 	@ResponseBody
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = "application/json")
 	public ApiResponse readModels(@PathVariable("type") String modelType,
-	                              @Max(MAX_KEYS_PER_REQUEST) @RequestParam(name = KEYS_PARAM, required = true) List<String> keys,
+	                              @RequestParam(name = KEYS_PARAM, required = true) @Size(min = 1, max = MAX_KEYS_PER_REQUEST, message=INVALID_KEYS_MESSAGE) List<String> keys,
 	                              @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
 	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
 	                              @RequestParam(name = RELATED_FILTER_PARAM, required = false) Set<String> relatedTypes)

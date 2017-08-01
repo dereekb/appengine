@@ -27,6 +27,7 @@ import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.web.api.model.crud.controller.ReadController;
 
 /**
  * Test utility for {@link ClientReadRequestSender}.
@@ -150,6 +151,50 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 			this.readRequestSender.read(readRequest);
 			Assert.fail("Should have thrown an atomic operation exception.");
 		} catch (ClientAtomicOperationException e) {
+
+		}
+	}
+
+	/**
+	 * Tests that reading nothing will result in an exception.
+	 */
+	public void testReadNothing(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		List<ModelKey> noKeys = new ArrayList<ModelKey>();
+
+		ReadRequestOptions options = new ReadRequestOptionsImpl(true);
+		ReadRequest readRequest = new KeyReadRequest(noKeys, options);
+
+		try {
+			this.readRequestSender.read(readRequest);
+			Assert.fail("Should have failed request.");
+		} catch (ClientRequestFailureException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Tests that reading nothing will result in an exception.
+	 */
+	public void testReadMoreThanMax(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		List<ModelKey> tooManyKeys = this.testModelGenerator.generateKeys(ReadController.MAX_KEYS_PER_REQUEST + 10);
+
+		ReadRequestOptions options = new ReadRequestOptionsImpl(true);
+		ReadRequest readRequest = new KeyReadRequest(tooManyKeys, options);
+
+		try {
+			this.readRequestSender.read(readRequest);
+			Assert.fail("Should have failed request.");
+		} catch (ClientRequestFailureException e) {
 
 		}
 	}

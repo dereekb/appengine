@@ -2,6 +2,7 @@ package com.dereekb.gae.test.mock.client.crud;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -179,6 +180,24 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		try {
 			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
 			Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
+		} catch (Exception e) {
+
+		}
+	}
+	
+	public void testEmptyMockUpdate(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+            ClientConnectionException,
+            ClientAuthenticationException,
+            ClientRequestFailureException {
+
+		List<T> collection = Collections.emptyList();
+		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(collection);
+
+		// Update again.
+		try {
+			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+			Assert.fail();
 		} catch (Exception e) {
 
 		}
