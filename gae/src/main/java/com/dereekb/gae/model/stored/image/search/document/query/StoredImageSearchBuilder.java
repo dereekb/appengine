@@ -4,8 +4,6 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchBuilderImpl;
 import com.dereekb.gae.model.extension.search.document.search.query.impl.AbstractSearchImpl;
-import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder;
-import com.dereekb.gae.model.geo.place.search.document.query.GeoPlaceSearchBuilder.GeoPlaceSearch;
 import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchBuilder;
 import com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchBuilder.StoredBlobSearch;
 import com.dereekb.gae.model.stored.image.search.document.index.StoredImageDocumentBuilderStep;
@@ -34,7 +32,6 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 	private String typeField = DEFAULT_TYPE_FIELD;
 	private String summaryField = DEFAULT_SUMMARY_FIELD;
 
-	private GeoPlaceSearchBuilder geoPlaceSearchBuilder = new GeoPlaceSearchBuilder();
 	private StoredBlobSearchBuilder storedBlobSearchBuilder = new StoredBlobSearchBuilder();
 
 	public StoredImageSearchBuilder() {
@@ -97,7 +94,6 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 		search.setTags(reader.get(this.tagsField));
 		search.setSummary(reader.get(this.summaryField));
 
-		search.geoPlaceSearch.applyParameters(reader.getMap());
 		search.storedBlobSearch.applyParameters(reader.getMap());
 	}
 
@@ -131,7 +127,6 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 			builder = builder.and(new TextField(summaryName, summary));
 		}
 
-		builder.and(search.geoPlaceSearch.makeExpression());
 		builder.and(search.storedBlobSearch.makeExpression());
 
 		return builder;
@@ -144,7 +139,6 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 		private String tags;
 		private String type;
 
-		private final GeoPlaceSearch geoPlaceSearch = StoredImageSearchBuilder.this.geoPlaceSearchBuilder.make();
 		private final StoredBlobSearch storedBlobSearch = StoredImageSearchBuilder.this.storedBlobSearchBuilder.make();
 
 		private StoredImageSearch() {}
@@ -188,10 +182,6 @@ public class StoredImageSearchBuilder extends AbstractSearchBuilderImpl<StoredIm
 
 		public void setType(String type) {
 			this.type = type;
-		}
-
-		public GeoPlaceSearch getGeoPlaceSearch() {
-			return this.geoPlaceSearch;
 		}
 
 		public StoredBlobSearch getStoredBlobSearch() {

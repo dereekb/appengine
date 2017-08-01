@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -13,10 +12,6 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
 public class StoredImageApiSearchTest extends ApiSearchTest<StoredImage> {
-
-	@Autowired
-	@Qualifier("geoPlaceTestModelGenerator")
-	private TestModelGenerator<GeoPlace> geoPlaceGenerator;
 
 	@Autowired
 	@Qualifier("storedBlobTestModelGenerator")

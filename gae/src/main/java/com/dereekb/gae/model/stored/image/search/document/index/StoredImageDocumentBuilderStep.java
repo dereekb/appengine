@@ -2,8 +2,6 @@ package com.dereekb.gae.model.stored.image.search.document.index;
 
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
-import com.dereekb.gae.model.geo.place.GeoPlace;
-import com.dereekb.gae.model.geo.place.search.document.index.GeoPlaceIncludedDocumentBuilderStep;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobIncludedDocumentBuilderStep;
 import com.dereekb.gae.model.stored.image.StoredImage;
@@ -14,7 +12,7 @@ import com.google.appengine.api.search.Document.Builder;
  * Implementation of {@link StagedDocumentBuilderStep} for adding
  * {@link StoredImageDocumentBuilderStep}.
  * <p>
- * Additional information about the {@link StoredBlob} and {@link GeoPlace}
+ * Additional information about the {@link StoredBlob}
  * should be added using a {@link StoredBlobIncludedDocumentBuilderStep} and
  * {@link GeoPlaceIncludedDocumentBuilderStep}, respectively.
  *
