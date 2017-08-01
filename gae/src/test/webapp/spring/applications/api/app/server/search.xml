@@ -24,7 +24,6 @@
 		<constructor-arg index="0">
 			<map key-type="java.lang.String">
 				<entry key-ref="loginType" value-ref="loginKeyedDocumentIndexService" />
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceKeyedDocumentIndexService" />
 				<entry key-ref="storedBlobType" value-ref="storedBlobKeyedDocumentIndexService" />
 				<entry key-ref="storedImageType" value-ref="storedImageKeyedDocumentIndexService" />
 				<entry key-ref="storedImageSetType" value-ref="storedImageSetKeyedDocumentIndexService" />
@@ -76,7 +75,7 @@
 		<constructor-arg index="1">
 			<map key-type="java.lang.String">
 				<entry key-ref="storedBlobType" value-ref="storedBlobIncludedDocumentBuilderStep" />
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceIncludedDocumentBuilderStep" />
+				<!-- <entry key-ref="geoPlaceType" value-ref="geoPlaceIncludedDocumentBuilderStep" /> -->
 			</map>
 		</constructor-arg>
 	</bean>

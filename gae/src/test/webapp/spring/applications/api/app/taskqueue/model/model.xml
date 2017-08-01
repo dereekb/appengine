@@ -10,7 +10,6 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Models -->
-	<import resource="geoplace.xml" />
 	<import resource="storedblob.xml" />
 	<import resource="storedimage.xml" />
 	<import resource="storedimageset.xml" />
@@ -27,7 +26,6 @@
 				<entry key-ref="loginType" value-ref="loginTaskQueueEditControllerEntry" />
 				<entry key-ref="loginKeyType" value-ref="loginKeyTaskQueueEditControllerEntry" />
 				<entry key-ref="loginPointerType" value-ref="loginPointerTaskQueueEditControllerEntry" />
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueEditControllerEntry" />
 				<entry key-ref="storedBlobType" value-ref="storedBlobTaskQueueEditControllerEntry" />
 				<entry key-ref="storedImageType" value-ref="storedImageTaskQueueEditControllerEntry" />
 				<entry key-ref="storedImageSetType" value-ref="storedImageSetTaskQueueEditControllerEntry" />
@@ -43,7 +41,6 @@
 		<constructor-arg index="2">
 			<map key-type="java.lang.String">
 				<entry key-ref="loginKeyType" value-ref="loginKeyTaskQueueIterateControllerEntry" />
-				<entry key-ref="geoPlaceType" value-ref="geoPlaceTaskQueueIterateControllerEntry" />
 				<entry key-ref="storedImageSetType" value-ref="storedImageSetTaskQueueIterateControllerEntry" />
 			</map>
 		</constructor-arg>

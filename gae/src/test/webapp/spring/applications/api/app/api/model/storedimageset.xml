@@ -16,13 +16,12 @@
 		<constructor-arg index="0" ref="storedImageSetReadService" />
 		<constructor-arg index="1" ref="storedImageSetDataConverter" />
 		<constructor-arg index="2"
-			ref="storedImageSetLinkModelInclusionReader" />
+			ref="storedImageSetModelInclusionReader" />
 	</bean>
 
-	<bean id="storedImageSetLinkModelInclusionReader"
-		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
-		lazy-init="false">
-		<constructor-arg index="0" ref="storedImageSetLinkSystem"></constructor-arg>
+	<bean id="storedImageSetModelInclusionReader"
+		class="com.dereekb.gae.model.extension.inclusion.reader.impl.ModelInclusionReaderImpl">
+		<constructor-arg index="0" ref="storedImageSetLinkModelAccessor"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->

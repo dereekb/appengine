@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.components;
 
+import java.util.List;
+
 import com.dereekb.gae.model.extension.links.system.components.exceptions.UnavailableLinkException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
@@ -30,4 +32,10 @@ public interface LinkModel
 	 */
 	public Link getLink(String linkName) throws UnavailableLinkException;
 
+	/**
+	 * 
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public List<? extends Link> getLinks();
+	
 }

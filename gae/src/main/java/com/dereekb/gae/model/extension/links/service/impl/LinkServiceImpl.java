@@ -14,11 +14,11 @@ import com.dereekb.gae.model.extension.links.system.components.exceptions.Unavai
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemInstance;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
-import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
-import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.internal.ChangesAlreadyExecutedException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.internal.LinkModificationSystemInstanceAlreadyRunException;
 import com.dereekb.gae.model.extension.links.system.modification.exception.internal.UnexpectedLinkModificationSystemChangeException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.ConflictingLinkModificationSystemRequestException;
+import com.dereekb.gae.model.extension.links.system.modification.exception.request.InvalidLinkModificationSystemRequestException;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemInstanceOptionsImpl;
 
 /**
@@ -31,6 +31,10 @@ public class LinkServiceImpl
         implements LinkService {
 
 	private LinkModificationSystem system;
+
+	public LinkServiceImpl(LinkModificationSystem system) {
+		this.setSystem(system);
+	}
 
 	public LinkModificationSystem getSystem() {
 		return this.system;

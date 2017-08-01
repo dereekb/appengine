@@ -16,13 +16,13 @@
 		<constructor-arg index="0" ref="storedBlobReadService" />
 		<constructor-arg index="1" ref="storedBlobDataConverter" />
 		<constructor-arg index="2"
-			ref="storedBlobLinkModelInclusionReader" />
+			ref="storedBlobModelInclusionReader" />
 	</bean>
 
-	<bean id="storedBlobLinkModelInclusionReader"
-		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
+	<bean id="storedBlobModelInclusionReader"
+		class="com.dereekb.gae.model.extension.inclusion.reader.impl.ModelInclusionReaderImpl"
 		lazy-init="false">
-		<constructor-arg index="0" ref="storedBlobLinkSystem"></constructor-arg>
+		<constructor-arg index="0" ref="storedBlobLinkModelAccessor"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->

@@ -66,7 +66,7 @@
 
 	<bean id="storedImageSetRemoveImagesTaskFactory"
 		class="com.dereekb.gae.model.extension.links.task.LinkModelChangeTaskFactory">
-		<constructor-arg index="0" ref="linkSystem" />
+		<constructor-arg index="0" ref="linkModificationSystem" />
 		<constructor-arg index="1">
 			<bean
 				class="com.dereekb.gae.model.stored.image.set.link.taskqueue.UnlinkStoredImagesInStoredImageSet">

@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.mutable.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -275,6 +276,17 @@ public class MutableLinkSystemBuilderImpl
 			ReadResponse<T> response = this.delegate.getReadService().read(request);
 			return new LinkModelReadResponse(response);
 		}
+		
+		// MARK: TypedLinkModelAccessor
+		@Override
+		public LinkModel makeLinkModel(T model) {
+			return MutableLinkModelAccessorImpl.this.makeMutableLinkModel(model);
+		}
+
+		@Override
+		public List<LinkModel> makeLinkModels(Collection<T> models) {
+			return MutableLinkModelAccessorImpl.this.makeLinkModels(models);
+		}
 
 		// MARK: LinkModelReadResponse
 		private class LinkModelReadResponse extends AbstractReadResponseWrapper<LinkModel, T> {
@@ -338,6 +350,20 @@ public class MutableLinkSystemBuilderImpl
 				MutableLinkAccessor accessor = MutableLinkModelAccessorImpl.this.delegate.makeLinkAccessor(linkName,
 				        this.model);
 				return new MutableLinkImpl(info, accessor);
+			}
+
+			@Override
+			public List<? extends MutableLink> getLinks() {
+				List<MutableLink> links = new ArrayList<MutableLink>();
+				
+				LinkModelInfo linkModelInfo = this.getLinkModelInfo();
+				Set<String> linkNames = linkModelInfo.getLinkNames();
+				
+				for (String linkName : linkNames) {
+					links.add(this.getLink(linkName));
+				}
+				
+				return links;
 			}
 
 			/**
@@ -453,7 +479,7 @@ public class MutableLinkSystemBuilderImpl
 			}
 
 		}
-
+		
 	}
 
 	// MARK: Internal

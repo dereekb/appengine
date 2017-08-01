@@ -14,8 +14,10 @@ import com.dereekb.gae.model.extension.links.system.mutable.FullLinkModelAccesso
 import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkSystemBuilderImpl;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkSystem;
+import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * Used for building a {@link LinkSystem} and {@link LinkModificationSystem},
@@ -28,7 +30,7 @@ public class LinkModificationSystemBuilder {
 
 	private List<LinkModificationSystemBuilderEntry> entries;
 
-	private transient Map<String, ? extends FullLinkModelAccessor> fullAccessors;
+	private transient CaseInsensitiveMap<? extends FullLinkModelAccessor> fullAccessors;
 	private transient MutableLinkSystemBuilderImpl mutableLinkSystemBuilder;
 
 	private transient LinkSystem linkSystem;
@@ -86,8 +88,19 @@ public class LinkModificationSystemBuilder {
 
 		return this.linkModificationSystem;
 	}
+	
+	public FullLinkModelAccessor getAccessorForType(String type) throws UnavailableTypesException {
+		 FullLinkModelAccessor accessor = this.getFullLinkModelAccessors().get(type);
+		 
+		 if (accessor == null) {
+			 throw new UnavailableTypesException(type);
+		 }
+		 
+		 return accessor;
+	}
 
-	private Map<String, ? extends FullLinkModelAccessor> getFullLinkModelAccessors() {
+	// MARK: Internal
+	private CaseInsensitiveMap<? extends FullLinkModelAccessor> getFullLinkModelAccessors() {
 		if (this.fullAccessors == null) {
 			this.fullAccessors = this.buildFullLinkModelAccessors();
 		}
@@ -96,13 +109,13 @@ public class LinkModificationSystemBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, ? extends FullLinkModelAccessor> buildFullLinkModelAccessors() {
-		Map<String, FullLinkModelAccessor> map = new HashMap<String, FullLinkModelAccessor>();
+	private CaseInsensitiveMap<? extends FullLinkModelAccessor> buildFullLinkModelAccessors() {
+		CaseInsensitiveMap<FullLinkModelAccessor> map = new CaseInsensitiveMap<FullLinkModelAccessor>();
+		MutableLinkSystemBuilderImpl builder = this.getMutableLinkSystemBuilder();
 
 		for (LinkModificationSystemBuilderEntry entry : this.entries) {
 			String type = entry.getLinkModelType();
-			FullLinkModelAccessor accessor = this.mutableLinkSystemBuilder.makeAccessor(entry);
-
+			FullLinkModelAccessor accessor = builder.makeAccessor(entry);
 			map.put(type, accessor);
 		}
 
@@ -110,7 +123,7 @@ public class LinkModificationSystemBuilder {
 	}
 
 	private MutableLinkSystemBuilderImpl getMutableLinkSystemBuilder() {
-		if (this.mutableLinkSystemBuilder != null) {
+		if (this.mutableLinkSystemBuilder == null) {
 			this.mutableLinkSystemBuilder = this.buildMutableLinkSystemBuilder();
 		}
 

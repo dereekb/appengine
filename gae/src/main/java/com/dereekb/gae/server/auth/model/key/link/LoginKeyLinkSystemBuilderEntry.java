@@ -59,7 +59,7 @@ public class LoginKeyLinkSystemBuilderEntry extends AbstractMutableLinkSystemBui
 	protected List<MutableLinkData<LoginKey>> makeLinkData() {
 		List<MutableLinkData<LoginKey>> linkData = new ArrayList<MutableLinkData<LoginKey>>();
 
-		// LoginKey Link
+		// LoginPointer Link
 		SingleMutableLinkData<LoginKey> loginPointerLinkData = new SingleMutableLinkData<LoginKey>(this.loginPointerLinkInfo, new SingleMutableLinkDataDelegate<LoginKey>() {
 
 			@Override

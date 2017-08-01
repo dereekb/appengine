@@ -10,6 +10,4 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *
  * @param <T> model type
  */
-public interface FullLinkModelAccessor<T extends UniqueModel> extends MutableLinkModelAccessor<T>, MutableLinkModelBuilder<T>, LinkModelAccessor {
-
-}
+public interface FullLinkModelAccessor<T extends UniqueModel> extends MutableLinkModelAccessor<T>, MutableLinkModelBuilder<T>, LinkModelAccessor { }

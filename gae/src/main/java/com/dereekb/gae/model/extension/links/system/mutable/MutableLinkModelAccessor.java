@@ -5,6 +5,7 @@ import java.util.Collection;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.extension.links.system.readonly.TypedLinkModelReader;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -13,16 +14,18 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * 
  * @author dereekb
  */
-public interface MutableLinkModelAccessor<T extends UniqueModel> {
+public interface MutableLinkModelAccessor<T extends UniqueModel>
+        extends TypedLinkModelReader<T> {
 
 	/**
 	 * Reads existing models and returns a response containing available keys.
 	 * 
-	 * @param modelKeys {@link Collection}. Never {@code null}.
+	 * @param modelKeys
+	 *            {@link Collection}. Never {@code null}.
 	 * @return {@link ReadResponse}. Never {@code null}.
 	 */
 	public ReadResponse<ModelKey> readExistingModels(Collection<ModelKey> modelKeys);
-	
+
 	/**
 	 * Reads models and wraps them together with their pairs.
 	 */

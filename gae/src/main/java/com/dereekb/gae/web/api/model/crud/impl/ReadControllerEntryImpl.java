@@ -30,8 +30,9 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
         implements ReadControllerEntry {
 
 	private ReadService<T> readService;
-	private ModelInclusionReader<T> inclusionReader;
 	private DirectionalConverter<T, ? extends Object> dtoConverter;
+
+	private ModelInclusionReader<T> inclusionReader;
 
 	public ReadControllerEntryImpl(ReadService<T> readService, DirectionalConverter<T, ? extends Object> dtoConverter) {
 		this(readService, dtoConverter, null);
@@ -47,11 +48,27 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 
 	public ReadService<T> getReadService() {
 		return this.readService;
-    }
+	}
 
-    public void setReadService(ReadService<T> readService) {
-    	this.readService = readService;
-    }
+	public void setReadService(ReadService<T> readService) {
+		if (readService == null) {
+			throw new IllegalArgumentException("readService cannot be null.");
+		}
+
+		this.readService = readService;
+	}
+
+	public DirectionalConverter<T, ? extends Object> getDtoConverter() {
+		return this.dtoConverter;
+	}
+
+	public void setDtoConverter(DirectionalConverter<T, ? extends Object> dtoConverter) {
+		if (dtoConverter == null) {
+			throw new IllegalArgumentException("dtoConverter cannot be null.");
+		}
+
+		this.dtoConverter = dtoConverter;
+	}
 
 	public ModelInclusionReader<T> getInclusionReader() {
 		return this.inclusionReader;
@@ -59,14 +76,6 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 
 	public void setInclusionReader(ModelInclusionReader<T> inclusionReader) {
 		this.inclusionReader = inclusionReader;
-	}
-
-	public DirectionalConverter<T, ?> getDtoConverter() {
-		return this.dtoConverter;
-	}
-
-	public void setDtoConverter(DirectionalConverter<T, ?> dtoConverter) {
-		this.dtoConverter = dtoConverter;
 	}
 
 	// MARK: ReadControllerEntry

@@ -20,7 +20,6 @@
 		<ref bean="loginObjectifyEntry" />
 		<ref bean="loginKeyObjectifyEntry" />
 		<ref bean="loginPointerObjectifyEntry" />
-		<ref bean="geoPlaceObjectifyEntry" />
 		<ref bean="storedBlobObjectifyEntry" />
 		<ref bean="storedImageObjectifyEntry" />
 		<ref bean="storedImageSetObjectifyEntry" />

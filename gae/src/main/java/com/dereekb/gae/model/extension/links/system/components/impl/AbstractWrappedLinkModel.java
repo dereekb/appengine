@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.links.system.components.impl;
 
+import java.util.List;
+
 import com.dereekb.gae.model.extension.links.system.components.Link;
 import com.dereekb.gae.model.extension.links.system.components.LinkModel;
 import com.dereekb.gae.model.extension.links.system.components.LinkModelInfo;
@@ -45,6 +47,11 @@ public abstract class AbstractWrappedLinkModel
 	@Override
 	public Link getLink(String linkName) throws UnavailableLinkException {
 		return this.linkModel.getLink(linkName);
+	}
+
+	@Override
+	public List<? extends Link> getLinks() {
+		return this.linkModel.getLinks();
 	}
 
 }

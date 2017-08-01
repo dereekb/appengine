@@ -14,12 +14,6 @@
 		<constructor-arg index="0" ref="loginPointerCrudService" />
 		<constructor-arg index="1" ref="loginPointerUpdater" />
 		<constructor-arg index="2" ref="loginPointerScheduleUpdateReview" />
-		<!-- Reverse Links Configuration -->
-		<property name="reverseLinkNames">
-			<map key-type="java.lang.String" value-type="java.lang.String">
-			</map>
-		</property>
-		<!-- Delete Links Configuration -->
 	</bean>
 
 </beans>

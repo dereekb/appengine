@@ -26,7 +26,6 @@
 		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateImpl">
 		<constructor-arg index="0">
 			<map key-type="java.lang.String">
-				<entry key-ref="geoPlaceSearchType" value-ref="geoPlaceSearchDelegateEntry" />
 				<entry key-ref="storedBlobSearchType" value-ref="storedBlobSearchDelegateEntry" />
 				<entry key-ref="storedImageSearchType" value-ref="storedImageSearchDelegateEntry" />
 				<entry key-ref="storedImageSetSearchType" value-ref="storedImageSetSearchDelegateEntry" />

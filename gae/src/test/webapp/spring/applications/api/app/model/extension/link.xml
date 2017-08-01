@@ -12,7 +12,7 @@
 	<!-- SERVICE -->
 	<bean id="linkService"
 		class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl">
-		<constructor-arg index="0" ref="linkSystem" />
+		<constructor-arg index="0" ref="linkModificationSystem" />
 	</bean>
 
 	<!-- SYSTEM -->
@@ -20,8 +20,8 @@
 		factory-bean="linkModificationSystemBuilder" factory-method="makeLinkModifictionSystem">
 	</bean>
 
-	<bean id="linkSystem" lazy-init="false"
-		factory-bean="linkModificationSystemBuilder" factory-method="makeLinkSystem">
+	<bean id="linkSystem" lazy-init="false" factory-bean="linkModificationSystemBuilder"
+		factory-method="makeLinkSystem">
 	</bean>
 
 	<!-- LinkInfoSystem -->
@@ -39,5 +39,31 @@
 		<ref bean="loginKeyLinkSystemEntry" />
 		<ref bean="loginPointerLinkSystemEntry" />
 	</util:list>
+
+	<!-- Accessors -->
+	<bean id="loginKeyLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
+		factory-method="getAccessorForType">
+		<constructor-arg index="0" ref="loginKeyType" />
+	</bean>
+
+	<bean id="loginPointerLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
+		factory-method="getAccessorForType">
+		<constructor-arg index="0" ref="loginPointerType" />
+	</bean>
+	
+	<bean id="storedBlobLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
+		factory-method="getAccessorForType">
+		<constructor-arg index="0" ref="storedBlobType" />
+	</bean>
+	
+	<bean id="storedImageLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
+		factory-method="getAccessorForType">
+		<constructor-arg index="0" ref="storedImageType" />
+	</bean>
+	
+	<bean id="storedImageSetLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
+		factory-method="getAccessorForType">
+		<constructor-arg index="0" ref="storedImageSetType" />
+	</bean>
 
 </beans>

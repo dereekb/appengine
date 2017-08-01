@@ -18,8 +18,6 @@
 	<bean id="linkExtensionApiController"
 		class="com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController">
 		<constructor-arg index="0" ref="linkService" />
-		<constructor-arg index="1"
-			ref="linkExtensionApiControllerDelegate" />
 	</bean>
 	
 </beans>

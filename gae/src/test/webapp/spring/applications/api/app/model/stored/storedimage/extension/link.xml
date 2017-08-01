@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<bean id="storedImageLinkSystemEntry"
-		class="com.dereekb.gae.server.auth.model.login.link.LoginLinkSystemBuilderEntry">
+		class="com.dereekb.gae.model.stored.image.link.StoredImageLinkSystemBuilderEntry">
 		<constructor-arg index="0" ref="storedImageCrudService" />
 		<constructor-arg index="1" ref="storedImageUpdater" />
 		<constructor-arg index="2" ref="storedImageScheduleUpdateReview" />

@@ -16,13 +16,12 @@
 		<constructor-arg index="0" ref="loginPointerReadService" />
 		<constructor-arg index="1" ref="loginPointerDataConverter" />
 		<constructor-arg index="2"
-			ref="loginPointerLinkModelInclusionReader" />
+			ref="loginPointerModelInclusionReader" />
 	</bean>
 
-	<bean id="loginPointerLinkModelInclusionReader"
-		class="com.dereekb.gae.model.extension.links.components.accessor.impl.LinkModelInclusionReaderImpl"
-		lazy-init="false">
-		<constructor-arg index="0" ref="loginPointerLinkSystem"></constructor-arg>
+	<bean id="loginPointerModelInclusionReader"
+		class="com.dereekb.gae.model.extension.inclusion.reader.impl.ModelInclusionReaderImpl">
+		<constructor-arg index="0" ref="loginPointerLinkModelAccessor"></constructor-arg>
 	</bean>
 
 	<!-- Edit Controller -->
