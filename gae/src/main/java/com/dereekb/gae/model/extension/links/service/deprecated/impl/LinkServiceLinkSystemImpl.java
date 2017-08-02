@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
-import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
+import com.dereekb.gae.model.extension.links.deprecated.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;

@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.components.Link;
-import com.dereekb.gae.model.extension.links.components.Relation;
-import com.dereekb.gae.model.extension.links.components.exception.RelationChangeException;
-import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
-import com.dereekb.gae.model.extension.links.components.impl.RelationImpl;
-import com.dereekb.gae.model.extension.links.components.model.LinkModel;
-import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
-import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
+import com.dereekb.gae.model.extension.links.deprecated.components.Link;
+import com.dereekb.gae.model.extension.links.deprecated.components.Relation;
+import com.dereekb.gae.model.extension.links.deprecated.components.exception.RelationChangeException;
+import com.dereekb.gae.model.extension.links.deprecated.components.exception.UnavailableLinkException;
+import com.dereekb.gae.model.extension.links.deprecated.components.impl.RelationImpl;
+import com.dereekb.gae.model.extension.links.deprecated.components.model.LinkModel;
+import com.dereekb.gae.model.extension.links.deprecated.components.model.LinkModelSet;
+import com.dereekb.gae.model.extension.links.deprecated.components.system.LinkSystem;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;

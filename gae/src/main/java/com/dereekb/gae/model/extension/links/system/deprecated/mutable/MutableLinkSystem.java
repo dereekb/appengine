@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.system.mutable;
 
-import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
+import com.dereekb.gae.model.extension.links.deprecated.components.model.LinkModelSet;
 import com.dereekb.gae.model.extension.links.system.exception.UnavailableLinkModelAccessorException;
 import com.dereekb.gae.model.extension.links.system.readonly.LinkModelAccessor;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
