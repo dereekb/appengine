@@ -1,6 +1,8 @@
 package com.dereekb.gae.test.mock.client.crud;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Assert;
 
@@ -82,6 +84,34 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		// Create again.
 		CreateResponse<T> simpleCreateResponse = this.createRequestSender.create(createRequest);
 		Assert.assertFalse(simpleCreateResponse.getModels().isEmpty());
+	}
+
+	public void testMockCreateNothingRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
+
+		List<T> noTemplates = new ArrayList<T>();
+		CreateRequest<T> createRequest = new CreateRequestImpl<T>(noTemplates);
+
+		try {
+			this.createRequestSender.sendRequest(createRequest, security);
+			Assert.fail("Should have failed request.");
+		} catch (ClientRequestFailureException e) {
+			
+		}
+	}
+
+	public void testMockCreateTooManyRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
+
+		int moreThanMax = CreateRequestImpl.MAX_TEMPLATES + 5;
+		
+		List<T> tooManyTemplates = this.testModelGenerator.generate(moreThanMax);
+		CreateRequest<T> createRequest = new CreateRequestImpl<T>(tooManyTemplates);
+
+		try {
+			this.createRequestSender.sendRequest(createRequest, security);
+			Assert.fail("Should have failed request.");
+		} catch (ClientRequestFailureException e) {
+			
+		}
 	}
 
 }

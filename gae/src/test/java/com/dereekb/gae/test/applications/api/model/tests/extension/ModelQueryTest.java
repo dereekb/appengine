@@ -23,12 +23,22 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOpt
 import com.dereekb.gae.server.datastore.objectify.query.builder.ConfigurableObjectifyQueryRequestConfigurer;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestOptionsImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.mock.client.extension.ModelClientQueryRequestSenderTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+/**
+ * 
+ * @author dereekb
+ *
+ * @param <T> model type
+ * 
+ * @deprecated Replaced by {@link ModelClientQueryRequestSenderTestUtility}.
+ */
+@Deprecated
 public abstract class ModelQueryTest<T extends ObjectifyModel<T>> extends ApiApplicationTestContext {
 
 	private JsonParser parser = new JsonParser();

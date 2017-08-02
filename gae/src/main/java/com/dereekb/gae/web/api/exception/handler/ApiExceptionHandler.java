@@ -261,11 +261,12 @@ public class ApiExceptionHandler {
 	
 	public static class ConstraintError extends ApiResponseErrorImpl {
 
-		private static final String ERROR_TITLE = "Constraint Error";
-		private static final String ERROR_DETAIL_FORMAT = "Invalid Request. Contains %s error(s).";
+		private static final String ERROR_CODE = "REQUEST_ERROR";
+		private static final String ERROR_TITLE = "Request Error";
+		private static final String ERROR_DETAIL_FORMAT = "Invalid Request. Contains %s request error(s).";
 
 		public ConstraintError() {
-			super(ValidationError.ERROR_CODE, ERROR_TITLE);
+			super(ERROR_CODE, ERROR_TITLE);
 		}
 
 		public ConstraintError(Set<ConstraintViolation<?>> violations) {
@@ -279,6 +280,7 @@ public class ApiExceptionHandler {
 			for (ConstraintViolation<?> violation : violations) {
 				FieldValidationIssue issue = new FieldValidationIssue();
 				
+				issue.setField("n/a");
 				issue.setValue("n/a");
 				issue.setMessage(violation.getMessage());
 				

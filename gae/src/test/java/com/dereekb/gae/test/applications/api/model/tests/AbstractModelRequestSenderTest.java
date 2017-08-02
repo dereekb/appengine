@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.model;
+package com.dereekb.gae.test.applications.api.model.tests;
 
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;

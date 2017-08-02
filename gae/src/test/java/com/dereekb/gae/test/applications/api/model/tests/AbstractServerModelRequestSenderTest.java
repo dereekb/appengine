@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.model;
+package com.dereekb.gae.test.applications.api.model.tests;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -108,6 +108,20 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 		}
 	}
 
+	@Test
+	public void testSystemModelClientCreateNothingRequest() throws Exception {
+		if (this.canCreateModel == true && this.createRequestUtility != null) {
+			this.createRequestUtility.testMockCreateNothingRequest(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testSystemModelClientCreateTooManyRequest() throws Exception {
+		if (this.canCreateModel == true && this.createRequestUtility != null) {
+			this.createRequestUtility.testMockCreateTooManyRequest(this.getRequestSecurity());
+		}
+	}
+
 	// TODO: Add test for invalid create templates.
 
 	// MARK: Read Tests
@@ -129,6 +143,13 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 	public void testAtomicModelClientReadRequest() throws Exception {
 		if (this.readRequestUtility != null) {
 			this.readRequestUtility.testAtomicReadRequestFailures(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testMockReadRequestWithRelated() throws Exception {
+		if (this.readRequestUtility != null) {
+			this.readRequestUtility.testMockReadRequestWithRelated(this.getRequestSecurity());
 		}
 	}
 

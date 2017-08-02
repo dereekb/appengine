@@ -196,7 +196,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		// Update again.
 		try {
-			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+			this.updateRequestSender.update(updateRequest);
 			Assert.fail();
 		} catch (Exception e) {
 

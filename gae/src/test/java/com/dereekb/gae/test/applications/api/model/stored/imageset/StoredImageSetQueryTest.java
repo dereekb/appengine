@@ -22,6 +22,7 @@ import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTes
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
+@Deprecated
 public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 
 	@Autowired

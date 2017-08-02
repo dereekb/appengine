@@ -9,7 +9,7 @@ import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.ClientQueryRequestSender;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.test.applications.api.model.AbstractServerModelRequestSenderTest;
+import com.dereekb.gae.test.applications.api.model.tests.AbstractServerModelRequestSenderTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 public class LoginServerUserApiTest extends AbstractServerModelRequestSenderTest<Login> {

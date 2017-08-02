@@ -14,6 +14,7 @@ import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryReque
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Deprecated
 public class LoginQueryTest extends ModelQueryTest<Login> {
 
 	@Override
