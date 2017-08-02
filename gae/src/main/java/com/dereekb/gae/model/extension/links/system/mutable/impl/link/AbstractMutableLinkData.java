@@ -119,7 +119,7 @@ public abstract class AbstractMutableLinkData<T>
 			return new MutableLinkChangeResultImpl(change, beforeKeysSet, afterKeysSet);
 		}
 
-		private void assertChangeIsAllowed(MutableLinkChange change) throws MutableLinkChangeException {
+		protected void assertChangeIsAllowed(MutableLinkChange change) throws MutableLinkChangeException {
 			AbstractMutableLinkData.this.assertionDelegate.assertChangeIsAllowed(this.model, change);
 		}
 		
