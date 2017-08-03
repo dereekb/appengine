@@ -14,15 +14,6 @@
 	<!-- Enable Validation On API Controllers -->
 	<bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
 
-	<!-- Exception Handlers -->
-	<bean id="apiExceptionHandler"
-		class="com.dereekb.gae.web.api.exception.handler.ApiExceptionHandler">
-	</bean>
-
-	<bean id="modelRequestExceptionHandler"
-		class="com.dereekb.gae.web.api.model.exception.handler.ModelRequestExceptionHandler">
-	</bean>
-
 	<!-- MODELS -->
 	<import resource="model/model.xml" />
 

@@ -28,9 +28,9 @@ public class LazyModelInclusionReaderAnalysis<T extends UniqueModel>
 
 	private T model;
 	private TypedLinkModelReader<T> accessor;
-	
+
 	private transient CaseInsensitiveMapWithSet<ModelKey> keysMap;
-	
+
 	public LazyModelInclusionReaderAnalysis(T model, TypedLinkModelReader<T> accessor) {
 		this.setModel(model);
 		this.setAccessor(accessor);
@@ -81,7 +81,7 @@ public class LazyModelInclusionReaderAnalysis<T extends UniqueModel>
 		if (this.keysMap == null) {
 			this.keysMap = this.buildRelationMap();
 		}
-		
+
 		return this.keysMap;
 	}
 
@@ -89,22 +89,28 @@ public class LazyModelInclusionReaderAnalysis<T extends UniqueModel>
 	public T getAnalyzedModel() {
 		return this.model;
 	}
-	
+
 	// MARK: Internal
 	private CaseInsensitiveMapWithSet<ModelKey> buildRelationMap() {
-		CaseInsensitiveMapWithSet<ModelKey> relationMap = new CaseInsensitiveMapWithSet<ModelKey>(); 
+		CaseInsensitiveMapWithSet<ModelKey> relationMap = new CaseInsensitiveMapWithSet<ModelKey>();
 		LinkModel linkModel = this.accessor.makeLinkModel(this.model);
 		List<? extends Link> links = linkModel.getLinks();
-		
-		for (Link link : links) {
-			LinkInfo linkInfo = link.getLinkInfo();
-			
-			String relationLinkType = linkInfo.getRelationLinkType();
-			Set<ModelKey> linkKeys = link.getLinkedModelKeys();
-			
-			relationMap.addAll(relationLinkType, linkKeys);
+
+		try {
+
+			for (Link link : links) {
+				LinkInfo linkInfo = link.getLinkInfo();
+
+				String relationLinkType = linkInfo.getRelationLinkType();
+				Set<ModelKey> linkKeys = link.getLinkedModelKeys();
+
+				relationMap.addAll(relationLinkType, linkKeys);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
+
 		return relationMap;
 	}
 

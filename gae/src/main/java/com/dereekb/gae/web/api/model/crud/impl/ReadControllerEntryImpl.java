@@ -10,8 +10,9 @@ import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
+import com.dereekb.gae.model.extension.inclusion.reader.InclusionReaderSetAnalysis;
 import com.dereekb.gae.model.extension.inclusion.reader.ModelInclusionReader;
-import com.dereekb.gae.model.extension.inclusion.reader.ModelInclusionReaderSetAnalysis;
+import com.dereekb.gae.model.extension.inclusion.reader.impl.EmptyInclusionReaderSetAnalysis;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.model.crud.controller.ReadControllerEntry;
@@ -102,12 +103,15 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 
 		// Analysis
 		if (request.loadRelatedTypes()) {
-			if (this.inclusionReader != null) {
-				ModelInclusionReaderSetAnalysis<T> analysis = this.inclusionReader.analyzeInclusionsForModels(available);
-				response.setAnalysis(analysis);
+			InclusionReaderSetAnalysis analysis = null;
+			
+			if (this.inclusionReader != null) { 
+				analysis = this.inclusionReader.analyzeInclusionsForModels(available);
 			} else {
-				// TODO: Show issue that included are not available.
+				analysis = EmptyInclusionReaderSetAnalysis.make();
 			}
+			
+			response.setAnalysis(analysis);
 		}
 
 		return response;

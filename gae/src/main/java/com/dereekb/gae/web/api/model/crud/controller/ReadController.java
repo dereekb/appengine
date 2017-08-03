@@ -1,10 +1,13 @@
 package com.dereekb.gae.web.api.model.crud.controller;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +53,7 @@ public class ReadController {
 	public static final String KEYS_PARAM = "keys";
 
 	public static final int MAX_KEYS_PER_REQUEST = 40;
-	
+
 	private static final String INVALID_KEYS_MESSAGE = "Must submit between 1 and " + MAX_KEYS_PER_REQUEST + " keys.";
 
 	private boolean appendUnavailable = true;
@@ -116,7 +119,7 @@ public class ReadController {
 	@ResponseBody
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = "application/json")
 	public ApiResponse readModels(@PathVariable("type") String modelType,
-	                              @RequestParam(name = KEYS_PARAM, required = true) @Size(min = 1, max = MAX_KEYS_PER_REQUEST, message=INVALID_KEYS_MESSAGE) List<String> keys,
+	                              @RequestParam(name = KEYS_PARAM, required = true) @Valid() @Size(min = 1, max = MAX_KEYS_PER_REQUEST, message = INVALID_KEYS_MESSAGE) List<String> keys,
 	                              @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
 	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
 	                              @RequestParam(name = RELATED_FILTER_PARAM, required = false) Set<String> relatedTypes)
@@ -180,19 +183,31 @@ public class ReadController {
 
 			if (filteredTypes != null && filteredTypes.isEmpty() == false) {
 				types = filteredTypes;
+			} else {
+				filteredTypes = Collections.emptySet();
 			}
 
-			try {
-				for (String type : types) {
+			Set<String> missingTypes = new HashSet<String>();
+			
+			for (String type : types) {
+				try {
 					Set<ModelKey> keys = analysis.getKeysForType(type);
 
 					if (keys.size() > 0) {
 						ApiResponseDataImpl inclusionData = this.readRelated(type, keys);
 						response.addIncluded(inclusionData);
 					}
+				} catch (InclusionTypeUnavailableException e) {
+					missingTypes.addAll(e.getTypes());
 				}
-			} catch (InclusionTypeUnavailableException e) {
-				ApiResponseError error = e.asResponseError();
+			}
+			
+			// Only return an error for items that were requested but aren't available.
+			missingTypes.retainAll(filteredTypes);
+			
+			if (missingTypes.size() > 0) {
+				InclusionTypeUnavailableException exception = new InclusionTypeUnavailableException(missingTypes);
+				ApiResponseError error = exception.asResponseError();
 				response.addError(error);
 			}
 		}
@@ -202,7 +217,7 @@ public class ReadController {
 
 	private ApiResponseDataImpl readRelated(String modelType,
 	                                        Set<ModelKey> keys)
-	        throws UnavailableTypesException {
+	        throws InclusionTypeUnavailableException {
 		ReadControllerEntryResponse response = this.read(modelType, false, keys);
 		Collection<Object> models = response.getResponseModels();
 		return new ApiResponseDataImpl(modelType, models);
@@ -211,7 +226,7 @@ public class ReadController {
 	private ReadControllerEntryResponse read(String modelType,
 	                                         boolean atomic,
 	                                         Collection<ModelKey> keys)
-	        throws UnavailableTypesException {
+	        throws InclusionTypeUnavailableException {
 		ReadControllerEntry entry = this.getEntryForType(modelType);
 		ReadControllerEntryRequestImpl request = new ReadControllerEntryRequestImpl(modelType, atomic, keys);
 		request.setLoadRelatedTypes(false);
@@ -223,11 +238,11 @@ public class ReadController {
 		return entry.read(request);
 	}
 
-	private ReadControllerEntry getEntryForType(String modelType) throws UnavailableTypesException {
+	private ReadControllerEntry getEntryForType(String modelType) throws InclusionTypeUnavailableException {
 		ReadControllerEntry entry = this.entries.get(modelType);
 
 		if (entry == null) {
-			throw new UnavailableTypesException(modelType);
+			throw new InclusionTypeUnavailableException(modelType);
 		}
 
 		return entry;
