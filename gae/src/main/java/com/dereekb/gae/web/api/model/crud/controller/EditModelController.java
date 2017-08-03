@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.model.crud.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,8 @@ import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
 import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
 import com.dereekb.gae.web.api.model.crud.request.ApiUpdateRequest;
+import com.dereekb.gae.web.api.model.exception.TooManyRequestKeysException;
+import com.dereekb.gae.web.api.model.exception.TooManyTemplatesException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
@@ -35,6 +39,10 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  *            Model Data Transfer Type
  */
 public abstract class EditModelController<T extends UniqueModel, I> {
+	
+	public static final Integer DEFAULT_MAX_ELEMENTS = 50;
+	
+	private Integer maxElements = DEFAULT_MAX_ELEMENTS;
 
 	private EditModelControllerDelegate<T> delegate;
 	private EditModelControllerConversionDelegate<T, I> conversionDelegate;
@@ -76,6 +84,8 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	public ApiResponse create(@Valid @RequestBody ApiCreateRequest<I> request) {
 		ApiResponse response = null;
 
+		TooManyTemplatesException.assertTemplatesCount(request.getData(), this.maxElements);
+		
 		try {
 			CreateRequest<T> createRequest = this.conversionDelegate.convert(request);
 			CreateResponse<T> createResponse = this.delegate.create(createRequest);
@@ -99,6 +109,8 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	public ApiResponse update(@Valid @RequestBody ApiUpdateRequest<I> request) {
 		ApiResponse response = null;
 
+		TooManyTemplatesException.assertTemplatesCount(request.getData(), this.maxElements);
+		
 		try {
 			UpdateRequest<T> updateRequest = this.conversionDelegate.convert(request);
 			UpdateResponse<T> updateResponse = this.delegate.update(updateRequest);
@@ -118,9 +130,12 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 
 	@ResponseBody
 	@RequestMapping(value = { "/delete", "/destroy" }, method = RequestMethod.DELETE, produces = "application/json")
-	public ApiResponse delete(@Valid @RequestBody ApiDeleteRequest request) {
+	public ApiResponse delete(@Valid @RequestBody ApiDeleteRequest request) throws TooManyRequestKeysException {
 		ApiResponse response = null;
 
+		List<String> keys = request.getData();
+		TooManyRequestKeysException.assertKeysCount(keys, this.maxElements);
+		
 		try {
 			DeleteRequest deleteRequest = this.conversionDelegate.convert(request);
 			DeleteResponse<T> deleteResponse = this.delegate.delete(deleteRequest);

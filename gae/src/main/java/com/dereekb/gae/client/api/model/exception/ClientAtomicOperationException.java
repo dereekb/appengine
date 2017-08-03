@@ -105,7 +105,7 @@ public class ClientAtomicOperationException extends ClientRequestFailureExceptio
 		/**
 		 * Serializes keys from the error associated with the atomic operation
 		 * exception,
-		 * {@link MissingRequiredResourceException#API_RESPONSE_ERROR_CODE}.
+		 * {@link MissingRequiredResourceException#ERROR_CODE}.
 		 * 
 		 * @param response
 		 *            {@link ClientApiResponse}. Never {@code null}.
@@ -118,7 +118,7 @@ public class ClientAtomicOperationException extends ClientRequestFailureExceptio
 			ClientResponseError error = response.getError();
 			Map<String, ClientResponseErrorInfo> errorInfoMap = error.getErrorInfoMap();
 			ClientResponseErrorInfo missingKeysInfo = errorInfoMap
-			        .get(MissingRequiredResourceException.API_RESPONSE_ERROR_CODE);
+			        .get(MissingRequiredResourceException.ERROR_CODE);
 
 			if (missingKeysInfo != null) {
 				objectKeys = this.keySerializer.serializeKeysFromErrorInfoData(type, missingKeysInfo);

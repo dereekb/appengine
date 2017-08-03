@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Assert;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
@@ -17,6 +18,7 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleCreateResponse;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
 /**
  * Test utility for {@link ClientCreateRequestSender}.
@@ -92,24 +94,24 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		CreateRequest<T> createRequest = new CreateRequestImpl<T>(noTemplates);
 
 		try {
-			this.createRequestSender.sendRequest(createRequest, security);
+			this.createRequestSender.create(createRequest, security);
 			Assert.fail("Should have failed request.");
 		} catch (ClientRequestFailureException e) {
-			
+			//e.printStackTrace();
 		}
 	}
 
 	public void testMockCreateTooManyRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
 
-		int moreThanMax = CreateRequestImpl.MAX_TEMPLATES + 5;
+		int moreThanMax = EditModelController.DEFAULT_MAX_ELEMENTS + 5;
 		
 		List<T> tooManyTemplates = this.testModelGenerator.generate(moreThanMax);
 		CreateRequest<T> createRequest = new CreateRequestImpl<T>(tooManyTemplates);
 
 		try {
-			this.createRequestSender.sendRequest(createRequest, security);
+			this.createRequestSender.create(createRequest, security);
 			Assert.fail("Should have failed request.");
-		} catch (ClientRequestFailureException e) {
+		} catch (ClientTooMuchInputException e) {
 			
 		}
 	}

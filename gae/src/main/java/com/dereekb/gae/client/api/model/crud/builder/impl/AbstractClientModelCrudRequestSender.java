@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException.ClientAtomicOperationExceptionUtility;
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractConfiguredClientModelRequestSender;
@@ -67,12 +68,17 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	            ClientRequestFailureException {
 		if (clientResponse.getSuccess() == false) {
 			this.assertNoAtomicOperationError(clientResponse);
+			this.assertNotTooMuchInputError(clientResponse);
 			throw new ClientRequestFailureException(clientResponse);
 		}
 	}
 
 	public void assertNoAtomicOperationError(ClientApiResponse clientResponse) throws ClientAtomicOperationException {
 		this.atomicOperationUtility.assertNoAtomicOperationError(this.getType(), clientResponse);
+	}
+
+	public void assertNotTooMuchInputError(ClientApiResponse clientResponse) throws ClientTooMuchInputException {
+		ClientTooMuchInputException.assertNotTooMuchInputException(clientResponse);
 	}
 
 	public List<ModelKey> serializeMissingResourceKeys(ClientApiResponse response) {

@@ -17,8 +17,8 @@ public class MissingRequiredResourceException extends ApiSafeRuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String API_RESPONSE_ERROR_CODE = "MISSING_RESOURCE";
-	public static final String API_RESPONSE_ERROR_TITLE = "Missing Resource";
+	public static final String ERROR_CODE = "MISSING_RESOURCE";
+	public static final String ERROR_TITLE = "Missing Resource";
 
 	public List<String> resources;
 	public String message;
@@ -79,8 +79,7 @@ public class MissingRequiredResourceException extends ApiSafeRuntimeException {
 
 	public static ApiResponseErrorImpl makeApiError(Collection<String> resources,
 	                                                String message) {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl(API_RESPONSE_ERROR_CODE);
-		error.setTitle(API_RESPONSE_ERROR_TITLE);
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE, ERROR_TITLE);
 		error.setDetail(message);
 		error.setData(resources);
 		return error;

@@ -3,6 +3,7 @@ package com.dereekb.gae.client.api.model.crud.builder;
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientUpdateApiResponse;
 import com.dereekb.gae.client.api.model.crud.services.ClientUpdateService;
 import com.dereekb.gae.client.api.model.shared.builder.SecuredClientModelRequestSender;
@@ -33,6 +34,7 @@ public interface ClientUpdateRequestSender<T extends UniqueModel>
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
+	            ClientTooMuchInputException,
 	            ClientRequestFailureException;
 
 }

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public abstract class ApiEditRequest<I> extends ApiRequest<I> {
 
 	protected boolean atomic = true;
-
+	
 	public ApiEditRequest() {
 		super();
 	}

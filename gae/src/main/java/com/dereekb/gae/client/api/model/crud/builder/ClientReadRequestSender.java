@@ -3,6 +3,7 @@ package com.dereekb.gae.client.api.model.crud.builder;
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.crud.services.ClientReadService;
@@ -35,6 +36,7 @@ public interface ClientReadRequestSender<T extends UniqueModel>
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
+	            ClientTooMuchInputException,
 	            ClientRequestFailureException;
 
 	/**
@@ -50,6 +52,8 @@ public interface ClientReadRequestSender<T extends UniqueModel>
 	 * @return {@link SerializedClientApiRespons}. Never {@code null}.
 	 * @throws NotClientApiResponseException
 	 *             thrown if the response cannot be serialized.
+	 * @throws ClientTooMuchInputException
+	 *             if too much input is provided.
 	 * @throws ClientConnectionException
 	 *             thrown if the request fails due to connection reasons.
 	 * @throws ClientAuthenticationException
@@ -60,6 +64,7 @@ public interface ClientReadRequestSender<T extends UniqueModel>
 	public SerializedClientReadApiResponse<T> sendRequest(ClientReadRequest request,
 	                                                      ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
+	            ClientTooMuchInputException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
 	            ClientRequestFailureException;

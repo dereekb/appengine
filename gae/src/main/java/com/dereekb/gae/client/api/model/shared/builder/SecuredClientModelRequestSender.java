@@ -3,6 +3,7 @@ package com.dereekb.gae.client.api.model.shared.builder;
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
@@ -33,6 +34,8 @@ public interface SecuredClientModelRequestSender<R, S> {
 	 *             thrown if the request fails due to connection reasons.
 	 * @throws ClientAuthenticationException
 	 *             thrown if the request fails due to authentication reasons.
+	 * @throws ClientTooMuchInputException
+	 *             if too much input is provided.
 	 * @throws ClientRequestFailureException
 	 *             thrown if the request fails due to any other reason.
 	 */
@@ -41,6 +44,7 @@ public interface SecuredClientModelRequestSender<R, S> {
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
+	            ClientTooMuchInputException,
 	            ClientRequestFailureException;
 
 }

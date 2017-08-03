@@ -16,7 +16,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 public class ApiIllegalArgumentException extends IllegalArgumentException
         implements ApiResponseErrorConvertable {
 
-	public static final String API_ERROR_CODE = "BAD_ARG_EXCEPTION";
+	public static final String ERROR_CODE = "BAD_ARG_EXCEPTION";
 	public static final String API_ERROR_TITLE = "Bad Request Argument";
 
 	private static final long serialVersionUID = 1L;
@@ -40,7 +40,7 @@ public class ApiIllegalArgumentException extends IllegalArgumentException
 	public ApiResponseError asResponseError() {
 		String causeMessage = this.exception.getMessage();
 
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl(API_ERROR_CODE);
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE);
 		error.setTitle(API_ERROR_TITLE);
 		error.setDetail(causeMessage);
 

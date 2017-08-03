@@ -10,6 +10,7 @@ import org.junit.Assert;
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.request.impl.ClientReadRequestImpl;
@@ -194,7 +195,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		try {
 			this.readRequestSender.read(readRequest);
 			Assert.fail("Should have failed request.");
-		} catch (ClientRequestFailureException e) {
+		} catch (ClientTooMuchInputException e) {
 
 		}
 	}

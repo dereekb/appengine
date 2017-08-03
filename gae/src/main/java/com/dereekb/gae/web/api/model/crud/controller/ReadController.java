@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Size;
-
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +28,7 @@ import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryRequestImpl;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
+import com.dereekb.gae.web.api.model.exception.TooManyRequestKeysException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
@@ -54,9 +53,9 @@ public class ReadController {
 
 	public static final int MAX_KEYS_PER_REQUEST = 40;
 
-	private static final String INVALID_KEYS_MESSAGE = "Must submit between 1 and " + MAX_KEYS_PER_REQUEST + " keys.";
-
 	private boolean appendUnavailable = true;
+
+	private Integer maxKeysAllowed = MAX_KEYS_PER_REQUEST;
 
 	private TypeModelKeyConverter keyTypeConverter;
 	private Map<String, ReadControllerEntry> entries;
@@ -73,6 +72,14 @@ public class ReadController {
 
 	public void setAppendUnavailable(boolean appendUnavailable) {
 		this.appendUnavailable = appendUnavailable;
+	}
+
+	public Integer getMaxKeysAllowed() {
+		return this.maxKeysAllowed;
+	}
+
+	public void setMaxKeysAllowed(Integer maxKeysAllowed) {
+		this.maxKeysAllowed = maxKeysAllowed;
 	}
 
 	public TypeModelKeyConverter getKeyTypeConverter() {
@@ -119,12 +126,14 @@ public class ReadController {
 	@ResponseBody
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = "application/json")
 	public ApiResponse readModels(@PathVariable("type") String modelType,
-	                              @RequestParam(name = KEYS_PARAM, required = true) @Valid() @Size(min = 1, max = MAX_KEYS_PER_REQUEST, message = INVALID_KEYS_MESSAGE) List<String> keys,
+	                              @RequestParam(name = KEYS_PARAM, required = true) @NotEmpty List<String> keys,
 	                              @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
 	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
 	                              @RequestParam(name = RELATED_FILTER_PARAM, required = false) Set<String> relatedTypes)
-	        throws UnavailableTypesException {
-
+	        throws TooManyRequestKeysException, UnavailableTypesException {
+		
+		TooManyRequestKeysException.assertKeysCount(keys, this.maxKeysAllowed);
+		
 		ApiResponseImpl response = null;
 		ReadControllerEntry entry = this.getEntryForType(modelType);
 
@@ -188,7 +197,7 @@ public class ReadController {
 			}
 
 			Set<String> missingTypes = new HashSet<String>();
-			
+
 			for (String type : types) {
 				try {
 					Set<ModelKey> keys = analysis.getKeysForType(type);
@@ -201,10 +210,11 @@ public class ReadController {
 					missingTypes.addAll(e.getTypes());
 				}
 			}
-			
-			// Only return an error for items that were requested but aren't available.
+
+			// Only return an error for items that were requested but aren't
+			// available.
 			missingTypes.retainAll(filteredTypes);
-			
+
 			if (missingTypes.size() > 0) {
 				InclusionTypeUnavailableException exception = new InclusionTypeUnavailableException(missingTypes);
 				ApiResponseError error = exception.asResponseError();
