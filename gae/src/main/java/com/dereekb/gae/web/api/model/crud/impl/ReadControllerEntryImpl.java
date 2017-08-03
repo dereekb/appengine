@@ -102,8 +102,12 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 
 		// Analysis
 		if (request.loadRelatedTypes()) {
-			ModelInclusionReaderSetAnalysis<T> analysis = this.inclusionReader.analyzeInclusionsForModels(available);
-			response.setAnalysis(analysis);
+			if (this.inclusionReader != null) {
+				ModelInclusionReaderSetAnalysis<T> analysis = this.inclusionReader.analyzeInclusionsForModels(available);
+				response.setAnalysis(analysis);
+			} else {
+				// TODO: Show issue that included are not available.
+			}
 		}
 
 		return response;
