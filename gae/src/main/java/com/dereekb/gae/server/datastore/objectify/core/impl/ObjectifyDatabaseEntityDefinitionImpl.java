@@ -2,6 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.core.impl;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 
 /**
@@ -17,6 +18,7 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 	private Class<?> entityType;
 	private ModelKeyType entityKeyType;
 	private ObjectifyQueryRequestLimitedBuilderInitializer queryInitializer;
+	private ObjectifyDatabaseEntityKeyEnforcement keyEnforcement = ObjectifyDatabaseEntityKeyEnforcement.DEFAULT;
 
 	public ObjectifyDatabaseEntityDefinitionImpl(String entityName, Class<?> entityType, ModelKeyType entityKeyType) {
 		this(entityName, entityType, entityKeyType, null);
@@ -86,6 +88,19 @@ public class ObjectifyDatabaseEntityDefinitionImpl
 			throw new RuntimeException("Improperly configured ObjectifyDatabaseEntry. Has type '"
 			        + this.entityType.getSimpleName() + "' but name '" + this.entityName + "'");
 		}
+	}
+
+	@Override
+	public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement() {
+		return this.keyEnforcement;
+	}
+
+	public void setKeyEnforcement(ObjectifyDatabaseEntityKeyEnforcement keyEnforcement) {
+		if (keyEnforcement == null) {
+			throw new IllegalArgumentException("keyEnforcement cannot be null.");
+		}
+
+		this.keyEnforcement = keyEnforcement;
 	}
 
 	@Override

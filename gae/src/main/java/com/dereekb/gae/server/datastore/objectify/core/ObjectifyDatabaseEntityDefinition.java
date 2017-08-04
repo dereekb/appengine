@@ -13,6 +13,11 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLim
 public interface ObjectifyDatabaseEntityDefinition {
 
 	/**
+	 * @return {@link ObjectifyDatabaseEntityKeyEnforcement}. Never {@code null}.
+	 */
+	public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement();
+
+	/**
 	 * @return the system name of the entity.
 	 */
 	public String getEntityName();

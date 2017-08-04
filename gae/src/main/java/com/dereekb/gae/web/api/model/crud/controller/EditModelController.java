@@ -40,7 +40,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  */
 public abstract class EditModelController<T extends UniqueModel, I> {
 	
-	public static final Integer DEFAULT_MAX_ELEMENTS = 50;
+	public static final Integer DEFAULT_MAX_ELEMENTS = 40;
 	
 	private Integer maxElements = DEFAULT_MAX_ELEMENTS;
 
