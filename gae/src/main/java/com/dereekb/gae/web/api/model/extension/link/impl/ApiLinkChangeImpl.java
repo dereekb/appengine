@@ -24,6 +24,11 @@ public class ApiLinkChangeImpl
         implements ApiLinkChange {
 
 	/**
+	 * Request Key/Identifier
+	 */
+	private String id;
+
+	/**
 	 * Action to perform.
 	 */
 	@NotNull
@@ -73,6 +78,14 @@ public class ApiLinkChangeImpl
 	public ApiLinkChangeImpl(String action, String primaryKey, String linkName, Set<String> targetKeys) {
 		this(action, primaryKey, linkName);
 		this.setTargetKeys(targetKeys);
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@Override

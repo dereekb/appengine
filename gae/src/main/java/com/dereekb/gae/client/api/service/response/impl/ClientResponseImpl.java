@@ -29,7 +29,7 @@ public class ClientResponseImpl
 
 	// MARK: ClientResponse
 	@Override
-	public boolean getSuccess() {
+	public boolean isSuccessful() {
 		return this.status == 200;
 	}
 

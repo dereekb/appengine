@@ -14,7 +14,7 @@ public interface LinkModificationSystemRequestFailure extends LinkModificationSy
 	/**
 	 * Returns the error that caused the failure.
 	 * 
-	 * @return {@link ApiResponseErrorConvertable}. Can be {@code null}.
+	 * @return {@link ApiResponseErrorConvertable}. {@code null} if no errors occured.
 	 */
 	public ApiResponseErrorConvertable getError();
 

@@ -1,5 +1,7 @@
 package com.dereekb.gae.utilities.collections.pairs;
 
+import com.dereekb.gae.utilities.misc.success.SuccessModel;
+
 /**
  * {@link ResultPair} with a boolean as a result.
  * 
@@ -9,13 +11,4 @@ package com.dereekb.gae.utilities.collections.pairs;
  *            source model type
  */
 public interface SuccessPair<S>
-        extends ResultPair<S, Boolean> {
-
-	/**
-	 * Convenience function for {@link #getObject()}.
-	 * 
-	 * @return {@code true} if successful.
-	 */
-	public boolean isSuccessful();
-
-}
+        extends ResultPair<S, Boolean>, SuccessModel {}

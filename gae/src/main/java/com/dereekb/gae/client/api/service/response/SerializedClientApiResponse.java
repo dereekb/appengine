@@ -17,7 +17,7 @@ public interface SerializedClientApiResponse<T>
 	/**
 	 * Returns the serialized primary response.
 	 * <p>
-	 * {@link #getSuccess()} must be true, otherwise an exception will be
+	 * {@link #isSuccessful()} must be true, otherwise an exception will be
 	 * raised.
 	 * 
 	 * @return Serialized response object. May be {@code null} if allowed by

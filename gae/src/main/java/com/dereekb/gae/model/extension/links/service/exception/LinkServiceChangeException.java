@@ -2,10 +2,11 @@ package com.dereekb.gae.model.extension.links.service.exception;
 
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.web.error.impl.ErrorInfoImpl;
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +15,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 /**
  * Thrown when a {@link LinkModificationSystemRequest} cannot be completed.
  * 
- * Wraps an internal {@link ApiLinkSystemException} with {@link LinkModificationSystemRequest}
+ * Wraps an internal {@link ApiResponseErrorConvertable} with
+ * {@link LinkModificationSystemRequest}
  * data.
  *
  * @author dereekb
@@ -26,13 +28,15 @@ public class LinkServiceChangeException extends RuntimeException {
 	public static final String LINK_CHANGE_ERROR_CODE = "LINK_CHANGE_ERROR";
 
 	private final LinkModificationSystemRequest change;
-	private final ApiLinkSystemException reason;
+	private final ApiResponseErrorConvertable reason;
 
-	public LinkServiceChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason) {
+	public LinkServiceChangeException(LinkModificationSystemRequest change, ApiResponseErrorConvertable reason) {
 		this(change, reason, null);
 	}
 
-	public LinkServiceChangeException(LinkModificationSystemRequest change, ApiLinkSystemException reason, String message) {
+	public LinkServiceChangeException(LinkModificationSystemRequest change,
+	        ApiResponseErrorConvertable reason,
+	        String message) {
 		super(message);
 		this.change = change;
 		this.reason = reason;
@@ -42,7 +46,7 @@ public class LinkServiceChangeException extends RuntimeException {
 		return this.change;
 	}
 
-	public ApiLinkSystemException getReason() {
+	public ApiResponseErrorConvertable getReason() {
 		return this.reason;
 	}
 
@@ -57,7 +61,8 @@ public class LinkServiceChangeException extends RuntimeException {
 	}
 
 	/**
-	 * {@link ApiResponseError} produced by a {@link LinkServiceChangeException}.
+	 * {@link ApiResponseError} produced by a
+	 * {@link LinkServiceChangeException}.
 	 * 
 	 * @author dereekb
 	 *
@@ -67,6 +72,7 @@ public class LinkServiceChangeException extends RuntimeException {
 	public static class LinkSystemChangeApiResponseError extends ErrorInfoImpl
 	        implements ApiResponseError {
 
+		private String id;
 		private String action;
 		private String link;
 		private String key;
@@ -75,13 +81,15 @@ public class LinkServiceChangeException extends RuntimeException {
 		public LinkSystemChangeApiResponseError() {}
 
 		public static LinkSystemChangeApiResponseError make(LinkModificationSystemRequest change,
-		                                                    ApiLinkSystemException exceptionReason) {
+		                                                    ApiResponseErrorConvertable exceptionReason) {
 			LinkSystemChangeApiResponseError error = new LinkSystemChangeApiResponseError();
 
 			MutableLinkChangeType action = change.getLinkChangeType();
+			String id = ModelKey.readStringKey(change.keyValue());
 			String key = change.getPrimaryKey();
 			String link = change.getLinkName();
 
+			error.setId(id);
 			error.setAction(action.getActionName());
 			error.setLink(link);
 			error.setKey(key.toString());
@@ -94,6 +102,14 @@ public class LinkServiceChangeException extends RuntimeException {
 			error.setDetail(reason.getErrorDetail());
 
 			return error;
+		}
+
+		public String getId() {
+			return this.id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
 		}
 
 		public String getAction() {

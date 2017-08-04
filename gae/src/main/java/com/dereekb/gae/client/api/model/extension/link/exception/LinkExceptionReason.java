@@ -16,6 +16,11 @@ public enum LinkExceptionReason {
 	 * @see UnavailableLinkException.
 	 */
 	LINK_UNAVAILABLE,
+	
+	/**
+	 * The requested model type was unavailable.
+	 */
+	LINK_MODEL_TYPE_UNAVAILABLE,
 
 	/**
 	 * The requested link failed being changed.

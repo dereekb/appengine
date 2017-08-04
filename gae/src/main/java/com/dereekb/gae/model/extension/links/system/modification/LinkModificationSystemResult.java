@@ -3,6 +3,10 @@ package com.dereekb.gae.model.extension.links.system.modification;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.links.system.modification.components.LinkModificationResult;
+import com.dereekb.gae.model.extension.links.system.modification.exception.failure.LinkModificationSystemRequestFailure;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
+import com.dereekb.gae.utilities.misc.success.SuccessModel;
 
 /**
  * The result after processing a {@link LinkModificationSystemRequest}. 
@@ -10,8 +14,16 @@ import com.dereekb.gae.model.extension.links.system.modification.components.Link
  * @author dereekb
  * @see LinkModificationSystemChangesResult
  */
-public interface LinkModificationSystemResult extends LinkModificationSystemRequestReference {
+public interface LinkModificationSystemResult extends LinkModificationSystemRequestReference, LinkModificationSystemRequestFailure, SuccessModel, Keyed<ModelKey> {
 
+	/**
+	 * Returns the key value of the request.
+	 * 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ModelKey keyValue();
+	
 	/**
 	 * Returns the pre-test results for this change.
 	 * 
@@ -32,5 +44,5 @@ public interface LinkModificationSystemResult extends LinkModificationSystemRequ
 	 * @return {@link List}. Never {@code null}.
 	 */
 	public List<LinkModificationResult> getSynchronizationResults();
-
+	
 }

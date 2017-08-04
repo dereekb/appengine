@@ -47,7 +47,7 @@ public class ClientApiResponseTest {
 		ClientResponseImpl clientResponse = new ClientResponseImpl(200, responseJson);
 		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
-		Assert.assertTrue(accessor.getSuccess());
+		Assert.assertTrue(accessor.isSuccessful());
 
 		try {
 			accessor.getPrimaryData();
@@ -75,7 +75,7 @@ public class ClientApiResponseTest {
 		ClientResponseImpl clientResponse = new ClientResponseImpl(missingTokenHttpResponseCode, responseJson);
 		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
-		Assert.assertTrue(accessor.getSuccess());
+		Assert.assertTrue(accessor.isSuccessful());
 		Assert.assertNotNull(accessor.getIncludedData());
 
 		try {
@@ -120,7 +120,7 @@ public class ClientApiResponseTest {
 		ClientResponseImpl clientResponse = new ClientResponseImpl(200, responseJson);
 		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
-		Assert.assertTrue(accessor.getSuccess());
+		Assert.assertTrue(accessor.isSuccessful());
 		Assert.assertNotNull(accessor.getIncludedData());
 
 		try {

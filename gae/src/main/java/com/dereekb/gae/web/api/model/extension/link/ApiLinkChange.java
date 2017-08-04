@@ -11,6 +11,13 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeTyp
  *
  */
 public interface ApiLinkChange {
+	
+	/**
+	 * Returns the optional id of the change.
+	 * 
+	 * @return {@link String}. Can be {@code null}.
+	 */
+	public String getId();
 
 	/**
 	 * Returns the string name of the {@link MutableLinkChangeType}.

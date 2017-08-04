@@ -124,7 +124,7 @@ public class ClientApiResponseAccessorBuilderImpl
 		}
 
 		@Override
-		public boolean getSuccess() {
+		public boolean isSuccessful() {
 			if (this.jsonNode.has(ClientApiResponseAccessorBuilderImpl.this.successKey)) {
 				return this.jsonNode.get(ClientApiResponseAccessorBuilderImpl.this.successKey).asBoolean();
 			} else {

@@ -76,8 +76,8 @@ public class ClientApiResponseBuilderImpl
 
 		// MARK: ClientApiResponse
 		@Override
-		public boolean getSuccess() {
-			return this.apiResponseAccessor.getSuccess();
+		public boolean isSuccessful() {
+			return this.apiResponseAccessor.isSuccessful();
 		}
 
 		@Override

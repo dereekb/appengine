@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.links.system.modification.components;
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationReference;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeResult;
+import com.dereekb.gae.utilities.misc.success.SuccessModel;
 
 /**
  * Wraps the {@link MutableLinkChangeResult} of a {@link LinkModification}
@@ -10,21 +11,12 @@ import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeRes
  * @author dereekb
  *
  */
-public interface LinkModificationResult extends LinkModificationReference {
+public interface LinkModificationResult extends LinkModificationReference, SuccessModel {
 
 	/**
 	 * Whether or not the model was modified.
 	 */
 	public boolean isModelModified();
-
-	/**
-	 * Whether or not the change was performed successfully.
-	 * 
-	 * TODO: Consider deprecating this...
-	 * 
-	 * @return {@code true} if successful.
-	 */
-	public boolean isSuccessful();
 
 	/**
 	 * Returns the result.

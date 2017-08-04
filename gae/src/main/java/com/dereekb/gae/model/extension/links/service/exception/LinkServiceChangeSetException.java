@@ -38,6 +38,10 @@ public class LinkServiceChangeSetException extends ApiLinkSystemException {
 	}
 
 	// MARK: Help
+	public boolean hasErrors() {
+		return this.exceptions.size() > 0;
+	}
+
 	public List<LinkModificationSystemRequest> getFailedLinkChanges() {
 		if (this.failedChanges == null) {
 			List<LinkModificationSystemRequest> failedChanges = new ArrayList<LinkModificationSystemRequest>();

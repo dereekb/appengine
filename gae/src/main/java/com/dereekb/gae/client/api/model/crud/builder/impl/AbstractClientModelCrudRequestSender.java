@@ -66,7 +66,7 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	public void assertSuccessfulResponse(ClientApiResponse clientResponse)
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
-		if (clientResponse.getSuccess() == false) {
+		if (clientResponse.isSuccessful() == false) {
 			this.assertNoAtomicOperationError(clientResponse);
 			this.assertNotTooMuchInputError(clientResponse);
 			throw new ClientRequestFailureException(clientResponse);

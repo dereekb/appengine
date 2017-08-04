@@ -14,7 +14,6 @@ import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
 import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException;
 import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
-import com.dereekb.gae.model.extension.links.system.components.exceptions.ApiLinkSystemException;
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -23,6 +22,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.map.MapUtility;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.util.attribute.impl.InvalidAttributeImpl;
 
 /**
@@ -183,7 +183,7 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 
 				InvalidAttributeImpl invalidAttribute = new InvalidAttributeImpl();
 
-				ApiLinkSystemException reason = exception.getReason();
+				ApiResponseErrorConvertable reason = exception.getReason();
 
 				invalidAttribute.setAttribute(change.getLinkName());
 				invalidAttribute.setValue(change.getKeys().toString());

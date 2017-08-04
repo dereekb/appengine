@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
-
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
@@ -19,6 +18,8 @@ import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
  */
 public class ClientApiLinkChange
         implements ApiLinkChange {
+
+	private String id;
 
 	private MutableLinkChangeType changeAction;
 
@@ -47,6 +48,15 @@ public class ClientApiLinkChange
 	}
 
 	// MARK: Accessors
+	@Override
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public MutableLinkChangeType getChangeAction() {
 		return this.changeAction;
 	}

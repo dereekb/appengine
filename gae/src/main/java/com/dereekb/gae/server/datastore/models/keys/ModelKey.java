@@ -223,20 +223,32 @@ public final class ModelKey
 	}
 
 	public static List<String> readStringKeys(Iterable<? extends Keyed<ModelKey>> models) {
-		List<String> ids = new ArrayList<>();
+		List<String> ids = new ArrayList<String>();
 
+		readStringKeysIntoCollection(models, ids);
+		
+		return ids;
+	}
+
+	public static Set<String> readStringKeysSet(Iterable<? extends Keyed<ModelKey>> models) {
+		Set<String> ids = new HashSet<String>();
+
+		readStringKeysIntoCollection(models, ids);
+		
+		return ids;
+	}
+	
+	public static void readStringKeysIntoCollection(Iterable<? extends Keyed<ModelKey>> models, Collection<String> collection) {
 		if (models != null) {
 			for (Keyed<ModelKey> model : models) {
 				ModelKey key = model.keyValue();
 
 				if (key != null) {
 					String id = key.keyAsString();
-					ids.add(id);
+					collection.add(id);
 				}
 			}
 		}
-
-		return ids;
 	}
 
 	public static List<String> keysAsStrings(Iterable<ModelKey> keys) {

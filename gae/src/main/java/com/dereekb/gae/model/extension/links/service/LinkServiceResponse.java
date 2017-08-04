@@ -1,8 +1,10 @@
 package com.dereekb.gae.model.extension.links.service;
 
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
+import java.util.List;
+
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemResult;
+import com.dereekb.gae.utilities.collections.pairs.SuccessPair;
 
 /**
  * Response returned from a {@link LinkService}.
@@ -11,16 +13,20 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
  *
  */
 public interface LinkServiceResponse {
-
-	public boolean isChangeAttempted();
 	
 	/**
-	 * Returns a map containing all missing primary keys.
-	 * <p>
-	 * Sets are keyed by model type.
-	 *
-	 * @return {@link HashMapWithSet}. Never {@code null}.
+	 * Returns a set of {@link SuccessPair} values.
+	 * 
+	 * @return {@link List}. Never {@code null}.
 	 */
-	public CaseInsensitiveMapWithSet<ModelKey> getMissingPrimaryKeysSet();
+	public List<SuccessPair<LinkModificationSystemResult>> getSuccessResults();
+
+	/**
+	 * Creates a new {@link LinkServiceChangeSetException} comprised of all
+	 * errors.
+	 * 
+	 * @return {@link LinkServiceChangeSetException}. Never {@code null}.
+	 */
+	public LinkServiceChangeSetException getErrorsSet();
 
 }

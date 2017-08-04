@@ -83,7 +83,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
 
-		Assert.assertFalse(response.getSuccess());
+		Assert.assertFalse(response.isSuccessful());
 		Assert.assertTrue(response.getError().getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR);
 
 		try {
@@ -129,7 +129,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
 
-		Assert.assertTrue(response.getSuccess());
+		Assert.assertTrue(response.isSuccessful());
 
 		// Get Serialized Primary Data
 		try {

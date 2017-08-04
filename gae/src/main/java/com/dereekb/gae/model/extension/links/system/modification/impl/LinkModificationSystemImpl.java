@@ -283,6 +283,7 @@ public class LinkModificationSystemImpl
 			this.primaryPair = new PrimaryLinkModificationPairImpl(modification);
 		}
 
+		@Override
 		public boolean isSuccessful() {
 			return this.isSuccessful;
 		}
@@ -292,6 +293,11 @@ public class LinkModificationSystemImpl
 		}
 
 		// MARK: LinkModificationSystemResult
+		@Override
+		public ModelKey keyValue() {
+			return this.request.keyValue();
+		}
+
 		@Override
 		public LinkModificationSystemRequest getRequest() {
 			return this.request;

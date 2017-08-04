@@ -22,17 +22,15 @@ import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
-import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
+import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
+import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
@@ -79,7 +77,11 @@ public class LinkExtensionApiController {
 			LinkServiceResponse linkServiceResponse = this.service.updateLinks(linkServiceRequest);
 
 			response = new ApiResponseImpl(true);
-			this.addMissingKeysToResponse(primaryType, linkServiceResponse, response);
+			
+			ApiLinkChangeResponseData data = ApiLinkChangeResponseData.makeWithResponse(linkServiceResponse);
+			response.setData(data);
+			
+			this.addErrorsToResponse(primaryType, linkServiceResponse, response);
 		} catch (LinkServiceChangeSetException e) {
 			throw new WrappedApiUnprocessableEntityException(e);
 		} catch (AtomicOperationException e) {
@@ -93,11 +95,30 @@ public class LinkExtensionApiController {
 		return response;
 	}
 
+	private void addErrorsToResponse(String primaryType,
+	                                 LinkServiceResponse linkServiceResponse,
+	                                 ApiResponseImpl response) {
+		LinkServiceChangeSetException errorsSet = linkServiceResponse.getErrorsSet();
+		
+		if (errorsSet.hasErrors()) {
+			ApiResponseError responseError = errorsSet.asResponseError();
+			response.addError(responseError);
+		}
+	}
+
 	private List<LinkModificationSystemRequest> convert(String linkModelType,
 	                                                    List<ApiLinkChangeImpl> inputChanges) {
 		List<LinkModificationSystemRequest> changes = new ArrayList<LinkModificationSystemRequest>();
 
+		Integer index = 0;
+		
 		for (ApiLinkChange inputChange : inputChanges) {
+			
+			String id = inputChange.getId();
+			
+			if (id == null) {
+				id = index.toString();
+			}
 			
 			String linkName = inputChange.getLinkName();
 			String primaryKey = inputChange.getPrimaryKey();
@@ -107,24 +128,15 @@ public class LinkExtensionApiController {
 			
 			Set<String> targetStringKeys = inputChange.getTargetKeys();
 			
-			LinkModificationSystemRequestImpl change = new LinkModificationSystemRequestImpl(linkName, linkModelType, primaryKey, linkChangeType, targetStringKeys);
+			LinkModificationSystemRequestImpl change = new LinkModificationSystemRequestImpl(linkModelType, primaryKey, linkName, linkChangeType, targetStringKeys);
+			change.setRequestKey(id);
+			
 			changes.add(change);
+			
+			index += 1;
 		}
 
 		return changes;
-	}
-
-	private void addMissingKeysToResponse(String primaryType,
-	                                      LinkServiceResponse linkServiceResponse,
-	                                      ApiResponseImpl apiResponse) {
-		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingPrimaryKeysSet();
-		Set<ModelKey> missingPrimaryKeys = missingKeys.get(primaryType);
-
-		if (missingPrimaryKeys != null && missingPrimaryKeys.isEmpty() == false) {
-			ApiResponseErrorImpl missingKeysError = MissingRequiredResourceException
-			        .tryMakeApiErrorForModelKeys(missingPrimaryKeys, "Unavailable to change links.");
-			apiResponse.addError(missingKeysError);
-		}
 	}
 
 	@Override

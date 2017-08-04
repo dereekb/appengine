@@ -157,9 +157,21 @@ public class LinkModificationSystemRequestImpl
 	public ModelKey getRequestKey() {
 		return this.requestKey;
 	}
-	
+
+	public void setRequestKey(String id) {
+		this.setRequestKey(ModelKey.safe(id));
+	}
+
 	public void setRequestKey(ModelKey requestKey) {
 		this.requestKey = requestKey;
+	}
+
+	@Override
+	public String toString() {
+		return "LinkModificationSystemRequestImpl [requestKey=" + this.requestKey + ", linkName=" + this.linkName
+		        + ", linkModelType=" + this.linkModelType + ", primaryKey=" + this.primaryKey + ", linkChangeType="
+		        + this.linkChangeType + ", dynamicLinkModelType=" + this.dynamicLinkModelType + ", keys=" + this.keys
+		        + "]";
 	}
 
 }

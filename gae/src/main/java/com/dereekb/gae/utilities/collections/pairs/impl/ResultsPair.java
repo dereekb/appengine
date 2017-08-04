@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.utilities.collections.pairs.MutableResultPair;
 import com.dereekb.gae.utilities.collections.pairs.ResultPair;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
@@ -202,6 +203,23 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 		for (P pair : pairs) {
 			S key = pair.getKey();
 			map.put(key, pair);
+		}
+
+		return map;
+	}
+
+	/**
+	 * Generates a map that maps all result objects to the input key objects.
+	 *
+	 * @param pairs
+	 * @return {@link HashMapWithList} keyed by whether or not results are
+	 *         contained, and lists of pairs for each.
+	 */
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithSet<R, S> keysResultsMap(Iterable<P> pairs) {
+		HashMapWithSet<R, S> map = new HashMapWithSet<R, S>();
+
+		for (P pair : pairs) {
+			map.add(pair.getObject(), pair.getKey());
 		}
 
 		return map;
