@@ -197,7 +197,8 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 	}
 
 	private LinkServiceResponse performLinkChanges(List<LinkCreateTaskPair<T>> linkPairs,
-	                                               CreateTaskConfig configuration) {
+	                                               CreateTaskConfig configuration) throws LinkServiceChangeSetException, AtomicOperationException {
+		
 		List<List<LinkModificationSystemRequest>> pairChanges = LinkCreateTaskPair.getObjects(linkPairs);
 		List<LinkModificationSystemRequest> changes = ListUtility.flatten(pairChanges);
 

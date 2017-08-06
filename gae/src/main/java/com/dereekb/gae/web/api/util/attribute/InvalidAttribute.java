@@ -28,7 +28,7 @@ public interface InvalidAttribute {
 	/**
 	 * Returns details for this failure, if available.
 	 * 
-	 * @return {@link String}.
+	 * @return {@link String}. May be {@code null}.
 	 */
 	public String getDetail();
 
@@ -36,7 +36,7 @@ public interface InvalidAttribute {
 	 * Returns an associated {@link ErrorInfo} with this attribute, if
 	 * available.
 	 * 
-	 * @return {@link ErrorInfo}.
+	 * @return {@link ErrorInfo}. May be {@code null}.
 	 */
 	public ErrorInfo getError();
 

@@ -162,6 +162,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 					Collection<T> results = createResponse.getModels();
 					created = new ArrayList<T>(results);
 				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
 					Assert.fail("Failed creating.");
 				}
 

@@ -70,4 +70,10 @@ public class ApiResponseErrorImpl extends ErrorInfoImpl
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "ApiResponseErrorImpl [getCode()=" + this.getCode() + ", getTitle()="
+		        + this.getTitle() + ", getDetail()=" + this.getDetail() + "data=" + this.data + "]";
+	}
+
 }

@@ -92,7 +92,7 @@ public class LinkServiceImpl
 		} catch (LinkModificationSystemInstanceAlreadyRunException e) {
 			// Won't occur.
 		} catch (LinkModificationFailedException e) {
-			throw e;
+			throw LinkServiceChangeSetException.make(e);
 		} catch (UnexpectedLinkModificationSystemChangeException e) {
 			throw e;
 		}

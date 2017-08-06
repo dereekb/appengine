@@ -1,8 +1,11 @@
 package com.dereekb.gae.model.extension.links.service.exception;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.exception.failure.LinkModificationSystemRequestFailure;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.web.error.impl.ErrorInfoImpl;
@@ -40,6 +43,25 @@ public class LinkServiceChangeException extends RuntimeException {
 		super(message);
 		this.change = change;
 		this.reason = reason;
+	}
+
+	public static List<LinkServiceChangeException> makeList(List<? extends LinkModificationSystemRequestFailure> failures) {
+		List<LinkServiceChangeException> exceptions = new ArrayList<LinkServiceChangeException>();
+
+		for (LinkModificationSystemRequestFailure failure : failures) {
+			LinkServiceChangeException exception = make(failure);
+			exceptions.add(exception);
+		}
+
+		return exceptions;
+	}
+	
+	public static LinkServiceChangeException make(LinkModificationSystemRequestFailure failure) {
+		ApiResponseErrorConvertable reason = failure.getError();
+		LinkModificationSystemRequest request = failure.getRequest();
+
+		LinkServiceChangeException exception = new LinkServiceChangeException(request, reason);
+		return exception;
 	}
 
 	public LinkModificationSystemRequest getChange() {

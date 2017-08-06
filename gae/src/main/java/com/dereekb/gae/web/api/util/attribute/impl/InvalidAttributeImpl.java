@@ -88,11 +88,17 @@ public class InvalidAttributeImpl
 
 	@JsonIgnore
 	public void setErrorInfo(ErrorInfo error) {
-		if (error instanceof ErrorInfoImpl) {
-			this.error = (ErrorInfoImpl) error;
-		} else {
-			this.setError(new ErrorInfoImpl(error));
+		ErrorInfoImpl errorImpl = null;
+		
+		if (error != null) {
+			if (error instanceof ErrorInfoImpl) {
+				errorImpl = (ErrorInfoImpl) error;
+			} else {
+				errorImpl = new ErrorInfoImpl(error);
+			}
 		}
+
+		this.setError(errorImpl);
 	}
 
 	@Override
