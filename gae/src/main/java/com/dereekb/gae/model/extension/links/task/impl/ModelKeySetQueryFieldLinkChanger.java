@@ -112,7 +112,7 @@ public class ModelKeySetQueryFieldLinkChanger
 			
 			RequestBuilderItem builder = ReusableLinkModificationSystemRequestBuilder.make(linkModelType);
 			
-			builder.setLinkName(linkModelType);
+			builder.setLinkName(ModelKeySetQueryFieldLinkChanger.this.linkName);
 			builder.setLinkChangeType(MutableLinkChangeType.REMOVE);
 			builder.setKeys(this.keys);
 			
