@@ -77,9 +77,9 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 	            ClientRequestFailureException {
 
 		int count = EditModelController.DEFAULT_MAX_ELEMENTS;
-		
+
 		List<T> models = this.testModelGenerator.generate(count);
-		
+
 		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(models);
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
@@ -209,12 +209,12 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		}
 	}
-	
+
 	public void testEmptyMockUpdate(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
-            ClientConnectionException,
-            ClientAuthenticationException,
-            ClientRequestFailureException {
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
 
 		List<T> collection = Collections.emptyList();
 		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(collection);

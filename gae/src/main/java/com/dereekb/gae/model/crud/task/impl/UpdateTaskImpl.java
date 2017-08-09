@@ -15,7 +15,8 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 
 /**
- * {@link UpdateTask} implementation.
+ * {@link UpdateTask} implementation with an optional {@link TaskRequestSender}
+ * to review the result.
  *
  * @author dereekb
  *
@@ -72,10 +73,6 @@ public class UpdateTaskImpl<T extends UniqueModel> extends AtomicTaskImpl<Update
 	}
 
 	public void setReviewTaskSender(TaskRequestSender<T> reviewTaskSender) throws IllegalArgumentException {
-		if (reviewTaskSender == null) {
-			throw new IllegalArgumentException("ReviewTaskSender cannot be null.");
-		}
-
 		this.reviewTaskSender = reviewTaskSender;
 	}
 

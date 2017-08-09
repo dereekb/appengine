@@ -30,9 +30,11 @@
 	</bean>
 
 	<bean id="storedBlobUpdateService"
-		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
 		<constructor-arg index="0" ref="storedBlobReadService" />
 		<constructor-arg index="1" ref="storedBlobUpdateTask" />
+		<constructor-arg index="2"
+			ref="storedBlobScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedBlobDeleteService"
@@ -86,8 +88,6 @@
 	<bean id="storedBlobUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="storedBlobAttributeUpdater" />
 		<constructor-arg index="1" ref="storedBlobUpdaterTask" />
-		<constructor-arg index="2"
-			ref="storedBlobScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedBlobAttributeUpdater"

@@ -30,9 +30,10 @@
 	</bean>
 
 	<bean id="loginKeyUpdateService"
-		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
 		<constructor-arg index="0" ref="loginKeyReadService" />
 		<constructor-arg index="1" ref="loginKeyUpdateTask" />
+		<constructor-arg index="2" ref="loginKeyScheduleUpdateReview" />
 	</bean>
 
 	<bean id="loginKeyDeleteService"
@@ -94,7 +95,6 @@
 	<bean id="loginKeyUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="loginKeyAttributeUpdater" />
 		<constructor-arg index="1" ref="loginKeyUpdaterTask" />
-		<constructor-arg index="2" ref="loginKeyScheduleUpdateReview" />
 	</bean>
 
 	<bean id="loginKeyAttributeUpdater"

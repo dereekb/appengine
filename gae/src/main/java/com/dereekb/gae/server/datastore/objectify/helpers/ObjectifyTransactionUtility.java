@@ -9,6 +9,8 @@ import com.googlecode.objectify.Work;
 
 public class ObjectifyTransactionUtility {
 
+	public static final int MAX_TRANSACTION_ELEMENTS = 25;
+
 	public static <T, X> List<X> doTransactNew(Iterable<T> input, Partitioner partitioner, PartitionDelegate<T, X> delegate) {
 		List<List<T>> partitions = partitioner.makePartitions(input);
 		
@@ -27,10 +29,14 @@ public class ObjectifyTransactionUtility {
 		return ObjectifyService.ofy().transactNew(work);
 	}
 
+	public static <X> X doTransactNew(Work<X> work) {
+		 return ObjectifyService.ofy().transactNew(work);
+	}
+	
 	public static interface PartitionDelegate<T, X> {
 		
 		public Work<X> makeWorkForInput(Iterable<T> input);
 		
 	}
-	
+
 }

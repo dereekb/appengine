@@ -27,9 +27,10 @@
 	</bean>
 
 	<bean id="loginUpdateService"
-		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
 		<constructor-arg index="0" ref="loginReadService" />
 		<constructor-arg index="1" ref="loginUpdateTask" />
+		<constructor-arg index="2" ref="loginScheduleUpdateReview" />
 	</bean>
 
 	<bean id="loginDeleteService"
@@ -72,7 +73,6 @@
 	<bean id="loginUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="loginAttributeUpdater" />
 		<constructor-arg index="1" ref="loginUpdaterTask" />
-		<constructor-arg index="2" ref="loginScheduleUpdateReview" />
 	</bean>
 
 	<bean id="loginAttributeUpdater"

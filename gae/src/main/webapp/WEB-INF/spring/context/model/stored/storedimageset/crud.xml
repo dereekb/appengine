@@ -30,9 +30,11 @@
 	</bean>
 
 	<bean id="storedImageSetUpdateService"
-		class="com.dereekb.gae.model.crud.services.components.impl.UpdateServiceImpl">
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
 		<constructor-arg index="0" ref="storedImageSetReadService" />
 		<constructor-arg index="1" ref="storedImageSetUpdateTask" />
+		<constructor-arg index="2"
+			ref="storedImageSetScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedImageSetDeleteService"
@@ -89,8 +91,6 @@
 		<constructor-arg index="0"
 			ref="storedImageSetAttributeUpdater" />
 		<constructor-arg index="1" ref="storedImageSetUpdaterTask" />
-		<constructor-arg index="2"
-			ref="storedImageSetScheduleUpdateReview" />
 	</bean>
 
 	<bean id="storedImageSetAttributeUpdater"

@@ -17,6 +17,7 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyTransactionUtility;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.ApiUnsupportedOperationException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
@@ -40,7 +41,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  */
 public abstract class EditModelController<T extends UniqueModel, I> {
 	
-	public static final Integer DEFAULT_MAX_ELEMENTS = 40;
+	public static final Integer DEFAULT_MAX_ELEMENTS = ObjectifyTransactionUtility.MAX_TRANSACTION_ELEMENTS;
 	
 	private Integer maxElements = DEFAULT_MAX_ELEMENTS;
 
