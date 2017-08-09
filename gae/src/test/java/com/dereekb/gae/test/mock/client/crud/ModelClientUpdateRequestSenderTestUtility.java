@@ -25,6 +25,7 @@ import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
 /**
  * Test utility for {@link ClientUpdateRequestSender}.
@@ -45,7 +46,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		this.testModelGenerator = testModelGenerator;
 	}
 
-	public void testMockUpdateRequest(ClientRequestSecurity security)
+	public void testMockUpdateSingleRequest(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
@@ -60,13 +61,37 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		        .sendRequest(updateRequest, security);
 
 		SimpleUpdateResponse<T> updateResponse = response.getSerializedResponse();
-		Collection<T> models = updateResponse.getModels();
+		Collection<T> results = updateResponse.getModels();
 
-		Assert.assertFalse(models.isEmpty());
+		Assert.assertFalse(results.isEmpty());
 
 		// Update again.
 		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
 		Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
+	}
+
+	public void testMockUpdateManyRequest(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		int count = EditModelController.DEFAULT_MAX_ELEMENTS;
+		
+		List<T> models = this.testModelGenerator.generate(count);
+		
+		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(models);
+		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
+		        .sendRequest(updateRequest, security);
+
+		SimpleUpdateResponse<T> updateResponse = response.getSerializedResponse();
+		Collection<T> results = updateResponse.getModels();
+
+		Assert.assertFalse(results.isEmpty());
+
+		// Update again.
+		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+		Assert.assertTrue(simpleUpdateResponse.getModels().containsAll(models));
 	}
 
 	public void testMockAtomicUnavailableUpdateRequest(ClientRequestSecurity security)

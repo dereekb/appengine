@@ -8,6 +8,8 @@ import com.google.apphosting.api.ApiProxy;
 import com.google.apphosting.api.ApiProxy.Environment;
 
 public class GoogleAppEngineUtility {
+	
+	public static final Integer MAX_TRANSACTION_ELEMENTS = 25;
 
 	// MARK: Environment
 	/**

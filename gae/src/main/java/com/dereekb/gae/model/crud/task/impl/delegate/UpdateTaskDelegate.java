@@ -6,7 +6,8 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
 /**
  * {@link UpdateTaskImpl} delegate.
  * <p>
- * Is used for updating a target model using an input template.
+ * Is used for updating a target model using an input template. The update
+ * should be idempotent.
  *
  * @author dereekb
  *
@@ -17,6 +18,8 @@ public interface UpdateTaskDelegate<T> {
 
 	/**
 	 * Updates the {@code target} with the {@code template} model.
+	 * <p>
+	 * The change should be idempotent.
 	 *
 	 * @param template
 	 *            Template model to use for updating. Never {@code null}.
@@ -26,6 +29,7 @@ public interface UpdateTaskDelegate<T> {
 	 *             If the update fails.
 	 */
 	public void updateTarget(T target,
-	                         T template) throws InvalidAttributeException;
+	                         T template)
+	        throws InvalidAttributeException;
 
 }
