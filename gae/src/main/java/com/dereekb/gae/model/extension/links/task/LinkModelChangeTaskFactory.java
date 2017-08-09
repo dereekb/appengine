@@ -88,12 +88,14 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 		/**
 		 * Creates requests for the input {@link ModelKeyListAccessor}.
 		 * 
-		 * @param input {@link ModelKeyListAccessor}. Never {@code null}.
+		 * @param input
+		 *            {@link ModelKeyListAccessor}. Never {@code null}.
 		 * @return {@link List}. Never {@code null}.
 		 * @throws FailedTaskException
 		 *             thrown if the requests cannot be made.
 		 */
-		public List<LinkModificationSystemRequest> makeRequestsForModels(ModelKeyListAccessor<T> input) throws FailedTaskException;
+		public List<LinkModificationSystemRequest> makeRequestsForModels(ModelKeyListAccessor<T> input)
+		        throws FailedTaskException;
 
 	}
 
@@ -120,12 +122,15 @@ public class LinkModelChangeTaskFactory<T extends UniqueModel>
 		public void doTask(ModelKeyListAccessor<T> input) throws FailedTaskException {
 			try {
 				List<LinkModificationSystemRequest> requests = this.delegate.makeRequestsForModels(input);
-				
-				LinkModificationSystemInstance instance = LinkModelChangeTaskFactory.this.system.makeInstance(LinkModelChangeTaskFactory.this.options);
-				
-				LinkModificationSystemUtility.queueRequests(requests, instance);
-				
-				instance.applyChanges();
+
+				if (requests.isEmpty() == false) {
+					LinkModificationSystemInstance instance = LinkModelChangeTaskFactory.this.system
+					        .makeInstance(LinkModelChangeTaskFactory.this.options);
+
+					LinkModificationSystemUtility.queueRequests(requests, instance);
+
+					instance.applyChanges();
+				}
 			} catch (FailedTaskException e) {
 				throw e;
 			} catch (RuntimeException e) {

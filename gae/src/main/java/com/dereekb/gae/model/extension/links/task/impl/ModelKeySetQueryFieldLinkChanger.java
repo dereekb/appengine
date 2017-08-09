@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.extension.links.task.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +110,10 @@ public class ModelKeySetQueryFieldLinkChanger
 			
 			String linkModelType = input.getModelType();
 			List<ModelKey> primaryKeys = input.getModelKeys();
+			
+			if (primaryKeys.isEmpty()) {
+				return Collections.emptyList();
+			}
 			
 			RequestBuilderItem builder = ReusableLinkModificationSystemRequestBuilder.make(linkModelType);
 			
