@@ -68,25 +68,59 @@ public class RedirectToNakedDomainFilter
 	}
 
 	protected boolean shouldRedirect(HttpServletRequest req) {
-		String serverName = this.getRequestDomainName(req);
-		String[] splits = serverName.split(SPLITTER, 3);	// www, google.com
-		return splits.length > 2;	// Triggers on everything except google.com -> "google", "com"
+		String serverName = getRequestDomainName(req);
+		return isSubDomain(serverName);
 	}
 	
-	/*
-	protected String getRequestSubdomain(HttpServletRequest req) {
-		String serverName = this.getRequestDomainName(req);
-		String[] splits = serverName.split(SPLITTER);
-		
-		if (splits.length > 2) {
-			
-		} else {
-			return null;
-		}
+	public static final boolean isSubDomain(HttpServletRequest req) {
+		String serverName = getRequestDomainName(req);
+		return isSubDomain(serverName);
 	}
-	*/
 
-	protected String getRequestDomainName(HttpServletRequest req) {
+	public static final boolean isSubDomain(String serverName) {
+		String[] splits = getRequestDomainSplits(serverName);	// www, google.com
+		return splits.length > 2;
+	}
+	
+	public static final String getSubDomain(HttpServletRequest req) {
+		String serverName = getRequestDomainName(req);
+		return getSubDomain(serverName);
+	}
+	
+	//TODO: Move this elsewhere to a better location/utility later
+	public static final String getSubDomain(String serverName) {
+		String subDomain = null;
+		boolean hitDomainType = false;
+		
+		int i = serverName.length() - 1;
+		
+		for (; i > 0; i--) {
+			char character = serverName.charAt(i);
+			
+			if (character == '.') {
+				if (hitDomainType) {
+					subDomain = serverName.substring(0, i);
+					break;
+				} else {
+					hitDomainType = true;
+				}
+			}
+		}
+		
+		return subDomain;
+	}
+
+	public static final String[] getRequestDomainSplits(HttpServletRequest req) {
+		String serverName = getRequestDomainName(req);
+		return getRequestDomainSplits(serverName);
+	}
+
+	public static final String[] getRequestDomainSplits(String serverName) {
+		String[] splits = serverName.split(SPLITTER, 3);	// www, google.com
+		return splits;
+	}
+
+	public static final String getRequestDomainName(HttpServletRequest req) {
 		String domain;
 
 		try {
@@ -97,16 +131,6 @@ public class RedirectToNakedDomainFilter
 
 		return domain;
 	}
-
-	/*
-	 * protected String makeRedirectUrl(HttpServletRequest req) {
-	 * String redirectDomain = this.redirectUrl;
-	 * String requestUri = req.getRequestURI();
-	 * 
-	 * String basePath = PathUtility.buildPath(redirectDomain, requestUri);
-	 * 
-	 * }
-	 */
 
 	@Override
 	public void destroy() {}
