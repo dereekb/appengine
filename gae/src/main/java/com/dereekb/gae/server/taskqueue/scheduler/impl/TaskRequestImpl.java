@@ -1,6 +1,8 @@
 package com.dereekb.gae.server.taskqueue.scheduler.impl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
@@ -143,6 +145,15 @@ public class TaskRequestImpl
 	@Override
 	public void setParameters(Collection<? extends KeyedEncodedParameter> parameters) {
 		this.parameters = ListUtility.safeCopy(parameters);
+	}
+	
+	public void setParameters(Map<String, String> parameters) {
+		if (parameters != null) {
+			List<KeyedEncodedParameterImpl> keyedParameters = KeyedEncodedParameterImpl.makeParametersWithMap(parameters);
+			this.setParameters(keyedParameters);
+		} else {
+			this.parameters = null;
+		}
 	}
 
 	public void mergeParameters(Collection<? extends KeyedEncodedParameter> parameters) {

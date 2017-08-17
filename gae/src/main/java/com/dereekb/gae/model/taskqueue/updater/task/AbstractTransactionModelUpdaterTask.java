@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -30,6 +31,10 @@ public abstract class AbstractTransactionModelUpdaterTask<T extends UniqueModel>
 	private Getter<T> getter;
 	private Updater<T> updater;
 
+	public AbstractTransactionModelUpdaterTask(GetterSetter<T> getterSetter) {
+		this(getterSetter, getterSetter);
+	}
+	
 	public AbstractTransactionModelUpdaterTask(Getter<T> getter, Updater<T> updater) {
 		super();
 		this.setGetter(getter);
