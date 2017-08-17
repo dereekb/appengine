@@ -9,7 +9,7 @@ import java.util.Set;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
 /**

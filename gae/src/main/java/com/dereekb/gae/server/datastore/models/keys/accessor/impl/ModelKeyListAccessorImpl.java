@@ -25,7 +25,7 @@ public class ModelKeyListAccessorImpl<T extends UniqueModel>
 	private final Getter<T> getter;
 
 	private List<ModelKey> keys;
-	private List<T> models; // lazy
+	private transient List<T> models; // lazy
 
 	public ModelKeyListAccessorImpl(String modelType, Getter<T> getter, Collection<ModelKey> keys)
 	        throws IllegalArgumentException {

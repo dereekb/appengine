@@ -17,6 +17,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.LongModelKeyConve
  */
 public final class LongModelKeyConverterImpl
         implements LongModelKeyConverter {
+	
+	public static final LongModelKeyConverter SINGLETON = new LongModelKeyConverterImpl(); 
 
 	// Bidirectional Converter
 	@Override

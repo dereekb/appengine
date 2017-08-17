@@ -24,6 +24,7 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  */
+@Deprecated
 public class LoginKeyQueryTest extends ModelQueryTest<LoginKey> {
 
 	@Override

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
+
 /**
  * Abstract utility class for handling {@link Collection} values within a
  * {@link Map}.
@@ -147,6 +149,9 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 	}
 
 	// MARK: HashMapWithCollection
+	public void initForKey(K key) {
+		this.getOrBuildCollectionForKey(key);
+	}
 
 	/**
 	 * Returns all elements for the specified {@code key} value. Returns an
@@ -242,6 +247,14 @@ public abstract class HashMapWithCollection<K, T, C extends Collection<T>>
 		for (K key : keys) {
 			List<? extends T> values = map.valuesForKey(key);
 			this.addAll(key, values);
+		}
+	}
+
+	public static <K, T extends AlwaysKeyed<K>, C extends Collection<T>> void addAllKeyedToMap(HashMapWithCollection<K, T, C> map,
+	                                                                                           Iterable<? extends T> objects) {
+		for (T object : objects) {
+			K key = object.keyValue();
+			map.add(key, object);
 		}
 	}
 

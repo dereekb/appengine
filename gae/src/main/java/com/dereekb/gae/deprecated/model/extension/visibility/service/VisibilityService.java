@@ -15,7 +15,7 @@ public interface VisibilityService<T> {
 	 * Changes the visibility of the models. Changes in the models may not be
 	 * reflected immediately.
 	 *
-	 * Visibility changes are indempotent.
+	 * Visibility changes are idempotent.
 	 *
 	 * @param models
 	 *            Models to change.

@@ -9,13 +9,12 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.task.CreateTask;
 import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
-import com.dereekb.gae.model.extension.links.exception.ApiLinkException;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
@@ -23,6 +22,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.map.MapUtility;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.util.attribute.impl.InvalidAttributeImpl;
 
 /**
@@ -149,7 +149,7 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 			// Generally this shouldn't occur, but caught just in-case.
 			this.undoDeleter.delete(created);
 			throw e;
-		} catch (LinkSystemChangeSetException e) {
+		} catch (LinkServiceChangeSetException e) {
 
 			// If the atomic operation fails, delete all created items to undo.
 			this.undoDeleter.delete(created);
@@ -161,18 +161,18 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 	}
 
 	private void setPairFailuresForChangeSetException(List<LinkCreateTaskPair<T>> pairs,
-	                                                  LinkSystemChangeSetException e) {
+	                                                  LinkServiceChangeSetException e) {
 
-		List<LinkSystemChangeException> exceptions = e.getExceptions();
+		List<LinkServiceChangeException> exceptions = e.getExceptions();
 
-		Map<LinkSystemChange, LinkCreateTaskPair<T>> pairsMap = new HashMap<LinkSystemChange, LinkCreateTaskPair<T>>();
+		Map<LinkModificationSystemRequest, LinkCreateTaskPair<T>> pairsMap = new HashMap<LinkModificationSystemRequest, LinkCreateTaskPair<T>>();
 
 		for (LinkCreateTaskPair<T> pair : pairs) {
 			MapUtility.putIntoMapMultipleTimes(pairsMap, pair.getObject(), pair);
 		}
 
-		for (LinkSystemChangeException exception : exceptions) {
-			LinkSystemChange change = exception.getChange();
+		for (LinkServiceChangeException exception : exceptions) {
+			LinkModificationSystemRequest change = exception.getChange();
 
 			LinkCreateTaskPair<T> pair = pairsMap.get(change);
 
@@ -183,10 +183,10 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 
 				InvalidAttributeImpl invalidAttribute = new InvalidAttributeImpl();
 
-				ApiLinkException reason = exception.getReason();
+				ApiResponseErrorConvertable reason = exception.getReason();
 
 				invalidAttribute.setAttribute(change.getLinkName());
-				invalidAttribute.setValue(change.getTargetStringKeys().toString());
+				invalidAttribute.setValue(change.getKeys().toString());
 				invalidAttribute.setDetail("An error occured while trying to link models.");
 				invalidAttribute.setErrorInfo(reason.asResponseError());
 
@@ -197,9 +197,10 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 	}
 
 	private LinkServiceResponse performLinkChanges(List<LinkCreateTaskPair<T>> linkPairs,
-	                                               CreateTaskConfig configuration) {
-		List<List<LinkSystemChange>> pairChanges = LinkCreateTaskPair.getObjects(linkPairs);
-		List<LinkSystemChange> changes = ListUtility.flatten(pairChanges);
+	                                               CreateTaskConfig configuration) throws LinkServiceChangeSetException, AtomicOperationException {
+		
+		List<List<LinkModificationSystemRequest>> pairChanges = LinkCreateTaskPair.getObjects(linkPairs);
+		List<LinkModificationSystemRequest> changes = ListUtility.flatten(pairChanges);
 
 		if (changes.isEmpty() == false) {
 			LinkServiceRequestImpl request = new LinkServiceRequestImpl(changes, configuration.isAtomic());

@@ -135,7 +135,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 	public void assertSuccessfulResponse(ClientLinkServiceRequest request,
 	                                     SerializedClientApiResponse<ClientLinkServiceResponse> clientResponse)
 	        throws ClientRequestFailureException {
-		if (clientResponse.getSuccess() == false) {
+		if (clientResponse.isSuccessful() == false) {
 			String type = request.getType();
 
 			this.atomicOperationUtility.assertNoAtomicOperationError(type, clientResponse);

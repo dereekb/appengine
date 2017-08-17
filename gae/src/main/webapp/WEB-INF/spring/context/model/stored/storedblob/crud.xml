@@ -1,0 +1,111 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Cruds -->
+	<bean id="storedBlobCrudService"
+		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
+		<constructor-arg index="0" ref="storedBlobCreateService" />
+		<constructor-arg index="1" ref="storedBlobReadService" />
+		<constructor-arg index="2" ref="storedBlobUpdateService" />
+		<constructor-arg index="3" ref="storedBlobDeleteService" />
+	</bean>
+
+	<!-- Services -->
+	<bean id="storedBlobCreateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
+		<constructor-arg index="0" ref="storedBlobCreateTask" />
+	</bean>
+
+	<bean id="storedBlobReadService"
+		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
+		<constructor-arg index="0" ref="storedBlobReadTask" />
+	</bean>
+
+	<bean id="storedBlobUpdateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
+		<constructor-arg index="0" ref="storedBlobReadService" />
+		<constructor-arg index="1" ref="storedBlobUpdateTask" />
+		<constructor-arg index="2"
+			ref="storedBlobScheduleUpdateReview" />
+	</bean>
+
+	<bean id="storedBlobDeleteService"
+		class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl">
+		<constructor-arg index="0" ref="storedBlobReadService" />
+		<constructor-arg index="1" ref="storedBlobDeleteTask" />
+	</bean>
+
+	<!-- Save/Delete Tasks -->
+	<bean id="storedBlobSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="storedBlobRegistry" />
+	</bean>
+	
+	<alias name="storedBlobSetterTask" alias="storedBlobStorerTask" />
+	<alias name="storedBlobSetterTask" alias="storedBlobUpdaterTask" />
+	<alias name="storedBlobSetterTask" alias="storedBlobDeleterTask" />
+
+	<!-- Create -->
+	<bean id="storedBlobCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
+		<constructor-arg index="0" ref="storedBlobCreateTaskDelegate" />
+		<constructor-arg index="1">
+			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
+				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
+				<constructor-arg index="1" ref="storedBlobStorerTask"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+				<constructor-arg index="0" ref="storedBlobType" />
+				<constructor-arg index="1" ref="taskScheduler" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="storedBlobCreateTaskDelegate"
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
+		<constructor-arg index="0" ref="storedBlobFactory" />
+		<constructor-arg index="1" ref="storedBlobAttributeUpdater" />
+	</bean>
+
+	<!-- Read -->
+	<bean id="storedBlobReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
+		<constructor-arg index="0" ref="storedBlobRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
+	</bean>
+
+	<!-- Update -->
+	<bean id="storedBlobUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
+		<constructor-arg index="0" ref="storedBlobAttributeUpdater" />
+		<constructor-arg index="1" ref="storedBlobUpdaterTask" />
+	</bean>
+
+	<bean id="storedBlobAttributeUpdater"
+		class="com.dereekb.gae.model.stored.blob.crud.StoredBlobAttributeUpdater">
+	</bean>
+
+	<!-- Delete -->
+	<alias name="storedBlobScheduleDeleteTask" alias="storedBlobDeleteTask" />
+
+	<bean id="storedBlobScheduleDeleteTask"
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
+		<constructor-arg index="0" ref="storedBlobType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+		<property name="deleteFilter">
+			<bean
+				class="com.dereekb.gae.model.stored.blob.crud.StoredBlobDeleteRulesFilter">
+			</bean>
+		</property>
+	</bean>
+
+</beans>

@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.services;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
@@ -29,6 +30,8 @@ public interface ClientCreateService<T extends UniqueModel> {
 	 * @return {@link CreateResponse}. Never {@code null}.
 	 * @throws ClientAtomicOperationException
 	 *             thrown if one or more objects fail to be updated.
+	 * @throws ClientTooMuchInputException
+	 *             if too much input is provided.
 	 * @throws ClientKeyedInvalidAttributeException
 	 *             if one or more templates are invalid.
 	 * @throws ClientRequestFailureException
@@ -36,6 +39,7 @@ public interface ClientCreateService<T extends UniqueModel> {
 	 */
 	public CreateResponse<T> create(CreateRequest<T> request)
 	        throws ClientAtomicOperationException,
+	            ClientTooMuchInputException,
 	            ClientKeyedInvalidAttributeException,
 	            ClientRequestFailureException;
 
@@ -49,6 +53,8 @@ public interface ClientCreateService<T extends UniqueModel> {
 	 * @return {@link CreateResponse}. Never {@code null}.
 	 * @throws ClientAtomicOperationException
 	 *             thrown if one or more objects fail to be updated.
+	 * @throws ClientTooMuchInputException
+	 *             if too much input is provided.
 	 * @throws ClientKeyedInvalidAttributeException
 	 *             if one or more templates are invalid.
 	 * @throws ClientRequestFailureException
@@ -57,6 +63,7 @@ public interface ClientCreateService<T extends UniqueModel> {
 	public CreateResponse<T> create(CreateRequest<T> request,
 	                                ClientRequestSecurity security)
 	        throws ClientAtomicOperationException,
+	            ClientTooMuchInputException,
 	            ClientKeyedInvalidAttributeException,
 	            ClientRequestFailureException;
 

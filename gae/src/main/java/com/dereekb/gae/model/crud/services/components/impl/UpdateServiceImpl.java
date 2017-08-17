@@ -41,11 +41,9 @@ public class UpdateServiceImpl<T extends UniqueModel>
 	private ReadService<T> readService;
 	private UpdateTask<T> updateTask;
 
-	public UpdateServiceImpl() {}
-
-	public UpdateServiceImpl(ReadService<T> readService, UpdateTask<T> updateTask) {
-		this.readService = readService;
-		this.updateTask = updateTask;
+	public UpdateServiceImpl(ReadService<T> readService, UpdateTask<T> updateTask) throws IllegalArgumentException {
+		this.setReadService(readService);
+		this.setUpdateTask(updateTask);
 	}
 
 	public ReadService<T> getReadService() {
@@ -53,6 +51,10 @@ public class UpdateServiceImpl<T extends UniqueModel>
 	}
 
 	public void setReadService(ReadService<T> readService) {
+		if (readService == null) {
+			throw new IllegalArgumentException("readService cannot be null.");
+		}
+
 		this.readService = readService;
 	}
 
@@ -61,6 +63,10 @@ public class UpdateServiceImpl<T extends UniqueModel>
 	}
 
 	public void setUpdateTask(UpdateTask<T> updateTask) {
+		if (updateTask == null) {
+			throw new IllegalArgumentException("updateTask cannot be null.");
+		}
+
 		this.updateTask = updateTask;
 	}
 

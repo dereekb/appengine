@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.services;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.model.crud.services.components.ReadService;
@@ -35,6 +36,7 @@ public interface ClientReadService<T extends UniqueModel> {
 	 */
 	public SimpleReadResponse<T> read(ReadRequest request)
 	        throws ClientAtomicOperationException,
+	            ClientTooMuchInputException,
 	            ClientRequestFailureException;
 
 	/**
@@ -54,6 +56,7 @@ public interface ClientReadService<T extends UniqueModel> {
 	public SimpleReadResponse<T> read(ReadRequest request,
 	                                  ClientRequestSecurity security)
 	        throws ClientAtomicOperationException,
+	            ClientTooMuchInputException,
 	            ClientRequestFailureException;
 
 }

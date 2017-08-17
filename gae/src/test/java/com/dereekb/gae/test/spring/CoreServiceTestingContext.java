@@ -20,6 +20,7 @@ import com.googlecode.objectify.util.Closeable;
  *
  * @author dereekb
  *
+ * @see CoreApiServiceTestingContext
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextHierarchy({
@@ -42,7 +43,7 @@ public class CoreServiceTestingContext {
 	@Autowired
 	protected LocalServiceTestHelper helper;
 
-	@Autowired
+	@Autowired(required=false)
 	protected TestAuthenticationContext authContext;
 
 	@Before
@@ -55,7 +56,9 @@ public class CoreServiceTestingContext {
 
 	@Before
 	public final void resetAuthContext() {
-		this.authContext.resetContext();
+		if (this.authContext != null) {
+			this.authContext.resetContext();
+		}
 	}
 
 	@After

@@ -8,10 +8,10 @@ import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.test.applications.api.api.tests.client.ClientApiCrudTest;
+import com.dereekb.gae.test.applications.api.model.tests.AbstractServerModelRequestSenderTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
-public class LoginClientCrudTests extends ClientApiCrudTest<Login> {
+public class LoginClientCrudTests extends AbstractServerModelRequestSenderTest<Login> {
 
 	@Override
 	@Autowired

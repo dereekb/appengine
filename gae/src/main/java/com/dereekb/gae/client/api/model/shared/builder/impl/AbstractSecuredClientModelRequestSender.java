@@ -235,7 +235,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	protected void assertSuccessfulResponse(ClientApiResponse response)
 	        throws ClientResponseSerializationException,
 	            ClientRequestFailureException {
-		if (response.getSuccess() == false) {
+		if (response.isSuccessful() == false) {
 			throw new ClientRequestFailureException(response);
 		}
 	}

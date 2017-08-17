@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.ModelGenerator;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 /**
  * Abstract {@link ModelGenerator} implementation.
@@ -22,6 +23,10 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 
 	private final String type;
 	private Generator<ModelKey> keyGenerator;
+
+	public AbstractModelGenerator(Class<?> type, ModelKeyType keyType) {
+		this(type, ModelKey.generatorForKeyType(keyType));
+	}
 
 	public AbstractModelGenerator(Class<?> type, Generator<ModelKey> keyGenerator) {
 		this.setKeyGenerator(keyGenerator);
@@ -44,6 +49,11 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 	@Override
 	public ModelKey generateKey() {
 		return this.keyGenerator.generate();
+	}
+
+	@Override
+	public List<ModelKey> generateKeys(int count) {
+		return this.generateKeys(count, null);
 	}
 
 	protected ModelKey generateKey(GeneratorArg arg) {

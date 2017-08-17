@@ -20,12 +20,12 @@ import com.dereekb.gae.model.crud.services.request.impl.CreateRequestImpl;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
-import com.dereekb.gae.test.applications.api.api.tests.client.ClientApiCrudTest;
+import com.dereekb.gae.test.applications.api.model.tests.AbstractServerModelRequestSenderTest;
 import com.dereekb.gae.test.mock.auth.MockKeyLoginControllerUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
-public class LoginKeyClientCrudTests extends ClientApiCrudTest<LoginKey> {
+public class LoginKeyClientCrudTests extends AbstractServerModelRequestSenderTest<LoginKey> {
 
 	@Override
 	@Autowired

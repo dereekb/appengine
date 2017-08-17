@@ -9,7 +9,9 @@ public class SetUtility {
 	public static <T> Set<T> wrap(T value) {
 		Set<T> set = new HashSet<T>();
 
-		set.add(value);
+		if (value != null) {
+			set.add(value);
+		}
 
 		return set;
 	}
@@ -25,7 +27,7 @@ public class SetUtility {
 		return set;
 	}
 
-	public static <T> SetDifferenceImpl<T> getDifference(Collection<? extends T> a,
+	public static <T> SetDifferenceImpl<T> makeSetInfo(Collection<? extends T> a,
 	                                                     Collection<? extends T> b) {
 		return new SetDifferenceImpl<T>(a, b);
 	}
@@ -37,13 +39,29 @@ public class SetUtility {
 		return set;
 	}
 
+	public static <T> Set<T> copy(Collection<? extends T> input) {
+		Set<T> set = new HashSet<T>();
+		
+		if (input != null) {
+			set.addAll(input);
+		}
+		
+		return set;
+	}
+
+	public static <T> boolean isEquivalent(Set<T> a,
+	                                   Set<T> b) {
+		return a.size() == b.size() && a.containsAll(b);
+	}
+
 	public static class SetDifferenceImpl<T>
-	        implements SetDifference<T> {
+	        implements SetInfo<T> {
 
 		private final Set<T> setA;
 		private final Set<T> setB;
 
 		private Set<T> intersection;
+		private Set<T> unique;
 		private Set<T> compliment;
 		private Set<T> difference;
 
@@ -72,6 +90,15 @@ public class SetUtility {
 		}
 
 		@Override
+		public Set<T> getUnique() {
+			if (this.unique == null) {
+				this.unique = makeUnique(this.setA, this.setB);
+			}
+
+			return this.unique;
+		}
+
+		@Override
 		public Set<T> getCompliment() {
 			if (this.compliment == null) {
 				this.compliment = makeCompliment(this.setA, this.setB);
@@ -83,7 +110,7 @@ public class SetUtility {
 		@Override
 		public Set<T> getDifference() {
 			if (this.difference == null) {
-				this.difference = makeDifference(this.setA, this.setB);
+				this.difference = this.makeDifference(this.setA, this.setB);
 			}
 
 			return this.difference;
@@ -92,27 +119,30 @@ public class SetUtility {
 		public static <T> Set<T> makeIntersection(Set<T> a,
 		                                          Set<T> b) {
 			Set<T> intersection = new HashSet<T>(a);
-			intersection.removeAll(b);
+			intersection.retainAll(b);
 			return intersection;
+		}
+
+		public static <T> Set<T> makeUnique(Set<T> a, Set<T> b) {
+			return makeCompliment(b, a);
 		}
 
 		public static <T> Set<T> makeCompliment(Set<T> a,
 		                                        Set<T> b) {
-			Set<T> compliment = new HashSet<T>(a);
-			compliment.retainAll(b);
+			Set<T> compliment = new HashSet<T>(b);
+			compliment.removeAll(a);
 			return compliment;
 		}
 
-		public static <T> Set<T> makeDifference(Set<T> a,
-		                                        Set<T> b) {
-			Set<T> aCompliment = makeCompliment(a, b);
-			Set<T> bCompliment = makeCompliment(b, a);
-
-			return SetUtility.combine(aCompliment, bCompliment);
+		public Set<T> makeDifference(Set<T> a, Set<T> b) {
+			Set<T> aUnique = this.getUnique();
+			Set<T> bCompliment = this.getCompliment();
+			return SetUtility.combine(aUnique, bCompliment);
 		}
+		
 	}
 
-	public static interface SetDifference<T> {
+	public static interface SetInfo<T> {
 
 		public Collection<T> getSetA();
 
@@ -122,9 +152,14 @@ public class SetUtility {
 		 * Gets all elements that are in both sets.
 		 */
 		public Set<T> getIntersection();
+		
+		/**
+		 * Gets all elements that are unique to set A.
+		 */
+		public Set<T> getUnique();
 
 		/**
-		 * Gets all elements that are not in set A.
+		 * Gets all elements that are not in set A (unique to set B).
 		 */
 		public Set<T> getCompliment();
 

@@ -9,13 +9,17 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.model.extension.generation.Generator;
+import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
+import com.dereekb.gae.model.extension.generation.impl.keys.StringModelKeyGenerator;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
 import com.dereekb.gae.server.datastore.models.keys.exception.UninitializedModelKeyException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 import com.dereekb.gae.utilities.misc.keyed.Keyed;
@@ -218,21 +222,33 @@ public final class ModelKey
 		return values;
 	}
 
-	public static List<String> readStringKeys(Iterable<? extends UniqueModel> models) {
-		List<String> ids = new ArrayList<>();
+	public static List<String> readStringKeys(Iterable<? extends Keyed<ModelKey>> models) {
+		List<String> ids = new ArrayList<String>();
 
+		readStringKeysIntoCollection(models, ids);
+		
+		return ids;
+	}
+
+	public static Set<String> readStringKeysSet(Iterable<? extends Keyed<ModelKey>> models) {
+		Set<String> ids = new HashSet<String>();
+
+		readStringKeysIntoCollection(models, ids);
+		
+		return ids;
+	}
+	
+	public static void readStringKeysIntoCollection(Iterable<? extends Keyed<ModelKey>> models, Collection<String> collection) {
 		if (models != null) {
-			for (UniqueModel model : models) {
-				ModelKey key = model.getModelKey();
+			for (Keyed<ModelKey> model : models) {
+				ModelKey key = model.keyValue();
 
 				if (key != null) {
 					String id = key.keyAsString();
-					ids.add(id);
+					collection.add(id);
 				}
 			}
 		}
-
-		return ids;
 	}
 
 	public static List<String> keysAsStrings(Iterable<ModelKey> keys) {
@@ -407,7 +423,7 @@ public final class ModelKey
 	}
 
 	/**
-	 * Convenience function for converting
+	 * Convenience function for converting.
 	 *
 	 * @param keyType
 	 *            {@link ModelKeyType} of values.
@@ -420,21 +436,48 @@ public final class ModelKey
 	 */
 	public static List<ModelKey> convert(ModelKeyType keyType,
 	                                     Collection<String> values)
-	        throws ConversionFailureException {
-		List<ModelKey> keys;
-
+	        throws IllegalArgumentException, ConversionFailureException {
+		return converterForKeyType(keyType).convert(values);
+	}
+	
+	/**
+	 * Returns the {@link StringModelKeyConverter} for the input key type.
+	 * 
+	 * @param keyType
+	 *            {@link ModelKeyType} of values.
+	 * @return {@link StringModelKeyConverter}. Never {@code null}.
+	 * @throws IllegalArgumentException if the input key type is unsupported.
+	 */
+	public static StringModelKeyConverter converterForKeyType(ModelKeyType keyType)
+	        throws IllegalArgumentException {
 		switch (keyType) {
 			case NAME:
-				keys = StringModelKeyConverterImpl.CONVERTER.convert(values);
-				break;
+				return StringModelKeyConverterImpl.CONVERTER;
 			case NUMBER:
-				keys = StringLongModelKeyConverterImpl.CONVERTER.convert(values);
-				break;
+				return StringLongModelKeyConverterImpl.CONVERTER;
 			default:
 				throw new IllegalArgumentException("Invalid key type specified.");
 		}
-
-		return keys;
+	}
+	
+	/**
+	 * Returns the {@link Generator} for the input key type.
+	 * 
+	 * @param keyType
+	 *            {@link ModelKeyType} of values.
+	 * @return {@link Generator}. Never {@code null}.
+	 * @throws IllegalArgumentException if the input key type is unsupported.
+	 */
+	public static Generator<ModelKey> generatorForKeyType(ModelKeyType keyType)
+	        throws IllegalArgumentException {
+		switch (keyType) {
+			case NAME:
+				return StringModelKeyGenerator.GENERATOR;
+			case NUMBER:
+				return LongModelKeyGenerator.GENERATOR;
+			default:
+				throw new IllegalArgumentException("Invalid key type specified.");
+		}
 	}
 
 	/**
@@ -619,12 +662,12 @@ public final class ModelKey
 	 * @throws NullKeyException
 	 *             Thrown if a model does not have a key.
 	 */
-	public static <T extends UniqueModel> Set<ModelKey> makeModelKeySet(Iterable<? extends T> models)
+	public static <T extends Keyed<ModelKey>> Set<ModelKey> makeModelKeySet(Iterable<? extends T> models)
 	        throws NullKeyException {
 		Set<ModelKey> keys = new HashSet<>();
 
 		for (T model : models) {
-			ModelKey key = model.getModelKey();
+			ModelKey key = model.keyValue();
 
 			if (key == null) {
 				throw new NullKeyException();

@@ -2,6 +2,7 @@ package com.dereekb.gae.test.mock.client.crud;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -24,6 +25,7 @@ import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
 /**
  * Test utility for {@link ClientUpdateRequestSender}.
@@ -44,7 +46,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		this.testModelGenerator = testModelGenerator;
 	}
 
-	public void testMockUpdateRequest(ClientRequestSecurity security)
+	public void testMockUpdateSingleRequest(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
@@ -59,13 +61,37 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		        .sendRequest(updateRequest, security);
 
 		SimpleUpdateResponse<T> updateResponse = response.getSerializedResponse();
-		Collection<T> models = updateResponse.getModels();
+		Collection<T> results = updateResponse.getModels();
 
-		Assert.assertFalse(models.isEmpty());
+		Assert.assertFalse(results.isEmpty());
 
 		// Update again.
 		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
 		Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
+	}
+
+	public void testMockUpdateManyRequest(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		int count = EditModelController.DEFAULT_MAX_ELEMENTS;
+
+		List<T> models = this.testModelGenerator.generate(count);
+
+		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(models);
+		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
+		        .sendRequest(updateRequest, security);
+
+		SimpleUpdateResponse<T> updateResponse = response.getSerializedResponse();
+		Collection<T> results = updateResponse.getModels();
+
+		Assert.assertFalse(results.isEmpty());
+
+		// Update again.
+		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+		Assert.assertTrue(simpleUpdateResponse.getModels().containsAll(models));
 	}
 
 	public void testMockAtomicUnavailableUpdateRequest(ClientRequestSecurity security)
@@ -82,7 +108,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
 
-		Assert.assertFalse(response.getSuccess());
+		Assert.assertFalse(response.isSuccessful());
 		Assert.assertTrue(response.getError().getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR);
 
 		try {
@@ -128,7 +154,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
 
-		Assert.assertTrue(response.getSuccess());
+		Assert.assertTrue(response.isSuccessful());
 
 		// Get Serialized Primary Data
 		try {
@@ -179,6 +205,24 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		try {
 			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
 			Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
+		} catch (Exception e) {
+
+		}
+	}
+
+	public void testEmptyMockUpdate(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		List<T> collection = Collections.emptyList();
+		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(collection);
+
+		// Update again.
+		try {
+			this.updateRequestSender.update(updateRequest);
+			Assert.fail();
 		} catch (Exception e) {
 
 		}

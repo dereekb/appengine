@@ -26,8 +26,8 @@ public abstract class ClientApiResponseWrapper
 
 	// MARK: ClientApiResponse
 	@Override
-	public boolean getSuccess() {
-		return this.response.getSuccess();
+	public boolean isSuccessful() {
+		return this.response.isSuccessful();
 	}
 
 	@Override

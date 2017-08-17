@@ -1,0 +1,68 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Read Controller -->
+	<bean id="storedBlobReadControllerEntry"
+		class="com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryImpl"
+		lazy-init="false">
+		<constructor-arg index="0" ref="storedBlobReadService" />
+		<constructor-arg index="1" ref="storedBlobDataConverter" />
+		<constructor-arg index="2"
+			ref="storedBlobModelInclusionReader" />
+	</bean>
+
+	<bean id="storedBlobModelInclusionReader"
+		class="com.dereekb.gae.model.extension.inclusion.reader.impl.ModelInclusionReaderImpl"
+		lazy-init="false">
+		<constructor-arg index="0" ref="storedBlobLinkModelAccessor"></constructor-arg>
+	</bean>
+
+	<!-- Edit Controller -->
+	<bean id="storedBlobEditController"
+		class="com.dereekb.gae.web.api.model.controllers.StoredBlobEditController"
+		lazy-init="false">
+		<constructor-arg index="0"
+			ref="storedBlobEditControllerDelegate" />
+		<constructor-arg index="1"
+			ref="storedBlobEditControllerConversionDelegate" />
+	</bean>
+
+	<bean id="storedBlobEditControllerDelegate"
+		class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerDelegateImpl">
+		<constructor-arg index="0" ref="storedBlobCrudService" />
+	</bean>
+
+	<bean id="storedBlobEditControllerConversionDelegate"
+		class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerConversionDelegateImpl">
+		<constructor-arg index="0" ref="storedBlobType" />
+		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
+		<constructor-arg index="2" ref="storedBlobDataConverter" />
+	</bean>
+
+	<!-- Search Component -->
+	<alias name="storedBlobType" alias="storedBlobSearchType" />
+
+	<bean id="storedBlobSearchDelegateEntry"
+		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
+		<constructor-arg index="0" ref="storedBlobSearchType" />
+		<constructor-arg index="1" ref="storedBlobQueryService" />
+		<constructor-arg index="2" ref="storedBlobSearchService" />
+		<constructor-arg index="3">
+			<bean
+				class="com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchRequestBuilder" />
+		</constructor-arg>
+		<constructor-arg index="4"
+			ref="storedBlobSearchResultConverter" />
+	</bean>
+
+	<alias name="storedBlobDataConverter" alias="storedBlobSearchResultConverter" />
+
+</beans>

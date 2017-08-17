@@ -7,6 +7,7 @@ import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.CreateRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
 
 /**
  * Default implementation of {@link CreateRequest}.
@@ -15,11 +16,14 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *
  * @param <T>
  *            model type
+ * 
+ * @see ApiCreateRequest
  */
 public final class CreateRequestImpl<T extends UniqueModel>
         implements CreateRequest<T> {
 
 	private List<T> templates;
+
 	private CreateRequestOptions options;
 
 	public CreateRequestImpl(T template) {

@@ -43,6 +43,10 @@ public class ApiResponseErrorImpl extends ErrorInfoImpl
 		this.setData(data);
 	}
 
+	public ApiResponseErrorImpl(ApiResponseError error) {
+		this(error.getErrorCode(), error.getErrorTitle(), error.getErrorDetail(), error.getErrorData());
+	}
+
 	public Object getData() {
 		return this.data;
 	}
@@ -56,6 +60,20 @@ public class ApiResponseErrorImpl extends ErrorInfoImpl
 	@Override
 	public Object getErrorData() {
 		return this.data;
+	}
+
+	public static ApiResponseErrorImpl asErrorImpl(ApiResponseError error) {
+		if (error instanceof ApiResponseErrorImpl) {
+			return (ApiResponseErrorImpl) error;
+		} else {
+			return new ApiResponseErrorImpl(error);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "ApiResponseErrorImpl [getCode()=" + this.getCode() + ", getTitle()="
+		        + this.getTitle() + ", getDetail()=" + this.getDetail() + "data=" + this.data + "]";
 	}
 
 }

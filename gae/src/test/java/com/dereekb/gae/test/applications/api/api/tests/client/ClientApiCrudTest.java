@@ -9,6 +9,7 @@ import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.test.applications.api.ClientApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.model.tests.AbstractServerModelRequestSenderTest;
 import com.dereekb.gae.test.mock.client.crud.ModelClientCreateRequestSenderTestUtility;
 import com.dereekb.gae.test.mock.client.crud.ModelClientDeleteRequestSenderTestUtility;
 import com.dereekb.gae.test.mock.client.crud.ModelClientReadRequestSenderTestUtility;
@@ -22,7 +23,10 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
  *
  * @param <T>
  *            model type
+ * 
+ * @deprecated replaced by {@link AbstractServerModelRequestSenderTest}.
  */
+@Deprecated
 public abstract class ClientApiCrudTest<T extends MutableUniqueModel> extends ClientApiApplicationTestContext {
 
 	private TestModelGenerator<T> testModelGenerator;
@@ -168,9 +172,16 @@ public abstract class ClientApiCrudTest<T extends MutableUniqueModel> extends Cl
 
 	// MARK: Update Tests
 	@Test
-	public void testAtomicModelClientUpdateRequest() throws Exception {
+	public void testAtomicModelClientUpdateSingleRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
-			this.updateRequestUtility.testMockUpdateRequest(this.getRequestSecurity());
+			this.updateRequestUtility.testMockUpdateSingleRequest(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testAtomicModelClientUpdateMultipleRequest() throws Exception {
+		if (this.updateRequestUtility != null) {
+			this.updateRequestUtility.testMockUpdateManyRequest(this.getRequestSecurity());
 		}
 	}
 
@@ -191,12 +202,17 @@ public abstract class ClientApiCrudTest<T extends MutableUniqueModel> extends Cl
 	@Test
 	public void testUpdateWithNoIdentifierClientUpdateRequest() throws Exception {
 		if (this.updateRequestUtility != null) {
-			this.updateRequestUtility.testMockUpdateRequest(this.getRequestSecurity());
+			this.updateRequestUtility.testMockUpdateWithoutIdentifier(this.getRequestSecurity());
 		}
 	}
 
-	// TODO: Add test for invalid update templates.
-
+	@Test
+	public void testEmptyMockUpdateClientUpdateRequest() throws Exception {
+		if (this.updateRequestUtility != null) {
+			this.updateRequestUtility.testEmptyMockUpdate(this.getRequestSecurity());
+		}
+	}
+	
 	// MARK: Delete Tests
 	@Test
 	public void testMockDeleteRequestReturnModels() throws Exception {

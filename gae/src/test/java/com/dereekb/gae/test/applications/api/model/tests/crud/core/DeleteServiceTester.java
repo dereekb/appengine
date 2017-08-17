@@ -22,6 +22,8 @@ import com.dereekb.gae.test.runnable.RunnableTest;
  *
  * @param <T>
  *            model type
+ * 
+ * @deprecated Use client tests instead.
  */
 @Deprecated
 public class DeleteServiceTester<T extends UniqueModel>

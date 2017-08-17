@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 
 /**
  * Indexes a model. Index change is based on the {@link IndexAction} of this

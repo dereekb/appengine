@@ -63,7 +63,7 @@ public abstract class AbstractClientModelTemplateRequestSender<T extends UniqueM
 	// MARK: Override
 	@Override
 	public void assertSuccessfulResponse(ClientApiResponse clientResponse) throws ClientRequestFailureException {
-		if (clientResponse.getSuccess() == false) {
+		if (clientResponse.isSuccessful() == false) {
 			this.assertNoInvalidAttributes(clientResponse);
 			super.assertSuccessfulResponse(clientResponse);
 		}

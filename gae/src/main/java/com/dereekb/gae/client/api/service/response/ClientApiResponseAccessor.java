@@ -5,6 +5,7 @@ import java.util.Map;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
+import com.dereekb.gae.utilities.misc.success.SuccessModel;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -15,14 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * 
  * @see ApiResponse
  */
-public interface ClientApiResponseAccessor {
-
-	/**
-	 * Returns the success value in the client response.
-	 * 
-	 * @return {@code true} if success.
-	 */
-	public boolean getSuccess();
+public interface ClientApiResponseAccessor extends SuccessModel {
 
 	/**
 	 * Returns the JSON node for the api response.

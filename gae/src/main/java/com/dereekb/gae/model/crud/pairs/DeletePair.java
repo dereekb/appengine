@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 
 /**
  * Basic delete pair.

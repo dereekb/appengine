@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.server.datastore.models.exception.UnknownModelTypeException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
@@ -21,10 +22,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 public class TypeModelKeyConverterImpl
         implements TypeModelKeyConverter {
 
-	private final static StringModelKeyConverter LONG_CONVERTER = StringLongModelKeyConverterImpl.CONVERTER;
-	private final static StringModelKeyConverter STRING_CONVERTER = StringModelKeyConverterImpl.CONVERTER;
-
-	private Map<String, ModelKeyType> map;
+	private CaseInsensitiveMap<ModelKeyType> map;
 
 	public TypeModelKeyConverterImpl(Map<String, ModelKeyType> map) {
 		this.setMap(map);
@@ -43,49 +41,36 @@ public class TypeModelKeyConverterImpl
 		return this.getConverterForType(modelType);
 	}
 
-	public SingleDirectionalConverter<String, ModelKey> getSingleConverterForType(ModelKeyType type) {
-		return this.getDirectionalConverterForType(type);
+	public static SingleDirectionalConverter<String, ModelKey> getSingleConverterForType(ModelKeyType type) {
+		return getDirectionalConverterForType(type);
 	}
 
-	public StringModelKeyConverter getDirectionalConverterForType(ModelKeyType type) {
-		StringModelKeyConverter converter = null;
-
-		switch (type) {
-			case NAME:
-				converter = STRING_CONVERTER;
-				break;
-			case NUMBER:
-				converter = LONG_CONVERTER;
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid type passed.");
-		}
-
-		return converter;
+	public static StringModelKeyConverter getDirectionalConverterForType(ModelKeyType keyType) {
+		return ModelKey.converterForKeyType(keyType);
 	}
 
 	// MARK: TypeModelKeyConverter
 	@Override
-	public ModelKeyType typeForModelType(String modelType) {
+	public ModelKeyType typeForModelType(String modelType) throws UnknownModelTypeException {
 		ModelKeyType type = this.map.get(modelType);
 
 		if (type == null) {
-			throw new IllegalArgumentException("Invalid type passed.");
+			throw new UnknownModelTypeException(modelType);
 		}
 
 		return type;
 	}
 
 	@Override
-	public StringModelKeyConverter getConverterForType(String modelType) throws IllegalArgumentException {
+	public StringModelKeyConverter getConverterForType(String modelType) throws UnknownModelTypeException {
 		ModelKeyType type = this.typeForModelType(modelType);
-		return this.getDirectionalConverterForType(type);
+		return getDirectionalConverterForType(type);
 	}
 
 	@Override
 	public ModelKey convertKey(String modelType,
 	                           String value)
-	        throws ConversionFailureException {
+	        throws UnknownModelTypeException, ConversionFailureException {
 		StringModelKeyConverter converter = this.getConverterForType(modelType);
 		return converter.convertSingle(value);
 	}
@@ -93,7 +78,7 @@ public class TypeModelKeyConverterImpl
 	@Override
 	public List<ModelKey> convertKeys(String modelType,
 	                                  Collection<String> values)
-	        throws ConversionFailureException {
+	        throws UnknownModelTypeException, ConversionFailureException {
 		StringModelKeyConverter converter = this.getConverterForType(modelType);
 		return converter.convertTo(values);
 	}

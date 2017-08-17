@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.model.extension.link;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,22 +17,20 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
-import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceRequestImpl;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystemRequest;
+import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModificationSystemRequestImpl;
+import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
-import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
-import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeConverterImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
+import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
+import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
@@ -44,23 +43,9 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 public class LinkExtensionApiController {
 
 	private LinkService service;
-	private ApiLinkChangeConverter converter;
 
-	/**
-	 * Convenience constructor that uses the passed
-	 * {@link TypeModelKeyConverter} to create a
-	 * {@link ApiLinkChangeConverterImpl} instance for the {@link #converter}.
-	 *
-	 * @param indexService
-	 * @param keyTypeConverter
-	 */
-	public LinkExtensionApiController(LinkService service, TypeModelKeyConverter keyTypeConverter) {
-		this(service, new ApiLinkChangeConverterImpl(keyTypeConverter));
-	}
-
-	public LinkExtensionApiController(LinkService service, ApiLinkChangeConverter converter) {
+	public LinkExtensionApiController(LinkService service) {
 		this.setService(service);
-		this.setConverter(converter);
 	}
 
 	public LinkService getService() {
@@ -75,18 +60,6 @@ public class LinkExtensionApiController {
 		this.service = service;
 	}
 
-	public ApiLinkChangeConverter getConverter() {
-		return this.converter;
-	}
-
-	public void setConverter(ApiLinkChangeConverter converter) {
-		if (converter == null) {
-			throw new IllegalArgumentException("converter cannot be null.");
-		}
-
-		this.converter = converter;
-	}
-
 	// MARK: API
 	@ResponseBody
 	@RequestMapping(value = "/{type}/link", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
@@ -98,14 +71,18 @@ public class LinkExtensionApiController {
 			boolean atomic = request.isAtomic();
 
 			List<ApiLinkChangeImpl> submittedChanges = request.getData();
-			List<LinkSystemChange> changes = this.converter.convert(primaryType, submittedChanges);
+			List<LinkModificationSystemRequest> changes = this.convert(primaryType, submittedChanges);
 
 			LinkServiceRequest linkServiceRequest = new LinkServiceRequestImpl(changes, atomic);
 			LinkServiceResponse linkServiceResponse = this.service.updateLinks(linkServiceRequest);
 
 			response = new ApiResponseImpl(true);
-			this.addMissingKeysToResponse(primaryType, linkServiceResponse, response);
-		} catch (LinkSystemChangeSetException e) {
+			
+			ApiLinkChangeResponseData data = ApiLinkChangeResponseData.makeWithResponse(linkServiceResponse);
+			response.setData(data);
+			
+			this.addErrorsToResponse(primaryType, linkServiceResponse, response);
+		} catch (LinkServiceChangeSetException e) {
 			throw new WrappedApiUnprocessableEntityException(e);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
@@ -118,22 +95,53 @@ public class LinkExtensionApiController {
 		return response;
 	}
 
-	private void addMissingKeysToResponse(String primaryType,
-	                                      LinkServiceResponse linkServiceResponse,
-	                                      ApiResponseImpl apiResponse) {
-		HashMapWithSet<String, ModelKey> missingKeys = linkServiceResponse.getMissingPrimaryKeysSet();
-		Set<ModelKey> missingPrimaryKeys = missingKeys.get(primaryType);
-
-		if (missingPrimaryKeys != null && missingPrimaryKeys.isEmpty() == false) {
-			ApiResponseErrorImpl missingKeysError = MissingRequiredResourceException
-			        .tryMakeApiErrorForModelKeys(missingPrimaryKeys, "Unavailable to change links.");
-			apiResponse.addError(missingKeysError);
+	private void addErrorsToResponse(String primaryType,
+	                                 LinkServiceResponse linkServiceResponse,
+	                                 ApiResponseImpl response) {
+		LinkServiceChangeSetException errorsSet = linkServiceResponse.getErrorsSet();
+		
+		if (errorsSet.hasErrors()) {
+			ApiResponseError responseError = errorsSet.asResponseError();
+			response.addError(responseError);
 		}
+	}
+
+	private List<LinkModificationSystemRequest> convert(String linkModelType,
+	                                                    List<ApiLinkChangeImpl> inputChanges) {
+		List<LinkModificationSystemRequest> changes = new ArrayList<LinkModificationSystemRequest>();
+
+		Integer index = 0;
+		
+		for (ApiLinkChange inputChange : inputChanges) {
+			
+			String id = inputChange.getId();
+			
+			if (id == null) {
+				id = index.toString();
+			}
+			
+			String linkName = inputChange.getLinkName();
+			String primaryKey = inputChange.getPrimaryKey();
+			
+			String actionString = inputChange.getAction();
+			MutableLinkChangeType linkChangeType = MutableLinkChangeType.fromString(actionString);
+			
+			Set<String> targetStringKeys = inputChange.getTargetKeys();
+			
+			LinkModificationSystemRequestImpl change = new LinkModificationSystemRequestImpl(linkModelType, primaryKey, linkName, linkChangeType, targetStringKeys);
+			change.setRequestKey(id);
+			
+			changes.add(change);
+			
+			index += 1;
+		}
+
+		return changes;
 	}
 
 	@Override
 	public String toString() {
-		return "LinkExtensionApiController [indexService=" + this.service + ", converter=" + this.converter + "]";
+		return "LinkExtensionApiController [indexService=" + this.service + "]";
 	}
 
 }

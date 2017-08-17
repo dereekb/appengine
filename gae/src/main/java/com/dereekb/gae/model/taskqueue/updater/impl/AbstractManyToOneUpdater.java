@@ -36,10 +36,24 @@ import com.googlecode.objectify.Work;
  */
 public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends UniqueModel> extends AbstractUpdater<T> {
 
+	/**
+	 * Default number of elements within the "many" to update at once.
+	 */
+	public static final int DEFAULT_INSTANCE_BATCH_SIZE = 15;
+
+	private int instanceBatchSize = DEFAULT_INSTANCE_BATCH_SIZE;
 	private Getter<T> modelGetter;
 
 	public AbstractManyToOneUpdater(Getter<T> modelGetter) {
 		this.setModelGetter(modelGetter);
+	}
+
+	public int getInstanceBatchSize() {
+		return this.instanceBatchSize;
+	}
+
+	public void setInstanceBatchSize(int instanceBatchSize) {
+		this.instanceBatchSize = instanceBatchSize;
 	}
 
 	public Getter<T> getModelGetter() {
@@ -249,12 +263,7 @@ public abstract class AbstractManyToOneUpdater<T extends UniqueModel, R extends 
 	protected abstract class AbstractInstance<O extends RelatedModelUpdaterResult, C extends InstanceChange<R, C>>
 	        implements Instance<T> {
 
-		/**
-		 * This batch size limit is related to the Google App Engine
-		 * transactional limit of 25 entities/transaction.
-		 */
-		protected final int INSTANCE_BATCH_SIZE = 10;
-		protected final Partitioner PARTITIONER = new PartitionerImpl(this.INSTANCE_BATCH_SIZE);
+		protected final Partitioner PARTITIONER = new PartitionerImpl(AbstractManyToOneUpdater.this.instanceBatchSize);
 
 		// MARK: Instance
 		@Override

@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.visibility.impl;
 
 import com.dereekb.gae.deprecated.model.extension.visibility.VisibilityState;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.pairs.SuccessResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 
 /**
  * Used by {@link VisibilityFunction}.

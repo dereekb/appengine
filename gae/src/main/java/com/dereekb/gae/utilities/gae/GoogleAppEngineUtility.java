@@ -8,7 +8,7 @@ import com.google.apphosting.api.ApiProxy;
 import com.google.apphosting.api.ApiProxy.Environment;
 
 public class GoogleAppEngineUtility {
-
+	
 	// MARK: Environment
 	/**
 	 * Returns true only if the environment is undefined.

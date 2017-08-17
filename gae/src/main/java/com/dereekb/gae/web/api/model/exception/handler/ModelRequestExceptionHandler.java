@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.web.api.model.crud.exception.NoTemplateDataExeption;
+import com.dereekb.gae.web.api.model.exception.ApiTooMuchInputException;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
+import com.dereekb.gae.web.api.model.exception.TooManyRequestKeysException;
+import com.dereekb.gae.web.api.model.exception.TooManyTemplatesException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
@@ -44,6 +47,13 @@ public class ModelRequestExceptionHandler {
 	}
 
 	// MARK: Templates and Data
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ TooManyTemplatesException.class, TooManyRequestKeysException.class, ApiTooMuchInputException.class })
+	public ApiResponse handleException(ApiTooMuchInputException exception) {
+		return ApiResponseImpl.makeFailure(exception);
+	}
+	
 	@ResponseBody
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(NoTemplateDataExeption.class)

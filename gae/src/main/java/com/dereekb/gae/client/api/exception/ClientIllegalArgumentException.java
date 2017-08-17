@@ -72,7 +72,7 @@ public class ClientIllegalArgumentException extends ClientRequestFailureExceptio
 
 	public static ClientResponseErrorInfo tryGetIllegalArgumentApiError(ClientResponseError error) {
 		Map<String, ClientResponseErrorInfo> errorInfoMap = error.getErrorInfoMap();
-		ClientResponseErrorInfo errorInfo = errorInfoMap.get(ApiIllegalArgumentException.API_ERROR_CODE);
+		ClientResponseErrorInfo errorInfo = errorInfoMap.get(ApiIllegalArgumentException.ERROR_CODE);
 		return errorInfo;
 	}
 

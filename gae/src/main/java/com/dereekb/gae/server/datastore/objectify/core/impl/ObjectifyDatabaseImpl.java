@@ -26,6 +26,8 @@ import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedSette
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntity;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcer;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityReader;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityWriter;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifySource;
@@ -145,7 +147,10 @@ public class ObjectifyDatabaseImpl
 		private final ObjectifyKeyConverter<T, ModelKey> objectifyKeyConverter;
 		private final ObjectifyQueryRequestLimitedBuilderInitializer initializer;
 		private final ObjectifyQueryIterableFactory<T> iterableFactory;
-
+		
+		private final ObjectifyDatabaseEntityKeyEnforcement keyEnforcement;
+		private final ObjectifyDatabaseEntityKeyEnforcer keyEnforcer;
+		
 		protected ObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			ObjectifyDatabaseEntityDefinition entity = ObjectifyDatabaseImpl.this.getDefinition(type);
 
@@ -155,7 +160,10 @@ public class ObjectifyDatabaseImpl
 			this.objectifyKeyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
 			this.initializer = entity.getQueryInitializer();
 			this.iterableFactory = new ObjectifyQueryIterableFactoryImpl<T>(this);
-
+			
+			this.keyEnforcement = entity.getKeyEnforcement();
+			this.keyEnforcer = this.makeKeyEnforcer(this.keyEnforcement);
+			
 			this.resetAccessors();
 		}
 
@@ -189,6 +197,30 @@ public class ObjectifyDatabaseImpl
 		protected void resetGetterSetters() {
 			this.getter = new ObjectifyDatabaseGetter();
 			this.setter = new ObjectifyDatabaseSetter();
+		}
+		
+		@Override
+		public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement() {
+			return this.keyEnforcement;
+		}
+		
+		private ObjectifyDatabaseEntityKeyEnforcer makeKeyEnforcer(ObjectifyDatabaseEntityKeyEnforcement keyEnforcement) {
+			ObjectifyDatabaseEntityKeyEnforcer keyEnforcer = null;
+			
+			switch (keyEnforcement) {
+				case DEFAULT:
+				case MUST_BE_NULL:
+				case MUST_BE_PROVIDED:
+					keyEnforcer = ObjectifyDatabaseEntityKeyEnforcerUtility.enforcerForType(keyEnforcement);
+					break;
+				case MUST_BE_PROVIDED_AND_UNIQUE:
+					// TODO
+				default:
+					throw new UnsupportedOperationException();
+			}
+			
+			
+			return keyEnforcer;
 		}
 
 		// MARK: ObjectifyDatabaseEntityReader
@@ -634,13 +666,7 @@ public class ObjectifyDatabaseImpl
 			}
 
 			private boolean keyIsAllowedForStorage(ModelKey key) {
-				if (key == null) {
-					return true;
-				} else if (key.getType() == ModelKeyType.NAME) {
-					return true;
-				} else {
-					return false;
-				}
+				return ObjectifyDatabaseEntityImpl.this.keyEnforcer.isAllowedForStorage(key);
 			}
 
 			// MARK: Deleter

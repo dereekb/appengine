@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.extension.links.task;
 
-import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
+import com.dereekb.gae.model.extension.links.system.modification.LinkModificationSystem;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
@@ -19,14 +19,13 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  */
 public class LinkModelTransactionChangeTaskFactory<T extends UniqueModel> extends LinkModelChangeTaskFactory<T> {
 
-	public LinkModelTransactionChangeTaskFactory(LinkSystem system, LinkModelChangeTaskFactoryDelegate delegate) {
+	public LinkModelTransactionChangeTaskFactory(LinkModificationSystem system, LinkModelChangeTaskFactoryDelegate<T> delegate) {
 		super(system, delegate);
 	}
 
 	protected class TransactionSafeLinkModelChangeTask extends LinkModelChangeTask {
 
-		public TransactionSafeLinkModelChangeTask(String modelType,
-		        com.dereekb.gae.model.extension.links.task.LinkModelChangeTaskFactory.ModelLinkChangeTaskDelegate delegate) {
+		public TransactionSafeLinkModelChangeTask(String modelType, ModelLinkChangeTaskDelegate<T> delegate) {
 			super(modelType, delegate);
 		}
 

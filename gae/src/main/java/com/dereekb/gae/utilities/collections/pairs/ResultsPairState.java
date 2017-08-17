@@ -1,7 +1,7 @@
 package com.dereekb.gae.utilities.collections.pairs;
 
 /**
- * States for {@link ResultsPair}.
+ * States for {@link ResultPair}.
  *
  * @author dereekb
  */

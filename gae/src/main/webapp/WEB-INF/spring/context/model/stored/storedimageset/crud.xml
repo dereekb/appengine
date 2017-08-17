@@ -1,0 +1,109 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Cruds -->
+	<bean id="storedImageSetCrudService"
+		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetCreateService" />
+		<constructor-arg index="1" ref="storedImageSetReadService" />
+		<constructor-arg index="2" ref="storedImageSetUpdateService" />
+		<constructor-arg index="3" ref="storedImageSetDeleteService" />
+	</bean>
+
+	<!-- Services -->
+	<bean id="storedImageSetCreateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetCreateTask" />
+	</bean>
+
+	<bean id="storedImageSetReadService"
+		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetReadTask" />
+	</bean>
+
+	<bean id="storedImageSetUpdateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetReadService" />
+		<constructor-arg index="1" ref="storedImageSetUpdateTask" />
+		<constructor-arg index="2"
+			ref="storedImageSetScheduleUpdateReview" />
+	</bean>
+
+	<bean id="storedImageSetDeleteService"
+		class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl">
+		<constructor-arg index="0" ref="storedImageSetReadService" />
+		<constructor-arg index="1" ref="storedImageSetDeleteTask" />
+	</bean>
+
+	<!-- Save/Delete Tasks -->
+	<bean id="storedImageSetSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="storedImageSetRegistry" />
+	</bean>
+	
+	<alias name="storedImageSetSetterTask" alias="storedImageSetStorerTask" />
+	<alias name="storedImageSetSetterTask" alias="storedImageSetUpdaterTask" />
+	<alias name="storedImageSetSetterTask" alias="storedImageSetDeleterTask" />
+
+	<!-- Create -->
+	<bean id="storedImageSetCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
+		<constructor-arg index="0"
+			ref="storedImageSetCreateTaskDelegate" />
+		<constructor-arg index="1">
+			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
+				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
+				<constructor-arg index="1" ref="storedImageSetStorerTask"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+				<constructor-arg index="0" ref="storedImageSetType" />
+				<constructor-arg index="1" ref="taskScheduler" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="storedImageSetCreateTaskDelegate"
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
+		<constructor-arg index="0" ref="storedImageSetFactory" />
+		<constructor-arg index="1"
+			ref="storedImageSetAttributeUpdater" />
+	</bean>
+
+	<!-- Read -->
+	<bean id="storedImageSetReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
+		<constructor-arg index="0" ref="storedImageSetRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
+	</bean>
+
+	<!-- Update -->
+	<bean id="storedImageSetUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
+		<constructor-arg index="0"
+			ref="storedImageSetAttributeUpdater" />
+		<constructor-arg index="1" ref="storedImageSetUpdaterTask" />
+	</bean>
+
+	<bean id="storedImageSetAttributeUpdater"
+		class="com.dereekb.gae.model.stored.image.set.crud.StoredImageSetAttributeUpdater">
+	</bean>
+
+	<!-- Delete -->
+	<alias name="storedImageSetScheduleDeleteTask" alias="storedImageSetDeleteTask" />
+
+	<bean id="storedImageSetScheduleDeleteTask"
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
+		<constructor-arg index="0" ref="storedImageSetType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+</beans>

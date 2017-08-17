@@ -1,6 +1,6 @@
 package com.dereekb.gae.utilities.function.staged.factory.pairs;
 
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.dereekb.gae.utilities.deprecated.function.staged.components.StagedFunctionStage;
 
 public class StagedFunctionStagePair<T> extends HandlerPair<StagedFunctionStage[], T> {

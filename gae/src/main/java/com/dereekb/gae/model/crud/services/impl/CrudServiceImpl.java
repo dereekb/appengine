@@ -15,6 +15,7 @@ import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link CrudService} implementation that uses implementations of the different
@@ -66,6 +67,11 @@ public class CrudServiceImpl<T extends UniqueModel>
 			readService = new ReadService<T>() {
 
 				@Override
+				public ReadResponse<ModelKey> exists(ReadRequest request) throws AtomicOperationException {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
 				public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 					throw new UnsupportedOperationException();
 				}
@@ -115,6 +121,11 @@ public class CrudServiceImpl<T extends UniqueModel>
 	@Override
 	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 		return this.readService.read(request);
+	}
+
+	@Override
+	public ReadResponse<ModelKey> exists(ReadRequest request) throws AtomicOperationException {
+		return this.readService.exists(request);
 	}
 
 	@Override

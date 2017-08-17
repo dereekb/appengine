@@ -7,9 +7,11 @@ import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
+import com.dereekb.gae.model.crud.services.response.impl.ExistsReadResponse;
 import com.dereekb.gae.model.crud.services.response.impl.ReadResponseImpl;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link ReadService} implementation that wraps another {@link ReadService} and
@@ -43,6 +45,13 @@ public class ConversionReadService<T extends UniqueModel, I extends UniqueModel>
 
 	public void setConverter(DirectionalConverter<T, I> converter) {
 		this.converter = converter;
+	}
+
+	// MARK: ReadService
+	@Override
+	public ReadResponse<ModelKey> exists(ReadRequest request) throws AtomicOperationException {
+		ReadResponse<I> response = this.read(request);
+		return new ExistsReadResponse(response);
 	}
 
 	@Override

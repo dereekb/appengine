@@ -17,6 +17,8 @@ import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedSette
 public interface ObjectifyDatabaseEntity<T extends ObjectifyModel<T>>
         extends ObjectifyRegistry<T> {
 
+	public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement();
+	
 	public ObjectifyKeyedGetter<T> getter();
 
 	public ObjectifyKeyedSetter<T> setter();

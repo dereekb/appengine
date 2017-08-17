@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.search.document.index.component.impl;
 
 import com.dereekb.gae.model.extension.search.document.index.component.IndexingDocument;
 import com.dereekb.gae.server.search.UniqueSearchModel;
-import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.google.appengine.api.search.Document;
 
 /**

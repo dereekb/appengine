@@ -31,6 +31,14 @@ public interface ModelGenerator<T extends UniqueModel>
 	public ModelKey generateKey();
 
 	/**
+	 * Generates several new model keys.
+	 * 
+	 * @param count
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public List<ModelKey> generateKeys(int count);
+
+	/**
 	 * Generates a single model with the passed key. The key may also be used
 	 * for randomization purposes.
 	 *

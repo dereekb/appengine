@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +23,8 @@ import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTes
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
+@Ignore
+@Deprecated
 public class StoredImageSetQueryTest extends ModelQueryTest<StoredImageSet> {
 
 	@Autowired

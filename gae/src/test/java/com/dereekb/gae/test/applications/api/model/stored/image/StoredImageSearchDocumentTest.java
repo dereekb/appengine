@@ -15,7 +15,6 @@ import com.dereekb.gae.model.extension.search.document.index.component.builder.s
 import com.dereekb.gae.model.extension.search.document.index.service.DocumentIndexService;
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchResponse;
 import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchService;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.model.stored.image.search.document.query.StoredImageSearchRequest;
@@ -25,10 +24,6 @@ import com.dereekb.gae.test.model.extension.generator.impl.WrappedTestModelGener
 import com.google.appengine.api.search.Document;
 
 public class StoredImageSearchDocumentTest extends ModelSearchDocumentTest<StoredImage> {
-
-	@Autowired
-	@Qualifier("geoPlaceTestModelGenerator")
-	private TestModelGenerator<GeoPlace> geoPlaceGenerator;
 
 	@Autowired
 	@Qualifier("storedBlobTestModelGenerator")

@@ -23,7 +23,7 @@ public class LoadedModelKeyListAccessor<T extends UniqueModel>
 	private String modelType;
 	
 	private List<T> models;
-	private List<ModelKey> keys; // lazy loaded
+	private transient List<ModelKey> keys; // lazy loaded
 
 	public LoadedModelKeyListAccessor(String modelType, Collection<T> models) throws IllegalArgumentException {
 		this.setModelType(modelType);

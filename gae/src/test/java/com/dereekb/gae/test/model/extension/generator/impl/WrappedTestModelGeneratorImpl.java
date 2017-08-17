@@ -48,6 +48,11 @@ public abstract class WrappedTestModelGeneratorImpl<T extends UniqueModel>
 	}
 
 	@Override
+	public List<ModelKey> generateKeys(int count) {
+		return this.generator.generateKeys(count);
+	}
+
+	@Override
 	public T generateModelWithoutKey() {
 		return this.generator.generateModelWithoutKey();
 	}

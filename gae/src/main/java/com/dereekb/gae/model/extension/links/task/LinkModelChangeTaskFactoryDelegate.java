@@ -9,7 +9,7 @@ import com.dereekb.gae.model.extension.links.task.LinkModelChangeTaskFactory.Mod
  * @author dereekb
  *
  */
-public interface LinkModelChangeTaskFactoryDelegate {
+public interface LinkModelChangeTaskFactoryDelegate<T> {
 
 	/**
 	 * Creates a new task delegate.
@@ -21,6 +21,6 @@ public interface LinkModelChangeTaskFactoryDelegate {
 	 *             thrown if a delegate cannot be generated due to illegal
 	 *             argument.
 	 */
-	public ModelLinkChangeTaskDelegate makeTaskDelegate(IterateTaskInput input) throws IllegalArgumentException;
+	public ModelLinkChangeTaskDelegate<T> makeTaskDelegate(IterateTaskInput input) throws IllegalArgumentException;
 
 }

@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.storage.upload.deprecated.function;
 
 import com.dereekb.gae.server.storage.upload.deprecated.UploadedFile;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
 import com.dereekb.gae.utilities.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.function.staged.filter.FallableStagedFunctionObject;
 

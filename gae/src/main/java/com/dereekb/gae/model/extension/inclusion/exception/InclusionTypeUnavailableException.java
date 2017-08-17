@@ -1,5 +1,7 @@
 package com.dereekb.gae.model.extension.inclusion.exception;
 
+import java.util.Set;
+
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 
 /**
@@ -13,6 +15,10 @@ public class InclusionTypeUnavailableException extends UnavailableTypesException
 
 	public InclusionTypeUnavailableException(String type) {
 		super(type);
+	}
+
+	public InclusionTypeUnavailableException(Set<String> types) {
+		super(types);
 	}
 
 }

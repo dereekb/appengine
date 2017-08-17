@@ -16,6 +16,7 @@ import com.dereekb.gae.test.applications.api.model.login.LoginModelTestUtilities
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Deprecated
 public class LoginPointerQueryTest extends ModelQueryTest<LoginPointer> {
 
 	@Autowired

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
@@ -26,13 +26,13 @@ public class ApiLinkExceptionHandler {
 
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(LinkSystemChangeSetException.class)
-	public ApiResponseImpl handleException(LinkSystemChangeSetException exception) {
+	@ExceptionHandler(LinkServiceChangeSetException.class)
+	public ApiResponseImpl handleException(LinkServiceChangeSetException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
 
-		List<LinkSystemChangeException> changes = exception.getExceptions();
+		List<LinkServiceChangeException> changes = exception.getExceptions();
 
-		for (LinkSystemChangeException changeException : changes) {
+		for (LinkServiceChangeException changeException : changes) {
 			ApiResponseError error = changeException.asResponseError();
 			response.addError(error);
 		}

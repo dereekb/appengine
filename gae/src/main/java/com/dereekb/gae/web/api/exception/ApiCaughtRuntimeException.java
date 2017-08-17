@@ -17,6 +17,9 @@ public final class ApiCaughtRuntimeException extends RuntimeException
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String ERROR_CODE = "SERVER_EXCEPTION";
+	public static final String ERROR_TITLE = "Server Exception";
+
 	public RuntimeException exception;
 
 	private ApiCaughtRuntimeException(RuntimeException exception) {
@@ -38,9 +41,8 @@ public final class ApiCaughtRuntimeException extends RuntimeException
 	// MARK: ApiResponseErrorConvertable
 	@Override
 	public ApiResponseErrorImpl asResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl("SERVER_EXCEPTION");
-
-		error.setTitle("Server Exception");
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE, ERROR_TITLE);
+		
 		error.setDetail("Something went wrong.");
 
 		/*
