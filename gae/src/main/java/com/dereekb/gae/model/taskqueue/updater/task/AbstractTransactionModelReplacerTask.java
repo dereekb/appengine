@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.datastore.Storer;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -38,6 +39,10 @@ public abstract class AbstractTransactionModelReplacerTask<I extends UniqueModel
 	private Deleter<I> deleter;
 	private Storer<O> storer;
 
+	public AbstractTransactionModelReplacerTask(GetterSetter<I> getterSetter, Storer<O> storer) {
+		this(getterSetter, getterSetter, storer);
+	}
+	
 	public AbstractTransactionModelReplacerTask(Getter<I> getter, Deleter<I> deleter, Storer<O> storer) {
 		super();
 		this.setGetter(getter);

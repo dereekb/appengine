@@ -19,6 +19,11 @@ public class ClientRequestDataImpl extends EncodedDataImpl
 		super(dataString);
 	}
 
+	public static ClientRequestDataImpl make(Object data)
+	        throws RuntimeException {
+		return make(new ObjectMapper(), data);
+	}
+
 	public static ClientRequestDataImpl make(ObjectMapper objectMapper,
 	                                         Object data)
 	        throws RuntimeException {

@@ -18,6 +18,7 @@ import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.extension.iterate.exception.UnavailableSchedulerTaskException;
+import com.dereekb.gae.web.api.model.extension.iterate.impl.ApiScheduleTaskRequestImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 /**
@@ -68,7 +69,7 @@ public class ApiScheduleTaskController {
 	// MARK: Scheduling
 	@ResponseBody
 	@RequestMapping(value = "/schedule", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ApiResponse schedule(@Valid @RequestBody ApiScheduleTaskRequest request)
+	public ApiResponse schedule(@Valid @RequestBody ApiScheduleTaskRequestImpl request)
 	        throws UnavailableSchedulerTaskException {
 		ApiResponse response = null;
 		
@@ -90,7 +91,7 @@ public class ApiScheduleTaskController {
 	// MARK: Internal
 	protected ApiScheduleTaskControllerEntry getEntryForRequest(ApiScheduleTaskRequest request)
 	        throws UnavailableSchedulerTaskException {
-		String taskName = request.getTaskName();
+		String taskName = request.getTaskEntryName();
 		ApiScheduleTaskControllerEntry entry = this.entries.get(taskName);
 
 		if (entry == null) {

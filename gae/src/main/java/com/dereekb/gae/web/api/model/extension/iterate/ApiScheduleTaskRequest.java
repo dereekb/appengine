@@ -10,10 +10,22 @@ import java.util.Map;
  */
 public interface ApiScheduleTaskRequest {
 
-	public String getTaskName();
-	
+	/**
+	 * Returns the task entry name that should correspond to an entry within the
+	 * {@link ApiScheduleTaskController}.
+	 * 
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getTaskEntryName();
+
+	/**
+	 * @return {@link Map}, or {@code null} if no headers.
+	 */
 	public Map<String, String> getEncodedHeaders();
-	
+
+	/**
+	 * @return {@link Map}, or {@code null} if no parameters.
+	 */
 	public Map<String, String> getEncodedParameters();
-	
+
 }
