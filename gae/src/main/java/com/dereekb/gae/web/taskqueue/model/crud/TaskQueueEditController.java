@@ -2,6 +2,8 @@ package com.dereekb.gae.web.taskqueue.model.crud;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.web.taskqueue.model.crud.exception.UnregisteredEditTypeException;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
 
 /**
  * Task Queue controller used for CRUD related changes.
@@ -25,6 +28,8 @@ import com.dereekb.gae.web.taskqueue.model.crud.exception.UnregisteredEditTypeEx
 @RestController
 @RequestMapping("/taskqueue")
 public final class TaskQueueEditController {
+
+	private static final Logger LOGGER = Logger.getLogger(TaskQueueIterateController.class.getName());
 
 	public static final String CREATE_PATH = "create";
 	public static final String UPDATE_PATH = "update";
@@ -62,18 +67,28 @@ public final class TaskQueueEditController {
 	@RequestMapping(value = "/{type}/" + CREATE_PATH, method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewCreate(@PathVariable("type") String modelType,
 	                         @RequestParam("keys") List<String> identifiers) {
-		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
-		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
-		entry.reviewCreate(keys);
+		try {
+			TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
+			List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
+			entry.reviewCreate(keys);
+		} catch (RuntimeException e) {
+			LOGGER.log(Level.SEVERE, "Create review task failed.", e);
+			throw e;
+		}
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "/{type}/" + UPDATE_PATH, method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void reviewUpdate(@PathVariable("type") String modelType,
 	                         @RequestParam("keys") List<String> identifiers) {
-		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
-		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
-		entry.reviewUpdate(keys);
+		try {
+			TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
+			List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
+			entry.reviewUpdate(keys);
+		} catch (RuntimeException e) {
+			LOGGER.log(Level.SEVERE, "Update review task failed.", e);
+			throw e;
+		}
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
@@ -81,9 +96,14 @@ public final class TaskQueueEditController {
 	        + DELETE_PATH, method = RequestMethod.DELETE, consumes = "application/octet-stream")
 	public void processDelete(@PathVariable("type") String modelType,
 	                          @RequestParam("keys") List<String> identifiers) {
-		TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
-		List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
-		entry.processDelete(keys);
+		try {
+			TaskQueueEditControllerEntry entry = this.getEntryForType(modelType);
+			List<ModelKey> keys = this.keyTypeConverter.convertKeys(modelType, identifiers);
+			entry.processDelete(keys);
+		} catch (RuntimeException e) {
+			LOGGER.log(Level.SEVERE, "Delete review task failed.", e);
+			throw e;
+		}
 	}
 
 	private TaskQueueEditControllerEntry getEntryForType(String modelType) throws UnregisteredEditTypeException {

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +37,8 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 @RestController
 @RequestMapping("/taskqueue")
 public class TaskQueueIterateController {
+
+	private static final Logger LOGGER = Logger.getLogger(TaskQueueIterateController.class.getName());
 
 	public static final String ITERATE_PATH = "iterate";
 
@@ -131,10 +135,15 @@ public class TaskQueueIterateController {
 	                    @RequestHeader(value = CURSOR_HEADER, required = false) String cursor,
 	                    @RequestParam Map<String, String> parameters) {
 
-		TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
-		IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, cursor, step, parameters);
-		IterateTaskRequestImpl request = new IterateTaskRequestImpl(input);
-		entry.performIterateTask(request);
+		try {
+			TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
+			IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, cursor, step, parameters);
+			IterateTaskRequestImpl request = new IterateTaskRequestImpl(input);
+			entry.performIterateTask(request);
+		} catch (RuntimeException e) {
+			LOGGER.log(Level.SEVERE, "Iterate task failed.", e);
+			throw e;
+		}
 	}
 
 	/**
@@ -158,13 +167,18 @@ public class TaskQueueIterateController {
 	                     @RequestParam("keys") List<String> identifiers,
 	                     @RequestParam Map<String, String> parameters) {
 
-		TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
-		IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, null, 0, parameters);
+		try {
+			TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
+			IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, null, 0, parameters);
 
-		List<ModelKey> sequence = this.keyTypeConverter.convertKeys(modelType, identifiers);
+			List<ModelKey> sequence = this.keyTypeConverter.convertKeys(modelType, identifiers);
 
-		SequenceTaskRequestImpl request = new SequenceTaskRequestImpl(input, sequence);
-		entry.performSequenceTask(request);
+			SequenceTaskRequestImpl request = new SequenceTaskRequestImpl(input, sequence);
+			entry.performSequenceTask(request);
+		} catch (RuntimeException e) {
+			LOGGER.log(Level.SEVERE, "Sequence task failed.", e);
+			throw e;
+		}
 	}
 
 	private TaskQueueIterateControllerEntry getEntryForType(String modelType) throws UnregisteredIterateTypeException {
