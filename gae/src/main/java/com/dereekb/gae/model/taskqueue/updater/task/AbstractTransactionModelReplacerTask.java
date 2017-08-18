@@ -122,7 +122,7 @@ public abstract class AbstractTransactionModelReplacerTask<I extends UniqueModel
 					List<I> models = AbstractTransactionModelReplacerTask.this.getModels(input);
 					Map<ModelKey, I> modelsMap = ModelKey.makeModelKeyMap(models);
 
-					List<ReplacementPair<O>> converted = new ArrayList<ReplacementPair<O>>();
+					List<ReplacementPair<O>> pairs = new ArrayList<ReplacementPair<O>>();
 
 					for (ModelKey key : input) {
 						ReplacementPair<O> pair = new ReplacementPair<O>(key);
@@ -138,9 +138,11 @@ public abstract class AbstractTransactionModelReplacerTask<I extends UniqueModel
 								pair.setShouldDelete(e.isShouldDelete());
 							}
 						}
+						
+						pairs.add(pair);
 					}
 
-					return converted;
+					return pairs;
 				}
 
 			};
