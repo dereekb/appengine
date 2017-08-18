@@ -60,6 +60,10 @@ public class ReadController {
 	private TypeModelKeyConverter keyTypeConverter;
 	private Map<String, ReadControllerEntry> entries;
 
+	public ReadController() {
+		super();
+	}
+
 	public ReadController(TypeModelKeyConverter keyTypeConverter, Map<String, ReadControllerEntry> entries)
 	        throws IllegalArgumentException {
 		this.setKeyTypeConverter(keyTypeConverter);
@@ -103,7 +107,7 @@ public class ReadController {
 			throw new IllegalArgumentException();
 		}
 
-		this.entries = new CaseInsensitiveMap<>(entries);
+		this.entries = new CaseInsensitiveMap<ReadControllerEntry>(entries);
 	}
 
 	// MARK: Controller
