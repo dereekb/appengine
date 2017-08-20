@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.extension.link.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
@@ -11,8 +12,10 @@ import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestS
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceResponse;
 import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkServiceChangeException;
 import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkServiceChangeException.ClientLinkServiceChangeExceptionUtility;
+import com.dereekb.gae.client.api.model.extension.link.exception.ClientLinkSystemChangeErrorSet;
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractSecuredClientModelRequestSender;
 import com.dereekb.gae.client.api.model.shared.utility.ClientModelKeySerializer;
+import com.dereekb.gae.client.api.model.shared.utility.ClientResponseMapperUtility;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
@@ -22,6 +25,7 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestUrlImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
+import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
@@ -30,6 +34,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeImpl;
 import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -147,8 +152,13 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 
 	private class ClientLinkServiceResponseImpl
 	        implements ClientLinkServiceResponse {
+		
+		private transient Set<String> successful;
+		private transient Set<String> failed;
+		
+		private transient List<ModelKey> missing;
 
-		private List<ModelKey> missing;
+		private transient ClientLinkSystemChangeErrorSet errorSet;
 
 		private final ClientLinkServiceRequest request;
 		private final ClientApiResponse response;
@@ -160,15 +170,56 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 
 		// MARK: ClientLinkServiceResponse
 		@Override
+		public Set<String> getSuccessful() {
+			if (this.successful == null) {
+				this.serializeSuccessfulAndFailed();
+			}
+			
+			return this.successful;
+		}
+
+		@Override
+		public Set<String> getFailed() {
+			if (this.failed == null) {
+				this.serializeSuccessfulAndFailed();
+			}
+			
+			return this.failed;
+		}
+		
+		private void serializeSuccessfulAndFailed() {
+			ClientApiResponseData data = this.response.getPrimaryData();
+			ObjectMapper mapper = ClientLinkRequestSenderImpl.this.getObjectMapper();
+			ClientResponseMapperUtility mapperUtility = new ClientResponseMapperUtility(mapper);
+			
+			JsonNode jsonNode = data.getJsonNode();
+			
+			JsonNode successfulNode = jsonNode.get("successful");
+			this.successful = mapperUtility.safeMapArrayToSet(successfulNode, String[].class);
+			
+			JsonNode failedNode = jsonNode.get("failed");
+			this.failed = mapperUtility.safeMapArrayToSet(failedNode, String[].class);
+		}
+
+		@Override
+		public ClientLinkSystemChangeErrorSet getErrors() {
+			if (this.errorSet == null) {
+				String type = this.request.getType();
+				this.errorSet = ClientLinkRequestSenderImpl.this.linkChangeExceptionUtility.serializeClientLinkSystemChangeErrorSet(type, this.response);
+			}
+			
+			return this.errorSet;
+		}
+		
+		@Override
 		public List<ModelKey> getMissing() {
 			if (this.missing == null) {
 				this.missing = ClientLinkRequestSenderImpl.this.atomicOperationUtility
 				        .serializeMissingResourceKeys(this.request.getType(), this.response);
 			}
-
+			
 			return this.missing;
 		}
-
 	}
 
 }

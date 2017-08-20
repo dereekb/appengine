@@ -17,7 +17,6 @@ import com.dereekb.gae.client.api.model.extension.link.impl.ClientApiLinkChange;
 import com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkServiceRequestImpl;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
-
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;

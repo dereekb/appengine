@@ -121,9 +121,10 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 		 * set codes,
 		 * {@link LinkServiceChangeSetException#API_ERROR_CODE}.
 		 * 
+		 * @param type {@link String} primary model type. 
 		 * @param response
 		 *            {@link ClientApiResponse}. Never {@code null}.
-		 * @return {@link List}. Never {@code null}.
+		 * @return {@link ClientLinkSystemChangeErrorSet}. Never {@code null}.
 		 */
 		public ClientLinkSystemChangeErrorSet serializeClientLinkSystemChangeErrorSet(String type,
 		                                                                              ClientApiResponse response) {
