@@ -88,6 +88,17 @@ public class ModelKeyQueryFieldParameterBuilder {
 		return fieldParameter;
 	}
 
+	public ModelKeyQueryFieldParameter makeNullModelKeyParameter(String field)
+	        throws IllegalArgumentException {
+		ModelKeyQueryFieldParameter fieldParameter = new ModelKeyQueryFieldParameter();
+		
+		fieldParameter.setField(field);
+		fieldParameter.setOperator(ExpressionOperator.IS_NULL);
+		fieldParameter.setValue(null);
+		
+		return fieldParameter;
+	}
+
 	public ModelKeyQueryFieldParameter makeModelKeyParameter(String field,
 	                                                         String parameterString)
 	        throws IllegalArgumentException {
@@ -148,7 +159,9 @@ public class ModelKeyQueryFieldParameterBuilder {
 		// MARK: Override
 		@Override
 		public AbstractQueryFieldParameter<ModelKey> setValue(ModelKey value) throws IllegalArgumentException {
-			if (value != null && value.getType() != ModelKeyQueryFieldParameterBuilder.this.keyType) {
+			if (ModelKey.isNullKey(value)) {
+				value = null; // Use null values instead of a Null key type.
+			} else if (value.getType() != ModelKeyQueryFieldParameterBuilder.this.keyType) {
 				throw new IllegalArgumentException("Key types did not match.");
 			}
 

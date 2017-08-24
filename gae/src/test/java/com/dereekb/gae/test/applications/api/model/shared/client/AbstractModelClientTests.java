@@ -248,6 +248,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				try {
 					return this.queryRequestSender.query(queryRequest, AbstractTestingInstance.this.testUser.security);
 				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
 					Assert.fail("Failed querying.");
 					throw new RuntimeException();
 				}

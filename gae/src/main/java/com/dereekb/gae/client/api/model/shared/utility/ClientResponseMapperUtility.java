@@ -25,17 +25,15 @@ public class ClientResponseMapperUtility {
 		this.setMapper(mapper);
 	}
 
-	
 	public ObjectMapper getMapper() {
 		return this.mapper;
 	}
 
-	
 	public void setMapper(ObjectMapper mapper) {
 		if (mapper == null) {
 			throw new IllegalArgumentException("mapper cannot be null.");
 		}
-	
+
 		this.mapper = mapper;
 	}
 
@@ -66,6 +64,11 @@ public class ClientResponseMapperUtility {
 		} catch (JsonProcessingException e) {
 			throw new ClientResponseSerializationException(e);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ClientResponseMapperUtility [mapper=" + this.mapper + "]";
 	}
 
 }

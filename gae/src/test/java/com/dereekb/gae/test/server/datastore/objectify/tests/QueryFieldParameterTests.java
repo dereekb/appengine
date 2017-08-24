@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.ParameterImpl;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
@@ -58,6 +60,14 @@ public class QueryFieldParameterTests {
 	}
 
 	@Test
+	public void testDecodingShortEqualsNullWithoutValueDecodesEquivalency() {
+		QueryParameter parameter = dencoder.decodeString("=n,");
+
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
+		Assert.assertTrue(parameter.getValue().equals("=n,"));
+	}
+
+	@Test
 	public void testDecodingCommaSeparatedValuesNull() {
 		String value = "1,2,3,4,5,6,7,8,9";
 
@@ -65,6 +75,21 @@ public class QueryFieldParameterTests {
 
 		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
 		Assert.assertTrue(parameter.getValue().equals(value));
+	}
+
+	@Test
+	public void testModelKeyParameterEncodingAndDecodingEqualsNull() {
+		ModelKeyQueryFieldParameterBuilder builder = ModelKeyQueryFieldParameterBuilder.NUMBER_SINGLETON;
+		
+		ModelKeyQueryFieldParameter parameter = builder.makeNullModelKeyParameter("field");
+		
+		Assert.assertTrue(parameter.getOperator().equals(ExpressionOperator.IS_NULL));
+		
+		String encoded = parameter.getParameterString();
+		
+		ModelKeyQueryFieldParameter decoded = builder.makeModelKeyParameter("field", encoded);
+		
+		Assert.assertTrue(decoded.getOperator().equals(ExpressionOperator.IS_NULL));
 	}
 
 }

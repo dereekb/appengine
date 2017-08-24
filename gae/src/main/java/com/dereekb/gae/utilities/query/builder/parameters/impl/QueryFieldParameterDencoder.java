@@ -17,6 +17,8 @@ import com.google.common.base.Joiner;
  */
 public class QueryFieldParameterDencoder {
 
+	public static final String NULL_OP_VALUE_PLACEHOLDER = "null";
+	
 	public static final String DEFAULT_SPLITTER = ",";
 	public static final QueryFieldParameterDencoder SINGLETON = new QueryFieldParameterDencoder();
 
@@ -65,6 +67,12 @@ public class QueryFieldParameterDencoder {
 
 		if (operator != null) {
 			components[0] = operator.getValue();
+			
+			// Override the value if its null.
+			// (value == null || value.isEmpty()) && ...
+			if (operator == ExpressionOperator.IS_NULL) {
+				components[1] = NULL_OP_VALUE_PLACEHOLDER;
+			}
 		}
 
 		if (ordering != null) {

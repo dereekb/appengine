@@ -81,7 +81,7 @@ public final class ModelKey
 		this.type = ModelKeyType.NAME;
 	}
 
-	public static ModelKey emptyKey() {
+	public static ModelKey nullKey() {
 		return new ModelKey();
 	}
 
@@ -106,8 +106,8 @@ public final class ModelKey
 		return key.type == ModelKeyType.DEFAULT;
 	}
 
-	public boolean isNullKey(ModelKey key) {
-		return key.type == ModelKeyType.NULL;
+	public boolean isNullKey() {
+		return this.type == ModelKeyType.NULL;
 	}
 
 	public boolean isInitialized() {
@@ -187,6 +187,10 @@ public final class ModelKey
 		}
 
 		return isEqual;
+	}
+
+	public static boolean isNullKey(ModelKey key) {
+		return (key != null) ? key.isNullKey() : true;
 	}
 
 	public static List<ModelKey> readModelKeysFromKeyed(Iterable<? extends AlwaysKeyed<? extends UniqueModel>> keyedModels) {
