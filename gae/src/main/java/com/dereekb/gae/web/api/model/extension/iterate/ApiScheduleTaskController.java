@@ -20,6 +20,7 @@ import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.extension.iterate.exception.UnavailableSchedulerTaskException;
 import com.dereekb.gae.web.api.model.extension.iterate.impl.ApiScheduleTaskRequestImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * REST controller that provides access to scheduling arbitrary taskqueue tasks.
@@ -77,6 +78,7 @@ public class ApiScheduleTaskController {
 			ApiScheduleTaskControllerEntry entry = this.getEntryForRequest(request);
 			List<? extends TaskRequest> requests = entry.makeTaskRequests(request);
 			this.scheduler.schedule(requests);
+			response = new ApiResponseImpl();
 		} catch (UnavailableSchedulerTaskException e)  {
 			throw new WrappedApiUnprocessableEntityException(e);
 		} catch (IllegalArgumentException e) {
