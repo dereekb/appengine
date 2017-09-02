@@ -221,6 +221,11 @@ public class RefreshTokenServiceImpl
 
 	private Login loadLogin(LoginPointer loginPointer) throws AuthenticationPurgeException {
 		ModelKey loginKey = loginPointer.getLoginModelKey();
+		
+		if (loginKey == null) {
+			throw new AuthenticationPurgeException("Login was purged or never existed.");
+		}
+		
 		Login login = this.loginGetterSetter.get(loginKey);
 
 		if (login == null) {
@@ -232,6 +237,7 @@ public class RefreshTokenServiceImpl
 
 	private LoginPointer loadLoginPointer(String loginPointerId) throws AuthenticationPurgeException {
 		ModelKey loginPointerKey = ModelKey.safe(loginPointerId);
+
 		if (loginPointerKey == null) {
 			throw new TokenUnauthorizedException("Token disallowed for refresh token.");
 		}
