@@ -12,6 +12,8 @@ import com.dereekb.gae.utilities.misc.numbers.LongBigDecimalUtility;
  */
 public class LongBigDecimalUtilityImpl extends AbstractBigDecimalUtility<Long> implements LongBigDecimalUtility {
 
+	public static final LongBigDecimalUtility THREE_PRECISION_UTILITY = new LongBigDecimalUtilityImpl(3);
+	
 	public LongBigDecimalUtilityImpl() {
 		super();
 	}

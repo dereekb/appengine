@@ -3,7 +3,7 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 
 /**
- * {@link AbstractQueryFieldParameter} used for integer query parameters.
+ * {@link AbstractQueryFieldParameter} used for {@link Long} query parameters.
  * 
  * @author dereekb
  *
