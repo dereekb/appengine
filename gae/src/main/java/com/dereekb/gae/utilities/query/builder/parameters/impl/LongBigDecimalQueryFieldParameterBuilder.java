@@ -143,7 +143,8 @@ public class LongBigDecimalQueryFieldParameterBuilder {
 		// MARK: AbstractQueryFieldParameters
 		@Override
 		protected String getParameterValue() {
-			return this.getValue().toString();
+			Long value = this.getValue();
+			return LongBigDecimalQueryFieldParameterBuilder.this.conversionUtility.quickToDecimal(value).toString();
 		}
 
 		@Override

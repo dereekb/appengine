@@ -27,6 +27,16 @@ public class SetUtility {
 		return set;
 	}
 
+	public static <T> Set<T> newHashSet(Collection<T> input) {
+		Set<T> set = new HashSet<T>();
+		
+		if (input != null) {
+			set.addAll(input);
+		}
+		
+		return set;		
+	}
+
 	public static <T> SetDifferenceImpl<T> makeSetInfo(Collection<? extends T> a,
 	                                                     Collection<? extends T> b) {
 		return new SetDifferenceImpl<T>(a, b);

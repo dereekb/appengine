@@ -8,6 +8,7 @@ import com.dereekb.gae.model.extension.search.document.search.SearchableDatabase
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -118,11 +119,7 @@ public final class StoredImageSet extends SearchableDatabaseModel
 	}
 
 	public void setImages(Collection<Key<StoredImage>> images) {
-		this.images = new HashSet<Key<StoredImage>>();
-		
-		if (images == null) {
-			this.images.addAll(images);
-		}
+		this.images = SetUtility.newHashSet(images);
 	}
 
 	// Unique Model

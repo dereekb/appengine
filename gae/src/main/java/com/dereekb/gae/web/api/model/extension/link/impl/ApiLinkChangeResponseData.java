@@ -46,6 +46,9 @@ public class ApiLinkChangeResponseData implements ApiResponseData {
 		Set<String> successfulKeys = ModelKey.readStringKeysSet(success);
 		Set<String> failedKeys = ModelKey.readStringKeysSet(failed);
 		
+		// TODO: Build the link change results per modified key and set as the data.
+		// success.iterator().next().getPrimaryResult().getLinkChangeResult();
+		
 		return new ApiLinkChangeResponseData(successfulKeys, failedKeys);
 	}
 
