@@ -2,7 +2,7 @@ package com.dereekb.gae.model.geo.place.dto;
 
 import com.dereekb.gae.model.deprecated.geo.place.GeoPlace;
 import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelData;
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.PointImpl;
 import com.dereekb.gae.model.general.geo.Region;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.search.document.index.utility;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.model.general.geo.utility.PointConverter;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.BooleanField;
 import com.google.appengine.api.search.Document;
@@ -157,20 +157,20 @@ public final class SearchDocumentBuilderUtility {
 
 	public static void addGeoPoint(String format,
 	                               String name,
-	                               Point point,
+	                               PointImpl point,
 	                               Document.Builder builder) {
 		addGeoPoint(String.format(format, name), point, builder);
 	}
 
 	public static void addGeoPoint(String name,
-	                               Point point,
+	                               PointImpl point,
 	                               Document.Builder builder) {
 		Field.Builder field = geoPointField(name, point);
 		builder.addField(field);
 	}
 
 	public static Field.Builder geoPointField(String name,
-	                                          Point point) {
+	                                          PointImpl point) {
 		GeoPoint geoPoint = null;
 
 		if (point != null) {

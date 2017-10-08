@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
@@ -87,7 +87,7 @@ public class DocumentQueryExpressionBuilderTests {
 	@Test
 	public void testGeoDistanceField() {
 
-		Point point = new Point();
+		PointImpl point = new PointImpl();
 		Integer radius = 10;
 		GeoDistanceField builder = new GeoDistanceField(TEST_FIELD_NAME, point, radius);
 

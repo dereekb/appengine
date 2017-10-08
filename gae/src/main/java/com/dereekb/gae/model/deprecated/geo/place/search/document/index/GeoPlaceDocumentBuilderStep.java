@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.search.document.index.component.builder.s
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.AbstractDerivableDocumentBuilderStep;
 import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.PointImpl;
 import com.google.appengine.api.search.Document.Builder;
 
 /**

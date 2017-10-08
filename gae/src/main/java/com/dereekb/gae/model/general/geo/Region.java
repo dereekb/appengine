@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,19 +22,19 @@ public final class Region {
 	 * List of points that make up this region.
 	 */
 	@Valid
-	private List<Point> points;
+	private List<PointImpl> points;
 
 	public Region() {}
 
-	public Region(List<Point> points) {
+	public Region(List<PointImpl> points) {
 		this.points = points;
 	}
 
-	public List<Point> getPoints() {
+	public List<PointImpl> getPoints() {
 		return this.points;
 	}
 
-	public void setPoints(List<Point> points) {
+	public void setPoints(List<PointImpl> points) {
 		this.points = points;
 	}
 

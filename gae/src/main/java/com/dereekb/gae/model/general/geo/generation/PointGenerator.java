@@ -3,6 +3,7 @@ package com.dereekb.gae.model.general.geo.generation;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractGenerator;
 import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.utilities.misc.random.DoubleGenerator;
 
 /**
@@ -24,7 +25,7 @@ public class PointGenerator extends AbstractGenerator<Point> {
 
 	@Override
 	public Point generate(GeneratorArg arg) {
-		Point point = new Point();
+		PointImpl point = new PointImpl();
 
 		point.setLatitude(LATITUDE_GENERATOR.generate(arg));
 		point.setLongitude(LONGITUDE_GENERATOR.generate(arg));

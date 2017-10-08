@@ -4,7 +4,7 @@ import com.dereekb.gae.model.deprecated.geo.place.GeoPlace;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.PointImpl;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;

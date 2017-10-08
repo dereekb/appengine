@@ -1,12 +1,12 @@
 package com.dereekb.gae.model.extension.search.document.search.model;
 
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.GeoDistanceField;
 
 /**
- * Search model for a {@link Point} that searches around a radius.
+ * Search model for a {@link PointImpl} that searches around a radius.
  *
  * @author dereekb
  *
@@ -15,25 +15,25 @@ public class PointRadiusSearch {
 
 	private static final String SPLITTER = ",";
 
-	private Point point;
+	private PointImpl point;
 	private Integer radius;
 	private ExpressionOperator operator;
 
-	public PointRadiusSearch(Point point, Integer radius) {
+	public PointRadiusSearch(PointImpl point, Integer radius) {
 		this(point, radius, ExpressionOperator.LESS_THAN);
 	}
 
-	public PointRadiusSearch(Point point, Integer radius, ExpressionOperator operator) {
+	public PointRadiusSearch(PointImpl point, Integer radius, ExpressionOperator operator) {
 		this.setPoint(point);
 		this.setRadius(radius);
 		this.setOperator(operator);
 	}
 
-	public Point getPoint() {
+	public PointImpl getPoint() {
 		return this.point;
 	}
 
-	public void setPoint(Point point) {
+	public void setPoint(PointImpl point) {
 		this.point = point;
 	}
 
@@ -87,7 +87,7 @@ public class PointRadiusSearch {
 						throw new IllegalArgumentException();
 				}
 
-				point = new PointRadiusSearch(new Point(latitude, longitude), radius, operator);
+				point = new PointRadiusSearch(new PointImpl(latitude, longitude), radius, operator);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Could not create point radius.", e);
 			}

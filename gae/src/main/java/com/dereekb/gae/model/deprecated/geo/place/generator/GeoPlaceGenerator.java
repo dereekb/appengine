@@ -6,7 +6,7 @@ import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.impl.AbstractModelGenerator;
 import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.PointImpl;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.keys.generator.ObjectifyKeyGenerator;

@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.search.document.query.expression.builder.impl.field;
 
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 
@@ -17,11 +17,11 @@ public class GeoDistanceField extends GeoField {
 	private Integer radius;
 	private ExpressionOperator operator;
 
-    public GeoDistanceField(String name, Point point, Integer radius) {
+    public GeoDistanceField(String name, PointImpl point, Integer radius) {
 	    this(name, point, radius, ExpressionOperator.LESS_THAN);
     }
 
-    public GeoDistanceField(String name, Point point, Integer radius, ExpressionOperator operator) {
+    public GeoDistanceField(String name, PointImpl point, Integer radius, ExpressionOperator operator) {
 		super(name, point);
 		this.setRadius(radius);
 		this.setOperator(operator);

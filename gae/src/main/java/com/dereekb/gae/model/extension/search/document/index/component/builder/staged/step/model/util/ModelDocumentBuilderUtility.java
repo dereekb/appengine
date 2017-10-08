@@ -5,7 +5,7 @@ import java.util.Date;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedModel;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;
@@ -89,13 +89,13 @@ public class ModelDocumentBuilderUtility {
 	}
 
 	// MARK: Point
-	public static void addPoint(Point point,
+	public static void addPoint(PointImpl point,
 	                            Builder builder) {
 		addPoint("%s", point, builder);
 	}
 
 	public static void addPoint(String format,
-	                            Point point,
+	                            PointImpl point,
 	                            Builder builder) {
 		SearchDocumentBuilderUtility.addGeoPoint(format, POINT_FIELD, point, builder);
 	}

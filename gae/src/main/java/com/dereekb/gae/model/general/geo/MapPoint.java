@@ -4,12 +4,13 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * A map point that contains a {@link Point}, {@link Address}, and {@link Zoom}
+ * A map point that contains a {@link PointImpl}, {@link Address}, and {@link Zoom}
  * value.
  *
  * @author dereekb
@@ -24,7 +25,7 @@ public final class MapPoint {
 	private static final Integer DEFAULT_ZOOM = 3;
 
 	@NotNull
-	private Point point;
+	private PointImpl point;
 
 	private Address address;
 
@@ -33,14 +34,14 @@ public final class MapPoint {
 	private int zoom;
 
 	public MapPoint() {
-		this.point = new Point();
+		this.point = new PointImpl();
 	}
 
-	public MapPoint(Point point) {
+	public MapPoint(PointImpl point) {
 		this(point, DEFAULT_ZOOM);
 	}
 
-	public MapPoint(Point point, int zoom) {
+	public MapPoint(PointImpl point, int zoom) {
 		this.point = point;
 		this.zoom = zoom;
 	}
@@ -50,7 +51,7 @@ public final class MapPoint {
 	}
 
 	public void setPoint(Point point) {
-		this.point = point;
+		this.point = new PointImpl(point);
 	}
 
 	public Address getAddress() {

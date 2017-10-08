@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
 import com.dereekb.gae.model.extension.objectify.annotation.IfNew;
-import com.dereekb.gae.model.general.geo.Point;
+import com.dereekb.gae.model.general.geo.PointImpl;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.general.geo.annotation.IfEmptyRegion;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
