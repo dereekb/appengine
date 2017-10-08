@@ -93,4 +93,8 @@ public class StringUtility {
 		return builder.toString();
 	}
 
+	public static boolean isEmptyString(String value) {
+		return (value == null || value.isEmpty());
+	}
+
 }

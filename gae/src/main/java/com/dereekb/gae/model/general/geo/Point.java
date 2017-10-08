@@ -20,6 +20,8 @@ import com.google.appengine.api.datastore.GeoPt;
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Point {
+	
+	public static final Point ORIGIN = new Point();
 
 	@NotNull
 	@Min(-90)
@@ -61,6 +63,16 @@ public final class Point {
 		}
 	}
 
+	public static boolean isOrigin(Point point) {
+		boolean isOrigin = true;
+		
+		if (point != null) {
+			isOrigin = point.isDefault();
+		}
+		
+		return isOrigin;
+	}
+	
 	public GeoPt toGeoPt() {
 		Double lat = this.getLatitude();
 		Double lon = this.getLongitude();
@@ -118,7 +130,7 @@ public final class Point {
 		}
 		return true;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Point [latitude=" + this.latitude + ", longitude=" + this.longitude + "]";

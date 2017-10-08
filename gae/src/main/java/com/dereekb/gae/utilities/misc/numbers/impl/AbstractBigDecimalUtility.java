@@ -42,6 +42,10 @@ public abstract class AbstractBigDecimalUtility<N extends Number> implements Big
 	
 		this.factor = new BigDecimal(1).scaleByPowerOfTen(precision);
 	}
+	
+	public Integer getPrecision() {
+		return -this.factor.scale();
+	}
 
 	// MARK: BigDecimalUtility
 	@Override

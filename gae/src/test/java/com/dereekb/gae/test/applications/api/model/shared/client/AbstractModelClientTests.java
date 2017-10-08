@@ -170,12 +170,12 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			// MARK: Update
-			public T update(T event) {
-				return this.update(ListUtility.wrap(event)).get(0);
+			public T update(T model) {
+				return this.update(ListUtility.wrap(model)).get(0);
 			}
 
-			public List<T> update(Collection<T> events) {
-				UpdateRequest<T> request = AbstractTestingInstance.this.makeAtomicUpdateRequest(events);
+			public List<T> update(Collection<T> models) {
+				UpdateRequest<T> request = AbstractTestingInstance.this.makeAtomicUpdateRequest(models);
 				SerializedClientApiResponse<SimpleUpdateResponse<T>> updateResponse = this.update(request);
 
 				SimpleUpdateResponse<T> simpleResponse;
