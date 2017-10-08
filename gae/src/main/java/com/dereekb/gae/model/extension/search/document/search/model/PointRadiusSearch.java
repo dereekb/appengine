@@ -1,12 +1,13 @@
 package com.dereekb.gae.model.extension.search.document.search.model;
 
+import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.GeoDistanceField;
 
 /**
- * Search model for a {@link PointImpl} that searches around a radius.
+ * Search model for a {@link Point} that searches around a radius.
  *
  * @author dereekb
  *
@@ -15,25 +16,25 @@ public class PointRadiusSearch {
 
 	private static final String SPLITTER = ",";
 
-	private PointImpl point;
+	private Point point;
 	private Integer radius;
 	private ExpressionOperator operator;
 
-	public PointRadiusSearch(PointImpl point, Integer radius) {
+	public PointRadiusSearch(Point point, Integer radius) {
 		this(point, radius, ExpressionOperator.LESS_THAN);
 	}
 
-	public PointRadiusSearch(PointImpl point, Integer radius, ExpressionOperator operator) {
+	public PointRadiusSearch(Point point, Integer radius, ExpressionOperator operator) {
 		this.setPoint(point);
 		this.setRadius(radius);
 		this.setOperator(operator);
 	}
 
-	public PointImpl getPoint() {
+	public Point getPoint() {
 		return this.point;
 	}
 
-	public void setPoint(PointImpl point) {
+	public void setPoint(Point point) {
 		this.point = point;
 	}
 

@@ -3,7 +3,7 @@ package com.dereekb.gae.server.search.document.query.expression.builder.impl.fie
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import com.dereekb.gae.model.general.geo.impl.PointImpl;
+import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.AbstractField;
 
 public abstract class GeoField extends AbstractField {
@@ -11,18 +11,18 @@ public abstract class GeoField extends AbstractField {
 	protected static final String DEGREES_DOUBLE_FORMAT = "0.000000";
 	protected static final String GEO_POINT_FORMAT = "geopoint(%s, %s)";
 
-	protected PointImpl point;
+	protected Point point;
 
-	public GeoField(String name, PointImpl point) {
+	public GeoField(String name, Point point) {
 		super(name);
 		this.point = point;
 	}
 
-	public PointImpl getPoint() {
+	public Point getPoint() {
 		return this.point;
 	}
 
-	public void setPoint(PointImpl point) {
+	public void setPoint(Point point) {
 		this.point = point;
 	}
 
