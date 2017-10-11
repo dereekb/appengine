@@ -87,6 +87,31 @@ public class SetUtilityTest {
 	}
 
 	@Test()
+	public void testSetUtilityUnique() {
+		
+		Set<Integer> setA = new HashSet<Integer>();
+
+		setA.add(1); // Unique to setA	
+		setA.add(2);
+		setA.add(3);
+		
+		Set<Integer> setB = new HashSet<Integer>();
+
+		setB.add(2);
+		setB.add(3);
+		setB.add(4); // Unique to setB
+		
+		SetDifferenceImpl<Integer> difference = SetUtility.makeSetInfo(setA, setB);
+		
+		Set<Integer> setDifference = difference.getUnique();
+		
+		Assert.assertTrue(setDifference.contains(1));
+		Assert.assertFalse(setDifference.contains(2));
+		Assert.assertFalse(setDifference.contains(3));
+		Assert.assertFalse(setDifference.contains(4));
+	}
+
+	@Test()
 	public void testIsEquivalent() {
 
 		Set<Integer> setA = new HashSet<Integer>();
