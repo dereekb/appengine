@@ -39,6 +39,36 @@ public interface TimeBlockReader {
 	public Long getTimeForBlocks(Long timeBlocks);
 
 	/**
+	 * Rounds the end block to be inline with the start block.
+	 * 
+	 * @param unevenEndBlock
+	 *            {@link Date}. Never {@code null}.
+	 * @param inlineStartBlock
+	 *            {@link Date}. Never {@code null}.
+	 * @param rounding
+	 *            {@link TimeBlockRounding} mode. Never {@code null}.
+	 * @return
+	 */
+	public Date makeEndDateInlineWithDate(Date endDate,
+	                                      Date startDate,
+	                                      TimeBlockRounding rounding);
+
+	/**
+	 * Makes a new {@link DatedTimeBlock} between the two times.
+	 * 
+	 * @param start
+	 *            {@link Date}. Never {@code null}.
+	 * @param end
+	 *            {@link Date}. Never {@code null}.
+	 * @param rounding
+	 *            {@link TimeBlockRounding} mode. Never {@code null}.
+	 * @return {@link DatedTimeBlock}. Never {@code null}.
+	 */
+	public DatedTimeBlock makeDatedTimeBlockBetween(Date start,
+	                                                Date end,
+	                                                TimeBlockRounding rounding);
+
+	/**
 	 * Returns the number of blocks between the start and end.
 	 * 
 	 * @param start
@@ -86,6 +116,34 @@ public interface TimeBlockReader {
 	 */
 	public Date getDateEnd(Date start,
 	                       Long timeBlocks);
+
+	/**
+	 * Returns true if both {@link DatedTimeBlock#getTimeBlockStart()} are
+	 * "inline" with eachother.
+	 *
+	 * @param a
+	 *            {@link DatedTimeBlock}. Never {@code null}.
+	 * @param b
+	 *            {@link DatedTimeBlock}. Never {@code null}.
+	 * @return {@code true} if both are inline with eachother.
+	 */
+	public boolean datesAreInline(DatedTimeBlock a,
+	                              DatedTimeBlock b);
+
+	/**
+	 * Returns true if both dates are "inline" with eachother.
+	 * <p>
+	 * If the difference between the two is evenly divisible by
+	 * {@link #getTimeInPeriod()}.
+	 * 
+	 * @param a
+	 *            {@link Date}. Never {@code null}.
+	 * @param b
+	 *            {@link Date}. Never {@code null}.
+	 * @return {@code true} if both are inline with eachother.
+	 */
+	public boolean datesAreInline(Date a,
+	                              Date b);
 
 	/**
 	 * Creates a new {@link DatedTimeBlockUtilityInstance}.

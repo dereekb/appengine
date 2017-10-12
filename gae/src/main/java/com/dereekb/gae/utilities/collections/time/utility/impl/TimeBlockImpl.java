@@ -13,6 +13,10 @@ public class TimeBlockImpl
 
 	private Long timeBlocks;
 
+	public TimeBlockImpl() {
+		this(0L);
+	};
+	
 	public TimeBlockImpl(Long timeBlocks) {
 		this.setTimeBlocks(timeBlocks);
 	}

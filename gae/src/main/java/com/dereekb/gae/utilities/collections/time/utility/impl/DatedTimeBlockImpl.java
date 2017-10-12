@@ -15,6 +15,15 @@ public class DatedTimeBlockImpl extends TimeBlockImpl
 
 	private Date timeBlockStart;
 
+	public DatedTimeBlockImpl() {
+		super();
+		this.timeBlockStart = new Date();
+	};
+
+	public DatedTimeBlockImpl(DatedTimeBlock datedTimeBlock) {
+		this(datedTimeBlock.getTimeBlocks(), datedTimeBlock.getTimeBlockStart());
+	}
+
 	public DatedTimeBlockImpl(Long timeBlocks, Date timeBlockStart) {
 		super(timeBlocks);
 		this.setTimeBlockStart(timeBlockStart);
@@ -35,7 +44,8 @@ public class DatedTimeBlockImpl extends TimeBlockImpl
 
 	@Override
 	public String toString() {
-		return "DatedTimeBlockImpl [timeBlocks=" + this.getTimeBlocks() + ", timeBlockStart=" + this.timeBlockStart + "]";
+		return "DatedTimeBlockImpl [timeBlocks=" + this.getTimeBlocks() + ", timeBlockStart=" + this.timeBlockStart
+		        + "]";
 	}
 
 }

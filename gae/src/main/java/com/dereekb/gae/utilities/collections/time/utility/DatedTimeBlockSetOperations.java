@@ -6,6 +6,9 @@ import com.dereekb.gae.utilities.collections.time.utility.exception.TimeBlockNoO
 /**
  * Interface for performing operations between two {@link DatedTimeBlock}
  * values.
+ * <p>
+ * These operations should also function in cases where BlockB splits BlockA.
+ * They will however only function as if the entire sequence ends at BlockB.
  * 
  * @author dereekb
  *
@@ -41,14 +44,25 @@ public interface DatedTimeBlockSetOperations {
 	public boolean hasOverlap();
 
 	/**
+	 * Returns true if the two blocks are inline with eachother.
+	 * 
+	 * @return {@code true} if both blocks are inline.
+	 */
+	public boolean isInline();
+
+	/**
 	 * Returns the index of the first overlap.
+	 * 
 	 * @throws TimeBlockNoOverlapException
 	 *             thrown if {@link #isContinuous()} is {@code false}.
 	 */
-	public Long getFirstOverlapIndex() throws TimeBlockNoOverlapException;
+	public Long getFirstConnectionIndex() throws TimeBlockNoOverlapException;
 
 	/**
 	 * Returns the union between the two blocks.
+	 * <p>
+	 * If {@link #isInline()} is false, then the union is rounded down to
+	 * be within the set of times.
 	 * 
 	 * @return {@link DatedTimeBlock}. Never {@code null}.
 	 * @throws TimeBlockNoOverlapException
@@ -58,6 +72,8 @@ public interface DatedTimeBlockSetOperations {
 
 	/**
 	 * Returns the unique section in the first block.
+	 * <p>
+	 * If {@link #isInline()} is false, then
 	 * 
 	 * @return {@link DatedTimeBlock}. Never {@code null}.
 	 */
