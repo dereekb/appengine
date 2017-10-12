@@ -15,9 +15,9 @@ public interface TimeBlockConverter {
 	 *            Time in milliseconds. Never {@code null}.
 	 * @param timeInPeriod
 	 *            Time in a period.
-	 * @return {@link Integer}. Never {@codee null}.
+	 * @return {@link Long}. Never {@codee null}.
 	 */
-	public Integer roundBlockSize(Long time,
-	                              Long timeInPeriod);
+	public Long roundBlockSize(Long time,
+	                           Long timeInPeriod);
 
 }

@@ -23,7 +23,7 @@ public enum TimeBlockRounding implements TimeBlockConverter {
 
 	// MARK: TimeBlockConverter
 	@Override
-	public Integer roundBlockSize(Long time,
+	public Long roundBlockSize(Long time,
 	                              Long timeInPeriod) {
 
 		BigDecimal timeDecimal = new BigDecimal(time).setScale(1);
@@ -41,7 +41,7 @@ public enum TimeBlockRounding implements TimeBlockConverter {
 		}
 
 		BigDecimal result = timeDecimal.divide(periodDecimal, roundingMode);
-		return result.setScale(0, roundingMode).intValue();
+		return result.setScale(0, roundingMode).longValue();
 	}
 
 }

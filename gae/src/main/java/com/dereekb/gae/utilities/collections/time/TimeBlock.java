@@ -1,7 +1,7 @@
 package com.dereekb.gae.utilities.collections.time;
 
 /**
- * Represents a block of time.
+ * Immutable block of time.
  * 
  * @author dereekb
  *

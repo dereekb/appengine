@@ -3,6 +3,7 @@ package com.dereekb.gae.utilities.collections.time.utility;
 import java.util.Date;
 
 import com.dereekb.gae.utilities.collections.time.DatedTimeBlock;
+import com.dereekb.gae.utilities.collections.time.TimeBlock;
 
 /**
  * Used for reading the time between two different blocks.
@@ -13,20 +14,29 @@ import com.dereekb.gae.utilities.collections.time.DatedTimeBlock;
 public interface TimeBlockReader {
 
 	/**
-	 * Returns the length of time a single block represents in milliseconds.
+	 * Returns the timeBlocks of time a single block represents in milliseconds.
 	 * 
 	 * @return {@link Long}. Never {@code null}.
 	 */
-	public Long getPeriodTime();
+	public Long getTimeInPeriod();
 
 	/**
-	 * Returns the length of time in milliseconds for the input blocks.
+	 * Returns the timeBlocks of time in milliseconds for the input blocks.
 	 * 
-	 * @param length
+	 * @param timeBlocks
+	 *            {@link TimeBlock}. Never {@code null}.
+	 * @return {@link Long}. Never {@code null}.
+	 */
+	public Long getTimeForBlocks(TimeBlock timeBlock);
+
+	/**
+	 * Returns the timeBlocks of time in milliseconds for the input blocks.
+	 * 
+	 * @param timeBlocks
 	 *            Number of blocks. Never {@code null}.
 	 * @return {@link Long}. Never {@code null}.
 	 */
-	public Long getTimeForBlocks(Integer length);
+	public Long getTimeForBlocks(Long timeBlocks);
 
 	/**
 	 * Returns the number of blocks between the start and end.
@@ -39,9 +49,9 @@ public interface TimeBlockReader {
 	 *            {@link TimeBlockRounding} mode. Never {@code null}.
 	 * @return {@link Integer}. Never {@code null}.
 	 */
-	public Integer getBlocksForDates(Date start,
-	                                 Date end,
-	                                 TimeBlockRounding rounding);
+	public Long getBlocksForDates(Date start,
+	                              Date end,
+	                              TimeBlockRounding rounding);
 
 	/**
 	 * Returns the number of blocks in the {@link TimeBlockDateRange}.
@@ -52,8 +62,8 @@ public interface TimeBlockReader {
 	 *            {@link TimeBlockRounding}. Never {@code null}.
 	 * @return {@link Integer}. Never {@code null}.
 	 */
-	public Integer getBlocksForDateRange(TimeBlockDateRange range,
-	                                     TimeBlockRounding rounding);
+	public Long getBlocksForDateRange(TimeBlockDateRange range,
+	                                  TimeBlockRounding rounding);
 
 	/**
 	 * Gets the end for the input.
@@ -65,25 +75,25 @@ public interface TimeBlockReader {
 	public Date getDateEnd(DatedTimeBlock datedTimeBlock);
 
 	/**
-	 * Returns the "end" of a length of periods from a start date.
+	 * Returns the "end" of a timeBlocks of periods from a start date.
 	 * 
 	 * @param start
 	 *            {@link Date}. Never {@code null}.
-	 * @param length
+	 * @param timeBlocks
 	 *            Number of blocks. Never {@code null}.
 	 * 
 	 * @return {@link Date}. Never {@code null}.
 	 */
 	public Date getDateEnd(Date start,
-	                       Integer length);
+	                       Long timeBlocks);
 
 	/**
-	 * Creates a new {@link DatedTimeBlockReadInstance}.
+	 * Creates a new {@link DatedTimeBlockUtilityInstance}.
 	 * 
 	 * @param datedTimeBlock
 	 *            {@link DatedTimeBlock}. Never {@code null}.
 	 * @return {@link DatedTimeBlockReadInstance}. Never {@code null}.
 	 */
-	public DatedTimeBlockReadInstance makeInstance(DatedTimeBlock datedTimeBlock);
+	public DatedTimeBlockUtilityInstance makeInstance(DatedTimeBlock datedTimeBlock);
 
 }

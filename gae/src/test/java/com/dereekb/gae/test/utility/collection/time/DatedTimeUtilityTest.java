@@ -1,9 +1,16 @@
 package com.dereekb.gae.test.utility.collection.time;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dereekb.gae.utilities.collections.time.DatedTimeBlock;
+import com.dereekb.gae.utilities.collections.time.utility.DatedTimeBlockSetOperations;
+import com.dereekb.gae.utilities.collections.time.utility.DatedTimeBlockUtilityInstance;
 import com.dereekb.gae.utilities.collections.time.utility.TimeBlockRounding;
+import com.dereekb.gae.utilities.collections.time.utility.impl.DatedTimeBlockImpl;
+import com.dereekb.gae.utilities.collections.time.utility.impl.TimeBlockReaderImpl;
 
 /**
  * Used for testing dated time utilities.
@@ -23,10 +30,10 @@ public class DatedTimeUtilityTest {
 		Long timeInPeriod = 500L;
 
 		// Time Period with even floor/ceil values
-		Integer ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
-		Integer floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
+		Long ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
+		Long floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(2));
+		Assert.assertTrue(ceilRound.equals(2L));
 		Assert.assertTrue(floorRound.equals(ceilRound));
 
 		// Time Period with Different floor/ceil values
@@ -35,8 +42,8 @@ public class DatedTimeUtilityTest {
 		ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
 		floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(4));
-		Assert.assertTrue(floorRound.equals(3));
+		Assert.assertTrue(ceilRound.equals(4L));
+		Assert.assertTrue(floorRound.equals(3L));
 
 		// Time Period equal to time
 		timeInPeriod = time;
@@ -44,7 +51,7 @@ public class DatedTimeUtilityTest {
 		ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
 		floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(1));
+		Assert.assertTrue(ceilRound.equals(1L));
 		Assert.assertTrue(floorRound.equals(ceilRound));
 
 		// Time Period with greatly larger timeInPeriod
@@ -53,8 +60,294 @@ public class DatedTimeUtilityTest {
 		ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
 		floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(1));
-		Assert.assertTrue(floorRound.equals(0));
+		Assert.assertTrue(ceilRound.equals(1L));
+		Assert.assertTrue(floorRound.equals(0L));
 	}
 
+	@Test
+	public void testTimeBlockReaderImplGetTimeForBlocks() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+
+		Long targetBlocks = 5L;
+		Long expectedLength = timeInPeriod * targetBlocks;
+		
+		Long blocks = reader.getTimeForBlocks(targetBlocks);
+		
+		Assert.assertTrue(expectedLength.equals(blocks));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplGetBlocksForDates() {
+		Long timeInPeriod = 500L;
+		
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+
+		Long targetBlocks = 5L;
+		Date start = new Date(0);
+		Date end = new Date(timeInPeriod * targetBlocks);
+
+		Long ceilBlocks = reader.getBlocksForDates(start, end, TimeBlockRounding.CEIL);
+		Long floorBlocks = reader.getBlocksForDates(start, end, TimeBlockRounding.FLOOR);
+
+		Assert.assertTrue(ceilBlocks.equals(targetBlocks));
+		Assert.assertTrue(floorBlocks.equals(targetBlocks));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplGetDateEnd() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+
+		Long targetBlocks = 5L;
+		Date start = new Date(0);
+		Date expectedEnd = new Date(timeInPeriod * targetBlocks);
+		
+		Date end = reader.getDateEnd(start, targetBlocks);
+		
+		Assert.assertTrue(expectedEnd.equals(end));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceGetDateEnd() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+
+		Long targetBlocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(targetBlocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+		Date endDate = instance.getEndDate();
+
+		Date expectedEnd = new Date(timeInPeriod * targetBlocks);
+		
+		Assert.assertTrue(expectedEnd.equals(endDate));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorHasOverlapWithOverlap() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * 3L);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		Assert.assertTrue(operations.hasOverlap());
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorIsContinuousBackToBack() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * blocks);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		Assert.assertTrue(operations.isContinuous());
+	}
+	
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorHasOverlapBackToBack() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * blocks);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		Assert.assertFalse(operations.hasOverlap());
+	}
+	
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorHasOverlapWithNoOverlap() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * 6L);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		Assert.assertFalse(operations.hasOverlap());
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorFirstOverlapIndexWithOverlap() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * blocks);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		Long firstOverlapIndex = operations.getFirstOverlapIndex();
+		Assert.assertTrue(firstOverlapIndex == (blocks - 1));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorGetUnion() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * blocks);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		DatedTimeBlock union = operations.getUnion();
+		Assert.assertTrue(union.getTimeBlocks() == blocks * 2);
+		Assert.assertTrue(union.getTimeBlockStart().equals(start));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorGetUniqueWithNoOverlap() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * blocks);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		DatedTimeBlock unique = operations.getUnique();
+		Assert.assertTrue(datedTimeBlock.getTimeBlocks() == unique.getTimeBlocks());
+		Assert.assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorGetUniqueWithOverlap() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Long overlap = 1L;
+		Date secondStart = new Date(timeInPeriod * (blocks - overlap) + (timeInPeriod / 2));
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		DatedTimeBlock unique = operations.getUnique();
+		Assert.assertTrue((datedTimeBlock.getTimeBlocks() - overlap) == unique.getTimeBlocks());
+		Assert.assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorGetIntersectionWithOverlap() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Long overlap = 1L;
+		Date secondStart = new Date(timeInPeriod * (blocks - overlap) + (timeInPeriod / 2));
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		DatedTimeBlock intersection = operations.getIntersection();
+
+		Date startEnd = reader.getDateEnd(datedTimeBlock);
+		Date intersectionEnd = reader.getDateEnd(intersection);
+		
+		Assert.assertTrue(intersection.getTimeBlocks() == overlap);
+		Assert.assertTrue(startEnd.equals(intersectionEnd));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorGetIntersectionWithNoOverlap() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * blocks);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		DatedTimeBlock intersection = operations.getIntersection();
+
+		Date startEnd = reader.getDateEnd(datedTimeBlock);
+		Date intersectionEnd = reader.getDateEnd(intersection);
+		
+		Assert.assertTrue(intersection.getTimeBlocks() == 0);
+		Assert.assertTrue(startEnd.equals(intersectionEnd));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorGetCompliment() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 5L;
+		Date start = new Date(0);
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(blocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date secondStart = new Date(timeInPeriod * blocks);
+		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
+		
+		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
+		DatedTimeBlock compliment = operations.getCompliment();
+
+		Date secondStartEnd = reader.getDateEnd(startDatedTimeBlock);
+		Date complimentEnd = reader.getDateEnd(compliment);
+		
+		Assert.assertTrue(compliment.getTimeBlocks() == blocks);
+		Assert.assertTrue(secondStartEnd.equals(complimentEnd));
+	}
+	
 }
