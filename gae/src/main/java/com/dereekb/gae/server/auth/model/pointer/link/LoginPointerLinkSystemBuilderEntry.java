@@ -36,7 +36,7 @@ public class LoginPointerLinkSystemBuilderEntry extends AbstractMutableLinkSyste
 	private static final ExtendedObjectifyModelKeyUtil<Login> loginUtil = ExtendedObjectifyModelKeyUtil
 	        .make(Login.class, ModelKeyType.NUMBER);
 
-	private SimpleLinkInfo loginLinkInfo = new SimpleLinkInfoImpl(LoginLinkSystemBuilderEntry.LOGIN_LINK_TYPE);
+	private SimpleLinkInfo loginLinkInfo = new SimpleLinkInfoImpl(LoginLinkSystemBuilderEntry.LINK_MODEL_TYPE);
 	
 	public LoginPointerLinkSystemBuilderEntry(ReadService<LoginPointer> readService,
 	        Updater<LoginPointer> updater,

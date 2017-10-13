@@ -20,7 +20,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
  */
 public class LoginLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilderEntry<Login> {
 
-	public static final String LOGIN_LINK_TYPE = "Login";
+	public static final String LINK_MODEL_TYPE = "Login";
 
 	public LoginLinkSystemBuilderEntry(ReadService<Login> readService,
 	        Updater<Login> updater,
@@ -31,7 +31,7 @@ public class LoginLinkSystemBuilderEntry extends AbstractMutableLinkSystemBuilde
 	// MARK: AbstractModelLinkSystemEntry
 	@Override
 	public String getLinkModelType() {
-		return LOGIN_LINK_TYPE;
+		return LINK_MODEL_TYPE;
 	}
 
 	@Override
