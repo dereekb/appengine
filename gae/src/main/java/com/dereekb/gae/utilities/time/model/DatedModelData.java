@@ -2,7 +2,7 @@ package com.dereekb.gae.utilities.time.model;
 
 import java.util.Date;
 
-import com.dereekb.gae.utilities.time.IsoTimeConverter;
+import com.dereekb.gae.utilities.time.SafeIsoTimeConverter;
 import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DatedModelData {
 
-	public static final IsoTimeConverter DATE_CONVERTER = ThreeTenIsoTimeConverter.SINGLETON;
+	public static final SafeIsoTimeConverter DATE_CONVERTER = ThreeTenIsoTimeConverter.SAFE_SINGLETON;
 
 	/**
 	 * Date for the model. For JSON serialization it is converted
@@ -36,23 +36,11 @@ public class DatedModelData {
 	}
 
 	public String getDate() {
-		String value = null;
-
-		if (this.date != null) {
-			value = DATE_CONVERTER.convertToString(this.date);
-		}
-
-		return value;
+		return DATE_CONVERTER.safeConvertToString(this.date);
 	}
 
 	public void setDate(String date) {
-		Date value = null;
-
-		if (date != null) {
-			value = DATE_CONVERTER.convertFromString(date);
-		}
-
-		this.date = value;
+		this.date = DATE_CONVERTER.safeConvertFromString(date);
 	}
 
 	@JsonIgnore

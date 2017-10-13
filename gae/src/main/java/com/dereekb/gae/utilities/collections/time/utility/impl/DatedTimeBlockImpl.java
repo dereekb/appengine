@@ -41,6 +41,10 @@ public class DatedTimeBlockImpl extends TimeBlockImpl
 
 		this.timeBlockStart = timeBlockStart;
 	}
+	
+	public static boolean areEqual(DatedTimeBlock a, DatedTimeBlock b) {
+		return a.getTimeBlockStart().equals(b.getTimeBlockStart()) && a.getTimeBlocks().equals(b.getTimeBlocks());
+	}
 
 	@Override
 	public String toString() {

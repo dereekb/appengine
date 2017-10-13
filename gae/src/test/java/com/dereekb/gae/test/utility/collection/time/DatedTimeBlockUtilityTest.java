@@ -572,7 +572,7 @@ public class DatedTimeBlockUtilityTest {
 		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
 		Assert.assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
 	}
-	
+
 	@Test
 	public void testTimeBlockReaderImplUtilityInstanceOperatorSplitWithNotInlineOverlap() {
 		Long timeInPeriod = 500L;
@@ -601,5 +601,50 @@ public class DatedTimeBlockUtilityTest {
 		Assert.assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
 		Assert.assertTrue(split.get(2).getTimeBlocks().equals(1L));
 	}
-	
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorSplitWithExact() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 2L;
+		Date start = new Date(0);
+		Long allBlocks = blocks * 2 + 1;	// 5 Blocks Long
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(allBlocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+		List<DatedTimeBlock> split = instance.split(datedTimeBlock);
+		
+		Assert.assertTrue(split.size() == 1);
+		Assert.assertTrue(split.get(0).getTimeBlocks().equals(datedTimeBlock.getTimeBlocks()));
+		Assert.assertTrue(split.get(0).getTimeBlockStart().equals(datedTimeBlock.getTimeBlockStart()));
+	}
+
+	@Test
+	public void testTimeBlockReaderImplUtilityInstanceOperatorSplitInlineWithNoExpectedHead() {
+		Long timeInPeriod = 500L;
+		TimeBlockReaderImpl reader = new TimeBlockReaderImpl(timeInPeriod);
+		
+		Long blocks = 2L;
+		Date start = new Date(0);
+		Long allBlocks = blocks * 2 + 1;	// 5 Blocks Long
+		DatedTimeBlockImpl datedTimeBlock = new DatedTimeBlockImpl(allBlocks, start);
+		
+		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
+
+		Date splitStart = start;
+		DatedTimeBlockImpl splitTimeBlock = new DatedTimeBlockImpl(blocks, splitStart);	//2 blocks long
+		
+		List<DatedTimeBlock> split = instance.split(splitTimeBlock);
+
+		Assert.assertTrue(split.size() == 2);
+		
+		Long totalBlocks = split.get(0).getTimeBlocks() + split.get(1).getTimeBlocks();
+		Long expectedTotalBlocks = allBlocks;	// Since offset, will be missing blocks.
+		
+		Assert.assertTrue(totalBlocks.equals(expectedTotalBlocks));
+		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
+		Assert.assertTrue(split.get(1).getTimeBlocks().equals(allBlocks - splitTimeBlock.getTimeBlocks()));
+	}
+
 }

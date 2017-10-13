@@ -10,6 +10,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.DateTimeParseException;
 
 import com.dereekb.gae.utilities.time.IsoTimeConverter;
+import com.dereekb.gae.utilities.time.SafeIsoTimeConverter;
 
 public final class ThreeTenIsoTimeConverter {
 
@@ -17,6 +18,7 @@ public final class ThreeTenIsoTimeConverter {
 	public static final IsoTimeConverter LOCAL_TIME_CONVERTER = new LocalDateTimeConverter();
 
 	public static final IsoTimeConverter SINGLETON = INSTANT_CONVERTER;
+	public static final SafeIsoTimeConverter SAFE_SINGLETON = new SafeIsoTimeConverterImpl(SINGLETON);
 
 	private static class InstantConverter
 	        implements IsoTimeConverter {

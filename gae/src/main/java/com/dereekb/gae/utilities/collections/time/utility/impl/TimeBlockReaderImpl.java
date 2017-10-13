@@ -186,7 +186,7 @@ public class TimeBlockReaderImpl
 
 		@Override
 		public DatedTimeBlockSetOperationsImpl operatorWith(DatedTimeBlock datedTimeBlock) {
-			if (!datedTimeBlock.getTimeBlockStart().after(this.datedTimeBlock.getTimeBlockStart())) {
+			if (datedTimeBlock.getTimeBlockStart().before(this.datedTimeBlock.getTimeBlockStart())) {
 				throw new IllegalArgumentException("Input date was before this date.");
 			}
 
