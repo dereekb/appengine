@@ -12,7 +12,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
  * @author dereekb
  *
  */
-public interface LoginTokenAuthenticationProvider
+public interface LoginTokenAuthenticationProvider<T extends LoginToken>
         extends AuthenticationProvider {
 
 	/**
@@ -25,7 +25,7 @@ public interface LoginTokenAuthenticationProvider
 	 *
 	 * @return {@link LoginTokenAuthentication}. Never {@code null}.
 	 */
-	public LoginTokenAuthentication authenticate(DecodedLoginToken loginToken,
-	                                             WebAuthenticationDetails details);
+	public LoginTokenAuthentication<T> authenticate(DecodedLoginToken<T> loginToken,
+	                                                WebAuthenticationDetails details);
 
 }

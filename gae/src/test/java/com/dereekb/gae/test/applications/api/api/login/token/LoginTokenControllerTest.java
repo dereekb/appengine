@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
@@ -37,8 +38,9 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 
 		// Get a refresh token.
 		String refreshToken = testUtility.getRefreshToken(fullUserToken);
-		DecodedLoginToken decodedRefreshToken = this.refreshEncoderDecoder.decodeLoginToken(refreshToken);
-		Assert.assertNotNull(decodedRefreshToken.getLoginId());
+		DecodedLoginToken<LoginTokenImpl> decodedRefreshToken = this.refreshEncoderDecoder
+		        .decodeLoginToken(refreshToken);
+		Assert.assertNotNull(decodedRefreshToken.getLoginToken().getLoginId());
 
 		// Authenticate with the token.
 		String reauthToken = testUtility.authWithRefreshToken(refreshToken);

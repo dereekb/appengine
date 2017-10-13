@@ -53,15 +53,15 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 
 	@Autowired
 	@Qualifier("loginTokenService")
-	public LoginTokenService loginTokenService;
+	public LoginTokenService<LoginToken> loginTokenService;
 
 	@Autowired
 	@Qualifier("loginTokenAuthenticationProvider")
-	private LoginTokenAuthenticationProvider authenticationProvider;
+	private LoginTokenAuthenticationProvider<LoginToken> authenticationProvider;
 
 	@Autowired
 	@Qualifier("loginTokenUserDetailsBuilder")
-	private LoginTokenUserDetailsBuilder builder;
+	private LoginTokenUserDetailsBuilder<LoginToken> builder;
 
 	@Test
 	public void testLoginTokenAuthentication() throws LoginExistsException, LoginRegistrationRejectedException {
@@ -75,13 +75,13 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 		LoginTokenPair tokenPair = this.passwordController.login(TEST_USERNAME, TEST_PASSWORD);
 		String token = tokenPair.getToken();
 
-		DecodedLoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
-		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
+		DecodedLoginToken<LoginToken> decodedToken = this.loginTokenService.decodeLoginToken(token);
+		LoginTokenAuthentication<LoginToken> authentication = this.authenticationProvider.authenticate(decodedToken, null);
 
-		LoginToken authLoginToken = authentication.getCredentials();
+		LoginToken authLoginToken = authentication.getCredentials().getLoginToken();
 		Assert.assertNotNull(authLoginToken);
 
-		LoginTokenUserDetails authLoginTokenUserDetails = authentication.getPrincipal();
+		LoginTokenUserDetails<LoginToken> authLoginTokenUserDetails = authentication.getPrincipal();
 		Assert.assertNotNull(authLoginTokenUserDetails);
 
 		Login authLogin = authLoginTokenUserDetails.getLogin();
@@ -99,16 +99,16 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 		LoginTokenPair pair = this.anonymousController.login(null);
 		String token = pair.getToken();
 
-		DecodedLoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
-		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
+		DecodedLoginToken<LoginToken> decodedToken = this.loginTokenService.decodeLoginToken(token);
+		LoginTokenAuthentication<LoginToken> authentication = this.authenticationProvider.authenticate(decodedToken, null);
 
-		LoginToken authLoginToken = authentication.getCredentials();
+		LoginToken authLoginToken = authentication.getCredentials().getLoginToken();
 		Assert.assertNotNull(authLoginToken);
 
-		LoginTokenUserDetails authLoginTokenUserDetails = authentication.getPrincipal();
+		LoginTokenUserDetails<LoginToken> authLoginTokenUserDetails = authentication.getPrincipal();
 		Assert.assertNotNull(authLoginTokenUserDetails);
 
-		Assert.assertTrue(decodedToken.isAnonymous());
+		Assert.assertTrue(decodedToken.getLoginToken().isAnonymous());
 
 		Collection<? extends GrantedAuthority> authorities = authLoginTokenUserDetails.getAuthorities();
 		Assert.assertNotNull(authorities);

@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.misc.task;
 
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
@@ -15,9 +16,9 @@ public abstract class AbstractSecurityTask {
 	 * @throws FailedTaskException
 	 *             if no authentication available.
 	 */
-	public static LoginTokenAuthentication getAuthentication() throws FailedTaskException {
+	public static LoginTokenAuthentication<LoginToken> getAuthentication() throws FailedTaskException {
 		try {
-			LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
+			LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
 			return authentication;
 		} catch (NoSecurityContextException e) {
 			throw new FailedTaskException(e);

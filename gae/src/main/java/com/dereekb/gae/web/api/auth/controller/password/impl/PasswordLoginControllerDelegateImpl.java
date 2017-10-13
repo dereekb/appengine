@@ -6,6 +6,7 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginService;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginControllerDelegate;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -20,9 +21,9 @@ public class PasswordLoginControllerDelegateImpl
 
 	private boolean refreshAllowed = true;
 	private PasswordLoginService loginService;
-	private LoginTokenService tokenService;
+	private LoginTokenService<LoginToken> tokenService;
 
-	public PasswordLoginControllerDelegateImpl(PasswordLoginService loginService, LoginTokenService tokenService)
+	public PasswordLoginControllerDelegateImpl(PasswordLoginService loginService, LoginTokenService<LoginToken> tokenService)
 	        throws IllegalArgumentException {
 		this.setLoginService(loginService);
 		this.setTokenService(tokenService);
@@ -40,11 +41,11 @@ public class PasswordLoginControllerDelegateImpl
 		this.loginService = loginService;
 	}
 
-	public LoginTokenService getTokenService() {
+	public LoginTokenService<LoginToken> getTokenService() {
 		return this.tokenService;
 	}
 
-	public void setTokenService(LoginTokenService tokenService) throws IllegalArgumentException {
+	public void setTokenService(LoginTokenService<LoginToken> tokenService) throws IllegalArgumentException {
 		if (tokenService == null) {
 			throw new IllegalArgumentException();
 		}

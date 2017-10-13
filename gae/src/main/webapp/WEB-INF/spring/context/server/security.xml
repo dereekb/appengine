@@ -47,7 +47,7 @@
 			</list>
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- Matches POST requests made to the Auth Controllers. Everything else 
 		falls through. -->
 	<bean id="authControllersMainPatternMatcher"
@@ -72,7 +72,7 @@
 			</set>
 		</constructor-arg>
 	</bean>
-	
+
 	<bean id="authControllersTokenPatternMatcher"
 		class="com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher">
 		<constructor-arg index="0" value="/login/auth/token/{type}" />
@@ -83,7 +83,8 @@
 			</set>
 		</constructor-arg>
 		<property name="methodMatcher">
-			<bean class="com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl">
+			<bean
+				class="com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl">
 				<constructor-arg index="0" value="POST" />
 			</bean>
 		</property>

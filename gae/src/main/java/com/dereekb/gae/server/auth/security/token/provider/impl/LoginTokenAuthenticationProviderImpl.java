@@ -5,22 +5,23 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticationProvider;
+import com.dereekb.gae.server.auth.security.token.provider.details.AbstractLoginTokenUserDetailsBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
-import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.preauth.PreAuthLoginTokenAuthentication;
 
 /**
- * {@link LoginTokenAuthenticationProvider} implementation.
+ * Abstract {@link LoginTokenAuthenticationProvider} implementation.
  *
  * @author dereekb
  *
  */
-public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTokenAuthenticationProvider<LoginTokenUserDetailsBuilder, DecodedLoginToken>
-        implements LoginTokenAuthenticationProvider {
+public class LoginTokenAuthenticationProviderImpl<B extends AbstractLoginTokenUserDetailsBuilder<D, T>, D extends LoginTokenUserDetails<T>, T extends LoginToken> extends AbstractLoginTokenAuthenticationProvider<B, T>
+        implements LoginTokenAuthenticationProvider<T> {
 
-	public LoginTokenAuthenticationProviderImpl(LoginTokenUserDetailsBuilder loginTokenUserDetailsBuilder)
+	public LoginTokenAuthenticationProviderImpl(B loginTokenUserDetailsBuilder)
 	        throws IllegalArgumentException {
 		super(loginTokenUserDetailsBuilder);
 	}
@@ -28,10 +29,11 @@ public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTok
 	// MARK: Authentication Provider
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		PreAuthLoginTokenAuthentication auth = (PreAuthLoginTokenAuthentication) authentication;
-		DecodedLoginToken loginToken = auth.getCredentials();
+		@SuppressWarnings("unchecked") 
+		PreAuthLoginTokenAuthentication<T> auth = (PreAuthLoginTokenAuthentication<T>) authentication;
+		DecodedLoginToken<T> decodedLoginToken = auth.getCredentials();
 		WebAuthenticationDetails details = auth.getDetails();
-		return this.authenticate(loginToken, details);
+		return this.authenticate(decodedLoginToken, details);
 	}
 
 	@Override
@@ -41,23 +43,23 @@ public final class LoginTokenAuthenticationProviderImpl extends AbstractLoginTok
 
 	// MARK: LoginTokenAuthenticationProvider
 	@Override
-	public LoginTokenAuthentication authenticate(DecodedLoginToken loginToken,
-	                                             WebAuthenticationDetails details) {
+	public LoginTokenAuthentication<T> authenticate(DecodedLoginToken<T> loginToken,
+	                                                WebAuthenticationDetails details) {
 		return new LoginTokenAuthenticationImpl(loginToken, details);
 	}
 
 	// MARK: Authentication
-	protected class LoginTokenAuthenticationImpl extends AbstractLoginTokenAuthenticationImpl<LoginTokenUserDetails> {
+	protected class LoginTokenAuthenticationImpl extends AbstractLoginTokenAuthenticationImpl<D> {
 
 		private static final long serialVersionUID = 1L;
 
-		public LoginTokenAuthenticationImpl(DecodedLoginToken loginToken, WebAuthenticationDetails details)
+		public LoginTokenAuthenticationImpl(DecodedLoginToken<T> loginToken, WebAuthenticationDetails details)
 		        throws IllegalArgumentException {
 			super(loginToken, details);
 		}
 
 		@Override
-		protected LoginTokenUserDetails makePrinciple(DecodedLoginToken loginToken) {
+		protected D makePrinciple(DecodedLoginToken<T> loginToken) {
 			return LoginTokenAuthenticationProviderImpl.this.builder.buildDetails(loginToken);
 		}
 

@@ -35,7 +35,7 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 	public PasswordLoginController passwordController;
 
 	@Autowired
-	public LoginTokenService loginTokenService;
+	public LoginTokenService<LoginToken> loginTokenService;
 
 	@Autowired
 	@Qualifier("loginPointerRegistry")
@@ -55,7 +55,7 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 		Assert.assertTrue(this.loginPointerRegistry.exists(pair.getLoginPointerKey()));
 
 		try {
-			LoginToken loginToken = this.loginTokenService.decodeLoginToken(token);
+			LoginToken loginToken = this.loginTokenService.decodeLoginToken(token).getLoginToken();
 			Assert.assertNotNull(loginToken);
 
 			Assert.assertTrue(pointer.equals(loginToken.getLoginPointerId()));

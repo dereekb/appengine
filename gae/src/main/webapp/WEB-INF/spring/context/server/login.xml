@@ -15,10 +15,15 @@
 			value="3zRepP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=" />
 	</bean>
 
+	<bean id="loginTokenEncoderDecoder"
+		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl">
+		<constructor-arg index="0" ref="loginTokenSecret" />
+	</bean>
+
 	<bean id="loginTokenService"
 		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl">
-		<constructor-arg index="0" ref="loginTokenSecret" />
-		<constructor-arg index="1" ref="loginTokenBuilder" />
+		<constructor-arg index="0" ref="loginTokenBuilder" />
+		<constructor-arg index="1" ref="loginTokenEncoderDecoder" />
 	</bean>
 
 	<bean id="loginTokenBuilder"
@@ -26,8 +31,6 @@
 		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1" ref="loginOwnershipRolesReader" />
 	</bean>
-
-	<alias name="loginTokenService" alias="loginTokenEncoderDecoder" />
 
 	<!-- Login Pointer Service -->
 	<bean id="loginPointerService"

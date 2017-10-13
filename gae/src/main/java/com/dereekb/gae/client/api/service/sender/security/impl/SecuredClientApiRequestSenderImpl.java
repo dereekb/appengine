@@ -16,6 +16,7 @@ import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextE
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenFactory;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * {@link SecuredClientApiRequestSender} implementation.
@@ -147,7 +148,7 @@ public class SecuredClientApiRequestSenderImpl
 
 		switch (type) {
 			case CURRENT:
-				DecodedLoginToken currentToken = LoginSecurityContext.getAuthentication().getCredentials();
+				DecodedLoginToken<LoginToken> currentToken = LoginSecurityContext.getAuthentication().getCredentials();
 				tokenString = currentToken.getEncodedLoginToken();
 				break;
 			case SYSTEM:

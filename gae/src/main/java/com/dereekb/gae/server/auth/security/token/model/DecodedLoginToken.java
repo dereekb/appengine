@@ -7,7 +7,14 @@ package com.dereekb.gae.server.auth.security.token.model;
  * @author dereekb
  *
  */
-public interface DecodedLoginToken
-        extends LoginToken, EncodedLoginToken {
+public interface DecodedLoginToken<T extends LoginToken>
+        extends EncodedLoginToken {
+
+	/**
+	 * Returns the decoded login token.
+	 * 
+	 * @return {@link LoginToken}. Never {@code null}.
+	 */
+	public T getLoginToken();
 
 }

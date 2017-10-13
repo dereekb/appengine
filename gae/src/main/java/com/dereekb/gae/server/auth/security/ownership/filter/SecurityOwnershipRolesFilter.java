@@ -24,8 +24,8 @@ public class SecurityOwnershipRolesFilter extends AbstractFactoryFilter<OwnedMod
 	@Override
 	public Filter<OwnedModel> makeFilter() {
 		Filter<OwnedModel> filter = null;
-		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
-		LoginTokenUserDetails principle = authentication.getPrincipal();
+		LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
+		LoginTokenUserDetails<LoginToken> principle = authentication.getPrincipal();
 
 		if (principle.isAdministrator()) {
 			filter = new FilterImpl<OwnedModel>(FilterResult.PASS);

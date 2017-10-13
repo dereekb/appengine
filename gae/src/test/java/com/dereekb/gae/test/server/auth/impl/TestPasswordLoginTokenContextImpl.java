@@ -33,7 +33,7 @@ public class TestPasswordLoginTokenContextImpl
 	private boolean refreshAllowed = true;
 	private PasswordLoginController passwordController;
 	private LoginRegisterService registerService;
-	private LoginTokenService service;
+	private LoginTokenService<LoginToken> service;
 
 	public ObjectifyRegistry<LoginPointer> loginPointerRegistry;
 	public ObjectifyRegistry<Login> loginRegistry;
@@ -53,7 +53,7 @@ public class TestPasswordLoginTokenContextImpl
 
 	public TestPasswordLoginTokenContextImpl(PasswordLoginController passwordController,
 	        LoginRegisterService registerService,
-	        LoginTokenService service,
+	        LoginTokenService<LoginToken> service,
 	        ObjectifyRegistry<LoginPointer> loginPointerRegistry,
 	        ObjectifyRegistry<Login> loginRegistry) {
 		this.passwordController = passwordController;
@@ -79,11 +79,11 @@ public class TestPasswordLoginTokenContextImpl
 		this.registerService = registerService;
 	}
 
-	public LoginTokenService getService() {
+	public LoginTokenService<LoginToken> getService() {
 		return this.service;
 	}
 
-	public void setService(LoginTokenService service) {
+	public void setService(LoginTokenService<LoginToken> service) {
 		this.service = service;
 	}
 

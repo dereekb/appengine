@@ -29,7 +29,7 @@ public class LoginTokenTests {
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
 		Assert.assertNotNull(encodedToken);
 
-		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken);
+		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
 		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
 		Assert.assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
 		Assert.assertTrue(decodedToken.isRefreshAllowed());
@@ -50,7 +50,7 @@ public class LoginTokenTests {
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
 		Assert.assertNotNull(encodedToken);
 
-		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken);
+		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
 		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
 		Assert.assertTrue(decodedToken.isNewUser());
 	}
@@ -79,7 +79,7 @@ public class LoginTokenTests {
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
 		Assert.assertNotNull(encodedToken);
 
-		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken);
+		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
 
 		// JWT rounds down to the nearest millisecond, meaning these will never
 		// be accurate.
@@ -102,7 +102,7 @@ public class LoginTokenTests {
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
 		Assert.assertNotNull(encodedToken);
 
-		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken);
+		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
 		Assert.assertTrue(decodedToken.isAnonymous());
 	}
 

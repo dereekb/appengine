@@ -4,6 +4,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenFactory;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticationProvider;
@@ -11,25 +12,25 @@ import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticat
 public class TestSystemAuthenticationContextSetter
         implements TestAuthenticationContext {
 
-	private LoginTokenDecoder decoder;
+	private LoginTokenDecoder<LoginToken> decoder;
 
 	private SystemLoginTokenFactory loginTokenFactory;
 
-	private LoginTokenAuthenticationProvider authenticationProvider;
+	private LoginTokenAuthenticationProvider<LoginToken> authenticationProvider;
 
-	public TestSystemAuthenticationContextSetter(LoginTokenDecoder decoder,
+	public TestSystemAuthenticationContextSetter(LoginTokenDecoder<LoginToken> decoder,
 	        SystemLoginTokenFactory loginTokenFactory,
-	        LoginTokenAuthenticationProvider authenticationProvider) {
+	        LoginTokenAuthenticationProvider<LoginToken> authenticationProvider) {
 		this.setDecoder(decoder);
 		this.setLoginTokenFactory(loginTokenFactory);
 		this.setAuthenticationProvider(authenticationProvider);
 	}
 
-	public LoginTokenDecoder getDecoder() {
+	public LoginTokenDecoder<LoginToken> getDecoder() {
 		return this.decoder;
 	}
 
-	public void setDecoder(LoginTokenDecoder decoder) {
+	public void setDecoder(LoginTokenDecoder<LoginToken> decoder) {
 		if (decoder == null) {
 			throw new IllegalArgumentException("decoder cannot be null.");
 		}
@@ -49,11 +50,11 @@ public class TestSystemAuthenticationContextSetter
 		this.loginTokenFactory = loginTokenFactory;
 	}
 
-	public LoginTokenAuthenticationProvider getAuthenticationProvider() {
+	public LoginTokenAuthenticationProvider<LoginToken> getAuthenticationProvider() {
 		return this.authenticationProvider;
 	}
 
-	public void setAuthenticationProvider(LoginTokenAuthenticationProvider authenticationProvider) {
+	public void setAuthenticationProvider(LoginTokenAuthenticationProvider<LoginToken> authenticationProvider) {
 		if (authenticationProvider == null) {
 			throw new IllegalArgumentException("authenticationProvider cannot be null.");
 		}
@@ -65,8 +66,8 @@ public class TestSystemAuthenticationContextSetter
 	@Override
 	public void resetContext() {
 		String encodedToken = this.loginTokenFactory.makeTokenString();
-		DecodedLoginToken decodedToken = this.decoder.decodeLoginToken(encodedToken);
-		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
+		DecodedLoginToken<LoginToken> decodedToken = this.decoder.decodeLoginToken(encodedToken);
+		LoginTokenAuthentication<LoginToken> authentication = this.authenticationProvider.authenticate(decodedToken, null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 

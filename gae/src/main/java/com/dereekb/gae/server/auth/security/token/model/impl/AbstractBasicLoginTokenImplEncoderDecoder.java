@@ -7,7 +7,6 @@ import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
@@ -29,8 +28,8 @@ import io.jsonwebtoken.SignatureException;
  * @author dereekb
  *
  */
-public abstract class AbstractLoginTokenEncoderDecoder
-        implements LoginTokenEncoderDecoder {
+public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginTokenImpl>
+        implements LoginTokenEncoderDecoder<T> {
 
 	public static final String REFRESH_KEY = "e";
 
@@ -39,11 +38,11 @@ public abstract class AbstractLoginTokenEncoderDecoder
 	private String secret;
 	private SignatureAlgorithm algorithm;
 
-	public AbstractLoginTokenEncoderDecoder(String secret) {
+	public AbstractBasicLoginTokenImplEncoderDecoder(String secret) {
 		this(secret, DEFAULT_ALGORITHM);
 	}
 
-	public AbstractLoginTokenEncoderDecoder(String secret, SignatureAlgorithm algorithm) {
+	public AbstractBasicLoginTokenImplEncoderDecoder(String secret, SignatureAlgorithm algorithm) {
 		this.setSecret(secret);
 		this.setAlgorithm(algorithm);
 	}
@@ -74,7 +73,7 @@ public abstract class AbstractLoginTokenEncoderDecoder
 
 	// MARK: LoginTokenEncoder
 	@Override
-	public String encodeLoginToken(LoginToken loginToken) {
+	public String encodeLoginToken(T loginToken) {
 		Claims claims = this.buildClaims(loginToken);
 		return this.encodeAndCompactClaims(claims);
 	}
@@ -84,7 +83,7 @@ public abstract class AbstractLoginTokenEncoderDecoder
 		return builder.setClaims(claims).compact();
 	}
 
-	protected Claims buildClaims(LoginToken loginToken) {
+	protected final Claims buildClaims(T loginToken) {
 		Claims claims = Jwts.claims();
 
 		claims.setSubject(loginToken.getSubject());
@@ -100,7 +99,7 @@ public abstract class AbstractLoginTokenEncoderDecoder
 		return claims;
 	}
 
-	protected abstract void appendClaimsComponents(LoginToken loginToken,
+	protected abstract void appendClaimsComponents(T loginToken,
 	                                               Claims claims);
 
 	protected String encodeOwnershipRoles(OwnershipRoles ownershipRoles) {
@@ -109,8 +108,10 @@ public abstract class AbstractLoginTokenEncoderDecoder
 
 	// MARK: LoginTokenDecoder
 	@Override
-	public DecodedLoginToken decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException {
-		DecodedLoginToken loginToken = null;
+	public DecodedLoginToken<T> decodeLoginToken(String token)
+	        throws TokenExpiredException,
+	            TokenUnauthorizedException {
+		T loginToken = null;
 
 		try {
 			Claims claims = this.parseClaims(token);
@@ -121,7 +122,7 @@ public abstract class AbstractLoginTokenEncoderDecoder
 			throw new TokenExpiredException();
 		}
 
-		return loginToken;
+		return new DecodedLoginTokenImpl<T>(token, loginToken);
 	}
 
 	protected final Claims parseClaims(String token) throws TokenExpiredException, TokenUnauthorizedException {
@@ -129,15 +130,17 @@ public abstract class AbstractLoginTokenEncoderDecoder
 		return parsers.parseClaimsJws(token).getBody();
 	}
 
-	protected DecodedLoginToken buildFromClaims(String token,
-	                                            Claims claims)
+	protected T buildFromClaims(String token,
+	                            Claims claims)
 	        throws TokenUnauthorizedException {
-		DecodedLoginTokenImpl loginToken = new DecodedLoginTokenImpl(token);
+		T loginToken = this.newLoginToken();
 		this.initFromClaims(loginToken, claims);
 		return loginToken;
 	}
 
-	protected void initFromClaims(LoginTokenImpl loginToken,
+	protected abstract T newLoginToken();
+
+	protected void initFromClaims(T loginToken,
 	                              Claims claims)
 	        throws TokenUnauthorizedException {
 		String subject = claims.getSubject();

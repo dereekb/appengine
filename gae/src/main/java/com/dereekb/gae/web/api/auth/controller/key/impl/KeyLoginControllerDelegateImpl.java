@@ -11,6 +11,7 @@ import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginExistsEx
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginRejectedException;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginInfoImpl;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
@@ -33,11 +34,11 @@ public class KeyLoginControllerDelegateImpl
 	private static final String ENABLED_KEY = "Enabled";
 
 	private boolean refreshAllowed = true;
-	private LoginTokenService tokenService;
+	private LoginTokenService<LoginToken> tokenService;
 	private KeyLoginStatusServiceManager serviceManager;
 	private KeyLoginAuthenticationService authenticationService;
 
-	public KeyLoginControllerDelegateImpl(LoginTokenService tokenService,
+	public KeyLoginControllerDelegateImpl(LoginTokenService<LoginToken> tokenService,
 	        KeyLoginStatusServiceManager serviceManager,
 	        KeyLoginAuthenticationService authenticationService) {
 		super();
@@ -46,11 +47,11 @@ public class KeyLoginControllerDelegateImpl
 		this.setAuthenticationService(authenticationService);
 	}
 
-	public LoginTokenService getTokenService() {
+	public LoginTokenService<LoginToken> getTokenService() {
 		return this.tokenService;
 	}
 
-	public void setTokenService(LoginTokenService tokenService) {
+	public void setTokenService(LoginTokenService<LoginToken> tokenService) {
 		if (tokenService == null) {
 			throw new IllegalArgumentException("TokenService cannot be null.");
 		}
@@ -140,8 +141,8 @@ public class KeyLoginControllerDelegateImpl
 
 	// MARK: Internal
 	private KeyLoginStatusService getLoginStatusService() {
-		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
-		LoginTokenUserDetails details = authentication.getPrincipal();
+		LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
+		LoginTokenUserDetails<LoginToken> details = authentication.getPrincipal();
 
 		Login login = details.getLogin();
 		return this.serviceManager.getService(login);
