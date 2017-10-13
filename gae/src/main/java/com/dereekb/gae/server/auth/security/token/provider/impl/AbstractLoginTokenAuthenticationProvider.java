@@ -98,7 +98,7 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Logi
 		}
 
 		@Override
-		public final U getPrincipal() {
+		public U getPrincipal() {
 			if (this.userDetails == null) {
 				this.userDetails = this.makePrinciple(this.decodedLoginToken);
 			}

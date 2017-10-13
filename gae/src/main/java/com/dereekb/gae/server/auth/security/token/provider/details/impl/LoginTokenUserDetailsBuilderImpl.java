@@ -90,13 +90,13 @@ public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
 
 	// MARK: LoginTokenUserDetailsBuilder
 	@Override
-	public LoginTokenUserDetails<T> buildDetails(DecodedLoginToken<T> loginToken) throws IllegalArgumentException {
+	public LoginTokenUserDetails<T> buildDetails(DecodedLoginToken<T> decodedLoginToken) throws IllegalArgumentException {
 		LoginTokenUserDetails<T> details;
 
-		if (loginToken.getLoginToken().isAnonymous()) {
-			details = new AnonymousLoginTokenUserDetailsImpl(loginToken);
+		if (decodedLoginToken.getLoginToken().isAnonymous()) {
+			details = new AnonymousLoginTokenUserDetailsImpl(decodedLoginToken);
 		} else {
-			details = new LoginTokenUserDetailsImpl(loginToken);
+			details = new LoginTokenUserDetailsImpl(decodedLoginToken);
 		}
 
 		return details;

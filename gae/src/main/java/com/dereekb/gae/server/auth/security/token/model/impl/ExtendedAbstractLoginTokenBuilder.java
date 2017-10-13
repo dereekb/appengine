@@ -16,6 +16,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @param <T>
  *            token type
+ *
+ * @see AbstractUserLoginTokenBuilder for extension that also include user data.
  */
 public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl> extends AbstractLoginTokenBuilder<T> {
 

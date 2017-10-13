@@ -9,7 +9,6 @@ import com.dereekb.gae.server.datastore.Getter;
  * Default {@link LoginTokenBuilder} implementation.
  *
  * @author dereekb
- *
  */
 public final class LoginTokenBuilderImpl extends ExtendedAbstractLoginTokenBuilder<LoginTokenImpl> {
 
