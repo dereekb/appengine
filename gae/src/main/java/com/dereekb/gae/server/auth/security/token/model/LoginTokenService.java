@@ -12,7 +12,7 @@ public interface LoginTokenService<T extends LoginToken>
         extends LoginTokenBuilder<T>, LoginTokenEncoderDecoder<T> {
 
 	/**
-	 * Builds and encodes a {@link LoginToken}.
+	 * Builds and encodes a token.
 	 *
 	 * @param anonymousId
 	 *            Optional anonymous identifier. May be {@code null}.
