@@ -14,7 +14,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
  *            token type
  */
 public abstract class AbstractLoginTokenBuilder<T extends LoginTokenImpl>
-        implements LoginTokenBuilder {
+        implements LoginTokenBuilder<T> {
 
 	// 2 hour expiration
 	private static final Long DEFAULT_EXPIRATION_TIME = 2 * 60 * 60 * 1000L;

@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
-import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * {@link DecodedLoginToken} implementation.
@@ -9,46 +9,53 @@ import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
  * @author dereekb
  *
  */
-public class DecodedLoginTokenImpl extends LoginTokenImpl
-        implements DecodedLoginToken {
+public class DecodedLoginTokenImpl<T extends LoginToken>
+        implements DecodedLoginToken<T> {
 
-	private String encodedTokenString;
+	private String encodedLoginToken;
+	private T loginToken;
 
-	public DecodedLoginTokenImpl(String encodedTokenString) {
-		super();
-		this.setEncodedTokenString(encodedTokenString);
+	public DecodedLoginTokenImpl(String encodedLoginToken) {
+		this.setEncodedLoginToken(encodedLoginToken);
 	}
 
-	public DecodedLoginTokenImpl(String encodedTokenString, LoginPointerType pointerType)
+	public DecodedLoginTokenImpl(String encodedLoginToken, T loginToken)
 	        throws IllegalArgumentException {
-		super(pointerType);
-		this.setEncodedTokenString(encodedTokenString);
-	}
-
-	public DecodedLoginTokenImpl(String encodedTokenString, DecodedLoginToken loginToken)
-	        throws IllegalArgumentException {
-		super(loginToken);
-		this.setEncodedTokenString(encodedTokenString);
+		this.setEncodedLoginToken(encodedLoginToken);
+		this.setLoginToken(loginToken);
 	}
 
 	// MARK: DecodedLoginToken
 	@Override
 	public String getEncodedLoginToken() {
-		return this.encodedTokenString;
+		return this.encodedLoginToken;
 	}
 
-	private void setEncodedTokenString(String encodedTokenString) {
-		if (encodedTokenString == null) {
+	@Override
+	public T getLoginToken() {
+		return this.loginToken;
+	}
+
+	public void setLoginToken(T loginToken) {
+		if (loginToken == null) {
+			throw new IllegalArgumentException("loginToken cannot be null.");
+		}
+
+		this.loginToken = loginToken;
+	}
+
+	private void setEncodedLoginToken(String encodedLoginToken) {
+		if (encodedLoginToken == null) {
 			throw new IllegalArgumentException("TokenString cannot be null.");
 		}
 
-		this.encodedTokenString = encodedTokenString;
+		this.encodedLoginToken = encodedLoginToken;
 	}
 
 	@Override
 	public String toString() {
-		return "DecodedLoginTokenImpl [encodedTokenString=" + this.encodedTokenString + ", toString()="
-		        + super.toString() + "]";
+		return "DecodedLoginTokenImpl [encodedLoginToken=" + this.encodedLoginToken + ", toString()=" + super.toString()
+		        + "]";
 	}
 
 }

@@ -6,7 +6,7 @@ package com.dereekb.gae.server.auth.security.token.model;
  * @author dereekb
  *
  */
-public interface LoginTokenEncoder {
+public interface LoginTokenEncoder<T extends LoginToken> {
 
 	/**
 	 * Encodes the input {@link LoginToken} to a string.
@@ -15,6 +15,6 @@ public interface LoginTokenEncoder {
 	 *            {@link LoginToken}. Never {@code null}.
 	 * @return {@link String}. Never {@code null}.
 	 */
-	public String encodeLoginToken(LoginToken loginToken);
+	public String encodeLoginToken(T loginToken);
 
 }

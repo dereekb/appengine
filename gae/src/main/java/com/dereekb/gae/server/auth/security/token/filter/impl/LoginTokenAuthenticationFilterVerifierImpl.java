@@ -9,6 +9,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilterVerifier;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * {@link LoginTokenAuthenticationFilterVerifier} implementation that verifies
@@ -17,8 +18,8 @@ import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
  * @author dereekb
  *
  */
-public class LoginTokenAuthenticationFilterVerifierImpl
-        implements LoginTokenAuthenticationFilterVerifier {
+public class LoginTokenAuthenticationFilterVerifierImpl<T extends LoginToken>
+        implements LoginTokenAuthenticationFilterVerifier<T> {
 
 	public static final String TASKQUEUE_QUEUE_HEADER_KEY = "X-AppEngine-QueueName";
 	public static final String INBOUND_ID_HEADER_KEY = "X-Appengine-Inbound-Appid";
@@ -27,10 +28,10 @@ public class LoginTokenAuthenticationFilterVerifierImpl
 
 	// MARK: LoginTokenAuthenticationFilterVerifier
 	@Override
-	public void assertValidDecodedLoginToken(DecodedLoginToken decodedLoginToken,
+	public void assertValidDecodedLoginToken(DecodedLoginToken<T> decodedLoginToken,
 	                                         HttpServletRequest request)
 	        throws TokenException {
-		LoginPointerType type = decodedLoginToken.getPointerType();
+		LoginPointerType type = decodedLoginToken.getLoginToken().getPointerType();
 
 		switch (type) {
 			case SYSTEM:
@@ -41,7 +42,7 @@ public class LoginTokenAuthenticationFilterVerifierImpl
 		}
 	}
 
-	private void assertSystemRequestIsFromSystem(DecodedLoginToken decodedLoginToken,
+	private void assertSystemRequestIsFromSystem(DecodedLoginToken<T> decodedLoginToken,
 	                                             HttpServletRequest request) {
 		Object taskqueue = request.getHeader(TASKQUEUE_QUEUE_HEADER_KEY);
 

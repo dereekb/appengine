@@ -4,14 +4,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
- * Used for asserting valid {@link DecodeDLoginToken} values.
+ * Used for asserting valid {@link DecodedLoginToken} values.
  * 
  * @author dereekb
  *
  */
-public interface LoginTokenAuthenticationFilterVerifier {
+public interface LoginTokenAuthenticationFilterVerifier<T extends LoginToken> {
 
 	/**
 	 * Asserts that only system requests are passed.
@@ -23,7 +24,7 @@ public interface LoginTokenAuthenticationFilterVerifier {
 	 * @throws TokenException
 	 *             thrown if the token is invalid.
 	 */
-	public void assertValidDecodedLoginToken(DecodedLoginToken decodedLoginToken,
+	public void assertValidDecodedLoginToken(DecodedLoginToken<T> decodedLoginToken,
 	                                         HttpServletRequest request)
 	        throws TokenException;
 

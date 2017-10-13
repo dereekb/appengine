@@ -2,9 +2,8 @@ package com.dereekb.gae.server.auth.security.token.refresh.impl;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
-import com.dereekb.gae.server.auth.security.token.model.impl.AbstractLoginTokenEncoderDecoder;
+import com.dereekb.gae.server.auth.security.token.model.impl.AbstractBasicLoginTokenImplEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 
@@ -17,7 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * @author dereekb
  *
  */
-public class RefreshTokenEncoderDecoder extends AbstractLoginTokenEncoderDecoder {
+public class RefreshTokenEncoderDecoder extends AbstractBasicLoginTokenImplEncoderDecoder<LoginTokenImpl> {
 
 	private static final Integer TYPE_OVERRIDE = LoginPointerType.REFRESH_TOKEN.getId();
 
@@ -31,7 +30,7 @@ public class RefreshTokenEncoderDecoder extends AbstractLoginTokenEncoderDecoder
 
 	// MARK: Encode
 	@Override
-	protected void appendClaimsComponents(LoginToken loginToken,
+	protected void appendClaimsComponents(LoginTokenImpl loginToken,
 	                                      Claims claims) {
 		// Export login key for external use. Is not decoded below though.
 		claims.put(LoginTokenEncoderDecoderImpl.LOGIN_KEY, loginToken.getLoginId());
@@ -40,6 +39,11 @@ public class RefreshTokenEncoderDecoder extends AbstractLoginTokenEncoderDecoder
 	}
 
 	// MARK: Decode
+	@Override
+	protected LoginTokenImpl newLoginToken() {
+		return new LoginTokenImpl();
+	}
+
 	@Override
 	protected void initFromClaims(LoginTokenImpl loginToken,
 	                              Claims claims)

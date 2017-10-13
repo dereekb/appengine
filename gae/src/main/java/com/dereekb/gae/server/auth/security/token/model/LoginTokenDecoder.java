@@ -9,7 +9,7 @@ import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedExc
  * @author dereekb
  *
  */
-public interface LoginTokenDecoder {
+public interface LoginTokenDecoder<T extends LoginToken> {
 
 	/**
 	 * Decodes a token.
@@ -23,6 +23,6 @@ public interface LoginTokenDecoder {
 	 *             Thrown if the token was unauthorized by either not existing
 	 *             or not matching against the details.
 	 */
-	public DecodedLoginToken decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException;
+	public DecodedLoginToken<T> decodeLoginToken(String token) throws TokenExpiredException, TokenUnauthorizedException;
 
 }

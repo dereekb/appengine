@@ -6,7 +6,5 @@ package com.dereekb.gae.server.auth.security.token.model;
  * @author dereekb
  *
  */
-public interface LoginTokenEncoderDecoder
-        extends LoginTokenEncoder, LoginTokenDecoder {
-
-}
+public interface LoginTokenEncoderDecoder<T extends LoginToken>
+        extends LoginTokenEncoder<T>, LoginTokenDecoder<T> {}

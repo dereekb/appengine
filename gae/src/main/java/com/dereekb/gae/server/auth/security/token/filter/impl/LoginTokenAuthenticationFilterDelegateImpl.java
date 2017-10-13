@@ -10,6 +10,7 @@ import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilterDelegate;
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilterVerifier;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.provider.preauth.impl.PreAuthLoginTokenAuthenticationImpl;
 
@@ -19,34 +20,35 @@ import com.dereekb.gae.server.auth.security.token.provider.preauth.impl.PreAuthL
  * @author dereekb
  *
  */
-public class LoginTokenAuthenticationFilterDelegateImpl
+public class LoginTokenAuthenticationFilterDelegateImpl<T extends LoginToken>
         implements LoginTokenAuthenticationFilterDelegate {
 
-	private static final LoginTokenAuthenticationFilterVerifier DEFAULT_VERIFIER = new LoginTokenAuthenticationFilterVerifierImpl();
+	protected static final LoginTokenAuthenticationFilterVerifier<LoginToken> DEFAULT_VERIFIER = new LoginTokenAuthenticationFilterVerifierImpl<LoginToken>();
 
-	private LoginTokenDecoder decoder;
+	private LoginTokenDecoder<T> decoder;
 	private AuthenticationManager authenticationManager;
-	private LoginTokenAuthenticationFilterVerifier verifier;
+	private LoginTokenAuthenticationFilterVerifier<T> verifier;
 
-	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder decoder,
-	        AuthenticationManager authenticationManager) throws IllegalArgumentException {
-		this(decoder, authenticationManager, DEFAULT_VERIFIER);
+	@SuppressWarnings("unchecked")
+	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder<T> decoder,
+	        AuthenticationManager authenticationManager) {
+		this(decoder, authenticationManager, (LoginTokenAuthenticationFilterVerifier<T>) DEFAULT_VERIFIER);
 	}
-
-	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder decoder,
+	
+	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder<T> decoder,
 	        AuthenticationManager authenticationManager,
-	        LoginTokenAuthenticationFilterVerifier verifier) {
+	        LoginTokenAuthenticationFilterVerifier<T> verifier) {
 		super();
 		this.setDecoder(decoder);
 		this.setAuthenticationManager(authenticationManager);
 		this.setVerifier(verifier);
 	}
 
-	public LoginTokenDecoder getDecoder() {
+	public LoginTokenDecoder<T> getDecoder() {
 		return this.decoder;
 	}
 
-	public void setDecoder(LoginTokenDecoder decoder) throws IllegalArgumentException {
+	public void setDecoder(LoginTokenDecoder<T> decoder) throws IllegalArgumentException {
 		if (decoder == null) {
 			throw new IllegalArgumentException("Decoder cannot be null.");
 		}
@@ -66,11 +68,11 @@ public class LoginTokenAuthenticationFilterDelegateImpl
 		this.authenticationManager = authenticationManager;
 	}
 
-	public LoginTokenAuthenticationFilterVerifier getVerifier() {
+	public LoginTokenAuthenticationFilterVerifier<T> getVerifier() {
 		return this.verifier;
 	}
 
-	public void setVerifier(LoginTokenAuthenticationFilterVerifier verifier) {
+	public void setVerifier(LoginTokenAuthenticationFilterVerifier<T> verifier) {
 		if (verifier == null) {
 			throw new IllegalArgumentException("verifier cannot be null.");
 		}
@@ -84,7 +86,7 @@ public class LoginTokenAuthenticationFilterDelegateImpl
 	                                     WebAuthenticationDetails details,
 	                                     HttpServletRequest request)
 	        throws TokenException {
-		DecodedLoginToken decodedLoginToken = this.decoder.decodeLoginToken(token);
+		DecodedLoginToken<T> decodedLoginToken = this.decoder.decodeLoginToken(token);
 
 		this.verifier.assertValidDecodedLoginToken(decodedLoginToken, request);
 
@@ -92,9 +94,9 @@ public class LoginTokenAuthenticationFilterDelegateImpl
 		return this.authenticationManager.authenticate(preAuth);
 	}
 
-	protected Authentication buildPreAuth(DecodedLoginToken decodedLoginToken,
+	protected Authentication buildPreAuth(DecodedLoginToken<T> decodedLoginToken,
 	                                      WebAuthenticationDetails details) {
-		return new PreAuthLoginTokenAuthenticationImpl(decodedLoginToken, details);
+		return new PreAuthLoginTokenAuthenticationImpl<T>(decodedLoginToken, details);
 	}
 
 	@Override

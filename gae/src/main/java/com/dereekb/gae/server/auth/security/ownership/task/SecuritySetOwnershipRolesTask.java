@@ -37,8 +37,8 @@ public class SecuritySetOwnershipRolesTask<T extends MutableOwnedModel>
 		String ownerId = null;
 
 		try {
-			LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
-			LoginToken token = authentication.getCredentials();
+			LoginTokenAuthentication<?> authentication = LoginSecurityContext.getAuthentication();
+			LoginToken token = authentication.getCredentials().getLoginToken();
 			OwnershipRoles ownershipRoles = token.getOwnershipRoles();
 			ownerId = ownershipRoles.getOwnerId();
 		} catch (NoSecurityContextException e) {

@@ -9,6 +9,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.misc.SecurityUtility;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGrantedAuthorityBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
@@ -23,23 +24,23 @@ import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyExceptio
  * @author dereekb
  *
  */
-public class LoginTokenUserDetailsBuilderImpl
-        implements LoginTokenUserDetailsBuilder {
+public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
+        implements LoginTokenUserDetailsBuilder<T> {
 
 	private static final String DEFAULT_ADMIN_ROLE = "ROLE_ADMIN";
 
 	private Getter<Login> loginGetter;
 	private Getter<LoginPointer> loginPointerGetter;
 
-	private LoginTokenGrantedAuthorityBuilder authorityBuilder;
+	private LoginTokenGrantedAuthorityBuilder<T> authorityBuilder;
 
 	private String adminRole = DEFAULT_ADMIN_ROLE;
 
-	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder authorityBuilder) {
+	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder<T> authorityBuilder) {
 		this(authorityBuilder, null, null);
 	}
 
-	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder authorityBuilder,
+	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder<T> authorityBuilder,
 	        Getter<Login> loginGetter,
 	        Getter<LoginPointer> loginPointerGetter) {
 		this.setAuthorityBuilder(authorityBuilder);
@@ -63,11 +64,11 @@ public class LoginTokenUserDetailsBuilderImpl
 		this.loginPointerGetter = loginPointerGetter;
 	}
 
-	public LoginTokenGrantedAuthorityBuilder getAuthorityBuilder() {
+	public LoginTokenGrantedAuthorityBuilder<T> getAuthorityBuilder() {
 		return this.authorityBuilder;
 	}
 
-	public void setAuthorityBuilder(LoginTokenGrantedAuthorityBuilder authorityBuilder) {
+	public void setAuthorityBuilder(LoginTokenGrantedAuthorityBuilder<T> authorityBuilder) {
 		if (authorityBuilder == null) {
 			throw new IllegalArgumentException("AuthorityBuilder cannot be null.");
 		}
@@ -89,10 +90,10 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	// MARK: LoginTokenUserDetailsBuilder
 	@Override
-	public LoginTokenUserDetails buildDetails(DecodedLoginToken loginToken) throws IllegalArgumentException {
-		LoginTokenUserDetails details;
+	public LoginTokenUserDetails<T> buildDetails(DecodedLoginToken<T> loginToken) throws IllegalArgumentException {
+		LoginTokenUserDetails<T> details;
 
-		if (loginToken.isAnonymous()) {
+		if (loginToken.getLoginToken().isAnonymous()) {
 			details = new AnonymousLoginTokenUserDetailsImpl(loginToken);
 		} else {
 			details = new LoginTokenUserDetailsImpl(loginToken);
@@ -102,33 +103,35 @@ public class LoginTokenUserDetailsBuilderImpl
 	}
 
 	// MARK: Anonymous
-	protected class AnonymousLoginTokenUserDetailsImpl extends AbstractAnonymousLoginTokenUserDetailsImpl<DecodedLoginToken> {
+	protected class AnonymousLoginTokenUserDetailsImpl extends AbstractAnonymousLoginTokenUserDetailsImpl {
 
 		private static final long serialVersionUID = 1L;
 
-		protected AnonymousLoginTokenUserDetailsImpl(DecodedLoginToken loginToken) throws IllegalArgumentException {
-			super(loginToken);
+		protected AnonymousLoginTokenUserDetailsImpl(DecodedLoginToken<T> decodedLoginToken)
+		        throws IllegalArgumentException {
+			super(decodedLoginToken);
 		}
 
 	}
 
 	// MARK: LoginTokenUserDetails
-	protected class LoginTokenUserDetailsImpl extends AbstractLoginTokenUserDetailsImpl<DecodedLoginToken> {
+	protected class LoginTokenUserDetailsImpl extends AbstractLoginTokenUserDetailsImpl {
 
 		private static final long serialVersionUID = 1L;
 
-		protected LoginTokenUserDetailsImpl(DecodedLoginToken loginToken) throws IllegalArgumentException {
-			super(loginToken);
+		protected LoginTokenUserDetailsImpl(DecodedLoginToken<T> decodedLoginToken) throws IllegalArgumentException {
+			super(decodedLoginToken);
 		}
 
 	}
 
 	// MARK: Abstract/Internals
-	protected class AbstractAnonymousLoginTokenUserDetailsImpl<T extends DecodedLoginToken> extends AbstractLoginTokenUserDetailsImpl<T> {
+	protected class AbstractAnonymousLoginTokenUserDetailsImpl extends AbstractLoginTokenUserDetailsImpl {
 
 		private static final long serialVersionUID = 1L;
 
-		protected AbstractAnonymousLoginTokenUserDetailsImpl(T loginToken) throws IllegalArgumentException {
+		protected AbstractAnonymousLoginTokenUserDetailsImpl(DecodedLoginToken<T> loginToken)
+		        throws IllegalArgumentException {
 			super(loginToken);
 		}
 
@@ -174,12 +177,12 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	}
 
-	protected class AbstractLoginTokenUserDetailsImpl<T extends DecodedLoginToken>
-	        implements LoginTokenUserDetails {
+	protected class AbstractLoginTokenUserDetailsImpl
+	        implements LoginTokenUserDetails<T> {
 
 		private static final long serialVersionUID = 1L;
 
-		protected final T loginToken;
+		protected final DecodedLoginToken<T> decodedLoginToken;
 
 		private boolean loginLoaded = false;
 		private boolean loginPointerLoaded = false;
@@ -192,17 +195,18 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		private LoginTokenUserType userType;
 
-		protected AbstractLoginTokenUserDetailsImpl(T loginToken) throws IllegalArgumentException {
-			if (loginToken == null) {
+		protected AbstractLoginTokenUserDetailsImpl(DecodedLoginToken<T> decodedLoginToken)
+		        throws IllegalArgumentException {
+			if (decodedLoginToken == null) {
 				throw new IllegalArgumentException("Token cannnot be null.");
 			}
 
-			this.loginToken = loginToken;
+			this.decodedLoginToken = decodedLoginToken;
 		}
 
 		@Override
 		public ModelKey getLoginKey() throws NoModelKeyException {
-			Long id = this.loginToken.getLoginId();
+			Long id = this.getLoginToken().getLoginId();
 			ModelKey key = null;
 
 			if (id != null) {
@@ -235,7 +239,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public ModelKey getLoginPointerKey() throws NoModelKeyException {
-			String id = this.loginToken.getLoginPointerId();
+			String id = this.getLoginToken().getLoginPointerId();
 			ModelKey key = null;
 
 			if (id != null) {
@@ -270,7 +274,7 @@ public class LoginTokenUserDetailsBuilderImpl
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			if (this.authorities == null) {
 				this.authorities = LoginTokenUserDetailsBuilderImpl.this.authorityBuilder
-				        .getAuthorities(this.loginToken);
+				        .getAuthorities(this.getLoginToken());
 			}
 
 			return this.authorities;
@@ -291,7 +295,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public String getUsername() {
-			return this.loginToken.getSubject();
+			return this.getLoginToken().getSubject();
 		}
 
 		@Override
@@ -316,7 +320,12 @@ public class LoginTokenUserDetailsBuilderImpl
 
 		@Override
 		public T getLoginToken() {
-			return this.loginToken;
+			return this.decodedLoginToken.getLoginToken();
+		}
+
+		@Override
+		public DecodedLoginToken<T> getDecodedLoginToken() {
+			return this.decodedLoginToken;
 		}
 
 		@Override

@@ -57,7 +57,7 @@ public class LoginPointerGrantedAuthorityBuilderImpl
 	}
 
 	@Override
-	public Set<GrantedAuthority> getGrantedAuthorities(LoginPointerType type) {
+	public Set<? extends GrantedAuthority> getGrantedAuthorities(LoginPointerType type) {
 
 		String nameString = type.toString();
 		String typeString = type.getType().toString();

@@ -13,8 +13,16 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
  * @author dereekb
  *
  */
-public interface LoginTokenGrantedAuthorityBuilder {
+public interface LoginTokenGrantedAuthorityBuilder<T extends LoginToken> {
 
-	public Collection<? extends GrantedAuthority> getAuthorities(LoginToken token);
+	/**
+	 * Returns the collection of {@link GrantedAuthority} for the input
+	 * {@link LoginToken}.
+	 * 
+	 * @param token
+	 *            Token. Never {@code null}.
+	 * @return {@link Collection}. Never {@code null}.
+	 */
+	public Collection<? extends GrantedAuthority> getAuthorities(T token);
 
 }

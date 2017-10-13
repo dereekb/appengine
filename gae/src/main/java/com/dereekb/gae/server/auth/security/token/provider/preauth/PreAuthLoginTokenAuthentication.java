@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * Basic pre-auth token.
@@ -11,11 +12,11 @@ import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
  * @author dereekb
  *
  */
-public interface PreAuthLoginTokenAuthentication
+public interface PreAuthLoginTokenAuthentication<T extends LoginToken>
         extends Authentication {
 
 	@Override
-	public DecodedLoginToken getCredentials();
+	public DecodedLoginToken<T> getCredentials();
 
 	@Override
 	public WebAuthenticationDetails getDetails();

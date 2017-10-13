@@ -8,15 +8,23 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
  * {@link LoginUserDetails} extension that includes a {@link LoginToken}.
  *
  * @author dereekb
- *
+ * 
+ * @param <T>
+ *            token type
  */
-public interface LoginTokenUserDetails
+public interface LoginTokenUserDetails<T extends LoginToken>
         extends LoginUserDetails {
+
+	/**
+	 * Returns the login token from {{@link #getDecodedLoginToken()}. Never
+	 * {@code null}.
+	 */
+	public T getLoginToken();
 
 	/**
 	 * @return {@link DecodedLoginToken}. Never {@code null}.
 	 */
-	public DecodedLoginToken getLoginToken();
+	public DecodedLoginToken<T> getDecodedLoginToken();
 
 	/**
 	 * Whether or not the user is an administrator.

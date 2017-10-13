@@ -11,7 +11,7 @@ import com.dereekb.gae.server.datastore.Getter;
  * @author dereekb
  *
  */
-public class LoginTokenBuilderImpl extends ExtendedAbstractLoginTokenBuilder<LoginTokenImpl> {
+public final class LoginTokenBuilderImpl extends ExtendedAbstractLoginTokenBuilder<LoginTokenImpl> {
 
 	public LoginTokenBuilderImpl(Getter<Login> loginGetter, OwnershipRolesReader<Login> ownershipRolesReader)
 	        throws IllegalArgumentException {

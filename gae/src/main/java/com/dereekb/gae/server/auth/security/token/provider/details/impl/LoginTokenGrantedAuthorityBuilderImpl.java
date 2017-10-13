@@ -22,8 +22,8 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  * @author dereekb
  *
  */
-public class LoginTokenGrantedAuthorityBuilderImpl
-        implements LoginTokenGrantedAuthorityBuilder {
+public class LoginTokenGrantedAuthorityBuilderImpl<T extends LoginToken>
+        implements LoginTokenGrantedAuthorityBuilder<T> {
 
 	public static final String DEFAULT_NEW_USER_ROLE = "ROLE_NEW_USER";
 
@@ -110,7 +110,7 @@ public class LoginTokenGrantedAuthorityBuilderImpl
 
 	// MARK: LoginTokenGrantedAuthorityBuilder
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities(LoginToken token) {
+	public Collection<? extends GrantedAuthority> getAuthorities(T token) {
 		Set<GrantedAuthority> authorities = null;
 		LoginPointerType type = token.getPointerType();
 

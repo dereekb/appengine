@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 
@@ -19,7 +20,7 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
  * @param <T>
  *            token type
  */
-public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends DecodedLoginToken>
+public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends LoginToken>
         implements AuthenticationProvider {
 
 	private static final String UNREGISTERED_DEFAULT_NAME = "Unregistered";
@@ -43,17 +44,17 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Deco
 	}
 
 	// MARK: Abstract
-	protected abstract class AbstractLoginTokenAuthenticationImpl<U extends LoginTokenUserDetails>
-	        implements LoginTokenAuthentication {
+	protected abstract class AbstractLoginTokenAuthenticationImpl<U extends LoginTokenUserDetails<T>>
+	        implements LoginTokenAuthentication<T> {
 
 		private static final long serialVersionUID = 1L;
 
-		private final T decodedLoginToken;
+		private final DecodedLoginToken<T> decodedLoginToken;
 		private final WebAuthenticationDetails details;
 
 		private U userDetails;
 
-		public AbstractLoginTokenAuthenticationImpl(T decodedLoginToken, WebAuthenticationDetails details)
+		public AbstractLoginTokenAuthenticationImpl(DecodedLoginToken<T> decodedLoginToken, WebAuthenticationDetails details)
 		        throws IllegalArgumentException {
 			if (decodedLoginToken == null) {
 				throw new IllegalArgumentException("LoginToken cannot be null.");
@@ -70,7 +71,7 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Deco
 		}
 
 		@Override
-		public T getCredentials() {
+		public DecodedLoginToken<T> getCredentials() {
 			return this.decodedLoginToken;
 		}
 
@@ -91,7 +92,7 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Deco
 
 		@Override
 		public String getName() {
-			Long loginId = this.decodedLoginToken.getLoginId();
+			Long loginId = this.decodedLoginToken.getLoginToken().getLoginId();
 			String name = (loginId != null) ? loginId.toString() : UNREGISTERED_DEFAULT_NAME;
 			return name;
 		}
@@ -105,7 +106,7 @@ public abstract class AbstractLoginTokenAuthenticationProvider<B, T extends Deco
 			return this.userDetails;
 		}
 
-		protected abstract U makePrinciple(T decodedLoginToken);
+		protected abstract U makePrinciple(DecodedLoginToken<T> decodedLoginToken);
 
 	}
 }
