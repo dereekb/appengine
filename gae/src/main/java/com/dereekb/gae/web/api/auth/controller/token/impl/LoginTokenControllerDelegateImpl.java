@@ -30,28 +30,28 @@ public class LoginTokenControllerDelegateImpl
 
 	private static final boolean ALLOW_REFRESH = false;
 
-	private LoginTokenEncoderDecoder refreshTokenEncoderDecoder;
-	private LoginTokenService loginTokenService;
+	private LoginTokenEncoderDecoder<LoginToken> refreshTokenEncoderDecoder;
+	private LoginTokenService<LoginToken> loginTokenService;
 	private RefreshTokenService refreshTokenService;
 
-	public LoginTokenControllerDelegateImpl(LoginTokenService loginTokenService,
+	public LoginTokenControllerDelegateImpl(LoginTokenService<LoginToken> loginTokenService,
 	        RefreshTokenService refreshTokenService) {
 		this(loginTokenService, loginTokenService, refreshTokenService);
 	}
 
-	public LoginTokenControllerDelegateImpl(LoginTokenEncoderDecoder refreshTokenEncoderDecoder,
-	        LoginTokenService loginTokenService,
+	public LoginTokenControllerDelegateImpl(LoginTokenEncoderDecoder<LoginToken> refreshTokenEncoderDecoder,
+	        LoginTokenService<LoginToken> loginTokenService,
 	        RefreshTokenService refreshTokenService) {
 		this.setRefreshTokenEncoderDecoder(refreshTokenEncoderDecoder);
 		this.setLoginTokenService(loginTokenService);
 		this.setRefreshTokenService(refreshTokenService);
 	}
 
-	public LoginTokenEncoderDecoder getRefreshTokenEncoderDecoder() {
+	public LoginTokenEncoderDecoder<LoginToken> getRefreshTokenEncoderDecoder() {
 		return this.refreshTokenEncoderDecoder;
 	}
 
-	public void setRefreshTokenEncoderDecoder(LoginTokenEncoderDecoder refreshTokenEncoderDecoder) {
+	public void setRefreshTokenEncoderDecoder(LoginTokenEncoderDecoder<LoginToken> refreshTokenEncoderDecoder) {
 		if (refreshTokenEncoderDecoder == null) {
 			throw new IllegalArgumentException("RefreshTokenEncoderDecoder cannot be null.");
 		}
@@ -59,11 +59,11 @@ public class LoginTokenControllerDelegateImpl
 		this.refreshTokenEncoderDecoder = refreshTokenEncoderDecoder;
 	}
 
-	public LoginTokenService getLoginTokenService() {
+	public LoginTokenService<LoginToken> getLoginTokenService() {
 		return this.loginTokenService;
 	}
 
-	public void setLoginTokenService(LoginTokenService loginTokenService) {
+	public void setLoginTokenService(LoginTokenService<LoginToken> loginTokenService) {
 		if (loginTokenService == null) {
 			throw new IllegalArgumentException("LoginTokenService cannot be null.");
 		}
@@ -86,17 +86,17 @@ public class LoginTokenControllerDelegateImpl
 	// MARK: TokenControllerDelegate
 	@Override
 	public LoginTokenPair makeRefreshToken(EncodedLoginToken token) throws TokenUnauthorizedException {
-		DecodedLoginToken loginToken = this.refreshTokenEncoderDecoder.decodeLoginToken(token.getEncodedLoginToken());
-		LoginToken refreshToken = this.refreshTokenService.makeRefreshToken(loginToken);
+		DecodedLoginToken<LoginToken> decodedLoginToken = this.refreshTokenEncoderDecoder.decodeLoginToken(token.getEncodedLoginToken());
+		LoginToken refreshToken = this.refreshTokenService.makeRefreshToken(decodedLoginToken.getLoginToken());
 		String encodedToken = this.refreshTokenEncoderDecoder.encodeLoginToken(refreshToken);
 		return new LoginTokenPair(encodedToken);
 	}
 
 	@Override
 	public LoginTokenPair loginWithRefreshToken(EncodedLoginToken refreshToken) throws RefreshTokenExpiredException {
-		DecodedLoginToken loginToken = this.refreshTokenEncoderDecoder
+		DecodedLoginToken<LoginToken> decodedLoginToken = this.refreshTokenEncoderDecoder
 		        .decodeLoginToken(refreshToken.getEncodedLoginToken());
-		LoginPointer pointer = this.refreshTokenService.loadRefreshTokenPointer(loginToken);
+		LoginPointer pointer = this.refreshTokenService.loadRefreshTokenPointer(decodedLoginToken.getLoginToken());
 		String encodedToken = this.loginTokenService.encodeLoginToken(pointer, ALLOW_REFRESH);
 		return new LoginTokenPair(encodedToken);
 	}
@@ -108,8 +108,8 @@ public class LoginTokenControllerDelegateImpl
 	            UnavailableModelException,
 	            RateLimitException {
 
-		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
-		LoginTokenUserDetails details = authentication.getPrincipal();
+		LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
+		LoginTokenUserDetails<LoginToken> details = authentication.getPrincipal();
 
 		ModelKey key = null;
 

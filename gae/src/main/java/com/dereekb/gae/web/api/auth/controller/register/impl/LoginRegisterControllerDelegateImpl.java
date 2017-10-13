@@ -32,9 +32,9 @@ public class LoginRegisterControllerDelegateImpl
 
 	private boolean refreshAllowed = true;
 	private LoginRegisterService registerService;
-	private LoginTokenService tokenService;
+	private LoginTokenService<LoginToken> tokenService;
 
-	public LoginRegisterControllerDelegateImpl(LoginRegisterService registerService, LoginTokenService tokenService) {
+	public LoginRegisterControllerDelegateImpl(LoginRegisterService registerService, LoginTokenService<LoginToken> tokenService) {
 		this.setRegisterService(registerService);
 		this.setTokenService(tokenService);
 	}
@@ -51,11 +51,11 @@ public class LoginRegisterControllerDelegateImpl
 		this.registerService = registerService;
 	}
 
-	public LoginTokenService getTokenService() {
+	public LoginTokenService<LoginToken> getTokenService() {
 		return this.tokenService;
 	}
 
-	public void setTokenService(LoginTokenService tokenService) {
+	public void setTokenService(LoginTokenService<LoginToken> tokenService) {
 		if (tokenService == null) {
 			throw new IllegalArgumentException("tokenService cannot be null.");
 		}
@@ -69,8 +69,8 @@ public class LoginRegisterControllerDelegateImpl
 	        throws TokenUnauthorizedException,
 	            LoginExistsException,
 	            LoginRegistrationRejectedException {
-		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
-		LoginTokenUserDetails details = authentication.getPrincipal();
+		LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
+		LoginTokenUserDetails<LoginToken> details = authentication.getPrincipal();
 
 		if (details.isAnonymous()) {
 			throw new TokenUnauthorizedException("Cannot register anonymous types.");
@@ -98,7 +98,7 @@ public class LoginRegisterControllerDelegateImpl
 		Set<String> loginPointers = new HashSet<>();
 
 		for (String token : tokens) {
-			LoginToken loginToken = this.tokenService.decodeLoginToken(token);
+			LoginToken loginToken = this.tokenService.decodeLoginToken(token).getLoginToken();
 			Long loginId = loginToken.getLoginId();
 			String loginPointer = loginToken.getLoginPointerId();
 

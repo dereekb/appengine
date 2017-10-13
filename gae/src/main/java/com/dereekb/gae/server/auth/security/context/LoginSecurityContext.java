@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 
 /**
@@ -14,14 +15,15 @@ import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthenticat
  */
 public class LoginSecurityContext {
 
-	public static LoginTokenAuthentication getAuthentication() throws NoSecurityContextException {
+	public static LoginTokenAuthentication<LoginToken> getAuthentication() throws NoSecurityContextException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null) {
 			throw new NoSecurityContextException();
 		}
 
-		LoginTokenAuthentication cast = (LoginTokenAuthentication) authentication;
+		@SuppressWarnings("unchecked")
+		LoginTokenAuthentication<LoginToken> cast = (LoginTokenAuthentication<LoginToken>) authentication;
 		return cast;
 	}
 

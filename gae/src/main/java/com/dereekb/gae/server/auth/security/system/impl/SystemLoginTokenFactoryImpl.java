@@ -32,13 +32,13 @@ public class SystemLoginTokenFactoryImpl
 	private String subject = DEFAULT_SUBJECT;
 	private Long roles;
 
-	private LoginTokenEncoder encoder;
+	private LoginTokenEncoder<LoginToken> encoder;
 
-	public SystemLoginTokenFactoryImpl(LoginTokenEncoder encoder) {
+	public SystemLoginTokenFactoryImpl(LoginTokenEncoder<LoginToken> encoder) {
 		this(encoder, DEFAULT_ROLES);
 	}
 
-	public SystemLoginTokenFactoryImpl(LoginTokenEncoder encoder, Long roles) {
+	public SystemLoginTokenFactoryImpl(LoginTokenEncoder<LoginToken> encoder, Long roles) {
 		this.setEncoder(encoder);
 		this.setRoles(roles);
 	}
@@ -95,11 +95,11 @@ public class SystemLoginTokenFactoryImpl
 		this.roles = roles;
 	}
 
-	public LoginTokenEncoder getEncoder() {
+	public LoginTokenEncoder<LoginToken> getEncoder() {
 		return this.encoder;
 	}
 
-	public void setEncoder(LoginTokenEncoder encoder) {
+	public void setEncoder(LoginTokenEncoder<LoginToken> encoder) {
 		if (encoder == null) {
 			throw new IllegalArgumentException("Encoder cannot be null.");
 		}

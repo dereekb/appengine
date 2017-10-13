@@ -14,6 +14,7 @@ import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -59,8 +60,8 @@ public class LoginTokenController {
 	@ResponseBody
 	@RequestMapping(value = "/refresh", method = RequestMethod.GET, produces = "application/json")
 	public final LoginTokenPair makeRefreshToken() throws NoSecurityContextException {
-		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
-		String loginToken = authentication.getPrincipal().getLoginToken().getEncodedLoginToken();
+		LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
+		String loginToken = authentication.getPrincipal().getDecodedLoginToken().getEncodedLoginToken();
 		return this.makeRefreshToken(loginToken);
 	}
 
@@ -134,7 +135,5 @@ public class LoginTokenController {
 
 		return response;
 	}
-
-	// TODO: Add function that provides information about the current token.
 
 }

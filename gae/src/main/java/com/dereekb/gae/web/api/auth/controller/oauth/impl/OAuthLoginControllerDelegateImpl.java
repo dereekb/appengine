@@ -14,6 +14,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsuffici
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAccessTokenImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAuthCodeImpl;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginControllerDelegate;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -29,9 +30,9 @@ public class OAuthLoginControllerDelegateImpl
 
 	private boolean refreshAllowed = true;
 	private OAuthServiceManager manager;
-	private LoginTokenService tokenService;
+	private LoginTokenService<LoginToken> tokenService;
 
-	public OAuthLoginControllerDelegateImpl(OAuthServiceManager manager, LoginTokenService tokenService) {
+	public OAuthLoginControllerDelegateImpl(OAuthServiceManager manager, LoginTokenService<LoginToken> tokenService) {
 		this.setManager(manager);
 		this.setTokenService(tokenService);
 	}
@@ -44,11 +45,11 @@ public class OAuthLoginControllerDelegateImpl
 		this.manager = manager;
 	}
 
-	public LoginTokenService getTokenService() {
+	public LoginTokenService<LoginToken> getTokenService() {
 		return this.tokenService;
 	}
 
-	public void setTokenService(LoginTokenService tokenService) {
+	public void setTokenService(LoginTokenService<LoginToken> tokenService) {
 		this.tokenService = tokenService;
 	}
 

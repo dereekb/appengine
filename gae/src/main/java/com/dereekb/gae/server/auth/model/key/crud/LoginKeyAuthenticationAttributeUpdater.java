@@ -10,6 +10,7 @@ import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextE
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusService;
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusServiceManager;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGetter;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
@@ -41,7 +42,7 @@ public class LoginKeyAuthenticationAttributeUpdater
 	}
 
 	public UpdateTaskDelegate<LoginKey> getUpdateTask() {
-		return updateTask;
+		return this.updateTask;
 	}
 
 	public void setUpdateTask(UpdateTaskDelegate<LoginKey> updateTask) throws IllegalArgumentException {
@@ -53,7 +54,7 @@ public class LoginKeyAuthenticationAttributeUpdater
 	}
 
 	public ObjectifyKeyedGetter<LoginPointer> getLoginPointerGetter() {
-		return loginPointerGetter;
+		return this.loginPointerGetter;
 	}
 
 	public void setLoginPointerGetter(ObjectifyKeyedGetter<LoginPointer> loginPointerGetter)
@@ -66,7 +67,7 @@ public class LoginKeyAuthenticationAttributeUpdater
 	}
 
 	public KeyLoginStatusServiceManager getStatusServiceManager() {
-		return statusServiceManager;
+		return this.statusServiceManager;
 	}
 
 	public void setStatusServiceManager(KeyLoginStatusServiceManager statusServiceManager)
@@ -88,7 +89,7 @@ public class LoginKeyAuthenticationAttributeUpdater
 		if (target.getLoginPointer() == null) {
 			Key<LoginPointer> templatePointerKey = template.getLoginPointer();
 
-			LoginTokenAuthentication authentication = null;
+			LoginTokenAuthentication<LoginToken> authentication = null;
 
 			try {
 				authentication = LoginSecurityContext.getAuthentication();
@@ -139,9 +140,9 @@ public class LoginKeyAuthenticationAttributeUpdater
 		return isApiKeyPointer;
 	}
 
-	private Key<LoginPointer> getKeyForCurrentUser(LoginTokenAuthentication authentication) {
+	private Key<LoginPointer> getKeyForCurrentUser(LoginTokenAuthentication<LoginToken> authentication) {
 		Login login = authentication.getPrincipal().getLogin();
-		KeyLoginStatusService statusService = statusServiceManager.getService(login);
+		KeyLoginStatusService statusService = this.statusServiceManager.getService(login);
 
 		try {
 			return statusService.getKeyLoginPointerKey();

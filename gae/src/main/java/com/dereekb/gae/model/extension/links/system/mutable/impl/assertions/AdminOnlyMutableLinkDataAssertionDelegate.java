@@ -6,6 +6,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.exception.ForbiddenL
 import com.dereekb.gae.model.extension.links.system.mutable.exception.MutableLinkChangeException;
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 
 /**
@@ -31,7 +32,7 @@ public final class AdminOnlyMutableLinkDataAssertionDelegate<T> implements Mutab
 	        throws MutableLinkChangeException {
 		
 		try {
-			LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
+			LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
 			
 			if (authentication.getPrincipal().isAdministrator()) {
 				return;	// Return, is allowed.

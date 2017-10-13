@@ -19,6 +19,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
@@ -58,7 +59,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 
 	@Autowired
 	@Qualifier("loginTokenService")
-	public LoginTokenService loginTokenService;
+	public LoginTokenService<LoginToken> loginTokenService;
 
 	@Autowired
 	@Qualifier("loginPointerRegistry")

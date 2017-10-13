@@ -2,6 +2,7 @@ package com.dereekb.gae.web.api.auth.controller.anonymous.impl;
 
 import java.util.UUID;
 
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
@@ -17,18 +18,18 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 public class AnonymousLoginControllerDelegateImpl
         implements AnonymousLoginControllerDelegate {
 
-	private LoginTokenService tokenService;
+	private LoginTokenService<LoginToken> tokenService;
 	private Factory<String> idFactory = new AnonymousUuidGenerator();
 
-	public AnonymousLoginControllerDelegateImpl(LoginTokenService tokenService) {
+	public AnonymousLoginControllerDelegateImpl(LoginTokenService<LoginToken> tokenService) {
 		this.setTokenService(tokenService);
 	}
 
-	public LoginTokenService getTokenService() {
+	public LoginTokenService<LoginToken> getTokenService() {
 		return this.tokenService;
 	}
 
-	public void setTokenService(LoginTokenService tokenService) throws IllegalArgumentException {
+	public void setTokenService(LoginTokenService<LoginToken> tokenService) throws IllegalArgumentException {
 		if (tokenService == null) {
 			throw new IllegalArgumentException();
 		}
