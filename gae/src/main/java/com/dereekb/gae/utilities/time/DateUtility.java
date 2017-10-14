@@ -11,6 +11,10 @@ public class DateUtility {
 	public static final String EPOCH_KEY = "epoch";
 	public static final String NOW_KEY = "now";
 
+	public static final Long TIME_IN_MINUTE = 1000 * 60L;
+	public static final Long TIME_IN_HOUR = TIME_IN_MINUTE * 60L;
+	public static final Long TIME_IN_DAY = TIME_IN_HOUR * 24;
+	
 	private static final Map<Long, String> DATE_KEY_VALUE_MAP = new HashMap<Long, String>();
 
 	static {
@@ -129,6 +133,14 @@ public class DateUtility {
 		Long time = issued.getTime();
 		time = time / 1000;
 		return new Date(time * 1000);
+	}
+
+	public static Long timeInDays(Integer days) {
+		return timeInDays(days.longValue());
+	}
+	
+	public static Long timeInDays(Long days) {
+		return TIME_IN_DAY * days;
 	}
 
 }

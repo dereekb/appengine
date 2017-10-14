@@ -36,12 +36,6 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 		this.setParameterString(parameterString);
 	}
 
-	protected AbstractSetQueryFieldParameter(String field, T value) throws IllegalArgumentException {
-		this.setField(field);
-		this.setSingleValue(value);
-		this.setOperator(ExpressionOperator.IN);
-	}
-
 	protected AbstractSetQueryFieldParameter(String field, Collection<T> value) throws IllegalArgumentException {
 		this.setField(field);
 		this.setValue(value);
