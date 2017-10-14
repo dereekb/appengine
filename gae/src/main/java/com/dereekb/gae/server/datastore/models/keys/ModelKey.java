@@ -386,8 +386,7 @@ public final class ModelKey
 	                                                 String keys,
 	                                                 String splitter)
 	        throws IllegalArgumentException {
-		String[] values = keys.split(splitter);
-		List<String> valuesList = ListUtility.toList(values);
+		List<String> valuesList = StringUtility.separateValues(splitter, keys);
 		return convert(keyType, valuesList);
 	}
 

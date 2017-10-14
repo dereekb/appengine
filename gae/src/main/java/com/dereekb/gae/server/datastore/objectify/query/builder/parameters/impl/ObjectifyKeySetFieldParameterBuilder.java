@@ -15,7 +15,13 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeySetQueryF
 import com.googlecode.objectify.Key;
 
 /**
- * Builder for {@link ObjectifyKeySetFieldParameter} instances.
+ * {@link ModelKeySetQueryFieldParameterBuilder} extension for
+ * {@link ObjectifyKeySetFieldParameter} instances.
+ * <p>
+ * The primary difference is the
+ * {@link #configure(ObjectifyQueryRequestLimitedBuilder, ModelKeySetQueryFieldParameter)}
+ * Implementation, and when queries are configured they compare {@link Key}
+ * values.
  *
  * @author dereekb
  *
@@ -132,7 +138,7 @@ public class ObjectifyKeySetFieldParameterBuilder<T extends ObjectifyModel<T>> e
 				throw new IllegalArgumentException("Key cannot be null.");
 			}
 
-			return super.setValue(ObjectifyKeySetFieldParameterBuilder.this.util.toModelKey(value));
+			return super.setSingleValue(ObjectifyKeySetFieldParameterBuilder.this.util.toModelKey(value));
 		}
 
 		public AbstractQueryFieldParameter<Set<ModelKey>> setKeyValues(Collection<Key<T>> value)

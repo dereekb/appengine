@@ -1,6 +1,8 @@
 package com.dereekb.gae.utilities.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.utilities.collections.list.ListUtility;
@@ -53,6 +55,35 @@ public class StringUtility {
 
 		Joiner joiner = Joiner.on(separator).skipNulls();
 		return joiner.join(objects);
+	}
+
+	/**
+	 * Separates the values within the input string.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static Collection<String> separateValues(String value) {
+		return separateValues(DEFAULT_SEPARATOR, value);
+	}
+
+	/**
+	 * Separates the values within the input string.
+	 * 
+	 * @param value
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public static List<String> separateValues(String regex,
+	                                          String value) {
+		if (regex == null) {
+			throw new IllegalArgumentException();
+		}
+
+		if (!StringUtility.isEmptyString(value)) {
+			return ListUtility.toList(value.split(DEFAULT_SEPARATOR));
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	public static int lengthOfStrings(Iterable<String> strings) {

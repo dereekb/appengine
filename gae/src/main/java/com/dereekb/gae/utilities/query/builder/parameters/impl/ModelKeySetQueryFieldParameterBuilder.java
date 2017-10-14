@@ -1,22 +1,20 @@
 package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
 
+/**
+ * Builder for a {@link ModelKeySetQueryFieldParameter}.
+ * 
+ * @author dereekb
+ *
+ */
 public class ModelKeySetQueryFieldParameterBuilder {
-
-	public static final Integer MAX_KEYS_ALLOWED = 30;
-
-	private static final Set<ExpressionOperator> ALLOWED_OPERATORS = SetUtility.makeSet(ExpressionOperator.IN,
-	        ExpressionOperator.EQUAL);
 
 	public static final ModelKeySetQueryFieldParameterBuilder NAME_SINGLETON = new ModelKeySetQueryFieldParameterBuilder(
 	        ModelKeyType.NAME);
@@ -124,11 +122,13 @@ public class ModelKeySetQueryFieldParameterBuilder {
 	 * @author dereekb
 	 *
 	 */
-	public class ModelKeySetQueryFieldParameter extends AbstractQueryFieldParameter<Set<ModelKey>> {
+	public class ModelKeySetQueryFieldParameter extends AbstractSetQueryFieldParameter<ModelKey> {
 
-		protected ModelKeySetQueryFieldParameter() {};
+		public ModelKeySetQueryFieldParameter() {
+			super();
+		}
 
-		protected ModelKeySetQueryFieldParameter(AbstractQueryFieldParameter<Set<ModelKey>> parameter)
+		public ModelKeySetQueryFieldParameter(AbstractQueryFieldParameter<Set<ModelKey>> parameter)
 		        throws IllegalArgumentException {
 			super(parameter);
 		}
@@ -138,76 +138,36 @@ public class ModelKeySetQueryFieldParameterBuilder {
 			super(field, parameter);
 		}
 
-		protected ModelKeySetQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
-			this.setField(field);
-			this.setParameterString(parameterString);
-		}
-
-		protected ModelKeySetQueryFieldParameter(String field, ModelKey value) throws IllegalArgumentException {
-			this.setField(field);
-			this.setValue(value);
-			this.setOperator(ExpressionOperator.IN);
-		}
-
-		protected ModelKeySetQueryFieldParameter(String field, Collection<ModelKey> value)
+		public ModelKeySetQueryFieldParameter(String field, Collection<ModelKey> value)
 		        throws IllegalArgumentException {
-			this.setField(field);
-			this.setValue(value);
-			this.setOperator(ExpressionOperator.IN);
+			super(field, value);
 		}
 
-		// MARK: Override
-		public AbstractQueryFieldParameter<Set<ModelKey>> setValue(Collection<ModelKey> value) {
-			if (value.size() > MAX_KEYS_ALLOWED) {
-				throw new IllegalArgumentException("Only " + MAX_KEYS_ALLOWED + " keys are allowed for this query.");
-			}
+		public ModelKeySetQueryFieldParameter(String field, ModelKey value) throws IllegalArgumentException {
+			super(field, value);
+		}
 
-			Set<ModelKey> set = new HashSet<ModelKey>(value);
-			return this.setValue(set);
+		public ModelKeySetQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+			super(field, parameterString);
 		}
 
 		@Override
-		public AbstractQueryFieldParameter<Set<ModelKey>> setValue(Set<ModelKey> value) {
-			if (value == null || value.isEmpty()) {
-				throw new IllegalArgumentException("Set cannot be empty.");
-			}
-
-			Set<ModelKey> set = new HashSet<ModelKey>(value);
-			return super.setValue(set);
-		}
-
-		public AbstractQueryFieldParameter<Set<ModelKey>> setValue(ModelKey value) {
-			if (value == null) {
-				throw new IllegalArgumentException("Single value cannot be null.");
-			} else if (value.getType() != ModelKeySetQueryFieldParameterBuilder.this.keyType) {
+		protected void assertSingleValueIsValid(ModelKey value) {
+			super.assertSingleValueIsValid(value);
+			if (value.getType() != ModelKeySetQueryFieldParameterBuilder.this.keyType) {
 				throw new IllegalArgumentException("Key types did not match.");
 			}
-
-			Set<ModelKey> set = new HashSet<ModelKey>();
-			set.add(value);
-
-			return super.setValue(set);
-		}
-
-		@Override
-		public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
-			if (ALLOWED_OPERATORS.contains(operator) == false) {
-				throw new IllegalArgumentException("Disallowed operator. Try using IN.");
-			}
-
-			super.setOperator(operator);
 		}
 
 		// MARK: AbstractQueryFieldParameter
 		@Override
-		protected String getParameterValue() {
-			Set<ModelKey> keys = this.getValue();
-			return ModelKey.keysAsString(keys);
+		protected String encodeValuesFromString(Collection<ModelKey> values) {
+			return ModelKey.keysAsString(values);
 		}
 
 		@Override
-		protected void setParameterValue(String value) throws IllegalArgumentException {
-			this.setValue(ModelKeySetQueryFieldParameterBuilder.this.decodeModelKeysFromValue(value));
+		protected Collection<ModelKey> decodeValuesFromString(String value) {
+			return ModelKeySetQueryFieldParameterBuilder.this.decodeModelKeysFromValue(value);
 		}
 
 	}
