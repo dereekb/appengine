@@ -50,7 +50,8 @@ import com.googlecode.objectify.Key;
 
 public abstract class AbstractModelClientTests extends ApiApplicationTestContext {
 
-	protected class BasicTestUserSetup {
+	protected class BasicTestUserSetup
+	        implements TestingInstanceObject {
 
 		public final Login login;
 		public final TestLoginTokenPair pair;
@@ -61,7 +62,16 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 		}
 
 		public BasicTestUserSetup(String user) {
-			this.pair = AbstractModelClientTests.this.testLoginTokenContext.generateLogin(user);
+			this(user, false);
+		}
+
+		public BasicTestUserSetup(String user, boolean admin) {
+			this((admin) ? AbstractModelClientTests.this.testLoginTokenContext.generateSystemAdmin(user)
+			        : AbstractModelClientTests.this.testLoginTokenContext.generateLogin(user));
+		}
+
+		public BasicTestUserSetup(TestLoginTokenPair pair) {
+			this.pair = pair;
 			this.login = this.pair.getLogin();
 
 			waitUntilTaskQueueCompletes();
@@ -69,9 +79,20 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			this.security = new ClientRequestSecurityImpl(this.pair);
 		}
 
+		@Override
+		public ClientRequestSecurity getSecurity() {
+			return this.security;
+		}
+
 	}
 
-	protected abstract class AbstractTestingInstance<U extends BasicTestUserSetup> {
+	protected interface TestingInstanceObject {
+
+		public ClientRequestSecurity getSecurity();
+
+	}
+
+	protected abstract class AbstractTestingInstance<U extends TestingInstanceObject> {
 
 		public final U testUser;
 
@@ -81,6 +102,10 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			this.testUser = testUser;
+		}
+
+		protected ClientRequestSecurity getSecurity() {
+			return this.testUser.getSecurity();
 		}
 
 		public abstract class AbstractModelTestingInstance<T extends UniqueModel> extends AbstractQueryableModelTestingInstance<T> {
@@ -157,7 +182,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 				try {
 					CreateResponse<T> createResponse = this.createRequestSender.create(createRequest,
-					        AbstractTestingInstance.this.testUser.security);
+					        AbstractTestingInstance.this.getSecurity());
 					Collection<T> results = createResponse.getModels();
 					created = new ArrayList<T>(results);
 				} catch (ClientRequestFailureException e) {
@@ -191,7 +216,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			public SerializedClientApiResponse<SimpleUpdateResponse<T>> update(UpdateRequest<T> updateRequest) {
 				try {
 					return this.updateRequestSender.sendRequest(updateRequest,
-					        AbstractTestingInstance.this.testUser.security);
+					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					Assert.fail("Failed updating.");
 					throw new RuntimeException(e);
@@ -212,7 +237,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			public void delete(DeleteRequest deleteRequest) {
 				try {
 					ClientDeleteResponse<T> deleteResponse = this.deleteRequestSender.delete(deleteRequest,
-					        AbstractTestingInstance.this.testUser.security);
+					        AbstractTestingInstance.this.getSecurity());
 					Assert.assertFalse(deleteResponse.getModelKeys().isEmpty());
 				} catch (ClientRequestFailureException e) {
 					Assert.fail("Failed deleting.");
@@ -245,7 +270,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			public ClientModelQueryResponse<T> query(SearchRequest queryRequest) {
 				try {
-					return this.queryRequestSender.query(queryRequest, AbstractTestingInstance.this.testUser.security);
+					return this.queryRequestSender.query(queryRequest, AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					Assert.fail("Failed querying.");
@@ -321,8 +346,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			public SerializedClientReadApiResponse<T> read(ClientReadRequest readRequest) {
 				try {
-					return this.readRequestSender.sendRequest(readRequest,
-					        AbstractTestingInstance.this.testUser.security);
+					return this.readRequestSender.sendRequest(readRequest, AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					Assert.fail("Failed reading.");
 					throw new RuntimeException(e);
