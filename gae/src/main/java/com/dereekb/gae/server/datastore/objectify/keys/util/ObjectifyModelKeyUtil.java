@@ -26,7 +26,7 @@ public class ObjectifyModelKeyUtil<T> {
 	public Class<T> getType() {
 		return this.type;
 	}
-
+	
 	// MARK: Key
 	/**
 	 * Creates a key from the input.

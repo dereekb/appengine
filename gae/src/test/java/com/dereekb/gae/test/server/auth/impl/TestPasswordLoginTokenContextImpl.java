@@ -248,11 +248,18 @@ public class TestPasswordLoginTokenContextImpl
 		this.pointer = pointer;
 	}
 
+	/**
+	 * {@link TestLoginTokenPair} implementation.
+	 * 
+	 * @author dereekb
+	 *
+	 */
 	private class TestLoginTokenPairImpl
 	        implements TestLoginTokenPair {
 
 		private Login login;
 		private LoginPointer loginPointer;
+		private String token;
 
 		public TestLoginTokenPairImpl(Login login, LoginPointer loginPointer) {
 			this.login = login;
@@ -267,6 +274,21 @@ public class TestPasswordLoginTokenContextImpl
 		@Override
 		public LoginPointer getLoginPointer() {
 			return this.loginPointer;
+		}
+
+		@Override
+		public String getEncodedLoginToken() {
+			if (this.token == null) {
+				this.token = this.regenerateToken();
+			}
+
+			return this.token;
+		}
+
+		@Override
+		public String regenerateToken() {
+			return TestPasswordLoginTokenContextImpl.this.service.encodeLoginToken(this.loginPointer,
+			        TestPasswordLoginTokenContextImpl.this.refreshAllowed);
 		}
 
 	}

@@ -31,4 +31,10 @@
 			ref="loginTokenAuthenticationProvider" />
 	</bean>
 
+	<!-- Overrides the BCrypt Password Encoder For Testing -->
+	<bean id="passwordEncoder"
+		class="com.dereekb.gae.test.server.auth.security.login.password.impl.TestPasswordEncoderImpl"
+		primary="true" scope="singleton">
+	</bean>
+
 </beans>

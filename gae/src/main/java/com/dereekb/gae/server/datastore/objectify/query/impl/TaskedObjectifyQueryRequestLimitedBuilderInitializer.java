@@ -76,6 +76,7 @@ public class TaskedObjectifyQueryRequestLimitedBuilderInitializer<Q extends Conf
 				// have come from the query, otherwise fail early so we can find
 				// issues in the system.
 				if (IllegalArgumentException.class.isAssignableFrom(causeClass)) {
+					// TODO: Change to IllegalQueryArgumentException
 					throw (IllegalArgumentException) cause;
 				}
 			}

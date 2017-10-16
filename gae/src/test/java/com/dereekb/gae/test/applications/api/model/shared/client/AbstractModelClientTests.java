@@ -37,8 +37,6 @@ import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
-import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
@@ -56,8 +54,6 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 		public final Login login;
 		public final TestLoginTokenPair pair;
-
-		public final String token;
 		public final ClientRequestSecurity security;
 
 		public BasicTestUserSetup() {
@@ -70,10 +66,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			waitUntilTaskQueueCompletes();
 
-			this.token = AbstractModelClientTests.this.testLoginTokenContext.getToken();
-
-			EncodedLoginToken userToken = new EncodedLoginTokenImpl(this.token);
-			this.security = new ClientRequestSecurityImpl(userToken);
+			this.security = new ClientRequestSecurityImpl(this.pair);
 		}
 
 	}
@@ -97,6 +90,12 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			protected final ClientUpdateRequestSender<T> updateRequestSender;
 
 			protected final ClientDeleteRequestSender<T> deleteRequestSender;
+
+			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
+			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender,
+			        ClientUpdateRequestSender<T> updateRequestSender) {
+				this(readRequestSender, queryRequestSender, null, updateRequestSender, null);
+			}
 
 			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
 			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender,
