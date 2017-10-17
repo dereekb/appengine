@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.junit.Assert;
 
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
@@ -115,7 +117,23 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 	}
 
 	// MARK: Testers
-	public static interface AbstractDateQueryTesterDelegate<T, Q>
+	public static abstract class AbstractDateQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends DateQueryTester<T, Q>
+	        implements DateQueryTesterDelegate<T, Q> {
+
+		public AbstractDateQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+			this.setDelegate(this);
+		}
+
+		// MARK: Delegate
+		@Override
+		public Date makeTestValue(int key) {
+			return new Date(1000 * key);
+		}
+
+	}
+
+	public static interface DateQueryTesterDelegate<T, Q>
 	        extends AbstractValueQueryTesterDelegate<Date, T, Q> {
 
 		public void configureQueryForValueTest(Q query,
@@ -126,7 +144,7 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 	}
 
 	/**
-	 * Abstract Date Query Testers.
+	 * Date Query Tester.
 	 * 
 	 * @author dereekb
 	 *
@@ -135,14 +153,13 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 	 * @param <Q>
 	 *            query type
 	 */
-	public static class AbstractDateQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractValueQueryTester<Date, T, Q, AbstractDateQueryTesterDelegate<T, Q>> {
+	public static class DateQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractValueQueryTester<Date, T, Q, DateQueryTesterDelegate<T, Q>> {
 
-		protected AbstractDateQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+		protected DateQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
 			super(modelQueryTest);
 		}
 
-		public AbstractDateQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest,
-		        AbstractDateQueryTesterDelegate<T, Q> delegate) {
+		public DateQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest, DateQueryTesterDelegate<T, Q> delegate) {
 			super(modelQueryTest, delegate);
 		}
 
@@ -156,8 +173,8 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 		}
 
 		public void testQueryingForModelsByDate(QueryResultsOrdering ordering) {
-			AbstractDateQueryTesterDelegate<T, Q> delegate = this.getDelegate();
-			
+			DateQueryTesterDelegate<T, Q> delegate = this.getDelegate();
+
 			int count = 10;
 			List<T> models = this.modelQueryTest.getModelGenerator().generate(count);
 
@@ -191,115 +208,169 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 		}
 
 		public void testQueryingForModelsOnAndAfterDate() {
-			this.testQueryingForModelsByDate(ExpressionOperator.GREATER_OR_EQUAL_TO);
+			this.testQueryingForValueByValue(ExpressionOperator.GREATER_OR_EQUAL_TO);
 		}
 
 		public void testQueryingForModelsBeforeDate() {
-			this.testQueryingForModelsByDate(ExpressionOperator.LESS_THAN);
-		}
-
-		public void testQueryingForModelsByDate(ExpressionOperator expression) {
-			AbstractDateQueryTesterDelegate<T, Q> delegate = this.getDelegate();
-			
-			int count = 10;
-			List<T> models = this.modelQueryTest.getModelGenerator().generate(count);
-
-			List<T> beforeHalf = new ArrayList<T>();
-			List<T> afterHalf = new ArrayList<T>();
-
-			int half = count / 2;
-
-			int step = 20000;	// 20 seconds
-			for (int i = 0; i < count; i += 1) {
-				T model = models.get(i);
-
-				Date date = new Date(i * step);
-				delegate.setValueForTest(model, date);
-
-				if (i < half) {
-					beforeHalf.add(model);
-				} else {
-					afterHalf.add(model);
-				}
-			}
-
-			Date testCutoff = new Date(half * step);
-
-			// Update Models
-			this.modelQueryTest.getModelRegistry().update(models);
-
-			// Always Sort Ascending
-			Q query = this.modelQueryTest.makeQuery();
-			delegate.configureQueryForValueExpressionTest(query, testCutoff, expression);
-
-			int expectedSize = half;
-
-			switch (expression) {
-				case EQUAL:
-					expectedSize = 1;
-					break;
-				case GREATER_OR_EQUAL_TO:
-					expectedSize = half;
-					break;
-				case GREATER_OR_LESS_BUT_NOT_EQUAL_TO:
-					expectedSize = count - 1;
-					break;
-				case LESS_OR_EQUAL_TO:
-					expectedSize = half + 1;
-					break;
-				case LESS_THAN:
-					expectedSize = half;
-					break;
-				case GREATER_THAN:
-					expectedSize = half - 1;
-					break;
-				default:
-					throw new UnsupportedOperationException();
-			}
-
-			List<T> results = this.modelQueryTest.queryModels(query);
-			Assert.assertTrue(results.size() == expectedSize);
-
-			switch (expression) {
-				case EQUAL:
-					Assert.assertTrue(results.contains(models.get(half)));
-					break;
-				case GREATER_OR_EQUAL_TO:
-					Assert.assertTrue(results.containsAll(afterHalf));
-					break;
-				case LESS_THAN:
-					Assert.assertTrue(results.containsAll(beforeHalf));
-					break;
-				default:
-					break;
-			}
+			this.testQueryingForValueByValue(ExpressionOperator.LESS_THAN);
 		}
 
 	}
 
 	// MARK: Integer
-	public static interface AbstractIntegerQueryTesterDelegate<T, Q>
+	public static abstract class AbstractIntegerQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends IntegerQueryTester<T, Q>
+	        implements IntegerQueryTesterDelegate<T, Q> {
+
+		public AbstractIntegerQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+			this.setDelegate(this);
+		}
+
+		// MARK: Delegate
+		@Override
+		public Integer makeTestValue(int key) {
+			return key;
+		}
+
+	}
+
+	public static interface IntegerQueryTesterDelegate<T, Q>
 	        extends AbstractValueQueryTesterDelegate<Integer, T, Q> {}
 
-	public static class IntegerQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractValueQueryTester<Integer, T, Q, AbstractIntegerQueryTesterDelegate<T, Q>> {
+	public static class IntegerQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractValueQueryTester<Integer, T, Q, IntegerQueryTesterDelegate<T, Q>> {
 
 		protected IntegerQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
 			super(modelQueryTest);
 		}
 
 		public IntegerQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest,
-		        AbstractIntegerQueryTesterDelegate<T, Q> delegate) {
+		        IntegerQueryTesterDelegate<T, Q> delegate) {
 			super(modelQueryTest, delegate);
 		}
 
-		public void testQueryingForIntegerExact() {
-			AbstractIntegerQueryTesterDelegate<T, Q> delegate = this.getDelegate();
-			
+	}
+
+	// MARK: Boolean
+	public static abstract class AbstractBooleanQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends BooleanQueryTester<T, Q>
+	        implements BooleanQueryTesterDelegate<T, Q> {
+
+		public AbstractBooleanQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+			this.setDelegate(this);
+		}
+
+		// MARK: Delegate
+		@Override
+		public Boolean makeTestValue(int key) {
+			return ((key % 1) == 0) ? false : true;
+		}
+
+	}
+
+	public static interface BooleanQueryTesterDelegate<T, Q>
+	        extends AbstractValueQueryTesterDelegate<Boolean, T, Q> {}
+
+	public static class BooleanQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractValueQueryTester<Boolean, T, Q, BooleanQueryTesterDelegate<T, Q>> {
+
+		protected BooleanQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+		}
+
+		public BooleanQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest,
+		        BooleanQueryTesterDelegate<T, Q> delegate) {
+			super(modelQueryTest, delegate);
+		}
+
+	}
+
+	// MARK: Model Key
+	public static abstract class AbstractModelKeyQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends ModelKeyQueryTester<T, Q>
+	        implements ModelKeyQueryTesterDelegate<T, Q> {
+
+		private ModelKeyType type = ModelKeyType.NUMBER;
+		
+		public AbstractModelKeyQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+			this.setDelegate(this);
+		}
+
+		// MARK: Delegate
+		@Override
+		public ModelKey makeTestValue(int key) {
+			switch (this.type) {
+				case NAME:
+					return new ModelKey(String.valueOf(key));
+				case NUMBER:
+					return new ModelKey(key);
+				default:
+					throw new RuntimeException("Invalid key type.");
+			}
+		}
+
+	}
+
+	public static interface ModelKeyQueryTesterDelegate<T, Q>
+	        extends AbstractValueQueryTesterDelegate<ModelKey, T, Q> {}
+
+	public static class ModelKeyQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractValueQueryTester<ModelKey, T, Q, ModelKeyQueryTesterDelegate<T, Q>> {
+
+		public ModelKeyQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest,
+		        ModelKeyQueryTesterDelegate<T, Q> delegate) {
+			super(modelQueryTest, delegate);
+		}
+
+		public ModelKeyQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+		}
+
+	}
+
+	// MARK: Abstract Value
+	public static interface AbstractValueQueryTesterDelegate<V, T, Q>
+	        extends AbstractQueryTesterDelegate<V, T, Q> {
+
+		/**
+		 * Creates a new test value from the input int.
+		 * <p>
+		 * Values should increase linearly, so those with a key greater than the
+		 * previous should have a greater value.
+		 * 
+		 * @param key
+		 * @return
+		 */
+		public V makeTestValue(int key);
+
+	}
+
+	public static abstract class AbstractValueQueryTester<V, T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters, D extends AbstractValueQueryTesterDelegate<V, T, Q>> extends AbstractQueryTester<V, T, Q, D> {
+
+		public AbstractValueQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest, D delegate) {
+			super(modelQueryTest, delegate);
+		}
+
+		public AbstractValueQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+		}
+
+		// MARK: Tests
+		protected V generateValueForValueExactTest() {
+			Integer key = 2;
+			return this.getDelegate().makeTestValue(key);
+		}
+		
+		protected V generateExtraValueForValueExactTest() {
+			Integer extraValueKey = 1;
+			return this.getDelegate().makeTestValue(extraValueKey);
+		}
+		
+		public void testQueryingForValueExact() {
+			D delegate = this.getDelegate();
+
 			int count = 3;
 			List<T> models = this.modelQueryTest.getModelGenerator().generate(count);
 
-			Integer value = 3;
-			
+			V value = this.generateValueForValueExactTest();
+
 			for (T model : models) {
 				delegate.setValueForTest(model, value);
 			}
@@ -310,13 +381,14 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			// Generate More Models
 			List<T> extraModels = this.modelQueryTest.getModelGenerator().generate(count);
 
-			Integer extraValue = 1;
+			V extraValue = this.generateExtraValueForValueExactTest();
+
 			for (T model : extraModels) {
 				delegate.setValueForTest(model, extraValue);
 			}
-			
+
 			this.modelQueryTest.getModelRegistry().update(extraModels);
-			
+
 			// Always Sort Ascending
 			Q query = this.modelQueryTest.makeQuery();
 			delegate.configureQueryForValueExpressionTest(query, value, ExpressionOperator.EQUAL);
@@ -324,20 +396,19 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			List<T> results = this.modelQueryTest.queryModels(query);
 			Assert.assertTrue(results.size() == count);
 			Assert.assertTrue(results.containsAll(models));
-			
 		}
 
-		public void testQueryingForIntegerGreaterThanOrEqual() {
-			this.testQueryingForIntegerByValue(ExpressionOperator.GREATER_OR_EQUAL_TO);
+		public void testQueryingForValueGreaterThanOrEqual() {
+			this.testQueryingForValueByValue(ExpressionOperator.GREATER_OR_EQUAL_TO);
 		}
 
-		public void testQueryingForIntegerLessThanOrEqual() {
-			this.testQueryingForIntegerByValue(ExpressionOperator.LESS_OR_EQUAL_TO);
+		public void testQueryingForValueLessThanOrEqual() {
+			this.testQueryingForValueByValue(ExpressionOperator.LESS_OR_EQUAL_TO);
 		}
 
-		public void testQueryingForIntegerByValue(ExpressionOperator expression) {
-			AbstractIntegerQueryTesterDelegate<T, Q> delegate = this.getDelegate();
-			
+		public void testQueryingForValueByValue(ExpressionOperator expression) {
+			D delegate = this.getDelegate();
+
 			int count = 10;
 			List<T> models = this.modelQueryTest.getModelGenerator().generate(count);
 
@@ -345,11 +416,13 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			List<T> afterHalf = new ArrayList<T>();
 
 			int half = count / 2;
+			V halfValue = delegate.makeTestValue(half);
 
 			for (int i = 0; i < count; i += 1) {
 				T model = models.get(i);
 
-				delegate.setValueForTest(model, i);
+				V value = delegate.makeTestValue(i);
+				delegate.setValueForTest(model, value);
 
 				if (i < half) {
 					beforeHalf.add(model);
@@ -363,7 +436,7 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 
 			// Always Sort Ascending
 			Q query = this.modelQueryTest.makeQuery();
-			delegate.configureQueryForValueExpressionTest(query, half, expression);
+			delegate.configureQueryForValueExpressionTest(query, halfValue, expression);
 
 			int expectedSize = half;
 
@@ -410,9 +483,11 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 
 	}
 
-	// TODO: Add separate delegate/extension that contains ordering tests.
-	
-	public static interface AbstractValueQueryTesterDelegate<V, T, Q> {
+	// MARK: Abstract
+	// TODO: Add separate delegate/extension that contains sorting/ordering
+	// tests.
+
+	public static interface AbstractQueryTesterDelegate<V, T, Q> {
 
 		public void setValueForTest(T model,
 		                            V value);
@@ -423,12 +498,12 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 
 	}
 
-	public static abstract class AbstractValueQueryTester<V, T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters, D extends AbstractValueQueryTesterDelegate<V, T, Q>> {
+	public static abstract class AbstractQueryTester<V, T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters, D extends AbstractQueryTesterDelegate<V, T, Q>> {
 
 		protected final AbstractModelQueryTest<T, Q> modelQueryTest;
 		private D delegate;
 
-		protected AbstractValueQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+		protected AbstractQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
 			super();
 			if (modelQueryTest == null) {
 				throw new IllegalArgumentException("modelQueryTest cannot be null.");
@@ -437,7 +512,7 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			this.modelQueryTest = modelQueryTest;
 		}
 
-		public AbstractValueQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest, D delegate) {
+		public AbstractQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest, D delegate) {
 			this(modelQueryTest);
 			this.setDelegate(delegate);
 		}

@@ -29,38 +29,43 @@ public abstract class AbstractDateModelQueryTest<T extends MutableDatedObjectify
 
 	@Test
 	public void testQueryingForNewestModelsByDate() {
-		new DateQueryTester<T, Q>(this).testQueryingForNewestByDate();
+		new DateModelQueryTester<T, Q>(this).testQueryingForNewestByDate();
 	}
 
 	@Test
 	public void testQueryingForOldestModelsByDate() {
-		new DateQueryTester<T, Q>(this).testQueryingForOldestByDate();
+		new DateModelQueryTester<T, Q>(this).testQueryingForOldestByDate();
 	}
 
 	@Test
 	public void testQueryingOnAndAfterDate() throws InstantiationException, IllegalAccessException {
-		AbstractDateModelQueryTest.DateQueryTester.make(this).testQueryingForModelsOnAndAfterDate();
+		AbstractDateModelQueryTest.DateModelQueryTester.make(this).testQueryingForModelsOnAndAfterDate();
 	}
 
 	@Test
 	public void testQueryingBeforeDate() throws InstantiationException, IllegalAccessException {
-		AbstractDateModelQueryTest.DateQueryTester.make(this).testQueryingForModelsBeforeDate();
+		AbstractDateModelQueryTest.DateModelQueryTester.make(this).testQueryingForModelsBeforeDate();
 	}
 
 	// MARK: Tester
-	public static class DateQueryTester<T extends MutableDatedObjectifyModel<T>, Q extends AbstractDateModelQuery> extends AbstractDateQueryTester<T, Q>
-	        implements AbstractDateQueryTesterDelegate<T, Q> {
+	public static class DateModelQueryTester<T extends MutableDatedObjectifyModel<T>, Q extends AbstractDateModelQuery> extends DateQueryTester<T, Q>
+	        implements DateQueryTesterDelegate<T, Q> {
 
-		public static <T extends MutableDatedObjectifyModel<T>, Q extends AbstractDateModelQuery> DateQueryTester<T, Q> make(AbstractModelQueryTest<T, Q> modelQueryTest) {
-			return new DateQueryTester<T, Q>(modelQueryTest);
+		public static <T extends MutableDatedObjectifyModel<T>, Q extends AbstractDateModelQuery> DateModelQueryTester<T, Q> make(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			return new DateModelQueryTester<T, Q>(modelQueryTest);
 		}
 
-		public DateQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+		public DateModelQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
 			super(modelQueryTest);
 			this.setDelegate(this);
 		}
 
 		// MARK: AbstractDateQueryTesterDelegate
+		@Override
+		public Date makeTestValue(int key) {
+			return new Date(key * 1000);
+		}
+
 		@Override
 		public void setValueForTest(T model,
 		                            Date value) {
