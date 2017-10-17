@@ -3,7 +3,8 @@ package com.dereekb.gae.server.datastore.objectify.query;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.utilities.collections.chain.Chain;
 
 /**
  * Utility wrapper for performing queries with Objectify.
@@ -29,6 +30,6 @@ public interface ObjectifyQueryRequest<T extends ObjectifyModel<T>> {
 	 */
 	public List<ObjectifySimpleQueryFilter<T>> getSimpleQueryFilters();
 
-	public ObjectifyQueryOrderingChain getResultsOrdering();
+	public Chain<ObjectifyQueryOrdering> getResultsOrdering();
 
 }

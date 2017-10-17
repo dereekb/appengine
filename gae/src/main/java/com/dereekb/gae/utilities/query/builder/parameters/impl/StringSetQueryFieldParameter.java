@@ -36,9 +36,58 @@ public class StringSetQueryFieldParameter extends AbstractSetQueryFieldParameter
 	public StringSetQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
 		super(field, parameterString);
 	}
-	
-	public static StringSetQueryFieldParameter makeWithSingle(String field, String singleValue) {
+
+	public static StringSetQueryFieldParameter tryMakeWithSingle(String field,
+	                                                             String value)
+	        throws IllegalArgumentException {
+		StringSetQueryFieldParameter fieldParameter = null;
+
+		if (value != null) {
+			fieldParameter = StringSetQueryFieldParameter.makeWithSingle(field, value);
+		}
+
+		return fieldParameter;
+	}
+
+	public static StringSetQueryFieldParameter makeWithSingle(String field,
+	                                                          String singleValue) {
 		return new StringSetQueryFieldParameter(field, SetUtility.wrap(singleValue));
+	}
+
+	public static StringSetQueryFieldParameter make(String field,
+	                                                String parameterString)
+	        throws IllegalArgumentException {
+		StringSetQueryFieldParameter fieldParameter = null;
+
+		if (parameterString != null) {
+			fieldParameter = new StringSetQueryFieldParameter(field, parameterString);
+		}
+
+		return fieldParameter;
+	}
+
+	public static StringSetQueryFieldParameter make(String field,
+	                                                StringSetQueryFieldParameter parameter)
+	        throws IllegalArgumentException {
+		StringSetQueryFieldParameter fieldParameter = null;
+
+		if (parameter != null) {
+			fieldParameter = new StringSetQueryFieldParameter(field, parameter);
+		}
+
+		return fieldParameter;
+	}
+
+	public static StringSetQueryFieldParameter make(String field,
+	                                                Collection<String> values)
+	        throws IllegalArgumentException {
+		StringSetQueryFieldParameter fieldParameter = null;
+
+		if (values != null) {
+			fieldParameter = new StringSetQueryFieldParameter(field, values);
+		}
+
+		return fieldParameter;
 	}
 
 	// MARK: AbstractSetQueryFieldParameter

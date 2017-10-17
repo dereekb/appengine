@@ -16,15 +16,15 @@ public class ObjectifyQueryOrderingImpl
 
 	public static final String ORDER_BY_KEY_VALUE = "__key__";
 
-	private String variable;
+	private String field;
 	private QueryResultsOrdering ordering;
 
 	public ObjectifyQueryOrderingImpl(QueryResultsOrdering ordering) {
 		this(ORDER_BY_KEY_VALUE, ordering);
 	}
 
-	public ObjectifyQueryOrderingImpl(String variable, QueryResultsOrdering ordering) {
-		this.setVariable(variable);
+	public ObjectifyQueryOrderingImpl(String field, QueryResultsOrdering ordering) {
+		this.setField(field);
 		this.setOrdering(ordering);
 	}
 
@@ -36,20 +36,21 @@ public class ObjectifyQueryOrderingImpl
 		return new ObjectifyQueryOrderingImpl(ordering);
 	}
 
-	public String getVariable() {
-		return this.variable;
+	@Override
+	public String getField() {
+		return this.field;
 	}
 
-	public void setVariableAsKeysOrdering() {
-		this.setVariable(ORDER_BY_KEY_VALUE);
+	public void setFieldAsKeysOrdering() {
+		this.setField(ORDER_BY_KEY_VALUE);
 	}
 
-	public void setVariable(String variable) {
+	public void setField(String variable) {
 		if (variable == null || variable.isEmpty()) {
-			throw new IllegalArgumentException("Variable cannot be a null or empty string.");
+			throw new IllegalArgumentException("Field cannot be a null or empty string.");
 		}
 
-		this.variable = variable;
+		this.field = variable;
 	}
 
 	public QueryResultsOrdering getOrdering() {
@@ -73,18 +74,23 @@ public class ObjectifyQueryOrderingImpl
 	}
 
     public boolean isKeysOrdering() {
-		return this.variable.equals(ORDER_BY_KEY_VALUE);
+		return this.field.equals(ORDER_BY_KEY_VALUE);
 	}
 
 	@Override
 	public String getOrderingString() {
-		String condition = this.variable;
+		String condition = this.field;
 
 		if (this.ordering == QueryResultsOrdering.Descending) {
 			condition = "-" + condition;
 		}
 
 		return condition;
+	}
+
+	@Override
+	public String toString() {
+		return "ObjectifyQueryOrderingImpl [field=" + this.field + ", ordering=" + this.ordering + "]";
 	}
 
 }

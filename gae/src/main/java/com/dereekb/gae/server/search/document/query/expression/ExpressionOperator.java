@@ -8,25 +8,25 @@ package com.dereekb.gae.server.search.document.query.expression;
  */
 public enum ExpressionOperator {
 
-	EQUAL("="),
+	EQUAL("=", false),
 
 	/**
 	 * For Geopoint locations, this specifies that the given point is outside
 	 * the given radius.
 	 */
-	GREATER_THAN(">"),
-	GREATER_OR_EQUAL_TO(">="),
+	GREATER_THAN(">", true),
+	GREATER_OR_EQUAL_TO(">=", true),
 
 	/**
 	 * For Geopoint locations, this specifies that the given point is within the
 	 * given radius.
 	 */
-	LESS_THAN("<"),
-	LESS_OR_EQUAL_TO("<="),
+	LESS_THAN("<", true),
+	LESS_OR_EQUAL_TO("<=", true),
 
     // Query Only
-	NOT_EQUAL("!="),
-	GREATER_OR_LESS_BUT_NOT_EQUAL_TO("<>"),
+	NOT_EQUAL("!=", false),
+	GREATER_OR_LESS_BUT_NOT_EQUAL_TO("<>", true),
 
 	/**
 	 * Used to check that one or more items of one collection are in another.
@@ -34,24 +34,30 @@ public enum ExpressionOperator {
 	 * I.E. will check if EITHER object A or B are referenced within a
 	 * collection.
 	 */
-	IN("in"),
+	IN("in", false),
 
     // Special
 	/**
 	 * Used only in cases where is null equivalence needs to be checked.
 	 */
-	IS_NULL("=n"),
+	IS_NULL("=n", false),
 
 	/**
 	 * Used when no comparison operation needs to take place. Useful for
 	 * instances where ordering is needed but no value filtering.
 	 */
-	NO_OP("_");
+	NO_OP("_", false);
 
 	private final String value;
+	private final boolean inequality;
 
-	ExpressionOperator(String value) {
+	ExpressionOperator(String value, boolean inequality) {
 		this.value = value;
+		this.inequality = inequality;
+	}
+	
+	public boolean isInequality() {
+		return this.inequality;
 	}
 
 	public static ExpressionOperator fromString(String op) {
@@ -108,6 +114,7 @@ public enum ExpressionOperator {
 		return this.value;
 	}
 
+	@Deprecated
 	public boolean isComplex() {
 		return this.equals(EQUAL) == false;
 	}

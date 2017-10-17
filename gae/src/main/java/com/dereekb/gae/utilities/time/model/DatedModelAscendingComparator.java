@@ -10,12 +10,12 @@ import java.util.Date;
  * @author dereekb
  *
  */
-public class DatedModelAscendingComparator
-        implements Comparator<DatedModel> {
+public class DatedModelAscendingComparator<T extends DatedModel>
+        implements Comparator<T> {
 
 	@Override
-	public int compare(DatedModel o1,
-	                   DatedModel o2) {
+	public int compare(T o1,
+	                   T o2) {
 
 		Date a = o1.getDate();
 		Date b = o2.getDate();

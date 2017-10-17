@@ -42,6 +42,54 @@ public class IntegerSetQueryFieldParameter extends AbstractSetQueryFieldParamete
 		super(field, SetUtility.wrap(value));
 	}
 
+	public static IntegerSetQueryFieldParameter make(String field,
+	                                                 Integer value)
+	        throws IllegalArgumentException {
+		IntegerSetQueryFieldParameter fieldParameter = null;
+
+		if (value != null) {
+			fieldParameter = new IntegerSetQueryFieldParameter(field, value);
+		}
+
+		return fieldParameter;
+	}
+
+	public static IntegerSetQueryFieldParameter make(String field,
+	                                                 String parameterString)
+	        throws IllegalArgumentException {
+		IntegerSetQueryFieldParameter fieldParameter = null;
+
+		if (parameterString != null) {
+			fieldParameter = new IntegerSetQueryFieldParameter(field, parameterString);
+		}
+
+		return fieldParameter;
+	}
+
+	public static IntegerSetQueryFieldParameter make(String field,
+	                                                 IntegerSetQueryFieldParameter parameter)
+	        throws IllegalArgumentException {
+		IntegerSetQueryFieldParameter fieldParameter = null;
+
+		if (parameter != null) {
+			fieldParameter = new IntegerSetQueryFieldParameter(field, parameter);
+		}
+
+		return fieldParameter;
+	}
+
+	public static IntegerSetQueryFieldParameter make(String field,
+	                                                 Collection<Integer> values)
+	        throws IllegalArgumentException {
+		IntegerSetQueryFieldParameter fieldParameter = null;
+
+		if (values != null) {
+			fieldParameter = new IntegerSetQueryFieldParameter(field, values);
+		}
+
+		return fieldParameter;
+	}
+
 	// MARK: AbstractSetQueryFieldParameter
 	@Override
 	protected String encodeValuesFromString(Collection<Integer> values) {

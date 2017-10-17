@@ -15,6 +15,7 @@ import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public abstract class AbstractGenerator<T>
         implements Generator<T>, Factory<T> {
@@ -30,7 +31,7 @@ public abstract class AbstractGenerator<T>
 	public AbstractGenerator() {}
 
 	@Override
-    public T make() throws FactoryMakeFailureException {
+	public T make() throws FactoryMakeFailureException {
 		return this.generate();
 	}
 

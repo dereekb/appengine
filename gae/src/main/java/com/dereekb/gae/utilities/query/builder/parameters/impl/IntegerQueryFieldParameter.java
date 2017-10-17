@@ -1,6 +1,7 @@
 package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
  * {@link AbstractQueryFieldParameter} used for integer query parameters.
@@ -12,6 +13,17 @@ public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Inte
 
 	public IntegerQueryFieldParameter() {
 		super();
+	}
+
+	public IntegerQueryFieldParameter(String field) {
+		super(field);
+	}
+
+	public IntegerQueryFieldParameter(String field,
+	        ExpressionOperator operator,
+	        Integer value,
+	        QueryResultsOrdering ordering) {
+		super(field, operator, value, ordering);
 	}
 
 	public IntegerQueryFieldParameter(String field, ExpressionOperator operator, Integer value) {
@@ -69,6 +81,13 @@ public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Inte
 		}
 
 		return fieldParameter;
+	}
+
+	public static IntegerQueryFieldParameter sortBy(String field,
+	                                                QueryResultsOrdering ordering) {
+		IntegerQueryFieldParameter parameter = new IntegerQueryFieldParameter(field);
+		parameter.onlySort(ordering);
+		return parameter;
 	}
 
 	// MARK: AbstractQueryFieldParameters

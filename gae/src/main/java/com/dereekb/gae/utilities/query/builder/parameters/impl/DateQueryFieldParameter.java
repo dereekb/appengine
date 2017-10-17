@@ -34,6 +34,13 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 		super(field, operator, new Date(Long.MIN_VALUE));
 	}
 
+	public DateQueryFieldParameter(String field,
+	        ExpressionOperator operator,
+	        Date value,
+	        QueryResultsOrdering ordering) {
+		super(field, operator, value, ordering);
+	}
+
 	public DateQueryFieldParameter(String field, Date value) throws IllegalArgumentException {
 		super(field, ExpressionOperator.GREATER_OR_EQUAL_TO, value);
 	}
@@ -107,8 +114,8 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 
 	public static DateQueryFieldParameter sortByDates(String field,
 	                                                  QueryResultsOrdering ordering) {
-		DateQueryFieldParameter parameter = searchByDates(field, ordering);
-		parameter.clearOperator();	// Do not want to filter by dates.
+		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
+		parameter.onlySort(ordering);
 		return parameter;
 	}
 

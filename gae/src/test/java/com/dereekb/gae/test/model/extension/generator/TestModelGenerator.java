@@ -33,6 +33,15 @@ public interface TestModelGenerator<T extends UniqueModel>
 	public T generate();
 
 	/**
+	 * Generates a new model with the input delegate.
+	 * 
+	 * @param delegate
+	 *            {@link TestModelGeneratorDelegate}. Never {@code null}.
+	 * @return Generated model. Never {@code null}.
+	 */
+	public T generate(TestModelGeneratorDelegate<T> delegate);
+
+	/**
 	 * Generates new models with random identifiers. The model is saved to the
 	 * configured datastore.
 	 *
@@ -40,6 +49,17 @@ public interface TestModelGenerator<T extends UniqueModel>
 	 * @return Generated models. Never null.
 	 */
 	public List<T> generate(int count);
+
+	/**
+	 * Generates new models with random identifiers.
+	 * <p>
+	 * Instead of configuring the models internally, they are
+	 *
+	 * @param count
+	 * @return Generated models. Never null.
+	 */
+	public List<T> generate(int count,
+	                        TestModelGeneratorDelegate<T> delegate);
 
 	/**
 	 * Generates new models with random identifiers. The model is saved to the
@@ -55,7 +75,7 @@ public interface TestModelGenerator<T extends UniqueModel>
 
 	/**
 	 * Generates a single model with the passed identifier.
-	 *
+	 * <p>
 	 * The model is saved to the configured datastore.
 	 *
 	 * @param identifier

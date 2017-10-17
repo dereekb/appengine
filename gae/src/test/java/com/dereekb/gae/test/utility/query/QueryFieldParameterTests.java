@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.server.datastore.objectify.tests;
+package com.dereekb.gae.test.utility.query;
 
 import org.junit.Assert;
 import org.junit.Test;

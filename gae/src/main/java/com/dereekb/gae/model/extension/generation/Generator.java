@@ -18,7 +18,7 @@ public interface Generator<T> {
 	 * @return A new model instance. Never {@code null}.
 	 */
 	public T generate();
-	
+
 	/**
 	 * Generates a new instance.
 	 *

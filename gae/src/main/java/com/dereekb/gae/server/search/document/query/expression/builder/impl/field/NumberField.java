@@ -54,6 +54,7 @@ public class NumberField extends AbstractField {
 		return queryString;
 	}
 
+	@Deprecated
 	@Override
 	public boolean isComplex() {
 		return this.operator.isComplex();

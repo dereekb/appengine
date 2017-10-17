@@ -11,6 +11,20 @@ import com.googlecode.objectify.cmd.Query;
 public interface ObjectifyQueryFilter {
 
 	/**
+	 * Returns the field for this filter.
+	 * 
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getField();
+
+	/**
+	 * Whether or not this filter is an inequality filter.
+	 * 
+	 * @return {@code true} if its an inequality.
+	 */
+	public boolean isInequality();
+
+	/**
 	 * Applies a filter to the query, and returns the result.
 	 *
 	 * @param query

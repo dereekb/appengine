@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.query.exception.InvalidQuerySortingException;
 
 /**
  * Used for building {@link ExecutableObjectifyQuery} instances.
@@ -19,6 +20,6 @@ public interface ObjectifyQueryRequestBuilder<T extends ObjectifyModel<T>>
 
 	public ObjectifyQueryRequestBuilder<T> copyBuilder();
 
-	public ExecutableObjectifyQuery<T> buildExecutableQuery();
+	public ExecutableObjectifyQuery<T> buildExecutableQuery() throws InvalidQuerySortingException;
 
 }

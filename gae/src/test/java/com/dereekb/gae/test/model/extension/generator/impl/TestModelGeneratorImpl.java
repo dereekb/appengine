@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.model.extension.generator.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
@@ -9,6 +10,7 @@ import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.test.model.extension.generator.TestModelGeneratorDelegate;
 
 /**
  * {@link TestModelGenerator} implementation.
@@ -88,6 +90,34 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 		List<T> models = this.generator.generate(count, arg);
 		this.setter.forceStore(models);
 		return models;
+	}
+
+	@Override
+	public T generate(TestModelGeneratorDelegate<T> delegate) {
+		return this.generate(delegate, new GeneratorArgImpl(), 0);
+	}
+
+	@Override
+	public List<T> generate(int count,
+	                        TestModelGeneratorDelegate<T> delegate) {
+		List<T> models = new ArrayList<T>();
+		GeneratorArg arg = new GeneratorArgImpl();
+
+		for (int i = 0; i < count; i += 1) {
+			T model = this.generate(delegate, arg, i);
+			models.add(model);
+		}
+
+		return models;
+	}
+
+	public T generate(TestModelGeneratorDelegate<T> delegate,
+	                  GeneratorArg arg,
+	                  int index) {
+		T model = this.generate();
+		delegate.configureTestModel(model, arg, index);
+		this.setter.forceStore(model);
+		return model;
 	}
 
 	@Override

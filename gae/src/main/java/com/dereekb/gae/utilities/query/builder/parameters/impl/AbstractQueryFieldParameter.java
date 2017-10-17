@@ -44,6 +44,11 @@ public abstract class AbstractQueryFieldParameter<T>
 		this((parameter != null) ? parameter.getField() : null, parameter);
 	}
 
+	protected AbstractQueryFieldParameter(String field) {
+		this.setField(field);
+		this.clearOperator();
+	}
+
 	protected AbstractQueryFieldParameter(String field, AbstractQueryFieldParameter<T> parameter)
 	        throws IllegalArgumentException {
 		if (parameter == null) {
@@ -71,8 +76,16 @@ public abstract class AbstractQueryFieldParameter<T>
 		this.setFilter(field, operator, value);
 	}
 
+	protected AbstractQueryFieldParameter(String field,
+	        ExpressionOperator operator,
+	        T value,
+	        QueryResultsOrdering ordering) {
+		this(field, operator, value);
+		this.setOrdering(ordering);
+	}
+
 	public void setAsComparison(ExpressionOperator operator,
-	                          T value)
+	                            T value)
 	        throws IllegalArgumentException {
 		this.setOperator(operator);
 		this.setValue(value);
@@ -130,6 +143,20 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	public AbstractQueryFieldParameter<T> sortAscending() {
 		return this.setOrdering(QueryResultsOrdering.Ascending);
+	}
+
+	/**
+	 * Makes this field only a sorting field.
+	 * <p>
+	 * Equivalent to calling {@link #clearOperator()} and
+	 * {@link #setOrdering(QueryResultsOrdering)}.
+	 * 
+	 * @param ordering
+	 *            {@link QueryResultsOrdering}. Never {@code null}.
+	 */
+	public AbstractQueryFieldParameter<T> onlySort(QueryResultsOrdering ordering) {
+		this.clearOperator();
+		return this.setOrdering(ordering);
 	}
 
 	public String getField() {

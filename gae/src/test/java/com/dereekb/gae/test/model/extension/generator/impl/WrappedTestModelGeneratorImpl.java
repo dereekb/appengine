@@ -7,6 +7,7 @@ import com.dereekb.gae.server.datastore.Setter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.test.model.extension.generator.TestModelGeneratorDelegate;
 
 /**
  * Abstract {@link TestModelGenerator} implementation that wraps another
@@ -16,7 +17,7 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
  *
  * @param <T>
  */
-public abstract class WrappedTestModelGeneratorImpl<T extends UniqueModel>
+public class WrappedTestModelGeneratorImpl<T extends UniqueModel>
         implements TestModelGenerator<T> {
 
 	private TestModelGenerator<T> generator;
@@ -66,7 +67,7 @@ public abstract class WrappedTestModelGeneratorImpl<T extends UniqueModel>
 	public Setter<T> getSetter() {
 		return this.generator.getSetter();
 	}
-
+	
 	@Override
 	public T generate() {
 		return this.generator.generate();
@@ -91,6 +92,17 @@ public abstract class WrappedTestModelGeneratorImpl<T extends UniqueModel>
 	@Override
 	public List<T> generateModels(Iterable<ModelKey> identifiers) {
 		return this.generator.generateModels(identifiers);
+	}
+
+	@Override
+	public T generate(TestModelGeneratorDelegate<T> delegate) {
+		return this.generator.generate(delegate);
+	}
+
+	@Override
+	public List<T> generate(int count,
+	                        TestModelGeneratorDelegate<T> delegate) {
+		return this.generator.generate(count, delegate);
 	}
 
 }

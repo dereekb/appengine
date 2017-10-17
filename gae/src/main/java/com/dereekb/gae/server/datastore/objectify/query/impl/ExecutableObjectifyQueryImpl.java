@@ -11,7 +11,8 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryModelRespo
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrderingChain;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.utilities.collections.chain.Chain;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -142,7 +143,7 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public ObjectifyQueryOrderingChain getResultsOrdering() {
+	public Chain<ObjectifyQueryOrdering> getResultsOrdering() {
 		return this.request.getResultsOrdering();
 	}
 
