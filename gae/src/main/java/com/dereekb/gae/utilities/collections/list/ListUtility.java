@@ -212,4 +212,39 @@ public class ListUtility {
 		return flattened;
 	}
 
+	/**
+	 * Sends an item to the front of the list.
+	 * <p>
+	 * If it doesn't exist in the list, it is added to the list at the front.
+	 * 
+	 * @param x
+	 *            Object. Never {@code null}.
+	 * @param list
+	 *            {@link List}. Never {@code null}.
+	 */
+	public static <T> void sendToFront(T x,
+	                                   List<T> list) {
+		int index = list.indexOf(x);
+
+		if (index == -1) {
+			// If not in the list, add it to the front.
+			T t = list.get(0);
+			list.set(0, x);
+			list.add(t);
+		} else {
+			swap(0, index, list);
+		}
+	}
+
+	public static <T> void swap(int x,
+	                            int y,
+	                            List<T> list)
+	        throws IndexOutOfBoundsException {
+		T ex = list.get(x);
+		T ey = list.get(y);
+
+		list.set(x, ey);
+		list.set(y, ex);
+	}
+
 }

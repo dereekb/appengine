@@ -12,11 +12,20 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.MutableObjectifyQueryRequestOptions;
+import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
+import com.dereekb.gae.server.datastore.objectify.query.exception.TooManyQueryInequalitiesException;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestBuilderImpl;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestOptionsImpl;
+import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
+import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.utilities.collections.chain.Chain;
+import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
@@ -145,6 +154,90 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		Assert.assertTrue(query.getResultCount() == count);
 	}
 
-	// TODO: Test querying limits?
+	// MARK: Request Builder
+	@Test
+	public void testRequestBuilderOrderReorderingWithoutInequality() {
+		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		        .makeQuery();
+
+		String fieldA = "fieldA";
+		String fieldB = "fieldB";
+
+		ObjectifyQueryFilter a = new ObjectifyConditionQueryFilter(fieldA, ExpressionOperator.EQUAL, "VALUE");
+		// ObjectifyQueryFilter b = new ObjectifyConditionQueryFilter(fieldB,
+		// ExpressionOperator.EQUAL, "VALUE");
+
+		impl.addQueryFilter(a);
+		// impl.addQueryFilter(b);
+
+		ObjectifyQueryOrdering aOrder = new ObjectifyQueryOrderingImpl(fieldA, QueryResultsOrdering.Ascending);
+		ObjectifyQueryOrdering bOrder = new ObjectifyQueryOrderingImpl(fieldB, QueryResultsOrdering.Ascending);
+
+		impl.addResultsOrdering(bOrder);	// Add b first.
+		impl.addResultsOrdering(aOrder);
+
+		ExecutableObjectifyQuery<Login> executable = impl.buildExecutableQuery();
+
+		// Check that
+		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
+		Assert.assertTrue(chain.getValue().getField().equals(fieldA));
+	}
+
+	@Test
+	public void testRequestBuilderOrderReorderingWithInequality() {
+		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		        .makeQuery();
+
+		String fieldA = "fieldA";
+		String fieldB = "fieldB";
+
+		ObjectifyQueryFilter a = new ObjectifyConditionQueryFilter(fieldA, ExpressionOperator.EQUAL, "VALUE");
+		ObjectifyQueryFilter b = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.GREATER_THAN, "VALUE");
+
+		Assert.assertTrue(b.isInequality());
+
+		impl.addQueryFilter(a);
+		impl.addQueryFilter(b);
+
+		Assert.assertTrue(impl.getInequalityFilter() != null);
+
+		ObjectifyQueryOrdering aOrder = new ObjectifyQueryOrderingImpl(fieldA, QueryResultsOrdering.Ascending);
+		ObjectifyQueryOrdering bOrder = new ObjectifyQueryOrderingImpl(fieldB, QueryResultsOrdering.Ascending);
+
+		impl.addResultsOrdering(aOrder);
+		impl.addResultsOrdering(bOrder);
+
+		ExecutableObjectifyQuery<Login> executable = impl.buildExecutableQuery();
+
+		Assert.assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
+
+		// Check that b's field is first.
+		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
+		Assert.assertTrue(chain.getValue().getField().equals(fieldB));
+	}
+
+	@Test
+	public void testRequestBuilderMultipleInequalitysFail() {
+		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		        .makeQuery();
+
+		String fieldA = "fieldA";
+		String fieldB = "fieldB";
+
+		ObjectifyQueryFilter a = new ObjectifyConditionQueryFilter(fieldA, ExpressionOperator.GREATER_THAN, "VALUE");
+		ObjectifyQueryFilter b = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.GREATER_THAN, "VALUE");
+
+		Assert.assertTrue(a.isInequality());
+		Assert.assertTrue(b.isInequality());
+
+		impl.addQueryFilter(a);
+
+		try {
+			impl.addQueryFilter(b);
+			Assert.fail("Should have failed.");
+		} catch (TooManyQueryInequalitiesException e) {
+
+		}
+	}
 
 }

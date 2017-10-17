@@ -21,8 +21,7 @@ import com.dereekb.gae.test.spring.CoreServiceTestingContext;
         CoreApplicationTestContext.API_APPLICATION_XML_PATH, CoreApplicationTestContext.WEB_TESTING_XML_PATH }) })
 public class CoreApplicationTestContext extends CoreServiceTestingContext {
 
-	public static final String API_APPLICATION_XML_PATH = CoreServiceTestingContext.APPLICATION_TESTING_PATH
-	        + "api/spring.xml";
+	public static final String API_APPLICATION_XML_PATH = CoreServiceTestingContext.BASE_MAIN_PATH + "spring/app.xml";
 
 	public static final String WEB_TESTING_XML_PATH = BASE_TESTING_PATH + "testing-web.xml";
 

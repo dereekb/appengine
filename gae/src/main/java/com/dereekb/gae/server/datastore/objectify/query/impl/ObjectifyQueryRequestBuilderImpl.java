@@ -17,6 +17,7 @@ import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrde
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingChainImpl;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.chain.Chain;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
  * {@link ObjectifyQueryRequestBuilder} implementation.
@@ -50,6 +51,10 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 		this.setSimpleQueryFilters(null);
 	}
 
+	public ObjectifyQueryFilter getInequalityFilter() {
+		return this.inequalityFilter;
+	}
+
 	@Override
 	public List<ObjectifyQueryFilter> getQueryFilters() {
 		return this.queryFilters;
@@ -62,6 +67,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	}
 
 	public void setQueryFilters(List<ObjectifyQueryFilter> queryFilters) throws TooManyQueryInequalitiesException {
+		this.inequalityFilter = null;
 		this.queryFilters = new ArrayList<ObjectifyQueryFilter>();
 
 		if (queryFilters != null) {
@@ -75,6 +81,11 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	public void addQueryFilter(ObjectifyQueryFilter filter) throws TooManyQueryInequalitiesException {
 		if (filter != null) {
 			this.assertNotInequalityFilter(filter);
+			
+			if (filter.isInequality()) {
+				this.inequalityFilter = filter;
+			}
+			
 			this.queryFilters.add(filter);
 		}
 	}
@@ -153,26 +164,38 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 		this.resultsOrdering = orderingChain;
 	}
 
-	private void tryReorderChainForInequality() {
-		if (this.resultsOrdering != null && this.inequalityFilter != null) {
+	private void tryReorderChain() {
+		this.reorderFilters();
+		if (this.resultsOrdering != null && this.queryFilters.isEmpty() == false) {
 			List<ObjectifyQueryOrdering> order = IteratorUtility.iterableToList(this.getResultsOrdering());
 
 			if (order.size() > 1) {
+				ObjectifyQueryFilter firstFilter = this.getQueryFilters().get(0);
 				ObjectifyQueryOrdering first = order.get(0);
 
-				if (first.getField().equals(this.inequalityFilter.getField())) {
+				if (first.getField().equals(firstFilter.getField())) {
 					return;	// Do nothing. Already sorted.
 				} else {
-					this.reorderChainForInequality(order);
+					this.reorderChain(order);
 				}
 			}
 		}
 	}
 
-	private void reorderChainForInequality(List<ObjectifyQueryOrdering> order) {
-		String inequalityField = this.inequalityFilter.getField();
+	/**
+	 * Re-orders the filters so {{@link #inequalityFilter} comes first, if
+	 * available.
+	 */
+	private void reorderFilters() {
+		if (this.inequalityFilter != null) {
+			ListUtility.sendToFront(this.inequalityFilter, this.queryFilters);
+		}
+	}
 
-		Integer inequalityOrderIndex = null;
+	private void reorderChain(List<ObjectifyQueryOrdering> order) {
+		String inequalityField = this.getQueryFilters().get(0).getField();
+
+		int inequalityOrderIndex = -1;
 
 		for (int i = 0; i < order.size(); i += 1) {
 			ObjectifyQueryOrdering ordering = order.get(i);
@@ -183,7 +206,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 			}
 		}
 
-		if (inequalityOrderIndex != null) {
+		if (inequalityOrderIndex != -1) {
 			ObjectifyQueryOrdering firstOrdering = order.get(inequalityOrderIndex);
 			order.remove(inequalityOrderIndex);
 
@@ -191,7 +214,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 
 			for (ObjectifyQueryOrdering ordering : order) {
 				if (ordering != null) {
-					chain = chain.chain(ordering);
+					chain.chain(ordering);
 				}
 			}
 
@@ -201,30 +224,27 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 
 	/**
 	 * Asserts the proper filter order. Should be called after
-	 * {{@link #tryReorderChainForInequality()}.
+	 * {{@link #tryReorderChain()}.
 	 */
 	private void assertProperFilterOrder() throws InvalidQuerySortingException {
 		if (this.resultsOrdering != null) {
 			if (this.queryFilters.isEmpty() == false) {
-				ObjectifyQueryFilter queryFilter;
-
-				if (this.inequalityFilter != null) {
-					queryFilter = this.inequalityFilter;
-				} else {
-					queryFilter = this.queryFilters.get(0);
-				}
-
+				ObjectifyQueryFilter queryFilter = this.queryFilters.get(0);
 				String field = queryFilter.getField();
 
 				for (ObjectifyQueryOrdering ordering : this.resultsOrdering) {
 					if (ordering.getField().equals(field)) {
-						break;	// Is valid.
+						return;	// Is valid.
 					}
 				}
+				
+				throw new InvalidQuerySortingException("Missing sorting for primary filter.");
 			}
-
-			throw new InvalidQuerySortingException("Missing sorting for primary filter.");
+			
+			// Can order without a query filter.
 		}
+
+		// No ordereing.
 	}
 
 	@Override
@@ -241,7 +261,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 
 	@Override
 	public ExecutableObjectifyQuery<T> buildExecutableQuery() throws InvalidQuerySortingException {
-		this.tryReorderChainForInequality();
+		this.tryReorderChain();
 		this.assertProperFilterOrder();
 		ObjectifyQueryRequestBuilder<T> copy = this.copyBuilder();
 		return new ExecutableObjectifyQueryImpl<T>(this.queryService, copy, this.options);

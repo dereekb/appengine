@@ -16,7 +16,7 @@ public class ObjectifyConditionQueryFilter
 	private String field;
 	private ExpressionOperator operator;
 	private Object value;
-	
+
 	private transient String condition;
 
 	public ObjectifyConditionQueryFilter(String field, ExpressionOperator operator, Object value) {
@@ -24,7 +24,7 @@ public class ObjectifyConditionQueryFilter
 			operator = ExpressionOperator.EQUAL;
 			value = null;
 		}
-		
+
 		this.setField(field);
 		this.setOperator(operator);
 		this.setValue(value);
@@ -50,7 +50,7 @@ public class ObjectifyConditionQueryFilter
 
 		this.field = field;
 	}
-	
+
 	public ExpressionOperator getOperator() {
 		return this.operator;
 	}
@@ -59,7 +59,7 @@ public class ObjectifyConditionQueryFilter
 		if (operator == null) {
 			throw new IllegalArgumentException("operator cannot be null.");
 		}
-	
+
 		this.operator = operator;
 	}
 
@@ -67,10 +67,10 @@ public class ObjectifyConditionQueryFilter
 		if (this.condition == null) {
 			this.condition = this.computeCondition();
 		}
-		
+
 		return this.condition;
 	}
-	
+
 	protected String computeCondition() {
 		return this.operator.createFilter(this.field);
 	}
@@ -80,7 +80,7 @@ public class ObjectifyConditionQueryFilter
 	public boolean isInequality() {
 		return this.operator.isInequality();
 	}
-	
+
 	@Override
 	public <T> Query<T> filter(Query<T> query) {
 		Query<T> filteredQuery = query.filter(this.getCondition(), this.getValue());
@@ -89,7 +89,8 @@ public class ObjectifyConditionQueryFilter
 
 	@Override
 	public String toString() {
-		return "ObjectifyConditionQueryFilter [condition=" + this.condition + ", value=" + this.value + "]";
+		return "ObjectifyConditionQueryFilter [field=" + this.field + ", operator=" + this.operator + ", value="
+		        + this.value + ", condition=" + this.condition + "]";
 	}
 
 }
