@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
+import com.dereekb.gae.model.extension.generation.GeneratorUtility;
 import com.dereekb.gae.model.extension.generation.ModelGenerator;
 import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
 import com.dereekb.gae.server.datastore.Setter;
@@ -81,7 +82,7 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 
 	@Override
 	public List<T> generate(int count) {
-		return this.generate(count, new GeneratorArgImpl());
+		return GeneratorUtility.generate(count, this);
 	}
 
 	@Override

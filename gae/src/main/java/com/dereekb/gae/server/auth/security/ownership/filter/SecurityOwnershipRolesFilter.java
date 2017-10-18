@@ -3,13 +3,9 @@ package com.dereekb.gae.server.auth.security.ownership.filter;
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.datastore.models.owner.OwnedModel;
 import com.dereekb.gae.utilities.filters.Filter;
-import com.dereekb.gae.utilities.filters.FilterResult;
-import com.dereekb.gae.utilities.filters.impl.AbstractFactoryFilter;
-import com.dereekb.gae.utilities.filters.impl.FilterImpl;
 
 /**
  * {@link Filter} for {@link OwnedModel} types that uses the
@@ -18,27 +14,15 @@ import com.dereekb.gae.utilities.filters.impl.FilterImpl;
  * @author dereekb
  *
  */
-public class SecurityOwnershipRolesFilter extends AbstractFactoryFilter<OwnedModel> {
+public class SecurityOwnershipRolesFilter extends AbstractLoginUserOwnershipFiltersImpl<OwnedModel> {
 
 	// MARK: Internal
 	@Override
-	public Filter<OwnedModel> makeFilter() {
-		Filter<OwnedModel> filter = null;
-		LoginTokenAuthentication<LoginToken> authentication = LoginSecurityContext.getAuthentication();
-		LoginTokenUserDetails<LoginToken> principle = authentication.getPrincipal();
-
-		if (principle.isAdministrator()) {
-			filter = new FilterImpl<OwnedModel>(FilterResult.PASS);
-		} else if (principle.isAnonymous()) {
-			filter = new FilterImpl<OwnedModel>(FilterResult.FAIL);
-		} else {
-			LoginToken token = principle.getLoginToken();
-			OwnershipRoles ownershipRoles = token.getOwnershipRoles();
-			String ownerId = ownershipRoles.getOwnerId();
-			filter = new OwnerIdFilter(ownerId);
-		}
-
-		return filter;
+	protected Filter<OwnedModel> makeFilterWithDetails(LoginTokenUserDetails<LoginToken> details) {
+		LoginToken token = details.getLoginToken();
+		OwnershipRoles ownershipRoles = token.getOwnershipRoles();
+		String ownerId = ownershipRoles.getOwnerId();
+		return new OwnerIdFilter(ownerId);
 	}
 
 }
