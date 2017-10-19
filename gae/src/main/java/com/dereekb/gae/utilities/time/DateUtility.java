@@ -55,6 +55,10 @@ public class DateUtility {
 		return getDateIn(System.currentTimeMillis(), milliseconds);
 	}
 
+	public static Date getDateInDays(Long days) {
+		return getDateIn(System.currentTimeMillis(), DateUtility.timeInDays(days));
+	}
+
 	public static Date getDateIn(Date start,
 	                             Long milliseconds) {
 		return getDateIn(start.getTime(), milliseconds);

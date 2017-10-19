@@ -727,7 +727,7 @@ public class LinkModificationSystemImpl
 			for (RequestInstance request : inputRequestChanges) {
 				LinkModificationPreTestResult result = request.getPreTestResults();
 
-				results.addWithBoolean(result.isPassed(), request);
+				results.addWithBoolean(result.isPassed(), request); 
 			}
 
 			return results;

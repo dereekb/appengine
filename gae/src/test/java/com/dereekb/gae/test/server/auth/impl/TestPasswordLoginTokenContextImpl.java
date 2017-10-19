@@ -287,8 +287,9 @@ public class TestPasswordLoginTokenContextImpl
 
 		@Override
 		public String regenerateToken() {
-			return TestPasswordLoginTokenContextImpl.this.service.encodeLoginToken(this.loginPointer,
+			this.token = TestPasswordLoginTokenContextImpl.this.service.encodeLoginToken(this.loginPointer,
 			        TestPasswordLoginTokenContextImpl.this.refreshAllowed);
+			return this.token;
 		}
 
 	}

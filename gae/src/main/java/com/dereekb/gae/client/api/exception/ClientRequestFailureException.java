@@ -49,4 +49,9 @@ public class ClientRequestFailureException extends Exception {
 		this.response = response;
 	}
 
+	@Override
+	public String toString() {
+		return "ClientRequestFailureException [response=" + this.response + "]";
+	}
+
 }
