@@ -66,25 +66,30 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 
 	@Override
 	public void setResult(R result) {
-		if (this.object == null) {
-			if (result != null) {
-				this.object = result;
-				this.state = ResultsPairState.SUCCESS;
+		R previous = this.object;
+
+		this.object = result;
+		this.state = this.recalculateState(this.object, previous);
+	}
+	
+	protected ResultsPairState recalculateState(R newValue, R oldValue) {
+		if (oldValue == null) {
+			if (newValue != null) {
+				return ResultsPairState.SUCCESS;
 			} else {
-				this.state = ResultsPairState.FAILURE;
+				return ResultsPairState.FAILURE;
 			}
 		} else {
-			if (result != null) {
-				this.object = result;
-				this.state = ResultsPairState.REPLACED;
+			if (newValue != null) {
+				return ResultsPairState.REPLACED;
 			} else {
-				this.clearResult();
+				return ResultsPairState.CLEARED;
 			}
 		}
 	}
 
 	@Override
-	public void clearResult() {
+	public final void clearResult() {
 		if (this.object != null) {
 			this.object = null;
 			this.state = ResultsPairState.CLEARED;

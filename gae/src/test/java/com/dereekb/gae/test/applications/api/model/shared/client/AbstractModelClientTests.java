@@ -14,7 +14,9 @@ import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.request.impl.ClientReadRequestImpl;
 import com.dereekb.gae.client.api.model.crud.response.ClientDeleteResponse;
+import com.dereekb.gae.client.api.model.crud.response.SerializedClientCreateApiResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
+import com.dereekb.gae.client.api.model.crud.response.SerializedClientUpdateApiResponse;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
@@ -181,8 +183,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				List<T> created = null;
 
 				try {
-					CreateResponse<T> createResponse = this.createRequestSender.create(createRequest,
-					        AbstractTestingInstance.this.getSecurity());
+					CreateResponse<T> createResponse = this.sendCreate(createRequest).getSerializedResponse();
 					Collection<T> results = createResponse.getModels();
 					created = new ArrayList<T>(results);
 				} catch (ClientRequestFailureException e) {
@@ -191,6 +192,16 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				}
 
 				return created;
+			}
+			
+			public SerializedClientCreateApiResponse<T> sendCreate(CreateRequest<T> createRequest) {
+				try {
+					return this.createRequestSender.sendRequest(createRequest, AbstractTestingInstance.this.getSecurity());
+				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
+					Assert.fail("Request failure.");
+					return null;
+				}
 			}
 
 			// MARK: Update
@@ -213,7 +224,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				return ListUtility.copy(simpleResponse.getModels());
 			}
 
-			public SerializedClientApiResponse<SimpleUpdateResponse<T>> update(UpdateRequest<T> updateRequest) {
+			public SerializedClientUpdateApiResponse<T> update(UpdateRequest<T> updateRequest) {
 				try {
 					return this.updateRequestSender.sendRequest(updateRequest,
 					        AbstractTestingInstance.this.getSecurity());
@@ -371,6 +382,10 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 		}
 
+		public <T extends UniqueModel> UpdateRequest<T> makeAtomicUpdateRequest(T template) {
+			return this.makeAtomicUpdateRequest(ListUtility.wrap(template));
+		}
+		
 		public <T extends UniqueModel> UpdateRequest<T> makeAtomicUpdateRequest(Collection<T> templates) {
 			UpdateRequestOptions options = new UpdateRequestOptionsImpl();
 			options.setAtomic(true);

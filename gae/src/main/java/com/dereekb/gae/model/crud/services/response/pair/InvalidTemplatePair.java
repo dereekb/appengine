@@ -53,6 +53,11 @@ public class InvalidTemplatePair<T extends UniqueModel> extends HandlerPair<T, I
 	}
 
 	@Override
+	public String getCode() {
+		return this.object.getCode();
+	}
+
+	@Override
 	public ErrorInfo getError() {
 		return this.object.getError();
 	}

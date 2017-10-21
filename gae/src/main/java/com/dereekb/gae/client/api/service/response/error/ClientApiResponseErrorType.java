@@ -34,7 +34,7 @@ public enum ClientApiResponseErrorType {
 	 * 
 	 * All 400 Codes not covered by other enum types.
 	 * 
-	 * Example: 415 Unprocessable Entity
+	 * Example: 422 Unprocessable Entity
 	 */
 	OTHER_BAD_RESPONSE_ERROR,
 

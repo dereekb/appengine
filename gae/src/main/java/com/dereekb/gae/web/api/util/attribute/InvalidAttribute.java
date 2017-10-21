@@ -26,6 +26,13 @@ public interface InvalidAttribute {
 	public String getValue();
 
 	/**
+	 * Returns the code for this attribute error, if available.
+	 * 
+	 * @return {@link String}. May be {@code null}.
+	 */
+	public String getCode();
+
+	/**
 	 * Returns details for this failure, if available.
 	 * 
 	 * @return {@link String}. May be {@code null}.

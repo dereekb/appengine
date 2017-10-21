@@ -1,6 +1,7 @@
 package com.dereekb.gae.utilities.collections.pairs.impl;
 
 import com.dereekb.gae.utilities.collections.pairs.MutableSuccessPair;
+import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
 import com.dereekb.gae.utilities.collections.pairs.SuccessPair;
 import com.dereekb.gae.utilities.misc.success.SuccessModel;
 
@@ -26,6 +27,26 @@ public class SuccessResultsPair<T> extends ResultsPair<T, Boolean> implements Su
 
 	public void setSuccessful(boolean successful) {
 		this.setResult(successful);
+	}
+
+	@Override
+	public ResultsPairState getState() {
+		if (this.hasFailed()) {
+			return ResultsPairState.FAILURE;
+		} else {
+			return super.getState();
+		}
+	}
+
+	@Override
+	protected ResultsPairState recalculateState(Boolean newValue, Boolean oldValue) {
+		if (newValue == null || oldValue == null) {
+			return super.recalculateState(newValue, oldValue);
+		} else if (newValue == true) {
+			return ResultsPairState.SUCCESS;
+		} else {
+			return ResultsPairState.FAILURE;
+		}
 	}
 
 	public boolean hasFailed() {

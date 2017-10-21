@@ -13,6 +13,7 @@ import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorT
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.error.impl.ClientResponseErrorInfoImpl;
+import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
@@ -262,7 +263,7 @@ public class ClientApiResponseAccessorBuilderImpl
 		}
 
 		@Override
-		public List<ClientResponseErrorInfo> getErrorInfo() {
+		public List<ClientResponseErrorInfo> getErrorInfo() throws ClientResponseSerializationException {
 			if (this.errors == null) {
 				this.errors = new ArrayList<ClientResponseErrorInfo>();
 
@@ -279,7 +280,7 @@ public class ClientApiResponseAccessorBuilderImpl
 						this.errors.add(info);
 					}
 				} catch (JsonProcessingException e) {
-					throw new RuntimeException(e);
+					throw new ClientResponseSerializationException(e);
 				}
 			}
 

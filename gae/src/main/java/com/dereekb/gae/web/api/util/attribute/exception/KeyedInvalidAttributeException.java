@@ -2,6 +2,7 @@ package com.dereekb.gae.web.api.util.attribute.exception;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
@@ -22,15 +23,15 @@ public class KeyedInvalidAttributeException extends InvalidAttributeException
 	private final KeyedInvalidAttribute failure;
 
 	public KeyedInvalidAttributeException(UniqueModel template, InvalidAttribute failure) {
-		this(template.getModelKey(), failure.getAttribute(), failure.getValue(), failure.getDetail());
+		this(template.getModelKey(), failure.getAttribute(), failure.getValue(), failure.getDetail(), failure.getCode(), failure.getError());
 	}
 
 	public KeyedInvalidAttributeException(UniqueModel template, String attribute, String value, String detail) {
-		this(template.getModelKey(), attribute, value, detail);
+		this(template.getModelKey(), attribute, value, detail, null, null);
 	}
 
-	public KeyedInvalidAttributeException(ModelKey templateKey, String attribute, String value, String detail) {
-		this(new KeyedInvalidAttributeImpl(templateKey, attribute, value, detail));
+	public KeyedInvalidAttributeException(ModelKey templateKey, String attribute, String value, String detail, String code, ErrorInfo info) {
+		this(new KeyedInvalidAttributeImpl(templateKey, attribute, value, detail, code, info));
 	}
 
 	protected KeyedInvalidAttributeException(KeyedInvalidAttribute failure) {

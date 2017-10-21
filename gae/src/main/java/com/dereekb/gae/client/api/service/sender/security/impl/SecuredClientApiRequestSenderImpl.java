@@ -105,13 +105,19 @@ public class SecuredClientApiRequestSenderImpl
 
 		ClientRequest securedRequest = this.buildSecuredRequest(request, security);
 		ClientApiResponse response = this.sender.sendRequest(securedRequest);
-
-		this.assertNoAuthenticationErrors(response);
+		
+		this.assertSuccessfulResponse(response);
 
 		return response;
 	}
 
-	private void assertNoAuthenticationErrors(ClientApiResponse response) throws ClientAuthenticationException {
+	protected void assertSuccessfulResponse(ClientApiResponse response) throws ClientAuthenticationException {
+		if (response.isSuccessful() == false) {
+			this.assertNoAuthenticationErrors(response);
+		}
+	}
+
+	protected void assertNoAuthenticationErrors(ClientApiResponse response) throws ClientAuthenticationException {
 		ClientResponseError error = response.getError();
 
 		if (error.getErrorType() == ClientApiResponseErrorType.AUTHENTICATION_ERROR) {

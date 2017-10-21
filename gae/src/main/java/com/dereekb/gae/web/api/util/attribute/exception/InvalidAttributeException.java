@@ -22,7 +22,15 @@ public class InvalidAttributeException extends ApiSafeRuntimeException
 	private final InvalidAttribute failure;
 
 	public InvalidAttributeException(String attribute, String value, String detail) {
-		this.failure = new InvalidAttributeImpl(attribute, value, detail);
+		this(attribute, value, detail, null, null);
+	}
+
+	public InvalidAttributeException(String attribute, String value, String detail, String code) {
+		this(attribute, value, detail, code, null);
+	}
+
+	public InvalidAttributeException(String attribute, String value, String detail, String code, ErrorInfo error) {
+		this.failure = new InvalidAttributeImpl(attribute, value, detail, code, error);
 	}
 
 	protected InvalidAttributeException(InvalidAttribute failure) {
@@ -46,6 +54,11 @@ public class InvalidAttributeException extends ApiSafeRuntimeException
 	@Override
 	public String getDetail() {
 		return this.failure.getDetail();
+	}
+
+	@Override
+	public String getCode() {
+		return this.failure.getCode();
 	}
 
 	@Override

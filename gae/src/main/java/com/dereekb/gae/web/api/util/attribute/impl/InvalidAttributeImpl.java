@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
+ * {@link InvalidAttribute} exception.
  * 
  * @author dereekb
  *
@@ -20,6 +21,7 @@ public class InvalidAttributeImpl
 
 	private String attribute;
 	private String value;
+	private String code;
 	private String detail;
 	private ErrorInfoImpl error;
 
@@ -30,19 +32,26 @@ public class InvalidAttributeImpl
 	}
 
 	public InvalidAttributeImpl(InvalidAttribute failure) {
-		this(failure.getAttribute(), failure.getValue(), failure.getDetail(), failure.getError());
+		this(failure.getAttribute(), failure.getValue(), failure.getDetail(), failure.getCode(), failure.getError());
 	}
 
 	public InvalidAttributeImpl(String attribute, String value, String detail) {
-		this.setAttribute(attribute);
-		this.setValue(value);
-		this.setDetail(detail);
+		this(attribute, value, detail, null, null);
 	}
 
+	public InvalidAttributeImpl(String attribute, String value, String detail, String code) {
+		this(attribute, value, detail, code, null);
+	}
+	
 	public InvalidAttributeImpl(String attribute, String value, String detail, ErrorInfo error) {
+		this(attribute, value, detail, null, error);
+	}
+
+	public InvalidAttributeImpl(String attribute, String value, String detail, String code, ErrorInfo error) {
 		this.setAttribute(attribute);
 		this.setValue(value);
 		this.setDetail(detail);
+		this.setCode(code);
 		this.setErrorInfo(error);
 	}
 
@@ -78,6 +87,15 @@ public class InvalidAttributeImpl
 	}
 
 	@Override
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	@Override
 	public ErrorInfoImpl getError() {
 		return this.error;
 	}
@@ -89,7 +107,7 @@ public class InvalidAttributeImpl
 	@JsonIgnore
 	public void setErrorInfo(ErrorInfo error) {
 		ErrorInfoImpl errorImpl = null;
-		
+
 		if (error != null) {
 			if (error instanceof ErrorInfoImpl) {
 				errorImpl = (ErrorInfoImpl) error;

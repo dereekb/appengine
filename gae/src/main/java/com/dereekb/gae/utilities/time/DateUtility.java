@@ -147,4 +147,22 @@ public class DateUtility {
 		return TIME_IN_DAY * days;
 	}
 
+	public static Long timeInHours(Integer hours) {
+		return timeInHours(hours.longValue());
+	}
+	
+	public static Long timeInHours(Long hours) {
+		return TIME_IN_HOUR * hours;
+	}
+
+	public static boolean dateIsInTheFutureAtleast(Date date, long minimumScheduleTime) {
+		return dateIsInTheFutureAtleast(date, minimumScheduleTime, 0L);
+	}
+	
+	public static boolean dateIsInTheFutureAtleast(Date date, long minimumScheduleTime, long leeway) {
+		Long futureTime = Math.min(0L, minimumScheduleTime - leeway);
+		Date futureDate = DateUtility.getDateIn(futureTime);
+		return futureDate.after(date);
+	}
+
 }
