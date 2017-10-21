@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.util.attribute.exception;
 
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
@@ -21,8 +22,16 @@ public class InvalidAttributeException extends ApiSafeRuntimeException
 
 	private final InvalidAttribute failure;
 
+	public InvalidAttributeException(String attribute, Object value, String detail) {
+		this(attribute, StringUtility.tryToString(value), detail);
+	}
+
 	public InvalidAttributeException(String attribute, String value, String detail) {
 		this(attribute, value, detail, null, null);
+	}
+
+	public InvalidAttributeException(String attribute, Object value, String detail, String code) {
+		this(attribute, StringUtility.tryToString(value), detail, code);
 	}
 
 	public InvalidAttributeException(String attribute, String value, String detail, String code) {

@@ -21,14 +21,20 @@ public abstract class AbstractSecuritySetModelKeyTask<T, D extends LoginTokenUse
         implements IterableTask<T> {
 
 	private boolean failOnNoSecurity = false;
+	private boolean alwaysSkipAdmin = true;
 
 	public AbstractSecuritySetModelKeyTask() {
-		super();
+		this(false, true);
 	}
 
 	public AbstractSecuritySetModelKeyTask(boolean failOnNoSecurity) {
+		this(failOnNoSecurity, true);
+	}
+
+	public AbstractSecuritySetModelKeyTask(boolean failOnNoSecurity, boolean alwaysSkipAdmin) {
 		super();
 		this.setFailOnNoSecurity(failOnNoSecurity);
+		this.setAlwaysSkipAdmin(alwaysSkipAdmin);
 	}
 
 	public boolean isFailOnNoSecurity() {
@@ -38,16 +44,41 @@ public abstract class AbstractSecuritySetModelKeyTask<T, D extends LoginTokenUse
 	public void setFailOnNoSecurity(boolean failOnNoSecurity) {
 		this.failOnNoSecurity = failOnNoSecurity;
 	}
+	
+	public boolean isAlwaysSkipAdmin() {
+		return this.alwaysSkipAdmin;
+	}
+
+	public void setAlwaysSkipAdmin(boolean alwaysSkipAdmin) {
+		this.alwaysSkipAdmin = alwaysSkipAdmin;
+	}
 
 	// MARK: IterableTask
 	@Override
 	public void doTask(Iterable<T> input) throws FailedTaskException {
+		if (this.trySkipAdmin()) {
+			return;
+		}
+		
 		ModelKey securityKey = this.getSecurityModelKey();
 
 		if (securityKey != null) {
 			IterableTask<T> task = this.makeSecurityTask(securityKey);
 			task.doTask(input);
 		}
+	}
+
+	private boolean trySkipAdmin() {
+		if (this.alwaysSkipAdmin) {
+			try {
+				D details = this.getUserDetails();
+				return details.isAdministrator();
+			} catch (NoSecurityContextException e) {
+				this.tryFailOnNoSecurity();
+			}
+		}
+		
+		return false;
 	}
 
 	// MARK: Internal
@@ -58,9 +89,7 @@ public abstract class AbstractSecuritySetModelKeyTask<T, D extends LoginTokenUse
 			D details = this.getUserDetails();
 			modelKey = this.getSecurityModelKeyFromDetails(details);
 		} catch (NoSecurityContextException e) {
-			if (this.failOnNoSecurity) {
-				throw new UnsupportedOperationException();
-			}
+			this.tryFailOnNoSecurity();
 		}
 
 		return modelKey;
@@ -78,6 +107,12 @@ public abstract class AbstractSecuritySetModelKeyTask<T, D extends LoginTokenUse
 		return null;
 	}
 
+	private void tryFailOnNoSecurity() {
+		if (this.failOnNoSecurity) {
+			throw new UnsupportedOperationException();
+		}
+	}
+	
 	protected abstract D getUserDetails();
 
 	protected abstract ModelKey getSecurityKey(D details) throws NoModelKeyException;

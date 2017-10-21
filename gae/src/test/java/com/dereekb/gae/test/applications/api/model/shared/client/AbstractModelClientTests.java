@@ -17,6 +17,7 @@ import com.dereekb.gae.client.api.model.crud.response.ClientDeleteResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientCreateApiResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientUpdateApiResponse;
+import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
@@ -48,6 +49,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.model.search.request.MutableSearchRequest;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
+import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.googlecode.objectify.Key;
 
 public abstract class AbstractModelClientTests extends ApiApplicationTestContext {
@@ -147,6 +149,11 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				return this.deleteRequestSender;
 			}
 
+			// MARK: Tests
+			public ModelTestingSet<T, AbstractModelTestingInstance<T>> makeTestingSet() {
+				return new ModelTestingSet<T, AbstractModelTestingInstance<T>>(this);
+			}
+
 			// MARK: Create
 			public T create() {
 				T template = this.makeTemplate();
@@ -193,10 +200,11 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 				return created;
 			}
-			
+
 			public SerializedClientCreateApiResponse<T> sendCreate(CreateRequest<T> createRequest) {
 				try {
-					return this.createRequestSender.sendRequest(createRequest, AbstractTestingInstance.this.getSecurity());
+					return this.createRequestSender.sendRequest(createRequest,
+					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					Assert.fail("Request failure.");
@@ -385,13 +393,88 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 		public <T extends UniqueModel> UpdateRequest<T> makeAtomicUpdateRequest(T template) {
 			return this.makeAtomicUpdateRequest(ListUtility.wrap(template));
 		}
-		
+
 		public <T extends UniqueModel> UpdateRequest<T> makeAtomicUpdateRequest(Collection<T> templates) {
 			UpdateRequestOptions options = new UpdateRequestOptionsImpl();
 			options.setAtomic(true);
 
 			UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(templates, options);
 			return updateRequest;
+		}
+
+	}
+
+	public static class ModelTestingSet<T extends UniqueModel, I extends AbstractTestingInstance<?>.AbstractModelTestingInstance<T>> {
+
+		private I instance;
+
+		public ModelTestingSet(I instance) {
+			super();
+			this.setInstance(instance);
+		}
+
+		public I getInstance() {
+			return this.instance;
+		}
+
+		public void setInstance(I instance) {
+			if (instance == null) {
+				throw new IllegalArgumentException("Instance cannot be null.");
+			}
+
+			this.instance = instance;
+		}
+
+		// MARK: Tests
+		public void testCreateFailsDueToKeyedAttributeFailure(T template,
+		                                                      final String attributeName) {
+			this.testCreateFailsDueToKeyedAttributeFailure(template, attributeName, null);
+		}
+		
+		public void testCreateFailsDueToKeyedAttributeFailure(T template,
+		                                                      final String attributeName,
+		                                                      final String failureCode) {
+			CreateRequest<T> createRequest = new CreateRequestImpl<T>(template);
+			this.testCreateFailsDueToKeyedAttributeFailure(createRequest, new ModelTestingSetInvalidTestDelegate() {
+
+				@Override
+				public void checkAndAssert(List<KeyedInvalidAttribute> attributes) {
+					KeyedInvalidAttribute attribute = attributes.get(0);
+
+					Assert.assertTrue(
+					        "Expected attribute name to be '" + attributeName + "' but was '" + attribute.getAttribute() + "' instead.",
+					        attribute.getAttribute().equals(attributeName));
+
+					if (failureCode != null) {
+						Assert.assertTrue(
+						        "Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode() + "' instead.",
+						        attribute.getCode().equals(failureCode));
+					}
+				}
+
+			});
+		}
+
+		public void testCreateFailsDueToKeyedAttributeFailure(CreateRequest<T> createRequest,
+		                                                      ModelTestingSetInvalidTestDelegate delegate) {
+			SerializedClientCreateApiResponse<T> response = this.instance.sendCreate(createRequest);
+
+			try {
+				response.getSerializedResponse();
+				Assert.fail("Should have been an invalid request.");
+			} catch (ClientKeyedInvalidAttributeException e) {
+				List<KeyedInvalidAttribute> attributes = e.getInvalidAttributes();
+				Assert.assertFalse(attributes.isEmpty());
+				delegate.checkAndAssert(attributes);
+			} catch (ClientRequestFailureException e) {
+				Assert.fail();
+			}
+		}
+
+		public static interface ModelTestingSetInvalidTestDelegate {
+
+			public void checkAndAssert(List<KeyedInvalidAttribute> attributes);
+
 		}
 
 	}

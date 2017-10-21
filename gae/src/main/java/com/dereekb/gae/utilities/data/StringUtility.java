@@ -128,4 +128,12 @@ public class StringUtility {
 		return (value == null || value.isEmpty());
 	}
 
+	public static String tryToString(Object value) {
+		if (value != null) {
+			return value.toString(); 
+		} else {
+			return null;
+		}
+	}
+
 }
