@@ -115,14 +115,14 @@ public class ObjectifyKeyFieldParameterBuilder<T extends ObjectifyModel<T>> exte
 			return key;
 		}
 
-		public AbstractQueryFieldParameter<ModelKey> setValue(Key<T> value) throws IllegalArgumentException {
+		public void setValue(Key<T> value) throws IllegalArgumentException {
 			ModelKey key = null;
 
 			if (value != null) {
 				key = ObjectifyKeyFieldParameterBuilder.this.util.readKey(value);
 			}
 
-			return this.setValue(key);
+			this.setValue(key);
 		}
 
 		// MARK: ObjectifyQueryRequestLimitedConfigurer

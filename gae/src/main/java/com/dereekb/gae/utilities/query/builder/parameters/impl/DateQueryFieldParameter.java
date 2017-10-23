@@ -144,12 +144,18 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 	}
 
 	@Override
-	public AbstractQueryFieldParameter<Date> setValue(Date date) {
+	public void setValue(Date date) {
 		if (date == null) {
 			date = new Date();
 		}
 
-		return super.setValue(date);
+		super.setValue(date);
+	}
+
+	public void searchRange(Date startDate,
+	                        Date endDate) {
+		this.setPrimaryFilter(startDate, ExpressionOperator.GREATER_OR_EQUAL_TO);
+		this.setSecondFilter(endDate, ExpressionOperator.LESS_OR_EQUAL_TO);
 	}
 
 	// MARK: AbstractQueryFieldParameter

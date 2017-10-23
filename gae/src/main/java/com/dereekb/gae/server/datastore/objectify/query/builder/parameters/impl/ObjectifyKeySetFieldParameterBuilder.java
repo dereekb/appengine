@@ -133,23 +133,22 @@ public class ObjectifyKeySetFieldParameterBuilder<T extends ObjectifyModel<T>> e
 			return ObjectifyKeySetFieldParameterBuilder.this.util.convertFrom(this.getValue());
 		}
 
-		public AbstractQueryFieldParameter<Set<ModelKey>> setValue(Key<T> value) {
+		public void setValue(Key<T> value) {
 			if (value == null) {
 				throw new IllegalArgumentException("Key cannot be null.");
 			}
 
-			return super.setSingleValue(ObjectifyKeySetFieldParameterBuilder.this.util.toModelKey(value));
+			super.setSingleValue(ObjectifyKeySetFieldParameterBuilder.this.util.toModelKey(value));
 		}
 
-		public AbstractQueryFieldParameter<Set<ModelKey>> setKeyValues(Collection<Key<T>> value)
-		        throws IllegalArgumentException {
+		public void setKeyValues(Collection<Key<T>> value) throws IllegalArgumentException {
 			List<ModelKey> keys = null;
 
 			if (value != null) {
 				keys = ObjectifyKeySetFieldParameterBuilder.this.util.convertTo(value);
 			}
 
-			return this.setValue(keys);
+			this.setValue(keys);
 		}
 
 		// MARK: ObjectifyQueryRequestLimitedConfigurer

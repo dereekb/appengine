@@ -3,8 +3,10 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.misc.parameters.ConfigurableEncodedParameter;
-import com.dereekb.gae.utilities.query.builder.parameters.QueryParameter;
-import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.ParameterImpl;
+import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.QueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.ValueExpressionOperatorPair;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.EncodedQueryParameterImpl;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
@@ -16,8 +18,8 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  * @author dereekb
  *
  */
-public abstract class AbstractQueryFieldParameter<T>
-        implements ConfigurableEncodedParameter {
+public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOperatorPairImpl<T>
+        implements ConfigurableEncodedParameter, QueryFieldParameter<T> {
 
 	/**
 	 * Public, temporary field to use in some cases where the field is ignored.
@@ -30,8 +32,8 @@ public abstract class AbstractQueryFieldParameter<T>
 	public static final String DEFAULT_NULL_VALUE = "";
 
 	private String field;
-	private ExpressionOperator operator = ExpressionOperator.NO_OP;
-	private T value = null;
+
+	private ValueExpressionOperatorPair<T> secondFilter;
 
 	private QueryResultsOrdering ordering = null;
 
@@ -91,39 +93,35 @@ public abstract class AbstractQueryFieldParameter<T>
 		this.setValue(value);
 	}
 
-	public ExpressionOperator getOperator() {
-		return this.operator;
+	@Override
+	public ValueExpressionOperatorPair<T> getSecondFilter() {
+		return this.secondFilter;
 	}
 
-	public void clearOperator() {
-		this.setOperator(ExpressionOperator.NO_OP);
+	public void clearSecondFilter(ValueExpressionOperatorPair<T> secondFilter) {
+		this.setSecondFilter(null);
 	}
 
-	/**
-	 * Sets the operator.
-	 *
-	 * @param operator
-	 *            {@link ExpressionOperator}. Never {@code null}.
-	 * @throws IllegalArgumentException
-	 *             if the operator is null.
-	 */
-	public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
-		if (operator == null) {
-			throw new IllegalArgumentException("Operator cannot be null.");
-		}
-
-		this.operator = operator;
+	public void setSecondFilter(ValueExpressionOperatorPair<T> secondFilter) {
+		this.secondFilter = secondFilter;
 	}
 
-	public T getValue() {
-		return this.value;
+	public void setPrimaryFilter(T value,
+	                             ExpressionOperator operator) {
+		this.setPrimaryFilter(ValueExpressionOperatorPairImpl.make(value, operator));
 	}
 
-	public AbstractQueryFieldParameter<T> setValue(T value) {
-		this.value = value;
-		return this;
+	public void setPrimaryFilter(ValueExpressionOperatorPair<T> pair) {
+		this.copyFrom(pair);
 	}
 
+	public void setSecondFilter(T value,
+	                            ExpressionOperator operator) {
+		this.setSecondFilter(ValueExpressionOperatorPairImpl.make(value, operator));
+	}
+
+	// MARK: Ordering
+	@Override
 	public QueryResultsOrdering getOrdering() {
 		return this.ordering;
 	}
@@ -159,6 +157,7 @@ public abstract class AbstractQueryFieldParameter<T>
 		return this.setOrdering(ordering);
 	}
 
+	@Override
 	public String getField() {
 		return this.field;
 	}
@@ -202,18 +201,18 @@ public abstract class AbstractQueryFieldParameter<T>
 
 	@Override
 	public String getParameterString() {
-		QueryParameter parameter = this.getParameterRepresentation();
+		EncodedQueryParameter parameter = this.getParameterRepresentation();
 		return QueryFieldParameterDencoder.SINGLETON.encodeString(parameter);
 	}
 
 	// MARK: ConfigurableQueryParameter
 	@Override
 	public void setParameterString(String parameterString) throws IllegalArgumentException {
-		QueryParameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
+		EncodedQueryParameter parameter = QueryFieldParameterDencoder.SINGLETON.decodeString(parameterString);
 		this.setParameterRepresentation(parameter);
 	}
 
-	public QueryParameter getParameterRepresentation() {
+	public EncodedQueryParameter getParameterRepresentation() {
 		String parameterValue = null;
 
 		switch (this.operator) {
@@ -228,10 +227,10 @@ public abstract class AbstractQueryFieldParameter<T>
 				break;
 		}
 
-		return new ParameterImpl(parameterValue, this.operator, this.ordering);
+		return new EncodedQueryParameterImpl(parameterValue, this.operator, this.ordering);
 	}
 
-	public void setParameterRepresentation(QueryParameter parameter) throws IllegalArgumentException {
+	public void setParameterRepresentation(EncodedQueryParameter parameter) throws IllegalArgumentException {
 		this.operator = parameter.getOperator();
 		this.ordering = parameter.getOrdering();
 

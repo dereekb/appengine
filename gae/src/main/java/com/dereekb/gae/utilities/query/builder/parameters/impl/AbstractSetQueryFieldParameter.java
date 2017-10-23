@@ -43,30 +43,30 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 	}
 
 	// MARK: Override
-	public AbstractQueryFieldParameter<Set<T>> setValue(Collection<T> value) {
+	public void setValue(Collection<T> value) {
 		if (value.size() > MAX_KEYS_ALLOWED) {
 			throw new IllegalArgumentException("Only " + MAX_KEYS_ALLOWED + " keys are allowed for this query.");
 		}
 
 		Set<T> set = new HashSet<T>(value);
-		return this.setValue(set);
+		this.setValue(set);
 	}
 
 	@Override
-	public AbstractQueryFieldParameter<Set<T>> setValue(Set<T> value) {
+	public void setValue(Set<T> value) {
 		if (value == null || value.isEmpty()) {
 			throw new IllegalArgumentException("Set cannot be empty.");
 		}
 
 		Set<T> set = new HashSet<T>(value);
-		return super.setValue(set);
+		super.setValue(set);
 	}
 
-	public AbstractQueryFieldParameter<Set<T>> setSingleValue(T value) {
+	public void setSingleValue(T value) {
 		this.assertSingleValueIsValid(value);
 
 		Set<T> set = SetUtility.wrap(value);
-		return super.setValue(set);
+		super.setValue(set);
 	}
 
 	protected void assertSingleValueIsValid(T value) {

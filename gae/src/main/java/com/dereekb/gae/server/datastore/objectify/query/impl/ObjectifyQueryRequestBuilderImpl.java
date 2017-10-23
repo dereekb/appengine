@@ -238,13 +238,14 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 					}
 				}
 				
-				throw new InvalidQuerySortingException("Missing sorting for primary filter.");
+				// This isn't always the case..?
+				//throw new InvalidQuerySortingException("Missing sorting for primary filter.");
 			}
 			
 			// Can order without a query filter.
 		}
 
-		// No ordereing.
+		// No ordering.
 	}
 
 	@Override
