@@ -22,6 +22,10 @@ public class ValueExpressionOperatorPairImpl<T>
 	public ValueExpressionOperatorPairImpl(T value) {
 		this(value, ExpressionOperator.EQUAL);
 	}
+
+	public ValueExpressionOperatorPairImpl(ExpressionOperator operator) {
+		this(null, operator);
+	}
 	
 	public ValueExpressionOperatorPairImpl(T value, ExpressionOperator operator) {
 		super();

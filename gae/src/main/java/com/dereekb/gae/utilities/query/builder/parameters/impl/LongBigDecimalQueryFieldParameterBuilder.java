@@ -117,7 +117,7 @@ public class LongBigDecimalQueryFieldParameterBuilder {
 		public LongBigDecimalQueryFieldParameter(String field, BigDecimal value) {
 			this(field, LongBigDecimalQueryFieldParameterBuilder.this.conversionUtility.fromDecimal(value));
 		}
-		
+
 		public LongBigDecimalQueryFieldParameter(String field, ExpressionOperator operator, Long encodedValue) {
 			super(field, operator, encodedValue);
 		}
@@ -142,17 +142,15 @@ public class LongBigDecimalQueryFieldParameterBuilder {
 
 		// MARK: AbstractQueryFieldParameters
 		@Override
-		protected String getParameterValue() {
-			Long value = this.getValue();
+		protected String encodeParameterValue(Long value) {
 			return LongBigDecimalQueryFieldParameterBuilder.this.conversionUtility.quickToDecimal(value).toString();
 		}
 
 		@Override
-		protected void setParameterValue(String value) throws IllegalArgumentException {
+		protected Long decodeParameterValue(String value) throws IllegalArgumentException {
 			try {
 				BigDecimal decimal = new BigDecimal(value);
-				Long longValue = LongBigDecimalQueryFieldParameterBuilder.this.conversionUtility.fromDecimal(decimal);
-				this.setValue(longValue);
+				return LongBigDecimalQueryFieldParameterBuilder.this.conversionUtility.fromDecimal(decimal);
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
 			}

@@ -6,6 +6,7 @@ import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQ
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.builder.parameters.ValueExpressionOperatorPair;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.AbstractQueryFieldParameter;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
@@ -104,10 +105,17 @@ public abstract class ObjectifyAbstractQueryFieldParameter<T> extends AbstractQu
 		QueryResultsOrdering resultsOrdering = parameter.getOrdering();
 
 		if (field != null) {
-
 			if (operator != ExpressionOperator.NO_OP) {
 				ObjectifyConditionQueryFilter filter = new ObjectifyConditionQueryFilter(field, operator, value);
 				request.addQueryFilter(filter);
+
+				ValueExpressionOperatorPair<?> secondFilterPair = parameter.getSecondFilter();
+
+				if (secondFilterPair != null) {
+					ObjectifyConditionQueryFilter secondFilter = new ObjectifyConditionQueryFilter(field,
+					        secondFilterPair.getOperator(), secondFilterPair.getValue());
+					request.addQueryFilter(secondFilter);
+				}
 			}
 
 			if (resultsOrdering != null) {

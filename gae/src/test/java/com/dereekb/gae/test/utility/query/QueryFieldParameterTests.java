@@ -1,10 +1,13 @@
 package com.dereekb.gae.test.utility.query;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder;
@@ -111,6 +114,25 @@ public class QueryFieldParameterTests {
 		Assert.assertTrue(decoded.getValue().equals(value));
 		Assert.assertTrue(decoded.equals(parameters));
 
+	}
+	
+	@Test
+	public void testDecodingDateParameters() {
+		
+		String field = "field";
+		
+		Date start = new Date(0);
+		Date end = new Date(1000);
+		
+		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
+		parameter.searchRange(start, end);
+		
+		String parameterString = parameter.getParameterString();
+		DateQueryFieldParameter decoded = new DateQueryFieldParameter(field, parameterString);
+		
+		Assert.assertTrue(decoded.getValue().equals(start));
+		Assert.assertTrue(decoded.getSecondFilter() != null);
+		Assert.assertTrue(decoded.getSecondFilter().getValue().equals(end));
 	}
 
 	@Test

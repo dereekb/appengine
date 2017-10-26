@@ -26,6 +26,8 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  *
  * @param <T>
  *            model type
+ * 
+ * @see {@linkplain https://cloud.google.com/appengine/docs/standard/go/datastore/query-restrictions}
  */
 public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
         implements ObjectifyQueryRequestBuilder<T> {
@@ -33,6 +35,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	private final ObjectifyEntityQueryService<T> queryService;
 
 	private ObjectifyQueryFilter inequalityFilter;
+	private ObjectifyQueryFilter inequalitySecondFilter;
 
 	private List<ObjectifyQueryFilter> queryFilters;
 	private List<ObjectifySimpleQueryFilter<T>> simpleQueryFilters;
@@ -55,6 +58,10 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 		return this.inequalityFilter;
 	}
 
+	public ObjectifyQueryFilter getInequalitySecondFilter() {
+		return this.inequalitySecondFilter;
+	}
+
 	@Override
 	public List<ObjectifyQueryFilter> getQueryFilters() {
 		return this.queryFilters;
@@ -68,6 +75,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 
 	public void setQueryFilters(List<ObjectifyQueryFilter> queryFilters) throws TooManyQueryInequalitiesException {
 		this.inequalityFilter = null;
+		this.inequalitySecondFilter = null;
 		this.queryFilters = new ArrayList<ObjectifyQueryFilter>();
 
 		if (queryFilters != null) {
@@ -81,11 +89,15 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	public void addQueryFilter(ObjectifyQueryFilter filter) throws TooManyQueryInequalitiesException {
 		if (filter != null) {
 			this.assertNotInequalityFilter(filter);
-			
+
 			if (filter.isInequality()) {
-				this.inequalityFilter = filter;
+				if (this.inequalityFilter == null) {
+					this.inequalityFilter = filter;
+				} else {
+					this.inequalitySecondFilter = filter;
+				}
 			}
-			
+
 			this.queryFilters.add(filter);
 		}
 	}
@@ -184,7 +196,7 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 
 	/**
 	 * Re-orders the filters so {{@link #inequalityFilter} comes first, if
-	 * available.
+	 * available. The second inequality does not need to be in the same order..?
 	 */
 	private void reorderFilters() {
 		if (this.inequalityFilter != null) {
@@ -223,11 +235,14 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	}
 
 	/**
-	 * Asserts the proper filter order. Should be called after
-	 * {{@link #tryReorderChain()}.
+	 * Asserts the proper filter order by checking that the inequality is sorted
+	 * first. Should be called after {{@link #tryReorderChain()}.
+	 * <p>
 	 */
 	private void assertProperFilterOrder() throws InvalidQuerySortingException {
-		if (this.resultsOrdering != null) {
+		// Only assert ordering if there is an inequality filter.
+		if (this.resultsOrdering != null && this.inequalityFilter != null) {
+
 			if (this.queryFilters.isEmpty() == false) {
 				ObjectifyQueryFilter queryFilter = this.queryFilters.get(0);
 				String field = queryFilter.getField();
@@ -237,11 +252,10 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 						return;	// Is valid.
 					}
 				}
-				
-				// This isn't always the case..?
-				//throw new InvalidQuerySortingException("Missing sorting for primary filter.");
+
+				throw new InvalidQuerySortingException("Missing sorting for primary filter.");
 			}
-			
+
 			// Can order without a query filter.
 		}
 

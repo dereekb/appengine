@@ -65,13 +65,13 @@ public class StringQueryFieldParameter extends AbstractQueryFieldParameter<Strin
 
 	// MARK: AbstractQueryFieldParameter
 	@Override
-	protected String getParameterValue() {
-		return this.getValue();
+	protected String encodeParameterValue(String value) {
+		return value;
 	}
 
 	@Override
-	protected void setParameterValue(String value) throws IllegalArgumentException {
-		this.setValue(value);
+	protected String decodeParameterValue(String value) throws IllegalArgumentException {
+		return value;
 	}
 
 }

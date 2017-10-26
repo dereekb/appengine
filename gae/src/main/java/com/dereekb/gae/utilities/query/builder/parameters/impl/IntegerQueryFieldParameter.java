@@ -92,14 +92,14 @@ public class IntegerQueryFieldParameter extends AbstractQueryFieldParameter<Inte
 
 	// MARK: AbstractQueryFieldParameters
 	@Override
-	protected String getParameterValue() {
-		return this.getValue().toString();
+	protected String encodeParameterValue(Integer value) {
+		return value.toString();
 	}
 
 	@Override
-	protected void setParameterValue(String value) throws IllegalArgumentException {
+	protected Integer decodeParameterValue(String value) throws IllegalArgumentException {
 		try {
-			this.setValue(new Integer(value));
+			return new Integer(value);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

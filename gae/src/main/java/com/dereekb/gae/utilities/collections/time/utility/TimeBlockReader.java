@@ -96,6 +96,17 @@ public interface TimeBlockReader {
 	                                  TimeBlockRounding rounding);
 
 	/**
+	 * Returns the end date of the input block with the number of blocks times
+	 * 2, which covers the entire possible range of time values that the time
+	 * block might cover or require.
+	 * 
+	 * @param datedTimeBlock
+	 *            {@link DatedTimeBlock}.
+	 * @return {@link Date}. Never {@code null}.
+	 */
+	public Date getDateRangeEnd(DatedTimeBlock datedTimeBlock);
+
+	/**
 	 * Gets the end for the input.
 	 * 
 	 * @param datedTimeBlock

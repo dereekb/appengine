@@ -85,14 +85,14 @@ public class LongQueryFieldParameter extends AbstractQueryFieldParameter<Long> {
 
 	// MARK: AbstractQueryFieldParameters
 	@Override
-	protected String getParameterValue() {
-		return this.getValue().toString();
+	protected String encodeParameterValue(Long value) {
+		return value.toString();
 	}
 
 	@Override
-	protected void setParameterValue(String value) throws IllegalArgumentException {
+	protected Long decodeParameterValue(String value) throws IllegalArgumentException {
 		try {
-			this.setValue(new Long(value));
+			return new Long(value);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

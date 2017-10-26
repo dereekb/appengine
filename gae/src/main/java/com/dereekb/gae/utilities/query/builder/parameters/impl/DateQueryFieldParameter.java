@@ -152,34 +152,41 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 		super.setValue(date);
 	}
 
+	// TODO: Move search range into more generic class.
 	public void searchRange(Date startDate,
 	                        Date endDate) {
+		this.searchRange(startDate, endDate, QueryResultsOrdering.Ascending);
+	}
+
+	public void searchRange(Date startDate,
+	                        Date endDate,
+	                        QueryResultsOrdering ordering) {
 		this.setPrimaryFilter(startDate, ExpressionOperator.GREATER_OR_EQUAL_TO);
 		this.setSecondFilter(endDate, ExpressionOperator.LESS_OR_EQUAL_TO);
+		this.setOrdering(ordering);
 	}
 
 	// MARK: AbstractQueryFieldParameter
 	@Override
-	public String getParameterValue() {
-		Date date = this.getValue();
+	protected String encodeParameterValue(Date date) {
 		String dateString = DateUtility.getKeyForDate(date);
 
 		if (dateString == null) {
-			dateString = DATE_CONVERTER.convertToString(this.getValue());
+			dateString = DATE_CONVERTER.convertToString(date);
 		}
 
 		return dateString;
 	}
 
 	@Override
-	public void setParameterValue(String value) throws IllegalArgumentException {
+	protected Date decodeParameterValue(String value) throws IllegalArgumentException {
 		Date date = DateUtility.getDateForKey(value);
 
 		if (date == null) {
 			date = DATE_CONVERTER.convertFromString(value);
 		}
 
-		this.setValue(date);
+		return date;
 	}
 
 }

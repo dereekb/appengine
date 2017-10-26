@@ -86,15 +86,13 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 
 	// MARK: AbstractQueryFieldParameter
 	@Override
-	protected String getParameterValue() {
-		Set<T> keys = this.getValue();
-		return this.encodeValuesFromString(keys);
+	protected String encodeParameterValue(Set<T> values) {
+		return this.encodeValuesFromString(values);
 	}
 
 	@Override
-	protected void setParameterValue(String value) throws IllegalArgumentException {
-		Collection<T> decodedValues = this.decodeValuesFromString(value);
-		this.setValue(decodedValues);
+	protected Set<T> decodeParameterValue(String value) throws IllegalArgumentException {
+		return SetUtility.newHashSet(this.decodeValuesFromString(value));
 	}
 
 	protected abstract String encodeValuesFromString(Collection<T> values);

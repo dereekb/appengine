@@ -217,6 +217,43 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 	}
 
 	@Test
+	public void testRequestBuilderOrderReorderingWithDoubleInequality() {
+		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		        .makeQuery();
+
+		String fieldA = "fieldA";
+		String fieldB = "fieldB";
+
+		ObjectifyQueryFilter a = new ObjectifyConditionQueryFilter(fieldA, ExpressionOperator.EQUAL, "VALUE");
+		ObjectifyQueryFilter b = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.GREATER_THAN, "VALUE");
+		ObjectifyQueryFilter b2 = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.LESS_THAN, "VALUE");
+
+		Assert.assertTrue(b.isInequality());
+
+		impl.addQueryFilter(a);
+		impl.addQueryFilter(b);
+		impl.addQueryFilter(b2);
+
+		Assert.assertTrue(impl.getInequalityFilter() != null);
+		Assert.assertTrue(impl.getInequalitySecondFilter() != null);
+
+		ObjectifyQueryOrdering aOrder = new ObjectifyQueryOrderingImpl(fieldA, QueryResultsOrdering.Ascending);
+		ObjectifyQueryOrdering bOrder = new ObjectifyQueryOrderingImpl(fieldB, QueryResultsOrdering.Ascending);
+
+		impl.addResultsOrdering(aOrder);
+		impl.addResultsOrdering(bOrder);
+
+		ExecutableObjectifyQuery<Login> executable = impl.buildExecutableQuery();
+		executable.queryModelKeys();
+
+		Assert.assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
+
+		// Check that b's field is first.
+		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
+		Assert.assertTrue(chain.getValue().getField().equals(fieldB));
+	}
+	
+	@Test
 	public void testRequestBuilderMultipleInequalitysFail() {
 		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
 		        .makeQuery();

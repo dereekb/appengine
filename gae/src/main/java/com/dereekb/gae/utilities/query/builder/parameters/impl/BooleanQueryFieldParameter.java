@@ -85,14 +85,14 @@ public class BooleanQueryFieldParameter extends AbstractQueryFieldParameter<Bool
 
 	// MARK: AbstractQueryFieldParameters
 	@Override
-	protected String getParameterValue() {
-		return this.getValue().toString();
+	protected String encodeParameterValue(Boolean value) {
+		return value.toString();
 	}
 
 	@Override
-	protected void setParameterValue(String value) throws IllegalArgumentException {
+	protected Boolean decodeParameterValue(String value) throws IllegalArgumentException {
 		try {
-			this.setValue(new Boolean(value));
+			return new Boolean(value);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

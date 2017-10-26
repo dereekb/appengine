@@ -169,13 +169,13 @@ public class ModelKeyQueryFieldParameterBuilder {
 
 		// MARK: AbstractQueryFieldParameter
 		@Override
-		protected String getParameterValue() {
-			return this.getValue().toString();
+		protected String encodeParameterValue(ModelKey value) {
+			return value.toString();
 		}
 
 		@Override
-		protected void setParameterValue(String value) throws IllegalArgumentException {
-			this.setValue(ModelKey.convert(ModelKeyQueryFieldParameterBuilder.this.keyType, value));
+		protected ModelKey decodeParameterValue(String value) throws IllegalArgumentException {
+			return ModelKey.convert(ModelKeyQueryFieldParameterBuilder.this.keyType, value);
 		}
 
 	}

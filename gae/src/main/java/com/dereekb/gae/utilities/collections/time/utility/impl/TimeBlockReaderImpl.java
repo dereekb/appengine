@@ -89,6 +89,11 @@ public class TimeBlockReaderImpl
 	}
 
 	@Override
+	public Date getDateRangeEnd(DatedTimeBlock datedTimeBlock) {
+		return this.getDateEnd(datedTimeBlock.getTimeBlockStart(), datedTimeBlock.getTimeBlocks() * 2);
+	}
+
+	@Override
 	public Date getDateEnd(DatedTimeBlock datedTimeBlock) {
 		Date start = datedTimeBlock.getTimeBlockStart();
 		Long timeBlocks = datedTimeBlock.getTimeBlocks();
@@ -466,5 +471,4 @@ public class TimeBlockReaderImpl
 		}
 
 	}
-
 }

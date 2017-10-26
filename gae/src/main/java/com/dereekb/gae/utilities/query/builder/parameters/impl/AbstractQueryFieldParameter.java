@@ -4,6 +4,7 @@ import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRe
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.misc.parameters.ConfigurableEncodedParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.EncodedValueExpressionOperatorPair;
 import com.dereekb.gae.utilities.query.builder.parameters.QueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.ValueExpressionOperatorPair;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.EncodedQueryParameterImpl;
@@ -98,7 +99,7 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 		return this.secondFilter;
 	}
 
-	public void clearSecondFilter(ValueExpressionOperatorPair<T> secondFilter) {
+	public void clearSecondFilter() {
 		this.setSecondFilter(null);
 	}
 
@@ -188,6 +189,28 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 		return this;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * If the operator is an inequality, sorting for this type will also be
+	 * initalized.
+	 */
+	@Override
+	public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
+		super.setOperator(operator);
+
+		if (operator.isInequality()) {
+			this.initSortingForInequality();
+		}
+	}
+
+	/**
+	 * Initializes sorting for an inequality operator.
+	 */
+	protected void initSortingForInequality() {
+		this.sortAscending();
+	}
+
 	// MARK: KeyedEncodedQueryParameter
 	@Override
 	public String getParameterKey() {
@@ -227,10 +250,20 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 				break;
 		}
 
-		return new EncodedQueryParameterImpl(parameterValue, this.operator, this.ordering);
+		EncodedValueExpressionOperatorPair encodedSecondFilter = null;
+
+		if (this.operator.isInequality()) {
+			encodedSecondFilter = this.getEncodedSecondFilter();
+
+			if (encodedSecondFilter.getOperator().isInequality() == false) {
+				encodedSecondFilter = null;
+			}
+		}
+
+		return new EncodedQueryParameterImpl(parameterValue, this.operator, this.ordering, encodedSecondFilter);
 	}
 
-	public void setParameterRepresentation(EncodedQueryParameter parameter) throws IllegalArgumentException {
+	public final void setParameterRepresentation(EncodedQueryParameter parameter) throws IllegalArgumentException {
 		this.operator = parameter.getOperator();
 		this.ordering = parameter.getOrdering();
 
@@ -244,6 +277,34 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 				this.setParameterValue(parameter.getValue());
 				break;
 		}
+
+		// Second Filter
+		EncodedValueExpressionOperatorPair secondFilter = parameter.getSecondFilter();
+
+		if (this.operator.isInequality() == false) {
+			secondFilter = null;	// Only set if input is inequality.
+			                    	// Otherwise, clear.
+		}
+
+		this.setEncodedSecondFilter(secondFilter);
+	}
+
+	// MARK: Second Filter
+	public EncodedValueExpressionOperatorPair getEncodedSecondFilter() {
+		if (this.secondFilter != null) {
+			return this.encodeValueExpressionOperatorPair(this.secondFilter);
+		} else {
+			return null;
+		}
+	}
+
+	public void setEncodedSecondFilter(EncodedValueExpressionOperatorPair secondFilter) {
+		if (secondFilter == null) {
+			this.clearSecondFilter();
+		} else {
+			ValueExpressionOperatorPairImpl<T> pair = this.decodeValueExpressionOperatorPair(secondFilter);
+			this.setSecondFilter(pair);
+		}
 	}
 
 	/**
@@ -251,7 +312,9 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 	 * 
 	 * @return {@link String} value for the current value. Never {@code null}.
 	 */
-	protected abstract String getParameterValue();
+	protected String getParameterValue() {
+		return this.encodeParameterValue(this.value);
+	}
 
 	/**
 	 * Sets the parameter value.
@@ -261,7 +324,47 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 	 * @throws IllegalArgumentException
 	 *             if the input value is not acceptable.
 	 */
-	protected abstract void setParameterValue(String value) throws IllegalArgumentException;
+	protected final void setParameterValue(String parameterValue) throws IllegalArgumentException {
+		T value = this.decodeParameterValue(parameterValue);
+		this.setValue(value);
+	}
+
+	protected EncodedValueExpressionOperatorPair encodeValueExpressionOperatorPair(ValueExpressionOperatorPair<T> pair) {
+		T value = pair.getValue();
+		ExpressionOperator operator = pair.getOperator();
+		String encodedValue = null;
+
+		if (value == null) {
+			operator = ExpressionOperator.IS_NULL;
+		} else {
+			encodedValue = this.encodeParameterValue(value);
+		}
+
+		return new EncodedValueExpressionOperatorPairImpl(encodedValue, operator);
+	}
+
+	protected ValueExpressionOperatorPairImpl<T> decodeValueExpressionOperatorPair(EncodedValueExpressionOperatorPair pair) {
+		T value = this.decodeParameterValue(pair.getValue());
+		return new ValueExpressionOperatorPairImpl<T>(value, pair.getOperator());
+	}
+
+	/**
+	 * Encodes the parameter value.
+	 * 
+	 * @return {@link String} value for the current value. Never {@code null}.
+	 */
+	protected abstract String encodeParameterValue(T value);
+
+	/**
+	 * Decodes the parameter value.
+	 * 
+	 * @param value
+	 *            {@link String}. Never {@code null}.
+	 * @return value. May be {@code null}.
+	 * @throws IllegalArgumentException
+	 *             if the input value is not acceptable.
+	 */
+	protected abstract T decodeParameterValue(String value) throws IllegalArgumentException;
 
 	/**
 	 * Retrieves the string representation for a null value.
@@ -284,8 +387,8 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 
 	@Override
 	public String toString() {
-		return "AbstractQueryFieldParameter [field=" + this.field + ", operator=" + this.operator + ", value="
-		        + this.value + ", ordering=" + this.ordering + "]";
+		return "AbstractQueryFieldParameter [field=" + this.field + ", secondFilter=" + this.secondFilter
+		        + ", ordering=" + this.ordering + ", value=" + this.value + ", operator=" + this.operator + "]";
 	}
 
 }
