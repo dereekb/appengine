@@ -143,7 +143,7 @@ public class DateUtility {
 		return timeInDays(days.longValue());
 	}
 	
-	public static Long timeInDays(Long days) {
+	public static Long timeInDays(long days) {
 		return TIME_IN_DAY * days;
 	}
 
@@ -151,10 +151,18 @@ public class DateUtility {
 		return timeInHours(hours.longValue());
 	}
 	
-	public static Long timeInHours(Long hours) {
+	public static Long timeInHours(long hours) {
 		return TIME_IN_HOUR * hours;
 	}
 
+	public static Long timeInMinutes(Integer minutes) {
+		return timeInMinutes(minutes.longValue());
+	}
+
+	public static Long timeInMinutes(long minutes) {
+		return TIME_IN_MINUTE * minutes;
+	}
+	
 	public static boolean dateIsInTheFutureAtleast(Date date, long minimumScheduleTime) {
 		return dateIsInTheFutureAtleast(date, minimumScheduleTime, 0L);
 	}

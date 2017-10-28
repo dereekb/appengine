@@ -255,7 +255,7 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 		if (this.operator.isInequality()) {
 			encodedSecondFilter = this.getEncodedSecondFilter();
 
-			if (encodedSecondFilter.getOperator().isInequality() == false) {
+			if (encodedSecondFilter != null && encodedSecondFilter.getOperator().isInequality() == false) {
 				encodedSecondFilter = null;
 			}
 		}
