@@ -104,7 +104,7 @@ public class IntegerSetQueryFieldParameter extends AbstractSetQueryFieldParamete
 
 	@Override
 	public String toString() {
-		return "IntegerSetQueryFieldParameter []";
+		return "IntegerSetQueryFieldParameter [toString()=" + super.toString() + "]";
 	}
 
 }

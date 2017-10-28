@@ -55,12 +55,13 @@ public class ListUtility {
 	 *            Array of elements to add.
 	 * @return {@link List}. Never {@code null}.
 	 */
-	public static <T> List<T> toList(T[] elements) {
+	@SafeVarargs
+	public static <T> List<T> toList(T... elements) {
 		List<T> list = new ArrayList<T>();
 		addElements(list, elements);
 		return list;
 	}
-
+	
 	/**
 	 * Adds the elements from an array to the input list.
 	 *
@@ -70,8 +71,9 @@ public class ListUtility {
 	 *            Array of elements to add.
 	 * @return {@link Collection}. Never {@code null}.
 	 */
+	@SafeVarargs
 	public static <T> Collection<T> addElements(Collection<T> list,
-	                                            T[] elements) {
+	                                            T... elements) {
 		if (list == null) {
 			list = new ArrayList<T>();
 		}
