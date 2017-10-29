@@ -173,4 +173,9 @@ public class DateUtility {
 		return futureDate.after(date);
 	}
 
+	public static Long getDifference(Date start,
+	                                 Date end) {
+		return end.getTime() - start.getTime();
+	}
+
 }

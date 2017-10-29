@@ -571,6 +571,9 @@ public class DatedTimeBlockUtilityTest {
 		Assert.assertTrue(totalBlocks.equals(expectedTotalBlocks));
 		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
 		Assert.assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
+		
+		// Assert the isSplitBy works here too.
+		Assert.assertTrue(instance.isSplitBy(splitTimeBlock));
 	}
 
 	@Test
@@ -600,6 +603,9 @@ public class DatedTimeBlockUtilityTest {
 		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
 		Assert.assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
 		Assert.assertTrue(split.get(2).getTimeBlocks().equals(1L));
+		
+		// Assert the isSplitBy works here too.
+		Assert.assertTrue(instance.isSplitBy(splitTimeBlock));
 	}
 
 	@Test
@@ -618,6 +624,9 @@ public class DatedTimeBlockUtilityTest {
 		Assert.assertTrue(split.size() == 1);
 		Assert.assertTrue(split.get(0).getTimeBlocks().equals(datedTimeBlock.getTimeBlocks()));
 		Assert.assertTrue(split.get(0).getTimeBlockStart().equals(datedTimeBlock.getTimeBlockStart()));
+		
+		// Assert the isSplitBy works here too.
+		Assert.assertTrue(instance.isSplitBy(datedTimeBlock));
 	}
 
 	@Test
@@ -645,6 +654,9 @@ public class DatedTimeBlockUtilityTest {
 		Assert.assertTrue(totalBlocks.equals(expectedTotalBlocks));
 		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
 		Assert.assertTrue(split.get(1).getTimeBlocks().equals(allBlocks - splitTimeBlock.getTimeBlocks()));
+
+		// Assert the isSplitBy works here too.
+		Assert.assertTrue(instance.isSplitBy(splitTimeBlock));
 	}
 
 }

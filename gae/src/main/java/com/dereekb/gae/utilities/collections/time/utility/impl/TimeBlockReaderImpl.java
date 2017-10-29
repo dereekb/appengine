@@ -240,7 +240,7 @@ public class TimeBlockReaderImpl
 		public boolean isSplitBy(DatedTimeBlock datedTimeBlock) {
 			if (this.overlapsWith(datedTimeBlock)) {
 				Date endDate = TimeBlockReaderImpl.this.getDateEnd(datedTimeBlock);
-				return endDate.before(this.getEndDate());
+				return (endDate.compareTo(this.getEndDate()) <= 0);
 			}
 
 			return false;
