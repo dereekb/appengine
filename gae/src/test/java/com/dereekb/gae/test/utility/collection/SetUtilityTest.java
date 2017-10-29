@@ -10,7 +10,27 @@ import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.collections.list.SetUtility.SetDifferenceImpl;
 
 public class SetUtilityTest {
+
+	@Test()
+	public void testSetUtilityHasAny() {
+		
+		Set<Integer> setA = new HashSet<Integer>();
+
+		setA.add(1);
+		setA.add(2); // Included in both
+		
+		Set<Integer> setB = new HashSet<Integer>();
+
+		setB.add(2); // Included in both
+		setB.add(3); // Included in both
 	
+		Assert.assertTrue(SetUtility.containsAnyElementsOf(setA, setB));
+		
+		setB.remove(2);
+		
+		Assert.assertFalse(SetUtility.containsAnyElementsOf(setA, setB));
+	}
+
 	@Test()
 	public void testSetUtilityIntersection() {
 		

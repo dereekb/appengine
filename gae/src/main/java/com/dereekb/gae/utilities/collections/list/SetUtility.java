@@ -29,16 +29,16 @@ public class SetUtility {
 
 	public static <T> Set<T> newHashSet(Collection<T> input) {
 		Set<T> set = new HashSet<T>();
-		
+
 		if (input != null) {
 			set.addAll(input);
 		}
-		
-		return set;		
+
+		return set;
 	}
 
 	public static <T> SetDifferenceImpl<T> makeSetInfo(Collection<? extends T> a,
-	                                                     Collection<? extends T> b) {
+	                                                   Collection<? extends T> b) {
 		return new SetDifferenceImpl<T>(a, b);
 	}
 
@@ -51,16 +51,29 @@ public class SetUtility {
 
 	public static <T> Set<T> copy(Collection<? extends T> input) {
 		Set<T> set = new HashSet<T>();
-		
+
 		if (input != null) {
 			set.addAll(input);
 		}
-		
+
 		return set;
 	}
 
+	/**
+	 * 
+	 * @param pools
+	 * @param customPools
+	 * @return {@code true} if any value of set a exists in set b.
+	 */
+	public static <T> boolean containsAnyElementsOf(Collection<T> a,
+	                                 Collection<T> b) {
+
+		SetDifferenceImpl<T> difference = makeSetInfo(a, b);
+		return (difference.getIntersection().isEmpty() == false);
+	}
+
 	public static <T> boolean isEquivalent(Set<T> a,
-	                                   Set<T> b) {
+	                                       Set<T> b) {
 		return a.size() == b.size() && a.containsAll(b);
 	}
 
@@ -133,7 +146,8 @@ public class SetUtility {
 			return intersection;
 		}
 
-		public static <T> Set<T> makeUnique(Set<T> a, Set<T> b) {
+		public static <T> Set<T> makeUnique(Set<T> a,
+		                                    Set<T> b) {
 			return makeCompliment(b, a);
 		}
 
@@ -144,12 +158,13 @@ public class SetUtility {
 			return compliment;
 		}
 
-		public Set<T> makeDifference(Set<T> a, Set<T> b) {
+		public Set<T> makeDifference(Set<T> a,
+		                             Set<T> b) {
 			Set<T> aUnique = this.getUnique();
 			Set<T> bCompliment = this.getCompliment();
 			return SetUtility.combine(aUnique, bCompliment);
 		}
-		
+
 	}
 
 	public static interface SetInfo<T> {
@@ -162,7 +177,7 @@ public class SetUtility {
 		 * Gets all elements that are in both sets.
 		 */
 		public Set<T> getIntersection();
-		
+
 		/**
 		 * Gets all elements that are unique to set A.
 		 */
