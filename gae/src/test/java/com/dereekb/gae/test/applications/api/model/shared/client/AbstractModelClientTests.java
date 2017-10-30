@@ -280,6 +280,16 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			// MARK: Query
+			public ClientModelQueryResponse<T> query() {
+				return this.query(false);
+			}
+			
+			public ClientModelQueryResponse<T> query(boolean keysOnly) {
+				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
+				queryRequest.setKeysOnly(keysOnly);
+				return this.query(queryRequest);
+			}
+
 			public ClientModelQueryResponse<T> query(ConfigurableEncodedQueryParameters query) {
 				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
 				queryRequest.setSearchParameters(query.getParameters());
@@ -358,6 +368,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				try {
 					return response.getSerializedResponse();
 				} catch (ClientResponseSerializationException | ClientRequestFailureException e) {
+					e.printStackTrace();
 					Assert.fail("Failed serializing response.");
 					throw new RuntimeException(e);
 				}
@@ -384,6 +395,10 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			public ClientReadRequestImpl makeReadRequest(Iterable<ModelKey> keys,
 			                                             boolean atomic) {
 				ReadRequest readRequest = new KeyReadRequest(keys, atomic);
+				return this.makeReadRequest(readRequest);
+			}
+			
+			public ClientReadRequestImpl makeReadRequest(ReadRequest readRequest) {
 				ClientReadRequestImpl clientReadRequest = new ClientReadRequestImpl(readRequest);
 				return clientReadRequest;
 			}

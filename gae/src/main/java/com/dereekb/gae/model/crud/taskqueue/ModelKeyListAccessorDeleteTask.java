@@ -5,14 +5,12 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
 import com.dereekb.gae.model.crud.services.request.impl.DeleteRequestImpl;
 import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
-import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
-import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
+import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelKeyListAccessorTask;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask;
-import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTaskFactory;
 
 /**
  * {@link Task} that uses a {@link DeleteService} to delete the input.
@@ -23,8 +21,7 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTas
  *            model type
  * @see TaskQueueDeleteModelTask
  */
-public class ModelKeyListAccessorDeleteTask<T extends UniqueModel>
-        implements Task<ModelKeyListAccessor<T>>, TaskQueueIterateTaskFactory<T> {
+public class ModelKeyListAccessorDeleteTask<T extends UniqueModel> extends AbstractModelKeyListAccessorTask<T> {
 
 	private DeleteService<T> deleteService;
 	private DeleteRequestOptions options;
@@ -69,12 +66,6 @@ public class ModelKeyListAccessorDeleteTask<T extends UniqueModel>
 		} catch (AtomicOperationException e) {
 			throw new FailedTaskException(e);
 		}
-	}
-
-	// MARK: Task Factory
-	@Override
-	public Task<ModelKeyListAccessor<T>> makeTask(IterateTaskInput input) throws FactoryMakeFailureException {
-		return this;
 	}
 
 	@Override
