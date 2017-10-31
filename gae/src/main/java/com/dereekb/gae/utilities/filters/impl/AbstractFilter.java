@@ -3,7 +3,6 @@ package com.dereekb.gae.utilities.filters.impl;
 import java.util.List;
 
 import com.dereekb.gae.utilities.filters.Filter;
-import com.dereekb.gae.utilities.filters.FilterDelegate;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
 
@@ -39,14 +38,7 @@ public abstract class AbstractFilter<T>
 
 	@Override
 	public FilterResults<T> filterObjects(Iterable<? extends T> objects) {
-		FilterResults<T> results = new FilterResults<T>();
-
-		for (T object : objects) {
-			FilterResult result = this.filterObject(object);
-			results.add(result, object);
-		}
-
-		return results;
+		return FilterUtility.filterObjects(this, objects);
 	}
 
 	public List<T> filterAndReturnMatchingResult(Iterable<T> objects,
@@ -59,7 +51,6 @@ public abstract class AbstractFilter<T>
 	/**
 	 * Does an efficient pass over input objects checking to see if they all
 	 * pass the filter.
-	 *
 	 *
 	 * @param objects
 	 * @return True if all objects pass the filter.
@@ -99,20 +90,6 @@ public abstract class AbstractFilter<T>
 		}
 
 		return allPassFilter;
-	}
-
-	@Override
-	public <W> FilterResults<W> filterObjectsWithDelegate(Iterable<? extends W> sources,
-	                                                      FilterDelegate<T, W> delegate) {
-		FilterResults<W> results = new FilterResults<W>();
-
-		for (W source : sources) {
-			T object = delegate.getModel(source);
-			FilterResult result = this.filterObject(object);
-			results.add(result, source);
-		}
-
-		return results;
 	}
 
 }

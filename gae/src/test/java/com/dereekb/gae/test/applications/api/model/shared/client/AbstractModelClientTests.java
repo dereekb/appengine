@@ -283,7 +283,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			public ClientModelQueryResponse<T> query() {
 				return this.query(false);
 			}
-			
+
 			public ClientModelQueryResponse<T> query(boolean keysOnly) {
 				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
 				queryRequest.setKeysOnly(keysOnly);
@@ -338,31 +338,31 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				}
 			}
 
-			public T read(T model) {
+			public T read(T model) throws AssertionError {
 				return this.read(ListUtility.wrap(model)).get(0);
 			}
 
-			public T readByKey(Key<T> key) {
+			public T readByKey(Key<T> key) throws AssertionError {
 				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
 				return this.readByKey(ListUtility.wrap(modelKey)).get(0);
 			}
 
-			public List<T> read(Iterable<T> types) {
+			public List<T> read(Iterable<T> types) throws AssertionError {
 				return this.readByKey(ModelKey.readModelKeys(types));
 			}
 
-			public List<T> readByKey(Collection<ModelKey> keys) {
+			public List<T> readByKey(Collection<ModelKey> keys) throws AssertionError {
 				ClientReadRequestImpl clientReadRequest = this.makeAtomicReadRequest(keys);
 				return this.readList(clientReadRequest);
 			}
 
-			public List<T> readList(ClientReadRequest readRequest) throws AtomicOperationException {
+			public List<T> readList(ClientReadRequest readRequest) throws AssertionError, AtomicOperationException {
 				SimpleReadResponse<T> readResponse = this.simpleRead(readRequest);
 				Collection<T> types = readResponse.getModels();
 				return ListUtility.copy(types);
 			}
 
-			public SimpleReadResponse<T> simpleRead(ClientReadRequest readRequest) {
+			public SimpleReadResponse<T> simpleRead(ClientReadRequest readRequest) throws AssertionError {
 				SerializedClientReadApiResponse<T> response = this.read(readRequest);
 
 				try {
@@ -397,7 +397,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				ReadRequest readRequest = new KeyReadRequest(keys, atomic);
 				return this.makeReadRequest(readRequest);
 			}
-			
+
 			public ClientReadRequestImpl makeReadRequest(ReadRequest readRequest) {
 				ClientReadRequestImpl clientReadRequest = new ClientReadRequestImpl(readRequest);
 				return clientReadRequest;
@@ -445,7 +445,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 		                                                      final String attributeName) {
 			this.testCreateFailsDueToKeyedAttributeFailure(template, attributeName, null);
 		}
-		
+
 		public void testCreateFailsDueToKeyedAttributeFailure(T template,
 		                                                      final String attributeName,
 		                                                      final String failureCode) {
@@ -456,14 +456,12 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				public void checkAndAssert(List<KeyedInvalidAttribute> attributes) {
 					KeyedInvalidAttribute attribute = attributes.get(0);
 
-					Assert.assertTrue(
-					        "Expected attribute name to be '" + attributeName + "' but was '" + attribute.getAttribute() + "' instead.",
-					        attribute.getAttribute().equals(attributeName));
+					Assert.assertTrue("Expected attribute name to be '" + attributeName + "' but was '"
+					        + attribute.getAttribute() + "' instead.", attribute.getAttribute().equals(attributeName));
 
 					if (failureCode != null) {
-						Assert.assertTrue(
-						        "Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode() + "' instead.",
-						        attribute.getCode().equals(failureCode));
+						Assert.assertTrue("Expected failure code to be '" + failureCode + "' but was '"
+						        + attribute.getCode() + "' instead.", attribute.getCode().equals(failureCode));
 					}
 				}
 

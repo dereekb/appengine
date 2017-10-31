@@ -1,7 +1,6 @@
 package com.dereekb.gae.utilities.filters.impl;
 
 import com.dereekb.gae.utilities.filters.Filter;
-import com.dereekb.gae.utilities.filters.FilterDelegate;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
 
@@ -25,13 +24,6 @@ public abstract class AbstractFactoryFilter<T>
 	@Override
 	public FilterResults<T> filterObjects(Iterable<? extends T> objects) {
 		return this.makeFilter().filterObjects(objects);
-	}
-
-	@Deprecated
-	@Override
-	public <W> FilterResults<W> filterObjectsWithDelegate(Iterable<? extends W> sources,
-	                                                      FilterDelegate<T, W> delegate) {
-		return this.makeFilter().filterObjectsWithDelegate(sources, delegate);
 	}
 
 	// MARK: Internal

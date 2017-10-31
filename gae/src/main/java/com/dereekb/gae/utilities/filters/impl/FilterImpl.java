@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.filters.impl;
 
+import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
 
@@ -14,6 +15,9 @@ import com.dereekb.gae.utilities.filters.FilterResults;
  */
 public class FilterImpl<T> extends AbstractFilter<T> {
 
+	private static final FilterImpl<Object> PASS = new FilterImpl<Object>(FilterResult.PASS);
+	private static final FilterImpl<Object> FAIL = new FilterImpl<Object>(FilterResult.FAIL);
+	
 	private final FilterResult result;
 
 	public FilterImpl(FilterResult result) throws IllegalArgumentException {
@@ -22,6 +26,16 @@ public class FilterImpl<T> extends AbstractFilter<T> {
 		}
 
 		this.result = result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Filter<T> pass() {
+		return (Filter<T>) PASS;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Filter<T> fail() {
+		return (Filter<T>) FAIL;
 	}
 
 	public FilterResult getResult() {
