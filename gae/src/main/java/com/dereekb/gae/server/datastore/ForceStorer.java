@@ -2,6 +2,8 @@ package com.dereekb.gae.server.datastore;
 
 /**
  * {@link Storer} extension that allows force-storing objects.
+ * <p>
+ * Generally only used for testing.
  * 
  * @author dereekb
  *

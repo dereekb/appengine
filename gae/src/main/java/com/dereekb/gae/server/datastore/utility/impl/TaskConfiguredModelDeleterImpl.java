@@ -12,13 +12,13 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
  * @param <T>
  *            model type
  */
-public class TaskConfiguredDeleterImpl<T>
+public class TaskConfiguredModelDeleterImpl<T>
         implements ModelDeleter<T> {
 
 	private ModelDeleter<T> deleter;
 	private TaskRequestSender<T> taskRequestSender;
 
-	public TaskConfiguredDeleterImpl(TaskRequestSender<T> taskRequestSender, ModelDeleter<T> deleter) {
+	public TaskConfiguredModelDeleterImpl(TaskRequestSender<T> taskRequestSender, ModelDeleter<T> deleter) {
 		this.setTaskRequestSender(taskRequestSender);
 		this.setDeleter(deleter);
 	}

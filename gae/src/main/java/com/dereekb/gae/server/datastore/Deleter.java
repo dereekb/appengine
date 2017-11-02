@@ -9,6 +9,4 @@ package com.dereekb.gae.server.datastore;
  *            model type
  */
 public interface Deleter<T>
-        extends ModelDeleter<T>, KeyDeleter {
-
-}
+        extends ModelDeleter<T>, KeyDeleter {}

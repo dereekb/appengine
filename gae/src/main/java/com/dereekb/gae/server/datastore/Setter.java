@@ -12,4 +12,4 @@ package com.dereekb.gae.server.datastore;
  * @see KeyDeleter
  */
 public interface Setter<T>
-        extends ForceStorer<T>, Saver<T>, Deleter<T> {}
+        extends Saver<T>, Deleter<T> {}

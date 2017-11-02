@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.components;
 
+import com.dereekb.gae.server.datastore.ForceSetter;
 import com.dereekb.gae.server.datastore.Setter;
 import com.googlecode.objectify.Key;
 
@@ -12,7 +13,7 @@ import com.googlecode.objectify.Key;
  *            model type
  */
 public interface ObjectifyKeyedSetter<T>
-        extends Setter<T> {
+        extends ForceSetter<T> {
 
 	/**
 	 * Synchronously deletes a model using a key.

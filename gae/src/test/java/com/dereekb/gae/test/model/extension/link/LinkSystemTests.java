@@ -146,7 +146,7 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 
 			this.aAccessor = aAccessor;
 			this.bAccessor = bAccessor;
-
+			
 			this.aEntityGenerator = new TestModelGeneratorImpl<TestLinkModelA>(aEntity, new TestLinkModelAGenerator());
 			this.bEntityGenerator = new TestModelGeneratorImpl<TestLinkModelB>(bEntity, new TestLinkModelBGenerator());
 		}

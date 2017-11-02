@@ -11,6 +11,4 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *            model type
  */
 public interface GetterSetter<T extends UniqueModel>
-        extends Getter<T>, Setter<T> {
-
-}
+        extends Getter<T>, Setter<T> {}

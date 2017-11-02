@@ -7,7 +7,7 @@ import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.GeneratorUtility;
 import com.dereekb.gae.model.extension.generation.ModelGenerator;
 import com.dereekb.gae.model.extension.generation.impl.GeneratorArgImpl;
-import com.dereekb.gae.server.datastore.Setter;
+import com.dereekb.gae.server.datastore.ForceSetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
@@ -19,26 +19,27 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGeneratorDelegate
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class TestModelGeneratorImpl<T extends UniqueModel>
         implements TestModelGenerator<T> {
 
-	protected Setter<T> setter;
+	protected ForceSetter<T> setter;
 	protected ModelGenerator<T> generator;
 
 	public TestModelGeneratorImpl() {}
 
-	public TestModelGeneratorImpl(Setter<T> setter, ModelGenerator<T> generator) {
+	public TestModelGeneratorImpl(ForceSetter<T> setter, ModelGenerator<T> generator) {
 		this.setSetter(setter);
 		this.setGenerator(generator);
 	}
 
 	@Override
-	public Setter<T> getSetter() {
+	public ForceSetter<T> getSetter() {
 		return this.setter;
 	}
 
-	public void setSetter(Setter<T> setter) {
+	public void setSetter(ForceSetter<T> setter) {
 		this.setter = setter;
 	}
 
