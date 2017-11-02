@@ -307,6 +307,16 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				}
 			}
 
+			public ClientModelQueryResponse<T> sendQuery(SearchRequest queryRequest) {
+				try {
+					return this.queryRequestSender.query(queryRequest, AbstractTestingInstance.this.getSecurity());
+				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
+					Assert.fail("Failed querying.");
+					throw new RuntimeException();
+				}
+			}
+
 		}
 
 		public abstract class AbstractReadOnlyModelTestingInstance<T extends UniqueModel> {

@@ -59,7 +59,7 @@ public class SafeUpdateServiceImpl<T extends UniqueModel> extends UpdateServiceI
 
 		};
 
-		UpdateResponse<T> response = ObjectifyTransactionUtility.doTransactNew(work);
+		UpdateResponse<T> response = ObjectifyTransactionUtility.transact().doTransaction(work);
 
 		this.reviewWithResponse(response);
 

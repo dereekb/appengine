@@ -94,7 +94,7 @@ public abstract class AbstractTransactionModelReplacerTask<I extends UniqueModel
 		List<List<ReplacementPair<O>>> results = null;
 
 		try {
-			results = ObjectifyTransactionUtility.doPartitionedTransactNew(input, delegate);
+			results = ObjectifyTransactionUtility.transact().doTransactionWithPartition(input, delegate);
 		} catch (RuntimeException e) {
 			throw new FailedTaskException(e);
 		}

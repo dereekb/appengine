@@ -24,52 +24,149 @@ public class ObjectifyTransactionUtility {
 		return PARTITIONER;
 	}
 
-	// MARK:
+	public static final ObjectifyTransactionFactory NEW_TRANSACTION_FACTORY = new ObjectifyNewTransactionFactoryImpl();
+	public static final ObjectifyTransactionFactory DEFAULT_TRANSACTION_FACTORY = new ObjectifyDefaultTransactionFactoryImpl();
+
+	// MARK: Accessors
+	public static ObjectifyTransactionFactory transact() {
+		return DEFAULT_TRANSACTION_FACTORY;
+	}
+
+	public static ObjectifyTransactionFactory newTransact() {
+		return NEW_TRANSACTION_FACTORY;
+	}
+
+	public static ObjectifyTransactionFactory newTransact(int maxTries) {
+		return new ObjectifyNewTransactionFactoryImpl(maxTries);
+	}
+
+	// MARK: Transactions
+	@Deprecated
 	public static <X> List<X> doPartitionedTransactNew(ModelKeyListAccessor<?> input,
 	                                                   PartitionDelegate<ModelKey, X> delegate) {
-		List<ModelKey> keys = input.getModelKeys();
-		return doTransactNewWithPartition(keys, delegate);
+		return NEW_TRANSACTION_FACTORY.doTransactionWithPartition(input, delegate);
 	}
 
-	// MARK: Transaction
+	@Deprecated
 	public static <T, X> List<X> doTransactNewWithPartition(Iterable<T> input,
 	                                                        PartitionDelegate<T, X> delegate) {
-		Partitioner partitioner = getTransactionElementsPartitioner();
-		List<List<T>> partitions = partitioner.makePartitions(input);
-
-		List<X> results = new ArrayList<X>(partitions.size());
-
-		for (List<T> partition : partitions) {
-			X result = doTransactNew(partition, delegate);
-			results.add(result);
-		}
-
-		return results;
+		return NEW_TRANSACTION_FACTORY.doTransactionWithPartition(input, delegate);
 	}
 
+	@Deprecated
 	public static <T, X> List<X> doTransactNew(Iterable<T> input,
 	                                           Partitioner partitioner,
 	                                           PartitionDelegate<T, X> delegate) {
-		List<List<T>> partitions = partitioner.makePartitions(input);
-
-		List<X> results = new ArrayList<X>(partitions.size());
-
-		for (List<T> partition : partitions) {
-			X result = doTransactNew(partition, delegate);
-			results.add(result);
-		}
-
-		return results;
+		return NEW_TRANSACTION_FACTORY.doTransaction(input, partitioner, delegate);
 	}
 
+	@Deprecated
 	public static <T, X> X doTransactNew(Iterable<T> input,
 	                                     PartitionDelegate<T, X> delegate) {
-		Work<X> work = delegate.makeWorkForInput(input);
-		return ObjectifyService.ofy().transactNew(work);
+		return NEW_TRANSACTION_FACTORY.doTransaction(input, delegate);
 	}
 
+	@Deprecated
 	public static <X> X doTransactNew(Work<X> work) {
-		return ObjectifyService.ofy().transactNew(work);
+		return NEW_TRANSACTION_FACTORY.doTransaction(work);
+	}
+
+	// MARK: Factories
+	public static class ObjectifyDefaultTransactionFactoryImpl extends ObjectifyTransactionFactoryImpl {
+
+		@Override
+		public ObjectifyTransactionType getTransactionType() {
+			return ObjectifyTransactionType.DEFAULT_TRANSACTION;
+		}
+
+		@Override
+		public <X> X doTransaction(Work<X> work) {
+			return ObjectifyService.ofy().transact(work);
+		}
+
+	}
+
+	public static class ObjectifyNewTransactionFactoryImpl extends ObjectifyTransactionFactoryImpl {
+
+		private final int maxTries;
+
+		public ObjectifyNewTransactionFactoryImpl() {
+			this(Integer.MAX_VALUE);
+		}
+
+		public ObjectifyNewTransactionFactoryImpl(int maxTries) {
+			this.maxTries = maxTries;
+		}
+
+		public int getMaxTries() {
+			return this.maxTries;
+		}
+		
+		@Override
+		public ObjectifyTransactionType getTransactionType() {
+			return ObjectifyTransactionType.NEW_TRANSACTION;
+		}
+
+		@Override
+		public <X> X doTransaction(Work<X> work) {
+			return ObjectifyService.ofy().transactNew(this.maxTries, work);
+		}
+
+	}
+
+	private static abstract class ObjectifyTransactionFactoryImpl
+	        implements ObjectifyTransactionFactory {
+
+		// MARK: ObjectifyTransactionFactory
+		@Override
+		public <X> List<X> doTransactionWithPartition(ModelKeyListAccessor<?> input,
+		                                              PartitionDelegate<ModelKey, X> delegate) {
+			List<ModelKey> keys = input.getModelKeys();
+			return this.doTransactionWithPartition(keys, delegate);
+		}
+
+		@Override
+		public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
+		                                                 PartitionDelegate<T, X> delegate) {
+			Partitioner partitioner = getTransactionElementsPartitioner();
+			List<List<T>> partitions = partitioner.makePartitions(input);
+
+			List<X> results = new ArrayList<X>(partitions.size());
+
+			for (List<T> partition : partitions) {
+				X result = this.doTransaction(partition, delegate);
+				results.add(result);
+			}
+
+			return results;
+		}
+
+		@Override
+		public <T, X> List<X> doTransaction(Iterable<T> input,
+		                                    Partitioner partitioner,
+		                                    PartitionDelegate<T, X> delegate) {
+			List<List<T>> partitions = partitioner.makePartitions(input);
+
+			List<X> results = new ArrayList<X>(partitions.size());
+
+			for (List<T> partition : partitions) {
+				X result = this.doTransaction(partition, delegate);
+				results.add(result);
+			}
+
+			return results;
+		}
+
+		@Override
+		public <T, X> X doTransaction(Iterable<T> input,
+		                              PartitionDelegate<T, X> delegate) {
+			Work<X> work = delegate.makeWorkForInput(input);
+			return this.doTransaction(work);
+		}
+
+		@Override
+		public abstract <X> X doTransaction(Work<X> work);
+
 	}
 
 	public static interface PartitionDelegate<T, X> {

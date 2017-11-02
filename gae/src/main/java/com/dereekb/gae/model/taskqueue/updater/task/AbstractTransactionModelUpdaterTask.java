@@ -71,7 +71,7 @@ public abstract class AbstractTransactionModelUpdaterTask<T extends UniqueModel>
 		final PartitionDelegate<ModelKey, ?> delegate = this.makeUpdatePartitionDelegate();
 
 		try {
-			ObjectifyTransactionUtility.doPartitionedTransactNew(input, delegate);
+			ObjectifyTransactionUtility.transact().doTransactionWithPartition(input, delegate);
 		} catch (RuntimeException e) {
 			throw new FailedTaskException(e);
 		}

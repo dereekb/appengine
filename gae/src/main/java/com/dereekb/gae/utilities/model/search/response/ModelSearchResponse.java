@@ -34,7 +34,7 @@ public interface ModelSearchResponse<T>
 	 *
 	 * @return {@link Collection} of results. Never {@code null}.
 	 * @throws KeysOnlySearchException
-	 *             if {@link #isKeysOnlyResponse()} is true and th
+	 *             if {@link #isKeysOnlyResponse()} is true and the
 	 *             implementation cannot return models post-search.
 	 */
 	public Collection<T> getModelResults() throws KeysOnlySearchException;

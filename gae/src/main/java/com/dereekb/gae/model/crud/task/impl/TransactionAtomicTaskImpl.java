@@ -45,7 +45,7 @@ public abstract class TransactionAtomicTaskImpl<P, C extends AtomicTaskConfig> e
 
 		};
 
-		ObjectifyTransactionUtility.doTransactNew(input, TRANS_DELEGATE);
+		ObjectifyTransactionUtility.transact().doTransaction(input, TRANS_DELEGATE);
 	}
 
 }
