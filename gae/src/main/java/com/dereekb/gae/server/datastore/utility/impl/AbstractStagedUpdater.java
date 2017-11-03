@@ -6,7 +6,6 @@ import java.util.Set;
 import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 import com.dereekb.gae.server.datastore.utility.StagedUpdater;
-import com.dereekb.gae.server.datastore.utility.StagedUpdaterAlreadyFinishedException;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 
 /**
@@ -17,12 +16,11 @@ import com.dereekb.gae.utilities.collections.IteratorUtility;
  * @param <T>
  *            model type
  */
-public abstract class AbstractStagedUpdater<T>
+public abstract class AbstractStagedUpdater<T> extends AbstractStagedTransactionChange
         implements StagedUpdater<T> {
 
 	private final Updater<T> updater;
 
-	private boolean complete = false;
 	private Set<T> entities = new HashSet<T>();
 
 	public AbstractStagedUpdater(Updater<T> updater) {
@@ -37,36 +35,31 @@ public abstract class AbstractStagedUpdater<T>
 	// MARK: Updater
 	@Override
 	public void update(T entity) throws UpdateUnkeyedEntityException {
-		this.entities.add(entity);
 		this.updater.update(entity);
+		this.entities.add(entity);
 	}
 
 	@Override
 	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.entities.addAll(IteratorUtility.iterableToList(entities));
 		this.updater.update(entities);
+		this.entities.addAll(IteratorUtility.iterableToList(entities));
 	}
 
 	@Override
 	public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
-		this.entities.add(entity);
 		this.updater.updateAsync(entity);
+		this.entities.add(entity);
 	}
 
 	@Override
 	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.entities.addAll(IteratorUtility.iterableToList(entities));
 		this.updater.updateAsync(entities);
+		this.entities.addAll(IteratorUtility.iterableToList(entities));
 	}
 
 	// MARK: StagedUpdater
 	@Override
-	public void finishUpdate() throws StagedUpdaterAlreadyFinishedException {
-		if (this.complete) {
-			throw new StagedUpdaterAlreadyFinishedException();
-		}
-
-		this.complete = true;
+	protected void finishChangesWithEntities() {
 		this.finishUpdateWithEntities(this.entities);
 	}
 
