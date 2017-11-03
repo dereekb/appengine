@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.datastore.utility.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.Updater;
@@ -53,27 +54,37 @@ public class TaskConfiguredUpdaterImpl<T>
 
 	// MARK: Updater
 	@Override
-	public void update(T entity) throws UpdateUnkeyedEntityException {
-		this.updater.update(entity);
-		this.taskRequestSender.sendTask(entity);
+	public boolean update(T entity) throws UpdateUnkeyedEntityException {
+		if (this.updater.update(entity)) {
+			this.taskRequestSender.sendTask(entity);
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
-	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.updater.update(entities);
-		this.taskRequestSender.sendTasks(entities);
+	public List<T> update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		List<T> updated = this.updater.update(entities);
+		this.taskRequestSender.sendTasks(updated);
+		return updated;
 	}
 
 	@Override
-	public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
-		this.updater.updateAsync(entity);
-		this.taskRequestSender.sendTask(entity);
+	public boolean updateAsync(T entity) throws UpdateUnkeyedEntityException {
+		if (this.updater.updateAsync(entity)) {
+			this.taskRequestSender.sendTask(entity);
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
-	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.updater.updateAsync(entities);
-		this.taskRequestSender.sendTasks(entities);
+	public List<T> updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		List<T> updated = this.updater.updateAsync(entities);
+		this.taskRequestSender.sendTasks(updated);
+		return updated;
 	}
 
 	// MARK: StagedUpdaterFactory

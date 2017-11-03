@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.datastore;
 
+import java.util.List;
+
 import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 
 /**
@@ -21,43 +23,47 @@ public interface Updater<T> {
 	 * 
 	 * @param entity
 	 *            Entity. Never {@code null}.
+	 * @return {@code true} if entity was updated.
 	 * @throws UpdateUnkeyedEntityException
 	 *             thrown if attempting to update a model that has not yet been
 	 *             created via {@link Storer}.
 	 */
-	public void update(T entity) throws UpdateUnkeyedEntityException;
+	public boolean update(T entity) throws UpdateUnkeyedEntityException;
 
 	/**
 	 * Updates the input entities synchronously.
 	 * 
 	 * @param entities
 	 *            Entities. Never {@code null}.
+	 * @return {@link List} of updated entities.
 	 * @throws UpdateUnkeyedEntityException
 	 *             thrown if attempting to update a model that has not yet been
 	 *             created via {@link Storer}.
 	 */
-	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException;
+	public List<T> update(Iterable<T> entities) throws UpdateUnkeyedEntityException;
 
 	/**
 	 * Updates the input entity asynchronously.
 	 * 
 	 * @param entity
 	 *            Entity. Never {@code null}.
+	 * @return {@code true} if entity was updated.
 	 * @throws UpdateUnkeyedEntityException
 	 *             thrown if attempting to update a model that has not yet been
 	 *             created via {@link Storer}.
 	 */
-	public void updateAsync(T entity) throws UpdateUnkeyedEntityException;
+	public boolean updateAsync(T entity) throws UpdateUnkeyedEntityException;
 
 	/**
 	 * Updates the input entities asynchronously.
 	 * 
 	 * @param entities
 	 *            Entities. Never {@code null}.
+	 * @return {@link List} of updated entities.
 	 * @throws UpdateUnkeyedEntityException
 	 *             thrown if attempting to update a model that has not yet been
 	 *             created via {@link Storer}.
 	 */
-	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException;
+	public List<T> updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException;
 
 }

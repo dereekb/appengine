@@ -1,12 +1,12 @@
 package com.dereekb.gae.server.datastore.utility.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 import com.dereekb.gae.server.datastore.utility.StagedUpdater;
-import com.dereekb.gae.utilities.collections.IteratorUtility;
 
 /**
  * Abstract {@link StagedUpdater} implementation.
@@ -34,27 +34,37 @@ public abstract class AbstractStagedUpdater<T> extends AbstractStagedTransaction
 
 	// MARK: Updater
 	@Override
-	public void update(T entity) throws UpdateUnkeyedEntityException {
-		this.updater.update(entity);
-		this.entities.add(entity);
+	public boolean update(T entity) throws UpdateUnkeyedEntityException {
+		if (this.updater.update(entity)) {
+			this.entities.add(entity);
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
-	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.updater.update(entities);
-		this.entities.addAll(IteratorUtility.iterableToList(entities));
+	public List<T> update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		List<T> updated = this.updater.update(entities);
+		this.entities.addAll(updated);
+		return updated;
 	}
 
 	@Override
-	public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
-		this.updater.updateAsync(entity);
-		this.entities.add(entity);
+	public boolean updateAsync(T entity) throws UpdateUnkeyedEntityException {
+		if (this.updater.updateAsync(entity)) {
+			this.entities.add(entity);
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
-	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.updater.updateAsync(entities);
-		this.entities.addAll(IteratorUtility.iterableToList(entities));
+	public List<T> updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		List<T> updated = this.updater.updateAsync(entities);
+		this.entities.addAll(updated);
+		return updated;
 	}
 
 	// MARK: StagedUpdater

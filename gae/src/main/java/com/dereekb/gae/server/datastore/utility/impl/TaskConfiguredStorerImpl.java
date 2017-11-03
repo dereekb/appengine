@@ -1,7 +1,11 @@
 package com.dereekb.gae.server.datastore.utility.impl;
 
+import java.util.Set;
+
 import com.dereekb.gae.server.datastore.Storer;
 import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;
+import com.dereekb.gae.server.datastore.utility.StagedStorer;
+import com.dereekb.gae.server.datastore.utility.StagedStorerFactory;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 
 /**
@@ -13,7 +17,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
  *            model type
  */
 public class TaskConfiguredStorerImpl<T>
-        implements Storer<T> {
+        implements Storer<T>, StagedStorerFactory<T> {
 
 	private Storer<T> storer;
 	private TaskRequestSender<T> taskRequestSender;
@@ -58,6 +62,26 @@ public class TaskConfiguredStorerImpl<T>
 	public void store(Iterable<T> entities) throws StoreKeyedEntityException {
 		this.storer.store(entities);
 		this.taskRequestSender.sendTasks(entities);
+	}
+
+	// MARK: StagedStorerFactory
+	@Override
+	public StagedStorer<T> makeStorer() {
+		return new StagedStorerImpl();
+	}
+
+	private class StagedStorerImpl extends AbstractStagedStorer<T> {
+
+		public StagedStorerImpl() {
+			super(TaskConfiguredStorerImpl.this.storer);
+		}
+
+		// MARK: AbstractStagedStorer
+		@Override
+		protected void finishUpdateWithEntities(Set<T> entities) {
+			TaskConfiguredStorerImpl.this.taskRequestSender.sendTasks(entities);
+		}
+
 	}
 
 	@Override

@@ -578,26 +578,26 @@ public class ObjectifyDatabaseImpl
 
 			// MARK: Updater
 			@Override
-			public void update(T entity) throws UpdateUnkeyedEntityException {
-				this.update(entity, false);
+			public boolean update(T entity) throws UpdateUnkeyedEntityException {
+				return this.update(entity, false);
 			}
 
 			@Override
-			public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-				this.update(entities, false);
+			public List<T> update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+				return this.update(entities, false);
 			}
 
 			@Override
-			public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
-				this.update(entity, true);
+			public boolean updateAsync(T entity) throws UpdateUnkeyedEntityException {
+				return this.update(entity, true);
 			}
 
 			@Override
-			public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-				this.update(entities, true);
+			public List<T> updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+				return this.update(entities, true);
 			}
 
-			protected void update(T entity,
+			protected boolean update(T entity,
 			                      boolean async)
 			        throws UpdateUnkeyedEntityException {
 				if (entity.getModelKey() != null) {
@@ -607,13 +607,17 @@ public class ObjectifyDatabaseImpl
 						if (!async) {
 							result.now();
 						}
+						
+						return true;
 					}
+					
+					return false;
 				} else {
 					throw new UpdateUnkeyedEntityException();
 				}
 			}
 
-			protected void update(Iterable<T> entities,
+			protected List<T> update(Iterable<T> entities,
 			                      boolean async)
 			        throws UpdateUnkeyedEntityException {
 				for (T entity : entities) {
@@ -629,6 +633,8 @@ public class ObjectifyDatabaseImpl
 				if (!async) {
 					result.now();
 				}
+				
+				return existing;
 			}
 
 			// MARK: Storer
@@ -813,23 +819,23 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
-		public void update(T entity) throws UpdateUnkeyedEntityException {
-			this.setter.update(entity);
+		public boolean update(T entity) throws UpdateUnkeyedEntityException {
+			return this.setter.update(entity);
 		}
 
 		@Override
-		public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-			this.setter.update(entities);
+		public List<T> update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+			return this.setter.update(entities);
 		}
 
 		@Override
-		public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
-			this.setter.updateAsync(entity);
+		public boolean updateAsync(T entity) throws UpdateUnkeyedEntityException {
+			return this.setter.updateAsync(entity);
 		}
 
 		@Override
-		public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-			this.setter.update(entities);
+		public List<T> updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+			return this.setter.update(entities);
 		}
 
 		@Override

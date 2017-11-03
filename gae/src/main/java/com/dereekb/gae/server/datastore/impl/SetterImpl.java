@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.datastore.impl;
 
+import java.util.List;
+
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.Saver;
 import com.dereekb.gae.server.datastore.Setter;
@@ -84,23 +86,23 @@ public class SetterImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public void update(T entity) throws UpdateUnkeyedEntityException {
-		this.updater.update(entity);
+	public boolean update(T entity) throws UpdateUnkeyedEntityException {
+		return this.updater.update(entity);
 	}
 
 	@Override
-	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.updater.update(entities);
+	public List<T> update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		return this.updater.update(entities);
 	}
 
 	@Override
-	public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
-		this.updater.updateAsync(entity);
+	public boolean updateAsync(T entity) throws UpdateUnkeyedEntityException {
+		return this.updater.updateAsync(entity);
 	}
 
 	@Override
-	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.updater.update(entities);
+	public List<T> updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		return this.updater.update(entities);
 	}
 
 	@Override

@@ -110,23 +110,23 @@ public class GetterSetterImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public void update(T entity) throws UpdateUnkeyedEntityException {
-		this.setter.update(entity);
+	public boolean update(T entity) throws UpdateUnkeyedEntityException {
+		return this.setter.update(entity);
 	}
 
 	@Override
-	public void update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.setter.update(entities);
+	public List<T> update(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		return this.setter.update(entities);
 	}
 
 	@Override
-	public void updateAsync(T entity) throws UpdateUnkeyedEntityException {
-		this.setter.updateAsync(entity);
+	public boolean updateAsync(T entity) throws UpdateUnkeyedEntityException {
+		return this.setter.updateAsync(entity);
 	}
 
 	@Override
-	public void updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
-		this.setter.update(entities);
+	public List<T> updateAsync(Iterable<T> entities) throws UpdateUnkeyedEntityException {
+		return this.setter.update(entities);
 	}
 
 	@Override
