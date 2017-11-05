@@ -237,6 +237,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 					return this.updateRequestSender.sendRequest(updateRequest,
 					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
 					Assert.fail("Failed updating.");
 					throw new RuntimeException(e);
 				}
@@ -259,7 +260,9 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 					        AbstractTestingInstance.this.getSecurity());
 					Assert.assertFalse(deleteResponse.getModelKeys().isEmpty());
 				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
 					Assert.fail("Failed deleting.");
+					throw new RuntimeException(e);
 				}
 			}
 
