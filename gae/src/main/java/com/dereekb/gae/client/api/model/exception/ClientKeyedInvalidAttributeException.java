@@ -52,4 +52,9 @@ public class ClientKeyedInvalidAttributeException extends ClientRequestFailureEx
 		this.invalidAttributes = invalidAttributes;
 	}
 
+	@Override
+	public String toString() {
+		return "ClientKeyedInvalidAttributeException [invalidAttributes=" + this.invalidAttributes + "]";
+	}
+
 }

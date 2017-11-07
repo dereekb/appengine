@@ -20,7 +20,6 @@ import com.dereekb.gae.client.api.model.crud.response.SerializedClientUpdateApiR
 import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
-import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
@@ -219,7 +218,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			public List<T> update(Collection<T> models) {
 				UpdateRequest<T> request = AbstractTestingInstance.this.makeAtomicUpdateRequest(models);
-				SerializedClientApiResponse<SimpleUpdateResponse<T>> updateResponse = this.update(request);
+				SerializedClientUpdateApiResponse<T> updateResponse = this.update(request);
 
 				SimpleUpdateResponse<T> simpleResponse;
 

@@ -1,5 +1,11 @@
 package com.dereekb.gae.client.api.service.response.exception;
 
+/**
+ * Thrown when the response cannot be serialized.
+ * 
+ * @author dereekb
+ *
+ */
 public class ClientResponseSerializationException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
@@ -25,6 +31,11 @@ public class ClientResponseSerializationException extends RuntimeException {
 
 	public ClientResponseSerializationException(Throwable cause) {
 		super(cause);
+	}
+
+	@Override
+	public String toString() {
+		return "ClientResponseSerializationException []";
 	}
 
 }
