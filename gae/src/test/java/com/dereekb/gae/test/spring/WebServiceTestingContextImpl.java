@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.ServletException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -103,6 +104,15 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	public void setUpCoreServices() {
 		// this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
 		super.setUpCoreServices();
+	}
+	
+	@Override
+	@After
+	public void tearDownCoreServices() {
+		super.tearDownCoreServices();
+	
+		// Wait for any tasks to complete first...
+		waitUntilTaskQueueCompletes();
 	}
 
 	public WebApplicationContext getWebApplicationContext() {

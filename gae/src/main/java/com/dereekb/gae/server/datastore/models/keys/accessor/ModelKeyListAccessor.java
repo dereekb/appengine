@@ -15,10 +15,25 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  */
 public interface ModelKeyListAccessor<T> {
 
+	/**
+	 * Returns the model type.
+	 * 
+	 * @return {@link String}. Never {@code null}.
+	 */
 	public String getModelType();
 
+	/**
+	 * Returns the keys for the models.
+	 * 
+	 * @return {@link List}. Never {@code null}.
+	 */
 	public List<ModelKey> getModelKeys();
 
+	/**
+	 * Loads the models.
+	 * 
+	 * @return {@link List}. Never {@code null}.
+	 */
 	public List<T> getModels();
 
 }
