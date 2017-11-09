@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.dereekb.gae.server.mail.pairs.MailRecipient;
+import com.dereekb.gae.server.deprecated.mail.pairs.MailRecipient;
 import com.dereekb.gae.server.storage.object.file.StorableContent;
 
 /**

@@ -1,8 +1,8 @@
-package com.dereekb.gae.server.mail.functions.observer;
+package com.dereekb.gae.server.deprecated.mail.functions.observer;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.mail.MailRequest;
+import com.dereekb.gae.server.deprecated.mail.MailRequest;
 
 /**
  * Delegate for a {@link SendMailObserver} instance.

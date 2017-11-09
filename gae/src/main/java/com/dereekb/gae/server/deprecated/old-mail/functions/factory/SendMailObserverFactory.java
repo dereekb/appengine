@@ -1,8 +1,8 @@
-package com.dereekb.gae.server.mail.functions.factory;
+package com.dereekb.gae.server.deprecated.mail.functions.factory;
 
 import com.dereekb.gae.server.deprecated.mail.functions.observer.SendMailObserver;
 import com.dereekb.gae.server.deprecated.mail.functions.observer.SendMailObserverDelegate;
-import com.dereekb.gae.server.mail.MailManager;
+import com.dereekb.gae.server.deprecated.mail.MailManager;
 import com.dereekb.gae.utilities.deprecated.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.deprecated.function.staged.factory.observer.AbstractStagedFunctionObserverFactory;
 

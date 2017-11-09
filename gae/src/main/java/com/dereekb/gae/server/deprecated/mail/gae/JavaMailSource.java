@@ -14,10 +14,10 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import com.dereekb.gae.server.mail.MailRequest;
-import com.dereekb.gae.server.mail.MailSource;
-import com.dereekb.gae.server.mail.exceptions.EmailSendFailureException;
-import com.dereekb.gae.server.mail.pairs.MailRecipient;
+import com.dereekb.gae.server.deprecated.mail.MailRequest;
+import com.dereekb.gae.server.deprecated.mail.MailSource;
+import com.dereekb.gae.server.deprecated.mail.exceptions.EmailSendFailureException;
+import com.dereekb.gae.server.deprecated.mail.pairs.MailRecipient;
 import com.dereekb.gae.server.storage.object.file.StorableContent;
 
 /**

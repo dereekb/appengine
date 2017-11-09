@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.mail.exceptions;
 
-import com.dereekb.gae.server.mail.MailManager;
+import com.dereekb.gae.server.deprecated.mail.MailManager;
 
 /**
  * Thrown when attempting to send a mail through a without any recipients.

@@ -2,9 +2,9 @@ package com.dereekb.gae.server.mail;
 
 import java.util.Set;
 
-import com.dereekb.gae.server.mail.exceptions.NoEmailRecipientException;
-import com.dereekb.gae.server.mail.exceptions.NoEmailSenderException;
-import com.dereekb.gae.server.mail.pairs.MailRecipient;
+import com.dereekb.gae.server.deprecated.mail.exceptions.NoEmailRecipientException;
+import com.dereekb.gae.server.deprecated.mail.exceptions.NoEmailSenderException;
+import com.dereekb.gae.server.deprecated.mail.pairs.MailRecipient;
 
 /**
  * Default implementation of the {@link MailManagerDelegate} interface.

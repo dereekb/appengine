@@ -1,9 +1,9 @@
-package com.dereekb.gae.server.mail.functions.observer;
+package com.dereekb.gae.server.deprecated.mail.functions.observer;
 
 import java.util.List;
 
-import com.dereekb.gae.server.mail.MailManager;
-import com.dereekb.gae.server.mail.MailRequest;
+import com.dereekb.gae.server.deprecated.mail.MailManager;
+import com.dereekb.gae.server.deprecated.mail.MailRequest;
 import com.dereekb.gae.utilities.deprecated.function.staged.StagedFunction;
 import com.dereekb.gae.utilities.deprecated.function.staged.components.StagedFunctionStage;
 import com.dereekb.gae.utilities.deprecated.function.staged.observer.StagedFunctionObserver;

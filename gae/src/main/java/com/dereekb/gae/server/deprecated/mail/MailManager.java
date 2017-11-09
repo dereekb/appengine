@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.mail;
 
-import com.dereekb.gae.server.mail.exceptions.EmailSendFailureException;
+import com.dereekb.gae.server.deprecated.mail.exceptions.EmailSendFailureException;
 
 /**
  * Manager for sending out mail.
