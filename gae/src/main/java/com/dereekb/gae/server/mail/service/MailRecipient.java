@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail;
+package com.dereekb.gae.server.mail.service;
 
 /**
  * Recipient for a message.

@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail.pairs;
+package com.dereekb.gae.server.mail.service.pairs;
 
 import com.dereekb.gae.server.deprecated.mail.MailRequest;
 import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;

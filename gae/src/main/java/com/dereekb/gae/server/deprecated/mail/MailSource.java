@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail;
+package com.dereekb.gae.server.mail.service;
 
 import com.dereekb.gae.server.deprecated.mail.exceptions.EmailSendFailureException;
 

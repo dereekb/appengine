@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail.exceptions;
+package com.dereekb.gae.server.mail.service.exceptions;
 
 /**
  * Throw when an email cannot be sent, or failed sending.

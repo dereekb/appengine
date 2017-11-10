@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail;
+package com.dereekb.gae.server.mail.service;
 
 /**
  * {@link MailServiceRequestBody} type.

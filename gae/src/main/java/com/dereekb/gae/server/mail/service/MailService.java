@@ -1,7 +1,7 @@
-package com.dereekb.gae.server.mail;
+package com.dereekb.gae.server.mail.service;
 
-import com.dereekb.gae.server.mail.exception.InvalidMailRequestException;
-import com.dereekb.gae.server.mail.exception.MailSendFailureException;
+import com.dereekb.gae.server.mail.service.exception.InvalidMailRequestException;
+import com.dereekb.gae.server.mail.service.exception.MailSendFailureException;
 
 /**
  * Service for sending an email.

@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail;
+package com.dereekb.gae.server.mail.service;
 
 import java.util.HashSet;
 import java.util.List;

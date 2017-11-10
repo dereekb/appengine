@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail.exception;
+package com.dereekb.gae.server.mail.service.exception;
 
 /**
  * Throw when the input request is invalid.

@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail;
+package com.dereekb.gae.server.mail.service;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +14,7 @@ public interface MailServiceRequest {
 	/**
 	 * Returns the sender.
 	 * 
-	 * @return {@link MailUser}. Never {@code null}.
+	 * @return {@link MailUser}. May be {@code null}.
 	 */
 	public MailUser getSender();
 

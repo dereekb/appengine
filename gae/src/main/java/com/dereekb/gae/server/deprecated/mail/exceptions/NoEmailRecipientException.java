@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.mail.exceptions;
+package com.dereekb.gae.server.mail.service.exceptions;
 
 import com.dereekb.gae.server.deprecated.mail.MailManager;
 
