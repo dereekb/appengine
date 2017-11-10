@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.mail.service.impl.provider.mailgun;
 
 import com.dereekb.gae.server.mail.service.MailService;
+import com.dereekb.gae.server.mail.service.impl.provider.MailServiceProvider;
 
 /**
  * {@link MailService} for Mailgun.
@@ -9,16 +10,6 @@ import com.dereekb.gae.server.mail.service.MailService;
  *
  */
 public interface MailgunMailService
-        extends MailService {
-
-	/**
-	 * Mailgun specific
-	 * {@link #sendMail(com.dereekb.gae.server.mail.service.MailServiceRequest)}.
-	 * 
-	 * @param input
-	 *            {@link MailgunMailServiceRequest}. Never {@code null}.
-	 * @return {@link MailgunMailServiceResponse}.
-	 */
-	public MailgunMailServiceResponse sendMail(MailgunMailServiceRequest input);
+        extends MailServiceProvider<MailgunMailServiceRequest, MailgunMailServiceResponse> {
 
 }

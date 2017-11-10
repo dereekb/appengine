@@ -20,7 +20,8 @@ public abstract interface MailServiceProvider<I extends MailServiceProviderReque
 	/**
 	 * 
 	 * @param input
-	 * @return
+	 *            Input. Never {@code null}.
+	 * @return Response. Never {@code null}.
 	 * 
 	 * @throws InvalidMailRequestException
 	 *             thrown if the input request is invalid.

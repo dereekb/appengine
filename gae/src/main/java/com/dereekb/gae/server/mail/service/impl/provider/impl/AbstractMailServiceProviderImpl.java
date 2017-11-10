@@ -73,7 +73,7 @@ public abstract class AbstractMailServiceProviderImpl<I extends MailServiceProvi
 
 	// MARK: MailServiceProvider
 	@Override
-	public final O sendMail(I input) {
+	public final O sendMail(I input) throws MailSendFailureException {
 		this.assertValidRequest(input);
 		return this.makeInstance(input).sendRequest();
 	}
@@ -109,12 +109,12 @@ public abstract class AbstractMailServiceProviderImpl<I extends MailServiceProvi
 		}
 
 		@Override
-		public O sendRequest() {
+		public O sendRequest() throws MailSendFailureException {
 			ResponseEntity<String> response = this.sendProviderRequest();
 			return this.makeMailServiceResponse(response);
 		}
 		
-		protected abstract ResponseEntity<String> sendProviderRequest();
+		protected abstract ResponseEntity<String> sendProviderRequest() throws MailSendFailureException;
 		
 		protected abstract O makeMailServiceResponse(ResponseEntity<String> response);
 		
@@ -141,7 +141,7 @@ public abstract class AbstractMailServiceProviderImpl<I extends MailServiceProvi
 			this.input = input;
 		}
 
-		public abstract O sendRequest();
+		public abstract O sendRequest() throws MailSendFailureException;
 
 		// MARK: Utility
 		protected String getSenderString() {
