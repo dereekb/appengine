@@ -115,7 +115,7 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 				return restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 			} catch (HttpClientErrorException e) {
 				String responseBody = e.getResponseBodyAsString();
-				throw new MailSendFailureException(e);
+				throw new MailSendFailureException(responseBody, e);
 			}
 		}
 

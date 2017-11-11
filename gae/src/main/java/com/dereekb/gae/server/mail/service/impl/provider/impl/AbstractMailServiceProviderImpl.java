@@ -1,19 +1,25 @@
 package com.dereekb.gae.server.mail.service.impl.provider.impl;
 
 import java.nio.charset.Charset;
+import java.util.Set;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.codec.Base64;
 
+import com.dereekb.gae.server.mail.service.MailRecipient;
 import com.dereekb.gae.server.mail.service.MailService;
 import com.dereekb.gae.server.mail.service.MailServiceRequest;
+import com.dereekb.gae.server.mail.service.MailServiceRequestBody;
 import com.dereekb.gae.server.mail.service.MailUser;
 import com.dereekb.gae.server.mail.service.exception.InvalidMailRequestException;
 import com.dereekb.gae.server.mail.service.exception.MailSendFailureException;
+import com.dereekb.gae.server.mail.service.exception.NoBodyContentSenderMailRequestException;
+import com.dereekb.gae.server.mail.service.exception.NoRecipientsSenderMailRequestException;
 import com.dereekb.gae.server.mail.service.exception.UnauthorizedSenderMailRequestException;
 import com.dereekb.gae.server.mail.service.impl.provider.MailServiceProvider;
 import com.dereekb.gae.server.mail.service.impl.provider.MailServiceProviderRequest;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.impl.FilterImpl;
@@ -97,6 +103,16 @@ public abstract class AbstractMailServiceProviderImpl<I extends MailServiceProvi
 			}
 		}
 
+		Set<MailRecipient> set = input.getRecipients();
+		if (set == null || set.isEmpty()) {
+			throw new NoRecipientsSenderMailRequestException();
+		}
+
+		MailServiceRequestBody body = input.getBody();
+		if (body == null || StringUtility.isEmptyString(body.getBodyContent())) {
+			throw new NoBodyContentSenderMailRequestException();
+		}
+		
 	}
 
 	protected abstract SenderInstance makeInstance(I input);

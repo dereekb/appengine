@@ -50,4 +50,29 @@ public class MailgunMailServiceTests {
 		service.sendMail(request);
 	}
 
+	@Test
+	public void testNoRecipientThrowsError() throws InvalidMailRequestException, MailSendFailureException {
+
+		MailgunMailServiceConfigurationImpl configuration = new MailgunMailServiceConfigurationImpl(API_KEY,
+		        SANDBOX_DOMAIN);
+		configuration.setTestMode(true);
+
+		MailUser defaultSender = new MailUserImpl(AUTHORIZED_EMAIL);
+		MailgunMailService service = new MailgunMailServiceImpl(defaultSender, configuration);
+
+		String subject = "Test Email!";
+		String bodyContent = "Test Email!";
+		MailServiceRequestBodyImpl body = new MailServiceRequestBodyImpl(subject, bodyContent);
+
+		MailServiceRequestImpl request = new MailServiceRequestImpl();
+
+		request.setBody(body);
+
+		try {
+			service.sendMail(request);
+		} catch (InvalidMailRequestException e) {
+
+		}
+	}
+
 }
