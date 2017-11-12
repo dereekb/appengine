@@ -24,7 +24,7 @@ public class RedirectToNakedDomainFilter
 
 	public static final String SPLITTER = "\\.";
 
-	private int statusCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
+	private int statusCode = HttpServletResponse.SC_FOUND;
 	private String redirectUrl;
 
 	public RedirectToNakedDomainFilter(String redirectUrl) {
@@ -67,36 +67,41 @@ public class RedirectToNakedDomainFilter
 		chain.doFilter(request, response);
 	}
 
+	protected String makeRedirectUrl(HttpServletRequest req) {
+		return this.redirectUrl;	// Redirect to the base URL.
+	}
+
 	protected boolean shouldRedirect(HttpServletRequest req) {
 		String serverName = getRequestDomainName(req);
 		return isSubDomain(serverName);
 	}
-	
+
 	public static final boolean isSubDomain(HttpServletRequest req) {
 		String serverName = getRequestDomainName(req);
 		return isSubDomain(serverName);
 	}
 
 	public static final boolean isSubDomain(String serverName) {
-		String[] splits = getRequestDomainSplits(serverName);	// www, google.com
+		String[] splits = getRequestDomainSplits(serverName);	// www,
+		                                                     	// google.com
 		return splits.length > 2;
 	}
-	
+
 	public static final String getSubDomain(HttpServletRequest req) {
 		String serverName = getRequestDomainName(req);
 		return getSubDomain(serverName);
 	}
-	
-	//TODO: Move this elsewhere to a better location/utility later
+
+	// TODO: Move this elsewhere to a better location/utility later
 	public static final String getSubDomain(String serverName) {
 		String subDomain = null;
 		boolean hitDomainType = false;
-		
+
 		int i = serverName.length() - 1;
-		
+
 		for (; i > 0; i--) {
 			char character = serverName.charAt(i);
-			
+
 			if (character == '.') {
 				if (hitDomainType) {
 					subDomain = serverName.substring(0, i);
@@ -106,7 +111,7 @@ public class RedirectToNakedDomainFilter
 				}
 			}
 		}
-		
+
 		return subDomain;
 	}
 
@@ -116,7 +121,8 @@ public class RedirectToNakedDomainFilter
 	}
 
 	public static final String[] getRequestDomainSplits(String serverName) {
-		String[] splits = serverName.split(SPLITTER, 3);	// www, google.com
+		// www, google.com
+		String[] splits = serverName.split(SPLITTER, 3);
 		return splits;
 	}
 

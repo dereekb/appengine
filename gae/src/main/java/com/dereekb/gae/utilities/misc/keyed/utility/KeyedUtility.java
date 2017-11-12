@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.data.ValueUtility;
+import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
 import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
@@ -116,6 +118,39 @@ public class KeyedUtility {
 
 		newParameters.add(replacement);
 		return newParameters;
+	}
+
+	/**
+	 * Reads the code from a {@link IndexCoded} value, and defaults to another
+	 * value if {@code null}.
+	 * 
+	 * @param coded
+	 *            {@link IndexCoded}. May be {@code null}.
+	 * @param defaultCode
+	 *            {@link Integer} default. May be {@code null}.
+	 * @return {@link Integer}. May be {@code null}.
+	 */
+	public static <T extends IndexCoded> Integer getCode(IndexCoded coded,
+	                                                     Integer defaultCode) {
+		Integer code = getCode(coded);
+		return ValueUtility.defaultTo(code, defaultCode);
+	}
+
+	/**
+	 * Reads the code from a {@link IndexCoded} value.
+	 * 
+	 * @param coded
+	 *            {@link IndexCoded}. May be {@code null}.
+	 * @return {@link Integer}. May be {@code null}.
+	 */
+	public static <T extends IndexCoded> Integer getCode(IndexCoded coded) {
+		Integer code = null;
+
+		if (coded != null) {
+			code = coded.getCode();
+		}
+
+		return code;
 	}
 
 }
