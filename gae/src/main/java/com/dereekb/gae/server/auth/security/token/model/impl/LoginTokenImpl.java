@@ -1,10 +1,14 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
+import com.dereekb.gae.server.auth.security.model.context.encoded.exception.UnavailableEncodedModelContextException;
+import com.dereekb.gae.server.auth.security.model.context.encoded.impl.EmptyEncodedLoginTokenModelContextSet;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.ownership.impl.OwnershipRolesImpl;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
@@ -65,6 +69,11 @@ public class LoginTokenImpl
 	 */
 	private OwnershipRoles ownershipRoles;
 
+	/**
+	 * Encoded context info.
+	 */
+	private EncodedLoginTokenModelContextSet encodedModelContextSet = EmptyEncodedLoginTokenModelContextSet.make();
+	
 	public LoginTokenImpl() {
 		this(LoginPointerType.ANONYMOUS);
 	}
@@ -226,6 +235,30 @@ public class LoginTokenImpl
 
 	public void makeOwnershipRoles(String ownerId) {
 		this.ownershipRoles = new OwnershipRolesImpl(ownerId);
+	}
+
+	
+	public EncodedLoginTokenModelContextSet getEncodedModelContextSet() {
+		return this.encodedModelContextSet;
+	}
+
+	
+	public void setEncodedModelContextSet(EncodedLoginTokenModelContextSet encodedModelContextSet) {
+		if (encodedModelContextSet == null) {
+			encodedModelContextSet = EmptyEncodedLoginTokenModelContextSet.make();
+		}
+	
+		this.encodedModelContextSet = encodedModelContextSet;
+	}
+
+	@Override
+	public Set<Integer> getEncodedModelContextTypes() {
+		return this.encodedModelContextSet.getEncodedModelContextTypes();
+	}
+
+	@Override
+	public String getEncodedModelTypeContext(Integer encodedType) throws UnavailableEncodedModelContextException {
+		return this.encodedModelContextSet.getEncodedModelTypeContext(encodedType);
 	}
 
 	@Override

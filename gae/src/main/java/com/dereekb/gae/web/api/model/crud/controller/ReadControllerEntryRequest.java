@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -12,9 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public interface ReadControllerEntryRequest {
-
-	public String getModelType();
+public interface ReadControllerEntryRequest extends TypedModel {
 
 	/**
 	 * Whether or not all entries are required or not.

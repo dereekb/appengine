@@ -45,7 +45,7 @@ public class LoginPointerQuery extends AbstractOwnedModelQuery
 		Integer typeInteger = null;
 
 		if (type != null) {
-			typeInteger = type.id;
+			typeInteger = type.code;
 		}
 
 		this.setType(typeInteger);

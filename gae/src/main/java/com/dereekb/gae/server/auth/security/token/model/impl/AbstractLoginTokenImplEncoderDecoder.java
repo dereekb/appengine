@@ -1,11 +1,18 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
+import com.dereekb.gae.utilities.data.NumberUtility;
+import com.dereekb.gae.utilities.data.StringUtility;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +30,7 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 	public static final String LOGIN_POINTER_KEY = "ptr";
 	public static final String LOGIN_POINTER_TYPE_KEY = "pt";
 	public static final String OWNERSHIP_KEY = "o";
+	public static final String OBJECT_CONTEXT_KEY = "oc";
 
 	@Deprecated
 	public static final String ANONYMOUS_KEY = "anon";
@@ -53,6 +61,23 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 
 		if (ownershipRoles.isEmpty() == false) {
 			claims.put(OWNERSHIP_KEY, ownershipRoles);
+		}
+
+		// Encode Object Context
+		Map<Integer, String> contextMap = loginToken.getEncodedModelContext();
+
+		if (contextMap.isEmpty() == false) {
+			Set<Integer> contextMapKeys = contextMap.keySet();
+			claims.put(OBJECT_CONTEXT_KEY, StringUtility.joinValues(contextMapKeys));
+
+			for (Entry<Integer, String> entry : contextMap.entrySet()) {
+				String key = OBJECT_CONTEXT_KEY + entry.getKey();
+				String value = entry.getValue();
+
+				if (StringUtility.isEmptyString(value) == false) {
+					claims.put(key, value);
+				}
+			}
 		}
 	}
 
@@ -110,6 +135,26 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		if (encodedOwnershipRoles != null) {
 			OwnershipRoles ownershipRoles = this.decodeOwnershipRoles(encodedOwnershipRoles);
 			loginToken.setOwnershipRoles(ownershipRoles);
+		}
+
+		// Decode Object Context
+		String objectContexts = claims.get(OBJECT_CONTEXT_KEY, String.class);
+
+		if (objectContexts != null) {
+			List<Integer> keys = NumberUtility.integersFromString(objectContexts);
+
+			Map<Integer, String> contextMap = new HashMap<Integer, String>();
+
+			for (Integer key : keys) {
+				String claimsKey = OBJECT_CONTEXT_KEY + key;
+				String encodedObjectContexts = claims.get(claimsKey, String.class);
+
+				if (StringUtility.isEmptyString(encodedObjectContexts)) {
+					throw new TokenUnauthorizedException("Invalid token at object context: " + key);
+				} else {
+					contextMap.put(key, encodedObjectContexts);
+				}
+			}
 		}
 	}
 

@@ -12,6 +12,14 @@ import org.springframework.security.core.GrantedAuthority;
  */
 public interface GrantedAuthorityDecoder {
 
+	/**
+	 * Decodes the input encoded roles into a {@link GrantedAuthority}
+	 * {@link Set}.
+	 * 
+	 * @param encodedRoles
+	 *            Roles encoded within a {@link Long}. Never {@code null}.
+	 * @return {@link Set}. Never {@code null}.
+	 */
 	public Set<GrantedAuthority> decodeRoles(Long encodedRoles);
 
 }

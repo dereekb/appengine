@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.model.pointer;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
 
 /**
  * {@link LoginPointer} type.
@@ -8,7 +9,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public enum LoginPointerType {
+public enum LoginPointerType implements IndexCoded {
 
     // Internal
 	SYSTEM(0, LoginType.SYSTEM, "S", true),
@@ -49,20 +50,25 @@ public enum LoginPointerType {
 
 	public static final String LOGIN_POINTER_FORMAT = "%s_%s";
 
-	public final int id;
+	public final int code;
 	public final LoginType type;
 	public final String prefix;
 	public final boolean internal;
 
-	private LoginPointerType(int id, LoginType type, String prefix, boolean internal) {
-		this.id = id;
+	private LoginPointerType(int code, LoginType type, String prefix, boolean internal) {
+		this.code = code;
 		this.type = type;
 		this.prefix = prefix;
 		this.internal = internal;
 	}
 
 	public int getId() {
-		return this.id;
+		return this.code;
+	}
+
+	@Override
+	public Integer getCode() {
+		return this.code;
 	}
 
 	public LoginType getType() {

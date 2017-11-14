@@ -2,13 +2,15 @@ package com.dereekb.gae.model.extension.iterate;
 
 import java.util.Map;
 
+import com.dereekb.gae.server.datastore.models.TypedModel;
+
 /**
  * Input for {@link IterateTaskExecutor} that defines custom parameters,
  *
  * @author dereekb
  *
  */
-public interface IterateTaskInput {
+public interface IterateTaskInput extends TypedModel {
 
 	/**
 	 * The current task's name.
@@ -16,13 +18,6 @@ public interface IterateTaskInput {
 	 * @return Task name. Never {@code null}.
 	 */
 	public String getTaskName();
-
-	/**
-	 * The model type.
-	 *
-	 * @return Model type. Never {@code null}.
-	 */
-	public String getModelType();
 
 	/**
 	 * @return Parameters for the request that are used for iteration

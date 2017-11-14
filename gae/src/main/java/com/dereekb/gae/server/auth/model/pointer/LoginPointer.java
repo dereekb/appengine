@@ -108,7 +108,7 @@ public class LoginPointer extends OwnedDatabaseModel
 		if (type == null) {
 			this.setTypeId(null);
 		} else {
-			this.type = type.id;
+			this.type = type.code;
 		}
 	}
 

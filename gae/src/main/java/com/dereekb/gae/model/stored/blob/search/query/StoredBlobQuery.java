@@ -36,7 +36,7 @@ public class StoredBlobQuery extends AbstractOwnedDateModelQuery {
 		Integer typeInteger = null;
 
 		if (type != null) {
-			typeInteger = type.id;
+			typeInteger = type.code;
 		}
 
 		this.setType(typeInteger);
