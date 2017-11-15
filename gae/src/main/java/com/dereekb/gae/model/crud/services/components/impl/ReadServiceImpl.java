@@ -2,13 +2,13 @@ package com.dereekb.gae.model.crud.services.components.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.pairs.ReadPair;
 import com.dereekb.gae.model.crud.services.components.AtomicReadService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.options.ReadRequestOptions;
@@ -74,7 +74,7 @@ public class ReadServiceImpl<T extends UniqueModel>
 		ReadResponse<T> readResponse = this.read(request);
 		return new ExistsReadResponse(readResponse);
 	}
-	
+
 	@Override
 	public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
 		ReadResponse<T> readResponse = null;
@@ -86,19 +86,27 @@ public class ReadServiceImpl<T extends UniqueModel>
 		List<ReadPair<T>> pairs = ReadPair.createPairsForKeys(keys);
 
 		try {
-			this.readTask.doTask(pairs);
+			boolean atomic = options.isAtomic();
+			this.readTask.doReadTask(pairs, atomic);
 
-			HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<ReadPair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
-			List<ModelKey> errorKeys = ReadPair.getKeys(errorPairs);
+			List<T> models = null;
+			List<ModelKey> errorKeys = null;
 
-			if (errorKeys.size() > 0 && options.isAtomic()) {
-				throw new AtomicOperationException(errorKeys, AtomicOperationExceptionReason.UNAVAILABLE);
+			if (atomic) {
+				// No Error Keys or else an exception would have been thrown.
+				errorKeys = Collections.emptyList();
+				models = ReadPair.getObjects(pairs);
 			} else {
-				List<ReadPair<T>> successPairs = ResultsPair.pairsWithResults(pairs);
-				List<T> models = ReadPair.getObjects(successPairs);
-				readResponse = new ReadResponseImpl<T>(models, errorKeys);
+				HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
+
+				List<ReadPair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
+				errorKeys = ReadPair.getKeys(errorPairs);
+
+				List<ReadPair<T>> successPairs = results.valuesForKey(FilterResult.PASS);
+				models = ReadPair.getObjects(successPairs);
 			}
+
+			readResponse = new ReadResponseImpl<T>(models, errorKeys);
 		} catch (AtomicOperationException e) {
 			throw e;
 		} catch (Exception e) {

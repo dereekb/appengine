@@ -5,11 +5,15 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.model.crud.pairs.ReadPair;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.task.ReadTask;
-import com.dereekb.gae.model.crud.task.config.ReadTaskConfig;
+import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
  * {@link ReadTask} implementation.
@@ -23,15 +27,9 @@ public class ReadTaskImpl<T extends UniqueModel>
         implements ReadTask<T> {
 
 	private Getter<T> getter;
-	private ReadTaskConfig defaultConfig;
 
 	public ReadTaskImpl(Getter<T> getter) throws IllegalArgumentException {
-		this(getter, null);
-	}
-
-	public ReadTaskImpl(Getter<T> getter, ReadTaskConfig defaultConfig) throws IllegalArgumentException {
 		this.setGetter(getter);
-		this.setDefaultConfig(defaultConfig);
 	}
 
 	public Getter<T> getGetter() {
@@ -46,23 +44,9 @@ public class ReadTaskImpl<T extends UniqueModel>
 		this.getter = getter;
 	}
 
-	public ReadTaskConfig getDefaultConfig() {
-		return this.defaultConfig;
-	}
-
-	public void setDefaultConfig(ReadTaskConfig defaultConfig) {
-		this.defaultConfig = defaultConfig;
-	}
-
 	// MARK: ReadTask
 	@Override
 	public void doTask(Iterable<ReadPair<T>> input) {
-		this.doTask(input, this.defaultConfig);
-	}
-
-	@Override
-	public void doTask(Iterable<ReadPair<T>> input,
-	                   ReadTaskConfig configuration) {
 		Map<ModelKey, ReadPair<T>> keysMap = ReadPair.pairsKeyMap(input);
 		List<T> results = this.loadModels(keysMap.keySet());
 
@@ -70,6 +54,34 @@ public class ReadTaskImpl<T extends UniqueModel>
 			ModelKey modelKey = result.getModelKey();
 			ReadPair<T> pair = keysMap.get(modelKey);
 			pair.setResult(result);
+		}
+	}
+
+	@Override
+	public void doTask(Iterable<ReadPair<T>> input,
+	                   AtomicTaskConfig configuration)
+	        throws FailedTaskException {
+		try {
+			this.doReadTask(input, configuration.isAtomic());
+		} catch (RuntimeException e) {
+			throw new FailedTaskException(e);
+		}
+	}
+
+	@Override
+	public void doReadTask(Iterable<ReadPair<T>> input,
+	                       boolean atomic)
+	        throws AtomicOperationException,
+	            FailedTaskException {
+		this.doTask(input);
+
+		if (atomic) {
+			List<ReadPair<T>> errorPairs = ResultsPair.pairsWithoutResults(input);
+			List<ModelKey> errorKeys = ReadPair.getKeys(errorPairs);
+
+			if (errorKeys.size() > 0) {
+				throw new AtomicOperationException(errorKeys, AtomicOperationExceptionReason.UNAVAILABLE);
+			}
 		}
 	}
 

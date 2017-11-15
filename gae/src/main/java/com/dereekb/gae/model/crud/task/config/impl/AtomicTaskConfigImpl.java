@@ -1,5 +1,6 @@
 package com.dereekb.gae.model.crud.task.config.impl;
 
+import com.dereekb.gae.model.crud.services.request.options.impl.AtomicRequestOptionsImpl;
 import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
 
 /**
@@ -8,22 +9,15 @@ import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
  * @author dereekb
  *
  */
-public abstract class AtomicTaskConfigImpl
+public abstract class AtomicTaskConfigImpl extends AtomicRequestOptionsImpl
         implements AtomicTaskConfig {
 
-	private boolean isAtomic;
-
-	public AtomicTaskConfigImpl(boolean isAtomic) {
-		this.isAtomic = isAtomic;
+	public AtomicTaskConfigImpl() {
+		super();
 	}
 
-	@Override
-	public boolean isAtomic() {
-		return this.isAtomic;
-	}
-
-	public void setAtomic(boolean isAtomic) {
-		this.isAtomic = isAtomic;
+	public AtomicTaskConfigImpl(boolean atomic) {
+		super(atomic);
 	}
 
 }

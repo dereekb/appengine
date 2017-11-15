@@ -3,7 +3,6 @@ package com.dereekb.gae.model.crud.task.impl.filtered;
 import java.util.List;
 import java.util.Set;
 
-import com.dereekb.gae.model.crud.task.config.ReadTaskConfig;
 import com.dereekb.gae.model.crud.task.impl.ReadTaskImpl;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -26,12 +25,6 @@ public class FilteredReadTaskImpl<T extends UniqueModel> extends ReadTaskImpl<T>
 
 	public FilteredReadTaskImpl(Getter<T> getter, Filter<T> filter) throws IllegalArgumentException {
 		super(getter);
-		this.setFilter(filter);
-	}
-
-	public FilteredReadTaskImpl(Getter<T> getter, ReadTaskConfig defaultConfig, Filter<T> filter)
-	        throws IllegalArgumentException {
-		super(getter, defaultConfig);
 		this.setFilter(filter);
 	}
 
