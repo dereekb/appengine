@@ -81,32 +81,10 @@ public class ReadServiceImpl<T extends UniqueModel>
 
 		Iterable<ModelKey> keys = request.getModelKeys();
 		ReadRequestOptions options = request.getOptions();
-
-		// Execute Function
-		List<ReadPair<T>> pairs = ReadPair.createPairsForKeys(keys);
+		boolean atomic = options.isAtomic();
 
 		try {
-			boolean atomic = options.isAtomic();
-			this.readTask.doReadTask(pairs, atomic);
-
-			List<T> models = null;
-			List<ModelKey> errorKeys = null;
-
-			if (atomic) {
-				// No Error Keys or else an exception would have been thrown.
-				errorKeys = Collections.emptyList();
-				models = ReadPair.getObjects(pairs);
-			} else {
-				HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-
-				List<ReadPair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
-				errorKeys = ReadPair.getKeys(errorPairs);
-
-				List<ReadPair<T>> successPairs = results.valuesForKey(FilterResult.PASS);
-				models = ReadPair.getObjects(successPairs);
-			}
-
-			readResponse = new ReadResponseImpl<T>(models, errorKeys);
+			readResponse = doReadForModels(this.readTask, keys, atomic);
 		} catch (AtomicOperationException e) {
 			throw e;
 		} catch (Exception e) {
@@ -114,6 +92,47 @@ public class ReadServiceImpl<T extends UniqueModel>
 		}
 
 		return readResponse;
+	}
+
+	/**
+	 * Static function that performs a read using a {@link ReadTask} and returns
+	 * a {@link ReadResponse}.
+	 * 
+	 * @param readTask
+	 *            {@link ReadTask}. Never {@code null}.
+	 * @param keys
+	 *            {@link Iterable}. Never {@code null}.
+	 * @param atomic
+	 *            if atomic request or not.
+	 * @return {@link ReadResponse}. Never {@code null}.
+	 * @throws AtomicOperationException
+	 *             thrown if the atomic request fails.
+	 */
+	public static <T extends UniqueModel> ReadResponse<T> doReadForModels(ReadTask<T> readTask,
+	                                                                      Iterable<ModelKey> keys,
+	                                                                      boolean atomic)
+	        throws AtomicOperationException {
+		List<ReadPair<T>> pairs = ReadPair.createPairsForKeys(keys);
+		readTask.doReadTask(pairs, atomic);
+
+		List<T> models = null;
+		List<ModelKey> errorKeys = null;
+
+		if (atomic) {
+			// No Error Keys or else an exception would have been thrown.
+			errorKeys = Collections.emptyList();
+			models = ReadPair.getObjects(pairs);
+		} else {
+			HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
+
+			List<ReadPair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
+			errorKeys = ReadPair.getKeys(errorPairs);
+
+			List<ReadPair<T>> successPairs = results.valuesForKey(FilterResult.PASS);
+			models = ReadPair.getObjects(successPairs);
+		}
+
+		return new ReadResponseImpl<T>(models, errorKeys);
 	}
 
 	@Override
