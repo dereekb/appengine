@@ -22,6 +22,9 @@ public class LongBitContainer
 
 	public static final Integer BITS_IN_LONG = 64;
 
+	public static final Integer MIN_INDEX = 0;
+	public static final Integer MAX_INDEX = BITS_IN_LONG - 1;
+
 	public static final Long INTEGER_BIT_MASK = 0xFFFFFFFFL;
 
 	private Long value;
@@ -50,13 +53,16 @@ public class LongBitContainer
 
 	@Override
 	public boolean getBit(int index) throws IndexOutOfBoundsException {
+		this.assertWithinBitRange(index);
 		long result = this.readBitValue(index);
 		return (result != 0);
 	}
 
 	@Override
 	public void setBit(boolean on,
-	                   int index) throws IndexOutOfBoundsException {
+	                   int index)
+	        throws IndexOutOfBoundsException {
+		this.assertWithinBitRange(index);
 		if (on) {
 			this.value |= (1 << index);
 		} else {
@@ -110,9 +116,9 @@ public class LongBitContainer
 	}
 
 	@Override
-    public void applyAnd(Long value) {
+	public void applyAnd(Long value) {
 		this.value = this.and(value);
-    }
+	}
 
 	@Override
 	public void applyOr(Long value) {
@@ -132,7 +138,8 @@ public class LongBitContainer
 	// MARK: Mask
 	@Override
 	public Long makeMask(int start,
-	                     int end) throws IndexOutOfBoundsException {
+	                     int end)
+	        throws IndexOutOfBoundsException {
 		int length = end - start;
 		return (~(ALL_ONE_BITS << length) << start);
 	}
@@ -278,6 +285,13 @@ public class LongBitContainer
 		}
 
 		return indexes;
+	}
+
+	// MARK: Assertions
+	public void assertWithinBitRange(Integer index) throws IndexOutOfBoundsException {
+		if (index < MIN_INDEX || index > MAX_INDEX) {
+			throw new IndexOutOfBoundsException("Bit out of range: " + index);
+		}
 	}
 
 	@Override

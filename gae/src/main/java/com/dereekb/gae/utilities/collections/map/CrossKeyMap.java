@@ -37,19 +37,6 @@ public interface CrossKeyMap<X, Y> {
 
 	public Set<Y> allY();
 
-	// MARK: Put
-	/**
-	 * Puts the keys into the map.
-	 * 
-	 * @param xKey
-	 *            Key. Never {@code null}.
-	 * @param yKey
-	 *            Key. Never {@code null}.
-	 */
-	public void put(X xKey,
-	                Y yKey)
-	        throws IllegalArgumentException;
-
 	// MARK: Contains
 	/**
 	 * Checks if the x key exists.

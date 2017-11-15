@@ -42,7 +42,7 @@ public class GrantedAuthorityDecoderImpl extends EncodedLongDecoderImpl<GrantedA
 
 	// MARK: GrantedAuthorityDecoder
 	@Override
-	public Set<GrantedAuthority> decodeRoles(Long encoded) {
+	public Set<GrantedAuthority> decode(Long encoded) {
 		return super.decode(encoded);
 	}
 

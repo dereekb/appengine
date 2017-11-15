@@ -2,9 +2,11 @@ package com.dereekb.gae.utilities.collections.map.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dereekb.gae.utilities.collections.map.CrossKeyMap;
+import com.dereekb.gae.utilities.collections.map.MutableCrossKeyMap;
 
 /**
  * {@link CrossKeyMap} implementation.
@@ -17,17 +19,41 @@ import com.dereekb.gae.utilities.collections.map.CrossKeyMap;
  *            y key type
  */
 public class CrossKeyMapImpl<X, Y>
-        implements CrossKeyMap<X, Y> {
+        implements MutableCrossKeyMap<X, Y> {
 
 	/**
 	 * X keys, Y values
 	 */
-	private Map<X, Y> y = new HashMap<X, Y>();
+	private Map<X, Y> y;
 
 	/**
 	 * Y keys, X values
 	 */
-	private Map<Y, X> x = new HashMap<Y, X>();
+	private Map<Y, X> x;
+
+	public CrossKeyMapImpl() {
+		this.clear();
+	}
+
+	public static <X, Y> CrossKeyMapImpl<X, Y> makeX(Map<Y, X> x) {
+		CrossKeyMapImpl<X, Y> map = new CrossKeyMapImpl<X, Y>();
+		map.setXMap(x);
+		return map;
+	}
+
+	public static <X, Y> CrossKeyMapImpl<X, Y> makeY(Map<X, Y> x) {
+		CrossKeyMapImpl<X, Y> map = new CrossKeyMapImpl<X, Y>();
+		map.setYMap(x);
+		return map;
+	}
+
+	@Override
+	public void clear() {
+		if (this.x == null || this.x.isEmpty() == false) {
+			this.y = new HashMap<X, Y>();
+			this.x = new HashMap<Y, X>();
+		}
+	}
 
 	// MARK: Get
 	@Override
@@ -53,13 +79,28 @@ public class CrossKeyMapImpl<X, Y>
 	// MARK: Put
 	@Override
 	public void put(X xKey,
-	                Y yKey) throws IllegalArgumentException {
+	                Y yKey)
+	        throws IllegalArgumentException {
 		if (xKey == null || yKey == null) {
 			throw new IllegalArgumentException("Cannot put a null key.");
 		}
-		
+
 		this.y.put(xKey, yKey);
 		this.x.put(yKey, xKey);
+	}
+
+	@Override
+	public void setXMap(Map<Y, X> x) {
+		for (Entry<Y, X> entry : x.entrySet()) {
+			this.put(entry.getValue(), entry.getKey());
+		}
+	}
+
+	@Override
+	public void setYMap(Map<X, Y> y) {
+		for (Entry<X, Y> entry : y.entrySet()) {
+			this.put(entry.getKey(), entry.getValue());
+		}
 	}
 
 	// MARK: Contains

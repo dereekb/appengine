@@ -12,6 +12,7 @@ import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
 import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
 import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoder;
+import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderDelegate;
 import com.dereekb.gae.server.auth.security.model.context.exception.UnavailableModelContextTypeException;
 import com.dereekb.gae.utilities.collections.map.CrossKeyMap;
 import com.dereekb.gae.utilities.collections.map.impl.CrossKeyMapImpl;
@@ -38,16 +39,18 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 	}
 
 	public void setDelegates(List<LoginTokenModelContextSetEncoderDecoderDelegate> delegates) {
-		this.typeMap = new CrossKeyMapImpl<Integer, String>();
+		CrossKeyMapImpl<Integer, String> typeMap = new CrossKeyMapImpl<Integer, String>();
 		this.delegates = new HashMap<String, LoginTokenModelContextSetEncoderDecoderDelegate>();
 
 		for (LoginTokenModelContextSetEncoderDecoderDelegate delegate : delegates) {
 			Integer code = delegate.getCode();
 			String type = delegate.getModelType();
 
-			this.typeMap.put(code, type);
+			typeMap.put(code, type);
 			this.delegates.put(type, delegate);
 		}
+		
+		this.typeMap = typeMap;
 	}
 
 	// MARK: Encode

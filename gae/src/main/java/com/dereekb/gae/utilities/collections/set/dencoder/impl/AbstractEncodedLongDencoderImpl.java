@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.dereekb.gae.utilities.collections.set.dencoder.BitIndexable;
 import com.dereekb.gae.utilities.collections.set.dencoder.EncodedLongDencoder;
 import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
@@ -16,10 +15,10 @@ import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
  * @param <T>
  *            decoded type
  */
-public class EncodedLongDencoderImpl<T extends BitIndexable> extends EncodedLongDecoderImpl<T>
+public abstract class AbstractEncodedLongDencoderImpl<T> extends EncodedLongDecoderImpl<T>
         implements EncodedLongDencoder<T> {
 
-	public EncodedLongDencoderImpl(Map<Integer, T> map) throws IllegalArgumentException {
+	public AbstractEncodedLongDencoderImpl(Map<Integer, T> map) throws IllegalArgumentException {
 		super(map);
 	}
 
@@ -27,9 +26,9 @@ public class EncodedLongDencoderImpl<T extends BitIndexable> extends EncodedLong
 	@Override
 	public Long encodeLong(Iterable<T> values) {
 		LongBitContainer container = new LongBitContainer();
-		Set<Byte> bytes = this.encode(values);
+		Set<Integer> bytes = this.encode(values);
 
-		for (Byte b : bytes) {
+		for (Integer b : bytes) {
 			container.setBit(true, b);
 		}
 
@@ -38,16 +37,19 @@ public class EncodedLongDencoderImpl<T extends BitIndexable> extends EncodedLong
 
 	// MARK: Encoder
 	@Override
-	public Set<Byte> encode(Iterable<? extends T> values) {
-		Set<Byte> bytes = new HashSet<Byte>();
+	public Set<Integer> encode(Iterable<? extends T> values) throws IllegalArgumentException {
+		Set<Integer> indexes = new HashSet<Integer>();
 
 		for (T value : values) {
-			byte index = value.getIndex();
-			bytes.add(index);
+			int index = this.getIndexForValue(value);
+			indexes.add(index);
 		}
 
-		return bytes;
+		return indexes;
 	}
+
+	// MARK: Internal
+	protected abstract int getIndexForValue(T value) throws IllegalArgumentException;
 
 	@Override
 	public String toString() {

@@ -89,4 +89,23 @@ public class LongBitContainerTest {
 		Assert.assertTrue(activeIndexes.contains(b));
 	}
 
+	@Test
+	public void testOutOfRangeRead() {
+		LongBitContainer container = new LongBitContainer(1L);
+
+		try {
+			container.getBit(LongBitContainer.MAX_INDEX + 1);
+			Assert.fail();
+		} catch (IndexOutOfBoundsException e) {
+
+		}
+
+		try {
+			container.getBit(LongBitContainer.MIN_INDEX - 1);
+			Assert.fail();
+		} catch (IndexOutOfBoundsException e) {
+
+		}
+	}
+
 }

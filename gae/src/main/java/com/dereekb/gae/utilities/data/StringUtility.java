@@ -10,7 +10,7 @@ import com.google.common.base.Joiner;
 
 public class StringUtility {
 
-	private static final String DEFAULT_SEPARATOR = ",";
+	public static final String DEFAULT_SEPARATOR = ",";
 
 	// MARK: Strins
 	/**

@@ -1,7 +1,5 @@
 package com.dereekb.gae.utilities.collections.set.dencoder;
 
-import java.util.Set;
-
 import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
 /**
@@ -13,10 +11,8 @@ import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
  * @param <T>
  *            decoded type
  */
-public interface EncodedLongDencoder<T extends BitIndexable>
-        extends EncodedLongDecoder<T>, SetEncoder<T, Byte> {
-
-	public Set<T> decode(Long encodedLong);
+public interface EncodedLongDencoder<T>
+        extends EncodedLongDecoder<T>, SetEncoder<T, Integer> {
 
 	public Long encodeLong(Iterable<T> values);
 

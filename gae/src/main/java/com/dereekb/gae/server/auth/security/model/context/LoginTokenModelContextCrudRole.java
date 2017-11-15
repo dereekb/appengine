@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.auth.security.model.context;
 
+import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
+
 /**
  * Default {@link LoginTokenModelContextRole} roles.
  * <p>
@@ -8,17 +10,37 @@ package com.dereekb.gae.server.auth.security.model.context;
  * @author dereekb
  *
  */
-public enum LoginTokenModelContextCrudRole implements LoginTokenModelContextRole {
+public enum LoginTokenModelContextCrudRole implements IndexCoded, LoginTokenModelContextRole {
 
-	READ(0, "read"),
+	/**
+	 * Read related models.
+	 */
+	READ(0, "crud_read"),
 
-	UPDATE(1, "update"),
+	/**
+	 * Update related models.
+	 */
+	UPDATE(1, "crud_update"),
 
-	DELETE(2, "delete"),
+	/**
+	 * Delete related models.
+	 */
+	DELETE(2, "crud_delete"),
 
-	CREATE(3, "create"),
-	
-	SEARCH(4, "search");
+	/**
+	 * Create related models.
+	 */
+	CREATE(3, "crud_create"),
+
+	/**
+	 * Search the model and related components.
+	 */
+	SEARCH(4, "crud_search"),
+
+	/**
+	 * Change model links.
+	 */
+	LINK(5, "crud_link");
 
 	public final int code;
 	public final String role;
@@ -35,11 +57,6 @@ public enum LoginTokenModelContextCrudRole implements LoginTokenModelContextRole
 
 	@Override
 	public String getRole() {
-		return this.role;
-	}
-
-	@Override
-	public String getAuthority() {
 		return this.role;
 	}
 

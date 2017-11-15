@@ -125,7 +125,7 @@ public class LoginTokenGrantedAuthorityBuilderImpl<T extends LoginToken>
 			Long encodedRoles = token.getRoles();
 
 			if (encodedRoles != null) {
-				authorities = this.grantedAuthorityDecoder.decodeRoles(encodedRoles);
+				authorities = this.grantedAuthorityDecoder.decode(encodedRoles);
 			} else {
 				authorities = new HashSet<>();
 			}

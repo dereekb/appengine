@@ -2,12 +2,13 @@ package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
@@ -64,19 +65,24 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		}
 
 		// Encode Object Context
-		Map<Integer, String> contextMap = loginToken.getEncodedModelContext();
+		EncodedLoginTokenModelContextSet contextMap = loginToken.getEncodedModelContextSet();
 
-		if (contextMap.isEmpty() == false) {
-			Set<Integer> contextMapKeys = contextMap.keySet();
-			claims.put(OBJECT_CONTEXT_KEY, StringUtility.joinValues(contextMapKeys));
+		if (contextMap != null) {
+			Set<Integer> contextMapKeys = contextMap.getEncodedModelContextTypes();
+			Set<Integer> nonEmptyKeys = new HashSet<Integer>();
 
-			for (Entry<Integer, String> entry : contextMap.entrySet()) {
-				String key = OBJECT_CONTEXT_KEY + entry.getKey();
-				String value = entry.getValue();
+			for (Integer contextMapKey : contextMapKeys) {
+				String key = OBJECT_CONTEXT_KEY + contextMapKey;
+				String value = contextMap.getEncodedModelTypeContext(contextMapKey);
 
 				if (StringUtility.isEmptyString(value) == false) {
 					claims.put(key, value);
+					nonEmptyKeys.add(contextMapKey);
 				}
+			}
+
+			if (nonEmptyKeys.isEmpty() == false) {
+				claims.put(OBJECT_CONTEXT_KEY, StringUtility.joinValues(nonEmptyKeys));
 			}
 		}
 	}
