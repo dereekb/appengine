@@ -6,7 +6,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.task.ConfigurableTask;
 
 /**
- * Task for reading models.
+ * Task for reading models into a {@link ReadPair}.
  *
  * @author dereekb
  *

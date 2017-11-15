@@ -10,7 +10,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 
 /**
- * Exception for when a requested types is unavailable.
+ * Exception for when one or more requested types are unavailable.
  *
  * @author dereekb
  */

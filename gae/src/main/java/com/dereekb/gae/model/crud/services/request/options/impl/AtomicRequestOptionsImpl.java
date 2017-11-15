@@ -14,7 +14,7 @@ public abstract class AtomicRequestOptionsImpl
 	/**
 	 * Whether all objects must be used successfully in order to succeed or not.
 	 */
-	private boolean atomic;
+	protected boolean atomic;
 
 	public AtomicRequestOptionsImpl() {
 		this(true);
