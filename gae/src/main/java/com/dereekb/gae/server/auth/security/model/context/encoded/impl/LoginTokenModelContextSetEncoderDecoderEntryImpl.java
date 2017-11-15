@@ -10,7 +10,7 @@ import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRoleSet;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
 import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextRoleSetEncoderDecoder;
-import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderDelegate;
+import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderEntry;
 import com.dereekb.gae.server.auth.security.model.context.impl.AbstractLoginTokenModelContextRoleSet;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
@@ -19,14 +19,14 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapAndSet;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
- * Abstract {@link LoginTokenModelContextSetEncoderDecoderDelegate}
+ * Abstract {@link LoginTokenModelContextSetEncoderDecoderEntry}
  * implementation.
  * 
  * @author dereekb
  *
  */
-public abstract class LoginTokenModelContextSetEncoderDecoderDelegateImpl
-        implements LoginTokenModelContextSetEncoderDecoderDelegate {
+public class LoginTokenModelContextSetEncoderDecoderEntryImpl
+        implements LoginTokenModelContextSetEncoderDecoderEntry {
 
 	public static final String ROLE_SPLITTER = ":::";
 	public static final String KEYS_ROLE_JOINER = ":";
@@ -37,17 +37,22 @@ public abstract class LoginTokenModelContextSetEncoderDecoderDelegateImpl
 	private StringModelKeyConverter keyConverter;
 	private LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder;
 
-	public LoginTokenModelContextSetEncoderDecoderDelegateImpl(Integer code,
+	public LoginTokenModelContextSetEncoderDecoderEntryImpl(Integer code,
 	        String modelType,
-	        ModelKeyType keyType) {
-		this(code, modelType, ModelKey.converterForKeyType(keyType));
+	        ModelKeyType keyType,
+	        LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder) {
+		this(code, modelType, ModelKey.converterForKeyType(keyType), rolesDencoder);
 	}
 
-	public LoginTokenModelContextSetEncoderDecoderDelegateImpl(Integer code,
+	public LoginTokenModelContextSetEncoderDecoderEntryImpl(Integer code,
 	        String modelType,
-	        StringModelKeyConverter keyConverter) {
+	        StringModelKeyConverter keyConverter,
+	        LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder) {
 		super();
+		this.setCode(code);
+		this.setModelType(modelType);
 		this.setKeyConverter(keyConverter);
+		this.setRolesDencoder(rolesDencoder);
 	}
 
 	@Override
@@ -88,11 +93,22 @@ public abstract class LoginTokenModelContextSetEncoderDecoderDelegateImpl
 		this.keyConverter = keyConverter;
 	}
 
+	public LoginTokenModelContextRoleSetEncoderDecoder getRolesDencoder() {
+		return this.rolesDencoder;
+	}
+
+	public void setRolesDencoder(LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder) {
+		if (rolesDencoder == null) {
+			throw new IllegalArgumentException("rolesDencoder cannot be null.");
+		}
+
+		this.rolesDencoder = rolesDencoder;
+	}
+
 	// MARK: LoginTokenModelContextSetEncoderDecoderDelegate
 	@Override
 	public String encode(LoginTokenTypedModelContextSet typedSet) {
 		CaseInsensitiveMapAndSet set = this.makeEncodedRoleAndKeySet(typedSet);
-
 		List<String> rolePartitions = new ArrayList<String>(set.keySet().size());
 
 		for (Entry<String, Set<String>> roleSet : set.entrySet()) {
@@ -169,14 +185,13 @@ public abstract class LoginTokenModelContextSetEncoderDecoderDelegateImpl
 		}
 
 		protected Set<LoginTokenModelContextRole> decodeRoles() {
-			return LoginTokenModelContextSetEncoderDecoderDelegateImpl.this.rolesDencoder
-			        .decodeRoleSet(this.encodedRoles);
+			return LoginTokenModelContextSetEncoderDecoderEntryImpl.this.rolesDencoder.decodeRoleSet(this.encodedRoles);
 		}
 
 		// MARK: Contexts
 		public List<LoginTokenModelContext> makeContexts(String keysString) {
 			List<String> stringKeys = StringUtility.separateValues(KEY_SPLITTER, keysString);
-			List<ModelKey> keys = LoginTokenModelContextSetEncoderDecoderDelegateImpl.this.keyConverter
+			List<ModelKey> keys = LoginTokenModelContextSetEncoderDecoderEntryImpl.this.keyConverter
 			        .convertTo(stringKeys);
 
 			List<LoginTokenModelContext> contexts = new ArrayList<LoginTokenModelContext>();
@@ -201,7 +216,7 @@ public abstract class LoginTokenModelContextSetEncoderDecoderDelegateImpl
 			// MARK: LoginTokenModelContext
 			@Override
 			public String getModelType() {
-				return LoginTokenModelContextSetEncoderDecoderDelegateImpl.this.modelType;
+				return LoginTokenModelContextSetEncoderDecoderEntryImpl.this.modelType;
 			}
 
 			@Override
@@ -221,6 +236,12 @@ public abstract class LoginTokenModelContextSetEncoderDecoderDelegateImpl
 
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "LoginTokenModelContextSetEncoderDecoderEntryImpl [code=" + this.code + ", modelType=" + this.modelType
+		        + ", keyConverter=" + this.keyConverter + ", rolesDencoder=" + this.rolesDencoder + "]";
 	}
 
 }

@@ -153,4 +153,21 @@ public class KeyedUtility {
 		return code;
 	}
 
+	/**
+	 * Makes a map using the input {@link IndexCoded} values.
+	 * 
+	 * @param values
+	 *            {@link Iterable}. Never {@code null}.
+	 * @return {@link Map}. Never {@code null}.
+	 */
+	public static <T extends IndexCoded> Map<Integer, ? extends T> makeCodedMap(Iterable<? extends T> values) {
+		Map<Integer, T> map = new HashMap<Integer, T>();
+
+		for (T value : values) {
+			map.put(value.getCode(), value);
+		}
+
+		return map;
+	}
+
 }

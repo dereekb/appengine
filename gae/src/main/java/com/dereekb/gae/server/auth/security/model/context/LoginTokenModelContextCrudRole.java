@@ -1,7 +1,5 @@
 package com.dereekb.gae.server.auth.security.model.context;
 
-import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
-
 /**
  * Default {@link LoginTokenModelContextRole} roles.
  * <p>
@@ -10,7 +8,7 @@ import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
  * @author dereekb
  *
  */
-public enum LoginTokenModelContextCrudRole implements IndexCoded, LoginTokenModelContextRole {
+public enum LoginTokenModelContextCrudRole implements IndexCodedLoginTokenModelContextRole {
 
 	/**
 	 * Read related models.

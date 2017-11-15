@@ -80,7 +80,7 @@ public class StringUtility {
 		}
 
 		if (!StringUtility.isEmptyString(value)) {
-			return ListUtility.toList(value.split(DEFAULT_SEPARATOR));
+			return ListUtility.toList(value.split(regex));
 		} else {
 			return Collections.emptyList();
 		}

@@ -52,7 +52,7 @@ public class LoginTokenModelContextRoleSetEncoderDecoderImpl extends AbstractEnc
 	@Override
 	public String encodeRoleSet(LoginTokenModelContextRoleSet roleSet) {
 		Set<LoginTokenModelContextRole> roles = roleSet.getRoles();
-		return this.encode(roles).toString();
+		return this.encodeLong(roles).toString();
 	}
 
 	@Override

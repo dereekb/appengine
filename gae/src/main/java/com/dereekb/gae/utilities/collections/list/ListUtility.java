@@ -61,7 +61,7 @@ public class ListUtility {
 		addElements(list, elements);
 		return list;
 	}
-	
+
 	/**
 	 * Adds the elements from an array to the input list.
 	 *
@@ -198,11 +198,34 @@ public class ListUtility {
 	}
 
 	/**
+	 * Flattens a two-dimensional array into a single list.
+	 * 
+	 * @param arrays
+	 *            Arrays. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 */
+	@SafeVarargs
+	public static <T> List<T> flatten(T[]... arrays) {
+		List<T[]> list = toList(arrays);
+		return flattenArrayList(list);
+	}
+
+	public static <T> List<T> flattenArrayList(List<T[]> list) {
+		List<T> flattened = new ArrayList<T>();
+
+		for (T[] entry : list) {
+			flattened.addAll(toList(entry));
+		}
+
+		return flattened;
+	}
+
+	/**
 	 * Flattens a list of lists.
 	 * 
 	 * @param lists
 	 *            {@link List}. Never {@code null}.
-	 * @return {@link List}.
+	 * @return {@link List}. Never {@code null}.
 	 */
 	public static <T> List<T> flatten(List<List<T>> lists) {
 		List<T> flattened = new ArrayList<T>();

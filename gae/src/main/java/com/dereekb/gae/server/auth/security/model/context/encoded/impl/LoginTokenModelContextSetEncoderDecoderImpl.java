@@ -12,8 +12,9 @@ import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
 import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
 import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoder;
-import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderDelegate;
+import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderEntry;
 import com.dereekb.gae.server.auth.security.model.context.exception.UnavailableModelContextTypeException;
+import com.dereekb.gae.server.auth.security.model.context.impl.AbstractLoginTokenModelContextSet;
 import com.dereekb.gae.utilities.collections.map.CrossKeyMap;
 import com.dereekb.gae.utilities.collections.map.impl.CrossKeyMapImpl;
 
@@ -27,22 +28,22 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
         implements LoginTokenModelContextSetEncoderDecoder {
 
 	private CrossKeyMap<Integer, String> typeMap;
-	private Map<String, LoginTokenModelContextSetEncoderDecoderDelegate> delegates;
+	private Map<String, LoginTokenModelContextSetEncoderDecoderEntry> delegates;
 
 	public LoginTokenModelContextSetEncoderDecoderImpl() {
-		this(new ArrayList<LoginTokenModelContextSetEncoderDecoderDelegate>());
+		this(new ArrayList<LoginTokenModelContextSetEncoderDecoderEntry>());
 	}
 
 	public LoginTokenModelContextSetEncoderDecoderImpl(
-	        List<LoginTokenModelContextSetEncoderDecoderDelegate> delegates) {
+	        List<LoginTokenModelContextSetEncoderDecoderEntry> delegates) {
 		this.setDelegates(delegates);
 	}
 
-	public void setDelegates(List<LoginTokenModelContextSetEncoderDecoderDelegate> delegates) {
+	public void setDelegates(List<LoginTokenModelContextSetEncoderDecoderEntry> delegates) {
 		CrossKeyMapImpl<Integer, String> typeMap = new CrossKeyMapImpl<Integer, String>();
-		this.delegates = new HashMap<String, LoginTokenModelContextSetEncoderDecoderDelegate>();
+		this.delegates = new HashMap<String, LoginTokenModelContextSetEncoderDecoderEntry>();
 
-		for (LoginTokenModelContextSetEncoderDecoderDelegate delegate : delegates) {
+		for (LoginTokenModelContextSetEncoderDecoderEntry delegate : delegates) {
 			Integer code = delegate.getCode();
 			String type = delegate.getModelType();
 
@@ -61,7 +62,7 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 		Set<String> types = set.getModelTypes();
 		
 		for (String type : types) {
-			LoginTokenModelContextSetEncoderDecoderDelegate delegate = LoginTokenModelContextSetEncoderDecoderImpl.this
+			LoginTokenModelContextSetEncoderDecoderEntry delegate = LoginTokenModelContextSetEncoderDecoderImpl.this
 			        .getDelegate(type);
 			
 			LoginTokenTypedModelContextSet typedSet = set.getContextsForType(type);
@@ -85,7 +86,7 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 	 * @author dereekb
 	 *
 	 */
-	protected class DecodedLoginTokenModelContextSet
+	protected class DecodedLoginTokenModelContextSet extends AbstractLoginTokenModelContextSet
 	        implements LoginTokenModelContextSet {
 
 		private final Set<String> typeSet;
@@ -129,8 +130,9 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 			return this.typeSet.contains(modelType);
 		}
 
+		// MARK: AbstractLoginTokenModelContextSet
 		@Override
-		public LoginTokenTypedModelContextSet getContextsForType(String modelType)
+		public LoginTokenTypedModelContextSet tryGetContextsForType(String modelType)
 		        throws UnavailableModelContextTypeException {
 			this.initType(modelType);
 			return this.setMap.get(modelType);
@@ -147,7 +149,7 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 		}
 
 		private void initType(String modelType) {
-			if (!this.uninitialized.contains(modelType)) {
+			if (this.uninitialized.contains(modelType)) {
 				LoginTokenTypedModelContextSet set = new LoginTokenTypedModelContextSetImpl(modelType);
 				this.setMap.put(modelType, set);
 				
@@ -186,7 +188,7 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 				Integer encodedType = LoginTokenModelContextSetEncoderDecoderImpl.this.typeMap.getX(this.modelType);
 				String encodedContext = DecodedLoginTokenModelContextSet.this.encodedSet
 				        .getEncodedModelTypeContext(encodedType);
-				LoginTokenModelContextSetEncoderDecoderDelegate delegate = LoginTokenModelContextSetEncoderDecoderImpl.this
+				LoginTokenModelContextSetEncoderDecoderEntry delegate = LoginTokenModelContextSetEncoderDecoderImpl.this
 				        .getDelegate(this.modelType);
 				return delegate.decode(encodedContext);
 			}
@@ -196,7 +198,7 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 	}
 
 	// MARK: Internal
-	protected LoginTokenModelContextSetEncoderDecoderDelegate getDelegate(Integer code) {
+	protected LoginTokenModelContextSetEncoderDecoderEntry getDelegate(Integer code) {
 		String type = this.getTypeForCode(code);
 		return this.getDelegate(type);
 	}
@@ -221,14 +223,20 @@ public class LoginTokenModelContextSetEncoderDecoderImpl
 		return code;
 	}
 
-	protected LoginTokenModelContextSetEncoderDecoderDelegate getDelegate(String modelType) {
-		LoginTokenModelContextSetEncoderDecoderDelegate delegate = this.delegates.get(modelType);
+	protected LoginTokenModelContextSetEncoderDecoderEntry getDelegate(String modelType) {
+		LoginTokenModelContextSetEncoderDecoderEntry delegate = this.delegates.get(modelType);
 
 		if (delegate == null) {
 			throw new UnavailableModelContextTypeException(modelType);
 		}
 
 		return delegate;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginTokenModelContextSetEncoderDecoderImpl [typeMap=" + this.typeMap + ", delegates=" + this.delegates
+		        + "]";
 	}
 
 }

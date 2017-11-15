@@ -56,4 +56,9 @@ public class EncodedLoginTokenModelContextSetImpl
 		return context;
 	}
 
+	@Override
+	public String toString() {
+		return "EncodedLoginTokenModelContextSetImpl [map=" + this.map + "]";
+	}
+
 }

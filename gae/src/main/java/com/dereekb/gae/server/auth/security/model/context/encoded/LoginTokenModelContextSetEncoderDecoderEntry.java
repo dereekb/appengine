@@ -14,7 +14,7 @@ import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
  * @author dereekb
  *
  */
-public interface LoginTokenModelContextSetEncoderDecoderDelegate
+public interface LoginTokenModelContextSetEncoderDecoderEntry
         extends IndexCoded, TypedModel {
 
 	/**

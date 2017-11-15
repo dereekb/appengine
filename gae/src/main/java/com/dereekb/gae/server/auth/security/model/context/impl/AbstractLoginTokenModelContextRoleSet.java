@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.auth.security.model.context.impl;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRole;
@@ -37,18 +36,8 @@ public abstract class AbstractLoginTokenModelContextRoleSet
 
 	protected void initStringRoles() {
 		if (this.stringRoles == null) {
-			this.stringRoles = AbstractLoginTokenModelContextRoleSet.readRoles(this.getRoles());
+			this.stringRoles = LoginTokenModelContextRoleSetUtility.readRoles(this.getRoles());
 		}
 	}
 
-	// MARK: Static Utility
-	public static Set<String> readRoles(Iterable<? extends LoginTokenModelContextRole> contextRoles) {
-		Set<String> roles = new HashSet<String>();
-
-		for (LoginTokenModelContextRole contextRole : contextRoles) {
-			roles.add(contextRole.getRole());
-		}
-
-		return roles;
-	}
 }
