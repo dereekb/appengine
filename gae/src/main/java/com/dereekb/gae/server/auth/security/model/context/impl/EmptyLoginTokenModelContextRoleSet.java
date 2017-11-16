@@ -27,6 +27,11 @@ public final class EmptyLoginTokenModelContextRoleSet
 
 	// MARK: LoginTokenModelContextRoleSet
 	@Override
+	public boolean isEmpty() {
+		return true;
+	}
+	
+	@Override
 	public boolean hasRole(LoginTokenModelContextRole role) {
 		return false;
 	}

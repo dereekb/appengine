@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.task.ReadTask;
 import com.dereekb.gae.model.crud.task.impl.ReadTaskImpl;
@@ -15,6 +16,7 @@ import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
 import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextRoleSetEncoderDecoder;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderEntryImpl;
+import com.dereekb.gae.server.auth.security.model.context.exception.NoModelContextRolesGrantedException;
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenModelContextBuilder;
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenTypedModelContextSetImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenModelContextRoleSetLoader;
@@ -97,15 +99,6 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 		ReadResponse<T> readResponse = ReadServiceImpl.doReadForModels(this.readTask, modelKeys, atomic);
 
 		Collection<T> models = readResponse.getModels();
-
-		// TODO: Use a getter or a readService here? The readService wouldn't be
-		// allowed to load specific objects that we might ultimately be granting
-		// access to.
-
-		// For example, if we're invited to a party, but our
-		// permissions currently do not allow us to read the party, which is why
-		// we're getting the context.
-
 		return this.makeInstanceForModels(models, atomic).makeTypedModelContextSet();
 	}
 
@@ -135,19 +128,29 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 			List<LoginTokenModelContext> contexts = new ArrayList<LoginTokenModelContext>();
 
 			for (T model : this.models) {
-				LoginTokenModelContext context = this.makeContextForModel(model);
-				contexts.add(context);
+				try {
+					LoginTokenModelContext context = this.makeContextForModel(model);
+					contexts.add(context);
+				} catch (NoModelContextRolesGrantedException e) {
+
+					// If atomic, fail for being granted no roles.
+					if (this.atomic) {
+						throw new AtomicOperationException(model, AtomicOperationExceptionReason.UNAVAILABLE);
+					}
+				}
 			}
 
 			String modelType = LoginTokenModelContextServiceEntryImpl.this.getModelType();
 			return new LoginTokenTypedModelContextSetImpl(modelType, contexts);
 		}
 
-		protected LoginTokenModelContext makeContextForModel(T model) {
+		protected LoginTokenModelContext makeContextForModel(T model) throws NoModelContextRolesGrantedException {
 			LoginTokenModelContextRoleSet roleSet = this.loadRolesForModel(model);
 
-			// TODO: If the roles are empty, throw an exception in order to
-			// remove the model/set from the results.
+			// No roles means remove from use.
+			if (roleSet.isEmpty()) {
+				throw new NoModelContextRolesGrantedException();
+			}
 
 			return this.builder.roles(roleSet).make(model.getModelKey());
 		}
@@ -156,6 +159,13 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 			return LoginTokenModelContextServiceEntryImpl.this.rolesLoader.loadRolesForModel(model);
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "LoginTokenModelContextServiceEntryImpl [getter=" + this.getter + ", rolesLoader=" + this.rolesLoader
+		        + ", getCode()=" + this.getCode() + ", getModelType()=" + this.getModelType() + ", getKeyConverter()="
+		        + this.getKeyConverter() + ", getRolesDencoder()=" + this.getRolesDencoder() + "]";
 	}
 
 }

@@ -10,6 +10,8 @@ import java.util.Set;
  *
  */
 public interface LoginTokenModelContextRoleSet {
+	
+	public boolean isEmpty();
 
 	/**
 	 * Checks if the role exists in this set.

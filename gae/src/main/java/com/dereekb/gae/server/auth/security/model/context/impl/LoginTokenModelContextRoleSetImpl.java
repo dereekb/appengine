@@ -28,6 +28,11 @@ public class LoginTokenModelContextRoleSetImpl extends AbstractLoginTokenModelCo
 
 	// MARK: LoginTokenModelContextRoleSet
 	@Override
+	public boolean isEmpty() {
+		return this.roles.isEmpty();
+	}
+	
+	@Override
 	public Set<LoginTokenModelContextRole> getRoles() {
 		return this.roles;
 	}

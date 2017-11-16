@@ -176,6 +176,16 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 
 		// MARK: LoginTokenModelContextRoleSet
 		@Override
+		public boolean isEmpty() {
+
+			// TODO: This might not be true in some cases. A value of "0" is
+			// empty, but this would return true, for instance. It really banks
+			// on the fact that empty encodings are ignored.
+
+			return StringUtility.isEmptyString(this.encodedRoles);
+		}
+
+		@Override
 		public Set<LoginTokenModelContextRole> getRoles() {
 			if (this.contextRoles == null) {
 				this.contextRoles = this.decodeRoles();

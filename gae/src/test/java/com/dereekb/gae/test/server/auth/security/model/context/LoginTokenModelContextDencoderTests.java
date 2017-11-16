@@ -25,12 +25,13 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
-public class LoginTokenModelContextTests {
-
-	// TODO: Test encoding and decoding a simple login token model context (one
-	// type, one permission, one key)
-
-	// TODO: Test encoding and decoding a login token model context
+/**
+ * {@link LoginTokenModelContextDencoder} tests.
+ * 
+ * @author dereekb
+ *
+ */
+public class LoginTokenModelContextDencoderTests {
 
 	@Test
 	public void testEncodeEmptySet() {
@@ -48,7 +49,7 @@ public class LoginTokenModelContextTests {
 
 		String aType = "a";
 		Integer aTypeCode = 0;
-		
+
 		// Make Context A
 		LoginTokenModelContextRoleSet aRoles = new LoginTokenModelContextRoleSetImpl(
 		        LoginTokenModelContextCrudRole.READ);
@@ -66,15 +67,70 @@ public class LoginTokenModelContextTests {
 		Assert.assertFalse(encodedSet.getEncodedModelContextTypes().isEmpty());
 		Assert.assertTrue(encodedSet.getEncodedModelContextTypes().contains(aTypeCode));
 		Assert.assertNotNull(encodedSet.getEncodedModelTypeContext(aTypeCode));
-		
+
 		// Decode
 		LoginTokenModelContextSet decoded = dencoder.decodeSet(encodedSet);
-		
-		LoginTokenTypedModelContextSet decodedContextA = decoded.getContextsForType(aType); 
+
+		LoginTokenTypedModelContextSet decodedContextA = decoded.getContextsForType(aType);
 
 		Assert.assertNotNull(decodedContextA);
 		Assert.assertTrue(decodedContextA.getModelType().equals(aType));
 		Assert.assertFalse(decodedContextA.getContexts().isEmpty());
+	}
+
+	@Test
+	public void testEncodeAndDecodeSets() {
+		LoginTokenModelContextSetEncoderDecoder dencoder = makeDencoder();
+
+		// Make Context A
+		String aType = "a";
+		Integer aTypeCode = 0;
+
+		LoginTokenModelContextRoleSet aRoles = new LoginTokenModelContextRoleSetImpl(
+		        LoginTokenModelContextCrudRole.READ);
+		LoginTokenModelContextBuilder.Builder aBuilder = LoginTokenModelContextBuilder.make(aType, aRoles);
+		List<LoginTokenModelContext> aContexts = aBuilder
+		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));
+		LoginTokenTypedModelContextSetImpl a = new LoginTokenTypedModelContextSetImpl(aType, aContexts);
+
+		// Make Context B
+		String bType = "b";
+		Integer bTypeCode = 1;
+
+		LoginTokenModelContextRoleSet bRoles = new LoginTokenModelContextRoleSetImpl(
+		        LoginTokenModelContextCrudRole.READ);
+		LoginTokenModelContextBuilder.Builder bBuilder = LoginTokenModelContextBuilder.make(bType, bRoles);
+		List<LoginTokenModelContext> bContexts = bBuilder
+		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));
+		LoginTokenTypedModelContextSetImpl b = new LoginTokenTypedModelContextSetImpl(bType, bContexts);
+
+		// Make Context Set From A and B
+		LoginTokenModelContextSetImpl contextSet = new LoginTokenModelContextSetImpl();
+		contextSet.add(a);
+		contextSet.add(b);
+
+		// Encode
+		EncodedLoginTokenModelContextSet encodedSet = dencoder.encodeSet(contextSet);
+
+		Assert.assertFalse(encodedSet.getEncodedModelContextTypes().isEmpty());
+		Assert.assertTrue(encodedSet.getEncodedModelContextTypes().contains(aTypeCode));
+		Assert.assertTrue(encodedSet.getEncodedModelContextTypes().contains(bTypeCode));
+		Assert.assertNotNull(encodedSet.getEncodedModelTypeContext(aTypeCode));
+		Assert.assertNotNull(encodedSet.getEncodedModelTypeContext(bTypeCode));
+
+		// Decode
+		LoginTokenModelContextSet decoded = dencoder.decodeSet(encodedSet);
+
+		LoginTokenTypedModelContextSet decodedContextA = decoded.getContextsForType(aType);
+		LoginTokenTypedModelContextSet decodedContextB = decoded.getContextsForType(bType);
+
+		Assert.assertNotNull(decodedContextA);
+		Assert.assertTrue(decodedContextA.getModelType().equals(aType));
+		Assert.assertFalse(decodedContextA.getContexts().isEmpty());
+
+		Assert.assertNotNull(decodedContextB);
+		Assert.assertTrue(decodedContextB.getModelType().equals(bType));
+		Assert.assertFalse(decodedContextB.getContexts().isEmpty());
 	}
 
 	// MARK: Utilities
