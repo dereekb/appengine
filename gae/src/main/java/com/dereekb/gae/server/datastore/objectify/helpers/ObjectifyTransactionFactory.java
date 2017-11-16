@@ -25,6 +25,14 @@ public interface ObjectifyTransactionFactory {
 	public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
 	                                                 PartitionDelegate<T, X> delegate);
 
+	public <X> List<X> doTransactionWithPartition(ModelKeyListAccessor<?> input,
+	                                              PartitionDelegate<ModelKey, X> delegate,
+	                                              Integer partitionSize);
+
+	public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
+	                                                 PartitionDelegate<T, X> delegate,
+	                                                 Integer partitionSize);
+
 	public <T, X> List<X> doTransaction(Iterable<T> input,
 	                                    Partitioner partitioner,
 	                                    PartitionDelegate<T, X> delegate);

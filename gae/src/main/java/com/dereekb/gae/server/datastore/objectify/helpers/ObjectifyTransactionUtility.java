@@ -129,16 +129,24 @@ public class ObjectifyTransactionUtility {
 		public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
 		                                                 PartitionDelegate<T, X> delegate) {
 			Partitioner partitioner = getTransactionElementsPartitioner();
-			List<List<T>> partitions = partitioner.makePartitions(input);
+			return this.doTransaction(input, partitioner, delegate);
+		}
 
-			List<X> results = new ArrayList<X>(partitions.size());
+		@Override
+		public <X> List<X> doTransactionWithPartition(ModelKeyListAccessor<?> input,
+		                                              PartitionDelegate<ModelKey, X> delegate,
+		                                              Integer partitionSize) {
+			List<ModelKey> keys = input.getModelKeys();
+			Partitioner partitioner = new PartitionerImpl(partitionSize);
+			return this.doTransaction(keys, partitioner, delegate);
+		}
 
-			for (List<T> partition : partitions) {
-				X result = this.doTransaction(partition, delegate);
-				results.add(result);
-			}
-
-			return results;
+		@Override
+		public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
+		                                                 PartitionDelegate<T, X> delegate,
+		                                                 Integer partitionSize) {
+			Partitioner partitioner = new PartitionerImpl(partitionSize);
+			return this.doTransaction(input, partitioner, delegate);
 		}
 
 		@Override

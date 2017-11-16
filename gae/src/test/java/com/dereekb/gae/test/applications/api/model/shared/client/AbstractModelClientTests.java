@@ -356,6 +356,10 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			public T readByKey(Key<T> key) throws AssertionError {
 				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
+				return this.readByKey(modelKey);
+			}
+
+			public T readByKey(ModelKey modelKey) throws AssertionError {
 				return this.readByKey(ListUtility.wrap(modelKey)).get(0);
 			}
 

@@ -13,14 +13,26 @@ public abstract class AbstractStagedTransactionChange
 
 	private boolean complete = false;
 
+	public boolean isComplete() {
+		return this.complete;
+	}
+
+	protected void resetComplete() {
+		this.complete = false;
+	}
+
 	// MARK: StagedUpdater
 	@Override
-	public void finishChanges() throws StagedTransactionAlreadyFinishedException {
+	public final void finishChanges() throws StagedTransactionAlreadyFinishedException {
+		this.assertIsNotComplete();
+		this.finishChangesWithEntities();
+		this.complete = true;
+	}
+
+	protected void assertIsNotComplete() {
 		if (this.complete) {
 			throw new StagedTransactionAlreadyFinishedException();
 		}
-
-		this.complete = true;
 	}
 
 	protected abstract void finishChangesWithEntities();

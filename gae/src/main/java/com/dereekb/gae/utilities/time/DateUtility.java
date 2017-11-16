@@ -14,7 +14,7 @@ public class DateUtility {
 	public static final Long TIME_IN_MINUTE = 1000 * 60L;
 	public static final Long TIME_IN_HOUR = TIME_IN_MINUTE * 60L;
 	public static final Long TIME_IN_DAY = TIME_IN_HOUR * 24;
-	
+
 	private static final Map<Long, String> DATE_KEY_VALUE_MAP = new HashMap<Long, String>();
 
 	static {
@@ -142,7 +142,7 @@ public class DateUtility {
 	public static Long timeInDays(Integer days) {
 		return timeInDays(days.longValue());
 	}
-	
+
 	public static Long timeInDays(long days) {
 		return TIME_IN_DAY * days;
 	}
@@ -150,7 +150,7 @@ public class DateUtility {
 	public static Long timeInHours(Integer hours) {
 		return timeInHours(hours.longValue());
 	}
-	
+
 	public static Long timeInHours(long hours) {
 		return TIME_IN_HOUR * hours;
 	}
@@ -162,15 +162,29 @@ public class DateUtility {
 	public static Long timeInMinutes(long minutes) {
 		return TIME_IN_MINUTE * minutes;
 	}
-	
-	public static boolean dateIsInTheFutureAtleast(Date date, long minimumScheduleTime) {
+
+	public static boolean dateIsInTheFutureAtleast(Date date,
+	                                               long minimumScheduleTime) {
 		return dateIsInTheFutureAtleast(date, minimumScheduleTime, 0L);
 	}
-	
-	public static boolean dateIsInTheFutureAtleast(Date date, long minimumScheduleTime, long leeway) {
+
+	public static boolean dateIsInTheFutureAtleast(Date date,
+	                                               long minimumScheduleTime,
+	                                               long leeway) {
 		Long futureTime = Math.min(0L, minimumScheduleTime - leeway);
 		Date futureDate = DateUtility.getDateIn(futureTime);
 		return futureDate.after(date);
+	}
+
+	/**
+	 * Returns the time difference between now and the current date.
+	 * 
+	 * @param date
+	 *            {@link Date}. Never {@code null}.
+	 * @return {@link Long} time difference. Never {@code null}.
+	 */
+	public static Long getDifference(Date date) {
+		return getDifference(date, new Date());
 	}
 
 	public static Long getDifference(Date start,
