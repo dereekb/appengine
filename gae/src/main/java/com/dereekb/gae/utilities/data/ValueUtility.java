@@ -16,5 +16,13 @@ public class ValueUtility {
 
 		return value;
 	}
+	
+	public static boolean valueOf(Boolean bool) {
+		if (bool == null) {
+			return false;
+		} else {
+			return bool;
+		}
+	}
 
 }

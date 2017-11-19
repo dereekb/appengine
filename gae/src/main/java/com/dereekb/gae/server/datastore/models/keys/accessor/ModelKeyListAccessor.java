@@ -8,13 +8,17 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 /**
  * Accessor that provides access to models, their {@link ModelKey} values, and
  * the model type.
+ * <p>
+ * The implementation may not always guarantee that returned models are up to
+ * date, allowing implementations to pre-wrap models.
  * 
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
-public interface ModelKeyListAccessor<T> extends TypedModel {
+public interface ModelKeyListAccessor<T>
+        extends TypedModel {
 
 	/**
 	 * Returns the keys for the models.

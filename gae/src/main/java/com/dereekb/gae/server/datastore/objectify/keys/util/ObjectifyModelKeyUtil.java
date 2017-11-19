@@ -26,7 +26,7 @@ public class ObjectifyModelKeyUtil<T> {
 	public Class<T> getType() {
 		return this.type;
 	}
-	
+
 	// MARK: Key
 	/**
 	 * Creates a key from the input.
@@ -75,11 +75,16 @@ public class ObjectifyModelKeyUtil<T> {
 	}
 
 	public Key<T> keyFromName(ModelKey modelKey) {
+		return keyFromName(this.type, modelKey);
+	}
+
+	public static <T> Key<T> keyFromName(Class<T> type,
+	                                     ModelKey modelKey) {
 		Key<T> key;
 
 		String name = modelKey.getName();
 		if (name != null) {
-			key = Key.create(this.type, name);
+			key = Key.create(type, name);
 		} else {
 			key = null;
 		}

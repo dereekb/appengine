@@ -11,7 +11,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelKeyListAccessorTask;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyTransactionUtility;
-import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyTransactionUtility.PartitionDelegate;
+import com.dereekb.gae.server.datastore.objectify.helpers.PartitionDelegate;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;

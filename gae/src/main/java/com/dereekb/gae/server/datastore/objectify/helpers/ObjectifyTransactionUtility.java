@@ -101,7 +101,7 @@ public class ObjectifyTransactionUtility {
 		public int getMaxTries() {
 			return this.maxTries;
 		}
-		
+
 		@Override
 		public ObjectifyTransactionType getTransactionType() {
 			return ObjectifyTransactionType.NEW_TRANSACTION;
@@ -126,6 +126,13 @@ public class ObjectifyTransactionUtility {
 		}
 
 		@Override
+		public <X> List<X> doTransactionWithPartition(ModelKeyListAccessor<?> input,
+		                                              CleanupPartitionDelegate<ModelKey, X> delegate) {
+			List<ModelKey> keys = input.getModelKeys();
+			return this.doTransactionWithPartition(keys, delegate);
+		}
+
+		@Override
 		public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
 		                                                 PartitionDelegate<T, X> delegate) {
 			Partitioner partitioner = getTransactionElementsPartitioner();
@@ -133,8 +140,24 @@ public class ObjectifyTransactionUtility {
 		}
 
 		@Override
+		public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
+		                                                 CleanupPartitionDelegate<T, X> delegate) {
+			Partitioner partitioner = getTransactionElementsPartitioner();
+			return this.doTransaction(input, partitioner, delegate);
+		}
+
+		@Override
 		public <X> List<X> doTransactionWithPartition(ModelKeyListAccessor<?> input,
 		                                              PartitionDelegate<ModelKey, X> delegate,
+		                                              Integer partitionSize) {
+			List<ModelKey> keys = input.getModelKeys();
+			Partitioner partitioner = new PartitionerImpl(partitionSize);
+			return this.doTransaction(keys, partitioner, delegate);
+		}
+
+		@Override
+		public <X> List<X> doTransactionWithPartition(ModelKeyListAccessor<?> input,
+		                                              CleanupPartitionDelegate<ModelKey, X> delegate,
 		                                              Integer partitionSize) {
 			List<ModelKey> keys = input.getModelKeys();
 			Partitioner partitioner = new PartitionerImpl(partitionSize);
@@ -150,15 +173,43 @@ public class ObjectifyTransactionUtility {
 		}
 
 		@Override
+		public <T, X> List<X> doTransactionWithPartition(Iterable<T> input,
+		                                                 CleanupPartitionDelegate<T, X> delegate,
+		                                                 Integer partitionSize) {
+			Partitioner partitioner = new PartitionerImpl(partitionSize);
+			return this.doTransaction(input, partitioner, delegate);
+		}
+
+		@Override
 		public <T, X> List<X> doTransaction(Iterable<T> input,
 		                                    Partitioner partitioner,
 		                                    PartitionDelegate<T, X> delegate) {
+			return doTransaction(input, partitioner, new CleanupPartitionDelegate<T, X>() {
+
+				@Override
+				public Work<X> makeWorkForInput(Iterable<T> input) {
+					return delegate.makeWorkForInput(input);
+				}
+
+				@Override
+				public X cleanup(X output) {
+					return output;
+				}
+
+			});
+		}
+
+		@Override
+		public <T, X> List<X> doTransaction(Iterable<T> input,
+		                                    Partitioner partitioner,
+		                                    CleanupPartitionDelegate<T, X> delegate) {
 			List<List<T>> partitions = partitioner.makePartitions(input);
 
 			List<X> results = new ArrayList<X>(partitions.size());
 
 			for (List<T> partition : partitions) {
 				X result = this.doTransaction(partition, delegate);
+				result = delegate.cleanup(result);
 				results.add(result);
 			}
 
@@ -174,12 +225,6 @@ public class ObjectifyTransactionUtility {
 
 		@Override
 		public abstract <X> X doTransaction(Work<X> work);
-
-	}
-
-	public static interface PartitionDelegate<T, X> {
-
-		public Work<X> makeWorkForInput(Iterable<T> input);
 
 	}
 
