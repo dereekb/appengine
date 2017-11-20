@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
-import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRoleSet;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
+import com.dereekb.gae.server.auth.security.model.roles.impl.EmptyModelRoleSetImpl;
 import com.dereekb.gae.server.datastore.models.impl.AbstractUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -30,7 +31,7 @@ public class LoginTokenModelContextBuilder {
 		return new LoginTokenModelContextBuilder(modelType).roles();
 	}
 
-	public static Builder make(String modelType, LoginTokenModelContextRoleSet roles) {
+	public static Builder make(String modelType, ModelRoleSet roles) {
 		return new LoginTokenModelContextBuilder(modelType).roles(roles);
 	}
 
@@ -40,10 +41,10 @@ public class LoginTokenModelContextBuilder {
 
 	// MARK: Builder
 	protected Builder roles() {
-		return this.roles(EmptyLoginTokenModelContextRoleSet.make());
+		return this.roles(EmptyModelRoleSetImpl.make());
 	}
 
-	public Builder roles(LoginTokenModelContextRoleSet roles) {
+	public Builder roles(ModelRoleSet roles) {
 		return new BuilderImpl(roles);
 	}
 
@@ -58,9 +59,9 @@ public class LoginTokenModelContextBuilder {
 	protected class BuilderImpl
 	        implements Builder {
 
-		private final LoginTokenModelContextRoleSet roles;
+		private final ModelRoleSet roles;
 
-		public BuilderImpl(LoginTokenModelContextRoleSet roles) {
+		public BuilderImpl(ModelRoleSet roles) {
 			if (roles == null) {
 				throw new IllegalArgumentException("roles cannot be null.");
 			}
@@ -68,7 +69,7 @@ public class LoginTokenModelContextBuilder {
 			this.roles = roles;
 		}
 
-		public LoginTokenModelContextRoleSet getRoles() {
+		public ModelRoleSet getRoles() {
 			return this.roles;
 		}
 
@@ -115,7 +116,7 @@ public class LoginTokenModelContextBuilder {
 			}
 
 			@Override
-			public LoginTokenModelContextRoleSet getRoleSet() {
+			public ModelRoleSet getRoleSet() {
 				return BuilderImpl.this.roles;
 			}
 

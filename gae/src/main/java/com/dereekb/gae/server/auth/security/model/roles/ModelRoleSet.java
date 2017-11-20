@@ -1,6 +1,8 @@
-package com.dereekb.gae.server.auth.security.model.context;
+package com.dereekb.gae.server.auth.security.model.roles;
 
 import java.util.Set;
+
+import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
 
 /**
  * Contains a list of roles and options available for a
@@ -9,24 +11,29 @@ import java.util.Set;
  * @author dereekb
  *
  */
-public interface LoginTokenModelContextRoleSet {
-	
+public interface ModelRoleSet {
+
+	/**
+	 * Whether or not the role set is empty.
+	 * 
+	 * @return {@code true} if empty.
+	 */
 	public boolean isEmpty();
 
 	/**
 	 * Checks if the role exists in this set.
 	 * 
 	 * @param role
-	 *            {@link LoginTokenModelContextRole}. Never {@code null}.
+	 *            {@link ModelRole}. Never {@code null}.
 	 * @return {@code true} if the role is contained.
 	 */
-	public boolean hasRole(LoginTokenModelContextRole role);
+	public boolean hasRole(ModelRole role);
 
 	/**
 	 * Returns the set of context roles.
 	 * 
 	 * @return {@link Set}. Never {@code null}.
 	 */
-	public Set<LoginTokenModelContextRole> getRoles();
+	public Set<ModelRole> getRoles();
 
 }

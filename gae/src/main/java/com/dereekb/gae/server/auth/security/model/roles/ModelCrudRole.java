@@ -1,14 +1,14 @@
-package com.dereekb.gae.server.auth.security.model.context;
+package com.dereekb.gae.server.auth.security.model.roles;
 
 /**
- * Default {@link LoginTokenModelContextRole} roles.
+ * Default {@link ModelRole} roles.
  * <p>
  * Grants basic CRUD roles.
  * 
  * @author dereekb
  *
  */
-public enum LoginTokenModelContextCrudRole implements IndexCodedLoginTokenModelContextRole {
+public enum ModelCrudRole implements IndexCodedModelRole {
 
 	/**
 	 * Read related models.
@@ -43,7 +43,7 @@ public enum LoginTokenModelContextCrudRole implements IndexCodedLoginTokenModelC
 	public final int code;
 	public final String role;
 
-	private LoginTokenModelContextCrudRole(int code, String role) {
+	private ModelCrudRole(int code, String role) {
 		this.code = code;
 		this.role = role;
 	}

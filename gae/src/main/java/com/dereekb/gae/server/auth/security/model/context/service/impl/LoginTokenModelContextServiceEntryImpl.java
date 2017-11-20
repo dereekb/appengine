@@ -12,15 +12,15 @@ import com.dereekb.gae.model.crud.services.response.ReadResponse;
 import com.dereekb.gae.model.crud.task.ReadTask;
 import com.dereekb.gae.model.crud.task.impl.ReadTaskImpl;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
-import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRoleSet;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
-import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextRoleSetEncoderDecoder;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderEntryImpl;
 import com.dereekb.gae.server.auth.security.model.context.exception.NoModelContextRolesGrantedException;
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenModelContextBuilder;
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenTypedModelContextSetImpl;
-import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenModelContextRoleSetLoader;
 import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenModelContextServiceEntry;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
+import com.dereekb.gae.server.auth.security.model.roles.encoded.ModelRoleSetEncoderDecoder;
+import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetLoader;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -38,16 +38,16 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
         implements LoginTokenModelContextServiceEntry {
 
 	private Getter<T> getter;
-	private LoginTokenModelContextRoleSetLoader<T> rolesLoader;
+	private ModelRoleSetLoader<T> rolesLoader;
 
 	private transient ReadTask<T> readTask;
 
 	public LoginTokenModelContextServiceEntryImpl(Integer code,
 	        String modelType,
 	        ModelKeyType keyType,
-	        LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder,
+	        ModelRoleSetEncoderDecoder rolesDencoder,
 	        Getter<T> getter,
-	        LoginTokenModelContextRoleSetLoader<T> rolesLoader) {
+	        ModelRoleSetLoader<T> rolesLoader) {
 		super(code, modelType, keyType, rolesDencoder);
 		this.setGetter(getter);
 		this.setRolesLoader(rolesLoader);
@@ -56,9 +56,9 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 	public LoginTokenModelContextServiceEntryImpl(Integer code,
 	        String modelType,
 	        StringModelKeyConverter keyConverter,
-	        LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder,
+	        ModelRoleSetEncoderDecoder rolesDencoder,
 	        Getter<T> getter,
-	        LoginTokenModelContextRoleSetLoader<T> rolesLoader) {
+	        ModelRoleSetLoader<T> rolesLoader) {
 		super(code, modelType, keyConverter, rolesDencoder);
 		this.setGetter(getter);
 		this.setRolesLoader(rolesLoader);
@@ -77,11 +77,11 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 		this.readTask = new ReadTaskImpl<T>(this.getter);
 	}
 
-	public LoginTokenModelContextRoleSetLoader<T> getRolesLoader() {
+	public ModelRoleSetLoader<T> getRolesLoader() {
 		return this.rolesLoader;
 	}
 
-	public void setRolesLoader(LoginTokenModelContextRoleSetLoader<T> rolesLoader) {
+	public void setRolesLoader(ModelRoleSetLoader<T> rolesLoader) {
 		if (rolesLoader == null) {
 			throw new IllegalArgumentException("rolesLoader cannot be null.");
 		}
@@ -145,7 +145,7 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 		}
 
 		protected LoginTokenModelContext makeContextForModel(T model) throws NoModelContextRolesGrantedException {
-			LoginTokenModelContextRoleSet roleSet = this.loadRolesForModel(model);
+			ModelRoleSet roleSet = this.loadRolesForModel(model);
 
 			// No roles means remove from use.
 			if (roleSet.isEmpty()) {
@@ -155,7 +155,7 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 			return this.builder.roles(roleSet).make(model.getModelKey());
 		}
 
-		protected LoginTokenModelContextRoleSet loadRolesForModel(T model) {
+		protected ModelRoleSet loadRolesForModel(T model) {
 			return LoginTokenModelContextServiceEntryImpl.this.rolesLoader.loadRolesForModel(model);
 		}
 

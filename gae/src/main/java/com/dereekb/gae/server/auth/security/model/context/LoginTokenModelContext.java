@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.auth.security.model.context;
 
+import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -16,8 +17,8 @@ public interface LoginTokenModelContext
 	/**
 	 * Returns the role set for this model.
 	 * 
-	 * @return {@link LoginTokenModelContextRoleSet}. Never {@code null}.
+	 * @return {@link ModelRoleSet}. Never {@code null}.
 	 */
-	public LoginTokenModelContextRoleSet getRoleSet();
+	public ModelRoleSet getRoleSet();
 
 }

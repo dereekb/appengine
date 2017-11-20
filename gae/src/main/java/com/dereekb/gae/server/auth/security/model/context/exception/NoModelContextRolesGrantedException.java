@@ -1,9 +1,9 @@
 package com.dereekb.gae.server.auth.security.model.context.exception;
 
-import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRoleSet;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 
 /**
- * Thrown in cases where a {@link LoginTokenModelContextRoleSet} with no roles
+ * Thrown in cases where a {@link ModelRoleSet} with no roles
  * is not allowed.
  * 
  * @author dereekb

@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.security.model.context.impl;
 
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
-import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRoleSet;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.datastore.models.impl.AbstractUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -15,11 +15,11 @@ public class LoginTokenModelContextImpl extends AbstractUniqueModel
 
 	private String modelType;
 	private ModelKey modelKey;
-	private LoginTokenModelContextRoleSet roleSet;
+	private ModelRoleSet roleSet;
 
 	public LoginTokenModelContextImpl() {}
 
-	public LoginTokenModelContextImpl(String modelType, ModelKey modelKey, LoginTokenModelContextRoleSet roleSet) {
+	public LoginTokenModelContextImpl(String modelType, ModelKey modelKey, ModelRoleSet roleSet) {
 		super();
 		this.setModelType(modelType);
 		this.setModelKey(modelKey);
@@ -54,11 +54,11 @@ public class LoginTokenModelContextImpl extends AbstractUniqueModel
 	}
 
 	@Override
-	public LoginTokenModelContextRoleSet getRoleSet() {
+	public ModelRoleSet getRoleSet() {
 		return this.roleSet;
 	}
 
-	public void setRoleSet(LoginTokenModelContextRoleSet roleSet) {
+	public void setRoleSet(ModelRoleSet roleSet) {
 		if (roleSet == null) {
 			throw new IllegalArgumentException("roleSet cannot be null.");
 		}

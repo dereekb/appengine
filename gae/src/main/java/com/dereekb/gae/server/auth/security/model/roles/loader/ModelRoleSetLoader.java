@@ -1,7 +1,8 @@
-package com.dereekb.gae.server.auth.security.model.context.service;
+package com.dereekb.gae.server.auth.security.model.roles.loader;
 
-import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRoleSet;
 import com.dereekb.gae.server.auth.security.model.context.exception.NoModelContextRolesGrantedException;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * Used for building roles for a specific model.
@@ -9,20 +10,21 @@ import com.dereekb.gae.server.auth.security.model.context.exception.NoModelConte
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
-public interface LoginTokenModelContextRoleSetLoader<T> {
+public interface ModelRoleSetLoader<T extends UniqueModel> {
 
 	/**
 	 * Loads the roles for the input model. It is valid for this function to
-	 * return an empty {@link LoginTokenModelContextRoleSet}.
+	 * return an empty {@link ModelRoleSet}.
 	 * 
 	 * @param model
 	 *            Model. Never {@code null}.
-	 * @return {@link LoginTokenModelContextRoleSet}. Never {@code null}.
+	 * @return {@link ModelRoleSet}. Never {@code null}.
 	 * @throws NoModelContextRolesGrantedException
 	 *             thrown if the implementation decides that the model should
 	 *             not be given roles.
 	 */
-	public LoginTokenModelContextRoleSet loadRolesForModel(T model) throws NoModelContextRolesGrantedException;
+	public ModelRoleSet loadRolesForModel(T model) throws NoModelContextRolesGrantedException;
 
 }

@@ -6,12 +6,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
-import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRole;
-import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextRoleSet;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
-import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextRoleSetEncoderDecoder;
 import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderEntry;
-import com.dereekb.gae.server.auth.security.model.context.impl.AbstractLoginTokenModelContextRoleSet;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
+import com.dereekb.gae.server.auth.security.model.roles.encoded.ModelRoleSetEncoderDecoder;
+import com.dereekb.gae.server.auth.security.model.roles.impl.AbstractModelRoleSet;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
@@ -35,19 +35,19 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 	private Integer code;
 	private String modelType;
 	private StringModelKeyConverter keyConverter;
-	private LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder;
+	private ModelRoleSetEncoderDecoder rolesDencoder;
 
 	public LoginTokenModelContextSetEncoderDecoderEntryImpl(Integer code,
 	        String modelType,
 	        ModelKeyType keyType,
-	        LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder) {
+	        ModelRoleSetEncoderDecoder rolesDencoder) {
 		this(code, modelType, ModelKey.converterForKeyType(keyType), rolesDencoder);
 	}
 
 	public LoginTokenModelContextSetEncoderDecoderEntryImpl(Integer code,
 	        String modelType,
 	        StringModelKeyConverter keyConverter,
-	        LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder) {
+	        ModelRoleSetEncoderDecoder rolesDencoder) {
 		super();
 		this.setCode(code);
 		this.setModelType(modelType);
@@ -93,11 +93,11 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 		this.keyConverter = keyConverter;
 	}
 
-	public LoginTokenModelContextRoleSetEncoderDecoder getRolesDencoder() {
+	public ModelRoleSetEncoderDecoder getRolesDencoder() {
 		return this.rolesDencoder;
 	}
 
-	public void setRolesDencoder(LoginTokenModelContextRoleSetEncoderDecoder rolesDencoder) {
+	public void setRolesDencoder(ModelRoleSetEncoderDecoder rolesDencoder) {
 		if (rolesDencoder == null) {
 			throw new IllegalArgumentException("rolesDencoder cannot be null.");
 		}
@@ -129,7 +129,7 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 		CaseInsensitiveMapAndSet set = new CaseInsensitiveMapAndSet();
 
 		for (LoginTokenModelContext context : contexts) {
-			LoginTokenModelContextRoleSet roleSet = context.getRoleSet();
+			ModelRoleSet roleSet = context.getRoleSet();
 			String encodedRoles = this.rolesDencoder.encodeRoleSet(roleSet);
 
 			ModelKey key = context.getModelKey();
@@ -159,22 +159,22 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 	}
 
 	/**
-	 * Lazy-loaded {@link LoginTokenModelContextRoleSet} implementation.
+	 * Lazy-loaded {@link ModelRoleSet} implementation.
 	 * 
 	 * @author dereekb
 	 *
 	 */
-	protected class LazyLoginTokenModelRoleContext extends AbstractLoginTokenModelContextRoleSet {
+	protected class LazyLoginTokenModelRoleContext extends AbstractModelRoleSet {
 
 		private final String encodedRoles;
-		private transient Set<LoginTokenModelContextRole> contextRoles;
+		private transient Set<ModelRole> contextRoles;
 
 		public LazyLoginTokenModelRoleContext(String encodedRoles) {
 			super();
 			this.encodedRoles = encodedRoles;
 		}
 
-		// MARK: LoginTokenModelContextRoleSet
+		// MARK: ModelRoleSet
 		@Override
 		public boolean isEmpty() {
 
@@ -186,7 +186,7 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 		}
 
 		@Override
-		public Set<LoginTokenModelContextRole> getRoles() {
+		public Set<ModelRole> getRoles() {
 			if (this.contextRoles == null) {
 				this.contextRoles = this.decodeRoles();
 			}
@@ -194,7 +194,7 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 			return this.contextRoles;
 		}
 
-		protected Set<LoginTokenModelContextRole> decodeRoles() {
+		protected Set<ModelRole> decodeRoles() {
 			return LoginTokenModelContextSetEncoderDecoderEntryImpl.this.rolesDencoder.decodeRoleSet(this.encodedRoles);
 		}
 
@@ -240,7 +240,7 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 			}
 
 			@Override
-			public LoginTokenModelContextRoleSet getRoleSet() {
+			public ModelRoleSet getRoleSet() {
 				return LazyLoginTokenModelRoleContext.this;
 			}
 

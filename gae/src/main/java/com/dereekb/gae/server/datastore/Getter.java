@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.datastore;
 
-import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.exception.UninitializedModelException;
@@ -17,7 +16,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * 
  * @see Setter
  */
-public interface Getter<T extends UniqueModel> {
+public interface Getter<T extends UniqueModel> extends SimpleGetter<T> {
 
 	/**
 	 * Check that the model still exists.
@@ -59,45 +58,6 @@ public interface Getter<T extends UniqueModel> {
 	 * @return {@link Set}. Never {@code null}.
 	 */
 	public Set<ModelKey> getExisting(Iterable<ModelKey> keys) throws IllegalArgumentException;
-
-	/**
-	 * Retrieves the database model that corresponds to the input key.
-	 *
-	 * @param key
-	 *            {@link ModelKey}. Never {@code null}.
-	 * @return Model, or {@code null} if it doesn't exist.
-	 */
-	public T get(ModelKey key) throws IllegalArgumentException;
-
-	/**
-	 * Retrieves the database value of the input model, if it exists.
-	 *
-	 * @param model
-	 *            Model. Never {@code null}.
-	 * @return Model, or {@code null} if it doesn't exist.
-	 */
-	public T get(T model) throws UninitializedModelException;
-
-	/**
-	 * Retrieves database value of the specified models.
-	 *
-	 * @param models
-	 *            {@link Iterable}. Never {@code null}.
-	 * 
-	 * @return A list of models that could be read from the source.
-	 * @throws UninitializedModelException
-	 *             if one or more models do not have an identifier.
-	 */
-	public List<T> get(Iterable<T> models) throws UninitializedModelException;
-
-	/**
-	 * Retrieves items with the given keys.
-	 *
-	 * @param keys
-	 *            {@link Iterable}. Never {@code null}.
-	 * @return A list of models that could be read from the source.
-	 */
-	public List<T> getWithKeys(Iterable<ModelKey> keys);
 
 	/**
 	 * Creates a new getter with the configuration.

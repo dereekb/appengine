@@ -1,9 +1,9 @@
-package com.dereekb.gae.server.auth.security.model.context;
+package com.dereekb.gae.server.auth.security.model.roles;
 
 import org.springframework.security.core.GrantedAuthority;
 
 /**
- * {@link LoginTokenModelContext} role.
+ * Model role.
  * <p>
  * Is very similar to a {@link GrantedAuthority}, but doesn't grants roles in
  * the same way. As such, it implements the same but is different.
@@ -11,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author dereekb
  *
  */
-public interface LoginTokenModelContextRole {
+public interface ModelRole {
 
 	/**
 	 * Returns the role.
