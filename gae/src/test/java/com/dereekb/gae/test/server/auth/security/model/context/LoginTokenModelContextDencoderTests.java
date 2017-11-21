@@ -16,9 +16,9 @@ import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginToke
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenModelContextBuilder;
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenModelContextSetImpl;
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenTypedModelContextSetImpl;
-import com.dereekb.gae.server.auth.security.model.roles.ModelCrudRole;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.encoded.ModelRoleSetEncoderDecoder;
+import com.dereekb.gae.server.auth.security.model.roles.impl.CrudModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.impl.ModelRoleSetImpl;
 import com.dereekb.gae.server.auth.security.model.roles.impl.ModelRoleSetUtility;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -52,7 +52,7 @@ public class LoginTokenModelContextDencoderTests {
 
 		// Make Context A
 		ModelRoleSet aRoles = new ModelRoleSetImpl(
-		        ModelCrudRole.READ);
+		        CrudModelRole.READ);
 		LoginTokenModelContextBuilder.Builder aBuilder = LoginTokenModelContextBuilder.make(aType, aRoles);
 		List<LoginTokenModelContext> aContexts = aBuilder
 		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));
@@ -87,7 +87,7 @@ public class LoginTokenModelContextDencoderTests {
 		Integer aTypeCode = 0;
 
 		ModelRoleSet aRoles = new ModelRoleSetImpl(
-		        ModelCrudRole.READ);
+		        CrudModelRole.READ);
 		LoginTokenModelContextBuilder.Builder aBuilder = LoginTokenModelContextBuilder.make(aType, aRoles);
 		List<LoginTokenModelContext> aContexts = aBuilder
 		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));
@@ -98,7 +98,7 @@ public class LoginTokenModelContextDencoderTests {
 		Integer bTypeCode = 1;
 
 		ModelRoleSet bRoles = new ModelRoleSetImpl(
-		        ModelCrudRole.READ);
+		        CrudModelRole.READ);
 		LoginTokenModelContextBuilder.Builder bBuilder = LoginTokenModelContextBuilder.make(bType, bRoles);
 		List<LoginTokenModelContext> bContexts = bBuilder
 		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));

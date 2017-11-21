@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.server.auth.security.model.roles.IndexCodedModelRole;
-import com.dereekb.gae.server.auth.security.model.roles.ModelCrudRole;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.encoded.ModelRoleSetEncoderDecoder;
@@ -28,7 +27,7 @@ import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 public class ModelRoleSetUtility {
 
 	public static ModelRoleSetEncoderDecoder makeCrudDencoder() {
-		IndexCodedModelRole[] roles = ModelCrudRole.values();
+		IndexCodedModelRole[] roles = CrudModelRole.values();
 		return makeDencoder(roles);
 	}
 

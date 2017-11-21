@@ -16,7 +16,7 @@ public class ListUtility {
 	/**
 	 * Safe copies the values from the collection into an array, only if the
 	 * input is not null. Otherwise returns null.
-	 * 
+	 *
 	 * @param input
 	 * @return
 	 */
@@ -63,6 +63,19 @@ public class ListUtility {
 	}
 
 	/**
+	 * Adds an element to the input collection if it is not null.
+	 *
+	 * @param collection
+	 * @param newElement
+	 */
+	public static <T> void addElement(Collection<T> collection,
+	                                  T newElement) {
+		if (newElement != null) {
+			collection.add(newElement);
+		}
+	}
+
+	/**
 	 * Adds the elements from an array to the input list.
 	 *
 	 * @param list
@@ -88,7 +101,7 @@ public class ListUtility {
 	/**
 	 * Checks that the input lists are exactly the same by checking models
 	 * order, etc.
-	 * 
+	 *
 	 * @param a
 	 *            {@link List}. Never {@code null}.
 	 * @param b
@@ -123,13 +136,13 @@ public class ListUtility {
 	 * Creates a new list with the input element reference copied n times.
 	 * <p>
 	 * Example: [1] -> [1,1,...]
-	 * 
+	 *
 	 * @param element
 	 *            element to reference multiple times in the new List.
 	 * @param count
 	 *            number of times to copy references in new list
 	 * @return {@link List}. Never {@code null}.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             thrown if the count is not greater than 0.
 	 */
@@ -152,13 +165,13 @@ public class ListUtility {
 	/**
 	 * Creates a new list with the input element references copied n times. The
 	 * order is kept, so if the input is [1,2], the result will be [1,2,1,2,...]
-	 * 
+	 *
 	 * @param elements
 	 *            elements to reference multiple times in the new List.
 	 * @param count
 	 *            number of times to copy references in new list
 	 * @return {@link List}. Never {@code null}.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             thrown if the count is not greater than 0.
 	 */
@@ -186,7 +199,7 @@ public class ListUtility {
 
 	/**
 	 * Asserts that no object input is null.
-	 * 
+	 *
 	 * @param components
 	 */
 	public static void assertNoNulls(Object[] components) throws NullPointerException {
@@ -199,7 +212,7 @@ public class ListUtility {
 
 	/**
 	 * Flattens a two-dimensional array into a single list.
-	 * 
+	 *
 	 * @param arrays
 	 *            Arrays. Never {@code null}.
 	 * @return {@link List}. Never {@code null}.
@@ -222,7 +235,7 @@ public class ListUtility {
 
 	/**
 	 * Flattens a list of lists.
-	 * 
+	 *
 	 * @param lists
 	 *            {@link List}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}.
@@ -241,7 +254,7 @@ public class ListUtility {
 	 * Sends an item to the front of the list.
 	 * <p>
 	 * If it doesn't exist in the list, it is added to the list at the front.
-	 * 
+	 *
 	 * @param x
 	 *            Object. Never {@code null}.
 	 * @param list
