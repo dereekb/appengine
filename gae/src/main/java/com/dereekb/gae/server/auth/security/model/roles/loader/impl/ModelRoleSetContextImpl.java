@@ -28,7 +28,7 @@ public class ModelRoleSetContextImpl<T extends UniqueModel> extends HandlerPair<
 	}
 
 	@Override
-	public ModelRoleSet getRoles() {
+	public ModelRoleSet getRoleSet() {
 		return this.object;
 	}
 
@@ -45,7 +45,7 @@ public class ModelRoleSetContextImpl<T extends UniqueModel> extends HandlerPair<
 
 	@Override
 	public String toString() {
-		return "ModelRoleSetContextImpl [getModel()=" + this.getModel() + ", getRoles()=" + this.getRoles() + "]";
+		return "ModelRoleSetContextImpl [getModel()=" + this.getModel() + ", getRoles()=" + this.getRoleSet() + "]";
 	}
 
 }

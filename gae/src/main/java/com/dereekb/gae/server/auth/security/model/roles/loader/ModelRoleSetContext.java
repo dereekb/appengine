@@ -26,6 +26,6 @@ public interface ModelRoleSetContext<T extends UniqueModel>
 	 * 
 	 * @return {@link ModelSet}. Never {@code null}.
 	 */
-	public ModelRoleSet getRoles();
+	public ModelRoleSet getRoleSet();
 
 }

@@ -12,8 +12,11 @@ import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.encoded.ModelRoleSetEncoderDecoder;
 import com.dereekb.gae.server.auth.security.model.roles.encoded.impl.ModelRoleSetEncoderDecoderImpl;
-import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
+import com.dereekb.gae.server.datastore.models.keys.exception.UninitializedModelKeyException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.collections.map.KeyDelegate;
+import com.dereekb.gae.utilities.collections.set.KeyedDelegatedSet;
+import com.dereekb.gae.utilities.collections.set.impl.KeyedDelegatedSetImpl;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 
 /**
@@ -34,8 +37,7 @@ public class ModelRoleSetUtility {
 		Map<Integer, ? extends ModelRole> rolesMap = makeIndexedRolesMap(rolesList);
 		Map<Integer, ModelRole> map = new HashMap<Integer, ModelRole>(rolesMap);
 
-		ModelRoleSetEncoderDecoderImpl dencoder = new ModelRoleSetEncoderDecoderImpl(
-		        map);
+		ModelRoleSetEncoderDecoderImpl dencoder = new ModelRoleSetEncoderDecoderImpl(map);
 		return dencoder;
 	}
 
@@ -51,6 +53,28 @@ public class ModelRoleSetUtility {
 		}
 
 		return roles;
+	}
+
+	public static KeyedDelegatedSet<String, ModelRole> makeRoleSet() {
+		return new KeyedDelegatedSetImpl<String, ModelRole>(ModelRoleKeyDelegate.SINGLETON);
+	}
+
+	public static class ModelRoleKeyDelegate
+	        implements KeyDelegate<String, ModelRole> {
+
+		private static final ModelRoleKeyDelegate SINGLETON = new ModelRoleKeyDelegate();
+
+		private ModelRoleKeyDelegate() {}
+
+		public ModelRoleKeyDelegate make() {
+			return SINGLETON;
+		}
+
+		@Override
+		public String keyForModel(ModelRole model) throws UninitializedModelKeyException {
+			return model.getRole();
+		}
+
 	}
 
 }

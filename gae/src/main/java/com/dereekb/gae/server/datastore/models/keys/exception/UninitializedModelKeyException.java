@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.datastore.models.keys.exception;
 
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
@@ -21,20 +20,6 @@ public class UninitializedModelKeyException extends ApiSafeRuntimeException {
 	public static final String ERROR_TITLE = "Uninitialized Model Key";
 
 	private static final long serialVersionUID = 1L;
-
-	private ModelKey key;
-
-	public ModelKey getKey() {
-		return this.key;
-	}
-
-	public void setKey(ModelKey key) {
-		if (key == null) {
-			throw new IllegalArgumentException("key cannot be null.");
-		}
-
-		this.key = key;
-	}
 
 	public UninitializedModelKeyException() {
 		super();
