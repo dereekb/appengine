@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.auth.security.model.roles;
 
+import java.util.Collection;
 import java.util.Set;
 
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
@@ -34,6 +35,6 @@ public interface ModelRoleSet {
 	 * 
 	 * @return {@link Set}. Never {@code null}.
 	 */
-	public Set<ModelRole> getRoles();
+	public Collection<ModelRole> getRoles();
 
 }

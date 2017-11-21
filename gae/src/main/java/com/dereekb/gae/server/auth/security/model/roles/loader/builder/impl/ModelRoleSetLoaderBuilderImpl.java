@@ -1,18 +1,18 @@
 package com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.server.auth.security.model.context.exception.NoModelContextRolesGrantedException;
-import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetLoader;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.ModelRoleSetLoaderBuilder;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.ModelRoleSetLoaderBuilderComponent;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.ModelRoleSetLoaderBuilderComponentSet;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * {@link ModelRoleSetLoaderBuilder} implementation.
- * 
+ * <p>
+ * Facilitates as much lazy loading as possible with it's implementations.
+ *
  * @author dereekb
  *
  * @param <T>
@@ -21,7 +21,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 public class ModelRoleSetLoaderBuilderImpl<T extends UniqueModel>
         implements ModelRoleSetLoaderBuilder<T> {
 
-	private List<ModelRoleSetLoaderBuilderComponent<T>> components = new ArrayList<ModelRoleSetLoaderBuilderComponent<T>>();
+	private ModelRoleSetLoaderBuilderComponentSet<T> set = new ModelRoleSetLoaderBuilderComponentSetImpl<T>();
 
 	public ModelRoleSetLoaderBuilderImpl() {}
 
@@ -38,28 +38,14 @@ public class ModelRoleSetLoaderBuilderImpl<T extends UniqueModel>
 	// MARK: ModelRoleSetLoaderBuilder
 	@Override
 	public ModelRoleSetLoaderBuilder<T> component(ModelRoleSetLoaderBuilderComponent<T> component) {
-		// TODO Auto-generated method stub
-		return null;
+		this.set.add(component);
+		return this;
 	}
 
 	@Override
 	public ModelRoleSetLoader<T> buildLoader() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// MARK: ModelRoleSetLoader
-	protected static class ModelRoleSetLoaderImpl<T extends UniqueModel>
-	        implements ModelRoleSetLoader<T> {
-
-		@Override
-		public ModelRoleSet loadRolesForModel(T model) throws NoModelContextRolesGrantedException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		private class LazyModelRoleSet 
-		
+		ModelRoleSetLoaderBuilderComponentSet<T> copy = this.set.copySet();
+		return new ModelRoleSetLoaderImpl<T>(copy);
 	}
 
 }

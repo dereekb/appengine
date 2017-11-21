@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.auth.security.model.roles.encoded.impl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,7 +13,7 @@ import com.dereekb.gae.utilities.collections.set.dencoder.impl.AbstractEncodedLo
 
 /**
  * {@link ModelRoleSetEncoderDecoder} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -51,7 +52,7 @@ public class ModelRoleSetEncoderDecoderImpl extends AbstractEncodedLongDencoderI
 	// MARK: ModelRoleSetEncoderDecoder
 	@Override
 	public String encodeRoleSet(ModelRoleSet roleSet) {
-		Set<ModelRole> roles = roleSet.getRoles();
+		Collection<ModelRole> roles = roleSet.getRoles();
 		return this.encodeLong(roles).toString();
 	}
 

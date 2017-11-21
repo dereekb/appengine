@@ -23,19 +23,25 @@ public interface ModelRoleSetLoaderBuilderComponent<T> {
 	 * Checks whether or not a specific role is granted.
 	 * 
 	 * @param model
+	 *            Model. Never {@code null}.
 	 * @param role
-	 * @return
+	 *            {@link ModelRole} to load. Never {@code null}.
+	 * @return {@code true} if the role is granted.
 	 */
 	public boolean hasRole(T model,
 	                       ModelRole role);
 
 	/**
-	 * Loads a specific role.
+	 * Equivalent to {{@link #hasRole(Object, ModelRole)}, but also modifies the
+	 * input set.
 	 * 
 	 * @param model
+	 *            Model. Never {@code null}.
 	 * @param role
+	 *            {@link ModelRole} to load. Never {@code null}.
 	 * @param set
-	 * @return
+	 *            {@link ModelRoleSetLoadingSet} to modify. Never {@code null}.
+	 * @return {@code true} if the role is granted.
 	 */
 	public boolean loadRole(T model,
 	                        ModelRole role,
@@ -44,10 +50,12 @@ public interface ModelRoleSetLoaderBuilderComponent<T> {
 	/**
 	 * Modifies the input roles map.
 	 * <p>
-	 * Roles can be added or removed.
+	 * Roles can be added or removed from the set.
 	 * 
 	 * @param model
+	 *            Model. Never {@code null}.
 	 * @param set
+	 *            {@link ModelRoleSetLoadingSet} to modify. Never {@code null}.
 	 */
 	public void loadRoles(T model,
 	                      ModelRoleSetLoadingSet set);
