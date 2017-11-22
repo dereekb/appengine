@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.impl.CrudModelRole;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.ModelRoleGranter;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.impl.AbstractAdminModelRoleGranterImpl;
+import com.dereekb.gae.server.auth.security.model.roles.ownership.SecurityContextModelOwnershipChecker;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
@@ -19,6 +22,25 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  *            model type
  */
 public abstract class AbstractCrudModelRoleSetLoaderBuilderComponent<T> extends AbstractModelRoleSetLoaderBuilderComponent<T> {
+
+	private SecurityContextModelOwnershipChecker<T> ownershipChecker;
+
+	public AbstractCrudModelRoleSetLoaderBuilderComponent(SecurityContextModelOwnershipChecker<T> ownershipChecker) {
+		super();
+		this.setOwnershipChecker(ownershipChecker);
+	}
+
+	public SecurityContextModelOwnershipChecker<T> getOwnershipChecker() {
+		return this.ownershipChecker;
+	}
+
+	public void setOwnershipChecker(SecurityContextModelOwnershipChecker<T> ownershipChecker) {
+		if (ownershipChecker == null) {
+			throw new IllegalArgumentException("ownershipChecker cannot be null.");
+		}
+
+		this.ownershipChecker = ownershipChecker;
+	}
 
 	// MARK: AbstractModelRoleSetLoaderBuilderComponent
 	@Override
@@ -62,30 +84,23 @@ public abstract class AbstractCrudModelRoleSetLoaderBuilderComponent<T> extends 
 
 	// MARK: Granters
 	/**
+	 * {@link ModelRoleGranter} that grants the role if the model is owned by
+	 * the current security context.
 	 *
 	 * @author dereekb
 	 *
 	 */
-	protected class IsOwnerModelRoleGranter extends AbstractModelRoleGranterImpl {
+	protected class IsOwnerModelRoleGranter extends AbstractAdminModelRoleGranterImpl<T> {
 
 		public IsOwnerModelRoleGranter(ModelRole grantedRole) {
 			super(grantedRole);
 		}
 
 		@Override
-		public boolean hasRole(T model) {
-			return currentContextIsOwnerOfModel(model);
+		public boolean nonAdminHasRole(T model) {
+			return AbstractCrudModelRoleSetLoaderBuilderComponent.this.ownershipChecker.isOwnedInSecurityContext(model);
 		}
 
 	}
-
-	// MARK: Internal
-	/**
-	 * Whether or not the model is owned.
-	 *
-	 * @param model
-	 * @return {@code true} if the current login owns the model.
-	 */
-	protected abstract boolean currentContextIsOwnerOfModel(T model);
 
 }

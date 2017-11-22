@@ -21,7 +21,7 @@ import com.dereekb.gae.utilities.collections.map.impl.CrossKeyMapImpl;
 
 /**
  * {@link LoginTokenModelContextSetEncoderDecoder} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -43,12 +43,12 @@ public class LoginTokenModelContextSetEncoderDecoderImpl extends AbstractTypedMo
 		super.setTypeMap(typeMap);
 
 		CrossKeyMapImpl<Integer, String> typeCodeMap = new CrossKeyMapImpl<Integer, String>();
+		Integer code = 0;
 
 		for (LoginTokenModelContextSetEncoderDecoderEntry delegate : typeMap.values()) {
-			Integer code = delegate.getCode();
 			String type = delegate.getModelType();
-
 			typeCodeMap.put(code, type);
+			code += 1;
 		}
 
 		this.typeCodeMap = typeCodeMap;
@@ -82,7 +82,7 @@ public class LoginTokenModelContextSetEncoderDecoderImpl extends AbstractTypedMo
 
 	/**
 	 * Lazy-decoded {@link LoginTokenModelContextSet} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */

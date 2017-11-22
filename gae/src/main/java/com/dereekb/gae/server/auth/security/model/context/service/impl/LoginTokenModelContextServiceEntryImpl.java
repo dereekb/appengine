@@ -30,7 +30,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyCon
 /**
  * {@link LoginTokenModelContextServiceEntry} implementation that extends
  * {@link LoginTokenModelContextSetEncoderDecoderEntryImpl}.
- * 
+ *
  * @author dereekb
  *
  */
@@ -42,24 +42,22 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 
 	private transient ReadTask<T> readTask;
 
-	public LoginTokenModelContextServiceEntryImpl(Integer code,
-	        String modelType,
+	public LoginTokenModelContextServiceEntryImpl(String modelType,
 	        ModelKeyType keyType,
 	        ModelRoleSetEncoderDecoder rolesDencoder,
 	        Getter<T> getter,
 	        ModelRoleSetLoader<T> rolesLoader) {
-		super(code, modelType, keyType, rolesDencoder);
+		super(modelType, keyType, rolesDencoder);
 		this.setGetter(getter);
 		this.setRolesLoader(rolesLoader);
 	}
 
-	public LoginTokenModelContextServiceEntryImpl(Integer code,
-	        String modelType,
+	public LoginTokenModelContextServiceEntryImpl(String modelType,
 	        StringModelKeyConverter keyConverter,
 	        ModelRoleSetEncoderDecoder rolesDencoder,
 	        Getter<T> getter,
 	        ModelRoleSetLoader<T> rolesLoader) {
-		super(code, modelType, keyConverter, rolesDencoder);
+		super(modelType, keyConverter, rolesDencoder);
 		this.setGetter(getter);
 		this.setRolesLoader(rolesLoader);
 	}
@@ -164,8 +162,8 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 	@Override
 	public String toString() {
 		return "LoginTokenModelContextServiceEntryImpl [getter=" + this.getter + ", rolesLoader=" + this.rolesLoader
-		        + ", getCode()=" + this.getCode() + ", getModelType()=" + this.getModelType() + ", getKeyConverter()="
-		        + this.getKeyConverter() + ", getRolesDencoder()=" + this.getRolesDencoder() + "]";
+		        + ", getModelType()=" + this.getModelType() + ", getKeyConverter()=" + this.getKeyConverter()
+		        + ", getRolesDencoder()=" + this.getRolesDencoder() + "]";
 	}
 
 }

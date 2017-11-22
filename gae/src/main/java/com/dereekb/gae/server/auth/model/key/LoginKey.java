@@ -16,7 +16,7 @@ import com.googlecode.objectify.condition.IfEmpty;
 import com.googlecode.objectify.condition.IfNull;
 
 /**
- * API key model.
+ * OAuth/API key model.
  * <p>
  * It is used for managing logging in via external systems and with a limited
  * set of permissions.

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.ModelRoleSetLoaderBuilderComponent;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.ModelRoleSetLoadingSet;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.ModelRoleGranter;
 
 /**
  * Abstract {@link ModelRoleSetLoaderBuilderComponent}.
@@ -113,52 +114,6 @@ public abstract class AbstractModelRoleSetLoaderBuilderComponent<T>
 		if (granted) {
 			set.addRole(role);
 		}
-	}
-
-	// MARK: Internal
-	protected interface ModelRoleGranter<T> {
-
-		public ModelRole getGrantedRole();
-
-		public boolean hasRole(T model);
-
-	}
-
-	protected abstract class AbstractModelRoleGranterImpl
-	        implements ModelRoleGranter<T> {
-
-		private final ModelRole grantedRole;
-
-		public AbstractModelRoleGranterImpl(ModelRole grantedRole) {
-			super();
-			this.grantedRole = grantedRole;
-		}
-
-		// MARK: ModelRoleGranter
-		@Override
-		public ModelRole getGrantedRole() {
-			return this.grantedRole;
-		}
-
-		@Override
-		public abstract boolean hasRole(T model);
-
-	}
-
-	protected final class AutoModelRoleGranter extends AbstractModelRoleGranterImpl {
-
-		private final boolean grant;
-
-		public AutoModelRoleGranter(ModelRole grantedRole, boolean grant) {
-			super(grantedRole);
-			this.grant = grant;
-		}
-
-		@Override
-		public boolean hasRole(T model) {
-			return this.grant;
-		}
-
 	}
 
 }

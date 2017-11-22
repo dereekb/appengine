@@ -19,9 +19,8 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapAndSet;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
- * Abstract {@link LoginTokenModelContextSetEncoderDecoderEntry}
- * implementation.
- * 
+ * {@link LoginTokenModelContextSetEncoderDecoderEntry} implementation.
+ *
  * @author dereekb
  *
  */
@@ -32,40 +31,23 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 	public static final String KEYS_ROLE_JOINER = ":";
 	public static final String KEY_SPLITTER = StringUtility.DEFAULT_SEPARATOR;
 
-	private Integer code;
 	private String modelType;
 	private StringModelKeyConverter keyConverter;
 	private ModelRoleSetEncoderDecoder rolesDencoder;
 
-	public LoginTokenModelContextSetEncoderDecoderEntryImpl(Integer code,
-	        String modelType,
+	public LoginTokenModelContextSetEncoderDecoderEntryImpl(String modelType,
 	        ModelKeyType keyType,
 	        ModelRoleSetEncoderDecoder rolesDencoder) {
-		this(code, modelType, ModelKey.converterForKeyType(keyType), rolesDencoder);
+		this(modelType, ModelKey.converterForKeyType(keyType), rolesDencoder);
 	}
 
-	public LoginTokenModelContextSetEncoderDecoderEntryImpl(Integer code,
-	        String modelType,
+	public LoginTokenModelContextSetEncoderDecoderEntryImpl(String modelType,
 	        StringModelKeyConverter keyConverter,
 	        ModelRoleSetEncoderDecoder rolesDencoder) {
 		super();
-		this.setCode(code);
 		this.setModelType(modelType);
 		this.setKeyConverter(keyConverter);
 		this.setRolesDencoder(rolesDencoder);
-	}
-
-	@Override
-	public Integer getCode() {
-		return this.code;
-	}
-
-	public void setCode(Integer code) {
-		if (code == null) {
-			throw new IllegalArgumentException("code cannot be null.");
-		}
-
-		this.code = code;
 	}
 
 	@Override
@@ -160,7 +142,7 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 
 	/**
 	 * Lazy-loaded {@link ModelRoleSet} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
@@ -180,7 +162,8 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 
 			// TODO: This might not be true in some cases. A value of "0" is
 			// empty, but this would return true, for instance. It really banks
-			// on the fact that empty encodings are ignored.
+			// on the fact that empty encodings are ignored. In this case, this
+			// function should always return true really.
 
 			return StringUtility.isEmptyString(this.encodedRoles);
 		}
@@ -250,8 +233,8 @@ public class LoginTokenModelContextSetEncoderDecoderEntryImpl
 
 	@Override
 	public String toString() {
-		return "LoginTokenModelContextSetEncoderDecoderEntryImpl [code=" + this.code + ", modelType=" + this.modelType
-		        + ", keyConverter=" + this.keyConverter + ", rolesDencoder=" + this.rolesDencoder + "]";
+		return "LoginTokenModelContextSetEncoderDecoderEntryImpl [modelType=" + this.modelType + ", keyConverter="
+		        + this.keyConverter + ", rolesDencoder=" + this.rolesDencoder + "]";
 	}
 
 }
