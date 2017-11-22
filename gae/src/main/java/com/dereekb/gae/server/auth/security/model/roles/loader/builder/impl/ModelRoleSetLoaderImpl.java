@@ -85,8 +85,6 @@ public class ModelRoleSetLoaderImpl<T extends UniqueModel>
 		}
 
 		protected boolean tryLoadRole(ModelRole role) {
-			boolean granted = false;
-
 			List<ModelRoleSetLoaderBuilderComponent<T>> components = ModelRoleSetLoaderImpl.this.set
 			        .getComponentsForRole(role);
 
@@ -94,7 +92,7 @@ public class ModelRoleSetLoaderImpl<T extends UniqueModel>
 				component.loadRole(this.model, role, this.roles);
 			}
 
-			return granted;
+			return this.roles.containsRole(role);
 		}
 
 	}

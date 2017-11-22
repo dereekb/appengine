@@ -19,6 +19,11 @@ public final class AutoModelRoleGranter<T> extends AbstractModelRoleGranterImpl<
 		this.grant = grant;
 	}
 
+	public static <T> AutoModelRoleGranter<T> make(ModelRole role,
+	                                               boolean grant) {
+		return new AutoModelRoleGranter<T>(role, grant);
+	}
+
 	@Override
 	public boolean hasRole(T model) {
 		return this.grant;

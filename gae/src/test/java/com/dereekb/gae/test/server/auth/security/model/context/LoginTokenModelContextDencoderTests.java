@@ -27,7 +27,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
  * {@link LoginTokenModelContextDencoder} tests.
- * 
+ *
  * @author dereekb
  *
  */
@@ -51,8 +51,7 @@ public class LoginTokenModelContextDencoderTests {
 		Integer aTypeCode = 0;
 
 		// Make Context A
-		ModelRoleSet aRoles = new ModelRoleSetImpl(
-		        CrudModelRole.READ);
+		ModelRoleSet aRoles = new ModelRoleSetImpl(CrudModelRole.READ);
 		LoginTokenModelContextBuilder.Builder aBuilder = LoginTokenModelContextBuilder.make(aType, aRoles);
 		List<LoginTokenModelContext> aContexts = aBuilder
 		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));
@@ -86,8 +85,7 @@ public class LoginTokenModelContextDencoderTests {
 		String aType = "a";
 		Integer aTypeCode = 0;
 
-		ModelRoleSet aRoles = new ModelRoleSetImpl(
-		        CrudModelRole.READ);
+		ModelRoleSet aRoles = new ModelRoleSetImpl(CrudModelRole.READ);
 		LoginTokenModelContextBuilder.Builder aBuilder = LoginTokenModelContextBuilder.make(aType, aRoles);
 		List<LoginTokenModelContext> aContexts = aBuilder
 		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));
@@ -97,8 +95,7 @@ public class LoginTokenModelContextDencoderTests {
 		String bType = "b";
 		Integer bTypeCode = 1;
 
-		ModelRoleSet bRoles = new ModelRoleSetImpl(
-		        CrudModelRole.READ);
+		ModelRoleSet bRoles = new ModelRoleSetImpl(CrudModelRole.READ);
 		LoginTokenModelContextBuilder.Builder bBuilder = LoginTokenModelContextBuilder.make(bType, bRoles);
 		List<LoginTokenModelContext> bContexts = bBuilder
 		        .make(ListUtility.toList(new ModelKey(1L), new ModelKey(2L), new ModelKey(3L)));
@@ -136,9 +133,9 @@ public class LoginTokenModelContextDencoderTests {
 	// MARK: Utilities
 	protected static LoginTokenModelContextSetEncoderDecoder makeDencoder() {
 
-		LoginTokenModelContextSetEncoderDecoderEntry a = makeCrudEntry(0, "a", ModelKeyType.NUMBER);
-		LoginTokenModelContextSetEncoderDecoderEntry b = makeCrudEntry(1, "b", ModelKeyType.NUMBER);
-		LoginTokenModelContextSetEncoderDecoderEntry c = makeCrudEntry(2, "c", ModelKeyType.NAME);
+		LoginTokenModelContextSetEncoderDecoderEntry a = makeCrudEntry("a", ModelKeyType.NUMBER);
+		LoginTokenModelContextSetEncoderDecoderEntry b = makeCrudEntry("b", ModelKeyType.NUMBER);
+		LoginTokenModelContextSetEncoderDecoderEntry c = makeCrudEntry("c", ModelKeyType.NAME);
 
 		List<LoginTokenModelContextSetEncoderDecoderEntry> delegates = ListUtility.toList(a, b, c);
 
@@ -147,11 +144,10 @@ public class LoginTokenModelContextDencoderTests {
 		return dencoder;
 	}
 
-	protected static LoginTokenModelContextSetEncoderDecoderEntry makeCrudEntry(Integer code,
-	                                                                            String modelType,
+	protected static LoginTokenModelContextSetEncoderDecoderEntry makeCrudEntry(String modelType,
 	                                                                            ModelKeyType keyType) {
 		ModelRoleSetEncoderDecoder dencoder = ModelRoleSetUtility.makeCrudDencoder();
-		LoginTokenModelContextSetEncoderDecoderEntry entry = new LoginTokenModelContextSetEncoderDecoderEntryImpl(code,
+		LoginTokenModelContextSetEncoderDecoderEntry entry = new LoginTokenModelContextSetEncoderDecoderEntryImpl(
 		        modelType, ModelKeyType.NUMBER, dencoder);
 		return entry;
 	}

@@ -15,7 +15,7 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithList;
 
 /**
  * {@link ModelRoleSetLoaderBuilderComponentSet} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -91,6 +91,7 @@ public class ModelRoleSetLoaderBuilderComponentSetImpl<T>
 	// MARK: ModelRoleSetLoaderBuilderComponentSet
 	@Override
 	public ModelRoleSetLoaderBuilderComponentSetImpl<T> copySet() {
+		this.initMap();
 		return new ModelRoleSetLoaderBuilderComponentSetImpl<T>(this.getComponents(), this.getMap(), this.getRoleSet());
 	}
 
