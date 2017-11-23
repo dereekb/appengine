@@ -73,7 +73,7 @@ public class LoginTokenImpl
 	 * Encoded context info.
 	 */
 	private EncodedLoginTokenModelContextSet encodedModelContextSet = EmptyEncodedLoginTokenModelContextSet.make();
-	
+
 	public LoginTokenImpl() {
 		this(LoginPointerType.ANONYMOUS);
 	}
@@ -98,6 +98,7 @@ public class LoginTokenImpl
 		this.setPointerType(loginToken.getPointerType());
 		this.setOwnershipRoles(loginToken.getOwnershipRoles());
 		this.setRefreshAllowed(loginToken.isRefreshAllowed());
+		this.setEncodedModelContextSet(loginToken.getEncodedModelContextSet());
 	}
 
 	@Override
@@ -186,7 +187,7 @@ public class LoginTokenImpl
 
 	/**
 	 * Sets the expiration time in milliseconds from the issued time.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            {@link Long}. Never {@code null}.
 	 */
@@ -197,7 +198,7 @@ public class LoginTokenImpl
 
 	/**
 	 * Sets the expiration time in milliseconds from the current time.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            {@link Long}. Never {@code null}.
 	 */
@@ -237,17 +238,18 @@ public class LoginTokenImpl
 		this.ownershipRoles = new OwnershipRolesImpl(ownerId);
 	}
 
-	
+
+	@Override
 	public EncodedLoginTokenModelContextSet getEncodedModelContextSet() {
 		return this.encodedModelContextSet;
 	}
 
-	
+
 	public void setEncodedModelContextSet(EncodedLoginTokenModelContextSet encodedModelContextSet) {
 		if (encodedModelContextSet == null) {
 			encodedModelContextSet = EmptyEncodedLoginTokenModelContextSet.make();
 		}
-	
+
 		this.encodedModelContextSet = encodedModelContextSet;
 	}
 

@@ -35,14 +35,14 @@ public interface LoginToken
 	 * Whether or not this is a new user. Generally true if
 	 * {{@link #getLoginId()} returns {@code null}, {@link #isAnonymous()}
 	 * returns false, and the pointer type is not special.
-	 * 
+	 *
 	 * @return {@code true} if it is a new user.
 	 */
 	public boolean isNewUser();
 
 	/**
 	 * Whether or not this token can be used to create a new refresh token.
-	 * 
+	 *
 	 * @return {@code true} if can create a new refresh token.
 	 */
 	public boolean isRefreshAllowed();
@@ -73,7 +73,7 @@ public interface LoginToken
 	/**
 	 * Returns the {@link LoginPointerType} used for generating this
 	 * {@link LoginToken}.
-	 * 
+	 *
 	 * @return {@link LoginPointerType}. Never {@code null}.
 	 */
 	public LoginPointerType getPointerType();
@@ -101,5 +101,12 @@ public interface LoginToken
 	 */
 	@Deprecated
 	public boolean hasExpired();
+
+	/**
+	 * Encoded login token contexts.
+	 *
+	 * @return {@link EncodedLoginTokenModelContextSet}. Never {@code null}.
+	 */
+	public EncodedLoginTokenModelContextSet getEncodedModelContextSet();
 
 }
