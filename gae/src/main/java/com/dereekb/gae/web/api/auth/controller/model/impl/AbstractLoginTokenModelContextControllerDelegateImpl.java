@@ -129,6 +129,22 @@ public abstract class AbstractLoginTokenModelContextControllerDelegateImpl<T ext
 		return new LoginTokenPair(encodedToken);
 	}
 
+	@Override
+	public ApiModelRolesResponseData readRoles(ApiModelRolesRequest request)
+	        throws NoSecurityContextException,
+	            AtomicOperationException {
+
+		LoginTokenModelContextServiceRequest serviceRequest = this.makeRequest(request);
+		LoginTokenModelContextServiceResponse serviceResponse = this.service.makeContextSet(serviceRequest);
+
+		LoginTokenModelContextSet contextSet = serviceResponse.getContextSet();
+		return this.makeRolesResponseData(contextSet);
+	}
+
+	private ApiModelRolesResponseData makeRolesResponseData(LoginTokenModelContextSet contextSet) {
+		return ApiModelRolesResponseData.makeWithContextSet(contextSet);
+	}
+
 	protected abstract T getCurrentToken() throws NoSecurityContextException;
 
 	protected abstract T makeNewToken(T currentToken,
@@ -157,7 +173,7 @@ public abstract class AbstractLoginTokenModelContextControllerDelegateImpl<T ext
 		return desiredExpiration;
 	}
 
-	private LoginTokenModelContextServiceRequest makeRequest(ApiLoginTokenModelContextRequest request) {
+	private LoginTokenModelContextServiceRequest makeRequest(ApiModelRolesRequest request) {
 
 		CaseInsensitiveMapAndSet map = new CaseInsensitiveMapAndSet();
 		List<ApiLoginTokenModelContextTypeImpl> types = request.getData();
@@ -165,11 +181,18 @@ public abstract class AbstractLoginTokenModelContextControllerDelegateImpl<T ext
 		for (ApiLoginTokenModelContextTypeImpl type : types) {
 			String modelType = type.getModelType();
 			Set<String> keys = type.getKeys();
-
 			map.put(modelType, keys);
 		}
 
 		return new LoginTokenModelContextServiceRequestImpl(map, request.isAtomic());
+	}
+
+	@Override
+	public String toString() {
+		return "AbstractLoginTokenModelContextControllerDelegateImpl [expirationTime=" + this.expirationTime
+		        + ", maxExpirationTime=" + this.maxExpirationTime + ", service=" + this.service
+		        + ", loginTokenEncoderDecoder=" + this.loginTokenEncoderDecoder + ", modelContextSetEncoder="
+		        + this.modelContextSetEncoder + "]";
 	}
 
 }

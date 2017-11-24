@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 import com.dereekb.gae.web.api.model.extension.iterate.ApiScheduleTaskRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

@@ -1,6 +1,5 @@
 package com.dereekb.gae.web.api.auth.controller.model.impl;
 
-import com.dereekb.gae.web.api.shared.request.AtomicApiRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiLoginTokenModelContextRequest extends AtomicApiRequest<ApiLoginTokenModelContextTypeImpl> {
+public class ApiLoginTokenModelContextRequest extends ApiModelRolesRequest {
 
 	private Long expirationTime;
 

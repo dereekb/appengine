@@ -44,6 +44,10 @@ public class ModelRoleSetUtility {
 		return ModelRoleSetEncoderDecoderImpl.makeBuilder(roles).build();
 	}
 
+	public static Set<String> readRoles(ModelRoleSet roleSet) {
+		return readRoles(roleSet.getRoles());
+	}
+
 	public static Set<String> readRoles(Iterable<? extends ModelRole> contextRoles) {
 		Set<String> roles = new HashSet<String>();
 

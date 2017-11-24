@@ -2,7 +2,7 @@ package com.dereekb.gae.web.api.auth.controller.model.impl;
 
 import java.util.Set;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 import com.dereekb.gae.server.datastore.models.impl.TypedModelImpl;
 import com.dereekb.gae.web.api.auth.controller.model.ApiLoginTokenModelContextType;
