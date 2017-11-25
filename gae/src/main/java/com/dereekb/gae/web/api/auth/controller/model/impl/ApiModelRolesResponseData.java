@@ -13,6 +13,9 @@ import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.impl.ModelRoleSetUtility;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * {@link ApiResponseData} for a {@link ApiModeleRolesRequest} response.
@@ -20,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author dereekb
  *
  */
+@JsonInclude(Include.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiModelRolesResponseData
         implements ApiResponseData {
 

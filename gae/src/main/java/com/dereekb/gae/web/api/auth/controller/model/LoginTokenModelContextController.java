@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.web.api.auth.controller.model.impl.ApiLoginTokenModelContextRequest;
 import com.dereekb.gae.web.api.auth.controller.model.impl.ApiModelRolesRequest;
 import com.dereekb.gae.web.api.auth.controller.model.impl.ApiModelRolesResponseData;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.ApiResponseData;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
@@ -45,17 +49,44 @@ public class LoginTokenModelContextController {
 	}
 
 	// MARK: API
+	/**
+	 * Primary request that can build a new {@link LoginToken} context from the
+	 * requested models and request security context.
+	 *
+	 * @param request
+	 *            {@link ApiLoginTokenModelContextRequest}. Never {@code null}.
+	 * @return {@link ApiResponse}. Never {@code null}.
+	 */
 	@ResponseBody
 	@RequestMapping(path = "/token", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public final LoginTokenPair makeLoginTokenContext(@Valid @RequestBody ApiLoginTokenModelContextRequest request)
+	public final ApiResponse makeLoginTokenContext(@Valid @RequestBody ApiLoginTokenModelContextRequest request)
 	        throws ApiLoginException,
 	            ApiCaughtRuntimeException {
-		LoginTokenPair response = null;
+		ApiResponseImpl response = null;
 
 		try {
-			response = this.delegate.loginWithContext(request);
+			response = new ApiResponseImpl();
+
+			ApiLoginTokenModelContextResponse delegateResponse = this.delegate.loginWithContext(request);
+			LoginTokenPair pair = delegateResponse.getLoginToken();
+
+			if (pair != null) {
+				ApiResponseData pairData = new ApiResponseDataImpl(LoginTokenPair.DATA_TYPE, pair);
+				response.setData(pairData);
+			}
+
+			ApiModelRolesResponseData rolesResponse = delegateResponse.getRolesData();
+
+			if (rolesResponse != null) {
+				response.addIncluded(rolesResponse);
+			}
+
+			// TODO: Add missing keys as an error.
+
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}
@@ -63,6 +94,13 @@ public class LoginTokenModelContextController {
 		return response;
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @return
+	 * @throws ApiLoginException
+	 * @throws ApiCaughtRuntimeException
+	 */
 	@ResponseBody
 	@RequestMapping(path = "/roles", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponse readRolesForModels(@Valid @RequestBody ApiModelRolesRequest request)
@@ -76,7 +114,7 @@ public class LoginTokenModelContextController {
 			ApiModelRolesResponseData rolesResponse = this.delegate.readRoles(request);
 			response.setData(rolesResponse);
 
-			// TODO: Add missing keys in the error?
+			// TODO: Add missing keys as an error.
 
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);

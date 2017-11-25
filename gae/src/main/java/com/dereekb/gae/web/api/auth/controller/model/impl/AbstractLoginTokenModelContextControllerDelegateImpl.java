@@ -16,7 +16,9 @@ import com.dereekb.gae.server.auth.security.model.context.service.impl.LoginToke
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapAndSet;
+import com.dereekb.gae.utilities.data.ValueUtility;
 import com.dereekb.gae.utilities.time.DateUtility;
+import com.dereekb.gae.web.api.auth.controller.model.ApiLoginTokenModelContextResponse;
 import com.dereekb.gae.web.api.auth.controller.model.LoginTokenModelContextControllerDelegate;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
@@ -110,7 +112,7 @@ public abstract class AbstractLoginTokenModelContextControllerDelegateImpl<T ext
 
 	// MARK: LoginTokenModelContextControllerDelegate
 	@Override
-	public LoginTokenPair loginWithContext(ApiLoginTokenModelContextRequest request)
+	public ApiLoginTokenModelContextResponse loginWithContext(ApiLoginTokenModelContextRequest request)
 	        throws NoSecurityContextException,
 	            AtomicOperationException {
 
@@ -121,12 +123,23 @@ public abstract class AbstractLoginTokenModelContextControllerDelegateImpl<T ext
 		LoginTokenModelContextServiceResponse serviceResponse = this.service.makeContextSet(serviceRequest);
 
 		LoginTokenModelContextSet set = serviceResponse.getContextSet();
-		EncodedLoginTokenModelContextSet encodedSet = this.modelContextSetEncoder.encodeSet(set);
 
-		T newToken = this.makeNewToken(currentToken, expires, encodedSet);
-		String encodedToken = this.loginTokenEncoderDecoder.encodeLoginToken(newToken);
+		LoginTokenPair pair = null;
+		ApiModelRolesResponseData rolesData = null;
 
-		return new LoginTokenPair(encodedToken);
+		if (ValueUtility.valueOf(request.getMakeContext(), true)) {
+			EncodedLoginTokenModelContextSet encodedSet = this.modelContextSetEncoder.encodeSet(set);
+
+			T newToken = this.makeNewToken(currentToken, expires, encodedSet);
+			String encodedToken = this.loginTokenEncoderDecoder.encodeLoginToken(newToken);
+			pair = new LoginTokenPair(encodedToken);
+		}
+
+		if (ValueUtility.valueOf(request.getIncludeRoles())) {
+			rolesData = this.makeRolesResponseData(set);
+		}
+
+		return new ApiLoginTokenModelContextResponseImpl(pair, rolesData);
 	}
 
 	@Override

@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginTokenPair {
 
+	public static final String DATA_TYPE = "LOGIN_TOKEN_PAIR";
+
 	private String loginPointer;
 	private String token;
 

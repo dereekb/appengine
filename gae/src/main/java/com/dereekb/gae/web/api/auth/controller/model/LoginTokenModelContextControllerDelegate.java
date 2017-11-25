@@ -24,7 +24,7 @@ public interface LoginTokenModelContextControllerDelegate {
 	 * @throws NoSecurityContextException
 	 * @throws AtomicOperationException
 	 */
-	public LoginTokenPair loginWithContext(ApiLoginTokenModelContextRequest request)
+	public ApiLoginTokenModelContextResponse loginWithContext(ApiLoginTokenModelContextRequest request)
 	        throws NoSecurityContextException,
 	            AtomicOperationException;
 

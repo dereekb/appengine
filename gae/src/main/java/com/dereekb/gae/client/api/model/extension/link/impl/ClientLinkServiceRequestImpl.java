@@ -3,21 +3,20 @@ package com.dereekb.gae.client.api.model.extension.link.impl;
 import java.util.List;
 
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequest;
+import com.dereekb.gae.model.crud.services.request.options.impl.AtomicRequestOptionsImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 
 /**
  * {@link ClientLinkServiceRequest} implementation.
- * 
+ *
  * @author dereekb
  *
  */
-public class ClientLinkServiceRequestImpl
+public class ClientLinkServiceRequestImpl extends AtomicRequestOptionsImpl
         implements ClientLinkServiceRequest {
 
 	public static final boolean DEFAULT_ATOMICITY = true;
-
-	private boolean atomic;
 
 	private String type;
 	private List<ApiLinkChange> changes;
@@ -35,18 +34,9 @@ public class ClientLinkServiceRequestImpl
 	}
 
 	public ClientLinkServiceRequestImpl(String type, List<ApiLinkChange> changes, boolean atomic) {
+		super(atomic);
 		this.setType(type);
 		this.setChanges(changes);
-		this.setAtomic(atomic);
-	}
-
-	@Override
-	public boolean isAtomic() {
-		return this.atomic;
-	}
-
-	public void setAtomic(boolean atomic) {
-		this.atomic = atomic;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.dereekb.gae.model.crud.services.request.options.impl;
 
-import com.dereekb.gae.model.crud.services.request.options.AtomicRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.MutableAtomicRequestOptions;
 
 /**
  * Basic request options.
@@ -9,7 +9,7 @@ import com.dereekb.gae.model.crud.services.request.options.AtomicRequestOptions;
  *
  */
 public abstract class AtomicRequestOptionsImpl
-        implements AtomicRequestOptions {
+        implements MutableAtomicRequestOptions {
 
 	/**
 	 * Whether all objects must be used successfully in order to succeed or not.

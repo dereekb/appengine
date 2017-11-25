@@ -10,16 +10,9 @@ public interface AtomicRequestOptions {
 
 	/**
 	 * If the request is atomic.
-	 * 
+	 *
 	 * @return {@code true} if atomic.
 	 */
 	public boolean isAtomic();
-
-	/**
-	 * Set atomic.
-	 * 
-	 * @param atomic
-	 */
-	public void setAtomic(boolean atomic);
 
 }

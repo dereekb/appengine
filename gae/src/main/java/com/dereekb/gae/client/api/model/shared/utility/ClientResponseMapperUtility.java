@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Utility used for mapping client responses.
- * 
+ *
  * @author dereekb
  *
  */
@@ -61,6 +61,16 @@ public class ClientResponseMapperUtility {
 		try {
 			X[] x = this.mapper.treeToValue(jsonNode, type);
 			return ListUtility.toList(x);
+		} catch (JsonProcessingException e) {
+			throw new ClientResponseSerializationException(e);
+		}
+	}
+
+	public <X> X safeMap(JsonNode jsonNode,
+	                     Class<X> type)
+	        throws ClientResponseSerializationException {
+		try {
+			return this.mapper.treeToValue(jsonNode, type);
 		} catch (JsonProcessingException e) {
 			throw new ClientResponseSerializationException(e);
 		}
