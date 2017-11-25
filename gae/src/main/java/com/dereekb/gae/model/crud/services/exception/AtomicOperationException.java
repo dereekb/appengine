@@ -10,16 +10,17 @@ import com.dereekb.gae.utilities.collections.SingleItem;
 
 /**
  * Exception for when an atomic operations fails.
- *
+ * <p>
  * Optionally includes information about what element caused the operation to
  * fail.
  *
  * @author dereekb
  */
-public final class AtomicOperationException extends RuntimeException {
+public class AtomicOperationException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
+	private String type;
 	private Iterable<? extends UniqueModel> failed;
 	private final AtomicOperationExceptionReason reason;
 	private Exception exception;
@@ -27,6 +28,16 @@ public final class AtomicOperationException extends RuntimeException {
 	public AtomicOperationException() {
 		this.exception = null;
 		this.reason = AtomicOperationExceptionReason.ATOMIC_FAILURE;
+	}
+
+	/**
+	 * Copy constructor.
+	 */
+	protected AtomicOperationException(AtomicOperationException e) {
+		this.type = e.getType();
+		this.failed = e.getFailed();
+		this.reason = e.getReason();
+		this.exception = e.getException();
 	}
 
 	public AtomicOperationException(UniqueModel failed, AtomicOperationExceptionReason reason) {
@@ -81,6 +92,14 @@ public final class AtomicOperationException extends RuntimeException {
 
 		this.exception = e;
 		this.reason = AtomicOperationExceptionReason.EXCEPTION;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Exception getException() {

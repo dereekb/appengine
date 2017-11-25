@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.StringQueryFieldP
 
 /**
  * Used by queries that query {@link OwnedDatabaseModel} types.
- * 
+ *
  * @author dereekb
  *
  */
@@ -65,7 +65,7 @@ public class AbstractOwnedModelQuery
 	}
 
 	protected void setOwnerIdParameters(Map<String, String> parameters) {
-		this.setOwnerId(parameters.get(this));
+		this.setOwnerId(parameters.get(DEFAULT_OWNER_ID_FIELD));
 	}
 
 }

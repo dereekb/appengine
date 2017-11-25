@@ -6,6 +6,9 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Thrown when some resources are missing. Resources are keyed as strings.
@@ -20,16 +23,37 @@ public class MissingRequiredResourceException extends ApiSafeRuntimeException {
 	public static final String ERROR_CODE = "MISSING_RESOURCE";
 	public static final String ERROR_TITLE = "Missing Resource";
 
-	public List<String> resources;
-	public String message;
+	public static final String ERROR_DATA_TYPE_CODE = "type";
+	public static final String ERROR_DATA_KEYS_CODE = "resources";
+
+	private String type;
+	private List<String> resources;
+	private String message;
 
 	public MissingRequiredResourceException(List<String> resources) {
-		this(resources, null);
+		this(null, resources);
+	}
+
+	public MissingRequiredResourceException(String type, List<String> resources) {
+		this(type, resources, null);
 	}
 
 	public MissingRequiredResourceException(List<String> resources, String message) {
+		this(null, resources, message);
+	}
+
+	public MissingRequiredResourceException(String type, List<String> resources, String message) {
+		this.setType(type);
 		this.setResources(resources);
 		this.setMessage(message);
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public List<String> getResources() {
@@ -57,7 +81,7 @@ public class MissingRequiredResourceException extends ApiSafeRuntimeException {
 
 	/**
 	 * Attempts to create an api response.
-	 * 
+	 *
 	 * @param resourceKeys
 	 *            {@link Collection}. Never {@code null}.
 	 * @param message
@@ -79,10 +103,50 @@ public class MissingRequiredResourceException extends ApiSafeRuntimeException {
 
 	public static ApiResponseErrorImpl makeApiError(Collection<String> resources,
 	                                                String message) {
+		return makeApiError(null, resources, message);
+	}
+
+	public static ApiResponseErrorImpl makeApiError(String type,
+	                                                Collection<String> resources,
+	                                                String message) {
 		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE, ERROR_TITLE);
 		error.setDetail(message);
-		error.setData(resources);
+
+		MissingRequiredResourceExceptionData data = new MissingRequiredResourceExceptionData(type, resources);
+		error.setData(data);
+
 		return error;
+	}
+
+	@JsonInclude(Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class MissingRequiredResourceExceptionData {
+
+		private String type;
+		private Collection<String> resources;
+
+		public MissingRequiredResourceExceptionData(String type, Collection<String> resources) {
+			super();
+			this.type = type;
+			this.resources = resources;
+		}
+
+		public String getType() {
+			return this.type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public Collection<String> getResources() {
+			return this.resources;
+		}
+
+		public void setResources(Collection<String> resources) {
+			this.resources = resources;
+		}
+
 	}
 
 }

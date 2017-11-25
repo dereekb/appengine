@@ -32,7 +32,6 @@ import com.dereekb.gae.model.crud.services.request.impl.CreateRequestImpl;
 import com.dereekb.gae.model.crud.services.request.impl.DeleteRequestImpl;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.UpdateRequestImpl;
-import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.request.options.impl.UpdateRequestOptionsImpl;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
@@ -426,7 +425,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 		}
 
 		public <T extends UniqueModel> UpdateRequest<T> makeAtomicUpdateRequest(Collection<T> templates) {
-			UpdateRequestOptions options = new UpdateRequestOptionsImpl();
+			UpdateRequestOptionsImpl options = new UpdateRequestOptionsImpl();
 			options.setAtomic(true);
 
 			UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(templates, options);

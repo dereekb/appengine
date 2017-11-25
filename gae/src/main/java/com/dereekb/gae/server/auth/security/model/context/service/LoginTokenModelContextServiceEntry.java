@@ -8,7 +8,7 @@ import com.dereekb.gae.server.datastore.models.TypedModel;
 
 /**
  * [@link LoginTokenModelContextService} entry.
- * 
+ *
  * @author dereekb
  *
  */
@@ -17,7 +17,7 @@ public interface LoginTokenModelContextServiceEntry
 
 	/**
 	 * Builds a new {@link LoginTokenTypedModelContextSet} for the input keys.
-	 * 
+	 *
 	 * @param keys
 	 *            {@link Set}. Never {@code null}.
 	 * @param atomic

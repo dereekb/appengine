@@ -17,7 +17,7 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
  * {@link LoginTokenModelContextService} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -30,7 +30,8 @@ public class LoginTokenModelContextServiceImpl extends AbstractTypedModelMap<Log
 
 	// MARK: LoginTokenModelContextService
 	@Override
-	public LoginTokenModelContextServiceResponse makeContextSet(LoginTokenModelContextServiceRequest request) {
+	public LoginTokenModelContextServiceResponse makeContextSet(LoginTokenModelContextServiceRequest request)
+	        throws AtomicOperationException {
 		return new Instance(request).makeContextSet();
 	}
 
@@ -61,7 +62,13 @@ public class LoginTokenModelContextServiceImpl extends AbstractTypedModelMap<Log
 			Set<String> keys = entry.getValue();
 			LoginTokenModelContextServiceEntry serviceEntry = LoginTokenModelContextServiceImpl.this
 			        .getEntryForType(type);
-			return serviceEntry.makeTypedContextSet(keys, this.request.isAtomic());
+
+			try {
+				return serviceEntry.makeTypedContextSet(keys, this.request.isAtomic());
+			} catch (AtomicOperationException e) {
+				e.setType(type);
+				throw e;
+			}
 		}
 
 	}

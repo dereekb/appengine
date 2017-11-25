@@ -36,8 +36,9 @@ public class AtomicOperationFailureResolver {
 			case FILTERED:
 			case UNSPECIFIED:
 			case UNAVAILABLE:
+				String type = e.getType();
 				List<String> unavailable = e.getUnavailableStringKeys();
-				throw new MissingRequiredResourceException(unavailable);
+				throw new MissingRequiredResourceException(type, unavailable);
 			case ATOMIC_FAILURE:
 				throw new RuntimeException("Internal atomic failure.");
 		}

@@ -167,11 +167,7 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 	                                     SerializedClientApiResponse<ClientModelRolesLoginTokenContextResponse> clientResponse)
 	        throws ClientRequestFailureException {
 		if (clientResponse.isSuccessful() == false) {
-
-			// TODO: Multi-type
-			String type = request.getType();
-
-			this.atomicOperationUtility.assertNoAtomicOperationError(type, clientResponse);
+			this.atomicOperationUtility.assertNoAtomicOperationError(clientResponse);
 			ClientIllegalArgumentException.assertNoIllegalArgumentException(clientResponse);
 			throw new ClientRequestFailureException(clientResponse);
 		}

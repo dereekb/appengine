@@ -6,7 +6,7 @@ import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext
 /**
  * Service used for building {@link LoginTokenModelContextSet} values from model
  * keys.
- * 
+ *
  * @author dereekb
  *
  */
@@ -14,7 +14,7 @@ public interface LoginTokenModelContextService {
 
 	/**
 	 * Builds a context set for the request.
-	 * 
+	 *
 	 * @param request
 	 *            {@link LoginTokenModelContextServiceRequest}. Never
 	 *            {@code null}.
