@@ -1,9 +1,13 @@
 package com.dereekb.gae.test.applications.api.model.tests;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextServiceRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
+import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.ClientQueryRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
@@ -12,7 +16,6 @@ import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenIm
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-
 
 public abstract class AbstractModelRequestSenderTest<T extends MutableUniqueModel> extends ApiApplicationTestContext {
 
@@ -28,8 +31,11 @@ public abstract class AbstractModelRequestSenderTest<T extends MutableUniqueMode
 	protected ClientQueryRequestSender<T> queryRequestSender;
 
 	// Link
+	protected ClientLinkServiceRequestSender linkRequestSender;
 
-	// TODO
+	// Model Roles
+	@Autowired
+	protected ClientModelRolesContextServiceRequestSender modelRolesRequestSender;
 
 	public TestModelGenerator<T> getTestModelGenerator() {
 		return this.testModelGenerator;
@@ -77,6 +83,22 @@ public abstract class AbstractModelRequestSenderTest<T extends MutableUniqueMode
 
 	public void setQueryRequestSender(ClientQueryRequestSender<T> queryRequestSender) {
 		this.queryRequestSender = queryRequestSender;
+	}
+
+	public ClientLinkServiceRequestSender getLinkRequestSender() {
+		return this.linkRequestSender;
+	}
+
+	public void setLinkRequestSender(ClientLinkServiceRequestSender linkRequestSender) {
+		this.linkRequestSender = linkRequestSender;
+	}
+
+	public ClientModelRolesContextServiceRequestSender getModelRolesRequestSender() {
+		return this.modelRolesRequestSender;
+	}
+
+	public void setModelRolesRequestSender(ClientModelRolesContextServiceRequestSender modelRolesRequestSender) {
+		this.modelRolesRequestSender = modelRolesRequestSender;
 	}
 
 	// MARK: Utility

@@ -62,7 +62,7 @@ public class LoginTokenModelContextController {
 	 * @return {@link ApiResponse}. Never {@code null}.
 	 */
 	@ResponseBody
-	@RequestMapping(path = "/token", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(path = "/token", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponse makeLoginTokenContext(@Valid @RequestBody ApiLoginTokenModelContextRequest request)
 	        throws ApiLoginException,
 	            ApiCaughtRuntimeException {

@@ -7,7 +7,9 @@ import java.util.Set;
 import javax.validation.constraints.NotEmpty;
 
 import com.dereekb.gae.server.datastore.models.impl.TypedModelImpl;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.web.api.auth.controller.model.ApiLoginTokenModelContextType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,12 +29,27 @@ public class ApiLoginTokenModelContextTypeImpl extends TypedModelImpl
 	@NotEmpty
 	private Set<String> keys;
 
+	public ApiLoginTokenModelContextTypeImpl() {};
+
 	public ApiLoginTokenModelContextTypeImpl(ApiLoginTokenModelContextType type) {
+		super(type.getModelType());
 		this.setKeys(type.getKeys());
 	}
 
-	public ApiLoginTokenModelContextTypeImpl(Set<String> keys) {
+	public ApiLoginTokenModelContextTypeImpl(String modelType, Set<String> keys) {
+		super(modelType);
 		this.setKeys(keys);
+	}
+
+	public static ApiLoginTokenModelContextTypeImpl fromKeyed(String modelType, Keyed<ModelKey> keyed) {
+		String key = ModelKey.readStringKey(keyed);
+		return new ApiLoginTokenModelContextTypeImpl(modelType, SetUtility.wrap(key));
+	}
+
+	public static ApiLoginTokenModelContextTypeImpl fromKeyed(String modelType,
+	                                                          Iterable<? extends Keyed<ModelKey>> keyed) {
+		Set<String> keys = ModelKey.readStringKeysSet(keyed);
+		return new ApiLoginTokenModelContextTypeImpl(modelType, keys);
 	}
 
 	public static List<ApiLoginTokenModelContextTypeImpl> copy(List<ApiLoginTokenModelContextType> data) {

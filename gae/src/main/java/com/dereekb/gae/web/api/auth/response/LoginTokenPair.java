@@ -24,6 +24,8 @@ public class LoginTokenPair {
 	private String loginPointer;
 	private String token;
 
+	public LoginTokenPair() {};
+
 	public LoginTokenPair(String token) {
 		this(null, token);
 	}

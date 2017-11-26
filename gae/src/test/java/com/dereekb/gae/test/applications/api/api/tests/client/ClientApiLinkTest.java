@@ -49,8 +49,8 @@ public abstract class ClientApiLinkTest<T extends MutableUniqueModel> extends Cl
 	@Before
 	public void setUtilities() {
 		if (this.linkRequestSender != null) {
-			this.linkRequestUtility = new ModelClientLinkRequestSenderTestUtility<T>(this.linkRequestSender,
-			        this.testModelGenerator);
+			this.linkRequestUtility = new ModelClientLinkRequestSenderTestUtility<T>(this.testModelGenerator,
+			        this.linkRequestSender);
 		}
 	}
 

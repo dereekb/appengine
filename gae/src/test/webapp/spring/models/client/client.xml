@@ -8,17 +8,17 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
+
 	<!-- Models -->
-	<import resource="login.xml"/>
-	<import resource="loginkey.xml"/>
-	<import resource="loginpointer.xml"/>
-	
+	<import resource="login.xml" />
+	<import resource="loginkey.xml" />
+	<import resource="loginpointer.xml" />
+
 	<!-- Base client-request sender. -->
 	<bean id="mockClientRequestSender"
 		class="com.dereekb.gae.test.mock.client.crud.MockClientRequestSender">
 	</bean>
-	
+
 	<bean id="clientApiRequestSender"
 		class="com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl">
 		<constructor-arg index="0" ref="mockClientRequestSender" />
@@ -27,10 +27,11 @@
 	<bean id="securedClientRequestSender"
 		class="com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl">
 		<constructor-arg index="0" ref="clientApiRequestSender" />
-		<constructor-arg index="1" ref="testDefaultClientRequestSecurity" />
+		<constructor-arg index="1"
+			ref="testDefaultClientRequestSecurity" />
 		<constructor-arg index="2" ref="systemLoginTokenFactory" />
 	</bean>
-	
+
 	<bean id="testDefaultClientRequestSecurity"
 		class="com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl">
 		<property name="securityContextType" value="SYSTEM" />
@@ -39,6 +40,12 @@
 	<!-- Shared -->
 	<bean id="clientLinkRequestSender"
 		class="com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkRequestSenderImpl">
+		<constructor-arg index="0" ref="modelKeyTypeConverter" />
+		<constructor-arg index="1" ref="securedClientRequestSender" />
+	</bean>
+
+	<bean id="clientModelRolesContextServiceRequestSender"
+		class="com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl">
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 		<constructor-arg index="1" ref="securedClientRequestSender" />
 	</bean>

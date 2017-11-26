@@ -14,7 +14,16 @@ import com.dereekb.gae.test.mock.client.crud.ModelClientReadRequestSenderTestUti
 import com.dereekb.gae.test.mock.client.crud.ModelClientUpdateRequestSenderTestUtility;
 import com.dereekb.gae.test.mock.client.extension.ModelClientLinkRequestSenderTestUtility;
 import com.dereekb.gae.test.mock.client.extension.ModelClientQueryRequestSenderTestUtility;
+import com.dereekb.gae.test.mock.client.extension.ModelClientRolesContextServiceRequestSenderTestUtility;
 
+/**
+ * Abstract server tests
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniqueModel> extends AbstractModelRequestSenderTest<T> {
 
 	private boolean canCreateModel = true;
@@ -29,6 +38,9 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 
 	// Link
 	private ModelClientLinkRequestSenderTestUtility<T> linkRequestUtility;
+
+	// Model Roles
+	private ModelClientRolesContextServiceRequestSenderTestUtility<T> modelRolesRequestUtility;
 
 	public boolean isCanCreateModel() {
 		return this.canCreateModel;
@@ -64,6 +76,13 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 		if (this.queryRequestSender != null) {
 			this.queryRequestUtility = new ModelClientQueryRequestSenderTestUtility<T>(this.queryRequestSender,
 			        this.testModelGenerator);
+		}
+
+		// TODO: Add Link?
+
+		if (this.modelRolesRequestSender != null) {
+			this.modelRolesRequestUtility = new ModelClientRolesContextServiceRequestSenderTestUtility<T>(
+			        this.modelRolesRequestSender, this.testModelGenerator);
 		}
 	}
 
@@ -254,6 +273,14 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 	public void testSystemClientLinkNonAtomicRequest() throws Exception {
 		if (this.linkRequestUtility != null) {
 			this.linkRequestUtility.testSystemClientLinkNonAtomicRequest(this.getRequestSecurity());
+		}
+	}
+
+	// MARK: Model Roles
+	@Test
+	public void testSystemClientReadModelRolesForSingleModelAtomic() throws Exception {
+		if (this.modelRolesRequestUtility != null) {
+			this.modelRolesRequestUtility.testSystemClientReadModelRolesForSingleModelAtomic(this.getRequestSecurity());
 		}
 	}
 

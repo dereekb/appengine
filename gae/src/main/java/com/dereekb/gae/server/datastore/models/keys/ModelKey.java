@@ -230,7 +230,7 @@ public final class ModelKey
 		List<String> ids = new ArrayList<String>();
 
 		readStringKeysIntoCollection(models, ids);
-		
+
 		return ids;
 	}
 
@@ -238,10 +238,10 @@ public final class ModelKey
 		Set<String> ids = new HashSet<String>();
 
 		readStringKeysIntoCollection(models, ids);
-		
+
 		return ids;
 	}
-	
+
 	public static void readStringKeysIntoCollection(Iterable<? extends Keyed<ModelKey>> models, Collection<String> collection) {
 		if (models != null) {
 			for (Keyed<ModelKey> model : models) {
@@ -346,6 +346,17 @@ public final class ModelKey
 		return name;
 	}
 
+	public static String readStringKey(Keyed<ModelKey> keyed) {
+		ModelKey key = keyed.keyValue();
+
+		if (key != null) {
+			return key.toString();
+		} else {
+			return null;
+		}
+	}
+
+
 	public static String readStringKey(ModelKey key) {
 		String keyString = null;
 
@@ -442,10 +453,10 @@ public final class ModelKey
 	        throws IllegalArgumentException, ConversionFailureException {
 		return converterForKeyType(keyType).convert(values);
 	}
-	
+
 	/**
 	 * Returns the {@link StringModelKeyConverter} for the input key type.
-	 * 
+	 *
 	 * @param keyType
 	 *            {@link ModelKeyType} of values.
 	 * @return {@link StringModelKeyConverter}. Never {@code null}.
@@ -462,10 +473,10 @@ public final class ModelKey
 				throw new IllegalArgumentException("Invalid key type specified.");
 		}
 	}
-	
+
 	/**
 	 * Returns the {@link Generator} for the input key type.
-	 * 
+	 *
 	 * @param keyType
 	 *            {@link ModelKeyType} of values.
 	 * @return {@link Generator}. Never {@code null}.
@@ -703,7 +714,7 @@ public final class ModelKey
 	/**
 	 * Makes multiple composite keys, using the initial key as a root and the
 	 * subkeys as the second component.
-	 * 
+	 *
 	 * @param root
 	 *            The root {@link ModelKey}. Never {@code null}.
 	 * @param subkeys
@@ -737,7 +748,7 @@ public final class ModelKey
 	/**
 	 * Makes multiple composite keys, using the input keys as the roots and the
 	 * subkey as the second component.
-	 * 
+	 *
 	 * @param roots
 	 *            {@link List}. Never {@code null}, and its contents should
 	 *            never be {@code null} either.
@@ -770,8 +781,8 @@ public final class ModelKey
 	/**
 	 * Does {{@link #makeCompositeName(Object...)} and wraps the value in a
 	 * {@link MdoelKey}.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param components
 	 *            Components array. Never {@code null}. Must be longer than 1
 	 *            element. No elements should be {@code null}.
@@ -790,7 +801,7 @@ public final class ModelKey
 
 	/**
 	 * Creates a new composite name from the input.
-	 * 
+	 *
 	 * @param components
 	 *            Components array. Never {@code null}. Must be longer than 1
 	 *            element. No elements should be {@code null}.

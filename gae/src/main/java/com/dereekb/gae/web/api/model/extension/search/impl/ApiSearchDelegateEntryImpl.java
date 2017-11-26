@@ -16,7 +16,6 @@ import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchDelegateEntry;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchUpdateRequest;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  * {@link ApiSearchDelegateEntry} implementation.
@@ -105,7 +104,7 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 
 	// MARK: ApiSearchDelegateEntry
 	@Override
-	public ApiResponseData search(ApiSearchReadRequest request) {
+	public ApiSearchResponseData search(ApiSearchReadRequest request) {
 		if (this.searchService == null) {
 			throw new UnsupportedOperationException("Searching is unsupported for this type.");
 		}
@@ -116,7 +115,7 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	}
 
 	@Override
-	public ApiResponseData query(ApiSearchReadRequest request) {
+	public ApiSearchResponseData query(ApiSearchReadRequest request) {
 		if (this.queryService == null) {
 			throw new UnsupportedOperationException("Querying is unsupported for this type.");
 		}
@@ -133,29 +132,29 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	}
 
 	// MARK: Internal
-	private ApiResponseData buildResponseForResult(ModelDocumentSearchResponse<T> response) {
+	private ApiSearchResponseData buildResponseForResult(ModelDocumentSearchResponse<T> response) {
 		return this.buildModelDataResponse(response);
 	}
 
-	private ApiResponseData buildResponseForResult(ModelQueryResponse<T> response) {
+	private ApiSearchResponseData buildResponseForResult(ModelQueryResponse<T> response) {
 		return this.buildModelDataResponse(response);
 	}
 
-	private ApiResponseData buildModelDataResponse(ModelSearchResponse<T> response) {
-		ApiSearchResponseData responseData = null;
+	private ApiSearchResponseData buildModelDataResponse(ModelSearchResponse<T> response) {
+		ApiSearchResponseData searchResponseData = null;
 
 		if (response.isKeysOnlyResponse()) {
 			Collection<ModelKey> keys = response.getKeyResults();
-			responseData = this.convertKeyResponse(keys);
+			searchResponseData = this.convertKeyResponse(keys);
 		} else {
 			Collection<T> models = response.getModelResults();
-			responseData = this.convertModelResponse(models);
+			searchResponseData = this.convertModelResponse(models);
 		}
 
 		String cursor = response.getSearchCursor();
-		responseData.setCursor(cursor);
+		searchResponseData.setCursor(cursor);
 
-		return responseData;
+		return searchResponseData;
 	}
 
 	private ApiSearchResponseData convertModelResponse(Collection<T> models) {

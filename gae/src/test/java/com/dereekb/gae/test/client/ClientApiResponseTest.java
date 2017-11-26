@@ -2,6 +2,7 @@ package com.dereekb.gae.test.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Tests Client API Response components.
- * 
+ *
  * @author dereekb
  *
  */
@@ -128,13 +129,55 @@ public class ClientApiResponseTest {
 
 			Assert.assertTrue(responseData.getDataType().equalsIgnoreCase(listName));
 
-			JsonNode jsonData = responseData.getDataJsonNode();
+			JsonNode jsonData = responseData.getJsonNode();
 			String[] marshalledData = mapper.treeToValue(jsonData, String[].class);
 			Assert.assertTrue(marshalledData.length == dataStrings.size());
 
 		} catch (NoClientResponseDataException e) {
 			Assert.fail();
 		}
+
+	}
+
+	@Test
+	public void testBuildIncludedInDataResponse() throws JsonProcessingException {
+
+		ObjectMapper mapper = new ObjectMapper();
+		ClientApiResponseAccessorBuilderImpl builder = new ClientApiResponseAccessorBuilderImpl(mapper);
+
+		ApiResponseImpl response = new ApiResponseImpl();
+
+		String listName = "list";
+
+		List<String> dataStrings = new ArrayList<String>();
+		dataStrings.add("A");
+		dataStrings.add("B");
+		dataStrings.add("C");
+
+		ApiResponseData data = new ApiResponseDataImpl(listName, dataStrings);
+		response.setData(data);
+
+		String includedDataAName = "a";
+		ApiResponseData includedDataA = new ApiResponseDataImpl(includedDataAName, dataStrings);
+		response.addIncluded(includedDataA);
+
+		String includedDataBName = "b";
+		ApiResponseData includedDataB = new ApiResponseDataImpl(includedDataBName, dataStrings);
+		response.addIncluded(includedDataB);
+
+		String responseJson = mapper.writeValueAsString(response);
+
+		ClientResponseImpl clientResponse = new ClientResponseImpl(200, responseJson);
+		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
+
+		// Read Included Data
+		Map<String, ClientApiResponseData> responseData = accessor.getIncludedData();
+
+		ClientApiResponseData includedAData = responseData.get(includedDataAName);
+		Assert.assertTrue(includedAData.getDataType().equals(includedDataAName));
+
+		ClientApiResponseData includedBData = responseData.get(includedDataBName);
+		Assert.assertTrue(includedBData.getDataType().equals(includedDataBName));
 
 	}
 

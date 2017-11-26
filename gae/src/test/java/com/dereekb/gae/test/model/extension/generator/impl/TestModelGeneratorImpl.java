@@ -53,8 +53,8 @@ public class TestModelGeneratorImpl<T extends UniqueModel>
 
 	// MARK: TestModelGenerator
 	@Override
-	public String getTypeName() {
-		return this.generator.getTypeName();
+	public String getModelType() {
+		return this.generator.getModelType();
 	}
 
 	@Override

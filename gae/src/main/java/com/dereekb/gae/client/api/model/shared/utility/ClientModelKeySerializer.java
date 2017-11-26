@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Utility for serializing {@link ModelKey} values from client responses and
  * JSON.
- * 
+ *
  * @author dereekb
  *
  */
@@ -60,13 +60,13 @@ public class ClientModelKeySerializer {
 	// MARK: Utility
 	/**
 	 * Serializes {@link ModelKey} values from the input error info.
-	 * 
+	 *
 	 * @param type
 	 *            Model type.
 	 * @param keysErrorInfo
 	 *            {@link ClientResponseErrorInfo}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}, but can be empty.
-	 * 
+	 *
 	 * @throws ClientResponseSerializationException
 	 */
 	public List<ModelKey> serializeKeysFromErrorInfoData(String type,
@@ -79,19 +79,19 @@ public class ClientModelKeySerializer {
 	public List<ModelKey> serializeKeys(String type,
 	                                    ClientApiResponseData data)
 	        throws ClientResponseSerializationException {
-		JsonNode keysArrayNode = data.getDataJsonNode();
+		JsonNode keysArrayNode = data.getJsonNode();
 		return this.serializeKeys(type, keysArrayNode);
 	}
 
 	/**
 	 * Serializes {@link ModelKey} values from the input json node.
-	 * 
+	 *
 	 * @param type
 	 *            Model type.
 	 * @param keysArrayNode
 	 *            {@link JsonNode}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}, but can be empty.
-	 * 
+	 *
 	 * @throws ClientResponseSerializationException
 	 */
 	public List<ModelKey> serializeKeys(String type,

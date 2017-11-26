@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.generation;
 
 import java.util.List;
 
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -14,25 +15,18 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *            model type
  */
 public interface ModelGenerator<T extends UniqueModel>
-        extends Generator<T> {
-
-	/**
-	 * Returns the type name as a String.
-	 * 
-	 * @return {@link String}. Never {@code null}.
-	 */
-	public String getTypeName();
+        extends Generator<T>, TypedModel {
 
 	/**
 	 * Generates a new model key.
-	 * 
+	 *
 	 * @return {@link ModelKey}. Never {@code null}.
 	 */
 	public ModelKey generateKey();
 
 	/**
 	 * Generates several new model keys.
-	 * 
+	 *
 	 * @param count
 	 * @return {@link List}. Never {@code null}.
 	 */

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dereekb.gae.client.api.service.response.ClientApiResponseAccessor;
 import com.dereekb.gae.client.api.service.response.ClientResponse;
@@ -16,6 +17,7 @@ import com.dereekb.gae.client.api.service.response.error.impl.ClientResponseErro
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
+import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
@@ -25,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link ClientApiResponseAccessorBuilder} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -83,7 +85,7 @@ public class ClientApiResponseAccessorBuilderImpl
 
 	/**
 	 * Builds an accessor with a default status code, generally 200 (Success).
-	 * 
+	 *
 	 * @param responseData
 	 *            {@link String}. Never {@code null}.
 	 * @param statusCode
@@ -143,7 +145,7 @@ public class ClientApiResponseAccessorBuilderImpl
 			if (this.primaryData == null) {
 				if (this.jsonNode.has(ClientApiResponseAccessorBuilderImpl.this.primaryDataKey)) {
 					JsonNode dataNode = this.jsonNode.get(ClientApiResponseAccessorBuilderImpl.this.primaryDataKey);
-					this.primaryData = new JsonClientApiResponseData(dataNode);
+					this.primaryData = new PrimaryJsonClientApiResponseData(dataNode);
 				} else {
 					throw new NoClientResponseDataException();
 				}
@@ -179,8 +181,13 @@ public class ClientApiResponseAccessorBuilderImpl
 			JsonNode included = this.jsonNode.get(ClientApiResponseAccessorBuilderImpl.this.includedDataKey);
 
 			if (included != null) {
-				for (JsonNode node : included) {
-					list.add(new JsonClientApiResponseData(node));
+				List<Entry<String, JsonNode>> fields = IteratorUtility.iteratorToList(included.fields());
+
+				for (Entry<String, JsonNode> field : fields) {
+					String type = field.getKey();
+					JsonNode node = field.getValue();
+
+					list.add(new JsonClientApiResponseData(type, node));
 				}
 			}
 
@@ -189,27 +196,38 @@ public class ClientApiResponseAccessorBuilderImpl
 
 	}
 
+	private class PrimaryJsonClientApiResponseData extends JsonClientApiResponseData {
+
+		public static final String DATA_TYPE_KEY = "type";
+		public static final String DATA_KEY = "data";
+
+		public PrimaryJsonClientApiResponseData(JsonNode dataNode) {
+			super(dataNode.get(DATA_TYPE_KEY).asText(), dataNode.get(DATA_KEY));
+		}
+
+	}
+
 	/**
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
 	private class JsonClientApiResponseData
 	        implements ClientApiResponseData {
 
-		public static final String DATA_TYPE_KEY = "type";
-		public static final String DATA_KEY = "data";
-
+		private final String type;
 		private final JsonNode dataNode;
 
-		public JsonClientApiResponseData(JsonNode dataNode) {
+		public JsonClientApiResponseData(String type, JsonNode dataNode) {
+			this.type = type;
 			this.dataNode = dataNode;
 		}
 
 		// MARK: ClientApiResponseData
 		@Override
 		public String getDataType() {
-			return this.dataNode.get(DATA_TYPE_KEY).asText();
+			return this.type;
+			// return this.dataNode.get(DATA_TYPE_KEY).asText();
 		}
 
 		@Override
@@ -217,9 +235,10 @@ public class ClientApiResponseAccessorBuilderImpl
 			return this.dataNode;
 		}
 
+		@Deprecated
 		@Override
 		public JsonNode getDataJsonNode() {
-			return this.dataNode.get(DATA_KEY);
+			return this.dataNode;
 		}
 
 		// MARK: Keyed
@@ -236,9 +255,9 @@ public class ClientApiResponseAccessorBuilderImpl
 	}
 
 	/**
-	 * 
+	 *
 	 * @author dereekb
-	 * 
+	 *
 	 * @see ErrorInfo
 	 */
 	private class JsonClientErrorsData

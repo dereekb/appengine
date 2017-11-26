@@ -1,5 +1,6 @@
 package com.dereekb.gae.client.api.auth.model.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.client.api.auth.model.ClientModelRolesRequest;
@@ -16,6 +17,11 @@ public class ClientModelRolesRequestImpl extends AtomicRequestOptionsImpl
         implements ClientModelRolesRequest {
 
 	private List<ApiLoginTokenModelContextType> requestedContexts;
+
+	public ClientModelRolesRequestImpl() {
+		super();
+		this.requestedContexts = Collections.emptyList();
+	}
 
 	public ClientModelRolesRequestImpl(List<ApiLoginTokenModelContextType> requestedContexts) {
 		this.setRequestedContexts(requestedContexts);

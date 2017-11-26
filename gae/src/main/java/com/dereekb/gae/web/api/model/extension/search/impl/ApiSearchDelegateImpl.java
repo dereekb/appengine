@@ -1,6 +1,8 @@
 package com.dereekb.gae.web.api.model.extension.search.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,7 +70,7 @@ public class ApiSearchDelegateImpl
 	                          ApiSearchReadRequest request)
 	        throws UnavailableTypesException {
 		ApiSearchDelegateEntry entry = this.getEntry(type);
-		ApiResponseData responseData = entry.search(request);
+		ApiResponseData responseData = entry.search(request).asResponseData();
 		return new ApiResponseImpl(responseData);
 	}
 
@@ -88,11 +90,16 @@ public class ApiSearchDelegateImpl
 
 		ApiResponseImpl response = new ApiResponseImpl();
 
+		List<ApiSearchResponseData> searchDataEntries = new ArrayList<ApiSearchResponseData>();
+
 		for (String type : types) {
 			ApiSearchDelegateEntry entry = this.entries.get(type);
-			ApiResponseData data = entry.search(request);
-			response.addIncluded(data);
+			ApiSearchResponseData data = entry.search(request);
+			searchDataEntries.add(data);
 		}
+
+		ApiMultiSearchResponseData responseData = new ApiMultiSearchResponseData(searchDataEntries);
+		response.setData(responseData.asResponseData());
 
 		return response;
 	}
@@ -102,7 +109,7 @@ public class ApiSearchDelegateImpl
 	                         ApiSearchReadRequest request)
 	        throws UnavailableTypesException {
 		ApiSearchDelegateEntry entry = this.getEntry(type);
-		ApiResponseData responseData = entry.query(request);
+		ApiResponseData responseData = entry.query(request).asResponseData();
 		return new ApiResponseImpl(responseData);
 	}
 

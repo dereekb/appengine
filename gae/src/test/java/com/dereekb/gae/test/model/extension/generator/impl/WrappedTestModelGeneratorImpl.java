@@ -12,7 +12,7 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGeneratorDelegate
 /**
  * Abstract {@link TestModelGenerator} implementation that wraps another
  * generator, allowing overriding selective components.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -39,8 +39,8 @@ public class WrappedTestModelGeneratorImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public String getTypeName() {
-		return this.generator.getTypeName();
+	public String getModelType() {
+		return this.generator.getModelType();
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class WrappedTestModelGeneratorImpl<T extends UniqueModel>
 	public Setter<T> getSetter() {
 		return this.generator.getSetter();
 	}
-	
+
 	@Override
 	public T generate() {
 		return this.generator.generate();

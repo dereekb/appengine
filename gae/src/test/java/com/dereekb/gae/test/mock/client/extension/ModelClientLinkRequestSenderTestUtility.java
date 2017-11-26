@@ -24,7 +24,7 @@ import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
 
 /**
  * Test utility for {@link ClientLinkServiceRequestSender}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -35,15 +35,15 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 	private final TestModelGenerator<T> testModelGenerator;
 	private final ClientLinkServiceRequestSender linkRequestSender;
 
-	public ModelClientLinkRequestSenderTestUtility(ClientLinkServiceRequestSender linkRequestSender,
-	        TestModelGenerator<T> testModelGenerator) {
+	public ModelClientLinkRequestSenderTestUtility(TestModelGenerator<T> testModelGenerator,
+	        ClientLinkServiceRequestSender linkRequestSender) {
 		this.linkRequestSender = linkRequestSender;
 		this.testModelGenerator = testModelGenerator;
 	}
 
 	// MARK: Tests
 	public void testSystemClientLinkToNonExistantLink(ClientRequestSecurity security) throws Exception {
-		String type = this.testModelGenerator.getTypeName();
+		String type = this.testModelGenerator.getModelType();
 
 		T model = this.testModelGenerator.generate();
 
@@ -73,7 +73,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 	}
 
 	public void testSystemClientLinkAtomicRequest(ClientRequestSecurity security) throws Exception {
-		String type = this.testModelGenerator.getTypeName();
+		String type = this.testModelGenerator.getModelType();
 		ModelKey primaryKey = this.testModelGenerator.generateKey();
 
 		List<ApiLinkChange> changes = new ArrayList<>();
@@ -99,7 +99,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 	}
 
 	public void testSystemClientLinkNonAtomicRequest(ClientRequestSecurity security) throws Exception {
-		String type = this.testModelGenerator.getTypeName();
+		String type = this.testModelGenerator.getModelType();
 		ModelKey primaryKey = this.testModelGenerator.generateKey();
 
 		List<ApiLinkChange> changes = new ArrayList<>();

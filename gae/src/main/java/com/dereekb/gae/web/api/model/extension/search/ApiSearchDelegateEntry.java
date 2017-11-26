@@ -1,7 +1,7 @@
 package com.dereekb.gae.web.api.model.extension.search;
 
+import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  *
@@ -18,7 +18,7 @@ public interface ApiSearchDelegateEntry {
 	 *            {@link ApiSearchReadRequest}. Never {@code null}.
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
 	 */
-	public ApiResponseData search(ApiSearchReadRequest request);
+	public ApiSearchResponseData search(ApiSearchReadRequest request);
 
 	/**
 	 * Performs a query search.
@@ -27,7 +27,7 @@ public interface ApiSearchDelegateEntry {
 	 *            {@link ApiSearchReadRequest}. Never {@code null}.
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
 	 */
-	public ApiResponseData query(ApiSearchReadRequest request);
+	public ApiSearchResponseData query(ApiSearchReadRequest request);
 
 	/**
 	 * Updates the search index.

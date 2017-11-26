@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * {@link AbstractSecuredClientModelRequestSender} extension with configuration
  * for serializing models from responses.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -164,7 +164,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	// MARK: Model Serialization
 	/**
 	 * Serializes models from the input data.
-	 * 
+	 *
 	 * @param data
 	 *            {@link ClientApiResponseData}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}.
@@ -185,7 +185,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 
 	/**
 	 * Serializes model DTOs from the input data.
-	 * 
+	 *
 	 * @param data
 	 *            {@link ClientApiResponseData}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}.
@@ -194,7 +194,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	 */
 	@Override
 	public List<O> serializeModelDtos(ClientApiResponseData data) throws ClientResponseSerializationException {
-		JsonNode jsonData = data.getDataJsonNode();
+		JsonNode jsonData = data.getJsonNode();
 		return this.serializeModelDtos(jsonData);
 	}
 

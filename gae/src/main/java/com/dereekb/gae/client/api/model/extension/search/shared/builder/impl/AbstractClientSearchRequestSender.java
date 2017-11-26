@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Abstract client model request sender for search responses.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -136,6 +136,7 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 
 	protected class SearchResponseDataSerializer {
 
+		private static final String MODEL_TYPE_KEY = "modelType";
 		private static final String DATA_KEY = "data";
 		private static final String CURSOR_KEY = "cursor";
 
@@ -148,6 +149,10 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 		public boolean hasResults() {
 			JsonNode dataNode = this.data.get(DATA_KEY);
 			return dataNode.has(0);	// Has atleast one value.
+		}
+
+		public String getModelType() {
+			return this.data.get(MODEL_TYPE_KEY).asText();
 		}
 
 		public Collection<T> getModelResults() throws KeysOnlySearchException {

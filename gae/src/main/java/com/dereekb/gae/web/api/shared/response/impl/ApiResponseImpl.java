@@ -86,7 +86,7 @@ public class ApiResponseImpl
 	}
 
 	public void setData(ApiResponseData data) {
-		this.data = data;
+		this.data = ApiResponseDataImpl.makeTypeDataWrap(data);
 	}
 
 	// Included
@@ -106,11 +106,11 @@ public class ApiResponseImpl
 		this.included = included;
 	}
 
-	public void addIncluded(ApiResponseData data) {
+	public void addIncluded(ApiResponseData responseData) {
 		this.initializeIncluded();
 
-		String type = data.getResponseDataType();
-		this.included.put(type, data);
+		String type = responseData.getResponseDataType();
+		this.included.put(type, responseData);
 	}
 
 	// Errors

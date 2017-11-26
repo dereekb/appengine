@@ -16,8 +16,10 @@ public class ClientModelRolesLoginTokenContextRequestImpl extends ClientModelRol
         implements ClientModelRolesLoginTokenContextRequest {
 
 	private Long expirationTime;
-	private Boolean makeContext;
-	private Boolean includeRoles;
+	private Boolean makeContext = true;
+	private Boolean includeRoles = false;
+
+	public ClientModelRolesLoginTokenContextRequestImpl() {};
 
 	public ClientModelRolesLoginTokenContextRequestImpl(List<ApiLoginTokenModelContextType> requestedContexts) {
 		super(requestedContexts);
@@ -53,6 +55,12 @@ public class ClientModelRolesLoginTokenContextRequestImpl extends ClientModelRol
 
 	public void setIncludeRoles(Boolean includeRoles) {
 		this.includeRoles = includeRoles;
+	}
+
+	// MARK: Convenience
+	public void makeRolesOnlyRequest() {
+		this.setMakeContext(false);
+		this.setIncludeRoles(true);
 	}
 
 	@Override

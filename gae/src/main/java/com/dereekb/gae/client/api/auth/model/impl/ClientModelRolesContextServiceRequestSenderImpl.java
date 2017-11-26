@@ -60,12 +60,11 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 
 	private TypeModelKeyConverter keyTypeConverter;
 
-	private ClientModelKeySerializer keySerializer;
-	private ClientAtomicOperationExceptionUtility atomicOperationUtility;
+	private transient ClientModelKeySerializer keySerializer;
+	private transient ClientAtomicOperationExceptionUtility atomicOperationUtility;
 
-	public ClientModelRolesContextServiceRequestSenderImpl(SecuredClientApiRequestSender requestSender,
-	        TypeModelKeyConverter keyTypeConverter,
-	        ClientAtomicOperationExceptionUtility atomicOperationUtility) throws IllegalArgumentException {
+	public ClientModelRolesContextServiceRequestSenderImpl(TypeModelKeyConverter keyTypeConverter,
+	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
 		super(requestSender);
 		this.setKeyTypeConverter(keyTypeConverter);
 	}
@@ -221,7 +220,7 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 			ClientApiResponseData data = this.response.getPrimaryData();
 			ObjectMapper mapper = ClientModelRolesContextServiceRequestSenderImpl.this.getObjectMapper();
 
-			JsonNode jsonNode = data.getDataJsonNode();
+			JsonNode jsonNode = data.getJsonNode();
 
 			try {
 				return mapper.treeToValue(jsonNode, LoginTokenPair.class);

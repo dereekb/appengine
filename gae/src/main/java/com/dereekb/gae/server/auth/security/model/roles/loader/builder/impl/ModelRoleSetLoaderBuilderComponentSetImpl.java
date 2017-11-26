@@ -135,7 +135,7 @@ public class ModelRoleSetLoaderBuilderComponentSetImpl<T>
 
 	// MARK: Internal
 	protected void tryInitMap() {
-		if (this.map != null) {
+		if (this.map == null) {
 			this.initMap();
 		}
 	}

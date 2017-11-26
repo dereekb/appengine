@@ -86,7 +86,7 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 
 	// ModelGenerator
 	@Override
-	public String getTypeName() {
+	public String getModelType() {
 		return this.type;
 	}
 
