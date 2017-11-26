@@ -1,7 +1,11 @@
 package com.dereekb.gae.client.api.auth.model.impl;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextService;
 import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextServiceRequestSender;
@@ -28,7 +32,10 @@ import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.data.ValueUtility;
 import com.dereekb.gae.web.api.auth.controller.model.ApiLoginTokenModelContextType;
 import com.dereekb.gae.web.api.auth.controller.model.impl.ApiLoginTokenModelContextRequest;
 import com.dereekb.gae.web.api.auth.controller.model.impl.ApiModelRolesResponseData;
@@ -96,8 +103,11 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 	        throws ClientIllegalArgumentException,
 	            ClientAtomicOperationException,
 	            ClientRequestFailureException {
-		// TODO Auto-generated method stub
-		return null;
+		ClientModelRolesLoginTokenContextRequestImpl contextRequest = new ClientModelRolesLoginTokenContextRequestImpl(
+		        request);
+		contextRequest.setMakeContext(false);
+		contextRequest.setIncludeRoles(true);
+		return this.getContextForModels(contextRequest).getRolesData();
 	}
 
 	@Override
@@ -153,8 +163,8 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 
 		tokenRequest.setAtomic(request.isAtomic());
 		tokenRequest.setExpirationTime(request.getExpirationTime());
-		tokenRequest.setMakeContext(request.shouldMakeContext());
-		tokenRequest.setIncludeRoles(request.shouldIncludeRoles());
+		tokenRequest.setMakeContext(request.getMakeContext());
+		tokenRequest.setIncludeRoles(request.getIncludeRoles());
 
 		List<ApiLoginTokenModelContextType> contexts = request.getRequestedContexts();
 		tokenRequest.setContexts(contexts);
@@ -180,7 +190,7 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 		private transient boolean serializedData = false;
 
 		private transient LoginTokenPair loginTokenPair;
-		private transient ApiModelRolesResponseData responseData;
+		private transient ClientModelRolesResponseData responseData;
 
 		private final ClientModelRolesLoginTokenContextRequest request;
 		private final ClientApiResponse response;
@@ -197,7 +207,7 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 		public LoginTokenPair getLoginTokenPair() {
 
 			if (!this.serializedToken) {
-				if (this.request.shouldMakeContext()) {
+				if (this.request.getMakeContext()) {
 					this.loginTokenPair = this.serializeLoginToken();
 				}
 
@@ -221,11 +231,12 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 		}
 
 		@Override
-		public ApiModelRolesResponseData getResponseData() {
+		public ClientModelRolesResponseData getRolesData() {
 
 			if (!this.serializedData) {
-				if (this.request.shouldIncludeRoles()) {
-					this.responseData = this.serializeRolesResponseData();
+				if (ValueUtility.valueOf(this.request.getIncludeRoles())) {
+					ApiModelRolesResponseData data = this.serializeRolesResponseData();
+					this.responseData = new ClientModelRolesResponseDataImpl(data);
 				}
 
 				this.serializedData = true;
@@ -235,7 +246,6 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 		}
 
 		private ApiModelRolesResponseData serializeRolesResponseData() {
-
 			Map<String, ClientApiResponseData> included = this.response.getIncludedData();
 
 			ClientApiResponseData clientRolesData = included.get(ApiModelRolesResponseData.DATA_TYPE);
@@ -248,6 +258,59 @@ public class ClientModelRolesContextServiceRequestSenderImpl extends AbstractSec
 			} catch (JsonProcessingException e) {
 				throw new RuntimeException(e);
 			}
+		}
+
+	}
+
+	private class ClientModelRolesResponseDataImpl
+	        implements ClientModelRolesResponseData {
+
+		private final ApiModelRolesResponseData rolesData;
+		private CaseInsensitiveMap<Map<ModelKey, Set<String>>> rolesMap = new CaseInsensitiveMap<Map<ModelKey, Set<String>>>();
+
+		public ClientModelRolesResponseDataImpl(ApiModelRolesResponseData rolesData) {
+			this.rolesData = rolesData;
+		}
+
+		// MARK: ClientModelRolesResponseData
+		@Override
+		public Map<String, Map<String, Set<String>>> getRawMap() {
+			return this.rolesData.getResults();
+		}
+
+		@Override
+		public Map<ModelKey, Set<String>> getRolesForType(String type) {
+			Map<ModelKey, Set<String>> map = this.rolesMap.get(type);
+
+			if (map == null) {
+				Map<String, Map<String, Set<String>>> raw = this.getRawMap();
+				map = this.buildRolesMapForType(type, raw);
+				this.rolesMap.put(type, map);
+			}
+
+			return map;
+		}
+
+		// MARK: Internal
+		protected Map<ModelKey, Set<String>> buildRolesMapForType(String type,
+		                                                          Map<String, Map<String, Set<String>>> raw) {
+			Map<String, Set<String>> typeRaw = raw.get(type);
+			Map<ModelKey, Set<String>> map = new HashMap<ModelKey, Set<String>>();
+
+			if (typeRaw != null) {
+				for (Entry<String, Set<String>> entry : typeRaw.entrySet()) {
+					String key = entry.getKey();
+					Set<String> roles = entry.getValue();
+
+					ModelKey modelKey = ClientModelRolesContextServiceRequestSenderImpl.this.keyTypeConverter
+					        .convertKey(type, key);
+					map.put(modelKey, roles);
+				}
+			} else {
+				map = Collections.emptyMap();
+			}
+
+			return map;
 		}
 
 	}

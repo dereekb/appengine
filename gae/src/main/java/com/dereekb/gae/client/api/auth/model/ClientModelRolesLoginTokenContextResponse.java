@@ -1,6 +1,5 @@
 package com.dereekb.gae.client.api.auth.model;
 
-import com.dereekb.gae.web.api.auth.controller.model.impl.ApiModelRolesResponseData;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
 /**
@@ -18,6 +17,10 @@ public interface ClientModelRolesLoginTokenContextResponse {
 	 */
 	public LoginTokenPair getLoginTokenPair();
 
-	public ApiModelRolesResponseData getResponseData();
+	/**
+	 *
+	 * @return {@link ClientModelRolesResponseData}. Never {@code null}.
+	 */
+	public ClientModelRolesResponseData getRolesData();
 
 }

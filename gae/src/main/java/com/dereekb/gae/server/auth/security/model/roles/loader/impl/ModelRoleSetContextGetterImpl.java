@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContextGetter;
+import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetLoader;
 import com.dereekb.gae.server.datastore.SimpleKeyGetter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -11,14 +12,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link ModelRoleSetContextGetter} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
 public class ModelRoleSetContextGetterImpl<T extends UniqueModel> extends ModelRolesContextBuilderImpl<T>
-        implements ModelRoleSetContextGetter<T> {
+        implements ModelRoleSetContextGetter<T>, ModelRoleSetContextService<T> {
 
 	private SimpleKeyGetter<T> getter;
 
@@ -43,7 +44,7 @@ public class ModelRoleSetContextGetterImpl<T extends UniqueModel> extends ModelR
 	@Override
 	public ModelRoleSetContext<T> get(ModelKey key) throws IllegalArgumentException {
 		T model = this.getter.get(key);
-		
+
 		if (model != null) {
 			return this.loadContext(model);
 		} else {

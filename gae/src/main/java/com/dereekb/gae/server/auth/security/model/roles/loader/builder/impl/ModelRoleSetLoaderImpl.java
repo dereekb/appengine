@@ -18,6 +18,17 @@ public class ModelRoleSetLoaderImpl<T extends UniqueModel>
 
 	private ModelRoleSetLoaderBuilderComponentSet<T> set;
 
+	/**
+	 * Quick builder for a single {@link ModelRoleSetLoaderBuilderComponent}.
+	 *
+	 * @param component
+	 *            {@link ModelRoleSetLoaderBuilderComponent}. Never
+	 *            {@code null}.
+	 */
+	public ModelRoleSetLoaderImpl(ModelRoleSetLoaderBuilderComponent<T> component) {
+		this(new ModelRoleSetLoaderBuilderComponentSetImpl<T>(component));
+	}
+
 	public ModelRoleSetLoaderImpl(ModelRoleSetLoaderBuilderComponentSet<T> set) {
 		this.setSet(set);
 	}

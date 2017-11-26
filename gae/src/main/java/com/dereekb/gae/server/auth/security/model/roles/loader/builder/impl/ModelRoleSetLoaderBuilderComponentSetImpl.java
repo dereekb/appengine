@@ -32,6 +32,10 @@ public class ModelRoleSetLoaderBuilderComponentSetImpl<T>
 		this.components = new ArrayList<ModelRoleSetLoaderBuilderComponent<T>>();
 	};
 
+	public ModelRoleSetLoaderBuilderComponentSetImpl(ModelRoleSetLoaderBuilderComponent<T> component) {
+		this(ListUtility.wrap(component));
+	};
+
 	public ModelRoleSetLoaderBuilderComponentSetImpl(List<ModelRoleSetLoaderBuilderComponent<T>> components) {
 		this.setComponents(components);
 	};

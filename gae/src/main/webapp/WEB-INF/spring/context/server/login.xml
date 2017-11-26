@@ -102,7 +102,7 @@
 	<bean id="loginOwnershipRolesReader"
 		class="com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader">
 	</bean>
-	
+
 	<!-- Refresh Token Service -->
 	<bean id="refreshTokenService"
 		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl">
@@ -114,5 +114,24 @@
 		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder">
 		<constructor-arg index="0" ref="loginTokenSecret" />
 	</bean>
+
+	<!-- Login Models Service -->
+	<bean id="loginTokenModelContextService"
+		class="com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl">
+		<constructor-arg index="0"
+			ref="loginTokenModelContextServiceEntries" />
+	</bean>
+
+	<bean id="loginTokenModelContextSetDencoder"
+		class="com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl">
+		<constructor-arg index="0"
+			ref="loginTokenModelContextServiceDencoderEntries" />
+	</bean>
+
+	<util:list id="loginTokenModelContextServiceEntries">
+		<ref bean="loginSecurityContextServiceEntry" />
+	</util:list>
+
+	<alias name="loginTokenModelContextServiceEntries" alias="loginTokenModelContextServiceDencoderEntries" />
 
 </beans>

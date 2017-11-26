@@ -25,8 +25,7 @@
 	<!-- Refresh Token Controller -->
 	<bean id="loginTokenController"
 		class="com.dereekb.gae.web.api.auth.controller.token.LoginTokenController">
-		<constructor-arg index="0"
-			ref="loginTokenControllerDelegate" />
+		<constructor-arg index="0" ref="loginTokenControllerDelegate" />
 	</bean>
 
 	<bean id="loginTokenControllerDelegate"
@@ -85,6 +84,23 @@
 		<constructor-arg index="0" ref="loginTokenService" />
 		<constructor-arg index="1" ref="keyLoginStatusServiceManager" />
 		<constructor-arg index="2" ref="keyLoginAuthenticationService" />
+	</bean>
+
+	<!-- Model Roles Service -->
+	<bean id="loginTokenModelContextController"
+		class="com.dereekb.gae.web.api.auth.controller.model.LoginTokenModelContextController">
+		<constructor-arg index="0"
+			ref="loginTokenModelContextControllerDelegate" />
+	</bean>
+
+	<bean id="loginTokenModelContextControllerDelegate"
+		class="com.dereekb.gae.web.api.auth.controller.model.impl.LoginTokenModelContextControllerDelegateImpl">
+		<constructor-arg index="0"
+			ref="loginTokenModelContextService" />
+		<constructor-arg index="1"
+			ref="loginTokenEncoderDecoder" />
+		<constructor-arg index="2"
+			ref="loginTokenModelContextSetDencoder" />
 	</bean>
 
 	<!-- Exception Handler -->

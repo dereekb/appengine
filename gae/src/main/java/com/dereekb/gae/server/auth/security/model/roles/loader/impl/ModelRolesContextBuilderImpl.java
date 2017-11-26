@@ -12,14 +12,14 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * {@link ModelRoleSetContextBuilder} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
 public class ModelRolesContextBuilderImpl<T extends UniqueModel>
-        implements ModelRoleSetContextBuilder<T> {
+        implements ModelRoleSetContextBuilder<T>, ModelRoleSetLoader<T> {
 
 	private ModelRoleSetLoader<T> roleSetLoader;
 
@@ -37,6 +37,12 @@ public class ModelRolesContextBuilderImpl<T extends UniqueModel>
 		}
 
 		this.roleSetLoader = roleSetLoader;
+	}
+
+	// MARK: ModelRoleSetLoader
+	@Override
+	public ModelRoleSet loadRolesForModel(T model) throws NoModelContextRolesGrantedException {
+		return this.getRoleSetLoader().loadRolesForModel(model);
 	}
 
 	// MARK: ModelRoleSetContextBuilder

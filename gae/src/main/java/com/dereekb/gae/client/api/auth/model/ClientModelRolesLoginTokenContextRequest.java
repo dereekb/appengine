@@ -24,13 +24,13 @@ public interface ClientModelRolesLoginTokenContextRequest
 	 *
 	 * @return {@code true} if a new token context should be made.
 	 */
-	public boolean shouldMakeContext();
+	public Boolean getMakeContext();
 
 	/**
 	 * Whether or not the roles should be returned in the request.
 	 *
 	 * @return {@code true} if roles info should be included.
 	 */
-	public boolean shouldIncludeRoles();
+	public Boolean getIncludeRoles();
 
 }

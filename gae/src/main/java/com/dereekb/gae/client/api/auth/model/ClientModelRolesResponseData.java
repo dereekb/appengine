@@ -23,8 +23,10 @@ public interface ClientModelRolesResponseData {
 	/**
 	 * Return the results for a specific type.
 	 *
+	 * @param type
+	 *            {@link String}. Never {@code null}.
 	 * @return {@link Map}. Never {@code null}.
 	 */
-	public Map<ModelKey, Set<String>> getRolesForType();
+	public Map<ModelKey, Set<String>> getRolesForType(String type);
 
 }

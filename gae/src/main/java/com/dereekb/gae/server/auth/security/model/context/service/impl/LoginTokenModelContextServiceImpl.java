@@ -24,8 +24,8 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 public class LoginTokenModelContextServiceImpl extends AbstractTypedModelMap<LoginTokenModelContextServiceEntry>
         implements LoginTokenModelContextService {
 
-	public LoginTokenModelContextServiceImpl(List<LoginTokenModelContextServiceEntry> typeMap) {
-		super(typeMap);
+	public LoginTokenModelContextServiceImpl(List<LoginTokenModelContextServiceEntry> entries) {
+		super(entries);
 	}
 
 	// MARK: LoginTokenModelContextService

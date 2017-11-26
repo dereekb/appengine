@@ -16,19 +16,26 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public class LoginModelRoleBuilderComponent extends AbstractChildCrudModelRoleSetLoaderBuilderComponent<Login>
-        implements SecurityContextModelOwnershipChecker<Login> {
+public class LoginModelRoleBuilderComponent extends AbstractChildCrudModelRoleSetLoaderBuilderComponent<Login> {
+
+	public LoginModelRoleBuilderComponent() {
+		this(new Checker());
+	}
 
 	public LoginModelRoleBuilderComponent(SecurityContextModelOwnershipChecker<Login> ownershipChecker) {
 		super(ownershipChecker);
 	}
 
 	// MARK: SecurityContextModelOwnershipChecker
-	@Override
-	public boolean isOwnedInSecurityContext(Login model) throws NoSecurityContextException {
-		LoginTokenUserDetails<LoginToken> principal = LoginSecurityContext.getPrincipal();
-		ModelKey loginKey = principal.getLoginKey();
-		return ModelKey.isEqual(loginKey, model.getModelKey());
+	private static final class Checker
+	        implements SecurityContextModelOwnershipChecker<Login> {
+
+		@Override
+		public boolean isOwnedInSecurityContext(Login model) throws NoSecurityContextException {
+			LoginTokenUserDetails<LoginToken> principal = LoginSecurityContext.getPrincipal();
+			ModelKey loginKey = principal.getLoginKey();
+			return ModelKey.isEqual(loginKey, model.getModelKey());
+		}
 	}
 
 }

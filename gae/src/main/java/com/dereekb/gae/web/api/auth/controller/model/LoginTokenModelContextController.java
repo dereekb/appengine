@@ -36,6 +36,10 @@ public class LoginTokenModelContextController {
 
 	private LoginTokenModelContextControllerDelegate delegate;
 
+	public LoginTokenModelContextController(LoginTokenModelContextControllerDelegate delegate) {
+		this.setDelegate(delegate);
+	}
+
 	public LoginTokenModelContextControllerDelegate getDelegate() {
 		return this.delegate;
 	}
