@@ -1,11 +1,9 @@
 package com.dereekb.gae.server.auth.security.model.roles.loader;
 
-import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
-import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSetContainer;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Roles context that wraps a {@link UniqueModel} and a {@link ModelRoleSet}.
+ * {@link AnonymousModelRoleSetContext} extension that provides the model.
  *
  * @author dereekb
  *
@@ -13,7 +11,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *            model type
  */
 public interface ModelRoleSetContext<T extends UniqueModel>
-        extends UniqueModel, ModelRoleSetContainer {
+        extends AnonymousModelRoleSetContext {
 
 	/**
 	 * Returns the model in this context.

@@ -2,17 +2,19 @@ package com.dereekb.gae.server.datastore;
 
 import java.util.List;
 
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * Simple {@link Getter} that is keys only.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
-public interface SimpleKeyGetter<T> {
+public interface SimpleKeyGetter<T>
+        extends TypedModel {
 
 	/**
 	 * Retrieves the database model that corresponds to the input key.

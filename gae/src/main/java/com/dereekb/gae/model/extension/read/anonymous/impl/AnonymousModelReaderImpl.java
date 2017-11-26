@@ -39,7 +39,7 @@ public class AnonymousModelReaderImpl
 	                                                Collection<ModelKey> keys) {
 		ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 		ReadRequest request = new KeyReadRequest(keys, options);
-		ReadService<? extends UniqueModel> service = this.entries.get(request);
+		ReadService<? extends UniqueModel> service = this.entries.get(type);
 		return service.read(request);
 	}
 

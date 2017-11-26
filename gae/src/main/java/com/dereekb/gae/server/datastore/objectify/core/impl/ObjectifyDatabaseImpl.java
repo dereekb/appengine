@@ -147,10 +147,10 @@ public class ObjectifyDatabaseImpl
 		private final ObjectifyKeyConverter<T, ModelKey> objectifyKeyConverter;
 		private final ObjectifyQueryRequestLimitedBuilderInitializer initializer;
 		private final ObjectifyQueryIterableFactory<T> iterableFactory;
-		
+
 		private final ObjectifyDatabaseEntityKeyEnforcement keyEnforcement;
 		private final ObjectifyDatabaseEntityKeyEnforcer keyEnforcer;
-		
+
 		protected ObjectifyDatabaseEntityImpl(Class<T> type) throws UnregisteredEntryTypeException {
 			ObjectifyDatabaseEntityDefinition entity = ObjectifyDatabaseImpl.this.getDefinition(type);
 
@@ -160,10 +160,10 @@ public class ObjectifyDatabaseImpl
 			this.objectifyKeyConverter = ObjectifyModelKeyUtil.converterForType(type, this.keyType);
 			this.initializer = entity.getQueryInitializer();
 			this.iterableFactory = new ObjectifyQueryIterableFactoryImpl<T>(this);
-			
+
 			this.keyEnforcement = entity.getKeyEnforcement();
 			this.keyEnforcer = this.makeKeyEnforcer(this.keyEnforcement);
-			
+
 			this.resetAccessors();
 		}
 
@@ -171,7 +171,8 @@ public class ObjectifyDatabaseImpl
 			return this.type;
 		}
 
-		public String getModelTypeName() {
+		@Override
+		public String getModelType() {
 			return this.modelTypeName;
 		}
 
@@ -198,15 +199,15 @@ public class ObjectifyDatabaseImpl
 			this.getter = new ObjectifyDatabaseGetter();
 			this.setter = new ObjectifyDatabaseSetter();
 		}
-		
+
 		@Override
 		public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement() {
 			return this.keyEnforcement;
 		}
-		
+
 		private ObjectifyDatabaseEntityKeyEnforcer makeKeyEnforcer(ObjectifyDatabaseEntityKeyEnforcement keyEnforcement) {
 			ObjectifyDatabaseEntityKeyEnforcer keyEnforcer = null;
-			
+
 			switch (keyEnforcement) {
 				case DEFAULT:
 				case MUST_BE_NULL:
@@ -218,8 +219,8 @@ public class ObjectifyDatabaseImpl
 				default:
 					throw new UnsupportedOperationException();
 			}
-			
-			
+
+
 			return keyEnforcer;
 		}
 
@@ -485,6 +486,11 @@ public class ObjectifyDatabaseImpl
 				return this.reader.keysGet(keys);
 			}
 
+			@Override
+			public String getModelType() {
+				return ObjectifyDatabaseEntityImpl.this.getModelType();
+			}
+
 		}
 
 		@Override
@@ -607,10 +613,10 @@ public class ObjectifyDatabaseImpl
 						if (!async) {
 							result.now();
 						}
-						
+
 						return true;
 					}
-					
+
 					return false;
 				} else {
 					throw new UpdateUnkeyedEntityException();
@@ -633,7 +639,7 @@ public class ObjectifyDatabaseImpl
 				if (!async) {
 					result.now();
 				}
-				
+
 				return existing;
 			}
 

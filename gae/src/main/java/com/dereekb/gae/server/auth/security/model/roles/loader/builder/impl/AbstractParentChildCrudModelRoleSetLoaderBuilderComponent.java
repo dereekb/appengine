@@ -8,8 +8,8 @@ import com.dereekb.gae.server.auth.security.model.roles.ownership.SecurityContex
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
- * {@link AbstractCrudModelRoleSetLoaderBuilderComponent} extension for
- * {@link ChildCrudModelRole} values.
+ * {@link AbstractCrudModelRoleSetLoaderBuilderComponent} extension for parent
+ * models that are granted {@link ChildCrudModelRole} values.
  * <p>
  * By default is granted based on ownership of the object.
  *
@@ -18,9 +18,9 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  * @param <T>
  *            model type
  */
-public abstract class AbstractChildCrudModelRoleSetLoaderBuilderComponent<T> extends AbstractCrudModelRoleSetLoaderBuilderComponent<T> {
+public abstract class AbstractParentChildCrudModelRoleSetLoaderBuilderComponent<T> extends AbstractCrudModelRoleSetLoaderBuilderComponent<T> {
 
-	public AbstractChildCrudModelRoleSetLoaderBuilderComponent(
+	public AbstractParentChildCrudModelRoleSetLoaderBuilderComponent(
 	        SecurityContextModelOwnershipChecker<T> ownershipChecker) {
 		super(ownershipChecker);
 	}

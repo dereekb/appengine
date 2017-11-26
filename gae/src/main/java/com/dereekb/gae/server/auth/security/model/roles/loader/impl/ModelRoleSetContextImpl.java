@@ -8,7 +8,7 @@ import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 
 /**
  * {@link ModelRoleSetContext} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -17,8 +17,11 @@ import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 public class ModelRoleSetContextImpl<T extends UniqueModel> extends HandlerPair<T, ModelRoleSet>
         implements ModelRoleSetContext<T> {
 
-	public ModelRoleSetContextImpl(T key, ModelRoleSet object) {
+	private String modelType;
+
+	public ModelRoleSetContextImpl(String modelType, T key, ModelRoleSet object) {
 		super(key, object);
+		this.modelType = modelType;
 	}
 
 	// MARK: ModelRoleSetContext
@@ -30,6 +33,12 @@ public class ModelRoleSetContextImpl<T extends UniqueModel> extends HandlerPair<
 	@Override
 	public ModelRoleSet getRoleSet() {
 		return this.object;
+	}
+
+	// MARK: TypedModel
+	@Override
+	public String getModelType() {
+		return this.modelType;
 	}
 
 	// MARK: UniqueModel
@@ -47,5 +56,4 @@ public class ModelRoleSetContextImpl<T extends UniqueModel> extends HandlerPair<
 	public String toString() {
 		return "ModelRoleSetContextImpl [getModel()=" + this.getModel() + ", getRoles()=" + this.getRoleSet() + "]";
 	}
-
 }

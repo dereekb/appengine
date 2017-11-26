@@ -8,18 +8,18 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link SimpleGetter} for {@link ModelRoleSetContext} values.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
 public interface ModelRoleSetContextGetter<T extends UniqueModel>
-        extends SimpleKeyGetter<ModelRoleSetContext<T>> {
+        extends SimpleKeyGetter<ModelRoleSetContext<T>>, AnonymousModelRoleSetContextGetter {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws NoModelContextRolesGrantedException
 	 *             if no roles are to be provided to this model.
 	 */

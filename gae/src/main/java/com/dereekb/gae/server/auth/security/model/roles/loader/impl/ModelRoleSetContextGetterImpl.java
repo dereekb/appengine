@@ -24,7 +24,7 @@ public class ModelRoleSetContextGetterImpl<T extends UniqueModel> extends ModelR
 	private SimpleKeyGetter<T> getter;
 
 	public ModelRoleSetContextGetterImpl(ModelRoleSetLoader<T> roleSetLoader, SimpleKeyGetter<T> getter) {
-		super(roleSetLoader);
+		super(getter.getModelType(), roleSetLoader);
 		this.setGetter(getter);
 	}
 

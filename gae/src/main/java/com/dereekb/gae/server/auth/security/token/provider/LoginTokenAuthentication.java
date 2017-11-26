@@ -8,7 +8,7 @@ import com.dereekb.gae.server.auth.security.token.provider.preauth.PreAuthLoginT
 /**
  * {@link LoginAuthentication} extension that also implements
  * {@link PreAuthLoginTokenAuthentication}.
- * 
+ *
  * @author dereekb
  *
  */

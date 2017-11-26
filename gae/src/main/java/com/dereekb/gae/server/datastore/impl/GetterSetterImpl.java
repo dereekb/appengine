@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * {@link GetterSetter} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -59,6 +59,11 @@ public class GetterSetterImpl<T extends UniqueModel>
 	}
 
 	// MARK: GetterSetterDeleter
+	@Override
+	public String getModelType() {
+		return this.getter.getModelType();
+	}
+
 	@Override
 	public boolean exists(T model) throws UninitializedModelException {
 		return this.getter.exists(model);

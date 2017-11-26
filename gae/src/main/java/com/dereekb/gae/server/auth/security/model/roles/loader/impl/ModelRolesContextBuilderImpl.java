@@ -8,7 +8,9 @@ import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContextBuilder;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetLoader;
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.impl.TypedModelImpl;
 
 /**
  * {@link ModelRoleSetContextBuilder} implementation.
@@ -18,12 +20,13 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * @param <T>
  *            model type
  */
-public class ModelRolesContextBuilderImpl<T extends UniqueModel>
-        implements ModelRoleSetContextBuilder<T>, ModelRoleSetLoader<T> {
+public class ModelRolesContextBuilderImpl<T extends UniqueModel> extends TypedModelImpl
+        implements TypedModel, ModelRoleSetContextBuilder<T>, ModelRoleSetLoader<T> {
 
 	private ModelRoleSetLoader<T> roleSetLoader;
 
-	public ModelRolesContextBuilderImpl(ModelRoleSetLoader<T> roleSetLoader) {
+	public ModelRolesContextBuilderImpl(String modelType, ModelRoleSetLoader<T> roleSetLoader) {
+		super(modelType);
 		this.setRoleSetLoader(roleSetLoader);
 	}
 
@@ -49,7 +52,7 @@ public class ModelRolesContextBuilderImpl<T extends UniqueModel>
 	@Override
 	public ModelRoleSetContext<T> loadContext(T model) throws NoModelContextRolesGrantedException {
 		ModelRoleSet roleSet = this.roleSetLoader.loadRolesForModel(model);
-		return new ModelRoleSetContextImpl<T>(model, roleSet);
+		return new ModelRoleSetContextImpl<T>(this.getModelType(), model, roleSet);
 	}
 
 	@Override

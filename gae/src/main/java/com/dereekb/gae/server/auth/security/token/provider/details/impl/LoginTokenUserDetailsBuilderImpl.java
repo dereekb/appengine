@@ -8,6 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.misc.SecurityUtility;
+import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextSet;
+import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
+import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetDecoder;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGrantedAuthorityBuilder;
@@ -17,6 +20,10 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;
+import com.dereekb.gae.server.datastore.models.keys.utility.ModelKeySource;
+import com.dereekb.gae.server.datastore.models.keys.utility.impl.ModelKeySourceImpl;
+import com.dereekb.gae.server.datastore.utility.source.ModelKeyGetterSourceImpl;
+import com.dereekb.gae.utilities.model.lazy.LazyLoadSource;
 
 /**
  * {@link LoginTokenUserDetailsBuilder} implementation.
@@ -32,17 +39,21 @@ public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
 	private Getter<Login> loginGetter;
 	private Getter<LoginPointer> loginPointerGetter;
 
+	private LoginTokenModelContextSetDecoder contextSetDecoder;
 	private LoginTokenGrantedAuthorityBuilder<T> authorityBuilder;
 
 	private String adminRole = DEFAULT_ADMIN_ROLE;
 
-	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder<T> authorityBuilder) {
-		this(authorityBuilder, null, null);
+	public LoginTokenUserDetailsBuilderImpl(LoginTokenModelContextSetDecoder contextSetDecoder,
+	        LoginTokenGrantedAuthorityBuilder<T> authorityBuilder) {
+		this(contextSetDecoder, authorityBuilder, null, null);
 	}
 
-	public LoginTokenUserDetailsBuilderImpl(LoginTokenGrantedAuthorityBuilder<T> authorityBuilder,
+	public LoginTokenUserDetailsBuilderImpl(LoginTokenModelContextSetDecoder contextSetDecoder,
+	        LoginTokenGrantedAuthorityBuilder<T> authorityBuilder,
 	        Getter<Login> loginGetter,
 	        Getter<LoginPointer> loginPointerGetter) {
+		this.setContextSetDecoder(contextSetDecoder);
 		this.setAuthorityBuilder(authorityBuilder);
 		this.setLoginGetter(loginGetter);
 		this.setLoginPointerGetter(loginPointerGetter);
@@ -62,6 +73,18 @@ public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
 
 	public void setLoginPointerGetter(Getter<LoginPointer> loginPointerGetter) {
 		this.loginPointerGetter = loginPointerGetter;
+	}
+
+	public LoginTokenModelContextSetDecoder getContextSetDecoder() {
+		return this.contextSetDecoder;
+	}
+
+	public void setContextSetDecoder(LoginTokenModelContextSetDecoder contextSetDecoder) {
+		if (contextSetDecoder == null) {
+			throw new IllegalArgumentException("contextSetDecoder cannot be null.");
+		}
+
+		this.contextSetDecoder = contextSetDecoder;
 	}
 
 	public LoginTokenGrantedAuthorityBuilder<T> getAuthorityBuilder() {
@@ -90,7 +113,8 @@ public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
 
 	// MARK: LoginTokenUserDetailsBuilder
 	@Override
-	public LoginTokenUserDetails<T> buildDetails(DecodedLoginToken<T> decodedLoginToken) throws IllegalArgumentException {
+	public LoginTokenUserDetails<T> buildDetails(DecodedLoginToken<T> decodedLoginToken)
+	        throws IllegalArgumentException {
 		LoginTokenUserDetails<T> details;
 
 		if (decodedLoginToken.getLoginToken().isAnonymous()) {
@@ -184,12 +208,13 @@ public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
 
 		protected final DecodedLoginToken<T> decodedLoginToken;
 
-		private boolean loginLoaded = false;
-		private boolean loginPointerLoaded = false;
+		private final ModelKeySource loginKey;
+		private final ModelKeySource loginPointerKey;
 
-		private Login login = null;
-		private LoginPointer loginPointer = null;
+		private final LazyLoadSource<Login> login;
+		private final LazyLoadSource<LoginPointer> loginPointer;
 
+		private LoginTokenModelContextSet contextSet;
 		private Collection<? extends GrantedAuthority> authorities;
 		private Set<String> roles;
 
@@ -202,72 +227,48 @@ public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
 			}
 
 			this.decodedLoginToken = decodedLoginToken;
+
+			T token = decodedLoginToken.getLoginToken();
+
+			this.loginKey = ModelKeySourceImpl.make(token.getLoginId());
+			this.loginPointerKey = ModelKeySourceImpl.make(token.getLoginPointerId());
+
+			this.login = ModelKeyGetterSourceImpl.makeLazySource(LoginTokenUserDetailsBuilderImpl.this.loginGetter,
+			        this.loginKey);
+			this.loginPointer = ModelKeyGetterSourceImpl
+			        .makeLazySource(LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter, this.loginPointerKey);
 		}
 
 		@Override
 		public ModelKey getLoginKey() throws NoModelKeyException {
-			Long id = this.getLoginToken().getLoginId();
-			ModelKey key = null;
-
-			if (id != null) {
-				key = new ModelKey(id);
-			} else {
-				throw new NoModelKeyException();
-			}
-
-			return key;
+			return this.loginKey.loadModelKey();
 		}
 
 		@Override
 		public Login getLogin() throws UnsupportedOperationException {
-			if (this.loginLoaded == false) {
-				this.loginLoaded = true;
-
+			if (this.login.hasTriedLoading() == false) {
 				if (LoginTokenUserDetailsBuilderImpl.this.loginGetter == null) {
 					throw new UnsupportedOperationException();
 				}
-
-				try {
-					ModelKey key = this.getLoginKey();
-					this.login = LoginTokenUserDetailsBuilderImpl.this.loginGetter.get(key);
-				} catch (NoModelKeyException e) {
-				}
 			}
 
-			return this.login;
+			return this.login.safeLoadObject();
 		}
 
 		@Override
 		public ModelKey getLoginPointerKey() throws NoModelKeyException {
-			String id = this.getLoginToken().getLoginPointerId();
-			ModelKey key = null;
-
-			if (id != null) {
-				key = new ModelKey(id);
-			} else {
-				throw new NoModelKeyException();
-			}
-
-			return key;
+			return this.loginPointerKey.loadModelKey();
 		}
 
 		@Override
 		public LoginPointer getLoginPointer() throws UnsupportedOperationException {
-			if (this.loginPointerLoaded == false) {
-				this.loginPointerLoaded = true;
-
+			if (this.loginPointer.hasTriedLoading() == false) {
 				if (LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter == null) {
 					throw new UnsupportedOperationException();
 				}
-
-				try {
-					ModelKey key = this.getLoginPointerKey();
-					this.loginPointer = LoginTokenUserDetailsBuilderImpl.this.loginPointerGetter.get(key);
-				} catch (NoModelKeyException e) {
-				}
 			}
 
-			return this.loginPointer;
+			return this.loginPointer.safeLoadObject();
 		}
 
 		@Override
@@ -321,6 +322,17 @@ public class LoginTokenUserDetailsBuilderImpl<T extends LoginTokenImpl>
 		@Override
 		public T getLoginToken() {
 			return this.decodedLoginToken.getLoginToken();
+		}
+
+		@Override
+		public LoginTokenModelContextSet getLoginTokenModelContextSet() {
+			if (this.contextSet == null) {
+				T loginToken = this.getLoginToken();
+				EncodedLoginTokenModelContextSet encodedSet = loginToken.getEncodedModelContextSet();
+				this.contextSet = LoginTokenUserDetailsBuilderImpl.this.contextSetDecoder.decodeSet(encodedSet);
+			}
+
+			return this.contextSet;
 		}
 
 		@Override
