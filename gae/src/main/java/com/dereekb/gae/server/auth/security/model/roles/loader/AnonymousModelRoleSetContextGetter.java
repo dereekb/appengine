@@ -22,7 +22,7 @@ public interface AnonymousModelRoleSetContextGetter
 	 * @throws IllegalArgumentException
 	 *             thrown if the input key is {@code null}.
 	 */
-	public AnonymousModelRoleSetContext get(ModelKey key) throws IllegalArgumentException;
+	public AnonymousModelRoleSetContext getAnonymous(ModelKey key) throws IllegalArgumentException;
 
 	/**
 	 * Attempts to load contexts for each of the input values.
@@ -33,6 +33,6 @@ public interface AnonymousModelRoleSetContextGetter
 	 *            {@link Iterable}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}.
 	 */
-	public List<? extends AnonymousModelRoleSetContext> getWithKeys(Iterable<ModelKey> keys);
+	public List<? extends AnonymousModelRoleSetContext> getAnonymousWithKeys(Iterable<ModelKey> keys);
 
 }

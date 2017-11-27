@@ -20,6 +20,7 @@ import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenTypedMo
 import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenModelContextServiceEntry;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.encoded.ModelRoleSetEncoderDecoder;
+import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetLoader;
@@ -194,6 +195,16 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 	@Override
 	public List<ModelRoleSetContext<T>> getWithKeys(Iterable<ModelKey> keys) {
 		return this.roleSetService.getWithKeys(keys);
+	}
+
+	@Override
+	public AnonymousModelRoleSetContext getAnonymous(ModelKey key) throws IllegalArgumentException {
+		return this.roleSetService.getAnonymous(key);
+	}
+
+	@Override
+	public List<? extends AnonymousModelRoleSetContext> getAnonymousWithKeys(Iterable<ModelKey> keys) {
+		return this.roleSetService.getAnonymousWithKeys(keys);
 	}
 
 	@Override

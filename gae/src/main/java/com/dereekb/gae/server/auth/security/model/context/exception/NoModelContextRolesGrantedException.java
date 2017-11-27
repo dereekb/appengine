@@ -5,7 +5,7 @@ import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 /**
  * Thrown in cases where a {@link ModelRoleSet} with no roles
  * is not allowed.
- * 
+ *
  * @author dereekb
  *
  */

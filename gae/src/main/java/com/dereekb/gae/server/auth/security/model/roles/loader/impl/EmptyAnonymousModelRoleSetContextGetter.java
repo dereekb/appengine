@@ -24,14 +24,19 @@ public class EmptyAnonymousModelRoleSetContextGetter extends TypedModelImpl
 		super(modelType);
 	}
 
+	public static AnonymousModelRoleSetContext makeEmptyContext(String type,
+	                                                            ModelKey modelKey) {
+		return new EmptyAnonymousModelRoleSetContextGetter(type).getAnonymous(modelKey);
+	}
+
 	// MARK: AnonymousModelRoleSetContextGetter
 	@Override
-	public AnonymousModelRoleSetContext get(ModelKey key) throws IllegalArgumentException {
+	public AnonymousModelRoleSetContext getAnonymous(ModelKey key) throws IllegalArgumentException {
 		return new EmptyAnonymousModelRoleSetContext(key);
 	}
 
 	@Override
-	public List<? extends AnonymousModelRoleSetContext> getWithKeys(Iterable<ModelKey> keys) {
+	public List<? extends AnonymousModelRoleSetContext> getAnonymousWithKeys(Iterable<ModelKey> keys) {
 		return Collections.emptyList();
 	}
 

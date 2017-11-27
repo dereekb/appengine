@@ -32,98 +32,133 @@ public class SecurityContextAnonymousModelRoleSetContextService
 	// MARK: AnonymousModelRoleSetContextService
 	@Override
 	public AnonymousModelRoleSetContextGetter getterForType(String type) {
-		LoginTokenModelContextSet set = this.getContextSet();
-
-		if (set.hasContextForType(type)) {
-			return new AnonymousModelRoleSetContextGetterImpl(type, set.getContextsForType(type));
-		} else {
-			return new EmptyAnonymousModelRoleSetContextGetter(type);
-		}
+		return new LazyAnonymousModelRoleSetContextGetter(type);
 	}
 
-	protected LoginTokenModelContextSet getContextSet() {
-		try {
-			return LoginSecurityContext.getAuthentication().getPrincipal().getLoginTokenModelContextSet();
-		} catch (NoSecurityContextException e) {
-			return new EmptyLoginTokenModelContextSet();
-		}
-	}
-
-	private class AnonymousModelRoleSetContextGetterImpl extends TypedModelImpl
+	/**
+	 * {@link AnonymousModelRoleSetContextGetter} for a specific type that
+	 * attempts to load using the current context, and otherwise returns an
+	 * empty context.
+	 *
+	 * @author dereekb
+	 *
+	 */
+	private class LazyAnonymousModelRoleSetContextGetter extends TypedModelImpl
 	        implements AnonymousModelRoleSetContextGetter {
 
-		private final LoginTokenTypedModelContextSet set;
-
-		private transient Map<ModelKey, LoginTokenModelContext> map;
-
-		public AnonymousModelRoleSetContextGetterImpl(String modelType, LoginTokenTypedModelContextSet set) {
+		public LazyAnonymousModelRoleSetContextGetter(String modelType) {
 			super(modelType);
-			this.set = set;
 		}
 
 		// MARK: AnonymousModelRoleSetContextGetter
 		@Override
-		public List<? extends AnonymousModelRoleSetContext> getWithKeys(Iterable<ModelKey> keys) {
-			List<AnonymousModelRoleSetContext> list = new ArrayList<AnonymousModelRoleSetContext>();
-
-			for (ModelKey key : keys) {
-				AnonymousModelRoleSetContext context = this.get(key);
-				list.add(context);
-			}
-
-			return list;
+		public AnonymousModelRoleSetContext getAnonymous(ModelKey key) throws IllegalArgumentException {
+			return this.getGetter().getAnonymous(key);
 		}
 
 		@Override
-		public AnonymousModelRoleSetContext get(ModelKey key) throws IllegalArgumentException {
-			return new AnonymousModelRoleSetContextImpl(key);
+		public List<? extends AnonymousModelRoleSetContext> getAnonymousWithKeys(Iterable<ModelKey> keys) {
+			return this.getGetter().getAnonymousWithKeys(keys);
 		}
 
-		// MARK: Internal
-		protected Map<ModelKey, LoginTokenModelContext> getMap() {
-			if (this.map == null) {
-				this.map = ModelKey.makeModelKeyMap(this.set.getContexts());
+		protected AnonymousModelRoleSetContextGetter getGetter() {
+			String type = this.getModelType();
+			LoginTokenModelContextSet set = this.getContextSet();
+
+			if (set.hasContextForType(type)) {
+				LoginTokenTypedModelContextSet typedSet = set.getContextsForType(type);
+				return new AnonymousModelRoleSetContextGetterImpl(typedSet);
+			} else {
+				return new EmptyAnonymousModelRoleSetContextGetter(this.getModelType());
 			}
 
-			return this.map;
 		}
 
-		private class AnonymousModelRoleSetContextImpl extends UniqueModelImpl
-		        implements AnonymousModelRoleSetContext {
+		protected LoginTokenModelContextSet getContextSet() {
+			try {
+				return LoginSecurityContext.getAuthentication().getPrincipal().getLoginTokenModelContextSet();
+			} catch (NoSecurityContextException e) {
+				return new EmptyLoginTokenModelContextSet();
+			}
+		}
 
-			private transient ModelRoleSet roleSet;
+		// MARK: Getter
+		private class AnonymousModelRoleSetContextGetterImpl
+		        implements AnonymousModelRoleSetContextGetter {
 
-			public AnonymousModelRoleSetContextImpl(ModelKey key) {
-				super(key);
+			private final LoginTokenTypedModelContextSet set;
+
+			private transient Map<ModelKey, LoginTokenModelContext> map;
+
+			public AnonymousModelRoleSetContextGetterImpl(LoginTokenTypedModelContextSet set) {
+				this.set = set;
 			}
 
-			// MARK: AnonymousModelRoleSetContext
+			// MARK: AnonymousModelRoleSetContextGetter
 			@Override
 			public String getModelType() {
-				return AnonymousModelRoleSetContextGetterImpl.this.getModelType();
+				return LazyAnonymousModelRoleSetContextGetter.this.getModelType();
 			}
 
 			@Override
-			public ModelRoleSet getRoleSet() {
-				if (this.roleSet == null) {
-					LoginTokenModelContext context = AnonymousModelRoleSetContextGetterImpl.this.getMap()
-					        .get(this.modelKey);
+			public List<? extends AnonymousModelRoleSetContext> getAnonymousWithKeys(Iterable<ModelKey> keys) {
+				List<AnonymousModelRoleSetContext> list = new ArrayList<AnonymousModelRoleSetContext>();
 
-					if (context != null) {
-						this.roleSet = context.getRoleSet();
-					} else {
-						this.roleSet = EmptyModelRoleSetImpl.make();
-					}
+				for (ModelKey key : keys) {
+					AnonymousModelRoleSetContext context = this.getAnonymous(key);
+					list.add(context);
 				}
 
-				return this.roleSet;
+				return list;
 			}
 
-		}
+			@Override
+			public AnonymousModelRoleSetContext getAnonymous(ModelKey key) throws IllegalArgumentException {
+				return new AnonymousModelRoleSetContextImpl(key);
+			}
 
-		@Override
-		public String toString() {
-			return "AnonymousModelRoleSetContextGetterImpl [modelType=" + this.modelType + "]";
+			// MARK: Internal
+			protected Map<ModelKey, LoginTokenModelContext> getMap() {
+				if (this.map == null) {
+					this.map = ModelKey.makeModelKeyMap(this.set.getContexts());
+				}
+
+				return this.map;
+			}
+
+			private class AnonymousModelRoleSetContextImpl extends UniqueModelImpl
+			        implements AnonymousModelRoleSetContext {
+
+				private transient ModelRoleSet roleSet;
+
+				public AnonymousModelRoleSetContextImpl(ModelKey key) {
+					super(key);
+				}
+
+				// MARK: AnonymousModelRoleSetContext
+				@Override
+				public String getModelType() {
+					return AnonymousModelRoleSetContextGetterImpl.this.getModelType();
+				}
+
+				@Override
+				public ModelRoleSet getRoleSet() {
+					if (this.roleSet == null) {
+						LoginTokenModelContext context = AnonymousModelRoleSetContextGetterImpl.this.getMap()
+						        .get(this.modelKey);
+
+						if (context != null) {
+							this.roleSet = context.getRoleSet();
+						} else {
+							this.roleSet = EmptyModelRoleSetImpl.make();
+						}
+					}
+
+					return this.roleSet;
+				}
+
+			}
+
 		}
 
 	}

@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.model.roles.loader.impl;
 
 import java.util.List;
 
+import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContextGetter;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContextService;
@@ -56,6 +57,23 @@ public class ModelRoleSetContextGetterImpl<T extends UniqueModel> extends ModelR
 	public List<ModelRoleSetContext<T>> getWithKeys(Iterable<ModelKey> keys) {
 		List<T> models = this.getter.getWithKeys(keys);
 		return this.loadContexts(models);
+	}
+
+	// MARK: AnonymousModelRoleSetContextGetter
+	@Override
+	public AnonymousModelRoleSetContext getAnonymous(ModelKey key) throws IllegalArgumentException {
+		AnonymousModelRoleSetContext context = this.get(key);
+
+		if (context != null) {
+			return context;
+		} else {
+			return EmptyAnonymousModelRoleSetContextGetter.makeEmptyContext(this.modelType, key);
+		}
+	}
+
+	@Override
+	public List<? extends AnonymousModelRoleSetContext> getAnonymousWithKeys(Iterable<ModelKey> keys) {
+		return this.getWithKeys(keys);
 	}
 
 	@Override

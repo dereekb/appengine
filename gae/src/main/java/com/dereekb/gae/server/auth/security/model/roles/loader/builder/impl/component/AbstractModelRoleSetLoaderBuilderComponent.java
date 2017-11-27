@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl;
+package com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.component;
 
 import java.util.ArrayList;
 import java.util.HashMap;

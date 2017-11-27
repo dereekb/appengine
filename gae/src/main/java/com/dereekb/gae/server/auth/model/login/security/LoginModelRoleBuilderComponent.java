@@ -3,7 +3,7 @@ package com.dereekb.gae.server.auth.model.login.security;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
-import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.AbstractParentChildCrudModelRoleSetLoaderBuilderComponent;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.component.AbstractParentChildCrudModelRoleSetLoaderBuilderComponent;
 import com.dereekb.gae.server.auth.security.model.roles.ownership.SecurityContextModelOwnershipChecker;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;

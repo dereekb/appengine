@@ -25,7 +25,7 @@ import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Represents a key for a model.
@@ -36,7 +36,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreType;
  *
  * @author dereekb
  */
-@JsonIgnoreType
 public final class ModelKey
         implements UniqueModel {
 
@@ -148,6 +147,7 @@ public final class ModelKey
 	/**
 	 * @see #keyAsString()
 	 */
+	@JsonValue
 	@Override
 	public String toString() {
 		return this.keyAsString();
