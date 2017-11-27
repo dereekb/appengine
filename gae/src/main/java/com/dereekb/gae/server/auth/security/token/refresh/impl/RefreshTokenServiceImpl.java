@@ -22,7 +22,7 @@ import com.dereekb.gae.utilities.time.exception.RateLimitException;
 
 /**
  * {@link RefreshTokenService} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -220,12 +220,12 @@ public class RefreshTokenServiceImpl
 	}
 
 	private Login loadLogin(LoginPointer loginPointer) throws AuthenticationPurgeException {
-		ModelKey loginKey = loginPointer.getLoginModelKey();
-		
+		ModelKey loginKey = loginPointer.getLoginOwnerKey();
+
 		if (loginKey == null) {
 			throw new AuthenticationPurgeException("Login was purged or never existed.");
 		}
-		
+
 		Login login = this.loginGetterSetter.get(loginKey);
 
 		if (login == null) {

@@ -42,27 +42,27 @@ public abstract class AbstractParentChildCrudModelRoleSetLoaderBuilderComponent<
 
 	// MARK: Functions
 	protected ModelRoleGranter<T> makeChildCreateGranter() {
-		return new IsOwnerModelRoleGranter(ChildCrudModelRole.CHILD_CREATE);
+		return this.ownershipRolesGranter.makeGranterForRole(ChildCrudModelRole.CHILD_CREATE);
 	}
 
 	protected ModelRoleGranter<T> makeChildReadGranter() {
-		return new IsOwnerModelRoleGranter(ChildCrudModelRole.CHILD_READ);
+		return this.ownershipRolesGranter.makeGranterForRole(ChildCrudModelRole.CHILD_READ);
 	}
 
 	protected ModelRoleGranter<T> makeChildUpdateGranter() {
-		return new IsOwnerModelRoleGranter(ChildCrudModelRole.CHILD_UPDATE);
+		return this.ownershipRolesGranter.makeGranterForRole(ChildCrudModelRole.CHILD_UPDATE);
 	}
 
 	protected ModelRoleGranter<T> makeChildDeleteGranter() {
-		return new IsOwnerModelRoleGranter(ChildCrudModelRole.CHILD_DELETE);
+		return this.ownershipRolesGranter.makeGranterForRole(ChildCrudModelRole.CHILD_DELETE);
 	}
 
 	protected ModelRoleGranter<T> makeChildSearchGranter() {
-		return new IsOwnerModelRoleGranter(ChildCrudModelRole.CHILD_SEARCH);
+		return this.ownershipRolesGranter.makeGranterForRole(ChildCrudModelRole.CHILD_SEARCH);
 	}
 
 	protected ModelRoleGranter<T> makeChildLinkGranter() {
-		return new IsOwnerModelRoleGranter(ChildCrudModelRole.CHILD_LINK);
+		return this.ownershipRolesGranter.makeGranterForRole(ChildCrudModelRole.CHILD_LINK);
 	}
 
 }

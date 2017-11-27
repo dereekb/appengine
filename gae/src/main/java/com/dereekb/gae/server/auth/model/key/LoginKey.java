@@ -2,10 +2,13 @@ package com.dereekb.gae.server.auth.model.key;
 
 import java.util.Date;
 
+import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwned;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -26,7 +29,7 @@ import com.googlecode.objectify.condition.IfNull;
 @Cache
 @Entity
 public class LoginKey extends OwnedDatabaseModel
-        implements ObjectifyModel<LoginKey> {
+        implements ObjectifyModel<LoginKey>, LoginOwned {
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,6 +37,12 @@ public class LoginKey extends OwnedDatabaseModel
 
 	@Id
 	private Long identifier;
+
+	/**
+	 * Login for this key.
+	 */
+	@Index
+	private Key<Login> login;
 
 	/**
 	 * API {@link LoginPointer} associated with this key.
@@ -81,6 +90,14 @@ public class LoginKey extends OwnedDatabaseModel
 
 	public void setIdentifier(Long identifier) {
 		this.identifier = identifier;
+	}
+
+	public Key<Login> getLogin() {
+		return this.login;
+	}
+
+	public void setLogin(Key<Login> login) {
+		this.login = login;
 	}
 
 	public Key<LoginPointer> getLoginPointer() {
@@ -168,6 +185,12 @@ public class LoginKey extends OwnedDatabaseModel
 	@Override
 	public Key<LoginKey> getObjectifyKey() {
 		return Key.create(LoginKey.class, this.identifier);
+	}
+
+	// Login Owned
+	@Override
+	public ModelKey getLoginOwnerKey() {
+		return ObjectifyModelKeyUtil.readModelKey(this.login);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwned;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -85,15 +86,9 @@ public class LoginPointer extends OwnedDatabaseModel
 		return this.login;
 	}
 
+	@Deprecated
 	public ModelKey getLoginModelKey() {
-		ModelKey key = null;
-
-		if (this.login != null) {
-			Long id = this.login.getId();
-			key = ModelKey.safe(id);
-		}
-
-		return key;
+		return this.getLoginOwnerKey();
 	}
 
 	public void setLogin(Key<Login> loginKey) {
@@ -174,7 +169,7 @@ public class LoginPointer extends OwnedDatabaseModel
 	// Login Owned
 	@Override
 	public ModelKey getLoginOwnerKey() {
-		return this.getLoginModelKey();
+		return ObjectifyModelKeyUtil.readModelKey(this.login);
 	}
 
 	@Override
