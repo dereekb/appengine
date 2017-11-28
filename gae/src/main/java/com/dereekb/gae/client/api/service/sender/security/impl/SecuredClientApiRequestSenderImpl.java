@@ -20,7 +20,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * {@link SecuredClientApiRequestSender} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -105,7 +105,7 @@ public class SecuredClientApiRequestSenderImpl
 
 		ClientRequest securedRequest = this.buildSecuredRequest(request, security);
 		ClientApiResponse response = this.sender.sendRequest(securedRequest);
-		
+
 		this.assertSuccessfulResponse(response);
 
 		return response;
@@ -159,6 +159,15 @@ public class SecuredClientApiRequestSenderImpl
 				break;
 			case SYSTEM:
 				tokenString = this.systemTokenFactory.makeTokenString();
+				break;
+			case OVERRIDE:
+				EncodedLoginToken overrideToken = security.getOverrideToken();
+
+				if (overrideToken == null) {
+					throw new NullPointerException("Expected an override token.");
+				}
+
+				tokenString = overrideToken.getEncodedLoginToken();
 				break;
 			case NONE:
 				// No token.

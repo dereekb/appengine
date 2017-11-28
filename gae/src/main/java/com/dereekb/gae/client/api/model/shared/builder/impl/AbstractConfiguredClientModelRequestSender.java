@@ -12,6 +12,7 @@ import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
@@ -35,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *            serialized response type
  */
 public abstract class AbstractConfiguredClientModelRequestSender<T extends UniqueModel, O, R, S> extends AbstractSecuredClientModelRequestSender<R, S>
-        implements JsonModelResultsSerializer<T, O> {
+        implements JsonModelResultsSerializer<T, O>, TypedModel {
 
 	private String type;
 	private String pathFormat;
@@ -75,6 +76,11 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	}
 
 	public String getType() {
+		return this.type;
+	}
+
+	@Override
+	public String getModelType() {
 		return this.type;
 	}
 

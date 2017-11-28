@@ -13,19 +13,20 @@ import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseE
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * {@link ClientReadService} and {@link SecuredClientModelRequestSender}
  * extension interface.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
 public interface ClientReadRequestSender<T extends UniqueModel>
-        extends ClientReadService<T>, SecuredClientModelRequestSender<ReadRequest, SimpleReadResponse<T>> {
+        extends ClientReadService<T>, SecuredClientModelRequestSender<ReadRequest, SimpleReadResponse<T>>, TypedModel {
 
 	/**
 	 * {@inheritDoc}
@@ -44,7 +45,7 @@ public interface ClientReadRequestSender<T extends UniqueModel>
 	 * {@link ClientReadRequest} requests related types be returned, the data
 	 * will be accessible via
 	 * {@link SerializedClientApiResponse#getIncludedData()}.
-	 * 
+	 *
 	 * @param request
 	 *            {@link ClientReadRequest}. Never {@code null}.
 	 * @param security

@@ -11,7 +11,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 /**
  * Abstract extension of {@link AbstractLoginTokenBuilder} that will load the
  * {@link Login} and initialize the {@link LoginToken} with it.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -64,7 +64,7 @@ public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl
 		loginToken.setLoginPointer(pointerId);
 		loginToken.setPointerType(pointer.getLoginPointerType());
 
-		ModelKey loginKey = pointer.getLoginModelKey();
+		ModelKey loginKey = pointer.getLoginOwnerKey();
 		this.initLoginTokenWithLogin(loginToken, loginKey);
 	}
 

@@ -21,6 +21,10 @@ public class ClientModelRolesLoginTokenContextRequestImpl extends ClientModelRol
 
 	public ClientModelRolesLoginTokenContextRequestImpl() {};
 
+	public ClientModelRolesLoginTokenContextRequestImpl(ApiLoginTokenModelContextType requestedContext) {
+		super(requestedContext);
+	}
+
 	public ClientModelRolesLoginTokenContextRequestImpl(List<ApiLoginTokenModelContextType> requestedContexts) {
 		super(requestedContexts);
 	}

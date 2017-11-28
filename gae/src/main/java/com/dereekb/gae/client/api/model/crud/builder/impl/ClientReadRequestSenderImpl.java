@@ -37,7 +37,7 @@ import com.dereekb.gae.web.api.model.crud.controller.ReadController;
 
 /**
  * {@link ClientReadRequestSender} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>

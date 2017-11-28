@@ -113,7 +113,7 @@ public class GoogleAccountAuthenticationProvider
 			throw new NewLoginAuthenticationException(tuple);
 		} else {
 			// Build authentication for the provided login.
-			ModelKey loginKey = pointer.getLoginModelKey();
+			ModelKey loginKey = pointer.getLoginOwnerKey();
 			Login login = this.loginGetter.get(loginKey);
 
 			if (login != null) {

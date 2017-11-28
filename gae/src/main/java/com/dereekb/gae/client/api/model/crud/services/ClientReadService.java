@@ -11,12 +11,12 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * Pre-configured system service for reading objects from a remote resource.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
- * 
+ *
  * @see ReadService
  */
 public interface ClientReadService<T extends UniqueModel> {
@@ -27,7 +27,7 @@ public interface ClientReadService<T extends UniqueModel> {
 	 * @param request
 	 *            {@link ReadRequest}. Never {@code null}.
 	 * @return {@link SimpleReadResponse}. Never {@code null}.
-	 * 
+	 *
 	 * @throws ClientAtomicOperationException
 	 *             thrown if one or more objects fail to be read.
 	 * @throws ClientRequestFailureException
@@ -47,7 +47,7 @@ public interface ClientReadService<T extends UniqueModel> {
 	 * @param security
 	 *            {@link ClientRequestSecurity}, or {@code null}.
 	 * @return {@link SimpleReadResponse}. Never {@code null}.
-	 * 
+	 *
 	 * @throws ClientAtomicOperationException
 	 *             thrown if one or more objects fail to be read.
 	 * @throws ClientRequestFailureException

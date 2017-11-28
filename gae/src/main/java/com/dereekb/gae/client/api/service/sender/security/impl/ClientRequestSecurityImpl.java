@@ -6,7 +6,7 @@ import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 
 /**
  * {@link ClientRequestSecurity} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -23,9 +23,10 @@ public class ClientRequestSecurityImpl
 	public ClientRequestSecurityImpl(EncodedLoginToken overrideToken) {
 		this();
 		this.setOverrideToken(overrideToken);
+		this.setSecurityContextType(ClientRequestSecurityContextType.OVERRIDE);
 	}
 
-	public ClientRequestSecurityImpl(ClientRequestSecurityContextType securityContextType) {
+	private ClientRequestSecurityImpl(ClientRequestSecurityContextType securityContextType) {
 		this.setSecurityContextType(securityContextType);
 	}
 

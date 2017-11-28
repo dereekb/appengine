@@ -10,7 +10,7 @@ import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 
 /**
  * Abstract interface for client models.
- * 
+ *
  * @author dereekb
  *
  * @param <R>
@@ -22,7 +22,7 @@ public interface SecuredClientModelRequestSender<R, S> {
 
 	/**
 	 * Sends a request and returns a serialized response.
-	 * 
+	 *
 	 * @param request
 	 *            Request. Never {@code null}.
 	 * @param security

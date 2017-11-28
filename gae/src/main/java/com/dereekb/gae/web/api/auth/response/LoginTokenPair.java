@@ -1,6 +1,7 @@
 package com.dereekb.gae.web.api.auth.response;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -17,7 +18,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginTokenPair {
+public final class LoginTokenPair
+        implements EncodedLoginToken {
 
 	public static final String DATA_TYPE = "LOGIN_TOKEN_PAIR";
 
@@ -60,6 +62,12 @@ public class LoginTokenPair {
 	}
 
 	public String getToken() {
+		return this.token;
+	}
+
+	@Override
+	@JsonIgnore
+	public String getEncodedLoginToken() {
 		return this.token;
 	}
 
