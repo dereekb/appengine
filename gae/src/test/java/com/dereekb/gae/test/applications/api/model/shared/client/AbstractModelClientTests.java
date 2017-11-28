@@ -5,12 +5,16 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
+import com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl;
+import com.dereekb.gae.client.api.model.crud.builder.impl.ClientUpdateRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.request.impl.ClientReadRequestImpl;
 import com.dereekb.gae.client.api.model.crud.response.ClientDeleteResponse;
@@ -38,6 +42,7 @@ import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.model.login.dto.LoginData;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
@@ -52,33 +57,55 @@ import com.googlecode.objectify.Key;
 
 public abstract class AbstractModelClientTests extends ApiApplicationTestContext {
 
-	protected class BasicTestUserSetup
-	        implements TestingInstanceObject {
+	// Login
+	@Autowired
+	@Qualifier("loginClientReadRequestSender")
+	protected ClientReadRequestSenderImpl<Login, LoginData> loginReadRequestSender;
+
+	@Autowired
+	@Qualifier("loginClientUpdateRequestSender")
+	protected ClientUpdateRequestSenderImpl<Login, LoginData> loginUpdateRequestSender;
+
+	protected interface BasicTestUserSetup
+	        extends TestingInstanceObject {
+
+		public Login getLogin();
+
+	}
+
+	protected class BasicTestUserSetupImpl
+	        implements TestingInstanceObject, BasicTestUserSetup {
 
 		public final Login login;
 		public final TestLoginTokenPair pair;
 		public final ClientRequestSecurity security;
 
-		public BasicTestUserSetup() {
+		public BasicTestUserSetupImpl() {
 			this("USER");
 		}
 
-		public BasicTestUserSetup(String user) {
+		public BasicTestUserSetupImpl(String user) {
 			this(user, false);
 		}
 
-		public BasicTestUserSetup(String user, boolean admin) {
+		public BasicTestUserSetupImpl(String user, boolean admin) {
 			this((admin) ? AbstractModelClientTests.this.testLoginTokenContext.generateSystemAdmin(user)
 			        : AbstractModelClientTests.this.testLoginTokenContext.generateLogin(user));
 		}
 
-		public BasicTestUserSetup(TestLoginTokenPair pair) {
+		public BasicTestUserSetupImpl(TestLoginTokenPair pair) {
 			this.pair = pair;
 			this.login = this.pair.getLogin();
 
 			waitUntilTaskQueueCompletes();
 
 			this.security = new ClientRequestSecurityImpl(this.pair);
+		}
+
+		// MARK: BasicTestUserSetup
+		@Override
+		public Login getLogin() {
+			return this.login;
 		}
 
 		@Override
@@ -94,22 +121,48 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 	}
 
-	protected abstract class AbstractTestingInstance<U extends TestingInstanceObject> {
+	protected abstract class AbstractTestingInstance<U extends TestingInstanceObject>
+	        implements TestingInstanceObject {
 
 		public final U testUser;
+		public final ClientRequestSecurity security;
 
 		public AbstractTestingInstance(U testUser) {
+			this(testUser, null);
+		}
+
+		protected AbstractTestingInstance(U testUser, ClientRequestSecurity security) {
 			if (testUser == null) {
 				throw new IllegalArgumentException();
 			}
 
+			if (security == null) {
+				security = testUser.getSecurity();
+			}
+
 			this.testUser = testUser;
+			this.security = security;
 		}
 
-		protected ClientRequestSecurity getSecurity() {
-			return this.testUser.getSecurity();
+		// MARK: Security
+		@Override
+		public ClientRequestSecurity getSecurity() {
+			return this.security;
 		}
 
+		protected abstract AbstractTestingInstance<U> withContext(ClientRequestSecurity security);
+
+		// MARK: Login
+		public class LoginTestingInstance extends AbstractModelTestingInstance<Login> {
+
+			public LoginTestingInstance() {
+				super(AbstractModelClientTests.this.loginReadRequestSender, null, null,
+				        AbstractModelClientTests.this.loginUpdateRequestSender, null);
+			}
+
+		}
+
+		// MARK: Instances
 		public abstract class AbstractModelTestingInstance<T extends UniqueModel> extends AbstractQueryableModelTestingInstance<T> {
 
 			protected final ClientCreateRequestSender<T> createRequestSender;

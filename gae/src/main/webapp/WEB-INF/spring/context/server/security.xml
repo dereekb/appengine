@@ -219,10 +219,11 @@
 
 	<bean id="loginTokenUserDetailsBuilder"
 		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl">
-		<constructor-arg index="0"
+		<constructor-arg index="0" ref="loginTokenModelContextSetDencoder" />
+		<constructor-arg index="1"
 			ref="loginTokenGrantedAuthorityBuilder" />
-		<constructor-arg index="1" ref="loginRegistry" />
-		<constructor-arg index="2" ref="loginPointerRegistry" />
+		<constructor-arg index="2" ref="loginRegistry" />
+		<constructor-arg index="3" ref="loginPointerRegistry" />
 	</bean>
 
 	<bean id="loginTokenGrantedAuthorityBuilder"

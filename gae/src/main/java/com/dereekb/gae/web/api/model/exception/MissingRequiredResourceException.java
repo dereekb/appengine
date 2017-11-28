@@ -76,7 +76,7 @@ public class MissingRequiredResourceException extends ApiSafeRuntimeException {
 	// MARK: ApiResponseErrorConvertable
 	@Override
 	public ApiResponseErrorImpl asResponseError() {
-		return makeApiError(this.resources, this.message);
+		return makeApiError(this.type, this.resources, this.message);
 	}
 
 	/**

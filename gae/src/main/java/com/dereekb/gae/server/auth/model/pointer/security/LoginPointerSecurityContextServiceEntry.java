@@ -19,7 +19,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 public class LoginPointerSecurityContextServiceEntry extends LoginTokenModelContextServiceEntryImpl<LoginPointer> {
 
 	public LoginPointerSecurityContextServiceEntry(Getter<LoginPointer> getter, ModelRoleSetLoader<LoginPointer> rolesLoader) {
-		super(LoginPointerLinkSystemBuilderEntry.LINK_MODEL_TYPE, ModelKeyType.NUMBER,
+		super(LoginPointerLinkSystemBuilderEntry.LINK_MODEL_TYPE, ModelKeyType.NAME,
 		        ModelRoleSetUtility.makeCrudDencoder(), getter, rolesLoader);
 	}
 

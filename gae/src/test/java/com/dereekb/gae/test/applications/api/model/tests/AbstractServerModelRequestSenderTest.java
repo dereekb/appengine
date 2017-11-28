@@ -284,6 +284,34 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 		}
 	}
 
+	@Test
+	public void testSystemClientReadModelRolesForSingleModelAtomicFailsOnMissing() throws Exception {
+		if (this.modelRolesRequestUtility != null) {
+			this.modelRolesRequestUtility.testSystemClientReadModelRolesForSingleModelAtomicFailsOnMissing(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testSystemClientReadModelRolesForMultipleModelsAtomic() throws Exception {
+		if (this.modelRolesRequestUtility != null) {
+			this.modelRolesRequestUtility.testSystemClientReadModelRolesForMultipleModelsAtomic(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testSystemClientReadModelRolesForMultipleModelsAtomicFailsOnMissing() throws Exception {
+		if (this.modelRolesRequestUtility != null) {
+			this.modelRolesRequestUtility.testSystemClientReadModelRolesForMultipleModelsAtomicFailsOnMissing(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testSystemClientReadModelRolesForMultipleModelsNonAtomicWithMissing() throws Exception {
+		if (this.modelRolesRequestUtility != null) {
+			this.modelRolesRequestUtility.testSystemClientReadModelRolesForMultipleModelsNonAtomicWithMissing(this.getRequestSecurity());
+		}
+	}
+
 	// MARK: Utility
 	@Override
 	public ClientRequestSecurity getRequestSecurity() {

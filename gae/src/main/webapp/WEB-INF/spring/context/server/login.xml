@@ -128,8 +128,14 @@
 			ref="loginTokenModelContextServiceDencoderEntries" />
 	</bean>
 
+	<bean id="securityContextAnonymousModelRoleSetContextService"
+		class="com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService">
+	</bean>
+
 	<util:list id="loginTokenModelContextServiceEntries">
 		<ref bean="loginSecurityContextServiceEntry" />
+		<ref bean="loginKeySecurityContextServiceEntry" />
+		<ref bean="loginPointerSecurityContextServiceEntry" />
 	</util:list>
 
 	<alias name="loginTokenModelContextServiceEntries" alias="loginTokenModelContextServiceDencoderEntries" />
