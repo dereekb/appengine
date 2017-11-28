@@ -9,7 +9,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public interface LoginOwned {
+public interface LoginOwnedModel {
 
 	/**
 	 * Gets the key for the associated {@link Login}.

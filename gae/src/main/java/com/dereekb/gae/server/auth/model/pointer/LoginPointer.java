@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.model.pointer;
 
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwned;
+import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
@@ -26,7 +26,7 @@ import com.googlecode.objectify.condition.IfEmpty;
 @Cache
 @Entity
 public class LoginPointer extends OwnedDatabaseModel
-        implements ObjectifyModel<LoginPointer>, LoginOwned {
+        implements ObjectifyModel<LoginPointer>, LoginOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 
