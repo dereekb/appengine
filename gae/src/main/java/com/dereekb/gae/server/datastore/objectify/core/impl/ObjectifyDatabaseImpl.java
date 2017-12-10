@@ -212,14 +212,12 @@ public class ObjectifyDatabaseImpl
 				case DEFAULT:
 				case MUST_BE_NULL:
 				case MUST_BE_PROVIDED:
-					keyEnforcer = ObjectifyDatabaseEntityKeyEnforcerUtility.enforcerForType(keyEnforcement);
-					break;
 				case MUST_BE_PROVIDED_AND_UNIQUE:
-					// TODO
+					keyEnforcer = ObjectifyDatabaseEntityKeyEnforcerUtility.enforcerForType(keyEnforcement, this);
+					break;
 				default:
 					throw new UnsupportedOperationException();
 			}
-
 
 			return keyEnforcer;
 		}

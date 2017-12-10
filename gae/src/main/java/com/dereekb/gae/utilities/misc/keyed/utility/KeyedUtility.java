@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.data.ValueUtility;
 import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
 import com.dereekb.gae.utilities.misc.keyed.Keyed;
@@ -14,7 +15,7 @@ import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
 /**
  * Utility used with {@link Keyed} models.
- * 
+ *
  * @author dereekb
  *
  */
@@ -24,7 +25,7 @@ public class KeyedUtility {
 	 * Safely merges of keyed models into one. Differs from
 	 * {@link #merge(Collection, Collection)} by allowing collections to be
 	 * null.
-	 * 
+	 *
 	 * @param override
 	 *            primary collection, which overrides those in the secondary
 	 *            collection. May be {@code null}.
@@ -48,7 +49,7 @@ public class KeyedUtility {
 
 	/**
 	 * Merges two collections of keyed models into one.
-	 * 
+	 *
 	 * @param override
 	 *            primary collection, which overrides those in the secondary
 	 *            collection. Never {@code null}.
@@ -68,7 +69,7 @@ public class KeyedUtility {
 
 	/**
 	 * Creates a map using keys from {@link Keyed} values.
-	 * 
+	 *
 	 * @param models
 	 *            Keyed values. Never {@code null}.
 	 * @return {@link Map}. Never {@code null}.
@@ -90,9 +91,32 @@ public class KeyedUtility {
 	}
 
 	/**
+	 * Creates a map using keys from {@link Keyed} values.
+	 *
+	 * @param models
+	 *            Keyed values. Never {@code null}.
+	 * @return {@link Map}. Never {@code null}.
+	 */
+	public static <K, T extends Keyed<K>> HashMapWithList<K, T> toHashMapWithList(Iterable<? extends T> models) {
+		HashMapWithList<K, T> map = new HashMapWithList<>();
+
+		for (T keyedValue : models) {
+			K key = keyedValue.keyValue();
+
+			if (key == null) {
+				throw new NullKeyException();
+			} else {
+				map.add(key, keyedValue);
+			}
+		}
+
+		return map;
+	}
+
+	/**
 	 * Removes all parameters with the same key as the replacement, then adds a
 	 * single instance of the replacement.
-	 * 
+	 *
 	 * @param inputParameters
 	 *            {@link Collection} of parameters. Can be {@code null}.
 	 * @param replacement
@@ -123,7 +147,7 @@ public class KeyedUtility {
 	/**
 	 * Reads the code from a {@link IndexCoded} value, and defaults to another
 	 * value if {@code null}.
-	 * 
+	 *
 	 * @param coded
 	 *            {@link IndexCoded}. May be {@code null}.
 	 * @param defaultCode
@@ -138,7 +162,7 @@ public class KeyedUtility {
 
 	/**
 	 * Reads the code from a {@link IndexCoded} value.
-	 * 
+	 *
 	 * @param coded
 	 *            {@link IndexCoded}. May be {@code null}.
 	 * @return {@link Integer}. May be {@code null}.
@@ -155,7 +179,7 @@ public class KeyedUtility {
 
 	/**
 	 * Makes a map using the input {@link IndexCoded} values.
-	 * 
+	 *
 	 * @param values
 	 *            {@link Iterable}. Never {@code null}.
 	 * @return {@link Map}. Never {@code null}.

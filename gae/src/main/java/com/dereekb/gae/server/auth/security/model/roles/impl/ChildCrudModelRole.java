@@ -16,7 +16,7 @@ import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 public enum ChildCrudModelRole implements IndexCodedModelRole {
 
 	/**
-	 * Delete any child models.
+	 * Create any child models.
 	 */
 	CHILD_CREATE(10, "c_crud_create"),
 

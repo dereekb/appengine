@@ -1,12 +1,15 @@
 package com.dereekb.gae.server.datastore.objectify.core.impl;
 
+import com.dereekb.gae.server.datastore.Getter;
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcer;
 
 /**
- * Utility that contains references to default {@link ObjectifyDatabaseEntityKeyEnforcer} implementations.
+ * Utility that contains references to default
+ * {@link ObjectifyDatabaseEntityKeyEnforcer} implementations.
  *
  * @author dereekb
  *
@@ -17,7 +20,8 @@ public class ObjectifyDatabaseEntityKeyEnforcerUtility {
 	public static final ObjectifyDatabaseEntityKeyEnforcer NULL_SINGLETON = new NullObjectifyDatabaseEntityKeyEnforcerImpl();
 	public static final ObjectifyDatabaseEntityKeyEnforcer PROVIDED_SINGLETON = new ProvidedObjectifyDatabaseEntityKeyEnforcerImpl();
 
-	public static ObjectifyDatabaseEntityKeyEnforcer enforcerForType(ObjectifyDatabaseEntityKeyEnforcement enforcement) {
+	public static <T extends UniqueModel> ObjectifyDatabaseEntityKeyEnforcer enforcerForType(ObjectifyDatabaseEntityKeyEnforcement enforcement,
+	                                                                                         Getter<T> getter) {
 		ObjectifyDatabaseEntityKeyEnforcer enforcer = null;
 
 		switch (enforcement) {
@@ -31,6 +35,7 @@ public class ObjectifyDatabaseEntityKeyEnforcerUtility {
 				enforcer = PROVIDED_SINGLETON;
 				break;
 			case MUST_BE_PROVIDED_AND_UNIQUE:
+				enforcer = new ProvidedAndUniqueObjectifyDatabaseEntityKeyEnforcerImpl<T>(getter);
 			default:
 				throw new UnsupportedOperationException();
 		}
@@ -40,7 +45,7 @@ public class ObjectifyDatabaseEntityKeyEnforcerUtility {
 
 	/**
 	 * Default {@link ObjectifyDatabaseEntityKeyEnforcer} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
@@ -81,7 +86,7 @@ public class ObjectifyDatabaseEntityKeyEnforcerUtility {
 
 	}
 
-	private static final class ProvidedObjectifyDatabaseEntityKeyEnforcerImpl
+	private static class ProvidedObjectifyDatabaseEntityKeyEnforcerImpl
 	        implements ObjectifyDatabaseEntityKeyEnforcer {
 
 		private ProvidedObjectifyDatabaseEntityKeyEnforcerImpl() {};
@@ -90,6 +95,30 @@ public class ObjectifyDatabaseEntityKeyEnforcerUtility {
 		@Override
 		public boolean isAllowedForStorage(ModelKey key) {
 			return (key != null);
+		}
+
+	}
+
+	private static final class ProvidedAndUniqueObjectifyDatabaseEntityKeyEnforcerImpl<T extends UniqueModel> extends ProvidedObjectifyDatabaseEntityKeyEnforcerImpl {
+
+		private Getter<T> getter;
+
+		public ProvidedAndUniqueObjectifyDatabaseEntityKeyEnforcerImpl(Getter<T> getter) {
+			this.setGetter(getter);
+		}
+
+		public void setGetter(Getter<T> getter) {
+			if (getter == null) {
+				throw new IllegalArgumentException("getter cannot be null.");
+			}
+
+			this.getter = getter;
+		}
+
+		// MARK: ObjectifyDatabaseEntityKeyEnforcer
+		@Override
+		public boolean isAllowedForStorage(ModelKey key) {
+			return super.isAllowedForStorage(key) && !this.getter.exists(key);
 		}
 
 	}
