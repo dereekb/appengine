@@ -43,27 +43,37 @@ public abstract class AbstractModelRoleAttributeUtility<T extends UniqueModel> {
 
 	// MARK: Instance
 	protected AttributeInstanceImpl makeInstanceWithKey(String attribute, Key<T> key) throws InvalidAttributeException {
+		this.assertKeyIsNotNull(attribute, key);
+		return new AttributeInstanceImpl(attribute, key);
+	}
+
+	protected void assertKeyIsNotNull(String attribute, Key<?> key) {
 		if (key == null) {
 			throw new InvalidAttributeException(attribute, null, "No model was provided in the request.", NO_MODEL_CODE);
 		}
-
-		return new AttributeInstanceImpl(attribute, key);
 	}
 
 	public class AttributeInstanceImpl implements ModelRoleAttributeInstance<T> {
 
-		private final String attribute;
-		private final Key<T> key;
-		private ModelRoleSetContext<T> context;
+		protected final String attribute;
+		protected final Key<T> key;
+		protected final transient ModelKey modelKey;
+
+		private transient ModelRoleSetContext<T> context;
 
 		protected AttributeInstanceImpl(String attribute, Key<T> key) {
 			this.attribute = attribute;
 			this.key = key;
+			this.modelKey = ObjectifyModelKeyUtil.readModelKey(this.key);
 		}
 
 		@Override
 		public Key<T> getKey() {
 			return this.key;
+		}
+
+		public T getModel() throws InvalidAttributeException {
+			return this.getContext().getModel();
 		}
 
 		@Override
@@ -86,16 +96,19 @@ public abstract class AbstractModelRoleAttributeUtility<T extends UniqueModel> {
 		@Override
 		public ModelRoleSetContext<T> getContext() throws InvalidAttributeException {
 			if (this.context == null) {
-				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(this.key);
-				this.context = AbstractModelRoleAttributeUtility.this.modelRoleSetContextService.get(modelKey);
+				this.context = AbstractModelRoleAttributeUtility.this.modelRoleSetContextService.get(this.modelKey);
 
 				if (this.context == null) {
-					throw new InvalidAttributeException(this.attribute, null, "The requested model is unavailable.",
-					        MODEL_UNAVAILABLE_CODE);
+					throw this.makeModelUnavailableException();
 				}
 			}
 
 			return this.context;
+		}
+
+		protected InvalidAttributeException makeModelUnavailableException() {
+			return new InvalidAttributeException(this.attribute, this.modelKey, "The requested model is unavailable.",
+			        MODEL_UNAVAILABLE_CODE);
 		}
 
 	}

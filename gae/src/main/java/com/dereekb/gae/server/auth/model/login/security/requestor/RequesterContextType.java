@@ -16,6 +16,11 @@ public enum RequesterContextType {
 	/**
 	 * Requester is making the request on behalf of another.
 	 */
-	OTHER
+	OTHER,
+
+	/**
+	 * Requester is an administrator
+	 */
+	ADMIN
 
 }
