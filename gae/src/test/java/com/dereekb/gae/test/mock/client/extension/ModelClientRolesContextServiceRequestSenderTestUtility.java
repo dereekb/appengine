@@ -230,7 +230,8 @@ public class ModelClientRolesContextServiceRequestSenderTestUtility<T extends Mu
 			Map<ModelKey, Set<String>> roles = responseData.getRolesForType(type);
 			Assert.assertFalse(roles.containsKey(nonExistingModel.getModelKey()));
 		} catch (ClientRequestFailureException e) {
-			Assert.fail();
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 

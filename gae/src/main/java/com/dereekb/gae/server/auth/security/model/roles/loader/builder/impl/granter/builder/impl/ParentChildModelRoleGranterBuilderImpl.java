@@ -22,6 +22,10 @@ public class ParentChildModelRoleGranterBuilderImpl<T>
 
 	private ParentModelRoleSetContextReader<T> parentContextReader;
 
+	public ParentChildModelRoleGranterBuilderImpl(ParentModelRoleSetContextReader<T> parentContextReader) {
+		this.setParentContextReader(parentContextReader);
+	}
+
 	public ParentModelRoleSetContextReader<T> getParentContextReader() {
 		return this.parentContextReader;
 	}

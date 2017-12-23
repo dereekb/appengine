@@ -35,7 +35,7 @@ public class LoginTokenModelContextControllerDelegateImpl extends AbstractLoginT
 	protected LoginToken makeNewToken(LoginToken token,
 	                                  Date expires,
 	                                  EncodedLoginTokenModelContextSet encodedSet) {
-		LoginTokenImpl newToken = new LoginTokenImpl(token);
+		LoginTokenImpl newToken = (LoginTokenImpl) this.getLoginTokenEncoderDecoder().makeToken(token);
 		newToken.setExpiration(expires);
 		newToken.setEncodedModelContextSet(encodedSet);
 		return newToken;

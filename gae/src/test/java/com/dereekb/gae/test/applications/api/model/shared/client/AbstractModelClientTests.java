@@ -293,6 +293,11 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				return created;
 			}
 
+			public SerializedClientCreateApiResponse<T> sendCreate(T template) {
+				CreateRequest<T> createRequest = new CreateRequestImpl<T>(template);
+				return this.sendCreate(createRequest);
+			}
+
 			public SerializedClientCreateApiResponse<T> sendCreate(CreateRequest<T> createRequest) {
 				try {
 					return this.createRequestSender.sendRequest(createRequest,
@@ -300,7 +305,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					Assert.fail("Request failure.");
-					return null;
+					throw new RuntimeException(e);
 				}
 			}
 

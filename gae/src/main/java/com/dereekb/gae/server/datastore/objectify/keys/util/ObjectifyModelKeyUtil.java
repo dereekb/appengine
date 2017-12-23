@@ -30,7 +30,7 @@ public class ObjectifyModelKeyUtil<T> {
 	// MARK: Key
 	/**
 	 * Creates a key from the input.
-	 * 
+	 *
 	 * @param modelKey
 	 *            {@link ModelKey}. Never {@code null}.
 	 * @return {@link Key} if successful, and {@code null} otherwise.

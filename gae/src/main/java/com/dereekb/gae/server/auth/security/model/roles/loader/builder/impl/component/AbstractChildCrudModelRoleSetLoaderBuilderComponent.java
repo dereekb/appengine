@@ -19,15 +19,10 @@ import com.dereekb.gae.server.auth.security.model.roles.parent.ParentModelRoleSe
  */
 public abstract class AbstractChildCrudModelRoleSetLoaderBuilderComponent<T> extends AbstractCrudModelRoleSetLoaderBuilderComponent<T> {
 
-	private ParentChildModelRoleGranterBuilderImpl<T> parentRolesGranter;
+	protected final ParentChildModelRoleGranterBuilderImpl<T> parentRolesGranter;
 
 	public AbstractChildCrudModelRoleSetLoaderBuilderComponent(ParentModelRoleSetContextReader<T> parentContextReader) {
-		super();
-		this.setParentContextReader(parentContextReader);
-	}
-
-	public void setParentContextReader(ParentModelRoleSetContextReader<T> parentContextReader) {
-		this.parentRolesGranter = new ParentChildModelRoleGranterBuilderImpl<T>();
+		this.parentRolesGranter = new ParentChildModelRoleGranterBuilderImpl<T>(parentContextReader);
 	}
 
 	// MARK: Functions

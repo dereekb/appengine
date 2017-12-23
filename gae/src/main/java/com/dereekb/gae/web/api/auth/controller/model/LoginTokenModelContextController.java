@@ -104,7 +104,12 @@ public class LoginTokenModelContextController {
 	 * @return
 	 * @throws ApiLoginException
 	 * @throws ApiCaughtRuntimeException
+	 *
+	 * @deprecated Better to just use
+	 *             {@link #makeLoginTokenContext(ApiLoginTokenModelContextRequest)}
+	 *             with the specific config instead.
 	 */
+	@Deprecated
 	@ResponseBody
 	@RequestMapping(path = "/roles", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public final ApiResponse readRolesForModels(@Valid @RequestBody ApiModelRolesRequest request)

@@ -24,7 +24,7 @@ import io.jsonwebtoken.SignatureException;
 /**
  * Abstract {@link LoginTokenEncoder} and {@link LoginTokenDecoder}
  * implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -133,12 +133,10 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 	protected T buildFromClaims(String token,
 	                            Claims claims)
 	        throws TokenUnauthorizedException {
-		T loginToken = this.newLoginToken();
+		T loginToken = this.makeToken();
 		this.initFromClaims(loginToken, claims);
 		return loginToken;
 	}
-
-	protected abstract T newLoginToken();
 
 	protected void initFromClaims(T loginToken,
 	                              Claims claims)

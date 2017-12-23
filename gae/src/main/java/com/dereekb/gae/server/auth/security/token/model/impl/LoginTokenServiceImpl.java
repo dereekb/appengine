@@ -53,6 +53,16 @@ public class LoginTokenServiceImpl<T extends LoginToken>
 
 	// MARK: LoginTokenService
 	@Override
+	public T makeToken() {
+		return this.dencoder.makeToken();
+	}
+
+	@Override
+	public T makeToken(LoginToken token) {
+		return this.dencoder.makeToken(token);
+	}
+
+	@Override
 	public String encodeAnonymousLoginToken(String anonymousId) {
 		T token = this.buildAnonymousLoginToken(anonymousId);
 		return this.encodeLoginToken(token);

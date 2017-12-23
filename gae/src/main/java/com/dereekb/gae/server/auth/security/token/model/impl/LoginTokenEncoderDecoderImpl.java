@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,7 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 /**
  * Default {@link LoginTokenEncoderDecoder} implementation for
  * {@link LoginTokenImpl}.
- * 
+ *
  * @author dereekb
  *
  */
@@ -16,15 +17,20 @@ public final class LoginTokenEncoderDecoderImpl extends AbstractLoginTokenImplEn
 	public LoginTokenEncoderDecoderImpl(String secret) {
 		super(secret);
 	}
-	
+
 	public LoginTokenEncoderDecoderImpl(String secret, SignatureAlgorithm algorithm) {
 		super(secret, algorithm);
 	}
 
 	// MARK: AbstractLoginTokenEncoderDecoder
 	@Override
-	protected LoginTokenImpl newLoginToken() {
+	public LoginTokenImpl makeToken() {
 		return new LoginTokenImpl();
+	}
+
+	@Override
+	public LoginTokenImpl makeToken(LoginToken token) {
+		return new LoginTokenImpl(token);
 	}
 
 	@Override

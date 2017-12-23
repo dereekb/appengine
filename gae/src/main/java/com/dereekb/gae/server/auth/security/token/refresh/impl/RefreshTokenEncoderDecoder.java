@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.token.refresh.impl;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.AbstractBasicLoginTokenImplEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
@@ -12,7 +13,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * {@link LoginTokenEncoderDecoder} for refresh tokens.
- * 
+ *
  * @author dereekb
  *
  */
@@ -28,6 +29,17 @@ public class RefreshTokenEncoderDecoder extends AbstractBasicLoginTokenImplEncod
 		super(secret, algorithm);
 	}
 
+	// MARK: EncoderDecoder
+	@Override
+	public LoginTokenImpl makeToken() {
+		return new LoginTokenImpl();
+	}
+
+	@Override
+	public LoginTokenImpl makeToken(LoginToken token) {
+		return new LoginTokenImpl(token);
+	}
+
 	// MARK: Encode
 	@Override
 	protected void appendClaimsComponents(LoginTokenImpl loginToken,
@@ -39,11 +51,6 @@ public class RefreshTokenEncoderDecoder extends AbstractBasicLoginTokenImplEncod
 	}
 
 	// MARK: Decode
-	@Override
-	protected LoginTokenImpl newLoginToken() {
-		return new LoginTokenImpl();
-	}
-
 	@Override
 	protected void initFromClaims(LoginTokenImpl loginToken,
 	                              Claims claims)
