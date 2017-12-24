@@ -18,8 +18,11 @@ import com.dereekb.gae.server.auth.security.model.context.exception.NoModelConte
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenModelContextBuilder;
 import com.dereekb.gae.server.auth.security.model.context.impl.LoginTokenTypedModelContextSetImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenModelContextServiceEntry;
+import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.encoded.ModelRoleSetEncoderDecoder;
+import com.dereekb.gae.server.auth.security.model.roles.filter.ModelRoleFilterFactory;
+import com.dereekb.gae.server.auth.security.model.roles.filter.impl.ModelRoleFilter;
 import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContextService;
@@ -30,6 +33,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
+import com.dereekb.gae.utilities.filters.Filter;
 
 /**
  * {@link LoginTokenModelContextServiceEntry} implementation that extends
@@ -41,7 +45,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyCon
  *
  */
 public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> extends LoginTokenModelContextSetEncoderDecoderEntryImpl
-        implements LoginTokenModelContextServiceEntry, ModelRoleSetContextService<T> {
+        implements LoginTokenModelContextServiceEntry, ModelRoleSetContextService<T>, ModelRoleFilterFactory<T> {
 
 	private Getter<T> getter;
 	private ModelRoleSetLoader<T> rolesLoader;
@@ -210,6 +214,12 @@ public class LoginTokenModelContextServiceEntryImpl<T extends UniqueModel> exten
 	@Override
 	public ModelRoleSet loadRolesForModel(T model) throws NoModelContextRolesGrantedException {
 		return this.roleSetService.loadRolesForModel(model);
+	}
+
+	// MARK: ModelRoleFilterFactory
+	@Override
+	public Filter<T> makeRoleFilter(ModelRole role) {
+		return new ModelRoleFilter<T>(role, this);
 	}
 
 	@Override

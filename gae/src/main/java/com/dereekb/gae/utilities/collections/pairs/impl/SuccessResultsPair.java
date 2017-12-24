@@ -7,7 +7,7 @@ import com.dereekb.gae.utilities.misc.success.SuccessModel;
 
 /**
  * {@link MutableSuccessPair} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -55,18 +55,18 @@ public class SuccessResultsPair<T> extends ResultsPair<T, Boolean> implements Su
 
 	public static <T extends SuccessModel> SuccessPair<T> make(T systemResult) {
 		SuccessResultsPair<T> pair = new SuccessResultsPair<T>(systemResult);
-		
+
 		boolean success = systemResult.isSuccessful();
 		pair.setSuccessful(success);
-		
+
 		return pair;
 	}
-	
+
 	public static <T extends SuccessResultsPair<?>> void setResultPairsSuccess(Iterable<T> pairs,
 	                                                                           boolean successful) {
 		for (T pair : pairs) {
 			pair.setSuccessful(successful);
 		}
 	}
-	
+
 }

@@ -8,7 +8,7 @@ import com.dereekb.gae.utilities.factory.Factory;
 /**
  * Abstract {@link DirectionalConverter} for a {@link DatabaseModelData} to
  * {@link DatedDatabaseModel}.
- * 
+ *
  * @author dereekb
  *
  * @param <M>
@@ -29,9 +29,9 @@ public abstract class DatedDatabaseModelDataReader<M extends DatedDatabaseModel,
 	// MARK: AbstractDirectionalConverter
 	@Override
 	public M convertSingle(D input) throws ConversionFailureException {
-		M model = this.convertSingle(input);
+		M model = super.convertSingle(input);
 
-		// ID
+		// Info
 		model.setDate(input.getDateValue());
 
 		return model;

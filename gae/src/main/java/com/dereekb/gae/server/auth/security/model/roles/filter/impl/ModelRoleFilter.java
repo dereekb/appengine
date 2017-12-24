@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.security.model.roles.filter;
+package com.dereekb.gae.server.auth.security.model.roles.filter.impl;
 
 import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.ModelRoleSetContext;

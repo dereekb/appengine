@@ -9,4 +9,6 @@ public interface LimitedModelRoleAttributeInstance {
 
 	public void assertHasRole(ModelRole role) throws InvalidAttributeException;
 
+	public void assertHasRole(ModelRole role, String reason) throws InvalidAttributeException;
+
 }

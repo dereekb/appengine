@@ -16,17 +16,22 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
 import com.dereekb.gae.utilities.collections.map.MapUtility;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
+import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * {@link UpdateTaskImpl} extension that adds a filter to filter objects from
  * getting updated.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
 public class FilteredUpdateTaskImpl<T extends UniqueModel> extends UpdateTaskImpl<T> {
+
+	public static final String REJECTED_UPDATE_CODE = "REJECTED_UPDATE";
+	private static final InvalidAttributeException DEFAULT_FILTER_EXCEPTION = new InvalidAttributeException(InvalidAttribute.MODEL_ATTRIBUTE, null, "Not allowed to update this type.", REJECTED_UPDATE_CODE);
 
 	private Filter<T> filter;
 
@@ -68,15 +73,16 @@ public class FilteredUpdateTaskImpl<T extends UniqueModel> extends UpdateTaskImp
 		List<T> passedObjects = filterResults.getPassingObjects();
 		List<T> failedObjects = filterResults.getFailingObjects();
 
-		if (configuration.isAtomic()) {
-			throw new AtomicOperationException(failedObjects, AtomicOperationExceptionReason.UNAVAILABLE);
+		List<UpdatePair<T>> failedPairs = MapUtility.getValuesForKeys(pairsMap, failedObjects);
+		UpdatePair.setPairsFailureException(failedPairs, DEFAULT_FILTER_EXCEPTION);
+
+		if (configuration.isAtomic() && failedObjects.isEmpty() == false) {
+			throw new AtomicOperationException(failedObjects, AtomicOperationExceptionReason.ATOMIC_FAILURE);
 		} else if (passedObjects.isEmpty() == false) {
 			List<UpdatePair<T>> passingPairs = MapUtility.getValuesForKeys(pairsMap, passedObjects);
 			super.doTask(passingPairs, configuration);
 		}
 
-		List<UpdatePair<T>> failedPairs = MapUtility.getValuesForKeys(pairsMap, failedObjects);
-		UpdatePair.setResultPairsSuccess(failedPairs, false);
 	}
 
 }

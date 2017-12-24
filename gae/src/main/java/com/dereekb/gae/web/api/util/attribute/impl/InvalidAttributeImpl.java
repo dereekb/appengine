@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * {@link InvalidAttribute} exception.
- * 
+ *
  * @author dereekb
  *
  */
@@ -42,7 +42,7 @@ public class InvalidAttributeImpl
 	public InvalidAttributeImpl(String attribute, String value, String detail, String code) {
 		this(attribute, value, detail, code, null);
 	}
-	
+
 	public InvalidAttributeImpl(String attribute, String value, String detail, ErrorInfo error) {
 		this(attribute, value, detail, null, error);
 	}
@@ -121,8 +121,8 @@ public class InvalidAttributeImpl
 
 	@Override
 	public String toString() {
-		return "InvalidAttributeImpl [attribute=" + this.attribute + ", value=" + this.value + ", detail=" + this.detail
-		        + ", error=" + this.error + "]";
+		return "InvalidAttributeImpl [attribute=" + this.attribute + ", value=" + this.value + ", code=" + this.code
+		        + ", detail=" + this.detail + ", error=" + this.error + "]";
 	}
 
 }

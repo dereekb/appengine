@@ -83,12 +83,16 @@ public abstract class AbstractModelRoleAttributeUtility<T extends UniqueModel> {
 
 		@Override
 		public void assertHasRole(ModelRole role) throws InvalidAttributeException {
+			this.assertHasRole(role, "You lack the proper permissions.");
+		}
+
+		@Override
+		public void assertHasRole(ModelRole role, String reason) throws InvalidAttributeException {
 			ModelRoleSetContext<T> context = this.getContext();
 			ModelRoleSet roleSet = context.getRoleSet();
 
 			if (!roleSet.hasRole(role)) {
-				throw new InvalidAttributeException(this.attribute, role.getRole(),
-				        "You lack the proper permissions.", NO_PERMISSION_CODE);
+				throw new InvalidAttributeException(this.attribute, role.getRole(), reason, NO_PERMISSION_CODE);
 			}
 		}
 

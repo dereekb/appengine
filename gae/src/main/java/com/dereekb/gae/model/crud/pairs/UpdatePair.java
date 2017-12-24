@@ -87,4 +87,11 @@ public class UpdatePair<T extends UniqueModel> extends SuccessResultsPair<T> {
 		return updatePairs;
 	}
 
+	public static <T extends UpdatePair<?>> void setPairsFailureException(Iterable<T> pairs,
+	                                                                      InvalidAttributeException failureException) {
+		for (T pair : pairs) {
+			pair.setFailureException(failureException);
+		}
+	}
+
 }
