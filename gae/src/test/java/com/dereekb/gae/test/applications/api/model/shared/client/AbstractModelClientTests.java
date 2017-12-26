@@ -279,18 +279,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			public List<T> create(CreateRequest<T> createRequest) {
-				List<T> created = null;
-
-				try {
-					CreateResponse<T> createResponse = this.sendCreate(createRequest).getSerializedResponse();
-					Collection<T> results = createResponse.getModels();
-					created = new ArrayList<T>(results);
-				} catch (ClientRequestFailureException e) {
-					e.printStackTrace();
-					Assert.fail("Failed creating.");
-				}
-
-				return created;
+				return CrudModelClientTestingResultUtility.makeCreateResultList(this.sendCreate(createRequest));
 			}
 
 			public SerializedClientCreateApiResponse<T> sendCreate(T template) {
@@ -498,7 +487,10 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			// MARK: Client Security
-			public ClientRequestSecurity sendModelSecurityContext(Key<T> key) throws ClientIllegalArgumentException, ClientAtomicOperationException, ClientRequestFailureException {
+			public ClientRequestSecurity sendModelSecurityContext(Key<T> key)
+			        throws ClientIllegalArgumentException,
+			            ClientAtomicOperationException,
+			            ClientRequestFailureException {
 				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
 				return this.sendModelSecurityContext(modelKey);
 			}
@@ -550,6 +542,22 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(templates, options);
 			return updateRequest;
+		}
+
+	}
+
+	public static class CrudModelClientTestingResultUtility {
+
+		public static <T extends UniqueModel> List<T> makeCreateResultList(SerializedClientCreateApiResponse<T> response) {
+			try {
+				CreateResponse<T> createResponse = response.getSerializedResponse();
+				Collection<T> results = createResponse.getModels();
+				return new ArrayList<T>(results);
+			} catch (ClientRequestFailureException e) {
+				e.printStackTrace();
+				Assert.fail("Failed creating.");
+				throw new RuntimeException(e);
+			}
 		}
 
 	}

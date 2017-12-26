@@ -9,6 +9,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * Anonymous getter for {@link AnonymousModelRoleSetContext} values.
  *
  * @author dereekb
+ *
+ * @see {@link ModelRoleSetContextGetter}
  */
 public interface AnonymousModelRoleSetContextGetter
         extends TypedModel {

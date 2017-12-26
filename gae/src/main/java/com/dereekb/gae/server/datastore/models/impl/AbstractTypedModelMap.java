@@ -49,7 +49,7 @@ public abstract class AbstractTypedModelMap<T extends TypedModel> {
 		this.typeMap = typeMap;
 	}
 
-	protected T getEntryForType(String type) {
+	protected T getEntryForType(String type) throws RuntimeException {
 		T entry = this.typeMap.get(type);
 
 		if (entry == null) {

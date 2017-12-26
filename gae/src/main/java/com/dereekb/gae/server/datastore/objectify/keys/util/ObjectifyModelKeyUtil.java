@@ -60,6 +60,15 @@ public class ObjectifyModelKeyUtil<T> {
 		return keyFromNumber(this.type, modelKey);
 	}
 
+	public static <T> Key<T> safeKeyFromNumber(Class<T> type,
+	                                           ModelKey modelKey) {
+		if (modelKey != null) {
+			return keyFromNumber(type, modelKey);
+		} else {
+			return null;
+		}
+	}
+
 	public static <T> Key<T> keyFromNumber(Class<T> type,
 	                                       ModelKey modelKey) {
 		Key<T> key;

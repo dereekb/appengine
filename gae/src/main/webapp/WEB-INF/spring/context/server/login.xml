@@ -122,6 +122,8 @@
 			ref="loginTokenModelContextServiceEntries" />
 	</bean>
 
+	<alias name="loginTokenModelContextService" alias="anonymousModelRoleSetContextService" />
+
 	<bean id="loginTokenModelContextSetDencoder"
 		class="com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl">
 		<constructor-arg index="0"

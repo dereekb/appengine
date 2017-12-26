@@ -12,6 +12,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
+@Deprecated
 public final class LoginParentModelRoleSetContextReaderDelegateImpl<T extends LoginOwnedModel>
         implements ParentModelRoleSetContextReaderDelegate<T> {
 

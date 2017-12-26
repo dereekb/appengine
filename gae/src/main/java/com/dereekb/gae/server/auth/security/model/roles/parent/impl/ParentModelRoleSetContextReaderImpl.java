@@ -2,7 +2,7 @@ package com.dereekb.gae.server.auth.security.model.roles.parent.impl;
 
 import com.dereekb.gae.model.exception.NoParentException;
 import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContext;
-import com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService;
+import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.model.roles.parent.ParentModelRoleSetContextReader;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -12,17 +12,20 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @author dereekb
  *
+ * @deprecated Forms a circular dependency in most cases.
+ *
  * @param <T>
  *            model type
  */
+@Deprecated
 public class ParentModelRoleSetContextReaderImpl<T extends UniqueModel>
         implements ParentModelRoleSetContextReader<T> {
 
 	private ParentModelRoleSetContextReaderDelegate<T> delegate;
-	private SecurityContextAnonymousModelRoleSetContextService contextService;
+	private AnonymousModelRoleSetContextService contextService;
 
 	public ParentModelRoleSetContextReaderImpl(ParentModelRoleSetContextReaderDelegate<T> delegate,
-	        SecurityContextAnonymousModelRoleSetContextService contextService) {
+	        AnonymousModelRoleSetContextService contextService) {
 		super();
 		this.setDelegate(delegate);
 		this.setContextService(contextService);
@@ -40,11 +43,11 @@ public class ParentModelRoleSetContextReaderImpl<T extends UniqueModel>
 		this.delegate = delegate;
 	}
 
-	public SecurityContextAnonymousModelRoleSetContextService getContextService() {
+	public AnonymousModelRoleSetContextService getContextService() {
 		return this.contextService;
 	}
 
-	public void setContextService(SecurityContextAnonymousModelRoleSetContextService contextService) {
+	public void setContextService(AnonymousModelRoleSetContextService contextService) {
 		if (contextService == null) {
 			throw new IllegalArgumentException("contextService cannot be null.");
 		}
@@ -67,7 +70,8 @@ public class ParentModelRoleSetContextReaderImpl<T extends UniqueModel>
 
 	@Override
 	public String toString() {
-		return "ParentModelRoleSetContextReaderImpl [delegate=" + this.delegate + ", contextService=" + this.contextService + "]";
+		return "ParentModelRoleSetContextReaderImpl [delegate=" + this.delegate + ", contextService="
+		        + this.contextService + "]";
 	}
 
 }

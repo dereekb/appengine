@@ -12,7 +12,7 @@
 	<bean id="loginKeyModelRoleBuilderComponent"
 		class="com.dereekb.gae.server.auth.model.key.security.LoginKeyModelRoleBuilderComponent">
 		<constructor-arg index="0"
-			ref="securityContextAnonymousModelRoleSetContextService" />
+			ref="loginParentModelRoleSetContextReader" />
 	</bean>
 
 	<bean id="loginKeyModelRoleSetLoader"

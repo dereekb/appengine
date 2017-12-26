@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
+import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContextGetter;
 import com.dereekb.gae.server.datastore.models.TypedModel;
 
 /**
@@ -13,7 +14,7 @@ import com.dereekb.gae.server.datastore.models.TypedModel;
  *
  */
 public interface LoginTokenModelContextServiceEntry
-        extends TypedModel {
+        extends AnonymousModelRoleSetContextGetter, TypedModel {
 
 	/**
 	 * Builds a new {@link LoginTokenTypedModelContextSet} for the input keys.

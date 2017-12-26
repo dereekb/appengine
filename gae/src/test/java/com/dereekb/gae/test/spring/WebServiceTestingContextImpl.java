@@ -105,12 +105,12 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		// this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
 		super.setUpCoreServices();
 	}
-	
+
 	@Override
 	@After
 	public void tearDownCoreServices() {
 		super.tearDownCoreServices();
-	
+
 		// Wait for any tasks to complete first...
 		waitUntilTaskQueueCompletes();
 	}
@@ -205,6 +205,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		private static final long serialVersionUID = 1L;
 
 		private static boolean LOG_EVENTS = true;
+		private static boolean FINE_LOG_EVENTS = false;
 
 		public static MockMvc mockMvc;
 
@@ -218,13 +219,19 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		public static final void safeWaitForLatch() throws InterruptedException {
 			int waits = 0;
 
-			System.out.println("Waiting for latch....");
+			if (FINE_LOG_EVENTS) {
+				System.out.println("Waiting for latch....");
+			}
 
 			waitForLatch(0);
 
 			while (ATOMIC_COUNTER.get() != 0) {
 				waits += 1;
-				System.out.println("Still waiting...");
+
+				if (FINE_LOG_EVENTS) {
+					System.out.println("Still waiting...");
+				}
+
 				waitForLatch(waits);
 
 				if (waits >= MAX_WAITS) {
@@ -240,12 +247,18 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 
 		private static final void increaseLatchCounter() {
 			Long count = ATOMIC_COUNTER.incrementAndGet();
-			System.out.println(String.format("Latch increasing to %s.", count));
+
+			if (FINE_LOG_EVENTS) {
+				System.out.println(String.format("Latch increasing to %s.", count));
+			}
 		}
 
 		private static final void decreaseLatchCounter() {
 			Long count = ATOMIC_COUNTER.decrementAndGet();
-			System.out.println(String.format("Latch decreased to %s.", count));
+
+			if (FINE_LOG_EVENTS) {
+				System.out.println(String.format("Latch decreased to %s.", count));
+			}
 		}
 
 		private static final int TASKQUEUE_TASK_WAIT_TIME = 10;
@@ -255,7 +268,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 			increaseLatchCounter();
 
 			if (LOG_EVENTS) {
-				System.out.println(String.format("Executing taskqueue task %s -> %s", arg0.getMethod(), arg0.getUrl()));
+				System.out.println(String.format("Executing TQ task %s -> %s", arg0.getMethod(), arg0.getUrl()));
 			}
 
 			MockHttpServletRequestBuilder requestBuilder;
@@ -288,12 +301,12 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 				e.printStackTrace();
 				return 500;
 			} catch (Exception e) {
-				System.out.println(String.format("Exception occured while executing task %s.", arg0.getUrl()));
+				System.out.println(String.format("Exception occured while executing TQ task %s.", arg0.getUrl()));
 				e.printStackTrace();
 				return 0;
 			} finally {
 				if (LOG_EVENTS) {
-					System.out.println(String.format("Finished task at %s.", arg0.getUrl()));
+					System.out.println(String.format("Finished TQ task at %s.", arg0.getUrl()));
 				}
 
 				ofy.close();
@@ -315,7 +328,10 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 				e.printStackTrace();
 			}
 
-			System.out.println("Stopped waiting for TaskQueue operation.");
+
+			if (FINE_LOG_EVENTS) {
+				System.out.println("Stopped waiting for TaskQueue operation.");
+			}
 		}
 
 	}

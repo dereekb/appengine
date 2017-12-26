@@ -8,9 +8,12 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @author dereekb
  *
+ * @Deprecated {@link ParentModelRoleSetContextReader} is deprecated.
+ *
  * @param <T>
  *            model type
  */
+@Deprecated
 public interface ParentModelRoleSetContextReaderDelegate<T> {
 
 	/**
@@ -18,6 +21,7 @@ public interface ParentModelRoleSetContextReaderDelegate<T> {
 	 *
 	 * @return {@link String}. Never {@code null}.
 	 */
+	@Deprecated
 	public String getParentType();
 
 	/**
