@@ -6,7 +6,7 @@ import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContext;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.ModelRoleGranter;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.builder.ParentChildModelRoleGranterBuilder;
-import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.impl.AbstractAdminModelRoleGranterImpl;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.impl.AdminModelRoleGranterImpl;
 import com.dereekb.gae.server.auth.security.model.roles.parent.ParentModelRoleSetContextReader;
 
 /**
@@ -58,7 +58,7 @@ public class ParentChildModelRoleGranterBuilderImpl<T>
 	 * @author dereekb
 	 *
 	 */
-	protected class ParentChildModelRoleGranter extends AbstractAdminModelRoleGranterImpl<T> {
+	protected class ParentChildModelRoleGranter extends AdminModelRoleGranterImpl<T> {
 
 		private final ModelRole parentRole;
 
@@ -71,7 +71,7 @@ public class ParentChildModelRoleGranterBuilderImpl<T>
 			this.parentRole = parentRole;
 		}
 
-		// MARK: AbstractAdminModelRoleGranterImpl
+		// MARK: AdminModelRoleGranterImpl
 		@Override
 		public boolean nonAdminHasRole(T model) {
 			try {

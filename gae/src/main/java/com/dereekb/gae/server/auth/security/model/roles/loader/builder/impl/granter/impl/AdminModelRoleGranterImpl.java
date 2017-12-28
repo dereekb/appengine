@@ -7,13 +7,15 @@ import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 /**
  * {@link AbstractModelRoleGranterImpl} extension that grants the role if
  * the user is an administrator.
+ * <p>
+ * Can be extended to provide alternative cases.
  *
  * @author dereekb
  *
  */
-public abstract class AbstractAdminModelRoleGranterImpl<T> extends AbstractModelRoleGranterImpl<T> {
+public class AdminModelRoleGranterImpl<T> extends AbstractModelRoleGranterImpl<T> {
 
-	public AbstractAdminModelRoleGranterImpl(ModelRole grantedRole) {
+	public AdminModelRoleGranterImpl(ModelRole grantedRole) {
 		super(grantedRole);
 	}
 

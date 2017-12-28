@@ -7,14 +7,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
 
 /**
  * {@link CoreServiceTestingContext} extension that includes the API application
  * configurations.
- * 
+ *
  * @author dereekb
  *
+ * @deprecated Use {@link CoreApplicationTestContext} instead.
  */
+@Deprecated
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextHierarchy({ @ContextConfiguration(name = "api", locations = {

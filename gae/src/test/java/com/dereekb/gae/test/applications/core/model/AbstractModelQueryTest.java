@@ -17,15 +17,15 @@ import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.test.spring.CoreApiServiceTestingContext;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
  * Abstract ModelQueryTest for TallyNote.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -33,7 +33,7 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  * @param <Q>
  *            query type
  */
-public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends CoreApiServiceTestingContext {
+public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends CoreApplicationTestContext {
 
 	protected final Class<Q> queryClass;
 
@@ -145,7 +145,7 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 
 	/**
 	 * Date Query Tester.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 * @param <T>
@@ -288,7 +288,7 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 	        implements ModelKeyQueryTesterDelegate<T, Q> {
 
 		private ModelKeyType type = ModelKeyType.NUMBER;
-		
+
 		public AbstractModelKeyQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
 			super(modelQueryTest);
 			this.setDelegate(this);
@@ -334,7 +334,7 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 		 * <p>
 		 * Values should increase linearly, so those with a key greater than the
 		 * previous should have a greater value.
-		 * 
+		 *
 		 * @param key
 		 * @return
 		 */
@@ -357,12 +357,12 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			Integer key = 2;
 			return this.getDelegate().makeTestValue(key);
 		}
-		
+
 		protected V generateExtraValueForValueExactTest() {
 			Integer extraValueKey = 1;
 			return this.getDelegate().makeTestValue(extraValueKey);
 		}
-		
+
 		public void testQueryingForValueExact() {
 			D delegate = this.getDelegate();
 

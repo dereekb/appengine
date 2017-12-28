@@ -11,8 +11,9 @@ import com.dereekb.gae.test.spring.CoreServiceTestingContext;
 
 /**
  * Initializes the application but skips all web configuration.
- * 
+ *
  * @author dereekb
+ *
  * @see ApiApplicationTestContext
  */
 @WebAppConfiguration

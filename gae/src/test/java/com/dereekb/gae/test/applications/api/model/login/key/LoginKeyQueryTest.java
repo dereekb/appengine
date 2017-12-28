@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,10 +21,11 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
 /**
- * 
+ *
  * @author dereekb
  *
  */
+@Ignore
 @Deprecated
 public class LoginKeyQueryTest extends ModelQueryTest<LoginKey> {
 

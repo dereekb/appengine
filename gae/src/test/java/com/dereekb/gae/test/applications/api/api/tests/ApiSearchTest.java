@@ -17,8 +17,10 @@ import com.dereekb.gae.model.extension.search.document.index.service.DocumentInd
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.web.api.model.extension.search.SearchExtensionApiController;
+import com.dereekb.gae.web.api.model.extension.search.impl.ApiMultiSearchResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl.ApiResponseTypeDataWrapper;
 
 
 public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends ApiApplicationTestContext {
@@ -90,7 +92,10 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 
 		ApiResponse response = this.controller.searchMultiple(query, types, parameters, limit, getKeys);
 		Assert.assertNotNull(response);
-		Assert.assertNotNull(response.getResponseIncludedData().get(this.searchType.toLowerCase()));
+
+		ApiResponseTypeDataWrapper data = (ApiResponseTypeDataWrapper) response.getResponsePrimaryData();
+		ApiMultiSearchResponseData responseData = (ApiMultiSearchResponseData) data.getResponseData();
+		Assert.assertNotNull(responseData.getResults().get(this.searchType.toLowerCase()));
 	}
 
 	@Test

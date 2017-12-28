@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.model.login.pointer;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +17,7 @@ import com.dereekb.gae.test.applications.api.model.login.LoginModelTestUtilities
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Ignore
 @Deprecated
 public class LoginPointerQueryTest extends ModelQueryTest<LoginPointer> {
 

@@ -3,7 +3,7 @@ package com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.gra
 import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.ModelRoleGranter;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.builder.OwnershipModelRolesGranterBuilder;
-import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.impl.AbstractAdminModelRoleGranterImpl;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.impl.AdminModelRoleGranterImpl;
 import com.dereekb.gae.server.auth.security.model.roles.ownership.SecurityContextModelOwnershipChecker;
 
 /**
@@ -50,7 +50,7 @@ public class OwnershipModelRolesGranterBuilderImpl<T>
 	 * @author dereekb
 	 *
 	 */
-	protected class IsOwnerModelRoleGranter extends AbstractAdminModelRoleGranterImpl<T> {
+	protected class IsOwnerModelRoleGranter extends AdminModelRoleGranterImpl<T> {
 
 		public IsOwnerModelRoleGranter(ModelRole grantedRole) {
 			super(grantedRole);

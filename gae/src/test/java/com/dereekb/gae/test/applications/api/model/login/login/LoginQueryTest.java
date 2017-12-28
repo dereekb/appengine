@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.model.login.login;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,7 @@ import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryReque
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelQueryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Ignore
 @Deprecated
 public class LoginQueryTest extends ModelQueryTest<Login> {
 
