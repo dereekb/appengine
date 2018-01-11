@@ -5,7 +5,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 /**
  * Thrown when an exception occurs while attempting to store a model that
  * already has an identifier.
- * 
+ *
  * @author dereekb
  *
  */

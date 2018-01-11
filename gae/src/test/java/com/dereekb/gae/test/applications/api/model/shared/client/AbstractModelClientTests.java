@@ -47,6 +47,7 @@ import com.dereekb.gae.model.crud.services.request.options.impl.UpdateRequestOpt
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
+import com.dereekb.gae.model.crud.task.impl.delegate.impl.IsUniqueCreateTaskValidatorImpl;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.dto.LoginData;
@@ -247,12 +248,12 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			// MARK: Create
-			public T create() {
+			public T create() throws UnsupportedOperationException, AssertionError {
 				T template = this.makeTemplate();
 				return this.create(template);
 			}
 
-			public List<T> create(int count) {
+			public List<T> create(int count) throws UnsupportedOperationException, AssertionError {
 				T template = this.makeTemplate();
 				return this.create(template, count);
 			}
@@ -262,32 +263,34 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			public List<T> create(T template,
-			                      int count) {
+			                      int count)
+			        throws AssertionError {
 				List<T> templates = ListUtility.cloneReferences(template, count);
 				return this.create(templates);
 			}
 
-			public T create(T template) {
+			public T create(T template) throws AssertionError {
 				CreateRequest<T> createRequest = new CreateRequestImpl<T>(template);
 				List<T> created = this.create(createRequest);
 				return created.get(0);
 			}
 
-			public List<T> create(List<T> templates) {
+			public List<T> create(List<T> templates) throws AssertionError {
 				CreateRequest<T> createRequest = new CreateRequestImpl<T>(templates);
 				return this.create(createRequest);
 			}
 
-			public List<T> create(CreateRequest<T> createRequest) {
+			public List<T> create(CreateRequest<T> createRequest) throws AssertionError {
 				return CrudModelClientTestingResultUtility.makeCreateResultList(this.sendCreate(createRequest));
 			}
 
-			public SerializedClientCreateApiResponse<T> sendCreate(T template) {
+			public SerializedClientCreateApiResponse<T> sendCreate(T template) throws AssertionError {
 				CreateRequest<T> createRequest = new CreateRequestImpl<T>(template);
 				return this.sendCreate(createRequest);
 			}
 
-			public SerializedClientCreateApiResponse<T> sendCreate(CreateRequest<T> createRequest) {
+			public SerializedClientCreateApiResponse<T> sendCreate(CreateRequest<T> createRequest)
+			        throws AssertionError {
 				try {
 					return this.createRequestSender.sendRequest(createRequest,
 					        AbstractTestingInstance.this.getSecurity());
@@ -299,11 +302,11 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			// MARK: Update
-			public T update(T model) {
+			public T update(T model) throws AssertionError {
 				return this.update(ListUtility.wrap(model)).get(0);
 			}
 
-			public List<T> update(Collection<T> models) {
+			public List<T> update(Collection<T> models) throws AssertionError {
 				UpdateRequest<T> request = AbstractTestingInstance.this.makeAtomicUpdateRequest(models);
 				SerializedClientUpdateApiResponse<T> updateResponse = this.update(request);
 
@@ -318,7 +321,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				return ListUtility.copy(simpleResponse.getModels());
 			}
 
-			public SerializedClientUpdateApiResponse<T> update(UpdateRequest<T> updateRequest) {
+			public SerializedClientUpdateApiResponse<T> update(UpdateRequest<T> updateRequest) throws AssertionError {
 				try {
 					return this.updateRequestSender.sendRequest(updateRequest,
 					        AbstractTestingInstance.this.getSecurity());
@@ -330,17 +333,17 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			// MARK: Delete
-			public void delete(T model) {
+			public void delete(T model) throws AssertionError {
 				DeleteRequest deleteRequest = new DeleteRequestImpl(model);
 				this.delete(deleteRequest);
 			}
 
-			public void delete(List<T> models) {
+			public void delete(List<T> models) throws AssertionError {
 				DeleteRequest deleteRequest = new DeleteRequestImpl(models);
 				this.delete(deleteRequest);
 			}
 
-			public void delete(DeleteRequest deleteRequest) {
+			public void delete(DeleteRequest deleteRequest) throws AssertionError {
 				try {
 					ClientDeleteResponse<T> deleteResponse = this.deleteRequestSender.delete(deleteRequest,
 					        AbstractTestingInstance.this.getSecurity());
@@ -442,6 +445,10 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			public T readByKey(Key<T> key) throws AssertionError {
+				return this.readByRelatedKey(key);
+			}
+
+			public T readByRelatedKey(Key<?> key) throws AssertionError {
 				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
 				return this.readByKey(modelKey);
 			}
@@ -646,6 +653,21 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			if (failureCode != null) {
 				Assert.assertTrue("Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode()
 				        + "' instead.", attribute.getCode().equals(failureCode));
+			}
+		}
+
+		public static void assertSuccessOrExists(SerializedClientCreateApiResponse<?> response) {
+			if (response.isSuccessful() == false) {
+				try {
+					response.getSerializedResponse();
+				} catch (ClientKeyedInvalidAttributeException e) {
+					ModelTestingSet.checkAndAssertAttributeFailure(e,
+					        IsUniqueCreateTaskValidatorImpl.IDENTIFIER_ATTRIBUTE,
+					        IsUniqueCreateTaskValidatorImpl.MODEL_EXISTS_CODE);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Assert.fail();
+				}
 			}
 		}
 
