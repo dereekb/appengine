@@ -27,6 +27,7 @@ import com.dereekb.gae.web.api.util.attribute.impl.InvalidAttributeImpl;
 public class IsUniqueCreateTaskValidatorImpl<T extends UniqueModel>
         implements CreateTaskValidator<T> {
 
+	public static final String IDENTIFIER_ATTRIBUTE = "identifier";
 	public static final String KEY_NOT_UNIQUE_CODE = "KEY_NOT_UNIQUE";
 	public static final String MODEL_EXISTS_CODE = "MODEL_EXISTS";
 
@@ -80,7 +81,7 @@ public class IsUniqueCreateTaskValidatorImpl<T extends UniqueModel>
 				if (key == null) {
 					throw new NullKeyException();
 				} else if (this.keySet.contains(key)) {
-					InvalidAttributeImpl attribute = new InvalidAttributeImpl("identifier", key.toString(),
+					InvalidAttributeImpl attribute = new InvalidAttributeImpl(IDENTIFIER_ATTRIBUTE, key.toString(),
 					        "The key for this is not unique.", KEY_NOT_UNIQUE_CODE);
 					pair.setAttributeFailure(attribute);
 					failed = true;
@@ -101,7 +102,7 @@ public class IsUniqueCreateTaskValidatorImpl<T extends UniqueModel>
 				for (ModelKey key : existing) {
 					CreatePair<T> pair = map.get(key);
 
-					InvalidAttributeImpl attribute = new InvalidAttributeImpl("identifier", key.toString(),
+					InvalidAttributeImpl attribute = new InvalidAttributeImpl(IDENTIFIER_ATTRIBUTE, key.toString(),
 					        "A model already exists with this key.", MODEL_EXISTS_CODE);
 					pair.setAttributeFailure(attribute);
 				}

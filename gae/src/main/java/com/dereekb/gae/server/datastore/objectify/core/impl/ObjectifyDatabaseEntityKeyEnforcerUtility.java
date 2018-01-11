@@ -36,6 +36,7 @@ public class ObjectifyDatabaseEntityKeyEnforcerUtility {
 				break;
 			case MUST_BE_PROVIDED_AND_UNIQUE:
 				enforcer = new ProvidedAndUniqueObjectifyDatabaseEntityKeyEnforcerImpl<T>(getter);
+				break;
 			default:
 				throw new UnsupportedOperationException();
 		}

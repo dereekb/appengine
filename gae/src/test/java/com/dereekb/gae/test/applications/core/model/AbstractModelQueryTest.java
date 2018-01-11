@@ -217,6 +217,39 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 
 	}
 
+	// MARK: Long
+	public static abstract class AbstractLongQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends LongQueryTester<T, Q>
+	        implements LongQueryTesterDelegate<T, Q> {
+
+		public AbstractLongQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+			this.setDelegate(this);
+		}
+
+		// MARK: Delegate
+		@Override
+		public Long makeTestValue(int key) {
+			return new Long(key);
+		}
+
+	}
+
+	public static interface LongQueryTesterDelegate<T, Q>
+	        extends AbstractValueQueryTesterDelegate<Long, T, Q> {}
+
+	public static class LongQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractValueQueryTester<Long, T, Q, LongQueryTesterDelegate<T, Q>> {
+
+		protected LongQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest) {
+			super(modelQueryTest);
+		}
+
+		public LongQueryTester(AbstractModelQueryTest<T, Q> modelQueryTest,
+		        LongQueryTesterDelegate<T, Q> delegate) {
+			super(modelQueryTest, delegate);
+		}
+
+	}
+
 	// MARK: Integer
 	public static abstract class AbstractIntegerQueryTester<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends IntegerQueryTester<T, Q>
 	        implements IntegerQueryTesterDelegate<T, Q> {

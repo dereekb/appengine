@@ -597,15 +597,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 				@Override
 				public void checkAndAssert(List<KeyedInvalidAttribute> attributes) {
-					KeyedInvalidAttribute attribute = attributes.get(0);
-
-					Assert.assertTrue("Expected attribute name to be '" + attributeName + "' but was '"
-					        + attribute.getAttribute() + "' instead.", attribute.getAttribute().equals(attributeName));
-
-					if (failureCode != null) {
-						Assert.assertTrue("Expected failure code to be '" + failureCode + "' but was '"
-						        + attribute.getCode() + "' instead.", attribute.getCode().equals(failureCode));
-					}
+					checkAndAssertAttributeFailure(attributes, attributeName, failureCode);
 				}
 
 			});
@@ -624,6 +616,36 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				delegate.checkAndAssert(attributes);
 			} catch (ClientRequestFailureException e) {
 				Assert.fail();
+			}
+		}
+
+		public static void checkAndAssertAttributeFailure(ClientKeyedInvalidAttributeException e,
+		                                                  String attributeName) {
+			checkAndAssertAttributeFailure(e, attributeName, null);
+		}
+
+		public static void checkAndAssertAttributeFailure(List<KeyedInvalidAttribute> attributes,
+		                                                  String attributeName) {
+			checkAndAssertAttributeFailure(attributes, attributeName, null);
+		}
+
+		public static void checkAndAssertAttributeFailure(ClientKeyedInvalidAttributeException e,
+		                                                  String attributeName,
+		                                                  String failureCode) {
+			checkAndAssertAttributeFailure(e.getInvalidAttributes(), attributeName, failureCode);
+		}
+
+		public static void checkAndAssertAttributeFailure(List<KeyedInvalidAttribute> attributes,
+		                                                  String attributeName,
+		                                                  String failureCode) {
+			KeyedInvalidAttribute attribute = attributes.get(0);
+
+			Assert.assertTrue("Expected attribute name to be '" + attributeName + "' but was '"
+			        + attribute.getAttribute() + "' instead.", attribute.getAttribute().equals(attributeName));
+
+			if (failureCode != null) {
+				Assert.assertTrue("Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode()
+				        + "' instead.", attribute.getCode().equals(failureCode));
 			}
 		}
 

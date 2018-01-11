@@ -81,8 +81,12 @@ public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 	// MARK: Internal
 	public static void resync() {
 		Objectify objectify = ObjectifyService.ofy();
-		objectify.flush();
-		objectify.clear();
+
+		// If mid-transaction do not clear or flush the context!
+		if (objectify.getTransaction() == null) {
+			objectify.flush();
+			objectify.clear();
+		}
 	}
 
 }
