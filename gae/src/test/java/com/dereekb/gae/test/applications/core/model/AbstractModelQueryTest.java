@@ -298,6 +298,15 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			return ((key % 1) == 0) ? false : true;
 		}
 
+		public static void assertOnlyTrueEquivalence(Boolean value, ExpressionOperator operator) throws UnsupportedOperationException {
+			/*
+			 * Can only query for when open is true, and is equal.
+			 */
+			if (value == false || !operator.equals(ExpressionOperator.EQUAL)) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
 	}
 
 	public static interface BooleanQueryTesterDelegate<T, Q>
