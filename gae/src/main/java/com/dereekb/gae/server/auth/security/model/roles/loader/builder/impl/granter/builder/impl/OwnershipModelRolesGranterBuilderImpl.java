@@ -61,6 +61,11 @@ public class OwnershipModelRolesGranterBuilderImpl<T>
 			return OwnershipModelRolesGranterBuilderImpl.this.ownershipChecker.isOwnedInSecurityContext(model);
 		}
 
+		@Override
+		public String toString() {
+			return "IsOwnerModelRoleGranter [grantedRole=" + this.grantedRole + "]";
+		}
+
 	}
 
 	@Override

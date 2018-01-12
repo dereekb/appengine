@@ -117,6 +117,12 @@ public class ModelRoleSetLoaderImpl<T extends UniqueModel>
 			return this.roles.containsRole(role);
 		}
 
+		@Override
+		public String toString() {
+			return "LazyModelRoleSet [model=" + this.model + ", roles=" + this.roles + ", unloadedRoleSet="
+			        + this.unloadedRoleSet + "]";
+		}
+
 	}
 
 	@Override

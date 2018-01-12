@@ -31,6 +31,7 @@ import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeExc
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
+import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
@@ -208,9 +209,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 		public abstract class AbstractModelTestingInstance<T extends UniqueModel> extends AbstractQueryableModelTestingInstance<T> {
 
 			protected final ClientCreateRequestSender<T> createRequestSender;
-
 			protected final ClientUpdateRequestSender<T> updateRequestSender;
-
 			protected final ClientDeleteRequestSender<T> deleteRequestSender;
 
 			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
@@ -308,7 +307,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			public List<T> update(Collection<T> models) throws AssertionError {
 				UpdateRequest<T> request = AbstractTestingInstance.this.makeAtomicUpdateRequest(models);
-				SerializedClientUpdateApiResponse<T> updateResponse = this.update(request);
+				SerializedClientUpdateApiResponse<T> updateResponse = this.sendUpdate(request);
 
 				SimpleUpdateResponse<T> simpleResponse;
 
@@ -321,7 +320,16 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 				return ListUtility.copy(simpleResponse.getModels());
 			}
 
-			public SerializedClientUpdateApiResponse<T> update(UpdateRequest<T> updateRequest) throws AssertionError {
+			public SerializedClientUpdateApiResponse<T> sendUpdate(T model) throws AssertionError {
+				return this.sendUpdate(ListUtility.wrap(model));
+			}
+
+			public SerializedClientUpdateApiResponse<T> sendUpdate(Collection<T> models) throws AssertionError {
+				UpdateRequest<T> request = AbstractTestingInstance.this.makeAtomicUpdateRequest(models);
+				return this.sendUpdate(request);
+			}
+
+			public SerializedClientUpdateApiResponse<T> sendUpdate(UpdateRequest<T> updateRequest) throws AssertionError {
 				try {
 					return this.updateRequestSender.sendRequest(updateRequest,
 					        AbstractTestingInstance.this.getSecurity());
@@ -391,17 +399,17 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 			public ClientModelQueryResponse<T> query(SearchRequest queryRequest) {
 				try {
-					return this.queryRequestSender.query(queryRequest, AbstractTestingInstance.this.getSecurity());
-				} catch (ClientRequestFailureException e) {
+					return this.sendQuery(queryRequest).getSerializedResponse();
+				} catch (ClientResponseSerializationException | ClientRequestFailureException e) {
 					e.printStackTrace();
 					Assert.fail("Failed querying.");
 					throw new RuntimeException();
 				}
 			}
 
-			public ClientModelQueryResponse<T> sendQuery(SearchRequest queryRequest) {
+			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(SearchRequest queryRequest) {
 				try {
-					return this.queryRequestSender.query(queryRequest, AbstractTestingInstance.this.getSecurity());
+					return this.queryRequestSender.sendRequest(queryRequest, AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					Assert.fail("Failed querying.");
@@ -648,11 +656,11 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			KeyedInvalidAttribute attribute = attributes.get(0);
 
 			Assert.assertTrue("Expected attribute name to be '" + attributeName + "' but was '"
-			        + attribute.getAttribute() + "' instead.", attribute.getAttribute().equals(attributeName));
+			        + attribute.getAttribute() + "' instead. -> " + attribute, attribute.getAttribute().equals(attributeName));
 
 			if (failureCode != null) {
 				Assert.assertTrue("Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode()
-				        + "' instead.", attribute.getCode().equals(failureCode));
+				        + "' instead. -> " + attribute, attribute.getCode().equals(failureCode));
 			}
 		}
 

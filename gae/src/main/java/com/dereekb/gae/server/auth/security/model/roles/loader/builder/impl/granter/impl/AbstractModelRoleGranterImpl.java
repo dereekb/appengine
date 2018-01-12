@@ -16,7 +16,7 @@ import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.gran
 public abstract class AbstractModelRoleGranterImpl<T>
         implements ModelRoleGranter<T> {
 
-	private final ModelRole grantedRole;
+	protected final ModelRole grantedRole;
 
 	public AbstractModelRoleGranterImpl(ModelRole grantedRole) {
 		super();
@@ -31,5 +31,10 @@ public abstract class AbstractModelRoleGranterImpl<T>
 
 	@Override
 	public abstract boolean hasRole(T model);
+
+	@Override
+	public String toString() {
+		return "AbstractModelRoleGranterImpl [grantedRole=" + this.grantedRole + "]";
+	}
 
 }
