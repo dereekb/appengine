@@ -3,7 +3,7 @@ package com.dereekb.gae.utilities.model.attribute;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
- * Update delegate for a {@link ModelAttributeHelperUtilityInstance}.
+ * Update delegate for a {@link ModelAttributeUtilityInstance}.
  *
  * @author dereekb
  *

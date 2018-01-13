@@ -3,15 +3,15 @@ package com.dereekb.gae.utilities.model.attribute;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
- * {@link ModelAttributeHelperUtility} instance for a specific attribute.
+ * {@link ModelAttributeUtilityBuilder} instance for a specific attribute.
  *
  * @author dereekb
  *
  * @param <T>
  *            value type
  */
-public interface ModelAttributeHelperUtilityInstance<T>
-        extends ModelAttributeHelperUtility<T> {
+public interface ModelAttributeUtilityInstance<T>
+        extends ModelAttributeUtilityBuilder<T> {
 
 	/**
 	 * Returns the attribute's name. Used for errors, etc.
@@ -32,11 +32,20 @@ public interface ModelAttributeHelperUtilityInstance<T>
 	public void assertValidDecodedValue(T value) throws InvalidAttributeException;
 
 	/**
-	 * Attempts to update the value using a delegate.
+	 * Attempts to update the value.
 	 *
+	 * @throws UnsupportedOperationException
+	 *             thrown if the operation isn't available.
 	 * @throws InvalidAttributeException
 	 *             thrown if the update fails.
 	 */
-	public void tryUpdateValue(T input) throws InvalidAttributeException;
+	public void updateValue(T input) throws UnsupportedOperationException, InvalidAttributeException;
+
+	/**
+	 * Creates a type instance.
+	 *
+	 * @return [@link ModelAttributeUtilityTypeInstance}. Never {@code null}.
+	 */
+	public <M> ModelAttributeUtilityTypeInstance<T, M> typeInstance(ModelAttributeTypeUpdateDelegate<T, M> delegate);
 
 }

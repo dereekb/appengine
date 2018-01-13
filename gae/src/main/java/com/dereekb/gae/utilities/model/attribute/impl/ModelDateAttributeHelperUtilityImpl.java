@@ -3,24 +3,24 @@ package com.dereekb.gae.utilities.model.attribute.impl;
 import java.util.Date;
 
 import com.dereekb.gae.utilities.data.ValueUtility;
-import com.dereekb.gae.utilities.model.attribute.ModelAttributeHelperUtilityInstance;
 import com.dereekb.gae.utilities.model.attribute.ModelAttributeUpdateDelegate;
-import com.dereekb.gae.utilities.model.attribute.ModelDateAttributeHelperUtility;
+import com.dereekb.gae.utilities.model.attribute.ModelAttributeUtilityInstance;
+import com.dereekb.gae.utilities.model.attribute.ModelDateAttributeUtilityBuilder;
 import com.dereekb.gae.utilities.time.DateUtility;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
- * {@link ModelDateAttributeHelperUtility} implementation.
+ * {@link ModelDateAttributeUtilityBuilder} implementation.
  *
  * @author dereekb
  *
  */
 public class ModelDateAttributeHelperUtilityImpl extends AbstractModelAttributeHelperUtility<Date, ModelDateAttributeHelperUtilityImpl>
-        implements ModelDateAttributeHelperUtility {
+        implements ModelDateAttributeUtilityBuilder {
 
 	public static final String NOT_IN_FUTURE_CODE_FORMAT = "%s_NOT_IN_FUTURE";
 
-	public static final ModelDateAttributeHelperUtility SINGLETON = new ModelDateAttributeHelperUtilityImpl();
+	public static final ModelDateAttributeUtilityBuilder SINGLETON = new ModelDateAttributeHelperUtilityImpl();
 
 	private boolean assertFuture = false;
 	private Long minimumFuture = 0L;
@@ -31,12 +31,25 @@ public class ModelDateAttributeHelperUtilityImpl extends AbstractModelAttributeH
 	}
 
 	// MARK: Accessors
+	public ModelDateAttributeHelperUtilityImpl future() {
+		return this.future(0L);
+	}
+
+	public ModelDateAttributeHelperUtilityImpl future(String code) {
+		return this.future(0L, code);
+	}
+
 	public ModelDateAttributeHelperUtilityImpl future(Long minimum) {
 		return this.future(true, minimum);
 	}
 
+	public ModelDateAttributeHelperUtilityImpl future(Long minimum,
+	                                                  String code) {
+		return this.future(true, minimum, code);
+	}
+
 	public ModelDateAttributeHelperUtilityImpl future(boolean future,
-	                                                     Long minimum) {
+	                                                  Long minimum) {
 		return this.future(future, minimum, null);
 	}
 
@@ -52,10 +65,10 @@ public class ModelDateAttributeHelperUtilityImpl extends AbstractModelAttributeH
 	 * @return value. Never {@code null}.
 	 */
 	public ModelDateAttributeHelperUtilityImpl future(boolean future,
-	                                                     Long minimum,
-	                                                     String code) {
-		if (minimum <= 0) {
-			throw new IllegalArgumentException("Minimum must be greater than 0.");
+	                                                  Long minimum,
+	                                                  String code) {
+		if (minimum < 0) {
+			throw new IllegalArgumentException("Minimum must be atleast 0.");
 		}
 
 		this.assertFuture = future;
@@ -75,8 +88,8 @@ public class ModelDateAttributeHelperUtilityImpl extends AbstractModelAttributeH
 	}
 
 	@Override
-	public ModelAttributeHelperUtilityInstance<Date> makeInstance(String attribute,
-	                                                              ModelAttributeUpdateDelegate<Date> delegate) {
+	public ModelAttributeUtilityInstance<Date> makeInstance(String attribute,
+	                                                        ModelAttributeUpdateDelegate<Date> delegate) {
 		return new DateAttributeInstance(attribute, delegate);
 	}
 

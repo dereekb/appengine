@@ -1,13 +1,15 @@
 package com.dereekb.gae.utilities.model.attribute.impl;
 
 import com.dereekb.gae.utilities.data.ValueUtility;
-import com.dereekb.gae.utilities.model.attribute.ModelAttributeHelperUtility;
-import com.dereekb.gae.utilities.model.attribute.ModelAttributeHelperUtilityInstance;
+import com.dereekb.gae.utilities.model.attribute.ModelAttributeTypeUpdateDelegate;
 import com.dereekb.gae.utilities.model.attribute.ModelAttributeUpdateDelegate;
+import com.dereekb.gae.utilities.model.attribute.ModelAttributeUtilityBuilder;
+import com.dereekb.gae.utilities.model.attribute.ModelAttributeUtilityInstance;
+import com.dereekb.gae.utilities.model.attribute.ModelAttributeUtilityTypeInstance;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
- * {@link ModelAttributeHelperUtility} implementation.
+ * {@link ModelAttributeUtilityBuilder} implementation.
  *
  * @author dereekb
  *
@@ -15,9 +17,18 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
  *            model type
  */
 public abstract class AbstractModelAttributeHelperUtility<T, X extends AbstractModelAttributeHelperUtility<T, X>>
-        implements ModelAttributeHelperUtility<T> {
+        implements ModelAttributeUtilityBuilder<T> {
 
 	public static final String REQUIRED_CODE_FORMAT = "%s_REQUIRED";
+
+	private static final ModelAttributeUpdateDelegate<?> DEFAULT_DELEGATE = new ModelAttributeUpdateDelegate<Object>() {
+
+		@Override
+		public void modifyValue(Object value) throws InvalidAttributeException {
+			throw new UnsupportedOperationException();
+		}
+
+	};
 
 	private boolean assertNotNull = false;
 	private String requiredCode = REQUIRED_CODE_FORMAT;
@@ -58,8 +69,14 @@ public abstract class AbstractModelAttributeHelperUtility<T, X extends AbstractM
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ModelAttributeHelperUtilityInstance<T> makeInstance(String attribute,
-	                                                           ModelAttributeUpdateDelegate<T> delegate) {
+	public ModelAttributeUtilityInstance<T> makeInstance(String attribute) {
+		return new AttributeInstance(attribute, null);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ModelAttributeUtilityInstance<T> makeInstance(String attribute,
+	                                                     ModelAttributeUpdateDelegate<T> delegate) {
 		return new AttributeInstance(attribute, delegate);
 	}
 
@@ -71,7 +88,7 @@ public abstract class AbstractModelAttributeHelperUtility<T, X extends AbstractM
 
 	// MARK: Instance
 	protected class AttributeInstance<Y extends AttributeInstance<Y>>
-	        implements ModelAttributeHelperUtilityInstance<T> {
+	        implements ModelAttributeUtilityInstance<T> {
 
 		private String attribute;
 		private ModelAttributeUpdateDelegate<T> delegate;
@@ -99,12 +116,9 @@ public abstract class AbstractModelAttributeHelperUtility<T, X extends AbstractM
 			return this.delegate;
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public void setDelegate(ModelAttributeUpdateDelegate<T> delegate) {
-			if (delegate == null) {
-				throw new IllegalArgumentException("delegate cannot be null.");
-			}
-
-			this.delegate = delegate;
+			this.delegate = ValueUtility.defaultTo(delegate, (ModelAttributeUpdateDelegate) DEFAULT_DELEGATE);
 		}
 
 		public Y initial() {
@@ -134,18 +148,29 @@ public abstract class AbstractModelAttributeHelperUtility<T, X extends AbstractM
 		}
 
 		@Override
-		public ModelAttributeHelperUtilityInstance<T> makeInstance(String attribute,
-		                                                           ModelAttributeUpdateDelegate<T> delegate) {
+		public ModelAttributeUtilityInstance<T> makeInstance(String attribute) throws UnsupportedOperationException {
+			return AbstractModelAttributeHelperUtility.this.makeInstance(attribute, this.delegate);
+		}
+
+		@Override
+		public ModelAttributeUtilityInstance<T> makeInstance(String attribute,
+		                                                     ModelAttributeUpdateDelegate<T> delegate) {
 			return AbstractModelAttributeHelperUtility.this.makeInstance(attribute, delegate);
 		}
 
 		// MARK: ModelAttributeHelperUtilityInstance
 		@Override
-		public void tryUpdateValue(T input) throws InvalidAttributeException {
+		public void updateValue(T input) throws InvalidAttributeException {
+			this.updateValue(input, this.delegate);
+		}
+
+		protected void updateValue(T input,
+		                           ModelAttributeUpdateDelegate<T> delegate)
+		        throws InvalidAttributeException {
 			if (this.isChangeValue(input)) {
 				T value = this.getDecodedValue(input);
 				this.assertValidDecodedValue(value);
-				this.delegate.modifyValue(value);
+				delegate.modifyValue(value);
 			}
 		}
 
@@ -179,6 +204,37 @@ public abstract class AbstractModelAttributeHelperUtility<T, X extends AbstractM
 			String attribute = this.getAttribute();
 			String code = String.format(codeFormat, attribute).toUpperCase();
 			return new InvalidAttributeException(attribute, value, reason, code);
+		}
+
+		@Override
+		public <M> ModelAttributeUtilityTypeInstance<T, M> typeInstance(ModelAttributeTypeUpdateDelegate<T, M> delegate) {
+			return new ModelAttributeUtilityTypeInstanceImpl<M>(delegate);
+		}
+
+		private class ModelAttributeUtilityTypeInstanceImpl<M>
+		        implements ModelAttributeUtilityTypeInstance<T, M> {
+
+			private final ModelAttributeTypeUpdateDelegate<T, M> delegate;
+
+			public ModelAttributeUtilityTypeInstanceImpl(ModelAttributeTypeUpdateDelegate<T, M> delegate) {
+				this.delegate = delegate;
+			}
+
+			// MARK: ModelAttributeUtilityTypeInstance
+			@Override
+			public void tryUpdateValue(T input,
+			                           M model)
+			        throws InvalidAttributeException {
+				AttributeInstance.this.updateValue(input, new ModelAttributeUpdateDelegate<T>() {
+
+					@Override
+					public void modifyValue(T value) throws InvalidAttributeException {
+						ModelAttributeUtilityTypeInstanceImpl.this.delegate.modifyValue(value, model);
+					}
+
+				});
+			}
+
 		}
 
 	}
