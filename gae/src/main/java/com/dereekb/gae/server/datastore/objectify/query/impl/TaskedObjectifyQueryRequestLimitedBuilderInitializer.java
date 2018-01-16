@@ -15,7 +15,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * {@link ObjectifyQueryRequestLimitedBuilderInitializer} implementation that
  * uses a {@link ObjectifyQueryFactory} and {@link Task} to initialize/modify a
  * configurer before using it to configure the input builder.
- * 
+ *
  * @author dereekb
  *
  * @param <Q>
@@ -81,6 +81,7 @@ public class TaskedObjectifyQueryRequestLimitedBuilderInitializer<Q extends Conf
 				}
 			}
 
+			// Re-throw e otherwise.
 			throw e;
 		}
 

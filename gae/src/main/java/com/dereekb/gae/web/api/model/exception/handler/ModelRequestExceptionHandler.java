@@ -16,6 +16,7 @@ import com.dereekb.gae.web.api.model.exception.TooManyRequestKeysException;
 import com.dereekb.gae.web.api.model.exception.TooManyTemplatesException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 
@@ -53,11 +54,18 @@ public class ModelRequestExceptionHandler {
 	public ApiResponse handleException(ApiTooMuchInputException exception) {
 		return ApiResponseImpl.makeFailure(exception);
 	}
-	
+
 	@ResponseBody
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(NoTemplateDataExeption.class)
 	public ApiResponse handleException(NoTemplateDataExeption exception) {
+		return ApiResponseImpl.makeFailure(exception);
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler(InvalidAttributeException.class)
+	public ApiResponse handleException(InvalidAttributeException exception) {
 		return ApiResponseImpl.makeFailure(exception);
 	}
 

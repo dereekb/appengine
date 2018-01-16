@@ -1,47 +1,40 @@
 package com.dereekb.gae.server.auth.security.model.query.task;
 
-import com.dereekb.gae.server.auth.security.misc.task.AbstractSecurityTask;
 import com.dereekb.gae.server.auth.security.model.query.MutableOwnedModelQuery;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
-import com.dereekb.gae.utilities.task.Task;
+import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * Security task that restricts a query to the user's ownerId depending on the
  * role the current security context has.
- * 
+ *
  * Administrator roles are unaffected. Non-user roles are rejected.
- * 
+ *
  * @author dereekb
  *
+ * @deprecated Ownership roles are mostly deprecated in favor of model security
+ *             roles.
  */
-public class SecurityOverrideOwnedModelQueryTask
-        implements Task<MutableOwnedModelQuery> {
+@Deprecated
+public class SecurityOverrideOwnedModelQueryTask extends AbstractLoginTokenSecurityModelQueryTaskOverride<MutableOwnedModelQuery> {
 
 	@Override
-	public void doTask(MutableOwnedModelQuery input) throws FailedTaskException {
-		LoginTokenAuthentication<LoginToken> authentication = AbstractSecurityTask.getAuthentication();
-		LoginTokenUserDetails<LoginToken> details = authentication.getPrincipal();
+	protected void tryUpdateQueryForUser(MutableOwnedModelQuery input,
+	                                     LoginTokenUserDetails<LoginToken> details)
+	        throws InvalidAttributeException,
+	            NoModelKeyException,
+	            FailedTaskException {
+		OwnershipRoles roles = details.getLoginToken().getOwnershipRoles();
+		String ownerId = roles.getOwnerId();
 
-		switch (details.getUserType()) {
-			case ADMINISTRATOR:
-				// Do nothing to modify the input query.
-				break;
-			case USER:
-				OwnershipRoles roles = details.getLoginToken().getOwnershipRoles();
-				String ownerId = roles.getOwnerId();
-
-				if (ownerId != null) {
-					input.setEqualsOwnerId(ownerId);
-					break;
-				}
-
-				// Fall through if there is no ownerId.
-			default:
-				throw new FailedTaskException("No owner is available for querying.");
+		if (ownerId != null) {
+			input.setEqualsOwnerId(ownerId);
+		} else {
+			throw new NoModelKeyException("Security has no ownership of this type.");
 		}
 	}
 

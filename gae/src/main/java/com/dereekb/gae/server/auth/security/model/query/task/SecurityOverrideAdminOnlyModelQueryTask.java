@@ -1,41 +1,37 @@
 package com.dereekb.gae.server.auth.security.model.query.task;
 
-import com.dereekb.gae.server.auth.security.misc.task.AbstractSecurityTask;
-import com.dereekb.gae.server.auth.security.model.query.MutableOwnedModelQuery;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
-import com.dereekb.gae.utilities.task.Task;
+import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * Security task that restricts querying to administrator only.
  * <p>
  * Generally this shouldn't be relied on as much as proper security
- * configurations, just due to the overhead it adds vs those systems.
- * 
+ * configurations, just due to the overhead it adds versus those systems.
+ * (I.E. secure routes only administrators can access.)
+ *
  * @author dereekb
  *
+ * @param <Q>
+ *            query type
  */
-public class SecurityOverrideAdminOnlyModelQueryTask
-        implements Task<MutableOwnedModelQuery> {
+public class SecurityOverrideAdminOnlyModelQueryTask<Q> extends AbstractLoginTokenSecurityModelQueryTaskOverride<Q> {
 
 	@Override
-	public void doTask(MutableOwnedModelQuery input) throws FailedTaskException {
-		LoginTokenAuthentication<LoginToken> authentication = AbstractSecurityTask.getAuthentication();
-		LoginTokenUserDetails<LoginToken> details = authentication.getPrincipal();
-
-		switch (details.getUserType()) {
-			case ADMINISTRATOR:
-				break;
-			default:
-				throw new FailedTaskException("Not allowed to query this type.");
-		}
+	protected void tryUpdateQueryForUser(Q input,
+	                                     LoginTokenUserDetails<LoginToken> details)
+	        throws InvalidAttributeException,
+	            NoModelKeyException,
+	            FailedTaskException {
+		this.throwFailedTaskForUnauthorizedUser();
 	}
 
 	@Override
 	public String toString() {
-		return "SecurityOverrideOwnedModelQueryTask []";
+		return "SecurityOverrideAdminOnlyModelQueryTask []";
 	}
 
 }
