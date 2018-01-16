@@ -289,6 +289,12 @@
 		class="com.dereekb.gae.server.auth.security.ownership.filter.SecurityOwnershipRolesFilter">
 	</bean>
 
+	<!-- Query Overrides -->
+	<bean id="securityOverrideAdminOnlyModelQueryTask"
+		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideOwnedModelQueryTask">
+	</bean>
+	
+	<!-- DEPRECATED -->
 	<bean id="securityOverrideOwnedModelQueryTask"
 		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideOwnedModelQueryTask">
 	</bean>

@@ -20,4 +20,8 @@ public abstract class AbstractModelKeyFieldTaskOverrideDelegate<D extends LoginT
 		super(field);
 	}
 
+	public AbstractModelKeyFieldTaskOverrideDelegate(String field, boolean required) {
+		super(field, required);
+	}
+
 }

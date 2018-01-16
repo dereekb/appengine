@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.model.pointer.search.query;
 
 import java.util.Map;
 
+import com.dereekb.gae.server.auth.model.login.misc.owned.query.MutableLoginOwnedQuery;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.model.query.impl.AbstractOwnedModelQuery;
@@ -14,12 +15,12 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFiel
 
 /**
  * Utility used for querying a {@link LoginPointer}.
- * 
+ *
  * @author dereekb
  *
  */
 public class LoginPointerQuery extends AbstractOwnedModelQuery
-        implements ConfigurableEncodedQueryParameters {
+        implements ConfigurableEncodedQueryParameters, MutableLoginOwnedQuery {
 
 	public static final String TYPE_FIELD = "type";
 	public static final String LOGIN_FIELD = "login";
@@ -59,16 +60,24 @@ public class LoginPointerQuery extends AbstractOwnedModelQuery
 		this.type = IntegerQueryFieldParameter.make(TYPE_FIELD, type);
 	}
 
+	@Override
 	public ModelKeyQueryFieldParameter getLogin() {
 		return this.login;
 	}
 
+	@Override
 	public void setLogin(ModelKey login) {
 		this.login = LOGIN_FIELD_BUILDER.make(LOGIN_FIELD, login);
 	}
 
+	@Override
 	public void setLogin(String login) {
 		this.login = LOGIN_FIELD_BUILDER.makeModelKeyParameter(LOGIN_FIELD, login);
+	}
+
+	@Override
+	public void setLogin(ModelKeyQueryFieldParameter login) {
+		this.login = LOGIN_FIELD_BUILDER.make(LOGIN_FIELD, login);
 	}
 
 	// MARK: ConfigurableQueryParameters

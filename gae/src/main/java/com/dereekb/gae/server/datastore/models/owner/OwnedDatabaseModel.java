@@ -8,9 +8,8 @@ import com.googlecode.objectify.condition.IfNotEmpty;
 
 /**
  * {@link DatabaseModel} that implements {@link Owned}.
- * 
- * @author dereekb
  *
+ * @author dereekb
  */
 public abstract class OwnedDatabaseModel extends DatabaseModel
         implements MutableOwnedModel {

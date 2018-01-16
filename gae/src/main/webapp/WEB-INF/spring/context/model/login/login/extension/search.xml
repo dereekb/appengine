@@ -85,11 +85,25 @@
 	<bean id="securedLoginQueryInitializer"
 		class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer">
 		<constructor-arg index="0" ref="loginQueryInitializer" />
-		<constructor-arg index="1" ref="securityOverrideOwnedModelQueryTask" />
+		<constructor-arg index="1" ref="securityOverrideAdminOnlyModelQueryTask" />
 	</bean>
 
 	<bean id="loginQueryInitializer"
 		class="com.dereekb.gae.server.auth.model.login.search.query.LoginQueryInitializer">
 	</bean>
 
+	<!-- Security -->
+	<bean id="loginOwnedModelQuerySecurityDelegate"
+		class="com.dereekb.gae.server.auth.model.login.misc.owned.query.security.LoginOwnedModelQuerySecurityDelegate">
+		<constructor-arg index="0"
+			ref="anonymousModelRoleSetContextService" />
+	</bean>
+
+	<bean id="optionalLoginOwnedModelQuerySecurityDelegate"
+		class="com.dereekb.gae.server.auth.model.login.misc.owned.query.security.LoginOwnedModelQuerySecurityDelegate">
+		<constructor-arg index="0"
+			ref="anonymousModelRoleSetContextService" />
+		<property name="optional" value="true" />
+	</bean>
+	
 </beans>

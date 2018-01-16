@@ -13,17 +13,41 @@
 	<bean id="loginPointerQueryService"
 		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
 		<constructor-arg index="0" ref="loginPointerRegistry" />
-		<constructor-arg index="1" ref="securedLoginPointerQueryInitializer" />
+		<constructor-arg index="1"
+			ref="securedLoginPointerQueryInitializer" />
 	</bean>
 
 	<bean id="securedLoginPointerQueryInitializer"
 		class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer">
 		<constructor-arg index="0" ref="loginPointerQueryInitializer" />
-		<constructor-arg index="1" ref="securityOverrideOwnedModelQueryTask" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl">
+				<constructor-arg index="0">
+					<list>
+						<ref bean="loginOwnedModelQuerySecurityDelegate" />
+					</list>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
 	</bean>
-	
+
 	<bean id="loginPointerQueryInitializer"
 		class="com.dereekb.gae.server.auth.model.pointer.search.query.LoginPointerQueryInitializer">
+	</bean>
+
+	<!-- Security -->
+	<bean id="loginPointerOwnedModelQuerySecurityDelegate"
+		class="com.dereekb.gae.server.auth.model.pointer.misc.owned.query.security.LoginPointerOwnedModelQuerySecurityDelegate">
+		<constructor-arg index="0"
+			ref="anonymousModelRoleSetContextService" />
+	</bean>
+
+	<bean id="optionalLoginPointerOwnedModelQuerySecurityDelegate"
+		class="com.dereekb.gae.server.auth.model.pointer.misc.owned.query.security.LoginPointerOwnedModelQuerySecurityDelegate">
+		<constructor-arg index="0"
+			ref="anonymousModelRoleSetContextService" />
+		<property name="optional" value="true" />
 	</bean>
 
 </beans>

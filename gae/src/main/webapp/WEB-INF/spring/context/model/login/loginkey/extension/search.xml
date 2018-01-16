@@ -13,15 +13,30 @@
 	<bean id="loginKeyQueryService"
 		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
 		<constructor-arg index="0" ref="loginKeyRegistry" />
-		<constructor-arg index="1" ref="securedLoginKeyQueryInitializer" />
+		<constructor-arg index="1"
+			ref="securedLoginKeyQueryInitializer" />
 	</bean>
 
 	<bean id="securedLoginKeyQueryInitializer"
 		class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer">
 		<constructor-arg index="0" ref="loginKeyQueryInitializer" />
-		<constructor-arg index="1" ref="securityOverrideOwnedModelQueryTask" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl">
+				<constructor-arg index="0">
+					<list>
+						<ref bean="optionalLoginOwnedModelQuerySecurityDelegate" />
+						<ref bean="optionalLoginPointerOwnedModelQuerySecurityDelegate" />
+						<!-- Ensure one of the optionals is picked. -->
+						<bean
+							class="com.dereekb.gae.server.auth.model.key.search.query.security.LoginKeyQuerySecurityDelegate">
+						</bean>
+					</list>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
 	</bean>
-	
+
 	<bean id="loginKeyQueryInitializer"
 		class="com.dereekb.gae.server.auth.model.key.search.query.LoginKeyQueryInitializer">
 	</bean>

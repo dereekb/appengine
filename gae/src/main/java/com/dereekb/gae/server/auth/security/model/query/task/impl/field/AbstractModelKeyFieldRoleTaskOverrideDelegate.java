@@ -28,13 +28,22 @@ public abstract class AbstractModelKeyFieldRoleTaskOverrideDelegate<D extends Lo
 
 	protected static final ModelRole DEFAULT_QUERY_ROLE = CrudModelRole.SEARCH;
 
+	private static boolean DEFAULT_REQUIRED = false;
+
 	private String type;
 	private AnonymousModelRoleSetContextService roleService;
 
 	public AbstractModelKeyFieldRoleTaskOverrideDelegate(String field,
 	        String type,
 	        AnonymousModelRoleSetContextService roleService) {
-		super(field);
+		this(field, DEFAULT_REQUIRED, type, roleService);
+	}
+
+	public AbstractModelKeyFieldRoleTaskOverrideDelegate(String field,
+	        boolean required,
+	        String type,
+	        AnonymousModelRoleSetContextService roleService) {
+		super(field, required);
 		this.setType(type);
 		this.setRoleService(roleService);
 	}
