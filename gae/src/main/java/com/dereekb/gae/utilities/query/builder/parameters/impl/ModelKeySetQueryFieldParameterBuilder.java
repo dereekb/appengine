@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
 
 /**
  * Builder for a {@link ModelKeySetQueryFieldParameter}.
- * 
+ *
  * @author dereekb
  *
  */

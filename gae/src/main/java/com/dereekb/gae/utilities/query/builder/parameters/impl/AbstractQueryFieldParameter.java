@@ -149,7 +149,7 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 	 * <p>
 	 * Equivalent to calling {@link #clearOperator()} and
 	 * {@link #setOrdering(QueryResultsOrdering)}.
-	 * 
+	 *
 	 * @param ordering
 	 *            {@link QueryResultsOrdering}. Never {@code null}.
 	 */
@@ -309,7 +309,7 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 
 	/**
 	 * Retrieves the current parameter value.
-	 * 
+	 *
 	 * @return {@link String} value for the current value. Never {@code null}.
 	 */
 	protected String getParameterValue() {
@@ -318,7 +318,7 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 
 	/**
 	 * Sets the parameter value.
-	 * 
+	 *
 	 * @param value
 	 *            {@link String}. Never {@code null}.
 	 * @throws IllegalArgumentException
@@ -350,14 +350,14 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 
 	/**
 	 * Encodes the parameter value.
-	 * 
+	 *
 	 * @return {@link String} value for the current value. Never {@code null}.
 	 */
 	protected abstract String encodeParameterValue(T value);
 
 	/**
 	 * Decodes the parameter value.
-	 * 
+	 *
 	 * @param value
 	 *            {@link String}. Never {@code null}.
 	 * @return value. May be {@code null}.
@@ -368,7 +368,7 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 
 	/**
 	 * Retrieves the string representation for a null value.
-	 * 
+	 *
 	 * @return {@link String} value for the current value. Never {@code null}.
 	 */
 	protected String getNullParameterValue() throws IllegalArgumentException {
@@ -377,12 +377,17 @@ public abstract class AbstractQueryFieldParameter<T> extends ValueExpressionOper
 
 	/**
 	 * Called when the value needs to be set null.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             if the input value is not acceptable.
 	 */
 	protected void setNullParameterValue() throws IllegalArgumentException {
 		this.value = null;
+	}
+
+	// MARK: Utility
+	public static <T extends AbstractQueryFieldParameter<?>> boolean isNullOrHasNullValue(T parameter) {
+		return (parameter == null || parameter.getValue() == null);
 	}
 
 	@Override

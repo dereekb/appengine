@@ -13,9 +13,9 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
 public interface AbstractSecurityModelQueryTaskOverrideDelegate<D extends LoginTokenUserDetails<?>, Q> {
 
 	/**
-	 * Updates the input query.
+	 * Updates the query.
 	 *
-	 * @param input
+	 * @param query
 	 *            query. Never {@code null}.
 	 * @param details
 	 *            details. Never {@code null}.
@@ -24,7 +24,7 @@ public interface AbstractSecurityModelQueryTaskOverrideDelegate<D extends LoginT
 	 * @throws NoModelKeyException
 	 *             thrown if a required security key is unavailable.
 	 */
-	public void updateQueryForUser(Q input,
+	public void updateQueryForUser(Q query,
 	                               D details)
 	        throws InvalidAttributeException,
 	            NoModelKeyException;

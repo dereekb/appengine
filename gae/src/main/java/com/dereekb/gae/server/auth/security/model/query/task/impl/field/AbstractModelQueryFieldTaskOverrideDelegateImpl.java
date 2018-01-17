@@ -1,8 +1,12 @@
 package com.dereekb.gae.server.auth.security.model.query.task.impl.field;
 
+import java.util.Set;
+
 import com.dereekb.gae.server.auth.security.model.query.task.impl.AbstractSecurityModelQueryTaskOverrideDelegate;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.builder.parameters.QueryFieldParameter;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
@@ -18,10 +22,11 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
  * @param <Q>
  *            query type
  */
-public abstract class AbstractModelQueryFieldTaskOverrideDelegateImpl<F, D extends LoginTokenUserDetails<?>, Q>
+public abstract class AbstractModelQueryFieldTaskOverrideDelegateImpl<F extends QueryFieldParameter<?>, D extends LoginTokenUserDetails<?>, Q>
         implements AbstractSecurityModelQueryTaskOverrideDelegate<D, Q> {
 
 	public static final String REQUIRED_FIELD_CODE = "REQUIRED_FIELD";
+	public static final String ILLEGAL_OPERATOR_CODE = "ILLEGAL_OPERATOR";
 
 	private static boolean DEFAULT_REQUIRED = false;
 	private static boolean DEFAULT_TRY_DEFAULT = true;
@@ -29,6 +34,7 @@ public abstract class AbstractModelQueryFieldTaskOverrideDelegateImpl<F, D exten
 	private final String field;
 	private boolean required;
 	private boolean tryDefault;
+	private Set<ExpressionOperator> allowedOps;
 
 	public AbstractModelQueryFieldTaskOverrideDelegateImpl(String field) {
 		this(field, DEFAULT_REQUIRED);
@@ -73,6 +79,14 @@ public abstract class AbstractModelQueryFieldTaskOverrideDelegateImpl<F, D exten
 		this.setTryDefault(!optional);
 	}
 
+	public Set<ExpressionOperator> getAllowedOps() {
+		return this.allowedOps;
+	}
+
+	public void setAllowedOps(Set<ExpressionOperator> allowedOps) {
+		this.allowedOps = allowedOps;
+	}
+
 	// MARK: AbstractSecurityModelQueryTaskOverrideDelegate
 	@Override
 	public void updateQueryForUser(Q query,
@@ -92,6 +106,7 @@ public abstract class AbstractModelQueryFieldTaskOverrideDelegateImpl<F, D exten
 		}
 
 		if (field != null) {
+			this.assertHasAllowedOperator(field, query, details);
 			this.assertHasAccessToFieldValue(field, query, details);
 		}
 	}
@@ -132,8 +147,29 @@ public abstract class AbstractModelQueryFieldTaskOverrideDelegateImpl<F, D exten
 		}
 	}
 
+	protected void throwIsRequiredException() throws InvalidAttributeException {
+		throw this.makeIsRequiredException();
+	}
+
 	protected InvalidAttributeException makeIsRequiredException() throws InvalidAttributeException {
 		return new InvalidAttributeException(this.field, null, "This field is required.", REQUIRED_FIELD_CODE);
+	}
+
+	private void assertHasAllowedOperator(F field,
+	                                    Q query,
+	                                    D details) {
+		if (this.allowedOps != null) {
+			ExpressionOperator operator = field.getOperator();
+
+			if (!this.allowedOps.contains(operator)) {
+				this.throwIllegalOperatorException();
+			}
+		}
+	}
+
+	protected void throwIllegalOperatorException() throws InvalidAttributeException {
+		throw new InvalidAttributeException(this.field, null, "Illegal operator for this field.",
+		        ILLEGAL_OPERATOR_CODE);
 	}
 
 	/**
@@ -151,5 +187,11 @@ public abstract class AbstractModelQueryFieldTaskOverrideDelegateImpl<F, D exten
 	                                                    Q query,
 	                                                    D details)
 	        throws InvalidAttributeException;
+
+	@Override
+	public String toString() {
+		return "AbstractModelQueryFieldTaskOverrideDelegateImpl [field=" + this.field + ", required=" + this.required
+		        + ", tryDefault=" + this.tryDefault + "]";
+	}
 
 }

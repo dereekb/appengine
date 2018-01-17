@@ -30,7 +30,7 @@ public enum ExpressionOperator {
 
 	/**
 	 * Used to check that one or more items of one collection are in another.
-	 * 
+	 *
 	 * I.E. will check if EITHER object A or B are referenced within a
 	 * collection.
 	 */
@@ -55,7 +55,11 @@ public enum ExpressionOperator {
 		this.value = value;
 		this.inequality = inequality;
 	}
-	
+
+	public boolean isEquality() {
+		return !this.inequality;
+	}
+
 	public boolean isInequality() {
 		return this.inequality;
 	}

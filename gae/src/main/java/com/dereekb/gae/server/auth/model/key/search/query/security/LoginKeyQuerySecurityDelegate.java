@@ -8,8 +8,9 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFiel
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
- * Delegate for {@link LoginKeyQuery}. Ensures that either Student, Tutor, or
- * Login fields are set.
+ * Delegate for {@link LoginKeyQuery}.
+ * <p>
+ * Ensures that either Login or LoginPointer are set.
  *
  * @author dereekb
  *

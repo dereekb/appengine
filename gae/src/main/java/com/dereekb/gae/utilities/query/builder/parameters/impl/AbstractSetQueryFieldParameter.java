@@ -6,10 +6,11 @@ import java.util.Set;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeySetQueryFieldParameterBuilder.ModelKeySetQueryFieldParameter;
 
 /**
  * Abstract Set query field parameter.
- * 
+ *
  * @author dereekb
  *
  */
@@ -98,5 +99,10 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 	protected abstract String encodeValuesFromString(Collection<T> values);
 
 	protected abstract Collection<T> decodeValuesFromString(String value);
+
+	// MARK: Utility
+	public static <T extends ModelKeySetQueryFieldParameter> boolean isNullOrHasNoValue(T parameter) {
+		return (parameter == null || parameter.getValue() == null || parameter.getValue().isEmpty());
+	}
 
 }
