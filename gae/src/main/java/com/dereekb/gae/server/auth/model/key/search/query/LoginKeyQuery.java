@@ -40,7 +40,7 @@ public class LoginKeyQuery extends AbstractOwnedModelQuery
 
 	@Override
 	public ModelKeyQueryFieldParameter getLogin() {
-		return this.loginPointer;
+		return this.login;
 	}
 
 	@Override
@@ -58,7 +58,8 @@ public class LoginKeyQuery extends AbstractOwnedModelQuery
 		this.login = LOGIN_FIELD_BUILDER.make(LOGIN_FIELD, login);
 	}
 
-	public ModelKeyQueryFieldParameter getlogin() {
+	@Override
+	public ModelKeyQueryFieldParameter getLoginPointer() {
 		return this.loginPointer;
 	}
 
@@ -93,12 +94,6 @@ public class LoginKeyQuery extends AbstractOwnedModelQuery
 		super.setParameters(parameters);
 		this.setLogin(parameters.get(LOGIN_FIELD));
 		this.setLoginPointer(parameters.get(LOGIN_POINTER_FIELD));
-	}
-
-	@Override
-	public ModelKeyQueryFieldParameter getLoginPointer() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
