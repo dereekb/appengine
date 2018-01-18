@@ -46,6 +46,8 @@ public abstract class AbstractSecurityModelQueryTaskOverride<D extends LoginToke
 		} catch (NoSecurityContextException e) {
 			throw new FailedTaskException("No security context is available.", e);
 		} catch (InvalidAttributeException e) {
+
+
 			throw new FailedTaskException("Illegal query argument.", e);
 		} catch (NoModelKeyException e) {
 			throw new FailedTaskException("One or more required security keys were unavailable.", e);

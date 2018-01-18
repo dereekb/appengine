@@ -3,6 +3,7 @@ package com.dereekb.gae.web.api.model.extension.search;
 import java.util.Set;
 
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
 /**
@@ -25,7 +26,8 @@ public interface ApiSearchDelegate {
 	 *             if the type is unknown/unavailable.
 	 */
 	public ApiResponse search(String type,
-	                          ApiSearchReadRequest request) throws UnavailableTypesException;
+	                          ApiSearchReadRequest request)
+	        throws UnavailableTypesException;
 
 	/**
 	 * Searches multiple types.
@@ -38,7 +40,8 @@ public interface ApiSearchDelegate {
 	 *             if a specified type is unknown/unavailable.
 	 */
 	public ApiResponse search(Set<String> types,
-	                          ApiSearchReadRequest request) throws UnavailableTypesException;
+	                          ApiSearchReadRequest request)
+	        throws UnavailableTypesException;
 
 	/**
 	 * Queries a single type.
@@ -50,9 +53,13 @@ public interface ApiSearchDelegate {
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
 	 * @throws UnavailableTypesException
 	 *             if the type is unknown/unavailable.
+	 * @throws IllegalQueryArgumentException
+	 *             if the input query is invalid.
 	 */
 	public ApiResponse query(String type,
-	                         ApiSearchReadRequest request) throws UnavailableTypesException;
+	                         ApiSearchReadRequest request)
+	        throws UnavailableTypesException,
+	            IllegalQueryArgumentException;
 
 	/**
 	 * Updates the search index.

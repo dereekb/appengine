@@ -70,19 +70,10 @@ public class TaskedObjectifyQueryRequestLimitedBuilderInitializer<Q extends Conf
 			Throwable cause = e.getCause();
 
 			if (cause != null) {
-				Class<?> causeClass = cause.getClass();
-
-				// Only try and catch illegal argument exceptions that might
-				// have come from the query, otherwise fail early so we can find
-				// issues in the system.
-				if (IllegalArgumentException.class.isAssignableFrom(causeClass)) {
-					// TODO: Change to IllegalQueryArgumentException
-					throw (IllegalArgumentException) cause;
-				}
+				throw (RuntimeException) cause;
+			} else {
+				throw new IllegalQueryArgumentException(e);
 			}
-
-			// Re-throw e otherwise.
-			throw e;
 		}
 
 		query.configure(builder);

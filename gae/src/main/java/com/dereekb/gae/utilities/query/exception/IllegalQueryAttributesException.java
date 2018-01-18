@@ -1,9 +1,8 @@
-package com.dereekb.gae.web.api.util.attribute.exception;
+package com.dereekb.gae.utilities.query.exception;
 
 import java.util.Collection;
-import java.util.List;
 
-import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
@@ -12,35 +11,29 @@ import com.dereekb.gae.web.api.util.attribute.builder.KeyedInvalidAttributeApiRe
 import com.dereekb.gae.web.api.util.attribute.impl.MultiKeyedInvalidAttributesImpl;
 
 /**
- * Exception that contains one or more {@link KeyedInvalidAttribute}
- * instances.
+ * Thrown when one or more attributes are invalid.
  * <p>
  * Wraps an {@link MultiKeyedInvalidAttributes}.
  *
  * @author dereekb
  *
- * @see KeyedInvalidAttributeException
  */
-public class MultiKeyedInvalidAttributeException extends ApiSafeRuntimeException
-        implements MultiKeyedInvalidAttributes {
+public class IllegalQueryAttributesException extends IllegalQueryArgumentException
+        implements MultiKeyedInvalidAttributes, ApiResponseErrorConvertable {
 
 	private static final long serialVersionUID = 1L;
 
 	private MultiKeyedInvalidAttributes keyedInvalidAttributes;
 
-	public MultiKeyedInvalidAttributeException(InvalidAttribute invalidAttribute) {
+	public IllegalQueryAttributesException(InvalidAttribute invalidAttribute) {
 		this(new MultiKeyedInvalidAttributesImpl(invalidAttribute));
 	}
 
-	public MultiKeyedInvalidAttributeException(KeyedInvalidAttribute keyedInvalidAttribute) {
+	public IllegalQueryAttributesException(KeyedInvalidAttribute keyedInvalidAttribute) {
 		this(new MultiKeyedInvalidAttributesImpl(keyedInvalidAttribute));
 	}
 
-	public MultiKeyedInvalidAttributeException(List<? extends KeyedInvalidAttribute> failures) {
-		this(new MultiKeyedInvalidAttributesImpl(failures));
-	}
-
-	public MultiKeyedInvalidAttributeException(MultiKeyedInvalidAttributes keyedInvalidAttributes) {
+	public IllegalQueryAttributesException(MultiKeyedInvalidAttributes keyedInvalidAttributes) {
 		this.setKeyedInvalidAttributes(keyedInvalidAttributes);
 	}
 
@@ -70,7 +63,7 @@ public class MultiKeyedInvalidAttributeException extends ApiSafeRuntimeException
 
 	@Override
 	public String toString() {
-		return "MultiKeyedInvalidAttributeException [keyedInvalidAttributes=" + this.keyedInvalidAttributes + "]";
+		return "IllegalQueryAttributesException [keyedInvalidAttributes=" + this.keyedInvalidAttributes + "]";
 	}
 
 }

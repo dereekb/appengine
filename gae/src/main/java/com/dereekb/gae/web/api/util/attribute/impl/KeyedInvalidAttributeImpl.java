@@ -8,7 +8,7 @@ import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 
 /**
  * {@link KeyedInvalidAttribute} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -16,6 +16,10 @@ public class KeyedInvalidAttributeImpl extends InvalidAttributeImpl
         implements KeyedInvalidAttribute {
 
 	private ModelKey modelKey;
+
+	public KeyedInvalidAttributeImpl(InvalidAttribute failure) {
+		this(ModelKey.nullKey(), failure);
+	}
 
 	public KeyedInvalidAttributeImpl(KeyedInvalidAttribute failure) {
 		this(failure.keyValue(), failure);
@@ -32,7 +36,7 @@ public class KeyedInvalidAttributeImpl extends InvalidAttributeImpl
 	public KeyedInvalidAttributeImpl(ModelKey templateKey, String attribute, String value, String detail) {
 		this(templateKey, attribute, value, detail, null);
 	}
-	
+
 	public KeyedInvalidAttributeImpl(ModelKey templateKey, String attribute, String value, String detail, String code) {
 		this(templateKey, attribute, value, detail, code, null);
 	}

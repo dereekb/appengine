@@ -44,7 +44,7 @@ public class UpdateFunction<T extends UniqueModel> extends AtomicFunction<T, Upd
 		try {
 			this.updateDelegate.update(template, target);
 			pair.setSuccessful(true);
-		} catch (AttributeFailureException e) {
+		} catch (InvalidAttributeException e) {
 			pair.setFailureException(e);
 			throw new AtomicFunctionException(template, e);
 		}

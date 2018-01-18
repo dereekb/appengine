@@ -143,7 +143,7 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 
 	}
 
-	protected abstract class AbstractTestingInstance<U extends TestingInstanceObject>
+	public abstract class AbstractTestingInstance<U extends TestingInstanceObject>
 	        implements TestingInstanceObject {
 
 		public final U testUser;

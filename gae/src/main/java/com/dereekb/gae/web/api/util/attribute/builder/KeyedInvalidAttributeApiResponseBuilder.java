@@ -9,11 +9,12 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseError;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.util.attribute.InvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
+import com.dereekb.gae.web.api.util.attribute.MultiKeyedInvalidAttributes;
 import com.dereekb.gae.web.api.util.attribute.impl.KeyedInvalidAttributeData;
 
 /**
  * Used for resolving {@link KeyedInvalidAttribute} types.
- * 
+ *
  * @author dereekb
  *
  */
@@ -31,6 +32,10 @@ public class KeyedInvalidAttributeApiResponseBuilder {
 
 	public static ApiResponseErrorImpl make(KeyedInvalidAttribute failure) {
 		return make(new SingleItem<KeyedInvalidAttribute>(failure));
+	}
+
+	public static ApiResponseErrorImpl make(MultiKeyedInvalidAttributes attributes) {
+		return make(attributes.getInvalidAttributes());
 	}
 
 	public static ApiResponseErrorImpl make(Iterable<? extends KeyedInvalidAttribute> failures) {

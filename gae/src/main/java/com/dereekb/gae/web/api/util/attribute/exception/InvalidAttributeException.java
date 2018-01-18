@@ -12,7 +12,7 @@ import com.dereekb.gae.web.api.util.attribute.impl.InvalidAttributeImpl;
  * Exception thrown when a change fails due to a field/attribute.
  *
  * @author dereekb
- * 
+ *
  * @see InvalidAttribute
  */
 public class InvalidAttributeException extends ApiSafeRuntimeException
@@ -77,7 +77,7 @@ public class InvalidAttributeException extends ApiSafeRuntimeException
 
 	@Override
 	public String toString() {
-		return "AttributeFailureException [failure=" + this.failure + "]";
+		return "InvalidAttributeException [failure=" + this.failure + "]";
 	}
 
 	// MARK: ApiSafeRuntimeException

@@ -4,10 +4,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
+import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
+import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.ClientQueryRequestSender;
 import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
+import com.dereekb.gae.client.api.model.extension.search.query.response.SerializedClientModelQueryApiResponse;
 import com.dereekb.gae.client.api.model.extension.search.shared.builder.impl.AbstractClientSearchRequestSender;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
@@ -16,6 +21,7 @@ import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
@@ -30,7 +36,7 @@ import com.googlecode.objectify.Key;
 
 /**
  * {@link ClientQueryRequestSender} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -80,7 +86,8 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 	// MARK: ClientQueryRequestSender
 	@Override
 	public ClientModelQueryResponse<T> query(SearchRequest request)
-	        throws ClientIllegalArgumentException,
+	        throws ClientKeyedInvalidAttributeException,
+	            ClientIllegalArgumentException,
 	            ClientRequestFailureException {
 		return this.query(request, null);
 	}
@@ -88,7 +95,8 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 	@Override
 	public ClientModelQueryResponse<T> query(SearchRequest request,
 	                                         ClientRequestSecurity security)
-	        throws ClientIllegalArgumentException,
+	        throws ClientKeyedInvalidAttributeException,
+	            ClientIllegalArgumentException,
 	            ClientRequestFailureException {
 
 		SerializedClientApiResponse<ClientModelQueryResponse<T>> clientResponse = this.sendRequest(request, security);
@@ -97,6 +105,19 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender
+	@Override
+	public SerializedClientModelQueryApiResponse<T> sendRequest(SearchRequest request,
+	                                                            ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientTooMuchInputException,
+	            ClientRequestFailureException {
+		ClientRequest clientRequest = this.buildClientRequest(request);
+		ClientApiResponse clientResponse = this.sendRequest(clientRequest, security);
+		return new SerializedClientModelQueryApiResponseImpl(request, clientResponse, security);
+	}
+
 	@Override
 	public ClientRequest buildClientRequest(SearchRequest request) {
 
@@ -113,17 +134,28 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 
 	@Override
 	public ClientModelQueryResponse<T> serializeResponseData(SearchRequest request,
+	                                                         ClientApiResponse response)
+	        throws ClientResponseSerializationException {
+		throw new UnsupportedOperationException("Security is required.");
+	}
+
+	@Override
+	public ClientModelQueryResponse<T> serializeResponseData(SearchRequest request,
 	                                                         ClientApiResponse response,
 	                                                         ClientRequestSecurity security)
 	        throws ClientResponseSerializationException {
 		return new ClientQueryResponseImpl(request, response, security);
 	}
 
-	@Override
-	public ClientModelQueryResponse<T> serializeResponseData(SearchRequest request,
-	                                                         ClientApiResponse response)
-	        throws ClientResponseSerializationException {
-		throw new UnsupportedOperationException("Security is required.");
+	protected class SerializedClientModelQueryApiResponseImpl extends SerializedClientApiResponseImpl
+	        implements SerializedClientModelQueryApiResponse<T> {
+
+		public SerializedClientModelQueryApiResponseImpl(SearchRequest request,
+		        ClientApiResponse response,
+		        ClientRequestSecurity security) {
+			super(request, response, security);
+		}
+
 	}
 
 	private class ClientQueryResponseImpl extends AbstractClientSearchResponse

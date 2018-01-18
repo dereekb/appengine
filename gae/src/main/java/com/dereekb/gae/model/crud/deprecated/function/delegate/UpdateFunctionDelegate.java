@@ -17,6 +17,6 @@ public interface UpdateFunctionDelegate<T> {
 	 *             If the update fails.
 	 */
 	public void update(T template,
-	                   T target) throws AttributeFailureException;
+	                   T target) throws InvalidAttributeException;
 
 }

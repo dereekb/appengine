@@ -39,7 +39,7 @@ public class CreateFunctionDelegateImpl<T extends UniqueModel>
 
 		try {
 			this.updateDelegate.update(source, newModel);
-		} catch (AttributeFailureException e) {
+		} catch (InvalidAttributeException e) {
 			throw new InvalidTemplateException(e);
 		}
 

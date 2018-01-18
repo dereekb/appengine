@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.constraints.NotEmpty;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.exception.LinkServiceChangeSetException;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryAttributesException;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
@@ -163,6 +165,8 @@ public class SearchExtensionApiController {
 			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
+		} catch (IllegalQueryAttributesException e) {
+			throw e;
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
 		} catch (DatastoreNeedIndexException e) {

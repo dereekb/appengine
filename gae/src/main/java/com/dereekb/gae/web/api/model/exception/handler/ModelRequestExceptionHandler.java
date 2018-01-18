@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
+import com.dereekb.gae.utilities.query.exception.IllegalQueryAttributesException;
 import com.dereekb.gae.web.api.model.crud.exception.NoTemplateDataExeption;
 import com.dereekb.gae.web.api.model.exception.ApiTooMuchInputException;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
@@ -80,6 +81,13 @@ public class ModelRequestExceptionHandler {
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler(MultiKeyedInvalidAttributeException.class)
 	public ApiResponse handleException(MultiKeyedInvalidAttributeException exception) {
+		return ApiResponseImpl.makeFailure(exception);
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler(IllegalQueryAttributesException.class)
+	public ApiResponse handleException(IllegalQueryAttributesException exception) {
 		return ApiResponseImpl.makeFailure(exception);
 	}
 

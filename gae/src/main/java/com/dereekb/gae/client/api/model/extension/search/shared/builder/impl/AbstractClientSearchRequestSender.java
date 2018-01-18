@@ -2,6 +2,8 @@ package com.dereekb.gae.client.api.model.extension.search.shared.builder.impl;
 
 import java.util.Collection;
 
+import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractConfiguredClientModelRequestSender;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
@@ -54,6 +56,23 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 		}
 
 		this.keyConverter = keyConverter;
+	}
+
+	// MARK: Override
+	@Override
+	public void assertSuccessfulResponse(ClientApiResponse clientResponse)
+	        throws ClientKeyedInvalidAttributeException,
+	            ClientRequestFailureException {
+		if (clientResponse.isSuccessful() == false) {
+			this.assertNoInvalidSearchAttributes(clientResponse);
+			super.assertSuccessfulResponse(clientResponse);
+		}
+	}
+
+	public void assertNoInvalidSearchAttributes(ClientApiResponse clientResponse)
+	        throws ClientKeyedInvalidAttributeException {
+		ClientKeyedInvalidAttributeException.utility(this.getObjectMapper())
+		        .assertNoInvalidAttributes(clientResponse);
 	}
 
 	protected class AbstractClientSearchResponse extends AbstractSerializedResponse
