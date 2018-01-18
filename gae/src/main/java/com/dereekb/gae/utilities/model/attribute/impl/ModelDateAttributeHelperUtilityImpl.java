@@ -30,6 +30,38 @@ public class ModelDateAttributeHelperUtilityImpl extends AbstractModelAttributeH
 		return new ModelDateAttributeHelperUtilityImpl();
 	}
 
+	public boolean isAssertFuture() {
+		return this.assertFuture;
+	}
+
+	public void setAssertFuture(boolean assertFuture) {
+		this.assertFuture = assertFuture;
+	}
+
+	public Long getMinimumFuture() {
+		return this.minimumFuture;
+	}
+
+	public void setMinimumFuture(Long minimumFuture) {
+		if (minimumFuture == null) {
+			throw new IllegalArgumentException("minimumFuture cannot be null.");
+		}
+
+		this.minimumFuture = minimumFuture;
+	}
+
+	public String getFutureCode() {
+		return this.futureCode;
+	}
+
+	public void setFutureCode(String futureCode) {
+		if (futureCode == null) {
+			throw new IllegalArgumentException("futureCode cannot be null.");
+		}
+
+		this.futureCode = futureCode;
+	}
+
 	// MARK: Accessors
 	public ModelDateAttributeHelperUtilityImpl future() {
 		return this.future(0L);

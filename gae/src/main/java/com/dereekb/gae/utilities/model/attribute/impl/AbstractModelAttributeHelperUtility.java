@@ -67,10 +67,9 @@ public abstract class AbstractModelAttributeHelperUtility<T, X extends AbstractM
 	@Override
 	public abstract T getDecodedValue(T value);
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public ModelAttributeUtilityInstance<T> makeInstance(String attribute) {
-		return new AttributeInstance(attribute, null);
+		return this.makeInstance(attribute, null);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
