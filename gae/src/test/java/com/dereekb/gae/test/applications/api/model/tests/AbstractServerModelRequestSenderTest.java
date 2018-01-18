@@ -17,7 +17,11 @@ import com.dereekb.gae.test.mock.client.extension.ModelClientQueryRequestSenderT
 import com.dereekb.gae.test.mock.client.extension.ModelClientRolesContextServiceRequestSenderTestUtility;
 
 /**
- * Abstract server tests
+ * Abstract server tests.
+ * <p>
+ * Passing these tests with a system account generally means the API is at least
+ * usable for CRUD calls, but does not indicate the business logic behind them
+ * is valid.
  *
  * @author dereekb
  *
@@ -287,28 +291,32 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 	@Test
 	public void testSystemClientReadModelRolesForSingleModelAtomicFailsOnMissing() throws Exception {
 		if (this.modelRolesRequestUtility != null) {
-			this.modelRolesRequestUtility.testSystemClientReadModelRolesForSingleModelAtomicFailsOnMissing(this.getRequestSecurity());
+			this.modelRolesRequestUtility
+			        .testSystemClientReadModelRolesForSingleModelAtomicFailsOnMissing(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testSystemClientReadModelRolesForMultipleModelsAtomic() throws Exception {
 		if (this.modelRolesRequestUtility != null) {
-			this.modelRolesRequestUtility.testSystemClientReadModelRolesForMultipleModelsAtomic(this.getRequestSecurity());
+			this.modelRolesRequestUtility
+			        .testSystemClientReadModelRolesForMultipleModelsAtomic(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testSystemClientReadModelRolesForMultipleModelsAtomicFailsOnMissing() throws Exception {
 		if (this.modelRolesRequestUtility != null) {
-			this.modelRolesRequestUtility.testSystemClientReadModelRolesForMultipleModelsAtomicFailsOnMissing(this.getRequestSecurity());
+			this.modelRolesRequestUtility
+			        .testSystemClientReadModelRolesForMultipleModelsAtomicFailsOnMissing(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testSystemClientReadModelRolesForMultipleModelsNonAtomicWithMissing() throws Exception {
 		if (this.modelRolesRequestUtility != null) {
-			this.modelRolesRequestUtility.testSystemClientReadModelRolesForMultipleModelsNonAtomicWithMissing(this.getRequestSecurity());
+			this.modelRolesRequestUtility
+			        .testSystemClientReadModelRolesForMultipleModelsNonAtomicWithMissing(this.getRequestSecurity());
 		}
 	}
 

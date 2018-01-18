@@ -26,7 +26,7 @@ public class SecurityOverrideAdminOnlyModelQueryTask<Q> extends AbstractLoginTok
 	        throws InvalidAttributeException,
 	            NoModelKeyException,
 	            FailedTaskException {
-		this.throwFailedTaskForUnauthorizedUser();
+		this.throwInvalidAttributeForUnauthorizedUser();
 	}
 
 	@Override

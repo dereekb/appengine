@@ -291,7 +291,7 @@
 
 	<!-- Query Overrides -->
 	<bean id="securityOverrideAdminOnlyModelQueryTask"
-		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideOwnedModelQueryTask">
+		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideAdminOnlyModelQueryTask">
 	</bean>
 	
 	<!-- DEPRECATED -->

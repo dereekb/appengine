@@ -24,6 +24,9 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 
 /**
  * Test utility for {@link ClientModelRolesContextServiceRequestSender}.
+ * <p>
+ * Failing any of these tests generally means that the roles are probably not
+ * configured properly.
  *
  * @author dereekb
  *

@@ -27,6 +27,8 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
 public abstract class AbstractSecurityModelQueryTaskOverride<D extends LoginTokenUserDetails<?>, Q>
         implements Task<Q> {
 
+	public static final String UNAUTHORIZED_QUERY_CODE = "UNAUTHORIZED_QUERY";
+
 	@Override
 	public void doTask(Q input) throws FailedTaskException {
 		try {
@@ -46,8 +48,6 @@ public abstract class AbstractSecurityModelQueryTaskOverride<D extends LoginToke
 		} catch (NoSecurityContextException e) {
 			throw new FailedTaskException("No security context is available.", e);
 		} catch (InvalidAttributeException e) {
-
-
 			throw new FailedTaskException("Illegal query argument.", e);
 		} catch (NoModelKeyException e) {
 			throw new FailedTaskException("One or more required security keys were unavailable.", e);
@@ -68,11 +68,12 @@ public abstract class AbstractSecurityModelQueryTaskOverride<D extends LoginToke
 	        throws InvalidAttributeException,
 	            NoModelKeyException,
 	            FailedTaskException {
-		this.throwFailedTaskForUnauthorizedUser();
+		this.throwInvalidAttributeForUnauthorizedUser();
 	}
 
-	protected void throwFailedTaskForUnauthorizedUser() throws FailedTaskException {
-		throw new FailedTaskException("This security user type is not allowed to query.");
+	protected void throwInvalidAttributeForUnauthorizedUser() throws FailedTaskException {
+		throw new InvalidAttributeException("query", null, "This security user type is not allowed to query this.",
+		        UNAUTHORIZED_QUERY_CODE);
 	}
 
 	@Override

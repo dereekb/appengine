@@ -24,7 +24,7 @@ public class ApiIllegalArgumentException extends IllegalArgumentException
 	public IllegalArgumentException exception;
 
 	public ApiIllegalArgumentException(IllegalArgumentException exception) {
-		this.exception = exception;
+		this.setException(exception);
 	}
 
 	public IllegalArgumentException getException() {
