@@ -66,6 +66,7 @@ import com.dereekb.gae.web.api.auth.controller.model.ApiLoginTokenModelContextTy
 import com.dereekb.gae.web.api.auth.controller.model.impl.ApiLoginTokenModelContextTypeImpl;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
+import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 import com.googlecode.objectify.Key;
 
 public abstract class AbstractModelClientTests extends ApiApplicationTestContext {
@@ -380,26 +381,28 @@ public abstract class AbstractModelClientTests extends ApiApplicationTestContext
 			}
 
 			// MARK: Query
-			public ClientModelQueryResponse<T> query() {
+			public ClientModelQueryResponse<T> query() throws MultiKeyedInvalidAttributeException {
 				return this.query(false);
 			}
 
-			public ClientModelQueryResponse<T> query(boolean keysOnly) {
+			public ClientModelQueryResponse<T> query(boolean keysOnly) throws MultiKeyedInvalidAttributeException {
 				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
 				queryRequest.setKeysOnly(keysOnly);
 				return this.query(queryRequest);
 			}
 
-			public ClientModelQueryResponse<T> query(ConfigurableEncodedQueryParameters query) {
+			public ClientModelQueryResponse<T> query(ConfigurableEncodedQueryParameters query) throws MultiKeyedInvalidAttributeException {
 				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
 				queryRequest.setSearchParameters(query.getParameters());
 				queryRequest.setKeysOnly(false);
 				return this.query(queryRequest);
 			}
 
-			public ClientModelQueryResponse<T> query(SearchRequest queryRequest) {
+			public ClientModelQueryResponse<T> query(SearchRequest queryRequest) throws MultiKeyedInvalidAttributeException {
 				try {
 					return this.sendQuery(queryRequest).getSerializedResponse();
+				} catch (ClientKeyedInvalidAttributeException e) {
+					throw new MultiKeyedInvalidAttributeException(e.getInvalidAttributes());
 				} catch (ClientResponseSerializationException | ClientRequestFailureException e) {
 					e.printStackTrace();
 					Assert.fail("Failed querying.");
