@@ -22,7 +22,9 @@ public class TokenException extends AuthenticationException {
 
 		EXPIRED_TOKEN("EXPIRED_AUTHORIZATION", "Expired Authorization"),
 
-		INVALID_TOKEN("INVALID_AUTHORIZATION", "Invalid Authorization");
+		INVALID_TOKEN("INVALID_AUTHORIZATION", "Invalid Authorization"),
+
+		INVALID_SIGNATURE("INVALID_SIGNATURE", "Invalid Signature");
 
 		private final String code;
 		private final String title;

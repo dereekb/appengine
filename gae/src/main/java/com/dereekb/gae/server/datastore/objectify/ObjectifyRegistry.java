@@ -6,6 +6,7 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGetter;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedSetter;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
+import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyAllocator;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 
@@ -18,7 +19,7 @@ import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryI
  *            model type
  */
 public interface ObjectifyRegistry<T extends ObjectifyModel<T>>
-        extends ObjectifyQueryIterableFactory<T>, ObjectifyKeyedGetter<T>, ObjectifyKeyedSetter<T>,
+        extends ObjectifyKeyAllocator<T>, ObjectifyQueryIterableFactory<T>, ObjectifyKeyedGetter<T>, ObjectifyKeyedSetter<T>,
         ObjectifyQueryService<T>, ModelKeyListAccessorFactory<T>, ForceGetterSetter<T> {
 
 	public ObjectifyKeyConverter<T, ModelKey> getObjectifyKeyConverter();

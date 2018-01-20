@@ -57,6 +57,7 @@ import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.KeyRange;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
@@ -220,6 +221,21 @@ public class ObjectifyDatabaseImpl
 			}
 
 			return keyEnforcer;
+		}
+
+		// MARK: ObjectifyKeyAllocator
+		@Override
+		public Key<T> allocateId() {
+			return ObjectifyDatabaseImpl.this.ofy().factory().allocateId(this.type);
+		}
+
+		@Override
+		public KeyRange<T> allocateIds(int count) {
+			if (count < 1) {
+				throw new IllegalArgumentException("Count must be positive and non-zero.");
+			}
+
+			return ObjectifyDatabaseImpl.this.ofy().factory().allocateIds(this.type, count);
 		}
 
 		// MARK: ObjectifyDatabaseEntityReader

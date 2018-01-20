@@ -2,20 +2,15 @@ package com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.fac
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.app.service.AppLoginSecuritySigningService;
+import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecuritySigningServiceImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
@@ -44,7 +39,7 @@ import com.google.gson.JsonObject;
 
 /**
  * {@link OAuthService} implementation for Facebook OAuth.
- * 
+ *
  * @author dereekb
  *
  */
@@ -111,7 +106,7 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 
 			/*
 			 * Request:
-			 * 
+			 *
 			 * https://graph.facebook.com/v2.8/oauth/access_token?grant_type=
 			 * fb_exchange_token&client_id=1815005125414904&client_secret=
 			 * ffdfeb73c8ed4958cd8c74d513022aa9&fb_exchange_token=
@@ -127,7 +122,7 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 
 			/*
 			 * Response:
-			 * 
+			 *
 			 * {"access_token":
 			 * "EAAZAyvMZCEDZCgBAKPtDwPuwpdEeo2ovZCteleLoJXugggQxtYeBElJhsWKObBssV8l8ZA6GZBrpQwX7ubClqfmrFfIhlKukIJU5QEFb6u9UudNZBAAKNonaHHhysqc71B0ZB605nVZAq8QzFAWFzeCG2YbrSsuLr0YADwZC9DjJCnigZDZD"
 			 * ,"token_type":"bearer","expires_in":5184000}
@@ -176,6 +171,9 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 	private static final String FACEBOOK_APP_SECRET_HASH_ALGORITHM = "HmacSHA256";
 	private static final String FACEBOOK_APP_SECRET_PROOF_PARAM = "appsecret_proof";
 
+	private static final AppLoginSecuritySigningService SIGNING_SERVICE = new AppLoginSecuritySigningServiceImpl(
+	        FACEBOOK_APP_SECRET_HASH_ALGORITHM);
+
 	@Override
 	protected String getLoginInfoRequestUrl(OAuthAccessToken token) {
 		String accessToken = token.getAccessToken();
@@ -187,28 +185,11 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 		OAuthRequest request = super.buildRequest(token);
 
 		// HMAC signature
-		try {
-			String secret = this.getClientConfig().getClientSecret();
-			byte[] secretBytes = secret.getBytes("utf-8");
-			SecretKeySpec keySpec = new SecretKeySpec(secretBytes, FACEBOOK_APP_SECRET_HASH_ALGORITHM);
+		String secret = this.getClientConfig().getClientSecret();
+		String accessToken = token.getAccessToken();
+		String hex = SIGNING_SERVICE.hexSign(secret, accessToken);
 
-			Mac mac = Mac.getInstance(FACEBOOK_APP_SECRET_HASH_ALGORITHM);
-			mac.init(keySpec);
-
-			String accessToken = token.getAccessToken();
-			byte[] accessTokenBytes = accessToken.getBytes("utf-8");
-
-			byte[] sig = mac.doFinal(accessTokenBytes);
-			String hex = DatatypeConverter.printHexBinary(sig).toLowerCase();
-
-			request.addParameter(FACEBOOK_APP_SECRET_PROOF_PARAM, hex);
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		} catch (InvalidKeyException e) {
-			throw new RuntimeException(e);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		request.addParameter(FACEBOOK_APP_SECRET_PROOF_PARAM, hex);
 
 		return request;
 	}

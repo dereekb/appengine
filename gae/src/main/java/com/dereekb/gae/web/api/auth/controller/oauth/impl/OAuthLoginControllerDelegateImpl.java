@@ -100,7 +100,6 @@ public class OAuthLoginControllerDelegateImpl
 		OAuthService service = this.manager.getService(type);
 		OAuthAccessToken token = new OAuthAccessTokenImpl(accessToken);
 		OAuthAuthorizationInfo authInfo = service.retrieveAuthorizationInfo(token);
-
 		return this.loginWithAuthInfo(authInfo);
 	}
 

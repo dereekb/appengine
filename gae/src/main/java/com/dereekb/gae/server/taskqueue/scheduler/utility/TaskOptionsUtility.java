@@ -38,6 +38,16 @@ public class TaskOptionsUtility {
 		return options;
 	}
 
+	public static List<TaskOptions> appendHeaders(List<TaskOptions> options,
+	                                             Iterable<KeyedEncodedParameter> headers) {
+
+		for (KeyedEncodedParameter header : headers) {
+			options = appendHeader(options, header);
+		}
+
+		return options;
+	}
+
 	public static List<TaskOptions> appendHeader(List<TaskOptions> options,
 	                                             KeyedEncodedParameter header) {
 		List<TaskOptions> newOptions = new ArrayList<TaskOptions>(options.size());

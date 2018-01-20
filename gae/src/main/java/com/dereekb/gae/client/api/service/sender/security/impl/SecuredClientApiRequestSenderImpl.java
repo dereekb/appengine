@@ -158,7 +158,7 @@ public class SecuredClientApiRequestSenderImpl
 				tokenString = currentToken.getEncodedLoginToken();
 				break;
 			case SYSTEM:
-				tokenString = this.systemTokenFactory.makeTokenString();
+				tokenString = this.systemTokenFactory.makeEncodedToken();
 				break;
 			case OVERRIDE:
 				EncodedLoginToken overrideToken = security.getOverrideToken();

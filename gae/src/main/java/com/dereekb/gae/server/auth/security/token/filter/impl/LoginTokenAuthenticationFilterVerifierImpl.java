@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilterVerifier;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
@@ -14,10 +15,13 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 /**
  * {@link LoginTokenAuthenticationFilterVerifier} implementation that verifies
  * the service requests were sent from another app-engine service.
- * 
+ *
  * @author dereekb
  *
+ * @deprecated Replaced by
+ *             {@link LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl}.
  */
+@Deprecated
 public class LoginTokenAuthenticationFilterVerifierImpl<T extends LoginToken>
         implements LoginTokenAuthenticationFilterVerifier<T> {
 
@@ -59,19 +63,19 @@ public class LoginTokenAuthenticationFilterVerifierImpl<T extends LoginToken>
 
 		/*
 		 * TODO: Figure out a better system request assertion.
-		 * 
+		 *
 		 * Requests may pass between servers due to TaskQueue calls that may
 		 * forward requests to other servers.
-		 * 
+		 *
 		 * There is no universal request header set for all requests issued by
 		 * the google app engine server.
 		 */
 		/*
 		 * Object inboundHeader = request.getAttribute(INBOUND_ID_HEADER_KEY);
-		 * 
+		 *
 		 * if (header != null) {
 		 * // String applicationSubject = decodedLoginToken.getSubject();
-		 * 
+		 *
 		 * } else {
 		 * LOGGER.log(Level.SEVERE,
 		 * "System Login Token used from non-server location.");

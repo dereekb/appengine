@@ -1,6 +1,7 @@
 package com.dereekb.gae.web.api.auth.controller.oauth;
 
 import javax.validation.constraints.NotEmpty;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,10 +45,16 @@ public final class OAuthLoginController {
 		this.delegate = delegate;
 	}
 
-	// MARK: Controller
+	// MARK: OAuth Resource / Authorization Server
+
+	// MARK: Login With OAuth Providers
 	/**
 	 * OAuth Login used by applications that have only received an
 	 * authorization code.
+	 * <p>
+	 * This is typically used in cases where the SDK's provided by the oauth
+	 * provider are not being used. In most cases you'll use
+	 * {@link #loginWithAccessToken(String, String)}.
 	 *
 	 * @param type
 	 *            OAuth service/type. Example "google".
@@ -80,8 +87,12 @@ public final class OAuthLoginController {
 	}
 
 	/**
-	 * OAuth Login used by applications that have already retrieved an access
-	 * token.
+	 * OAuth Login used by applications that have already retrieved a short-term
+	 * web access
+	 * token that can only be used by our server.
+	 * <p>
+	 * The server will use this short-term token to get the data it needs to
+	 * complete logging into our site.
 	 *
 	 * @param type
 	 *            OAuth service/type. Example "google".

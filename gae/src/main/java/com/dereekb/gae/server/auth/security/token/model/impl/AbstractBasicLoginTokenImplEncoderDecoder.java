@@ -32,6 +32,7 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
         implements LoginTokenEncoderDecoder<T> {
 
 	public static final String REFRESH_KEY = "e";
+	public static final String APP_KEY = "app";
 
 	private static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureAlgorithm.HS256;
 
@@ -90,6 +91,11 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		claims.setIssuedAt(loginToken.getIssued());
 		claims.setExpiration(loginToken.getExpiration());
 
+		String app = loginToken.getApp();
+		if (app != null) {
+			claims.put(APP_KEY, app);
+		}
+
 		if (loginToken.isRefreshAllowed()) {
 			claims.put(REFRESH_KEY, true);
 		}
@@ -144,8 +150,11 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		String subject = claims.getSubject();
 		Date expiration = claims.getExpiration();
 		Date issued = claims.getIssuedAt();
+
+		String app = claims.get(APP_KEY, String.class);
 		Boolean refreshAllowed = claims.get(REFRESH_KEY, Boolean.class);
 
+		loginToken.setApp(app);
 		loginToken.setSubject(subject);
 		loginToken.setExpiration(expiration);
 		loginToken.setIssued(issued);

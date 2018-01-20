@@ -27,6 +27,16 @@ public interface LoginToken
 	public String getSubject();
 
 	/**
+	 * Returns the app this token is associated with.
+	 * <p>
+	 * Tokens with an association may only be used by servers if the request is
+	 * signed.
+	 *
+	 * @return {@link String}. May be {@code null}.
+	 */
+	public String getApp();
+
+	/**
 	 * @return {@code true} if it is an Anoynmous login.
 	 */
 	public boolean isAnonymous();

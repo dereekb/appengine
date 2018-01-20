@@ -30,6 +30,11 @@ public class LoginTokenImpl
 	private String subject;
 
 	/**
+	 * Optional app association.
+	 */
+	private String app;
+
+	/**
 	 * {@link Login} identifier
 	 */
 	private Long login;
@@ -85,20 +90,7 @@ public class LoginTokenImpl
 	}
 
 	public LoginTokenImpl(LoginToken loginToken) throws IllegalArgumentException {
-		if (loginToken == null) {
-			throw new IllegalArgumentException("LoginToken cannot be null.");
-		}
-
-		this.setSubject(loginToken.getSubject());
-		this.setLogin(loginToken.getLoginId());
-		this.setLoginPointer(loginToken.getLoginPointerId());
-		this.setRoles(loginToken.getEncodedRoles());
-		this.setIssued(loginToken.getIssued());
-		this.setExpiration(loginToken.getExpiration());
-		this.setPointerType(loginToken.getPointerType());
-		this.setOwnershipRoles(loginToken.getOwnershipRoles());
-		this.setRefreshAllowed(loginToken.isRefreshAllowed());
-		this.setEncodedModelContextSet(loginToken.getEncodedModelContextSet());
+		this.copyFromLoginToken(loginToken);
 	}
 
 	@Override
@@ -114,6 +106,15 @@ public class LoginTokenImpl
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	@Override
+	public String getApp() {
+		return this.app;
+	}
+
+	public void setApp(String app) {
+		this.app = app;
 	}
 
 	@Override
@@ -238,12 +239,10 @@ public class LoginTokenImpl
 		this.ownershipRoles = new OwnershipRolesImpl(ownerId);
 	}
 
-
 	@Override
 	public EncodedLoginTokenModelContextSet getEncodedModelContextSet() {
 		return this.encodedModelContextSet;
 	}
-
 
 	public void setEncodedModelContextSet(EncodedLoginTokenModelContextSet encodedModelContextSet) {
 		if (encodedModelContextSet == null) {
@@ -261,6 +260,25 @@ public class LoginTokenImpl
 	@Override
 	public String getEncodedModelTypeContext(Integer encodedType) throws UnavailableEncodedModelContextException {
 		return this.encodedModelContextSet.getEncodedModelTypeContext(encodedType);
+	}
+
+	// MARK: Copy
+	public void copyFromLoginToken(LoginToken loginToken) {
+		if (loginToken == null) {
+			throw new IllegalArgumentException("LoginToken cannot be null.");
+		}
+
+		this.setSubject(loginToken.getSubject());
+		this.setApp(loginToken.getApp());
+		this.setLogin(loginToken.getLoginId());
+		this.setLoginPointer(loginToken.getLoginPointerId());
+		this.setRoles(loginToken.getEncodedRoles());
+		this.setIssued(loginToken.getIssued());
+		this.setExpiration(loginToken.getExpiration());
+		this.setPointerType(loginToken.getPointerType());
+		this.setOwnershipRoles(loginToken.getOwnershipRoles());
+		this.setRefreshAllowed(loginToken.isRefreshAllowed());
+		this.setEncodedModelContextSet(loginToken.getEncodedModelContextSet());
 	}
 
 	@Override

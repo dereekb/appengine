@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 
 /**
  * {@link AuthenticationParameterService} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -88,7 +88,6 @@ public class AuthenticationParameterServiceImpl
 	}
 
 	// MARK: Builder
-
 	@Override
 	public KeyedEncodedParameter buildAuthenticationParameter(String token) {
 		if (token == null) {
