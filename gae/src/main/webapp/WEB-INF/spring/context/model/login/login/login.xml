@@ -62,7 +62,6 @@
 	</bean>
 
 	<!-- Imported -->
-	<import resource="test.xml" />
 	<import resource="crud.xml" />
 	<import resource="extension/data.xml" />
 	<import resource="extension/link.xml" />

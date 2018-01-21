@@ -9,18 +9,31 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Generator -->
-	<bean id="loginPointerTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
-		<constructor-arg index="0" ref="loginPointerRegistry" />
-		<constructor-arg index="1" ref="loginPointerGenerator" />
+	<!-- Query Services -->
+	<bean id="appQueryService"
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="appRegistry" />
+		<constructor-arg index="1"
+			ref="securedAppQueryInitializer" />
 	</bean>
 
-	<!-- Data Generator -->
-	<bean id="loginPointerTestDataGenerator"
-		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
-		<constructor-arg index="0" ref="loginPointerGenerator" />
-		<constructor-arg index="1" ref="loginPointerDataBuilder" />
+	<bean id="securedAppQueryInitializer"
+		class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer">
+		<constructor-arg index="0" ref="appQueryInitializer" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl">
+				<constructor-arg index="0">
+					<list>
+						<ref bean="loginOwnedModelQuerySecurityDelegate" />
+					</list>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="appQueryInitializer"
+		class="com.dereekb.gae.server.app.model.app.search.query.AppQueryInitializer">
 	</bean>
 
 </beans>

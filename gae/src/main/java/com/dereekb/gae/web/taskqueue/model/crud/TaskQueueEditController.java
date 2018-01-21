@@ -36,7 +36,7 @@ public final class TaskQueueEditController {
 	public static final String DELETE_PATH = "delete";
 
 	private TypeModelKeyConverter keyTypeConverter;
-	private Map<String, TaskQueueEditControllerEntry> entries;
+	private CaseInsensitiveMap<TaskQueueEditControllerEntry> entries;
 
 	public TaskQueueEditController() {}
 

@@ -128,7 +128,7 @@ public class TaskQueueIterateController {
 	 *            All request parameters. Never {@code null}.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/iterate/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/iterate/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void iterate(@PathVariable("type") String modelType,
 	                    @PathVariable("task") String taskName,
 	                    @RequestHeader(value = TASK_STEP_HEADER, required = false) Integer step,
@@ -161,7 +161,7 @@ public class TaskQueueIterateController {
 	 *            All request parameters. Never {@code null}.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "{type}/sequence/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/{type}/sequence/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void sequence(@PathVariable("type") String modelType,
 	                     @PathVariable("task") String taskName,
 	                     @RequestParam("keys") List<String> identifiers,

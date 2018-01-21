@@ -4,19 +4,18 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.exception.InvalidIt
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.exception.UnknownIterateTaskException;
 
 /**
- * Delegate for {@link TaskQueueIterateController} for performing an iteration
+ * Delegate for {@link TaskQueueIterateController} for performing a sequence
  * task.
  *
  * @author dereekb
  */
-public interface TaskQueueIterateControllerEntry
-        extends TaskQueueSequenceControllerEntry {
+public interface TaskQueueSequenceControllerEntry {
 
 	/**
-	 * Performs an iterate task.
+	 * Performs a sequence task.
 	 *
 	 * @param input
-	 *            {@link IterateTaskRequest} instance for this task. Never
+	 *            {@link SequenceTaskRequest} instance for this task. Never
 	 *            {@code null}.
 	 * @throws UnknownIterateTaskException
 	 *             thrown if no task is available with the input
@@ -25,7 +24,7 @@ public interface TaskQueueIterateControllerEntry
 	 *             thrown if a task was available but not able to be
 	 *             initialized.
 	 */
-	public void performIterateTask(IterateTaskRequest request)
+	public void performSequenceTask(SequenceTaskRequest request)
 	        throws UnknownIterateTaskException,
 	            InvalidIterateTaskException;
 

@@ -10,55 +10,55 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Type -->
-	<bean id="loginKeyType" class="java.lang.String">
-		<constructor-arg index="0" value="LoginKey" />
+	<bean id="appType" class="java.lang.String">
+		<constructor-arg index="0" value="App" />
 	</bean>
 
-	<bean id="loginKeyClass" class="java.lang.Class" factory-method="forName">
+	<bean id="appClass" class="java.lang.Class" factory-method="forName">
 		<constructor-arg index="0"
-			value="com.dereekb.gae.server.auth.model.key.LoginKey" />
+			value="com.dereekb.gae.server.app.model.app.App" />
 	</bean>
 
-	<bean id="loginKeyDtoClass" class="java.lang.Class" factory-method="forName">
+	<bean id="appDtoClass" class="java.lang.Class" factory-method="forName">
 		<constructor-arg index="0"
-			value="com.dereekb.gae.server.auth.model.key.dto.LoginKeyData" />
+			value="com.dereekb.gae.server.app.model.app.dto.AppData" />
 	</bean>
 
-	<bean id="loginKeyIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+	<bean id="appIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
 		<constructor-arg index="0" value="NUMBER" />
 	</bean>
 
 	<!-- Database -->
-	<bean id="loginKeyObjectifyEntry"
+	<bean id="appObjectifyEntry"
 		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
-		<constructor-arg index="0" ref="loginKeyType" />
-		<constructor-arg index="1" ref="loginKeyClass" />
-		<constructor-arg index="2" ref="loginKeyIdType" />
-		<constructor-arg index="3" ref="loginKeyQueryInitializer" />
+		<constructor-arg index="0" ref="appType" />
+		<constructor-arg index="1" ref="appClass" />
+		<constructor-arg index="2" ref="appIdType" />
+		<constructor-arg index="3" ref="appQueryInitializer" />
 	</bean>
 
-	<bean id="loginKeyRegistry" factory-bean="objectifyDatabase"
+	<bean id="appRegistry" factory-bean="objectifyDatabase"
 		factory-method="makeRegistry">
-		<constructor-arg index="0" ref="loginKeyClass" />
+		<constructor-arg index="0" ref="appClass" />
 	</bean>
 
 	<!-- Configured Setters -->
-	<alias name="loginKeyRegistry" alias="loginKeyStorer" />
-	<alias name="loginKeyRegistry" alias="loginKeyUpdater" />
-	<alias name="loginKeyRegistry" alias="loginKeyDeleter" />
+	<alias name="appRegistry" alias="appStorer" />
+	<alias name="appRegistry" alias="appUpdater" />
+	<alias name="appRegistry" alias="appDeleter" />
 
 	<!-- Update Scheduler -->
-	<bean id="loginKeyScheduleUpdateReview"
+	<bean id="appScheduleUpdateReview"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
-		<constructor-arg index="0" ref="loginKeyType" />
+		<constructor-arg index="0" ref="appType" />
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="loginKeyTaskConfiguredUpdater"
+	<bean id="appTaskConfiguredUpdater"
 		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl">
-		<constructor-arg index="0" ref="loginKeyScheduleUpdateReview" />
-		<constructor-arg index="1" ref="loginKeyRegistry" />
+		<constructor-arg index="0" ref="appScheduleUpdateReview" />
+		<constructor-arg index="1" ref="appRegistry" />
 	</bean>
 
 	<!-- Imported -->

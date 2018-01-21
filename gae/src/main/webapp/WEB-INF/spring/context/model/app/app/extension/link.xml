@@ -9,18 +9,11 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Generator -->
-	<bean id="loginTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
-		<constructor-arg index="0" ref="loginRegistry" />
-		<constructor-arg index="1" ref="loginGenerator" />
-	</bean>
-
-	<!-- Data Generator -->
-	<bean id="loginTestDataGenerator"
-		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
-		<constructor-arg index="0" ref="loginGenerator" />
-		<constructor-arg index="1" ref="loginDataBuilder" />
+	<bean id="appLinkSystemEntry"
+		class="com.dereekb.gae.server.app.model.app.link.AppLinkSystemBuilderEntry">
+		<constructor-arg index="0" ref="appCrudService" />
+		<constructor-arg index="1" ref="appUpdater" />
+		<constructor-arg index="2" ref="appScheduleUpdateReview" />
 	</bean>
 
 </beans>

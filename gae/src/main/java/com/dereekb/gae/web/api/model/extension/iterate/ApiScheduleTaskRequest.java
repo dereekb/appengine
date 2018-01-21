@@ -4,7 +4,7 @@ import java.util.Map;
 
 /**
  * Request for {@link ApiScheduleTaskController}.
- * 
+ *
  * @author dereekb
  *
  */
@@ -13,7 +13,7 @@ public interface ApiScheduleTaskRequest {
 	/**
 	 * Returns the task entry name that should correspond to an entry within the
 	 * {@link ApiScheduleTaskController}.
-	 * 
+	 *
 	 * @return {@link String}. Never {@code null}.
 	 */
 	public String getTaskEntryName();

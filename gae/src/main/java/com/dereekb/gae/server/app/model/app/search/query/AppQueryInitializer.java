@@ -1,8 +1,8 @@
-package com.dereekb.gae.server.app.model.app.search;
+package com.dereekb.gae.server.app.model.app.search.query;
 
 import java.util.Map;
 
-import com.dereekb.gae.server.app.model.app.search.AppQueryInitializer.ObjectifyAppQuery;
+import com.dereekb.gae.server.app.model.app.search.query.AppQueryInitializer.ObjectifyAppQuery;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;

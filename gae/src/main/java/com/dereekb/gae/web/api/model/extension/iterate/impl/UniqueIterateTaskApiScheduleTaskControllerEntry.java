@@ -9,8 +9,8 @@ import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttribu
  * {@link ConfiguredIterateTaskApiScheduleTaskControllerEntry} extension that
  * also sets a unique task request name.
  * <p>
- * This is useful for patches, etc.
- * 
+ * This is useful for patches for models of a certain type, etc.
+ *
  * @author dereekb
  *
  */

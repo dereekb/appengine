@@ -8,14 +8,14 @@ package com.dereekb.gae.server.event;
  * <p>
  * They should not be used for modifying objects; those sorts of actions should
  * be configured to occur in the taskqueue as a {@link Task}.
- * 
+ *
  * @author dereekb
  *
  */
 public interface Event {
 
 	/**
-	 * Returns the unique event code.
+	 * Returns the event code/type.
 	 */
 	public String getEventCode();
 

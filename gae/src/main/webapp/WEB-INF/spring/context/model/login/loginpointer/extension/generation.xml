@@ -14,9 +14,4 @@
 		<constructor-arg index="0" ref="loginPointerClass" />
 	</bean>
 
-	<!-- Generator -->
-	<bean id="loginPointerGenerator"
-		class="com.dereekb.gae.server.auth.model.pointer.generator.LoginPointerGenerator">
-	</bean>
-
 </beans>

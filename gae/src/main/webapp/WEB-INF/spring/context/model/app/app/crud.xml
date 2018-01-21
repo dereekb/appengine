@@ -1,0 +1,113 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Cruds -->
+	<bean id="appCrudService"
+		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
+		<constructor-arg index="0" ref="appCreateService" />
+		<constructor-arg index="1" ref="appReadService" />
+		<constructor-arg index="2" ref="appUpdateService" />
+		<constructor-arg index="3" ref="appDeleteService" />
+	</bean>
+
+	<!-- Services -->
+	<bean id="appCreateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
+		<constructor-arg index="0" ref="appCreateTask" />
+	</bean>
+
+	<bean id="appReadService"
+		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
+		<constructor-arg index="0" ref="appReadTask" />
+	</bean>
+
+	<bean id="appUpdateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
+		<constructor-arg index="0" ref="appReadService" />
+		<constructor-arg index="1" ref="appUpdateTask" />
+		<constructor-arg index="2" ref="appScheduleUpdateReview" />
+	</bean>
+
+	<bean id="appDeleteService"
+		class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl">
+		<constructor-arg index="0" ref="appReadService" />
+		<constructor-arg index="1" ref="appDeleteTask" />
+	</bean>
+
+	<!-- Save/Delete Tasks -->
+	<bean id="appSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="appRegistry" />
+	</bean>
+	
+	<alias name="appSetterTask" alias="appStorerTask" />
+	<alias name="appSetterTask" alias="appUpdaterTask" />
+	<alias name="appSetterTask" alias="appDeleterTask" />
+
+	<!-- Create -->
+	<bean id="appCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
+		<constructor-arg index="0" ref="appCreateTaskDelegate" />
+		<constructor-arg index="1">
+			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
+				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
+				<constructor-arg index="1" ref="appStorerTask"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="2" ref="appScheduleCreateReview" />
+	</bean>
+
+	<bean id="appScheduleCreateReview"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+		<constructor-arg index="0" ref="appType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="appCreateTaskDelegate"
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
+		<constructor-arg index="0" ref="appFactory" />
+		<constructor-arg index="1"
+			ref="appAuthenticationAttributeUpdater" />
+	</bean>
+
+	<bean id="appAuthenticationAttributeUpdater"
+		class="com.dereekb.gae.server.app.model.app.crud.AppAuthenticationAttributeUpdater">
+		<constructor-arg index="0" ref="appAttributeUpdater" />
+		<constructor-arg index="1" ref="loginPointerRegistry" />
+		<constructor-arg index="2" ref="keyLoginStatusServiceManager" />
+	</bean>
+
+	<!-- Read -->
+	<bean id="appReadTask"
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
+		<constructor-arg index="0" ref="appRegistry" />
+		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
+	</bean>
+
+	<!-- Update -->
+	<bean id="appUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
+		<constructor-arg index="0" ref="appAttributeUpdater" />
+		<constructor-arg index="1" ref="appUpdaterTask" />
+	</bean>
+
+	<bean id="appAttributeUpdater"
+		class="com.dereekb.gae.server.app.model.app.crud.AppAttributeUpdater">
+	</bean>
+
+	<!-- Delete -->
+	<alias name="appScheduleDeleteTask" alias="appDeleteTask" />
+
+	<bean id="appScheduleDeleteTask"
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
+		<constructor-arg index="0" ref="appType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+</beans>

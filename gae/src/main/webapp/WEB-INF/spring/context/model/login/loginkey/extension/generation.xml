@@ -14,9 +14,4 @@
 		<constructor-arg index="0" ref="loginKeyClass" />
 	</bean>
 
-	<!-- Generator -->
-	<bean id="loginKeyGenerator"
-		class="com.dereekb.gae.server.auth.model.key.generator.LoginKeyGenerator">
-	</bean>
-
 </beans>

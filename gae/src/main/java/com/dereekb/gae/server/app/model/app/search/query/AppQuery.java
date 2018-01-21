@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.app.model.app.search;
+package com.dereekb.gae.server.app.model.app.search.query;
 
 import java.util.Map;
 

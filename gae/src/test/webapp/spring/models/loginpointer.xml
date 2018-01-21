@@ -10,6 +10,10 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Generator -->
+	<bean id="loginPointerGenerator"
+		class="com.dereekb.gae.server.auth.model.pointer.generator.LoginPointerGenerator">
+	</bean>
+	
 	<bean id="loginPointerTestModelGenerator"
 		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
 		<constructor-arg index="0" ref="loginPointerRegistry" />

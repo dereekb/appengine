@@ -9,18 +9,19 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Generator -->
-	<bean id="loginKeyTestModelGenerator"
-		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
-		<constructor-arg index="0" ref="loginKeyRegistry" />
-		<constructor-arg index="1" ref="loginKeyGenerator" />
+	<!-- Type -->
+	<bean id="appDataBuilder"
+		class="com.dereekb.gae.server.app.model.app.dto.AppDataBuilder">
 	</bean>
 
-	<!-- Data Generator -->
-	<bean id="loginKeyTestDataGenerator"
-		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
-		<constructor-arg index="0" ref="loginKeyGenerator" />
-		<constructor-arg index="1" ref="loginKeyDataBuilder" />
+	<bean id="appDataReader"
+		class="com.dereekb.gae.server.app.model.app.dto.AppDataReader">
+	</bean>
+
+	<bean id="appDataConverter"
+		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl">
+		<constructor-arg index="0" ref="appDataBuilder" />
+		<constructor-arg index="1" ref="appDataReader" />
 	</bean>
 
 </beans>

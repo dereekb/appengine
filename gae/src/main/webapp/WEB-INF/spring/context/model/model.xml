@@ -11,6 +11,7 @@
 
 	<!-- IMPORTS -->
 	<!-- Models -->
+	<import resource="app/app/app.xml" />
 	<import resource="login/login/login.xml" />
 	<import resource="login/loginkey/loginkey.xml" />
 	<import resource="login/loginpointer/loginpointer.xml" />
@@ -28,6 +29,7 @@
 		<constructor-arg index="0">
 			<map key-type="java.lang.String"
 				value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
+				<entry key-ref="appType" value-ref="appIdType" />
 				<entry key-ref="storedBlobType" value-ref="storedBlobIdType" />
 				<entry key-ref="storedImageType" value-ref="storedImageIdType" />
 				<entry key-ref="storedImageSetType" value-ref="storedImageSetIdType" />

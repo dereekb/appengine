@@ -9,9 +9,18 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Factory -->
-	<bean id="loginFactory" class="com.dereekb.gae.utilities.factory.impl.BasicFactory">
-		<constructor-arg index="0" ref="loginClass" />
+	<!-- Generator -->
+	<bean id="appTestModelGenerator"
+		class="com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl">
+		<constructor-arg index="0" ref="appRegistry" />
+		<constructor-arg index="1" ref="appGenerator" />
+	</bean>
+
+	<!-- Data Generator -->
+	<bean id="appTestDataGenerator"
+		class="com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl">
+		<constructor-arg index="0" ref="appGenerator" />
+		<constructor-arg index="1" ref="appDataBuilder" />
 	</bean>
 
 </beans>

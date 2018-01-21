@@ -9,9 +9,22 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- Factory -->
-	<bean id="loginFactory" class="com.dereekb.gae.utilities.factory.impl.BasicFactory">
-		<constructor-arg index="0" ref="loginClass" />
+	<bean id="appModelRoleBuilderComponent"
+		class="com.dereekb.gae.server.app.model.app.security.AppModelRoleBuilderComponent">
+		<constructor-arg index="0"
+			ref="loginParentModelRoleSetContextReader" />
+	</bean>
+
+	<bean id="appModelRoleSetLoader"
+		class="com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.ModelRoleSetLoaderImpl">
+		<constructor-arg index="0"
+			ref="appModelRoleBuilderComponent" />
+	</bean>
+
+	<bean id="appSecurityContextServiceEntry"
+		class="com.dereekb.gae.server.app.model.app.security.AppSecurityContextServiceEntry">
+		<constructor-arg index="0" ref="appRegistry" />
+		<constructor-arg index="1" ref="appModelRoleSetLoader" />
 	</bean>
 
 </beans>
