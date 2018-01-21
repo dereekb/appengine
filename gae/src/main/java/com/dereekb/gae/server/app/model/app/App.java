@@ -1,10 +1,15 @@
 package com.dereekb.gae.server.app.model.app;
 
-import com.dereekb.gae.server.datastore.models.DatabaseModel;
+import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
+import com.dereekb.gae.server.datastore.models.DatedDatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.condition.IfZero;
 
 /**
  * Represents a registered app on the system.
@@ -12,10 +17,12 @@ import com.googlecode.objectify.annotation.Id;
  * @author dereekb
  *
  */
-public class App extends DatabaseModel
-        implements ObjectifyModel<App> {
+public class App extends DatedDatabaseModel
+        implements ObjectifyModel<App>, AppLoginSecurityDetails {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final Integer DEFAULT_LEVEL = AppLoginSecurityLevel.APP.code;
 
 	/**
 	 * Database identifier.
@@ -24,11 +31,27 @@ public class App extends DatabaseModel
 	private Long identifier;
 
 	/**
-	 * Application name.
+	 * Application OAuth name.
 	 */
 	private String name;
 
-	// TODO: ...
+	/**
+	 * Generated app secret. Is generally a hexadecimal value.
+	 * <p>
+	 * Used for signing requests.
+	 */
+	private String secret;
+
+	/**
+	 * Security level.
+	 */
+	@IgnoreSave({ IfZero.class })
+	private Integer level = DEFAULT_LEVEL;
+
+	/**
+	 * Login
+	 */
+	private Key<Login> login;
 
 	public App() {
 		super();
@@ -48,6 +71,55 @@ public class App extends DatabaseModel
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSecret() {
+		return this.secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	public Integer getLevelCode() {
+		return this.level;
+	}
+
+	public void setLevelCode(Integer level) {
+		this.level = level;
+	}
+
+	public AppLoginSecurityLevel getLevel() {
+		return AppLoginSecurityLevel.valueOf(this.level);
+	}
+
+	public void setLevel(AppLoginSecurityLevel level) {
+		Integer levelCode = KeyedUtility.getCode(level);
+		this.setLevelCode(levelCode);
+	}
+
+	// MARK: AppLoginSecurityDetails
+	@Override
+	public String getAppName() {
+		return this.name;
+	}
+
+	@Override
+	public String getAppSecret() {
+		return this.secret;
+	}
+
+	@Override
+	public AppLoginSecurityLevel getAppLoginSecurityLevel() {
+		return AppLoginSecurityLevel.valueOf(this.level);
+	}
+
+	public Key<Login> getLogin() {
+		return this.login;
+	}
+
+	public void setLogin(Key<Login> login) {
+		this.login = login;
 	}
 
 	// Unique Model
@@ -71,6 +143,12 @@ public class App extends DatabaseModel
 	@Override
 	public Key<App> getObjectifyKey() {
 		return Key.create(App.class, this.identifier);
+	}
+
+	@Override
+	public String toString() {
+		return "App [identifier=" + this.identifier + ", name=" + this.name + ", secret=" + this.secret + ", level="
+		        + this.level + ", login=" + this.login + ", date=" + this.date + "]";
 	}
 
 }

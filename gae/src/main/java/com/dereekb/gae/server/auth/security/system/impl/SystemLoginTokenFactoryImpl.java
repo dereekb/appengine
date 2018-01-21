@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.system.impl;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.app.service.ConfiguredAppLoginSecuritySigningService;
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenFactory;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
@@ -8,7 +9,7 @@ import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterBuilder;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
-import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
@@ -34,21 +35,20 @@ public class SystemLoginTokenFactoryImpl
 	private Long expirationTime = DEFAULT_EXPIRATION_TIME;
 	private String subject = DEFAULT_SUBJECT;
 
-	private String app;
 	private Long roles;
 
 	private LoginTokenEncoder<LoginToken> encoder;
+	private ConfiguredAppLoginSecuritySigningService signingService;
 
-	public SystemLoginTokenFactoryImpl(LoginTokenEncoder<LoginToken> encoder) {
-		this(encoder, DEFAULT_ROLES);
+	public SystemLoginTokenFactoryImpl(ConfiguredAppLoginSecuritySigningService signingService,
+	        LoginTokenEncoder<LoginToken> encoder) {
+		this(signingService, encoder, DEFAULT_ROLES);
 	}
 
-	public SystemLoginTokenFactoryImpl(LoginTokenEncoder<LoginToken> encoder, Long roles) {
-		this.setEncoder(encoder);
-		this.setRoles(roles);
-	}
-
-	public SystemLoginTokenFactoryImpl(String app, LoginTokenEncoder<LoginToken> encoder, Long roles) {
+	public SystemLoginTokenFactoryImpl(ConfiguredAppLoginSecuritySigningService signingService,
+	        LoginTokenEncoder<LoginToken> encoder,
+	        Long roles) {
+		this.setSigningService(signingService);
 		this.setEncoder(encoder);
 		this.setRoles(roles);
 	}
@@ -93,18 +93,6 @@ public class SystemLoginTokenFactoryImpl
 		this.subject = subject;
 	}
 
-	public String getApp() {
-		return this.app;
-	}
-
-	public void setApp(String app) {
-		if (StringUtility.isEmptyString(app)) {
-			throw new IllegalArgumentException("App cannot be null.");
-		}
-
-		this.app = app;
-	}
-
 	public Long getRoles() {
 		return this.roles;
 	}
@@ -129,14 +117,24 @@ public class SystemLoginTokenFactoryImpl
 		this.encoder = encoder;
 	}
 
+	public ConfiguredAppLoginSecuritySigningService getSigningService() {
+		return this.signingService;
+	}
+
+	public void setSigningService(ConfiguredAppLoginSecuritySigningService signingService) {
+		if (signingService == null) {
+			throw new IllegalArgumentException("signingService cannot be null.");
+		}
+
+		this.signingService = signingService;
+	}
+
 	// MARK: SystemLoginTokenFactory
 	@Override
 	public SignedEncodedLoginToken makeSystemToken() throws FactoryMakeFailureException {
 		LoginToken token = this.makeLoginToken();
 		String encodedToken = this.encoder.encodeLoginToken(token);
-
-		// TODO: ...
-
+		return this.signingService.signToken(encodedToken);
 	}
 
 	@Deprecated
@@ -156,7 +154,9 @@ public class SystemLoginTokenFactoryImpl
 	public LoginTokenImpl makeLoginToken() throws FactoryMakeFailureException {
 		LoginTokenImpl token = new LoginTokenImpl(this.pointerType);
 
-		token.setApp(this.getApp());
+		ModelKey appId = this.signingService.getAppDetails().getModelKey();
+
+		token.setApp(appId.toString());
 		token.setRoles(this.getRoles());
 		token.setRefreshAllowed(false);
 		token.setExpiration(this.expirationTime);
@@ -164,5 +164,12 @@ public class SystemLoginTokenFactoryImpl
 		return token;
 	}
 
+	@Override
+	public String toString() {
+		return "SystemLoginTokenFactoryImpl [authParameterBuilder=" + this.authParameterBuilder + ", pointerType="
+		        + this.pointerType + ", expirationTime=" + this.expirationTime + ", subject=" + this.subject
+		        + ", roles=" + this.roles + ", encoder=" + this.encoder + ", signingService=" + this.signingService
+		        + "]";
+	}
 
 }

@@ -1,9 +1,11 @@
 package com.dereekb.gae.utilities.data;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.google.common.base.Joiner;
@@ -15,7 +17,7 @@ public class StringUtility {
 	// MARK: Strins
 	/**
 	 * Converts a list of values to their {@link #toString()} value.
-	 * 
+	 *
 	 * @param values
 	 *            {@link List}. Never {@code null}.
 	 * @return {@link List}. Never {@code null}.
@@ -59,7 +61,7 @@ public class StringUtility {
 
 	/**
 	 * Separates the values within the input string.
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 */
@@ -69,7 +71,7 @@ public class StringUtility {
 
 	/**
 	 * Separates the values within the input string.
-	 * 
+	 *
 	 * @param value
 	 * @return {@link List}. Never {@code null}.
 	 */
@@ -130,10 +132,29 @@ public class StringUtility {
 
 	public static String tryToString(Object value) {
 		if (value != null) {
-			return value.toString(); 
+			return value.toString();
 		} else {
 			return null;
 		}
+	}
+
+	public static String generateRandomHex(int numchars) {
+		Random r = new Random();
+		return generateRandomHexString(numchars, r);
+	}
+
+	public static String generateSecureRandomHexString(int numchars) {
+		SecureRandom r = new SecureRandom();
+		return generateRandomHexString(numchars, r);
+	}
+
+	public static String generateRandomHexString(int numchars, Random r) {
+		StringBuffer sb = new StringBuffer();
+        while(sb.length() < numchars){
+            sb.append(Integer.toHexString(r.nextInt()));
+        }
+
+        return sb.toString().substring(0, numchars);
 	}
 
 }

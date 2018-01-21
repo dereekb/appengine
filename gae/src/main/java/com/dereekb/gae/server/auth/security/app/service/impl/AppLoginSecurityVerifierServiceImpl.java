@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.auth.security.app.service.impl;
 
-import com.dereekb.gae.server.app.model.login.AppLogin;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityDetailsService;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecuritySigningService;
@@ -10,7 +9,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * {@link AppLoginSecurityVerifierService} that uses {@link AppLogin} to verify
+ * {@link AppLoginSecurityVerifierService} that uses {@link App} to verify
  * requests.
  *
  * @author dereekb
@@ -69,13 +68,11 @@ public class AppLoginSecurityVerifierServiceImpl
 				AppLoginSecurityDetails appDetails = this.detailsService.getAppLoginDetails(key);
 
 				// Compare the Keys
-					String secret = appDetails.getAppSecret();
-					String encodedToken = token.getEncodedLoginToken();
+				String secret = appDetails.getAppSecret();
+				String encodedToken = token.getEncodedLoginToken();
 
-					String signed = this.signingService.hexSign(secret, encodedToken);
-					return signed.equals(signature);
-
-				// False
+				String signed = this.signingService.hexSign(secret, encodedToken);
+				return signed.equals(signature);
 			}
 		} catch (NumberFormatException e) {
 			// False if key is not a number.

@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.app.model.login;
+package com.dereekb.gae.server.app.model.app;
 
 import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
 import com.dereekb.gae.utilities.misc.keyed.exception.UnknownIndexCodeException;

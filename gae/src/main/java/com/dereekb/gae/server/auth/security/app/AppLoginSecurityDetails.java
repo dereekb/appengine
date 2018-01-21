@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.auth.security.app;
 
-import com.dereekb.gae.server.app.model.login.AppLoginSecurityLevel;
+import com.dereekb.gae.server.app.model.app.AppLoginSecurityLevel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**

@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.app.model.login;
 
+import com.dereekb.gae.server.app.model.app.AppLoginSecurityLevel;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -18,9 +19,11 @@ import com.googlecode.objectify.condition.IfZero;
  *
  * @author dereekb
  *
+ * @Deprecated use {@link App} directly.
  */
 @Cache
 @Entity
+@Deprecated
 public class AppLogin extends DatabaseModel
         implements ObjectifyModel<AppLogin>, AppLoginSecurityDetails {
 
