@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.auth.security.app.service.impl;
 
-import com.dereekb.gae.server.app.model.login.AppLogin;
+import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.auth.security.app.exception.UnavailableAppLoginSecurityDetails;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityDetailsService;
@@ -17,28 +17,28 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public class AppLoginSecurityDetailsServiceImpl
         implements AppLoginSecurityDetailsService {
 
-	private Getter<AppLogin> appLoginGetter;
+	private Getter<App> appGetter;
 
-	public AppLoginSecurityDetailsServiceImpl(Getter<AppLogin> appLoginGetter) {
-		this.setAppLoginGetter(appLoginGetter);
+	public AppLoginSecurityDetailsServiceImpl(Getter<App> appGetter) {
+		this.setAppGetter(appGetter);
 	}
 
-	public Getter<AppLogin> getAppLoginGetter() {
-		return this.appLoginGetter;
+	public Getter<App> getAppGetter() {
+		return this.appGetter;
 	}
 
-	public void setAppLoginGetter(Getter<AppLogin> appLoginGetter) {
-		if (appLoginGetter == null) {
-			throw new IllegalArgumentException("appLoginGetter cannot be null.");
+	public void setAppGetter(Getter<App> appGetter) {
+		if (appGetter == null) {
+			throw new IllegalArgumentException("appGetter cannot be null.");
 		}
 
-		this.appLoginGetter = appLoginGetter;
+		this.appGetter = appGetter;
 	}
 
 	// MARK: AppLoginSecurityDetailsService
 	@Override
 	public AppLoginSecurityDetails getAppLoginDetails(ModelKey appId) {
-		AppLogin login = this.appLoginGetter.get(appId);
+		App login = this.appGetter.get(appId);
 
 		if (login == null) {
 			throw new UnavailableAppLoginSecurityDetails();
@@ -49,7 +49,7 @@ public class AppLoginSecurityDetailsServiceImpl
 
 	@Override
 	public String toString() {
-		return "AppLoginSecurityDetailsServiceImpl [appLoginGetter=" + this.appLoginGetter + "]";
+		return "AppLoginSecurityDetailsServiceImpl [appGetter=" + this.appGetter + "]";
 	}
 
 }

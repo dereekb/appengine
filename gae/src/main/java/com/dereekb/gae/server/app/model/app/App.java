@@ -1,12 +1,16 @@
 package com.dereekb.gae.server.app.model.app;
 
 import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.datastore.models.DatedDatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.condition.IfZero;
@@ -17,8 +21,10 @@ import com.googlecode.objectify.condition.IfZero;
  * @author dereekb
  *
  */
+@Cache
+@Entity
 public class App extends DatedDatabaseModel
-        implements ObjectifyModel<App>, AppLoginSecurityDetails {
+        implements ObjectifyModel<App>, AppLoginSecurityDetails, LoginOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -120,6 +126,12 @@ public class App extends DatedDatabaseModel
 
 	public void setLogin(Key<Login> login) {
 		this.login = login;
+	}
+
+	// Login Owner
+	@Override
+	public ModelKey getLoginOwnerKey() {
+		return ObjectifyModelKeyUtil.readModelKey(this.login);
 	}
 
 	// Unique Model
