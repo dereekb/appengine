@@ -18,9 +18,15 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public final class AppGenerator extends AbstractModelGenerator<App> {
 
 	private AppLoginSecretGenerator secretGenerator = new AppLoginSecretGeneratorImpl();
+	private AppLoginSecurityLevel level = AppLoginSecurityLevel.APP;
 
 	public AppGenerator() {
 		this(LongModelKeyGenerator.GENERATOR);
+	};
+
+	public AppGenerator(AppLoginSecurityLevel level) {
+		this(LongModelKeyGenerator.GENERATOR);
+		this.setLevel(level);
 	};
 
 	public AppGenerator(Generator<ModelKey> keyGenerator) {
@@ -39,6 +45,18 @@ public final class AppGenerator extends AbstractModelGenerator<App> {
 		this.secretGenerator = secretGenerator;
 	}
 
+	public AppLoginSecurityLevel getLevel() {
+		return this.level;
+	}
+
+	public void setLevel(AppLoginSecurityLevel level) {
+		if (level == null) {
+			throw new IllegalArgumentException("level cannot be null.");
+		}
+
+		this.level = level;
+	}
+
 	// MARK: AbstractModelGenerator
 	@Override
 	public App generateModel(ModelKey key,
@@ -47,7 +65,7 @@ public final class AppGenerator extends AbstractModelGenerator<App> {
 
 		login.setName("App");
 		login.setSecret(this.secretGenerator.generateSecret());
-		login.setLevel(AppLoginSecurityLevel.APP);
+		login.setLevel(this.level);
 
 		return login;
 	}

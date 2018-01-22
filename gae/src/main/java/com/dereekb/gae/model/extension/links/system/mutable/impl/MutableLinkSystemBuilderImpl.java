@@ -51,18 +51,17 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
 
 /**
  * {@link LinkInfoSystem} implementation that also provides functions for
  * building other components.
- * 
+ *
  * @author dereekb
  *
  */
-public class MutableLinkSystemBuilderImpl
+public class MutableLinkSystemBuilderImpl extends CaseInsensitiveEntryContainer<MutableLinkSystemBuilderEntry>
         implements LinkInfoSystem {
-
-	private CaseInsensitiveMap<MutableLinkSystemBuilderEntry> entriesMap;
 
 	private CaseInsensitiveMap<LinkModelInfo> linkModelInfoMap = new CaseInsensitiveMap<LinkModelInfo>();
 
@@ -73,32 +72,24 @@ public class MutableLinkSystemBuilderImpl
 
 	public MutableLinkSystemBuilderImpl(Map<String, MutableLinkSystemBuilderEntry> entriesMap)
 	        throws IllegalArgumentException {
-		this.setEntriesMap(entriesMap);
+		super(entriesMap);
 	}
 
 	private void setEntriesMap(List<? extends MutableLinkSystemBuilderEntry> entries) {
 		Map<String, MutableLinkSystemBuilderEntry> entriesMap = new HashMap<String, MutableLinkSystemBuilderEntry>();
-		
+
 		for (MutableLinkSystemBuilderEntry entry : entries) {
 			String type = entry.getLinkModelType();
 			entriesMap.put(type, entry);
 		}
-		
-		this.setEntriesMap(entriesMap);
-	}
-	
-	public void setEntriesMap(Map<String, MutableLinkSystemBuilderEntry> entriesMap) throws IllegalArgumentException {
-		if (entriesMap == null) {
-			throw new IllegalArgumentException("entriesMap cannot be null.");
-		}
 
-		this.entriesMap = new CaseInsensitiveMap<MutableLinkSystemBuilderEntry>(entriesMap);
+		this.setEntries(entriesMap);
 	}
 
 	// MARK: LinkInfoSystem
 	@Override
 	public Set<String> getAvailableSetTypes() {
-		return this.entriesMap.keySet();
+		return this.getEntries().keySet();
 	}
 
 	@Override
@@ -125,7 +116,7 @@ public class MutableLinkSystemBuilderImpl
 
 	/**
 	 * {@link LinkSystem} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
@@ -216,12 +207,12 @@ public class MutableLinkSystemBuilderImpl
 				}
 
 				private class LinkWrapper extends AbstractWrappedLink {
-					
+
 					public LinkWrapper(Link link) {
 						super(link);
 					}
-					
-					// MARK: 
+
+					// MARK:
 					@Override
 					public DynamicLinkAccessorInfo getDynamicLinkAccessorInfo() {
 						return new DynamicLinkAccessorInfoImpl(this.link);
@@ -238,7 +229,7 @@ public class MutableLinkSystemBuilderImpl
 	// MARK: Mutable Accessors
 	/**
 	 * Used for generating a new {@link MutableLinkModelAccessor}.
-	 * 
+	 *
 	 * @return {@link MutableLinkModelAccessor}. Never {@code null}.
 	 */
 	public <T extends UniqueModel> FullLinkModelAccessor<T> makeAccessor(MutableLinkSystemBuilderAccessorDelegate<T> delegate)
@@ -248,7 +239,7 @@ public class MutableLinkSystemBuilderImpl
 
 	/**
 	 * {@link MutableLinkModelAccessor} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 * @param <T>
@@ -276,7 +267,7 @@ public class MutableLinkSystemBuilderImpl
 			ReadResponse<T> response = this.delegate.getReadService().read(request);
 			return new LinkModelReadResponse(response);
 		}
-		
+
 		// MARK: TypedLinkModelAccessor
 		@Override
 		public LinkModel makeLinkModel(T model) {
@@ -310,7 +301,7 @@ public class MutableLinkSystemBuilderImpl
 
 		/**
 		 * {@link MutableLinkModel} implementation.
-		 * 
+		 *
 		 * @author dereekb
 		 *
 		 */
@@ -355,20 +346,20 @@ public class MutableLinkSystemBuilderImpl
 			@Override
 			public List<? extends MutableLink> getLinks() {
 				List<MutableLink> links = new ArrayList<MutableLink>();
-				
+
 				LinkModelInfo linkModelInfo = this.getLinkModelInfo();
 				Set<String> linkNames = linkModelInfo.getLinkNames();
-				
+
 				for (String linkName : linkNames) {
 					links.add(this.getLink(linkName));
 				}
-				
+
 				return links;
 			}
 
 			/**
 			 * {@link MutableLink} implementation.
-			 * 
+			 *
 			 * @author dereekb
 			 *
 			 */
@@ -420,7 +411,7 @@ public class MutableLinkSystemBuilderImpl
 			ReadRequest request = new KeyReadRequest(modelKeys, false);
 			return this.delegate.getReadService().exists(request);
 		}
-		
+
 		@Override
 		public ReadResponse<? extends MutableLinkModelAccessorPair<T>> readMutableLinkModels(ReadRequest request)
 		        throws AtomicOperationException {
@@ -445,7 +436,7 @@ public class MutableLinkSystemBuilderImpl
 
 		/**
 		 * {@link MutableLinkModelAccessorPair} implementation.
-		 * 
+		 *
 		 * @author dereekb
 		 *
 		 */
@@ -479,23 +470,18 @@ public class MutableLinkSystemBuilderImpl
 			}
 
 		}
-		
+
 	}
 
 	// MARK: Internal
-	public MutableLinkSystemBuilderEntry getEntryForType(String type) throws UnavailableLinkModelException {
-		MutableLinkSystemBuilderEntry entry = this.entriesMap.get(type);
-
-		if (entry == null) {
-			throw UnavailableLinkModelException.makeForType(type);
-		}
-
-		return entry;
+	@Override
+	protected void throwEntryDoesntExistException(String type) throws RuntimeException {
+		throw UnavailableLinkModelException.makeForType(type);
 	}
 
 	/**
 	 * {@link LinkModelInfo} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
@@ -527,7 +513,7 @@ public class MutableLinkSystemBuilderImpl
 		public ModelKeyType getModelKeyType() {
 			return this.limitedLinkModel.getModelKeyType();
 		}
-		
+
 		@Override
 		public LinkInfo getLinkInfo(String linkName) throws UnavailableLinkException {
 			LinkInfoImpl linkInfo = this.linksMap.get(linkName);
@@ -545,7 +531,7 @@ public class MutableLinkSystemBuilderImpl
 		        implements LinkInfo {
 
 			private final LimitedLinkInfo limitedLinkInfo;
-			
+
 			private ModelKeyType keyType = null;
 			private RelationSource relationSource;
 
@@ -590,7 +576,7 @@ public class MutableLinkSystemBuilderImpl
 						this.keyType = ModelKeyType.NAME;	// Default to a name.
 					}
 				}
-				
+
 				return this.keyType;
 			}
 
@@ -638,7 +624,7 @@ public class MutableLinkSystemBuilderImpl
 	}
 
 	private class DynamicLinkAccessorInfoImpl implements DynamicLinkAccessorInfo {
-		
+
 		private final Link link;
 
 		public DynamicLinkAccessorInfoImpl(Link link) {
@@ -655,16 +641,16 @@ public class MutableLinkSystemBuilderImpl
 		@Override
 		public Relation getRelationInfo() throws UnsupportedOperationException, NoRelationException {
 			LinkInfo linkInfo = this.link.getLinkInfo();
-			
+
 			String linkName = linkInfo.getLinkName();
 			String linkModelType = this.getRelationLinkType();
-			MutableLinkSystemBuilderEntry entry = MutableLinkSystemBuilderImpl.this.entriesMap.get(linkModelType);
-			
+			MutableLinkSystemBuilderEntry entry = MutableLinkSystemBuilderImpl.this.getEntryForType(linkModelType);
+
 			BidirectionalLinkNameMap map = entry.getBidirectionalMap();
-			
+
 			String reverseLinkName = null;
 			String relationLinkType = this.getRelationLinkType();
-			
+
 
 			try {
 				if (linkInfo.getLinkType() == LinkType.DYNAMIC) {
@@ -685,7 +671,7 @@ public class MutableLinkSystemBuilderImpl
 				throw e;
 			}
 		}
-		
+
 	}
 
 	private class RelationSourceImpl

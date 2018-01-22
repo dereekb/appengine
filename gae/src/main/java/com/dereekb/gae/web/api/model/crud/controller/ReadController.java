@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.constraints.NotEmpty;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ import com.dereekb.gae.model.extension.inclusion.reader.InclusionReaderSetAnalys
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryRequestImpl;
@@ -44,7 +45,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  */
 @Validated
 @RestController
-public class ReadController {
+public class ReadController extends CaseInsensitiveEntryContainer<ReadControllerEntry> {
 
 	public static final String ATOMIC_PARAM = "atomic";
 	public static final String LOAD_RELATED_PARAM = "getRelated";
@@ -58,7 +59,6 @@ public class ReadController {
 	private Integer maxKeysAllowed = MAX_KEYS_PER_REQUEST;
 
 	private TypeModelKeyConverter keyTypeConverter;
-	private Map<String, ReadControllerEntry> entries;
 
 	public ReadController() {
 		super();
@@ -98,18 +98,6 @@ public class ReadController {
 		this.keyTypeConverter = keyTypeConverter;
 	}
 
-	public Map<String, ReadControllerEntry> getEntries() {
-		return this.entries;
-	}
-
-	public void setEntries(Map<String, ReadControllerEntry> entries) throws IllegalArgumentException {
-		if (entries == null) {
-			throw new IllegalArgumentException();
-		}
-
-		this.entries = new CaseInsensitiveMap<ReadControllerEntry>(entries);
-	}
-
 	// MARK: Controller
 	/**
 	 * API Entry point for reading a value.
@@ -135,9 +123,9 @@ public class ReadController {
 	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
 	                              @RequestParam(name = RELATED_FILTER_PARAM, required = false) Set<String> relatedTypes)
 	        throws TooManyRequestKeysException, UnavailableTypesException {
-		
+
 		TooManyRequestKeysException.assertKeysCount(keys, this.maxKeysAllowed);
-		
+
 		ApiResponseImpl response = null;
 		ReadControllerEntry entry = this.getEntryForType(modelType);
 
@@ -252,20 +240,15 @@ public class ReadController {
 		return entry.read(request);
 	}
 
-	private ReadControllerEntry getEntryForType(String modelType) throws InclusionTypeUnavailableException {
-		ReadControllerEntry entry = this.entries.get(modelType);
-
-		if (entry == null) {
-			throw new InclusionTypeUnavailableException(modelType);
-		}
-
-		return entry;
+	@Override
+	protected void throwEntryDoesntExistException(String type) throws RuntimeException {
+		throw new InclusionTypeUnavailableException(type);
 	}
 
 	@Override
 	public String toString() {
 		return "ReadController [appendUnavailable=" + this.appendUnavailable + ", keyTypeConverter="
-		        + this.keyTypeConverter + ", entries=" + this.entries + "]";
+		        + this.keyTypeConverter + ", entries=" + this.getEntries() + "]";
 	}
 
 }

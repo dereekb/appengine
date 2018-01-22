@@ -7,6 +7,7 @@ import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.models.ModelUtility;
 import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
 
 /**
  * Abstract class that contains {@link TypedModel} values and puts them into a
@@ -17,16 +18,14 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
  * @param <T>
  *            model type
  */
-public abstract class AbstractTypedModelMap<T extends TypedModel> {
-
-	private CaseInsensitiveMap<T> typeMap;
-
-	public Map<String, T> getTypeMap() {
-		return this.typeMap;
-	}
+public abstract class AbstractTypedModelMap<T extends TypedModel> extends CaseInsensitiveEntryContainer<T> {
 
 	public AbstractTypedModelMap(List<T> typeMap) {
 		this.setTypeMap(typeMap);
+	}
+
+	public Map<String, T> getTypeMap() {
+		return this.getEntries();
 	}
 
 	public final void setTypeMap(List<T> typeMap) {
@@ -46,26 +45,17 @@ public abstract class AbstractTypedModelMap<T extends TypedModel> {
 	}
 
 	protected void setTypeMap(CaseInsensitiveMap<T> typeMap) {
-		this.typeMap = typeMap;
+		this.setEntries(typeMap);
 	}
 
-	protected T getEntryForType(String type) throws RuntimeException {
-		T entry = this.typeMap.get(type);
-
-		if (entry == null) {
-			this.throwEntryDoesntExistException(type);
-		}
-
-		return entry;
-	}
-
+	@Override
 	protected void throwEntryDoesntExistException(String type) throws RuntimeException {
 		throw new UnavailableTypesException(type);
 	}
 
 	@Override
 	public String toString() {
-		return "AbstractTypedModelMap [typeMap=" + this.typeMap + "]";
+		return "AbstractTypedModelMap [typeMap=" + this.getEntries() + "]";
 	}
 
 }

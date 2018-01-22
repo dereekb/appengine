@@ -13,6 +13,7 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfZero;
 
 /**
@@ -51,6 +52,7 @@ public class App extends DatedDatabaseModel
 	/**
 	 * Security level.
 	 */
+	@Index
 	@IgnoreSave({ IfZero.class })
 	private Integer level = DEFAULT_LEVEL;
 

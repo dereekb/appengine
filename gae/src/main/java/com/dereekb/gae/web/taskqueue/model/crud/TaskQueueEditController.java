@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
 import com.dereekb.gae.web.taskqueue.model.crud.exception.UnregisteredEditTypeException;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
 
@@ -27,7 +27,7 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateCon
  */
 @RestController
 @RequestMapping("/taskqueue")
-public final class TaskQueueEditController {
+public final class TaskQueueEditController extends CaseInsensitiveEntryContainer<TaskQueueEditControllerEntry> {
 
 	private static final Logger LOGGER = Logger.getLogger(TaskQueueIterateController.class.getName());
 
@@ -36,14 +36,13 @@ public final class TaskQueueEditController {
 	public static final String DELETE_PATH = "delete";
 
 	private TypeModelKeyConverter keyTypeConverter;
-	private CaseInsensitiveMap<TaskQueueEditControllerEntry> entries;
 
 	public TaskQueueEditController() {}
 
 	public TaskQueueEditController(TypeModelKeyConverter keyTypeConverter,
 	        Map<String, TaskQueueEditControllerEntry> entries) {
-		this.keyTypeConverter = keyTypeConverter;
-		this.setEntries(entries);
+		super(entries);
+		this.setKeyTypeConverter(keyTypeConverter);
 	}
 
 	public TypeModelKeyConverter getKeyTypeConverter() {
@@ -51,15 +50,11 @@ public final class TaskQueueEditController {
 	}
 
 	public void setKeyTypeConverter(TypeModelKeyConverter keyTypeConverter) {
+		if (keyTypeConverter == null) {
+			throw new IllegalArgumentException("keyTypeConverter cannot be null.");
+		}
+
 		this.keyTypeConverter = keyTypeConverter;
-	}
-
-	public Map<String, TaskQueueEditControllerEntry> getEntries() {
-		return this.entries;
-	}
-
-	public void setEntries(Map<String, TaskQueueEditControllerEntry> entries) {
-		this.entries = new CaseInsensitiveMap<TaskQueueEditControllerEntry>(entries);
 	}
 
 	// CRUD
@@ -106,14 +101,15 @@ public final class TaskQueueEditController {
 		}
 	}
 
-	private TaskQueueEditControllerEntry getEntryForType(String modelType) throws UnregisteredEditTypeException {
-		TaskQueueEditControllerEntry entry = this.entries.get(modelType);
+	// MARK: Entries
+	@Override
+	protected void throwEntryDoesntExistException(String type) throws RuntimeException {
+		throw new UnregisteredEditTypeException(type);
+	}
 
-		if (entry == null) {
-			throw new UnregisteredEditTypeException(modelType);
-		}
-
-		return entry;
+	@Override
+	public String toString() {
+		return "TaskQueueEditController [keyTypeConverter=" + this.keyTypeConverter + "]";
 	}
 
 }

@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
-import com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.IterateTaskInputImpl;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
 
 /**
  * Task Queue controller used for hook events.
@@ -23,26 +22,14 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.IterateTaskInp
  */
 @RestController
 @RequestMapping("/taskqueue")
-public class TaskQueueHookController {
+public class TaskQueueHookController extends CaseInsensitiveEntryContainer<TaskQueueHookControllerEntry> {
 
-	private static final Logger LOGGER = Logger.getLogger(TaskQueueIterateController.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(TaskQueueHookController.class.getName());
 
-	private Map<String, TaskQueueHookControllerEntry> entries;
+	public static final String HOOK_EVENT_TYPE_PARAMETER = "eventType";
 
 	public TaskQueueHookController(Map<String, TaskQueueHookControllerEntry> entries) {
-		this.setEntries(entries);
-	}
-
-	public Map<String, TaskQueueHookControllerEntry> getEntries() {
-		return this.entries;
-	}
-
-	public void setEntries(Map<String, TaskQueueHookControllerEntry> entries) {
-		if (entries == null) {
-			throw new IllegalArgumentException("entries cannot be null.");
-		}
-
-		this.entries = entries;
+		super(entries);
 	}
 
 	// MARK: Paths
@@ -53,16 +40,17 @@ public class TaskQueueHookController {
 	 * @param parameters
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/hook/event/{type}", method = RequestMethod.PUT, consumes = "application/octet-stream")
-	public void handleEvent(@PathVariable("type") String hookType,
+	@RequestMapping(value = "/hook/event/{group}", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	public void handleEvent(@PathVariable("group") String hookEventGroup,
+	                        @RequestParam(value = HOOK_EVENT_TYPE_PARAMETER, required = false) String hookEventType,
 	                        @RequestParam Map<String, String> parameters) {
 
 		try {
-			TaskQueueHookControllerEntry entry = this.getEntryForHookType(hookType);
-			IterateTaskInputImpl input = new IterateTaskInputImpl(this.taskName, modelType, cursor, step,
-			        this.parameters);
-			IterateTaskRequestImpl request = new IterateTaskRequestImpl(input);
-			entry.performIterateTask(request);
+			TaskQueueHookControllerEntry entry = this.getEntryForType(hookEventGroup);
+			TaskQueueHookEvent event = new TaskQueueHookEventImpl(hookEventGroup, hookEventType, parameters);
+			// IterateTaskRequestImpl request = new
+			// IterateTaskRequestImpl(input);
+			// entry.performIterateTask(request);
 		} catch (RuntimeException e) {
 			LOGGER.log(Level.SEVERE, "Hook task failed.", e);
 			throw e;

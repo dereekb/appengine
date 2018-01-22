@@ -10,6 +10,9 @@ import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttribu
 
 public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiScheduleTaskControllerEntry {
 
+	public static final String HOOK_EVENT_GROUP_PARAM = "hookEventGroup";
+	public static final String HOOK_EVENT_CODE_PARAM = "hookEventCode";
+
 	@Override
 	public TaskRequest makeTaskRequest(ApiScheduleTaskRequest request)
 	        throws MultiKeyedInvalidAttributeException,
@@ -18,6 +21,8 @@ public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiSch
 
 		Map<String, String> params = request.getEncodedParameters();
 
+		params.get(HOOK_EVENT_GROUP_PARAM);
+		params.get(HOOK_EVENT_CODE_PARAM);
 
 
 		// TODO Auto-generated method stub

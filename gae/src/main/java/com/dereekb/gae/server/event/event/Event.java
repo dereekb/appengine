@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.event;
+package com.dereekb.gae.server.event.event;
 
 /**
  * A server event that is emitted when a certain action occurs.
@@ -15,8 +15,20 @@ package com.dereekb.gae.server.event;
 public interface Event {
 
 	/**
-	 * Returns the event code/type.
+	 * Returns the event group.
 	 */
-	public String getEventCode();
+	public String getEventGroup();
+
+	/**
+	 * Returns the event type code.
+	 */
+	public String getEventType();
+
+	/**
+	 * Returns the event data, if applicable.
+	 *
+	 * @return {@link EventData}, {@code null} if none exists.
+	 */
+	public EventData getEventData();
 
 }

@@ -8,7 +8,7 @@ import com.google.apphosting.api.ApiProxy;
 import com.google.apphosting.api.ApiProxy.Environment;
 
 public class GoogleAppEngineUtility {
-	
+
 	// MARK: Environment
 	/**
 	 * Returns true only if the environment is undefined.
@@ -68,6 +68,18 @@ public class GoogleAppEngineUtility {
 
 	public static Environment getApiEnvironment() {
 		return ApiProxy.getCurrentEnvironment();
+	}
+
+	public static String getApplicationId() {
+		return ApiProxy.getCurrentEnvironment().getAppId();
+	}
+
+	public static String getApplicationVersion() {
+		return ApiProxy.getCurrentEnvironment().getVersionId();
+	}
+
+	public static String getApplicationEmail() {
+		return ApiProxy.getCurrentEnvironment().getEmail();
 	}
 
 }
