@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.extension.iterate.exception;
+package com.dereekb.gae.web.api.server.schedule.exception;
 
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;

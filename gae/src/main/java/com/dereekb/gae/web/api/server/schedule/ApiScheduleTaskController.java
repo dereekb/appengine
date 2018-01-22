@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.extension.iterate;
+package com.dereekb.gae.web.api.server.schedule;
 
 import java.util.List;
 import java.util.Map;
@@ -17,8 +17,8 @@ import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
-import com.dereekb.gae.web.api.model.extension.iterate.exception.UnavailableSchedulerTaskException;
-import com.dereekb.gae.web.api.model.extension.iterate.impl.ApiScheduleTaskRequestImpl;
+import com.dereekb.gae.web.api.server.schedule.exception.UnavailableSchedulerTaskException;
+import com.dereekb.gae.web.api.server.schedule.impl.ApiScheduleTaskRequestImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 

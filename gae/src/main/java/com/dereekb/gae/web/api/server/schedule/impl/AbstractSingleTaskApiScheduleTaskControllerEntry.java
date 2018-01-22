@@ -1,11 +1,11 @@
-package com.dereekb.gae.web.api.model.extension.iterate.impl;
+package com.dereekb.gae.web.api.server.schedule.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
-import com.dereekb.gae.web.api.model.extension.iterate.ApiScheduleTaskControllerEntry;
-import com.dereekb.gae.web.api.model.extension.iterate.ApiScheduleTaskRequest;
+import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskControllerEntry;
+import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 

@@ -11,7 +11,7 @@
 
 	<!-- Scheduler -->
 	<bean id="apiScheduleTaskController"
-		class="com.dereekb.gae.web.api.model.extension.iterate.ApiScheduleTaskController">
+		class="com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskController">
 		<constructor-arg index="0" ref="taskScheduler" />
 		<constructor-arg index="1" ref="apiScheduleTaskControllerEntries" />
 	</bean>
@@ -24,7 +24,7 @@
 
 	<!-- Unique Patches -->
 	<bean id="scheduleTallyOverviewPatchEntry"
-		class="com.dereekb.gae.web.api.model.extension.iterate.impl.UniqueIterateTaskApiScheduleTaskControllerEntry">
+		class="com.dereekb.gae.web.api.server.schedule.impl.UniqueIterateTaskApiScheduleTaskControllerEntry">
 		<constructor-arg index="0" value="TallyOverview" />
 		<!-- Same as the "tallyOverviewPatchTallyTypeLinkTaskKey". -->
 		<constructor-arg index="1" value="patchTallyOverviewTallyType" />
@@ -32,7 +32,7 @@
 	</bean>
 	
 	<bean id="scheduleTallyEventPatchEntry"
-		class="com.dereekb.gae.web.api.model.extension.iterate.impl.UniqueIterateTaskApiScheduleTaskControllerEntry">
+		class="com.dereekb.gae.web.api.server.schedule.impl.UniqueIterateTaskApiScheduleTaskControllerEntry">
 		<constructor-arg index="0" value="TallyEvent" />
 		<!-- Same as the "tallyOverviewPatchTallyTypeLinkTaskKey". -->
 		<constructor-arg index="1" value="patchTallyEventTallyOverview" />
