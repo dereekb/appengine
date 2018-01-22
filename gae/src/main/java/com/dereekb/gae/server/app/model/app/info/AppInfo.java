@@ -9,7 +9,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *
  */
 public interface AppInfo
-        extends UniqueModel {
+        extends AppName, UniqueModel {
 
 	/**
 	 * Returns app version info if available.

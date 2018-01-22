@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.app;
 
 import com.dereekb.gae.server.app.model.app.AppLoginSecurityLevel;
+import com.dereekb.gae.server.app.model.app.info.AppName;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -10,14 +11,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *
  */
 public interface AppLoginSecurityDetails
-        extends UniqueModel {
-
-	/**
-	 * Returns the app's name.
-	 *
-	 * @return {@link String}. Never {@code null}.
-	 */
-	public String getAppName();
+        extends AppName, UniqueModel {
 
 	/**
 	 * Returns the app's secret.
