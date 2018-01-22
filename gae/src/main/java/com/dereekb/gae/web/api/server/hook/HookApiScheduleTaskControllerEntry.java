@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.extension.hook;
+package com.dereekb.gae.web.api.server.hook;
 
 import java.util.Map;
 

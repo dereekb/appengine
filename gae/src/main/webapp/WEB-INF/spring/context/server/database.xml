@@ -17,6 +17,7 @@
 	</bean>
 
 	<util:list id="objectifyDatabaseEntities">
+		<ref bean="appObjectifyEntry" />
 		<ref bean="loginObjectifyEntry" />
 		<ref bean="loginKeyObjectifyEntry" />
 		<ref bean="loginPointerObjectifyEntry" />

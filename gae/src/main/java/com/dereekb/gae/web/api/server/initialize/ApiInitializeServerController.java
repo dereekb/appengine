@@ -18,7 +18,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  *
  */
 @RestController
-@RequestMapping("/service")
+@RequestMapping("/server")
 public class ApiInitializeServerController {
 
 	private ApiInitializeServerControllerDelegate delegate;
@@ -54,6 +54,11 @@ public class ApiInitializeServerController {
 		}
 
 		return response;
+	}
+
+	@Override
+	public String toString() {
+		return "ApiInitializeServerController [delegate=" + this.delegate + "]";
 	}
 
 }

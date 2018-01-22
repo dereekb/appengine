@@ -8,6 +8,6 @@ package com.dereekb.gae.server.auth.security.app.service;
  *
  */
 public interface AppLoginSecurityService
-        extends AppLoginSecurityDetailsService, AppLoginSecurityVerifierService {
+        extends AppLoginSecuritySigningService, AppLoginSecurityDetailsService, AppLoginSecurityVerifierService {
 
 }

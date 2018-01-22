@@ -47,7 +47,7 @@
 		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
 		<constructor-arg index="0" ref="appRegistry" />
 	</bean>
-	
+
 	<alias name="appSetterTask" alias="appStorerTask" />
 	<alias name="appSetterTask" alias="appUpdaterTask" />
 	<alias name="appSetterTask" alias="appDeleterTask" />
@@ -55,12 +55,7 @@
 	<!-- Create -->
 	<bean id="appCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="appCreateTaskDelegate" />
-		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
-				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
-				<constructor-arg index="1" ref="appStorerTask"/>
-			</bean>
-		</constructor-arg>
+		<constructor-arg index="1" ref="appStorerTask" />
 		<constructor-arg index="2" ref="appScheduleCreateReview" />
 	</bean>
 
@@ -73,15 +68,7 @@
 	<bean id="appCreateTaskDelegate"
 		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
 		<constructor-arg index="0" ref="appFactory" />
-		<constructor-arg index="1"
-			ref="appAuthenticationAttributeUpdater" />
-	</bean>
-
-	<bean id="appAuthenticationAttributeUpdater"
-		class="com.dereekb.gae.server.app.model.app.crud.AppAuthenticationAttributeUpdater">
-		<constructor-arg index="0" ref="appAttributeUpdater" />
-		<constructor-arg index="1" ref="loginPointerRegistry" />
-		<constructor-arg index="2" ref="keyLoginStatusServiceManager" />
+		<constructor-arg index="1" ref="appAttributeUpdater" />
 	</bean>
 
 	<!-- Read -->

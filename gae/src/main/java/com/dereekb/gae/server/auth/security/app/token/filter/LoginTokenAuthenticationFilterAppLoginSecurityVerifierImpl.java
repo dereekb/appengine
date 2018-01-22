@@ -33,12 +33,14 @@ public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
 	private String proofHeader;
 	private AppLoginSecurityVerifierService service;
 
-	public LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl() {
-		this(DEFAULT_HEADER);
+	public LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl(AppLoginSecurityVerifierService service) {
+		this(service, DEFAULT_HEADER);
 	}
 
-	public LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl(String proofHeader) {
+	public LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl(AppLoginSecurityVerifierService service,
+	        String proofHeader) {
 		this.setProofHeader(proofHeader);
+		this.setService(service);
 	}
 
 	public String getProofHeader() {
@@ -53,8 +55,19 @@ public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
 		this.proofHeader = proofHeader;
 	}
 
-	// MARK: LoginTokenAuthenticationFilterVerifier
+	public AppLoginSecurityVerifierService getService() {
+		return this.service;
+	}
 
+	public void setService(AppLoginSecurityVerifierService service) {
+		if (service == null) {
+			throw new IllegalArgumentException("service cannot be null.");
+		}
+
+		this.service = service;
+	}
+
+	// MARK: LoginTokenAuthenticationFilterVerifier
 	@Override
 	public void assertValidDecodedLoginToken(DecodedLoginToken<LoginToken> decodedLoginToken,
 	                                         HttpServletRequest request)
@@ -69,6 +82,11 @@ public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
 			if (StringUtility.isEmptyString(header)) {
 				throw new TokenSignatureInvalidException("App signature header is missing.");
 			} else if (this.service.isValidToken(decodedLoginToken, header) == false) {
+
+				// TODO: If not valid, but the request is the the taskqueue,
+				// then try again with any older/stored secrets. ONLY valid for
+				// the taskqueue.
+
 				throw new TokenSignatureInvalidException("App signature header does not match.");
 			}
 

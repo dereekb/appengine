@@ -13,6 +13,7 @@ public class AppLoginSecretGeneratorImpl
         implements AppLoginSecretGenerator {
 
 	public static Integer DEFAULT_LENGTH = 32;
+	public static AppLoginSecretGenerator SINGLETON = new AppLoginSecretGeneratorImpl();
 
 	private Integer length;
 

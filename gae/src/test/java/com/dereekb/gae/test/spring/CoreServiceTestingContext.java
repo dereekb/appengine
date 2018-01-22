@@ -10,6 +10,7 @@ import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
+import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
@@ -46,18 +47,29 @@ public class CoreServiceTestingContext {
 	@Autowired(required=false)
 	protected TestAuthenticationContext authContext;
 
+	@Autowired(required=false)
+	protected ApiInitializeServerController initializeServerController;
+
 	@Before
 	public void setUpCoreServices() {
 		if (this.session == null) {
 			this.helper.setUp();
 			this.session = ObjectifyService.begin();
+
+			this.initializeServer();
+			this.resetAuthContext();
 		}
 	}
 
-	@Before
 	public final void resetAuthContext() {
 		if (this.authContext != null) {
 			this.authContext.resetContext();
+		}
+	}
+
+	protected void initializeServer() {
+		if (this.initializeServerController != null) {
+			this.initializeServerController.initialize();
 		}
 	}
 

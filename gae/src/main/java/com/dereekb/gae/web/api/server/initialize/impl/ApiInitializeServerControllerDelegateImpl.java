@@ -8,6 +8,7 @@ import com.dereekb.gae.server.app.model.app.info.AppInfo;
 import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfo;
 import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfoUtility;
 import com.dereekb.gae.server.app.model.app.info.exception.AppInequalityException;
+import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecretGeneratorImpl;
 import com.dereekb.gae.server.datastore.ForceGetterSetter;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerControllerDelegate;
@@ -34,6 +35,11 @@ public class ApiInitializeServerControllerDelegateImpl
 
 	private AppInfo appInfo;
 	private ForceGetterSetter<App> appGetterSetter;
+
+	public ApiInitializeServerControllerDelegateImpl(AppInfo appInfo, ForceGetterSetter<App> appGetterSetter) {
+		this.setAppInfo(appInfo);
+		this.setAppGetterSetter(appGetterSetter);
+	}
 
 	public AppInfo getAppInfo() {
 		return this.appInfo;
@@ -119,6 +125,11 @@ public class ApiInitializeServerControllerDelegateImpl
 			// Create App
 			app = new App();
 			app.setModelKey(this.appInfo.getModelKey());
+
+			// Generate Secret
+			app.setSecret(AppLoginSecretGeneratorImpl.SINGLETON.generateSecret());
+
+			// Don't initialize yet though.
 			app.setInitialized(false);
 
 			this.appGetterSetter.forceStore(app);

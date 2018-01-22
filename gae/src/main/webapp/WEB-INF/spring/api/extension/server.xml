@@ -9,34 +9,17 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- App -->
-	<bean id="serverAppInfo"
-		class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl">
-		<constructor-arg index="0" ref="serverAppKey"/>
-		<constructor-arg index="1" ref="serverAppName"/>
-	</bean>
-	
-	<bean id="serverAppKey"
-		class="com.dereekb.gae.server.datastore.models.keys.ModelKey">
-		<constructor-arg index="0" ref="serverAppId"/>
-	</bean>
-	
-	<bean id="serverAppId" class="java.lang.Long">
-		<constructor-arg index="0" value="1234" />
+	<!-- Register Controller -->
+	<bean id="initializeServerController"
+		class="com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController">
+		<constructor-arg index="0"
+			ref="initializeServerControllerDelegate" />
 	</bean>
 
-	<bean id="serverAppName" class="java.lang.String">
-		<constructor-arg index="0" value="Demo" />
+	<bean id="initializeServerControllerDelegate"
+		class="com.dereekb.gae.web.api.server.initialize.impl.ApiInitializeServerControllerDelegateImpl">
+		<constructor-arg index="0" ref="serverAppInfo" />
+		<constructor-arg index="1" ref="appRegistry" />
 	</bean>
-
-	<!-- Imports -->
-	<import resource="login.xml" />
-	<import resource="taskqueue.xml" />
-	<import resource="database.xml" />
-	<import resource="keys.xml" />
-	<import resource="security.xml" />
-	<import resource="storage.xml" />
-	<import resource="search.xml" />
-	<import resource="image.xml" />
 
 </beans>

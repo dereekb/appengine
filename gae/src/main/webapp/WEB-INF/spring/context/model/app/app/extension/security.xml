@@ -11,8 +11,6 @@
 
 	<bean id="appModelRoleBuilderComponent"
 		class="com.dereekb.gae.server.app.model.app.security.AppModelRoleBuilderComponent">
-		<constructor-arg index="0"
-			ref="loginParentModelRoleSetContextReader" />
 	</bean>
 
 	<bean id="appModelRoleSetLoader"

@@ -16,25 +16,27 @@ import com.dereekb.gae.server.auth.security.token.provider.preauth.impl.PreAuthL
 
 /**
  * {@link LoginTokenAuthenticationFilterDelegate} implementation.
- * 
+ *
  * @author dereekb
  *
  */
 public class LoginTokenAuthenticationFilterDelegateImpl<T extends LoginToken>
         implements LoginTokenAuthenticationFilterDelegate {
 
+	@Deprecated
 	protected static final LoginTokenAuthenticationFilterVerifier<LoginToken> DEFAULT_VERIFIER = new LoginTokenAuthenticationFilterVerifierImpl<LoginToken>();
 
 	private LoginTokenDecoder<T> decoder;
 	private AuthenticationManager authenticationManager;
 	private LoginTokenAuthenticationFilterVerifier<T> verifier;
 
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder<T> decoder,
-	        AuthenticationManager authenticationManager) {
-		this(decoder, authenticationManager, (LoginTokenAuthenticationFilterVerifier<T>) DEFAULT_VERIFIER);
-	}
-	
+	                                      	        AuthenticationManager authenticationManager) {
+	                                      		this(decoder, authenticationManager, (LoginTokenAuthenticationFilterVerifier<T>) DEFAULT_VERIFIER);
+	                                      	}
+
 	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder<T> decoder,
 	        AuthenticationManager authenticationManager,
 	        LoginTokenAuthenticationFilterVerifier<T> verifier) {

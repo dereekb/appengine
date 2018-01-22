@@ -13,30 +13,21 @@
 	<bean id="apiScheduleTaskController"
 		class="com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskController">
 		<constructor-arg index="0" ref="taskScheduler" />
-		<constructor-arg index="1" ref="apiScheduleTaskControllerEntries" />
+		<constructor-arg index="1"
+			ref="apiScheduleTaskControllerEntries" />
 	</bean>
-	
+
 	<!-- Entries -->
 	<util:map id="apiScheduleTaskControllerEntries" key-type="java.lang.String">
 		<entry key="webhooks" value-ref="scheduleWebHookEvent"></entry>
-		<entry key="patchTallyEventTallyOverviews" value-ref="scheduleTallyEventPatchEntry"></entry>
 	</util:map>
 
+	<!-- Hooks/Events -->
+	<bean id="scheduleWebHookEvent"
+		class="com.dereekb.gae.web.api.server.hook.HookApiScheduleTaskControllerEntry">
+
+	</bean>
+
 	<!-- Unique Patches -->
-	<bean id="scheduleTallyOverviewPatchEntry"
-		class="com.dereekb.gae.web.api.server.schedule.impl.UniqueIterateTaskApiScheduleTaskControllerEntry">
-		<constructor-arg index="0" value="TallyOverview" />
-		<!-- Same as the "tallyOverviewPatchTallyTypeLinkTaskKey". -->
-		<constructor-arg index="1" value="patchTallyOverviewTallyType" />
-		<constructor-arg index="2" value="patchTallyOverviewMatchTallyTypeKeys" />
-	</bean>
-	
-	<bean id="scheduleTallyEventPatchEntry"
-		class="com.dereekb.gae.web.api.server.schedule.impl.UniqueIterateTaskApiScheduleTaskControllerEntry">
-		<constructor-arg index="0" value="TallyEvent" />
-		<!-- Same as the "tallyOverviewPatchTallyTypeLinkTaskKey". -->
-		<constructor-arg index="1" value="patchTallyEventTallyOverview" />
-		<constructor-arg index="2" value="patchTallyEventDeprecateTallyOverviewKeys" />
-	</bean>
 
 </beans>

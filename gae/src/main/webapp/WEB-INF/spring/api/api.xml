@@ -22,6 +22,7 @@
 	<import resource="extension/login.xml" />
 	<import resource="extension/schedule.xml" />
 	<import resource="extension/search.xml" />
+	<import resource="extension/server.xml" />
 	<import resource="extension/upload.xml" />
 	<import resource="extension/download.xml" />
 

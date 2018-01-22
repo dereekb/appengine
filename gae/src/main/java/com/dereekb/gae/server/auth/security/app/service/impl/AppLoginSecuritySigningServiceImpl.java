@@ -21,14 +21,20 @@ import com.dereekb.gae.server.auth.security.token.model.impl.SignedEncodedLoginT
 public class AppLoginSecuritySigningServiceImpl
         implements AppLoginSecuritySigningService {
 
+	public static final String DEFAULT_ALGORITHM = "HmacSHA256";
+
 	private String hashAlg;
+
+	public AppLoginSecuritySigningServiceImpl() {
+		this(DEFAULT_ALGORITHM);
+	}
 
 	public AppLoginSecuritySigningServiceImpl(String hashAlg) {
 		this.setHashAlg(hashAlg);
 	}
 
 	public static AppLoginSecuritySigningService HmacSHA256() {
-		return new AppLoginSecuritySigningServiceImpl("HmacSHA256");
+		return new AppLoginSecuritySigningServiceImpl(DEFAULT_ALGORITHM);
 	}
 
 	public String getHashAlg() {

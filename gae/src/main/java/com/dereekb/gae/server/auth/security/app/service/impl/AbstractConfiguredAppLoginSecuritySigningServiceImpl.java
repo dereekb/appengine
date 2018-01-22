@@ -1,33 +1,24 @@
 package com.dereekb.gae.server.auth.security.app.service.impl;
 
-import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecuritySigningService;
 import com.dereekb.gae.server.auth.security.app.service.ConfiguredAppLoginSecuritySigningService;
 import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 
 /**
- * {@link ConfiguredAppLoginSecuritySigningService} implementation that wraps a
+ * Abstract {@link ConfiguredAppLoginSecuritySigningService} implementation that wraps a
  * {@link AppLoginSecuritySigningService}.
  *
  * @author dereekb
  *
  */
-public class ConfiguredAppLoginSecuritySigningServiceImpl
+public abstract class AbstractConfiguredAppLoginSecuritySigningServiceImpl
         implements ConfiguredAppLoginSecuritySigningService {
 
-	private AppLoginSecurityDetails appSecurityDetails;
 	private AppLoginSecuritySigningService service;
 
-	public AppLoginSecurityDetails getAppSecurityDetails() {
-		return this.appSecurityDetails;
-	}
-
-	public void setAppSecurityDetails(AppLoginSecurityDetails appSecurityDetails) {
-		if (appSecurityDetails == null) {
-			throw new IllegalArgumentException("appSecurityDetails cannot be null.");
-		}
-
-		this.appSecurityDetails = appSecurityDetails;
+	public AbstractConfiguredAppLoginSecuritySigningServiceImpl(AppLoginSecuritySigningService service) {
+		super();
+		this.setService(service);
 	}
 
 	public AppLoginSecuritySigningService getService() {
@@ -43,7 +34,7 @@ public class ConfiguredAppLoginSecuritySigningServiceImpl
 	}
 
 	protected String getSecret() {
-		return this.appSecurityDetails.getAppSecret();
+		return this.getAppDetails().getAppSecret();
 	}
 
 	// MARK: ConfiguredAppLoginSecuritySigningService
@@ -63,11 +54,6 @@ public class ConfiguredAppLoginSecuritySigningServiceImpl
 	}
 
 	// MARK: AppLoginSecuritySigningService
-	@Override
-	public AppLoginSecurityDetails getAppDetails() {
-		return this.appSecurityDetails;
-	}
-
 	@Override
 	public SignedEncodedLoginToken signToken(String secret,
 	                                         String token)
@@ -91,8 +77,7 @@ public class ConfiguredAppLoginSecuritySigningServiceImpl
 
 	@Override
 	public String toString() {
-		return "ConfiguredAppLoginSecuritySigningServiceImpl [appSecurityDetails=" + this.appSecurityDetails
-		        + ", service=" + this.service + "]";
+		return "AbstractConfiguredAppLoginSecuritySigningServiceImpl [service=" + this.service + "]";
 	}
 
 }
