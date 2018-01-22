@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.taskqueue.server.impl.lifecycle;
+package com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps;
 
 import java.util.List;
 
@@ -17,8 +17,12 @@ import com.dereekb.gae.server.mail.service.impl.MailRecipientImpl;
 import com.dereekb.gae.server.mail.service.impl.MailServiceRequestBodyImpl;
 import com.dereekb.gae.server.mail.service.impl.MailServiceRequestImpl;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
+import com.dereekb.gae.utilities.task.Task;
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskControllerEntry;
 import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskControllerRequest;
+import com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.impl.AllocateAppsRequestImpl;
+import com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.impl.AllocateAppsResponseImpl;
 import com.google.apphosting.api.ApiProxy.Environment;
 
 /**
@@ -28,9 +32,11 @@ import com.google.apphosting.api.ApiProxy.Environment;
  *
  */
 public class AllocateAppsTask
-        implements TaskQueueTaskControllerEntry {
+        implements Task<AllocateAppsTaskPair>, TaskQueueTaskControllerEntry {
 
-	private Integer count = 20;
+	private static final Integer DEFAULT_APP_COUNT = 20;
+
+	private AllocateAppsRequest request = new AllocateAppsRequestImpl(DEFAULT_APP_COUNT);
 
 	private MailService mailService;
 	private Storer<App> appStorer;
@@ -42,16 +48,16 @@ public class AllocateAppsTask
 		this.setAppStorer(appStorer);
 	}
 
-	public Integer getCount() {
-		return this.count;
+	public AllocateAppsRequest getRequest() {
+		return this.request;
 	}
 
-	public void setCount(Integer count) {
-		if (count == null) {
-			throw new IllegalArgumentException("count cannot be null.");
+	public void setRequest(AllocateAppsRequest request) {
+		if (request == null) {
+			throw new IllegalArgumentException("request cannot be null.");
 		}
 
-		this.count = count;
+		this.request = request;
 	}
 
 	public MailService getMailService() {
@@ -92,8 +98,17 @@ public class AllocateAppsTask
 
 	// MARK: TaskQueueTaskControllerEntry
 	@Override
+	public void doTask(AllocateAppsTaskPair input) throws FailedTaskException {
+		input.setResult(this.makeApps(input.getKey()));
+	}
+
+	@Override
 	public void performTask(TaskQueueTaskControllerRequest request) throws RuntimeException {
-		List<App> apps = GeneratorUtility.generate(this.count, this.appGenerator);
+		this.makeApps(this.request);
+	}
+
+	protected AllocateAppsResponse makeApps(AllocateAppsRequest request) {
+		List<App> apps = GeneratorUtility.generate(request.getAppCount(), this.appGenerator);
 		this.appStorer.store(apps);
 
 		MailServiceRequest mailRequest = this.makeMailRequest(apps);
@@ -103,6 +118,8 @@ public class AllocateAppsTask
 		} catch (MailSendFailureException e) {
 			e.printStackTrace();
 		}
+
+		return new AllocateAppsResponseImpl(apps);
 	}
 
 	private MailServiceRequest makeMailRequest(List<App> apps) {
@@ -134,7 +151,7 @@ public class AllocateAppsTask
 
 	@Override
 	public String toString() {
-		return "AllocateAppsTask [count=" + this.count + ", mailService=" + this.mailService + ", appStorer="
+		return "AllocateAppsTask [request=" + this.request + ", mailService=" + this.mailService + ", appStorer="
 		        + this.appStorer + ", appGenerator=" + this.appGenerator + "]";
 	}
 

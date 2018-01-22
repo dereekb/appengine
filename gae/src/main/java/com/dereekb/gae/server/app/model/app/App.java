@@ -1,5 +1,9 @@
 package com.dereekb.gae.server.app.model.app;
 
+import com.dereekb.gae.server.app.model.app.info.AppInfo;
+import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfo;
+import com.dereekb.gae.server.app.model.app.info.AppVersion;
+import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
@@ -7,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.DatedDatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
+import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -14,6 +19,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfFalse;
 import com.googlecode.objectify.condition.IfZero;
 
 /**
@@ -25,7 +32,7 @@ import com.googlecode.objectify.condition.IfZero;
 @Cache
 @Entity
 public class App extends DatedDatabaseModel
-        implements ObjectifyModel<App>, AppLoginSecurityDetails, LoginOwnedModel {
+        implements ObjectifyModel<App>, AppInfo, AppLoginSecurityDetails, LoginOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -60,6 +67,19 @@ public class App extends DatedDatabaseModel
 	 * Login
 	 */
 	private Key<Login> login;
+
+	// MARK: Internal Variables
+	@IgnoreSave({ IfEmpty.class })
+	private String app;
+
+	@IgnoreSave({ IfEmpty.class })
+	private String service;
+
+	@IgnoreSave({ IfEmpty.class })
+	private String version;
+
+	@IgnoreSave({ IfFalse.class })
+	private boolean initialized = false;
 
 	public App() {
 		super();
@@ -104,6 +124,72 @@ public class App extends DatedDatabaseModel
 	public void setLevel(AppLoginSecurityLevel level) {
 		Integer levelCode = KeyedUtility.getCode(level);
 		this.setLevelCode(levelCode);
+	}
+
+	public String getApp() {
+		return this.app;
+	}
+
+	public void setApp(String app) {
+		this.app = app;
+	}
+
+	public String getService() {
+		return this.service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
+	public AppVersion getAppVersion() {
+		try {
+			return GoogleAppEngineUtility.decodeAppVersion(this.getVersion());
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
+	public void setAppVersion(AppVersion version) {
+		this.setVersion(GoogleAppEngineUtility.encodeAppVersion(version));
+	}
+
+	public String getVersion() {
+		return this.version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public boolean isInitialized() {
+		return this.initialized;
+	}
+
+	public void setInitialized(boolean initialized) {
+		this.initialized = initialized;
+	}
+
+	// MARK: AppInfo
+	@Override
+	public AppServiceVersionInfo getAppServiceVersionInfo() {
+		try {
+			return new AppServiceVersionInfoImpl(this.app, this.service, this.getAppVersion());
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
+	public void setAppServiceVersionInfo(AppServiceVersionInfo info) {
+		if (info != null) {
+			this.setApp(info.getAppId());
+			this.setService(info.getAppService());
+			this.setAppVersion(info.getAppVersion());
+		} else {
+			this.setApp(null);
+			this.setService(null);
+			this.setAppVersion(null);
+		}
 	}
 
 	// MARK: AppLoginSecurityDetails
@@ -162,7 +248,8 @@ public class App extends DatedDatabaseModel
 	@Override
 	public String toString() {
 		return "App [identifier=" + this.identifier + ", name=" + this.name + ", secret=" + this.secret + ", level="
-		        + this.level + ", login=" + this.login + ", date=" + this.date + "]";
+		        + this.level + ", login=" + this.login + ", app=" + this.app + ", service=" + this.service
+		        + ", version=" + this.version + ", initialized=" + this.initialized + ", date=" + this.date + "]";
 	}
 
 }

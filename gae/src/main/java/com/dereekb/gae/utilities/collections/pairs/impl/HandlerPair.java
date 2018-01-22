@@ -24,6 +24,10 @@ public class HandlerPair<L, R> implements Pair<L, R> {
 	protected L key;
 	protected R object;
 
+	public HandlerPair(L key) {
+		this(key, null);
+	}
+
 	public HandlerPair(L key, R object) {
 		this.key = key;
 		this.object = object;

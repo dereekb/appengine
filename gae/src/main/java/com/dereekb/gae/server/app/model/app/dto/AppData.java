@@ -21,6 +21,12 @@ public class AppData extends DatabaseModelData {
 	private String secret;
 	private Integer level;
 
+	private String app;
+	private String service;
+	private String version;
+
+	private boolean initialized = false;
+
 	private Long login;
 
 	public AppData() {
@@ -59,10 +65,43 @@ public class AppData extends DatabaseModelData {
 		this.login = login;
 	}
 
+	public String getApp() {
+		return this.app;
+	}
+
+	public void setApp(String app) {
+		this.app = app;
+	}
+
+	public String getService() {
+		return this.service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
+	public String getVersion() {
+		return this.version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public boolean isInitialized() {
+		return this.initialized;
+	}
+
+	public void setInitialized(boolean initialized) {
+		this.initialized = initialized;
+	}
+
 	@Override
 	public String toString() {
-		return "AppData [name=" + this.name + ", secret=" + this.secret + ", level=" + this.level + ", login="
-		        + this.login + ", key=" + this.key + ", date=" + this.date + "]";
+		return "AppData [name=" + this.name + ", secret=" + this.secret + ", level=" + this.level + ", app=" + this.app
+		        + ", service=" + this.service + ", version=" + this.version + ", initialized=" + this.initialized
+		        + ", login=" + this.login + ", key=" + this.key + ", date=" + this.date + "]";
 	}
 
 }

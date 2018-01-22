@@ -47,7 +47,10 @@ public class TaskQueueHookController extends CaseInsensitiveEntryContainer<TaskQ
 
 		try {
 			TaskQueueHookControllerEntry entry = this.getEntryForType(hookEventGroup);
-			TaskQueueHookEvent event = new TaskQueueHookEventImpl(hookEventGroup, hookEventType, parameters);
+
+			// TODO: Complete hook events.
+
+			// TaskQueueHookEvent event = new TaskQueueHookEventImpl(hookEventGroup, hookEventType, parameters);
 			// IterateTaskRequestImpl request = new
 			// IterateTaskRequestImpl(input);
 			// entry.performIterateTask(request);

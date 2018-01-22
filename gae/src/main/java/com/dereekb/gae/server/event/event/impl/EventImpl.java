@@ -2,26 +2,44 @@ package com.dereekb.gae.server.event.event.impl;
 
 import com.dereekb.gae.server.event.event.Event;
 import com.dereekb.gae.server.event.event.EventData;
+import com.dereekb.gae.server.event.event.EventType;
 
-public class EventImpl
+/**
+ * {@link Event} implementation.
+ *
+ * @author dereekb
+ *
+ */
+public class EventImpl extends BasicEventImpl
         implements Event {
 
-	@Override
-	public String getEventGroup() {
-		// TODO Auto-generated method stub
-		return null;
+	private EventData eventData;
+
+	public EventImpl(EventType eventType) {
+		this(eventType, EmptyEventData.make());
 	}
 
-	@Override
-	public String getEventType() {
-		// TODO Auto-generated method stub
-		return null;
+	public EventImpl(EventType eventType, EventData eventData) {
+		super(eventType);
+		this.setEventData(eventData);
 	}
 
 	@Override
 	public EventData getEventData() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eventData;
+	}
+
+	public void setEventData(EventData eventData) {
+		if (eventData == null) {
+			throw new IllegalArgumentException("eventData cannot be null.");
+		}
+
+		this.eventData = eventData;
+	}
+
+	@Override
+	public String toString() {
+		return "EventImpl [eventData=" + this.eventData + ", getEventType()=" + this.getEventType() + "]";
 	}
 
 }

@@ -16,7 +16,7 @@ import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMai
 
 /**
  * {@link MailgunMailService} tests.
- * 
+ *
  * @author dereekb
  *
  */
@@ -26,6 +26,9 @@ public class MailgunMailServiceTests {
 	private static final String AUTHORIZED_EMAIL = "dereekb@gmail.com";
 	private static final String API_KEY = "key-d7e36a9ead3fdb61983587832bd75b42";
 
+
+	public static final String SPLITTER = "\\.";
+
 	@Test
 	public void testSendingEmail() throws InvalidMailRequestException, MailSendFailureException {
 
@@ -34,7 +37,8 @@ public class MailgunMailServiceTests {
 		configuration.setTestMode(true);
 
 		MailUser defaultSender = new MailUserImpl(AUTHORIZED_EMAIL);
-		MailgunMailService service = new MailgunMailServiceImpl(defaultSender, configuration);
+		MailgunMailServiceImpl service = new MailgunMailServiceImpl(defaultSender, configuration);
+		service.setSendInAllEnvironments(true);
 
 		MailRecipient recipient = new MailRecipientImpl(AUTHORIZED_EMAIL);
 
@@ -58,7 +62,8 @@ public class MailgunMailServiceTests {
 		configuration.setTestMode(true);
 
 		MailUser defaultSender = new MailUserImpl(AUTHORIZED_EMAIL);
-		MailgunMailService service = new MailgunMailServiceImpl(defaultSender, configuration);
+		MailgunMailServiceImpl service = new MailgunMailServiceImpl(defaultSender, configuration);
+		service.setSendInAllEnvironments(true);
 
 		String subject = "Test Email!";
 		String bodyContent = "Test Email!";

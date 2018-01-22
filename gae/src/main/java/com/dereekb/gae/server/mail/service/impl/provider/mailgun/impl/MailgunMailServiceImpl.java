@@ -31,7 +31,7 @@ import com.dereekb.gae.utilities.filters.Filter;
  * {@link MailService} configured for Mailgun.
  * <p>
  * https://documentation.mailgun.com/en/latest/api-intro.html
- * 
+ *
  * @author dereekb
  *
  */
@@ -82,7 +82,7 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 	}
 
 	@Override
-	protected MailgunSenderInstance makeInstance(MailgunMailServiceRequest input) {
+	protected MailgunSenderInstance makeSenderInstance(MailgunMailServiceRequest input) {
 		return new MailgunSenderInstance(input);
 	}
 
@@ -145,7 +145,7 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 			map.add(contentTypeKey, content);
 
 			// TODO: Add Attachments
-			
+
 			// Add Custom Configuration
 			if (MailgunMailServiceImpl.this.configuration.isTestMode()) {
 				map.add("o:testmode", "true");
