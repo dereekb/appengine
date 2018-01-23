@@ -1,7 +1,8 @@
-package com.dereekb.gae.server.event.event.impl;
+package com.dereekb.gae.server.event.model.shared.event.impl;
 
 import com.dereekb.gae.server.event.event.EventGroup;
 import com.dereekb.gae.server.event.event.EventType;
+import com.dereekb.gae.server.event.event.impl.CommonEventGroup;
 import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
 
 /**

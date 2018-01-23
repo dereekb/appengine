@@ -54,6 +54,10 @@ public class CaseInsensitiveEntryContainer<T> {
 		return entry;
 	}
 
+	public void addEntry(String key, T value) {
+		this.entries.put(key, value);
+	}
+
 	protected void throwEntryDoesntExistException(String type) throws RuntimeException {
 		throw new NullPointerException(type + " doesn't exist in the entries.");
 	}

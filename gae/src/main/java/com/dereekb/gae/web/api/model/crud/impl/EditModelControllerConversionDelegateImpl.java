@@ -50,6 +50,8 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 
 	private String type;
 
+	// TODO: Can change to typedModelConversion
+
 	private DirectionalConverter<String, ModelKey> keyReader;
 	private BidirectionalConverter<T, I> converter;
 

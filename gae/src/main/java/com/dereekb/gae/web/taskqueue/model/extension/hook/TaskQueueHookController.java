@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
 
 /**
- * Task Queue controller used for hook events.
+ * Task Queue controller used for web hooks.
  *
  * @author dereekb
  *

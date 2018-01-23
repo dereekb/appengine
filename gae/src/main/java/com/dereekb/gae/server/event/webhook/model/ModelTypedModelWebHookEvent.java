@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.event.hook.model;
+package com.dereekb.gae.server.event.webhook.model;
 
 import java.util.List;
 

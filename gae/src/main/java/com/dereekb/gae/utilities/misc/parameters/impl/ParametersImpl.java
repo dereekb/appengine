@@ -1,47 +1,42 @@
 package com.dereekb.gae.utilities.misc.parameters.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.utilities.misc.parameters.MutableParameters;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 
 /**
  * {@link Parameters} implementation that wraps a map.
- * 
+ *
  * @author dereekb
  *
  */
-public class ParametersImpl
-        implements Parameters {
+public class ParametersImpl extends CaseInsensitiveEntryContainer<String>
+        implements MutableParameters {
 
-	private Map<String, String> parameters;
-
-	public ParametersImpl() {
-		this(new HashMap<String, String>());
-	}
+	public ParametersImpl() {}
 
 	public ParametersImpl(Map<String, String> parameters) {
-		this.setParameters(parameters);
+		super(parameters);
+	}
+
+	// MARK: MutableParameters
+	@Override
+	public final Map<String, String> getParameters() {
+		return this.getEntries();
 	}
 
 	@Override
-	public Map<String, String> getParameters() {
-		return this.parameters;
-	}
-
-	public void setParameters(Map<String, String> parameters) {
-		if (parameters == null) {
-			parameters = new HashMap<String, String>();
-		}
-
-		this.parameters = parameters;
+	public final void setParameters(Map<String, String> parameters) {
+		super.setEntries(parameters);
 	}
 
 	// MARK: Utility
 	public void addParameter(KeyedEncodedParameter parameter) {
-		ParameterUtility.put(this.parameters, parameter);
+		ParameterUtility.put(this.getEntries(), parameter);
 	}
 
 	public void addObjectParameter(String key,
@@ -51,12 +46,12 @@ public class ParametersImpl
 
 	public void addParameter(String key,
 	                         String value) {
-		this.parameters.put(key, value);
+		this.addEntry(key, value);
 	}
 
 	@Override
 	public String toString() {
-		return "ParametersImpl [parameters=" + this.parameters + "]";
+		return "ParametersImpl [parameters=" + this.getParameters() + "]";
 	}
 
 }

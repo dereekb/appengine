@@ -31,4 +31,10 @@ public class CaseInsensitiveCatchMapImpl<T> extends CatchMapImpl<String, T> {
 		super.setMap(new CaseInsensitiveMap<>(map));
 	}
 
+	@Override
+	public String toString() {
+		return "CaseInsensitiveCatchMapImpl [getCatchAll()=" + this.getCatchAll() + ", getMap()=" + this.getMap()
+		        + ", getNullKeyValue()=" + this.getNullKeyValue() + "]";
+	}
+
 }

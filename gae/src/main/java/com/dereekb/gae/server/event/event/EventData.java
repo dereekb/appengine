@@ -1,27 +1,54 @@
 package com.dereekb.gae.server.event.event;
 
-import java.util.Set;
+import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
+import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  * Arbitrary data associated with an {@link Event}.
+ * <p>
+ * In most cases it is recommended to test and cast to a more specific event
+ * data interface.
+ * <p>
+ * Event data can be exported (for webhooks, etc.) via
+ * {{@link #getWebSafeData()}.
  *
  * @author dereekb
  *
  */
-public interface EventData {
+public interface EventData
+        extends AlwaysKeyed<String> {
 
 	/**
-	 * Returns a set of all available property keys.
+	 * Returns data type.
 	 *
-	 * @return {@link Set}. Never {@code null}.
+	 * @return {@link String}. Never {@code null}.
 	 */
-	public Set<String> getPropertyKeys();
+	public String getEventDataType();
 
 	/**
-	 * Returns the property value for that key.
+	 * Creates websafe data configured with default parameters.
 	 *
-	 * @return
+	 * @return An object that can safely be serialized to JSON.
 	 */
-	public String getProperty(String key);
+	public ApiResponseData getWebSafeData();
+
+	/**
+	 * Creates websafe data configured with the input parameters. If the input
+	 * parameters are null, will use the default settings.
+	 *
+	 * @param parameters
+	 *            {@link Parameters}. Can be {@code null}.
+	 * @return An object that can safely be serialized to JSON.
+	 */
+	public ApiResponseData getWebSafeData(Parameters parameters);
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns the same value as {@link #getEventDataType()}.
+	 */
+	@Override
+	public String keyValue();
 
 }

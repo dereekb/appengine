@@ -1,8 +1,7 @@
 package com.dereekb.gae.server.event.event.impl;
 
-import java.util.Set;
-
 import com.dereekb.gae.server.event.event.EventData;
+import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  * Empty {@link EventData} implementation.
@@ -10,10 +9,18 @@ import com.dereekb.gae.server.event.event.EventData;
  * @author dereekb
  *
  */
-public class EmptyEventData
-        implements EventData {
+public class EmptyEventData extends AbstractEventData {
 
+	public static final String EMPTY_DATA_TYPE = "none";
 	public static final EmptyEventData SINGLETON = new EmptyEventData();
+
+	public EmptyEventData() {
+		this(EMPTY_DATA_TYPE);
+	}
+
+	public EmptyEventData(String eventDataType) {
+		super(eventDataType);
+	}
 
 	public static EventData make() {
 		return SINGLETON;
@@ -21,15 +28,13 @@ public class EmptyEventData
 
 	// MARK: EventData
 	@Override
-	public Set<String> getPropertyKeys() {
-		// TODO Auto-generated method stub
+	public ApiResponseData getWebSafeData() {
 		return null;
 	}
 
 	@Override
-	public String getProperty(String key) {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return "EmptyEventData []";
 	}
 
 }
