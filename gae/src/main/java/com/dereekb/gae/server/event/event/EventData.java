@@ -31,6 +31,7 @@ public interface EventData
 	 *
 	 * @return An object that can safely be serialized to JSON.
 	 */
+	@Deprecated
 	public ApiResponseData getWebSafeData();
 
 	/**
@@ -40,7 +41,14 @@ public interface EventData
 	 * @param parameters
 	 *            {@link Parameters}. Can be {@code null}.
 	 * @return An object that can safely be serialized to JSON.
+	 *
+	 * @Deprecated makes it hard to separate concerns and have consistent
+	 *             components for serialization and deserialization.
+	 *
+	 *             At the same time however, the system internally doesn't need
+	 *             web-safe data and recieving events is different.
 	 */
+	@Deprecated
 	public ApiResponseData getWebSafeData(Parameters parameters);
 
 	/**

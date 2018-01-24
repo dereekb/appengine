@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.event.event.impl;
 
 import com.dereekb.gae.server.event.event.EventData;
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
@@ -28,7 +29,7 @@ public class EmptyEventData extends AbstractEventData {
 
 	// MARK: EventData
 	@Override
-	public ApiResponseData getWebSafeData() {
+	public ApiResponseData getWebSafeData(Parameters parameters) {
 		return null;
 	}
 

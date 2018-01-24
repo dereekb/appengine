@@ -14,6 +14,8 @@ import com.dereekb.gae.server.event.event.Event;
 public interface ModelEvent<T extends UniqueModel>
         extends Event {
 
+	public static final String MODEL_EVENT_GROUP = "model";
+
 	/**
 	 * {@inheritDoc}
 	 */

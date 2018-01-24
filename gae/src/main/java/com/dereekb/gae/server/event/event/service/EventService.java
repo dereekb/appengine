@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.event.event.service;
 
 import com.dereekb.gae.server.event.event.Event;
+import com.dereekb.gae.server.event.event.service.exception.EventServiceException;
 
 /**
  * {@link Event} service use for submitting events.
@@ -12,11 +13,12 @@ public interface EventService {
 
 	/**
 	 * Submits the event to the service.
-	 * <p>
-	 * The event will be immediately digested and used by the relevant
-	 * listeners.
 	 *
+	 * @param event
+	 *            {@link Event}. Never {@code null}.
+	 * @throws EventServiceException
+	 *             thrown if the service encounters an error.
 	 */
-	public void submitEvent(Event event);
+	public void submitEvent(Event event) throws EventServiceException;
 
 }

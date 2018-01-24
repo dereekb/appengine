@@ -1,13 +1,17 @@
-package com.dereekb.gae.server.event.model.shared.event.impl;
+package com.dereekb.gae.server.event.model.shared.event.service.impl;
 
 import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.impl.TypedModelImpl;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.event.service.EventService;
+import com.dereekb.gae.server.event.model.shared.event.ModelEvent;
+import com.dereekb.gae.server.event.model.shared.event.impl.AbstractModelEventDataImpl;
+import com.dereekb.gae.server.event.model.shared.event.impl.ModelEventImpl;
 import com.dereekb.gae.server.event.model.shared.event.service.ModelEventSubmitTaskFactory;
 import com.dereekb.gae.server.event.model.shared.event.service.task.ModelEventSubscriptionTask;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
@@ -34,8 +38,8 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 	        EventService eventService,
 	        BidirectionalConverter<T, D> converter) {
 		super(modelType);
-		this.eventService = eventService;
-		this.converter = converter;
+		this.setEventService(eventService);
+		this.setConverter(converter);
 	}
 
 	public EventService getEventService() {
@@ -88,8 +92,9 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 		// MARK: ModelEventSubscriptionTask
 		@Override
 		public void doTask(ModelKeyListAccessor<T> input) throws FailedTaskException {
-			// TODO Auto-generated method stub
-
+			ModelEventDataImpl data = new ModelEventDataImpl(input);
+			ModelEvent<T> event = new ModelEventImpl<T>(this.event, data);
+			ModelEventServiceEntryImpl.this.eventService.submitEvent(event);
 		}
 
 	}
@@ -97,16 +102,39 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 	// MARK: ModelEventData
 	protected class ModelEventDataImpl extends AbstractModelEventDataImpl<T> {
 
-		public ModelEventDataImpl(List<T> eventModels) {
-			super(ModelEventServiceEntryImpl.this.getModelType(), eventModels);
+		private ModelKeyListAccessor<T> accessor;
+
+		public ModelEventDataImpl(ModelKeyListAccessor<T> accessor) {
+			super(ModelEventServiceEntryImpl.this.getModelType());
+			this.setAccessor(accessor);
+		}
+
+		public ModelKeyListAccessor<T> getAccessor() {
+			return this.accessor;
+		}
+
+		public void setAccessor(ModelKeyListAccessor<T> accessor) {
+			if (accessor == null) {
+				throw new IllegalArgumentException("accessor cannot be null.");
+			}
+
+			this.accessor = accessor;
 		}
 
 		// MARK:
 		@Override
+		public List<T> getEventModels() {
+			return this.getAccessor().getModels();
+		}
+
+		@Override
+		public List<ModelKey> getEventModelKeys() {
+			return this.getAccessor().getModelKeys();
+		}
+
+		@Override
 		public ApiResponseData getWebSafeData(Parameters parameters) {
 			parameters = ParameterUtility.safe(parameters);
-
-
 
 			// TODO Auto-generated method stub
 			return null;

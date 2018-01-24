@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.event.model.shared.event.ModelKeyEventData;
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
@@ -43,7 +44,7 @@ public class ModelKeyEventDataImpl extends AbstractModelKeyEventDataImpl {
 	}
 
 	@Override
-	public ApiResponseData getWebSafeData() {
+	public ApiResponseData getWebSafeData(Parameters parameters) {
 		// TODO Auto-generated method stub
 		return null;
 	}

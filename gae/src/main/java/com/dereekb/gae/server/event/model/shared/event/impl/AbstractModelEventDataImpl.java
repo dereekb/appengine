@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.event.model.shared.event.impl;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -20,43 +19,20 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 public abstract class AbstractModelEventDataImpl<T extends UniqueModel> extends AbstractModelKeyEventDataImpl
         implements ModelEventData<T> {
 
-	public static final String MODEL_KEY_EVENT_DATA_TYPE = "model_key";
-
-	private List<T> eventModels;
+	public static final String MODEL_EVENT_DATA_TYPE = "model";
 
 	public AbstractModelEventDataImpl(String modelType) {
-		this(modelType, Collections.emptyList());
-	}
-
-	public AbstractModelEventDataImpl(String modelType, List<T> eventModels) {
-		super(MODEL_KEY_EVENT_DATA_TYPE, modelType);
-		this.setEventModels(eventModels);
+		super(MODEL_EVENT_DATA_TYPE, modelType);
 	}
 
 	// MARK: ModelEventData
 	@Override
-	public List<T> getEventModels() {
-		return this.eventModels;
-	}
-
-	public void setEventModels(List<T> eventModels) {
-		if (eventModels == null) {
-			throw new IllegalArgumentException("eventModels cannot be null.");
-		}
-
-		this.eventModels = eventModels;
-	}
+	public abstract List<T> getEventModels();
 
 	// MARK: AbstractModelKeyEventDataImpl
 	@Override
 	public List<ModelKey> getEventModelKeys() {
 		return ModelKey.readModelKeys(this.getEventModels());
-	}
-
-	@Override
-	public String toString() {
-		return "AbstractModelEventDataImpl [eventModels=" + this.eventModels + ", getModelType()=" + this.getModelType()
-		        + ", getEventDataType()=" + this.getEventDataType() + "]";
 	}
 
 }
