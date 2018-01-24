@@ -43,4 +43,6 @@ public class WebHookEventSerializationTest {
 		Assert.assertTrue(EventTypeImpl.isEquivalent(eventType, jsonWebHook.getEventType()));
 	}
 
+	// TODO: Test serializing event with missing group/type throws an exception.
+
 }

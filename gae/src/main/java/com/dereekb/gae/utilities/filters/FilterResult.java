@@ -2,7 +2,7 @@ package com.dereekb.gae.utilities.filters;
 
 /**
  * FilterResult enumerations.
- * 
+ *
  * @author dereekb
  *
  */
@@ -22,6 +22,10 @@ public enum FilterResult {
 
 	private FilterResult(boolean bool) {
 		this.bool = bool;
+	}
+
+	public boolean isPass() {
+		return this.bool;
 	}
 
 	public FilterResult and(boolean bool) {

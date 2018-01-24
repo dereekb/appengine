@@ -6,8 +6,9 @@ import java.util.Map;
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.models.ModelUtility;
 import com.dereekb.gae.server.datastore.models.TypedModel;
+import com.dereekb.gae.server.datastore.models.TypedModelMap;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
-import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 
 /**
  * Abstract class that contains {@link TypedModel} values and puts them into a
@@ -18,9 +19,10 @@ import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContai
  * @param <T>
  *            model type
  */
-public abstract class AbstractTypedModelMap<T extends TypedModel> extends CaseInsensitiveEntryContainer<T> {
+public class TypedModelMapImpl<T extends TypedModel> extends CaseInsensitiveEntryContainerImpl<T>
+        implements TypedModelMap<T> {
 
-	public AbstractTypedModelMap(List<T> typeMap) {
+	public TypedModelMapImpl(List<T> typeMap) {
 		this.setTypeMap(typeMap);
 	}
 
@@ -48,6 +50,12 @@ public abstract class AbstractTypedModelMap<T extends TypedModel> extends CaseIn
 		this.setEntries(typeMap);
 	}
 
+	// MARK: TypedModelMap
+	@Override
+	public T getEntryForType(TypedModel model) throws RuntimeException {
+		return this.getEntryForType(model.getModelType());
+	}
+
 	@Override
 	protected void throwEntryDoesntExistException(String type) throws RuntimeException {
 		throw new UnavailableTypesException(type);
@@ -55,7 +63,7 @@ public abstract class AbstractTypedModelMap<T extends TypedModel> extends CaseIn
 
 	@Override
 	public String toString() {
-		return "AbstractTypedModelMap [typeMap=" + this.getEntries() + "]";
+		return "TypedModelMapImpl [typeMap=" + this.getEntries() + "]";
 	}
 
 }

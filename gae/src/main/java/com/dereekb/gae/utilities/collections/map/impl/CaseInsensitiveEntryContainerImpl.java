@@ -2,32 +2,35 @@ package com.dereekb.gae.utilities.collections.map.impl;
 
 import java.util.Map;
 
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveEntryContainer;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
- * {@link CaseInsensitiveMap} wrapper.
+ * {@link CaseInsensitiveEntryContainer} implementation.
  *
  * @author dereekb
  *
  * @param <T>
  *            entry type
  */
-public class CaseInsensitiveEntryContainer<T> {
+public class CaseInsensitiveEntryContainerImpl<T>
+        implements CaseInsensitiveEntryContainer<T> {
 
 	private CaseInsensitiveMap<T> entries;
 
-	public CaseInsensitiveEntryContainer() {
+	public CaseInsensitiveEntryContainerImpl() {
 		this(new CaseInsensitiveMap<T>());
 	}
 
-	public CaseInsensitiveEntryContainer(Map<String, T> entries) {
+	public CaseInsensitiveEntryContainerImpl(Map<String, T> entries) {
 		this.setEntries(entries);
 	}
 
-	public CaseInsensitiveEntryContainer(CaseInsensitiveMap<T> entries) {
+	public CaseInsensitiveEntryContainerImpl(CaseInsensitiveMap<T> entries) {
 		this.setEntries(entries);
 	}
 
+	@Override
 	public Map<String, T> getEntries() {
 		return this.entries;
 	}
@@ -44,7 +47,8 @@ public class CaseInsensitiveEntryContainer<T> {
 		this.entries = entries;
 	}
 
-	protected T getEntryForType(String type) throws RuntimeException {
+	@Override
+	public T getEntryForType(String type) throws RuntimeException {
 		T entry = this.entries.get(type);
 
 		if (entry == null) {
@@ -54,7 +58,8 @@ public class CaseInsensitiveEntryContainer<T> {
 		return entry;
 	}
 
-	public void addEntry(String key, T value) {
+	public void addEntry(String key,
+	                     T value) {
 		this.entries.put(key, value);
 	}
 

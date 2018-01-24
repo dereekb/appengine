@@ -14,7 +14,7 @@ import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
  * @param <T>
  *            entry type
  */
-public class KeyedCaseInsensitiveEntryContainer<T extends AlwaysKeyed<String>> extends CaseInsensitiveEntryContainer<T> {
+public class KeyedCaseInsensitiveEntryContainer<T extends AlwaysKeyed<String>> extends CaseInsensitiveEntryContainerImpl<T> {
 
 	public KeyedCaseInsensitiveEntryContainer() {
 		super();

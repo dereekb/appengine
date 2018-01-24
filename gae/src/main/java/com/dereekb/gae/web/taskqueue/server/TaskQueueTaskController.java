@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 import com.dereekb.gae.web.taskqueue.server.impl.TaskQueueTaskControllerRequestImpl;
 
 /**
@@ -23,7 +23,7 @@ import com.dereekb.gae.web.taskqueue.server.impl.TaskQueueTaskControllerRequestI
  */
 @RestController
 @RequestMapping("/taskqueue")
-public class TaskQueueTaskController extends CaseInsensitiveEntryContainer<TaskQueueTaskControllerEntry> {
+public class TaskQueueTaskController extends CaseInsensitiveEntryContainerImpl<TaskQueueTaskControllerEntry> {
 
 	private static final Logger LOGGER = Logger.getLogger(TaskQueueTaskController.class.getName());
 

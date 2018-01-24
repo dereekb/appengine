@@ -21,7 +21,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
-import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.exception.UnregisteredIterateTypeException;
@@ -36,7 +36,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  */
 @RestController
 @RequestMapping("/taskqueue")
-public class TaskQueueIterateController extends CaseInsensitiveEntryContainer<TaskQueueIterateControllerEntry>{
+public class TaskQueueIterateController extends CaseInsensitiveEntryContainerImpl<TaskQueueIterateControllerEntry>{
 
 	private static final Logger LOGGER = Logger.getLogger(TaskQueueIterateController.class.getName());
 

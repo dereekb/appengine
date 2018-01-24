@@ -16,7 +16,7 @@ import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenMode
 import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContextGetter;
 import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.model.roles.loader.impl.EmptyAnonymousModelRoleSetContextGetter;
-import com.dereekb.gae.server.datastore.models.impl.AbstractTypedModelMap;
+import com.dereekb.gae.server.datastore.models.impl.TypedModelMapImpl;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
@@ -25,7 +25,7 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
  * @author dereekb
  *
  */
-public class LoginTokenModelContextServiceImpl extends AbstractTypedModelMap<LoginTokenModelContextServiceEntry>
+public class LoginTokenModelContextServiceImpl extends TypedModelMapImpl<LoginTokenModelContextServiceEntry>
         implements LoginTokenModelContextService, AnonymousModelRoleSetContextService {
 
 	public LoginTokenModelContextServiceImpl(List<LoginTokenModelContextServiceEntry> entries) {

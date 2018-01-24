@@ -37,14 +37,14 @@ public class CaseInsensitiveMap<T> extends TreeMap<String, T> {
 		for (Entry<String, ? extends Map<String, ? extends T>> entry : input.entrySet()) {
 			String key = entry.getKey();
 			Map<String, ? extends T> entryMap = entry.getValue();
-			
-			CaseInsensitiveMap<T> subMap = new CaseInsensitiveMap<T>(entryMap); 
+
+			CaseInsensitiveMap<T> subMap = new CaseInsensitiveMap<T>(entryMap);
 			map.put(key, subMap);
 		}
-		
+
 		return map;
 	}
-	
+
 	@Override
 	public CaseInsensitiveSet keySet() {
 		return new CaseInsensitiveSet(super.keySet());

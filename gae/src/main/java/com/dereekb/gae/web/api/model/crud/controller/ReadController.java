@@ -24,7 +24,7 @@ import com.dereekb.gae.model.extension.inclusion.reader.InclusionReaderSetAnalys
 import com.dereekb.gae.model.extension.read.exception.UnavailableTypesException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryRequestImpl;
@@ -45,7 +45,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  */
 @Validated
 @RestController
-public class ReadController extends CaseInsensitiveEntryContainer<ReadControllerEntry> {
+public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadControllerEntry> {
 
 	public static final String ATOMIC_PARAM = "atomic";
 	public static final String LOAD_RELATED_PARAM = "getRelated";

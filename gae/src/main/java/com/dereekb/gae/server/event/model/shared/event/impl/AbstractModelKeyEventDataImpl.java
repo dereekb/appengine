@@ -5,8 +5,6 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.event.event.impl.AbstractEventData;
 import com.dereekb.gae.server.event.model.shared.event.ModelKeyEventData;
-import com.dereekb.gae.utilities.misc.parameters.Parameters;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  * Abstract {@link ModelKeyEventData} implementation.
@@ -40,9 +38,6 @@ public abstract class AbstractModelKeyEventDataImpl extends AbstractEventData
 	// MARK: ModelKeyEventData
 	@Override
 	public abstract List<ModelKey> getEventModelKeys();
-
-	@Override
-	public abstract ApiResponseData getWebSafeData(Parameters parameters);
 
 	@Override
 	public String toString() {

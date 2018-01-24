@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 
 /**
  * Task Queue controller used for web hooks.
@@ -22,7 +22,7 @@ import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContai
  */
 @RestController
 @RequestMapping("/taskqueue")
-public class TaskQueueHookController extends CaseInsensitiveEntryContainer<TaskQueueHookControllerEntry> {
+public class TaskQueueHookController extends CaseInsensitiveEntryContainerImpl<TaskQueueHookControllerEntry> {
 
 	private static final Logger LOGGER = Logger.getLogger(TaskQueueHookController.class.getName());
 

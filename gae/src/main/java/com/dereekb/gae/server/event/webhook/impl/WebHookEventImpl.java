@@ -38,7 +38,7 @@ public class WebHookEventImpl
 		this(eventType.getEventGroupCode(), eventType.getEventTypeCode(), data);
 	}
 
-	public WebHookEventImpl(String group, String type, Object data) {
+	public WebHookEventImpl(String group, String type, Object data) throws IllegalArgumentException {
 		super();
 		this.setGroup(group);
 		this.setType(type);

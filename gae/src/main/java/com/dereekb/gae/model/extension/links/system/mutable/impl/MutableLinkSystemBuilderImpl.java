@@ -51,7 +51,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
-import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 
 /**
  * {@link LinkInfoSystem} implementation that also provides functions for
@@ -60,7 +60,7 @@ import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContai
  * @author dereekb
  *
  */
-public class MutableLinkSystemBuilderImpl extends CaseInsensitiveEntryContainer<MutableLinkSystemBuilderEntry>
+public class MutableLinkSystemBuilderImpl extends CaseInsensitiveEntryContainerImpl<MutableLinkSystemBuilderEntry>
         implements LinkInfoSystem {
 
 	private CaseInsensitiveMap<LinkModelInfo> linkModelInfoMap = new CaseInsensitiveMap<LinkModelInfo>();

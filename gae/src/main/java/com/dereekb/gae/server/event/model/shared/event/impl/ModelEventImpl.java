@@ -1,9 +1,7 @@
 package com.dereekb.gae.server.event.model.shared.event.impl;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.event.event.EventData;
 import com.dereekb.gae.server.event.event.EventType;
-import com.dereekb.gae.server.event.event.impl.EventImpl;
 import com.dereekb.gae.server.event.model.shared.event.ModelEvent;
 import com.dereekb.gae.server.event.model.shared.event.ModelEventData;
 
@@ -15,12 +13,8 @@ import com.dereekb.gae.server.event.model.shared.event.ModelEventData;
  * @param <T>
  *            model type
  */
-public class ModelEventImpl<T extends UniqueModel> extends EventImpl
+public class ModelEventImpl<T extends UniqueModel> extends ModelKeyEventImpl
         implements ModelEvent<T> {
-
-	public ModelEventImpl(EventType eventType) {
-		super(eventType);
-	}
 
 	public ModelEventImpl(EventType eventType, ModelEventData<T> eventData) {
 		super(eventType, eventData);
@@ -31,11 +25,6 @@ public class ModelEventImpl<T extends UniqueModel> extends EventImpl
 	@Override
 	public ModelEventData<T> getEventData() {
 		return (ModelEventData<T>) super.getEventData();
-	}
-
-	@Override
-	public void setEventData(EventData eventData) {
-		throw new UnsupportedOperationException("Can only set model event data.");
 	}
 
 	public void setEventData(ModelEventData<T> eventData) {

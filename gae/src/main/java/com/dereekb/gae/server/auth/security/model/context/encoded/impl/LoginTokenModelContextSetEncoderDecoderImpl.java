@@ -15,7 +15,7 @@ import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenMode
 import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderEntry;
 import com.dereekb.gae.server.auth.security.model.context.exception.UnavailableModelContextTypeException;
 import com.dereekb.gae.server.auth.security.model.context.impl.AbstractLoginTokenModelContextSet;
-import com.dereekb.gae.server.datastore.models.impl.AbstractTypedModelMap;
+import com.dereekb.gae.server.datastore.models.impl.TypedModelMapImpl;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 import com.dereekb.gae.utilities.collections.map.CrossKeyMap;
 import com.dereekb.gae.utilities.collections.map.impl.CrossKeyMapImpl;
@@ -26,7 +26,7 @@ import com.dereekb.gae.utilities.collections.map.impl.CrossKeyMapImpl;
  * @author dereekb
  *
  */
-public class LoginTokenModelContextSetEncoderDecoderImpl extends AbstractTypedModelMap<LoginTokenModelContextSetEncoderDecoderEntry>
+public class LoginTokenModelContextSetEncoderDecoderImpl extends TypedModelMapImpl<LoginTokenModelContextSetEncoderDecoderEntry>
         implements LoginTokenModelContextSetEncoderDecoder {
 
 	private CrossKeyMap<Integer, String> typeCodeMap;

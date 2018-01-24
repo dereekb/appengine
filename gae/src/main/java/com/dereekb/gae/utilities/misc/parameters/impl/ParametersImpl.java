@@ -2,7 +2,7 @@ package com.dereekb.gae.utilities.misc.parameters.impl;
 
 import java.util.Map;
 
-import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.MutableParameters;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
@@ -14,7 +14,7 @@ import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
  * @author dereekb
  *
  */
-public class ParametersImpl extends CaseInsensitiveEntryContainer<String>
+public class ParametersImpl extends CaseInsensitiveEntryContainerImpl<String>
         implements MutableParameters {
 
 	public ParametersImpl() {}

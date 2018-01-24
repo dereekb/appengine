@@ -1,8 +1,6 @@
 package com.dereekb.gae.server.event.event.impl;
 
 import com.dereekb.gae.server.event.event.EventData;
-import com.dereekb.gae.utilities.misc.parameters.Parameters;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  * Empty {@link EventData} implementation.
@@ -12,15 +10,11 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
  */
 public class EmptyEventData extends AbstractEventData {
 
-	public static final String EMPTY_DATA_TYPE = "none";
+	public static final String EVENT_DATA_TYPE = "empty";
 	public static final EmptyEventData SINGLETON = new EmptyEventData();
 
 	public EmptyEventData() {
-		this(EMPTY_DATA_TYPE);
-	}
-
-	public EmptyEventData(String eventDataType) {
-		super(eventDataType);
+		super(EVENT_DATA_TYPE);
 	}
 
 	public static EventData make() {
@@ -28,11 +22,6 @@ public class EmptyEventData extends AbstractEventData {
 	}
 
 	// MARK: EventData
-	@Override
-	public ApiResponseData getWebSafeData(Parameters parameters) {
-		return null;
-	}
-
 	@Override
 	public String toString() {
 		return "EmptyEventData []";

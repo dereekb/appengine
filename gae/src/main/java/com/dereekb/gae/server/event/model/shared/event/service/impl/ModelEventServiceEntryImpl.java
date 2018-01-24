@@ -14,10 +14,7 @@ import com.dereekb.gae.server.event.model.shared.event.impl.AbstractModelEventDa
 import com.dereekb.gae.server.event.model.shared.event.impl.ModelEventImpl;
 import com.dereekb.gae.server.event.model.shared.event.service.ModelEventSubmitTaskFactory;
 import com.dereekb.gae.server.event.model.shared.event.service.task.ModelEventSubscriptionTask;
-import com.dereekb.gae.utilities.misc.parameters.Parameters;
-import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 
 /**
  *
@@ -130,14 +127,6 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 		@Override
 		public List<ModelKey> getEventModelKeys() {
 			return this.getAccessor().getModelKeys();
-		}
-
-		@Override
-		public ApiResponseData getWebSafeData(Parameters parameters) {
-			parameters = ParameterUtility.safe(parameters);
-
-			// TODO Auto-generated method stub
-			return null;
 		}
 
 	}

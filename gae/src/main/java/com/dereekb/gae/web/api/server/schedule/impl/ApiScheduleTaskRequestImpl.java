@@ -2,18 +2,18 @@ package com.dereekb.gae.web.api.server.schedule.impl;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * {@link ApiScheduleTaskRequest} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -25,12 +25,12 @@ public class ApiScheduleTaskRequestImpl
 	@NotNull
 	@NotEmpty
 	private String taskEntryName;
-	
 	private Map<String, String> encodedHeaders;
 	private Map<String, String> encodedParameters;
+	private JsonNode data;
 
 	public ApiScheduleTaskRequestImpl() {}
-	
+
 	public ApiScheduleTaskRequestImpl(String taskEntryName) {
 		this.setTaskEntryName(taskEntryName);
 	}
@@ -62,10 +62,18 @@ public class ApiScheduleTaskRequestImpl
 		this.encodedParameters = encodedParameters;
 	}
 
+	public JsonNode getData() {
+		return this.data;
+	}
+
+	public void setData(JsonNode data) {
+		this.data = data;
+	}
+
 	@Override
 	public String toString() {
-		return "ApiScheduleTaskRequestImpl [taskEntryName=" + this.taskEntryName + ", encodedHeaders=" + this.encodedHeaders
-		        + ", encodedParameters=" + this.encodedParameters + "]";
+		return "ApiScheduleTaskRequestImpl [taskEntryName=" + this.taskEntryName + ", encodedHeaders="
+		        + this.encodedHeaders + ", encodedParameters=" + this.encodedParameters + ", data=" + this.data + "]";
 	}
 
 }

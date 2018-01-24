@@ -3,10 +3,15 @@ package com.dereekb.gae.server.event.model.shared.event.impl;
 import com.dereekb.gae.server.event.event.EventGroup;
 import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.event.impl.CommonEventGroup;
+import com.dereekb.gae.server.event.model.shared.event.ModelEventData;
+import com.dereekb.gae.server.event.model.shared.event.ModelKeyEventData;
 import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
 
 /**
  * Common {@link EventGroup} values.
+ * <p>
+ * Always has {@link ModelEventData} or {@link ModelKeyEventData} data
+ * associated with the {@link Event}.
  *
  * @author dereekb
  *
