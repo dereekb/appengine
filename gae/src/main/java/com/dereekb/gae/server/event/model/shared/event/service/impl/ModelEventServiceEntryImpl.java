@@ -1,17 +1,18 @@
 package com.dereekb.gae.server.event.model.shared.event.service.impl;
 
-import java.util.List;
-
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.dereekb.gae.server.datastore.models.impl.TypedModelImpl;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.exception.IllegalModelTypeException;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
 import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.event.service.EventService;
 import com.dereekb.gae.server.event.model.shared.event.ModelEvent;
-import com.dereekb.gae.server.event.model.shared.event.impl.AbstractModelEventDataImpl;
+import com.dereekb.gae.server.event.model.shared.event.ModelKeyEvent;
+import com.dereekb.gae.server.event.model.shared.event.impl.ModelEventDataImpl;
 import com.dereekb.gae.server.event.model.shared.event.impl.ModelEventImpl;
+import com.dereekb.gae.server.event.model.shared.event.service.ModelEventKeyLoader;
 import com.dereekb.gae.server.event.model.shared.event.service.ModelEventSubmitTaskFactory;
 import com.dereekb.gae.server.event.model.shared.event.service.task.ModelEventSubscriptionTask;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
@@ -25,17 +26,20 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * @param <D>
  *            data type
  */
-public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueModel> extends TypedModelImpl
-        implements ModelEventSubmitTaskFactory<T> {
+public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueModel>
+        implements ModelEventSubmitTaskFactory<T>, ModelEventKeyLoader<T>, TypedModel {
 
 	private EventService eventService;
+	private ModelKeyListAccessorFactory<T> accessorFactory;
 	private BidirectionalConverter<T, D> converter;
 
-	public ModelEventServiceEntryImpl(String modelType,
-	        EventService eventService,
+	private transient ModelEventKeyLoader<T> loader;
+
+	public ModelEventServiceEntryImpl(EventService eventService,
+	        ModelKeyListAccessorFactory<T> accessorFactory,
 	        BidirectionalConverter<T, D> converter) {
-		super(modelType);
 		this.setEventService(eventService);
+		this.setAccessorFactory(accessorFactory);
 		this.setConverter(converter);
 	}
 
@@ -51,6 +55,18 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 		this.eventService = eventService;
 	}
 
+	public ModelKeyListAccessorFactory<T> getAccessorFactory() {
+		return this.accessorFactory;
+	}
+
+	public void setAccessorFactory(ModelKeyListAccessorFactory<T> accessorFactory) {
+		if (accessorFactory == null) {
+			throw new IllegalArgumentException("accessorFactory cannot be null.");
+		}
+
+		this.accessorFactory = accessorFactory;
+	}
+
 	public BidirectionalConverter<T, D> getConverter() {
 		return this.converter;
 	}
@@ -61,6 +77,12 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 		}
 
 		this.converter = converter;
+	}
+
+	// MARK: TypedModel
+	@Override
+	public String getModelType() {
+		return this.accessorFactory.getModelType();
 	}
 
 	// MARK: ModelEventSubmitTaskFactory
@@ -89,46 +111,25 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 		// MARK: ModelEventSubscriptionTask
 		@Override
 		public void doTask(ModelKeyListAccessor<T> input) throws FailedTaskException {
-			ModelEventDataImpl data = new ModelEventDataImpl(input);
+			ModelEventDataImpl<T> data = new ModelEventDataImpl<T>(input);
 			ModelEvent<T> event = new ModelEventImpl<T>(this.event, data);
 			ModelEventServiceEntryImpl.this.eventService.submitEvent(event);
 		}
 
 	}
 
-	// MARK: ModelEventData
-	protected class ModelEventDataImpl extends AbstractModelEventDataImpl<T> {
+	// MARK: ModelEventKeyLoader
+	@Override
+	public ModelEvent<T> loadModelEvent(ModelKeyEvent keyEvent) throws IllegalModelTypeException {
+		return this.getLoader().loadModelEvent(keyEvent);
+	}
 
-		private ModelKeyListAccessor<T> accessor;
-
-		public ModelEventDataImpl(ModelKeyListAccessor<T> accessor) {
-			super(ModelEventServiceEntryImpl.this.getModelType());
-			this.setAccessor(accessor);
+	public ModelEventKeyLoader<T> getLoader() {
+		if (this.loader == null) {
+			this.loader = new ModelEventLoaderImpl<T>(this.accessorFactory);
 		}
 
-		public ModelKeyListAccessor<T> getAccessor() {
-			return this.accessor;
-		}
-
-		public void setAccessor(ModelKeyListAccessor<T> accessor) {
-			if (accessor == null) {
-				throw new IllegalArgumentException("accessor cannot be null.");
-			}
-
-			this.accessor = accessor;
-		}
-
-		// MARK:
-		@Override
-		public List<T> getEventModels() {
-			return this.getAccessor().getModels();
-		}
-
-		@Override
-		public List<ModelKey> getEventModelKeys() {
-			return this.getAccessor().getModelKeys();
-		}
-
+		return this.loader;
 	}
 
 }

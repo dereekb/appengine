@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.event.model.shared.event.service;
+package com.dereekb.gae.server.event.model.shared.webhook;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.event.model.shared.event.ModelEvent;

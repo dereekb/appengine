@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.event.model.shared.event.service;
+package com.dereekb.gae.server.event.model.shared.event.service.listener;
 
 import com.dereekb.gae.server.event.model.shared.event.ModelKeyEvent;
 

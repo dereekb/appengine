@@ -1,8 +1,8 @@
-package com.dereekb.gae.server.event.model.shared.event.service.impl;
+package com.dereekb.gae.server.event.model.shared.event.service.listener.impl;
 
 import com.dereekb.gae.server.event.event.service.EventServiceListener;
 import com.dereekb.gae.server.event.model.shared.event.ModelKeyEvent;
-import com.dereekb.gae.server.event.model.shared.event.service.ModelKeyEventServiceListener;
+import com.dereekb.gae.server.event.model.shared.event.service.listener.ModelKeyEventServiceListener;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveEntryContainer;
 
 /**

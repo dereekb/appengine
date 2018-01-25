@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.event.model.shared.event.service.impl;
+package com.dereekb.gae.server.event.model.shared.event.service.listener.impl;
 
 import com.dereekb.gae.server.event.event.Event;
 import com.dereekb.gae.server.event.event.EventGroup;
@@ -6,7 +6,7 @@ import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.event.impl.CommonEventGroup;
 import com.dereekb.gae.server.event.event.service.impl.AbstractFilteredEventServiceListenerImpl;
 import com.dereekb.gae.server.event.model.shared.event.ModelKeyEvent;
-import com.dereekb.gae.server.event.model.shared.event.service.ModelKeyEventServiceListener;
+import com.dereekb.gae.server.event.model.shared.event.service.listener.ModelKeyEventServiceListener;
 import com.dereekb.gae.utilities.filters.Filter;
 
 /**
@@ -37,7 +37,7 @@ public abstract class AbstractModelKeyEventServiceListenerImpl extends AbstractF
 	// MARK: AbstractFilteredEventServiceListenerImpl
 	@Override
 	public final void handleCastEvent(ModelKeyEvent event) {
-		this.handleModelKeyEvent(event);;
+		this.handleModelKeyEvent(event);
 	}
 
 	@Override
