@@ -15,6 +15,8 @@ import com.dereekb.gae.server.event.event.EventData;
 public interface ModelKeyEventData
         extends TypedModel, EventData {
 
+	public static final String EVENT_DATA_TYPE = "model_key";
+
 	/**
 	 * Returns the list of model keys.
 	 *

@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.server.event.event.EventType;
-import com.dereekb.gae.server.event.event.impl.EventTypeImpl;
 import com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType;
 import com.dereekb.gae.server.event.webhook.impl.JsonWebHookEventImpl;
 import com.dereekb.gae.server.event.webhook.impl.WebHookEventImpl;
@@ -40,7 +39,7 @@ public class WebHookEventSerializationTest {
 		JsonNode readNode = mapper.readTree(json);
 
 		JsonWebHookEventImpl jsonWebHook = new JsonWebHookEventImpl(readNode);
-		Assert.assertTrue(EventTypeImpl.isEquivalent(eventType, jsonWebHook.getEventType()));
+		Assert.assertTrue(EventType.isEquivalent(eventType, jsonWebHook.getEventType()));
 	}
 
 	// TODO: Test serializing event with missing group/type throws an exception.

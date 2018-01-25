@@ -3,10 +3,11 @@ package com.dereekb.gae.server.event.webhook.impl;
 import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.event.impl.EventTypeImpl;
 import com.dereekb.gae.server.event.webhook.WebHookEvent;
+import com.dereekb.gae.server.event.webhook.WebHookEventData;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Incoming event that was deserialized to a json node.
+ * {@link WebHookEvent} implementation that is built from a {@link JsonNode}.
  *
  * @author dereekb
  *
@@ -15,6 +16,10 @@ public class JsonWebHookEventImpl
         implements WebHookEvent {
 
 	private transient EventType eventType;
+
+	private transient boolean checkedData = false;
+	private transient WebHookEventData data;
+
 	private JsonNode jsonNode;
 
 	public JsonWebHookEventImpl(JsonNode jsonNode) throws IllegalArgumentException {
@@ -26,6 +31,22 @@ public class JsonWebHookEventImpl
 		if (!(this.jsonNode.has(WebHookEventImpl.GROUP_FIELD) && this.jsonNode.has(WebHookEventImpl.TYPE_FIELD))) {
 			throw new IllegalArgumentException("Json is missing group or type field.");
 		}
+	}
+
+	@Override
+	public JsonNode getJsonNode() {
+		return this.jsonNode;
+	}
+
+	public void setJsonNode(JsonNode jsonNode) {
+		if (jsonNode == null) {
+			throw new IllegalArgumentException("jsonNode cannot be null.");
+		}
+
+		this.jsonNode = jsonNode;
+		this.eventType = null;
+		this.data = null;
+		this.checkedData = false;
 	}
 
 	// MARK: WebHookEvent
@@ -45,16 +66,26 @@ public class JsonWebHookEventImpl
 	}
 
 	@Override
-	public JsonNode getJsonNode() {
-		return this.jsonNode;
-	}
-
-	public void setJsonNode(JsonNode jsonNode) {
-		if (jsonNode == null) {
-			throw new IllegalArgumentException("jsonNode cannot be null.");
+	public WebHookEventData getEventData() {
+		if (!this.checkedData) {
+			this.data = this.deserializeEventData();
+			this.checkedData = true;
 		}
 
-		this.jsonNode = jsonNode;
+		return this.data;
+	}
+
+	private WebHookEventData deserializeEventData() {
+		JsonNode dataRoot = this.jsonNode.get(WebHookEventImpl.DATA_FIELD);
+
+		if (dataRoot != null) {
+
+			// TODO: Catch potential error here.
+
+			return new JsonWebHookEventDataImpl(dataRoot);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

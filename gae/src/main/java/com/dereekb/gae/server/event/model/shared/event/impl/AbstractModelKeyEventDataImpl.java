@@ -3,7 +3,7 @@ package com.dereekb.gae.server.event.model.shared.event.impl;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.event.event.impl.AbstractEventData;
+import com.dereekb.gae.server.event.event.impl.AbstractEventDataImpl;
 import com.dereekb.gae.server.event.model.shared.event.ModelKeyEventData;
 
 /**
@@ -12,7 +12,7 @@ import com.dereekb.gae.server.event.model.shared.event.ModelKeyEventData;
  * @author dereekb
  *
  */
-public abstract class AbstractModelKeyEventDataImpl extends AbstractEventData
+public abstract class AbstractModelKeyEventDataImpl extends AbstractEventDataImpl
         implements ModelKeyEventData {
 
 	private String modelType;

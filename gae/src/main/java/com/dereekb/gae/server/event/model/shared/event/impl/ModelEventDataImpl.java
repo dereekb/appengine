@@ -8,7 +8,8 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.server.event.model.shared.event.ModelEventData;
 
 /**
- * {@link ModelEventData} implementation.
+ * {@link ModelEventData} implementation that wraps a
+ * {@link ModelKeyListAccessor}.
  *
  * @author dereekb
  *

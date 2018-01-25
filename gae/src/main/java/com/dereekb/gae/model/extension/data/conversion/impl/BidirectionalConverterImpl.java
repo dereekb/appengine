@@ -13,49 +13,57 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
  * @author dereekb
  *
  * @param <I>
- *            Input type.
+ *            input type
  * @param <O>
- *            Output type.
+ *            output type
  */
 public class BidirectionalConverterImpl<I, O>
         implements BidirectionalConverter<I, O>, DirectionalConverter<I, O> {
 
-	private DirectionalConverter<I, O> outputConversion;
-	private DirectionalConverter<O, I> inputConversion;
+	private DirectionalConverter<I, O> inputConversion;
+	private DirectionalConverter<O, I> outputConversion;
 
 	public BidirectionalConverterImpl() {}
 
-	public BidirectionalConverterImpl(DirectionalConverter<I, O> outputConversion,
-	        DirectionalConverter<O, I> inputConversion) {
-		this.outputConversion = outputConversion;
-		this.inputConversion = inputConversion;
+	public BidirectionalConverterImpl(DirectionalConverter<I, O> inputConversion,
+	        DirectionalConverter<O, I> outputConversion) {
+		this.setInputConversion(inputConversion);
+		this.setOutputConversion(outputConversion);
 	}
 
-	public DirectionalConverter<I, O> getOutputConversion() {
-		return this.outputConversion;
-	}
-
-	public void setOutputConversions(DirectionalConverter<I, O> outputConversion) {
-		this.outputConversion = outputConversion;
-	}
-
-	public DirectionalConverter<O, I> getInputConversion() {
+	public DirectionalConverter<I, O> getInputConversion() {
 		return this.inputConversion;
 	}
 
-	public void setInputConversion(DirectionalConverter<O, I> inputConversion) {
+	public void setInputConversion(DirectionalConverter<I, O> inputConversion) {
+		if (inputConversion == null) {
+			throw new IllegalArgumentException("inputConversion cannot be null.");
+		}
+
 		this.inputConversion = inputConversion;
+	}
+
+	public DirectionalConverter<O, I> getOutputConversion() {
+		return this.outputConversion;
+	}
+
+	public void setOutputConversion(DirectionalConverter<O, I> outputConversion) {
+		if (outputConversion == null) {
+			throw new IllegalArgumentException("outputConversion cannot be null.");
+		}
+
+		this.outputConversion = outputConversion;
 	}
 
 	// BidirectionalConverter
 	@Override
 	public List<O> convertTo(Collection<? extends I> input) throws ConversionFailureException {
-		return this.outputConversion.convert(input);
+		return this.inputConversion.convert(input);
 	}
 
 	@Override
 	public List<I> convertFrom(Collection<? extends O> output) throws ConversionFailureException {
-		return this.inputConversion.convert(output);
+		return this.outputConversion.convert(output);
 	}
 
 	// DirectionalConverter
@@ -66,8 +74,8 @@ public class BidirectionalConverterImpl<I, O>
 
 	@Override
 	public String toString() {
-		return "BidirectionalConverterImpl [outputConversion=" + this.outputConversion + ", inputConversion="
-		        + this.inputConversion + "]";
+		return "BidirectionalConverterImpl [inputConversion=" + this.inputConversion + ", outputConversion="
+		        + this.outputConversion + "]";
 	}
 
 }

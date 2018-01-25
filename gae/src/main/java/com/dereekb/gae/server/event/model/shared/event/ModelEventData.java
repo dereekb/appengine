@@ -15,6 +15,8 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 public interface ModelEventData<T extends UniqueModel>
         extends ModelKeyEventData {
 
+	public static final String EVENT_DATA_TYPE = "model";
+
 	/**
 	 * Returns a list of all models.
 	 *

@@ -8,7 +8,7 @@ import com.dereekb.gae.server.event.event.EventData;
  * @author dereekb
  *
  */
-public class EmptyEventData extends AbstractEventData {
+public class EmptyEventData extends AbstractEventDataImpl {
 
 	public static final String EVENT_DATA_TYPE = "empty";
 	public static final EmptyEventData SINGLETON = new EmptyEventData();

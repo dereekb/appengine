@@ -8,12 +8,12 @@ import com.dereekb.gae.server.event.event.EventData;
  * @author dereekb
  *
  */
-public abstract class AbstractEventData
+public abstract class AbstractEventDataImpl
         implements EventData {
 
 	private String eventDataType;
 
-	public AbstractEventData(String eventDataType) {
+	public AbstractEventDataImpl(String eventDataType) {
 		this.setEventDataType(eventDataType);
 	}
 
@@ -38,7 +38,7 @@ public abstract class AbstractEventData
 
 	@Override
 	public String toString() {
-		return "AbstractEventData [eventDataType=" + this.eventDataType + "]";
+		return "AbstractEventDataImpl [eventDataType=" + this.eventDataType + "]";
 	}
 
 }

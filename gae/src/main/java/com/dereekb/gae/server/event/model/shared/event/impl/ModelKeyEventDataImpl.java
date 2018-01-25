@@ -14,8 +14,6 @@ import com.dereekb.gae.server.event.model.shared.event.ModelKeyEventData;
  */
 public class ModelKeyEventDataImpl extends AbstractModelKeyEventDataImpl {
 
-	public static final String MODEL_KEY_EVENT_DATA_TYPE = "model_key";
-
 	private List<ModelKey> eventModelKeys;
 
 	public ModelKeyEventDataImpl(String modelType) {
@@ -23,7 +21,7 @@ public class ModelKeyEventDataImpl extends AbstractModelKeyEventDataImpl {
 	}
 
 	public ModelKeyEventDataImpl(String modelType, List<ModelKey> eventModelKeys) {
-		super(MODEL_KEY_EVENT_DATA_TYPE, modelType);
+		super(ModelKeyEventData.EVENT_DATA_TYPE, modelType);
 		this.setEventModelKeys(eventModelKeys);
 	}
 

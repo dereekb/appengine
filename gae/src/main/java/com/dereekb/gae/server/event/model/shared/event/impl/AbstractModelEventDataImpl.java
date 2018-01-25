@@ -19,10 +19,8 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 public abstract class AbstractModelEventDataImpl<T extends UniqueModel> extends AbstractModelKeyEventDataImpl
         implements ModelEventData<T> {
 
-	public static final String MODEL_EVENT_DATA_TYPE = "model";
-
 	public AbstractModelEventDataImpl(String modelType) {
-		super(MODEL_EVENT_DATA_TYPE, modelType);
+		super(ModelEventData.EVENT_DATA_TYPE, modelType);
 	}
 
 	// MARK: ModelEventData

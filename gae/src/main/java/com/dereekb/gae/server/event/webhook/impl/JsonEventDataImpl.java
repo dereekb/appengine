@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.event.webhook.impl;
 
-import com.dereekb.gae.server.event.event.impl.AbstractEventData;
+import com.dereekb.gae.server.event.event.EventData;
+import com.dereekb.gae.server.event.event.impl.AbstractEventDataImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -9,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author dereekb
  *
  */
-public class JsonEventDataImpl extends AbstractEventData {
+public class JsonEventDataImpl extends AbstractEventDataImpl {
 
 	public static final String EVENT_DATA_TYPE = "json";
 
@@ -29,6 +30,11 @@ public class JsonEventDataImpl extends AbstractEventData {
 		}
 
 		this.json = json;
+	}
+
+	@Override
+	public String toString() {
+		return "JsonEventDataImpl [json=" + this.json + "]";
 	}
 
 }

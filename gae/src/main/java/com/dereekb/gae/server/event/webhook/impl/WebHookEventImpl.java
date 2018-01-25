@@ -3,6 +3,7 @@ package com.dereekb.gae.server.event.webhook.impl;
 import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.event.impl.EventTypeImpl;
 import com.dereekb.gae.server.event.webhook.WebHookEvent;
+import com.dereekb.gae.server.event.webhook.WebHookEventData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -88,6 +89,16 @@ public class WebHookEventImpl
 	@Override
 	public JsonNode getJsonNode() {
 		return new ObjectMapper().valueToTree(this);
+	}
+
+	@JsonIgnore
+	@Override
+	public WebHookEventData getEventData() {
+		if (this.data != null) {
+			return new ObjectMapper().valueToTree(this.data);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

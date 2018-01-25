@@ -15,9 +15,9 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
  * @author dereekb
  *
  * @param <I>
- *            Input Type
+ *            input type
  * @param <O>
- *            Output Type
+ *            output type
  */
 public abstract class AbstractDirectionalConverter<I, O>
         implements DirectionalConverter<I, O>, SingleDirectionalConverter<I, O> {

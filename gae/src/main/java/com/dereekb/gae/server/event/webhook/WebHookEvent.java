@@ -17,10 +17,17 @@ public interface WebHookEvent
         extends BasicEvent {
 
 	/**
-	 * Returns the root JSON node for the event.
+	 * Returns the root JSON node for this event.
 	 *
 	 * @return {@link JsonNode}. Never {@code null}.
 	 */
 	public JsonNode getJsonNode();
+
+	/**
+	 * Returns the data for this web hook event, if available.
+	 *
+	 * @return {@link WebHookEventData}, or {@code null} if none available.
+	 */
+	public WebHookEventData getEventData();
 
 }
