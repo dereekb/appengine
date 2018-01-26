@@ -39,7 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link ClientLinkServiceRequestSender} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -152,10 +152,10 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 
 	private class ClientLinkServiceResponseImpl
 	        implements ClientLinkServiceResponse {
-		
+
 		private transient Set<String> successful;
 		private transient Set<String> failed;
-		
+
 		private transient List<ModelKey> missing;
 
 		private transient ClientLinkSystemChangeErrorSet errorSet;
@@ -174,7 +174,7 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 			if (this.successful == null) {
 				this.serializeSuccessfulAndFailed();
 			}
-			
+
 			return this.successful;
 		}
 
@@ -183,22 +183,22 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 			if (this.failed == null) {
 				this.serializeSuccessfulAndFailed();
 			}
-			
+
 			return this.failed;
 		}
-		
+
 		private void serializeSuccessfulAndFailed() {
 			ClientApiResponseData data = this.response.getPrimaryData();
 			ObjectMapper mapper = ClientLinkRequestSenderImpl.this.getObjectMapper();
 			ClientResponseMapperUtility mapperUtility = new ClientResponseMapperUtility(mapper);
-			
+
 			JsonNode jsonNode = data.getJsonNode();
-			
+
 			JsonNode successfulNode = jsonNode.get("successful");
-			this.successful = mapperUtility.safeMapArrayToSet(successfulNode, String[].class);
-			
+			this.successful = mapperUtility.safeMapArrayToSet(successfulNode, String.class);
+
 			JsonNode failedNode = jsonNode.get("failed");
-			this.failed = mapperUtility.safeMapArrayToSet(failedNode, String[].class);
+			this.failed = mapperUtility.safeMapArrayToSet(failedNode, String.class);
 		}
 
 		@Override
@@ -207,17 +207,17 @@ public class ClientLinkRequestSenderImpl extends AbstractSecuredClientModelReque
 				String type = this.request.getType();
 				this.errorSet = ClientLinkRequestSenderImpl.this.linkChangeExceptionUtility.serializeClientLinkSystemChangeErrorSet(type, this.response);
 			}
-			
+
 			return this.errorSet;
 		}
-		
+
 		@Override
 		public List<ModelKey> getMissing() {
 			if (this.missing == null) {
 				this.missing = ClientLinkRequestSenderImpl.this.atomicOperationUtility
 				        .serializeMissingResourceKeys(this.request.getType(), this.response);
 			}
-			
+
 			return this.missing;
 		}
 	}

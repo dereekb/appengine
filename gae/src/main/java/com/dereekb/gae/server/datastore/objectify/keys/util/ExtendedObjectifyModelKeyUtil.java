@@ -9,6 +9,7 @@ import java.util.Set;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.IllegalKeyConversionException;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.googlecode.objectify.Key;
@@ -59,6 +60,11 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 		return this.converter;
 	}
 
+	@Override
+	public StringModelKeyConverter getStringKeyConverter() {
+		return this.converter.getStringKeyConverter();
+	}
+
 	// MARK: Model Key
 	public ModelKey toModelKey(Key<T> key) {
 		ModelKey modelKey;
@@ -102,13 +108,13 @@ public class ExtendedObjectifyModelKeyUtil<T> extends ObjectifyModelKeyUtil<T>
 
 		return list;
 	}
-	
+
 	// MARK: Set
 	public Set<ModelKey> setFromKeys(Set<Key<T>> keys) {
 		List<ModelKey> modelKeyList = this.convertTo(keys);
 		return new HashSet<ModelKey>(modelKeyList);
 	}
-	
+
 	// MARK: ObjectifyKeyConverter
 	@Override
 	public ModelKey readKey(Key<T> key) throws IllegalKeyConversionException {

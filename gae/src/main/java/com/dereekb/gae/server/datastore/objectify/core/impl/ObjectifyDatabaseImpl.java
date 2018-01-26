@@ -18,6 +18,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.LoadedModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAccessorImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistryFactory;
@@ -618,7 +619,7 @@ public class ObjectifyDatabaseImpl
 			}
 
 			protected boolean update(T entity,
-			                      boolean async)
+			                         boolean async)
 			        throws UpdateUnkeyedEntityException {
 				if (entity.getModelKey() != null) {
 					if (this.getter.exists(entity)) {
@@ -638,7 +639,7 @@ public class ObjectifyDatabaseImpl
 			}
 
 			protected List<T> update(Iterable<T> entities,
-			                      boolean async)
+			                         boolean async)
 			        throws UpdateUnkeyedEntityException {
 				for (T entity : entities) {
 					if (entity.getModelKey() == null) {
@@ -966,11 +967,23 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
+		public ModelKeyListAccessor<T> createAccessorWithStringKeys(Collection<String> keys) {
+			StringModelKeyConverter keyConverter = this.getStringKeyConverter();
+			List<ModelKey> modelKeys = keyConverter.convert(keys);
+			return this.createAccessor(modelKeys);
+		}
+
+		@Override
 		public ModelKeyListAccessor<T> createAccessorWithModels(Collection<T> models) {
 			return new LoadedModelKeyListAccessor<T>(this.modelTypeName, models);
 		}
 
 		// MARK: ObjectifyKeyConverter
+		@Override
+		public StringModelKeyConverter getStringKeyConverter() {
+			return this.objectifyKeyConverter.getStringKeyConverter();
+		}
+
 		@Override
 		public ModelKey readKey(Key<T> key) throws IllegalKeyConversionException, NullPointerException {
 			return this.objectifyKeyConverter.readKey(key);

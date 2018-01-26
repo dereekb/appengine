@@ -35,6 +35,18 @@ public interface ModelKeyListAccessorFactory<T extends UniqueModel>
 	public ModelKeyListAccessor<T> createAccessor(Collection<ModelKey> keys);
 
 	/**
+	 * Creates a new accessor with the input key strings.
+	 * <p>s
+	 * Keys are converted to {@link ModelKey} properly.
+	 *
+	 * @param keys
+	 *            {@link Collection}. Never {@code null}.
+	 *
+	 * @return {@link ModelKeyListAccessor}. Never {@code null}.
+	 */
+	public ModelKeyListAccessor<T> createAccessorWithStringKeys(Collection<String> stringKeys);
+
+	/**
 	 * Creates a new accessor with the input models.
 	 *
 	 * @param models

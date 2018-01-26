@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ModelWebHookEventDataImpl<D> extends ModelTypedWebHookEventDataImpl {
 
+	public static final String MODELS_KEY = "models";
+
 	private List<D> models;
 
 	public ModelWebHookEventDataImpl() {

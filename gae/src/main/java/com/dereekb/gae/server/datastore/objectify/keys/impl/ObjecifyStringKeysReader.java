@@ -10,7 +10,7 @@ import com.googlecode.objectify.Key;
 
 /**
  * Implementation of {@link ObjectifyKeyReader} for converting to
- * {@link ModelKey}.
+ * {@link ModelKey} using a {@link Key}'s name.
  *
  * @author dereekb
  *
