@@ -1,5 +1,8 @@
 package com.dereekb.gae.test.extras.gen.utility.spring.impl;
 
+import java.util.List;
+
+import com.dereekb.gae.test.extras.gen.utility.GenFile;
 import com.dereekb.gae.test.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.test.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.test.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -7,6 +10,7 @@ import com.dereekb.gae.test.extras.gen.utility.spring.SpringBeansXMLBuilderEntit
 import com.dereekb.gae.test.extras.gen.utility.spring.bean.SpringBeansXMLBean;
 import com.dereekb.gae.test.extras.gen.utility.spring.bean.SpringBeansXMLBeanConstructor;
 import com.dereekb.gae.test.extras.gen.utility.spring.bean.impl.SpringBeansXMLBeanImpl;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.jamesmurty.utils.XMLBuilder2;
 
 /**
@@ -60,12 +64,38 @@ public class SpringBeansXMLBuilderImpl
 		this.beansBuilder = beansBuilder;
 	}
 
+	// MARK: Builder
 	@Override
 	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> bean(String id) {
 		return new SpringBeansXMLBeanBuilderImpl<SpringBeansXMLBuilder>(this, this.beansBuilder, id);
 	}
 
+	@Override
+	public void imp(String resource) {
+		this.importResource(resource);
+	}
+
+	@Override
+	public void importResources(List<GenFile> files) {
+		for (GenFile file : files) {
+			this.importResource(file);
+		}
+	}
+
+	@Override
+	public void importResource(GenFile file) {
+		this.importResource(file.getOutputFileName());
+	}
+
+	@Override
+	public void importResource(String resource) {
+		resource = StringUtility.startWith("/", resource);
+		this.beansBuilder.e(IMPORT_ELEMENT).attr(IMPORT_ELEMENT_RESOURCE_ATTR, resource);
+	}
+
 	// MARK: Bean
+	public static final String IMPORT_ELEMENT = "import";
+	public static final String IMPORT_ELEMENT_RESOURCE_ATTR = "resource";
 
 	private class SpringBeansXMLBeanBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
 	        implements SpringBeansXMLBeanBuilder<T> {

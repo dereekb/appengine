@@ -1,9 +1,6 @@
-package com.dereekb.gae.test.extras.gen.app.model;
+package com.dereekb.gae.test.extras.gen.app.config.model;
 
-import com.dereekb.gae.model.extension.data.conversion.ModelDataConversionInfo;
-
-public interface AppModelConfiguration
-        extends ModelDataConversionInfo<Object, Object> {
+public interface AppModelBeansConfiguration {
 
 	/**
 	 * Returns the bean model name/prefix, which is usually
@@ -20,5 +17,7 @@ public interface AppModelConfiguration
 	public String getModelDtoBeanId();
 
 	public String getModelDataConverterBeanId();
+
+	public String getModelRegistryId();
 
 }

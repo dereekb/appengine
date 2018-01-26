@@ -64,10 +64,32 @@ public class GenFolderImpl
 	}
 
 	// MARK: Folders
+	public void merge(List<GenFolder> folders) {
+		for (GenFolder folder : folders) {
+			this.merge(folder);
+		}
+	}
+
+	public void merge(GenFolder folder) {
+		this.addFolders(folder.getFolders());
+		this.addFiles(folder.getFiles());
+	}
+
+	public void addFolder(GenFolder folder) {
+		this.folders.add(folder);
+	}
+
+	public void addFolders(List<GenFolder> folders) {
+		this.folders.addAll(folders);
+	}
 
 	// MARK: Files
 	public void addFile(GenFile file) {
 		this.files.add(file);
+	}
+
+	public void addFiles(List<GenFile> files) {
+		this.files.addAll(files);
 	}
 
 	@Override

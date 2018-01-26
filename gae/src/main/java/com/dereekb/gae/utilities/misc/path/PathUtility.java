@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 import com.google.common.base.Joiner;
 
@@ -14,6 +15,8 @@ import com.google.common.base.Joiner;
  *
  */
 public class PathUtility {
+
+	public static final String DEFAULT_PATH_SEPARATOR = "/";
 
 	public static List<String> getComponents(String path,
 	                                         String separator) {
@@ -54,6 +57,10 @@ public class PathUtility {
 		}
 
 		return merged;
+	}
+
+	public static String buildPath(String... components) {
+		return buildPath(ListUtility.toList(components), DEFAULT_PATH_SEPARATOR);
 	}
 
 	public static String buildPath(List<String> components,

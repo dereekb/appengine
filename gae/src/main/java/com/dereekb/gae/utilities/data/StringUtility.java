@@ -2,7 +2,6 @@ package com.dereekb.gae.utilities.data;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -14,7 +13,7 @@ public class StringUtility {
 
 	public static final String DEFAULT_SEPARATOR = ",";
 
-	// MARK: Strins
+	// MARK: Strings
 	/**
 	 * Converts a list of values to their {@link #toString()} value.
 	 *
@@ -59,13 +58,49 @@ public class StringUtility {
 		return joiner.join(objects);
 	}
 
+	// Split
+	public static String splitAndSnip(String string,
+	                                  String splitter) {
+		return splitAndSnip(string, splitter, 1);
+	}
+
+	public static String splitAndSnip(String string,
+	                                  String splitter,
+	                                  int cut) {
+		String joiner = splitter;
+
+		switch (joiner) {
+			case ".":
+				splitter = "\\.";
+				break;
+			default:
+				break;
+		}
+
+		return splitAndSnip(string, splitter, joiner, cut);
+	}
+
+	public static String splitAndSnip(String string,
+	                                  String splitter,
+	                                  String joiner,
+	                                  int cut) {
+		List<String> split = separateValues(splitter, string);
+
+		if (cut >= split.size()) {
+			return "";
+		} else {
+			List<String> pieces = split.subList(0, split.size() - cut);
+			return joinValues(joiner, pieces);
+		}
+	}
+
 	/**
 	 * Separates the values within the input string.
 	 *
 	 * @param value
 	 * @return
 	 */
-	public static Collection<String> separateValues(String value) {
+	public static List<String> separateValues(String value) {
 		return separateValues(DEFAULT_SEPARATOR, value);
 	}
 
@@ -170,6 +205,25 @@ public class StringUtility {
 		char c[] = string.toCharArray();
 		c[0] = Character.toLowerCase(c[0]);
 		return new String(c);
+	}
+
+	/**
+	 * Makes the string start with the prefix if it doesn't already start with
+	 * it.
+	 *
+	 * @param prefix
+	 *            Prefix
+	 * @param string
+	 *            String
+	 * @return {@link
+	 */
+	public static String startWith(String prefix,
+	                               String string) {
+		if (string.startsWith(prefix)) {
+			return string;
+		} else {
+			return prefix + string;
+		}
 	}
 
 }

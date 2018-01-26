@@ -1,85 +1,33 @@
-package com.dereekb.gae.test.extras.gen.app.model.impl;
+package com.dereekb.gae.test.extras.gen.app.config.model.impl;
 
-import com.dereekb.gae.test.extras.gen.app.model.AppModelConfiguration;
+import com.dereekb.gae.test.extras.gen.app.config.model.AppModelBeansConfiguration;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
- * {@link AppModelConfiguration} implementation.
+ * {@link AppModelBeansConfiguration} implementation.
+ *
+ * @author dereekb
+ *
  */
-public class AppModelConfigurationImpl
-        implements AppModelConfiguration {
+public class AppModelBeansConfigurationImpl
+        implements AppModelBeansConfiguration {
 
-	String modelType;
-	Class<Object> modelClass;
-	Class<Object> modelDataClass;
+	private String modelBeanPrefix;
+	private String modelTypeBeanId;
+	private String modelClassBeanId;
+	private String modelDtoBeanId;
+	private String modelDataConverterBeanId;
+	private String modelRegistryId;
 
-	String modelBeanPrefix;
-	String modelTypeBeanId;
-	String modelClassBeanId;
-	String modelDtoBeanId;
-	String modelDataConverterBeanId;
-
-	public AppModelConfigurationImpl(Class<?> modelClass, Class<?> modelDataClass) {
-		this(modelClass, modelDataClass, modelClass.getSimpleName());
-	}
-
-	@SuppressWarnings("unchecked")
-	public AppModelConfigurationImpl(Class<?> modelClass, Class<?> modelDataClass, String modelType) {
-		super();
-		this.setModelClass((Class<Object>) modelClass);
-		this.setModelDataClass((Class<Object>) modelDataClass);
-		this.setModelType(modelType);
-
-		this.resetBeans();
-	}
-
-	protected void resetBeans() {
-		String modelBeanPrefix = StringUtility.firstLetterLowerCase(this.modelType);
+	public AppModelBeansConfigurationImpl(String modelType) {
+		String modelBeanPrefix = StringUtility.firstLetterLowerCase(modelType);
 
 		this.setModelBeanPrefix(modelBeanPrefix);
 		this.setModelTypeBeanId(modelBeanPrefix + "Type");
 		this.setModelClassBeanId(modelBeanPrefix + "Class");
 		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
-	}
-
-	@Override
-	public String getModelType() {
-		return this.modelType;
-	}
-
-	public void setModelType(String modelType) {
-		if (modelType == null) {
-			throw new IllegalArgumentException("modelType cannot be null.");
-		}
-
-		this.modelType = modelType;
-	}
-
-	@Override
-	public Class<Object> getModelClass() {
-		return this.modelClass;
-	}
-
-	public void setModelClass(Class<Object> modelClass) {
-		if (modelClass == null) {
-			throw new IllegalArgumentException("modelClass cannot be null.");
-		}
-
-		this.modelClass = modelClass;
-	}
-
-	@Override
-	public Class<Object> getModelDataClass() {
-		return this.modelDataClass;
-	}
-
-	public void setModelDataClass(Class<Object> modelDataClass) {
-		if (modelDataClass == null) {
-			throw new IllegalArgumentException("modelDataClass cannot be null.");
-		}
-
-		this.modelDataClass = modelDataClass;
+		this.setModelRegistryId(modelBeanPrefix + "Registry");
 	}
 
 	@Override
@@ -145,6 +93,19 @@ public class AppModelConfigurationImpl
 		}
 
 		this.modelDataConverterBeanId = modelDataConverterBeanId;
+	}
+
+	@Override
+	public String getModelRegistryId() {
+		return this.modelRegistryId;
+	}
+
+	public void setModelRegistryId(String modelRegistryId) {
+		if (modelRegistryId == null) {
+			throw new IllegalArgumentException("modelRegistryId cannot be null.");
+		}
+
+		this.modelRegistryId = modelRegistryId;
 	}
 
 }
