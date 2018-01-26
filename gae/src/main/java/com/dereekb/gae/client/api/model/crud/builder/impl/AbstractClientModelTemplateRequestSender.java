@@ -8,7 +8,7 @@ import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
@@ -30,21 +30,17 @@ import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
  */
 public abstract class AbstractClientModelTemplateRequestSender<T extends UniqueModel, O, R, S> extends AbstractClientModelCrudRequestSender<T, O, R, S> {
 
-	public AbstractClientModelTemplateRequestSender(String type,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoReader,
+	public AbstractClientModelTemplateRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		super(type, dtoType, dtoReader, keyTypeConverter, requestSender);
+		super(typedConverter, keyTypeConverter, requestSender);
 	}
 
-	public AbstractClientModelTemplateRequestSender(String type,
-	        String pathFormat,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoReader,
+	public AbstractClientModelTemplateRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
-	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		super(type, pathFormat, dtoType, dtoReader, keyTypeConverter, requestSender);
+	        SecuredClientApiRequestSender requestSender,
+	        String pathFormat) throws IllegalArgumentException {
+		super(typedConverter, keyTypeConverter, requestSender, pathFormat);
 	}
 
 	// MARK: Override
@@ -72,7 +68,7 @@ public abstract class AbstractClientModelTemplateRequestSender<T extends UniqueM
 	// MARK: Utility
 	public List<KeyedInvalidAttribute> serializeInvalidAttributes(ClientApiResponse response) {
 		return ClientKeyedInvalidAttributeException
-		        .utility(this.getKeyTypeConverter(), this.getObjectMapper(), this.getType())
+		        .utility(this.getKeyTypeConverter(), this.getObjectMapper(), this.getModelType())
 		        .serializeInvalidAttributes(response);
 	}
 

@@ -20,9 +20,12 @@
 	</bean>
 
 	<bean id="storedBlobDataConverter"
-		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl">
+		class="com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl">
 		<constructor-arg index="0" ref="storedBlobDataBuilder" />
 		<constructor-arg index="1" ref="storedBlobDataReader" />
+		<constructor-arg index="2" ref="storedBlobType" />
+		<constructor-arg index="3" ref="storedBlobClass" />
+		<constructor-arg index="4" ref="storedBlobDtoClass" />
 	</bean>
 
 	<!-- Delegate -->

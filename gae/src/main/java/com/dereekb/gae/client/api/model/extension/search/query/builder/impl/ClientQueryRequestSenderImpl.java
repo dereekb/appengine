@@ -24,7 +24,7 @@ import com.dereekb.gae.client.api.service.response.exception.ClientResponseSeria
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
@@ -52,29 +52,11 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 	 */
 	public static final String DEFAULT_PATH_FORMAT = "/%s/query";
 
-	private ObjectifyKeyConverter<T, ModelKey> keyConverter;
-
-	public ClientQueryRequestSenderImpl(String type,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoConverter,
+	public ClientQueryRequestSenderImpl(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender,
 	        ObjectifyKeyConverter<T, ModelKey> keyConverter) throws IllegalArgumentException {
-		super(type, dtoType, dtoConverter, keyTypeConverter, requestSender, keyConverter);
-	}
-
-	@Override
-	public ObjectifyKeyConverter<T, ModelKey> getKeyConverter() {
-		return this.keyConverter;
-	}
-
-	@Override
-	public void setKeyConverter(ObjectifyKeyConverter<T, ModelKey> keyConverter) {
-		if (keyConverter == null) {
-			throw new IllegalArgumentException("keyConverter cannot be null.");
-		}
-
-		this.keyConverter = keyConverter;
+		super(typedConverter, keyTypeConverter, requestSender, keyConverter);
 	}
 
 	// MARK: Abstract
@@ -173,7 +155,7 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 		public List<Key<T>> getObjectifyKeyResults() {
 			if (this.objectifyKeyResults == null) {
 				Collection<ModelKey> modelKeys = this.getKeyResults();
-				this.objectifyKeyResults = ClientQueryRequestSenderImpl.this.keyConverter.convertFrom(modelKeys);
+				this.objectifyKeyResults = ClientQueryRequestSenderImpl.this.getKeyConverter().convertFrom(modelKeys);
 			}
 
 			return this.objectifyKeyResults;
@@ -203,6 +185,11 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 			return ClientQueryRequestSenderImpl.this.query(searchRequest, this.getSecurity());
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "ClientQueryRequestSenderImpl []";
 	}
 
 }

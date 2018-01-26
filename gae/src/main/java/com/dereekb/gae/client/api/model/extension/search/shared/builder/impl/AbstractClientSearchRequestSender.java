@@ -8,7 +8,7 @@ import com.dereekb.gae.client.api.model.shared.builder.impl.AbstractConfiguredCl
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
@@ -36,13 +36,11 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 
 	private ObjectifyKeyConverter<T, ModelKey> keyConverter;
 
-	public AbstractClientSearchRequestSender(String type,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoConverter,
+	public AbstractClientSearchRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender,
 	        ObjectifyKeyConverter<T, ModelKey> keyConverter) throws IllegalArgumentException {
-		super(type, dtoType, dtoConverter, keyTypeConverter, requestSender);
+		super(typedConverter, keyTypeConverter, requestSender);
 		this.setKeyConverter(keyConverter);
 	}
 
@@ -71,8 +69,7 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 
 	public void assertNoInvalidSearchAttributes(ClientApiResponse clientResponse)
 	        throws ClientKeyedInvalidAttributeException {
-		ClientKeyedInvalidAttributeException.utility(this.getObjectMapper())
-		        .assertNoInvalidAttributes(clientResponse);
+		ClientKeyedInvalidAttributeException.utility(this.getObjectMapper()).assertNoInvalidAttributes(clientResponse);
 	}
 
 	protected class AbstractClientSearchResponse extends AbstractSerializedResponse

@@ -1,6 +1,6 @@
 package com.dereekb.gae.client.api.model.shared.builder.impl;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 import com.dereekb.gae.client.api.model.crud.utility.JsonModelResultsSerializer;
@@ -11,14 +11,13 @@ import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link AbstractSecuredClientModelRequestSender} extension with configuration
@@ -38,33 +37,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class AbstractConfiguredClientModelRequestSender<T extends UniqueModel, O, R, S> extends AbstractSecuredClientModelRequestSender<R, S>
         implements JsonModelResultsSerializer<T, O>, TypedModel {
 
-	private String type;
 	private String pathFormat;
 
-	private Class<O> dtoType;
-	private BidirectionalConverter<T, O> dtoConverter;
+	private TypedBidirectionalConverter<T, O> typedConverter;
 	private TypeModelKeyConverter keyTypeConverter;
 
 	private TypedClientModelKeySerializer keySerializer;
 
-	public AbstractConfiguredClientModelRequestSender(String type,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoConverter,
+	public AbstractConfiguredClientModelRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		this(type, null, dtoType, dtoConverter, keyTypeConverter, requestSender);
+		this(typedConverter, keyTypeConverter, requestSender, null);
 	}
 
-	public AbstractConfiguredClientModelRequestSender(String type,
-	        String pathFormat,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoConverter,
+	public AbstractConfiguredClientModelRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
-	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
+	        SecuredClientApiRequestSender requestSender,
+	        String pathFormat) throws IllegalArgumentException {
 		super(requestSender);
-		this.setType(type);
-		this.setDtoType(dtoType);
-		this.setDtoConverter(dtoConverter);
+		this.setTypedConverter(typedConverter);
 		this.setKeyTypeConverter(keyTypeConverter);
 		this.resetKeySerializer();
 
@@ -75,21 +66,21 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		this.setPathFormat(pathFormat);
 	}
 
-	public String getType() {
-		return this.type;
-	}
-
 	@Override
-	public String getModelType() {
-		return this.type;
+	public final String getModelType() {
+		return this.typedConverter.getModelType();
 	}
 
-	public void setType(String type) {
-		if (type == null) {
-			throw new IllegalArgumentException("type cannot be null.");
+	public TypedBidirectionalConverter<T, O> getTypedConverter() {
+		return this.typedConverter;
+	}
+
+	public void setTypedConverter(TypedBidirectionalConverter<T, O> typedConverter) {
+		if (typedConverter == null) {
+			throw new IllegalArgumentException("typedConverter cannot be null.");
 		}
 
-		this.type = type;
+		this.typedConverter = typedConverter;
 	}
 
 	public String getPathFormat() {
@@ -104,28 +95,8 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 		this.pathFormat = pathFormat;
 	}
 
-	public Class<O> getDtoType() {
-		return this.dtoType;
-	}
-
-	public void setDtoType(Class<O> dtoType) {
-		if (dtoType == null) {
-			throw new IllegalArgumentException("dtoType cannot be null.");
-		}
-
-		this.dtoType = dtoType;
-	}
-
-	public BidirectionalConverter<T, O> getDtoConverter() {
-		return this.dtoConverter;
-	}
-
-	public void setDtoConverter(BidirectionalConverter<T, O> dtoConverter) {
-		if (dtoConverter == null) {
-			throw new IllegalArgumentException("dtoConverter cannot be null.");
-		}
-
-		this.dtoConverter = dtoConverter;
+	public final Class<O> getDtoType() {
+		return this.typedConverter.getModelDataClass();
 	}
 
 	public TypeModelKeyConverter getKeyTypeConverter() {
@@ -145,8 +116,8 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	}
 
 	protected void resetKeySerializer() {
-		TypedClientModelKeySerializer serializer = new TypedClientModelKeySerializer(this.type, this.keyTypeConverter,
-		        this.getObjectMapper());
+		TypedClientModelKeySerializer serializer = new TypedClientModelKeySerializer(this.getModelType(),
+		        this.keyTypeConverter, this.getObjectMapper());
 		this.setKeySerializer(serializer);
 	}
 
@@ -163,7 +134,7 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 
 	// MARK: Utility
 	public ClientRequestUrl makeRequestUrl() {
-		String formattedPath = String.format(this.pathFormat, this.type);
+		String formattedPath = String.format(this.pathFormat, this.getModelType());
 		return new ClientRequestUrlImpl(formattedPath);
 	}
 
@@ -180,13 +151,13 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	@Override
 	public List<T> serializeModels(ClientApiResponseData data) throws ClientResponseSerializationException {
 		List<O> dtos = this.serializeModelDtos(data);
-		return this.dtoConverter.convertFrom(dtos);
+		return this.typedConverter.convertFrom(dtos);
 	}
 
 	@Override
 	public List<T> serializeModels(JsonNode jsonData) throws ClientResponseSerializationException {
 		List<O> dtos = this.serializeModelDtos(jsonData);
-		return this.dtoConverter.convertFrom(dtos);
+		return this.typedConverter.convertFrom(dtos);
 	}
 
 	/**
@@ -206,19 +177,11 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 
 	@Override
 	public List<O> serializeModelDtos(JsonNode jsonData) throws ClientResponseSerializationException {
-		ObjectMapper mapper = this.getObjectMapper();
-		List<O> dtoList = new ArrayList<O>();
-
 		try {
-			for (JsonNode result : jsonData) {
-				O dto = mapper.treeToValue(result, this.dtoType);
-				dtoList.add(dto);
-			}
-		} catch (JsonProcessingException e) {
+			return ObjectMapperUtilityBuilderImpl.SINGLETON.make().mapArrayToList(jsonData, this.getDtoType());
+		} catch (IOException e) {
 			throw new ClientResponseSerializationException(e);
 		}
-
-		return dtoList;
 	}
 
 	// MARK: Key Serialization

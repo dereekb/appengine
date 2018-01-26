@@ -19,9 +19,12 @@
 	</bean>
 
 	<bean id="appDataConverter"
-		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl">
+		class="com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl">
 		<constructor-arg index="0" ref="appDataBuilder" />
 		<constructor-arg index="1" ref="appDataReader" />
+		<constructor-arg index="2" ref="appDataType" />
+		<constructor-arg index="3" ref="appDataClass" />
+		<constructor-arg index="4" ref="appDataDtoClass" />
 	</bean>
 
 </beans>

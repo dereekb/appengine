@@ -22,7 +22,7 @@ import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
 import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link ClientDeleteRequestSender} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -47,12 +47,10 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	 */
 	public static final String DEFAULT_PATH_FORMAT = "/%s/delete";
 
-	public ClientDeleteRequestSenderImpl(String type,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoReader,
+	public ClientDeleteRequestSenderImpl(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		super(type, dtoType, dtoReader, keyTypeConverter, requestSender);
+		super(typedConverter, keyTypeConverter, requestSender);
 	}
 
 	// MARK: Abstract

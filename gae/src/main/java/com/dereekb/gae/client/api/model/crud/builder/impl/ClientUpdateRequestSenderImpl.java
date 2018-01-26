@@ -25,6 +25,7 @@ import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.request.options.UpdateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
@@ -34,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link ClientUpdateRequestSender} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -50,12 +51,10 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	 */
 	public static final String DEFAULT_PATH_FORMAT = "/%s/update";
 
-	public ClientUpdateRequestSenderImpl(String type,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoReader,
+	public ClientUpdateRequestSenderImpl(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		super(type, dtoType, dtoReader, keyTypeConverter, requestSender);
+		super(typedConverter, keyTypeConverter, requestSender);
 	}
 
 	// MARK: Abstract
@@ -109,7 +108,7 @@ public class ClientUpdateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		updateRequest.setOptions(options);
 
 		Collection<T> templates = request.getTemplates();
-		BidirectionalConverter<T, O> converter = this.getDtoConverter();
+		BidirectionalConverter<T, O> converter = this.getTypedConverter();
 
 		List<O> templateDtos = converter.convertTo(templates);
 		updateRequest.setData(templateDtos);

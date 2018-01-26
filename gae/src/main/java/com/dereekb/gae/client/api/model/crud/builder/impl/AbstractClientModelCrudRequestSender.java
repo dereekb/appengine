@@ -12,16 +12,16 @@ import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.response.SimpleServiceResponse;
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 
 /**
  * Abstract client model request sender for all types.
- * 
+ *
  * Provides helper functions for asserting responses, etc.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -37,30 +37,26 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 
 	private ClientAtomicOperationExceptionUtility atomicOperationUtility;
 
-	public AbstractClientModelCrudRequestSender(String type,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoConverter,
+	public AbstractClientModelCrudRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		this(type, null, dtoType, dtoConverter, keyTypeConverter, requestSender);
+		this(typedConverter, keyTypeConverter, requestSender, null);
 	}
 
-	public AbstractClientModelCrudRequestSender(String type,
-	        String pathFormat,
-	        Class<O> dtoType,
-	        BidirectionalConverter<T, O> dtoConverter,
+	public AbstractClientModelCrudRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
-	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
-		super(type, pathFormat, dtoType, dtoConverter, keyTypeConverter, requestSender);
+	        SecuredClientApiRequestSender requestSender,
+	        String pathFormat) throws IllegalArgumentException {
+		super(typedConverter, keyTypeConverter, requestSender, pathFormat);
 		this.atomicOperationUtility = new ClientAtomicOperationExceptionUtility(this.getKeySerializer());
 	}
 
 	// MARK: Utility
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * Checks for {@link ClientAtomicOperationException} also.
-	 * 
+	 *
 	 */
 	@Override
 	public void assertSuccessfulResponse(ClientApiResponse clientResponse)
@@ -74,7 +70,7 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	}
 
 	public void assertNoAtomicOperationError(ClientApiResponse clientResponse) throws ClientAtomicOperationException {
-		this.atomicOperationUtility.assertNoAtomicOperationError(this.getType(), clientResponse);
+		this.atomicOperationUtility.assertNoAtomicOperationError(this.getModelType(), clientResponse);
 	}
 
 	public void assertNotTooMuchInputError(ClientApiResponse clientResponse) throws ClientTooMuchInputException {
@@ -82,7 +78,7 @@ public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel
 	}
 
 	public List<ModelKey> serializeMissingResourceKeys(ClientApiResponse response) {
-		return this.atomicOperationUtility.serializeMissingResourceKeys(this.getType(), response);
+		return this.atomicOperationUtility.serializeMissingResourceKeys(this.getModelType(), response);
 	}
 
 	// MARK: Utility Classes

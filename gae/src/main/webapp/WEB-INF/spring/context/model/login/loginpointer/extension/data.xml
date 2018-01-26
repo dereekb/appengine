@@ -19,9 +19,12 @@
 	</bean>
 
 	<bean id="loginPointerDataConverter"
-		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl">
+		class="com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl">
 		<constructor-arg index="0" ref="loginPointerDataBuilder" />
 		<constructor-arg index="1" ref="loginPointerDataReader" />
+		<constructor-arg index="2" ref="loginPointerType" />
+		<constructor-arg index="3" ref="loginPointerClass" />
+		<constructor-arg index="4" ref="loginPointerDtoClass" />
 	</bean>
 
 </beans>
