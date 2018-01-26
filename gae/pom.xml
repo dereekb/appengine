@@ -183,7 +183,7 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>6.0.5.Final</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.el</artifactId>
@@ -256,6 +256,14 @@
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-tools-sdk</artifactId>
 			<version>${appengine.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Extras -->
+		<dependency>
+			<groupId>com.jamesmurty.utils</groupId>
+			<artifactId>java-xmlbuilder</artifactId>
+			<version>1.2</version>
 			<scope>test</scope>
 		</dependency>
 

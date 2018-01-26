@@ -148,13 +148,28 @@ public class StringUtility {
 		return generateRandomHexString(numchars, r);
 	}
 
-	public static String generateRandomHexString(int numchars, Random r) {
+	public static String generateRandomHexString(int numchars,
+	                                             Random r) {
 		StringBuffer sb = new StringBuffer();
-        while(sb.length() < numchars){
-            sb.append(Integer.toHexString(r.nextInt()));
-        }
+		while (sb.length() < numchars) {
+			sb.append(Integer.toHexString(r.nextInt()));
+		}
 
-        return sb.toString().substring(0, numchars);
+		return sb.toString().substring(0, numchars);
+	}
+
+	public static String safeFirstLetterLowerCase(String string) {
+		if (isEmptyString(string)) {
+			return string;
+		}
+
+		return firstLetterLowerCase(string);
+	}
+
+	public static String firstLetterLowerCase(String string) {
+		char c[] = string.toCharArray();
+		c[0] = Character.toLowerCase(c[0]);
+		return new String(c);
 	}
 
 }
