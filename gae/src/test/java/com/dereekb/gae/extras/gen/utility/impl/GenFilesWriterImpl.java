@@ -50,10 +50,10 @@ public class GenFilesWriterImpl
 	// MARK: GenFilesWriter
 	@Override
 	public void writeFiles(GenFolder folder) throws IOException {
-		new GenFolderWriterImpl(folder, this.rootFolder.getFolderFile()).writeFiles();
+		new GenFolderWriterImpl(folder, this.rootFolder).writeFiles();
 	}
 
-	private static class WriteFolder {
+	public static class WriteFolder {
 
 		private File folderFile;
 

@@ -20,6 +20,11 @@
 			value="com.dereekb.gae.model.stored.image.set.StoredImageSet" />
 	</bean>
 
+	<bean id="storedImageSetDtoClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.model.stored.image.set.dto.StoredImageSetData" />
+	</bean>
+	
 	<bean id="storedImageSetIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
 		<constructor-arg index="0" value="NUMBER" />
 	</bean>

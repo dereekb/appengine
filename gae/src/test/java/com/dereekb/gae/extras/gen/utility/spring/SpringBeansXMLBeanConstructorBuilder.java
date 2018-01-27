@@ -13,6 +13,4 @@ public interface SpringBeansXMLBeanConstructorBuilder<T>
 
 	public SpringBeansXMLBeanConstructorBuilder<T> ref(String ref);
 
-	// public SpringBeansXMLBeanConstructorBuilder bean(SpringBeansXMLBean ref);
-
 }

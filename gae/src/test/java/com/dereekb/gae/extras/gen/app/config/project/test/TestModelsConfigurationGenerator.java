@@ -1,9 +1,15 @@
 package com.dereekb.gae.extras.gen.app.config.project.test;
 
+import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientCreateRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientDeleteRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientUpdateRequestSenderImpl;
+import com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkRequestSenderImpl;
+import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
+import com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl;
+import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
+import com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
@@ -14,6 +20,7 @@ import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl;
+import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
 import com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl;
 import com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
@@ -58,11 +65,9 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 	public static final String SHARED_MODEL_FILE_NAME = "models";
 
-	public GenFile makeSharedModelXMLFile(GenFolder modelFiles, GenFolder clientFolder) {
+	public GenFile makeSharedModelXMLFile(GenFolder modelFiles,
+	                                      GenFolder clientFolder) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
-
-		// Objectify Override
-		builder.bean("objectifyDatabase").beanClass(ObjectifyTestDatabase.class).c().ref("objectifyDatabaseEntities");
 
 		// Model Imports
 		builder.getRawXMLBuilder().comment("Models");
@@ -70,7 +75,12 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 		// Client Import
 		builder.getRawXMLBuilder().comment("Client");
-		builder.imp(PathUtility.buildPath(clientFolder.getFolderName(), CLIENT_SHARED_FILE_NAME));
+		builder.imp(PathUtility.buildPath(clientFolder.getFolderName(), CLIENT_SHARED_FILE_FULL_NAME));
+
+		// Objectify Override
+		builder.comment("Objectify Override");
+		builder.bean("objectifyDatabase").beanClass(ObjectifyTestDatabase.class).primary().lazy(false).c()
+		        .ref("objectifyDatabaseEntities");
 
 		return this.makeFileWithXML(SHARED_MODEL_FILE_NAME, builder);
 	}
@@ -117,6 +127,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 	}
 
 	public static final String CLIENT_SHARED_FILE_NAME = "client";
+	public static final String CLIENT_SHARED_FILE_FULL_NAME = CLIENT_SHARED_FILE_NAME + ".xml";
 
 	private class TestClientConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
@@ -139,7 +150,35 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		public GenFile makeSharedClientXMLFile(GenFolderImpl folder) {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
+			// Models Import
+			builder.comment("Models");
+
 			builder.importResources(folder.getFiles());
+
+			// Base Client-Request Sender
+			builder.comment("Base Client Sender");
+
+			builder.bean("mockClientRequestSender").beanClass(MockClientRequestSender.class);
+
+			builder.bean("clientApiRequestSender").beanClass(ClientApiRequestSenderImpl.class).c()
+			        .ref("mockClientRequestSender");
+
+			builder.bean("securedClientRequestSender").beanClass(SecuredClientApiRequestSenderImpl.class).c()
+			        .ref("clientApiRequestSender").ref("testDefaultClientRequestSecurity")
+			        .ref("systemLoginTokenFactory");
+
+			builder.bean("testDefaultClientRequestSecurity").beanClass(ClientRequestSecurityImpl.class)
+			        .property("securityContextType").value("SYSTEM");
+
+			// Shared
+			builder.comment("Shared");
+
+			builder.bean("clientLinkRequestSender").beanClass(ClientLinkRequestSenderImpl.class).c()
+			        .ref("modelKeyTypeConverter").ref("securedClientRequestSender");
+
+			builder.bean("clientModelRolesContextServiceRequestSender")
+			        .beanClass(ClientModelRolesContextServiceRequestSenderImpl.class).c().ref("modelKeyTypeConverter")
+			        .ref("securedClientRequestSender");
 
 			return this.makeFileWithXML(CLIENT_SHARED_FILE_NAME, builder);
 		}
@@ -167,6 +206,10 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 			builder.bean(modelPrefix + "ClientDeleteRequestSender").beanClass(ClientDeleteRequestSenderImpl.class).c()
 			        .ref(modelConfig.getModelDataConverterBeanId()).ref("modelKeyTypeConverter")
 			        .ref("securedClientRequestSender");
+
+			builder.bean(modelPrefix + "ClientQueryRequestSender").beanClass(ClientQueryRequestSenderImpl.class).c()
+			        .ref(modelConfig.getModelDataConverterBeanId()).ref("modelKeyTypeConverter")
+			        .ref("securedClientRequestSender").ref(modelConfig.getModelRegistryId());
 
 			return builder;
 		}

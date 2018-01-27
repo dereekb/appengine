@@ -24,7 +24,19 @@ public interface SpringBeansXMLBeanBuilder<T>
 
 	public SpringBeansXMLBeanConstructorBuilder<SpringBeansXMLBeanBuilder<T>> constructor();
 
+	// Property
+	public SpringBeansXMLBeanPropertyBuilder<SpringBeansXMLBeanBuilder<T>> property(String name);
+
 	// Bean
 	public SpringBeansXMLBean getBean();
+
+	// Config
+	public SpringBeansXMLBeanBuilder<T> primary();
+
+	public SpringBeansXMLBeanBuilder<T> primary(boolean primary);
+
+	public SpringBeansXMLBeanBuilder<T> lazy();
+
+	public SpringBeansXMLBeanBuilder<T> lazy(boolean lazy);
 
 }

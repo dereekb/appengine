@@ -5,10 +5,12 @@ import java.util.List;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanPropertyBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilderEntity;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBean;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBeanConstructor;
+import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLProperty;
 import com.dereekb.gae.extras.gen.utility.spring.bean.impl.SpringBeansXMLBeanImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.jamesmurty.utils.XMLBuilder2;
@@ -148,8 +150,35 @@ public class SpringBeansXMLBuilderImpl
 		}
 
 		@Override
+		public SpringBeansXMLBeanPropertyBuilder<SpringBeansXMLBeanBuilder<T>> property(String name) {
+			return new SpringBeansXMLBeanPropertyBuilderImpl<SpringBeansXMLBeanBuilder<T>>(this, this.builder).name(name);
+		}
+
+		@Override
 		public SpringBeansXMLBean getBean() {
 			return new SpringBeansXMLBeanImpl(this.builder);
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<T> primary() {
+			return this.primary(true);
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<T> primary(boolean primary) {
+			this.builder.a(SpringBeansXMLBean.PRIMARY_ATTRIBUTE, String.valueOf(primary));
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<T> lazy() {
+			return this.lazy(true);
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<T> lazy(boolean lazy) {
+			this.builder.a(SpringBeansXMLBean.LAZY_INIT_ATTRIBUTE, String.valueOf(lazy));
+			return this;
 		}
 
 	}
@@ -187,6 +216,51 @@ public class SpringBeansXMLBuilderImpl
 			this.nextArgIndex += 1;
 			return this.builder.e(SpringBeansXMLBeanConstructor.ARG_ELEMENT)
 			        .a(SpringBeansXMLBeanConstructor.ARG_INDEX_ATTRIBUTE, arg.toString());
+		}
+
+	}
+
+	// MARK: Property
+	private class SpringBeansXMLBeanPropertyBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
+	        implements SpringBeansXMLBeanPropertyBuilder<T> {
+
+		public SpringBeansXMLBeanPropertyBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		// MARK: Init
+		@Override
+		protected XMLBuilder2 makeBuilderForElement(XMLBuilder2 builder) {
+			return builder.e(SpringBeansXMLProperty.ELEMENT);
+		}
+
+		@Override
+		protected void initForLoadedBuilderElement() {
+			// TODO: Could initialize the internal property...
+		}
+
+		// MARK: SpringBeansXMLBeanPropertyBuilder
+		@Override
+		public SpringBeansXMLBeanPropertyBuilder<T> name(String name) {
+			this.builder.a(SpringBeansXMLProperty.NAME_ATTRIBUTE, name);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanPropertyBuilder<T> value(String value) {
+			this.builder.a(SpringBeansXMLProperty.VALUE_ATTRIBUTE, value);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanPropertyBuilder<T> ref(String ref) {
+			this.builder.a(SpringBeansXMLProperty.REF_ATTRIBUTE, ref);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<SpringBeansXMLBeanPropertyBuilder<T>> bean() {
+			return new SpringBeansXMLBeanBuilderImpl<>(this, this.builder);
 		}
 
 	}

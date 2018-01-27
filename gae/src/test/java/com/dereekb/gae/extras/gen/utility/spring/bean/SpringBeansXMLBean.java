@@ -4,5 +4,7 @@ public interface SpringBeansXMLBean {
 
 	public static final String ID_ATTRIBUTE = "id";
 	public static final String CLASS_ATTRIBUTE = "class";
+	public static final String PRIMARY_ATTRIBUTE = "primary";
+	public static final String LAZY_INIT_ATTRIBUTE = "lazy-init";
 
 }
