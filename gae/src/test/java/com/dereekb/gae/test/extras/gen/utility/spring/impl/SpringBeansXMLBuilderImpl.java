@@ -93,6 +93,11 @@ public class SpringBeansXMLBuilderImpl
 		this.beansBuilder.e(IMPORT_ELEMENT).attr(IMPORT_ELEMENT_RESOURCE_ATTR, resource);
 	}
 
+	@Override
+	public void comment(String comment) {
+		this.beansBuilder.comment(comment);
+	}
+
 	// MARK: Bean
 	public static final String IMPORT_ELEMENT = "import";
 	public static final String IMPORT_ELEMENT_RESOURCE_ATTR = "resource";

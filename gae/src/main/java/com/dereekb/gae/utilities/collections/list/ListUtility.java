@@ -285,4 +285,14 @@ public class ListUtility {
 		list.set(y, ex);
 	}
 
+	public static boolean isLastElementIndex(int index,
+	                                    String[] array) {
+		return index == array.length - 1;
+	}
+
+	public static boolean isLastElement(int index,
+	                                    List<?> list) {
+		return index == list.size() - 1;
+	}
+
 }

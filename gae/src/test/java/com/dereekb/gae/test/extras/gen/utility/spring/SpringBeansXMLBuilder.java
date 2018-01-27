@@ -52,4 +52,7 @@ public interface SpringBeansXMLBuilder
 	 */
 	public void importResources(List<GenFile> files);
 
+	// Comment
+	public void comment(String comment);
+
 }

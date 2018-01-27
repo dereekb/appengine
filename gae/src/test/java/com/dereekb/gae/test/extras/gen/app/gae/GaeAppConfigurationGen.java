@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.extras.gen.app.gae;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -15,6 +16,7 @@ import com.dereekb.gae.test.extras.gen.app.config.model.impl.AppConfigurationImp
 import com.dereekb.gae.test.extras.gen.app.config.model.impl.AppModelConfigurationGroupImpl;
 import com.dereekb.gae.test.extras.gen.app.config.model.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.test.extras.gen.utility.GenFolder;
+import com.dereekb.gae.test.extras.gen.utility.impl.GenFilesWriterImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 public class GaeAppConfigurationGen {
@@ -45,10 +47,13 @@ public class GaeAppConfigurationGen {
 	public static final AppConfiguration APP_CONFIG = makeGaeAppConfiguration();
 
 	@Test
-	public void testMakeTestClentConfiguration() {
+	public void testMakeTestClentConfiguration() throws IOException {
 
 		TestModelsConfigurationGenerator generator = new TestModelsConfigurationGenerator(APP_CONFIG);
 		GenFolder folder = generator.generateConfigurations();
+		GenFilesWriterImpl writer = new GenFilesWriterImpl();
+		// String path = writer.getRootFolder().getRoot().getAbsolutePath();
+		writer.writeFiles(folder);
 
 
 		// TODO: Print to files.

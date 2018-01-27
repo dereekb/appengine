@@ -94,12 +94,16 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationGener
 
 			String modelGeneratorId = modelPrefix + "Generator";
 
+			builder.comment("Generator");
+
 			// Generator
 			builder.bean(modelGeneratorId).beanClass(modelConfig.getModelGeneratorClass());
 
 			// Test Model Generator
 			builder.bean(modelPrefix + "TestModelGenerator").beanClass(TestModelGeneratorImpl.class).c()
 			        .ref(modelConfig.getModelRegistryId()).ref(modelGeneratorId);
+
+			builder.comment("Data Generator");
 
 			// Test Model Data Generator
 			builder.bean(modelPrefix + "TestDataGenerator").beanClass(DerivedGeneratorImpl.class).c()
