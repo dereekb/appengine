@@ -20,7 +20,11 @@ public class EventImpl extends BasicEventImpl
 	}
 
 	public EventImpl(EventType eventType, EventData eventData) {
-		super(eventType);
+		this(null, eventType, eventData);
+	}
+
+	public EventImpl(String scope, EventType eventType, EventData eventData) {
+		super(scope, eventType);
 		this.setEventData(eventData);
 	}
 

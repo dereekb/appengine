@@ -51,6 +51,11 @@ public class JsonWebHookEventImpl
 
 	// MARK: WebHookEvent
 	@Override
+	public String getScope() {
+		return this.jsonNode.get(WebHookEventImpl.SCOPE_FIELD).asText();
+	}
+
+	@Override
 	public EventType getEventType() {
 		if (this.eventType == null) {
 			this.eventType = this.deserializeEventType();

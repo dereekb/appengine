@@ -8,6 +8,7 @@ import java.util.Set;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.data.ObjectMapperUtility;
 import com.dereekb.gae.utilities.data.ObjectMapperUtilityBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -204,6 +205,16 @@ public class ObjectMapperUtilityBuilderImpl
 		private void handleNullPointerException(NullPointerException e) throws NullPointerException {
 			if (!this.nullSafe) {
 				throw e;
+			}
+		}
+
+		@Override
+		public String writeJsonString(JsonNode jsonNode) {
+			try {
+				return this.mapper.writeValueAsString(jsonNode);
+			} catch (JsonProcessingException e) {
+				// Should never happen.
+				throw new RuntimeException(e);
 			}
 		}
 

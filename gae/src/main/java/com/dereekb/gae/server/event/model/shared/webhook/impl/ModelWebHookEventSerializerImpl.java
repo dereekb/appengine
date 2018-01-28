@@ -73,7 +73,14 @@ public class ModelWebHookEventSerializerImpl<T extends UniqueModel, D extends Un
 	public WebHookEvent convertSingle(Event input,
 	                                  boolean keysOnly)
 	        throws ConversionFailureException {
-		WebHookEventImpl event = new WebHookEventImpl(input.getEventType());
+
+		String scope = input.getScope();
+
+		if (scope == null) {
+			throw new ConversionFailureException("Event must have a scope.");
+		}
+
+		WebHookEventImpl event = new WebHookEventImpl(scope, input.getEventType());
 		EventData data = input.getEventData();
 
 		if (data != null) {

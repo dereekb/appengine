@@ -12,10 +12,25 @@ import com.dereekb.gae.server.event.event.EventType;
 public class BasicEventImpl
         implements BasicEvent {
 
+	private String scope;
 	private EventType eventType;
 
 	public BasicEventImpl(EventType eventType) {
+		this(null, eventType);
+	}
+
+	public BasicEventImpl(String scope, EventType eventType) {
+		this.setScope(scope);
 		this.setEventType(eventType);
+	}
+
+	@Override
+	public String getScope() {
+		return this.scope;
+	}
+
+	public void setScope(String scope) {
+		this.scope = scope;
 	}
 
 	@Override

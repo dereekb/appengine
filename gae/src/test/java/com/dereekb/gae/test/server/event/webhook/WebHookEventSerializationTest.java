@@ -29,7 +29,7 @@ public class WebHookEventSerializationTest {
 		EventType eventType = CommonModelEventType.CREATED;
 		List<String> testData = ListUtility.toList("a", "b", "c");
 
-		WebHookEventImpl event = new WebHookEventImpl(eventType, testData);
+		WebHookEventImpl event = new WebHookEventImpl("scope", eventType, testData);
 
 		// Convert to JSON
 		JsonNode node = event.getJsonNode(); // mapper.valueToTree(event);

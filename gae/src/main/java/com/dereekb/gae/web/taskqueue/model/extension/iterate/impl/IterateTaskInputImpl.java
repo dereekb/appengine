@@ -3,6 +3,7 @@ package com.dereekb.gae.web.taskqueue.model.extension.iterate.impl;
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * {@link IterateTaskInput} implementation.
@@ -17,7 +18,7 @@ public class IterateTaskInputImpl
 	private String modelType;
 	private String stepCursor;
 	private Integer iterationStep;
-	private Map<String, String> parameters;
+	private CaseInsensitiveMap<String> parameters;
 
 	public IterateTaskInputImpl(String taskName, String modelType, String stepCursor, Map<String, String> parameters) {
 		this(taskName, modelType, stepCursor, 0, parameters);
@@ -76,12 +77,16 @@ public class IterateTaskInputImpl
 	}
 
 	@Override
-	public Map<String, String> getParameters() {
+	public CaseInsensitiveMap<String> getParameters() {
 		return this.parameters;
 	}
 
 	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
+		if (parameters == null) {
+			this.parameters = null;
+		} else {
+			this.parameters = new CaseInsensitiveMap<String>(parameters);
+		}
 	}
 
 	@Override

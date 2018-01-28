@@ -15,6 +15,13 @@ package com.dereekb.gae.server.event.event;
 public interface BasicEvent {
 
 	/**
+	 * Returns the Server/Service Scope of the event.
+	 *
+	 * @return {@link String}, or {@code null} if not set.
+	 */
+	public String getScope();
+
+	/**
 	 * Returns the event type.
 	 *
 	 * @return {@link EventType}. Never {@code null}.

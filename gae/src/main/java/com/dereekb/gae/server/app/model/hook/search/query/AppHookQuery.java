@@ -4,7 +4,9 @@ import java.util.Map;
 
 import com.dereekb.gae.server.app.model.app.shared.search.query.AbstractAppRelatedModelQuery;
 import com.dereekb.gae.server.app.model.hook.AppHook;
+import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.BooleanQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.StringQueryFieldParameter;
 
 /**
@@ -17,9 +19,11 @@ public class AppHookQuery extends AbstractAppRelatedModelQuery {
 
 	public static final String GROUP_FIELD = "group";
 	public static final String EVENT_FIELD = "event";
+	public static final String ENABLED_FIELD = "enabled";
 
 	private StringQueryFieldParameter group;
 	private StringQueryFieldParameter event;
+	private BooleanQueryFieldParameter enabled;
 
 	public AppHookQuery() {
 		super();
@@ -27,6 +31,11 @@ public class AppHookQuery extends AbstractAppRelatedModelQuery {
 
 	public AppHookQuery(Map<String, String> parameters) throws IllegalArgumentException {
 		super(parameters);
+	}
+
+	public void searchEventType(EventType eventType) {
+		this.setGroup(eventType.getEventGroupCode());
+		this.setEvent(eventType.getEventTypeCode());
 	}
 
 	public StringQueryFieldParameter getGroup() {
@@ -53,6 +62,22 @@ public class AppHookQuery extends AbstractAppRelatedModelQuery {
 		this.event = StringQueryFieldParameter.make(EVENT_FIELD, event);
 	}
 
+	public BooleanQueryFieldParameter getEnabled() {
+		return this.enabled;
+	}
+
+	public void setEnabled(String enabled) {
+		this.enabled = BooleanQueryFieldParameter.make(ENABLED_FIELD, enabled);
+	}
+
+	public void searchIsEnabled() {
+		this.setEnabled(true);
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = BooleanQueryFieldParameter.make(ENABLED_FIELD, enabled);
+	}
+
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
@@ -60,6 +85,7 @@ public class AppHookQuery extends AbstractAppRelatedModelQuery {
 
 		ParameterUtility.put(parameters, this.getGroup());
 		ParameterUtility.put(parameters, this.getEvent());
+		ParameterUtility.put(parameters, this.getEnabled());
 
 		return parameters;
 	}
@@ -69,6 +95,7 @@ public class AppHookQuery extends AbstractAppRelatedModelQuery {
 		super.setParameters(parameters);
 		this.setGroup(parameters.get(GROUP_FIELD));
 		this.setEvent(parameters.get(EVENT_FIELD));
+		this.setEnabled(parameters.get(ENABLED_FIELD));
 	}
 
 }

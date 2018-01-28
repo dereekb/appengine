@@ -31,6 +31,8 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 /**
  * Task Queue controller used for performing custom tasks over input models.
  *
+ * TODO: Consider making a builder for sequence or iterate tasks.
+ *
  * @author dereekb
  *
  */
@@ -43,6 +45,8 @@ public class TaskQueueIterateController extends CaseInsensitiveEntryContainerImp
 	public static final String ITERATE_PATH = "iterate";
 
 	public static final String SEQUENCE_PATH = "sequence";
+
+	public static final String SEQUENCE_KEYS_PARAM_NAME = "keys";
 
 	/**
 	 * HTTP header for the step value.
@@ -151,7 +155,7 @@ public class TaskQueueIterateController extends CaseInsensitiveEntryContainerImp
 	@RequestMapping(value = "/{type}/sequence/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void sequence(@PathVariable("type") String modelType,
 	                     @PathVariable("task") String taskName,
-	                     @RequestParam("keys") List<String> identifiers,
+	                     @RequestParam(SEQUENCE_KEYS_PARAM_NAME) List<String> identifiers,
 	                     @RequestParam Map<String, String> parameters) {
 
 		try {

@@ -1,8 +1,7 @@
 package com.dereekb.gae.model.extension.iterate;
 
-import java.util.Map;
-
 import com.dereekb.gae.server.datastore.models.TypedModel;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMap;
 
 /**
  * Input for {@link IterateTaskExecutor} that defines custom parameters,
@@ -23,7 +22,7 @@ public interface IterateTaskInput extends TypedModel {
 	 * @return Parameters for the request that are used for iteration
 	 *         configuration. Never {@code null}.
 	 */
-	public Map<String, String> getParameters();
+	public CaseInsensitiveMap<String> getParameters();
 
 	/**
 	 * Step of the iteration.

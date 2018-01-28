@@ -1,6 +1,11 @@
 package com.dereekb.gae.server.app.model.app.info;
 
-
+/**
+ * Application name container.
+ *
+ * @author dereekb
+ *
+ */
 public interface AppName {
 
 	/**

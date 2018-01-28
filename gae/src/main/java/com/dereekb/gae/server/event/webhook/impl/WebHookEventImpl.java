@@ -26,24 +26,39 @@ public class WebHookEventImpl
 	public static final String GROUP_FIELD = "group";
 	public static final String TYPE_FIELD = "type";
 	public static final String DATA_FIELD = "data";
+	public static final String SCOPE_FIELD = "scope";
 
+	private String scope;
 	private String group;
 	private String type;
 	private Object data;
 
-	public WebHookEventImpl(EventType eventType) {
-		this(eventType.getEventGroupCode(), eventType.getEventTypeCode(), null);
+	public WebHookEventImpl(String scope, EventType eventType) {
+		this(scope, eventType.getEventGroupCode(), eventType.getEventTypeCode(), null);
 	}
 
-	public WebHookEventImpl(EventType eventType, Object data) {
-		this(eventType.getEventGroupCode(), eventType.getEventTypeCode(), data);
+	public WebHookEventImpl(String scope, EventType eventType, Object data) {
+		this(scope, eventType.getEventGroupCode(), eventType.getEventTypeCode(), data);
 	}
 
-	public WebHookEventImpl(String group, String type, Object data) throws IllegalArgumentException {
+	public WebHookEventImpl(String scope, String group, String type, Object data) throws IllegalArgumentException {
 		super();
 		this.setGroup(group);
 		this.setType(type);
 		this.setData(data);
+	}
+
+	@Override
+	public String getScope() {
+		return this.scope;
+	}
+
+	public void setScope(String scope) {
+		if (scope == null) {
+			throw new IllegalArgumentException("scope cannot be null.");
+		}
+
+		this.scope = scope;
 	}
 
 	public String getGroup() {
@@ -103,7 +118,8 @@ public class WebHookEventImpl
 
 	@Override
 	public String toString() {
-		return "WebHookEventImpl [group=" + this.group + ", type=" + this.type + ", data=" + this.data + "]";
+		return "WebHookEventImpl [scope=" + this.scope + ", group=" + this.group + ", type=" + this.type + ", data="
+		        + this.data + "]";
 	}
 
 }

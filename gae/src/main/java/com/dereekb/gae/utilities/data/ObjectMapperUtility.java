@@ -53,4 +53,7 @@ public interface ObjectMapperUtility {
 	                 Class<X> type)
 	        throws IOException;
 
+	// Writer
+	public String writeJsonString(JsonNode jsonNode);
+
 }
