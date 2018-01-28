@@ -45,9 +45,19 @@ public class App extends DatedDatabaseModel
 	private Long identifier;
 
 	/**
-	 * Application OAuth name.
+	 * Application name.
 	 */
 	private String name;
+
+	/**
+	 * Base server url.
+	 */
+	private String server;
+
+	/**
+	 * API Path for the server.
+	 */
+	private String api;
 
 	/**
 	 * Generated app secret. Is generally a hexadecimal value.

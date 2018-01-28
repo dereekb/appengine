@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.event.event.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.server.event.event.Event;
@@ -17,6 +18,10 @@ public class EventServiceImpl
         implements EventService {
 
 	private List<EventServiceListener> listeners;
+
+	public EventServiceImpl() {
+		this(Collections.emptyList());
+	}
 
 	public EventServiceImpl(List<EventServiceListener> listeners) {
 		this.setListeners(listeners);

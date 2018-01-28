@@ -1,9 +1,12 @@
 package com.dereekb.gae.server.event.model.shared.event.service.listener.impl;
 
+import java.util.Map;
+
 import com.dereekb.gae.server.event.event.service.EventServiceListener;
 import com.dereekb.gae.server.event.model.shared.event.ModelKeyEvent;
 import com.dereekb.gae.server.event.model.shared.event.service.listener.ModelKeyEventServiceListener;
 import com.dereekb.gae.utilities.collections.map.CaseInsensitiveEntryContainer;
+import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 
 /**
  * {@link EventServiceListener} implementation for multiple model types.
@@ -15,8 +18,20 @@ public class MultiTypeModelKeyEventServiceListener extends AbstractModelKeyEvent
 
 	private CaseInsensitiveEntryContainer<ModelKeyEventServiceListener> map;
 
+	public MultiTypeModelKeyEventServiceListener() {
+		super();
+	}
+
+	public MultiTypeModelKeyEventServiceListener(Map<String, ModelKeyEventServiceListener> map) {
+		this.setMap(map);
+	}
+
 	public CaseInsensitiveEntryContainer<ModelKeyEventServiceListener> getMap() {
 		return this.map;
+	}
+
+	public void setMap(Map<String, ModelKeyEventServiceListener> map) {
+		this.setMap(new CaseInsensitiveEntryContainerImpl<ModelKeyEventServiceListener>(map));
 	}
 
 	public void setMap(CaseInsensitiveEntryContainer<ModelKeyEventServiceListener> map) {

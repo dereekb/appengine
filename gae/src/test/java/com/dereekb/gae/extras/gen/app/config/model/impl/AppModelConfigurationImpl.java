@@ -34,7 +34,6 @@ public class AppModelConfigurationImpl
 	@SuppressWarnings("unchecked")
 	private void inferClasses() {
 
-		String baseClassName = this.modelClass.getName();
 		String baseClassPath = this.modelClass.getPackage().getName();
 		String baseClassSimpleName = this.modelClass.getSimpleName();
 
