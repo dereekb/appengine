@@ -14,8 +14,8 @@ import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerControllerDelegate;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
-import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskController;
-import com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.AllocateAppsTask;
+import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController;
+import com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.AllocateAppsTask;
 
 /**
  * {@link ApiInitializeServerControllerDelegate} that initializes the server's

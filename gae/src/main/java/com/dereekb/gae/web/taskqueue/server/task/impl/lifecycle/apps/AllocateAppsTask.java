@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps;
+package com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ import com.dereekb.gae.server.mail.service.impl.MailServiceRequestImpl;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskControllerEntry;
-import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskControllerRequest;
-import com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.impl.AllocateAppsRequestImpl;
-import com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.impl.AllocateAppsResponseImpl;
+import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskControllerEntry;
+import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskControllerRequest;
+import com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.impl.AllocateAppsRequestImpl;
+import com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.impl.AllocateAppsResponseImpl;
 import com.google.apphosting.api.ApiProxy.Environment;
 
 /**

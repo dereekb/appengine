@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.taskqueue.server;
+package com.dereekb.gae.web.taskqueue.server.task;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
-import com.dereekb.gae.web.taskqueue.server.impl.TaskQueueTaskControllerRequestImpl;
+import com.dereekb.gae.web.taskqueue.server.task.impl.TaskQueueTaskControllerRequestImpl;
 
 /**
  * Arbitrary task controller.
@@ -53,9 +53,13 @@ public class TaskQueueTaskController extends CaseInsensitiveEntryContainerImpl<T
 			TaskQueueTaskControllerRequestImpl request = new TaskQueueTaskControllerRequestImpl(task, parameters);
 			entry.performTask(request);
 		} catch (RuntimeException e) {
-			LOGGER.log(Level.SEVERE, "Hook task failed.", e);
+			LOGGER.log(Level.SEVERE, "Task failed.", e);
 			throw e;
 		}
+	}
+
+	public static String pathForTask(String taskName) {
+		return String.format("/task/%s", taskName);
 	}
 
 	@Override

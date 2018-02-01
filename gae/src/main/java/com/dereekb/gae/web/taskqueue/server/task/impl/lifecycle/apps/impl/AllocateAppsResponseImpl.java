@@ -1,9 +1,9 @@
-package com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.impl;
+package com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.impl;
 
 import java.util.List;
 
 import com.dereekb.gae.server.app.model.app.App;
-import com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.AllocateAppsResponse;
+import com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.AllocateAppsResponse;
 
 /**
  * {@link AllocateAppsResponse} implementation.

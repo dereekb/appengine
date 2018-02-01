@@ -14,6 +14,7 @@ import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -29,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class AbstractSecuredClientModelRequestSender<R, S>
         implements SecuredClientModelRequestSender<R, S> {
 
-	private ObjectMapper objectMapper = new ObjectMapper();
+	private ObjectMapper objectMapper = ObjectMapperUtilityBuilderImpl.MAPPER;
 
 	private SecuredClientApiRequestSender requestSender;
 	private ClientRequestSecurity defaultServiceSecurity = ClientRequestSecurityImpl.none();

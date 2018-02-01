@@ -1,6 +1,6 @@
-package com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.impl;
+package com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.impl;
 
-import com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps.AllocateAppsRequest;
+import com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.AllocateAppsRequest;
 
 /**
  * {@link AllocateAppsRequest} implementation.

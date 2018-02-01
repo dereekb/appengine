@@ -1,9 +1,9 @@
-package com.dereekb.gae.web.taskqueue.server.impl.lifecycle;
+package com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle;
 
 import java.util.Collection;
 
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.web.taskqueue.server.impl.AbstractMultiTaskQueueTaskControllerEntry;
+import com.dereekb.gae.web.taskqueue.server.task.impl.AbstractMultiTaskQueueTaskControllerEntry;
 
 /**
  * Abstract task for initializing the server.

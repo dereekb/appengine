@@ -31,7 +31,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 /**
  * Task Queue controller used for performing custom tasks over input models.
  *
- * TODO: Consider making a builder for sequence or iterate tasks.
+ * TODO: Consider making a builder for scheduling sequence or iterate tasks.
  *
  * @author dereekb
  *
@@ -178,12 +178,12 @@ public class TaskQueueIterateController extends CaseInsensitiveEntryContainerImp
 
 	public static String pathForIterateTask(String modelType,
 	                                        String taskName) {
-		return String.format("%s/iterate/%s", modelType, taskName);
+		return String.format("/%s/iterate/%s", modelType, taskName);
 	}
 
 	public static String pathForSequenceTask(String modelType,
 	                                         String taskName) {
-		return String.format("%s/sequence/%s", modelType, taskName);
+		return String.format("/%s/sequence/%s", modelType, taskName);
 	}
 
 	// MARK: Entries

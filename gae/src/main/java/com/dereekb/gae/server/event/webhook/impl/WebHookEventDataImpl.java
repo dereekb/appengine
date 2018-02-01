@@ -4,12 +4,12 @@ import javax.validation.constraints.NotNull;
 
 import com.dereekb.gae.server.event.event.EventData;
 import com.dereekb.gae.server.event.webhook.WebHookEventData;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Abstract {@link WebHookEventData} that wraps the {@link EventData}'s type.
@@ -57,7 +57,7 @@ public class WebHookEventDataImpl
 	@JsonIgnore
 	@Override
 	public JsonNode getJsonNode() {
-		return new ObjectMapper().valueToTree(this);
+		return ObjectMapperUtilityBuilderImpl.MAPPER.valueToTree(this);
 	}
 
 	@Override

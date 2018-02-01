@@ -18,6 +18,7 @@ import com.dereekb.gae.client.api.service.response.exception.ClientResponseSeria
 import com.dereekb.gae.client.api.service.response.exception.NoClientResponseDataException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.web.error.ErrorInfo;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
@@ -49,7 +50,7 @@ public class ClientApiResponseAccessorBuilderImpl
 	private String errorsDataKey = ERRORS_KEY;
 
 	public ClientApiResponseAccessorBuilderImpl() {
-		this(new ObjectMapper());
+		this(ObjectMapperUtilityBuilderImpl.MAPPER);
 	}
 
 	public ClientApiResponseAccessorBuilderImpl(ObjectMapper objectMapper) {

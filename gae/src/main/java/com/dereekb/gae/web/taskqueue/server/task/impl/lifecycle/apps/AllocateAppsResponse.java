@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.taskqueue.server.impl.lifecycle.apps;
+package com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps;
 
 import java.util.List;
 

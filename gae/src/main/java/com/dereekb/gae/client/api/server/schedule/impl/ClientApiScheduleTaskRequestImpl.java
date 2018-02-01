@@ -1,5 +1,6 @@
 package com.dereekb.gae.client.api.server.schedule.impl;
 
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.dereekb.gae.web.api.server.schedule.impl.AbstractApiScheduleTaskRequestImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link ApiScheduleTaskRequest} implementation for clients.
@@ -54,7 +54,7 @@ public class ClientApiScheduleTaskRequestImpl extends AbstractApiScheduleTaskReq
 	public JsonNode getData() {
 		if (this.rawData != null) {
 			if (this.mappedData == null) {
-				this.mappedData = new ObjectMapper().valueToTree(this.rawData);
+				this.mappedData = ObjectMapperUtilityBuilderImpl.MAPPER.valueToTree(this.rawData);
 			}
 
 			return this.mappedData;

@@ -4,12 +4,12 @@ import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.event.impl.EventTypeImpl;
 import com.dereekb.gae.server.event.webhook.WebHookEvent;
 import com.dereekb.gae.server.event.webhook.WebHookEventData;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link WebHookEvent} implementation meant for external JSON
@@ -103,14 +103,14 @@ public class WebHookEventImpl
 	@JsonIgnore
 	@Override
 	public JsonNode getJsonNode() {
-		return new ObjectMapper().valueToTree(this);
+		return ObjectMapperUtilityBuilderImpl.MAPPER.valueToTree(this);
 	}
 
 	@JsonIgnore
 	@Override
 	public WebHookEventData getEventData() {
 		if (this.data != null) {
-			return new ObjectMapper().valueToTree(this.data);
+			return ObjectMapperUtilityBuilderImpl.MAPPER.valueToTree(this.data);
 		} else {
 			return null;
 		}

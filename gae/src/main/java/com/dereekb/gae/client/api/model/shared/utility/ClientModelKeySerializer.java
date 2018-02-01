@@ -8,6 +8,7 @@ import com.dereekb.gae.client.api.service.response.exception.ClientResponseSeria
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +26,7 @@ public class ClientModelKeySerializer {
 	private TypeModelKeyConverter keyTypeConverter;
 
 	public ClientModelKeySerializer(TypeModelKeyConverter keyTypeConverter) {
-		this(keyTypeConverter, new ObjectMapper());
+		this(keyTypeConverter, ObjectMapperUtilityBuilderImpl.MAPPER);
 	}
 
 	public ClientModelKeySerializer(TypeModelKeyConverter keyTypeConverter, ObjectMapper objectMapper) {

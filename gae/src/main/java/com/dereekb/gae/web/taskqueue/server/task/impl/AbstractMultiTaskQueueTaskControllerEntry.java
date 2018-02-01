@@ -1,11 +1,11 @@
-package com.dereekb.gae.web.taskqueue.server.impl;
+package com.dereekb.gae.web.taskqueue.server.task.impl;
 
 import com.dereekb.gae.utilities.collections.map.impl.LazyKeyedCaseInsensitiveEntryContainer;
 import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
 import com.dereekb.gae.utilities.task.Task;
-import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskControllerEntry;
-import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskControllerRequest;
-import com.dereekb.gae.web.taskqueue.server.impl.AbstractMultiTaskQueueTaskControllerEntry.TaskEntry;
+import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskControllerEntry;
+import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskControllerRequest;
+import com.dereekb.gae.web.taskqueue.server.task.impl.AbstractMultiTaskQueueTaskControllerEntry.TaskEntry;
 
 /**
  * Abstract {@link TaskQueueTaskControllerEntry} implementation.

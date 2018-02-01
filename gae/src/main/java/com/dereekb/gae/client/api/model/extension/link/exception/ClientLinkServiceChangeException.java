@@ -18,6 +18,7 @@ import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModifi
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * {@link ClientRequestFailureException} used for wrapping a
  * {@link LinkServiceChangeSetException} client side.
- * 
+ *
  * @author dereekb
  *
  */
@@ -54,13 +55,13 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 
 	/**
 	 * Used for serializing a {@link LinkServiceChangeSetException} from errors.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
 	public static class ClientLinkServiceChangeExceptionUtility {
 
-		private ObjectMapper mapper = new ObjectMapper();
+		private ObjectMapper mapper = ObjectMapperUtilityBuilderImpl.MAPPER;
 		private TypeModelKeyConverter keyConverter;
 
 		public ClientLinkServiceChangeExceptionUtility(TypeModelKeyConverter keySerializer) {
@@ -95,7 +96,7 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 		/**
 		 * Asserts that the request was successful and there are no link change
 		 * errors.
-		 * 
+		 *
 		 * @param clientResponse
 		 *            {@link ClientApiResponse}. Never {@code null}.
 		 * @throws ClientLinkServiceChangeException
@@ -120,8 +121,8 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 		 * Serializes keys from the error associated with the link change error
 		 * set codes,
 		 * {@link LinkServiceChangeSetException#API_ERROR_CODE}.
-		 * 
-		 * @param type {@link String} primary model type. 
+		 *
+		 * @param type {@link String} primary model type.
 		 * @param response
 		 *            {@link ClientApiResponse}. Never {@code null}.
 		 * @return {@link ClientLinkSystemChangeErrorSet}. Never {@code null}.
@@ -143,7 +144,7 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 
 		/**
 		 * Serializes the error back from {@link
-		 * 
+		 *
 		 * @param type
 		 * @param errorInfo
 		 * @return

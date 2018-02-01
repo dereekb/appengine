@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.taskqueue.server;
+package com.dereekb.gae.web.taskqueue.server.task;
 
 import java.util.Map;
 

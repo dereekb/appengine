@@ -22,12 +22,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ObjectMapperUtilityBuilderImpl
         implements ObjectMapperUtilityBuilder {
 
+	public static final ObjectMapper MAPPER = new ObjectMapper();
 	public static final ObjectMapperUtilityBuilder SINGLETON = new ObjectMapperUtilityBuilderImpl();
 
 	private final ObjectMapper mapper;
 
 	public ObjectMapperUtilityBuilderImpl() {
-		this(new ObjectMapper());
+		this(MAPPER);
 	}
 
 	public ObjectMapperUtilityBuilderImpl(ObjectMapper mapper) throws IllegalArgumentException {

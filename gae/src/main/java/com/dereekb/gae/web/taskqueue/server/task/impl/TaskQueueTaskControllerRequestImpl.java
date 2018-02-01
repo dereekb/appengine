@@ -1,8 +1,8 @@
-package com.dereekb.gae.web.taskqueue.server.impl;
+package com.dereekb.gae.web.taskqueue.server.task.impl;
 
 import java.util.Map;
 
-import com.dereekb.gae.web.taskqueue.server.TaskQueueTaskControllerRequest;
+import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskControllerRequest;
 
 /**
  * {@link TaskQueueTaskControllerRequest} implementation.
