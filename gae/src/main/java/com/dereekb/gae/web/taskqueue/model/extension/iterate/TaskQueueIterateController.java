@@ -48,6 +48,9 @@ public class TaskQueueIterateController extends CaseInsensitiveEntryContainerImp
 
 	public static final String SEQUENCE_KEYS_PARAM_NAME = "keys";
 
+	public static final String TASK_NAME_HEADER = "X-AppEngine-TaskName";
+	public static final String TASK_RETRY_COUNT_HEADER = "X-AppEngine-TaskExecutionCount";
+
 	/**
 	 * HTTP header for the step value.
 	 *
@@ -155,12 +158,13 @@ public class TaskQueueIterateController extends CaseInsensitiveEntryContainerImp
 	@RequestMapping(value = "/{type}/sequence/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void sequence(@PathVariable("type") String modelType,
 	                     @PathVariable("task") String taskName,
+		                 @RequestHeader(value = TASK_RETRY_COUNT_HEADER, required = false) Integer retry,
 	                     @RequestParam(SEQUENCE_KEYS_PARAM_NAME) List<String> identifiers,
 	                     @RequestParam Map<String, String> parameters) {
 
 		try {
 			TaskQueueIterateControllerEntry entry = this.getEntryForType(modelType);
-			IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, null, 0, parameters);
+			IterateTaskInputImpl input = new IterateTaskInputImpl(taskName, modelType, null, retry, parameters);
 
 			List<ModelKey> sequence = this.keyTypeConverter.convertKeys(modelType, identifiers);
 

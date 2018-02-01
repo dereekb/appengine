@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Abstract {@link SecuredClientModelRequestSender} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <R>
@@ -32,7 +32,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	private SecuredClientApiRequestSender requestSender;
-	private ClientRequestSecurity defaultServiceSecurity = new ClientRequestSecurityImpl();
+	private ClientRequestSecurity defaultServiceSecurity = ClientRequestSecurityImpl.none();
 
 	public AbstractSecuredClientModelRequestSender(SecuredClientApiRequestSender requestSender)
 	        throws IllegalArgumentException {
@@ -117,7 +117,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	// MARK: Abstract
 	/**
 	 * Builds a client request from the input data.
-	 * 
+	 *
 	 * @param request
 	 *            Input request type. Never {@code null}.
 	 * @return {@link ClientApiResponse}. Never {@code null}.
@@ -126,7 +126,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 	/**
 	 * Serializes response data into a new object.
-	 * 
+	 *
 	 * @param request
 	 *            Request. Never {@code null}.
 	 * @param response
@@ -148,7 +148,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 	/**
 	 * Serializes response data into a new object.
-	 * 
+	 *
 	 * @param request
 	 *            Request. Never {@code null}.
 	 * @param response
@@ -163,7 +163,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 	/**
 	 * {@link SerializedClientApiResponse} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
@@ -226,7 +226,7 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 	/**
 	 * Asserts that the request was successful.
-	 * 
+	 *
 	 * @param clientResponse
 	 *            {@link ClientApiResponse}. Never {@code null}.
 	 * @throws ClientRequestFailureException

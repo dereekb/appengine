@@ -8,6 +8,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfNull;
+import com.googlecode.objectify.condition.IfZero;
 
 /**
  * {@link App} {@link WebHookEvent} subscription.
@@ -44,6 +45,13 @@ public class AppHook extends AbstractLongKeyedAppRelatedModel<AppHook> {
 	 * Relative to the {@link App}'s api path.
 	 */
 	private String path;
+
+	/**
+	 * Returns the number of send failures.
+	 */
+	@Index
+	@IgnoreSave({ IfZero.class })
+	private Integer failures = 0;
 
 	// TODO: Filters and other components for restricting the hooks caught by
 	// this event.
@@ -89,6 +97,14 @@ public class AppHook extends AbstractLongKeyedAppRelatedModel<AppHook> {
 		this.path = path;
 	}
 
+	public Integer getFailures() {
+		return this.failures;
+	}
+
+	public void setFailures(Integer failures) {
+		this.failures = failures;
+	}
+
 	// ObjectifyModel
 	@Override
 	public Key<AppHook> getObjectifyKey() {
@@ -97,8 +113,8 @@ public class AppHook extends AbstractLongKeyedAppRelatedModel<AppHook> {
 
 	@Override
 	public String toString() {
-		return "AppHook [group=" + this.group + ", event=" + this.event + ", path=" + this.path + ", identifier="
-		        + this.identifier + ", app=" + this.app + ", date=" + this.date + "]";
+		return "AppHook [group=" + this.group + ", event=" + this.event + ", enabled=" + this.enabled + ", path="
+		        + this.path + ", failures=" + this.failures + "]";
 	}
 
 }

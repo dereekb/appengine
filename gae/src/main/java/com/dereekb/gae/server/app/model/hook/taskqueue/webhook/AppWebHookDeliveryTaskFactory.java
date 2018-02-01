@@ -6,24 +6,27 @@ import java.util.List;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.server.schedule.ClientScheduleTaskRequest;
 import com.dereekb.gae.client.api.server.schedule.ClientScheduleTaskService;
+import com.dereekb.gae.client.api.server.schedule.impl.ClientApiScheduleTaskRequestImpl;
 import com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskRequestImpl;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.server.app.model.hook.AppHook;
+import com.dereekb.gae.server.datastore.GetterSetter;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.objectify.components.ObjectifyKeyedGetter;
+import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyTransactionUtility;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.web.api.server.hook.HookApiScheduleTaskControllerEntry;
-import com.dereekb.gae.web.api.server.schedule.impl.ApiScheduleTaskRequestImpl;
+import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTaskFactory;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Work;
 
 /**
  * {@link TaskQueueIterateTaskFactory} implementation for {@link AppHook} that
@@ -40,11 +43,19 @@ public class AppWebHookDeliveryTaskFactory
 	public static final String EVENT_DATA_KEY = "eventdata";
 
 	private ObjectifyKeyedGetter<App> appGetter;
+	private GetterSetter<AppHook> appHookGetterSetter;
 	private ClientScheduleTaskService scheduleService;
 
 	private String scheduleTaskName = HookApiScheduleTaskControllerEntry.ENTRY_KEY;
 
-	private ObjectMapper mapper = new ObjectMapper();
+	public AppWebHookDeliveryTaskFactory(ObjectifyKeyedGetter<App> appGetter,
+	        GetterSetter<AppHook> appHookGetterSetter,
+	        ClientScheduleTaskService scheduleService) {
+		super();
+		this.setAppGetter(appGetter);
+		this.setAppHookGetterSetter(appHookGetterSetter);
+		this.setScheduleService(scheduleService);
+	}
 
 	public ObjectifyKeyedGetter<App> getAppGetter() {
 		return this.appGetter;
@@ -58,6 +69,18 @@ public class AppWebHookDeliveryTaskFactory
 		this.appGetter = appGetter;
 	}
 
+	public GetterSetter<AppHook> getAppHookGetterSetter() {
+		return this.appHookGetterSetter;
+	}
+
+	public void setAppHookGetterSetter(GetterSetter<AppHook> appHookGetterSetter) {
+		if (appHookGetterSetter == null) {
+			throw new IllegalArgumentException("appHookGetterSetter cannot be null.");
+		}
+
+		this.appHookGetterSetter = appHookGetterSetter;
+	}
+
 	public ClientScheduleTaskService getScheduleService() {
 		return this.scheduleService;
 	}
@@ -68,18 +91,6 @@ public class AppWebHookDeliveryTaskFactory
 		}
 
 		this.scheduleService = scheduleService;
-	}
-
-	public ObjectMapper getMapper() {
-		return this.mapper;
-	}
-
-	public void setMapper(ObjectMapper mapper) {
-		if (mapper == null) {
-			throw new IllegalArgumentException("mapper cannot be null.");
-		}
-
-		this.mapper = mapper;
 	}
 
 	// MARK: TaskQueueIterateTaskFactory
@@ -95,14 +106,23 @@ public class AppWebHookDeliveryTaskFactory
 	private class ScheduledAppTaskInstance
 	        implements Task<ModelKeyListAccessor<AppHook>> {
 
+		@SuppressWarnings("unused")
 		private final IterateTaskInput taskInput;
-		private transient JsonNode eventData;
+		private final ApiScheduleTaskRequest apiScheduleTaskRequest;
 
 		public ScheduledAppTaskInstance(IterateTaskInput taskInput) throws IOException {
 			this.taskInput = taskInput;
 
+			// Setup ApiScheduleTaskRequest
+			ClientApiScheduleTaskRequestImpl scheduleTaskRequest = new ClientApiScheduleTaskRequestImpl(
+			        AppWebHookDeliveryTaskFactory.this.scheduleTaskName);
+
 			String eventDataString = taskInput.getParameters().get(EVENT_DATA_KEY);
-			this.eventData = AppWebHookDeliveryTaskFactory.this.mapper.readTree(eventDataString);
+
+			// TODO: Can set tries and other arbitrary data to pass.
+
+			scheduleTaskRequest.setRawData(eventDataString);
+			this.apiScheduleTaskRequest = scheduleTaskRequest;
 		}
 
 		// MARK: Task
@@ -142,7 +162,7 @@ public class AppWebHookDeliveryTaskFactory
 			try {
 				AppWebHookDeliveryTaskFactory.this.scheduleService.scheduleTask(request, security);
 			} catch (ClientRequestFailureException e) {
-				throw new FailedTaskException(e);
+				this.handleDeliveryFailure(e, model);
 			}
 		}
 
@@ -154,14 +174,55 @@ public class AppWebHookDeliveryTaskFactory
 
 			ClientScheduleTaskRequestImpl request = new ClientScheduleTaskRequestImpl();
 			request.setRequestUrl(deliveryPath);
-
-			ApiScheduleTaskRequestImpl taskRequest = new ApiScheduleTaskRequestImpl();
-			taskRequest.setTask(AppWebHookDeliveryTaskFactory.this.scheduleTaskName);
-			taskRequest.setData(this.eventData);
-
-			request.setTaskRequest(taskRequest);
+			request.setTaskRequest(this.apiScheduleTaskRequest);
 
 			return request;
+		}
+
+		private void handleDeliveryFailure(ClientRequestFailureException e,
+		                                   AppHook model) {
+
+			FailedTaskException exception = ObjectifyTransactionUtility.newTransact()
+			        .doTransaction(new DeliveryFailureTransaction(e, model));
+
+			if (exception != null) {
+				throw exception;
+			}
+		}
+
+		private class DeliveryFailureTransaction
+		        implements Work<FailedTaskException> {
+
+			private final ModelKey appHookKey;
+			private final ClientRequestFailureException e;
+
+			public DeliveryFailureTransaction(ClientRequestFailureException e, AppHook model) {
+				this.appHookKey = model.getModelKey();
+				this.e = e;
+			}
+
+			// MARK: Work
+			@Override
+			public FailedTaskException run() {
+				AppHook hook = AppWebHookDeliveryTaskFactory.this.appHookGetterSetter.get(this.appHookKey);
+
+				if (hook == null) {
+					// Hook no longer exists. Don't send message.
+					return null;
+				}
+
+				// Only increase failures here.
+				Integer failures = hook.getFailures();
+				hook.setFailures(failures += 1);
+
+				AppWebHookDeliveryTaskFactory.this.appHookGetterSetter.update(hook);
+
+				// TODO: Consider adding another field to AppHook that shows the
+				// failures boundary, and discard once it is met.
+
+				return new FailedTaskException(this.e);
+			}
+
 		}
 
 	}

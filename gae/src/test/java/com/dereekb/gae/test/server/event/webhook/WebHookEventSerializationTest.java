@@ -33,8 +33,7 @@ public class WebHookEventSerializationTest {
 
 		// Convert to JSON
 		JsonNode node = event.getJsonNode(); // mapper.valueToTree(event);
-
-		String json = node.toString();
+		String json = mapper.writeValueAsString(node);
 
 		JsonNode readNode = mapper.readTree(json);
 

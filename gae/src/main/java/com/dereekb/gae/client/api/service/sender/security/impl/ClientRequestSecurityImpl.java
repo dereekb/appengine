@@ -17,17 +17,20 @@ public class ClientRequestSecurityImpl
 	private ClientRequestSecurityContextType securityContextType;
 
 	public ClientRequestSecurityImpl() {
-		this(ClientRequestSecurityContextType.CURRENT);
+		this(ClientRequestSecurityContextType.NONE);
 	};
 
 	public ClientRequestSecurityImpl(EncodedLoginToken overrideToken) {
-		this();
 		this.setOverrideToken(overrideToken);
 		this.setSecurityContextType(ClientRequestSecurityContextType.OVERRIDE);
 	}
 
 	private ClientRequestSecurityImpl(ClientRequestSecurityContextType securityContextType) {
 		this.setSecurityContextType(securityContextType);
+	}
+
+	public static ClientRequestSecurityImpl none() {
+		return new ClientRequestSecurityImpl(ClientRequestSecurityContextType.NONE);
 	}
 
 	public static ClientRequestSecurityImpl systemSecurity() {
