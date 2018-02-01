@@ -1,17 +1,15 @@
 package com.dereekb.gae.web.api.server.hook;
 
-import java.util.Map;
-
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.dereekb.gae.web.api.server.schedule.impl.AbstractSingleTaskApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiScheduleTaskControllerEntry {
 
-	public static final String HOOK_EVENT_GROUP_PARAM = "hookEventGroup";
-	public static final String HOOK_EVENT_CODE_PARAM = "hookEventCode";
+	public static final String ENTRY_KEY = "webhook";
 
 	@Override
 	public TaskRequest makeTaskRequest(ApiScheduleTaskRequest request)
@@ -19,11 +17,7 @@ public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiSch
 	            KeyedInvalidAttributeException,
 	            IllegalArgumentException {
 
-		Map<String, String> params = request.getEncodedParameters();
-
-		params.get(HOOK_EVENT_GROUP_PARAM);
-		params.get(HOOK_EVENT_CODE_PARAM);
-
+		JsonNode data = request.getData();
 
 		// TODO Auto-generated method stub
 		return null;

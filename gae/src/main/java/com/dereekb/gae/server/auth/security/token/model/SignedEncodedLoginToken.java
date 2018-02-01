@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.model;
 
 /**
- * {@link EncodedLoginToken} that has been signed.
+ * {@link EncodedLoginToken} that always has a signature.
  *
  * @author dereekb
  *
@@ -14,6 +14,7 @@ public interface SignedEncodedLoginToken
 	 *
 	 * @return {@link String}. Never {@code null}.
 	 */
+	@Override
 	public String getTokenSignature();
 
 }

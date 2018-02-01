@@ -24,7 +24,7 @@ public class ApiScheduleTaskRequestImpl
 
 	@NotNull
 	@NotEmpty
-	private String taskEntryName;
+	private String task;
 	private Map<String, String> encodedHeaders;
 	private Map<String, String> encodedParameters;
 	private JsonNode data;
@@ -32,16 +32,16 @@ public class ApiScheduleTaskRequestImpl
 	public ApiScheduleTaskRequestImpl() {}
 
 	public ApiScheduleTaskRequestImpl(String taskEntryName) {
-		this.setTaskEntryName(taskEntryName);
+		this.setTask(taskEntryName);
 	}
 
 	@Override
-	public String getTaskEntryName() {
-		return this.taskEntryName;
+	public String getTask() {
+		return this.task;
 	}
 
-	public void setTaskEntryName(String taskEntryName) {
-		this.taskEntryName = taskEntryName;
+	public void setTask(String taskEntryName) {
+		this.task = taskEntryName;
 	}
 
 	@Override
@@ -62,6 +62,7 @@ public class ApiScheduleTaskRequestImpl
 		this.encodedParameters = encodedParameters;
 	}
 
+	@Override
 	public JsonNode getData() {
 		return this.data;
 	}
@@ -72,8 +73,8 @@ public class ApiScheduleTaskRequestImpl
 
 	@Override
 	public String toString() {
-		return "ApiScheduleTaskRequestImpl [taskEntryName=" + this.taskEntryName + ", encodedHeaders="
-		        + this.encodedHeaders + ", encodedParameters=" + this.encodedParameters + ", data=" + this.data + "]";
+		return "ApiScheduleTaskRequestImpl [task=" + this.task + ", encodedHeaders=" + this.encodedHeaders
+		        + ", encodedParameters=" + this.encodedParameters + ", data=" + this.data + "]";
 	}
 
 }

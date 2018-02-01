@@ -1,11 +1,16 @@
 package com.dereekb.gae.server.auth.security.token.parameter.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.auth.security.token.exception.TokenMissingException;
+import com.dereekb.gae.server.auth.security.token.exception.TokenSignatureInvalidException;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterService;
 import com.dereekb.gae.server.auth.security.token.parameter.exception.InvalidAuthStringException;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 
@@ -21,12 +26,16 @@ public class AuthenticationParameterServiceImpl
 	public static final String DEFAULT_BEARER_PREFIX = "Bearer ";
 	public static final String DEFAULT_HEADER_KEY = "Authorization";
 
+	public static final String DEFAULT_SIGNATURE_HEADER = "app_proof";
+
 	public static final AuthenticationParameterService SINGLETON = new AuthenticationParameterServiceImpl();
 
 	private String headerKey = DEFAULT_HEADER_KEY;
 	private String bearerPrefix = DEFAULT_BEARER_PREFIX;
 
-	private int bearerPrefixLength = DEFAULT_BEARER_PREFIX.length();
+	private String signatureKey = DEFAULT_SIGNATURE_HEADER;
+
+	private transient int bearerPrefixLength = DEFAULT_BEARER_PREFIX.length();
 
 	public AuthenticationParameterServiceImpl() {}
 
@@ -60,6 +69,18 @@ public class AuthenticationParameterServiceImpl
 		this.bearerPrefixLength = this.bearerPrefix.length();
 	}
 
+	public String getSignatureKey() {
+		return this.signatureKey;
+	}
+
+	public void setSignatureKey(String signatureKey) {
+		if (signatureKey == null) {
+			throw new IllegalArgumentException("signatureKey cannot be null.");
+		}
+
+		this.signatureKey = signatureKey;
+	}
+
 	// MARK: Reader
 	@Override
 	public String getAuthenticationHeaderKey() {
@@ -67,14 +88,30 @@ public class AuthenticationParameterServiceImpl
 	}
 
 	@Override
+	public String getSignatureHeaderKey() {
+		return this.signatureKey;
+	}
+
+	@Override
 	public String readToken(HttpServletRequest request) throws TokenMissingException, InvalidAuthStringException {
 		String header = request.getHeader(this.headerKey);
 
-		if (header == null) {
+		if (StringUtility.isEmptyString(header)) {
 			throw new TokenMissingException();
 		}
 
 		return this.readToken(header);
+	}
+
+	@Override
+	public String readSignature(HttpServletRequest request) throws TokenSignatureInvalidException {
+		String header = request.getHeader(this.signatureKey);
+
+		if (StringUtility.isEmptyString(header)) {
+			throw new TokenSignatureInvalidException("App signature header is missing.");
+		}
+
+		return header;
 	}
 
 	@Override
@@ -89,7 +126,7 @@ public class AuthenticationParameterServiceImpl
 
 	// MARK: Builder
 	@Override
-	public KeyedEncodedParameter buildAuthenticationParameter(String token) {
+	public KeyedEncodedParameter buildTokenAuthenticationParameter(String token) throws IllegalArgumentException {
 		if (token == null) {
 			throw new IllegalArgumentException("Token cannot be null.");
 		}
@@ -99,14 +136,35 @@ public class AuthenticationParameterServiceImpl
 	}
 
 	@Override
-	public KeyedEncodedParameter buildAuthenticationParameter(EncodedLoginToken token) {
-		return this.buildAuthenticationParameter(token.getEncodedLoginToken());
+	public KeyedEncodedParameter buildSignatureAuthenticationParameter(String signature) {
+		if (signature == null) {
+			throw new IllegalArgumentException("Signature cannot be null.");
+		}
+
+		return new KeyedEncodedParameterImpl(this.signatureKey, signature);
+	}
+
+	@Override
+	public List<KeyedEncodedParameter> buildAuthenticationParameters(EncodedLoginToken token)
+	        throws IllegalArgumentException {
+		List<KeyedEncodedParameter> parameters = new ArrayList<KeyedEncodedParameter>();
+
+		String encodedToken = token.getEncodedLoginToken();
+		parameters.add(this.buildTokenAuthenticationParameter(encodedToken));
+
+		String signature = token.getTokenSignature();
+
+		if (signature != null) {
+			parameters.add(this.buildSignatureAuthenticationParameter(signature));
+		}
+
+		return parameters;
 	}
 
 	@Override
 	public String toString() {
 		return "AuthenticationParameterServiceImpl [headerKey=" + this.headerKey + ", bearerPrefix=" + this.bearerPrefix
-		        + "]";
+		        + ", signatureKey=" + this.signatureKey + "]";
 	}
 
 }

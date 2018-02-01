@@ -5,7 +5,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * {@link DecodedLoginToken} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -19,8 +19,7 @@ public class DecodedLoginTokenImpl<T extends LoginToken>
 		this.setEncodedLoginToken(encodedLoginToken);
 	}
 
-	public DecodedLoginTokenImpl(String encodedLoginToken, T loginToken)
-	        throws IllegalArgumentException {
+	public DecodedLoginTokenImpl(String encodedLoginToken, T loginToken) throws IllegalArgumentException {
 		this.setEncodedLoginToken(encodedLoginToken);
 		this.setLoginToken(loginToken);
 	}
@@ -29,6 +28,11 @@ public class DecodedLoginTokenImpl<T extends LoginToken>
 	@Override
 	public String getEncodedLoginToken() {
 		return this.encodedLoginToken;
+	}
+
+	@Override
+	public String getTokenSignature() {
+		return null;
 	}
 
 	@Override

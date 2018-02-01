@@ -141,7 +141,7 @@ public class SystemLoginTokenFactoryImpl
 	@Override
 	public KeyedEncodedParameter makeTokenHeader() throws FactoryMakeFailureException {
 		String tokenString = this.makeEncodedToken();
-		return this.authParameterBuilder.buildAuthenticationParameter(tokenString);
+		return this.authParameterBuilder.buildTokenAuthenticationParameter(tokenString);
 	}
 
 	@Deprecated

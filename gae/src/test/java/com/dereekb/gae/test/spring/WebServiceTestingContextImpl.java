@@ -172,7 +172,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	                                              String token)
 	        throws Exception {
 		if (token != null) {
-			KeyedEncodedParameter authParameter = this.authParameterService.buildAuthenticationParameter(token);
+			KeyedEncodedParameter authParameter = this.authParameterService.buildTokenAuthenticationParameter(token);
 			request.header(authParameter.keyValue(), authParameter.getParameterString());
 		}
 
@@ -327,7 +327,6 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
 
 			if (FINE_LOG_EVENTS) {
 				System.out.println("Stopped waiting for TaskQueue operation.");

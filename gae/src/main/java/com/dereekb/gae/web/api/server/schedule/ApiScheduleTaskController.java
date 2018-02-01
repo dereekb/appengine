@@ -3,8 +3,6 @@ package com.dereekb.gae.web.api.server.schedule;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,7 +25,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * <p>
  * Is administrator only, and tasks must be white-listed for use in
  * configuration.
- * 
+ *
  * @author dereekb
  *
  */
@@ -93,7 +91,7 @@ public class ApiScheduleTaskController {
 	// MARK: Internal
 	protected ApiScheduleTaskControllerEntry getEntryForRequest(ApiScheduleTaskRequest request)
 	        throws UnavailableSchedulerTaskException {
-		String taskName = request.getTaskEntryName();
+		String taskName = request.getTask();
 		ApiScheduleTaskControllerEntry entry = this.entries.get(taskName);
 
 		if (entry == null) {

@@ -50,14 +50,10 @@ public class App extends DatedDatabaseModel
 	private String name;
 
 	/**
-	 * Base server url.
+	 * Base server url. Used by various other components when resolving the
+	 * path.
 	 */
 	private String server;
-
-	/**
-	 * API Path for the server.
-	 */
-	private String api;
 
 	/**
 	 * Generated app secret. Is generally a hexadecimal value.
@@ -109,6 +105,14 @@ public class App extends DatedDatabaseModel
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getServer() {
+		return this.server;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
 	}
 
 	public String getSecret() {

@@ -10,8 +10,6 @@ import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
  */
 public interface AppLoginSecurityVerifierService {
 
-	public static final String DEFAULT_SIGNATURE_HEADER = "app_proof";
-
 	/**
 	 * Verifies a decoded token and signature for the token's app.
 	 *

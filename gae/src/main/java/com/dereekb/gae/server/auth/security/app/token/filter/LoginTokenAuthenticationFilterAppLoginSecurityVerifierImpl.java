@@ -12,6 +12,8 @@ import com.dereekb.gae.server.auth.security.token.exception.TokenSignatureInvali
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilterVerifier;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterReader;
+import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
@@ -25,34 +27,20 @@ import com.dereekb.gae.utilities.data.StringUtility;
 public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
         implements LoginTokenAuthenticationFilterVerifier<LoginToken> {
 
-	private static final String DEFAULT_HEADER = AppLoginSecurityVerifierService.DEFAULT_SIGNATURE_HEADER;
-
 	private static final Logger LOGGER = Logger
 	        .getLogger(LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl.class.getName());
 
-	private String proofHeader;
 	private AppLoginSecurityVerifierService service;
+	private AuthenticationParameterReader reader;
 
 	public LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl(AppLoginSecurityVerifierService service) {
-		this(service, DEFAULT_HEADER);
+		this(service, AuthenticationParameterServiceImpl.SINGLETON);
 	}
 
 	public LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl(AppLoginSecurityVerifierService service,
-	        String proofHeader) {
-		this.setProofHeader(proofHeader);
+	        AuthenticationParameterReader reader) {
 		this.setService(service);
-	}
-
-	public String getProofHeader() {
-		return this.proofHeader;
-	}
-
-	public void setProofHeader(String proofHeader) {
-		if (StringUtility.isEmptyString(proofHeader)) {
-			throw new IllegalArgumentException("proofHeader cannot be null.");
-		}
-
-		this.proofHeader = proofHeader;
+		this.setReader(reader);
 	}
 
 	public AppLoginSecurityVerifierService getService() {
@@ -67,6 +55,18 @@ public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
 		this.service = service;
 	}
 
+	public AuthenticationParameterReader getReader() {
+		return this.reader;
+	}
+
+	public void setReader(AuthenticationParameterReader reader) {
+		if (reader == null) {
+			throw new IllegalArgumentException("reader cannot be null.");
+		}
+
+		this.reader = reader;
+	}
+
 	// MARK: LoginTokenAuthenticationFilterVerifier
 	@Override
 	public void assertValidDecodedLoginToken(DecodedLoginToken<LoginToken> decodedLoginToken,
@@ -77,11 +77,9 @@ public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
 		String app = token.getApp();
 
 		if (StringUtility.isEmptyString(app) == false) {
-			String header = request.getHeader(this.proofHeader);
+			String signatureHeader = this.reader.readSignature(request);
 
-			if (StringUtility.isEmptyString(header)) {
-				throw new TokenSignatureInvalidException("App signature header is missing.");
-			} else if (this.service.isValidToken(decodedLoginToken, header) == false) {
+			if (this.service.isValidToken(decodedLoginToken, signatureHeader) == false) {
 
 				// TODO: If not valid, but the request is the the taskqueue,
 				// then try again with any older/stored secrets. ONLY valid for
@@ -100,8 +98,8 @@ public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
 
 	@Override
 	public String toString() {
-		return "LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl [proofHeader=" + this.proofHeader
-		        + ", service=" + this.service + "]";
+		return "LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl [service=" + this.service + ", reader="
+		        + this.reader + "]";
 	}
 
 }

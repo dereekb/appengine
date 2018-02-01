@@ -14,9 +14,7 @@ import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiReques
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenFactory;
-import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
  * {@link SecuredClientApiRequestSender} implementation.
@@ -129,17 +127,14 @@ public class SecuredClientApiRequestSenderImpl
 	protected ClientRequest buildSecuredRequest(ClientRequest request,
 	                                            ClientRequestSecurity security) {
 		ClientRequest securedRequest = null;
-		EncodedLoginToken overrideToken = security.getOverrideToken();
-		String tokenString = null;
+		EncodedLoginToken loginToken = security.getOverrideToken();
 
-		if (overrideToken == null) {
-			tokenString = this.getTokenForSecurity(security);
-		} else {
-			tokenString = overrideToken.getEncodedLoginToken();
+		if (loginToken == null) {
+			loginToken = this.getTokenForSecurity(security);
 		}
 
-		if (tokenString != null) {
-			securedRequest = new SecuredClientRequestImpl(tokenString, request);
+		if (loginToken != null) {
+			securedRequest = new SecuredClientRequestImpl(loginToken, request);
 		} else {
 			securedRequest = request;
 		}
@@ -147,27 +142,23 @@ public class SecuredClientApiRequestSenderImpl
 		return securedRequest;
 	}
 
-	protected String getTokenForSecurity(ClientRequestSecurity security) {
-		String tokenString = null;
-
+	protected EncodedLoginToken getTokenForSecurity(ClientRequestSecurity security) throws NullPointerException {
+		EncodedLoginToken token = null;
 		ClientRequestSecurityContextType type = security.getSecurityContextType();
 
 		switch (type) {
 			case CURRENT:
-				DecodedLoginToken<LoginToken> currentToken = LoginSecurityContext.getAuthentication().getCredentials();
-				tokenString = currentToken.getEncodedLoginToken();
+				token = LoginSecurityContext.getAuthentication().getCredentials();
 				break;
 			case SYSTEM:
-				tokenString = this.systemTokenFactory.makeEncodedToken();
+				token = this.systemTokenFactory.makeSystemToken();
 				break;
 			case OVERRIDE:
-				EncodedLoginToken overrideToken = security.getOverrideToken();
+				token = security.getOverrideToken();
 
-				if (overrideToken == null) {
+				if (token == null) {
 					throw new NullPointerException("Expected an override token.");
 				}
-
-				tokenString = overrideToken.getEncodedLoginToken();
 				break;
 			case NONE:
 				// No token.
@@ -176,7 +167,7 @@ public class SecuredClientApiRequestSenderImpl
 				break;
 		}
 
-		return tokenString;
+		return token;
 	}
 
 }

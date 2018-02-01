@@ -28,7 +28,7 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTas
  * @author dereekb
  *
  * @see AppHookEventListener
- * @see AppWebHookSendTaskFactory
+ * @see AppWebHookDeliveryTaskFactory
  */
 public class ScheduleAppWebHookSendTaskFactory
         implements TaskQueueIterateTaskFactory<AppHook> {
@@ -86,7 +86,7 @@ public class ScheduleAppWebHookSendTaskFactory
 
 			// Create Iterate Sequence Path
 			String taskPath = TaskQueueIterateController.pathForSequenceTask(
-			        AppHookLinkSystemBuilderEntry.LINK_MODEL_TYPE, AppWebHookSendTaskFactory.TASK_KEY);
+			        AppHookLinkSystemBuilderEntry.LINK_MODEL_TYPE, AppWebHookDeliveryTaskFactory.TASK_KEY);
 
 			TaskRequestImpl taskRequest = new TaskRequestImpl(taskPath);
 
@@ -95,7 +95,7 @@ public class ScheduleAppWebHookSendTaskFactory
 			taskRequest.replaceParameter(keysParameter);
 
 			KeyedEncodedParameter eventDataParameter = new KeyedEncodedParameterImpl(
-			        AppWebHookSendTaskFactory.EVENT_DATA_KEY, eventData);
+			        AppWebHookDeliveryTaskFactory.EVENT_DATA_KEY, eventData);
 			taskRequest.replaceParameter(eventDataParameter);
 
 			return taskRequest;

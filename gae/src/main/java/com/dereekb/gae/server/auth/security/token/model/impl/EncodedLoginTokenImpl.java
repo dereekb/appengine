@@ -4,7 +4,7 @@ import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 
 /**
  * {@link EncodedLoginToken} implementation that wraps a string token.
- * 
+ *
  * @author dereekb
  *
  */
@@ -12,9 +12,16 @@ public class EncodedLoginTokenImpl
         implements EncodedLoginToken {
 
 	private String encodedLoginToken;
+	private String tokenSignature;
 
 	public EncodedLoginTokenImpl(String encodedLoginToken) {
 		this.setEncodedLoginToken(encodedLoginToken);
+	}
+
+	public EncodedLoginTokenImpl(String encodedLoginToken, String tokenSignature) {
+		super();
+		this.setEncodedLoginToken(encodedLoginToken);
+		this.setTokenSignature(tokenSignature);
 	}
 
 	// MARK: EncodedLoginToken
@@ -29,6 +36,15 @@ public class EncodedLoginTokenImpl
 		}
 
 		this.encodedLoginToken = encodedLoginToken;
+	}
+
+	@Override
+	public String getTokenSignature() {
+		return this.tokenSignature;
+	}
+
+	public void setTokenSignature(String tokenSignature) {
+		this.tokenSignature = tokenSignature;
 	}
 
 	@Override

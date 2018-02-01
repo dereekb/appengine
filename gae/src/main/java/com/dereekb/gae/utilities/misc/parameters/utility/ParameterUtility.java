@@ -24,6 +24,15 @@ public class ParameterUtility {
 		}
 	}
 
+	public static void putAll(Map<String, String> parameters,
+	                          Iterable<KeyedEncodedParameter> keyedParameters) {
+		if (keyedParameters != null) {
+			for (KeyedEncodedParameter parameter : keyedParameters) {
+				parameters.put(parameter.getParameterKey(), parameter.getParameterString());
+			}
+		}
+	}
+
 	public static List<KeyedEncodedParameterImpl> toParametersList(EncodedQueryParameters parameters) {
 		Map<String, String> map = parameters.getParameters();
 		return KeyedEncodedParameterImpl.makeParametersWithMap(map);

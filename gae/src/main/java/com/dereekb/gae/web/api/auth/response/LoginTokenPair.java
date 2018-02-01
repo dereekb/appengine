@@ -71,6 +71,11 @@ public final class LoginTokenPair
 		return this.token;
 	}
 
+	@Override
+	public String getTokenSignature() {
+		return null;
+	}
+
 	public void setToken(String token) {
 		this.token = token;
 	}

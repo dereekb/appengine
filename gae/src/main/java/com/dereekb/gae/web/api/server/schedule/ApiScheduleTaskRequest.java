@@ -2,6 +2,8 @@ package com.dereekb.gae.web.api.server.schedule;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * Request for {@link ApiScheduleTaskController}.
  *
@@ -16,7 +18,7 @@ public interface ApiScheduleTaskRequest {
 	 *
 	 * @return {@link String}. Never {@code null}.
 	 */
-	public String getTaskEntryName();
+	public String getTask();
 
 	/**
 	 * @return {@link Map}, or {@code null} if no headers.
@@ -27,5 +29,10 @@ public interface ApiScheduleTaskRequest {
 	 * @return {@link Map}, or {@code null} if no parameters.
 	 */
 	public Map<String, String> getEncodedParameters();
+
+	/**
+	 * @return {@link JsonNode} or {@code null} if no data.
+	 */
+	public JsonNode getData();
 
 }

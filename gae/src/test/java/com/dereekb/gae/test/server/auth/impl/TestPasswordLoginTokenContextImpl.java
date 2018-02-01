@@ -250,7 +250,7 @@ public class TestPasswordLoginTokenContextImpl
 
 	/**
 	 * {@link TestLoginTokenPair} implementation.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */
@@ -274,6 +274,11 @@ public class TestPasswordLoginTokenContextImpl
 		@Override
 		public LoginPointer getLoginPointer() {
 			return this.loginPointer;
+		}
+
+		@Override
+		public String getTokenSignature() {
+			return null;
 		}
 
 		@Override

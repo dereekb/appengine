@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.service.sender.security.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.dereekb.gae.client.api.service.request.ClientRequest;
@@ -8,6 +9,7 @@ import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientRequest;
+import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterBuilder;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
@@ -17,38 +19,38 @@ import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 /**
  * {@link SecuredClientRequest} implementation that wraps a
  * {@link ClientRequest}.
- * 
+ *
  * @author dereekb
  *
  */
 public class SecuredClientRequestImpl
         implements SecuredClientRequest {
 
-	private String token;
+	private EncodedLoginToken token;
 	private ClientRequest request;
 
-	private AuthenticationParameterBuilder authParameterBuilder = AuthenticationParameterServiceImpl.SINGLETON;
+	private AuthenticationParameterBuilder authParameterBuilder;
 
-	public SecuredClientRequestImpl(String token, ClientRequest request) {
-		this.setToken(token);
-		this.setRequest(request);
+	public SecuredClientRequestImpl(EncodedLoginToken token, ClientRequest request) {
+		this(token, request, AuthenticationParameterServiceImpl.SINGLETON);
 	}
 
-	public SecuredClientRequestImpl(String token,
+	public SecuredClientRequestImpl(EncodedLoginToken token,
 	        ClientRequest request,
 	        AuthenticationParameterBuilder authParameterBuilder) {
+		super();
 		this.setToken(token);
 		this.setRequest(request);
 		this.setAuthParameterBuilder(authParameterBuilder);
 	}
 
-	public String getToken() {
+	public EncodedLoginToken getToken() {
 		return this.token;
 	}
 
-	public void setToken(String token) throws IllegalArgumentException {
-		if (token == null || token.isEmpty()) {
-			throw new IllegalArgumentException("Security token cannot be null or empty");
+	public void setToken(EncodedLoginToken token) {
+		if (token == null) {
+			throw new IllegalArgumentException("token cannot be null.");
 		}
 
 		this.token = token;
@@ -91,7 +93,7 @@ public class SecuredClientRequestImpl
 
 	@Override
 	public Parameters getHeaders() {
-		return new SecuredHeaders(this.token, this.request.getHeaders());
+		return new SecuredHeaders();
 	}
 
 	@Override
@@ -104,41 +106,41 @@ public class SecuredClientRequestImpl
 		return this.request.getData();
 	}
 
-	// MARK: SecuredClientRequest
+	// MARK:
+	@Override
+	public String getTokenSignature() {
+		return this.token.getTokenSignature();
+	}
+
 	@Override
 	public String getEncodedLoginToken() {
-		return this.getToken();
+		return this.token.getEncodedLoginToken();
 	}
 
-	// MARK: Internal
-	public KeyedEncodedParameter getAuthenticationParameter() {
-		return this.authParameterBuilder.buildAuthenticationParameter(this.token);
-	}
-
+	// MARK: SecuredClientRequest
 	private class SecuredHeaders
 	        implements Parameters {
 
-		private final String token;
-		private final Parameters parameters;
-
-		public SecuredHeaders(String token, Parameters parameters) {
-			this.token = token;
-			this.parameters = parameters;
-		}
+		private transient Map<String, String> parameters;
 
 		@Override
 		public Map<String, String> getParameters() {
-			Map<String, String> parameters = new HashMap<String, String>();
 
-			if (this.parameters != null) {
-				parameters.putAll(this.parameters.getParameters());
+			if (this.parameters == null) {
+				this.parameters = new HashMap<String, String>();
+
+				Parameters basicHeaders = SecuredClientRequestImpl.this.request.getHeaders();
+
+				if (basicHeaders != null) {
+					this.parameters.putAll(basicHeaders.getParameters());
+				}
+
+				List<KeyedEncodedParameter> authParameter = SecuredClientRequestImpl.this.authParameterBuilder
+				        .buildAuthenticationParameters(SecuredClientRequestImpl.this.token);
+				ParameterUtility.putAll(this.parameters, authParameter);
 			}
 
-			KeyedEncodedParameter authParameter = SecuredClientRequestImpl.this.authParameterBuilder
-			        .buildAuthenticationParameter(this.token);
-			ParameterUtility.put(parameters, authParameter);
-
-			return parameters;
+			return this.parameters;
 		}
 
 	}

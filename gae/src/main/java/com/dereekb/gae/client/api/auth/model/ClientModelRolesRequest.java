@@ -15,7 +15,7 @@ public interface ClientModelRolesRequest
         extends AtomicRequestOptions {
 
 	/**
-	 * Returns the list of requested contexts.s
+	 * Returns the list of requested contexts.
 	 *
 	 * @return {@link List}. Never {@code null}.
 	 */
