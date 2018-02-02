@@ -9,4 +9,9 @@ public interface AppModelConfiguration
 
 	public Class<?> getModelGeneratorClass();
 
+	/**
+	 * Whether or not the model is local to the app.
+	 */
+	public boolean isLocalModel();
+
 }

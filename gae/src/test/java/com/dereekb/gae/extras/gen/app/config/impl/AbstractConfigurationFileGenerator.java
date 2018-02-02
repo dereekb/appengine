@@ -8,6 +8,7 @@ import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.XMLGenFileImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.jamesmurty.utils.XMLBuilder2;
 
 /**
@@ -56,6 +57,19 @@ public abstract class AbstractConfigurationFileGenerator
 	public abstract GenFolder generateConfigurations();
 
 	// MARK: Utility
+	public GenFile makeImportFile(GenFolder folder) {
+		return this.makeImportFile(folder.getFolderName(), folder);
+	}
+
+	public GenFile makeImportFile(String filename,
+	                              GenFolder folder) {
+		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+		builder.importResources(folder.getFiles());
+
+		return this.makeFileWithXML(filename, builder);
+	}
+
 	public GenFile makeFileWithXML(String fileName,
 	                               SpringBeansXMLBuilder builder) {
 		return this.makeFileWithXML(fileName, builder.getRawXMLBuilder());

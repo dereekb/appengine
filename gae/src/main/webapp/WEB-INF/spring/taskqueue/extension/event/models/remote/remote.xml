@@ -9,24 +9,4 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<import resource="/webhook.xml" />
-	<import resource="/models/models.xml" />
-
-	<!-- Service -->
-	<bean id="eventService"
-		class="com.dereekb.gae.server.event.event.service.impl.EventServiceImpl">
-		<constructor-arg index="0" ref="eventServiceListeners" />
-	</bean>
-
-	<!-- Entries -->
-	<util:list id="eventServiceListeners">
-		<ref bean="modelKeyEventServiceListener" />
-	</util:list>
-	
-	<!-- Shared -->
-	<bean id="serverEventGroup" class="java.lang.String">
-		<!-- CommonEventGroup.SERVER_EVENT -->
-		<constructor-arg index="0" value="server" />
-	</bean>
-
 </beans>

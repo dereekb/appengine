@@ -22,11 +22,11 @@ public class CaseInsensitiveEntryContainerImpl<T>
 		this(new CaseInsensitiveMap<T>());
 	}
 
-	public CaseInsensitiveEntryContainerImpl(Map<String, T> entries) {
+	public CaseInsensitiveEntryContainerImpl(Map<String, ? extends T> entries) {
 		this.setEntries(entries);
 	}
 
-	public CaseInsensitiveEntryContainerImpl(CaseInsensitiveMap<T> entries) {
+	public CaseInsensitiveEntryContainerImpl(CaseInsensitiveMap<? extends T> entries) {
 		this.setEntries(entries);
 	}
 
@@ -35,7 +35,7 @@ public class CaseInsensitiveEntryContainerImpl<T>
 		return this.entries;
 	}
 
-	public final void setEntries(Map<String, T> entries) {
+	public final void setEntries(Map<String, ? extends T> entries) {
 		if (entries == null) {
 			throw new IllegalArgumentException("entries cannot be null.");
 		}

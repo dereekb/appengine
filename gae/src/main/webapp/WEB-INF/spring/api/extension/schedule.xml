@@ -25,7 +25,6 @@
 	<!-- Hooks/Events -->
 	<bean id="scheduleWebHookEvent"
 		class="com.dereekb.gae.web.api.server.hook.HookApiScheduleTaskControllerEntry">
-
 	</bean>
 
 	<!-- Unique Patches -->

@@ -10,7 +10,7 @@ import com.dereekb.gae.server.event.webhook.service.WebHookEventSerializer;
 
 /**
  * Used for serializing {@link ModelEvent} and {@link ModelKeyEvent} instances
- * to a {@link WebHookEvent}.
+ * to a {@link WebHookEvent} for a specific type.
  *
  * @author dereekb
  *

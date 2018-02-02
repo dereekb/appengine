@@ -55,4 +55,16 @@ public interface SpringBeansXMLBuilder
 	// Comment
 	public void comment(String comment);
 
+	// Utility Beans
+	public <T> SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> valueBean(String id,
+	                                                                      T value);
+
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> stringBean(String id,
+	                                                                   String value);
+
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> integerBean(String id,
+	                                                                    Integer value);
+
+	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id);
+
 }

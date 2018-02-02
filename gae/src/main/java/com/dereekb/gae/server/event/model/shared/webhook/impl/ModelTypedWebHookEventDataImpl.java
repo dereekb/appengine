@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class ModelTypedWebHookEventDataImpl extends WebHookEventDataImpl
         implements TypedModel {
 
+	public static final String MODEL_TYPE_FIELD = "modelType";
+
 	@NotNull
 	private String modelType;
 

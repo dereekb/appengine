@@ -9,6 +9,8 @@ import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBean;
  *
  * @author dereekb
  *
+ * @param <T>
+ *            return type
  */
 public interface SpringBeansXMLBeanBuilder<T>
         extends SpringBeansXMLBuilderEntity<T> {

@@ -77,4 +77,9 @@ public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiSch
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "HookApiScheduleTaskControllerEntry [mapper=" + this.mapper + "]";
+	}
+
 }

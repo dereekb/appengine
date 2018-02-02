@@ -16,11 +16,9 @@ import com.dereekb.gae.server.event.model.shared.event.ModelEventData;
 import com.dereekb.gae.server.event.model.shared.event.impl.ModelEventDataImpl;
 import com.dereekb.gae.server.event.model.shared.event.impl.ModelEventImpl;
 import com.dereekb.gae.server.event.model.shared.webhook.ModelWebHookEventDeserializer;
+import com.dereekb.gae.server.event.model.shared.webhook.impl.utility.WebHookEventDataDeserializerUtility;
 import com.dereekb.gae.server.event.webhook.WebHookEvent;
 import com.dereekb.gae.server.event.webhook.WebHookEventData;
-import com.dereekb.gae.utilities.data.ObjectMapperUtility;
-import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * {@link ModelWebHookEventDeserializer} implementation.
@@ -87,40 +85,30 @@ public class ModelWebHookEventDeserializerImpl<T extends UniqueModel, D extends 
 	}
 
 	protected ModelEventData<T> convertEventData(WebHookEventData webHookEventData) {
-		JsonNode rootData = webHookEventData.getJsonNode();
+		WebHookEventDataDeserializerUtility utility = new WebHookEventDataDeserializerUtility(webHookEventData);
 
-		if (rootData.has(ModelWebHookEventDataImpl.MODELS_KEY)) {
-			// Convert models.
-			return this.convertModelsEventData(webHookEventData);
-		} else if (rootData.has(ModelKeyWebHookEventDataImpl.KEYS_KEY)) {
-			// Convert keys.
-			return this.convertKeysEventData(webHookEventData);
-		} else {
-			throw new ConversionFailureException("Data was unfamiliar.");
+		switch (utility.getType()) {
+			case KEYS:
+				// Convert keys.
+				return this.convertKeysEventData(utility);
+			case MODELS:
+				// Convert models.
+				return this.convertModelsEventData(utility);
+			case INVALID:
+			default:
+				throw new ConversionFailureException("Data was unfamiliar.");
 		}
 	}
 
-	private ModelEventData<T> convertKeysEventData(WebHookEventData webHookEventData) {
-
-		JsonNode rootData = webHookEventData.getJsonNode();
-		JsonNode keysNode = rootData.get(ModelKeyWebHookEventDataImpl.KEYS_KEY);
-
-		ObjectMapperUtility utility = ObjectMapperUtilityBuilderImpl.SINGLETON.nullSafe().make();
-
-		List<String> stringKeys = utility.safeMapArrayToList(keysNode, String.class);
+	private ModelEventData<T> convertKeysEventData(WebHookEventDataDeserializerUtility utility) {
+		List<String> stringKeys = utility.getStringKeys();
 		ModelKeyListAccessor<T> accessor = this.accessorFactory.createAccessorWithStringKeys(stringKeys);
-
 		return new ModelEventDataImpl<T>(accessor);
 	}
 
-	private ModelEventData<T> convertModelsEventData(WebHookEventData webHookEventData) {
+	private ModelEventData<T> convertModelsEventData(WebHookEventDataDeserializerUtility utility) {
 
-		JsonNode rootData = webHookEventData.getJsonNode();
-		JsonNode modelsNode = rootData.get(ModelWebHookEventDataImpl.MODELS_KEY);
-
-		ObjectMapperUtility utility = ObjectMapperUtilityBuilderImpl.SINGLETON.nullSafe().make();
-
-		List<D> modelData = utility.safeMapArrayToList(modelsNode, this.typedConverter.getModelDataClass());
+		List<D> modelData = utility.serializeModels(this.typedConverter.getModelDataClass());
 		List<T> models = this.typedConverter.convertFrom(modelData);
 
 		ModelKeyListAccessor<T> accessor = this.accessorFactory.createAccessorWithModels(models);

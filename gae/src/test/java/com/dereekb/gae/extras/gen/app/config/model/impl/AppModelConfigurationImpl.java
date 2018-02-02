@@ -9,6 +9,8 @@ import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 public class AppModelConfigurationImpl
         implements AppModelConfiguration, AppModelBeansConfiguration {
 
+	private boolean localModel = true;
+
 	private String modelType;
 	private Class<Object> modelClass;
 	private Class<Object> modelDataClass;
@@ -18,12 +20,17 @@ public class AppModelConfigurationImpl
 	private AppModelBeansConfiguration beansConfiguration;
 
 	public AppModelConfigurationImpl(Class<?> modelClass) {
-		this(modelClass, modelClass.getSimpleName());
+		this(modelClass, true);
+	}
+
+	public AppModelConfigurationImpl(Class<?> modelClass, boolean localModel) {
+		this(modelClass, modelClass.getSimpleName(), localModel);
 	}
 
 	@SuppressWarnings("unchecked")
-	public AppModelConfigurationImpl(Class<?> modelClass, String modelType) {
+	public AppModelConfigurationImpl(Class<?> modelClass, String modelType, boolean localModel) {
 		super();
+		this.setLocalModel(localModel);
 		this.setModelClass((Class<Object>) modelClass);
 		this.setModelType(modelType);
 
@@ -51,6 +58,15 @@ public class AppModelConfigurationImpl
 
 	protected void resetBeans() {
 		this.setBeansConfiguration(new AppModelBeansConfigurationImpl(this.modelType));
+	}
+
+	@Override
+	public boolean isLocalModel() {
+		return this.localModel;
+	}
+
+	public void setLocalModel(boolean localModel) {
+		this.localModel = localModel;
 	}
 
 	@Override

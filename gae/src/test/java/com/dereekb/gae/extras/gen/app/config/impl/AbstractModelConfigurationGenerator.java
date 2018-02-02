@@ -27,10 +27,12 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 
 	private boolean splitByModel = false;
 	private boolean splitByGroup = false;
+	private boolean ignoreLocal = false;
+	private boolean ignoreRemote = true;
 	private boolean makeImportFile = true;
 
 	public AbstractModelConfigurationGenerator(AppConfiguration appConfig) {
-		super(appConfig);
+		this(appConfig, null);
 	}
 
 	public AbstractModelConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
@@ -49,12 +51,36 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		this.resultsFolderName = resultsFolderName;
 	}
 
+	public boolean isSplitByModel() {
+		return this.splitByModel;
+	}
+
+	public void setSplitByModel(boolean splitByModel) {
+		this.splitByModel = splitByModel;
+	}
+
 	public boolean isSplitByGroup() {
 		return this.splitByGroup;
 	}
 
 	public void setSplitByGroup(boolean splitByGroup) {
 		this.splitByGroup = splitByGroup;
+	}
+
+	public boolean isIgnoreLocal() {
+		return this.ignoreLocal;
+	}
+
+	public void setIgnoreLocal(boolean ignoreLocal) {
+		this.ignoreLocal = ignoreLocal;
+	}
+
+	public boolean isIgnoreRemote() {
+		return this.ignoreRemote;
+	}
+
+	public void setIgnoreRemote(boolean ignoreRemote) {
+		this.ignoreRemote = ignoreRemote;
 	}
 
 	public boolean isMakeImportFile() {
@@ -72,31 +98,16 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 	}
 
 	private final GenFolderImpl makeModelClientConfigurations() {
+		return this.makeGeneratorForConfiguration()
+		        .makeModelConfigurations(this.getAppConfig().getModelConfigurations());
+	}
+
+	public ModelClientConfigurationGenerator makeGeneratorForConfiguration() {
 		if (this.isSplitByGroup()) {
-			return this.makeModelClientConfigurationsSplitByGroup();
+			return new SplitByGroupModelClientConfigurationGenerator();
 		} else {
-			return this.makeModelClientConfigurationsTogether();
+			return new TogetherModelClientConfigurationGenerator();
 		}
-	}
-
-	public GenFolderImpl makeModelClientConfigurationsSplitByGroup() {
-		GenFolderImpl folder = new GenFolderImpl(this.resultsFolderName);
-
-		for (AppModelConfigurationGroup groupConfig : this.getAppConfig().getModelConfigurations()) {
-			folder.addFolder(this.makeModelClientConfigurationsForModels(groupConfig));
-		}
-
-		return folder;
-	}
-
-	public GenFolderImpl makeModelClientConfigurationsTogether() {
-		GenFolderImpl folder = new GenFolderImpl(this.resultsFolderName);
-
-		for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
-			folder.merge(this.makeModelClientConfigurationsForModels(group.getModelConfigurations()));
-		}
-
-		return folder;
 	}
 
 	public GenFolderImpl makeModelClientConfigurationsForModels(AppModelConfigurationGroup group) {
@@ -165,6 +176,45 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		throw new UnsupportedOperationException("Override in subclass to use.");
+	}
+
+	// MARK: Generator
+	public interface ModelClientConfigurationGenerator {
+
+		public GenFolderImpl makeModelConfigurations(List<AppModelConfigurationGroup> groups);
+
+	}
+
+	public class SplitByGroupModelClientConfigurationGenerator
+	        implements ModelClientConfigurationGenerator {
+
+		@Override
+		public GenFolderImpl makeModelConfigurations(List<AppModelConfigurationGroup> groups) {
+			GenFolderImpl folder = new GenFolderImpl(AbstractModelConfigurationGenerator.this.resultsFolderName);
+
+			for (AppModelConfigurationGroup groupConfig : groups) {
+				folder.addFolder(makeModelClientConfigurationsForModels(groupConfig));
+			}
+
+			return folder;
+		}
+
+	}
+
+	public class TogetherModelClientConfigurationGenerator
+	        implements ModelClientConfigurationGenerator {
+
+		@Override
+		public GenFolderImpl makeModelConfigurations(List<AppModelConfigurationGroup> groups) {
+			GenFolderImpl folder = new GenFolderImpl(AbstractModelConfigurationGenerator.this.resultsFolderName);
+
+			for (AppModelConfigurationGroup group : groups) {
+				folder.merge(makeModelClientConfigurationsForModels(group.getModelConfigurations()));
+			}
+
+			return folder;
+		}
+
 	}
 
 }

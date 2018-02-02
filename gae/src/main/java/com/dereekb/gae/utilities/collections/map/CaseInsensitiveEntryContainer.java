@@ -19,7 +19,7 @@ public interface CaseInsensitiveEntryContainer<T> {
 	 *
 	 * @return {@link Map}. Never {@code null}.
 	 */
-	public Map<String, T> getEntries();
+	public Map<String, ? extends T> getEntries();
 
 	/**
 	 * Returns the entry for the type, if it exists.

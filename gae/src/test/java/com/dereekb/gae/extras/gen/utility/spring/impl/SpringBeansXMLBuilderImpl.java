@@ -8,6 +8,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBu
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanPropertyBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilderEntity;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBean;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBeanConstructor;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLProperty;
@@ -100,6 +101,30 @@ public class SpringBeansXMLBuilderImpl
 		this.beansBuilder.comment(comment);
 	}
 
+	@Override
+	public <T> SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> valueBean(String id,
+	                                                                      T value) {
+		return this.bean(id).beanClass(value.getClass()).constructor().value(value.toString()).up();
+	}
+
+	@Override
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> stringBean(String id,
+	                                                                   String value) {
+		return this.bean(id).beanClass(String.class).constructor().value(value).up();
+	}
+
+	@Override
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> integerBean(String id,
+	                                                                    Integer value) {
+		return this.bean(id).beanClass(Integer.class).constructor().value(value.toString()).up();
+	}
+
+	@Override
+	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	// MARK: Bean
 	public static final String IMPORT_ELEMENT = "import";
 	public static final String IMPORT_ELEMENT_RESOURCE_ATTR = "resource";
@@ -151,7 +176,8 @@ public class SpringBeansXMLBuilderImpl
 
 		@Override
 		public SpringBeansXMLBeanPropertyBuilder<SpringBeansXMLBeanBuilder<T>> property(String name) {
-			return new SpringBeansXMLBeanPropertyBuilderImpl<SpringBeansXMLBeanBuilder<T>>(this, this.builder).name(name);
+			return new SpringBeansXMLBeanPropertyBuilderImpl<SpringBeansXMLBeanBuilder<T>>(this, this.builder)
+			        .name(name);
 		}
 
 		@Override
@@ -208,6 +234,12 @@ public class SpringBeansXMLBuilderImpl
 		@Override
 		public SpringBeansXMLBeanConstructorBuilder<T> ref(String ref) {
 			this.nextArgBuilder().a(SpringBeansXMLBeanConstructor.ARG_REF_ATTRIBUTE, ref);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanConstructorBuilder<T> value(String value) {
+			this.nextArgBuilder().a(SpringBeansXMLBeanConstructor.ARG_VALUE_ATTRIBUTE, value);
 			return this;
 		}
 

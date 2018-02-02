@@ -9,6 +9,17 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Imports -->
+	<import resource="/local/local.xml" />
+	<import resource="/remote/remote.xml" />
+	<import resource="/webhook.xml" />
+
+	<!-- Shared -->
+	<bean id="modelEventGroup" class="java.lang.String">
+		<!-- CommonEventGroup.MODEL_EVENT -->
+		<constructor-arg index="0" value="model" />
+	</bean>
+
 	<!-- Multi-event Listener -->
 	<bean id="modelKeyEventServiceListener"
 		class="com.dereekb.gae.server.event.model.shared.event.service.listener.impl.MultiTypeModelKeyEventServiceListener">

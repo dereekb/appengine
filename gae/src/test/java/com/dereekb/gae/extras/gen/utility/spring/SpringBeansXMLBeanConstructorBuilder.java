@@ -13,4 +13,6 @@ public interface SpringBeansXMLBeanConstructorBuilder<T>
 
 	public SpringBeansXMLBeanConstructorBuilder<T> ref(String ref);
 
+	public SpringBeansXMLBeanConstructorBuilder<T> value(String value);
+
 }
