@@ -9,7 +9,13 @@ package com.dereekb.gae.extras.gen.utility.spring;
  *            return type
  */
 public interface SpringBeansXMLListBuilder<T>
-        extends SpringBeansXMLBuilderEntity<T> {
+        extends SpringBeansXMLUtilBeanBuilderEntity<T> {
+
+	public static final String ROOT_LIST_ELEMENT = "util:list";
+	public static final String LIST_ELEMENT = "list";
+
+	public static final String LIST_CLASS_ATTRIBUTE = "list-class";
+	public static final String VALUE_CLASS_ATTRIBUTE = "value-type";
 
 	/**
 	 * Only allowed on root-level list beans.

@@ -19,12 +19,13 @@ import com.dereekb.gae.server.event.model.shared.event.service.listener.impl.Mul
  */
 public class TaskQueueModelHooksConfigurationGenerator extends AbstractRemoteModelConfigurationGenerator {
 
-	public static final String MODELS_FILE_NAME = "models";
+	public static final String MODELS_FOLDER_NAME = "model";
+	public static final String MODELS_FILE_NAME = "model";
 	public static final String MODELS_WEBHOOK_FILE_NAME = "webhook";
 
 	public TaskQueueModelHooksConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
-		this.setResultsFolderName("models");
+		this.setResultsFolderName(MODELS_FOLDER_NAME);
 	}
 
 	public TaskQueueModelHooksConfigurationGenerator(AppConfiguration appConfig) {
@@ -76,6 +77,8 @@ public class TaskQueueModelHooksConfigurationGenerator extends AbstractRemoteMod
 
 		builder.comment("Entries");
 		builder.list("modelKeyEventServiceListenerEntries");
+
+		// TODO: Add Listeners
 
 		return this.makeFileWithXML(MODELS_FILE_NAME, builder);
 	}

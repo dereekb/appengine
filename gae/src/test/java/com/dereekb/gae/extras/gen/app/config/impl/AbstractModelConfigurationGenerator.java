@@ -126,8 +126,10 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		List<GenFolder> results = new ArrayList<GenFolder>();
 
 		for (AppModelConfiguration modelConfig : modelConfigs) {
-			GenFolder result = this.makeModelClientConfiguration(modelConfig);
-			results.add(result);
+			if (this.shouldMakeModelConfiguration(modelConfig)) {
+				GenFolder result = this.makeModelClientConfiguration(modelConfig);
+				results.add(result);
+			}
 		}
 
 		if (!this.splitByModel) {
@@ -137,6 +139,16 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		}
 
 		return results;
+	}
+
+	protected boolean shouldMakeModelConfiguration(AppModelConfiguration modelConfig) {
+		boolean local = modelConfig.isLocalModel();
+
+		if (local) {
+			return !this.ignoreLocal;
+		} else {
+			return !this.ignoreRemote;
+		}
 	}
 
 	public GenFolder makeModelClientConfiguration(AppModelConfiguration modelConfig) {
@@ -215,6 +227,25 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 			return folder;
 		}
 
+	}
+
+	// MARK: Utility
+	protected List<AppModelConfiguration> getAllApplicableConfigurations() {
+		return this.getAllApplicableConfigurations(this.getAppConfig().getModelConfigurations());
+	}
+
+	protected List<AppModelConfiguration> getAllApplicableConfigurations(List<AppModelConfigurationGroup> groups) {
+		List<AppModelConfiguration> configs = new ArrayList<AppModelConfiguration>();
+
+		for (AppModelConfigurationGroup groupConfig : groups) {
+			for (AppModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
+				if (this.shouldMakeModelConfiguration(modelConfig)) {
+					configs.add(modelConfig);
+				}
+			}
+		}
+
+		return configs;
 	}
 
 }

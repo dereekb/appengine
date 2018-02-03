@@ -22,7 +22,7 @@
 	</bean>
 
 	<util:map id="taskQueueTaskControllerEntries" key-type="java.lang.String">
-		<entry key="webhooks" value-ref="t"></entry>
+		<entry key="webhooks" value-ref="scheduleWebHookEvent"></entry>
 	</util:map>
 
 </beans>

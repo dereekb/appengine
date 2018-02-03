@@ -6,7 +6,7 @@ package com.dereekb.gae.extras.gen.utility.spring;
  * @author dereekb
  *
  * @param <T>
- *            entity type
+ *            parent type
  */
 public interface SpringBeansXMLBuilderEntity<T>
         extends SpringBeansXMLObject {

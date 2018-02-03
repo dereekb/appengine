@@ -11,6 +11,8 @@ public class AppModelConfigurationImpl
 
 	private boolean localModel = true;
 
+	private boolean iterateControllerEntry = true;
+
 	private String modelType;
 	private Class<Object> modelClass;
 	private Class<Object> modelDataClass;
@@ -163,6 +165,11 @@ public class AppModelConfigurationImpl
 	@Override
 	public String getModelRegistryId() {
 		return this.beansConfiguration.getModelRegistryId();
+	}
+
+	@Override
+	public boolean hasIterateControllerEntry() {
+		return this.iterateControllerEntry;
 	}
 
 }

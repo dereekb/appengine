@@ -14,4 +14,6 @@ public interface AppModelConfiguration
 	 */
 	public boolean isLocalModel();
 
+	public boolean hasIterateControllerEntry();
+
 }

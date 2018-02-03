@@ -9,6 +9,9 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanPropertyBuild
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilderEntity;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapEntryBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLUtilBeanBuilderEntity;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBean;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBeanConstructor;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLProperty;
@@ -121,8 +124,12 @@ public class SpringBeansXMLBuilderImpl
 
 	@Override
 	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SpringBeansXMLListBuilderImpl<SpringBeansXMLBuilder>(this, this.beansBuilder, id);
+	}
+
+	@Override
+	public SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> map(String id) {
+		return new SpringBeansXMLMapBuilderImpl<SpringBeansXMLBuilder>(this, this.beansBuilder, id);
 	}
 
 	// MARK: Bean
@@ -209,6 +216,170 @@ public class SpringBeansXMLBuilderImpl
 
 	}
 
+	private class SpringBeansXMLListBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
+	        implements SpringBeansXMLListBuilder<T> {
+
+		public SpringBeansXMLListBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		public SpringBeansXMLListBuilderImpl(T parent, XMLBuilder2 builder, String beanId) {
+			super(parent, builder);
+			this.id(beanId);
+		}
+
+		@Override
+		protected String getRootBeanName() {
+			return SpringBeansXMLListBuilder.ROOT_LIST_ELEMENT;
+		}
+
+		@Override
+		protected String getNonRootBeanName() {
+			return SpringBeansXMLListBuilder.LIST_ELEMENT;
+		}
+
+		// MARK: SpringBeansXMLBeanBuilder
+		@Override
+		public SpringBeansXMLListBuilder<T> id(String beanId) {
+			this.builder.a(SpringBeansXMLBean.ID_ATTRIBUTE, beanId);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLListBuilder<T> type(Class<T> type) {
+			this.builder.a(SpringBeansXMLListBuilder.VALUE_CLASS_ATTRIBUTE, type.getCanonicalName());
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLListBuilder<T> ref(String ref) {
+			this.builder.e("ref").a("bean", ref);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLListBuilder<T> value(String value) {
+			this.builder.e("value").text(value);
+			return this;
+		}
+
+	}
+
+	private class SpringBeansXMLMapBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
+	        implements SpringBeansXMLMapBuilder<T> {
+
+		public SpringBeansXMLMapBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		public SpringBeansXMLMapBuilderImpl(T parent, XMLBuilder2 builder, String beanId) {
+			super(parent, builder);
+			this.id(beanId);
+		}
+
+		@Override
+		protected String getRootBeanName() {
+			return SpringBeansXMLMapBuilder.ROOT_LIST_ELEMENT;
+		}
+
+		@Override
+		protected String getNonRootBeanName() {
+			return SpringBeansXMLMapBuilder.LIST_ELEMENT;
+		}
+
+		// MARK: SpringBeansXMLBeanBuilder
+		@Override
+		public SpringBeansXMLMapBuilder<T> id(String beanId) {
+			this.builder.a(SpringBeansXMLBean.ID_ATTRIBUTE, beanId);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLMapBuilder<T> keyType(Class<?> type) {
+			this.builder.a(SpringBeansXMLMapBuilder.KEY_TYPE_ATTRIBUTE, type.getCanonicalName());
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key) {
+			return new SpringBeansXMLMapEntryBuilderImpl<SpringBeansXMLMapBuilder<T>>(this, this.builder).key(key);
+		}
+
+		@Override
+		public SpringBeansXMLMapBuilder<T> keyValueRefEntry(String key,
+		                                                    String valueRef) {
+			this.entry(key).valueRef(valueRef);
+			return this;
+		}
+
+	}
+
+	private class SpringBeansXMLMapEntryBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
+	        implements SpringBeansXMLMapEntryBuilder<T> {
+
+		public SpringBeansXMLMapEntryBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		// MARK: Init
+		@Override
+		protected XMLBuilder2 makeBuilderForElement(XMLBuilder2 builder) {
+			return builder.e(SpringBeansXMLMapEntryBuilder.ELEMENT);
+		}
+
+		// MARK: SpringBeansXMLBeanPropertyBuilder
+		@Override
+		public SpringBeansXMLMapEntryBuilder<T> key(String key) {
+			this.builder.a(SpringBeansXMLMapEntryBuilder.KEY_ATTRIBUTE, key);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLMapEntryBuilder<T> keyRef(String keyRef) {
+			this.builder.a(SpringBeansXMLMapEntryBuilder.KEY_REF_ATTRIBUTE, keyRef);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLMapEntryBuilder<T> valueRef(String beanRef) {
+			this.builder.a(SpringBeansXMLMapEntryBuilder.VALUE_REF_ATTRIBUTE, beanRef);
+			return this;
+		}
+
+	}
+
+	private abstract class AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
+	        implements SpringBeansXMLUtilBeanBuilderEntity<T> {
+
+		private final boolean isRootBean;
+
+		public AbstractSpringBeansXMLUtilBeanBuilderEntityImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+			this.isRootBean = builder.equals(SpringBeansXMLBuilderImpl.this.beansBuilder);
+		}
+
+		@Override
+		protected XMLBuilder2 makeBuilderForElement(XMLBuilder2 builder) {
+			if (this.isRootBean()) {
+				return builder.e(this.getRootBeanName());
+			} else {
+				return builder.e(this.getNonRootBeanName());
+			}
+		}
+
+		// MARK: SpringBeansXMLUtilBeanBuilderEntity
+		@Override
+		public boolean isRootBean() {
+			return this.isRootBean;
+		}
+
+		// MARK: Internal
+		protected abstract String getRootBeanName();
+
+		protected abstract String getNonRootBeanName();
+
+	}
+
 	// MARK: Bean Constructor Arg
 	private class SpringBeansXMLBeanConstructorBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
 	        implements SpringBeansXMLBeanConstructorBuilder<T> {
@@ -248,6 +419,18 @@ public class SpringBeansXMLBuilderImpl
 			this.nextArgIndex += 1;
 			return this.builder.e(SpringBeansXMLBeanConstructor.ARG_ELEMENT)
 			        .a(SpringBeansXMLBeanConstructor.ARG_INDEX_ATTRIBUTE, arg.toString());
+		}
+
+		@Override
+		public SpringBeansXMLMapBuilder<SpringBeansXMLBeanConstructorBuilder<T>> map() {
+			XMLBuilder2 builder = this.nextArgBuilder();
+			return new SpringBeansXMLMapBuilderImpl<SpringBeansXMLBeanConstructorBuilder<T>>(this, builder);
+		}
+
+		@Override
+		public SpringBeansXMLListBuilder<SpringBeansXMLBeanConstructorBuilder<T>> list() {
+			XMLBuilder2 builder = this.nextArgBuilder();
+			return new SpringBeansXMLListBuilderImpl<SpringBeansXMLBeanConstructorBuilder<T>>(this, builder);
 		}
 
 	}

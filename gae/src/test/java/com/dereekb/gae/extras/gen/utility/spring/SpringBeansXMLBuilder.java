@@ -67,4 +67,6 @@ public interface SpringBeansXMLBuilder
 
 	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id);
 
+	public SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> map(String id);
+
 }

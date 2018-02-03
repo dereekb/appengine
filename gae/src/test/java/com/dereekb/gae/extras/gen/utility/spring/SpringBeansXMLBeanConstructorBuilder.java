@@ -15,4 +15,8 @@ public interface SpringBeansXMLBeanConstructorBuilder<T>
 
 	public SpringBeansXMLBeanConstructorBuilder<T> value(String value);
 
+	public SpringBeansXMLMapBuilder<SpringBeansXMLBeanConstructorBuilder<T>> map();
+
+	public SpringBeansXMLListBuilder<SpringBeansXMLBeanConstructorBuilder<T>> list();
+
 }
