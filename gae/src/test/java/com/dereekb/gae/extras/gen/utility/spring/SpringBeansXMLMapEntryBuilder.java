@@ -18,10 +18,12 @@ public interface SpringBeansXMLMapEntryBuilder<T>
 	public static final String KEY_REF_ATTRIBUTE = "key-ref";
 	public static final String VALUE_REF_ATTRIBUTE = "value-ref";
 
+	public SpringBeansXMLMapEntryBuilder<T> key(String key, boolean ref);
+
 	public SpringBeansXMLMapEntryBuilder<T> key(String key);
 
 	public SpringBeansXMLMapEntryBuilder<T> keyRef(String beanRef);
-	public SpringBeansXMLMapEntryBuilder<T> valueRef(String beanRef);
 
+	public SpringBeansXMLMapEntryBuilder<T> valueRef(String beanRef);
 
 }

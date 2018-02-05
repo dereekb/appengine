@@ -65,6 +65,7 @@ public abstract class AbstractConfigurationFileGenerator
 	                              GenFolder folder) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
+		builder.comment("Import");
 		builder.importResources(folder.getFiles());
 
 		return this.makeFileWithXML(filename, builder);

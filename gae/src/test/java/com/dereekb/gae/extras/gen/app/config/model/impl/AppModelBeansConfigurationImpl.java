@@ -18,6 +18,7 @@ public class AppModelBeansConfigurationImpl
 	private String modelDtoBeanId;
 	private String modelDataConverterBeanId;
 	private String modelRegistryId;
+	private String modelKeyListAccessorFactoryId;
 
 	public AppModelBeansConfigurationImpl(String modelType) {
 		String modelBeanPrefix = StringUtility.firstLetterLowerCase(modelType);
@@ -28,6 +29,7 @@ public class AppModelBeansConfigurationImpl
 		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
+		this.setModelRegistryId(modelBeanPrefix + "KeyListAccessorFactory");
 	}
 
 	@Override
@@ -106,6 +108,19 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelRegistryId = modelRegistryId;
+	}
+
+	@Override
+	public String getModelKeyListAccessorFactoryId() {
+		return this.modelKeyListAccessorFactoryId;
+	}
+
+	public void setModelKeyListAccessorFactoryId(String modelKeyListAccessorFactoryId) {
+		if (modelKeyListAccessorFactoryId == null) {
+			throw new IllegalArgumentException("modelKeyListAccessorFactoryId cannot be null.");
+		}
+
+		this.modelKeyListAccessorFactoryId = modelKeyListAccessorFactoryId;
 	}
 
 }

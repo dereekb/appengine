@@ -76,7 +76,8 @@ public class XMLGenFileImpl extends AbstractGenFileImpl {
 
 	@Override
 	public String toString() {
-		return "XMLGenFileImpl [result=" + this.result + ", outputProperties=" + this.outputProperties + "]";
+		return "XMLGenFileImpl [result=" + this.result + ", outputProperties=" + this.outputProperties
+		        + ", getFileName()=" + this.getFileName() + ", getFileType()=" + this.getFileType() + "]";
 	}
 
 }

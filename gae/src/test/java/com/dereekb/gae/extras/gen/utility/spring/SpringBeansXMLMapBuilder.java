@@ -28,8 +28,14 @@ public interface SpringBeansXMLMapBuilder<T>
 
 	public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key);
 
+	public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key,
+	                                                                        boolean ref);
+
 	// Utility
 	public SpringBeansXMLMapBuilder<T> keyValueRefEntry(String key,
 	                                                    String valueRef);
+
+	public SpringBeansXMLMapBuilder<T> keyRefValueRefEntry(String keyRef,
+	                                                       String valueRef);
 
 }

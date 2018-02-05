@@ -34,6 +34,8 @@ import com.dereekb.gae.utilities.misc.path.PathUtility;
  */
 public class TestModelsConfigurationGenerator extends AbstractConfigurationFileGenerator {
 
+	public static final String TEST_FOLDER_NAME = "test";
+
 	// MARK: Generation
 	public TestModelsConfigurationGenerator(AppConfiguration appConfig) {
 		super(appConfig);
@@ -60,7 +62,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		GenFile modelsfile = this.makeSharedModelXMLFile(modelFiles, clientFolder);
 		folder.addFile(modelsfile);
 
-		return folder;
+		return folder.wrap(TEST_FOLDER_NAME);
 	}
 
 	public static final String SHARED_MODEL_FILE_NAME = "models";

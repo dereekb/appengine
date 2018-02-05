@@ -9,11 +9,11 @@ public interface AppModelConfiguration
 
 	public Class<?> getModelGeneratorClass();
 
+	public boolean hasIterateControllerEntry();
+
 	/**
 	 * Whether or not the model is local to the app.
 	 */
 	public boolean isLocalModel();
-
-	public boolean hasIterateControllerEntry();
 
 }

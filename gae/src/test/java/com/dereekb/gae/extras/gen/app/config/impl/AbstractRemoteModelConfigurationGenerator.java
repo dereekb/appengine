@@ -122,9 +122,13 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 			GenFolderImpl localFolder = AbstractRemoteModelConfigurationGenerator.this
 			        .makeModelClientConfigurationsForModels(
 			                AbstractRemoteModelConfigurationGenerator.this.localFolderName, localModels);
+			localFolder.flatten();
+
 			GenFolderImpl remoteFolder = AbstractRemoteModelConfigurationGenerator.this
 			        .makeModelClientConfigurationsForModels(
 			                AbstractRemoteModelConfigurationGenerator.this.remoteFolderName, remoteModels);
+			remoteFolder.flatten();
+
 
 			folder.addFolder(localFolder);
 			folder.addFolder(remoteFolder);

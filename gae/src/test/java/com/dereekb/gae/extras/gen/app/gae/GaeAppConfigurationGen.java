@@ -10,6 +10,7 @@ import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.taskqueue.TaskQueueConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.test.TestModelsConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFilesWriterImpl;
@@ -55,6 +56,19 @@ public class GaeAppConfigurationGen {
 		// String path = writer.getRootFolder().getRoot().getAbsolutePath();
 		writer.writeFiles(folder);
 
+		// TODO: Print to files.
+
+	}
+
+	@Test
+	public void testMakeTaskqueueConfiguration() throws IOException {
+
+		TaskQueueConfigurationGenerator generator = new TaskQueueConfigurationGenerator(APP_CONFIG);
+		GenFolder folder = generator.generateConfigurations();
+
+		GenFilesWriterImpl writer = new GenFilesWriterImpl();
+		// String path = writer.getRootFolder().getRoot().getAbsolutePath();
+		writer.writeFiles(folder);
 
 		// TODO: Print to files.
 

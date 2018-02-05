@@ -270,10 +270,11 @@ public class SpringBeansXMLBuilderImpl
 
 		public SpringBeansXMLMapBuilderImpl(T parent, XMLBuilder2 builder) {
 			super(parent, builder);
+			this.keyType(String.class);
 		}
 
 		public SpringBeansXMLMapBuilderImpl(T parent, XMLBuilder2 builder, String beanId) {
-			super(parent, builder);
+			this(parent, builder);
 			this.id(beanId);
 		}
 
@@ -300,15 +301,37 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		private SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry() {
+			return this.entry(null, false);
+		}
+
 		@Override
 		public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key) {
-			return new SpringBeansXMLMapEntryBuilderImpl<SpringBeansXMLMapBuilder<T>>(this, this.builder).key(key);
+			return this.entry(key, false);
+		}
+
+		@Override
+		public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key, boolean ref) {
+			SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> builder = new SpringBeansXMLMapEntryBuilderImpl<SpringBeansXMLMapBuilder<T>>(this, this.builder);
+
+			if (key != null) {
+				return builder.key(key, ref);
+			}
+
+			return builder;
 		}
 
 		@Override
 		public SpringBeansXMLMapBuilder<T> keyValueRefEntry(String key,
 		                                                    String valueRef) {
 			this.entry(key).valueRef(valueRef);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLMapBuilder<T> keyRefValueRefEntry(String keyRef,
+		                                                       String valueRef) {
+			this.entry().keyRef(keyRef).valueRef(valueRef);
 			return this;
 		}
 
@@ -328,6 +351,16 @@ public class SpringBeansXMLBuilderImpl
 		}
 
 		// MARK: SpringBeansXMLBeanPropertyBuilder
+		@Override
+		public SpringBeansXMLMapEntryBuilder<T> key(String key,
+		                                            boolean ref) {
+			if (ref) {
+				return this.keyRef(key);
+			} else {
+				return this.key(key);
+			}
+		}
+
 		@Override
 		public SpringBeansXMLMapEntryBuilder<T> key(String key) {
 			this.builder.a(SpringBeansXMLMapEntryBuilder.KEY_ATTRIBUTE, key);

@@ -168,6 +168,11 @@ public class AppModelConfigurationImpl
 	}
 
 	@Override
+	public String getModelKeyListAccessorFactoryId() {
+		return this.beansConfiguration.getModelKeyListAccessorFactoryId();
+	}
+
+	@Override
 	public boolean hasIterateControllerEntry() {
 		return this.iterateControllerEntry;
 	}

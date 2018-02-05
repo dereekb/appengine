@@ -28,6 +28,14 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 
 		folder.addFile(this.makeTaskQueueFile());
 
+		// Models
+		TaskQueueModelsConfigurationGenerator modelsGen = new TaskQueueModelsConfigurationGenerator(this.getAppConfig(),
+		        this.getOutputProperties());
+		folder.addFolder(modelsGen.generateConfigurations());
+
+		// Extensions
+		folder.addFolder(this.generateExtensions());
+
 		return folder;
 	}
 
@@ -48,6 +56,17 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		        .valueRef("scheduleWebHookEvent");
 
 		return this.makeFileWithXML("taskqueue", builder);
+	}
+
+	public GenFolderImpl generateExtensions() {
+		GenFolderImpl extensions = new GenFolderImpl("extension");
+
+		// Events
+		TaskQueueEventConfigurationGenerator eventGen = new TaskQueueEventConfigurationGenerator(this.getAppConfig(),
+		        this.getOutputProperties());
+		extensions.addFolder(eventGen.generateConfigurations());
+
+		return extensions;
 	}
 
 }

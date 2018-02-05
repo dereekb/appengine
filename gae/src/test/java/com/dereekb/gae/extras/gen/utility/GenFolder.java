@@ -10,4 +10,13 @@ public interface GenFolder {
 
 	public List<GenFile> getFiles();
 
+	/**
+	 * Returns a new folder that wraps this one.
+	 *
+	 * @param folder
+	 *            {@link String}. Never {@code null}.
+	 * @return {@link GenFolder}. Never {@code null}.
+	 */
+	public GenFolder wrap(String folder);
+
 }
