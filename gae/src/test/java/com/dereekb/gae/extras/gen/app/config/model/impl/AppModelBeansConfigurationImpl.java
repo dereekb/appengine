@@ -27,9 +27,23 @@ public class AppModelBeansConfigurationImpl
 	private String modelRegistryId;
 	private String modelKeyListAccessorFactoryId;
 
+	private String newModelFactoryBeanId;
+	private String modelCrudServiceId;
+	private String modelCreateServiceId;
 	private String modelReadServiceId;
+	private String modelUpdateServiceId;
+	private String modelDeleteServiceId;
 	private String modelInclusionReaderId;
 	private String modelLinkModelAccessorId;
+	private String modelLinkSystemBuilderEntryBeanId;
+
+	private String modelStorerBeanId;
+	private String modelUpdaterBeanId;
+	private String modelDeleterBeanId;
+	private String modelScheduleCreateReviewBeanId;
+	private String modelScheduleUpdateReviewBeanId;
+	private String modelRoleSetLoaderBeanId;
+
 	private String stringModelKeyConverter;
 	private String modelQueryServiceId;
 	private String modelSecurityContextServiceEntryBeanId;
@@ -48,9 +62,21 @@ public class AppModelBeansConfigurationImpl
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
 		this.setModelKeyListAccessorFactoryId(modelBeanPrefix + "KeyListAccessorFactory");
+		this.setNewModelFactoryBeanId(modelBeanPrefix + "Factory");
+		this.setModelCrudServiceId(modelBeanPrefix + "CrudService");
+		this.setModelCreateServiceId(modelBeanPrefix + "CreateService");
 		this.setModelReadServiceId(modelBeanPrefix + "ReadService");
+		this.setModelUpdateServiceId(modelBeanPrefix + "UpdateService");
+		this.setModelDeleteServiceId(modelBeanPrefix + "DeleteService");
 		this.setModelInclusionReaderId(modelBeanPrefix + "InclusionReader");
 		this.setModelLinkModelAccessorId(modelBeanPrefix + "LinkModelAccessor");
+		this.setModelLinkSystemBuilderEntryBeanId(modelBeanPrefix + "LinkSystemBuilderEntry");
+		this.setModelStorerBeanId(modelBeanPrefix + "Storer");
+		this.setModelUpdaterBeanId(modelBeanPrefix + "Updater");
+		this.setModelDeleterBeanId(modelBeanPrefix + "Deleter");
+		this.setModelScheduleCreateReviewBeanId(modelBeanPrefix + "ScheduleCreateReview");
+		this.setModelScheduleUpdateReviewBeanId(modelBeanPrefix + "ScheduleUpdateReview");
+		this.setModelRoleSetLoaderBeanId(modelBeanPrefix + "ModelRoleSetLoader");
 		this.setStringModelKeyConverter(AppBeansConfiguration.getModelKeyConverterBeanId(modelKeyType));
 		this.setModelQueryServiceId(modelBeanPrefix + "QueryService");
 		this.setModelSecurityContextServiceEntryBeanId(modelBeanPrefix + "SecurityContextServiceEntry");
@@ -199,6 +225,45 @@ public class AppModelBeansConfigurationImpl
 	}
 
 	@Override
+	public String getNewModelFactoryBeanId() {
+		return this.newModelFactoryBeanId;
+	}
+
+	public void setNewModelFactoryBeanId(String newModelFactoryBeanId) {
+		if (newModelFactoryBeanId == null) {
+			throw new IllegalArgumentException("newModelFactoryBeanId cannot be null.");
+		}
+
+		this.newModelFactoryBeanId = newModelFactoryBeanId;
+	}
+
+	@Override
+	public String getModelCrudServiceId() {
+		return this.modelCrudServiceId;
+	}
+
+	public void setModelCrudServiceId(String modelCrudServiceId) {
+		if (modelCrudServiceId == null) {
+			throw new IllegalArgumentException("modelCrudServiceId cannot be null.");
+		}
+
+		this.modelCrudServiceId = modelCrudServiceId;
+	}
+
+	@Override
+	public String getModelCreateServiceId() {
+		return this.modelCreateServiceId;
+	}
+
+	public void setModelCreateServiceId(String modelCreateServiceId) {
+		if (modelCreateServiceId == null) {
+			throw new IllegalArgumentException("modelCreateServiceId cannot be null.");
+		}
+
+		this.modelCreateServiceId = modelCreateServiceId;
+	}
+
+	@Override
 	public String getModelReadServiceId() {
 		return this.modelReadServiceId;
 	}
@@ -209,6 +274,32 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelReadServiceId = modelReadServiceId;
+	}
+
+	@Override
+	public String getModelUpdateServiceId() {
+		return this.modelUpdateServiceId;
+	}
+
+	public void setModelUpdateServiceId(String modelUpdateServiceId) {
+		if (modelUpdateServiceId == null) {
+			throw new IllegalArgumentException("modelUpdateServiceId cannot be null.");
+		}
+
+		this.modelUpdateServiceId = modelUpdateServiceId;
+	}
+
+	@Override
+	public String getModelDeleteServiceId() {
+		return this.modelDeleteServiceId;
+	}
+
+	public void setModelDeleteServiceId(String modelDeleteServiceId) {
+		if (modelDeleteServiceId == null) {
+			throw new IllegalArgumentException("modelDeleteServiceId cannot be null.");
+		}
+
+		this.modelDeleteServiceId = modelDeleteServiceId;
 	}
 
 	@Override
@@ -235,6 +326,84 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelLinkModelAccessorId = modelLinkModelAccessorId;
+	}
+
+	@Override
+	public String getModelLinkSystemBuilderEntryBeanId() {
+		return this.modelLinkSystemBuilderEntryBeanId;
+	}
+
+	public void setModelLinkSystemBuilderEntryBeanId(String modelLinkSystemBuilderEntryBeanId) {
+		if (modelLinkSystemBuilderEntryBeanId == null) {
+			throw new IllegalArgumentException("modelLinkSystemBuilderEntryBeanId cannot be null.");
+		}
+
+		this.modelLinkSystemBuilderEntryBeanId = modelLinkSystemBuilderEntryBeanId;
+	}
+
+	@Override
+	public String getModelStorerBeanId() {
+		return this.modelStorerBeanId;
+	}
+
+	public void setModelStorerBeanId(String modelStorerBeanId) {
+		if (modelStorerBeanId == null) {
+			throw new IllegalArgumentException("modelStorerBeanId cannot be null.");
+		}
+
+		this.modelStorerBeanId = modelStorerBeanId;
+	}
+
+	@Override
+	public String getModelUpdaterBeanId() {
+		return this.modelUpdaterBeanId;
+	}
+
+	public void setModelUpdaterBeanId(String modelUpdaterBeanId) {
+		if (modelUpdaterBeanId == null) {
+			throw new IllegalArgumentException("modelUpdaterBeanId cannot be null.");
+		}
+
+		this.modelUpdaterBeanId = modelUpdaterBeanId;
+	}
+
+	@Override
+	public String getModelDeleterBeanId() {
+		return this.modelDeleterBeanId;
+	}
+
+	public void setModelDeleterBeanId(String modelDeleterBeanId) {
+		if (modelDeleterBeanId == null) {
+			throw new IllegalArgumentException("modelDeleterBeanId cannot be null.");
+		}
+
+		this.modelDeleterBeanId = modelDeleterBeanId;
+	}
+
+	@Override
+	public String getModelScheduleCreateReviewBeanId() {
+		return this.modelScheduleCreateReviewBeanId;
+	}
+
+	public void setModelScheduleCreateReviewBeanId(String modelScheduleCreateReviewBeanId) {
+		if (modelScheduleCreateReviewBeanId == null) {
+			throw new IllegalArgumentException("modelScheduleCreateReviewBeanId cannot be null.");
+		}
+
+		this.modelScheduleCreateReviewBeanId = modelScheduleCreateReviewBeanId;
+	}
+
+	@Override
+	public String getModelScheduleUpdateReviewBeanId() {
+		return this.modelScheduleUpdateReviewBeanId;
+	}
+
+	public void setModelScheduleUpdateReviewBeanId(String modelScheduleUpdateReviewBeanId) {
+		if (modelScheduleUpdateReviewBeanId == null) {
+			throw new IllegalArgumentException("modelScheduleUpdateReviewBeanId cannot be null.");
+		}
+
+		this.modelScheduleUpdateReviewBeanId = modelScheduleUpdateReviewBeanId;
 	}
 
 	@Override
@@ -274,6 +443,19 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelSecurityContextServiceEntryBeanId = modelSecurityContextServiceEntryBeanId;
+	}
+
+	@Override
+	public String getModelRoleSetLoaderBeanId() {
+		return this.modelRoleSetLoaderBeanId;
+	}
+
+	public void setModelRoleSetLoaderBeanId(String modelRoleSetLoaderBeanId) {
+		if (modelRoleSetLoaderBeanId == null) {
+			throw new IllegalArgumentException("modelRoleSetLoaderBeanId cannot be null.");
+		}
+
+		this.modelRoleSetLoaderBeanId = modelRoleSetLoaderBeanId;
 	}
 
 }

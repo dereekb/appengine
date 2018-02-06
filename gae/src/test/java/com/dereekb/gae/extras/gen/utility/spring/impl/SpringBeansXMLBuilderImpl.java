@@ -479,6 +479,7 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		@Override
 		public XMLBuilder2 nextArgBuilder() {
 			Integer arg = this.nextArgIndex;
 			this.nextArgIndex += 1;

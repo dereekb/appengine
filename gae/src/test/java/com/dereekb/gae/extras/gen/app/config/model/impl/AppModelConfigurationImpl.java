@@ -34,7 +34,7 @@ public class AppModelConfigurationImpl
 	private Class<Object> modelQueryClass;
 	private Class<Object> modelQueryInitializerClass;
 
-	private Class<Object> modelSecurityContextServiceEntry;
+	private Class<Object> modelSecurityContextServiceEntryClass;
 
 	private Class<Object> modelEditControllerClass;
 
@@ -100,7 +100,7 @@ public class AppModelConfigurationImpl
 			this.modelQueryClass = (Class<Object>) Class.forName(queryClassName);
 			this.modelQueryInitializerClass = (Class<Object>) Class.forName(queryInitializerClassName);
 
-			this.modelSecurityContextServiceEntry = (Class<Object>) Class.forName(queryInitializerClassName);
+			this.modelSecurityContextServiceEntryClass = (Class<Object>) Class.forName(queryInitializerClassName);
 
 			this.modelEditControllerClass = (Class<Object>) Class.forName(editControllerClass);
 		} catch (ClassNotFoundException e) {
@@ -265,16 +265,17 @@ public class AppModelConfigurationImpl
 		this.modelQueryInitializerClass = modelQueryInitializerClass;
 	}
 
-	public Class<Object> getModelSecurityContextServiceEntry() {
-		return this.modelSecurityContextServiceEntry;
+	@Override
+	public Class<Object> getModelSecurityContextServiceEntryClass() {
+		return this.modelSecurityContextServiceEntryClass;
 	}
 
-	public void setModelSecurityContextServiceEntry(Class<Object> modelSecurityContextServiceEntry) {
-		if (modelSecurityContextServiceEntry == null) {
-			throw new IllegalArgumentException("modelSecurityContextServiceEntry cannot be null.");
+	public void setModelSecurityContextServiceEntryClass(Class<Object> modelSecurityContextServiceEntryClass) {
+		if (modelSecurityContextServiceEntryClass == null) {
+			throw new IllegalArgumentException("modelSecurityContextServiceEntryClass cannot be null.");
 		}
 
-		this.modelSecurityContextServiceEntry = modelSecurityContextServiceEntry;
+		this.modelSecurityContextServiceEntryClass = modelSecurityContextServiceEntryClass;
 	}
 
 	@Override
@@ -351,11 +352,6 @@ public class AppModelConfigurationImpl
 	}
 
 	@Override
-	public String getModelReadServiceId() {
-		return this.beansConfiguration.getModelReadServiceId();
-	}
-
-	@Override
 	public String getModelInclusionReaderId() {
 		return this.beansConfiguration.getModelInclusionReaderId();
 	}
@@ -371,13 +367,78 @@ public class AppModelConfigurationImpl
 	}
 
 	@Override
+	public String getModelCrudServiceId() {
+		return this.beansConfiguration.getModelCrudServiceId();
+	}
+
+	@Override
+	public String getModelCreateServiceId() {
+		return this.beansConfiguration.getModelCreateServiceId();
+	}
+
+	@Override
+	public String getModelReadServiceId() {
+		return this.beansConfiguration.getModelReadServiceId();
+	}
+
+	@Override
+	public String getModelUpdateServiceId() {
+		return this.beansConfiguration.getModelUpdateServiceId();
+	}
+
+	@Override
+	public String getModelDeleteServiceId() {
+		return this.beansConfiguration.getModelDeleteServiceId();
+	}
+
+	@Override
 	public String getModelQueryServiceId() {
 		return this.beansConfiguration.getModelQueryServiceId();
 	}
 
 	@Override
+	public String getModelLinkSystemBuilderEntryBeanId() {
+		return this.beansConfiguration.getModelLinkSystemBuilderEntryBeanId();
+	}
+
+	@Override
 	public String getModelSecurityContextServiceEntryBeanId() {
 		return this.beansConfiguration.getModelSecurityContextServiceEntryBeanId();
+	}
+
+	@Override
+	public String getNewModelFactoryBeanId() {
+		return this.beansConfiguration.getNewModelFactoryBeanId();
+	}
+
+	@Override
+	public String getModelStorerBeanId() {
+		return this.beansConfiguration.getModelStorerBeanId();
+	}
+
+	@Override
+	public String getModelUpdaterBeanId() {
+		return this.beansConfiguration.getModelUpdaterBeanId();
+	}
+
+	@Override
+	public String getModelDeleterBeanId() {
+		return this.beansConfiguration.getModelDeleterBeanId();
+	}
+
+	@Override
+	public String getModelScheduleCreateReviewBeanId() {
+		return this.beansConfiguration.getModelScheduleCreateReviewBeanId();
+	}
+
+	@Override
+	public String getModelScheduleUpdateReviewBeanId() {
+		return this.beansConfiguration.getModelScheduleUpdateReviewBeanId();
+	}
+
+	@Override
+	public String getModelRoleSetLoaderBeanId() {
+		return this.beansConfiguration.getModelRoleSetLoaderBeanId();
 	}
 
 }

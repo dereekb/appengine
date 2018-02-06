@@ -18,6 +18,8 @@ public interface AppModelConfiguration
 
 	public Class<?> getModelLinkSystemBuilderEntryClass();
 
+	public Class<?> getModelSecurityContextServiceEntryClass();
+
 	public Class<?> getModelQueryClass();
 
 	public Class<?> getModelQueryInitializerClass();
