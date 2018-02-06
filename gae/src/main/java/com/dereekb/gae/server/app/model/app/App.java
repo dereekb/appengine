@@ -9,6 +9,9 @@ import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.datastore.models.DatedDatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
@@ -31,6 +34,7 @@ import com.googlecode.objectify.condition.IfZero;
  */
 @Cache
 @Entity
+@ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public class App extends DatedDatabaseModel
         implements ObjectifyModel<App>, AppInfo, AppLoginSecurityDetails, LoginOwnedModel {
 

@@ -1,6 +1,8 @@
 package com.dereekb.gae.extras.gen.app.config.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppModelBeansConfiguration;
+import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
@@ -12,6 +14,8 @@ import com.dereekb.gae.utilities.data.StringUtility;
 public class AppModelBeansConfigurationImpl
         implements AppModelBeansConfiguration {
 
+	private ModelKeyType modelKeyType;
+
 	private String modelBeanPrefix;
 	private String modelTypeBeanId;
 	private String modelClassBeanId;
@@ -20,16 +24,40 @@ public class AppModelBeansConfigurationImpl
 	private String modelRegistryId;
 	private String modelKeyListAccessorFactoryId;
 
-	public AppModelBeansConfigurationImpl(String modelType) {
+	private String modelReadServiceId;
+	private String modelInclusionReaderId;
+	private String modelLinkModelAccessorId;
+	private String stringModelKeyConverter;
+	private String modelQueryServiceId;
+
+	public AppModelBeansConfigurationImpl(String modelType, ModelKeyType modelKeyType) {
 		String modelBeanPrefix = StringUtility.firstLetterLowerCase(modelType);
 
+		this.setModelKeyType(modelKeyType);
 		this.setModelBeanPrefix(modelBeanPrefix);
 		this.setModelTypeBeanId(modelBeanPrefix + "Type");
 		this.setModelClassBeanId(modelBeanPrefix + "Class");
 		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
-		this.setModelRegistryId(modelBeanPrefix + "KeyListAccessorFactory");
+		this.setModelKeyListAccessorFactoryId(modelBeanPrefix + "KeyListAccessorFactory");
+		this.setModelReadServiceId(modelBeanPrefix + "ReadService");
+		this.setModelInclusionReaderId(modelBeanPrefix + "InclusionReader");
+		this.setModelLinkModelAccessorId(modelBeanPrefix + "LinkModelAccessor");
+		this.setStringModelKeyConverter(AppBeansConfiguration.getModelKeyConverterBeanId(modelKeyType));
+		this.setModelQueryServiceId(modelBeanPrefix + "QueryService");
+	}
+
+	public ModelKeyType getModelKeyType() {
+		return this.modelKeyType;
+	}
+
+	public void setModelKeyType(ModelKeyType modelKeyType) {
+		if (modelKeyType == null) {
+			throw new IllegalArgumentException("modelKeyType cannot be null.");
+		}
+
+		this.modelKeyType = modelKeyType;
 	}
 
 	@Override
@@ -121,6 +149,71 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelKeyListAccessorFactoryId = modelKeyListAccessorFactoryId;
+	}
+
+	@Override
+	public String getModelReadServiceId() {
+		return this.modelReadServiceId;
+	}
+
+	public void setModelReadServiceId(String modelReadServiceId) {
+		if (modelReadServiceId == null) {
+			throw new IllegalArgumentException("modelReadServiceId cannot be null.");
+		}
+
+		this.modelReadServiceId = modelReadServiceId;
+	}
+
+	@Override
+	public String getModelInclusionReaderId() {
+		return this.modelInclusionReaderId;
+	}
+
+	public void setModelInclusionReaderId(String modelInclusionReaderId) {
+		if (modelInclusionReaderId == null) {
+			throw new IllegalArgumentException("modelInclusionReaderId cannot be null.");
+		}
+
+		this.modelInclusionReaderId = modelInclusionReaderId;
+	}
+
+	@Override
+	public String getModelLinkModelAccessorId() {
+		return this.modelLinkModelAccessorId;
+	}
+
+	public void setModelLinkModelAccessorId(String modelLinkModelAccessorId) {
+		if (modelLinkModelAccessorId == null) {
+			throw new IllegalArgumentException("modelLinkModelAccessorId cannot be null.");
+		}
+
+		this.modelLinkModelAccessorId = modelLinkModelAccessorId;
+	}
+
+	@Override
+	public String getStringModelKeyConverter() {
+		return this.stringModelKeyConverter;
+	}
+
+	public void setStringModelKeyConverter(String stringModelKeyConverter) {
+		if (stringModelKeyConverter == null) {
+			throw new IllegalArgumentException("stringModelKeyConverter cannot be null.");
+		}
+
+		this.stringModelKeyConverter = stringModelKeyConverter;
+	}
+
+	@Override
+	public String getModelQueryServiceId() {
+		return this.modelQueryServiceId;
+	}
+
+	public void setModelQueryServiceId(String modelQueryServiceId) {
+		if (modelQueryServiceId == null) {
+			throw new IllegalArgumentException("modelQueryServiceId cannot be null.");
+		}
+
+		this.modelQueryServiceId = modelQueryServiceId;
 	}
 
 }

@@ -7,6 +7,9 @@ import java.util.Set;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
 import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -27,6 +30,7 @@ import com.googlecode.objectify.condition.IfNotDefault;
  */
 @Cache
 @Entity
+@ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public final class Login extends DescribedDatabaseModel
         implements ObjectifyModel<Login>, EncodedRolesBearer {
 

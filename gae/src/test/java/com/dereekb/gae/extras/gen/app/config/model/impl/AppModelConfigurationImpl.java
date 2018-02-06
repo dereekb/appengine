@@ -1,7 +1,13 @@
 package com.dereekb.gae.extras.gen.app.config.model.impl;
 
+import java.util.List;
+
 import com.dereekb.gae.extras.gen.app.config.model.AppModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.misc.path.PathUtility;
 
 /**
  * {@link AppModelConfiguration} implementation.
@@ -14,27 +20,48 @@ public class AppModelConfigurationImpl
 	private boolean iterateControllerEntry = true;
 
 	private String modelType;
+	private ModelKeyType modelKeyType;
+
 	private Class<Object> modelClass;
 	private Class<Object> modelDataClass;
 
+	private Class<Object> modelDataBuilderClass;
+	private Class<Object> modelDataReaderClass;
+
 	private Class<Object> modelGeneratorClass;
+	private Class<Object> modelLinkSystemBuilderEntryClass;
+
+	private Class<Object> modelQueryClass;
+	private Class<Object> modelQueryInitializerClass;
+
+	private Class<Object> modelSecurityContextServiceEntry;
+
+	private Class<Object> modelEditControllerClass;
 
 	private AppModelBeansConfiguration beansConfiguration;
 
 	public AppModelConfigurationImpl(Class<?> modelClass) {
-		this(modelClass, true);
+		this(modelClass, ModelKey.readModelKeyType(modelClass));
 	}
 
-	public AppModelConfigurationImpl(Class<?> modelClass, boolean localModel) {
-		this(modelClass, modelClass.getSimpleName(), localModel);
+	public AppModelConfigurationImpl(Class<?> modelClass, ModelKeyType modelKeyType) {
+		this(modelClass, modelKeyType, true);
+	}
+
+	public AppModelConfigurationImpl(Class<?> modelClass, ModelKeyType modelKeyType, boolean localModel) {
+		this(modelClass, modelKeyType, modelClass.getSimpleName(), localModel);
 	}
 
 	@SuppressWarnings("unchecked")
-	public AppModelConfigurationImpl(Class<?> modelClass, String modelType, boolean localModel) {
+	public AppModelConfigurationImpl(Class<?> modelClass,
+	        ModelKeyType modelKeyType,
+	        String modelType,
+	        boolean localModel) {
 		super();
 		this.setLocalModel(localModel);
 		this.setModelClass((Class<Object>) modelClass);
 		this.setModelType(modelType);
+		this.setModelKeyType(modelKeyType);
 
 		this.inferClasses();
 		this.resetBeans();
@@ -43,15 +70,39 @@ public class AppModelConfigurationImpl
 	@SuppressWarnings("unchecked")
 	private void inferClasses() {
 
-		String baseClassPath = this.modelClass.getPackage().getName();
+		Package baseClassPackage = this.modelClass.getPackage();
+		String baseClassPath = baseClassPackage.getName();
 		String baseClassSimpleName = this.modelClass.getSimpleName();
 
 		String dataClassName = baseClassPath + ".dto." + baseClassSimpleName + "Data";
 		String generatorClassName = baseClassPath + ".generator." + baseClassSimpleName + "Generator";
+		String linkSystemBuilderEntryClassName = baseClassPath + ".link." + baseClassSimpleName
+		        + "LinkSystemBuilderEntry";
+		String queryClassName = baseClassPath + ".search.query." + baseClassSimpleName + "Query";
+		String queryInitializerClassName = queryClassName + "Initializer";
+
+		// Find Edit Controller Name
+		List<String> packagePathComponents = PathUtility.getComponents(baseClassPath, "\\.");
+		List<String> comPathComponents = packagePathComponents.subList(0, 3);
+		String comPath = StringUtility.joinValues(".", comPathComponents);
+		comPath = comPath + ".web.api.model.controllers";
+
+		String editControllerClass = comPath + "." + baseClassSimpleName + "EditController";
 
 		try {
 			this.modelDataClass = (Class<Object>) Class.forName(dataClassName);
+			this.modelDataReaderClass = (Class<Object>) Class.forName(dataClassName + "Reader");
+			this.modelDataBuilderClass = (Class<Object>) Class.forName(dataClassName + "Builder");
+
 			this.modelGeneratorClass = (Class<Object>) Class.forName(generatorClassName);
+			this.modelLinkSystemBuilderEntryClass = (Class<Object>) Class.forName(linkSystemBuilderEntryClassName);
+
+			this.modelQueryClass = (Class<Object>) Class.forName(queryClassName);
+			this.modelQueryInitializerClass = (Class<Object>) Class.forName(queryInitializerClassName);
+
+			this.modelSecurityContextServiceEntry = (Class<Object>) Class.forName(queryInitializerClassName);
+
+			this.modelEditControllerClass = (Class<Object>) Class.forName(editControllerClass);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -59,7 +110,7 @@ public class AppModelConfigurationImpl
 	}
 
 	protected void resetBeans() {
-		this.setBeansConfiguration(new AppModelBeansConfigurationImpl(this.modelType));
+		this.setBeansConfiguration(new AppModelBeansConfigurationImpl(this.modelType, this.modelKeyType));
 	}
 
 	@Override
@@ -82,6 +133,19 @@ public class AppModelConfigurationImpl
 		}
 
 		this.modelType = modelType;
+	}
+
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return this.modelKeyType;
+	}
+
+	public void setModelKeyType(ModelKeyType modelKeyType) {
+		if (modelKeyType == null) {
+			throw new IllegalArgumentException("modelKeyType cannot be null.");
+		}
+
+		this.modelKeyType = modelKeyType;
 	}
 
 	@Override
@@ -111,6 +175,32 @@ public class AppModelConfigurationImpl
 	}
 
 	@Override
+	public Class<Object> getModelDataBuilderClass() {
+		return this.modelDataBuilderClass;
+	}
+
+	public void setModelDataBuilderClass(Class<Object> modelDataBuilderClass) {
+		if (modelDataBuilderClass == null) {
+			throw new IllegalArgumentException("modelDataBuilderClass cannot be null.");
+		}
+
+		this.modelDataBuilderClass = modelDataBuilderClass;
+	}
+
+	@Override
+	public Class<Object> getModelDataReaderClass() {
+		return this.modelDataReaderClass;
+	}
+
+	public void setModelDataReaderClass(Class<Object> modelDataReaderClass) {
+		if (modelDataReaderClass == null) {
+			throw new IllegalArgumentException("modelDataReaderClass cannot be null.");
+		}
+
+		this.modelDataReaderClass = modelDataReaderClass;
+	}
+
+	@Override
 	public AppModelBeansConfiguration getBeansConfiguration() {
 		return this.beansConfiguration;
 	}
@@ -134,6 +224,79 @@ public class AppModelConfigurationImpl
 		}
 
 		this.modelGeneratorClass = modelGeneratorClass;
+	}
+
+	@Override
+	public Class<Object> getModelLinkSystemBuilderEntryClass() {
+		return this.modelLinkSystemBuilderEntryClass;
+	}
+
+	public void setModelLinkSystemBuilderEntryClass(Class<Object> modelLinkSystemBuilderEntryClass) {
+		if (modelLinkSystemBuilderEntryClass == null) {
+			throw new IllegalArgumentException("modelLinkSystemBuilderEntryClass cannot be null.");
+		}
+
+		this.modelLinkSystemBuilderEntryClass = modelLinkSystemBuilderEntryClass;
+	}
+
+	@Override
+	public Class<Object> getModelQueryClass() {
+		return this.modelQueryClass;
+	}
+
+	public void setModelQueryClass(Class<Object> modelQueryClass) {
+		if (modelQueryClass == null) {
+			throw new IllegalArgumentException("modelQueryClass cannot be null.");
+		}
+
+		this.modelQueryClass = modelQueryClass;
+	}
+
+	@Override
+	public Class<Object> getModelQueryInitializerClass() {
+		return this.modelQueryInitializerClass;
+	}
+
+	public void setModelQueryInitializerClass(Class<Object> modelQueryInitializerClass) {
+		if (modelQueryInitializerClass == null) {
+			throw new IllegalArgumentException("modelQueryInitializerClass cannot be null.");
+		}
+
+		this.modelQueryInitializerClass = modelQueryInitializerClass;
+	}
+
+	public Class<Object> getModelSecurityContextServiceEntry() {
+		return this.modelSecurityContextServiceEntry;
+	}
+
+	public void setModelSecurityContextServiceEntry(Class<Object> modelSecurityContextServiceEntry) {
+		if (modelSecurityContextServiceEntry == null) {
+			throw new IllegalArgumentException("modelSecurityContextServiceEntry cannot be null.");
+		}
+
+		this.modelSecurityContextServiceEntry = modelSecurityContextServiceEntry;
+	}
+
+	@Override
+	public Class<Object> getModelEditControllerClass() {
+		return this.modelEditControllerClass;
+	}
+
+	public void setModelEditControllerClass(Class<Object> modelEditControllerClass) {
+		if (modelEditControllerClass == null) {
+			throw new IllegalArgumentException("modelEditControllerClass cannot be null.");
+		}
+
+		this.modelEditControllerClass = modelEditControllerClass;
+	}
+
+	@Override
+	public boolean hasIterateControllerEntry() {
+		return this.iterateControllerEntry;
+	}
+
+	public void setIterateControllerEntry(boolean iterateControllerEntry) {
+		this.iterateControllerEntry = iterateControllerEntry;
 	}
 
 	// MARK: AppModelBeansConfiguration
@@ -173,8 +336,28 @@ public class AppModelConfigurationImpl
 	}
 
 	@Override
-	public boolean hasIterateControllerEntry() {
-		return this.iterateControllerEntry;
+	public String getModelReadServiceId() {
+		return this.beansConfiguration.getModelReadServiceId();
+	}
+
+	@Override
+	public String getModelInclusionReaderId() {
+		return this.beansConfiguration.getModelInclusionReaderId();
+	}
+
+	@Override
+	public String getModelLinkModelAccessorId() {
+		return this.beansConfiguration.getModelLinkModelAccessorId();
+	}
+
+	@Override
+	public String getStringModelKeyConverter() {
+		return this.beansConfiguration.getStringModelKeyConverter();
+	}
+
+	@Override
+	public String getModelQueryServiceId() {
+		return this.beansConfiguration.getModelQueryServiceId();
 	}
 
 }

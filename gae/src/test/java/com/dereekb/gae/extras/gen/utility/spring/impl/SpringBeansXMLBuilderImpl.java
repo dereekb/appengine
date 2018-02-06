@@ -30,6 +30,7 @@ public class SpringBeansXMLBuilderImpl
 
 	public static final String ROOT_BEANS_ELEMENT = "beans";
 	public static final String BEAN_ELEMENT = "bean";
+	public static final String ALIAS_ELEMENT = "alias";
 
 	private XMLBuilder2 beansBuilder;
 
@@ -102,6 +103,17 @@ public class SpringBeansXMLBuilderImpl
 	@Override
 	public void comment(String comment) {
 		this.beansBuilder.comment(comment);
+	}
+
+	@Override
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> bean() {
+		return new SpringBeansXMLBeanBuilderImpl<SpringBeansXMLBuilder>(this, this.beansBuilder);
+	}
+
+	@Override
+	public void alias(String existingBeanRef,
+	                  String alias) {
+		this.beansBuilder.e(ALIAS_ELEMENT).attr("name", existingBeanRef).attr("alias", alias);
 	}
 
 	@Override

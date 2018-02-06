@@ -242,7 +242,8 @@ public final class ModelKey
 		return ids;
 	}
 
-	public static void readStringKeysIntoCollection(Iterable<? extends Keyed<ModelKey>> models, Collection<String> collection) {
+	public static void readStringKeysIntoCollection(Iterable<? extends Keyed<ModelKey>> models,
+	                                                Collection<String> collection) {
 		if (models != null) {
 			for (Keyed<ModelKey> model : models) {
 				ModelKey key = model.keyValue();
@@ -356,7 +357,6 @@ public final class ModelKey
 		}
 	}
 
-
 	public static String readStringKey(ModelKey key) {
 		String keyString = null;
 
@@ -450,7 +450,8 @@ public final class ModelKey
 	 */
 	public static List<ModelKey> convert(ModelKeyType keyType,
 	                                     Collection<String> values)
-	        throws IllegalArgumentException, ConversionFailureException {
+	        throws IllegalArgumentException,
+	            ConversionFailureException {
 		return converterForKeyType(keyType).convert(values);
 	}
 
@@ -460,10 +461,10 @@ public final class ModelKey
 	 * @param keyType
 	 *            {@link ModelKeyType} of values.
 	 * @return {@link StringModelKeyConverter}. Never {@code null}.
-	 * @throws IllegalArgumentException if the input key type is unsupported.
+	 * @throws IllegalArgumentException
+	 *             if the input key type is unsupported.
 	 */
-	public static StringModelKeyConverter converterForKeyType(ModelKeyType keyType)
-	        throws IllegalArgumentException {
+	public static StringModelKeyConverter converterForKeyType(ModelKeyType keyType) throws IllegalArgumentException {
 		switch (keyType) {
 			case NAME:
 				return StringModelKeyConverterImpl.CONVERTER;
@@ -480,10 +481,10 @@ public final class ModelKey
 	 * @param keyType
 	 *            {@link ModelKeyType} of values.
 	 * @return {@link Generator}. Never {@code null}.
-	 * @throws IllegalArgumentException if the input key type is unsupported.
+	 * @throws IllegalArgumentException
+	 *             if the input key type is unsupported.
 	 */
-	public static Generator<ModelKey> generatorForKeyType(ModelKeyType keyType)
-	        throws IllegalArgumentException {
+	public static Generator<ModelKey> generatorForKeyType(ModelKeyType keyType) throws IllegalArgumentException {
 		switch (keyType) {
 			case NAME:
 				return StringModelKeyGenerator.GENERATOR;
@@ -823,6 +824,25 @@ public final class ModelKey
 
 	private static String safeMakeCompositeName(Object... components) {
 		return StringUtility.joinValues(COMPOSITE_NAME_SEPARATOR, components);
+	}
+
+	// MARK: Info
+	public static ModelKeyType readModelKeyType(Class<?> type) throws NullPointerException {
+		return readModelKeyInfo(type).value();
+	}
+
+	public static ModelKeyGenerationType readModelKeyGenerationType(Class<?> type) throws NullPointerException {
+		return readModelKeyInfo(type).generation();
+	}
+
+	public static ModelKeyInfo readModelKeyInfo(Class<?> type) throws NullPointerException {
+		ModelKeyInfo annotation = type.getAnnotation(ModelKeyInfo.class);
+
+		if (annotation == null) {
+			throw new NullPointerException("Class '" + type.getName() + "' has no model key information attached.");
+		}
+
+		return annotation;
 	}
 
 }

@@ -15,6 +15,8 @@ public interface SpringBeansXMLBuilder
         extends SpringBeansXMLObject {
 
 	// Bean
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> bean();
+
 	/**
 	 * Start a new bean element.
 	 *
@@ -52,8 +54,13 @@ public interface SpringBeansXMLBuilder
 	 */
 	public void importResources(List<GenFile> files);
 
+	public void alias(String existingBean,
+	                  String alias);
+
 	// Comment
 	public void comment(String comment);
+
+	// Spring
 
 	// Utility Beans
 	public <T> SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> valueBean(String id,

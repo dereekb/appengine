@@ -26,4 +26,14 @@ public interface AppModelBeansConfiguration {
 	 */
 	public String getModelKeyListAccessorFactoryId();
 
+	public String getModelReadServiceId();
+
+	public String getModelQueryServiceId();
+
+	public String getModelInclusionReaderId();
+
+	public String getModelLinkModelAccessorId();
+
+	public String getStringModelKeyConverter();
+
 }

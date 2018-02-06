@@ -6,6 +6,9 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
@@ -28,6 +31,7 @@ import com.googlecode.objectify.condition.IfNull;
  */
 @Cache
 @Entity
+@ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public class LoginKey extends OwnedDatabaseModel
         implements ObjectifyModel<LoginKey>, LoginOwnedModel {
 
