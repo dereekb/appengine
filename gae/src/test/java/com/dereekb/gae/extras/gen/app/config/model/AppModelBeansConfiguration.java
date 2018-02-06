@@ -12,7 +12,13 @@ public interface AppModelBeansConfiguration {
 
 	public String getModelTypeBeanId();
 
+	public String getModelIdTypeBeanId();
+
 	public String getModelClassBeanId();
+
+	public String getModelDtoClassBeanId();
+
+	public String getModelObjectifyEntryBeanId();
 
 	public String getModelDtoBeanId();
 
@@ -35,5 +41,7 @@ public interface AppModelBeansConfiguration {
 	public String getModelLinkModelAccessorId();
 
 	public String getStringModelKeyConverter();
+
+	public String getModelSecurityContextServiceEntryBeanId();
 
 }

@@ -4,12 +4,23 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 public interface AppBeansConfiguration {
 
+	// App
+	public String getAppKeyBeanId();
+
+	public String getAppNameBeanId();
+
+	public String getAppIdBeanId();
+
 	// Context
 	public String getModelKeyTypeConverterId();
 
 	public String getLinkServiceId();
 
 	public String getTaskSchedulerId();
+
+	public String getTaskQueueNameId();
+
+	public String getSystemLoginTokenFactoryBeanId();
 
 	// TaskQueue
 	public String getEventServiceId();

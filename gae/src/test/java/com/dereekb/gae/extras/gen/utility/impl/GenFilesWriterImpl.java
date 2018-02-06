@@ -17,6 +17,7 @@ import com.dereekb.gae.extras.gen.utility.GenFolder;
 public class GenFilesWriterImpl
         implements GenFilesWriter {
 
+	private boolean enforceLowerCase = true;
 	private WriteFolder rootFolder;
 
 	public GenFilesWriterImpl() throws IOException {
@@ -109,7 +110,7 @@ public class GenFilesWriterImpl
 		private WriteFolder outputFolder;
 
 		public GenFolderWriterImpl(GenFolder folder, WriteFolder parentFolder) throws IOException {
-			this(folder, parentFolder.newFolder(folder.getFolderName()));
+			this(folder, parentFolder.newFolder(getFileNameString(folder.getFolderName())));
 		}
 
 		public GenFolderWriterImpl(GenFolder folder, File folderFile) throws IOException {
@@ -136,7 +137,7 @@ public class GenFilesWriterImpl
 		private final File outputFile;
 
 		public GenFileWriterImpl(GenFile file, WriteFolder outputFolder) throws IOException {
-			this(file, outputFolder.newFile(file.getOutputFileName()));
+			this(file, outputFolder.newFile(getFileNameString(file.getOutputFileName())));
 		}
 
 		public GenFileWriterImpl(GenFile file, File outputFile) {
@@ -151,6 +152,14 @@ public class GenFilesWriterImpl
 			fileWriter.close();
 		}
 
+	}
+
+	protected String getFileNameString(String fileName) {
+		if (this.enforceLowerCase) {
+			return fileName.toLowerCase();
+		}
+
+		return fileName;
 	}
 
 }

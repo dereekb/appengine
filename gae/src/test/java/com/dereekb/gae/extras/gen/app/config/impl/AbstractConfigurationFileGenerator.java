@@ -23,6 +23,10 @@ public abstract class AbstractConfigurationFileGenerator
 	private AppConfiguration appConfig;
 	private Properties outputProperties;
 
+	public AbstractConfigurationFileGenerator(AbstractConfigurationFileGenerator generator) {
+		this(generator.getAppConfig(), generator.getOutputProperties());
+	}
+
 	public AbstractConfigurationFileGenerator(AppConfiguration appConfig) {
 		this(appConfig, null);
 	}

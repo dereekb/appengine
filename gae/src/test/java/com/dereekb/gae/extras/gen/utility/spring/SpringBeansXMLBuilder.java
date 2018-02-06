@@ -72,6 +72,9 @@ public interface SpringBeansXMLBuilder
 	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> integerBean(String id,
 	                                                                    Integer value);
 
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> longBean(String id,
+	                                                                 Long value);
+
 	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id);
 
 	public SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> map(String id);

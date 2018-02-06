@@ -18,7 +18,10 @@ public class AppModelBeansConfigurationImpl
 
 	private String modelBeanPrefix;
 	private String modelTypeBeanId;
+	private String modelIdTypeBeanId;
 	private String modelClassBeanId;
+	private String modelDtoClassBeanId;
+	private String modelObjectifyEntryBeanId;
 	private String modelDtoBeanId;
 	private String modelDataConverterBeanId;
 	private String modelRegistryId;
@@ -29,6 +32,7 @@ public class AppModelBeansConfigurationImpl
 	private String modelLinkModelAccessorId;
 	private String stringModelKeyConverter;
 	private String modelQueryServiceId;
+	private String modelSecurityContextServiceEntryBeanId;
 
 	public AppModelBeansConfigurationImpl(String modelType, ModelKeyType modelKeyType) {
 		String modelBeanPrefix = StringUtility.firstLetterLowerCase(modelType);
@@ -36,7 +40,10 @@ public class AppModelBeansConfigurationImpl
 		this.setModelKeyType(modelKeyType);
 		this.setModelBeanPrefix(modelBeanPrefix);
 		this.setModelTypeBeanId(modelBeanPrefix + "Type");
+		this.setModelIdTypeBeanId(modelBeanPrefix + "IdType");
 		this.setModelClassBeanId(modelBeanPrefix + "Class");
+		this.setModelDtoClassBeanId(modelBeanPrefix + "DtoClass");
+		this.setModelObjectifyEntryBeanId(modelBeanPrefix + "ObjectifyEntry");
 		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
@@ -46,6 +53,7 @@ public class AppModelBeansConfigurationImpl
 		this.setModelLinkModelAccessorId(modelBeanPrefix + "LinkModelAccessor");
 		this.setStringModelKeyConverter(AppBeansConfiguration.getModelKeyConverterBeanId(modelKeyType));
 		this.setModelQueryServiceId(modelBeanPrefix + "QueryService");
+		this.setModelSecurityContextServiceEntryBeanId(modelBeanPrefix + "SecurityContextServiceEntry");
 	}
 
 	public ModelKeyType getModelKeyType() {
@@ -87,6 +95,19 @@ public class AppModelBeansConfigurationImpl
 	}
 
 	@Override
+	public String getModelIdTypeBeanId() {
+		return this.modelIdTypeBeanId;
+	}
+
+	public void setModelIdTypeBeanId(String modelIdTypeBeanId) {
+		if (modelIdTypeBeanId == null) {
+			throw new IllegalArgumentException("modelIdTypeBeanId cannot be null.");
+		}
+
+		this.modelIdTypeBeanId = modelIdTypeBeanId;
+	}
+
+	@Override
 	public String getModelClassBeanId() {
 		return this.modelClassBeanId;
 	}
@@ -97,6 +118,32 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelClassBeanId = modelClassBeanId;
+	}
+
+	@Override
+	public String getModelDtoClassBeanId() {
+		return this.modelDtoClassBeanId;
+	}
+
+	public void setModelDtoClassBeanId(String modelDtoClassBeanId) {
+		if (modelDtoClassBeanId == null) {
+			throw new IllegalArgumentException("modelDtoClassBeanId cannot be null.");
+		}
+
+		this.modelDtoClassBeanId = modelDtoClassBeanId;
+	}
+
+	@Override
+	public String getModelObjectifyEntryBeanId() {
+		return this.modelObjectifyEntryBeanId;
+	}
+
+	public void setModelObjectifyEntryBeanId(String modelObjectifyEntryBeanId) {
+		if (modelObjectifyEntryBeanId == null) {
+			throw new IllegalArgumentException("modelObjectifyEntryBeanId cannot be null.");
+		}
+
+		this.modelObjectifyEntryBeanId = modelObjectifyEntryBeanId;
 	}
 
 	@Override
@@ -214,6 +261,19 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelQueryServiceId = modelQueryServiceId;
+	}
+
+	@Override
+	public String getModelSecurityContextServiceEntryBeanId() {
+		return this.modelSecurityContextServiceEntryBeanId;
+	}
+
+	public void setModelSecurityContextServiceEntryBeanId(String modelSecurityContextServiceEntryBeanId) {
+		if (modelSecurityContextServiceEntryBeanId == null) {
+			throw new IllegalArgumentException("modelSecurityContextServiceEntryBeanId cannot be null.");
+		}
+
+		this.modelSecurityContextServiceEntryBeanId = modelSecurityContextServiceEntryBeanId;
 	}
 
 }

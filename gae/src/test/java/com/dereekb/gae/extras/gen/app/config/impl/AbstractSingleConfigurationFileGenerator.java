@@ -13,6 +13,14 @@ public class AbstractSingleConfigurationFileGenerator extends AbstractConfigurat
 	private String folderName = "result";
 	private String fileName = "result";
 
+	public AbstractSingleConfigurationFileGenerator(AbstractConfigurationFileGenerator generator) {
+		super(generator);
+	}
+
+	public AbstractSingleConfigurationFileGenerator(AppConfiguration appConfig) {
+		super(appConfig);
+	}
+
 	public AbstractSingleConfigurationFileGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
 	}

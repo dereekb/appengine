@@ -151,7 +151,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		}
 	}
 
-	public GenFolder makeModelClientConfiguration(AppModelConfiguration modelConfig) {
+	public GenFolderImpl makeModelClientConfiguration(AppModelConfiguration modelConfig) {
 		GenFolderImpl folder = new GenFolderImpl(modelConfig.getModelType());
 		this.makeModelClientConfiguration(folder, modelConfig);
 		return folder;

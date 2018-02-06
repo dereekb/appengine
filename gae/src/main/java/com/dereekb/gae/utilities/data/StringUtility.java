@@ -207,6 +207,20 @@ public class StringUtility {
 		return new String(c);
 	}
 
+	public static String safeFirstLetterUpperCase(String string) {
+		if (isEmptyString(string)) {
+			return string;
+		}
+
+		return firstLetterUpperCase(string);
+	}
+
+	public static String firstLetterUpperCase(String string) {
+		char c[] = string.toCharArray();
+		c[0] = Character.toUpperCase(c[0]);
+		return new String(c);
+	}
+
 	/**
 	 * Makes the string start with the prefix if it doesn't already start with
 	 * it.

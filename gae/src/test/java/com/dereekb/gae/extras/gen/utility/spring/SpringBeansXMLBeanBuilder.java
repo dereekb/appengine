@@ -41,4 +41,6 @@ public interface SpringBeansXMLBeanBuilder<T>
 
 	public SpringBeansXMLBeanBuilder<T> lazy(boolean lazy);
 
+	public SpringBeansXMLBeanBuilder<T> factoryMethod(String method);
+
 }

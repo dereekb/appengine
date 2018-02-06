@@ -19,6 +19,7 @@ import com.dereekb.gae.model.crud.services.response.pair.InvalidCreateTemplatePa
 import com.dereekb.gae.model.crud.services.response.pair.InvalidTemplatePair;
 import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
+import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -49,12 +50,15 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
         implements EditModelControllerConversionDelegate<T, I> {
 
 	private String type;
-
-	// TODO: Can change to typedModelConversion
-
 	private DirectionalConverter<String, ModelKey> keyReader;
 	private BidirectionalConverter<T, I> converter;
 
+	public EditModelControllerConversionDelegateImpl(DirectionalConverter<String, ModelKey> keyReader,
+	        TypedBidirectionalConverter<T, I> converter) throws IllegalArgumentException {
+		this(converter.getModelType(), keyReader, converter);
+	}
+
+	@Deprecated
 	public EditModelControllerConversionDelegateImpl(String type,
 	        DirectionalConverter<String, ModelKey> keyReader,
 	        BidirectionalConverter<T, I> converter) throws IllegalArgumentException {
@@ -221,6 +225,12 @@ public final class EditModelControllerConversionDelegateImpl<T extends UniqueMod
 		apiResponse.addError(missingKeysError);
 
 		return apiResponse;
+	}
+
+	@Override
+	public String toString() {
+		return "EditModelControllerConversionDelegateImpl [type=" + this.type + ", keyReader=" + this.keyReader
+		        + ", converter=" + this.converter + "]";
 	}
 
 }

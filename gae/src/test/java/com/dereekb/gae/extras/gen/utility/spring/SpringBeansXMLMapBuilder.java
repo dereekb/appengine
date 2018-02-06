@@ -15,6 +15,7 @@ public interface SpringBeansXMLMapBuilder<T>
 	public static final String LIST_ELEMENT = "map";
 
 	public static final String KEY_TYPE_ATTRIBUTE = "key-type";
+	public static final String VALUE_TYPE_ATTRIBUTE = "value-type";
 
 	/**
 	 * Only allowed on root-level list beans.
@@ -25,6 +26,8 @@ public interface SpringBeansXMLMapBuilder<T>
 	public SpringBeansXMLMapBuilder<T> id(String beanId) throws UnsupportedOperationException;
 
 	public SpringBeansXMLMapBuilder<T> keyType(Class<?> type);
+
+	public SpringBeansXMLMapBuilder<T> valueType(Class<?> type);
 
 	public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key);
 

@@ -135,6 +135,12 @@ public class SpringBeansXMLBuilderImpl
 	}
 
 	@Override
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> longBean(String id,
+	                                                                 Long value) {
+		return this.bean(id).beanClass(Long.class).constructor().value(value.toString()).up();
+	}
+
+	@Override
 	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id) {
 		return new SpringBeansXMLListBuilderImpl<SpringBeansXMLBuilder>(this, this.beansBuilder, id);
 	}
@@ -226,6 +232,12 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		@Override
+		public SpringBeansXMLBeanBuilder<T> factoryMethod(String method) {
+			this.builder.a(SpringBeansXMLBean.FACTORY_METHOD_ATTRIBUTE, method);
+			return this;
+		}
+
 	}
 
 	private class SpringBeansXMLListBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
@@ -313,6 +325,12 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		@Override
+		public SpringBeansXMLMapBuilder<T> valueType(Class<?> type) {
+			this.builder.a(SpringBeansXMLMapBuilder.VALUE_TYPE_ATTRIBUTE, type.getCanonicalName());
+			return this;
+		}
+
 		private SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry() {
 			return this.entry(null, false);
 		}
@@ -323,8 +341,10 @@ public class SpringBeansXMLBuilderImpl
 		}
 
 		@Override
-		public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key, boolean ref) {
-			SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> builder = new SpringBeansXMLMapEntryBuilderImpl<SpringBeansXMLMapBuilder<T>>(this, this.builder);
+		public SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> entry(String key,
+		                                                                        boolean ref) {
+			SpringBeansXMLMapEntryBuilder<SpringBeansXMLMapBuilder<T>> builder = new SpringBeansXMLMapEntryBuilderImpl<SpringBeansXMLMapBuilder<T>>(
+			        this, this.builder);
 
 			if (key != null) {
 				return builder.key(key, ref);

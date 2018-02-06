@@ -311,8 +311,23 @@ public class AppModelConfigurationImpl
 	}
 
 	@Override
+	public String getModelIdTypeBeanId() {
+		return this.beansConfiguration.getModelIdTypeBeanId();
+	}
+
+	@Override
 	public String getModelClassBeanId() {
 		return this.beansConfiguration.getModelClassBeanId();
+	}
+
+	@Override
+	public String getModelDtoClassBeanId() {
+		return this.beansConfiguration.getModelDtoClassBeanId();
+	}
+
+	@Override
+	public String getModelObjectifyEntryBeanId() {
+		return this.beansConfiguration.getModelObjectifyEntryBeanId();
 	}
 
 	@Override
@@ -358,6 +373,11 @@ public class AppModelConfigurationImpl
 	@Override
 	public String getModelQueryServiceId() {
 		return this.beansConfiguration.getModelQueryServiceId();
+	}
+
+	@Override
+	public String getModelSecurityContextServiceEntryBeanId() {
+		return this.beansConfiguration.getModelSecurityContextServiceEntryBeanId();
 	}
 
 }

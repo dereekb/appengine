@@ -30,6 +30,10 @@ public class TaskSchedulerImpl
 	private Context context;
 	private TaskSchedulerAuthenticator authenticator;
 
+	public TaskSchedulerImpl(String queue) {
+		this(queue, null, new TaskRequestConverterImpl());
+	}
+
 	public TaskSchedulerImpl(Filter<TaskRequest> filter) {
 		this(filter, new TaskRequestConverterImpl());
 	}

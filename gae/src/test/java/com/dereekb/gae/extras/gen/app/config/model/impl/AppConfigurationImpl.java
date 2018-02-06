@@ -16,6 +16,10 @@ import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationIm
 public class AppConfigurationImpl
         implements AppConfiguration {
 
+	private Long appId = 0L;
+	private String appName = "app";
+	private String appTaskQueueName = "app";
+
 	private AppBeansConfiguration appBeans = new AppBeansConfigurationImpl();
 	private List<AppModelConfigurationGroup> modelConfigurations;
 
@@ -24,6 +28,32 @@ public class AppConfigurationImpl
 	}
 
 	// MARK: AppConfiguration
+	@Override
+	public Long getAppId() {
+		return this.appId;
+	}
+
+	public void setAppId(Long appId) {
+		if (appId == null) {
+			throw new IllegalArgumentException("appId cannot be null.");
+		}
+
+		this.appId = appId;
+	}
+
+	@Override
+	public String getAppName() {
+		return this.appName;
+	}
+
+	public void setAppName(String appName) {
+		if (appName == null) {
+			throw new IllegalArgumentException("appName cannot be null.");
+		}
+
+		this.appName = appName;
+	}
+
 	@Override
 	public AppBeansConfiguration getAppBeans() {
 		return this.appBeans;
@@ -48,6 +78,19 @@ public class AppConfigurationImpl
 		}
 
 		this.modelConfigurations = modelConfigurations;
+	}
+
+	@Override
+	public String getAppTaskQueueName() {
+		return this.appTaskQueueName;
+	}
+
+	public void setAppTaskQueueName(String appTaskQueueName) {
+		if (appTaskQueueName == null) {
+			throw new IllegalArgumentException("appTaskQueueName cannot be null.");
+		}
+
+		this.appTaskQueueName = appTaskQueueName;
 	}
 
 }
