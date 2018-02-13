@@ -32,6 +32,10 @@ public class ApiConfigurationGenerator extends AbstractConfigurationFileGenerato
 		super(appConfig);
 	}
 
+	public ApiConfigurationGenerator(AbstractConfigurationFileGenerator generator) {
+		super(generator);
+	}
+
 	// MARK: AbstractConfigurationFileGenerator
 	@Override
 	public GenFolder generateConfigurations() {

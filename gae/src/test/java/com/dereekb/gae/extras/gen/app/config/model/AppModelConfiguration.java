@@ -4,7 +4,9 @@ import com.dereekb.gae.model.extension.data.conversion.ModelDataConversionInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 public interface AppModelConfiguration
-        extends ModelDataConversionInfo<Object, Object>, AppModelBeansConfiguration {
+        extends ModelDataConversionInfo<Object, Object>, AppModelCrudsConfiguration, AppModelBeansConfiguration {
+
+	public AppModelCrudsConfiguration getCrudsConfiguration();
 
 	public AppModelBeansConfiguration getBeansConfiguration();
 

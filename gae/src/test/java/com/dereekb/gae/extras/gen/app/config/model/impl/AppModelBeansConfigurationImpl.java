@@ -25,6 +25,8 @@ public class AppModelBeansConfigurationImpl
 	private String modelDtoBeanId;
 	private String modelDataConverterBeanId;
 	private String modelRegistryId;
+	private String modelSetterTaskBeanId;
+	private String modelQueryInitializerBeanId;
 	private String modelKeyListAccessorFactoryId;
 
 	private String newModelFactoryBeanId;
@@ -39,6 +41,7 @@ public class AppModelBeansConfigurationImpl
 
 	private String modelStorerBeanId;
 	private String modelUpdaterBeanId;
+	private String modelConfiguredUpdaterBeanId;
 	private String modelDeleterBeanId;
 	private String modelScheduleCreateReviewBeanId;
 	private String modelScheduleUpdateReviewBeanId;
@@ -61,6 +64,8 @@ public class AppModelBeansConfigurationImpl
 		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
+		this.setModelSetterTaskBeanId(modelBeanPrefix + "SetterTask");
+		this.setModelQueryInitializerBeanId(modelBeanPrefix + "QueryInitializer");
 		this.setModelKeyListAccessorFactoryId(modelBeanPrefix + "KeyListAccessorFactory");
 		this.setNewModelFactoryBeanId(modelBeanPrefix + "Factory");
 		this.setModelCrudServiceId(modelBeanPrefix + "CrudService");
@@ -73,6 +78,7 @@ public class AppModelBeansConfigurationImpl
 		this.setModelLinkSystemBuilderEntryBeanId(modelBeanPrefix + "LinkSystemBuilderEntry");
 		this.setModelStorerBeanId(modelBeanPrefix + "Storer");
 		this.setModelUpdaterBeanId(modelBeanPrefix + "Updater");
+		this.setModelConfiguredUpdaterBeanId(modelBeanPrefix + "ConfiguredUpdater");
 		this.setModelDeleterBeanId(modelBeanPrefix + "Deleter");
 		this.setModelScheduleCreateReviewBeanId(modelBeanPrefix + "ScheduleCreateReview");
 		this.setModelScheduleUpdateReviewBeanId(modelBeanPrefix + "ScheduleUpdateReview");
@@ -209,6 +215,32 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelRegistryId = modelRegistryId;
+	}
+
+	@Override
+	public String getModelSetterTaskBeanId() {
+		return this.modelSetterTaskBeanId;
+	}
+
+	public void setModelSetterTaskBeanId(String modelSetterTaskBeanId) {
+		if (modelSetterTaskBeanId == null) {
+			throw new IllegalArgumentException("modelSetterTaskBeanId cannot be null.");
+		}
+
+		this.modelSetterTaskBeanId = modelSetterTaskBeanId;
+	}
+
+	@Override
+	public String getModelQueryInitializerBeanId() {
+		return this.modelQueryInitializerBeanId;
+	}
+
+	public void setModelQueryInitializerBeanId(String modelQueryInitializerBeanId) {
+		if (modelQueryInitializerBeanId == null) {
+			throw new IllegalArgumentException("modelQueryInitializerBeanId cannot be null.");
+		}
+
+		this.modelQueryInitializerBeanId = modelQueryInitializerBeanId;
 	}
 
 	@Override
@@ -365,6 +397,19 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelUpdaterBeanId = modelUpdaterBeanId;
+	}
+
+	@Override
+	public String getModelConfiguredUpdaterBeanId() {
+		return this.modelConfiguredUpdaterBeanId;
+	}
+
+	public void setModelConfiguredUpdaterBeanId(String modelConfiguredUpdaterBeanId) {
+		if (modelConfiguredUpdaterBeanId == null) {
+			throw new IllegalArgumentException("modelConfiguredUpdaterBeanId cannot be null.");
+		}
+
+		this.modelConfiguredUpdaterBeanId = modelConfiguredUpdaterBeanId;
 	}
 
 	@Override

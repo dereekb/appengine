@@ -28,6 +28,10 @@ public class ContextConfigurationGenerator extends AbstractConfigurationFileGene
 		super(appConfig);
 	}
 
+	public ContextConfigurationGenerator(AbstractConfigurationFileGenerator generator) {
+		super(generator);
+	}
+
 	// MARK: AbstractConfigurationFileGenerator
 	@Override
 	public GenFolder generateConfigurations() {

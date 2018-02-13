@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.utility.spring.impl;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.utility.GenFile;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanPropertyBuilder;
@@ -238,6 +239,12 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		@Override
+		public SpringBeansXMLBeanBuilder<T> factoryBean(String ref) {
+			this.builder.a(SpringBeansXMLBean.FACTORY_BEAN_ATTRIBUTE, ref);
+			return this;
+		}
+
 	}
 
 	private class SpringBeansXMLListBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
@@ -289,6 +296,55 @@ public class SpringBeansXMLBuilderImpl
 
 	}
 
+	private class SpringBeansXMLArrayBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
+	        implements SpringBeansXMLArrayBuilder<T> {
+
+		public SpringBeansXMLArrayBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		public SpringBeansXMLArrayBuilderImpl(T parent, XMLBuilder2 builder, String beanId) {
+			super(parent, builder);
+			this.id(beanId);
+		}
+
+		@Override
+		protected String getRootBeanName() {
+			return SpringBeansXMLArrayBuilder.ROOT_ARRAY_ELEMENT;
+		}
+
+		@Override
+		protected String getNonRootBeanName() {
+			return SpringBeansXMLArrayBuilder.ARRAY_ELEMENT;
+		}
+
+		// MARK: SpringBeansXMLBeanBuilder
+		@Override
+		public SpringBeansXMLArrayBuilder<T> id(String beanId) {
+			this.builder.a(SpringBeansXMLBean.ID_ATTRIBUTE, beanId);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLArrayBuilder<T> type(Class<T> type) {
+			this.builder.a(SpringBeansXMLArrayBuilder.VALUE_CLASS_ATTRIBUTE, type.getCanonicalName());
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLArrayBuilder<T> ref(String ref) {
+			this.builder.e("ref").a("bean", ref);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLArrayBuilder<T> value(String value) {
+			this.builder.e("value").text(value);
+			return this;
+		}
+
+	}
+
 	private class SpringBeansXMLMapBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
 	        implements SpringBeansXMLMapBuilder<T> {
 
@@ -304,12 +360,12 @@ public class SpringBeansXMLBuilderImpl
 
 		@Override
 		protected String getRootBeanName() {
-			return SpringBeansXMLMapBuilder.ROOT_LIST_ELEMENT;
+			return SpringBeansXMLMapBuilder.ROOT_MAP_ELEMENT;
 		}
 
 		@Override
 		protected String getNonRootBeanName() {
-			return SpringBeansXMLMapBuilder.LIST_ELEMENT;
+			return SpringBeansXMLMapBuilder.MAP_ELEMENT;
 		}
 
 		// MARK: SpringBeansXMLBeanBuilder
@@ -416,16 +472,17 @@ public class SpringBeansXMLBuilderImpl
 	private abstract class AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
 	        implements SpringBeansXMLUtilBeanBuilderEntity<T> {
 
-		private final boolean isRootBean;
+		private boolean isRootBean;
 
 		public AbstractSpringBeansXMLUtilBeanBuilderEntityImpl(T parent, XMLBuilder2 builder) {
 			super(parent, builder);
-			this.isRootBean = builder.equals(SpringBeansXMLBuilderImpl.this.beansBuilder);
 		}
 
 		@Override
 		protected XMLBuilder2 makeBuilderForElement(XMLBuilder2 builder) {
-			if (this.isRootBean()) {
+			this.isRootBean = builder.equals(builder.root());
+
+			if (this.isRootBean) {
 				return builder.e(this.getRootBeanName());
 			} else {
 				return builder.e(this.getNonRootBeanName());
@@ -468,6 +525,14 @@ public class SpringBeansXMLBuilderImpl
 
 		// MARK: SpringBeansXMLBeanConstructorBuilder
 		@Override
+		public XMLBuilder2 nextArgBuilder() {
+			Integer arg = this.nextArgIndex;
+			this.nextArgIndex += 1;
+			return this.builder.e(SpringBeansXMLBeanConstructor.ARG_ELEMENT)
+			        .a(SpringBeansXMLBeanConstructor.ARG_INDEX_ATTRIBUTE, arg.toString());
+		}
+
+		@Override
 		public SpringBeansXMLBeanConstructorBuilder<T> ref(String ref) {
 			this.nextArgBuilder().a(SpringBeansXMLBeanConstructor.ARG_REF_ATTRIBUTE, ref);
 			return this;
@@ -480,11 +545,15 @@ public class SpringBeansXMLBuilderImpl
 		}
 
 		@Override
-		public XMLBuilder2 nextArgBuilder() {
-			Integer arg = this.nextArgIndex;
-			this.nextArgIndex += 1;
-			return this.builder.e(SpringBeansXMLBeanConstructor.ARG_ELEMENT)
-			        .a(SpringBeansXMLBeanConstructor.ARG_INDEX_ATTRIBUTE, arg.toString());
+		public SpringBeansXMLBeanConstructorBuilder<T> nullArg() {
+			this.nextArgBuilder().e(SpringBeansXMLBeanConstructor.NULL_ELEMENT);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<SpringBeansXMLBeanConstructorBuilder<T>> bean() {
+			return new SpringBeansXMLBeanBuilderImpl<SpringBeansXMLBeanConstructorBuilder<T>>(this,
+			        this.nextArgBuilder());
 		}
 
 		@Override
@@ -497,6 +566,12 @@ public class SpringBeansXMLBuilderImpl
 		public SpringBeansXMLListBuilder<SpringBeansXMLBeanConstructorBuilder<T>> list() {
 			XMLBuilder2 builder = this.nextArgBuilder();
 			return new SpringBeansXMLListBuilderImpl<SpringBeansXMLBeanConstructorBuilder<T>>(this, builder);
+		}
+
+		@Override
+		public SpringBeansXMLArrayBuilder<SpringBeansXMLBeanConstructorBuilder<T>> array() {
+			XMLBuilder2 builder = this.nextArgBuilder();
+			return new SpringBeansXMLArrayBuilderImpl<SpringBeansXMLBeanConstructorBuilder<T>>(this, builder);
 		}
 
 	}

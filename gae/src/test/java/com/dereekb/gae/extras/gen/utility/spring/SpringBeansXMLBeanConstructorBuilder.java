@@ -19,8 +19,14 @@ public interface SpringBeansXMLBeanConstructorBuilder<T>
 
 	public SpringBeansXMLBeanConstructorBuilder<T> value(String value);
 
+	public SpringBeansXMLBeanConstructorBuilder<T> nullArg();
+
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBeanConstructorBuilder<T>> bean();
+
 	public SpringBeansXMLMapBuilder<SpringBeansXMLBeanConstructorBuilder<T>> map();
 
 	public SpringBeansXMLListBuilder<SpringBeansXMLBeanConstructorBuilder<T>> list();
+
+	public SpringBeansXMLArrayBuilder<SpringBeansXMLBeanConstructorBuilder<T>> array();
 
 }

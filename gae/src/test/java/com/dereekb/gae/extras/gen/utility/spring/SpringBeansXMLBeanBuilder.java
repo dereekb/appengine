@@ -43,4 +43,6 @@ public interface SpringBeansXMLBeanBuilder<T>
 
 	public SpringBeansXMLBeanBuilder<T> factoryMethod(String method);
 
+	public SpringBeansXMLBeanBuilder<T> factoryBean(String ref);
+
 }

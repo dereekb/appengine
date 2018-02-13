@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.model.AppModelCrudsConfiguration;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -13,15 +14,25 @@ import com.dereekb.gae.utilities.misc.path.PathUtility;
  * {@link AppModelConfiguration} implementation.
  */
 public class AppModelConfigurationImpl
-        implements AppModelConfiguration, AppModelBeansConfiguration {
+        implements AppModelConfiguration, AppModelCrudsConfiguration, AppModelBeansConfiguration {
 
 	private boolean localModel = true;
 	private boolean localReadOnly = true;
+
+	private boolean crudService = true;
+	private boolean createService = true;
+	private boolean validatedCreate = false;
+	private boolean updateService = true;
+	private boolean deleteService = true;
 
 	private boolean iterateControllerEntry = true;
 
 	private String modelType;
 	private ModelKeyType modelKeyType;
+
+	private Class<Object> modelCreateAttributeUpdaterClass;
+	private Class<Object> modelAttributeUpdaterClass;
+	private Class<Object> modelRelatedModelAttributeUtilityClass;
 
 	private Class<Object> modelClass;
 	private Class<Object> modelDataClass;
@@ -39,6 +50,7 @@ public class AppModelConfigurationImpl
 
 	private Class<Object> modelEditControllerClass;
 
+	private AppModelCrudsConfiguration crudsConfiguration;
 	private AppModelBeansConfiguration beansConfiguration;
 
 	public AppModelConfigurationImpl(Class<?> modelClass) {
@@ -82,6 +94,11 @@ public class AppModelConfigurationImpl
 		String queryClassName = baseClassPath + ".search.query." + baseClassSimpleName + "Query";
 		String queryInitializerClassName = queryClassName + "Initializer";
 
+		String updateAttributeInitializerClassName = baseClassPath + ".crud." + baseClassSimpleName
+		        + "AttributeUpdater";
+		String createAttributeInitializerClassName = baseClassPath + ".crud." + baseClassSimpleName
+		        + "CreateAttributeUpdater";
+
 		// Find Edit Controller Name
 		List<String> packagePathComponents = PathUtility.getComponents(baseClassPath, "\\.");
 		List<String> comPathComponents = packagePathComponents.subList(0, 3);
@@ -90,6 +107,7 @@ public class AppModelConfigurationImpl
 
 		String editControllerClass = comPath + "." + baseClassSimpleName + "EditController";
 
+		// Required Classes
 		try {
 			this.modelDataClass = (Class<Object>) Class.forName(dataClassName);
 			this.modelDataReaderClass = (Class<Object>) Class.forName(dataClassName + "Reader");
@@ -101,11 +119,36 @@ public class AppModelConfigurationImpl
 			this.modelQueryClass = (Class<Object>) Class.forName(queryClassName);
 			this.modelQueryInitializerClass = (Class<Object>) Class.forName(queryInitializerClassName);
 
+			this.modelAttributeUpdaterClass = (Class<Object>) Class.forName(updateAttributeInitializerClassName);
 			this.modelSecurityContextServiceEntryClass = (Class<Object>) Class.forName(queryInitializerClassName);
 
 			this.modelEditControllerClass = (Class<Object>) Class.forName(editControllerClass);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
+		}
+
+		// Optional Classes
+		try {
+			this.modelCreateAttributeUpdaterClass = (Class<Object>) Class.forName(createAttributeInitializerClassName);
+		} catch (ClassNotFoundException e) {
+
+		}
+
+		try {
+			String firstRelatedAttributeUtilityClassName = baseClassPath + ".crud." + baseClassSimpleName
+			        + "RelatedModelAttributeUtility";
+			this.modelRelatedModelAttributeUtilityClass = (Class<Object>) Class
+			        .forName(firstRelatedAttributeUtilityClassName);
+		} catch (ClassNotFoundException e) {
+			// Try Checking "Shared"
+			try {
+				String sharedRelatedAttributeUtilityClassName = baseClassPath + ".shared.crud." + baseClassSimpleName
+				        + "RelatedModelAttributeUtility";
+				this.modelRelatedModelAttributeUtilityClass = (Class<Object>) Class
+				        .forName(sharedRelatedAttributeUtilityClassName);
+			} catch (ClassNotFoundException x) {
+
+			}
 		}
 
 	}
@@ -208,6 +251,19 @@ public class AppModelConfigurationImpl
 		}
 
 		this.modelDataReaderClass = modelDataReaderClass;
+	}
+
+	@Override
+	public AppModelCrudsConfiguration getCrudsConfiguration() {
+		return this.crudsConfiguration;
+	}
+
+	public void setCrudsConfiguration(AppModelCrudsConfiguration crudsConfiguration) {
+		if (crudsConfiguration == null) {
+			throw new IllegalArgumentException("crudsConfiguration cannot be null.");
+		}
+
+		this.crudsConfiguration = crudsConfiguration;
 	}
 
 	@Override
@@ -449,6 +505,107 @@ public class AppModelConfigurationImpl
 	@Override
 	public String getModelRoleSetLoaderBeanId() {
 		return this.beansConfiguration.getModelRoleSetLoaderBeanId();
+	}
+
+	@Override
+	public String getModelQueryInitializerBeanId() {
+		return this.beansConfiguration.getModelQueryInitializerBeanId();
+	}
+
+	@Override
+	public String getModelConfiguredUpdaterBeanId() {
+		return this.beansConfiguration.getModelConfiguredUpdaterBeanId();
+	}
+
+	@Override
+	public String getModelSetterTaskBeanId() {
+		return this.beansConfiguration.getModelSetterTaskBeanId();
+	}
+
+	// AppModelCrudsConfiguration
+	@Override
+	public boolean hasCrudService() {
+		return this.crudService;
+	}
+
+	public void setHasCrudService(boolean crudService) {
+		this.crudService = crudService;
+	}
+
+	@Override
+	public boolean hasCreateService() {
+		return this.createService;
+	}
+
+	public void setHasCreateService(boolean createService) {
+		this.createService = createService;
+	}
+
+	@Override
+	public boolean hasUpdateService() {
+		return this.updateService;
+	}
+
+	public void setHasUpdateService(boolean updateService) {
+		this.updateService = updateService;
+	}
+
+	@Override
+	public boolean hasDeleteService() {
+		return this.deleteService;
+	}
+
+	public void setHasDeleteService(boolean deleteService) {
+		this.deleteService = deleteService;
+	}
+
+	@Override
+	public boolean hasValidatedCreate() {
+		return this.validatedCreate;
+	}
+
+	public void setHasValidatedCreate(boolean validatedCreate) {
+		this.validatedCreate = validatedCreate;
+	}
+
+	@Override
+	public boolean hasCreateAttributeUpdater() {
+		return this.modelCreateAttributeUpdaterClass != null;
+	}
+
+	@Override
+	public Class<Object> getModelCreateAttributeUpdaterClass() {
+		return this.modelCreateAttributeUpdaterClass;
+	}
+
+	public void setModelCreateAttributeUpdaterClass(Class<Object> modelCreateAttributeUpdaterClass) {
+		this.modelCreateAttributeUpdaterClass = modelCreateAttributeUpdaterClass;
+	}
+
+	@Override
+	public Class<Object> getModelAttributeUpdaterClass() {
+		return this.modelAttributeUpdaterClass;
+	}
+
+	public void setModelAttributeUpdaterClass(Class<Object> modelAttributeUpdaterClass) {
+		if (modelAttributeUpdaterClass == null) {
+			throw new IllegalArgumentException("modelAttributeUpdaterClass cannot be null.");
+		}
+
+		this.modelAttributeUpdaterClass = modelAttributeUpdaterClass;
+	}
+
+	@Override
+	public boolean hasRelatedAttributeUtility() {
+		return this.modelRelatedModelAttributeUtilityClass != null;
+	}
+
+	public Class<Object> getModelRelatedModelAttributeUtilityClass() {
+		return this.modelRelatedModelAttributeUtilityClass;
+	}
+
+	public void setModelRelatedModelAttributeUtilityClass(Class<Object> modelRelatedModelAttributeUtilityClass) {
+		this.modelRelatedModelAttributeUtilityClass = modelRelatedModelAttributeUtilityClass;
 	}
 
 }

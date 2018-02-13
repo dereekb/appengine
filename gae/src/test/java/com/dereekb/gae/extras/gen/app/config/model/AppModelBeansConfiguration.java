@@ -26,6 +26,10 @@ public interface AppModelBeansConfiguration {
 
 	public String getModelRegistryId();
 
+	public String getModelSetterTaskBeanId();
+
+	public String getModelQueryInitializerBeanId();
+
 	public String getModelLinkSystemBuilderEntryBeanId();
 
 	/**
@@ -51,6 +55,8 @@ public interface AppModelBeansConfiguration {
 	public String getModelStorerBeanId();
 
 	public String getModelUpdaterBeanId();
+
+	public String getModelConfiguredUpdaterBeanId();
 
 	public String getModelDeleterBeanId();
 

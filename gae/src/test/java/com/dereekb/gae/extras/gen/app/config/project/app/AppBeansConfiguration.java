@@ -14,6 +14,8 @@ public interface AppBeansConfiguration {
 	public String getAppIdBeanId();
 
 	// Context
+	public String getObjectifyDatabaseId();
+
 	public String getModelKeyTypeConverterId();
 
 	public String getLinkServiceId();
@@ -23,6 +25,12 @@ public interface AppBeansConfiguration {
 	public String getTaskQueueNameId();
 
 	public String getSystemLoginTokenFactoryBeanId();
+
+	public String getCrudReadModelRoleRefBeanId();
+
+	public String getCrudUpdateModelRoleRefBeanId();
+
+	public String getCrudDeleteModelRoleRefBeanId();
 
 	// TaskQueue
 	public String getEventServiceId();

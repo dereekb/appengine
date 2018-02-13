@@ -21,6 +21,10 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		super(appConfig);
 	}
 
+	public TaskQueueConfigurationGenerator(AbstractConfigurationFileGenerator generator) {
+		super(generator);
+	}
+
 	// MARK: AbstractConfigurationFileGenerator
 	@Override
 	public GenFolder generateConfigurations() {

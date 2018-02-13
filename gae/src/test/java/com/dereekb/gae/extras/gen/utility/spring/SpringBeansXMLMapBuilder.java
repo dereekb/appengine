@@ -11,8 +11,8 @@ package com.dereekb.gae.extras.gen.utility.spring;
 public interface SpringBeansXMLMapBuilder<T>
         extends SpringBeansXMLUtilBeanBuilderEntity<T> {
 
-	public static final String ROOT_LIST_ELEMENT = "util:map";
-	public static final String LIST_ELEMENT = "map";
+	public static final String ROOT_MAP_ELEMENT = "util:map";
+	public static final String MAP_ELEMENT = "map";
 
 	public static final String KEY_TYPE_ATTRIBUTE = "key-type";
 	public static final String VALUE_TYPE_ATTRIBUTE = "value-type";
