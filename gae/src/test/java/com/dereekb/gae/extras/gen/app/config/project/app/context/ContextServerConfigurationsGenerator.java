@@ -8,6 +8,7 @@ import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFil
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -62,14 +63,14 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 	public GenFile makeServerFile(GenFolderImpl folder) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
+		AppBeansConfiguration appBeans = this.getAppConfig().getAppBeans();
+
 		builder.comment("App Info");
-		builder.bean("serverAppInfo").beanClass(AppInfoImpl.class).c()
-		        .ref(this.getAppConfig().getAppBeans().getAppKeyBeanId())
-		        .ref(this.getAppConfig().getAppBeans().getAppNameBeanId());
-		builder.bean("serverAppKey").beanClass(ModelKey.class)
-		        .property(this.getAppConfig().getAppBeans().getAppIdBeanId());
-		builder.longBean("serverAppId", this.getAppConfig().getAppId());
-		builder.stringBean("serverAppName", this.getAppConfig().getAppName());
+		builder.bean(appBeans.getAppInfoBeanId()).beanClass(AppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
+		        .ref(appBeans.getAppNameBeanId());
+		builder.bean(appBeans.getAppKeyBeanId()).beanClass(ModelKey.class).property(appBeans.getAppIdBeanId());
+		builder.longBean(appBeans.getAppIdBeanId(), this.getAppConfig().getAppId());
+		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());
 
 		builder.comment("Import");
 		builder.imp("/model/model.xml");

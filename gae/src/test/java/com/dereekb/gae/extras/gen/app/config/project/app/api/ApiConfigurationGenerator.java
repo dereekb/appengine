@@ -9,6 +9,7 @@ import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLinkConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiScheduleConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiSearchConfigurationGenerator;
+import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiServerConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -81,6 +82,8 @@ public class ApiConfigurationGenerator extends AbstractConfigurationFileGenerato
 		        .generateConfigurations());
 
 		// Server
+		extensions.merge(new ApiServerConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		        .generateConfigurations());
 
 		// Extensions Import File
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();

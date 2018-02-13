@@ -9,9 +9,10 @@ package com.dereekb.gae.extras.gen.app.config.project.app;
 public class AppBeansConfigurationImpl
         implements AppBeansConfiguration {
 
+	public static final String APP_INFO_BEAN_ID = "serverAppInfo";
 	public static final String APP_KEY_BEAN_ID = "serverAppKey";
-	public static final String APP_NAME_BEAN_ID = "serverNameKey";
-	public static final String APP_ID_BEAN_ID = "serverIdKey";
+	public static final String APP_NAME_BEAN_ID = "serverAppName";
+	public static final String APP_ID_BEAN_ID = "serverAppId";
 
 	public static final String EVENT_SERVICE_BEAN_ID = "eventService";
 	public static final String LINK_SERVICE_BEAN_ID = "linkService";
@@ -20,6 +21,7 @@ public class AppBeansConfigurationImpl
 	public static final String MODEL_KEY_TYPE_CONVERTER_ID = "modelKeyTypeConverter";
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
 
+	private String appInfoBeanId = APP_INFO_BEAN_ID;
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
 	private String appNameBeanId = APP_NAME_BEAN_ID;
 	private String appIdBeanId = APP_ID_BEAN_ID;
@@ -30,6 +32,19 @@ public class AppBeansConfigurationImpl
 	private String taskQueueNameId = TASK_QUEUE_NAME_BEAN_ID;
 	private String modelKeyTypeConverterId = MODEL_KEY_TYPE_CONVERTER_ID;
 	private String SystemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
+
+	@Override
+	public String getAppInfoBeanId() {
+		return this.appInfoBeanId;
+	}
+
+	public void setAppInfoBeanId(String appInfoBeanId) {
+		if (appInfoBeanId == null) {
+			throw new IllegalArgumentException("appInfoBeanId cannot be null.");
+		}
+
+		this.appInfoBeanId = appInfoBeanId;
+	}
 
 	@Override
 	public String getAppKeyBeanId() {

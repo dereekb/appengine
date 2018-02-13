@@ -16,6 +16,7 @@ public class AppModelConfigurationImpl
         implements AppModelConfiguration, AppModelBeansConfiguration {
 
 	private boolean localModel = true;
+	private boolean localReadOnly = true;
 
 	private boolean iterateControllerEntry = true;
 
@@ -120,6 +121,15 @@ public class AppModelConfigurationImpl
 
 	public void setLocalModel(boolean localModel) {
 		this.localModel = localModel;
+	}
+
+	@Override
+	public boolean isLocalReadOnly() {
+		return this.localReadOnly;
+	}
+
+	public void setLocalReadOnly(boolean localReadOnly) {
+		this.localReadOnly = localReadOnly;
 	}
 
 	@Override

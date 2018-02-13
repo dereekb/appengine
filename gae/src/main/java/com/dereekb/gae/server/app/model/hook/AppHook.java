@@ -1,6 +1,9 @@
 package com.dereekb.gae.server.app.model.hook;
 
 import com.dereekb.gae.server.app.model.app.shared.impl.AbstractLongKeyedAppRelatedModel;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.webhook.WebHookEvent;
@@ -16,6 +19,7 @@ import com.googlecode.objectify.condition.IfZero;
  * @author dereekb
  *
  */
+@ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public class AppHook extends AbstractLongKeyedAppRelatedModel<AppHook> {
 
 	private static final long serialVersionUID = 1L;

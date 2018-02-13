@@ -17,6 +17,7 @@ import com.dereekb.gae.extras.gen.app.config.project.test.TestModelsConfiguratio
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFilesWriterImpl;
 import com.dereekb.gae.server.app.model.app.App;
+import com.dereekb.gae.server.app.model.hook.AppHook;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -36,9 +37,9 @@ public class GaeAppConfigurationGen {
 
 		// App
 		AppModelConfigurationImpl appModel = new AppModelConfigurationImpl(App.class);
-
+		AppModelConfigurationImpl appHookModel = new AppModelConfigurationImpl(AppHook.class);
 		AppModelConfigurationGroupImpl appGroup = new AppModelConfigurationGroupImpl("app",
-		        ListUtility.toList(appModel));
+		        ListUtility.toList(appModel, appHookModel));
 
 		List<AppModelConfigurationGroup> modelConfigurations = ListUtility.toList(loginGroup, appGroup);
 

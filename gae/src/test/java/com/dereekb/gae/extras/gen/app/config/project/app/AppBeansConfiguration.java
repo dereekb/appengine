@@ -5,6 +5,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 public interface AppBeansConfiguration {
 
 	// App
+	public String getAppInfoBeanId();
+
 	public String getAppKeyBeanId();
 
 	public String getAppNameBeanId();
