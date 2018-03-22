@@ -32,6 +32,6 @@ public interface SpringBeansXMLArrayBuilder<T>
 
 	public SpringBeansXMLArrayBuilder<T> value(String ref);
 
-	// TODO: Bean, etc.
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLArrayBuilder<T>> bean();
 
 }

@@ -10,7 +10,11 @@ public interface AppConfiguration {
 
 	public String getAppName();
 
+	public String getAppServiceName();
+
 	public String getAppTaskQueueName();
+
+	public String getAppVersion();
 
 	public AppBeansConfiguration getAppBeans();
 

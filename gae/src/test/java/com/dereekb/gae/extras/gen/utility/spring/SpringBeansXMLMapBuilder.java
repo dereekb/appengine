@@ -41,4 +41,7 @@ public interface SpringBeansXMLMapBuilder<T>
 	public SpringBeansXMLMapBuilder<T> keyRefValueRefEntry(String keyRef,
 	                                                       String valueRef);
 
+	public SpringBeansXMLMapBuilder<T> value(String key,
+	                                         String value);
+
 }

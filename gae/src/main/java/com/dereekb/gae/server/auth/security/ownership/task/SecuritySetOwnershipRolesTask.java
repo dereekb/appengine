@@ -12,12 +12,16 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 /**
  * {@link IterableTask} that sets all input {@link MutableOwnedModel} values to
  * match the owner returned by {@link LoginSecurityContext}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
+ * @deprecated The current context might not always be the user requesting it
+ *             (I.E. an admin is performing the function on their behalf in an
+ *             admin context.)
  */
+@Deprecated
 public class SecuritySetOwnershipRolesTask<T extends MutableOwnedModel>
         implements IterableTask<T> {
 

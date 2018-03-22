@@ -18,7 +18,9 @@ public class AppConfigurationImpl
 
 	private Long appId = 0L;
 	private String appName = "app";
+	private String appServiceName = "app";
 	private String appTaskQueueName = "app";
+	private String appVersion = "v1";
 
 	private AppBeansConfiguration appBeans = new AppBeansConfigurationImpl();
 	private List<AppModelConfigurationGroup> modelConfigurations;
@@ -55,6 +57,45 @@ public class AppConfigurationImpl
 	}
 
 	@Override
+	public String getAppServiceName() {
+		return this.appServiceName;
+	}
+
+	public void setAppServiceName(String appServiceName) {
+		if (appServiceName == null) {
+			throw new IllegalArgumentException("appServiceName cannot be null.");
+		}
+
+		this.appServiceName = appServiceName;
+	}
+
+	@Override
+	public String getAppTaskQueueName() {
+		return this.appTaskQueueName;
+	}
+
+	public void setAppTaskQueueName(String appTaskQueueName) {
+		if (appTaskQueueName == null) {
+			throw new IllegalArgumentException("appTaskQueueName cannot be null.");
+		}
+
+		this.appTaskQueueName = appTaskQueueName;
+	}
+
+	@Override
+	public String getAppVersion() {
+		return this.appVersion;
+	}
+
+	public void setAppVersion(String appVersion) {
+		if (appVersion == null) {
+			throw new IllegalArgumentException("appVersion cannot be null.");
+		}
+
+		this.appVersion = appVersion;
+	}
+
+	@Override
 	public AppBeansConfiguration getAppBeans() {
 		return this.appBeans;
 	}
@@ -78,19 +119,6 @@ public class AppConfigurationImpl
 		}
 
 		this.modelConfigurations = modelConfigurations;
-	}
-
-	@Override
-	public String getAppTaskQueueName() {
-		return this.appTaskQueueName;
-	}
-
-	public void setAppTaskQueueName(String appTaskQueueName) {
-		if (appTaskQueueName == null) {
-			throw new IllegalArgumentException("appTaskQueueName cannot be null.");
-		}
-
-		this.appTaskQueueName = appTaskQueueName;
 	}
 
 }

@@ -32,6 +32,18 @@ public interface AppBeansConfiguration {
 
 	public String getCrudDeleteModelRoleRefBeanId();
 
+	public String getAnonymousModelRoleSetContextServiceBeanId();
+
+	public String getAppLoginSecurityServiceBeanId();
+
+	public String getAppLoginSecuritySigningServiceBeanId();
+
+	public String getLoginTokenServiceBeanId();
+
+	public Class<?> getLoginTokenAuthenticationProviderClass();
+
+	public Class<?> getLoginTokenUserDetailsBuilderClass();
+
 	// TaskQueue
 	public String getEventServiceId();
 

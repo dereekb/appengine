@@ -417,6 +417,21 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.bean(queryInitializerId).beanClass(this.modelConfig.getModelQueryInitializerClass());
 
 			builder.comment("Security");
+			if (this.modelConfig.getModelOwnedModelQuerySecurityDelegateClass() != null) {
+				builder.comment("Owned Model");
+
+				String securityDelegateBeanId = this.modelConfig.getModelBeanPrefix()
+				        + "OwnedModelQuerySecurityDelegate";
+
+				builder.bean(securityDelegateBeanId)
+				        .beanClass(this.modelConfig.getModelOwnedModelQuerySecurityDelegateClass()).c()
+				        .ref(this.getAppConfig().getAppBeans().getAnonymousModelRoleSetContextServiceBeanId());
+
+				builder.bean("optional" + StringUtility.firstLetterUpperCase(securityDelegateBeanId))
+				        .beanClass(this.modelConfig.getModelOwnedModelQuerySecurityDelegateClass()).c()
+				        .ref(this.getAppConfig().getAppBeans().getAnonymousModelRoleSetContextServiceBeanId()).up()
+				        .property("optional").value("true");
+			}
 
 		}
 

@@ -31,6 +31,8 @@ public interface SpringBeansXMLListBuilder<T>
 
 	public SpringBeansXMLListBuilder<T> value(String ref);
 
-	// TODO: Bean, etc.
+	public SpringBeansXMLListBuilder<T> values(String... values);
+
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLListBuilder<T>> bean();
 
 }

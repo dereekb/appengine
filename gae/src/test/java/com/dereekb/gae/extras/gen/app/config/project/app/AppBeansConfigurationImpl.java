@@ -1,5 +1,8 @@
 package com.dereekb.gae.extras.gen.app.config.project.app;
 
+import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl;
+import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl;
+
 /**
  * {@link AppBeansConfiguration} implementation.
  *
@@ -25,6 +28,11 @@ public class AppBeansConfigurationImpl
 	public static final String CRUD_READ_MODEL_ROLE_REF_BEAN_ID = "crudReadModelRole";
 	public static final String CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID = "crudUpdateModelRole";
 	public static final String CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID = "crudDeleteModelRole";
+	public static final String ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID = "anonymousModelRoleSetContextService";
+
+	public static final String APP_LOGIN_SECURITY_SERVICE_BEAN_ID = "appLoginSecurityService";
+	public static final String APP_LOGIN_SECURITY_SIGNING_SERVICE_BEAN_ID = "appLoginSecuritySigningService";
+	public static final String LOGIN_TOKEN_SERVICE_BEAN_ID = "loginTokenService";
 
 	private String appInfoBeanId = APP_INFO_BEAN_ID;
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
@@ -37,11 +45,19 @@ public class AppBeansConfigurationImpl
 	private String taskSchedulerId = TASK_SCHEDULER_BEAN_ID;
 	private String taskQueueNameId = TASK_QUEUE_NAME_BEAN_ID;
 	private String modelKeyTypeConverterId = MODEL_KEY_TYPE_CONVERTER_ID;
-	private String SystemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
+	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
+	private String anonymousModelRoleSetContextServiceBeanId = ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID;
+
+	private String appLoginSecurityServiceBeanId = APP_LOGIN_SECURITY_SERVICE_BEAN_ID;
+	private String appLoginSecuritySigningServiceBeanId = APP_LOGIN_SECURITY_SIGNING_SERVICE_BEAN_ID;
+	private String loginTokenServiceBeanId = LOGIN_TOKEN_SERVICE_BEAN_ID;
 
 	private String crudReadModelRoleRefBeanId = CRUD_READ_MODEL_ROLE_REF_BEAN_ID;
 	private String crudUpdateModelRoleRefBeanId = CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID;
 	private String crudDeleteModelRoleRefBeanId = CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID;
+
+	private Class<?> loginTokenAuthenticationProviderClass = LoginTokenAuthenticationProviderImpl.class;
+	private Class<?> loginTokenUserDetailsBuilderClass = LoginTokenUserDetailsBuilderImpl.class;
 
 	@Override
 	public String getAppInfoBeanId() {
@@ -175,7 +191,7 @@ public class AppBeansConfigurationImpl
 
 	@Override
 	public String getSystemLoginTokenFactoryBeanId() {
-		return this.SystemLoginTokenFactoryBeanId;
+		return this.systemLoginTokenFactoryBeanId;
 	}
 
 	public void setSystemLoginTokenFactoryBeanId(String systemLoginTokenFactoryBeanId) {
@@ -183,7 +199,59 @@ public class AppBeansConfigurationImpl
 			throw new IllegalArgumentException("systemLoginTokenFactoryBeanId cannot be null.");
 		}
 
-		this.SystemLoginTokenFactoryBeanId = systemLoginTokenFactoryBeanId;
+		this.systemLoginTokenFactoryBeanId = systemLoginTokenFactoryBeanId;
+	}
+
+	@Override
+	public String getAnonymousModelRoleSetContextServiceBeanId() {
+		return this.anonymousModelRoleSetContextServiceBeanId;
+	}
+
+	public void setAnonymousModelRoleSetContextServiceBeanId(String anonymousModelRoleSetContextServiceBeanId) {
+		if (anonymousModelRoleSetContextServiceBeanId == null) {
+			throw new IllegalArgumentException("anonymousModelRoleSetContextServiceBeanId cannot be null.");
+		}
+
+		this.anonymousModelRoleSetContextServiceBeanId = anonymousModelRoleSetContextServiceBeanId;
+	}
+
+	@Override
+	public String getAppLoginSecurityServiceBeanId() {
+		return this.appLoginSecurityServiceBeanId;
+	}
+
+	public void setAppLoginSecurityServiceBeanId(String appLoginSecurityServiceBeanId) {
+		if (appLoginSecurityServiceBeanId == null) {
+			throw new IllegalArgumentException("appLoginSecurityServiceBeanId cannot be null.");
+		}
+
+		this.appLoginSecurityServiceBeanId = appLoginSecurityServiceBeanId;
+	}
+
+	@Override
+	public String getAppLoginSecuritySigningServiceBeanId() {
+		return this.appLoginSecuritySigningServiceBeanId;
+	}
+
+	public void setAppLoginSecuritySigningServiceBeanId(String appLoginSecuritySigningServiceBeanId) {
+		if (appLoginSecuritySigningServiceBeanId == null) {
+			throw new IllegalArgumentException("appLoginSecuritySigningServiceBeanId cannot be null.");
+		}
+
+		this.appLoginSecuritySigningServiceBeanId = appLoginSecuritySigningServiceBeanId;
+	}
+
+	@Override
+	public String getLoginTokenServiceBeanId() {
+		return this.loginTokenServiceBeanId;
+	}
+
+	public void setLoginTokenServiceBeanId(String loginTokenServiceBeanId) {
+		if (loginTokenServiceBeanId == null) {
+			throw new IllegalArgumentException("loginTokenServiceBeanId cannot be null.");
+		}
+
+		this.loginTokenServiceBeanId = loginTokenServiceBeanId;
 	}
 
 	@Override
@@ -223,6 +291,32 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.crudDeleteModelRoleRefBeanId = crudDeleteModelRoleRefBeanId;
+	}
+
+	@Override
+	public Class<?> getLoginTokenAuthenticationProviderClass() {
+		return this.loginTokenAuthenticationProviderClass;
+	}
+
+	public void setLoginTokenAuthenticationProviderClass(Class<?> loginTokenAuthenticationProviderClass) {
+		if (loginTokenAuthenticationProviderClass == null) {
+			throw new IllegalArgumentException("loginTokenAuthenticationProviderClass cannot be null.");
+		}
+
+		this.loginTokenAuthenticationProviderClass = loginTokenAuthenticationProviderClass;
+	}
+
+	@Override
+	public Class<?> getLoginTokenUserDetailsBuilderClass() {
+		return this.loginTokenUserDetailsBuilderClass;
+	}
+
+	public void setLoginTokenUserDetailsBuilderClass(Class<?> loginTokenUserDetailsBuilderClass) {
+		if (loginTokenUserDetailsBuilderClass == null) {
+			throw new IllegalArgumentException("loginTokenUserDetailsBuilderClass cannot be null.");
+		}
+
+		this.loginTokenUserDetailsBuilderClass = loginTokenUserDetailsBuilderClass;
 	}
 
 }

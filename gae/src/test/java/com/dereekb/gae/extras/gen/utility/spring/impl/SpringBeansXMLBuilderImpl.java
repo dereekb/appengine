@@ -294,6 +294,20 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		@Override
+		public SpringBeansXMLListBuilder<T> values(String... values) {
+			for (String value : values) {
+				this.value(value);
+			}
+
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<SpringBeansXMLListBuilder<T>> bean() {
+			return new SpringBeansXMLBeanBuilderImpl<>(this, this.builder);
+		}
+
 	}
 
 	private class SpringBeansXMLArrayBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
@@ -341,6 +355,11 @@ public class SpringBeansXMLBuilderImpl
 		public SpringBeansXMLArrayBuilder<T> value(String value) {
 			this.builder.e("value").text(value);
 			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanBuilder<SpringBeansXMLArrayBuilder<T>> bean() {
+			return new SpringBeansXMLBeanBuilderImpl<>(this, this.builder);
 		}
 
 	}
@@ -423,6 +442,13 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		@Override
+		public SpringBeansXMLMapBuilder<T> value(String key,
+		                                         String value) {
+			this.entry().key(key).value(value);
+			return this;
+		}
+
 	}
 
 	private class SpringBeansXMLMapEntryBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
@@ -464,6 +490,12 @@ public class SpringBeansXMLBuilderImpl
 		@Override
 		public SpringBeansXMLMapEntryBuilder<T> valueRef(String beanRef) {
 			this.builder.a(SpringBeansXMLMapEntryBuilder.VALUE_REF_ATTRIBUTE, beanRef);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLMapEntryBuilder<T> value(String value) {
+			this.builder.a(SpringBeansXMLMapEntryBuilder.VALUE_ATTRIBUTE, value);
 			return this;
 		}
 

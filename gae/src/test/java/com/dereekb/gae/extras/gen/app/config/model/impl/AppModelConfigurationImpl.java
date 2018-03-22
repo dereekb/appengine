@@ -50,6 +50,8 @@ public class AppModelConfigurationImpl
 
 	private Class<Object> modelEditControllerClass;
 
+	private Class<Object> modelOwnedModelQuerySecurityDelegateClass;
+
 	private AppModelCrudsConfiguration crudsConfiguration;
 	private AppModelBeansConfiguration beansConfiguration;
 
@@ -151,6 +153,16 @@ public class AppModelConfigurationImpl
 			}
 		}
 
+		try {
+			String miscOwnedPath = baseClassPath + ".misc.owned";
+			String ownedModelQuerySecurityDelegateClassName = miscOwnedPath + ".query.security." + baseClassSimpleName
+			        + "OwnedModelQuerySecurityDelegate";
+			this.modelOwnedModelQuerySecurityDelegateClass = (Class<Object>) Class
+			        .forName(ownedModelQuerySecurityDelegateClassName);
+		} catch (ClassNotFoundException e) {
+
+		}
+
 	}
 
 	protected void resetBeans() {
@@ -173,6 +185,11 @@ public class AppModelConfigurationImpl
 
 	public void setLocalReadOnly(boolean localReadOnly) {
 		this.localReadOnly = localReadOnly;
+	}
+
+	@Override
+	public boolean isOwnerModel() {
+		return this.modelOwnedModelQuerySecurityDelegateClass != null;
 	}
 
 	@Override
@@ -364,6 +381,15 @@ public class AppModelConfigurationImpl
 
 	public void setIterateControllerEntry(boolean iterateControllerEntry) {
 		this.iterateControllerEntry = iterateControllerEntry;
+	}
+
+	@Override
+	public Class<Object> getModelOwnedModelQuerySecurityDelegateClass() {
+		return this.modelOwnedModelQuerySecurityDelegateClass;
+	}
+
+	public void setModelOwnedModelQuerySecurityDelegateClass(Class<Object> modelOwnedModelQuerySecurityDelegateClass) {
+		this.modelOwnedModelQuerySecurityDelegateClass = modelOwnedModelQuerySecurityDelegateClass;
 	}
 
 	// MARK: AppModelBeansConfiguration
@@ -600,6 +626,7 @@ public class AppModelConfigurationImpl
 		return this.modelRelatedModelAttributeUtilityClass != null;
 	}
 
+	@Override
 	public Class<Object> getModelRelatedModelAttributeUtilityClass() {
 		return this.modelRelatedModelAttributeUtilityClass;
 	}

@@ -28,6 +28,8 @@ public interface AppModelConfiguration
 
 	public Class<?> getModelEditControllerClass();
 
+	public Class<?> getModelOwnedModelQuerySecurityDelegateClass();
+
 	public boolean hasIterateControllerEntry();
 
 	/**
@@ -40,8 +42,18 @@ public interface AppModelConfiguration
 	 * cases where we want direct datastore access for reading, instead of
 	 * having to rely on remote sources.
 	 * <p>
-	 * In most cases however, you should rely on remote retrieval instead of local.
+	 * In most cases however, you should rely on remote retrieval instead of
+	 * local.
 	 */
 	public boolean isLocalReadOnly();
+
+	/**
+	 * Whether or not the model is an "owner" of objects or has children.
+	 * <p>
+	 * Generally has a related interface/class within it's own folder as
+	 * "\<base\>.misc.owned"...
+	 */
+	@Deprecated
+	public boolean isOwnerModel();
 
 }
