@@ -7,6 +7,7 @@ import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.JwtStringDencoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
@@ -14,8 +15,6 @@ import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.IncorrectClaimException;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MissingClaimException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,42 +33,29 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 	public static final String REFRESH_KEY = "e";
 	public static final String APP_KEY = "app";
 
-	private static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureAlgorithm.HS256;
+	public static final SignatureAlgorithm DEFAULT_ALGORITHM = JwtStringDencoderImpl.DEFAULT_ALGORITHM;
 
-	private String secret;
-	private SignatureAlgorithm algorithm;
+	private JwtStringDencoder tokenStringDencoder;
 
 	public AbstractBasicLoginTokenImplEncoderDecoder(String secret) {
 		this(secret, DEFAULT_ALGORITHM);
 	}
 
 	public AbstractBasicLoginTokenImplEncoderDecoder(String secret, SignatureAlgorithm algorithm) {
-		this.setSecret(secret);
-		this.setAlgorithm(algorithm);
+		this.resetTokenStringDencoder(secret, algorithm);
 	}
 
-	public String getSecret() {
-		return this.secret;
+	public JwtStringDencoder getTokenStringDencoder() {
+		return this.tokenStringDencoder;
 	}
 
-	public void setSecret(String secret) throws IllegalArgumentException {
-		if (secret == null || secret.isEmpty()) {
-			throw new IllegalArgumentException("Secret cannot be null or empty.");
+	private void resetTokenStringDencoder(String secret,
+	                                      SignatureAlgorithm algorithm) {
+		if (secret == null) {
+			this.tokenStringDencoder = UnsignedJwtStringDecoder.SINGLETON;
+		} else {
+			this.tokenStringDencoder = new JwtStringDencoderImpl(secret, algorithm);
 		}
-
-		this.secret = secret;
-	}
-
-	public SignatureAlgorithm getAlgorithm() {
-		return this.algorithm;
-	}
-
-	public void setAlgorithm(SignatureAlgorithm algorithm) {
-		if (algorithm == null) {
-			throw new IllegalArgumentException("Algorithm cannot be null.");
-		}
-
-		this.algorithm = algorithm;
 	}
 
 	// MARK: LoginTokenEncoder
@@ -80,8 +66,7 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 	}
 
 	protected final String encodeAndCompactClaims(Claims claims) {
-		JwtBuilder builder = Jwts.builder().signWith(this.algorithm, this.secret);
-		return builder.setClaims(claims).compact();
+		return this.tokenStringDencoder.encodeClaims(claims);
 	}
 
 	protected final Claims buildClaims(T loginToken) {
@@ -121,7 +106,7 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 
 		try {
 			Claims claims = this.parseClaims(token);
-			loginToken = this.buildFromClaims(token, claims);
+			loginToken = this.buildFromClaims(claims);
 		} catch (MissingClaimException | SignatureException | IncorrectClaimException e) {
 			throw new TokenUnauthorizedException("Could not decode token.", e);
 		} catch (ExpiredJwtException e) {
@@ -132,13 +117,10 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 	}
 
 	protected final Claims parseClaims(String token) throws TokenExpiredException, TokenUnauthorizedException {
-		JwtParser parsers = Jwts.parser().setSigningKey(this.secret);
-		return parsers.parseClaimsJws(token).getBody();
+		return this.tokenStringDencoder.decodeTokenClaims(token);
 	}
 
-	protected T buildFromClaims(String token,
-	                            Claims claims)
-	        throws TokenUnauthorizedException {
+	protected T buildFromClaims(Claims claims) throws TokenUnauthorizedException {
 		T loginToken = this.makeToken();
 		this.initFromClaims(loginToken, claims);
 		return loginToken;

@@ -106,4 +106,25 @@ public class LoginTokenTests {
 		Assert.assertTrue(decodedToken.isAnonymous());
 	}
 
+	@Test
+	public void testEncodingDecodingWithNoSecret() {
+		LoginTokenEncoderDecoderImpl encoder = new LoginTokenEncoderDecoderImpl(SECRET);
+		LoginTokenEncoderDecoderImpl decoder = new LoginTokenEncoderDecoderImpl(null);
+
+		LoginTokenImpl loginToken = new LoginTokenImpl();
+		loginToken.setLogin(1L);
+		loginToken.setLoginPointer("pointer");
+		loginToken.setExpiration(new Date(new Date().getTime() + (60 * 1000)));
+		loginToken.setIssued(new Date());
+		loginToken.setRefreshAllowed(true);
+
+		String encodedToken = encoder.encodeLoginToken(loginToken);
+		Assert.assertNotNull(encodedToken);
+
+		LoginToken decodedToken = decoder.decodeLoginToken(encodedToken).getLoginToken();
+		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
+		Assert.assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
+		Assert.assertTrue(decodedToken.isRefreshAllowed());
+	}
+
 }
