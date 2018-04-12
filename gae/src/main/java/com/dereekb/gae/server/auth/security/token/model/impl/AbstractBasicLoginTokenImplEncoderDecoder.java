@@ -11,6 +11,7 @@ import com.dereekb.gae.server.auth.security.token.model.JwtStringDencoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
+import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -33,28 +34,33 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 	public static final String REFRESH_KEY = "e";
 	public static final String APP_KEY = "app";
 
-	public static final SignatureAlgorithm DEFAULT_ALGORITHM = JwtStringDencoderImpl.DEFAULT_ALGORITHM;
+	public static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureConfigurationImpl.DEFAULT_ALGORITHM;
 
 	private JwtStringDencoder tokenStringDencoder;
 
+	@Deprecated
 	public AbstractBasicLoginTokenImplEncoderDecoder(String secret) {
 		this(secret, DEFAULT_ALGORITHM);
 	}
 
+	@Deprecated
 	public AbstractBasicLoginTokenImplEncoderDecoder(String secret, SignatureAlgorithm algorithm) {
-		this.resetTokenStringDencoder(secret, algorithm);
+		this(new SignatureConfigurationImpl(secret, algorithm));
+	}
+
+	public AbstractBasicLoginTokenImplEncoderDecoder(SignatureConfiguration signature) {
+		this.resetTokenStringDencoder(signature);
 	}
 
 	public JwtStringDencoder getTokenStringDencoder() {
 		return this.tokenStringDencoder;
 	}
 
-	private void resetTokenStringDencoder(String secret,
-	                                      SignatureAlgorithm algorithm) {
-		if (secret == null) {
+	private void resetTokenStringDencoder(SignatureConfiguration signature) {
+		if (signature == null) {
 			this.tokenStringDencoder = UnsignedJwtStringDecoder.SINGLETON;
 		} else {
-			this.tokenStringDencoder = new JwtStringDencoderImpl(secret, algorithm);
+			this.tokenStringDencoder = new JwtStringDencoderImpl(signature);
 		}
 	}
 

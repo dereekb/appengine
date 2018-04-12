@@ -7,17 +7,20 @@ import org.junit.Test;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
+import com.dereekb.gae.server.auth.security.token.model.impl.SignatureConfigurationImpl;
 import com.dereekb.gae.utilities.time.DateUtility;
 
 public class LoginTokenTests {
 
 	private static final String SECRET = "3zRepP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=";
+	private static final SignatureConfiguration SIGNATURE = new SignatureConfigurationImpl(SECRET);
 
 	@Test
 	public void testEncodingDecoding() {
-		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SECRET);
+		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SIGNATURE);
 
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setLogin(1L);
@@ -37,7 +40,7 @@ public class LoginTokenTests {
 
 	@Test
 	public void testEncodingDecodingNewUser() {
-		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SECRET);
+		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SIGNATURE);
 
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setPointerType(LoginPointerType.PASSWORD);
@@ -57,7 +60,7 @@ public class LoginTokenTests {
 
 	@Test
 	public void testEncodingDecodingTime() {
-		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SECRET);
+		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SIGNATURE);
 
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setPointerType(LoginPointerType.PASSWORD);
@@ -94,7 +97,7 @@ public class LoginTokenTests {
 
 	@Test
 	public void testEncodingDecodingAnonymousToken() {
-		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SECRET);
+		LoginTokenEncoderDecoderImpl encoderDecoder = new LoginTokenEncoderDecoderImpl(SIGNATURE);
 
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setPointerType(LoginPointerType.ANONYMOUS);
@@ -108,8 +111,8 @@ public class LoginTokenTests {
 
 	@Test
 	public void testEncodingDecodingWithNoSecret() {
-		LoginTokenEncoderDecoderImpl encoder = new LoginTokenEncoderDecoderImpl(SECRET);
-		LoginTokenEncoderDecoderImpl decoder = new LoginTokenEncoderDecoderImpl(null);
+		LoginTokenEncoderDecoderImpl encoder = new LoginTokenEncoderDecoderImpl(SIGNATURE);
+		LoginTokenEncoderDecoderImpl decoder = new LoginTokenEncoderDecoderImpl((SignatureConfiguration) null);
 
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setLogin(1L);

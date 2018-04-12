@@ -27,7 +27,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Controller for refresh tokens.
- * 
+ *
  * @author dereekb
  *
  */
@@ -67,7 +67,7 @@ public class LoginTokenController {
 
 	/**
 	 * Resets all authentication.
-	 * 
+	 *
 	 * @param loginKey
 	 *            Optional key corresponding to a {@link Login}.
 	 * @return {@link ApiResponse}. Never {@code null}.
@@ -96,6 +96,28 @@ public class LoginTokenController {
 	}
 
 	// MARK: No Authentication
+	/**
+	 * Validates the input token.
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/validate", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
+	public final ApiResponse validateToken(@RequestParam("token") @NotNull String token,
+	                                       @RequestParam("signature") @NotNull String signature,
+	                                       @RequestParam("quick") @NotNull Boolean quick) {
+		ApiResponseImpl response = null;
+
+		try {
+			EncodedLoginToken encodedToken = new EncodedLoginTokenImpl(token, signature);
+			response = this.delegate.validateToken(encodedToken, quick);
+		} catch (TokenException e) {
+			throw e;
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
 	/**
 	 * Creates a refresh token using the input authentication token.
 	 */

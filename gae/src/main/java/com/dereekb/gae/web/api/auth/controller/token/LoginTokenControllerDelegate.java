@@ -8,10 +8,11 @@ import com.dereekb.gae.server.auth.security.token.refresh.exception.RefreshToken
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.time.exception.RateLimitException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * {@link LoginTokenController} delegate.
- * 
+ *
  * @author dereekb
  *
  */
@@ -19,7 +20,7 @@ public interface LoginTokenControllerDelegate {
 
 	/**
 	 * Creates a new refresh token with the input token.
-	 * 
+	 *
 	 * @param token
 	 *            {@link EncodedLoginToken}. Never {@code null}.
 	 * @return {@link LoginTokenPair}. Never {@code null}.
@@ -30,7 +31,7 @@ public interface LoginTokenControllerDelegate {
 
 	/**
 	 * Authenticates with the input refresh token.
-	 * 
+	 *
 	 * @param refreshToken
 	 *            {@link EncodedLoginToken}. Never {@code null}.
 	 * @return {@link LoginTokenPair}. Never {@code null}.
@@ -42,7 +43,7 @@ public interface LoginTokenControllerDelegate {
 	/**
 	 * Resets token authentication for the current user, or the target user,
 	 * causing refresh tokens to no longer work.
-	 * 
+	 *
 	 * @param loginKey
 	 *            Optional {@link String} key to reset.
 	 * @return {@link ModelKey} of login that was updated.
@@ -60,5 +61,14 @@ public interface LoginTokenControllerDelegate {
 	            TokenUnauthorizedException,
 	            UnavailableModelException,
 	            RateLimitException;
+
+	/**
+	 *
+	 * @param encodedToken
+	 * @param quick
+	 * @return
+	 */
+	public ApiResponseImpl validateToken(EncodedLoginToken encodedToken,
+	                                     Boolean quick);
 
 }

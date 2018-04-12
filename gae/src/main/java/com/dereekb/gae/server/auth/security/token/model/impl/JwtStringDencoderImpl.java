@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import com.dereekb.gae.server.auth.security.token.model.JwtStringDencoder;
+import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
@@ -17,52 +18,44 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtStringDencoderImpl
         implements JwtStringDencoder {
 
-	public static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureAlgorithm.HS256;
-
-	private String secret;
-	private SignatureAlgorithm algorithm;
-
-	public JwtStringDencoderImpl(String secret) {
-		this(secret, DEFAULT_ALGORITHM);
-	}
+	private SignatureConfiguration signature;
 
 	public JwtStringDencoderImpl(String secret, SignatureAlgorithm algorithm) {
-		this.setSecret(secret);
-		this.setAlgorithm(algorithm);
+		this(new SignatureConfigurationImpl(secret, algorithm));
 	}
 
-	private void setSecret(String secret) throws IllegalArgumentException {
-		if (secret == null || secret.isEmpty()) {
-			throw new IllegalArgumentException("Secret cannot be null or empty.");
-		}
-
-		this.secret = secret;
+	public JwtStringDencoderImpl(SignatureConfiguration signature) {
+		this.setSignature(signature);
 	}
 
-	private void setAlgorithm(SignatureAlgorithm algorithm) {
-		if (algorithm == null) {
-			throw new IllegalArgumentException("Algorithm cannot be null.");
+	public SignatureConfiguration getSignature() {
+		return this.signature;
+	}
+
+	public void setSignature(SignatureConfiguration signature) {
+		if (signature == null) {
+			throw new IllegalArgumentException("signature cannot be null.");
 		}
 
-		this.algorithm = algorithm;
+		this.signature = signature;
 	}
 
 	// MARK: JwtStringDencoder
 	@Override
 	public String encodeClaims(Claims claims) {
-		JwtBuilder builder = Jwts.builder().signWith(this.algorithm, this.secret);
+		JwtBuilder builder = Jwts.builder().signWith(this.signature.getAlgorithm(), this.signature.getSecret());
 		return builder.setClaims(claims).compact();
 	}
 
 	@Override
 	public Claims decodeTokenClaims(String token) {
-		JwtParser parsers = Jwts.parser().setSigningKey(this.secret);
+		JwtParser parsers = Jwts.parser().setSigningKey(this.signature.getSecret());
 		return parsers.parseClaimsJws(token).getBody();
 	}
 
 	@Override
 	public String toString() {
-		return "JwtStringDencoderImpl [secret=" + this.secret.length() + ", algorithm=" + this.algorithm + "]";
+		return "JwtStringDencoderImpl [signature=" + this.signature + "]";
 	}
 
 }

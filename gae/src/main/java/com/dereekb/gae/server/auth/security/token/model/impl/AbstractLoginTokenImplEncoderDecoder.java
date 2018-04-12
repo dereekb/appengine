@@ -12,6 +12,7 @@ import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTo
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
+import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 import com.dereekb.gae.utilities.data.NumberUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 
@@ -38,12 +39,18 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 
 	public static final String ROLES_KEY = "r";
 
+	@Deprecated
 	public AbstractLoginTokenImplEncoderDecoder(String secret) {
 		super(secret);
 	}
 
+	@Deprecated
 	public AbstractLoginTokenImplEncoderDecoder(String secret, SignatureAlgorithm algorithm) {
 		super(secret, algorithm);
+	}
+
+	public AbstractLoginTokenImplEncoderDecoder(SignatureConfiguration signature) {
+		super(signature);
 	}
 
 	// MARK: LoginTokenEncoder

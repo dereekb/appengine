@@ -4,6 +4,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
+import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 import com.dereekb.gae.server.auth.security.token.model.impl.AbstractBasicLoginTokenImplEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
@@ -21,12 +22,18 @@ public class RefreshTokenEncoderDecoder extends AbstractBasicLoginTokenImplEncod
 
 	private static final Integer TYPE_OVERRIDE = LoginPointerType.REFRESH_TOKEN.getId();
 
+	@Deprecated
 	public RefreshTokenEncoderDecoder(String secret) {
 		super(secret);
 	}
 
+	@Deprecated
 	public RefreshTokenEncoderDecoder(String secret, SignatureAlgorithm algorithm) {
 		super(secret, algorithm);
+	}
+
+	public RefreshTokenEncoderDecoder(SignatureConfiguration signature) {
+		super(signature);
 	}
 
 	// MARK: EncoderDecoder

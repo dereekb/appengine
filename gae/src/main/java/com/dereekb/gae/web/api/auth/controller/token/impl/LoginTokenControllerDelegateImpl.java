@@ -18,10 +18,11 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.time.exception.RateLimitException;
 import com.dereekb.gae.web.api.auth.controller.token.LoginTokenControllerDelegate;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * {@link LoginTokenControllerDelegate} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -85,8 +86,19 @@ public class LoginTokenControllerDelegateImpl
 
 	// MARK: TokenControllerDelegate
 	@Override
+	public ApiResponseImpl validateToken(EncodedLoginToken token,
+	                                     Boolean quick) {
+
+		// TODO: ...
+
+
+		return null;
+	}
+
+	@Override
 	public LoginTokenPair makeRefreshToken(EncodedLoginToken token) throws TokenUnauthorizedException {
-		DecodedLoginToken<LoginToken> decodedLoginToken = this.refreshTokenEncoderDecoder.decodeLoginToken(token.getEncodedLoginToken());
+		DecodedLoginToken<LoginToken> decodedLoginToken = this.refreshTokenEncoderDecoder
+		        .decodeLoginToken(token.getEncodedLoginToken());
 		LoginToken refreshToken = this.refreshTokenService.makeRefreshToken(decodedLoginToken.getLoginToken());
 		String encodedToken = this.refreshTokenEncoderDecoder.encodeLoginToken(refreshToken);
 		return new LoginTokenPair(encodedToken);
