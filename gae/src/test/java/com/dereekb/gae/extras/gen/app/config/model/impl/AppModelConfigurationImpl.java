@@ -30,6 +30,10 @@ public class AppModelConfigurationImpl
 	private String modelType;
 	private ModelKeyType modelKeyType;
 
+	private final Package baseClassPackage;
+	private final String baseClassPath;
+	private final String baseClassSimpleName;
+
 	private Class<Object> modelCreateAttributeUpdaterClass;
 	private Class<Object> modelAttributeUpdaterClass;
 	private Class<Object> modelRelatedModelAttributeUtilityClass;
@@ -78,6 +82,10 @@ public class AppModelConfigurationImpl
 		this.setModelType(modelType);
 		this.setModelKeyType(modelKeyType);
 
+		this.baseClassPackage = this.modelClass.getPackage();
+		this.baseClassPath = this.baseClassPackage.getName();
+		this.baseClassSimpleName = this.modelClass.getSimpleName();
+
 		this.inferClasses();
 		this.resetBeans();
 	}
@@ -85,9 +93,8 @@ public class AppModelConfigurationImpl
 	@SuppressWarnings("unchecked")
 	private void inferClasses() {
 
-		Package baseClassPackage = this.modelClass.getPackage();
-		String baseClassPath = baseClassPackage.getName();
-		String baseClassSimpleName = this.modelClass.getSimpleName();
+		String baseClassPath = this.baseClassPath;
+		String baseClassSimpleName = this.baseClassSimpleName;
 
 		String dataClassName = baseClassPath + ".dto." + baseClassSimpleName + "Data";
 		String generatorClassName = baseClassPath + ".generator." + baseClassSimpleName + "Generator";
@@ -100,6 +107,9 @@ public class AppModelConfigurationImpl
 		        + "AttributeUpdater";
 		String createAttributeInitializerClassName = baseClassPath + ".crud." + baseClassSimpleName
 		        + "CreateAttributeUpdater";
+
+		String modelSecurityContextServiceEntry = baseClassPath + ".security." + baseClassSimpleName
+		        + "SecurityContextServiceEntry";
 
 		// Find Edit Controller Name
 		List<String> packagePathComponents = PathUtility.getComponents(baseClassPath, "\\.");
@@ -122,7 +132,8 @@ public class AppModelConfigurationImpl
 			this.modelQueryInitializerClass = (Class<Object>) Class.forName(queryInitializerClassName);
 
 			this.modelAttributeUpdaterClass = (Class<Object>) Class.forName(updateAttributeInitializerClassName);
-			this.modelSecurityContextServiceEntryClass = (Class<Object>) Class.forName(queryInitializerClassName);
+			this.modelSecurityContextServiceEntryClass = (Class<Object>) Class
+			        .forName(modelSecurityContextServiceEntry);
 
 			this.modelEditControllerClass = (Class<Object>) Class.forName(editControllerClass);
 		} catch (ClassNotFoundException e) {
@@ -229,6 +240,18 @@ public class AppModelConfigurationImpl
 		}
 
 		this.modelClass = modelClass;
+	}
+
+	public Package getBaseClassPackage() {
+		return this.baseClassPackage;
+	}
+
+	public String getBaseClassPath() {
+		return this.baseClassPath;
+	}
+
+	public String getBaseClassSimpleName() {
+		return this.baseClassSimpleName;
 	}
 
 	@Override

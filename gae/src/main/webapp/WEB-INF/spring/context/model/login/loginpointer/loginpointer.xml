@@ -20,12 +20,15 @@
 			value="com.dereekb.gae.server.auth.model.pointer.LoginPointer" />
 	</bean>
 
-	<bean id="loginPointerDtoClass" class="java.lang.Class" factory-method="forName">
+	<bean id="loginPointerDtoClass" class="java.lang.Class"
+		factory-method="forName">
 		<constructor-arg index="0"
 			value="com.dereekb.gae.server.auth.model.pointer.dto.LoginPointerData" />
 	</bean>
 
-	<bean id="loginPointerIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+	<bean id="loginPointerIdType"
+		class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType"
+		factory-method="valueOf">
 		<constructor-arg index="0" value="NAME" />
 	</bean>
 
@@ -44,6 +47,8 @@
 		<constructor-arg index="0" ref="loginPointerClass" />
 	</bean>
 
+	<alias alias="loginPointerKeyListAccessorFactory" name="loginPointerRegistry" />
+	
 	<!-- Configured Setters -->
 	<alias name="loginPointerRegistry" alias="loginPointerStorer" />
 	<alias name="loginPointerRegistry" alias="loginPointerUpdater" />

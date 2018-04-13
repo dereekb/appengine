@@ -12,6 +12,7 @@
 	<!-- IMPORTS -->
 	<!-- Models -->
 	<import resource="app/app/app.xml" />
+	<import resource="/app/apphook/apphook.xml" />
 	<import resource="login/login/login.xml" />
 	<import resource="login/loginkey/loginkey.xml" />
 	<import resource="login/loginpointer/loginpointer.xml" />

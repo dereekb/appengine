@@ -16,6 +16,14 @@ public class TokenValidationRequestImpl
 	private String signature;
 	private Boolean quick;
 
+	public TokenValidationRequestImpl(String token) {
+		this(token, true);
+	}
+
+	public TokenValidationRequestImpl(String token, Boolean quick) {
+		this(token, null, null, quick);
+	}
+
 	public TokenValidationRequestImpl(String token, String content, String signature, Boolean quick) {
 		super();
 		this.setToken(token);
@@ -52,10 +60,6 @@ public class TokenValidationRequestImpl
 	}
 
 	public void setSignature(String signature) {
-		if (signature == null) {
-			throw new IllegalArgumentException("signature cannot be null.");
-		}
-
 		this.signature = signature;
 	}
 

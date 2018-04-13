@@ -10,6 +10,7 @@ import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.server.event.event.service.impl.AppEventServiceImpl;
 import com.dereekb.gae.server.event.model.shared.event.service.impl.ModelEventServiceEntryImpl;
 import com.dereekb.gae.server.event.model.shared.event.service.listener.impl.MultiTypeModelKeyEventServiceListener;
 import com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventDeserializerImpl;
@@ -25,13 +26,14 @@ import com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookE
  */
 public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelConfigurationGenerator {
 
-	public static final String MODELS_FOLDER_NAME = "model";
-	public static final String MODELS_FILE_NAME = "model";
-	public static final String MODELS_WEBHOOK_FILE_NAME = "webhook";
+	public static final String EVENT_FOLDER_NAME = "event";
+	public static final String EVENT_FILE_NAME = "event";
+	public static final String WEBHOOK_FILE_NAME = "webhook";
 
 	public TaskQueueEventConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
-		this.setResultsFolderName(MODELS_FOLDER_NAME);
+		this.setResultsFolderName(EVENT_FOLDER_NAME);
+		this.setModelsFolderName(EVENT_FOLDER_NAME);
 	}
 
 	public TaskQueueEventConfigurationGenerator(AppConfiguration appConfig) {
@@ -55,8 +57,10 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		builder.comment("Model Event Service");
-		builder.bean(modelConfig.getModelBeanPrefix() + "EventSerializer")
-		        .beanClass(ModelEventServiceEntryImpl.class).c().ref(this.getAppConfig().getAppBeans().getEventServiceId());
+		builder.bean(modelConfig.getModelBeanPrefix() + "EventSerializer").beanClass(ModelEventServiceEntryImpl.class)
+		        .c().ref(this.getAppConfig().getAppBeans().getEventServiceId())
+		        .ref(modelConfig.getModelKeyListAccessorFactoryId())
+		        .ref(modelConfig.getModelDataConverterBeanId());
 
 		builder.comment("Web Hook Serializers");
 		builder.bean(modelConfig.getModelBeanPrefix() + "WebHookEventSerializer")
@@ -93,6 +97,8 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		builder.imp("/webhook.xml");
 
 		builder.comment("Shared");
+		builder.bean("eventService").beanClass(AppEventServiceImpl.class).c()
+		        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId());
 		builder.stringBean("modelEventGroup", "model");
 
 		builder.comment("Multi-event Listener");
@@ -100,11 +106,11 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		        .ref("modelKeyEventServiceListenerEntries");
 
 		builder.comment("Entries");
-		builder.list("modelKeyEventServiceListenerEntries");
+		SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> entriesMap = builder.map("modelKeyEventServiceListenerEntries");
 
-		// TODO: Add Listeners
+		// TODO: Add each listener to map.
 
-		return this.makeFileWithXML(MODELS_FILE_NAME, builder);
+		return this.makeFileWithXML(EVENT_FILE_NAME, builder);
 	}
 
 	public GenFile makeModelsWebHookXmlFile() {
@@ -130,7 +136,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 			deserializerMapper.keyRefValueRefEntry(model.getModelTypeBeanId(), deserializerId);
 		}
 
-		return this.makeFileWithXML(MODELS_WEBHOOK_FILE_NAME, builder);
+		return this.makeFileWithXML(WEBHOOK_FILE_NAME, builder);
 	}
 
 }

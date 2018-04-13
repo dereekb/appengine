@@ -9,6 +9,7 @@ import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController;
 
 public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGenerator {
@@ -50,7 +51,7 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		builder.imp("/model/model.xml");
 
 		builder.comment("Extensions");
-		builder.imp("/extension/search.xml");
+		builder.imp("/extension/extension.xml");
 
 		builder.comment("Task");
 		builder.bean("taskQueueTaskController").beanClass(TaskQueueTaskController.class).c()
@@ -65,10 +66,29 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 	public GenFolderImpl generateExtensions() {
 		GenFolderImpl extensions = new GenFolderImpl("extension");
 
+		SpringBeansXMLBuilder extensionsFile = SpringBeansXMLBuilderImpl.make();
+
+		// Remote Models
+		TaskQueueRemoteModelConfigurationGenerator remoteGen = new TaskQueueRemoteModelConfigurationGenerator(
+		        this.getAppConfig(), this.getOutputProperties());
+		GenFolderImpl remoteFolder = remoteGen.generateConfigurations();
+		extensions.addFolder(remoteFolder);
+		extensionsFile.importResource(PathUtility.buildPath(TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FOLDER_NAME,
+				TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FILE_NAME + ".xml"));
+
 		// Events
 		TaskQueueEventConfigurationGenerator eventGen = new TaskQueueEventConfigurationGenerator(this.getAppConfig(),
 		        this.getOutputProperties());
-		extensions.addFolder(eventGen.generateConfigurations());
+		GenFolderImpl eventFolder = eventGen.generateConfigurations();
+		extensions.addFolder(eventFolder);
+		extensionsFile.importResource(PathUtility.buildPath(TaskQueueEventConfigurationGenerator.EVENT_FOLDER_NAME,
+		        TaskQueueEventConfigurationGenerator.EVENT_FILE_NAME + ".xml"));
+
+		// Other Extensions
+
+		// Extension File
+		GenFile extensionFile = this.makeFileWithXML("extension", extensionsFile);
+		extensions.addFile(extensionFile);
 
 		return extensions;
 	}

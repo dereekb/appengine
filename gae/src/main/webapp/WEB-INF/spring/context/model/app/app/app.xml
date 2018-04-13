@@ -24,7 +24,9 @@
 			value="com.dereekb.gae.server.app.model.app.dto.AppData" />
 	</bean>
 
-	<bean id="appIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+	<bean id="appIdType"
+		class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType"
+		factory-method="valueOf">
 		<constructor-arg index="0" value="NUMBER" />
 	</bean>
 
@@ -42,6 +44,8 @@
 		factory-method="makeRegistry">
 		<constructor-arg index="0" ref="appClass" />
 	</bean>
+
+	<alias alias="appKeyListAccessorFactory" name="appRegistry" />
 
 	<!-- Configured Setters -->
 	<alias name="appRegistry" alias="appStorer" />

@@ -8,6 +8,8 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.server.event.event.EventType;
 import com.dereekb.gae.server.event.webhook.WebHookEvent;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfNull;
@@ -19,6 +21,8 @@ import com.googlecode.objectify.condition.IfZero;
  * @author dereekb
  *
  */
+@Cache
+@Entity
 @ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public class AppHook extends AbstractLongKeyedAppRelatedModel<AppHook> {
 

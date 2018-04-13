@@ -11,6 +11,7 @@ import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -151,6 +152,9 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .factoryBean(getAppConfig().getAppBeans().getObjectifyDatabaseId()).factoryMethod("makeRegistry").c()
 		        .ref(modelConfig.getModelClassBeanId());
 
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelKeyListAccessorFactoryId());
+
+		builder.comment("Configured Setters");
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelStorerBeanId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelUpdaterBeanId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelDeleterBeanId());
@@ -282,7 +286,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.comment("Read");
 			builder.bean(readTask).beanClass(FilteredReadTaskImpl.class).c().ref(this.modelConfig.getModelRegistryId())
 			        .bean().factoryBean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
-			        .factoryMethod("modelRoleFilter").c()
+			        .factoryMethod("makeRoleFilter").c()
 			        .ref(this.getAppConfig().getAppBeans().getCrudReadModelRoleRefBeanId());
 
 			// Update Task
@@ -294,7 +298,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 				builder.bean(this.modelConfig.getModelBeanPrefix() + "UpdateTask")
 				        .beanClass(FilteredUpdateTaskImpl.class).c().ref(attributeUpdater).ref(updaterTask).bean()
 				        .factoryBean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
-				        .factoryMethod("modelRoleFilter").c()
+				        .factoryMethod("makeRoleFilter").c()
 				        .ref(this.getAppConfig().getAppBeans().getCrudUpdateModelRoleRefBeanId());
 
 				builder.bean(attributeUpdater).beanClass(this.modelConfig.getModelAttributeUpdaterClass()).c()
@@ -313,7 +317,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 				        .ref(this.modelConfig.getModelTypeBeanId())
 				        .ref(this.getAppConfig().getAppBeans().getTaskSchedulerId()).up().property("deleteFilter")
 				        .bean().factoryBean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
-				        .factoryMethod("modelRoleFilter").c()
+				        .factoryMethod("makeRoleFilter").c()
 				        .ref(this.getAppConfig().getAppBeans().getCrudDeleteModelRoleRefBeanId());
 
 			}
@@ -348,7 +352,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.bean(dataReaderId).beanClass(this.modelConfig.getModelDataReaderClass());
 			builder.bean(this.modelConfig.getModelBeanPrefix() + "DataConverter")
 			        .beanClass(TypedBidirectionalConverterImpl.class).c().ref(dataBuilderId).ref(dataReaderId)
-			        .ref(this.modelConfig.getModelIdTypeBeanId()).ref(this.modelConfig.getModelBeanPrefix() + "Class")
+			        .ref(this.modelConfig.getModelTypeBeanId()).ref(this.modelConfig.getModelBeanPrefix() + "Class")
 			        .ref(this.modelConfig.getModelBeanPrefix() + "DtoClass");
 
 		}
@@ -444,16 +448,38 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			this.setFileName("security");
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void makeXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
 			builder.comment("Role Builder Components");
-			builder.comment("TODO: Complete Adding Role Builders");
+
+			String defaultModelRoleBuilderComponentName = this.modelConfig.getModelBeanPrefix()
+			        + "ModelRoleBuilderComponent";
+			Class<Object> defaultModelRoleBuilderClass = null;
+
+			// Try to find the default security item here.
+			try {
+				String defaultModelRoleBuilderClassPath = this.modelConfig.getBaseClassPath() + ".security."
+				        + this.modelConfig.getBaseClassSimpleName() + "ModelRoleBuilderComponent";
+				defaultModelRoleBuilderClass = (Class<Object>) Class.forName(defaultModelRoleBuilderClassPath);
+
+				builder.bean(defaultModelRoleBuilderComponentName).beanClass(defaultModelRoleBuilderClass);
+			} catch (ClassNotFoundException e) {
+				builder.comment("TODO: Complete Adding Role Builders");
+				// Does not exist!
+			}
 
 			String modelRoleSetLoader = this.modelConfig.getModelRoleSetLoaderBeanId();
 
-			builder.bean(modelRoleSetLoader).beanClass(ModelRoleSetLoaderImpl.class).c().array().getRawXMLBuilder()
-			        .comment("TODO: Add Component Refs Here");
+			SpringBeansXMLArrayBuilder<?> rolesArrayBuilder = builder.bean(modelRoleSetLoader)
+			        .beanClass(ModelRoleSetLoaderImpl.class).c().array();
+
+			if (defaultModelRoleBuilderClass != null) {
+				rolesArrayBuilder.ref(defaultModelRoleBuilderComponentName);
+			} else {
+				rolesArrayBuilder.getRawXMLBuilder().comment("TODO: Add Component Refs Here");
+			}
 
 			builder.bean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
 			        .beanClass(this.modelConfig.getModelSecurityContextServiceEntryClass()).c()

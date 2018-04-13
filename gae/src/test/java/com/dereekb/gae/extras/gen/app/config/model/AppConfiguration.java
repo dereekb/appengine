@@ -20,4 +20,6 @@ public interface AppConfiguration {
 
 	public List<AppModelConfigurationGroup> getModelConfigurations();
 
+	public boolean isLoginServer();
+
 }

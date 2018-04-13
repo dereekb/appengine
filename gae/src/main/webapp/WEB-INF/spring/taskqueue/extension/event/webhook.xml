@@ -1,43 +1,25 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
-	<!-- Task Controller -->
-	<bean id="webHookTaskQueueTaskControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.server.hook.WebHookTaskQueueTaskControllerEntry">
-		<constructor-arg index="0" ref="eventService" />
-		<constructor-arg index="1" ref="webHookEventDeserializer" />
-	</bean>
-
-	<bean id="webHookEventConverter"
-		class="com.dereekb.gae.server.event.webhook.service.impl.WebHookEventConverterImpl">
-		<constructor-arg index="0" ref="webHookEventSerializer" />
-		<constructor-arg index="1" ref="webHookEventDeserializer" />
-	</bean>
-
-	<bean id="webHookEventDeserializer"
-		class="com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventDeserializerImpl">
-		<constructor-arg index="0">
-			<map key-type="java.lang.String">
-				<entry key-ref="modelEventGroup" value-ref="modelEventGroupWebHookEventDeserializer" />
-			</map>
-		</constructor-arg>
-	</bean>
-
-	<bean id="webHookEventSerializer"
-		class="com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventSerializerImpl">
-		<constructor-arg index="0">
-			<map key-type="java.lang.String">
-				<entry key-ref="modelEventGroup" value-ref="modelEventGroupWebHookEventSerializer" />
-			</map>
-		</constructor-arg>
-	</bean>
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Converter-->
+  <bean class="com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookEventSerializerImpl" id="typedModelWebHookEventSerializer">
+    <constructor-arg index="0">
+      <map key-type="java.lang.String">
+        <entry key-ref="loginType" value-ref="loginWebHookEventSerializer"/>
+        <entry key-ref="loginPointerType" value-ref="loginPointerWebHookEventSerializer"/>
+        <entry key-ref="loginKeyType" value-ref="loginKeyWebHookEventSerializer"/>
+        <entry key-ref="appType" value-ref="appWebHookEventSerializer"/>
+        <entry key-ref="appHookType" value-ref="appHookWebHookEventSerializer"/>
+      </map>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookEventDeserializerImpl" id="typedModelWebHookEventDeserializer">
+    <constructor-arg index="0">
+      <map key-type="java.lang.String">
+        <entry key-ref="loginType" value-ref="loginWebHookEventDeserializer"/>
+        <entry key-ref="loginPointerType" value-ref="loginPointerWebHookEventDeserializer"/>
+        <entry key-ref="loginKeyType" value-ref="loginKeyWebHookEventDeserializer"/>
+        <entry key-ref="appType" value-ref="appWebHookEventDeserializer"/>
+        <entry key-ref="appHookType" value-ref="appHookWebHookEventDeserializer"/>
+      </map>
+    </constructor-arg>
+  </bean>
 </beans>

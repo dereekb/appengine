@@ -1,5 +1,8 @@
 package com.dereekb.gae.web.api.auth.controller.token.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityVerifierService;
@@ -27,6 +30,8 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
+
+import io.jsonwebtoken.Claims;
 
 /**
  * {@link LoginTokenControllerDelegate} implementation.
@@ -109,7 +114,9 @@ public class LoginTokenControllerDelegateImpl
 
 		boolean quick = ValueUtility.valueOf(request.getQuick());
 		if (!quick) {
-			ApiResponseData data = new ApiResponseDataImpl("TOKEN_CLAIMS", loginToken.getClaims());
+			Claims claims = loginToken.getClaims();
+			Map<String, Object> claimsMap = new HashMap<String, Object>(claims);
+			ApiResponseData data = new ApiResponseDataImpl("TOKEN_CLAIMS", claimsMap);
 
 			// TODO: Set API safe login token data instead/too?
 

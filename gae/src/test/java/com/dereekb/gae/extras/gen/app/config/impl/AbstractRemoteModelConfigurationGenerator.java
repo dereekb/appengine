@@ -25,6 +25,7 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 	private boolean splitByRemote = true;
 	private boolean makeSplitByRemoteImportFiles = true;
 
+	private String modelsFolderName = "models";
 	private String localFolderName = "local";
 	private String remoteFolderName = "remote";
 
@@ -35,6 +36,7 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 	public AbstractRemoteModelConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
 		this.setSplitByGroup(false);
+		this.setIgnoreRemote(false);
 	}
 
 	public boolean isSplitByRemote() {
@@ -43,6 +45,18 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 
 	public void setSplitByRemote(boolean splitByRemote) {
 		this.splitByRemote = splitByRemote;
+	}
+
+	public String getModelsFolderName() {
+		return this.modelsFolderName;
+	}
+
+	public void setModelsFolderName(String modelsFolderName) {
+		if (modelsFolderName == null) {
+			throw new IllegalArgumentException("modelsFolderName cannot be null.");
+		}
+
+		this.modelsFolderName = modelsFolderName;
 	}
 
 	public String getLocalFolderName() {
@@ -104,7 +118,7 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 
 		@Override
 		public GenFolderImpl makeModelConfigurations(List<AppModelConfigurationGroup> groups) {
-			GenFolderImpl folder = new GenFolderImpl("models");
+			GenFolderImpl folder = new GenFolderImpl(AbstractRemoteModelConfigurationGenerator.this.modelsFolderName);
 
 			LocalModelFilter filter = new LocalModelFilter();
 
@@ -119,23 +133,42 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 				remoteModels.addAll(results.getFailingObjects());
 			}
 
-			GenFolderImpl localFolder = AbstractRemoteModelConfigurationGenerator.this
-			        .makeModelClientConfigurationsForModels(
-			                AbstractRemoteModelConfigurationGenerator.this.localFolderName, localModels);
-			localFolder.flatten();
+			// Local Folder
+			GenFolderImpl localFolder = null;
 
-			GenFolderImpl remoteFolder = AbstractRemoteModelConfigurationGenerator.this
-			        .makeModelClientConfigurationsForModels(
-			                AbstractRemoteModelConfigurationGenerator.this.remoteFolderName, remoteModels);
-			remoteFolder.flatten();
+			if (AbstractRemoteModelConfigurationGenerator.this.isIgnoreLocal() == false) {
+				localFolder = AbstractRemoteModelConfigurationGenerator.this.makeModelClientConfigurationsForModels(
+				        AbstractRemoteModelConfigurationGenerator.this.localFolderName, localModels);
 
+				if (AbstractRemoteModelConfigurationGenerator.this.isSplitByModel() == false) {
+					localFolder.flatten();
+				}
 
-			folder.addFolder(localFolder);
-			folder.addFolder(remoteFolder);
+				folder.addFolder(localFolder);
+			}
+
+			// Remote Folder
+			GenFolderImpl remoteFolder = null;
+
+			if (AbstractRemoteModelConfigurationGenerator.this.isIgnoreRemote() == false) {
+				remoteFolder = AbstractRemoteModelConfigurationGenerator.this.makeModelClientConfigurationsForModels(
+				        AbstractRemoteModelConfigurationGenerator.this.remoteFolderName, remoteModels);
+
+				if (AbstractRemoteModelConfigurationGenerator.this.isSplitByModel() == false) {
+					remoteFolder.flatten();
+				}
+
+				folder.addFolder(remoteFolder);
+			}
 
 			if (AbstractRemoteModelConfigurationGenerator.this.makeSplitByRemoteImportFiles) {
-				localFolder.addFile(makeImportFile(localFolder));
-				remoteFolder.addFile(makeImportFile(remoteFolder));
+				if (localFolder != null) {
+					localFolder.addFile(makeImportFile(localFolder));
+				}
+
+				if (remoteFolder != null) {
+					remoteFolder.addFile(makeImportFile(remoteFolder));
+				}
 			}
 
 			return folder;

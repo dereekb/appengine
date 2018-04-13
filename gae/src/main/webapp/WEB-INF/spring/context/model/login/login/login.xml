@@ -24,7 +24,9 @@
 			value="com.dereekb.gae.server.auth.model.login.dto.LoginData" />
 	</bean>
 
-	<bean id="loginIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+	<bean id="loginIdType"
+		class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType"
+		factory-method="valueOf">
 		<constructor-arg index="0" value="NUMBER" />
 	</bean>
 
@@ -43,6 +45,8 @@
 		<constructor-arg index="0" ref="loginClass" />
 	</bean>
 
+	<alias alias="loginKeyListAccessorFactory" name="loginRegistry" />
+
 	<!-- Configured Setters -->
 	<alias name="loginRegistry" alias="loginStorer" />
 	<alias name="loginRegistry" alias="loginUpdater" />
@@ -53,7 +57,7 @@
 		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
 		<constructor-arg index="0" ref="loginRegistry" />
 	</bean>
-	
+
 	<alias name="loginSetterTask" alias="loginStorerTask" />
 	<alias name="loginSetterTask" alias="loginUpdaterTask" />
 	<alias name="loginSetterTask" alias="loginDeleterTask" />
@@ -64,7 +68,7 @@
 		<constructor-arg index="0" ref="loginScheduleUpdateReview" />
 		<constructor-arg index="1" ref="loginRegistry" />
 	</bean>
-	
+
 	<bean id="loginScheduleUpdateReview"
 		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
 		<constructor-arg index="0" ref="loginType" />

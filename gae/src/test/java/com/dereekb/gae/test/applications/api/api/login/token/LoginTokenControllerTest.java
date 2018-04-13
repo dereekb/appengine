@@ -1,22 +1,32 @@
 package com.dereekb.gae.test.applications.api.api.login.token;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
+import com.dereekb.gae.web.api.auth.controller.token.impl.TokenValidationRequestImpl;
 
 public class LoginTokenControllerTest extends ApiApplicationTestContext {
 
 	private static final String TEST_USERNAME = "tokenUsername";
 	private static final String TEST_PASSWORD = "tokenPassword";
+
+	@Autowired
+	@Qualifier("loginTokenService")
+	private LoginTokenService<LoginToken> loginTokenService;
 
 	@Autowired
 	@Qualifier("refreshTokenEncoderDecoder")
@@ -68,6 +78,26 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 			// Don't throw assertion error.
 		}
 
+	}
+
+	@Test
+	public void testValidateTokenWithNoSignature() throws Exception {
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+
+		LoginTokenImpl loginToken = new LoginTokenImpl();
+		loginToken.setLogin(1L);
+		loginToken.setLoginPointer("pointer");
+		loginToken.setExpiration(new Date(new Date().getTime() + (60 * 1000)));
+		loginToken.setIssued(new Date());
+		loginToken.setRefreshAllowed(true);
+
+		String encodedToken = this.loginTokenService.encodeLoginToken(loginToken);
+
+		TokenValidationRequestImpl request = new TokenValidationRequestImpl(encodedToken);
+		MockHttpServletResponse response = testUtility.validateLoginToken(request);
+
+		int status = response.getStatus();
+		Assert.assertTrue(status == 200);
 	}
 
 	@Test

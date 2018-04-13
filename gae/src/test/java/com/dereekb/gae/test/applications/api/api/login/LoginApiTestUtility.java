@@ -7,13 +7,14 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import com.dereekb.gae.test.spring.WebServiceTester;
 import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
+import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
  * Utility for testing client logins.
- * 
+ *
  * @author dereekb
  *
  */
@@ -87,6 +88,28 @@ public class LoginApiTestUtility {
 		MockHttpServletRequestBuilder registerRequestBuilder = serviceRequestBuilder.post("/login/auth/register");
 		MvcResult result = this.webServiceTester.performSecureHttpRequest(registerRequestBuilder, token).andReturn();
 		return this.getTokenFromResponse(result);
+	}
+
+	// MARK: Validate Token
+	public MockHttpServletResponse validateLoginToken(TokenValidationRequest request) throws Exception {
+
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder validateRequestBuilder = serviceRequestBuilder.post("/login/auth/token/validate");
+
+		validateRequestBuilder.param("token", request.getToken());
+
+		if (request.getSignature() != null) {
+			validateRequestBuilder.param("signature", request.getSignature());
+		}
+
+		if (request.getContent() != null) {
+			validateRequestBuilder.param("content", request.getContent());
+		}
+
+		validateRequestBuilder.param("quick", request.getQuick().toString());
+
+		MvcResult result = this.webServiceTester.performHttpRequest(validateRequestBuilder).andReturn();
+		return result.getResponse();
 	}
 
 	// MARK: Password

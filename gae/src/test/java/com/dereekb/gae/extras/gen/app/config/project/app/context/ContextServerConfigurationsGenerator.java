@@ -70,9 +70,13 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		// Server Files
 		folder.addFile(new DatabaseConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
-		folder.addFile(new LoginConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new RefConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
+
+		if (this.getAppConfig().isLoginServer()) {
+			folder.addFile(new LoginConfigurationGenerator().generateConfigurationFile());
+		}
 
 		// Main Server File
 		folder.addFile(this.makeServerFile(folder));
@@ -93,8 +97,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());
 
 		builder.comment("Import");
-		builder.imp("/model/model.xml");
-		builder.imp("/server/server.xml");
+		builder.importResources(folder.getFiles());
 
 		return this.makeFileWithXML(this.serverFileName, builder);
 	}
@@ -233,9 +236,9 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			builder.comment("Security Refs");
 			for (CrudModelRole role : CrudModelRole.values()) {
-				String roleString = StringUtility.firstLetterUpperCase(role.getRole().toLowerCase());
+				String roleString = StringUtility.firstLetterUpperCase(role.toString());
 				builder.bean("crud" + roleString + "ModelRole").beanClass(CrudModelRole.class).factoryMethod("valueOf")
-				        .c().value(role.getRole());
+				        .c().value(role.toString());
 			}
 
 			return builder;

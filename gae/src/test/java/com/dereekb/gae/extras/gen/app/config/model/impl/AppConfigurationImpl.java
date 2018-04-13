@@ -21,6 +21,7 @@ public class AppConfigurationImpl
 	private String appServiceName = "app";
 	private String appTaskQueueName = "app";
 	private String appVersion = "v1";
+	private boolean isLoginServer = true;
 
 	private AppBeansConfiguration appBeans = new AppBeansConfigurationImpl();
 	private List<AppModelConfigurationGroup> modelConfigurations;
@@ -93,6 +94,15 @@ public class AppConfigurationImpl
 		}
 
 		this.appVersion = appVersion;
+	}
+
+	@Override
+	public boolean isLoginServer() {
+		return this.isLoginServer;
+	}
+
+	public void setLoginServer(boolean isLoginServer) {
+		this.isLoginServer = isLoginServer;
 	}
 
 	@Override

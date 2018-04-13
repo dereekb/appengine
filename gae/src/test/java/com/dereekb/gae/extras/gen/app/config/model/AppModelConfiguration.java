@@ -6,6 +6,12 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 public interface AppModelConfiguration
         extends ModelDataConversionInfo<Object, Object>, AppModelCrudsConfiguration, AppModelBeansConfiguration {
 
+	public Package getBaseClassPackage();
+
+	public String getBaseClassPath();
+
+	public String getBaseClassSimpleName();
+
 	public AppModelCrudsConfiguration getCrudsConfiguration();
 
 	public AppModelBeansConfiguration getBeansConfiguration();
