@@ -3,12 +3,12 @@ package com.dereekb.gae.server.auth.security.token.model;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * {@link LoginTokenVerifier} request.
+ * Represents a request that may be secured by a signature.
  *
  * @author dereekb
  *
  */
-public interface LoginTokenVerificationRequest {
+public interface LoginTokenSecuredRequest {
 
 	/**
 	 * Returns the token to verify.

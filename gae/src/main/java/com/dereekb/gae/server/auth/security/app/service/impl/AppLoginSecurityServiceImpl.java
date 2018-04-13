@@ -5,7 +5,8 @@ import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityDetailsS
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityService;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecuritySigningService;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityVerifierService;
-import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.app.service.LoginTokenVerifierRequest;
+import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -78,32 +79,40 @@ public class AppLoginSecurityServiceImpl
 		return this.detailsService.getAppLoginDetails(appId);
 	}
 
+	// MARK: AppLoginSecurityVerifierService
 	@Override
-	public boolean isValidToken(DecodedLoginToken<?> token,
-	                            String signature) {
-		return this.verifierService.isValidToken(token, signature);
+	public boolean isValidTokenSignature(LoginTokenVerifierRequest request) {
+		return this.verifierService.isValidTokenSignature(request);
+	}
+
+	@Override
+	public void assertValidTokenSignature(LoginTokenVerifierRequest request) throws TokenException {
+		this.verifierService.assertValidTokenSignature(request);
 	}
 
 	// MARK: AppLoginSecuritySigningService
 	@Override
 	public SignedEncodedLoginToken signToken(String secret,
-	                                         String token)
+	                                         String token,
+	                                         String content)
 	        throws IllegalArgumentException {
-		return this.signingService.signToken(secret, token);
+		return this.signingService.signToken(secret, token, content);
 	}
 
 	@Override
 	public String hexSign(String secret,
-	                      String token)
+	                      String token,
+	                      String content)
 	        throws IllegalArgumentException {
-		return this.signingService.hexSign(secret, token);
+		return this.signingService.hexSign(secret, token, content);
 	}
 
 	@Override
 	public byte[] byteSign(String secret,
-	                       String token)
+	                       String token,
+	                       String content)
 	        throws IllegalArgumentException {
-		return this.signingService.byteSign(secret, token);
+		return this.signingService.byteSign(secret, token, content);
 	}
 
 	@Override

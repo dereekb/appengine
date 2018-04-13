@@ -2,8 +2,12 @@ package com.dereekb.gae.web.api.auth.controller.token.impl;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityVerifierService;
+import com.dereekb.gae.server.auth.security.app.service.LoginTokenVerifierRequest;
+import com.dereekb.gae.server.auth.security.app.service.impl.LoginTokenVerifierRequestImpl;
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
+import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
@@ -15,9 +19,13 @@ import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUse
 import com.dereekb.gae.server.auth.security.token.refresh.RefreshTokenService;
 import com.dereekb.gae.server.auth.security.token.refresh.exception.RefreshTokenExpiredException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.data.ValueUtility;
 import com.dereekb.gae.utilities.time.exception.RateLimitException;
 import com.dereekb.gae.web.api.auth.controller.token.LoginTokenControllerDelegate;
+import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
+import com.dereekb.gae.web.api.shared.response.ApiResponseData;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
@@ -34,6 +42,7 @@ public class LoginTokenControllerDelegateImpl
 	private LoginTokenEncoderDecoder<LoginToken> refreshTokenEncoderDecoder;
 	private LoginTokenService<LoginToken> loginTokenService;
 	private RefreshTokenService refreshTokenService;
+	private AppLoginSecurityVerifierService verifierService;
 
 	public LoginTokenControllerDelegateImpl(LoginTokenService<LoginToken> loginTokenService,
 	        RefreshTokenService refreshTokenService) {
@@ -86,13 +95,28 @@ public class LoginTokenControllerDelegateImpl
 
 	// MARK: TokenControllerDelegate
 	@Override
-	public ApiResponseImpl validateToken(EncodedLoginToken token,
-	                                     Boolean quick) {
+	public ApiResponseImpl validateToken(TokenValidationRequest request) throws TokenException {
+		String token = request.getToken();
+		DecodedLoginToken<LoginToken> loginToken = this.loginTokenService.decodeLoginToken(token);
 
-		// TODO: ...
+		String content = request.getContent();
+		String signature = request.getSignature();
 
+		LoginTokenVerifierRequest verifierRequest = new LoginTokenVerifierRequestImpl(loginToken, content, signature);
+		this.verifierService.assertValidTokenSignature(verifierRequest);
 
-		return null;
+		ApiResponseImpl response = new ApiResponseImpl();
+
+		boolean quick = ValueUtility.valueOf(request.getQuick());
+		if (!quick) {
+			ApiResponseData data = new ApiResponseDataImpl("TOKEN_CLAIMS", loginToken.getClaims());
+
+			// TODO: Set API safe login token data instead/too?
+
+			response.setData(data);
+		}
+
+		return response;
 	}
 
 	@Override

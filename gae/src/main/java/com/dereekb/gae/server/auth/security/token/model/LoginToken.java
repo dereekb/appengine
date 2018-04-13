@@ -37,7 +37,7 @@ public interface LoginToken
 	public String getApp();
 
 	/**
-	 * @return {@code true} if it is an Anoynmous login.
+	 * @return {@code true} if it is an Anonymous login.
 	 */
 	public boolean isAnonymous();
 

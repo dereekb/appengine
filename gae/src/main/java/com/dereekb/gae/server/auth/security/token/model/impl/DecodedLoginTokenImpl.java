@@ -3,6 +3,8 @@ package com.dereekb.gae.server.auth.security.token.model.impl;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
+import io.jsonwebtoken.Claims;
+
 /**
  * {@link DecodedLoginToken} implementation.
  *
@@ -14,14 +16,13 @@ public class DecodedLoginTokenImpl<T extends LoginToken>
 
 	private String encodedLoginToken;
 	private T loginToken;
+	private Claims claims;
 
-	public DecodedLoginTokenImpl(String encodedLoginToken) {
-		this.setEncodedLoginToken(encodedLoginToken);
-	}
-
-	public DecodedLoginTokenImpl(String encodedLoginToken, T loginToken) throws IllegalArgumentException {
+	public DecodedLoginTokenImpl(String encodedLoginToken, T loginToken, Claims claims)
+	        throws IllegalArgumentException {
 		this.setEncodedLoginToken(encodedLoginToken);
 		this.setLoginToken(loginToken);
+		this.setClaims(claims);
 	}
 
 	// MARK: DecodedLoginToken
@@ -54,6 +55,18 @@ public class DecodedLoginTokenImpl<T extends LoginToken>
 		}
 
 		this.encodedLoginToken = encodedLoginToken;
+	}
+
+	public Claims getClaims() {
+		return this.claims;
+	}
+
+	public void setClaims(Claims claims) {
+		if (claims == null) {
+			throw new IllegalArgumentException("claims cannot be null.");
+		}
+
+		this.claims = claims;
 	}
 
 	@Override

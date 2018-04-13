@@ -52,23 +52,26 @@ public class AppLoginSecuritySigningServiceImpl
 	// MARK: AppLoginSecuritySigningService
 	@Override
 	public SignedEncodedLoginToken signToken(String secret,
-	                                         String token)
+	                                         String token,
+	                                         String content)
 	        throws IllegalArgumentException {
-		String signature = this.hexSign(secret, token);
+		String signature = this.hexSign(secret, token, content);
 		return new SignedEncodedLoginTokenImpl(token, signature);
 	}
 
 	@Override
 	public String hexSign(String secret,
-	                      String token)
+	                      String token,
+	                      String content)
 	        throws IllegalArgumentException {
-		byte[] sig = this.byteSign(secret, token);
+		byte[] sig = this.byteSign(secret, token, content);
 		return DatatypeConverter.printHexBinary(sig).toLowerCase();
 	}
 
 	@Override
 	public byte[] byteSign(String secret,
-	                       String token)
+	                       String token,
+	                       String content)
 	        throws IllegalArgumentException {
 		try {
 			byte[] secretBytes = secret.getBytes("utf-8");
@@ -77,7 +80,8 @@ public class AppLoginSecuritySigningServiceImpl
 			Mac mac = Mac.getInstance(this.hashAlg);
 			mac.init(keySpec);
 
-			byte[] accessTokenBytes = token.getBytes("utf-8");
+			String secretPayload = this.buildSecretPayload(token, content);
+			byte[] accessTokenBytes = secretPayload.getBytes("utf-8");
 			byte[] sig = mac.doFinal(accessTokenBytes);
 			return sig;
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
@@ -85,6 +89,11 @@ public class AppLoginSecuritySigningServiceImpl
 		} catch (InvalidKeyException e) {
 			throw new IllegalArgumentException(e);
 		}
+	}
+
+	protected String buildSecretPayload(String token,
+	                                    String content) {
+		return token + content;
 	}
 
 	@Override

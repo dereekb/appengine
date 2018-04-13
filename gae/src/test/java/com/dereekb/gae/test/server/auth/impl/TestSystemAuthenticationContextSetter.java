@@ -65,7 +65,7 @@ public class TestSystemAuthenticationContextSetter
 	// MARK: TestAuthenticationContext
 	@Override
 	public void resetContext() {
-		String encodedToken = this.loginTokenFactory.makeEncodedToken();
+		String encodedToken = this.loginTokenFactory.makeSystemToken().getEncodedLoginToken();
 		DecodedLoginToken<LoginToken> decodedToken = this.decoder.decodeLoginToken(encodedToken);
 		LoginTokenAuthentication<LoginToken> authentication = this.authenticationProvider.authenticate(decodedToken, null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);

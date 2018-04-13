@@ -134,7 +134,7 @@ public class SystemLoginTokenFactoryImpl
 	public SignedEncodedLoginToken makeSystemToken() throws FactoryMakeFailureException {
 		LoginToken token = this.makeLoginToken();
 		String encodedToken = this.encoder.encodeLoginToken(token);
-		return this.signingService.signToken(encodedToken);
+		return this.signingService.signWithToken(encodedToken, "");
 	}
 
 	@Deprecated

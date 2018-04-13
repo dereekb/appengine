@@ -2,6 +2,7 @@ package com.dereekb.gae.web.api.auth.controller.token;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
+import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.refresh.exception.RefreshTokenExpiredException;
@@ -63,12 +64,12 @@ public interface LoginTokenControllerDelegate {
 	            RateLimitException;
 
 	/**
+	 * Verifies/Validates the input, and returns a response for the client.
 	 *
-	 * @param encodedToken
-	 * @param quick
-	 * @return
+	 * @param request
+	 *            {@link TokenValidationRequest}. Never {@code null}.
+	 * @return {@link ApiResponseImpl}. Never {@code null}.
 	 */
-	public ApiResponseImpl validateToken(EncodedLoginToken encodedToken,
-	                                     Boolean quick);
+	public ApiResponseImpl validateToken(TokenValidationRequest request) throws TokenException;
 
 }

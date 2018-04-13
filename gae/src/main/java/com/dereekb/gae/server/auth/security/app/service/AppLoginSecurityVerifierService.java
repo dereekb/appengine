@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.auth.security.app.service;
 
-import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 
 /**
  * Used for verifying an app request.
@@ -11,15 +11,20 @@ import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 public interface AppLoginSecurityVerifierService {
 
 	/**
-	 * Verifies a decoded token and signature for the token's app.
+	 * Verifies a token signature.
 	 *
-	 * @param token
-	 *            {@link DecodedLoginToken}. Never {@code null}.
-	 * @param signature
-	 *            {@link String}. Never {@code null}.
+	 * @param request
+	 *            {@link LoginTokenVerifierRequest}. Never {@code null}.
 	 * @return {@code true} if valid.
 	 */
-	public boolean isValidToken(DecodedLoginToken<?> token,
-	                            String signature);
+	public boolean isValidTokenSignature(LoginTokenVerifierRequest request);
+
+	/**
+	 * Asserts that a token is valid.
+	 *
+	 * @param request
+	 *            {@link LoginTokenVerifierRequest}. Never {@code null}.
+	 */
+	public void assertValidTokenSignature(LoginTokenVerifierRequest request) throws TokenException;
 
 }

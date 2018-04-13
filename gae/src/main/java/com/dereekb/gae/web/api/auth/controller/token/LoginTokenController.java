@@ -18,6 +18,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.web.api.auth.controller.token.impl.TokenValidationRequestImpl;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
@@ -102,15 +103,20 @@ public class LoginTokenController {
 	@ResponseBody
 	@RequestMapping(value = "/validate", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
 	public final ApiResponse validateToken(@RequestParam("token") @NotNull String token,
+	                                       @RequestParam("content") String content,
 	                                       @RequestParam("signature") @NotNull String signature,
-	                                       @RequestParam("quick") @NotNull Boolean quick) {
+	                                       @RequestParam("quick") Boolean quick) {
 		ApiResponseImpl response = null;
 
+		// TODO: Validate
+
 		try {
-			EncodedLoginToken encodedToken = new EncodedLoginTokenImpl(token, signature);
-			response = this.delegate.validateToken(encodedToken, quick);
+			TokenValidationRequestImpl request = new TokenValidationRequestImpl(token, content, signature, quick);
+			response = this.delegate.validateToken(request);
 		} catch (TokenException e) {
 			throw e;
+		} catch (IllegalArgumentException e) {
+			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}

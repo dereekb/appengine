@@ -20,33 +20,44 @@ public interface ConfiguredAppLoginSecuritySigningService
 	public AppLoginSecurityDetails getAppDetails();
 
 	/**
-	 * Signs the token with the pre-configured secret.
+	 * Signs the content with the token and a pre-configured secret.
 	 *
 	 * @param token
+	 *            {@link String}. Never {@code null}.
+	 * @param content
 	 *            {@link String}. Never {@code null}.
 	 * @return {@link SignedEncodedLoginToken}. Never {@code null}.
 	 * @throws IllegalArgumentException
 	 */
-	public SignedEncodedLoginToken signToken(String token);
+	public SignedEncodedLoginToken signWithToken(String token,
+	                                             String content);
 
 	/**
-	 * Signs the token with the pre-configured secret.
+	 * Signs the content with the token and a pre-configured secret.
 	 *
 	 * @param token
+	 *            {@link String}. Never {@code null}.
+	 * @param content
 	 *            {@link String}. Never {@code null}.
 	 * @return {@link String}. Never {@code null}.
 	 * @throws IllegalArgumentException
 	 */
-	public String hexSign(String token) throws IllegalArgumentException;
+	public String hexSign(String token,
+	                      String content)
+	        throws IllegalArgumentException;
 
 	/**
-	 * Signs the token with the pre-configured secret.
+	 * Signs the content with the token and a pre-configured secret.
 	 *
 	 * @param token
+	 *            {@link String}. Never {@code null}.
+	 * @param content
 	 *            {@link String}. Never {@code null}.
 	 * @return {@code byte[]}. Never {@code null}.
 	 * @throws IllegalArgumentException
 	 */
-	public byte[] byteSign(String token) throws IllegalArgumentException;
+	public byte[] byteSign(String token,
+	                       String content)
+	        throws IllegalArgumentException;
 
 }

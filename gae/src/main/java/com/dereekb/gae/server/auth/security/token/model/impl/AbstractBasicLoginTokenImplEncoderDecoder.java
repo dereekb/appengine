@@ -109,9 +109,10 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 	        throws TokenExpiredException,
 	            TokenUnauthorizedException {
 		T loginToken = null;
+		Claims claims = null;
 
 		try {
-			Claims claims = this.parseClaims(token);
+			claims = this.parseClaims(token);
 			loginToken = this.buildFromClaims(claims);
 		} catch (MissingClaimException | SignatureException | IncorrectClaimException e) {
 			throw new TokenUnauthorizedException("Could not decode token.", e);
@@ -119,7 +120,7 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 			throw new TokenExpiredException();
 		}
 
-		return new DecodedLoginTokenImpl<T>(token, loginToken);
+		return new DecodedLoginTokenImpl<T>(token, loginToken, claims);
 	}
 
 	protected final Claims parseClaims(String token) throws TokenExpiredException, TokenUnauthorizedException {

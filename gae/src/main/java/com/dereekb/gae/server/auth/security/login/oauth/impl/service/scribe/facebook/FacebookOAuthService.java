@@ -187,7 +187,9 @@ public class FacebookOAuthService extends AbstractScribeOAuthService {
 		// HMAC signature
 		String secret = this.getClientConfig().getClientSecret();
 		String accessToken = token.getAccessToken();
-		String hex = SIGNING_SERVICE.hexSign(secret, accessToken);
+
+		// TODO: Is this correct?
+		String hex = SIGNING_SERVICE.hexSign(secret, accessToken, "");
 
 		request.addParameter(FACEBOOK_APP_SECRET_PROOF_PARAM, hex);
 

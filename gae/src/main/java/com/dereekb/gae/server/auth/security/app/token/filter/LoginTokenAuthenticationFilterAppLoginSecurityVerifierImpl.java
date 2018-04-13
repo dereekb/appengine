@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityVerifierService;
+import com.dereekb.gae.server.auth.security.app.service.LoginTokenVerifierRequest;
+import com.dereekb.gae.server.auth.security.app.service.impl.LoginTokenVerifierRequestImpl;
 import com.dereekb.gae.server.auth.security.token.exception.TokenException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenSignatureInvalidException;
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilterVerifier;
@@ -76,17 +78,23 @@ public class LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl
 		LoginToken token = decodedLoginToken.getLoginToken();
 		String app = token.getApp();
 
+		// No need to verify the signature.
 		if (StringUtility.isEmptyString(app) == false) {
 			String signatureHeader = this.reader.readSignature(request);
 
-			if (this.service.isValidToken(decodedLoginToken, signatureHeader) == false) {
+			// TODO: Content for token signatures is always empty, but we may
+			// add full-request signing and verification here. Content is pulled
+			// from request.
+			String content = "";
 
-				// TODO: If not valid, but the request is the the taskqueue,
-				// then try again with any older/stored secrets. ONLY valid for
-				// the taskqueue.
+			LoginTokenVerifierRequest verifierRequest = new LoginTokenVerifierRequestImpl(decodedLoginToken, content,
+			        signatureHeader);
 
-				throw new TokenSignatureInvalidException("App signature header does not match.");
-			}
+			this.service.assertValidTokenSignature(verifierRequest);
+
+			// TODO: If not valid, but the request is the the taskqueue,
+			// then try again with any older/stored secrets. ONLY valid for
+			// the taskqueue... This is for legacy systems.
 
 		} else if (token.getPointerType() == LoginPointerType.SYSTEM) {
 			String address = request.getRemoteAddr();
