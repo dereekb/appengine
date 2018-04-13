@@ -1,6 +1,7 @@
 package com.dereekb.gae.test.applications.api.api.login;
 
 import org.junit.Assert;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -95,6 +96,7 @@ public class LoginApiTestUtility {
 
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder validateRequestBuilder = serviceRequestBuilder.post("/login/auth/token/validate");
+		validateRequestBuilder.contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		validateRequestBuilder.param("token", request.getToken());
 
@@ -108,7 +110,7 @@ public class LoginApiTestUtility {
 
 		validateRequestBuilder.param("quick", request.getQuick().toString());
 
-		MvcResult result = this.webServiceTester.performHttpRequest(validateRequestBuilder).andReturn();
+		MvcResult result = this.webServiceTester.mockMvcPerform(validateRequestBuilder).andReturn();
 		return result.getResponse();
 	}
 

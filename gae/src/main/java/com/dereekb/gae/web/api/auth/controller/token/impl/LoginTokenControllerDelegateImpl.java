@@ -50,16 +50,19 @@ public class LoginTokenControllerDelegateImpl
 	private AppLoginSecurityVerifierService verifierService;
 
 	public LoginTokenControllerDelegateImpl(LoginTokenService<LoginToken> loginTokenService,
-	        RefreshTokenService refreshTokenService) {
-		this(loginTokenService, loginTokenService, refreshTokenService);
+	        RefreshTokenService refreshTokenService,
+	        AppLoginSecurityVerifierService verifierService) {
+		this(loginTokenService, loginTokenService, refreshTokenService, verifierService);
 	}
 
 	public LoginTokenControllerDelegateImpl(LoginTokenEncoderDecoder<LoginToken> refreshTokenEncoderDecoder,
 	        LoginTokenService<LoginToken> loginTokenService,
-	        RefreshTokenService refreshTokenService) {
+	        RefreshTokenService refreshTokenService,
+	        AppLoginSecurityVerifierService verifierService) {
 		this.setRefreshTokenEncoderDecoder(refreshTokenEncoderDecoder);
 		this.setLoginTokenService(loginTokenService);
 		this.setRefreshTokenService(refreshTokenService);
+		this.setVerifierService(verifierService);
 	}
 
 	public LoginTokenEncoderDecoder<LoginToken> getRefreshTokenEncoderDecoder() {
@@ -96,6 +99,18 @@ public class LoginTokenControllerDelegateImpl
 		}
 
 		this.refreshTokenService = refreshTokenService;
+	}
+
+	public AppLoginSecurityVerifierService getVerifierService() {
+		return this.verifierService;
+	}
+
+	public void setVerifierService(AppLoginSecurityVerifierService verifierService) {
+		if (verifierService == null) {
+			throw new IllegalArgumentException("verifierService cannot be null.");
+		}
+
+		this.verifierService = verifierService;
 	}
 
 	// MARK: TokenControllerDelegate

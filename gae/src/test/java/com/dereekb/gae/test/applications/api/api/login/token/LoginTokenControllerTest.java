@@ -17,6 +17,7 @@ import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncod
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
+import com.dereekb.gae.utilities.time.DateUtility;
 import com.dereekb.gae.web.api.auth.controller.token.impl.TokenValidationRequestImpl;
 
 public class LoginTokenControllerTest extends ApiApplicationTestContext {
@@ -87,13 +88,15 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setLogin(1L);
 		loginToken.setLoginPointer("pointer");
-		loginToken.setExpiration(new Date(new Date().getTime() + (60 * 1000)));
+		loginToken.setExpiration(DateUtility.getDateIn(60 * 1000L));
 		loginToken.setIssued(new Date());
 		loginToken.setRefreshAllowed(true);
 
 		String encodedToken = this.loginTokenService.encodeLoginToken(loginToken);
 
 		TokenValidationRequestImpl request = new TokenValidationRequestImpl(encodedToken);
+		request.setQuick(true);
+
 		MockHttpServletResponse response = testUtility.validateLoginToken(request);
 
 		int status = response.getStatus();

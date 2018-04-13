@@ -102,13 +102,11 @@ public class LoginTokenController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/validate", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
-	public final ApiResponse validateToken(@RequestParam("token") @NotNull String token,
-	                                       @RequestParam("content") String content,
-	                                       @RequestParam("signature") @NotNull String signature,
-	                                       @RequestParam("quick") Boolean quick) {
+	public final ApiResponse validateToken(@RequestParam(value = "token", required = true) @NotNull String token,
+	                                       @RequestParam(value = "content", required = false) String content,
+	                                       @RequestParam(value = "signature", required = false) String signature,
+	                                       @RequestParam(value = "quick", required = false) Boolean quick) {
 		ApiResponseImpl response = null;
-
-		// TODO: Validate
 
 		try {
 			TokenValidationRequestImpl request = new TokenValidationRequestImpl(token, content, signature, quick);

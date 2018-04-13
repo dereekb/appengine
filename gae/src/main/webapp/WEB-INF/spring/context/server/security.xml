@@ -80,6 +80,7 @@
 			<set value-type="java.lang.String">
 				<value>login</value>
 				<value>refresh</value>
+				<value>validate</value>
 			</set>
 		</constructor-arg>
 		<property name="methodMatcher">
