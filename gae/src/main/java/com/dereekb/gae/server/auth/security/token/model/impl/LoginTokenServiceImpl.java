@@ -101,6 +101,14 @@ public class LoginTokenServiceImpl<T extends LoginToken>
 	}
 
 	@Override
+	public DecodedLoginToken<T> decodeLoginTokenFromClaims(String token,
+	                                                       Claims claims)
+	        throws TokenExpiredException,
+	            TokenUnauthorizedException {
+		return this.dencoder.decodeLoginTokenFromClaims(token, claims);
+	}
+
+	@Override
 	public DecodedLoginToken<T> decodeLoginTokenFromClaims(Claims claims)
 	        throws TokenExpiredException,
 	            TokenUnauthorizedException {

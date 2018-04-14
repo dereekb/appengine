@@ -95,6 +95,7 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setLogin(1L);
 		loginToken.setLoginPointer("pointer");
+
 		// Set Expired
 		loginToken.setIssued(DateUtility.getDateIn(60 * -1000L));
 		loginToken.setExpiration(DateUtility.getDateIn(30 * -1000L));

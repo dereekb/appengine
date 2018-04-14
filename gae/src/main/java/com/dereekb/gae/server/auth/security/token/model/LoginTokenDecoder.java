@@ -30,6 +30,25 @@ public interface LoginTokenDecoder<T extends LoginToken> {
 	/**
 	 * Decodes a token using the input claims.
 	 *
+	 * @param token
+	 *            Original token. Never {@code null}.
+	 * @param claims
+	 *            {@link Claims}. Never {@code null}.
+	 * @return {@link LoginToken}. Never {@code null}.
+	 * @throws TokenExpiredException
+	 *             Thrown if the token was validated, but is considered expired.
+	 * @throws TokenUnauthorizedException
+	 *             Thrown if the token was unauthorized by either not existing
+	 *             or not matching against the details.
+	 */
+	public DecodedLoginToken<T> decodeLoginTokenFromClaims(String token,
+	                                                       Claims claims)
+	        throws TokenExpiredException,
+	            TokenUnauthorizedException;
+
+	/**
+	 * Decodes a token using the input claims.
+	 *
 	 * @param claims
 	 *            {@link Claims}. Never {@code null}.
 	 * @return {@link LoginToken}. Never {@code null}.

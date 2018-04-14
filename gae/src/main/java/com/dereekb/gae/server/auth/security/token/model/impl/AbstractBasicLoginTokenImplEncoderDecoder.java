@@ -129,8 +129,9 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		return new DecodedLoginTokenImpl<T>(encoded, decodedToken.getLoginToken(), claims);
 	}
 
-	protected final DecodedLoginTokenImpl<T> decodeLoginTokenFromClaims(String encodedToken,
-	                                                                    Claims claims)
+	@Override
+	public final DecodedLoginTokenImpl<T> decodeLoginTokenFromClaims(String encodedToken,
+	                                                                 Claims claims)
 	        throws TokenExpiredException,
 	            TokenUnauthorizedException {
 		T loginToken = this.buildFromClaims(claims);

@@ -33,9 +33,9 @@ public class LoginTokenAuthenticationFilterDelegateImpl<T extends LoginToken>
 	@Deprecated
 	@SuppressWarnings("unchecked")
 	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder<T> decoder,
-	                                      	        AuthenticationManager authenticationManager) {
-	                                      		this(decoder, authenticationManager, (LoginTokenAuthenticationFilterVerifier<T>) DEFAULT_VERIFIER);
-	                                      	}
+	        AuthenticationManager authenticationManager) {
+		this(decoder, authenticationManager, (LoginTokenAuthenticationFilterVerifier<T>) DEFAULT_VERIFIER);
+	}
 
 	public LoginTokenAuthenticationFilterDelegateImpl(LoginTokenDecoder<T> decoder,
 	        AuthenticationManager authenticationManager,
