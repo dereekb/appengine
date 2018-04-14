@@ -57,6 +57,7 @@ public class DecodedLoginTokenImpl<T extends LoginToken>
 		this.encodedLoginToken = encodedLoginToken;
 	}
 
+	@Override
 	public Claims getClaims() {
 		return this.claims;
 	}

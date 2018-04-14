@@ -3,6 +3,7 @@ package com.dereekb.gae.utilities.data.impl;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.dereekb.gae.utilities.collections.list.SetUtility;
@@ -217,6 +218,13 @@ public class ObjectMapperUtilityBuilderImpl
 				// Should never happen.
 				throw new RuntimeException(e);
 			}
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public Map<String, String> mapToStringMap(JsonNode jsonNode) {
+			Map<String, String> result = this.mapper.convertValue(jsonNode, Map.class);
+			return result;
 		}
 
 	}

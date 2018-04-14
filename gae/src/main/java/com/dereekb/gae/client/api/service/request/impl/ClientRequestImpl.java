@@ -5,15 +5,18 @@ import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
+import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
 
 /**
  * {@link ClientRequest} implementation.
- * 
+ *
  * @author dereekb
  *
  */
 public class ClientRequestImpl
         implements ClientRequest {
+
+	public static final String CONTENT_TYPE_HEADER = "content-type";
 
 	private ClientRequestUrl url;
 	private ClientRequestMethod method;
@@ -52,6 +55,32 @@ public class ClientRequestImpl
 		}
 
 		this.method = method;
+	}
+
+	public String getContentType() {
+		if (this.headers != null) {
+			return this.headers.getParameters().get(CONTENT_TYPE_HEADER);
+		} else {
+			return null;
+		}
+	}
+
+	public void setContentType(String contentType) {
+		ParametersImpl newParameters = null;
+
+		if (this.headers != null) {
+			newParameters = new ParametersImpl(this.headers);
+		} else {
+			newParameters = new ParametersImpl();
+		}
+
+		if (contentType == null) {
+			newParameters.removeEntry(CONTENT_TYPE_HEADER);
+		} else {
+			newParameters.addEntry(CONTENT_TYPE_HEADER, contentType);
+		}
+
+		this.setHeaders(newParameters);
 	}
 
 	@Override

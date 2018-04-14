@@ -108,19 +108,33 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 	public DecodedLoginToken<T> decodeLoginToken(String token)
 	        throws TokenExpiredException,
 	            TokenUnauthorizedException {
-		T loginToken = null;
 		Claims claims = null;
 
 		try {
 			claims = this.parseClaims(token);
-			loginToken = this.buildFromClaims(claims);
+			return this.decodeLoginTokenFromClaims(token, claims);
 		} catch (MissingClaimException | SignatureException | IncorrectClaimException e) {
 			throw new TokenUnauthorizedException("Could not decode token.", e);
 		} catch (ExpiredJwtException e) {
 			throw new TokenExpiredException();
 		}
+	}
 
-		return new DecodedLoginTokenImpl<T>(token, loginToken, claims);
+	@Override
+	public final DecodedLoginTokenImpl<T> decodeLoginTokenFromClaims(Claims claims)
+	        throws TokenExpiredException,
+	            TokenUnauthorizedException {
+		DecodedLoginTokenImpl<T> decodedToken = this.decodeLoginTokenFromClaims("", claims);
+		String encoded = this.encodeLoginToken(decodedToken.getLoginToken());
+		return new DecodedLoginTokenImpl<T>(encoded, decodedToken.getLoginToken(), claims);
+	}
+
+	protected final DecodedLoginTokenImpl<T> decodeLoginTokenFromClaims(String encodedToken,
+	                                                                    Claims claims)
+	        throws TokenExpiredException,
+	            TokenUnauthorizedException {
+		T loginToken = this.buildFromClaims(claims);
+		return new DecodedLoginTokenImpl<T>(encodedToken, loginToken, claims);
 	}
 
 	protected final Claims parseClaims(String token) throws TokenExpiredException, TokenUnauthorizedException {

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityService;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
@@ -28,6 +29,10 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 	@Autowired
 	@Qualifier("loginTokenService")
 	private LoginTokenService<LoginToken> loginTokenService;
+
+	@Autowired
+	@Qualifier("appLoginSecurityService")
+	private AppLoginSecurityService appLoginSecurityService;
 
 	@Autowired
 	@Qualifier("refreshTokenEncoderDecoder")

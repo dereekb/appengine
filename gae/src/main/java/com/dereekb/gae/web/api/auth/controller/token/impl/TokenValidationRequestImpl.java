@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.auth.controller.token.impl;
 
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
 
 /**
@@ -21,7 +22,15 @@ public class TokenValidationRequestImpl
 	}
 
 	public TokenValidationRequestImpl(String token, Boolean quick) {
-		this(token, null, null, quick);
+		this(token, null, quick);
+	}
+
+	public TokenValidationRequestImpl(String token, String signature) {
+		this(token, signature, true);
+	}
+
+	public TokenValidationRequestImpl(String token, String signature, Boolean quick) {
+		this(token, null, signature, quick);
 	}
 
 	public TokenValidationRequestImpl(String token, String content, String signature, Boolean quick) {
@@ -38,8 +47,8 @@ public class TokenValidationRequestImpl
 	}
 
 	public void setToken(String token) {
-		if (token == null) {
-			throw new IllegalArgumentException("token cannot be null.");
+		if (StringUtility.isEmptyString(token)) {
+			throw new IllegalArgumentException("token cannot be null or empty.");
 		}
 
 		this.token = token;

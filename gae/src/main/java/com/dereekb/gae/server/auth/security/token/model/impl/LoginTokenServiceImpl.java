@@ -9,6 +9,8 @@ import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 
+import io.jsonwebtoken.Claims;
+
 /**
  * {@link LoginTokenService} implementation.
  *
@@ -96,6 +98,13 @@ public class LoginTokenServiceImpl<T extends LoginToken>
 	        throws TokenExpiredException,
 	            TokenUnauthorizedException {
 		return this.dencoder.decodeLoginToken(token);
+	}
+
+	@Override
+	public DecodedLoginToken<T> decodeLoginTokenFromClaims(Claims claims)
+	        throws TokenExpiredException,
+	            TokenUnauthorizedException {
+		return this.dencoder.decodeLoginTokenFromClaims(claims);
 	}
 
 	@Override

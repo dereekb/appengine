@@ -43,4 +43,11 @@
 		<constructor-arg index="0" ref="modelKeyTypeConverter" />
 		<constructor-arg index="1" ref="securedClientRequestSender" />
 	</bean>
+
+	<bean
+		class="com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationServiceRequestSenderImpl"
+		id="clientLoginTokenValidationServiceRequestSender">
+		<constructor-arg index="0" ref="securedClientRequestSender" />
+	</bean>
+	
 </beans>

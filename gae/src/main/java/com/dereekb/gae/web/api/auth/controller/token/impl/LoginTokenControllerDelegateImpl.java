@@ -29,6 +29,7 @@ import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 import io.jsonwebtoken.Claims;
@@ -136,6 +137,11 @@ public class LoginTokenControllerDelegateImpl
 			// TODO: Set API safe login token data instead/too?
 
 			response.setData(data);
+		}
+
+		if (request.getSignature() != null && loginToken.getLoginToken().getApp() == null) {
+			response.addError(new ApiResponseErrorImpl("UNUSED_SIGNATURE", "Unused Signature",
+			        "Token has no app association. Signature unnecessary."));
 		}
 
 		return response;

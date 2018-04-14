@@ -19,6 +19,18 @@ public class ParametersImpl extends CaseInsensitiveEntryContainerImpl<String>
 
 	public ParametersImpl() {}
 
+	public ParametersImpl(KeyedEncodedParameter parameter) {
+		this.addParameter(parameter);
+	}
+
+	public ParametersImpl(String key, String value) {
+		this.addParameter(key, value);
+	}
+
+	public ParametersImpl(Parameters parameters) {
+		this(parameters.getParameters());
+	}
+
 	public ParametersImpl(Map<String, String> parameters) {
 		super(parameters);
 	}

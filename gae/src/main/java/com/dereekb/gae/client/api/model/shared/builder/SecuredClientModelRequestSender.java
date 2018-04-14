@@ -9,7 +9,8 @@ import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseE
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 
 /**
- * Abstract interface for client models.
+ * Abstract interface for client services/models that wraps responses in a
+ * {@link SerializedClientApiResponse}.
  *
  * @author dereekb
  *

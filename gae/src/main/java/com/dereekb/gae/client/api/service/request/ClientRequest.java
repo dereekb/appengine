@@ -25,6 +25,13 @@ public interface ClientRequest {
 	public ClientRequestMethod getMethod();
 
 	/**
+	 * Returns the content-type header from all headers, if specified.
+	 *
+	 * @return {@link String}, or {@code null} if not specified.
+	 */
+	public String getContentType();
+
+	/**
 	 * Returns the headers for this request, if any.
 	 *
 	 * @return {@link Parameters}, or {@code null} if none defined.

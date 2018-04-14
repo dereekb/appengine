@@ -2,6 +2,7 @@ package com.dereekb.gae.utilities.data;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,6 +53,8 @@ public interface ObjectMapperUtility {
 	public <X> X map(JsonNode jsonNode,
 	                 Class<X> type)
 	        throws IOException;
+
+	public Map<String, String> mapToStringMap(JsonNode jsonNode);
 
 	// Writer
 	public String writeJsonString(JsonNode jsonNode);

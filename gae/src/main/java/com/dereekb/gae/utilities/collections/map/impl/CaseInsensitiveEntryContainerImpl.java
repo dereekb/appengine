@@ -63,6 +63,10 @@ public class CaseInsensitiveEntryContainerImpl<T>
 		this.entries.put(key, value);
 	}
 
+	public void removeEntry(String key) {
+		this.entries.remove(key);
+	}
+
 	protected void throwEntryDoesntExistException(String type) throws RuntimeException {
 		throw new NullPointerException(type + " doesn't exist in the entries.");
 	}

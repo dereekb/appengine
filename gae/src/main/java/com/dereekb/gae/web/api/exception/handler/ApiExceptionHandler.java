@@ -13,9 +13,11 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -164,6 +166,54 @@ public class ApiExceptionHandler {
 	}
 
 	@ResponseBody
+	@ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+	public ApiResponse handleException(HttpMediaTypeNotSupportedException e) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("UNSUPPORTED_MEDIA_TYPE");
+		error.setTitle("Unsupported Media Type");
+		error.setDetail("Change the media type of your request to a supported type.");
+
+		error.setData(new HttpMediaTypeNotSupportedData(e));
+
+		response.setError(error);
+
+		return response;
+	}
+
+	public static class HttpMediaTypeNotSupportedData {
+
+		private String requestContentType;
+		private List<String> supportedTypes;
+
+		public HttpMediaTypeNotSupportedData(HttpMediaTypeNotSupportedException e) {
+
+			List<String> supportedTypes = new ArrayList<String>();
+			for (MediaType type : e.getSupportedMediaTypes()) {
+				supportedTypes.add(type.toString());
+			}
+
+			this.supportedTypes = supportedTypes;
+
+			MediaType type = e.getContentType();
+
+			if (type != null) {
+				this.requestContentType = type.toString();
+			}
+		}
+
+		public String getRequestContentType() {
+			return this.requestContentType;
+		}
+
+		public List<String> getSupportedTypes() {
+			return this.supportedTypes;
+		}
+
+	}
+
+	@ResponseBody
 	@ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
 	@ExceptionHandler(RateLimitException.class)
 	public ApiResponse handleException(RateLimitException e) {
@@ -258,7 +308,7 @@ public class ApiExceptionHandler {
 
 		return response;
 	}
-	
+
 	public static class ConstraintError extends ApiResponseErrorImpl {
 
 		private static final String ERROR_CODE = "REQUEST_ERROR";
@@ -279,11 +329,11 @@ public class ApiExceptionHandler {
 
 			for (ConstraintViolation<?> violation : violations) {
 				FieldValidationIssue issue = new FieldValidationIssue();
-				
+
 				issue.setField("n/a");
 				issue.setValue("n/a");
 				issue.setMessage(violation.getMessage());
-				
+
 				issues.add(issue);
 			}
 

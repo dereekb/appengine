@@ -97,6 +97,11 @@ public class SecuredClientRequestImpl
 	}
 
 	@Override
+	public String getContentType() {
+		return this.request.getContentType();
+	}
+
+	@Override
 	public Parameters getParameters() {
 		return this.request.getParameters();
 	}
