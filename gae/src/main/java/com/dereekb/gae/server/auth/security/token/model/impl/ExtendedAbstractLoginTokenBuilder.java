@@ -22,8 +22,15 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl> extends AbstractLoginTokenBuilder<T> {
 
 	private Getter<Login> loginGetter;
+
+	@Deprecated
 	private OwnershipRolesReader<Login> ownershipRolesReader;
 
+	public ExtendedAbstractLoginTokenBuilder(Getter<Login> loginGetter) throws IllegalArgumentException {
+		this.setLoginGetter(loginGetter);
+	}
+
+	@Deprecated
 	public ExtendedAbstractLoginTokenBuilder(Getter<Login> loginGetter,
 	        OwnershipRolesReader<Login> ownershipRolesReader) throws IllegalArgumentException {
 		this.setLoginGetter(loginGetter);
@@ -42,10 +49,12 @@ public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl
 		this.loginGetter = loginGetter;
 	}
 
+	@Deprecated
 	public OwnershipRolesReader<Login> getOwnershipRolesReader() {
 		return this.ownershipRolesReader;
 	}
 
+	@Deprecated
 	public void setOwnershipRolesReader(OwnershipRolesReader<Login> ownershipRolesReader)
 	        throws IllegalArgumentException {
 		if (ownershipRolesReader == null) {

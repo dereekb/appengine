@@ -8,10 +8,11 @@ import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 
 /**
  * {@link OwnershipRoles} implementation.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public final class OwnershipRolesImpl
         implements OwnershipRoles {
 

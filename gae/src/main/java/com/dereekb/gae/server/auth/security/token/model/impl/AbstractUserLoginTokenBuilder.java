@@ -13,7 +13,7 @@ import com.dereekb.gae.server.datastore.Getter;
 /**
  * Abstract extension of {@link ExtendedAbstractLoginTokenBuilder} that also
  * loads the user associated with the {@link Login} and initializes the token.
- * 
+ *
  * @author dereekb
  *
  * @param <U>
@@ -101,6 +101,7 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 		}
 	}
 
+	@Deprecated
 	protected OwnershipRoles mergeOwnershipRoles(OwnershipRoles userRoles,
 	                                             OwnershipRoles loginRoles) {
 		return OwnershipRolesUtility.mergeRoles(loginRoles, userRoles);

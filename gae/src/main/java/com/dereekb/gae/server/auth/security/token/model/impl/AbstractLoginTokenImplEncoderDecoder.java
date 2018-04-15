@@ -94,6 +94,7 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		}
 	}
 
+	@Deprecated
 	@Override
 	protected String encodeOwnershipRoles(OwnershipRoles ownershipRoles) {
 		return OwnershipRolesUtility.encodeRoles(ownershipRoles);
@@ -171,6 +172,7 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		}
 	}
 
+	@Deprecated
 	protected OwnershipRoles decodeOwnershipRoles(String encodedOwnershipRoles) {
 		return OwnershipRolesUtility.decodeRoles(encodedOwnershipRoles);
 	}

@@ -10,10 +10,11 @@ import com.dereekb.gae.utilities.filters.Filter;
 /**
  * {@link Filter} for {@link OwnedModel} types that uses the
  * {@link LoginSecurityContext}.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class SecurityOwnershipRolesFilter extends AbstractLoginUserOwnershipFiltersImpl<OwnedModel> {
 
 	// MARK: Internal

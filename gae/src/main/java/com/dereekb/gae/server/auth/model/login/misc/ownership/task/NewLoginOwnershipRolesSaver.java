@@ -9,10 +9,11 @@ import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;
 /**
  * {@link Saver} implementation used for attaching ownership roles after
  * creating {@link Login} values.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class NewLoginOwnershipRolesSaver
         implements Storer<Login> {
 

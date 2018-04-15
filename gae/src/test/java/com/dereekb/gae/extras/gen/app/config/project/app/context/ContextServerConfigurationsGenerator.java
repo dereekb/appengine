@@ -12,6 +12,7 @@ import com.dereekb.gae.extras.gen.app.config.model.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
+import com.dereekb.gae.extras.gen.app.config.project.app.AppLoginTokenBeansConfiguration;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -34,6 +35,8 @@ import com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExce
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter;
 import com.dereekb.gae.server.auth.security.token.filter.handlers.LoginTokenAuthenticationFailureHandler;
 import com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl;
+import com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory;
+import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -73,10 +76,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		folder.addFile(new RefConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
-
-		if (this.getAppConfig().isLoginServer()) {
-			folder.addFile(new LoginConfigurationGenerator().generateConfigurationFile());
-		}
+		folder.addFile(new LoginConfigurationGenerator().generateConfigurationFile());
 
 		// Main Server File
 		folder.addFile(this.makeServerFile(folder));
@@ -173,11 +173,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-			// TODO: Microservices will eventually need to not be married to the
-			// login token secret here. This change can always be made later
-			// though...
-			if (true) {
+			if (this.getAppConfig().isLoginServer()) {
 				this.addLoginServerLoginTokenBeansToXMLConfigurationFile(builder);
+			} else {
+				this.addRemoteLoginServerLoginTokenBeansToXMLConfigurationFile(builder);
 			}
 
 			// Common Components
@@ -188,10 +187,60 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 		public void addLoginServerLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
-			builder.comment("Login Service");
-			builder.stringBean("loginTokenSecret", "");
+			AppLoginTokenBeansConfiguration loginTokenBeansConfiguration = this.getAppConfig().getAppBeans()
+			        .getAppLoginTokenBeansConfiguration();
 
-			// TODO: All internal OAuth services, etc.
+			builder.comment("Login Server");
+			builder.comment("Signatures");
+
+			// TODO: Update to pull signatures from JSON file or similar file
+			// not included in git.
+
+			String loginTokenSignatureFactoryId = "loginTokenSignatureFactory";
+			String refreshTokenSignatureFactoryId = "refreshTokenSignatureFactory";
+
+			builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).getRawXMLBuilder()
+			        .comment("TODO: Add production source.");
+			builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class)
+			        .getRawXMLBuilder().comment("TODO: Add production source.");
+
+			builder.bean("loginTokenEncoderDecoder")
+			        .beanClass(loginTokenBeansConfiguration.getLoginTokenEncoderDecoderClass()).c().bean()
+			        .factoryBean(loginTokenSignatureFactoryId).factoryMethod("make");
+
+			builder.bean("loginTokenBuilder").beanClass(loginTokenBeansConfiguration.getLoginTokenBuilderClass()).c().ref("loginRegistry").b
+
+
+			builder.bean("loginTokenService").beanClass(LoginTokenServiceImpl.class).c()
+
+			builder.comment("LoginToken Service");
+
+			builder.comment("LoginPointer Service");
+
+			builder.comment("Password Service");
+
+			builder.comment("OAuth Service");
+
+			builder.comment("KeyLogin Service");
+
+			builder.comment("Register Service");
+
+			builder.comment("Refresh Token Service");
+
+		}
+
+		public void addRemoteLoginServerLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
+
+			AppLoginTokenBeansConfiguration loginTokenBeansConfiguration = this.getAppConfig().getAppBeans()
+			        .getAppLoginTokenBeansConfiguration();
+
+			builder.comment("Remote Login Service");
+
+			// TODO: For Test, use local dencoder.
+			// TODO: For Dev, send requests to the dev login service.
+			// TODO: For Prod, send requests to the prod login service.
+
+			builder.comment("Register Service");
 
 		}
 

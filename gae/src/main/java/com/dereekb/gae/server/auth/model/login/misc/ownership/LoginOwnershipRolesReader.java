@@ -7,10 +7,11 @@ import com.googlecode.objectify.Key;
 
 /**
  * Login Ownership Key.
- * 
+ *
  * @author dereekb
  *
  */
+@Deprecated
 public class LoginOwnershipRolesReader
         implements OwnershipRolesReader<Login> {
 
@@ -66,7 +67,7 @@ public class LoginOwnershipRolesReader
 	}
 
 	/**
-	 * 
+	 *
 	 * @param login
 	 *            {@link Login}. Never {@code null}.
 	 * @return {@link String}. Never {@code null}.
@@ -76,7 +77,7 @@ public class LoginOwnershipRolesReader
 	}
 
 	/**
-	 * 
+	 *
 	 * @param key
 	 *            {@link Key}. Never {@code null}.
 	 * @return {@link String}. Never {@code null}.
@@ -86,7 +87,7 @@ public class LoginOwnershipRolesReader
 	}
 
 	/**
-	 * 
+	 *
 	 * @param identifier
 	 *            {@link Long}. Never {@code null}.
 	 * @return {@link String}. Never {@code null}.

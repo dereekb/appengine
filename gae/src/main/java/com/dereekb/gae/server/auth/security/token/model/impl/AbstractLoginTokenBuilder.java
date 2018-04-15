@@ -7,7 +7,8 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
 
 /**
- * 
+ * Abstract {@link LoginTokenBuilder} implementation.
+ *
  * @author dereekb
  *
  * @param <T>

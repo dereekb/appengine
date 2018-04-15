@@ -1,7 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.project.app;
 
-import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl;
-import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.impl.AppLoginTokenBeansConfigurationImpl;
 
 /**
  * {@link AppBeansConfiguration} implementation.
@@ -56,8 +55,7 @@ public class AppBeansConfigurationImpl
 	private String crudUpdateModelRoleRefBeanId = CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID;
 	private String crudDeleteModelRoleRefBeanId = CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID;
 
-	private Class<?> loginTokenAuthenticationProviderClass = LoginTokenAuthenticationProviderImpl.class;
-	private Class<?> loginTokenUserDetailsBuilderClass = LoginTokenUserDetailsBuilderImpl.class;
+	private AppLoginTokenBeansConfiguration appLoginTokenBeansConfiguration = new AppLoginTokenBeansConfigurationImpl();
 
 	@Override
 	public String getAppInfoBeanId() {
@@ -294,29 +292,16 @@ public class AppBeansConfigurationImpl
 	}
 
 	@Override
-	public Class<?> getLoginTokenAuthenticationProviderClass() {
-		return this.loginTokenAuthenticationProviderClass;
+	public AppLoginTokenBeansConfiguration getAppLoginTokenBeansConfiguration() {
+		return this.appLoginTokenBeansConfiguration;
 	}
 
-	public void setLoginTokenAuthenticationProviderClass(Class<?> loginTokenAuthenticationProviderClass) {
-		if (loginTokenAuthenticationProviderClass == null) {
-			throw new IllegalArgumentException("loginTokenAuthenticationProviderClass cannot be null.");
+	public void setAppLoginTokenBeansConfiguration(AppLoginTokenBeansConfiguration appLoginTokenBeansConfiguration) {
+		if (appLoginTokenBeansConfiguration == null) {
+			throw new IllegalArgumentException("appLoginTokenBeansConfiguration cannot be null.");
 		}
 
-		this.loginTokenAuthenticationProviderClass = loginTokenAuthenticationProviderClass;
-	}
-
-	@Override
-	public Class<?> getLoginTokenUserDetailsBuilderClass() {
-		return this.loginTokenUserDetailsBuilderClass;
-	}
-
-	public void setLoginTokenUserDetailsBuilderClass(Class<?> loginTokenUserDetailsBuilderClass) {
-		if (loginTokenUserDetailsBuilderClass == null) {
-			throw new IllegalArgumentException("loginTokenUserDetailsBuilderClass cannot be null.");
-		}
-
-		this.loginTokenUserDetailsBuilderClass = loginTokenUserDetailsBuilderClass;
+		this.appLoginTokenBeansConfiguration = appLoginTokenBeansConfiguration;
 	}
 
 }

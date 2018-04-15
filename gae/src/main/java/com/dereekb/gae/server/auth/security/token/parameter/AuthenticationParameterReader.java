@@ -65,4 +65,6 @@ public interface AuthenticationParameterReader {
 	 */
 	public String readToken(String parameter) throws InvalidAuthStringException;
 
+	// TODO: Read content?
+
 }

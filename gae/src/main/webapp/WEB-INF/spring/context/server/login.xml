@@ -9,15 +9,24 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Login Server -->
 	<!-- Login Service -->
-	<bean id="loginTokenSecret" class="java.lang.String">
-		<constructor-arg index="0"
-			value="3zRepP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=" />
+	<bean id="loginTokenSignatureFactory"
+		class="com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory">
+		<!-- TODO: Add production source. -->
+	</bean>
+
+	<bean id="refreshTokenSignatureFactory"
+		class="com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory">
+		<!-- TODO: Add production source. -->
 	</bean>
 
 	<bean id="loginTokenEncoderDecoder"
 		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl">
-		<constructor-arg index="0" ref="loginTokenSecret" />
+		<constructor-arg index="0">
+			<bean factory-bean="loginTokenSignatureFactory" factory-method="make">
+			</bean>
+		</constructor-arg>
 	</bean>
 
 	<bean id="loginTokenService"
@@ -93,12 +102,14 @@
 		<constructor-arg index="1" ref="loginScheduleCreateReview" />
 	</bean>
 
+	<!-- DEPRECATED -->
 	<bean id="newLoginOwnershipRolesSaver"
 		class="com.dereekb.gae.server.auth.model.login.misc.ownership.task.NewLoginOwnershipRolesSaver">
 		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1" ref="loginOwnershipRolesReader" />
 	</bean>
 
+	<!-- DEPRECATED -->
 	<bean id="loginOwnershipRolesReader"
 		class="com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader">
 	</bean>
@@ -112,9 +123,14 @@
 
 	<bean id="refreshTokenEncoderDecoder"
 		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder">
-		<constructor-arg index="0" ref="loginTokenSecret" />
+		<constructor-arg index="0">
+			<bean factory-bean="refreshTokenSignatureFactory"
+				factory-method="make">
+			</bean>
+		</constructor-arg>
 	</bean>
 
+	<!-- Login Token Utilities -->
 	<!-- Login Models Service -->
 	<bean id="loginTokenModelContextService"
 		class="com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl">

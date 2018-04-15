@@ -40,9 +40,7 @@ public interface AppBeansConfiguration {
 
 	public String getLoginTokenServiceBeanId();
 
-	public Class<?> getLoginTokenAuthenticationProviderClass();
-
-	public Class<?> getLoginTokenUserDetailsBuilderClass();
+	public AppLoginTokenBeansConfiguration getAppLoginTokenBeansConfiguration();
 
 	// TaskQueue
 	public String getEventServiceId();

@@ -9,6 +9,12 @@ import com.dereekb.gae.server.auth.security.ownership.impl.OwnershipRolesImpl;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.google.common.base.Joiner;
 
+/**
+ * @author dereekb
+ *
+ * @deprecated {@link OwnershipRoles} are deprecated.
+ */
+@Deprecated
 public class OwnershipRolesUtility {
 
 	private static final String OWNERSHIP_ROLES_SPLITTER = ",";

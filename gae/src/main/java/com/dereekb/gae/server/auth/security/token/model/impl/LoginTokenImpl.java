@@ -72,6 +72,7 @@ public class LoginTokenImpl
 	/**
 	 * Ownership roles.
 	 */
+	@Deprecated
 	private OwnershipRoles ownershipRoles;
 
 	/**
@@ -222,11 +223,13 @@ public class LoginTokenImpl
 		this.pointerType = pointerType;
 	}
 
+	@Deprecated
 	@Override
 	public OwnershipRoles getOwnershipRoles() {
 		return this.ownershipRoles;
 	}
 
+	@Deprecated
 	public void setOwnershipRoles(OwnershipRoles ownershipRoles) {
 		if (ownershipRoles == null) {
 			ownershipRoles = new OwnershipRolesImpl();

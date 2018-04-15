@@ -12,8 +12,16 @@ import com.dereekb.gae.utilities.time.exception.RateLimitException;
 
 /**
  * Service used for creating and building refresh tokens.
- * 
- * @author dereekb
+ * <p>
+ * Refresh tokens are {@link LoginToken} values that are used for long-term
+ * authentication. They typically last months at a time, allowing them to be
+ * safely and conveniently stored on devices then can be used to authenticate
+ * fully, without the user's credentials/password required.
+ * <p>
+ * They can also be invalidated at any time, disabling their ability to be used
+ * for retrieving short-term authentication tokens.
+ *
+ * @author dereekbs
  *
  */
 public interface RefreshTokenService {
@@ -23,7 +31,7 @@ public interface RefreshTokenService {
 	 * <p>
 	 * The refresh token should not be directly used for authentication
 	 * purposes.
-	 * 
+	 *
 	 * @param token
 	 *            {@link LoginToken}. Never {@code null}.
 	 * @return {@link LoginToken}. Never {@code null}.
@@ -37,11 +45,11 @@ public interface RefreshTokenService {
 	/**
 	 * Verifies the input refresh token is valid. If valid, will return the
 	 * {@link LoginPointer} used for authenticating again.
-	 * 
+	 *
 	 * @param refreshToken
 	 *            {@link LoginToken}. Never {@code null}.
 	 * @return {@link LoginPointer}. Never {@code null}.
-	 * 
+	 *
 	 * @throws RefreshTokenExpiredException
 	 * @throws TokenUnauthorizedException
 	 */
@@ -51,7 +59,7 @@ public interface RefreshTokenService {
 
 	/**
 	 * Resets authentication for the referenced {@link Login}.
-	 * 
+	 *
 	 * @throws UnavailableModelException
 	 *             thrown if the target login is not available.
 	 * @throws RateLimitException
