@@ -21,7 +21,7 @@ public class SimplePathImpl
 	private final String divider;
 	private final List<String> pathComponents;
 
-	private String path; // Lazy Init
+	private transient String path; // Lazy Init
 
 	public SimplePathImpl() {
 		this.pathComponents = Collections.emptyList();
