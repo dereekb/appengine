@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.dereekb.gae.server.auth.security.ownership.impl.OwnershipRolesImpl;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.impl.OwnershipRolesImpl;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.google.common.base.Joiner;
 

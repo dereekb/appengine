@@ -1,8 +1,8 @@
 package com.dereekb.gae.server.auth.model.login.misc.ownership;
 
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.security.ownership.impl.OwnershipRolesImpl;
-import com.dereekb.gae.server.auth.security.ownership.source.OwnershipRolesReader;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.impl.OwnershipRolesImpl;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.source.OwnershipRolesReader;
 import com.googlecode.objectify.Key;
 
 /**

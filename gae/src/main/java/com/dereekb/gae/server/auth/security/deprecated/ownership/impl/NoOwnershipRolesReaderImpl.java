@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.security.ownership.impl;
 
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
-import com.dereekb.gae.server.auth.security.ownership.source.OwnershipRolesReader;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.OwnershipRoles;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.source.OwnershipRolesReader;
 
 /**
  * {@link OwnershipRolesReader} implementation that returns an empty

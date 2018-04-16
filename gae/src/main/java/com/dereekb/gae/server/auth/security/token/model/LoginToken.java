@@ -6,7 +6,6 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesBearer;
 import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
 
 /**
@@ -16,7 +15,7 @@ import com.dereekb.gae.server.auth.security.roles.EncodedRolesBearer;
  *
  */
 public interface LoginToken
-        extends EncodedRolesBearer, OwnershipRolesBearer, EncodedLoginTokenModelContextSet {
+        extends EncodedRolesBearer, EncodedLoginTokenModelContextSet {
 
 	/**
 	 * Returns the subject of the token. Generally the result of

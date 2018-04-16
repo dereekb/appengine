@@ -45,7 +45,7 @@
 		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
 		<constructor-arg index="0" ref="loginPointerRegistry" />
 	</bean>
-	
+
 	<alias name="loginPointerSetterTask" alias="loginPointerStorerTask" />
 	<alias name="loginPointerSetterTask" alias="loginPointerUpdaterTask" />
 	<alias name="loginPointerSetterTask" alias="loginPointerDeleterTask" />
@@ -65,10 +65,16 @@
 	</bean>
 
 	<!-- Read -->
-	<bean id="loginPointerReadTask"
-		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
+	<bean
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl"
+		id="loginPointerReadTask">
 		<constructor-arg index="0" ref="loginPointerRegistry" />
-		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
+		<constructor-arg index="1">
+			<bean factory-bean="loginPointerSecurityContextServiceEntry"
+				factory-method="makeRoleFilter">
+				<constructor-arg index="0" ref="crudReadModelRole" />
+			</bean>
+		</constructor-arg>
 	</bean>
 
 	<!-- Update -->

@@ -56,12 +56,7 @@
 	<!-- Create -->
 	<bean id="storedBlobCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="storedBlobCreateTaskDelegate" />
-		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
-				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
-				<constructor-arg index="1" ref="storedBlobStorerTask"/>
-			</bean>
-		</constructor-arg>
+		<constructor-arg index="1" ref="storedBlobStorerTask"/>
 		<constructor-arg index="2">
 			<bean
 				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
@@ -79,9 +74,9 @@
 
 	<!-- Read -->
 	<bean id="storedBlobReadTask"
-		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
+		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
 		<constructor-arg index="0" ref="storedBlobRegistry" />
-		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
+		<!-- TODO: Filter -->
 	</bean>
 
 	<!-- Update -->

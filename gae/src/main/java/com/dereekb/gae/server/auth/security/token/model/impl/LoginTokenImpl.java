@@ -9,8 +9,6 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
 import com.dereekb.gae.server.auth.security.model.context.encoded.exception.UnavailableEncodedModelContextException;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.EmptyEncodedLoginTokenModelContextSet;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
-import com.dereekb.gae.server.auth.security.ownership.impl.OwnershipRolesImpl;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.utilities.time.DateUtility;
 
@@ -70,12 +68,6 @@ public class LoginTokenImpl
 	private LoginPointerType pointerType;
 
 	/**
-	 * Ownership roles.
-	 */
-	@Deprecated
-	private OwnershipRoles ownershipRoles;
-
-	/**
 	 * Encoded context info.
 	 */
 	private EncodedLoginTokenModelContextSet encodedModelContextSet = EmptyEncodedLoginTokenModelContextSet.make();
@@ -87,7 +79,6 @@ public class LoginTokenImpl
 	public LoginTokenImpl(LoginPointerType pointerType) throws IllegalArgumentException {
 		this.setPointerType(pointerType);
 		this.setIssued(new Date());
-		this.setOwnershipRoles(null);
 	}
 
 	public LoginTokenImpl(LoginToken loginToken) throws IllegalArgumentException {
@@ -223,25 +214,6 @@ public class LoginTokenImpl
 		this.pointerType = pointerType;
 	}
 
-	@Deprecated
-	@Override
-	public OwnershipRoles getOwnershipRoles() {
-		return this.ownershipRoles;
-	}
-
-	@Deprecated
-	public void setOwnershipRoles(OwnershipRoles ownershipRoles) {
-		if (ownershipRoles == null) {
-			ownershipRoles = new OwnershipRolesImpl();
-		}
-
-		this.ownershipRoles = ownershipRoles;
-	}
-
-	public void makeOwnershipRoles(String ownerId) {
-		this.ownershipRoles = new OwnershipRolesImpl(ownerId);
-	}
-
 	@Override
 	public EncodedLoginTokenModelContextSet getEncodedModelContextSet() {
 		return this.encodedModelContextSet;
@@ -279,7 +251,6 @@ public class LoginTokenImpl
 		this.setIssued(loginToken.getIssued());
 		this.setExpiration(loginToken.getExpiration());
 		this.setPointerType(loginToken.getPointerType());
-		this.setOwnershipRoles(loginToken.getOwnershipRoles());
 		this.setRefreshAllowed(loginToken.isRefreshAllowed());
 		this.setEncodedModelContextSet(loginToken.getEncodedModelContextSet());
 	}
@@ -288,8 +259,7 @@ public class LoginTokenImpl
 	public String toString() {
 		return "LoginTokenImpl [subject=" + this.subject + ", login=" + this.login + ", loginPointer="
 		        + this.loginPointer + ", roles=" + this.roles + ", issued=" + this.issued + ", expiration="
-		        + this.expiration + ", pointerType=" + this.pointerType + ", ownershipRoles=" + this.ownershipRoles
-		        + "]";
+		        + this.expiration + ", pointerType=" + this.pointerType + "]";
 	}
 
 }

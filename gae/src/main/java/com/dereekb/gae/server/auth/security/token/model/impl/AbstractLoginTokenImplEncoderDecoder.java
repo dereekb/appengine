@@ -9,8 +9,6 @@ import java.util.Set;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.model.context.encoded.EncodedLoginTokenModelContextSet;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 import com.dereekb.gae.utilities.data.NumberUtility;
@@ -31,7 +29,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 	public static final String LOGIN_KEY = "lgn";
 	public static final String LOGIN_POINTER_KEY = "ptr";
 	public static final String LOGIN_POINTER_TYPE_KEY = "pt";
-	public static final String OWNERSHIP_KEY = "o";
 	public static final String OBJECT_CONTEXT_KEY = "oc";
 
 	@Deprecated
@@ -65,12 +62,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 			claims.put(ROLES_KEY, loginToken.getRoles());
 		}
 
-		String ownershipRoles = this.encodeOwnershipRoles(loginToken.getOwnershipRoles());
-
-		if (ownershipRoles.isEmpty() == false) {
-			claims.put(OWNERSHIP_KEY, ownershipRoles);
-		}
-
 		// Encode Object Context
 		EncodedLoginTokenModelContextSet contextMap = loginToken.getEncodedModelContextSet();
 
@@ -92,12 +83,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 				claims.put(OBJECT_CONTEXT_KEY, StringUtility.joinValues(nonEmptyKeys));
 			}
 		}
-	}
-
-	@Deprecated
-	@Override
-	protected String encodeOwnershipRoles(OwnershipRoles ownershipRoles) {
-		return OwnershipRolesUtility.encodeRoles(ownershipRoles);
 	}
 
 	// MARK: LoginTokenDecoder
@@ -144,13 +129,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		loginToken.setLoginPointer(loginPointer);
 		loginToken.setRoles(roles);
 
-		String encodedOwnershipRoles = claims.get(OWNERSHIP_KEY, String.class);
-
-		if (encodedOwnershipRoles != null) {
-			OwnershipRoles ownershipRoles = this.decodeOwnershipRoles(encodedOwnershipRoles);
-			loginToken.setOwnershipRoles(ownershipRoles);
-		}
-
 		// Decode Object Context
 		String objectContexts = claims.get(OBJECT_CONTEXT_KEY, String.class);
 
@@ -170,11 +148,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 				}
 			}
 		}
-	}
-
-	@Deprecated
-	protected OwnershipRoles decodeOwnershipRoles(String encodedOwnershipRoles) {
-		return OwnershipRolesUtility.decodeRoles(encodedOwnershipRoles);
 	}
 
 }

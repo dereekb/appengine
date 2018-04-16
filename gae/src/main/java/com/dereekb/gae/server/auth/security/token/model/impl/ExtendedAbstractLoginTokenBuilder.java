@@ -2,8 +2,6 @@ package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
-import com.dereekb.gae.server.auth.security.ownership.source.OwnershipRolesReader;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -23,18 +21,8 @@ public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl
 
 	private Getter<Login> loginGetter;
 
-	@Deprecated
-	private OwnershipRolesReader<Login> ownershipRolesReader;
-
 	public ExtendedAbstractLoginTokenBuilder(Getter<Login> loginGetter) throws IllegalArgumentException {
 		this.setLoginGetter(loginGetter);
-	}
-
-	@Deprecated
-	public ExtendedAbstractLoginTokenBuilder(Getter<Login> loginGetter,
-	        OwnershipRolesReader<Login> ownershipRolesReader) throws IllegalArgumentException {
-		this.setLoginGetter(loginGetter);
-		this.setOwnershipRolesReader(ownershipRolesReader);
 	}
 
 	public Getter<Login> getLoginGetter() {
@@ -47,21 +35,6 @@ public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl
 		}
 
 		this.loginGetter = loginGetter;
-	}
-
-	@Deprecated
-	public OwnershipRolesReader<Login> getOwnershipRolesReader() {
-		return this.ownershipRolesReader;
-	}
-
-	@Deprecated
-	public void setOwnershipRolesReader(OwnershipRolesReader<Login> ownershipRolesReader)
-	        throws IllegalArgumentException {
-		if (ownershipRolesReader == null) {
-			throw new IllegalArgumentException("OwnershipRolesReader cannot be null.");
-		}
-
-		this.ownershipRolesReader = ownershipRolesReader;
 	}
 
 	// MARK: LoginTokenBuilder
@@ -92,11 +65,8 @@ public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl
 	                                       Login login) {
 		loginToken.setLogin(login.getIdentifier());
 
-		OwnershipRoles ownershipRoles = this.ownershipRolesReader.readRoles(login);
 		Long roles = login.getRoles();
-
 		loginToken.setRoles(roles);
-		loginToken.setOwnershipRoles(ownershipRoles);
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.OwnershipRoles;
 
 /**
  * {@link OwnershipRoles} implementation.

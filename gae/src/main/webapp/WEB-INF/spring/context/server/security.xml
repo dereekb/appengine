@@ -315,22 +315,9 @@
 		<ref bean="storedImageSetType" />
 	</util:list>
 
-	<bean id="securitySetOwnershipRolesTask"
-		class="com.dereekb.gae.server.auth.security.ownership.task.SecuritySetOwnershipRolesTask">
-	</bean>
-
-	<bean id="securityOwnershipRolesFilter"
-		class="com.dereekb.gae.server.auth.security.ownership.filter.SecurityOwnershipRolesFilter">
-	</bean>
-
 	<!-- Query Overrides -->
 	<bean id="securityOverrideAdminOnlyModelQueryTask"
 		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideAdminOnlyModelQueryTask">
-	</bean>
-
-	<!-- DEPRECATED -->
-	<bean id="securityOverrideOwnedModelQueryTask"
-		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideOwnedModelQueryTask">
 	</bean>
 
 	<!-- Exception Handler -->

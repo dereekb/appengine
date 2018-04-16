@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.security.model.query.task;
 
+import com.dereekb.gae.server.auth.security.deprecated.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.model.query.MutableOwnedModelQuery;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;

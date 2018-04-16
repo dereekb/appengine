@@ -5,9 +5,6 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.loader.LoginUserLoader;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
-import com.dereekb.gae.server.auth.security.ownership.source.OwnershipRolesReader;
 import com.dereekb.gae.server.datastore.Getter;
 
 /**
@@ -24,15 +21,11 @@ import com.dereekb.gae.server.datastore.Getter;
 public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl> extends ExtendedAbstractLoginTokenBuilder<T> {
 
 	private LoginUserLoader<U> userLoader;
-	private OwnershipRolesReader<U> userOwnershipRolesReader;
 
 	public AbstractUserLoginTokenBuilder(Getter<Login> loginGetter,
-	        OwnershipRolesReader<Login> ownershipRolesReader,
-	        LoginUserLoader<U> userLoader,
-	        OwnershipRolesReader<U> userOwnershipRolesReader) throws IllegalArgumentException {
-		super(loginGetter, ownershipRolesReader);
+	        LoginUserLoader<U> userLoader) throws IllegalArgumentException {
+		super(loginGetter);
 		this.setUserLoader(userLoader);
-		this.setUserOwnershipRolesReader(userOwnershipRolesReader);
 	}
 
 	public LoginUserLoader<U> getUserLoader() {
@@ -45,18 +38,6 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 		}
 
 		this.userLoader = userLoader;
-	}
-
-	public OwnershipRolesReader<U> getUserOwnershipRolesReader() {
-		return this.userOwnershipRolesReader;
-	}
-
-	public void setUserOwnershipRolesReader(OwnershipRolesReader<U> userOwnershipRolesReader) {
-		if (userOwnershipRolesReader == null) {
-			throw new IllegalArgumentException("userOwnershipRolesReader cannot be null.");
-		}
-
-		this.userOwnershipRolesReader = userOwnershipRolesReader;
 	}
 
 	// MARK: Override
@@ -88,23 +69,10 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 
 		try {
 			U user = this.userLoader.loadUserForLogin(login);
-
-			OwnershipRoles loginRoles = loginToken.getOwnershipRoles();
-			OwnershipRoles userRoles = this.userOwnershipRolesReader.readRoles(user);
-
-			OwnershipRoles ownershipRoles = this.mergeOwnershipRoles(userRoles, loginRoles);
-			loginToken.setOwnershipRoles(ownershipRoles);
-
 			this.initLoginTokenWithUser(loginToken, user);
 		} catch (UnavailableModelException e) {
-			// Do nothing.
+			// Do nothing?
 		}
-	}
-
-	@Deprecated
-	protected OwnershipRoles mergeOwnershipRoles(OwnershipRoles userRoles,
-	                                             OwnershipRoles loginRoles) {
-		return OwnershipRolesUtility.mergeRoles(loginRoles, userRoles);
 	}
 
 	protected abstract void initLoginTokenWithUser(T loginToken,

@@ -2,7 +2,7 @@ package com.dereekb.gae.server.auth.security.ownership.task;
 
 import com.dereekb.gae.server.auth.security.context.LoginSecurityContext;
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.OwnershipRoles;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.datastore.models.owner.MutableOwnedModel;

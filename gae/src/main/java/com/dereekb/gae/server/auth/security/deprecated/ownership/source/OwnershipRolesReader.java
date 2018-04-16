@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.auth.security.ownership.source;
 
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
+import com.dereekb.gae.server.auth.security.deprecated.ownership.OwnershipRoles;
 
 /**
  * Used for reading roles from models.

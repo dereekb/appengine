@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.model.login.misc.ownership.task;
 
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.auth.model.login.misc.ownership.LoginOwnershipRolesReader;
+import com.dereekb.gae.server.auth.model.login.misc.deprecated.ownership.LoginOwnershipRolesReader;
 import com.dereekb.gae.server.datastore.Saver;
 import com.dereekb.gae.server.datastore.Storer;
 import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;

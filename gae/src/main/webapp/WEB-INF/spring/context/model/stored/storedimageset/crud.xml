@@ -57,12 +57,7 @@
 	<bean id="storedImageSetCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0"
 			ref="storedImageSetCreateTaskDelegate" />
-		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
-				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
-				<constructor-arg index="1" ref="storedImageSetStorerTask"/>
-			</bean>
-		</constructor-arg>
+		<constructor-arg index="1" ref="storedImageSetStorerTask"/>
 		<constructor-arg index="2">
 			<bean
 				class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
@@ -81,9 +76,9 @@
 
 	<!-- Read -->
 	<bean id="storedImageSetReadTask"
-		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl">
+		class="com.dereekb.gae.model.crud.task.impl.ReadTaskImpl">
 		<constructor-arg index="0" ref="storedImageSetRegistry" />
-		<constructor-arg index="1" ref="securityOwnershipRolesFilter" />
+		<!-- TODO: Filter -->
 	</bean>
 
 	<!-- Update -->

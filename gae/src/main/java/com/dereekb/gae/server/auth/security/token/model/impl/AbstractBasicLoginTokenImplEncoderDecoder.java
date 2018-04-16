@@ -2,8 +2,6 @@ package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRoles;
-import com.dereekb.gae.server.auth.security.ownership.OwnershipRolesUtility;
 import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
@@ -98,10 +96,6 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 
 	protected abstract void appendClaimsComponents(T loginToken,
 	                                               Claims claims);
-
-	protected String encodeOwnershipRoles(OwnershipRoles ownershipRoles) {
-		return OwnershipRolesUtility.encodeRoles(ownershipRoles);
-	}
 
 	// MARK: LoginTokenDecoder
 	@Override
