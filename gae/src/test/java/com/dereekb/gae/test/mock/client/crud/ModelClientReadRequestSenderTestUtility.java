@@ -32,7 +32,7 @@ import com.dereekb.gae.web.api.model.crud.controller.ReadController;
 
 /**
  * Test utility for {@link ClientReadRequestSender}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -149,7 +149,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		}
 
 		try {
-			this.readRequestSender.read(readRequest);
+			this.readRequestSender.read(readRequest, security);
 			Assert.fail("Should have thrown an atomic operation exception.");
 		} catch (ClientAtomicOperationException e) {
 
@@ -171,8 +171,10 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		ReadRequest readRequest = new KeyReadRequest(noKeys, options);
 
 		try {
-			this.readRequestSender.read(readRequest);
-			Assert.fail("Should have failed request.");
+			SimpleReadResponse<T> response = this.readRequestSender.read(readRequest, security);
+			Collection<T> models = response.getModels();
+			Assert.assertTrue(models.isEmpty());
+			//Assert.fail("Should have failed request.");
 		} catch (ClientRequestFailureException e) {
 			e.printStackTrace();
 		}
@@ -193,7 +195,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		ReadRequest readRequest = new KeyReadRequest(tooManyKeys, options);
 
 		try {
-			this.readRequestSender.read(readRequest);
+			this.readRequestSender.read(readRequest, security);
 			Assert.fail("Should have failed request.");
 		} catch (ClientTooMuchInputException e) {
 

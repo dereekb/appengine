@@ -29,7 +29,7 @@ import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
 /**
  * Test utility for {@link ClientUpdateRequestSender}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -66,7 +66,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		Assert.assertFalse(results.isEmpty());
 
 		// Update again.
-		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
 		Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
 	}
 
@@ -90,7 +90,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		Assert.assertFalse(results.isEmpty());
 
 		// Update again.
-		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
 		Assert.assertTrue(simpleUpdateResponse.getModels().containsAll(models));
 	}
 
@@ -120,7 +120,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		// Try again. Should get ClientAtomicOperationException
 		try {
-			this.updateRequestSender.update(updateRequest);
+			this.updateRequestSender.update(updateRequest, security);
 			Assert.fail();
 		} catch (ClientAtomicOperationException e) {
 			List<ModelKey> missingKeys = e.getMissingKeys();
@@ -172,7 +172,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		// ClientUpdateService
 		try {
-			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
 
 			Collection<T> successfulModels = simpleUpdateResponse.getModels();
 			Assert.assertFalse(successfulModels.isEmpty());
@@ -203,7 +203,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		// Update again.
 		try {
-			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest);
+			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
 			Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
 		} catch (Exception e) {
 
@@ -221,7 +221,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		// Update again.
 		try {
-			this.updateRequestSender.update(updateRequest);
+			this.updateRequestSender.update(updateRequest, security);
 			Assert.fail();
 		} catch (Exception e) {
 

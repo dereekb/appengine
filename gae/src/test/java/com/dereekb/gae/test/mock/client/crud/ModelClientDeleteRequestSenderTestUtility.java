@@ -18,7 +18,7 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 /**
  * Test utility for {@link ClientDeleteRequestSender}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -57,7 +57,7 @@ public class ModelClientDeleteRequestSenderTestUtility<T extends MutableUniqueMo
 		deleteRequest = new DeleteRequestImpl(template);
 		clientDeleteRequest = new ClientDeleteRequestImpl(deleteRequest, returnModels);
 
-		ClientDeleteResponse<T> simpleDeleteResponse = this.deleteRequestSender.delete(clientDeleteRequest);
+		ClientDeleteResponse<T> simpleDeleteResponse = this.deleteRequestSender.delete(clientDeleteRequest, security);
 		Assert.assertFalse(simpleDeleteResponse.getModels().isEmpty());
 	}
 

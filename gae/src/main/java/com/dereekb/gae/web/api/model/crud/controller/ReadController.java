@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.validation.constraints.NotEmpty;
-
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +40,6 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @author dereekb
  *
  */
-@Validated
 @RestController
 public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadControllerEntry> {
 
@@ -115,19 +111,25 @@ public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadContro
 	 *            Inclusive filter of related elements to load.
 	 * @return {@link ApiResponse}
 	 */
+
 	@ResponseBody
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = "application/json")
 	public ApiResponse readModels(@PathVariable("type") String modelType,
-	                              @RequestParam(name = KEYS_PARAM, required = true) @NotEmpty List<String> keys,
+	                              @RequestParam(name = KEYS_PARAM, required = true) List<String> keys,
 	                              @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
 	                              @RequestParam(name = LOAD_RELATED_PARAM, required = false, defaultValue = "false") boolean loadRelated,
 	                              @RequestParam(name = RELATED_FILTER_PARAM, required = false) Set<String> relatedTypes)
-	        throws TooManyRequestKeysException, UnavailableTypesException {
+	        throws TooManyRequestKeysException,
+	            UnavailableTypesException {
 
 		TooManyRequestKeysException.assertKeysCount(keys, this.maxKeysAllowed);
 
 		ApiResponseImpl response = null;
 		ReadControllerEntry entry = this.getEntryForType(modelType);
+
+		if (keys.isEmpty()) {
+			return this.buildNoKeysApiResponse(modelType);
+		}
 
 		List<ModelKey> modelKeys = null;
 
@@ -154,6 +156,14 @@ public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadContro
 	}
 
 	// MARK: Internal
+	private ApiResponseImpl buildNoKeysApiResponse(String modelType) {
+		ApiResponseImpl response = new ApiResponseImpl();
+		ApiResponseDataImpl data = new ApiResponseDataImpl(modelType, Collections.emptyList());
+		response.setData(data);
+		response.addError(new ApiResponseErrorImpl("NO_KEYS", "No Keys"));
+		return response;
+	}
+
 	private ApiResponseImpl buildApiResponse(ReadControllerEntryRequest entryRequest,
 	                                         ReadControllerEntryResponse entryResponse) {
 		String modelType = entryRequest.getModelType();
