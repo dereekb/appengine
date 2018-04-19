@@ -3,8 +3,8 @@ package com.dereekb.gae.web.api.auth.controller.register;
 import java.util.List;
 
 import javax.validation.constraints.Min;
-
 import javax.validation.constraints.NotEmpty;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +49,7 @@ public class LoginRegisterController {
 
 	// MARK: Controller
 	/**
-	 * Creates a new login using the current user, and returns the updated
+	 * Creates a new login using the current user and token in the context, and returns the updated
 	 * {@link LoginTokenPair}.
 	 */
 	@ResponseBody
@@ -80,7 +80,7 @@ public class LoginRegisterController {
 	 */
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(path = "/tokens", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public final void registerLogins(@RequestBody @NotEmpty @Min(2) List<String> tokens) {
+	public final void registerTokensWithLogin(@RequestBody @NotEmpty @Min(2) List<String> tokens) {
 
 		// TODO: Need to update this to use the current security.
 

@@ -41,6 +41,13 @@ public interface LoginToken
 	public boolean isAnonymous();
 
 	/**
+	 * Whether or not the token is registered with a user.
+	 *
+	 * @return {@code true} if registered.
+	 */
+	public boolean isRegistered();
+
+	/**
 	 * Whether or not this is a new user. Generally true if
 	 * {{@link #getLoginId()} returns {@code null}, {@link #isAnonymous()}
 	 * returns false, and the pointer type is not special.

@@ -4,15 +4,18 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -26,7 +29,7 @@ import com.google.gson.JsonParser;
  * @author dereekb
  *
  */
-public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
+public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 
 	private static final String TEST_USERNAME = "pUsername";
 	private static final String TEST_PASSWORD = "pPassword";
@@ -97,14 +100,13 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 	// MARK: Mock Tests
 	@Test
 	public void testLoginRequests() throws Exception {
+
+		// Create a password LoginPointer/Token
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+
 		JsonParser parser = new JsonParser();
 
-		MockHttpServletRequestBuilder createRequestBuilder = this.serviceRequestBuilder.post("/login/auth/pass/create");
-		createRequestBuilder.param("username", TEST_USERNAME);
-		createRequestBuilder.param("password", TEST_PASSWORD);
-		createRequestBuilder.accept("application/json");
-
-		MvcResult createResult = this.mockMvcPerform(createRequestBuilder).andReturn();
+		MvcResult createResult = testUtility.sendCreatePasswordLogin(TEST_USERNAME, TEST_PASSWORD);
 		MockHttpServletResponse createResponse = createResult.getResponse();
 		String createResponseData = createResponse.getContentAsString();
 
@@ -121,22 +123,50 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 		Assert.assertNotNull(token);
 
 		try {
-			this.loginTokenService.decodeLoginToken(token);
+			DecodedLoginToken<LoginToken> decoded = this.loginTokenService.decodeLoginToken(token);
+			Assert.assertTrue(decoded.getLoginToken().getPointerType() == LoginPointerType.PASSWORD);
 		} catch (Exception e) {
 			Assert.fail("Should decode token.");
 		}
 
-		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder.post("/login/auth/pass");
-		loginRequestBuilder.param("username", TEST_USERNAME);
-		loginRequestBuilder.param("password", TEST_PASSWORD);
-		loginRequestBuilder.accept("application/json");
-
-		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
+		MvcResult loginResult = testUtility.sendLoginWithPassword(TEST_USERNAME, TEST_PASSWORD);
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
 		Assert.assertTrue("Expected 200 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 200);
 		Assert.assertNotNull(loginResponseData);
 	}
+
+	@Test
+	public void testCreateLogin() throws Exception {
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
+
+		DecodedLoginToken<LoginToken> decodedPasswordToken = this.loginTokenService.decodeLoginToken(token);
+		Assert.assertTrue(decodedPasswordToken.getLoginToken().getPointerType() == LoginPointerType.PASSWORD);
+	}
+
+	@Test
+	public void testCreateLoginWithoutPasswordFails() throws Exception {
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+
+		MvcResult createResult = testUtility.sendCreatePasswordLogin(TEST_USERNAME, "");
+		MockHttpServletResponse createResponse = createResult.getResponse();
+
+		Assert.assertTrue(createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
+	}
+
+	@Test
+	public void testCreateLoginWithShortPasswordFails() throws Exception {
+		String shortPassword = "abc";
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+
+		MvcResult createResult = testUtility.sendCreatePasswordLogin(TEST_USERNAME, shortPassword);
+		MockHttpServletResponse createResponse = createResult.getResponse();
+
+		Assert.assertTrue(createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
+	}
+
+	// TODO: Test recover components!
 
 }

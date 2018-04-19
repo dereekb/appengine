@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.applications.api.api.login;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -9,6 +11,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import com.dereekb.gae.test.spring.WebServiceTester;
 import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -91,6 +94,23 @@ public class LoginApiTestUtility {
 		return this.getTokenFromResponse(result);
 	}
 
+	public String registerTokensWithLogin(String loginToken,
+	                                      List<String> tokens)
+	        throws Exception {
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder registerRequestBuilder = serviceRequestBuilder
+		        .post("/login/auth/register/tokenss");
+
+		ObjectMapper mapper = new ObjectMapper();
+		String content = mapper.writeValueAsString(tokens);
+
+		registerRequestBuilder.content(content);
+
+		MvcResult result = this.webServiceTester.performSecureHttpRequest(registerRequestBuilder, loginToken)
+		        .andReturn();
+		return this.getTokenFromResponse(result);
+	}
+
 	// MARK: Validate Token
 	public MockHttpServletResponse validateLoginToken(TokenValidationRequest request) throws Exception {
 
@@ -115,8 +135,33 @@ public class LoginApiTestUtility {
 	}
 
 	// MARK: Password
+	public String loginWithPassword(String username,
+	                                String password)
+	        throws Exception {
+		MvcResult result = this.sendLoginWithPassword(username, password);
+		return this.getTokenFromResponse(result);
+	}
+
+	public MvcResult sendLoginWithPassword(String username,
+	                                       String password)
+	        throws Exception {
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder createRequestBuilder = serviceRequestBuilder.post("/login/auth/pass");
+		createRequestBuilder.param("username", username);
+		createRequestBuilder.param("password", password);
+		createRequestBuilder.accept("application/json");
+		return this.webServiceTester.mockMvcPerform(createRequestBuilder).andReturn();
+	}
+
 	public String createPasswordLogin(String username,
 	                                  String password)
+	        throws Exception {
+		MvcResult result = this.sendCreatePasswordLogin(username, password);
+		return this.getTokenFromResponse(result);
+	}
+
+	public MvcResult sendCreatePasswordLogin(String username,
+	                                         String password)
 	        throws Exception {
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder createRequestBuilder = serviceRequestBuilder.post("/login/auth/pass/create");
@@ -124,8 +169,7 @@ public class LoginApiTestUtility {
 		createRequestBuilder.param("password", password);
 		createRequestBuilder.accept("application/json");
 
-		MvcResult result = this.webServiceTester.mockMvcPerform(createRequestBuilder).andReturn();
-		return this.getTokenFromResponse(result);
+		return this.webServiceTester.mockMvcPerform(createRequestBuilder).andReturn();
 	}
 
 	// MARK: OAuth

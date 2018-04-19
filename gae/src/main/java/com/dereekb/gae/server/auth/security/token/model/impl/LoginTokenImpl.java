@@ -110,6 +110,11 @@ public class LoginTokenImpl
 	}
 
 	@Override
+	public boolean isRegistered() {
+		return this.login != null;
+	}
+
+	@Override
 	public boolean isNewUser() {
 		return this.login == null && !this.pointerType.isInternalType();
 	}

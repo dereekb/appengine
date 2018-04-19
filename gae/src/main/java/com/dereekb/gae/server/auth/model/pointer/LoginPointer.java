@@ -44,6 +44,8 @@ public class LoginPointer extends OwnedDatabaseModel
 
 	/**
 	 * Identifier for the target {@link Login}.
+	 * <p>
+	 * If {@code null}, not associated with any login yet.
 	 */
 	@Index
 	private Key<Login> login;
@@ -69,6 +71,7 @@ public class LoginPointer extends OwnedDatabaseModel
 	/**
 	 * Email address, if applicable.
 	 */
+	@Index
 	@IgnoreSave({ IfEmpty.class })
 	private String email;
 

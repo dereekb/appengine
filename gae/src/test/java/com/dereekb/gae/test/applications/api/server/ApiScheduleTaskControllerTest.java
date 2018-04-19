@@ -8,8 +8,6 @@ import com.dereekb.gae.client.api.server.schedule.impl.ClientApiScheduleTaskRequ
 
 public class ApiScheduleTaskControllerTest {
 
-
-
 	// MARK: Client Tests
 	@Test
 	public void testClientApiScheduleTaskRequestImplSerialization() throws IOException {
@@ -22,7 +20,5 @@ public class ApiScheduleTaskControllerTest {
 
 
 	}
-
-
 
 }

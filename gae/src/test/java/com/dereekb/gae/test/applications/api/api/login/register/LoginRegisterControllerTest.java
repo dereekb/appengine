@@ -19,10 +19,12 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
 import com.dereekb.gae.web.api.auth.controller.anonymous.AnonymousLoginController;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.controller.register.LoginRegisterController;
@@ -116,12 +118,33 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 			tokens.add(token);
 		}
 
-		this.registerController.registerLogins(tokens);
+		this.registerController.registerTokensWithLogin(tokens);
 
 		// Assert those login pointers reference the login...
 	}
 
 	// MARK: Mock Controllers
+	@Test
+	public void testRegister() throws Exception {
+
+		// Create a password LoginPointer/Token
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
+		DecodedLoginToken<LoginToken> decodedPasswordToken = this.loginTokenService.decodeLoginToken(token);
+
+		LoginToken passwordLoginToken = decodedPasswordToken.getLoginToken();
+		Assert.assertFalse(passwordLoginToken.isRegistered());
+
+		// Login Again
+		testUtility.loginWithPassword(TEST_USERNAME, TEST_PASSWORD);
+
+		// Register
+		String fullUserToken = testUtility.register(token);
+
+		DecodedLoginToken<LoginToken> decodedFullToken = this.loginTokenService.decodeLoginToken(fullUserToken);
+		//decoded.getLoginToken()
+	}
+
 	@Test
 	public void testAnonymousRegisteringFails() throws Exception {
 

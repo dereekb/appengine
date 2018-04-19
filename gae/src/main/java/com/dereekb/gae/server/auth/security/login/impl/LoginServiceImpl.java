@@ -1,16 +1,9 @@
 package com.dereekb.gae.server.auth.security.login.impl;
 
-import java.util.Set;
-
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
-import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.LoginService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
-import com.dereekb.gae.server.auth.security.login.exception.LoginPointerRegisteredException;
-import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -20,22 +13,15 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  */
-public class LoginServiceImpl
+public abstract class LoginServiceImpl
         implements LoginService {
 
 	private String format;
 	private LoginPointerService pointerService;
-	private LoginRegisterService registerService;
 
 	public LoginServiceImpl(String format, LoginPointerService pointerService) throws IllegalArgumentException {
-		this(format, pointerService, null);
-	}
-
-	public LoginServiceImpl(String format, LoginPointerService pointerService, LoginRegisterService registerService)
-	        throws IllegalArgumentException {
 		this.setFormat(format);
 		this.setPointerService(pointerService);
-		this.setRegisterService(registerService);
 	}
 
 	public String getFormat() {
@@ -56,14 +42,6 @@ public class LoginServiceImpl
 		}
 
 		this.pointerService = pointerService;
-	}
-
-	public LoginRegisterService getRegisterService() {
-		return this.registerService;
-	}
-
-	public void setRegisterService(LoginRegisterService registerService) {
-		this.registerService = registerService;
 	}
 
 	// MARK: LoginService
@@ -99,24 +77,9 @@ public class LoginServiceImpl
 		return String.format(this.format, username.toLowerCase());
 	}
 
-	// MARK: LoginRegisterService
-	@Override
-	public Login register(LoginPointer pointer) throws LoginExistsException, LoginRegistrationRejectedException {
-		return this.registerService.register(pointer);
-	}
-
-	@Override
-	public void registerPointersToLogin(ModelKey loginKey,
-	                                    Set<String> loginPointers)
-	        throws LoginPointerRegisteredException,
-	            AtomicOperationException {
-		this.registerService.registerPointersToLogin(loginKey, loginPointers);
-	}
-
 	@Override
 	public String toString() {
-		return "LoginServiceImpl [format=" + this.format + ", pointerService=" + this.pointerService
-		        + ", registerService=" + this.registerService + "]";
+		return "LoginServiceImpl [format=" + this.format + ", pointerService=" + this.pointerService + "]";
 	}
 
 }

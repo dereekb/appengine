@@ -19,7 +19,7 @@ public interface LoginPointerService {
 	 *            {@link ModelKey}. Never {@code null}.
 	 * @param template
 	 *            (Optional) {@link LoginPointer}.
-	 * @return {@Link LoginPointer} if it exists.
+	 * @return {@link LoginPointer} if it exists, or {@code null}.
 	 */
 	public LoginPointer getOrCreateLoginPointer(ModelKey key,
 	                                            LoginPointer template);
@@ -29,7 +29,7 @@ public interface LoginPointerService {
 	 *
 	 * @param key
 	 *            {@link ModelKey}. Never {@code null}.
-	 * @return {@Link LoginPointer} if it exists.
+	 * @return {@link LoginPointer} if it exists, or {@code null}.
 	 */
 	public LoginPointer getLoginPointer(ModelKey key);
 
@@ -47,6 +47,5 @@ public interface LoginPointerService {
 	public LoginPointer createLoginPointer(ModelKey key,
 	                                       LoginPointer template)
 	        throws LoginExistsException;
-
 
 }

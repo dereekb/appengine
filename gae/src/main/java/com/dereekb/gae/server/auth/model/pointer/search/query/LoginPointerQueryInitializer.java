@@ -61,6 +61,7 @@ public class LoginPointerQueryInitializer extends AbstractObjectifyQueryRequestL
 		@Override
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
 			LOGIN_BUILDER.configure(request, this.getLogin());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getEmail());
 			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getType());
 			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
 		}

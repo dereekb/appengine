@@ -88,8 +88,7 @@ public final class OAuthLoginController {
 
 	/**
 	 * OAuth Login used by applications that have already retrieved a short-term
-	 * web access
-	 * token that can only be used by our server.
+	 * web access token that can only be used by our server.
 	 * <p>
 	 * The server will use this short-term token to get the data it needs to
 	 * complete logging into our site.
