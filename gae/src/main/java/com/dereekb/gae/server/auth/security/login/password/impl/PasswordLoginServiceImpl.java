@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.login.password.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
@@ -15,9 +16,17 @@ import com.dereekb.gae.server.auth.security.login.password.PasswordRestriction;
 import com.dereekb.gae.server.auth.security.login.password.recover.PasswordRecoveryService;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryMailException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerificationException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerificationExpiredException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnknownUsernameException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnregisteredEmailException;
 import com.dereekb.gae.server.auth.security.login.password.recover.impl.AbstractPasswordRecoveryServiceImpl;
+import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
+import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
+import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.mail.service.MailService;
 
 /**
@@ -37,8 +46,9 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
 	private PasswordRestriction restriction;
 	private PasswordRecoveryService recoveryService;
 
-	public PasswordLoginServiceImpl(PasswordEncoder encoder, LoginPointerService pointerService, MailService mailService)
-	        throws IllegalArgumentException {
+	public PasswordLoginServiceImpl(PasswordEncoder encoder,
+	        LoginPointerService pointerService,
+	        MailService mailService) throws IllegalArgumentException {
 		super(DEFAULT_FORMAT, pointerService);
 		this.setEncoder(encoder);
 	}
@@ -140,23 +150,81 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
 		this.recoveryService.recoverUsername(email);
 	}
 
+	private static final String VERIFICATION_SUBJECT = "VERIFICATION";
+
 	private class PasswordRecoveryServiceImpl extends AbstractPasswordRecoveryServiceImpl {
+
+		private LoginTokenService<LoginToken> loginTokenService;
+
+		public PasswordRecoveryServiceImpl(LoginTokenService<LoginToken> loginTokenService) {
+			this.setLoginTokenService(loginTokenService);
+		}
+
+		public LoginTokenService<LoginToken> getLoginTokenService() {
+			return this.loginTokenService;
+		}
+
+		public void setLoginTokenService(LoginTokenService<LoginToken> loginTokenService) {
+			if (loginTokenService == null) {
+				throw new IllegalArgumentException("loginTokenService cannot be null.");
+			}
+
+			this.loginTokenService = loginTokenService;
+		}
 
 		// MARK: PasswordRecoveryService
 		@Override
+		protected String generateVerificationToken(LoginPointer pointer) {
+			LoginTokenImpl token = (LoginTokenImpl) this.loginTokenService.buildLoginToken(pointer, false);
+			token.setSubject(VERIFICATION_SUBJECT);
+
+			// Consider whether or not to lock to an app.
+
+			return this.loginTokenService.encodeLoginToken(token);
+		}
+
+		@Override
+		public void verifyUserEmail(String verificationToken) throws PasswordRecoveryVerificationException {
+
+			try {
+				DecodedLoginToken<LoginToken> decoded = this.loginTokenService.decodeLoginToken(verificationToken);
+
+				LoginToken token = decoded.getLoginToken();
+				boolean isValid = (token.getSubject() == VERIFICATION_SUBJECT);
+
+				if (!isValid) {
+					throw new PasswordRecoveryVerificationException();
+				}
+
+				String loginPointer = token.getLoginPointerId();
+
+				LoginPointerService pointerService = PasswordLoginServiceImpl.this.getPointerService();
+				ModelKey loginPointerKey = new ModelKey(loginPointer);
+
+				try {
+					pointerService.changeVerified(loginPointerKey, true);
+				} catch (UnavailableModelException e) {
+					throw new PasswordRecoveryVerificationException();
+				}
+			} catch (TokenExpiredException e) {
+				throw new PasswordRecoveryVerificationExpiredException();
+			} catch (TokenUnauthorizedException e) {
+				throw new PasswordRecoveryVerificationException();
+			}
+		}
+
+		@Override
 		protected LoginPointer loadLoginPointerForUser(String username) {
-			// TODO Auto-generated method stub
-			return null;
+			return PasswordLoginServiceImpl.this.loadLogin(username);
 		}
 
 		@Override
 		protected LoginPointer loadLoginPointerForEmail(String email) {
-			// TODO Auto-generated method stub
-			return null;
+			LoginPointerService pointerService = PasswordLoginServiceImpl.this.getPointerService();
+			return pointerService.findWithEmail(LoginPointerType.PASSWORD, email);
 		}
 
 	}
-
 
 	@Override
 	public String toString() {

@@ -6,6 +6,11 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginService;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryMailException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerificationException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerifiedException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnknownUsernameException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnregisteredEmailException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginControllerDelegate;
@@ -84,6 +89,37 @@ public class PasswordLoginControllerDelegateImpl
 		String loginPointerId = loginPointer.getIdentifier();
 		String loginToken = this.tokenService.encodeLoginToken(loginPointer, false);
 		return new LoginTokenPair(loginPointerId, loginToken);
+	}
+
+	@Override
+	public void sendVerificationEmail(String email)
+	        throws PasswordRecoveryVerifiedException,
+	            UnregisteredEmailException,
+	            PasswordRecoveryMailException {
+		this.loginService.sendVerificationEmail(email);
+	}
+
+	@Override
+	public void verifyUserEmail(String verificationToken)
+	        throws PasswordRecoveryVerifiedException,
+	            PasswordRecoveryVerificationException {
+		this.loginService.verifyUserEmail(verificationToken);
+	}
+
+	@Override
+	public void recoverPassword(String username) throws UnknownUsernameException {
+		this.loginService.recoverPassword(username);
+	}
+
+	@Override
+	public void recoverUsername(String email) throws UnregisteredEmailException {
+		this.loginService.recoverUsername(email);
+	}
+
+	@Override
+	public String toString() {
+		return "PasswordLoginControllerDelegateImpl [refreshAllowed=" + this.refreshAllowed + ", loginService="
+		        + this.loginService + ", tokenService=" + this.tokenService + "]";
 	}
 
 }

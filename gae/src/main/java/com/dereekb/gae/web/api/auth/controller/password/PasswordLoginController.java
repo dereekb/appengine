@@ -12,12 +12,18 @@ import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredenti
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerifiedException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnknownUsernameException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnregisteredEmailException;
 import com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginPairImpl;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
+import com.dereekb.gae.web.api.exception.WrappedApiNotFoundException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
+import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * API used for simple username/password logins.
@@ -47,7 +53,7 @@ public final class PasswordLoginController {
 		this.delegate = delegate;
 	}
 
-	// MARK: Controller
+	// MARK: Login
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
 	public final LoginTokenPair login(@RequestParam @NotEmpty String username,
@@ -79,6 +85,83 @@ public final class PasswordLoginController {
 			response = this.delegate.createLogin(loginPair);
 		} catch (LoginExistsException e) {
 			throw new ApiLoginExistsException(e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
+	// MARK: Email
+
+	// TODO: Change email. Requires the user to be logged in.
+
+	// MARK: Recovery
+	/**
+	 * Send or resends a verification email to the requested email.
+	 *
+	 * @param email
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/verify/send", method = RequestMethod.POST, produces = "application/json")
+	public final ApiResponse sendVerificationEmail(@RequestParam String email) {
+		ApiResponseImpl response = new ApiResponseImpl();
+
+		try {
+			this.delegate.sendVerificationEmail(email);
+		} catch (PasswordRecoveryVerifiedException e) {
+			response.addError(e.asResponseError());
+		} catch (UnregisteredEmailException e) {
+			throw new WrappedApiNotFoundException(e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/verify/token", method = RequestMethod.POST, produces = "application/json")
+	public final ApiResponse verifyEmail(@RequestParam String username) {
+		ApiResponseImpl response = new ApiResponseImpl();
+
+		try {
+			this.delegate.recoverPassword(username);
+		} catch (UnknownUsernameException e) {
+			throw new WrappedApiNotFoundException(e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/recover/password", method = RequestMethod.POST, produces = "application/json")
+	public final ApiResponse recoverPassword(@RequestParam String username) {
+		ApiResponseImpl response = new ApiResponseImpl();
+
+		try {
+			this.delegate.recoverPassword(username);
+		} catch (UnknownUsernameException e) {
+			throw new WrappedApiNotFoundException(e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/recover/username", method = RequestMethod.POST, produces = "application/json")
+	public final ApiResponse recoverUsername(@RequestParam String email) {
+		ApiResponseImpl response = new ApiResponseImpl();
+
+		try {
+			this.delegate.recoverUsername(email);
+		} catch (UnregisteredEmailException e) {
+			throw new WrappedApiNotFoundException(e);
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}

@@ -35,6 +35,7 @@ import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
 import com.dereekb.gae.web.api.exception.ApiUnsupportedOperationException;
 import com.dereekb.gae.web.api.exception.WrappedApiBadRequestException;
 import com.dereekb.gae.web.api.exception.WrappedApiErrorException;
+import com.dereekb.gae.web.api.exception.WrappedApiNotFoundException;
 import com.dereekb.gae.web.api.exception.WrappedApiUnprocessableEntityException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseErrorImpl;
@@ -92,6 +93,13 @@ public class ApiExceptionHandler {
 	@ExceptionHandler({ ApiIllegalArgumentException.class, WrappedApiBadRequestException.class,
 	        WrappedApiErrorException.class })
 	public ApiResponseImpl handleException(ApiResponseErrorConvertable e) {
+		return ApiResponseImpl.makeFailure(e);
+	}
+
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	@ExceptionHandler({ WrappedApiNotFoundException.class })
+	public ApiResponseImpl handleException(WrappedApiNotFoundException e) {
 		return ApiResponseImpl.makeFailure(e);
 	}
 

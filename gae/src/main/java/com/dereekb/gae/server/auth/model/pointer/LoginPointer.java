@@ -16,6 +16,8 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfFalse;
+import com.googlecode.objectify.condition.IfNull;
 
 /**
  * Internal type used by {@link Login} to allow a flexible login system, and
@@ -75,10 +77,16 @@ public class LoginPointer extends OwnedDatabaseModel
 	@IgnoreSave({ IfEmpty.class })
 	private String email;
 
+	/**
+	 * If the pointer's email has been verified.
+	 */
+	@IgnoreSave({ IfNull.class, IfFalse.class })
+	private Boolean verified = false;
+
 	public LoginPointer() {}
 
 	public LoginPointer(String identifier) {
-		this.identifier = identifier;
+		this.setIdentifier(identifier);
 	}
 
 	public String getIdentifier() {
@@ -147,7 +155,19 @@ public class LoginPointer extends OwnedDatabaseModel
 	}
 
 	public void setEmail(String email) {
+		if (email != null) {
+			email = email.toLowerCase();
+		}
+
 		this.email = email;
+	}
+
+	public Boolean getVerified() {
+		return this.verified;
+	}
+
+	public void setVerified(Boolean verified) {
+		this.verified = verified;
 	}
 
 	// Unique Model

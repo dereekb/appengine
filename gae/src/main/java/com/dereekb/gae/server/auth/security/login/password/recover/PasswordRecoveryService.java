@@ -1,7 +1,9 @@
 package com.dereekb.gae.server.auth.security.login.password.recover;
 
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.NoPasswordRecoveryAddressException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryMailException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerificationException;
+import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerifiedException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnknownUsernameException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnregisteredEmailException;
 
@@ -17,13 +19,23 @@ public interface PasswordRecoveryService {
 	/**
 	 * Sends a verification email to the user's email address.
 	 *
-	 * @param email
+	 * @param username
 	 *            {@link String}. Never {@code null}.
+	 * @throws NoPasswordRecoveryAddressException
+	 *             thrown if the user has no email attached to it.
+	 * @throws PasswordRecoveryVerifiedException
+	 *             thrown if the email is already verified.
+	 * @throws UnknownUsernameException
+	 *             thrown if the user does not exist.
 	 * @throws PasswordRecoveryMailException
 	 *             thrown if an error occurs while trying to send the recovery
 	 *             mail.
 	 */
-	public void sendVerificationEmail(String email) throws PasswordRecoveryMailException;
+	public void sendVerificationEmail(String username)
+	        throws NoPasswordRecoveryAddressException,
+	            PasswordRecoveryVerifiedException,
+	            UnknownUsernameException,
+	            PasswordRecoveryMailException;
 
 	/**
 	 * Verifies a user's email address using the verification token.
@@ -31,11 +43,15 @@ public interface PasswordRecoveryService {
 	 *
 	 * @param verificationToken
 	 *            {@link String}. Never {@code null}.
+	 * @throws PasswordRecoveryVerifiedException
+	 *             thrown if the email is already verified.
 	 * @throws PasswordRecoveryVerificationException
 	 *             thrown if an error occurs while trying to verify the user
 	 *             email.
 	 */
-	public void verifyUserEmail(String verificationToken) throws PasswordRecoveryVerificationException;
+	public void verifyUserEmail(String verificationToken)
+	        throws PasswordRecoveryVerifiedException,
+	            PasswordRecoveryVerificationException;
 
 	/**
 	 * Sends a recover password email, if the user exists.
