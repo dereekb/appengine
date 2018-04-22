@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dispatch-entries>
+	<!-- Login API Service -->
+	<dispatch>
+		<url>dereekb.com/api/login/*</url>
+		<module>login</module>
+	</dispatch>
+	<dispatch>
+		<url>login-dot-gae-test-server.appspot.com/</url>
+		<module>login</module>
+	</dispatch>
+	<!-- Webhook API Service -->
+	<dispatch>
+		<url>dereekb.com/api/webhook/*</url>
+		<module>data</module>
+	</dispatch>
+	<dispatch>
+		<url>webhook-dot-gae-test-server.appspot.com/</url>
+		<module>webhook</module>
+	</dispatch>
+	<!-- Data API Service -->
+	<dispatch>
+		<url>dereekb.com/api/data/*</url>
+		<module>data</module>
+	</dispatch>
+	<dispatch>
+		<url>data-dot-gae-test-server.appspot.com/</url>
+		<module>data</module>
+	</dispatch>
+	<!-- TODO: Add additional API Service Here -->
+	<!-- Default -->
+	<dispatch>
+		<url>www.dereekb.com/</url>
+		<module>default</module>
+	</dispatch>
+	<dispatch>
+		<url>dereekb.com/</url>
+		<module>default</module>
+	</dispatch>
+	<dispatch>
+		<!-- Default module -->
+		<url>gae-test-server.appspot.com/</url>
+		<module>default</module>
+	</dispatch>
+</dispatch-entries>

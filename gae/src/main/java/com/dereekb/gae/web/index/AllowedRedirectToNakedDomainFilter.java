@@ -5,17 +5,24 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
 
 /**
  * {@link RedirectToNakedDomainFilter} that can allow certain sub domains.
- * 
+ *
  * @author dereekb
  *
  */
 public class AllowedRedirectToNakedDomainFilter extends RedirectToNakedDomainFilter {
 
+	public static final Set<String> DEFAULT_ALLOWED_SUB_DOMAINS = SetUtility.makeSet("app", "api");
+
 	private Set<String> allowedSubDomains = null;
+
+	public AllowedRedirectToNakedDomainFilter(String redirectUrl) {
+		this(redirectUrl, DEFAULT_ALLOWED_SUB_DOMAINS);
+	}
 
 	public AllowedRedirectToNakedDomainFilter(String redirectUrl, Set<String> allowed) {
 		super(redirectUrl);

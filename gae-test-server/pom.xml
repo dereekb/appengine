@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<name>Google App Engine Test Server</name>
+	<description>Test server configuration that can be adapted for other servers. Also contains various unit and integration tests for the configuration.</description>
+	<url>app.dereekb.com</url>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dereekb.gae.server</groupId>
+	<artifactId>gae-test-server</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<com.dereekb.gae.server.version>0.0.1-SNAPSHOT</com.dereekb.gae.server.version>
+		<com.dereekb.gae.version>1.4.0-SNAPSHOT</com.dereekb.gae.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<appengine.target.version>1.9.53</appengine.target.version>
+		<spring.target.version>4.3.8.RELEASE</spring.target.version>
+		<spring-security.target.version>4.2.2.RELEASE</spring-security.target.version>
+		<jackson.target.version>2.8.7</jackson.target.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.dereekb.gae</groupId>
+			<artifactId>gae-core</artifactId>
+			<version>${com.dereekb.gae.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>com.dereekb.gae</groupId>
+			<artifactId>gae-core</artifactId>
+			<version>${com.dereekb.gae.version}</version>
+			<scope>test</scope>
+			<type>test-jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.12.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<version>${spring-security.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-testing</artifactId>
+			<version>${appengine.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-labs</artifactId>
+			<version>${appengine.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-stubs</artifactId>
+			<version>${appengine.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-tools-sdk</artifactId>
+			<version>${appengine.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Extras -->
+		<dependency>
+			<groupId>com.jamesmurty.utils</groupId>
+			<artifactId>java-xmlbuilder</artifactId>
+			<version>1.2</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<!-- Plugin Configuration -->
+		<!-- Children will inherit configurations from here. -->
+		<pluginManagement>
+			<plugins>
+
+				<!-- Clean -->
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<id>auto-clean</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>clean</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Compile -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.5.1</version>
+					<!--$NO-MVN-MAN-VER$ -->
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+						<!-- Exclude all deprecated folders. -->
+						<excludes>
+							<exclude>**/deprecated/**</exclude>
+						</excludes>
+						<testExcludes>
+							<testExclude>**/deprecated/**</testExclude>
+						</testExcludes>
+					</configuration>
+				</plugin>
+
+				<!-- Jar Generation -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<!-- Exclude all deprecated folders. -->
+						<excludes>
+							<exclude>**/deprecated/*</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- War Generation -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<version>7</version>
+						<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+						<archiveClasses>true</archiveClasses>
+						<webResources>
+							<!-- Copy Resources from webapp/WEB-INF to the created WAR file. -->
+							<resource>
+								<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+								<filtering>true</filtering>
+								<!-- Exclude Spring Components. Will be added later. -->
+								<excludes>
+									<exclude>**/spring/**</exclude>
+								</excludes>
+								<targetPath>WEB-INF</targetPath>
+							</resource>
+							<!-- <resource> <directory>${basedir}/src/main/webapp/static</directory> 
+								<filtering>false</filtering> <targetPath>static</targetPath> </resource> -->
+							<resource>
+								<directory>${project.build.directory}/generated-resources/xml/xslt/spring</directory>
+								<filtering>false</filtering>
+								<targetPath>WEB-INF/spring</targetPath>
+							</resource>
+						</webResources>
+					</configuration>
+				</plugin>
+
+				<!-- Maven Build Plugins -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.0.1</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+						<!-- Exclude all deprecated folders. -->
+						<excludes>
+							<exclude>**/deprecated/**</exclude>
+						</excludes>
+						<testExcludes>
+							<testExclude>**/deprecated/**</testExclude>
+						</testExcludes>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<configuration>
+						<!-- Exclude Deprecated Packages -->
+						<excludePackageNames>*.deprecated.*</excludePackageNames>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<configuration>
+								<!-- add this to disable checking -->
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Spring XML Stage -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>xml-maven-plugin</artifactId>
+					<version>1.0.1</version>
+					<executions>
+						<execution>
+							<phase>compile</phase>
+							<goals>
+								<goal>transform</goal>
+							</goals>
+							<configuration>
+								<transformationSets>
+									<transformationSet>
+										<!-- Merge all Spring files into a single one. -->
+										<dir>src/main/webapp/WEB-INF/spring/context</dir>
+										<outputDir>${project.build.directory}/generated-resources/xml/xslt/spring</outputDir>
+										<stylesheet>src/build/spring.xsl</stylesheet>
+										<!-- Only modify app.xml -->
+										<includes>
+											<include>**/context.xml</include>
+										</includes>
+									</transformationSet>
+									<transformationSet>
+										<!-- Merge all API Spring files into a single one. -->
+										<dir>src/main/webapp/WEB-INF/spring/api</dir>
+										<outputDir>${project.build.directory}/generated-resources/xml/xslt/spring</outputDir>
+										<stylesheet>src/build/spring.xsl</stylesheet>
+										<!-- Only modify app.xml -->
+										<includes>
+											<include>**/api.xml</include>
+										</includes>
+									</transformationSet>
+									<transformationSet>
+										<!-- Merge all Taskqueue Spring files into a single one. -->
+										<dir>src/main/webapp/WEB-INF/spring/taskqueue</dir>
+										<outputDir>${project.build.directory}/generated-resources/xml/xslt/spring</outputDir>
+										<stylesheet>src/build/spring.xsl</stylesheet>
+										<!-- Only modify app.xml -->
+										<includes>
+											<include>**/taskqueue.xml</include>
+										</includes>
+									</transformationSet>
+									<transformationSet>
+										<!-- Cleanup and finalize app.xml -->
+										<dir>${project.build.directory}/generated-resources/xml/xslt/spring</dir>
+										<outputDir>${project.build.directory}/generated-resources/xml/xslt/spring</outputDir>
+										<stylesheet>src/build/cleanup.xsl</stylesheet>
+										<!-- Modify all inputs. -->
+										<includes>
+											<include>**/context.xml</include>
+											<include>**/api.xml</include>
+											<include>**/taskqueue.xml</include>
+										</includes>
+									</transformationSet>
+								</transformationSets>
+							</configuration>
+						</execution>
+					</executions>
+					<configuration>
+						<transformationSets>
+							<transformationSet>
+								<!-- Merge all Spring files into a single one. -->
+								<dir>src/main/webapp/WEB-INF/spring</dir>
+								<outputDir>${project.build.directory}/generated-resources/xml/xslt/spring</outputDir>
+								<stylesheet>src/build/spring.xsl</stylesheet>
+								<!-- Only modify app.xml -->
+								<includes>
+									<include>**/app.xml</include>
+								</includes>
+							</transformationSet>
+							<transformationSet>
+								<!-- Cleanup and finalize app.xml -->
+								<dir>${project.build.directory}/generated-resources/xml/xslt/spring</dir>
+								<outputDir>${project.build.directory}/generated-resources/xml/xslt/spring</outputDir>
+								<stylesheet>src/build/cleanup.xsl</stylesheet>
+								<!-- Only modify app.xml -->
+								<includes>
+									<include>**/app.xml</include>
+								</includes>
+							</transformationSet>
+						</transformationSets>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>net.sf.saxon</groupId>
+							<artifactId>saxon</artifactId>
+							<version>8.7</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+
+				<!-- Maven Appengine Plugin -->
+				<plugin>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>appengine-maven-plugin</artifactId>
+					<version>${appengine.target.version}</version>
+					<!-- Default Development Server Config -->
+					<configuration>
+						<fullScanSeconds>10</fullScanSeconds>
+						<port>8080</port>
+						<jvmFlags>
+							<jvmFlag>-Xdebug</jvmFlag>
+							<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=n</jvmFlag>
+						</jvmFlags>
+						<disableUpdateCheck>true</disableUpdateCheck>
+					</configuration>
+				</plugin>
+
+				<!-- GitFlow -->
+				<plugin>
+					<groupId>external.atlassian.jgitflow</groupId>
+					<artifactId>jgitflow-maven-plugin</artifactId>
+					<version>1.0-m5.1</version>
+					<configuration>
+						<!-- Enable this to push to origin using SSH keys -->
+						<enableSshAgent>true</enableSshAgent>
+						<!-- Keep your maven submodules at the same version as the parent POM -->
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<!-- Pusing in-development features to origin allows all devs to see 
+							what each other are working on -->
+						<pushFeatures>true</pushFeatures>
+						<!-- This allows the CI server (e.g. Jenkins) to automatically push 
+							new releases to origin; you can then either manually deploy them or, if you 
+							are doing Continuous Deployments, auto-deploy them to prod -->
+						<pushReleases>true</pushReleases>
+						<!-- Hot Fixes should be pushed to origin as well so that any dev can 
+							pick them up -->
+						<pushHotfixes>true</pushHotfixes>
+						<flowInitContext>
+							<masterBranchName>master</masterBranchName>
+							<developBranchName>development</developBranchName>
+							<featureBranchPrefix>feature/</featureBranchPrefix>
+							<releaseBranchPrefix>release/</releaseBranchPrefix>
+							<hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+							<versionTagPrefix />
+						</flowInitContext>
+						<releaseBranchVersionSuffix>RC</releaseBranchVersionSuffix>
+						<noDeploy>true</noDeploy>
+					</configuration>
+				</plugin>
+
+				<!-- M2E -->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											xml-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0.1,)
+										</versionRange>
+										<goals>
+											<goal>transform</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-clean-plugin
+										</artifactId>
+										<versionRange>
+											[3.0.0,)
+										</versionRange>
+										<goals>
+											<goal>clean</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<developers>
+		<developer>
+			<id>dereekb</id>
+			<name>Derek Burgman</name>
+			<email>dereekb@gmail.com</email>
+			<url>https://dereekb.com</url>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+
+	<modules>
+
+		<!-- Server Test Core -->
+		<!-- Any code exclusive to the Test Server -->
+		<module>gae-test-server-core</module>
+
+		<!-- Server Test Services -->
+		<!-- All microservices -->
+		<module>gae-test-server-services</module>
+
+	</modules>
+
+</project>

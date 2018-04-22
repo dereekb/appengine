@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>Google App Engine Test Default API</name>
+	<description>Google App Engine Test Default Microservice</description>
+
+	<parent>
+		<groupId>com.dereekb.gae.server</groupId>
+		<artifactId>gae-test-server-services</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>gae-test-server-services-default</artifactId>
+	<packaging>war</packaging>
+
+	<dependencies>
+
+	</dependencies>
+
+	<build>
+		<outputDirectory>target/${project.artifactId}/WEB-INF/classes</outputDirectory>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- Inherited Config -->
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<!-- Inherited Config -->
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<version>7</version>
+					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+					<archiveClasses>true</archiveClasses>
+					<webResources>
+						<!-- Copy Resources from webapp/WEB-INF to the created WAR file. -->
+						<resource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<filtering>false</filtering>
+							<targetPath>WEB-INF</targetPath>
+						</resource>
+						<!-- Static Resources Only -->
+						<resource>
+							<directory>${basedir}/src/main/webapp/static</directory>
+							<filtering>false</filtering>
+							<targetPath>static</targetPath>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+			<!-- Maven Appengine Plugin -->
+			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<!-- Default Development Server Config -->
+				<configuration>
+					<fullScanSeconds>10</fullScanSeconds>
+         			<port>8181</port>
+					<jvmFlags>
+						<jvmFlag>-Xdebug</jvmFlag>
+						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8989,server=y,suspend=n</jvmFlag>
+					</jvmFlags>
+					<disableUpdateCheck>true</disableUpdateCheck>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+</project>
