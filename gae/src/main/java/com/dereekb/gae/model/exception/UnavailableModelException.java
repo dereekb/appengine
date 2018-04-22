@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.web.api.exception.ApiSafeRuntimeException;
@@ -33,11 +34,11 @@ public class UnavailableModelException extends ApiSafeRuntimeException {
 	public UnavailableModelException(String message) {
 		this((Collection<ModelKey>) null, message);
 	}
-	
+
 	public UnavailableModelException(ModelKey modelKey) {
 		this(modelKey, null);
 	}
-	
+
 	public UnavailableModelException(Collection<ModelKey> modelKeys) {
 		this(modelKeys, null);
 	}
@@ -48,15 +49,27 @@ public class UnavailableModelException extends ApiSafeRuntimeException {
 
 	public UnavailableModelException(Collection<ModelKey> modelKeys, String message) {
 		super(message);
-		
+
 		if (modelKeys != null) {
 			this.modelKeys = new HashSet<ModelKey>(modelKeys);
 		} else {
 			this.modelKeys = Collections.emptySet();
 		}
-		
+
 	}
-	
+
+	public static <T extends UniqueModel> void assertNotNull(T model, String message) {
+		if (model == null) {
+			throw new UnavailableModelException(message);
+		}
+	}
+
+	public static <T extends UniqueModel> void assertNotNull(T model, ModelKey key) {
+		if (model == null) {
+			throw new UnavailableModelException(key);
+		}
+	}
+
 	public Set<ModelKey> getModelKeys() {
 		return this.modelKeys;
 	}

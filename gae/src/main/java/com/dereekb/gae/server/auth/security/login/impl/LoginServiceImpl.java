@@ -1,6 +1,8 @@
 package com.dereekb.gae.server.auth.security.login.impl;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.login.LoginPointerKeyFormatter;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
 import com.dereekb.gae.server.auth.security.login.LoginService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
@@ -16,20 +18,29 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public abstract class LoginServiceImpl
         implements LoginService {
 
-	private String format;
+	private LoginPointerKeyFormatter formatter;
 	private LoginPointerService pointerService;
 
-	public LoginServiceImpl(String format, LoginPointerService pointerService) throws IllegalArgumentException {
-		this.setFormat(format);
+	public LoginServiceImpl(LoginPointerType type, LoginPointerService pointerService) throws IllegalArgumentException {
+		this.setFormatter(new LoginPointerKeyFormatterImpl(type));
 		this.setPointerService(pointerService);
 	}
 
-	public String getFormat() {
-		return this.format;
+	public LoginServiceImpl(LoginPointerKeyFormatter formatter, LoginPointerService pointerService) throws IllegalArgumentException {
+		this.setFormatter(formatter);
+		this.setPointerService(pointerService);
 	}
 
-	public void setFormat(String format) {
-		this.format = format;
+	public LoginPointerKeyFormatter getFormatter() {
+		return this.formatter;
+	}
+
+	public void setFormatter(LoginPointerKeyFormatter formatter) {
+		if (formatter == null) {
+			throw new IllegalArgumentException("formatter cannot be null.");
+		}
+
+		this.formatter = formatter;
 	}
 
 	public LoginPointerService getPointerService() {
@@ -59,27 +70,18 @@ public abstract class LoginServiceImpl
 	protected LoginPointer createLogin(String username,
 	                                   LoginPointer template)
 	        throws LoginExistsException {
-		ModelKey key = this.getLoginPointerKey(username);
+		ModelKey key = this.formatter.getKeyForUsername(username);
 		return this.pointerService.createLoginPointer(key, template);
 	}
 
 	protected LoginPointer loadLogin(String username) {
-		ModelKey key = this.getLoginPointerKey(username);
+		ModelKey key = this.formatter.getKeyForUsername(username);
 		return this.pointerService.getLoginPointer(key);
-	}
-
-	protected ModelKey getLoginPointerKey(String username) {
-		String id = this.getLoginIdForUsername(username);
-		return new ModelKey(id);
-	}
-
-	protected String getLoginIdForUsername(String username) {
-		return String.format(this.format, username.toLowerCase());
 	}
 
 	@Override
 	public String toString() {
-		return "LoginServiceImpl [format=" + this.format + ", pointerService=" + this.pointerService + "]";
+		return "LoginServiceImpl [formatter=" + this.formatter + ", pointerService=" + this.pointerService + "]";
 	}
 
 }

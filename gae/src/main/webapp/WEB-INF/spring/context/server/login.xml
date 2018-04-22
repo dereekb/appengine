@@ -49,15 +49,31 @@
 	</bean>
 
 	<!-- Password Service -->
+	<bean id="passwordEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+	</bean>
+
 	<bean id="passwordLoginService"
 		class="com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl">
 		<constructor-arg index="0" ref="passwordEncoder" />
 		<constructor-arg index="1" ref="loginPointerService" />
-		<constructor-arg index="2" ref="loginRegisterService" />
 	</bean>
 
-	<bean id="passwordEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+	<bean id="passwordRecoveryService"
+		class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceImpl">
+		<constructor-arg index="0" ref="mailService" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceTokenDelegateImpl">
+				<constructor-arg index="0" ref="loginPointerService" />
+				<constructor-arg index="1" ref="loginTokenService" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<bean id="passwordRecoveryServiceEmailDelegate"
+				class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceEmailDelegateImpl">
+			</bean>
+		</constructor-arg>
 	</bean>
 
 	<!-- OAuth Services -->
@@ -100,7 +116,7 @@
 		<constructor-arg index="0" ref="loginRegistry" />
 		<constructor-arg index="1" ref="loginScheduleCreateReview" />
 	</bean>
-	
+
 	<!-- Refresh Token Service -->
 	<bean id="refreshTokenService"
 		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl">

@@ -61,7 +61,7 @@ public interface PasswordRecoveryService {
 	 * @throws UnknownUsernameException
 	 *             thrown if the user does not exist.
 	 */
-	public void recoverPassword(String username) throws UnknownUsernameException;
+	public void recoverPassword(String username) throws NoPasswordRecoveryAddressException, UnknownUsernameException;
 
 	/**
 	 * Sends an email to the input email, if a user is registered with that
@@ -72,6 +72,6 @@ public interface PasswordRecoveryService {
 	 * @throws UnregisteredEmailException
 	 *             thrown if the email does not exist.
 	 */
-	public void recoverUsername(String email) throws UnregisteredEmailException;
+	public void recoverUsername(String email) throws NoPasswordRecoveryAddressException, UnregisteredEmailException;
 
 }

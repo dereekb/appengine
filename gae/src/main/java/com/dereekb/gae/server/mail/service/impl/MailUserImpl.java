@@ -1,10 +1,11 @@
 package com.dereekb.gae.server.mail.service.impl;
 
 import com.dereekb.gae.server.mail.service.MailUser;
+import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * {@link MailUser} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -14,14 +15,14 @@ public class MailUserImpl
 	private String name;
 	private String emailAddress;
 
-	public MailUserImpl(String emailAddress) {
-		super();
-		this.setEmailAddress(emailAddress);
-	}
-
 	public MailUserImpl(String emailAddress, String name) {
 		this(emailAddress);
 		this.setName(name);
+	}
+
+	public MailUserImpl(String emailAddress) {
+		super();
+		this.setEmailAddress(emailAddress);
 	}
 
 	@Override
@@ -39,8 +40,8 @@ public class MailUserImpl
 	}
 
 	public void setEmailAddress(String emailAddress) {
-		if (emailAddress == null) {
-			throw new IllegalArgumentException("emailAddress cannot be null.");
+		if (StringUtility.isEmptyString(emailAddress)) {
+			throw new IllegalArgumentException("emailAddress cannot be null or empty.");
 		}
 
 		this.emailAddress = emailAddress;

@@ -59,7 +59,8 @@
 	<bean id="passwordLoginControllerDelegate"
 		class="com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginControllerDelegateImpl">
 		<constructor-arg index="0" ref="passwordLoginService" />
-		<constructor-arg index="1" ref="loginTokenService" />
+		<constructor-arg index="1" ref="passwordRecoveryService" />
+		<constructor-arg index="2" ref="loginTokenService" />
 	</bean>
 
 	<!-- OAuth -->
@@ -96,10 +97,8 @@
 
 	<bean id="loginTokenModelContextControllerDelegate"
 		class="com.dereekb.gae.web.api.auth.controller.model.impl.LoginTokenModelContextControllerDelegateImpl">
-		<constructor-arg index="0"
-			ref="loginTokenModelContextService" />
-		<constructor-arg index="1"
-			ref="loginTokenEncoderDecoder" />
+		<constructor-arg index="0" ref="loginTokenModelContextService" />
+		<constructor-arg index="1" ref="loginTokenEncoderDecoder" />
 		<constructor-arg index="2"
 			ref="loginTokenModelContextSetDencoder" />
 	</bean>

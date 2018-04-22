@@ -142,7 +142,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		String fullUserToken = testUtility.register(token);
 
 		DecodedLoginToken<LoginToken> decodedFullToken = this.loginTokenService.decodeLoginToken(fullUserToken);
-		//decoded.getLoginToken()
+		Assert.assertTrue(decodedFullToken.getLoginToken().isRegistered());
 	}
 
 	@Test

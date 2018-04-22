@@ -6,6 +6,7 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginService;
+import com.dereekb.gae.server.auth.security.login.password.recover.PasswordRecoveryService;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryMailException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerificationException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerifiedException;
@@ -25,13 +26,25 @@ public class PasswordLoginControllerDelegateImpl
         implements PasswordLoginControllerDelegate {
 
 	private boolean refreshAllowed = true;
+
 	private PasswordLoginService loginService;
+	private PasswordRecoveryService recoveryService;
 	private LoginTokenService<LoginToken> tokenService;
 
-	public PasswordLoginControllerDelegateImpl(PasswordLoginService loginService, LoginTokenService<LoginToken> tokenService)
-	        throws IllegalArgumentException {
+	public PasswordLoginControllerDelegateImpl(PasswordLoginService loginService,
+	        PasswordRecoveryService recoveryService,
+	        LoginTokenService<LoginToken> tokenService) throws IllegalArgumentException {
 		this.setLoginService(loginService);
+		this.setRecoveryService(recoveryService);
 		this.setTokenService(tokenService);
+	}
+
+	public boolean isRefreshAllowed() {
+		return this.refreshAllowed;
+	}
+
+	public void setRefreshAllowed(boolean refreshAllowed) {
+		this.refreshAllowed = refreshAllowed;
 	}
 
 	public PasswordLoginService getLoginService() {
@@ -46,6 +59,18 @@ public class PasswordLoginControllerDelegateImpl
 		this.loginService = loginService;
 	}
 
+	public PasswordRecoveryService getRecoveryService() {
+		return this.recoveryService;
+	}
+
+	public void setRecoveryService(PasswordRecoveryService recoveryService) {
+		if (recoveryService == null) {
+			throw new IllegalArgumentException("recoveryService cannot be null.");
+		}
+
+		this.recoveryService = recoveryService;
+	}
+
 	public LoginTokenService<LoginToken> getTokenService() {
 		return this.tokenService;
 	}
@@ -56,14 +81,6 @@ public class PasswordLoginControllerDelegateImpl
 		}
 
 		this.tokenService = tokenService;
-	}
-
-	public boolean isRefreshAllowed() {
-		return this.refreshAllowed;
-	}
-
-	public void setRefreshAllowed(boolean refreshAllowed) {
-		this.refreshAllowed = refreshAllowed;
 	}
 
 	// MARK: PasswordLoginControllerDelegate
@@ -91,35 +108,37 @@ public class PasswordLoginControllerDelegateImpl
 		return new LoginTokenPair(loginPointerId, loginToken);
 	}
 
+	// MARK: PasswordRecoveryService
 	@Override
 	public void sendVerificationEmail(String email)
 	        throws PasswordRecoveryVerifiedException,
 	            UnregisteredEmailException,
 	            PasswordRecoveryMailException {
-		this.loginService.sendVerificationEmail(email);
+		this.recoveryService.sendVerificationEmail(email);
 	}
 
 	@Override
 	public void verifyUserEmail(String verificationToken)
 	        throws PasswordRecoveryVerifiedException,
 	            PasswordRecoveryVerificationException {
-		this.loginService.verifyUserEmail(verificationToken);
+		this.recoveryService.verifyUserEmail(verificationToken);
 	}
 
 	@Override
 	public void recoverPassword(String username) throws UnknownUsernameException {
-		this.loginService.recoverPassword(username);
+		this.recoveryService.recoverPassword(username);
 	}
 
 	@Override
 	public void recoverUsername(String email) throws UnregisteredEmailException {
-		this.loginService.recoverUsername(email);
+		this.recoveryService.recoverUsername(email);
 	}
 
 	@Override
 	public String toString() {
 		return "PasswordLoginControllerDelegateImpl [refreshAllowed=" + this.refreshAllowed + ", loginService="
-		        + this.loginService + ", tokenService=" + this.tokenService + "]";
+		        + this.loginService + ", recoveryService=" + this.recoveryService + ", tokenService="
+		        + this.tokenService + "]";
 	}
 
 }

@@ -53,14 +53,18 @@ public interface LoginPointerService {
 	        throws LoginExistsException;
 
 	/**
-	 * Changes the verified status for the pointer.
+	 * Changes the verified status for the pointer, and returns it.
 	 *
 	 * @param key
+	 *            {@link ModelKey}. Never {@code null}.
 	 * @param verified
-	 * @return
+	 *            new verified state.
+	 * @return {@link LoginPointer}. Never {@code null}.
 	 * @throws UnavailableModelException
 	 */
-	public LoginPointer changeVerified(ModelKey key, boolean verified) throws UnavailableModelException;
+	public LoginPointer changeVerified(ModelKey key,
+	                                   boolean verified)
+	        throws UnavailableModelException;
 
 	/**
 	 * Returns all login pointers associated with the specified email.

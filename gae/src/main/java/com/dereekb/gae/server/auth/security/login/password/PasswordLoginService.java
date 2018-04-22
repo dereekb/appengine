@@ -4,7 +4,6 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredentialsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
-import com.dereekb.gae.server.auth.security.login.password.recover.PasswordRecoveryService;
 
 /**
  * Service used for creating and retrieving {@link LoginPointer} instances using
@@ -13,7 +12,7 @@ import com.dereekb.gae.server.auth.security.login.password.recover.PasswordRecov
  * @author dereekb
  *
  */
-public interface PasswordLoginService extends PasswordRecoveryService {
+public interface PasswordLoginService {
 
 	/**
 	 * Creates a new {@link LoginPointer} with the specified credentials.

@@ -7,7 +7,8 @@ import com.dereekb.gae.model.extension.generation.impl.keys.StringModelKeyGenera
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
-import com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl;
+import com.dereekb.gae.server.auth.security.login.LoginPointerKeyFormatter;
+import com.dereekb.gae.server.auth.security.login.impl.LoginPointerKeyFormatterImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.keys.generator.ObjectifyKeyGenerator;
 import com.googlecode.objectify.Key;
@@ -23,6 +24,7 @@ public final class LoginPointerGenerator extends AbstractModelGenerator<LoginPoi
 	        .numberKeyGenerator(Login.class);
 
 	private Generator<Key<Login>> loginKeyGenerator = LOGIN_GENERATOR;
+	private LoginPointerKeyFormatter formatter = new LoginPointerKeyFormatterImpl(LoginPointerType.PASSWORD);
 
 	public LoginPointerGenerator() {
 		this(StringModelKeyGenerator.GENERATOR);
@@ -39,7 +41,7 @@ public final class LoginPointerGenerator extends AbstractModelGenerator<LoginPoi
 
 		loginPointer.setLoginPointerType(LoginPointerType.PASSWORD);
 		loginPointer.setPassword("ENCODEDPASSWORD");
-		loginPointer.setIdentifier(PasswordLoginServiceImpl.PASSWORD_PREFIX + key.toString());
+		loginPointer.setIdentifier(this.formatter.getIdForUsername(key.toString()));
 
 		if (this.loginKeyGenerator != null) {
 			loginPointer.setLogin(this.loginKeyGenerator.generate(arg));

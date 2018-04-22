@@ -10,6 +10,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.login.password.PasswordLoginService;
+import com.dereekb.gae.server.auth.security.login.password.recover.PasswordRecoveryService;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
@@ -43,6 +45,14 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 	@Autowired
 	@Qualifier("loginPointerRegistry")
 	public ObjectifyRegistry<LoginPointer> loginPointerRegistry;
+
+	@Autowired
+	@Qualifier("passwordLoginService")
+	PasswordLoginService passwordLoginService;
+
+	@Autowired
+	@Qualifier("passwordRecoveryService")
+	PasswordRecoveryService passwordRecoveryService;
 
 	// MARK: Direct Controller Tests
 	@Test

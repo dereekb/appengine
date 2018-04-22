@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.auth.security.login.password.recover.impl;
 
+import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.password.recover.PasswordRecoveryService;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.NoPasswordRecoveryAddressException;
@@ -25,9 +26,29 @@ public abstract class AbstractPasswordRecoveryServiceImpl
 
 	private MailService mailService;
 
+	public AbstractPasswordRecoveryServiceImpl(MailService mailService) {
+		this.setMailService(mailService);
+	}
+
+	public MailService getMailService() {
+		return this.mailService;
+	}
+
+	public void setMailService(MailService mailService) {
+		if (mailService == null) {
+			throw new IllegalArgumentException("mailService cannot be null.");
+		}
+
+		this.mailService = mailService;
+	}
+
 	// MARK: PasswordRecoveryServiceImpl
 	@Override
-	public void sendVerificationEmail(String username) throws NoPasswordRecoveryAddressException, PasswordRecoveryVerifiedException, UnregisteredEmailException, PasswordRecoveryMailException {
+	public void sendVerificationEmail(String username)
+	        throws NoPasswordRecoveryAddressException,
+	            PasswordRecoveryVerifiedException,
+	            UnregisteredEmailException,
+	            PasswordRecoveryMailException {
 		LoginPointer pointer = this.loadLoginPointerForUser(username);
 
 		String email = pointer.getEmail();
@@ -41,7 +62,7 @@ public abstract class AbstractPasswordRecoveryServiceImpl
 				throw new PasswordRecoveryVerifiedException(username);
 			} else {
 				String verificationToken = this.generateVerificationToken(pointer);
-				MailServiceRequest verificationRequest = this.generateVerificationEmail(verificationToken);
+				MailServiceRequest verificationRequest = this.generateVerificationEmail(email, verificationToken);
 
 				try {
 					this.mailService.sendMail(verificationRequest);
@@ -57,29 +78,36 @@ public abstract class AbstractPasswordRecoveryServiceImpl
 
 	@Override
 	public void recoverPassword(String username) throws UnknownUsernameException {
-		LoginPointer pointer = this.loadLoginPointerForUser(username);
-
-		if (pointer == null) {
-			throw new UnknownUsernameException(username);
-		} else {
+		try {
+			LoginPointer pointer = this.loadLoginPointerForUser(username);
 			this.sendRecoveryEmail(pointer);
+		} catch (UnavailableModelException e) {
+			throw new UnknownUsernameException(username);
 		}
 	}
 
 	@Override
 	public void recoverUsername(String email) throws UnregisteredEmailException {
-		LoginPointer pointer = this.loadLoginPointerForEmail(email);
-
-		if (pointer == null) {
-			throw new UnregisteredEmailException(email);
-		} else {
+		try {
+			LoginPointer pointer = this.loadLoginPointerForEmail(email);
 			this.sendRecoveryEmail(pointer);
+		} catch (UnavailableModelException e) {
+			throw new UnregisteredEmailException(email);
 		}
 	}
 
 	// MARK: Internal
-	protected void sendRecoveryEmail(LoginPointer pointer) throws PasswordRecoveryMailException {
-		MailServiceRequest verificationRequest = this.generateRecoveryEmail(pointer);
+	protected void sendRecoveryEmail(LoginPointer pointer)
+	        throws NoPasswordRecoveryAddressException,
+	            PasswordRecoveryMailException {
+		String email = pointer.getEmail();
+
+		if (email == null) {
+			throw new NoPasswordRecoveryAddressException();
+		}
+
+		String token = this.generateRecoveryToken(pointer);
+		MailServiceRequest verificationRequest = this.generateRecoveryEmail(email, token);
 
 		try {
 			this.mailService.sendMail(verificationRequest);
@@ -88,20 +116,18 @@ public abstract class AbstractPasswordRecoveryServiceImpl
 		}
 	}
 
-	protected MailServiceRequest generateVerificationEmail(String verificationToken) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	protected abstract MailServiceRequest generateVerificationEmail(String email,
+	                                                                String verificationToken);
 
-	protected MailServiceRequest generateRecoveryEmail(LoginPointer pointer) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	protected abstract MailServiceRequest generateRecoveryEmail(String email,
+	                                                            String recoveryToken);
 
 	protected abstract String generateVerificationToken(LoginPointer pointer);
 
-	protected abstract LoginPointer loadLoginPointerForUser(String username);
+	protected abstract String generateRecoveryToken(LoginPointer pointer);
 
-	protected abstract LoginPointer loadLoginPointerForEmail(String email);
+	protected abstract LoginPointer loadLoginPointerForUser(String username) throws UnavailableModelException;
+
+	protected abstract LoginPointer loadLoginPointerForEmail(String email) throws UnavailableModelException;
 
 }

@@ -9,6 +9,12 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Domain -->
+	<bean id="appDomainInfo"
+		class="com.dereekb.gae.server.app.model.app.info.impl.AppDomainInfoImpl">
+		<constructor-arg index="0" value="test.com"/>
+	</bean>
+
 	<!-- App -->
 	<bean id="serverAppInfo"
 		class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl">
@@ -34,6 +40,7 @@
 	<import resource="taskqueue.xml" />
 	<import resource="database.xml" />
 	<import resource="keys.xml" />
+	<import resource="mail.xml" />
 	<import resource="ref.xml" />
 	<import resource="security.xml" />
 	<import resource="storage.xml" />
