@@ -27,7 +27,7 @@ public class LoginServiceAppConfigurationGen {
 		// App
 		AppModelConfigurationGroupImpl appGroup = AppGroupConfigurationGen.makeLocalAppGroupConfig();
 
-		List<AppModelConfigurationGroup> modelConfigurations = ListUtility.toList(loginGroup, appGroup);
+		List<AppModelConfigurationGroup> modelConfigurations = ListUtility.toList((AppModelConfigurationGroup) loginGroup, appGroup);
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(modelConfigurations);
 

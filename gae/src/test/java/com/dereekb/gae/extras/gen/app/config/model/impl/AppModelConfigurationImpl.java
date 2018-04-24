@@ -5,6 +5,8 @@ import java.util.List;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelCrudsConfiguration;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.CustomLocalModelContextConfigurerImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -58,6 +60,7 @@ public class AppModelConfigurationImpl
 
 	private AppModelCrudsConfiguration crudsConfiguration;
 	private AppModelBeansConfiguration beansConfiguration;
+	private CustomLocalModelContextConfigurer customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 
 	public AppModelConfigurationImpl(Class<?> modelClass) {
 		this(modelClass, ModelKey.readModelKeyType(modelClass));
@@ -242,14 +245,17 @@ public class AppModelConfigurationImpl
 		this.modelClass = modelClass;
 	}
 
+	@Override
 	public Package getBaseClassPackage() {
 		return this.baseClassPackage;
 	}
 
+	@Override
 	public String getBaseClassPath() {
 		return this.baseClassPath;
 	}
 
+	@Override
 	public String getBaseClassSimpleName() {
 		return this.baseClassSimpleName;
 	}
@@ -656,6 +662,19 @@ public class AppModelConfigurationImpl
 
 	public void setModelRelatedModelAttributeUtilityClass(Class<Object> modelRelatedModelAttributeUtilityClass) {
 		this.modelRelatedModelAttributeUtilityClass = modelRelatedModelAttributeUtilityClass;
+	}
+
+	@Override
+	public CustomLocalModelContextConfigurer getCustomLocalModelContextConfigurer() {
+		return this.customLocalModelContextConfigurer;
+	}
+
+	public void setCustomLocalModelContextConfigurer(CustomLocalModelContextConfigurer customLocalModelContextConfigurer) {
+		if (customLocalModelContextConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelContextConfigurer cannot be null.");
+		}
+
+		this.customLocalModelContextConfigurer = customLocalModelContextConfigurer;
 	}
 
 }

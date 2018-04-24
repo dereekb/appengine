@@ -9,6 +9,7 @@ import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFil
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
@@ -414,9 +415,12 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.bean(this.modelConfig.getModelQueryServiceId()).beanClass(ModelQueryServiceImpl.class).c()
 			        .ref(this.modelConfig.getModelRegistryId()).ref(securedQueryInitializerId);
 
-			builder.bean(securedQueryInitializerId)
-			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId)
-			        .nextArgBuilder().comment("TODO: Complete Configuration");
+			SpringBeansXMLBeanConstructorBuilder<?> securedLoginQueryInitializer = builder.bean(securedQueryInitializerId)
+			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId);
+
+			CustomLocalModelContextConfigurer configuration = this.modelConfig
+			        .getCustomLocalModelContextConfigurer();
+			configuration.configureSecuredQueryInitializer(this.getAppConfig(), this.modelConfig, securedLoginQueryInitializer);
 
 			builder.bean(queryInitializerId).beanClass(this.modelConfig.getModelQueryInitializerClass());
 

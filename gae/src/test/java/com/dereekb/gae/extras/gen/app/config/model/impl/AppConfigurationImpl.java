@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.model.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationImpl;
 
@@ -23,6 +24,7 @@ public class AppConfigurationImpl
 	private String appVersion = "v1";
 	private boolean isLoginServer = true;
 
+	private AppSecurityBeansConfigurer appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 	private AppBeansConfiguration appBeans = new AppBeansConfigurationImpl();
 	private List<AppModelConfigurationGroup> modelConfigurations;
 
@@ -116,6 +118,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appBeans = appBeans;
+	}
+
+	@Override
+	public AppSecurityBeansConfigurer getAppSecurityBeansConfigurer() {
+		return this.appSecurityBeansConfigurer;
+	}
+
+	public void setAppSecurityBeansConfigurer(AppSecurityBeansConfigurer appSecurityBeansConfigurer) {
+		if (appSecurityBeansConfigurer == null) {
+			throw new IllegalArgumentException("appSecurityBeansConfigurer cannot be null.");
+		}
+
+		this.appSecurityBeansConfigurer = appSecurityBeansConfigurer;
 	}
 
 	@Override

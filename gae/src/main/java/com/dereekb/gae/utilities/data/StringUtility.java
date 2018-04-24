@@ -216,7 +216,14 @@ public class StringUtility {
 	}
 
 	public static String firstLetterUpperCase(String string) {
-		string = string.toLowerCase();
+		return firstLetterUpperCase(string, false);
+	}
+
+	public static String firstLetterUpperCase(String string, boolean onlyFirstLetter) {
+		if (onlyFirstLetter) {
+			string = string.toLowerCase();
+		}
+
 		char c[] = string.toCharArray();
 		c[0] = Character.toUpperCase(c[0]);
 		return new String(c);

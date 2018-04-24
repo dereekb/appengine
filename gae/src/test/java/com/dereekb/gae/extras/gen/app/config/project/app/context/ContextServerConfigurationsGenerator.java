@@ -12,11 +12,12 @@ import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.model.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
-import com.dereekb.gae.extras.gen.app.config.project.app.AppLoginTokenBeansConfiguration;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
@@ -51,7 +52,6 @@ import com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenti
 import com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl;
-import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -202,8 +202,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 		public void addLoginServerLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
-			AppLoginTokenBeansConfiguration loginTokenBeansConfiguration = this.getAppConfig().getAppBeans()
-			        .getAppLoginTokenBeansConfiguration();
+			AppSecurityBeansConfigurer appSecurityBeansConfigurer = this.getAppConfig().getAppSecurityBeansConfigurer();
 
 			builder.comment("Login Server");
 			builder.comment("Signatures");
@@ -211,8 +210,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			// TODO: Update to pull signatures from JSON file or similar file
 			// not included in git.
 
-			String loginTokenSignatureFactoryId = "loginTokenSignatureFactory";
-			String refreshTokenSignatureFactoryId = "refreshTokenSignatureFactory";
+			String loginTokenSignatureFactoryId = appSecurityBeansConfigurer.getLoginTokenSignatureFactoryBeanId();
+			String refreshTokenSignatureFactoryId = appSecurityBeansConfigurer.getRefreshTokenSignatureFactoryBeanId();
 
 			builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).getRawXMLBuilder()
 			        .comment("TODO: Add production source.");
@@ -220,12 +219,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .getRawXMLBuilder().comment("TODO: Add production source.");
 
 			builder.comment("LoginToken Service");
-			builder.bean("loginTokenEncoderDecoder")
-			        .beanClass(loginTokenBeansConfiguration.getLoginTokenEncoderDecoderClass()).c().bean()
-			        .factoryBean(loginTokenSignatureFactoryId).factoryMethod("make");
 
-			builder.bean("loginTokenBuilder").beanClass(loginTokenBeansConfiguration.getLoginTokenBuilderClass()).c()
-			        .ref("loginRegistry");
+			SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder.bean("loginTokenEncoderDecoder");
+			appSecurityBeansConfigurer.configureTokenUserDetailsBuilder(this.getAppConfig(), loginTokenEncoderDecoderBuilder);
+
+			SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean("loginTokenBuilder");
+			appSecurityBeansConfigurer.configureTokenBuilder(this.getAppConfig(), loginTokenBuilderBuilder);
 
 			builder.bean("loginTokenService").beanClass(LoginTokenServiceImpl.class).c().ref("loginTokenBuilder")
 			        .ref("loginTokenEncoderDecoder");
@@ -270,9 +269,6 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		}
 
 		public void addRemoteLoginServerLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
-
-			AppLoginTokenBeansConfiguration loginTokenBeansConfiguration = this.getAppConfig().getAppBeans()
-			        .getAppLoginTokenBeansConfiguration();
 
 			builder.comment("Remote Login Service");
 
@@ -336,7 +332,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			builder.comment("Security Refs");
 			for (CrudModelRole role : CrudModelRole.values()) {
-				String roleString = StringUtility.firstLetterUpperCase(role.toString());
+				String roleString = StringUtility.firstLetterUpperCase(role.toString(), true);
 				builder.bean("crud" + roleString + "ModelRole").beanClass(CrudModelRole.class).factoryMethod("valueOf")
 				        .c().value(role.toString());
 			}
@@ -356,6 +352,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		@Override
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppSecurityBeansConfigurer appSecurityBeansConfigurer = this.getAppConfig().getAppSecurityBeansConfigurer();
 
 			builder.comment("TODO: Complete the security!");
 
@@ -386,16 +384,15 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .ref("appLoginSecurityVerifierService").up().up().up().up().nullArg().bean()
 			        .beanClass(LoginTokenAuthenticationFailureHandler.class).c().ref("loginTokenExceptionHandler");
 
-			builder.getRawXMLBuilder().elem("security:autentication-manager").a("alias", "loginAuthenticationManager")
+			builder.getRawXMLBuilder().elem("security:authentication-manager").a("alias", "loginAuthenticationManager")
 			        .e("security:authentication-provider").a("ref", "loginTokenAuthenticationProvider");
 
 			builder.comment("Authentication");
-			builder.bean("loginTokenAuthenticationProvider").beanClass(this.getAppConfig().getAppBeans()
-			        .getAppLoginTokenBeansConfiguration().getLoginTokenAuthenticationProviderClass());
+			SpringBeansXMLBeanBuilder<?> loginTokenAuthenticationProviderBuilder = builder.bean("loginTokenAuthenticationProvider");
+			appSecurityBeansConfigurer.configureTokenAuthenticationProvider(this.getAppConfig(), loginTokenAuthenticationProviderBuilder);
 
-			builder.bean("loginTokenUserDetailsBuilder").beanClass(LoginTokenUserDetailsBuilderImpl.class).c()
-			        .ref("loginTokenModelContextSetDencoder").ref("loginTokenGrantedAuthorityBuilder")
-			        .ref("loginRegistry").ref("loginPointerRegistry");
+			SpringBeansXMLBeanBuilder<?> loginTokenUserDetailsBuilder = builder.bean("loginTokenUserDetailsBuilder");
+			appSecurityBeansConfigurer.configureTokenUserDetailsBuilder(this.getAppConfig(), loginTokenUserDetailsBuilder);
 
 			builder.bean("loginTokenGrantedAuthorityBuilder").beanClass(LoginTokenGrantedAuthorityBuilderImpl.class).c()
 			        .ref("loginGrantedAuthorityDecoder").array().bean().beanClass("SimpleGrantedAuthority").c()

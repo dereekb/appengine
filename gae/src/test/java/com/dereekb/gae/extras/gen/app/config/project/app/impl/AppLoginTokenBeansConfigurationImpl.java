@@ -12,6 +12,7 @@ import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthen
  * @author dereekb
  *
  */
+@Deprecated
 public class AppLoginTokenBeansConfigurationImpl
         implements AppLoginTokenBeansConfiguration {
 

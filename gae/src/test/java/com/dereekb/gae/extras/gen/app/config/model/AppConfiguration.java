@@ -18,6 +18,8 @@ public interface AppConfiguration {
 
 	public AppBeansConfiguration getAppBeans();
 
+	public AppSecurityBeansConfigurer getAppSecurityBeansConfigurer();
+
 	public List<AppModelConfigurationGroup> getModelConfigurations();
 
 	public boolean isLoginServer();

@@ -1,7 +1,5 @@
 package com.dereekb.gae.extras.gen.app.config.project.app;
 
-import com.dereekb.gae.extras.gen.app.config.project.app.impl.AppLoginTokenBeansConfigurationImpl;
-
 /**
  * {@link AppBeansConfiguration} implementation.
  *
@@ -54,8 +52,6 @@ public class AppBeansConfigurationImpl
 	private String crudReadModelRoleRefBeanId = CRUD_READ_MODEL_ROLE_REF_BEAN_ID;
 	private String crudUpdateModelRoleRefBeanId = CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID;
 	private String crudDeleteModelRoleRefBeanId = CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID;
-
-	private AppLoginTokenBeansConfiguration appLoginTokenBeansConfiguration = new AppLoginTokenBeansConfigurationImpl();
 
 	@Override
 	public String getAppInfoBeanId() {
@@ -289,19 +285,6 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.crudDeleteModelRoleRefBeanId = crudDeleteModelRoleRefBeanId;
-	}
-
-	@Override
-	public AppLoginTokenBeansConfiguration getAppLoginTokenBeansConfiguration() {
-		return this.appLoginTokenBeansConfiguration;
-	}
-
-	public void setAppLoginTokenBeansConfiguration(AppLoginTokenBeansConfiguration appLoginTokenBeansConfiguration) {
-		if (appLoginTokenBeansConfiguration == null) {
-			throw new IllegalArgumentException("appLoginTokenBeansConfiguration cannot be null.");
-		}
-
-		this.appLoginTokenBeansConfiguration = appLoginTokenBeansConfiguration;
 	}
 
 }
