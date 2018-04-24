@@ -107,7 +107,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		builder.comment("App Info");
 		builder.bean(appBeans.getAppInfoBeanId()).beanClass(AppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
 		        .ref(appBeans.getAppNameBeanId());
-		builder.bean(appBeans.getAppKeyBeanId()).beanClass(ModelKey.class).property(appBeans.getAppIdBeanId());
+		builder.bean(appBeans.getAppKeyBeanId()).beanClass(ModelKey.class).c().ref(appBeans.getAppIdBeanId());
 		builder.longBean(appBeans.getAppIdBeanId(), this.getAppConfig().getAppId());
 		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());
 
@@ -472,7 +472,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .ref(this.getAppConfig().getAppBeans().getTaskQueueNameId()).up().property("authenticator")
 			        .ref("taskSchedulerAuthenticator");
 
-			builder.bean("taskSchedulerAuthentication").beanClass(TaskSchedulerAuthenticatorImpl.class).c()
+			builder.bean("taskSchedulerAuthenticator").beanClass(TaskSchedulerAuthenticatorImpl.class).c()
 			        .ref(this.getAppConfig().getAppBeans().getSystemLoginTokenFactoryBeanId());
 
 			return builder;

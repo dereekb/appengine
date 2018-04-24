@@ -16,6 +16,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl;
@@ -32,6 +33,8 @@ import com.dereekb.gae.model.crud.task.impl.filtered.FilteredUpdateTaskImpl;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask;
 import com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl;
+import com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl;
+import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemBuilder;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.ModelRoleSetLoaderImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
@@ -66,6 +69,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		folder.addFile(this.makeModelsXmlFile(folder));
 
 		// Extensions
+		folder.addFolder(this.makeModelsExtensionFolder());
 
 		return folder;
 	}
@@ -112,6 +116,54 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	}
 
 	// MARK: Extensions
+	public GenFolderImpl makeModelsExtensionFolder() {
+		GenFolderImpl folder = new GenFolderImpl("extension");
+
+		folder.addFile(this.makeModelsLinkExtensionFile());
+
+		return folder;
+	}
+
+	public GenFile makeModelsLinkExtensionFile() {
+		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+		String linkSystemEntriesId = "linkSystemEntries";
+		String linkModificationSystemId = "linkModificationSystem";
+		String linkModificationSystemBuilderId = "linkModificationSystemBuilder";
+
+		builder.comment("Service");
+		builder.bean(this.getAppConfig().getAppBeans().getLinkServiceId()).beanClass(LinkServiceImpl.class).c()
+		        .ref(linkModificationSystemId);
+
+		builder.comment("System");
+		builder.bean(linkModificationSystemId).lazy(false).factoryBean(linkModificationSystemBuilderId)
+		        .factoryMethod("makeLinkModifictionSystem");
+
+		/*
+		 * builder.bean("linkSystem").lazy(false).factoryBean(
+		 * linkModificationSystemBuilderId)
+		 * .factoryMethod("makeLinkSystem");
+		 */
+
+		builder.bean(linkModificationSystemBuilderId).beanClass(LinkModificationSystemBuilder.class).c()
+		        .ref(linkSystemEntriesId);
+
+		builder.comment("Entries");
+		SpringBeansXMLListBuilder<?> entriesListBuilder = builder.list(linkSystemEntriesId);
+
+		List<AppModelConfiguration> localModelConfigs = this.getAllLocalConfigurations();
+		for (AppModelConfiguration modelConfig : localModelConfigs) {
+			entriesListBuilder.ref(modelConfig.getModelLinkSystemBuilderEntryBeanId());
+		}
+
+		builder.comment("Accessors");
+		for (AppModelConfiguration modelConfig : localModelConfigs) {
+			builder.bean(modelConfig.getModelLinkModelAccessorId()).factoryBean(linkModificationSystemBuilderId)
+			        .factoryMethod("getAccessorForType").c().ref(modelConfig.getModelTypeBeanId());
+		}
+
+		return this.makeFileWithXML("link", builder);
+	}
 
 	// MARK: Model
 	@Override
@@ -415,12 +467,13 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.bean(this.modelConfig.getModelQueryServiceId()).beanClass(ModelQueryServiceImpl.class).c()
 			        .ref(this.modelConfig.getModelRegistryId()).ref(securedQueryInitializerId);
 
-			SpringBeansXMLBeanConstructorBuilder<?> securedLoginQueryInitializer = builder.bean(securedQueryInitializerId)
+			SpringBeansXMLBeanConstructorBuilder<?> securedLoginQueryInitializer = builder
+			        .bean(securedQueryInitializerId)
 			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId);
 
-			CustomLocalModelContextConfigurer configuration = this.modelConfig
-			        .getCustomLocalModelContextConfigurer();
-			configuration.configureSecuredQueryInitializer(this.getAppConfig(), this.modelConfig, securedLoginQueryInitializer);
+			CustomLocalModelContextConfigurer configuration = this.modelConfig.getCustomLocalModelContextConfigurer();
+			configuration.configureSecuredQueryInitializer(this.getAppConfig(), this.modelConfig,
+			        securedLoginQueryInitializer);
 
 			builder.bean(queryInitializerId).beanClass(this.modelConfig.getModelQueryInitializerClass());
 
@@ -461,6 +514,8 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			String defaultModelRoleBuilderComponentName = this.modelConfig.getModelBeanPrefix()
 			        + "ModelRoleBuilderComponent";
 			Class<Object> defaultModelRoleBuilderClass = null;
+
+			// TODO: Generate using the app model security configuration for this model.
 
 			// Try to find the default security item here.
 			try {

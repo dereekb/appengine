@@ -248,4 +248,22 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		return configs;
 	}
 
+	protected List<AppModelConfiguration> getAllLocalConfigurations() {
+		return this.getAllLocalConfigurations(this.getAppConfig().getModelConfigurations());
+	}
+
+	protected List<AppModelConfiguration> getAllLocalConfigurations(List<AppModelConfigurationGroup> groups) {
+		List<AppModelConfiguration> configs = new ArrayList<AppModelConfiguration>();
+
+		for (AppModelConfigurationGroup groupConfig : groups) {
+			for (AppModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
+				if (modelConfig.isLocalModel()) {
+					configs.add(modelConfig);
+				}
+			}
+		}
+
+		return configs;
+	}
+
 }

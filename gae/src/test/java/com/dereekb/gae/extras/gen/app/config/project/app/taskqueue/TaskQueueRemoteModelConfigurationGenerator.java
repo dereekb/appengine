@@ -24,6 +24,7 @@ public class TaskQueueRemoteModelConfigurationGenerator extends AbstractRemoteMo
 
 	public TaskQueueRemoteModelConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
+		this.setSplitByRemote(false);
 		this.setIgnoreLocal(true);
 		this.setSplitByModel(true);
 		this.setResultsFolderName(REMOTE_MODEL_FOLDER_NAME);

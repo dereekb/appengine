@@ -7,9 +7,23 @@
   <bean class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer" id="securedAppQueryInitializer">
     <constructor-arg index="0" ref="appQueryInitializer"/>
     <constructor-arg index="1">
-      <!--TODO: Complete Configuration-->
+      <bean class="com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl">
+        <constructor-arg index="0">
+          <list>
+            <ref bean="loginOwnedModelQuerySecurityDelegate"/>
+          </list>
+        </constructor-arg>
+      </bean>
     </constructor-arg>
   </bean>
   <bean class="com.dereekb.gae.server.app.model.app.search.query.AppQueryInitializer" id="appQueryInitializer"/>
   <!--Security-->
+  <!--Owned Model-->
+  <bean class="com.dereekb.gae.server.app.model.app.misc.owned.query.security.AppOwnedModelQuerySecurityDelegate" id="appOwnedModelQuerySecurityDelegate">
+    <constructor-arg index="0" ref="anonymousModelRoleSetContextService"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.app.model.app.misc.owned.query.security.AppOwnedModelQuerySecurityDelegate" id="optionalAppOwnedModelQuerySecurityDelegate">
+    <constructor-arg index="0" ref="anonymousModelRoleSetContextService"/>
+    <property name="optional" value="true"/>
+  </bean>
 </beans>

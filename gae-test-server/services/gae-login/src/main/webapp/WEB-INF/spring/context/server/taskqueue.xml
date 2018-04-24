@@ -7,7 +7,7 @@
     <constructor-arg index="0" ref="taskQueueName"/>
     <property name="authenticator" ref="taskSchedulerAuthenticator"/>
   </bean>
-  <bean class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl" id="taskSchedulerAuthentication">
+  <bean class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl" id="taskSchedulerAuthenticator">
     <constructor-arg index="0" ref="systemLoginTokenFactory"/>
   </bean>
 </beans>
