@@ -44,13 +44,14 @@ public class TaskQueueTaskController extends CaseInsensitiveEntryContainerImpl<T
 	 *            Request parameters. Never {@code null}.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/task/{task}", method = RequestMethod.PUT, consumes = "application/octet-stream")
+	@RequestMapping(value = "/task/{task}/{type}", method = RequestMethod.PUT, consumes = "application/octet-stream")
 	public void handleEvent(@PathVariable("task") String task,
+	                        @PathVariable(value="type", required=false) String type,
 	                        @RequestParam Map<String, String> parameters) {
 
 		try {
 			TaskQueueTaskControllerEntry entry = this.getEntryForType(task);
-			TaskQueueTaskControllerRequestImpl request = new TaskQueueTaskControllerRequestImpl(task, parameters);
+			TaskQueueTaskControllerRequestImpl request = new TaskQueueTaskControllerRequestImpl(task, parameters, type);
 			entry.performTask(request);
 		} catch (RuntimeException e) {
 			LOGGER.log(Level.SEVERE, "Task failed.", e);

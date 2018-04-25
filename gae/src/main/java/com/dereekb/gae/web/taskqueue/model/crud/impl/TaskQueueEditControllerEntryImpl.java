@@ -15,7 +15,9 @@ import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditControllerEntry;
  *
  * @author dereekb
  *
+ * @deprecated
  */
+@Deprecated
 public class TaskQueueEditControllerEntryImpl<T extends UniqueModel>
         implements TaskQueueEditControllerEntry {
 

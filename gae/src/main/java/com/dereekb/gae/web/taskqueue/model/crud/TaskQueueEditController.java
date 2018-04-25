@@ -24,7 +24,9 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateCon
  *
  * @author dereekb
  *
+ * @deprecated Send taskqueue requests to {@link TaskQueueIterateController} instead.
  */
+@Deprecated
 @RestController
 @RequestMapping("/taskqueue")
 public final class TaskQueueEditController extends CaseInsensitiveEntryContainerImpl<TaskQueueEditControllerEntry> {
@@ -39,6 +41,7 @@ public final class TaskQueueEditController extends CaseInsensitiveEntryContainer
 
 	public TaskQueueEditController() {}
 
+	@Deprecated
 	public TaskQueueEditController(TypeModelKeyConverter keyTypeConverter,
 	        Map<String, TaskQueueEditControllerEntry> entries) {
 		super(entries);

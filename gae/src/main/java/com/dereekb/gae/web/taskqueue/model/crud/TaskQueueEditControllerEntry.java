@@ -3,13 +3,18 @@ package com.dereekb.gae.web.taskqueue.model.crud;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateControllerEntry;
 
 /**
  * Delegate entry for {@link TaskQueueEditController}.
  *
  * @author dereekb
  *
+ * @deprecated Use {@link TaskQueueIterateControllerEntry} with the
+ *             {@link TaskQueueIterateController} instead.
  */
+@Deprecated
 public interface TaskQueueEditControllerEntry {
 
 	/**

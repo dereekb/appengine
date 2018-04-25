@@ -16,9 +16,17 @@ public class TaskQueueTaskControllerRequestImpl
 	private String taskName;
 	private Map<String, String> parameters;
 
+	private String type;
+
 	public TaskQueueTaskControllerRequestImpl(String taskName, Map<String, String> parameters) {
 		this.setTaskName(taskName);
 		this.setParameters(parameters);
+	}
+
+	public TaskQueueTaskControllerRequestImpl(String taskName, Map<String, String> parameters, String type) {
+		this.setTaskName(taskName);
+		this.setParameters(parameters);
+		this.setType(type);
 	}
 
 	@Override
@@ -47,10 +55,18 @@ public class TaskQueueTaskControllerRequestImpl
 		this.parameters = parameters;
 	}
 
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
 		return "TaskQueueTaskControllerRequestImpl [taskName=" + this.taskName + ", parameters=" + this.parameters
-		        + "]";
+		        + ", type=" + this.type + "]";
 	}
 
 }
