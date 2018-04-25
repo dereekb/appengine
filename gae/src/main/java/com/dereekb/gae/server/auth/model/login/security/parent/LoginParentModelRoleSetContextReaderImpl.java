@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.auth.model.login.security.child;
+package com.dereekb.gae.server.auth.model.login.security.parent;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;

@@ -40,6 +40,9 @@ public class TaskQueueRemoteModelConfigurationGenerator extends AbstractRemoteMo
 	public GenFolderImpl generateConfigurations() {
 		GenFolderImpl folder = super.generateConfigurations();
 
+		GenFile remote = makeImportFile(folder);
+		folder.addFile(remote);
+
 		// folder.addFile(this.makeModelsXmlFile());
 
 		return folder;

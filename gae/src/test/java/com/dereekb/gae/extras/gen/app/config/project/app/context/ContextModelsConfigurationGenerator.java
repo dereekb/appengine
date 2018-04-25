@@ -12,7 +12,6 @@ import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -36,7 +35,6 @@ import com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalCo
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl;
 import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemBuilder;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl;
-import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.ModelRoleSetLoaderImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl;
@@ -505,48 +503,22 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			this.setFileName("security");
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void makeXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
 			builder.comment("Role Builder Components");
 
-			String defaultModelRoleBuilderComponentName = this.modelConfig.getModelBeanPrefix()
-			        + "ModelRoleBuilderComponent";
-			Class<Object> defaultModelRoleBuilderClass = null;
-
-			// TODO: Generate using the app model security configuration for this model.
-
-			// Try to find the default security item here.
-			try {
-				String defaultModelRoleBuilderClassPath = this.modelConfig.getBaseClassPath() + ".security."
-				        + this.modelConfig.getBaseClassSimpleName() + "ModelRoleBuilderComponent";
-				defaultModelRoleBuilderClass = (Class<Object>) Class.forName(defaultModelRoleBuilderClassPath);
-
-				builder.bean(defaultModelRoleBuilderComponentName).beanClass(defaultModelRoleBuilderClass);
-			} catch (ClassNotFoundException e) {
-				builder.comment("TODO: Complete Adding Role Builders");
-				// Does not exist!
-			}
-
 			String modelRoleSetLoader = this.modelConfig.getModelRoleSetLoaderBeanId();
 
-			SpringBeansXMLArrayBuilder<?> rolesArrayBuilder = builder.bean(modelRoleSetLoader)
-			        .beanClass(ModelRoleSetLoaderImpl.class).c().array();
-
-			if (defaultModelRoleBuilderClass != null) {
-				rolesArrayBuilder.ref(defaultModelRoleBuilderComponentName);
-			} else {
-				rolesArrayBuilder.getRawXMLBuilder().comment("TODO: Add Component Refs Here");
-			}
+			CustomLocalModelContextConfigurer customConfigurer = this.getModelConfig()
+			        .getCustomLocalModelContextConfigurer();
+			customConfigurer.configureModelRoleSetLoaderComponents(this.getAppConfig(), this.modelConfig, builder);
 
 			builder.bean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
 			        .beanClass(this.modelConfig.getModelSecurityContextServiceEntryClass()).c()
 			        .ref(this.modelConfig.getModelRegistryId()).ref(modelRoleSetLoader);
 
-			builder.comment("Children");
-			builder.comment("TODO: Complete if applicable.");
-
+			customConfigurer.configureModelChildrenRoleComponents(this.getAppConfig(), this.modelConfig, builder);
 		}
 
 	}

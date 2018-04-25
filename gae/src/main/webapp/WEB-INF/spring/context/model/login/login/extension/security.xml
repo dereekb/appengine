@@ -27,7 +27,7 @@
 
 	<!-- Children -->
 	<bean id="loginParentModelRoleSetContextReader"
-		class="com.dereekb.gae.server.auth.model.login.security.child.LoginParentModelRoleSetContextReaderImpl">
+		class="com.dereekb.gae.server.auth.model.login.security.parent.LoginParentModelRoleSetContextReaderImpl">
 		<constructor-arg index="0"
 			ref="loginSecurityContextServiceEntry" />
 	</bean>

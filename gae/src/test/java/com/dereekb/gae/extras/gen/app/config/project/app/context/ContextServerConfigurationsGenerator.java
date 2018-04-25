@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.context;
 import java.util.List;
 import java.util.Properties;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -22,7 +23,6 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
-import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityDetailsServiceImpl;
@@ -221,7 +221,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.comment("LoginToken Service");
 
 			SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder.bean("loginTokenEncoderDecoder");
-			appSecurityBeansConfigurer.configureTokenUserDetailsBuilder(this.getAppConfig(), loginTokenEncoderDecoderBuilder);
+			appSecurityBeansConfigurer.configureTokenEncoderDecoder(this.getAppConfig(),
+			        loginTokenEncoderDecoderBuilder);
 
 			SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean("loginTokenBuilder");
 			appSecurityBeansConfigurer.configureTokenBuilder(this.getAppConfig(), loginTokenBuilderBuilder);
@@ -388,15 +389,18 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .e("security:authentication-provider").a("ref", "loginTokenAuthenticationProvider");
 
 			builder.comment("Authentication");
-			SpringBeansXMLBeanBuilder<?> loginTokenAuthenticationProviderBuilder = builder.bean("loginTokenAuthenticationProvider");
-			appSecurityBeansConfigurer.configureTokenAuthenticationProvider(this.getAppConfig(), loginTokenAuthenticationProviderBuilder);
+			SpringBeansXMLBeanBuilder<?> loginTokenAuthenticationProviderBuilder = builder
+			        .bean("loginTokenAuthenticationProvider");
+			appSecurityBeansConfigurer.configureTokenAuthenticationProvider(this.getAppConfig(),
+			        loginTokenAuthenticationProviderBuilder);
 
 			SpringBeansXMLBeanBuilder<?> loginTokenUserDetailsBuilder = builder.bean("loginTokenUserDetailsBuilder");
-			appSecurityBeansConfigurer.configureTokenUserDetailsBuilder(this.getAppConfig(), loginTokenUserDetailsBuilder);
+			appSecurityBeansConfigurer.configureTokenUserDetailsBuilder(this.getAppConfig(),
+			        loginTokenUserDetailsBuilder);
 
 			builder.bean("loginTokenGrantedAuthorityBuilder").beanClass(LoginTokenGrantedAuthorityBuilderImpl.class).c()
-			        .ref("loginGrantedAuthorityDecoder").array().bean().beanClass("SimpleGrantedAuthority").c()
-			        .value("ROLE_USER").up().up().up().bean().beanClass("SimpleGrantedAuthority").c()
+			        .ref("loginGrantedAuthorityDecoder").array().bean().beanClass(SimpleGrantedAuthority.class).c()
+			        .value("ROLE_USER").up().up().up().bean().beanClass(SimpleGrantedAuthority.class).c()
 			        .value("ROLE_ANON");
 
 			builder.bean("loginGrantedAuthorityDecoder").beanClass(GrantedAuthorityDecoderImpl.class)
@@ -412,8 +416,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .ref(this.getAppConfig().getAppBeans().getAppLoginSecuritySigningServiceBeanId())
 			        .ref(this.getAppConfig().getAppBeans().getLoginTokenServiceBeanId()).ref(systemEncodedRolesId);
 
-			String adminEncodedRole = "1";
-			builder.bean(systemEncodedRolesId).beanClass(Login.class).c().value(adminEncodedRole);
+			Long adminEncodedRole = 1L;
+			builder.longBean(systemEncodedRolesId, adminEncodedRole);
 
 			builder.comment("App Security");
 			String appLoginSecurityDetailsServiceId = "appLoginSecurityDetailsService";

@@ -13,5 +13,7 @@
     <constructor-arg index="1" ref="loginModelRoleSetLoader"/>
   </bean>
   <!--Children-->
-  <!--TODO: Complete if applicable.-->
+  <bean class="com.dereekb.gae.server.auth.model.login.security.parent.LoginParentModelRoleSetContextReaderImpl" id="loginParentModelRoleSetContextReader">
+    <constructor-arg index="0" ref="loginSecurityContextServiceEntry"/>
+  </bean>
 </beans>

@@ -64,13 +64,13 @@
     <constructor-arg index="0" ref="loginGrantedAuthorityDecoder"/>
     <constructor-arg index="1">
       <array>
-        <bean class="SimpleGrantedAuthority">
+        <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
           <constructor-arg index="0" value="ROLE_USER"/>
         </bean>
       </array>
     </constructor-arg>
     <constructor-arg index="2">
-      <bean class="SimpleGrantedAuthority">
+      <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
         <constructor-arg index="0" value="ROLE_ANON"/>
       </bean>
     </constructor-arg>
@@ -88,7 +88,7 @@
     <constructor-arg index="1" ref="loginTokenService"/>
     <constructor-arg index="2" ref="systemEncodedRoles"/>
   </bean>
-  <bean class="com.dereekb.gae.server.auth.model.login.Login" id="systemEncodedRoles">
+  <bean class="java.lang.Long" id="systemEncodedRoles">
     <constructor-arg index="0" value="1"/>
   </bean>
   <!--App Security-->

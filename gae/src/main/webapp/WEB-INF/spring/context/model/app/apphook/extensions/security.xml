@@ -8,6 +8,7 @@
 	<bean
 		class="com.dereekb.gae.server.app.model.hook.security.AppHookModelRoleBuilderComponent"
 		id="appHookModelRoleBuilderComponent" />
+		
 	<bean
 		class="com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.ModelRoleSetLoaderImpl"
 		id="appHookModelRoleSetLoader">
@@ -17,7 +18,7 @@
 			</array>
 		</constructor-arg>
 	</bean>
-	
+
 	<bean
 		class="com.dereekb.gae.server.app.model.hook.security.AppHookSecurityContextServiceEntry"
 		id="appHookSecurityContextServiceEntry">

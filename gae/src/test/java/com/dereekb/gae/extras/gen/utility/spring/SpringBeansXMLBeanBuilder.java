@@ -19,6 +19,7 @@ public interface SpringBeansXMLBeanBuilder<T>
 
 	public SpringBeansXMLBeanBuilder<T> beanClass(Class<?> beanClass);
 
+	@Deprecated
 	public SpringBeansXMLBeanBuilder<T> beanClass(String beanClass);
 
 	// Constructor

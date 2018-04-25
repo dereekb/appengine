@@ -8,11 +8,10 @@
     <!--TODO: Add production source.-->
   </bean>
   <!--LoginToken Service-->
-  <bean class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl" id="loginTokenEncoderDecoder">
-    <constructor-arg index="0" ref="loginTokenModelContextSetDencoder"/>
-    <constructor-arg index="1" ref="loginTokenGrantedAuthorityBuilder"/>
-    <constructor-arg index="2" ref="loginRegistry"/>
-    <constructor-arg index="3" ref="loginPointerRegistry"/>
+  <bean class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl" id="loginTokenEncoderDecoder">
+    <constructor-arg index="0">
+      <bean factory-bean="loginTokenSignatureFactory" factory-method="make"/>
+    </constructor-arg>
   </bean>
   <bean class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl" id="loginTokenBuilder">
     <constructor-arg index="0" ref="loginRegistry"/>

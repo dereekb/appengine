@@ -2,9 +2,12 @@ package com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelChildrenRoleComponentConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelRoleSetLoaderConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.SecuredQueryInitializerConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
  * {@link CustomLocalModelContextConfigurer} implementation.
@@ -15,6 +18,8 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBu
 public class CustomLocalModelContextConfigurerImpl
         implements CustomLocalModelContextConfigurer {
 
+	private CustomLocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new CustomLocalModelRoleSetLoaderConfigurerImpl();
+	private CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new CustomLocalModelChildrenRoleComponentConfigurerImpl();
 	private SecuredQueryInitializerConfigurer securedQueryInitializerConfigurer = new TodoSecuredQueryInitializerConfigurerImpl();
 
 	public SecuredQueryInitializerConfigurer getSecuredQueryInitializerConfigurer() {
@@ -27,6 +32,30 @@ public class CustomLocalModelContextConfigurerImpl
 		}
 
 		this.securedQueryInitializerConfigurer = securedQueryInitializerConfigurer;
+	}
+
+	public CustomLocalModelRoleSetLoaderConfigurer getCustomLocalModelRoleSetLoaderConfigurer() {
+		return this.customLocalModelRoleSetLoaderConfigurer;
+	}
+
+	public void setCustomLocalModelRoleSetLoaderConfigurer(CustomLocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer) {
+		if (customLocalModelRoleSetLoaderConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelRoleSetLoaderConfigurer cannot be null.");
+		}
+
+		this.customLocalModelRoleSetLoaderConfigurer = customLocalModelRoleSetLoaderConfigurer;
+	}
+
+	public CustomLocalModelChildrenRoleComponentConfigurer getCustomLocalModelChildrenRoleComponentConfigurer() {
+		return this.customLocalModelChildrenRoleComponentConfigurer;
+	}
+
+	public void setCustomLocalModelChildrenRoleComponentConfigurer(CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer) {
+		if (customLocalModelChildrenRoleComponentConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelChildrenRoleComponentConfigurer cannot be null.");
+		}
+
+		this.customLocalModelChildrenRoleComponentConfigurer = customLocalModelChildrenRoleComponentConfigurer;
 	}
 
 	// MARK: CustomLocalModelContextConfigurer
@@ -49,6 +78,22 @@ public class CustomLocalModelContextConfigurerImpl
 			beanConstructor.nextArgBuilder().comment("TODO: Complete Configuration");
 		}
 
+	}
+
+	@Override
+	public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
+	                                                  AppModelConfiguration modelConfig,
+	                                                  SpringBeansXMLBuilder builder) {
+		this.customLocalModelRoleSetLoaderConfigurer.configureModelRoleSetLoaderComponents(appConfig, modelConfig,
+		        builder);
+	}
+
+	@Override
+	public void configureModelChildrenRoleComponents(AppConfiguration appConfig,
+	                                                 AppModelConfiguration modelConfig,
+	                                                 SpringBeansXMLBuilder builder) {
+		this.customLocalModelChildrenRoleComponentConfigurer.configureModelChildrenRoleComponents(appConfig,
+		        modelConfig, builder);
 	}
 
 }

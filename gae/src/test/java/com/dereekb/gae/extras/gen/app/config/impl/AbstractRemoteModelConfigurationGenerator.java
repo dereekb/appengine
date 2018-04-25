@@ -47,6 +47,14 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 		this.splitByRemote = splitByRemote;
 	}
 
+	public boolean isMakeSplitByRemoteImportFiles() {
+		return this.makeSplitByRemoteImportFiles;
+	}
+
+	public void setMakeSplitByRemoteImportFiles(boolean makeSplitByRemoteImportFiles) {
+		this.makeSplitByRemoteImportFiles = makeSplitByRemoteImportFiles;
+	}
+
 	public String getModelsFolderName() {
 		return this.modelsFolderName;
 	}

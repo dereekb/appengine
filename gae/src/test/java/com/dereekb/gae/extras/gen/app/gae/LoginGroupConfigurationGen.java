@@ -1,10 +1,14 @@
 package com.dereekb.gae.extras.gen.app.gae;
 
+import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.AdminOnlySecuredQueryInitializerConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.CustomLocalModelContextConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.CustomLocalModelRoleSetLoaderConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.SecurityModelQueryInitializerConfigurerImpl;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
@@ -44,6 +48,8 @@ public class LoginGroupConfigurationGen {
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
 		        new SecurityModelQueryInitializerConfigurerImpl("loginOwnedModelQuerySecurityDelegate"));
+		customLocalModelContextConfigurer
+		        .setCustomLocalModelRoleSetLoaderConfigurer(new LoginParentSecurityRoleConfigurer());
 
 		loginPointerModel.setCustomLocalModelContextConfigurer(customLocalModelContextConfigurer);
 
@@ -56,10 +62,26 @@ public class LoginGroupConfigurationGen {
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
 		        new SecurityModelQueryInitializerConfigurerImpl("loginOwnedModelQuerySecurityDelegate"));
+		customLocalModelContextConfigurer
+		        .setCustomLocalModelRoleSetLoaderConfigurer(new LoginParentSecurityRoleConfigurer());
 
 		loginKeyModel.setCustomLocalModelContextConfigurer(customLocalModelContextConfigurer);
 
 		return loginKeyModel;
+	}
+
+	// MARK: Internal
+	private static class LoginParentSecurityRoleConfigurer extends CustomLocalModelRoleSetLoaderConfigurerImpl {
+
+		@Override
+		public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
+		                                                  AppModelConfiguration modelConfig,
+		                                                  SpringBeansXMLBuilder builder) {
+
+			this.saferMakeRoleBuilderComponent(modelConfig, builder).c().ref("loginParentModelRoleSetContextReader");
+			this.makeRoleSetLoaderComponent(modelConfig, builder, true);
+		}
+
 	}
 
 }
