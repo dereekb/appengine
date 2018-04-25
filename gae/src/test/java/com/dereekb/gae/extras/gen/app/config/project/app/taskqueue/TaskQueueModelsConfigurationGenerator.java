@@ -48,7 +48,8 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 
 		builder.comment("Edit Controller");
 		SpringBeansXMLMapBuilder<?> map = builder.bean("taskQueueEditController")
-		        .beanClass(TaskQueueEditController.class).c().map();
+		        .beanClass(TaskQueueEditController.class).c()
+		        .ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).map();
 
 		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
 			map.keyValueRefEntry(model.getModelTypeBeanId(),
@@ -61,7 +62,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 		        .map();
 
 		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
-			if (model.hasIterateControllerEntry()) {
+			if (model.getCustomLocalModelContextConfigurer().hasIterateControllerEntry()) {
 				iterateEntryMap.keyValueRefEntry(model.getModelTypeBeanId(),
 				        model.getModelBeanPrefix() + "TaskQueueIterateControllerEntry");
 			}

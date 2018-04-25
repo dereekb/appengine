@@ -31,7 +31,7 @@
     <constructor-arg index="0" ref="appFactory"/>
     <constructor-arg index="1" ref="appCreateAttributeUpdater"/>
   </bean>
-  <alias alias="appAttributeUpdater" name="appCreateAttributeUpdater"/>
+  <alias alias="appCreateAttributeUpdater" name="appAttributeUpdater"/>
   <!--Read-->
   <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl" id="appReadTask">
     <constructor-arg index="0" ref="appRegistry"/>

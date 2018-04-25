@@ -27,7 +27,7 @@ public class AppModelConfigurationImpl
 	private boolean updateService = true;
 	private boolean deleteService = true;
 
-	private boolean iterateControllerEntry = true;
+	private boolean iterateControllerEntry = false;
 
 	private String modelType;
 	private ModelKeyType modelKeyType;

@@ -45,6 +45,8 @@ public class LoginGroupConfigurationGen {
 	public static AppModelConfigurationImpl makeLoginPointerModelConfig() {
 		AppModelConfigurationImpl loginPointerModel = new AppModelConfigurationImpl(LoginPointer.class);
 
+		loginPointerModel.setHasCreateService(false);
+
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
 		        new SecurityModelQueryInitializerConfigurerImpl("loginOwnedModelQuerySecurityDelegate"));
@@ -58,6 +60,8 @@ public class LoginGroupConfigurationGen {
 
 	public static AppModelConfigurationImpl makeLoginKeyModelConfig() {
 		AppModelConfigurationImpl loginKeyModel = new AppModelConfigurationImpl(LoginKey.class);
+
+		// loginKeyModel.setHasCreateService(false);
 
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(

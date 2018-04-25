@@ -95,7 +95,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.imp("/extension/link.xml");
 
 		builder.comment("Shared");
-		SpringBeansXMLMapBuilder<?> modelKeyTypeMap = builder.bean("modelKeyTypeConverter")
+		SpringBeansXMLMapBuilder<?> modelKeyTypeMap = builder.bean(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId())
 		        .beanClass(TypeModelKeyConverterImpl.class).c().map().valueType(ModelKeyType.class);
 
 		for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
@@ -329,7 +329,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 					        .beanClass(this.modelConfig.getModelCreateAttributeUpdaterClass()).c().ref(attributeUpdater)
 					        .up().getRawXMLBuilder().comment("TODO: Add any needed arguments here.");
 				} else {
-					builder.alias(createAttributeUpdater, attributeUpdater);
+					builder.alias(attributeUpdater, createAttributeUpdater);
 				}
 			}
 

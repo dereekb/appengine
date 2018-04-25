@@ -4,6 +4,7 @@ import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelChildrenRoleComponentConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelIterateControllerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelRoleSetLoaderConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.model.SecuredQueryInitializerConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
@@ -18,6 +19,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 public class CustomLocalModelContextConfigurerImpl
         implements CustomLocalModelContextConfigurer {
 
+	private CustomLocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer;
 	private CustomLocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new CustomLocalModelRoleSetLoaderConfigurerImpl();
 	private CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new CustomLocalModelChildrenRoleComponentConfigurerImpl();
 	private SecuredQueryInitializerConfigurer securedQueryInitializerConfigurer = new TodoSecuredQueryInitializerConfigurerImpl();
@@ -94,6 +96,12 @@ public class CustomLocalModelContextConfigurerImpl
 	                                                 SpringBeansXMLBuilder builder) {
 		this.customLocalModelChildrenRoleComponentConfigurer.configureModelChildrenRoleComponents(appConfig,
 		        modelConfig, builder);
+	}
+
+	@Override
+	public boolean hasIterateControllerEntry() {
+		// TODO: Update.
+		return this.customLocalModelIterateControllerConfigurer != null;
 	}
 
 }

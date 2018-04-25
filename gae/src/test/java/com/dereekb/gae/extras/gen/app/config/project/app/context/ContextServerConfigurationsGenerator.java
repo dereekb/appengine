@@ -40,6 +40,7 @@ import com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginSer
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl;
+import com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideAdminOnlyModelQueryTask;
 import com.dereekb.gae.server.auth.security.model.roles.impl.CrudModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl;
@@ -238,7 +239,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean("passwordEncoder").beanClass(BCryptPasswordEncoder.class);
 
 			builder.bean("passwordLoginService").beanClass(PasswordLoginServiceImpl.class).c().ref("passwordEncoder")
-			        .ref("loginPointerService").ref("loginRegisterService");
+			        .ref("loginPointerService");
 
 			builder.comment("OAuth Service");
 			builder.bean("oAuthLoginService").beanClass(OAuthLoginServiceImpl.class).c().ref("loginPointerService");
@@ -451,6 +452,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.comment("Exception Handler");
 			builder.bean("loginTokenExceptionHandler").beanClass(ApiTokenExceptionHandler.class);
 			builder.bean("accessDeniedHandler").beanClass(AccessDeniedHandlerImpl.class);
+
+			builder.comment("Other Security");
+			builder.comment("Query Overrides");
+			builder.bean("securityOverrideAdminOnlyModelQueryTask")
+			        .beanClass(SecurityOverrideAdminOnlyModelQueryTask.class);
 
 			return builder;
 		}

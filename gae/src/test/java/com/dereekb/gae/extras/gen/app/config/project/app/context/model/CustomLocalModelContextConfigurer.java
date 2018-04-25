@@ -7,7 +7,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.context.model;
  *
  */
 public interface CustomLocalModelContextConfigurer
-        extends CustomLocalModelRoleSetLoaderConfigurer, CustomLocalModelChildrenRoleComponentConfigurer,
-        SecuredQueryInitializerConfigurer {
+        extends CustomLocalModelIterateControllerConfigurer, CustomLocalModelRoleSetLoaderConfigurer,
+        CustomLocalModelChildrenRoleComponentConfigurer, SecuredQueryInitializerConfigurer {
 
 }

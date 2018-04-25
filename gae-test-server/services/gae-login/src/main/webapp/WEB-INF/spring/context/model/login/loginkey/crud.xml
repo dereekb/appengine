@@ -31,7 +31,7 @@
     <constructor-arg index="0" ref="loginKeyFactory"/>
     <constructor-arg index="1" ref="loginKeyCreateAttributeUpdater"/>
   </bean>
-  <alias alias="loginKeyAttributeUpdater" name="loginKeyCreateAttributeUpdater"/>
+  <alias alias="loginKeyCreateAttributeUpdater" name="loginKeyAttributeUpdater"/>
   <!--Read-->
   <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl" id="loginKeyReadTask">
     <constructor-arg index="0" ref="loginKeyRegistry"/>

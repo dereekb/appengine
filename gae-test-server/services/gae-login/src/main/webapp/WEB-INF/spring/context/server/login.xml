@@ -30,7 +30,6 @@
   <bean class="com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl" id="passwordLoginService">
     <constructor-arg index="0" ref="passwordEncoder"/>
     <constructor-arg index="1" ref="loginPointerService"/>
-    <constructor-arg index="2" ref="loginRegisterService"/>
   </bean>
   <!--OAuth Service-->
   <bean class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl" id="oAuthLoginService">

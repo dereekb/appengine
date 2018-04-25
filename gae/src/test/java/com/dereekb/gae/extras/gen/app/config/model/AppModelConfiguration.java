@@ -37,6 +37,8 @@ public interface AppModelConfiguration
 
 	public Class<?> getModelOwnedModelQuerySecurityDelegateClass();
 
+	// TODO: Move to Custom Generator
+	@Deprecated
 	public boolean hasIterateControllerEntry();
 
 	/**
