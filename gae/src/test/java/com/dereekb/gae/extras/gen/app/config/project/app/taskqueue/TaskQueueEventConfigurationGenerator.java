@@ -17,6 +17,10 @@ import com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventD
 import com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventSerializerImpl;
 import com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookEventDeserializerImpl;
 import com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookEventSerializerImpl;
+import com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventDeserializerImpl;
+import com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventSerializerImpl;
+import com.dereekb.gae.server.event.webhook.service.impl.WebHookEventConverterImpl;
+import com.dereekb.gae.web.taskqueue.server.hook.WebHookTaskQueueTaskControllerEntry;
 
 /**
  * {@link AbstractRemoteModelConfigurationGenerator}
@@ -59,8 +63,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		builder.comment("Model Event Service");
 		builder.bean(modelConfig.getModelBeanPrefix() + "EventSerializer").beanClass(ModelEventServiceEntryImpl.class)
 		        .c().ref(this.getAppConfig().getAppBeans().getEventServiceId())
-		        .ref(modelConfig.getModelKeyListAccessorFactoryId())
-		        .ref(modelConfig.getModelDataConverterBeanId());
+		        .ref(modelConfig.getModelKeyListAccessorFactoryId()).ref(modelConfig.getModelDataConverterBeanId());
 
 		builder.comment("Web Hook Serializers");
 		builder.bean(modelConfig.getModelBeanPrefix() + "WebHookEventSerializer")
@@ -116,11 +119,30 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 	public GenFile makeModelsWebHookXmlFile() {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
+		String webHookEventConverterBeanId = "webHookEventConverter";
+		String webHookEventSerializerBeanId = "webHookEventSerializer";
+		String webHookEventDeserializerBeanId = "webHookEventDeserializer";
+
+		builder.comment("Task Controller");
+		builder.bean("webHookTaskQueueTaskControllerEntry").beanClass(WebHookTaskQueueTaskControllerEntry.class).c()
+		        .ref(this.getAppConfig().getAppBeans().getEventServiceId()).ref(webHookEventDeserializerBeanId);
+
 		builder.comment("Converter");
 
-		SpringBeansXMLMapBuilder<?> serializerMapper = builder.bean("typedModelWebHookEventSerializer")
+		builder.bean(webHookEventConverterBeanId).beanClass(WebHookEventConverterImpl.class).c()
+		        .ref(webHookEventSerializerBeanId).ref(webHookEventDeserializerBeanId);
+
+		SpringBeansXMLMapBuilder<?> groupEventSerializer = builder.bean(webHookEventSerializerBeanId).beanClass(GroupWebHookEventSerializerImpl.class).c().map();
+		SpringBeansXMLMapBuilder<?> groupEventDeserializer = builder.bean(webHookEventDeserializerBeanId).beanClass(GroupWebHookEventDeserializerImpl.class).c().map();
+
+		// Model
+		groupEventSerializer.entry("model").valueRef("modelWebHookEventSerializer");
+		groupEventDeserializer.entry("model").valueRef("modelWebHookEventDeserializer");
+
+		builder.comment("Model Converter");
+		SpringBeansXMLMapBuilder<?> serializerMapper = builder.bean("modelWebHookEventSerializer")
 		        .beanClass(TypedModelWebHookEventSerializerImpl.class).c().map();
-		SpringBeansXMLMapBuilder<?> deserializerMapper = builder.bean("typedModelWebHookEventDeserializer")
+		SpringBeansXMLMapBuilder<?> deserializerMapper = builder.bean("modelWebHookEventDeserializer")
 		        .beanClass(TypedModelWebHookEventDeserializerImpl.class).c().map();
 
 		// Make Typed Serializers

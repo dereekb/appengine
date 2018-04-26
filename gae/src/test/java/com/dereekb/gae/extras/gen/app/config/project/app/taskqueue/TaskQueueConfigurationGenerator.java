@@ -8,6 +8,7 @@ import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController;
@@ -57,8 +58,8 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		builder.bean("taskQueueTaskController").beanClass(TaskQueueTaskController.class).c()
 		        .ref("taskQueueTaskControllerEntries");
 
-		builder.map("taskQueueTaskControllerEntries").keyType(String.class).entry("webhooks")
-		        .valueRef("scheduleWebHookEvent");
+		SpringBeansXMLMapBuilder<?> map = builder.map("taskQueueTaskControllerEntries").keyType(String.class);
+		map.entry("webhooks").valueRef("webHookTaskQueueTaskControllerEntry");
 
 		return this.makeFileWithXML("taskqueue", builder);
 	}
@@ -73,8 +74,9 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		        this.getAppConfig(), this.getOutputProperties());
 		GenFolderImpl remoteFolder = remoteGen.generateConfigurations();
 		extensions.addFolder(remoteFolder);
-		extensionsFile.importResource(PathUtility.buildPath(TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FOLDER_NAME,
-				TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FILE_NAME + ".xml"));
+		extensionsFile.importResource(
+		        PathUtility.buildPath(TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FOLDER_NAME,
+		                TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FILE_NAME + ".xml"));
 
 		// Events
 		TaskQueueEventConfigurationGenerator eventGen = new TaskQueueEventConfigurationGenerator(this.getAppConfig(),

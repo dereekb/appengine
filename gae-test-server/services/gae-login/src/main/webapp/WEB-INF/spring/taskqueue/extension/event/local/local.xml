@@ -3,6 +3,6 @@
   <import resource="/login.xml"/>
   <import resource="/loginpointer.xml"/>
   <import resource="/loginkey.xml"/>
-  <import resource="/app.xml"/>
   <import resource="/apphook.xml"/>
+  <import resource="/app.xml"/>
 </beans>

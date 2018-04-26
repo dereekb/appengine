@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * {@link AbstractSingleTaskApiScheduleTaskControllerEntry} for recieving
+ * {@link AbstractSingleTaskApiScheduleTaskControllerEntry} for receiving
  * webhook events and building a task for the
  * {@link WebHookTaskQueueTaskControllerEntry}.
  *

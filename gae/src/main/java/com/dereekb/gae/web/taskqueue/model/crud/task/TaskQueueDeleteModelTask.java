@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.taskqueue.model.crud.task;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.KeyDeleter;
@@ -21,7 +22,7 @@ public class TaskQueueDeleteModelTask<T extends UniqueModel> extends TaskQueueMo
 	private KeyDeleter deleter;
 
 	public TaskQueueDeleteModelTask(KeyDeleter deleter) {
-		this(deleter, null);
+		this(deleter, Collections.emptyList());
 	}
 
 	public TaskQueueDeleteModelTask(KeyDeleter deleter, List<Task<ModelKeyListAccessor<T>>> tasks) {
@@ -34,6 +35,10 @@ public class TaskQueueDeleteModelTask<T extends UniqueModel> extends TaskQueueMo
 	}
 
 	public void setDeleter(KeyDeleter deleter) {
+		if (deleter == null) {
+			throw new IllegalArgumentException("deleter cannot be null.");
+		}
+
 		this.deleter = deleter;
 	}
 

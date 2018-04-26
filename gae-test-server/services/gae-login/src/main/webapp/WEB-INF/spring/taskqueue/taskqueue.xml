@@ -8,6 +8,6 @@
     <constructor-arg index="0" ref="taskQueueTaskControllerEntries"/>
   </bean>
   <util:map id="taskQueueTaskControllerEntries" key-type="java.lang.String">
-    <entry key="webhooks" value-ref="scheduleWebHookEvent"/>
+    <entry key="webhooks" value-ref="webHookTaskQueueTaskControllerEntry"/>
   </util:map>
 </beans>

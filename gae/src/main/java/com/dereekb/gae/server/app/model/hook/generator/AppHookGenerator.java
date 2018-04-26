@@ -16,14 +16,11 @@ import com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType
  */
 public class AppHookGenerator extends AbstractAppRelatedModelGenerator<AppHook> {
 
-	public AppHookGenerator(Class<AppHook> type, Generator<ModelKey> keyGenerator) {
-		super(type, keyGenerator);
+	public AppHookGenerator() {
+		super(AppHook.class, ModelKeyType.NUMBER);
 	}
 
-	public AppHookGenerator(Class<AppHook> type, ModelKeyType keyType) {
-		super(type, keyType);
-	}
-
+	// MARK: AbstractModelGenerator
 	@Override
 	protected AppHook generateModel(ModelKey key,
 	                                GeneratorArg arg) {

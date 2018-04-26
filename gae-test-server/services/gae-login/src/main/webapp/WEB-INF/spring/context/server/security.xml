@@ -1,169 +1,123 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	<!--TODO: Complete the security! -->
-	<!--Patterns -->
-	<bean
-		class="com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher"
-		id="securedModelResourcePatternMatcher">
-		<constructor-arg index="0" value="/api/app/v1/{type}/{res}" />
-		<constructor-arg index="1">
-			<map key-type="java.lang.String">
-				<entry key="type" value-ref="secureModelTypes" />
-				<entry key="res" value-ref="securedModelResources" />
-			</map>
-		</constructor-arg>
-	</bean>
-	<util:list id="securedModelResources">
-		<value>create</value>
-		<value>read</value>
-		<value>update</value>
-		<value>delete</value>
-		<value>query</value>
-		<value>search</value>
-		<value>link</value>
-	</util:list>
-	<!--Security -->
-	<bean
-		class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"
-		id="securityRequestMatcher">
-		<constructor-arg index="0" value="/**" />
-		<constructor-arg index="1">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="2" value="false" />
-	</bean>
-	<bean
-		class="com.dereekb.gae.server.auth.security.token.entry.TokenAuthenticationEntryPoint"
-		id="securityEntryPoint" />
-	<bean
-		class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter"
-		id="authenticationFilter">
-		<constructor-arg index="0">
-			<bean
-				class="com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl">
-				<constructor-arg index="0" ref="loginTokenService" />
-				<constructor-arg index="1" ref="loginAuthenticationManager" />
-				<constructor-arg index="2">
-					<bean
-						class="com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl">
-						<constructor-arg index="0"
-							ref="appLoginSecurityVerifierService" />
-					</bean>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
-		<constructor-arg index="1">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="2">
-			<bean
-				class="com.dereekb.gae.server.auth.security.token.filter.handlers.LoginTokenAuthenticationFailureHandler">
-				<constructor-arg index="0" ref="loginTokenExceptionHandler" />
-			</bean>
-		</constructor-arg>
-	</bean>
-	<security:authentication-manager alias="loginAuthenticationManager">
-		<security:authentication-provider
-			ref="loginTokenAuthenticationProvider" />
-	</security:authentication-manager>
-	<!--Authentication -->
-	<bean
-		class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl"
-		id="loginTokenAuthenticationProvider" />
-	<bean
-		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl"
-		id="loginTokenUserDetailsBuilder">
-		<constructor-arg index="0"
-			ref="loginTokenModelContextSetDencoder" />
-		<constructor-arg index="1"
-			ref="loginTokenGrantedAuthorityBuilder" />
-		<constructor-arg index="2" ref="loginRegistry" />
-		<constructor-arg index="3" ref="loginPointerRegistry" />
-	</bean>
-	<bean
-		class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl"
-		id="loginTokenGrantedAuthorityBuilder">
-		<constructor-arg index="0" ref="loginGrantedAuthorityDecoder" />
-		<constructor-arg index="1">
-			<array>
-				<bean
-					class="org.springframework.security.core.authority.SimpleGrantedAuthority">
-					<constructor-arg index="0" value="ROLE_USER" />
-				</bean>
-			</array>
-		</constructor-arg>
-		<constructor-arg index="2">
-			<bean
-				class="org.springframework.security.core.authority.SimpleGrantedAuthority">
-				<constructor-arg index="0" value="ROLE_ANON" />
-			</bean>
-		</constructor-arg>
-	</bean>
-	<bean
-		class="com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl"
-		factory-method="withStringMap" id="loginGrantedAuthorityDecoder">
-		<constructor-arg index="0">
-			<map key-type="java.lang.Integer" value-type="java.lang.String">
-				<entry key="0" value="ROLE_ADMIN" />
-			</map>
-		</constructor-arg>
-	</bean>
-	<!--Login Token System -->
-	<bean
-		class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl"
-		id="systemLoginTokenFactory">
-		<constructor-arg index="0"
-			ref="appLoginSecuritySigningService" />
-		<constructor-arg index="1" ref="loginTokenService" />
-		<constructor-arg index="2" ref="systemEncodedRoles" />
-	</bean>
-	<bean class="java.lang.Long" id="systemEncodedRoles">
-		<constructor-arg index="0" value="1" />
-	</bean>
-	<!--App Security -->
-	<bean
-		class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityServiceImpl"
-		id="appLoginSecurityService">
-		<constructor-arg index="0">
-			<bean
-				class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecuritySigningServiceImpl" />
-		</constructor-arg>
-		<constructor-arg index="1"
-			ref="appLoginSecurityDetailsService" />
-	</bean>
-	<alias alias="appLoginSecurityVerifierService" name="appLoginSecurityService" />
-	<bean
-		class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityDetailsServiceImpl"
-		id="appLoginSecurityDetailsService">
-		<constructor-arg index="0" ref="appRegistry" />
-	</bean>
-	<bean
-		class="com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl"
-		id="appLoginSecuritySigningService">
-		<constructor-arg index="0" ref="serverAppInfo" />
-		<constructor-arg index="1" ref="appLoginSecurityService" />
-	</bean>
-	<!--Secure Model Types -->
-	<util:list id="secureModelTypes">
-		<ref bean="loginType" />
-		<ref bean="loginPointerType" />
-		<ref bean="loginKeyType" />
-		<ref bean="appType" />
-		<ref bean="appHookType" />
-	</util:list>
-	<!--Exception Handler -->
-	<bean
-		class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler"
-		id="loginTokenExceptionHandler" />
-	<bean
-		class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl"
-		id="accessDeniedHandler" />
-	<!-- Query Overrides -->
-	<bean id="securityOverrideAdminOnlyModelQueryTask"
-		class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideAdminOnlyModelQueryTask">
-	</bean>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--TODO: Complete the security!-->
+  <!--Patterns-->
+  <bean class="com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher" id="securedModelResourcePatternMatcher">
+    <constructor-arg index="0" value="/api/app/v1/{type}/{res}"/>
+    <constructor-arg index="1">
+      <map key-type="java.lang.String">
+        <entry key="type" value-ref="secureModelTypes"/>
+        <entry key="res" value-ref="securedModelResources"/>
+      </map>
+    </constructor-arg>
+  </bean>
+  <util:list id="securedModelResources">
+    <value>create</value>
+    <value>read</value>
+    <value>update</value>
+    <value>delete</value>
+    <value>query</value>
+    <value>search</value>
+    <value>link</value>
+  </util:list>
+  <!--Security-->
+  <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher" id="securityRequestMatcher">
+    <constructor-arg index="0" value="/**"/>
+    <constructor-arg index="1">
+      <null/>
+    </constructor-arg>
+    <constructor-arg index="2" value="false"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.token.entry.TokenAuthenticationEntryPoint" id="securityEntryPoint"/>
+  <bean class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter" id="authenticationFilter">
+    <constructor-arg index="0">
+      <bean class="com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl">
+        <constructor-arg index="0" ref="loginTokenService"/>
+        <constructor-arg index="1" ref="loginAuthenticationManager"/>
+        <constructor-arg index="2">
+          <bean class="com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl">
+            <constructor-arg index="0" ref="appLoginSecurityVerifierService"/>
+          </bean>
+        </constructor-arg>
+      </bean>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <null/>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <bean class="com.dereekb.gae.server.auth.security.token.filter.handlers.LoginTokenAuthenticationFailureHandler">
+        <constructor-arg index="0" ref="loginTokenExceptionHandler"/>
+      </bean>
+    </constructor-arg>
+  </bean>
+  <security:authentication-manager alias="loginAuthenticationManager">
+    <security:authentication-provider ref="loginTokenAuthenticationProvider"/>
+  </security:authentication-manager>
+  <!--Authentication-->
+  <bean class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl" id="loginTokenAuthenticationProvider"/>
+  <bean class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl" id="loginTokenUserDetailsBuilder">
+    <constructor-arg index="0" ref="loginTokenModelContextSetDencoder"/>
+    <constructor-arg index="1" ref="loginTokenGrantedAuthorityBuilder"/>
+    <constructor-arg index="2" ref="loginRegistry"/>
+    <constructor-arg index="3" ref="loginPointerRegistry"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl" id="loginTokenGrantedAuthorityBuilder">
+    <constructor-arg index="0" ref="loginGrantedAuthorityDecoder"/>
+    <constructor-arg index="1">
+      <array>
+        <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+          <constructor-arg index="0" value="ROLE_USER"/>
+        </bean>
+      </array>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+        <constructor-arg index="0" value="ROLE_ANON"/>
+      </bean>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl" factory-method="withStringMap" id="loginGrantedAuthorityDecoder">
+    <constructor-arg index="0">
+      <map key-type="java.lang.Integer" value-type="java.lang.String">
+        <entry key="0" value="ROLE_ADMIN"/>
+      </map>
+    </constructor-arg>
+  </bean>
+  <!--Login Token System-->
+  <bean class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl" id="systemLoginTokenFactory">
+    <constructor-arg index="0" ref="appLoginSecuritySigningService"/>
+    <constructor-arg index="1" ref="loginTokenService"/>
+    <constructor-arg index="2" ref="systemEncodedRoles"/>
+  </bean>
+  <bean class="java.lang.Long" id="systemEncodedRoles">
+    <constructor-arg index="0" value="1"/>
+  </bean>
+  <!--App Security-->
+  <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityServiceImpl" id="appLoginSecurityService">
+    <constructor-arg index="0">
+      <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecuritySigningServiceImpl"/>
+    </constructor-arg>
+    <constructor-arg index="1" ref="appLoginSecurityDetailsService"/>
+  </bean>
+  <alias alias="appLoginSecurityVerifierService" name="appLoginSecurityService"/>
+  <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityDetailsServiceImpl" id="appLoginSecurityDetailsService">
+    <constructor-arg index="0" ref="appRegistry"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl" id="appLoginSecuritySigningService">
+    <constructor-arg index="0" ref="serverAppInfo"/>
+    <constructor-arg index="1" ref="appLoginSecurityService"/>
+  </bean>
+  <!--Secure Model Types-->
+  <util:list id="secureModelTypes">
+    <ref bean="loginType"/>
+    <ref bean="loginPointerType"/>
+    <ref bean="loginKeyType"/>
+    <ref bean="appType"/>
+    <ref bean="appHookType"/>
+  </util:list>
+  <!--Exception Handler-->
+  <bean class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler" id="loginTokenExceptionHandler"/>
+  <bean class="com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl" id="accessDeniedHandler"/>
+  <!--Other Security-->
+  <!--Query Overrides-->
+  <bean class="com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideAdminOnlyModelQueryTask" id="securityOverrideAdminOnlyModelQueryTask"/>
 </beans>

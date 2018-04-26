@@ -11,7 +11,7 @@ import com.dereekb.gae.server.event.webhook.service.WebHookEventDeserializer;
 import com.dereekb.gae.server.event.webhook.service.WebHookEventSerializer;
 
 /**
- * {@link WebHookEventConverter} implementation.s
+ * {@link WebHookEventConverter} implementation.
  *
  * @author dereekb
  *
