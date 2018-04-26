@@ -1,13 +1,8 @@
 package com.dereekb.gae.model.crud.task.impl.task;
 
-import java.net.URISyntaxException;
-
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
-import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Pre-configured {@link ScheduleReviewTask} for reviewing model updates in
@@ -20,12 +15,15 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  */
 public class ScheduleUpdateReviewTask<T extends UniqueModel> extends ScheduleReviewTask<T> {
 
-	private static final TaskRequest DEFAULT_TASK_REQUEST = new TaskRequestImpl(TaskQueueEditController.UPDATE_PATH,
-	        Method.PUT);
+	private static final String UPDATE_TASK = "update";
 
-	public ScheduleUpdateReviewTask(String modelResource, TaskScheduler scheduler)
-	        throws URISyntaxException, IllegalArgumentException {
-		super(modelResource, DEFAULT_TASK_REQUEST, scheduler);
+	public ScheduleUpdateReviewTask(String modelType, TaskScheduler scheduler) throws IllegalArgumentException {
+		this(modelType, scheduler, null);
+	}
+
+	public ScheduleUpdateReviewTask(String modelType, TaskScheduler scheduler, TaskRequest baseRequest)
+	        throws IllegalArgumentException {
+		super(UPDATE_TASK, modelType, scheduler, baseRequest);
 	}
 
 }

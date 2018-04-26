@@ -11,7 +11,7 @@ import com.google.common.base.Joiner;
 
 /**
  * {@link KeyedEncodedParameter} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -152,7 +152,7 @@ public class KeyedEncodedParameterImpl
 	/**
 	 * Removes all parameters with the same key as the replacement, then adds a
 	 * single instance of the replacement.
-	 * 
+	 *
 	 * @param inputParameters
 	 *            {@link Collection} of parameters. Can be {@code null}.
 	 * @param replacement
@@ -162,6 +162,21 @@ public class KeyedEncodedParameterImpl
 	public static List<KeyedEncodedParameter> replaceInCollection(Collection<? extends KeyedEncodedParameter> inputParameters,
 	                                                              KeyedEncodedParameter replacement) {
 		return KeyedUtility.replaceInCollection(inputParameters, replacement);
+	}
+
+	/**
+	 * Merges the set of parameters together. The second list takes priority.
+	 * single instance of the replacement.
+	 *
+	 * @param a
+	 *            {@link Collection} of parameters. Can be {@code null}.
+	 * @param b
+	 *            {@link Collection} of parameters. Can be {@code null}.
+	 * @return {@link Collection} with the values replaced.
+	 */
+	public static Collection<? extends KeyedEncodedParameter> merge(Collection<? extends KeyedEncodedParameter> a,
+	                                                                Collection<? extends KeyedEncodedParameter> b) {
+		return KeyedUtility.merge(a, b);
 	}
 
 }

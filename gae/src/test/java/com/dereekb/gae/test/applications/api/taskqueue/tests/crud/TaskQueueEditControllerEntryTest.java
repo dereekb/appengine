@@ -35,11 +35,17 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  * Executes the review then checks with the implementation to see if all
  * expected changes occurred.
  *
+ * TODO: Create new unit tests.
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
+ *
+ * @deprecated {@link TaskQueueEditController} is deprecated.
  */
+@Ignore
+@Deprecated
 public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> extends ApiApplicationTestContext {
 
 	private Integer genCount = 2;

@@ -51,10 +51,10 @@ public abstract class PartitionedTaskRequestBuilder<T> {
 	private Partitioner partitioner;
 
 	protected PartitionedTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
-		this(false, baseRequest);
+		this(baseRequest, false);
 	}
 
-	protected PartitionedTaskRequestBuilder(boolean asIndividualRequests, TaskRequest baseRequest)
+	protected PartitionedTaskRequestBuilder(TaskRequest baseRequest, boolean asIndividualRequests)
 	        throws IllegalArgumentException {
 		this.setAsIndividualRequests(asIndividualRequests);
 		this.setBaseRequest(baseRequest);

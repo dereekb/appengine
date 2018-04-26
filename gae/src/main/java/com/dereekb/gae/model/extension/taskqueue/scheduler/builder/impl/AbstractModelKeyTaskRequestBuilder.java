@@ -32,7 +32,7 @@ public abstract class AbstractModelKeyTaskRequestBuilder<T extends UniqueModel> 
 
 	public AbstractModelKeyTaskRequestBuilder(boolean asIndividualRequests, TaskRequest baseRequest)
 	        throws IllegalArgumentException {
-		super(asIndividualRequests, baseRequest);
+		super(baseRequest, asIndividualRequests);
 	}
 
 	// MARK: TaskRequestBuilder

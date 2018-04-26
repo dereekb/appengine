@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.taskqueue.login.login;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -11,6 +12,8 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.TaskQueueEditControllerEntryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Ignore
+@Deprecated
 public class LoginTaskQueueEditControllerEntryTest extends TaskQueueEditControllerEntryTest<Login> {
 
 	@Override

@@ -25,7 +25,7 @@ public abstract class AbstractTaskRequestBuilder<T> extends PartitionedTaskReque
 
 	public AbstractTaskRequestBuilder(boolean asIndividualRequests, TaskRequest baseRequest)
 	        throws IllegalArgumentException {
-		super(asIndividualRequests, baseRequest);
+		super(baseRequest, asIndividualRequests);
 	}
 
 	@Override

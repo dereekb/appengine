@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.taskqueue.stored.storedimageset;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -9,7 +10,8 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
-
+@Ignore
+@Deprecated
 public class StoredImageSetTaskQueueEditControllerEntryTest extends SearchableTaskQueueEditControllerEntryTest<StoredImageSet> {
 
 	@Override

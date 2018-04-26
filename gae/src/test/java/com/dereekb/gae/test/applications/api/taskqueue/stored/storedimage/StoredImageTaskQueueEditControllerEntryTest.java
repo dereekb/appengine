@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.taskqueue.stored.storedimage;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,6 +14,8 @@ import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTask
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
+@Ignore
+@Deprecated
 public class StoredImageTaskQueueEditControllerEntryTest extends SearchableTaskQueueEditControllerEntryTest<StoredImage> {
 
 	@Autowired

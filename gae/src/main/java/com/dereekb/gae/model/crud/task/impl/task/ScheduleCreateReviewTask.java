@@ -3,9 +3,6 @@ package com.dereekb.gae.model.crud.task.impl.task;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
-import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Pre-configured {@link ScheduleReviewTask} for reviewing model creations in
@@ -18,11 +15,15 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  */
 public class ScheduleCreateReviewTask<T extends UniqueModel> extends ScheduleReviewTask<T> {
 
-	private static final TaskRequest DEFAULT_TASK_REQUEST = new TaskRequestImpl(TaskQueueEditController.CREATE_PATH,
-	        Method.PUT);
+	private static final String CREATE_TASK = "create";
 
-	public ScheduleCreateReviewTask(String modelResource, TaskScheduler scheduler) throws IllegalArgumentException {
-		super(modelResource, DEFAULT_TASK_REQUEST, scheduler);
+	public ScheduleCreateReviewTask(String modelType, TaskScheduler scheduler) throws IllegalArgumentException {
+		this(modelType, scheduler, null);
+	}
+
+	public ScheduleCreateReviewTask(String modelType, TaskScheduler scheduler, TaskRequest baseRequest)
+	        throws IllegalArgumentException {
+		super(CREATE_TASK, modelType, scheduler, baseRequest);
 	}
 
 }

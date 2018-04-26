@@ -1,6 +1,5 @@
 package com.dereekb.gae.model.crud.task.impl.delete;
 
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,39 +13,37 @@ import com.dereekb.gae.model.crud.task.impl.task.ScheduleReviewTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
-import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
-import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
 
 /**
  * Pre-configured {@link ScheduleReviewTask} and {@link DeleteTask} for
  * performing deletions in the taskqueue.
  * <p>
- * Generally used to queue up requests to {@link TaskQueueEditController}.
+ * Used to queue up requests to {@link TaskQueueIterateController}.
  *
  * @author dereekb
  *
  * @param <T>
  *            model type
- * 
- * @see TaskQueueEditController
  */
 public class ScheduleDeleteTask<T extends UniqueModel> extends ScheduleReviewTask<T>
         implements DeleteTask<T> {
 
+	private static final String DELETE_TASK = "delete";
+
 	private DeleteTaskConfig defaultConfig;
 	private Filter<T> deleteFilter;
 
-	public ScheduleDeleteTask(String modelResource, TaskScheduler scheduler) throws URISyntaxException {
-		this(modelResource, scheduler, new TaskRequestImpl("delete", Method.DELETE));
+	public ScheduleDeleteTask(String modelType, TaskScheduler scheduler) throws IllegalArgumentException {
+		this(modelType, scheduler, null);
 	}
 
-	public ScheduleDeleteTask(String modelResource, TaskScheduler scheduler, TaskRequest baseRequest)
-	        throws URISyntaxException {
-		super(modelResource, baseRequest, scheduler);
+	public ScheduleDeleteTask(String modelType, TaskScheduler scheduler, TaskRequest baseRequest)
+	        throws IllegalArgumentException {
+		super(DELETE_TASK, modelType, scheduler, baseRequest);
 		this.setDefaultConfig(null);
 	}
 

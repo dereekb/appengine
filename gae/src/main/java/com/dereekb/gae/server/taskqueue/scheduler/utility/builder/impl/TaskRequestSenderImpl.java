@@ -26,12 +26,12 @@ public class TaskRequestSenderImpl<T> extends AbstractTaskRequestSender
 
 	protected TaskRequestSenderImpl() {}
 
-	public TaskRequestSenderImpl(TaskRequestBuilder<T> builder, TaskScheduler scheduler) {
+	public TaskRequestSenderImpl(TaskScheduler scheduler, TaskRequestBuilder<T> builder) {
 		super(scheduler);
 		this.setBuilder(builder);
 	}
 
-	public TaskRequestSenderImpl(TaskScheduler scheduler, TaskRequestModifier modifier, TaskRequestBuilder<T> builder) {
+	public TaskRequestSenderImpl(TaskScheduler scheduler, TaskRequestBuilder<T> builder, TaskRequestModifier modifier) {
 		super(scheduler, modifier);
 		this.setBuilder(builder);
 	}

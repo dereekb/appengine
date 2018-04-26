@@ -8,7 +8,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
 
-
+/**
+ *
+ * @author dereekb
+ *
+ * @deprecated {@link TaskQueueEditController} is deprecated.
+ */
+@Deprecated
 public class TaskQueueEditControllerTest extends ApiApplicationTestContext {
 
 	@Autowired

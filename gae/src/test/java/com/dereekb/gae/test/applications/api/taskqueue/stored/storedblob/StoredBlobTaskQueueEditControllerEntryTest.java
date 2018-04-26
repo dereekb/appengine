@@ -2,6 +2,7 @@ package com.dereekb.gae.test.applications.api.taskqueue.stored.storedblob;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,7 +14,8 @@ import com.dereekb.gae.server.storage.object.file.StorableContent;
 import com.dereekb.gae.test.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
-
+@Ignore
+@Deprecated
 public class StoredBlobTaskQueueEditControllerEntryTest extends SearchableTaskQueueEditControllerEntryTest<StoredBlob> {
 
 	@Autowired

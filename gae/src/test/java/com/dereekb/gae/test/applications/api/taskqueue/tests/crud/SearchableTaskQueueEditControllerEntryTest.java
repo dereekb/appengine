@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.taskqueue.tests.crud;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dereekb.gae.model.extension.search.document.SearchableUniqueModel;
@@ -8,7 +9,8 @@ import com.dereekb.gae.server.search.system.request.DocumentIdentifierRequest;
 import com.dereekb.gae.server.search.system.request.impl.DocumentIdentifierRequestImpl;
 import com.dereekb.gae.server.search.system.response.SearchDocumentReadResponse;
 
-
+@Ignore
+@Deprecated
 public abstract class SearchableTaskQueueEditControllerEntryTest<T extends SearchableUniqueModel> extends TaskQueueEditControllerEntryTest<T> {
 
 	private String searchIndex;

@@ -18,7 +18,6 @@ import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
  * <p>
  * This builder uses a {@link TaskRequest} template to copy from, and appends
  * the request identifiers.
- * <p>
  *
  * @author dereekb
  *
@@ -56,6 +55,13 @@ public class KeyParameterTaskRequestBuilder<T extends UniqueModel> extends Abstr
 		List<ModelKey> keys = ModelKey.readModelKeys(partition);
 		KeyedEncodedParameterImpl keyParameter = KeyedEncodedParameterImpl.make(this.idParameter, keys);
 		return new SingleItem<KeyedEncodedParameter>(keyParameter);
+	}
+
+	@Override
+	public String toString() {
+		return "KeyParameterTaskRequestBuilder [idParameter=" + this.idParameter + ", isAsIndividualRequests()="
+		        + this.isAsIndividualRequests() + ", getBaseRequest()=" + this.getBaseRequest() + ", getCopier()="
+		        + this.getCopier() + ", getPartitioner()=" + this.getPartitioner() + "]";
 	}
 
 }

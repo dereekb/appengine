@@ -14,6 +14,4 @@ import com.dereekb.gae.utilities.task.ConfigurableTask;
  *            model type
  */
 public interface DeleteTask<T extends UniqueModel>
-        extends ConfigurableTask<Iterable<DeletePair<T>>, DeleteTaskConfig> {
-
-}
+        extends ConfigurableTask<Iterable<DeletePair<T>>, DeleteTaskConfig> {}

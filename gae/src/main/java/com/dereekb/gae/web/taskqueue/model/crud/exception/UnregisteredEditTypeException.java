@@ -9,8 +9,8 @@ import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
  * @author dereekb
  *
  */
-public class UnregisteredEditTypeException
-        extends RuntimeException {
+@Deprecated
+public class UnregisteredEditTypeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
