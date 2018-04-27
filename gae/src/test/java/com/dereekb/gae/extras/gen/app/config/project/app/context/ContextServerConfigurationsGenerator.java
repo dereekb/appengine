@@ -37,6 +37,9 @@ import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginStatusService
 import com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl;
 import com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl;
+import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceEmailDelegateImpl;
+import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceImpl;
+import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceTokenDelegateImpl;
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl;
@@ -60,6 +63,9 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKey
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
+import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
+import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -89,6 +95,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		// Server Files
 		folder.addFile(new DatabaseConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new MailConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new RefConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
@@ -241,6 +248,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean("passwordLoginService").beanClass(PasswordLoginServiceImpl.class).c().ref("passwordEncoder")
 			        .ref("loginPointerService");
 
+			builder.bean("passwordRecoveryService").beanClass(PasswordRecoveryServiceImpl.class).c().ref("mailService")
+			        .bean().beanClass(PasswordRecoveryServiceTokenDelegateImpl.class).c().ref("loginPointerService")
+			        .ref(this.getAppConfig().getAppBeans().getLoginTokenServiceBeanId()).up().up().bean()
+			        .beanClass(PasswordRecoveryServiceEmailDelegateImpl.class);
+
 			builder.comment("OAuth Service");
 			builder.bean("oAuthLoginService").beanClass(OAuthLoginServiceImpl.class).c().ref("loginPointerService");
 
@@ -317,6 +329,34 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			builder.alias("loginTokenModelContextServiceEntries", "loginTokenModelContextServiceDencoderEntries");
 
+		}
+
+	}
+
+	public class MailConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public MailConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("mail");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			builder.comment("Mail");
+			String mailgunMailServiceConfigurationBeanId = "mailServiceConfiguration";
+
+			builder.bean("mailService").beanClass(MailgunMailServiceImpl.class).c().ref("serverMailUser")
+			        .ref(mailgunMailServiceConfigurationBeanId);
+
+			builder.bean("serverMailUser").beanClass(MailUserImpl.class).c().value("demo@test.com")
+			        .value("test service");
+
+			builder.bean(mailgunMailServiceConfigurationBeanId).beanClass(MailgunMailServiceConfigurationImpl.class).c()
+			        .value("API_KEY").value("test.com");
+
+			return builder;
 		}
 
 	}

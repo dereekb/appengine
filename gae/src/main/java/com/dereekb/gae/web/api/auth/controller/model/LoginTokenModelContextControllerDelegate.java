@@ -21,11 +21,16 @@ public interface LoginTokenModelContextControllerDelegate {
 	 * @param request
 	 *            {@link ApiLoginTokenModelContextRequest}. Never {@code null}.
 	 * @return {@link LoginTokenPair}. Never {@code null}.
+	 * @throws UnsupportedOperationException
+	 *             thrown if a new LoginToken is requested as part of the
+	 *             response, but is not available.
 	 * @throws NoSecurityContextException
+	 *             thrown if
 	 * @throws AtomicOperationException
 	 */
 	public ApiLoginTokenModelContextResponse loginWithContext(ApiLoginTokenModelContextRequest request)
 	        throws NoSecurityContextException,
+	            UnsupportedOperationException,
 	            AtomicOperationException;
 
 	/**

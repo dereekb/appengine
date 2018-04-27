@@ -31,6 +31,18 @@
     <constructor-arg index="0" ref="passwordEncoder"/>
     <constructor-arg index="1" ref="loginPointerService"/>
   </bean>
+  <bean class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceImpl" id="passwordRecoveryService">
+    <constructor-arg index="0" ref="mailService"/>
+    <constructor-arg index="1">
+      <bean class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceTokenDelegateImpl">
+        <constructor-arg index="0" ref="loginPointerService"/>
+        <constructor-arg index="1" ref="loginTokenService"/>
+      </bean>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <bean class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceEmailDelegateImpl"/>
+    </constructor-arg>
+  </bean>
   <!--OAuth Service-->
   <bean class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl" id="oAuthLoginService">
     <constructor-arg index="0" ref="loginPointerService"/>

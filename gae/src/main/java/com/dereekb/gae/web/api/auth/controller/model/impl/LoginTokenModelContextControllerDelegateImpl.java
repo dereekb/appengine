@@ -21,9 +21,9 @@ import com.dereekb.gae.web.api.auth.controller.model.LoginTokenModelContextContr
 public class LoginTokenModelContextControllerDelegateImpl extends AbstractLoginTokenModelContextControllerDelegateImpl<LoginToken> {
 
 	public LoginTokenModelContextControllerDelegateImpl(LoginTokenModelContextService service,
-	        LoginTokenEncoderDecoder<LoginToken> loginTokenEncoderDecoder,
-	        LoginTokenModelContextSetEncoder modelContextSetEncoder) {
-		super(service, loginTokenEncoderDecoder, modelContextSetEncoder);
+	        LoginTokenModelContextSetEncoder modelContextSetEncoder,
+	        LoginTokenEncoderDecoder<LoginToken> loginTokenEncoderDecoder) {
+		super(service, modelContextSetEncoder, loginTokenEncoderDecoder);
 	}
 
 	@Override

@@ -7,6 +7,8 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLinkConfigurationGenerator;
+import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLoginConfigurationGenerator;
+import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiModelContextConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiScheduleConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiSearchConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiServerConfigurationGenerator;
@@ -72,6 +74,16 @@ public class ApiConfigurationGenerator extends AbstractConfigurationFileGenerato
 
 	public GenFolderImpl generateExtensions() {
 		GenFolderImpl extensions = new GenFolderImpl("extension");
+
+		// Login
+		if (this.getAppConfig().isLoginServer()) {
+			extensions.merge(new ApiLoginConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+			        .generateConfigurations());
+		}
+
+		// Model Context / Roles
+		extensions.merge(new ApiModelContextConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		        .generateConfigurations());
 
 		// Link
 		extensions.merge(new ApiLinkConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())

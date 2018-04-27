@@ -98,9 +98,9 @@
 	<bean id="loginTokenModelContextControllerDelegate"
 		class="com.dereekb.gae.web.api.auth.controller.model.impl.LoginTokenModelContextControllerDelegateImpl">
 		<constructor-arg index="0" ref="loginTokenModelContextService" />
-		<constructor-arg index="1" ref="loginTokenEncoderDecoder" />
-		<constructor-arg index="2"
+		<constructor-arg index="1"
 			ref="loginTokenModelContextSetDencoder" />
+		<constructor-arg index="2" ref="loginTokenEncoderDecoder" />
 	</bean>
 
 	<!-- Exception Handler -->
