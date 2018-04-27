@@ -31,6 +31,12 @@ public class LoginServiceAppConfigurationGen {
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(modelConfigurations);
 
+		configuration.setAppName("gae-test-login");
+		configuration.setAppVersion("v1");
+		configuration.setAppServiceName("login");
+		configuration.setAppTaskQueueName("login");
+		configuration.setAppId(1L);
+
 		return configuration;
 	}
 

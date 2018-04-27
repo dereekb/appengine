@@ -22,6 +22,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl;
@@ -113,8 +114,15 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		AppBeansConfiguration appBeans = this.getAppConfig().getAppBeans();
 
 		builder.comment("App Info");
-		builder.bean(appBeans.getAppInfoBeanId()).beanClass(AppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
+		builder.bean("productionAppInfo").beanClass(AppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
 		        .ref(appBeans.getAppNameBeanId());
+
+		String appInfoFactoryBeanId = "appInfoFactory";
+		builder.bean(appInfoFactoryBeanId).beanClass(AppInfoFactoryImpl.class).property("productionSingleton")
+		        .ref("productionAppInfo");
+
+		builder.bean(appBeans.getAppInfoBeanId()).factoryBean(appInfoFactoryBeanId).factoryMethod("make");
+
 		builder.bean(appBeans.getAppKeyBeanId()).beanClass(ModelKey.class).c().ref(appBeans.getAppIdBeanId());
 		builder.longBean(appBeans.getAppIdBeanId(), this.getAppConfig().getAppId());
 		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());

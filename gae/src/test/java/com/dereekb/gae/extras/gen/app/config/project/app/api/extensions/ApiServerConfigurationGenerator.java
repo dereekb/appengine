@@ -23,11 +23,15 @@ public class ApiServerConfigurationGenerator extends AbstractSingleConfiguration
 	public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		builder.comment("Initialize Server Controller");
-		builder.bean("apiInitializeServerController").beanClass(ApiInitializeServerController.class).c()
-		        .ref("apiInitializeServerControllerDelegate");
-		builder.bean("apiInitializeServerControllerDelegate").beanClass(ApiInitializeServerControllerDelegateImpl.class)
-		        .c().ref(this.getAppConfig().getAppBeans().getAppInfoBeanId()).ref("appRegistry");
+		// The Root Service has no initialization...
+		if (this.getAppConfig().isRootServer() == false) {
+			builder.comment("Initialize Server Controller");
+			builder.bean("apiInitializeServerController").beanClass(ApiInitializeServerController.class).c()
+			        .ref("apiInitializeServerControllerDelegate");
+			builder.bean("apiInitializeServerControllerDelegate")
+			        .beanClass(ApiInitializeServerControllerDelegateImpl.class).c()
+			        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId()).ref("appRegistry");
+		}
 
 		return builder;
 	}

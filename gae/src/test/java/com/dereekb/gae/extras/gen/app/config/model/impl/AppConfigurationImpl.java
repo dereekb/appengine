@@ -17,11 +17,13 @@ import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationIm
 public class AppConfigurationImpl
         implements AppConfiguration {
 
-	private Long appId = 0L;
+	private Long appId = 1L;
 	private String appName = "app";
 	private String appServiceName = "app";
 	private String appTaskQueueName = "app";
 	private String appVersion = "v1";
+
+	private boolean isRootServer = false;
 	private boolean isLoginServer = true;
 
 	private AppSecurityBeansConfigurer appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
@@ -39,8 +41,8 @@ public class AppConfigurationImpl
 	}
 
 	public void setAppId(Long appId) {
-		if (appId == null) {
-			throw new IllegalArgumentException("appId cannot be null.");
+		if (appId == null || appId == 0L) {
+			throw new IllegalArgumentException("appId cannot be null or 0.");
 		}
 
 		this.appId = appId;
@@ -96,6 +98,15 @@ public class AppConfigurationImpl
 		}
 
 		this.appVersion = appVersion;
+	}
+
+	@Override
+	public boolean isRootServer() {
+		return this.isRootServer;
+	}
+
+	public void setRootServer(boolean isRootServer) {
+		this.isRootServer = isRootServer;
 	}
 
 	@Override

@@ -22,6 +22,17 @@ public interface AppConfiguration {
 
 	public List<AppModelConfigurationGroup> getModelConfigurations();
 
+	/**
+	 * Whether or not the server is the initial server.
+	 * <p>
+	 * These services may not rely on initialization components.
+	 * <p>
+	 * If {@link #isLoginServer()} is true, this is usually true too.
+	 *
+	 * @return {@code true} if a root server.
+	 */
+	public boolean isRootServer();
+
 	public boolean isLoginServer();
 
 }

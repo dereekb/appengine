@@ -17,6 +17,10 @@ public class AppInfoImpl extends UniqueModelImpl
 	private String appName;
 	private AppServiceVersionInfo appServiceVersionInfo;
 
+	public AppInfoImpl(AppInfo appInfo) {
+		this(appInfo.getModelKey(), appInfo.getAppName(), appInfo.getAppServiceVersionInfo());
+	}
+
 	public AppInfoImpl(Long id, String appName) {
 		this(id, appName, null);
 	}
