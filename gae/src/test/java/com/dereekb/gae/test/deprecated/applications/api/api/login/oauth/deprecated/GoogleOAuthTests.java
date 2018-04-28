@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.api.login.oauth;
+package com.dereekb.gae.test.deprecated.applications.api.api.login.oauth;
 
 import org.junit.Assert;
 import org.junit.Ignore;

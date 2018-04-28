@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.extension.link.exception;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import com.dereekb.gae.model.extension.links.system.modification.impl.LinkModifi
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.data.ValueUtility;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -189,7 +191,7 @@ public class ClientLinkServiceChangeException extends ClientRequestFailureExcept
 			change.setLinkModelType(type);
 			change.setPrimaryKey(primaryKeyString);
 			change.setLinkName(error.getLink());
-			change.setKeys(error.getTargetKeys());
+			change.setKeys(ValueUtility.defaultTo(error.getTargetKeys(), Collections.emptyList()));
 
 			LinkExceptionReason reason = LinkExceptionReason.fromErrorCode(error.getErrorCode());
 			return new ClientLinkSystemChangeErrorImpl(change, reason);

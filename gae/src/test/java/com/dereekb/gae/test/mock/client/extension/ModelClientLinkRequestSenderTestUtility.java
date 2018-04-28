@@ -32,10 +32,14 @@ import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
  */
 public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueModel> {
 
+	private String testLinkName;
+	private String nonExistantLinkName = "NON_EXISTANT_LINK_NAME";
+
 	private final TestModelGenerator<T> testModelGenerator;
 	private final ClientLinkServiceRequestSender linkRequestSender;
 
-	public ModelClientLinkRequestSenderTestUtility(TestModelGenerator<T> testModelGenerator,
+	public ModelClientLinkRequestSenderTestUtility(String testLinkName,
+	        TestModelGenerator<T> testModelGenerator,
 	        ClientLinkServiceRequestSender linkRequestSender) {
 
 		if (testModelGenerator == null) {
@@ -46,8 +50,34 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 			throw new IllegalArgumentException("List Request Sender cannot be null.");
 		}
 
+		this.setTestLinkName(testLinkName);
+
 		this.linkRequestSender = linkRequestSender;
 		this.testModelGenerator = testModelGenerator;
+	}
+
+	public String getTestLinkName() {
+		return this.testLinkName;
+	}
+
+	public void setTestLinkName(String testLinkName) {
+		if (testLinkName == null) {
+			throw new IllegalArgumentException("testLinkName cannot be null.");
+		}
+
+		this.testLinkName = testLinkName;
+	}
+
+	public String getNonExistantLinkName() {
+		return this.nonExistantLinkName;
+	}
+
+	public void setNonExistantLinkName(String nonExistantLinkName) {
+		if (nonExistantLinkName == null) {
+			throw new IllegalArgumentException("nonExistantLinkName cannot be null.");
+		}
+
+		this.nonExistantLinkName = nonExistantLinkName;
 	}
 
 	// MARK: Tests
@@ -61,7 +91,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(model.getModelKey());
 		linkChange.setChangeAction(MutableLinkChangeType.CLEAR);
-		linkChange.setLinkName("NON_EXISTANT_LINK_NAME");
+		linkChange.setLinkName(this.nonExistantLinkName);
 
 		changes.add(linkChange);
 
@@ -90,8 +120,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(primaryKey);
 		linkChange.setChangeAction(MutableLinkChangeType.CLEAR);
-		linkChange.setLinkName("LINK_NAME");	// Should fail before this is a
-		                                    	// problem.
+		linkChange.setLinkName(this.testLinkName);
 
 		changes.add(linkChange);
 
@@ -116,8 +145,7 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 		ClientApiLinkChange linkChange = new ClientApiLinkChange();
 		linkChange.setPrimary(primaryKey);
 		linkChange.setChangeAction(MutableLinkChangeType.CLEAR);
-		linkChange.setLinkName("LINK_NAME");	// Should fail before this is a
-		                                    	// problem.
+		linkChange.setLinkName(this.testLinkName);
 
 		changes.add(linkChange);
 

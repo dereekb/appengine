@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.app.service;
 
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
+import com.dereekb.gae.server.auth.security.app.exception.UnavailableAppLoginSecurityDetails;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -17,7 +18,9 @@ public interface AppLoginSecurityDetailsService {
 	 * @param appId
 	 *            {@link ModelKey}. Never {@code null}.
 	 * @return {@link AppLoginSecurityDetails}. Never {@code null}.
+	 * @throws UnavailableAppLoginSecurityDetails
+	 *             if unavailable
 	 */
-	public AppLoginSecurityDetails getAppLoginDetails(ModelKey appId);
+	public AppLoginSecurityDetails getAppLoginDetails(ModelKey appId) throws UnavailableAppLoginSecurityDetails;
 
 }

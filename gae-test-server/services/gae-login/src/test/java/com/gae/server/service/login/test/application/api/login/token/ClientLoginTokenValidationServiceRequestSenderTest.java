@@ -19,11 +19,14 @@ import com.dereekb.gae.client.api.auth.token.exception.ClientLoginTokenValidatio
 import com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationRequestImpl;
 import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityService;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.time.DateUtility;
 
@@ -37,6 +40,10 @@ import io.jsonwebtoken.Jwts;
  *
  */
 public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiApplicationTestContext {
+
+	@Autowired
+	@Qualifier("appRegistry")
+	private ObjectifyRegistry<App> appRegistry;
 
 	@Autowired
 	@Qualifier("loginTokenService")
@@ -122,13 +129,22 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 	            ClientIllegalArgumentException,
 	            ClientRequestFailureException {
 
+		// Create Test App
+		App testApp = new App();
+		testApp.setApp("test");
+		testApp.setSecret("secret");
+		this.appRegistry.store(testApp);
+
+		ModelKey testAppKey = testApp.getModelKey();
+
+		// Attempt Validating
 		LoginTokenImpl loginToken = new LoginTokenImpl();
 		loginToken.setLogin(1L);
 		loginToken.setLoginPointer("pointer");
 		loginToken.setExpiration(DateUtility.getDateIn(60 * 1000L));
 		loginToken.setIssued(new Date());
 		loginToken.setRefreshAllowed(true);
-		loginToken.setApp("1234");
+		loginToken.setApp(testAppKey.keyAsString());
 
 		String encodedToken = this.loginTokenService.encodeLoginToken(loginToken);
 		String invalidSignature = "INVALID_SIGNATURE";

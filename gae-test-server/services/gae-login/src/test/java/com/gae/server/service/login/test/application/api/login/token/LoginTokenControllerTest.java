@@ -17,7 +17,7 @@ import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.gae.server.service.login.test.application.api.login.LoginApiTestUtility;
+import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
 import com.dereekb.gae.utilities.time.DateUtility;
 import com.dereekb.gae.web.api.auth.controller.token.impl.TokenValidationRequestImpl;
 

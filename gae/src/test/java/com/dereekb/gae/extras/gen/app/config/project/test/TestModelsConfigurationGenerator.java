@@ -1,6 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.test;
 
 import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl;
+import com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientCreateRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientDeleteRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl;
@@ -181,6 +182,12 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 			builder.bean("clientModelRolesContextServiceRequestSender")
 			        .beanClass(ClientModelRolesContextServiceRequestSenderImpl.class).c().ref("modelKeyTypeConverter")
 			        .ref("securedClientRequestSender");
+
+			if (this.getAppConfig().isLoginServer()) {
+				builder.bean("clientLoginTokenValidationServiceRequestSender")
+				        .beanClass(ClientLoginTokenValidationServiceRequestSenderImpl.class).c()
+				        .ref("securedClientRequestSender");
+			}
 
 			return this.makeFileWithXML(CLIENT_SHARED_FILE_NAME, builder);
 		}

@@ -41,10 +41,20 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 	private ModelClientQueryRequestSenderTestUtility<T> queryRequestUtility;
 
 	// Link
+	private String testLinkName;
 	private ModelClientLinkRequestSenderTestUtility<T> linkRequestUtility;
 
 	// Model Roles
 	private ModelClientRolesContextServiceRequestSenderTestUtility<T> modelRolesRequestUtility;
+
+	public AbstractServerModelRequestSenderTest() {
+		super();
+	}
+
+	public AbstractServerModelRequestSenderTest(String testLinkName) {
+		super();
+		this.setTestLinkName(testLinkName);
+	}
 
 	public boolean isCanCreateModel() {
 		return this.canCreateModel;
@@ -52,6 +62,14 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 
 	public void setCanCreateModel(boolean canCreateModel) {
 		this.canCreateModel = canCreateModel;
+	}
+
+	public String getTestLinkName() {
+		return this.testLinkName;
+	}
+
+	public void setTestLinkName(String testLinkName) {
+		this.testLinkName = testLinkName;
 	}
 
 	// MARK: Utilities
@@ -82,9 +100,9 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 			        this.testModelGenerator);
 		}
 
-		if (this.linkRequestSender != null) {
-			this.linkRequestUtility = new ModelClientLinkRequestSenderTestUtility<T>(this.testModelGenerator,
-			        this.linkRequestSender);
+		if (this.linkRequestSender != null && this.testLinkName != null) {
+			this.linkRequestUtility = new ModelClientLinkRequestSenderTestUtility<T>(this.testLinkName,
+			        this.testModelGenerator, this.linkRequestSender);
 		}
 
 		if (this.modelRolesRequestSender != null) {

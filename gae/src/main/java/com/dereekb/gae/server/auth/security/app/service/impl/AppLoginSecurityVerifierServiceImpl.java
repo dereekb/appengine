@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.app.service.impl;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
+import com.dereekb.gae.server.auth.security.app.exception.UnavailableAppLoginSecurityDetails;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityDetailsService;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecuritySigningService;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityVerifierService;
@@ -106,8 +107,10 @@ public class AppLoginSecurityVerifierServiceImpl
 			} else if (loginToken.getPointerType() == LoginPointerType.SYSTEM) {
 				throw new TokenSignatureInvalidException("Use of system tokens requires a signature.");
 			}
+		} catch (UnavailableAppLoginSecurityDetails e) {
+			// False if key is not a number.
+			throw new TokenUnauthorizedException("Unknown app specified in token.");
 		} catch (NumberFormatException e) {
-
 			// False if key is not a number.
 			throw new TokenUnauthorizedException("Invalid app specified. Improperly forged token?");
 		}
