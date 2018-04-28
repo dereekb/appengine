@@ -1,6 +1,7 @@
 package com.dereekb.gae.test.applications.api.model.tests;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextServiceRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
@@ -31,6 +32,8 @@ public abstract class AbstractModelRequestSenderTest<T extends MutableUniqueMode
 	protected ClientQueryRequestSender<T> queryRequestSender;
 
 	// Link
+	@Autowired(required=false)
+	@Qualifier("clientLinkRequestSender")
 	protected ClientLinkServiceRequestSender linkRequestSender;
 
 	// Model Roles

@@ -2,6 +2,8 @@ package com.dereekb.gae.extras.gen.utility.spring.impl;
 
 import java.util.List;
 
+import org.springframework.http.HttpMethod;
+
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
@@ -17,6 +19,13 @@ import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBean;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLBeanConstructor;
 import com.dereekb.gae.extras.gen.utility.spring.bean.SpringBeansXMLProperty;
 import com.dereekb.gae.extras.gen.utility.spring.bean.impl.SpringBeansXMLBeanImpl;
+import com.dereekb.gae.extras.gen.utility.spring.security.RoleConfig;
+import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLCustomFilterBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLHttpBeanBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLInterceptUrlBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLCustomFilterBean;
+import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLHttpBean;
+import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLInterceptUrlBean;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.jamesmurty.utils.XMLBuilder2;
 
@@ -115,6 +124,11 @@ public class SpringBeansXMLBuilderImpl
 	public void alias(String existingBeanRef,
 	                  String alias) {
 		this.beansBuilder.e(ALIAS_ELEMENT).attr("name", existingBeanRef).attr("alias", alias);
+	}
+
+	@Override
+	public SpringSecurityXMLHttpBeanBuilder<SpringBeansXMLBuilder> httpSecurity() {
+		return new SpringSecurityXMLHttpBeanBuilderImpl<SpringBeansXMLBuilder>(this, this.beansBuilder);
 	}
 
 	@Override
@@ -269,7 +283,7 @@ public class SpringBeansXMLBuilderImpl
 			return SpringBeansXMLListBuilder.LIST_ELEMENT;
 		}
 
-		// MARK: SpringBeansXMLBeanBuilder
+		// MARK: SpringBeansXMLListBuilder
 		@Override
 		public SpringBeansXMLListBuilder<T> id(String beanId) {
 			this.builder.a(SpringBeansXMLBean.ID_ATTRIBUTE, beanId);
@@ -332,7 +346,7 @@ public class SpringBeansXMLBuilderImpl
 			return SpringBeansXMLArrayBuilder.ARRAY_ELEMENT;
 		}
 
-		// MARK: SpringBeansXMLBeanBuilder
+		// MARK: SpringBeansXMLArrayBuilder
 		@Override
 		public SpringBeansXMLArrayBuilder<T> id(String beanId) {
 			this.builder.a(SpringBeansXMLBean.ID_ATTRIBUTE, beanId);
@@ -387,7 +401,7 @@ public class SpringBeansXMLBuilderImpl
 			return SpringBeansXMLMapBuilder.MAP_ELEMENT;
 		}
 
-		// MARK: SpringBeansXMLBeanBuilder
+		// MARK: SpringBeansXMLMapBuilder
 		@Override
 		public SpringBeansXMLMapBuilder<T> id(String beanId) {
 			this.builder.a(SpringBeansXMLBean.ID_ATTRIBUTE, beanId);
@@ -464,7 +478,7 @@ public class SpringBeansXMLBuilderImpl
 			return builder.e(SpringBeansXMLMapEntryBuilder.ELEMENT);
 		}
 
-		// MARK: SpringBeansXMLBeanPropertyBuilder
+		// MARK: SpringSecurityXMLInterceptUrlBuilder
 		@Override
 		public SpringBeansXMLMapEntryBuilder<T> key(String key,
 		                                            boolean ref) {
@@ -627,7 +641,7 @@ public class SpringBeansXMLBuilderImpl
 			// TODO: Could initialize the internal property...
 		}
 
-		// MARK: SpringBeansXMLBeanPropertyBuilder
+		// MARK: SpringSecurityXMLInterceptUrlBuilder
 		@Override
 		public SpringBeansXMLBeanPropertyBuilder<T> name(String name) {
 			this.builder.a(SpringBeansXMLProperty.NAME_ATTRIBUTE, name);
@@ -653,6 +667,236 @@ public class SpringBeansXMLBuilderImpl
 
 	}
 
+	// MARK: HTTP Security
+	private class SpringSecurityXMLHttpBeanBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
+	        implements SpringSecurityXMLHttpBeanBuilder<T> {
+
+		public SpringSecurityXMLHttpBeanBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		@Override
+		protected XMLBuilder2 makeBuilderForElement(XMLBuilder2 builder) {
+			return builder.e(SpringSecurityXMLHttpBean.ELEMENT);
+		}
+
+		// MARK: SpringSecurityXMLHttpBeanBuilder
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> i() {
+			return this.intercept();
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> i(String pattern,
+		                                                                                   RoleConfig access) {
+			return this.intercept(pattern, access);
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> i(String pattern,
+		                                                                                   RoleConfig access,
+		                                                                                   HttpMethod method) {
+			return this.intercept(pattern, access, method);
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> i(String pattern,
+		                                                                                   String access,
+		                                                                                   HttpMethod method) {
+			return this.intercept(pattern, access, method);
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> intercept() {
+			return new SpringSecurityXMLInterceptUrlBuilderImpl<SpringSecurityXMLHttpBeanBuilder<T>>(this,
+			        this.builder);
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> intercept(String pattern,
+		                                                                                           RoleConfig access) {
+			return this.intercept(pattern, access.getAccess(), null);
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> intercept(String pattern,
+		                                                                                           RoleConfig access,
+		                                                                                           HttpMethod method) {
+			return this.intercept(pattern, access.getAccess(), method);
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> intercept(String pattern,
+		                                                                                           String access,
+		                                                                                           HttpMethod method) {
+			SpringSecurityXMLInterceptUrlBuilder<SpringSecurityXMLHttpBeanBuilder<T>> builder = this.intercept()
+			        .pattern(pattern).access(access);
+
+			if (method != null) {
+				builder.method(method);
+			}
+
+			return builder;
+		}
+
+		@Override
+		public SpringSecurityXMLCustomFilterBuilder<SpringSecurityXMLHttpBeanBuilder<T>> filter() {
+			return new SpringSecurityXMLCustomFilterBuilderImpl<SpringSecurityXMLHttpBeanBuilder<T>>(this,
+			        this.builder);
+		}
+
+		@Override
+		public SpringSecurityXMLCustomFilterBuilder<SpringSecurityXMLHttpBeanBuilder<T>> filter(String ref,
+		                                                                                        String position) {
+			return this.filter().ref(ref).position(position);
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> accessDeniedHandlerRef(String ref) {
+			this.builder.e(SpringSecurityXMLHttpBean.ACCESS_DENIED_HANDLER_ELEMENT).a("ref", ref);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> useExpressions() {
+			this.builder.a(SpringSecurityXMLHttpBean.USE_EXPRESSIONS, new Boolean(true).toString());
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> noAnonymous() {
+			return this.anonymous(false);
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> anonymous(boolean enabled) {
+			this.builder.e(SpringSecurityXMLHttpBean.ANONYMOUS_ELEMENT).a("enabled", new Boolean(enabled).toString());
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> noCsrf() {
+			return this.csrf(false);
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> csrf(boolean enabled) {
+			this.builder.e(SpringSecurityXMLHttpBean.CSRF_ELEMENT).a("disabled", new Boolean(!enabled).toString());
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> stateless() {
+			return this.createSession("stateless");
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> createSession(String createSessionOption) {
+			this.builder.a(SpringSecurityXMLHttpBean.CREATE_SESSION_ATTRIBUTE, createSessionOption);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> requestMatcherRef(String ref) {
+			this.builder.a(SpringSecurityXMLHttpBean.REQUEST_MATCHER_REF_ATTRIBUTE, ref);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> entryPointRef(String ref) {
+			this.builder.a(SpringSecurityXMLHttpBean.ENTRY_POINT_REF_ATTRIBUTE, ref);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> pattern(String pattern) {
+			this.builder.a(SpringSecurityXMLHttpBean.PATTERN_ATTRIBUTE, pattern);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLHttpBeanBuilder<T> security(String security) {
+			this.builder.a(SpringSecurityXMLHttpBean.SECURITY_ATTRIBUTE, security);
+			return this;
+		}
+
+	}
+
+	// MARK:
+	private class SpringSecurityXMLInterceptUrlBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
+	        implements SpringSecurityXMLInterceptUrlBuilder<T> {
+
+		public SpringSecurityXMLInterceptUrlBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		// MARK: Init
+		@Override
+		protected XMLBuilder2 makeBuilderForElement(XMLBuilder2 builder) {
+			return builder.e(SpringSecurityXMLInterceptUrlBean.ELEMENT);
+		}
+
+		// MARK: SpringSecurityXMLInterceptUrlBuilder
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<T> access(String string) {
+			this.builder.a(SpringSecurityXMLInterceptUrlBean.ACCESS_ATTRIBUTE, string);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<T> method(HttpMethod method) {
+			this.builder.a(SpringSecurityXMLInterceptUrlBean.METHOD_ATTRIBUTE, method.name());
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<T> pattern(String urlPattern) {
+			this.builder.a(SpringSecurityXMLInterceptUrlBean.PATTERN_ATTRIBUTE, urlPattern);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<T> access(RoleConfig access) {
+			return this.access(access.getAccess());
+		}
+
+		@Override
+		public SpringSecurityXMLInterceptUrlBuilder<T> matcherRef(String matcher) {
+			this.builder.a(SpringSecurityXMLInterceptUrlBean.REQUEST_MATCHER_REF_ATTRIBUTE, matcher);
+			return this;
+		}
+
+	}
+
+	private class SpringSecurityXMLCustomFilterBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
+	        implements SpringSecurityXMLCustomFilterBuilder<T> {
+
+		public SpringSecurityXMLCustomFilterBuilderImpl(T parent, XMLBuilder2 builder) {
+			super(parent, builder);
+		}
+
+		// MARK: Init
+		@Override
+		protected XMLBuilder2 makeBuilderForElement(XMLBuilder2 builder) {
+			return builder.e(SpringSecurityXMLCustomFilterBean.ELEMENT);
+		}
+
+		// MARK: SpringSecurityXMLCustomFilterUrlBuilder
+		@Override
+		public SpringSecurityXMLCustomFilterBuilder<T> ref(String ref) {
+			this.builder.a(SpringSecurityXMLCustomFilterBean.REF_ATTRIBUTE, ref);
+			return this;
+		}
+
+		@Override
+		public SpringSecurityXMLCustomFilterBuilder<T> position(String position) {
+			this.builder.a(SpringSecurityXMLCustomFilterBean.POSITION_ATTRIBUTE, position);
+			return this;
+		}
+
+	}
+
+	// MARK: Abstract
 	/**
 	 * Abstract entity that wraps the builder and "up".
 	 *

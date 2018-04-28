@@ -13,6 +13,7 @@ import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
+import com.dereekb.gae.utilities.filters.impl.FilterImpl;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskAlreadyExistsException;
@@ -132,15 +133,24 @@ public class TaskSchedulerImpl
 		 */
 		private TaskRequestConverter converter;
 
+		protected Context(String queue, TaskRequestConverter converter) {
+			this(queue, FilterImpl.pass(), converter);
+		}
+
 		protected Context(String queue, Filter<TaskRequest> filter, TaskRequestConverter converter) {
 			this(null, queue, filter, converter);
 		}
 
 		protected Context(Context parent, String queue, Filter<TaskRequest> filter, TaskRequestConverter converter) {
 			this.parent = parent;
+
 			this.setQueue(queue);
 			this.setFilter(filter);
 			this.setConverter(converter);
+
+			if (parent == null && this.filter == null) {
+				this.setFilter(FilterImpl.pass());
+			}
 		}
 
 		public String getQueue() {

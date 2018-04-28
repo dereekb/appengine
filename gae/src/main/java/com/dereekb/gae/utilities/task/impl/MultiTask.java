@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.task.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.utilities.collections.list.ListUtility;
@@ -19,7 +20,9 @@ public class MultiTask<T>
 
 	private List<Task<T>> tasks;
 
-	public MultiTask() {}
+	public MultiTask() {
+		this(Collections.emptyList());
+	}
 
 	public MultiTask(Task<T> task) throws IllegalArgumentException {
 		this(ListUtility.wrap(task));

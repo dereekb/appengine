@@ -6,17 +6,21 @@ import org.junit.Test;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.test.applications.api.ClientApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.model.tests.AbstractServerModelRequestSenderTest;
 import com.dereekb.gae.test.mock.client.extension.ModelClientLinkRequestSenderTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 /**
  * Abstract testing class used for testing Link requests on a model type.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
+ *
+ * @deprecated Tests merged into {@link AbstractServerModelRequestSenderTest}
  */
+@Deprecated
 public abstract class ClientApiLinkTest<T extends MutableUniqueModel> extends ClientApiApplicationTestContext {
 
 	private TestModelGenerator<T> testModelGenerator;

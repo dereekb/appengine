@@ -49,7 +49,7 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 		        .lazy(false).c().ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).map();
 
 		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
-			readControllerMap.keyValueRefEntry(model.getModelTypeBeanId(),
+			readControllerMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 			        model.getModelBeanPrefix() + "ReadControllerEntry");
 		}
 

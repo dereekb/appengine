@@ -31,8 +31,6 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 /**
  * Task Queue controller used for performing custom tasks over input models.
  *
- * TODO: Consider making a builder for scheduling sequence or iterate tasks.
- *
  * @author dereekb
  *
  */

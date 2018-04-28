@@ -82,7 +82,10 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 			        this.testModelGenerator);
 		}
 
-		// TODO: Add Link?
+		if (this.linkRequestSender != null) {
+			this.linkRequestUtility = new ModelClientLinkRequestSenderTestUtility<T>(this.testModelGenerator,
+			        this.linkRequestSender);
+		}
 
 		if (this.modelRolesRequestSender != null) {
 			this.modelRolesRequestUtility = new ModelClientRolesContextServiceRequestSenderTestUtility<T>(

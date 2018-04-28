@@ -37,6 +37,15 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 
 	public ModelClientLinkRequestSenderTestUtility(TestModelGenerator<T> testModelGenerator,
 	        ClientLinkServiceRequestSender linkRequestSender) {
+
+		if (testModelGenerator == null) {
+			throw new IllegalArgumentException("Test Model Generator cannot be null.");
+		}
+
+		if (linkRequestSender == null) {
+			throw new IllegalArgumentException("List Request Sender cannot be null.");
+		}
+
 		this.linkRequestSender = linkRequestSender;
 		this.testModelGenerator = testModelGenerator;
 	}

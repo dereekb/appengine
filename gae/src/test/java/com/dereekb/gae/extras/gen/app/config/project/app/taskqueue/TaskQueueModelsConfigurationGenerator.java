@@ -46,16 +46,19 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 
 		// NOTE: Deprecated and moved into Iterate. Remove later.
 		/*
-		builder.comment("Edit Controller");
-		SpringBeansXMLMapBuilder<?> map = builder.bean("taskQueueEditController")
-		        .beanClass(TaskQueueEditController.class).c()
-		        .ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).map();
-
-		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
-			map.keyValueRefEntry(model.getModelTypeBeanId(),
-			        model.getModelBeanPrefix() + "TaskQueueEditControllerEntry");
-		}
-		*/
+		 * builder.comment("Edit Controller");
+		 * SpringBeansXMLMapBuilder<?> map =
+		 * builder.bean("taskQueueEditController")
+		 * .beanClass(TaskQueueEditController.class).c()
+		 * .ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).
+		 * map();
+		 *
+		 * for (AppModelConfiguration model :
+		 * this.getAllApplicableConfigurations()) {
+		 * map.keyValueRefEntry(model.getModelTypeBeanId(),
+		 * model.getModelBeanPrefix() + "TaskQueueEditControllerEntry");
+		 * }
+		 */
 
 		builder.comment("Iterate");
 		SpringBeansXMLMapBuilder<?> iterateEntryMap = builder.bean("taskQueueIterateController")
@@ -64,7 +67,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 
 		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
 			if (model.getCustomLocalModelContextConfigurer().hasIterateControllerEntry()) {
-				iterateEntryMap.keyValueRefEntry(model.getModelTypeBeanId(),
+				iterateEntryMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 				        model.getModelBeanPrefix() + "TaskQueueIterateControllerEntry");
 			}
 		}
@@ -77,27 +80,32 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		CustomLocalModelContextConfigurer customConfigurer = modelConfig
-		        .getCustomLocalModelContextConfigurer();
+		CustomLocalModelContextConfigurer customConfigurer = modelConfig.getCustomLocalModelContextConfigurer();
 		customConfigurer.configureIterateControllerTasks(this.getAppConfig(), modelConfig, builder);
 		// NOTE: Deprecated and moved into Iterate. Remove later.
 		/*
-		builder.comment("Edit Controller");
-		builder.bean(modelConfig.getModelBeanPrefix() + "TaskQueueEditControllerEntry")
-		        .beanClass(TaskQueueEditControllerEntryImpl.class).c().ref(modelConfig.getModelRegistryId())
-		        .ref(modelConfig.getModelBeanPrefix() + "TaskQueuePostCreateTask")
-		        .ref(modelConfig.getModelBeanPrefix() + "TaskQueuePostUpdateTask")
-		        .ref(modelConfig.getModelBeanPrefix() + "TaskQueueProcessDeleteTask");
-
-		builder.bean(modelConfig.getModelBeanPrefix() + "TaskQueuePostCreateTask").beanClass(TaskQueueModelTask.class)
-		        .c().list();
-
-		builder.bean(modelConfig.getModelBeanPrefix() + "TaskQueuePostUpdateTask").beanClass(TaskQueueModelTask.class)
-		        .c().list();
-
-		builder.bean(modelConfig.getModelBeanPrefix() + "TaskQueueProcessDeleteTask")
-		        .beanClass(TaskQueueModelTask.class).c().list();
-		*/
+		 * builder.comment("Edit Controller");
+		 * builder.bean(modelConfig.getModelBeanPrefix() +
+		 * "TaskQueueEditControllerEntry")
+		 * .beanClass(TaskQueueEditControllerEntryImpl.class).c().ref(
+		 * modelConfig.getModelRegistryId())
+		 * .ref(modelConfig.getModelBeanPrefix() + "TaskQueuePostCreateTask")
+		 * .ref(modelConfig.getModelBeanPrefix() + "TaskQueuePostUpdateTask")
+		 * .ref(modelConfig.getModelBeanPrefix() +
+		 * "TaskQueueProcessDeleteTask");
+		 *
+		 * builder.bean(modelConfig.getModelBeanPrefix() +
+		 * "TaskQueuePostCreateTask").beanClass(TaskQueueModelTask.class)
+		 * .c().list();
+		 *
+		 * builder.bean(modelConfig.getModelBeanPrefix() +
+		 * "TaskQueuePostUpdateTask").beanClass(TaskQueueModelTask.class)
+		 * .c().list();
+		 *
+		 * builder.bean(modelConfig.getModelBeanPrefix() +
+		 * "TaskQueueProcessDeleteTask")
+		 * .beanClass(TaskQueueModelTask.class).c().list();
+		 */
 
 		return builder;
 	}

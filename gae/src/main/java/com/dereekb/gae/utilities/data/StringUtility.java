@@ -219,7 +219,8 @@ public class StringUtility {
 		return firstLetterUpperCase(string, false);
 	}
 
-	public static String firstLetterUpperCase(String string, boolean onlyFirstLetter) {
+	public static String firstLetterUpperCase(String string,
+	                                          boolean onlyFirstLetter) {
 		if (onlyFirstLetter) {
 			string = string.toLowerCase();
 		}
@@ -246,6 +247,23 @@ public class StringUtility {
 		} else {
 			return prefix + string;
 		}
+	}
+
+	public static Iterable<String> wrapValues(Iterable<String> args,
+	                                          String wrap) {
+		return wrapValues(args, wrap, wrap);
+	}
+
+	public static Iterable<String> wrapValues(Iterable<String> args,
+	                                          String prefix,
+	                                          String suffix) {
+		List<String> wrapped = new ArrayList<String>();
+
+		for (String arg : args) {
+			wrapped.add(prefix + arg + suffix);
+		}
+
+		return wrapped;
 	}
 
 }

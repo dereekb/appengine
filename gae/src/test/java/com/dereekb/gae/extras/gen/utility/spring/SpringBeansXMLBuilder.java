@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.utility.spring;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.utility.GenFile;
+import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLHttpBeanBuilder;
 import com.jamesmurty.utils.XMLBuilder2;
 
 /**
@@ -21,7 +22,7 @@ public interface SpringBeansXMLBuilder
 	 * Start a new bean element.
 	 *
 	 * @param id
-	 * @return {@link SpringBeansXMLBeanBuilder}. Never {@code null}.
+	 * @return {@link SpringSecurityXMLHttpBeanBuilder}. Never {@code null}.
 	 */
 	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> bean(String id);
 
@@ -61,6 +62,9 @@ public interface SpringBeansXMLBuilder
 	public void comment(String comment);
 
 	// Spring
+
+	// Spring Security
+	public SpringSecurityXMLHttpBeanBuilder<SpringBeansXMLBuilder> httpSecurity();
 
 	// Utility Beans
 	public <T> SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> valueBean(String id,

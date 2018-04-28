@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.context;
 import java.util.List;
 import java.util.Properties;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -22,6 +23,10 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLHttpBeanBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasAnyRoleConfig;
+import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasRoleConfig;
+import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
@@ -70,7 +75,10 @@ import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMai
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.web.matcher.MultiRequestMatcher;
+import com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher;
+import com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl;
 
 public class ContextServerConfigurationsGenerator extends AbstractConfigurationFileGenerator {
 
@@ -405,17 +413,93 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			AppSecurityBeansConfigurer appSecurityBeansConfigurer = this.getAppConfig().getAppSecurityBeansConfigurer();
 
-			builder.comment("TODO: Complete the security!");
-
 			String secureModelTypesBeanId = "secureModelTypes";
 			String securedModelResourcesBeanId = "securedModelResources";
 
-			builder.comment("Patterns");
+			String securedModelPatternMatcherBeanId = "securedModelPatternMatcher";
+			String securedModelReadPatternMatcherBeanId = "securedModelReadPatternMatcher";
+			String securedModelResourcePatternMatcherBeanId = "securedModelResourcePatternMatcher";
 
-			builder.bean("securedModelResourcePatternMatcher").beanClass(MultiTypeMapAntRequestMatcher.class).c()
-			        .value("/api/" + this.getAppConfig().getAppServiceName() + "/" + this.getAppConfig().getAppVersion()
-			                + "/{type}/{res}")
-			        .map().keyValueRefEntry("type", secureModelTypesBeanId)
+			builder.comment("No HTTP Security For Google App Engine Test Server");
+			builder.httpSecurity().pattern("/_ah/**").security("none");
+
+			// TODO: Add custom pattern matching components.
+
+			if (this.getAppConfig().isLoginServer()) {
+				this.addLoginServerAuthenticationSecurity(builder);
+			}
+
+			builder.comment("Protected Application Resources");
+			SpringSecurityXMLHttpBeanBuilder<?> http = builder.httpSecurity().useExpressions().stateless()
+			        .entryPointRef("securityEntryPoint");
+
+			http.filter("authenticationFilter", "PRE_AUTH_FILTER");
+
+			http.getRawXMLBuilder().c("Only allow this service to access the taskqueue.");
+			http.intercept("/taskqueue/**", HasRoleConfig.make("ROLE_LOGINTYPE_SYSTEM"));
+
+			String serviceApiPath = this.getServiceApiPath();
+
+			if (this.getAppConfig().isLoginServer()) {
+				http.getRawXMLBuilder().c("LoginKey Auth Requests rejected for some roles.");
+				http.intercept(serviceApiPath + "/login/auth/key/*",
+				        HasAnyRoleConfig.not("ROLE_LOGINTYPE_API", "ROLE_ANON", "ROLE_SYSTEM"));
+
+				http.getRawXMLBuilder().c("LoginKey Requests rejected for some roles.");
+				http.intercept().matcherRef("loginKeyObjectApiPathRequestMatcher")
+				        .access(HasAnyRoleConfig.not("ROLE_LOGINTYPE_API", "ROLE_ANON"));
+			}
+
+			http.getRawXMLBuilder().c("Secured Owned Model Patterns");
+			http.intercept().matcherRef(securedModelPatternMatcherBeanId).access(HasRoleConfig.make("ROLE_USER"));
+
+			http.getRawXMLBuilder().c("Other Extension Resources");
+			http.intercept(serviceApiPath + "/search/**", HasRoleConfig.make("ROLE_ADMIN"));
+
+			if (this.getAppConfig().isLoginServer()) {
+				http.getRawXMLBuilder().c("Register Patterns");
+				http.intercept(serviceApiPath + "/login/auth/register", HasRoleConfig.make("ROLE_NEW_USER"),
+				        HttpMethod.POST);
+				http.intercept(serviceApiPath + "/login/auth/register/token", HasRoleConfig.make("ROLE_USER"),
+				        HttpMethod.POST);
+
+				http.getRawXMLBuilder().c("Taken Patterns");
+				http.intercept(serviceApiPath + "/login/auth/model/*", HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT);
+				http.intercept(serviceApiPath + "/login/auth/token/refresh", HasRoleConfig.make("ROLE_USER"),
+				        HttpMethod.GET);
+				http.intercept(serviceApiPath + "/login/auth/token/reset", HasRoleConfig.make("ROLE_USER"),
+				        HttpMethod.GET);
+				http.intercept(serviceApiPath + "/login/auth/token/reset/*", HasRoleConfig.make("ROLE_ADMIN"),
+				        HttpMethod.GET);
+			}
+
+			http.getRawXMLBuilder().c("Scheduling Pattern");
+			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_USER"), HttpMethod.POST);
+
+			http.getRawXMLBuilder().c("Everything Else Is Denied");
+			http.intercept("/**", RoleConfigImpl.makel("denyAll"));
+
+			http.accessDeniedHandlerRef("accessDeniedHandler");
+
+			http.getRawXMLBuilder().c("No Anonymous Allowed");
+			http.noAnonymous().noCsrf();
+
+			if (this.getAppConfig().isLoginServer()) {
+				builder.bean("loginKeyObjectApiPathRequestMatcher").beanClass(AntPathRequestMatcher.class).c()
+				        .value(serviceApiPath + "/loginkey/**").nullArg().value("false");
+			}
+
+			// Security
+			builder.comment("Secure Model Pattern Matchers");
+			builder.bean(securedModelPatternMatcherBeanId).beanClass(MultiRequestMatcher.class).c().list()
+			        .ref(securedModelReadPatternMatcherBeanId).ref(securedModelResourcePatternMatcherBeanId);
+
+			builder.bean(securedModelReadPatternMatcherBeanId).beanClass(MultiTypeAntRequestMatcher.class).c()
+			        .value(serviceApiPath + "/{type}").ref(secureModelTypesBeanId).up().property("methodMatcher").bean()
+			        .beanClass(RequestMethodMatcherImpl.class).c().value("GET");
+
+			builder.bean(securedModelResourcePatternMatcherBeanId).beanClass(MultiTypeMapAntRequestMatcher.class).c()
+			        .value(serviceApiPath + "/{type}/{res}").map().keyValueRefEntry("type", secureModelTypesBeanId)
 			        .keyValueRefEntry("res", securedModelResourcesBeanId);
 
 			builder.list(securedModelResourcesBeanId).values("create", "read", "update", "delete", "query", "search",
@@ -507,6 +591,54 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .beanClass(SecurityOverrideAdminOnlyModelQueryTask.class);
 
 			return builder;
+		}
+
+		/**
+		 * Adds security components for accessing the
+		 */
+		private void addLoginServerAuthenticationSecurity(SpringBeansXMLBuilder builder) {
+
+			SpringSecurityXMLHttpBeanBuilder<?> http = builder.httpSecurity()
+			        .requestMatcherRef("authControllersPatternMatcher").stateless().entryPointRef("securityEntryPoint");
+
+			String serviceApiPath = this.getServiceApiPath();
+
+			http.getRawXMLBuilder().c("Only allow this service to access the taskqueue.");
+			http.getRawXMLBuilder().c("Authentication Matched");
+			http.intercept(serviceApiPath + "/login/auth/pass", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/pass/**", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/oauth/**", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/key", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
+
+			http.getRawXMLBuilder().c("Token Matched");
+			http.intercept(serviceApiPath + "/login/auth/token/**", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/**", RoleConfigImpl.makel("denyAll"));
+
+			http.accessDeniedHandlerRef("accessDeniedHandler").anonymous(true).noCsrf();
+
+			// Pattern Matchers
+			String authControllersMainPatternMatcherBeanId = "authControllersMainPatternMatcher";
+			String authControllersTokenPatternMatcherBeanId = "authControllersTokenPatternMatcher";
+
+			http.getRawXMLBuilder()
+			        .c("Matches POST requests made to the Auth Controllers. Everything else falls through.");
+			builder.bean("authControllersPatternMatcher").beanClass(MultiRequestMatcher.class).c().list()
+			        .ref(authControllersMainPatternMatcherBeanId).ref(authControllersTokenPatternMatcherBeanId);
+
+			builder.bean("authControllersMainPatternMatcher").beanClass(MultiTypeAntRequestMatcher.class).c()
+			        .value(serviceApiPath + "/login/auth/{type}/**").list().value("pass").value("oauth").value("key")
+			        .up().up().property("methodMatcher").bean().beanClass(RequestMethodMatcherImpl.class).c()
+			        .value("POST");
+
+			builder.bean("authControllersTokenPatternMatcher").beanClass(MultiTypeAntRequestMatcher.class).c()
+			        .value(serviceApiPath + "/login/auth/token/{type}").list().value("login").value("refresh")
+			        .value("validate").up().up().property("methodMatcher").bean()
+			        .beanClass(RequestMethodMatcherImpl.class).c().value("POST");
+
+		}
+
+		private String getServiceApiPath() {
+			return "/api/" + this.getAppConfig().getAppServiceName() + "/" + this.getAppConfig().getAppVersion();
 		}
 
 	}
