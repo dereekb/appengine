@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,10 +24,11 @@ import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 
 /**
- * 
+ *
  * @author dereekb
  * @deprecated Use Client api tests instead.
  */
+@Ignore
 @Deprecated
 public class StoredBlobApiEditTest extends ApiEditTest<StoredBlob, StoredBlobData> {
 

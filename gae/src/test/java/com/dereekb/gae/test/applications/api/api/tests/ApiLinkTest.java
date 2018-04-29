@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.model.extension.links.system.mutable.MutableLinkChangeType;
-
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
@@ -21,6 +20,7 @@ import com.dereekb.gae.web.api.model.extension.link.impl.ApiLinkChangeRequest;
 import com.dereekb.gae.web.api.shared.request.ApiRequest;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 
+@Deprecated
 public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationTestContext {
 
 	protected String modelType;

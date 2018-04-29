@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.api.upload;
 import java.util.Collection;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +27,7 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseData;
  * @author dereekb
  *
  */
+@Ignore
 public abstract class AbstractStoredImageUploadTest extends ApiApplicationTestContext {
 
 	private FileUploadHandlerDelegate uploadHandler;

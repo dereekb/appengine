@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +24,8 @@ import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDo
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.google.appengine.api.search.Document;
 
+@Ignore
+@Deprecated
 public class StoredBlobSearchDocumentTest extends ModelSearchDocumentTest<StoredBlob> {
 
 	@Override

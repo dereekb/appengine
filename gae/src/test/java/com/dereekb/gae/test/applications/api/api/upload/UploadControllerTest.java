@@ -3,6 +3,7 @@ package com.dereekb.gae.test.applications.api.api.upload;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -19,6 +20,7 @@ import com.dereekb.gae.web.api.model.extension.upload.exception.InvalidUploadTyp
  * @author dereekb
  *
  */
+@Ignore
 public class UploadControllerTest extends ApiApplicationTestContext {
 
 	@Autowired

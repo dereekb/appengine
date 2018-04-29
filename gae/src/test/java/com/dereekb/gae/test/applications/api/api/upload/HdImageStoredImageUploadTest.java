@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.api.upload;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,6 +14,7 @@ import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerato
  * @author dereekb
  *
  */
+@Ignore
 public class HdImageStoredImageUploadTest extends AbstractStoredImageUploadTest {
 
 	@Override

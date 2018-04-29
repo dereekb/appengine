@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.api.stored.imageset;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -9,6 +10,8 @@ import com.dereekb.gae.test.applications.api.api.tests.ApiSearchTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 
+@Ignore
+@Deprecated
 public class StoredImageSetApiSearchTest extends ApiSearchTest<StoredImageSet> {
 
 	@Override

@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.applications.api.model.login.login;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +14,8 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.model.tests.extension.ModelSearchDocumentTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Ignore
+@Deprecated
 public class LoginSearchDocumentTest extends ModelSearchDocumentTest<Login> {
 
 	@Autowired

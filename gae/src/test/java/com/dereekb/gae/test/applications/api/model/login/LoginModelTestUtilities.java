@@ -8,6 +8,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.googlecode.objectify.Key;
 
+@Deprecated
 public class LoginModelTestUtilities {
 
 	public static void setPointerLogins(Login login,

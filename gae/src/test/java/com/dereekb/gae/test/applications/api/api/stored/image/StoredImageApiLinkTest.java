@@ -10,6 +10,7 @@ import com.dereekb.gae.test.applications.api.api.tests.ApiLinkTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 @Ignore
+@Deprecated
 public class StoredImageApiLinkTest extends ApiLinkTest<StoredImage> {
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,6 +25,8 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.model.extension.generator.impl.WrappedTestModelGeneratorImpl;
 import com.google.appengine.api.search.Document;
 
+@Ignore
+@Deprecated
 public class StoredImageSetSearchDocumentTest extends ModelSearchDocumentTest<StoredImageSet> {
 
 	@Autowired

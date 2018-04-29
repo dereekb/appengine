@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.applications.api.model.login;
+package com.gae.server.service.login.test.application.api.model.gae.system;
 
 import java.util.List;
 
