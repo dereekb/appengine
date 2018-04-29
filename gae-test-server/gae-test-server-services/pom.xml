@@ -368,15 +368,15 @@
 	<modules>
 
 		<!-- Test Server Default Microservice -->
-		<module>gae-test-server-services-default</module>
+		<module>gae-default-service</module>
 		
 		<!-- Test Server Services -->
-		<module>gae-test-server-services-login</module>
-		<module>gae-test-server-services-webhook</module>
+		<module>gae-login-service</module>
 		
 		<!-- 
-		<module>gae-test-server-services-data</module>
-		<module>gae-test-server-services-payment</module>
+		<module>gae-webhook</module>
+		<module>gae-data</module>
+		<module>gae-payment</module>
 		 -->
 		 
 	</modules>
