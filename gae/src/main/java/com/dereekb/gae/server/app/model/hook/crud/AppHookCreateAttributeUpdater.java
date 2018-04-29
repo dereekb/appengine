@@ -12,7 +12,7 @@ import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeExceptio
 import com.googlecode.objectify.Key;
 
 /**
- * {@link AppHookCreateAttributeUpdater} extension used specifically for the
+ * {@link AppHookAttributeUpdater} extension used specifically for the
  * create-case.
  *
  * @author dereekb
@@ -26,8 +26,10 @@ public class AppHookCreateAttributeUpdater extends AbstractChainedUpdateTaskDele
 
 	private AppRelatedModelAttributeUtility appAttributeUtility;
 
-	public AppHookCreateAttributeUpdater(UpdateTaskDelegate<AppHook> updateTaskDelegate) {
+	public AppHookCreateAttributeUpdater(UpdateTaskDelegate<AppHook> updateTaskDelegate,
+	        AppRelatedModelAttributeUtility appAttributeUtility) {
 		super(updateTaskDelegate);
+		this.appAttributeUtility = appAttributeUtility;
 	}
 
 	public AppRelatedModelAttributeUtility getAppAttributeUtility() {

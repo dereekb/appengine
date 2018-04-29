@@ -1,4 +1,4 @@
-package com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.iterate;
+package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;

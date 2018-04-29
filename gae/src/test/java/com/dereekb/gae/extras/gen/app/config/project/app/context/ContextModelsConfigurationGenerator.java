@@ -9,26 +9,14 @@ import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFil
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
-import com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl;
-import com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl;
-import com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl;
-import com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl;
-import com.dereekb.gae.model.crud.services.impl.CrudServiceImpl;
-import com.dereekb.gae.model.crud.task.impl.CreateTaskImpl;
-import com.dereekb.gae.model.crud.task.impl.ValidatedCreateTaskImpl;
-import com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl;
-import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
-import com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl;
-import com.dereekb.gae.model.crud.task.impl.filtered.FilteredUpdateTaskImpl;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask;
 import com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl;
@@ -95,7 +83,8 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.imp("/extension/link.xml");
 
 		builder.comment("Shared");
-		SpringBeansXMLMapBuilder<?> modelKeyTypeMap = builder.bean(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId())
+		SpringBeansXMLMapBuilder<?> modelKeyTypeMap = builder
+		        .bean(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId())
 		        .beanClass(TypeModelKeyConverterImpl.class).c().map().valueType(ModelKeyType.class);
 
 		for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
@@ -248,138 +237,8 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 		@Override
 		public void makeXMLConfigurationFile(SpringBeansXMLBuilder builder) {
-
-			SpringBeansXMLBeanConstructorBuilder<?> crudsConstructor = builder
-			        .bean(this.modelConfig.getModelCrudServiceId()).beanClass(CrudServiceImpl.class).c();
-
-			if (this.modelConfig.hasCreateService()) {
-				crudsConstructor.ref(this.modelConfig.getModelCreateServiceId());
-			} else {
-				crudsConstructor.nullArg();
-			}
-
-			crudsConstructor.ref(this.modelConfig.getModelReadServiceId());
-
-			if (this.modelConfig.hasUpdateService()) {
-				crudsConstructor.ref(this.modelConfig.getModelUpdateServiceId());
-			} else {
-				crudsConstructor.nullArg();
-			}
-
-			if (this.modelConfig.hasDeleteService()) {
-				crudsConstructor.ref(this.modelConfig.getModelDeleteServiceId());
-			} else {
-				crudsConstructor.nullArg();
-			}
-
-			builder.comment("Services");
-
-			String modelBeanPrefix = this.modelConfig.getModelBeanPrefix();
-			String createTask = modelBeanPrefix + "CreateTask";
-			String readTask = modelBeanPrefix + "ReadTask";
-			String updateTask = modelBeanPrefix + "UpdateTask";
-			String deleteTask = modelBeanPrefix + "DeleteTask";
-
-			if (this.modelConfig.hasCreateService()) {
-				builder.bean(this.modelConfig.getModelCreateServiceId()).beanClass(CreateServiceImpl.class).c()
-				        .ref(createTask);
-			}
-
-			builder.bean(this.modelConfig.getModelReadServiceId()).beanClass(ReadServiceImpl.class).c().ref(readTask);
-
-			if (this.modelConfig.hasUpdateService()) {
-				builder.bean(this.modelConfig.getModelUpdateServiceId()).beanClass(SafeUpdateServiceImpl.class).c()
-				        .ref(this.modelConfig.getModelReadServiceId()).ref(updateTask)
-				        .ref(this.modelConfig.getModelScheduleUpdateReviewBeanId());
-			}
-
-			if (this.modelConfig.hasDeleteService()) {
-				builder.bean(this.modelConfig.getModelDeleteServiceId()).beanClass(DeleteServiceImpl.class).c()
-				        .ref(this.modelConfig.getModelReadServiceId()).ref(deleteTask);
-			}
-
-			String attributeUpdater = modelBeanPrefix + "AttributeUpdater";
-
-			// Create Task
-			if (this.modelConfig.hasCreateService()) {
-				builder.comment("Create");
-
-				String createAttributeUpdater = modelBeanPrefix + "CreateAttributeUpdater";
-
-				String createTaskDelegate = modelBeanPrefix + "CreateTaskDelegate";
-				String storerTask = this.modelConfig.getModelSetterTaskBeanId();
-
-				boolean isValidated = this.modelConfig.hasValidatedCreate();
-
-				Class<?> createClass = (isValidated) ? ValidatedCreateTaskImpl.class : CreateTaskImpl.class;
-				SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> createBuilder = builder.bean(createTask)
-				        .beanClass(createClass);
-				SpringBeansXMLBeanConstructorBuilder<?> createConstructor = createBuilder.c().ref(createTaskDelegate)
-				        .ref(storerTask).ref(this.modelConfig.getModelScheduleCreateReviewBeanId());
-
-				if (isValidated) {
-					createConstructor.nextArgBuilder().c("TODO: Add validation bean info.");
-				}
-
-				builder.bean(createTaskDelegate).beanClass(CreateTaskDelegateImpl.class).c()
-				        .ref(this.modelConfig.getNewModelFactoryBeanId()).ref(createAttributeUpdater);
-
-				if (this.modelConfig.hasCreateAttributeUpdater()) {
-					builder.bean(createAttributeUpdater)
-					        .beanClass(this.modelConfig.getModelCreateAttributeUpdaterClass()).c().ref(attributeUpdater)
-					        .up().getRawXMLBuilder().comment("TODO: Add any needed arguments here.");
-				} else {
-					builder.alias(attributeUpdater, createAttributeUpdater);
-				}
-			}
-
-			// Read Task
-			builder.comment("Read");
-			builder.bean(readTask).beanClass(FilteredReadTaskImpl.class).c().ref(this.modelConfig.getModelRegistryId())
-			        .bean().factoryBean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
-			        .factoryMethod("makeRoleFilter").c()
-			        .ref(this.getAppConfig().getAppBeans().getCrudReadModelRoleRefBeanId());
-
-			// Update Task
-			if (this.modelConfig.hasUpdateService()) {
-				builder.comment("Update");
-
-				String updaterTask = this.modelConfig.getModelSetterTaskBeanId();
-
-				builder.bean(this.modelConfig.getModelBeanPrefix() + "UpdateTask")
-				        .beanClass(FilteredUpdateTaskImpl.class).c().ref(attributeUpdater).ref(updaterTask).bean()
-				        .factoryBean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
-				        .factoryMethod("makeRoleFilter").c()
-				        .ref(this.getAppConfig().getAppBeans().getCrudUpdateModelRoleRefBeanId());
-
-				builder.bean(attributeUpdater).beanClass(this.modelConfig.getModelAttributeUpdaterClass()).c()
-				        .getRawXMLBuilder().c("TODO: Add constructor args if applicable.");
-			}
-
-			// Delete Task
-			if (this.modelConfig.hasDeleteService()) {
-				builder.comment("Delete");
-
-				String scheduleDeleteTask = this.modelConfig.getModelBeanPrefix() + "ScheduleDeleteTask";
-
-				builder.alias(scheduleDeleteTask, this.modelConfig.getModelBeanPrefix() + "DeleteTask");
-
-				builder.bean(scheduleDeleteTask).beanClass(ScheduleDeleteTask.class).c()
-				        .ref(this.modelConfig.getModelTypeBeanId())
-				        .ref(this.getAppConfig().getAppBeans().getTaskSchedulerId()).up().property("deleteFilter")
-				        .bean().factoryBean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
-				        .factoryMethod("makeRoleFilter").c()
-				        .ref(this.getAppConfig().getAppBeans().getCrudDeleteModelRoleRefBeanId());
-
-			}
-
-			// Utility
-			if (this.modelConfig.hasRelatedAttributeUtility()) {
-				builder.bean(this.modelConfig.getModelBeanPrefix() + "RelatedModelAttributeUtility")
-				        .beanClass(this.modelConfig.getModelRelatedModelAttributeUtilityClass()).c()
-				        .ref(this.modelConfig.getModelSecurityContextServiceEntryBeanId());
-			}
-
+			this.getModelConfig().getCustomLocalModelContextConfigurer()
+			        .configureCrudServiceComponents(this.getAppConfig(), this.modelConfig, builder);
 		}
 
 	}

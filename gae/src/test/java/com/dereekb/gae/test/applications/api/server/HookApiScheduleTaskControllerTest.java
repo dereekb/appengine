@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dereekb.gae.client.api.server.schedule.impl.ClientApiScheduleTaskRequestImpl;
@@ -17,6 +18,7 @@ import com.dereekb.gae.web.api.server.schedule.impl.ApiScheduleTaskRequestImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Ignore
 public class HookApiScheduleTaskControllerTest extends ApiApplicationTestContext {
 
 	// MARK: Client Tests

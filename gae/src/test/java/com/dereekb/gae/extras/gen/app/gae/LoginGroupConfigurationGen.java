@@ -8,13 +8,16 @@ import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.configurer.ConfigurerInstance;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.AdminOnlySecuredQueryInitializerConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.CustomLocalModelContextConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.CustomLocalModelIterateControllerConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.CustomLocalModelRoleSetLoaderConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.SecurityModelQueryInitializerConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.iterate.IterateConfigurerInstanceTaskEntry;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.iterate.impl.DeleteByParentIterateTaskConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.AdminOnlySecuredQueryInitializerConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelContextConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelCrudConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelIterateControllerConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelRoleSetLoaderConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.SecurityModelQueryInitializerConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate.IterateConfigurerInstanceTaskEntry;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate.impl.DeleteByParentIterateTaskConfigurer;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.key.taskqueue.LoginKeyLoginPointerQueryTaskRequestBuilder;
@@ -84,6 +87,7 @@ public class LoginGroupConfigurationGen {
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer
 		        .setCustomLocalModelIterateControllerConfigurer(new LoginKeyIterateControllerConfigurer());
+		customLocalModelContextConfigurer.setCustomLocalModelCrudConfigurer(new LoginKeyCrudConfigurer());
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
 		        new SecurityModelQueryInitializerConfigurerImpl("loginOwnedModelQuerySecurityDelegate"));
 		customLocalModelContextConfigurer
@@ -192,6 +196,34 @@ public class LoginGroupConfigurationGen {
 
 			private LoginPointerDeleteByParentIterateTaskConfigurer() {
 				super(LoginLinkSystemBuilderEntry.LINK_MODEL_TYPE, LoginPointerLoginQueryTaskRequestBuilder.class);
+			}
+
+		}
+
+	}
+
+	public static class LoginKeyCrudConfigurer extends CustomLocalModelCrudConfigurerImpl {
+
+		@Override
+		public void configureCrudServiceComponents(AppConfiguration appConfig,
+		                                           AppModelConfiguration modelConfig,
+		                                           SpringBeansXMLBuilder builder) {
+			new LoginKeyCrudConfigurerInstance(appConfig, modelConfig, builder).configure();
+		}
+
+		protected class LoginKeyCrudConfigurerInstance extends CrudConfigurerInstance {
+
+			public LoginKeyCrudConfigurerInstance(AppConfiguration appConfig,
+			        AppModelConfiguration modelConfig,
+			        SpringBeansXMLBuilder builder) {
+				super(appConfig, modelConfig, builder);
+			}
+
+			@Override
+			protected SpringBeansXMLBeanConstructorBuilder<SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder>> configureCreateAttributeUpdater(SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> builder,
+			                                                                                                                                 String attributeUpdaterBeanId) {
+				return super.configureCreateAttributeUpdater(builder, attributeUpdaterBeanId)
+				        .ref("loginRelatedModelAttributeUtility");
 			}
 
 		}

@@ -1,12 +1,13 @@
-package com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl;
+package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelChildrenRoleComponentConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelIterateControllerConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelRoleSetLoaderConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.SecuredQueryInitializerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelChildrenRoleComponentConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelCrudConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelIterateControllerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelRoleSetLoaderConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.SecuredQueryInitializerConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
@@ -19,10 +20,23 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 public class CustomLocalModelContextConfigurerImpl
         implements CustomLocalModelContextConfigurer {
 
+	private CustomLocalModelCrudConfigurer customLocalModelCrudConfigurer = new CustomLocalModelCrudConfigurerImpl();
 	private CustomLocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer = new CustomLocalModelIterateControllerConfigurerImpl();
 	private CustomLocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new CustomLocalModelRoleSetLoaderConfigurerImpl();
 	private CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new CustomLocalModelChildrenRoleComponentConfigurerImpl();
 	private SecuredQueryInitializerConfigurer securedQueryInitializerConfigurer = new TodoSecuredQueryInitializerConfigurerImpl();
+
+	public CustomLocalModelCrudConfigurer getCustomLocalModelCrudConfigurer() {
+		return this.customLocalModelCrudConfigurer;
+	}
+
+	public void setCustomLocalModelCrudConfigurer(CustomLocalModelCrudConfigurer customLocalModelCrudConfigurer) {
+		if (customLocalModelCrudConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelCrudConfigurer cannot be null.");
+		}
+
+		this.customLocalModelCrudConfigurer = customLocalModelCrudConfigurer;
+	}
 
 	public CustomLocalModelIterateControllerConfigurer getCustomLocalModelIterateControllerConfigurer() {
 		return this.customLocalModelIterateControllerConfigurer;
@@ -92,6 +106,13 @@ public class CustomLocalModelContextConfigurerImpl
 			beanConstructor.nextArgBuilder().comment("TODO: Complete Configuration");
 		}
 
+	}
+
+	@Override
+	public void configureCrudServiceComponents(AppConfiguration appConfig,
+	                                           AppModelConfiguration modelConfig,
+	                                           SpringBeansXMLBuilder builder) {
+		this.customLocalModelCrudConfigurer.configureCrudServiceComponents(appConfig, modelConfig, builder);
 	}
 
 	@Override

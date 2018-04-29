@@ -1,4 +1,4 @@
-package com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl;
+package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,8 +7,8 @@ import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.configurer.ConfigurerInstance;
 import com.dereekb.gae.extras.gen.app.config.model.configurer.impl.AbstractBuilderConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelIterateControllerConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl.iterate.IterateConfigurerInstanceTaskEntry;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelIterateControllerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate.IterateConfigurerInstanceTaskEntry;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;

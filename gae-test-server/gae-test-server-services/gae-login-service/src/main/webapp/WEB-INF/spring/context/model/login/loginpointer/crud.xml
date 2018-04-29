@@ -7,20 +7,11 @@
     <constructor-arg index="2" ref="loginPointerUpdateService"/>
     <constructor-arg index="3" ref="loginPointerDeleteService"/>
   </bean>
-  <!--Services-->
+  <!--Read Service-->
   <bean class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl" id="loginPointerReadService">
     <constructor-arg index="0" ref="loginPointerReadTask"/>
   </bean>
-  <bean class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl" id="loginPointerUpdateService">
-    <constructor-arg index="0" ref="loginPointerReadService"/>
-    <constructor-arg index="1" ref="loginPointerUpdateTask"/>
-    <constructor-arg index="2" ref="loginPointerScheduleUpdateReview"/>
-  </bean>
-  <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="loginPointerDeleteService">
-    <constructor-arg index="0" ref="loginPointerReadService"/>
-    <constructor-arg index="1" ref="loginPointerDeleteTask"/>
-  </bean>
-  <!--Read-->
+  <!--Read Task-->
   <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl" id="loginPointerReadTask">
     <constructor-arg index="0" ref="loginPointerRegistry"/>
     <constructor-arg index="1">
@@ -29,7 +20,13 @@
       </bean>
     </constructor-arg>
   </bean>
-  <!--Update-->
+  <!--Update Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl" id="loginPointerUpdateService">
+    <constructor-arg index="0" ref="loginPointerReadService"/>
+    <constructor-arg index="1" ref="loginPointerUpdateTask"/>
+    <constructor-arg index="2" ref="loginPointerScheduleUpdateReview"/>
+  </bean>
+  <!--Update Task-->
   <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredUpdateTaskImpl" id="loginPointerUpdateTask">
     <constructor-arg index="0" ref="loginPointerAttributeUpdater"/>
     <constructor-arg index="1" ref="loginPointerSetterTask"/>
@@ -39,10 +36,13 @@
       </bean>
     </constructor-arg>
   </bean>
-  <bean class="com.dereekb.gae.server.auth.model.pointer.crud.LoginPointerAttributeUpdater" id="loginPointerAttributeUpdater">
-    <!--TODO: Add constructor args if applicable.-->
+  <bean class="com.dereekb.gae.server.auth.model.pointer.crud.LoginPointerAttributeUpdater" id="loginPointerAttributeUpdater"/>
+  <!--Delete Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="loginPointerDeleteService">
+    <constructor-arg index="0" ref="loginPointerReadService"/>
+    <constructor-arg index="1" ref="loginPointerDeleteTask"/>
   </bean>
-  <!--Delete-->
+  <!--Delete Task-->
   <alias alias="loginPointerDeleteTask" name="loginPointerScheduleDeleteTask"/>
   <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="loginPointerScheduleDeleteTask">
     <constructor-arg index="0" ref="loginPointerType"/>

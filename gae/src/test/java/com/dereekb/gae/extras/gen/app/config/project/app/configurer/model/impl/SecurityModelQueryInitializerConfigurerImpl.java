@@ -1,11 +1,11 @@
-package com.dereekb.gae.extras.gen.app.config.project.app.context.model.impl;
+package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppSecurityBeansConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.SecuredQueryInitializerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.SecuredQueryInitializerConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.utilities.collections.list.ListUtility;

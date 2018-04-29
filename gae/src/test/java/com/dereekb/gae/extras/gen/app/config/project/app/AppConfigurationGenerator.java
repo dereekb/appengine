@@ -30,6 +30,30 @@ public class AppConfigurationGenerator extends AbstractConfigurationFileGenerato
 		super(appConfig);
 	}
 
+	public String getAppFileName() {
+		return this.appFileName;
+	}
+
+	public void setAppFileName(String appFileName) {
+		if (appFileName == null) {
+			throw new IllegalArgumentException("appFileName cannot be null.");
+		}
+
+		this.appFileName = appFileName;
+	}
+
+	public String getAppFolderName() {
+		return this.appFolderName;
+	}
+
+	public void setAppFolderName(String appFolderName) {
+		if (appFolderName == null) {
+			throw new IllegalArgumentException("appFolderName cannot be null.");
+		}
+
+		this.appFolderName = appFolderName;
+	}
+
 	// MARK: AbstractConfigurationFileGenerator
 	@Override
 	public GenFolder generateConfigurations() {

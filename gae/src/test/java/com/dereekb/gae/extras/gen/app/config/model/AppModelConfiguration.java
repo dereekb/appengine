@@ -1,6 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.model;
 
-import com.dereekb.gae.extras.gen.app.config.project.app.context.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.model.extension.data.conversion.ModelDataConversionInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 

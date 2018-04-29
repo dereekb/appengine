@@ -18,7 +18,7 @@ import com.google.gson.JsonParser;
 /**
  * {@link MockWebServiceTestUtility} for interacting with the
  * {@link KeyLoginController}.
- * 
+ *
  * @author dereekb
  *
  */
@@ -72,7 +72,7 @@ public class MockKeyLoginControllerUtility extends AbstractMockWebServiceTestUti
 		boolean success = loginResultResponse.getStatus() == 200;
 
 		if (assertSuccess) {
-			Assert.assertTrue("API Key Authentication Failed.", success);
+			Assert.assertTrue("API Key Authentication Failed: " + loginResultResponse.getContentAsString(), success);
 		}
 
 		String apiKeyLoginToken = null;

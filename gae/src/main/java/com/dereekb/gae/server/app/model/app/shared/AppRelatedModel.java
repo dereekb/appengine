@@ -5,7 +5,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.googlecode.objectify.Key;
 
 /**
- * Interface for {@link UniqueModel}s that are related to an {@link App}.
+ * Interface for a {@link UniqueModel} that is related to an {@link App}.
  *
  * @author dereekb
  *

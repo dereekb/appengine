@@ -1,4 +1,4 @@
-package com.dereekb.gae.extras.gen.app.config.project.app.context.model;
+package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model;
 
 import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;

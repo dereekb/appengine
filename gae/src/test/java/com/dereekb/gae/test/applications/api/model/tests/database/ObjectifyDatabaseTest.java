@@ -1,6 +1,7 @@
 package com.dereekb.gae.test.applications.api.model.tests.database;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +14,7 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.applications.api.model.tests.database.SetterTestUtility.SetterTestUtilityDelegate;
 import com.dereekb.gae.utilities.misc.random.PositiveLongGenerator;
 
+@Ignore
 public class ObjectifyDatabaseTest extends ApiApplicationTestContext {
 
 	@Autowired

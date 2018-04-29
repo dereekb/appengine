@@ -19,6 +19,9 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 public class LoginServiceAppConfigurationGen {
 
+	private static final String APP_SPRING_PATH = "src/main/webapp/WEB-INF/spring";
+	private static final String APP_TEST_SPRING_PATH = "src/test/webapp/spring/test";
+
 	public static AppConfiguration makeAppConfiguration() {
 
 		// Login
@@ -56,6 +59,8 @@ public class LoginServiceAppConfigurationGen {
 	public void testMakeAppConfiguration() throws IOException {
 
 		AppConfigurationGenerator generator = new AppConfigurationGenerator(APP_CONFIG);
+		generator.setAppFolderName("spring");
+
 		GenFolder folder = generator.generateConfigurations();
 
 		GenFilesWriterImpl writer = new GenFilesWriterImpl();

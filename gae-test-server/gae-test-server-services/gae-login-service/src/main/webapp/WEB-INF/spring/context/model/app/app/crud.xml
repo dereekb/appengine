@@ -5,23 +5,11 @@
     <constructor-arg index="2" ref="appUpdateService"/>
     <constructor-arg index="3" ref="appDeleteService"/>
   </bean>
-  <!--Services-->
+  <!--Create Service-->
   <bean class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl" id="appCreateService">
     <constructor-arg index="0" ref="appCreateTask"/>
   </bean>
-  <bean class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl" id="appReadService">
-    <constructor-arg index="0" ref="appReadTask"/>
-  </bean>
-  <bean class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl" id="appUpdateService">
-    <constructor-arg index="0" ref="appReadService"/>
-    <constructor-arg index="1" ref="appUpdateTask"/>
-    <constructor-arg index="2" ref="appScheduleUpdateReview"/>
-  </bean>
-  <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="appDeleteService">
-    <constructor-arg index="0" ref="appReadService"/>
-    <constructor-arg index="1" ref="appDeleteTask"/>
-  </bean>
-  <!--Create-->
+  <!--Create Task-->
   <bean class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl" id="appCreateTask">
     <constructor-arg index="0" ref="appCreateTaskDelegate"/>
     <constructor-arg index="1" ref="appSetterTask"/>
@@ -32,7 +20,11 @@
     <constructor-arg index="1" ref="appCreateAttributeUpdater"/>
   </bean>
   <alias alias="appCreateAttributeUpdater" name="appAttributeUpdater"/>
-  <!--Read-->
+  <!--Read Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl" id="appReadService">
+    <constructor-arg index="0" ref="appReadTask"/>
+  </bean>
+  <!--Read Task-->
   <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl" id="appReadTask">
     <constructor-arg index="0" ref="appRegistry"/>
     <constructor-arg index="1">
@@ -41,7 +33,13 @@
       </bean>
     </constructor-arg>
   </bean>
-  <!--Update-->
+  <!--Update Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl" id="appUpdateService">
+    <constructor-arg index="0" ref="appReadService"/>
+    <constructor-arg index="1" ref="appUpdateTask"/>
+    <constructor-arg index="2" ref="appScheduleUpdateReview"/>
+  </bean>
+  <!--Update Task-->
   <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredUpdateTaskImpl" id="appUpdateTask">
     <constructor-arg index="0" ref="appAttributeUpdater"/>
     <constructor-arg index="1" ref="appSetterTask"/>
@@ -51,10 +49,13 @@
       </bean>
     </constructor-arg>
   </bean>
-  <bean class="com.dereekb.gae.server.app.model.app.crud.AppAttributeUpdater" id="appAttributeUpdater">
-    <!--TODO: Add constructor args if applicable.-->
+  <bean class="com.dereekb.gae.server.app.model.app.crud.AppAttributeUpdater" id="appAttributeUpdater"/>
+  <!--Delete Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="appDeleteService">
+    <constructor-arg index="0" ref="appReadService"/>
+    <constructor-arg index="1" ref="appDeleteTask"/>
   </bean>
-  <!--Delete-->
+  <!--Delete Task-->
   <alias alias="appDeleteTask" name="appScheduleDeleteTask"/>
   <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="appScheduleDeleteTask">
     <constructor-arg index="0" ref="appType"/>

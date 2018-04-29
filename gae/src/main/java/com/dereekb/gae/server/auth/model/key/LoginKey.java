@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
+import com.dereekb.gae.server.auth.model.login.shared.LoginRelatedModel;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
@@ -33,7 +34,7 @@ import com.googlecode.objectify.condition.IfNull;
 @Entity
 @ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public class LoginKey extends OwnedDatabaseModel
-        implements ObjectifyModel<LoginKey>, LoginOwnedModel {
+        implements LoginRelatedModel, ObjectifyModel<LoginKey>, LoginOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 
