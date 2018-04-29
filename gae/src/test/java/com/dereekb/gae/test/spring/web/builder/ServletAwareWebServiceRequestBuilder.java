@@ -1,5 +1,6 @@
 package com.dereekb.gae.test.spring.web.builder;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,7 +16,7 @@ import com.dereekb.gae.utilities.misc.path.PathUtility;
 /**
  * {@link WebServiceRequestBuilder} implementation that automatically sets
  * servlet urls for generated requests.
- * 
+ *
  * @author dereekb
  *
  */
@@ -79,12 +80,24 @@ public class ServletAwareWebServiceRequestBuilder extends WebServiceRequestBuild
 	// MARK: WebServiceRequestBuilder
 	@Override
 	public MockHttpServletRequestBuilder request(HttpMethod method,
+	                                             URI uri) {
+		String servletPath = this.getServletPath(uri.getRawPath());
+
+		if (servletPath.isEmpty() == false) {
+			uri = URI.create(PathUtility.quickMerge(servletPath, uri.toString()));
+		}
+
+		return this.requestBuilder.request(method, uri).servletPath(servletPath);
+	}
+
+	@Override
+	public MockHttpServletRequestBuilder request(HttpMethod method,
 	                                             String urlTemplate,
 	                                             Object... uriVars) {
 		String servletPath = this.getServletPath(urlTemplate);
 
 		if (servletPath.isEmpty() == false) {
-			urlTemplate = PathUtility.buildPath(servletPath, urlTemplate);
+			urlTemplate = PathUtility.quickMerge(servletPath, urlTemplate);
 		}
 
 		return this.requestBuilder.request(method, urlTemplate, uriVars).servletPath(servletPath);
@@ -107,6 +120,13 @@ public class ServletAwareWebServiceRequestBuilder extends WebServiceRequestBuild
 		}
 
 		return servletPath;
+	}
+
+	@Override
+	public String toString() {
+		return "ServletAwareWebServiceRequestBuilder [pathMatcher=" + this.pathMatcher + ", defaultServletPath="
+		        + this.defaultServletPath + ", servletMappings=" + this.servletMappings + ", requestBuilder="
+		        + this.requestBuilder + "]";
 	}
 
 }

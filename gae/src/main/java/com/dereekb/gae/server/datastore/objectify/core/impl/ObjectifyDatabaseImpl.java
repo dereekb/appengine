@@ -255,6 +255,62 @@ public class ObjectifyDatabaseImpl
 			this.reader = reader;
 		}
 
+		/**
+		 * @author dereekb
+		 *
+		 * @deprecated while reading keys in a case-insensitive manner is easy
+		 *             enough, they also need to be written as a lower-case
+		 *             value, which is not easy to do generically with the
+		 *             current Objectify API since the entities are written with
+		 *             the IDs that are attached.
+		 */
+		@Deprecated
+		protected class CaseInsensitiveObjectifyDatabaseEntityReaderImpl extends ObjectifyDatabaseEntityReaderImpl {
+
+			@Override
+			public T get(Key<T> key) {
+				return super.get(this.makeCaseInsensitiveKey(key));
+			}
+
+			@Override
+			public List<T> keysGet(Iterable<Key<T>> list) {
+				return super.keysGet(this.makeCaseInsensitiveKeys(list));
+			}
+
+			@Override
+			public List<T> refsGet(Iterable<Ref<T>> list) {
+				return super.keysGet(this.makeCaseInsensitiveFromRefs(list));
+			}
+
+			protected List<Key<T>> makeCaseInsensitiveFromRefs(Iterable<Ref<T>> input) {
+				List<Key<T>> keys = new ArrayList<Key<T>>();
+
+				for (Ref<T> key : input) {
+					keys.add(this.makeCaseInsensitiveKey(key.getKey()));
+				}
+
+				return keys;
+			}
+
+			protected List<Key<T>> makeCaseInsensitiveKeys(Iterable<Key<T>> input) {
+				List<Key<T>> keys = new ArrayList<Key<T>>();
+
+				for (Key<T> key : input) {
+					keys.add(this.makeCaseInsensitiveKey(key));
+				}
+
+				return keys;
+			}
+
+			@SuppressWarnings("unchecked")
+			protected Key<T> makeCaseInsensitiveKey(Key<T> input) {
+				String name = input.getName().toLowerCase();
+				Class<T> type = (Class<T>) input.getClass();
+				return Key.create(type, name);
+			}
+
+		}
+
 		protected class ObjectifyDatabaseEntityReaderImpl
 		        implements ObjectifyDatabaseEntityReader<T> {
 

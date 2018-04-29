@@ -4,6 +4,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredentialsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
+import com.dereekb.gae.server.auth.security.login.password.exception.PasswordRestrictionException;
 
 /**
  * Service used for creating and retrieving {@link LoginPointer} instances using
@@ -22,8 +23,10 @@ public interface PasswordLoginService {
 	 * @return {@link LoginPointer} for the newly created element.
 	 * @throws LoginExistsException
 	 *             Thrown if a login with this identifier already exists.
+	 * @throws PasswordRestrictionException
+	 *             thrown if the password does not pass the restrictions.
 	 */
-	public LoginPointer create(PasswordLoginPair pair) throws LoginExistsException;
+	public LoginPointer create(PasswordLoginPair pair) throws LoginExistsException, PasswordRestrictionException;
 
 	/**
 	 * Retrieves a {@link LoginPointer} for the given username, if the password

@@ -43,7 +43,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 	private static final String TEST_USERNAME = "tUsername";
 	private static final String TEST_PASSWORD = "tPassword";
 
-	@Autowired
+	@Autowired(required=false)
 	@Qualifier("anonymousLoginController")
 	public AnonymousLoginController anonymousController;
 

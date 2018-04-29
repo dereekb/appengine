@@ -94,7 +94,8 @@ public class DeleteByParentIterateTaskConfigurer extends AbstractIterateConfigur
 	protected void configureScheduleTask(AppModelConfiguration modelConfig,
 	                                     SpringBeansXMLBuilder builder,
 	                                     boolean hasFilter) {
-		String filteredSchedulingTaskBeanId = "schedule" + StringUtility.firstLetterUpperCase(this.getTaskBeanId(modelConfig));
+		String filteredSchedulingTaskBeanId = "schedule"
+		        + StringUtility.firstLetterUpperCase(this.getTaskBeanId(modelConfig));
 		String schedulingTaskBeanId = filteredSchedulingTaskBeanId + "Scheduler";
 
 		if (hasFilter) {
@@ -129,8 +130,8 @@ public class DeleteByParentIterateTaskConfigurer extends AbstractIterateConfigur
 		builder.bean(taskBuilderBeanId).beanClass(this.taskRequestBuilderClass).c().ref(requestBeanId);
 
 		builder.bean(requestBeanId).beanClass(TaskQueueIterateRequestBuilderUtility.class)
-		        .factoryMethod("makeIterateRequest").c().ref(modelConfig.getModelTypeBeanId())
-		        .ref(this.getTaskKeyBeanId(modelConfig));
+		        .factoryMethod("makeIterateRequest").c().ref(this.getTaskKeyBeanId(modelConfig))
+		        .ref(modelConfig.getModelTypeBeanId());
 	}
 
 }

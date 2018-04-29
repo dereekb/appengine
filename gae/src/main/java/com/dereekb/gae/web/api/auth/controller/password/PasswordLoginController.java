@@ -12,6 +12,7 @@ import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredenti
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
+import com.dereekb.gae.server.auth.security.login.password.exception.PasswordRestrictionException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.PasswordRecoveryVerifiedException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnknownUsernameException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnregisteredEmailException;
@@ -20,6 +21,7 @@ import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
+import com.dereekb.gae.web.api.exception.WrappedApiBadRequestException;
 import com.dereekb.gae.web.api.exception.WrappedApiNotFoundException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
@@ -83,6 +85,8 @@ public final class PasswordLoginController {
 		try {
 			PasswordLoginPair loginPair = new PasswordLoginPairImpl(username, password);
 			response = this.delegate.createLogin(loginPair);
+		} catch (PasswordRestrictionException e) {
+			throw new WrappedApiBadRequestException(e);
 		} catch (LoginExistsException e) {
 			throw new ApiLoginExistsException(e);
 		} catch (RuntimeException e) {

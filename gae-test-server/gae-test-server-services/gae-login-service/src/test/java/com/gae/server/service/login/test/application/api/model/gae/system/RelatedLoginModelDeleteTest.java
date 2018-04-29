@@ -29,7 +29,7 @@ import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
  * Special test that tests all related models for a login are properly deleted
  * when the "parent" is deleted. (I.E. when a LoginPointer for LoginKeys is
  * deleted.)
- * 
+ *
  * @author dereekb
  *
  */
@@ -89,6 +89,9 @@ public class RelatedLoginModelDeleteTest extends ApiApplicationTestContext {
 
 		List<LoginKey> otherKeys = this.loginKeyGenerator.generate(5);
 		this.loginKeyRegistry.update(keyA);
+
+		// pointer = this.loginPointerRegistry.get(pointer);
+		// LoginPointer pointerC = this.loginPointerRegistry.get(new ModelKey(pointer.getModelKey().toString().toLowerCase()));
 
 		// Delete Login Pointer
 		DeleteRequest request = new DeleteRequestImpl(pointer);

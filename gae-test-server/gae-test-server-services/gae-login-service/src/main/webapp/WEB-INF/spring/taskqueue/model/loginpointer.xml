@@ -43,8 +43,8 @@
     <constructor-arg index="0" ref="scheduleLoginPointerDeleteByLoginTaskBuilderRequest"/>
   </bean>
   <bean class="com.dereekb.gae.web.taskqueue.model.extension.iterate.utility.TaskQueueIterateRequestBuilderUtility" factory-method="makeIterateRequest" id="scheduleLoginPointerDeleteByLoginTaskBuilderRequest">
-    <constructor-arg index="0" ref="loginPointerType"/>
-    <constructor-arg index="1" ref="loginPointerDeleteByLoginTaskKey"/>
+    <constructor-arg index="0" ref="loginPointerDeleteByLoginTaskKey"/>
+    <constructor-arg index="1" ref="loginPointerType"/>
   </bean>
   <!-- - - - - -->
 </beans>

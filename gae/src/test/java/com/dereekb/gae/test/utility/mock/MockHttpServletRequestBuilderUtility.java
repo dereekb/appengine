@@ -110,7 +110,6 @@ public class MockHttpServletRequestBuilderUtility {
 		url = url.replaceFirst(URL_PREFIX, "");
 
 		MockHttpServletRequestBuilder requestBuilder = serviceRequestBuilder.request(method, url);
-
 		Parameters headers = getHeaderParameters(arg0);
 		addHeaders(requestBuilder, headers);
 

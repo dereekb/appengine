@@ -47,10 +47,16 @@ public abstract class AbstractRoleConfigImpl
 
 	// MARK: RoleConfig
 	@Override
-	public String getAccess() {
+	public final String getAccess() {
 		Iterable<String> args = this.getArguments();
 		args = StringUtility.wrapValues(args, "'");
-		return this.accessFunction + "(" + StringUtility.joinValues(args) + ")";
+		String expression = this.accessFunction + "(" + StringUtility.joinValues(args) + ")";
+
+		if (this.not) {
+			return "!" + expression;
+		} else {
+			return expression;
+		}
 	}
 
 	protected abstract Iterable<String> getArguments();

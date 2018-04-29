@@ -9,6 +9,9 @@ import com.dereekb.gae.utilities.misc.path.SimplePath;
 
 /**
  * {@link SimplePath} implementation.
+ * <p>
+ * It is recommended to not use this with URIs with query parameters, and only
+ * use it with simple paths.
  *
  * @author dereekb
  *
@@ -112,31 +115,31 @@ public class SimplePathImpl
 	}
 
 	@Override
-    public int hashCode() {
+	public int hashCode() {
 		return this.getPath().hashCode();
-    }
+	}
 
 	@Override
-    public boolean equals(Object obj) {
-	    if (this == obj) {
-	        return true;
-        }
-	    if (obj == null) {
-	        return false;
-        }
-	    if (this.getClass() != obj.getClass()) {
-	        return false;
-        }
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
 		SimplePath other = (SimplePath) obj;
 		if (this.getPath() == null) {
 			if (other.getPath() != null) {
-	            return false;
-            }
+				return false;
+			}
 		} else if (!this.getPath().equals(other.getPath())) {
-	        return false;
-        }
-	    return true;
-    }
+			return false;
+		}
+		return true;
+	}
 
 	@Override
 	public String toString() {

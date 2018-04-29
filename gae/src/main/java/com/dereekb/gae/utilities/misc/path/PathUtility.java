@@ -59,6 +59,31 @@ public class PathUtility {
 		return merged;
 	}
 
+	public static String quickMerge(String pathA,
+	                                String pathB) {
+		return quickMerge(pathA, pathB, DEFAULT_PATH_SEPARATOR);
+	}
+
+	public static String quickMerge(String pathA,
+	                                String pathB,
+	                                String separator) {
+		boolean hasSlash = false;
+
+		if (pathA.endsWith(separator)) {
+			hasSlash = true;
+		}
+
+		if (pathB.startsWith(separator)) {
+			if (hasSlash) {
+				pathB = pathB.substring(1);
+			}
+		} else if (!hasSlash) {
+			pathB = separator + pathB;
+		}
+
+		return pathA + pathB;
+	}
+
 	public static String buildPath(String... components) {
 		return buildPath(ListUtility.toList(components), DEFAULT_PATH_SEPARATOR);
 	}

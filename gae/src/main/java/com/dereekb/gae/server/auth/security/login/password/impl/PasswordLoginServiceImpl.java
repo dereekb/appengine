@@ -13,6 +13,7 @@ import com.dereekb.gae.server.auth.security.login.impl.LoginServiceImpl;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginService;
 import com.dereekb.gae.server.auth.security.login.password.PasswordRestriction;
+import com.dereekb.gae.server.auth.security.login.password.exception.PasswordRestrictionException;
 
 /**
  * {@link PasswordLoginService} implementation.
@@ -24,7 +25,7 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
         implements PasswordLoginService {
 
 	private PasswordEncoder encoder;
-	private PasswordRestriction restriction;
+	private PasswordRestriction restriction = new LengthPasswordRestriction();
 
 	public PasswordLoginServiceImpl(LoginPointerService pointerService) throws IllegalArgumentException {
 		this(new BCryptPasswordEncoder(), pointerService);
@@ -87,9 +88,11 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
 	}
 
 	@Override
-	public LoginPointer create(PasswordLoginPair pair) throws LoginExistsException {
+	public LoginPointer create(PasswordLoginPair pair) throws PasswordRestrictionException, LoginExistsException {
 		String username = pair.getUsername();
 		String password = pair.getPassword();
+
+		this.restriction.assertIsValidPassword(password);
 
 		LoginPointer loginPointer = new LoginPointer();
 

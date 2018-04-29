@@ -163,7 +163,7 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		MvcResult createResult = testUtility.sendCreatePasswordLogin(TEST_USERNAME, "");
 		MockHttpServletResponse createResponse = createResult.getResponse();
 
-		Assert.assertTrue(createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
+		Assert.assertTrue("Expected bad request. Got: " + createResponse.getContentAsString(), createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
 	}
 
 	@Test

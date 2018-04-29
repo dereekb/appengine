@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.spring.web.builder;
 
+import java.net.URI;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -38,10 +40,19 @@ public class WebServiceRequestBuilderImpl
 
 	@Override
 	public MockHttpServletRequestBuilder request(HttpMethod method,
+	                                             URI uri) {
+		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.request(method, uri);
+		builder.secure(this.secure);
+		return builder;
+	}
+
+	@Override
+	public MockHttpServletRequestBuilder request(HttpMethod method,
 	                                             String urlTemplate,
 	                                             Object... uriVars) {
 		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.request(method, urlTemplate, uriVars);
 		builder.secure(this.secure);
 		return builder;
 	}
+
 }

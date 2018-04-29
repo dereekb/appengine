@@ -60,9 +60,9 @@
     <!--Only allow this service to access the taskqueue.-->
     <security:intercept-url access="hasRole('ROLE_LOGINTYPE_SYSTEM')" pattern="/taskqueue/**"/>
     <!--LoginKey Auth Requests rejected for some roles.-->
-    <security:intercept-url access="hasAnyRole('ROLE_SYSTEM','ROLE_LOGINTYPE_API','ROLE_ANON')" pattern="/api/login/v1/login/auth/key/*"/>
+    <security:intercept-url access="!hasAnyRole('ROLE_SYSTEM','ROLE_LOGINTYPE_API','ROLE_ANON')" pattern="/api/login/v1/login/auth/key/*"/>
     <!--LoginKey Requests rejected for some roles.-->
-    <security:intercept-url access="hasAnyRole('ROLE_LOGINTYPE_API','ROLE_ANON')" request-matcher-ref="loginKeyObjectApiPathRequestMatcher"/>
+    <security:intercept-url access="!hasAnyRole('ROLE_LOGINTYPE_API','ROLE_ANON')" request-matcher-ref="loginKeyObjectApiPathRequestMatcher"/>
     <!--Secured Owned Model Patterns-->
     <security:intercept-url access="hasRole('ROLE_USER')" request-matcher-ref="securedModelPatternMatcher"/>
     <!--Other Extension Resources-->
