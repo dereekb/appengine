@@ -17,6 +17,11 @@
   <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="loginTaskQueuePostUpdateTask"/>
   <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask" id="loginTaskQueueProcessDeleteTask">
     <constructor-arg index="0" ref="loginRegistry"/>
+    <constructor-arg index="1">
+      <list>
+        <ref bean="scheduleLoginPointerDeleteByLoginTask"/>
+      </list>
+    </constructor-arg>
   </bean>
   <!--Iterate Controller Tasks-->
 </beans>

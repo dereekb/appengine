@@ -9,6 +9,7 @@
         <entry key="update" value-ref="loginPointerTaskQueuePostUpdateTask"/>
         <entry key="delete" value-ref="loginPointerTaskQueueProcessDeleteTask"/>
         <!--TASKS-->
+        <entry key-ref="loginPointerDeleteByLoginTaskKey" value-ref="loginPointerDeleteByLoginTask"/>
       </map>
     </constructor-arg>
   </bean>
@@ -17,6 +18,33 @@
   <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="loginPointerTaskQueuePostUpdateTask"/>
   <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask" id="loginPointerTaskQueueProcessDeleteTask">
     <constructor-arg index="0" ref="loginPointerRegistry"/>
+    <constructor-arg index="1">
+      <list>
+        <ref bean="scheduleLoginKeyDeleteByLoginPointerTask"/>
+      </list>
+    </constructor-arg>
   </bean>
   <!--Iterate Controller Tasks-->
+  <!--DeleteByLogin Task-->
+  <!-- - - - - -->
+  <bean class="java.lang.String" id="loginPointerDeleteByLoginTaskKey">
+    <constructor-arg index="0" value="deleteByLogin"/>
+  </bean>
+  <!--Task-->
+  <bean class="com.dereekb.gae.model.crud.taskqueue.ModelKeyListAccessorDeleteTask" id="loginPointerDeleteByLoginTask">
+    <constructor-arg index="0" ref="loginPointerCrudService"/>
+  </bean>
+  <!--Scheduler-->
+  <bean class="com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.ListAccessorTaskRequestSenderImpl" id="scheduleLoginPointerDeleteByLoginTask">
+    <constructor-arg index="0" ref="scheduleLoginPointerDeleteByLoginTaskBuilder"/>
+    <constructor-arg index="1" ref="taskScheduler"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.model.pointer.taskqueue.LoginPointerLoginQueryTaskRequestBuilder" id="scheduleLoginPointerDeleteByLoginTaskBuilder">
+    <constructor-arg index="0" ref="scheduleLoginPointerDeleteByLoginTaskBuilderRequest"/>
+  </bean>
+  <bean class="com.dereekb.gae.web.taskqueue.model.extension.iterate.utility.TaskQueueIterateRequestBuilderUtility" factory-method="makeIterateRequest" id="scheduleLoginPointerDeleteByLoginTaskBuilderRequest">
+    <constructor-arg index="0" ref="loginPointerType"/>
+    <constructor-arg index="1" ref="loginPointerDeleteByLoginTaskKey"/>
+  </bean>
+  <!-- - - - - -->
 </beans>

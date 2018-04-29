@@ -9,6 +9,7 @@
         <entry key="update" value-ref="loginKeyTaskQueuePostUpdateTask"/>
         <entry key="delete" value-ref="loginKeyTaskQueueProcessDeleteTask"/>
         <!--TASKS-->
+        <entry key-ref="loginKeyDeleteByLoginPointerTaskKey" value-ref="loginKeyDeleteByLoginPointerTask"/>
       </map>
     </constructor-arg>
   </bean>
@@ -19,4 +20,33 @@
     <constructor-arg index="0" ref="loginKeyRegistry"/>
   </bean>
   <!--Iterate Controller Tasks-->
+  <!--DeleteByLoginPointer Task-->
+  <!-- - - - - -->
+  <bean class="java.lang.String" id="loginKeyDeleteByLoginPointerTaskKey">
+    <constructor-arg index="0" value="deleteByLoginPointer"/>
+  </bean>
+  <!--Task-->
+  <bean class="com.dereekb.gae.model.crud.taskqueue.ModelKeyListAccessorDeleteTask" id="loginKeyDeleteByLoginPointerTask">
+    <constructor-arg index="0" ref="loginKeyCrudService"/>
+  </bean>
+  <!--Scheduler-->
+  <bean class="com.dereekb.gae.server.datastore.models.keys.accessor.task.ModelKeyListAccessorTaskFilter" id="scheduleLoginKeyDeleteByLoginPointerTask">
+    <constructor-arg index="0" ref="loginPointerIsApiKeyPointerFilter"/>
+    <constructor-arg index="1" ref="scheduleLoginKeyDeleteByLoginPointerTaskScheduler"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.model.pointer.misc.LoginPointerTypeFilter" id="loginPointerIsApiKeyPointerFilter">
+    <constructor-arg index="0" value="API_KEY"/>
+  </bean>
+  <bean class="com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.ListAccessorTaskRequestSenderImpl" id="scheduleLoginKeyDeleteByLoginPointerTaskScheduler">
+    <constructor-arg index="0" ref="scheduleLoginKeyDeleteByLoginPointerTaskBuilder"/>
+    <constructor-arg index="1" ref="taskScheduler"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.model.key.taskqueue.LoginKeyLoginPointerQueryTaskRequestBuilder" id="scheduleLoginKeyDeleteByLoginPointerTaskBuilder">
+    <constructor-arg index="0" ref="scheduleLoginKeyDeleteByLoginPointerTaskBuilderRequest"/>
+  </bean>
+  <bean class="com.dereekb.gae.web.taskqueue.model.extension.iterate.utility.TaskQueueIterateRequestBuilderUtility" factory-method="makeIterateRequest" id="scheduleLoginKeyDeleteByLoginPointerTaskBuilderRequest">
+    <constructor-arg index="0" ref="loginKeyType"/>
+    <constructor-arg index="1" ref="loginKeyDeleteByLoginPointerTaskKey"/>
+  </bean>
+  <!-- - - - - -->
 </beans>

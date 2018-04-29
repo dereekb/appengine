@@ -20,12 +20,14 @@
 	</properties>
 
 	<dependencies>
+	
 		<!-- Import the core components. -->
 		<dependency>
 			<groupId>com.dereekb.gae.server</groupId>
 			<artifactId>gae-test-server-core</artifactId>
 			<version>${com.dereekb.gae.server.version}</version>
 		</dependency>
+		
 	</dependencies>
 	
 	<build>
@@ -371,9 +373,12 @@
 		<!-- Test Server Services -->
 		<module>gae-test-server-services-login</module>
 		<module>gae-test-server-services-webhook</module>
+		
+		<!-- 
 		<module>gae-test-server-services-data</module>
 		<module>gae-test-server-services-payment</module>
-		
+		 -->
+		 
 	</modules>
 
 </project>

@@ -44,6 +44,33 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 
 	// MARK: Mock Tests
 	@Test
+	public void testRefreshTokenCycle() throws Exception {
+
+		// Create a password LoginPointer/Token
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
+
+		// Register
+		String fullUserToken = testUtility.register(token);
+
+		// Get a refresh token.
+		String refreshToken = testUtility.getRefreshToken(fullUserToken);
+		DecodedLoginToken<LoginTokenImpl> decodedRefreshToken = this.refreshEncoderDecoder
+		        .decodeLoginToken(refreshToken);
+		Assert.assertNotNull(decodedRefreshToken.getLoginToken().getLoginId());
+
+		// Authenticate with the token.
+		String authToken = testUtility.authWithRefreshToken(refreshToken);
+
+		DecodedLoginToken<LoginToken> decoded = this.loginTokenService.decodeLoginToken(authToken);
+		Assert.assertTrue("Decoded token should not be allowed to refresh.", decoded.getLoginToken().isRefreshAllowed() == false);
+
+		// Validate the auth token to ensure it works.
+		MockHttpServletResponse response = testUtility.validateLoginToken(authToken);
+		Assert.assertTrue("Auth token should have been validated.", response.getStatus() == 200);
+	}
+
+	@Test
 	public void testLoginRequests() throws Exception {
 		// Create a password LoginPointer/Token
 		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
@@ -59,13 +86,13 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		Assert.assertNotNull(decodedRefreshToken.getLoginToken().getLoginId());
 
 		// Authenticate with the token.
-		String reauthToken = testUtility.authWithRefreshToken(refreshToken);
+		String authToken = testUtility.authWithRefreshToken(refreshToken);
 
 		// Reset Authentication
 		this.refreshTokenService.setResetCooldown(0L);	// Disable reset
 		                                              	// cooldown for test
 
-		String modified = testUtility.resetTokenAuth(reauthToken);
+		String modified = testUtility.resetTokenAuth(authToken);
 		Assert.assertNotNull(modified);
 
 		// Try to authenticate again. It should fail.
@@ -126,7 +153,7 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 
 		// Reset Authentication
 		MvcResult result = testUtility.sendTokenAuthReset(reauthToken, "");
-		Assert.assertTrue(result.getResponse().getStatus() == 429);
+		Assert.assertTrue("Expected reset failure, but got following status instead: " + result.getResponse().getStatus() + " - " + result.getResponse().getContentAsString(), result.getResponse().getStatus() == 429);
 	}
 
 	@Test

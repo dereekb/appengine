@@ -24,6 +24,18 @@ public class CustomLocalModelContextConfigurerImpl
 	private CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new CustomLocalModelChildrenRoleComponentConfigurerImpl();
 	private SecuredQueryInitializerConfigurer securedQueryInitializerConfigurer = new TodoSecuredQueryInitializerConfigurerImpl();
 
+	public CustomLocalModelIterateControllerConfigurer getCustomLocalModelIterateControllerConfigurer() {
+		return this.customLocalModelIterateControllerConfigurer;
+	}
+
+	public void setCustomLocalModelIterateControllerConfigurer(CustomLocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer) {
+		if (customLocalModelIterateControllerConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelIterateControllerConfigurer cannot be null.");
+		}
+
+		this.customLocalModelIterateControllerConfigurer = customLocalModelIterateControllerConfigurer;
+	}
+
 	public SecuredQueryInitializerConfigurer getSecuredQueryInitializerConfigurer() {
 		return this.securedQueryInitializerConfigurer;
 	}

@@ -59,7 +59,6 @@ public class AppGroupConfigurationGen {
 		public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
 		                                                  AppModelConfiguration modelConfig,
 		                                                  SpringBeansXMLBuilder builder) {
-
 			this.saferMakeRoleBuilderComponent(modelConfig, builder).c().ref("appParentModelRoleSetContextReader");
 			this.makeRoleSetLoaderComponent(modelConfig, builder, true);
 		}

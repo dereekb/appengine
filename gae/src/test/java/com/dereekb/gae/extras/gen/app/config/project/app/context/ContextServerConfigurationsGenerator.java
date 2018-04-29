@@ -468,9 +468,9 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				http.intercept(serviceApiPath + "/login/auth/token/refresh", HasRoleConfig.make("ROLE_USER"),
 				        HttpMethod.GET);
 				http.intercept(serviceApiPath + "/login/auth/token/reset", HasRoleConfig.make("ROLE_USER"),
-				        HttpMethod.GET);
+				        HttpMethod.POST);
 				http.intercept(serviceApiPath + "/login/auth/token/reset/*", HasRoleConfig.make("ROLE_ADMIN"),
-				        HttpMethod.GET);
+				        HttpMethod.POST);
 			}
 
 			http.getRawXMLBuilder().c("Scheduling Pattern");

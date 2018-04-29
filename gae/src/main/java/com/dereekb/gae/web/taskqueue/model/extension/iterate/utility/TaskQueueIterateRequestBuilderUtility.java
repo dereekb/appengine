@@ -29,7 +29,23 @@ public class TaskQueueIterateRequestBuilderUtility {
 
 	public static final TaskQueueIterateRequestBuilderUtility SINGLETON = new TaskQueueIterateRequestBuilderUtility();
 
+	// MARK: Static
+	public static TaskRequest makeSequenceRequest(String taskName,
+	                                              String modelType) {
+		return SINGLETON.sequenceRequest(taskName, modelType);
+	}
+
+	public static TaskRequest makeIterateRequest(String taskName,
+	                                             String modelType) {
+		return SINGLETON.iterateRequest(taskName, modelType);
+	}
+
 	// MARK: Make
+	public <T extends UniqueModel> TaskRequestBuilder<T> iterate(String taskName,
+	                                                             String modelType) {
+		return this.make(taskName, modelType, IterateType.ITERATE);
+	}
+
 	public <T extends UniqueModel> TaskRequestBuilder<T> make(String taskName,
 	                                                          String modelType) {
 		return this.make(taskName, modelType, null);
@@ -49,6 +65,18 @@ public class TaskQueueIterateRequestBuilderUtility {
 		return builder.make();
 	}
 
+	// MARK: Sequence
+	public TaskRequest sequenceRequest(String taskName,
+	                                   String modelType) {
+		return this.builder(taskName, modelType, IterateType.SEQUENCE).makeRequest();
+	}
+
+	public TaskRequest iterateRequest(String taskName,
+	                                  String modelType) {
+		return this.builder(taskName, modelType, IterateType.ITERATE).makeRequest();
+	}
+
+	// MARK: Builder
 	public <T extends UniqueModel> Builder<T> builder(String taskName,
 	                                                  String modelType) {
 		return this.builder(taskName, modelType, null);
@@ -173,6 +201,11 @@ public class TaskQueueIterateRequestBuilderUtility {
 
 		// MARK: Build
 		public TaskRequestBuilder<T> make() {
+			TaskRequestImpl request = this.makeRequest();
+			return new KeyParameterTaskRequestBuilder<T>(request);
+		}
+
+		public TaskRequestImpl makeRequest() {
 			String url = this.iterateType.pathForTask(this.modelType, this.taskName);
 			TaskRequestImpl request = new TaskRequestImpl(url, ITERATE_REQUEST_METHOD);
 
@@ -188,7 +221,7 @@ public class TaskQueueIterateRequestBuilderUtility {
 			request.setParameters(parameters);
 			request.setTimings(this.timings);
 
-			return new KeyParameterTaskRequestBuilder<T>(request);
+			return request;
 		}
 
 		@Override

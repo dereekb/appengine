@@ -3,6 +3,8 @@ package com.dereekb.gae.extras.gen.utility.spring.impl;
 import java.util.List;
 
 import org.springframework.http.HttpMethod;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
@@ -27,6 +29,7 @@ import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXML
 import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLHttpBean;
 import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLInterceptUrlBean;
 import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.data.ValueUtility;
 import com.jamesmurty.utils.XMLBuilder2;
 
 /**
@@ -552,10 +555,11 @@ public class SpringBeansXMLBuilderImpl
 	private class SpringBeansXMLBeanConstructorBuilderImpl<T> extends AnstractSpringBeansXMLBuilderEntityImpl<T>
 	        implements SpringBeansXMLBeanConstructorBuilder<T> {
 
-		private int nextArgIndex = 0;
+		private Integer nextArgIndex;
 
 		public SpringBeansXMLBeanConstructorBuilderImpl(T parent, XMLBuilder2 builder) {
 			super(parent, builder, true);
+			this.nextArgIndex = ValueUtility.defaultTo(this.nextArgIndex, 0);
 		}
 
 		// MARK: Init
@@ -566,7 +570,24 @@ public class SpringBeansXMLBuilderImpl
 
 		@Override
 		protected void initForLoadedBuilderElement() {
-			// TODO: Could initialize the nextArgIndex, etc.
+			this.nextArgIndex = 0;
+
+			NodeList children = this.builder.getElement().getChildNodes();
+
+			int count = children.getLength();
+
+			if (count == 0) {
+				return;
+			}
+
+			for (int i = 0; i < count; i += 1) {
+				Node child = children.item(i);
+				String name = child.getNodeName();
+
+				if (name == SpringBeansXMLBeanConstructor.ARG_ELEMENT) {
+					this.nextArgIndex += 1;
+				}
+			}
 		}
 
 		// MARK: SpringBeansXMLBeanConstructorBuilder

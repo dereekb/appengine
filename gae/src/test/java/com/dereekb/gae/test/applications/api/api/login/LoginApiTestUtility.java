@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import com.dereekb.gae.test.spring.WebServiceTester;
 import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
+import com.dereekb.gae.web.api.auth.controller.token.impl.TokenValidationRequestImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -71,8 +72,13 @@ public class LoginApiTestUtility {
 	        throws Exception {
 		MvcResult result = this.sendTokenAuthReset(token, key);
 
-		// {"data":{"type":"modified","data":"2"}}
 		String content = result.getResponse().getContentAsString();
+
+		if (result.getResponse().getStatus() != 200) {
+			Assert.fail("Reset response failed: " + content);
+		}
+
+		// {"data":{"type":"modified","data":"2"}}
 
 		JsonElement json = PARSER.parse(content);
 		return json.getAsJsonObject().get("data").getAsJsonObject().get("data").getAsString();
@@ -112,6 +118,13 @@ public class LoginApiTestUtility {
 	}
 
 	// MARK: Validate Token
+	public MockHttpServletResponse validateLoginToken(String token) throws Exception {
+		TokenValidationRequestImpl request = new TokenValidationRequestImpl(token);
+		request.setQuick(true);
+
+		return this.validateLoginToken(request);
+	}
+
 	public MockHttpServletResponse validateLoginToken(TokenValidationRequest request) throws Exception {
 
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
