@@ -35,4 +35,9 @@ public interface AppConfiguration {
 
 	public boolean isLoginServer();
 
+	/**
+	 * Returns the root API path for this app.
+	 */
+	public String getRootAppApiPath();
+
 }

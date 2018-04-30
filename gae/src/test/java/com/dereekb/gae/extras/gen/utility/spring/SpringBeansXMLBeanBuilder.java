@@ -46,4 +46,6 @@ public interface SpringBeansXMLBeanBuilder<T>
 
 	public SpringBeansXMLBeanBuilder<T> factoryBean(String ref);
 
+	public SpringBeansXMLBeanBuilder<T> scope(String scope);
+
 }

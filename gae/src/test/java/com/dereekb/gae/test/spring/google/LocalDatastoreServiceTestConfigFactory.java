@@ -1,9 +1,13 @@
 package com.dereekb.gae.test.spring.google;
 
+import com.dereekb.gae.utilities.factory.Factory;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService.AutoIdAllocationPolicy;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 
-public class LocalDatastoreServiceTestConfigFactory {
+public class LocalDatastoreServiceTestConfigFactory
+        implements Factory<LocalDatastoreServiceTestConfig> {
+
+	private boolean applyAllHighRepJobPolicy = true;
 
 	private boolean noStorage = true;
 	private boolean noIndexAutoGen = true;
@@ -13,6 +17,7 @@ public class LocalDatastoreServiceTestConfigFactory {
 	// Used scattered identifiers
 	private AutoIdAllocationPolicy idPolicy = AutoIdAllocationPolicy.SCATTERED;
 
+	@Override
 	public LocalDatastoreServiceTestConfig make() {
 		LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
 
@@ -25,7 +30,19 @@ public class LocalDatastoreServiceTestConfigFactory {
 
 		config = config.setAutoIdAllocationPolicy(this.idPolicy);
 
+		if (this.applyAllHighRepJobPolicy) {
+			config = config.setApplyAllHighRepJobPolicy();
+		}
+
 		return config;
+	}
+
+	public boolean isApplyAllHighRepJobPolicy() {
+		return this.applyAllHighRepJobPolicy;
+	}
+
+	public void setApplyAllHighRepJobPolicy(boolean applyAllHighRepJobPolicy) {
+		this.applyAllHighRepJobPolicy = applyAllHighRepJobPolicy;
 	}
 
 	public boolean isNoStorage() {
@@ -54,6 +71,21 @@ public class LocalDatastoreServiceTestConfigFactory {
 		}
 
 		this.idPolicy = idPolicy;
+	}
+
+	public boolean isHighRepJobPolicy() {
+		return this.highRepJobPolicy;
+	}
+
+	public void setHighRepJobPolicy(boolean highRepJobPolicy) {
+		this.highRepJobPolicy = highRepJobPolicy;
+	}
+
+	@Override
+	public String toString() {
+		return "LocalDatastoreServiceTestConfigFactory [applyAllHighRepJobPolicy=" + this.applyAllHighRepJobPolicy
+		        + ", noStorage=" + this.noStorage + ", noIndexAutoGen=" + this.noIndexAutoGen + ", highRepJobPolicy="
+		        + this.highRepJobPolicy + ", idPolicy=" + this.idPolicy + "]";
 	}
 
 }

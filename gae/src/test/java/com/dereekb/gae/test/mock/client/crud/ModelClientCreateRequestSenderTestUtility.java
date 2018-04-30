@@ -55,7 +55,7 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 			SerializedClientApiResponse<CreateResponse<T>> response = this.createRequestSender
 			        .sendRequest(createRequest, security);
 			int status = response.getStatus();
-			Assert.assertTrue(status == 405);
+			Assert.assertTrue("Create request should have failed with status 405, but instead got: " + status + " - " + response.getResponseData(), status == 405);
 		} catch (NotClientApiResponseException e) {
 			Assert.fail("Should be wrapped within a client API response.");
 		}
@@ -75,6 +75,11 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		template.setModelKey(null);
 
 		CreateRequest<T> createRequest = new CreateRequestImpl<T>(template);
+		this.testMockCreateRequest(createRequest, security);
+	}
+
+	public void testMockCreateRequest(CreateRequest<T> createRequest, ClientRequestSecurity security) throws ClientRequestFailureException {
+
 		SerializedClientApiResponse<CreateResponse<T>> response = this.createRequestSender.sendRequest(createRequest,
 		        security);
 

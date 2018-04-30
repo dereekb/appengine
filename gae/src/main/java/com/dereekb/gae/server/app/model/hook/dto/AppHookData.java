@@ -24,6 +24,8 @@ public class AppHookData extends AbstractAppRelatedModelData {
 
 	private Boolean enabled;
 
+	private Integer failures;
+
 	public String getGroup() {
 		return this.group;
 	}
@@ -56,10 +58,19 @@ public class AppHookData extends AbstractAppRelatedModelData {
 		this.enabled = enabled;
 	}
 
+	public Integer getFailures() {
+		return this.failures;
+	}
+
+	public void setFailures(Integer failures) {
+		this.failures = failures;
+	}
+
 	@Override
 	public String toString() {
-		return "AppHookData [group=" + this.group + ", event=" + this.event + ", enabled=" + this.enabled + ", path="
-		        + this.path + "]";
+		return "AppHookData [group=" + this.group + ", event=" + this.event + ", path=" + this.path + ", enabled="
+		        + this.enabled + ", failures=" + this.failures + ", app=" + this.app + ", key=" + this.key + ", date="
+		        + this.date + "]";
 	}
 
 }

@@ -31,8 +31,9 @@ public final class AppHookDataReader extends AbstractAppRelatedModelDataReader<A
 		model.setEvent(input.getEvent());
 		model.setPath(input.getPath());
 		model.setEnabled(input.getEnabled());
+		model.setFailures(input.getFailures());
 
-		// Links
+		// Link
 
 		return model;
 	}

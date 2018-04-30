@@ -2,8 +2,8 @@ package com.dereekb.gae.server.app.model.hook.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.server.app.model.app.shared.dto.AbstractAppRelatedModelDataBuilder;
 import com.dereekb.gae.server.app.model.hook.AppHook;
-import com.dereekb.gae.server.datastore.models.dto.DatedDatabaseModelDataBuilder;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**
@@ -12,7 +12,7 @@ import com.dereekb.gae.utilities.factory.Factory;
  *
  * @author dereekb
  */
-public final class AppHookDataBuilder extends DatedDatabaseModelDataBuilder<AppHook, AppHookData> {
+public final class AppHookDataBuilder extends AbstractAppRelatedModelDataBuilder<AppHook, AppHookData> {
 
 	public AppHookDataBuilder() {
 		super(AppHookData.class);
@@ -31,6 +31,7 @@ public final class AppHookDataBuilder extends DatedDatabaseModelDataBuilder<AppH
 		data.setEvent(input.getEvent());
 		data.setPath(input.getPath());
 		data.setEnabled(input.getEnabled());
+		data.setFailures(input.getFailures());
 
 		// Links
 

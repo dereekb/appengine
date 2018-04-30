@@ -10,17 +10,18 @@ import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppConfigurationGenerator;
-import com.dereekb.gae.extras.gen.app.config.project.test.TestModelsConfigurationGenerator;
+import com.dereekb.gae.extras.gen.app.config.project.test.TestConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.gae.AppGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.LoginGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFilesWriterImpl;
+import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 public class LoginServiceAppConfigurationGen {
 
-	private static final String APP_SPRING_PATH = "src/main/webapp/WEB-INF/spring";
-	private static final String APP_TEST_SPRING_PATH = "src/test/webapp/spring/test";
+	private static final String APP_SPRING_PATH = "src/main/webapp/WEB-INF";
+	private static final String APP_TEST_SPRING_PATH = "src/test/webapp";
 
 	public static AppConfiguration makeAppConfiguration() {
 
@@ -30,7 +31,8 @@ public class LoginServiceAppConfigurationGen {
 		// App
 		AppModelConfigurationGroupImpl appGroup = AppGroupConfigurationGen.makeLocalAppGroupConfig();
 
-		List<AppModelConfigurationGroup> modelConfigurations = ListUtility.toList((AppModelConfigurationGroup) loginGroup, appGroup);
+		List<AppModelConfigurationGroup> modelConfigurations = ListUtility
+		        .toList((AppModelConfigurationGroup) loginGroup, appGroup);
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(modelConfigurations);
 
@@ -46,16 +48,6 @@ public class LoginServiceAppConfigurationGen {
 	public static final AppConfiguration APP_CONFIG = makeAppConfiguration();
 
 	@Test
-	public void testMakeTestClentConfiguration() throws IOException {
-
-		TestModelsConfigurationGenerator generator = new TestModelsConfigurationGenerator(APP_CONFIG);
-		GenFolder folder = generator.generateConfigurations();
-
-		GenFilesWriterImpl writer = new GenFilesWriterImpl();
-		writer.writeFiles(folder);
-	}
-
-	@Test
 	public void testMakeAppConfiguration() throws IOException {
 
 		AppConfigurationGenerator generator = new AppConfigurationGenerator(APP_CONFIG);
@@ -63,7 +55,19 @@ public class LoginServiceAppConfigurationGen {
 
 		GenFolder folder = generator.generateConfigurations();
 
-		GenFilesWriterImpl writer = new GenFilesWriterImpl();
+		GenFilesWriterImpl writer = new GenFilesWriterImpl(APP_SPRING_PATH);
+		writer.writeFiles(folder);
+	}
+
+	@Test
+	public void testMakeTestClentConfiguration() throws IOException {
+
+		TestConfigurationGenerator generator = new TestConfigurationGenerator(APP_CONFIG);
+		GenFolderImpl folder = generator.generateConfigurations();
+
+		folder.setFolderName("spring");
+
+		GenFilesWriterImpl writer = new GenFilesWriterImpl(APP_TEST_SPRING_PATH);
 		writer.writeFiles(folder);
 	}
 

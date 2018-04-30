@@ -157,4 +157,9 @@ public class AppConfigurationImpl
 		this.modelConfigurations = modelConfigurations;
 	}
 
+	@Override
+	public String getRootAppApiPath() {
+		return "/api/" + this.getAppServiceName() + "/" + this.getAppVersion();
+	}
+
 }

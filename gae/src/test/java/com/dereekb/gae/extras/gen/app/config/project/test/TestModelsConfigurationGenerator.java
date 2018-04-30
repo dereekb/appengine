@@ -1,5 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.test;
 
+import java.util.Properties;
+
 import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientCreateRequestSenderImpl;
@@ -37,13 +39,21 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 	public static final String TEST_FOLDER_NAME = "test";
 
-	// MARK: Generation
+	public TestModelsConfigurationGenerator(AbstractConfigurationFileGenerator generator) {
+		super(generator);
+	}
+
 	public TestModelsConfigurationGenerator(AppConfiguration appConfig) {
 		super(appConfig);
 	}
 
+	public TestModelsConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
+		super(appConfig, outputProperties);
+	}
+
+	// MARK: Generation
 	@Override
-	public GenFolder generateConfigurations() {
+	public GenFolderImpl generateConfigurations() {
 
 		GenFolderImpl folder = new GenFolderImpl("models");
 
@@ -63,7 +73,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		GenFile modelsfile = this.makeSharedModelXMLFile(modelFiles, clientFolder);
 		folder.addFile(modelsfile);
 
-		return folder.wrap(TEST_FOLDER_NAME);
+		return folder;
 	}
 
 	public static final String SHARED_MODEL_FILE_NAME = "models";

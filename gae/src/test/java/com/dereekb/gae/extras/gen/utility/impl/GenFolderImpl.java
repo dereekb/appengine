@@ -117,7 +117,7 @@ public class GenFolderImpl
 	}
 
 	@Override
-	public GenFolder wrap(String folder) {
+	public GenFolderImpl wrap(String folder) {
 		GenFolderImpl wrap = new GenFolderImpl(folder);
 
 		wrap.addFolder(this);

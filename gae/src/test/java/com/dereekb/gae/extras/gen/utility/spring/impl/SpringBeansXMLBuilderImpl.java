@@ -262,6 +262,12 @@ public class SpringBeansXMLBuilderImpl
 			return this;
 		}
 
+		@Override
+		public SpringBeansXMLBeanBuilder<T> scope(String scope) {
+			this.builder.a(SpringBeansXMLBean.SCOPE_ATTRIBUTE, scope);
+			return this;
+		}
+
 	}
 
 	private class SpringBeansXMLListBuilderImpl<T> extends AbstractSpringBeansXMLUtilBeanBuilderEntityImpl<T>
