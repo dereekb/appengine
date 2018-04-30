@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.dereekb.gae.client.api.server.schedule.impl.ClientApiScheduleTaskRequestImpl;
-
 public class ApiScheduleTaskControllerTest {
 
 	// MARK: Client Tests
@@ -14,7 +12,7 @@ public class ApiScheduleTaskControllerTest {
 
 		// TODO: Move to a better location later.
 
-		ClientApiScheduleTaskRequestImpl test = new ClientApiScheduleTaskRequestImpl();
+		// ClientApiScheduleTaskRequestImpl test = new ClientApiScheduleTaskRequestImpl();
 
 
 
