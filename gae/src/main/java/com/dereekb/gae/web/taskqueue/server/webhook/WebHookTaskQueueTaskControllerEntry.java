@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.taskqueue.server.hook;
+package com.dereekb.gae.web.taskqueue.server.webhook;
 
 import java.io.IOException;
 import java.util.Map;
@@ -21,9 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @author dereekb
  *
+ * @deprecated Use {@link TaskQueueWebHookController} instead.
+ *
  * @see {@link HookApiScheduleTaskControllerEntry} for scheduling tasks through
  *      the REST API.
  */
+@Deprecated
 public class WebHookTaskQueueTaskControllerEntry
         implements TaskQueueTaskControllerEntry {
 

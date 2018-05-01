@@ -6,7 +6,8 @@ import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskController;
 
 /**
- * Client interface for interacting with the {@link ApiScheduleTaskController}.
+ * Client interface for interacting with the {@link ApiScheduleTaskController}
+ * configured on a remote service.
  *
  * @author dereekb
  *

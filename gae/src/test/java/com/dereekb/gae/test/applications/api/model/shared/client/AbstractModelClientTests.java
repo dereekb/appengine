@@ -69,6 +69,12 @@ import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 import com.googlecode.objectify.Key;
 
+/**
+ *
+ *
+ * @author dereekb
+ *
+ */
 public abstract class AbstractModelClientTests extends ApiApplicationTestContext {
 
 	// Login

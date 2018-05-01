@@ -12,15 +12,15 @@ import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.dereekb.gae.web.api.server.schedule.impl.AbstractSingleTaskApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
-import com.dereekb.gae.web.taskqueue.server.hook.WebHookTaskQueueTaskControllerEntry;
 import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController;
+import com.dereekb.gae.web.taskqueue.server.webhook.TaskQueueWebHookController;
+import com.dereekb.gae.web.taskqueue.server.webhook.WebHookTaskQueueTaskControllerEntry;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link AbstractSingleTaskApiScheduleTaskControllerEntry} for receiving
- * webhook events and building a task for the
- * {@link WebHookTaskQueueTaskControllerEntry}.
+ * webhook events and building a task for the {@link TaskQueueWebHookController}.
  *
  * @author dereekb
  *
@@ -60,6 +60,8 @@ public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiSch
 
 		try {
 			TaskRequestImpl taskRequest = new TaskRequestImpl();
+
+			// TODO: Update and sent task to TaskQueueWebHookController
 
 			String path = TaskQueueTaskController.pathForTask(WebHookTaskQueueTaskControllerEntry.TASK_ENTRY_KEY);
 			taskRequest.setPath(path);

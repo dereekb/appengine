@@ -577,6 +577,11 @@ public class AppModelConfigurationImpl
 		return this.beansConfiguration.getModelSetterTaskBeanId();
 	}
 
+	@Override
+	public String getModelEventServiceEntryBeanId() {
+		return this.beansConfiguration.getModelEventServiceEntryBeanId();
+	}
+
 	// AppModelCrudsConfiguration
 	@Override
 	public boolean hasCrudService() {

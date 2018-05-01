@@ -5,7 +5,7 @@ import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 
-// MARK: IterateConfigurerInstance Task Enttry
+// MARK: IterateConfigurerInstance Task Entry
 public interface IterateConfigurerInstanceTaskEntry {
 
 	/**

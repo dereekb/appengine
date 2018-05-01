@@ -1,6 +1,5 @@
 package com.dereekb.gae.server.event.model.shared.event.service.impl;
 
-import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.exception.IllegalModelTypeException;
@@ -18,6 +17,7 @@ import com.dereekb.gae.server.event.model.shared.event.service.task.ModelEventSu
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
+ * {@link ModelEventSubmitTaskFactory} implementation for a particular model.
  *
  * @author dereekb
  *
@@ -26,21 +26,17 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  * @param <D>
  *            data type
  */
-public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueModel>
+public class ModelEventServiceEntryImpl<T extends UniqueModel>
         implements ModelEventSubmitTaskFactory<T>, ModelEventKeyLoader<T>, TypedModel {
 
 	private EventService eventService;
 	private ModelKeyListAccessorFactory<T> accessorFactory;
-	private BidirectionalConverter<T, D> converter;
 
 	private transient ModelEventKeyLoader<T> loader;
 
-	public ModelEventServiceEntryImpl(EventService eventService,
-	        ModelKeyListAccessorFactory<T> accessorFactory,
-	        BidirectionalConverter<T, D> converter) {
+	public ModelEventServiceEntryImpl(EventService eventService, ModelKeyListAccessorFactory<T> accessorFactory) {
 		this.setEventService(eventService);
 		this.setAccessorFactory(accessorFactory);
-		this.setConverter(converter);
 	}
 
 	public EventService getEventService() {
@@ -65,18 +61,6 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 		}
 
 		this.accessorFactory = accessorFactory;
-	}
-
-	public BidirectionalConverter<T, D> getConverter() {
-		return this.converter;
-	}
-
-	public void setConverter(BidirectionalConverter<T, D> converter) {
-		if (converter == null) {
-			throw new IllegalArgumentException("converter cannot be null.");
-		}
-
-		this.converter = converter;
 	}
 
 	// MARK: TypedModel
@@ -130,6 +114,12 @@ public class ModelEventServiceEntryImpl<T extends UniqueModel, D extends UniqueM
 		}
 
 		return this.loader;
+	}
+
+	@Override
+	public String toString() {
+		return "ModelEventServiceEntryImpl [eventService=" + this.eventService + ", accessorFactory="
+		        + this.accessorFactory + "]";
 	}
 
 }

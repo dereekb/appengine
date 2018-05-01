@@ -15,6 +15,11 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 public interface TaskRequest {
 
 	/**
+	 * @return {@link TaskRequestDataType}. Never {@code null}.
+	 */
+	public TaskRequestDataType getDataType();
+
+	/**
 	 * Optional request name.
 	 *
 	 * @return {@link String} request name.
@@ -50,6 +55,13 @@ public interface TaskRequest {
 	 * @return {@link Collection} of request parameters.
 	 */
 	public Collection<KeyedEncodedParameter> getParameters();
+
+	/**
+	 * Returns the data for this request, if set.
+	 *
+	 * @return {@link String} data, or {@code null} if not set.
+	 */
+	public String getRequestData();
 
 	/**
 	 * Returns timings for when to submit the request.

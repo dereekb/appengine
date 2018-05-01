@@ -13,10 +13,45 @@
     </constructor-arg>
   </bean>
   <!--Iterate Controller CRUD Tasks-->
-  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appHookTaskQueuePostCreateTask"/>
-  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appHookTaskQueuePostUpdateTask"/>
+  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appHookTaskQueuePostCreateTask">
+    <constructor-arg index="0">
+      <list>
+        <bean factory-bean="appHookModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="CREATED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appHookTaskQueuePostUpdateTask">
+    <constructor-arg index="0">
+      <list>
+        <bean factory-bean="appHookModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="UPDATED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
   <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask" id="appHookTaskQueueProcessDeleteTask">
     <constructor-arg index="0" ref="appHookRegistry"/>
+    <constructor-arg index="1">
+      <list>
+        <bean factory-bean="appHookModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="DELETED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
   </bean>
   <!--Iterate Controller Tasks-->
 </beans>

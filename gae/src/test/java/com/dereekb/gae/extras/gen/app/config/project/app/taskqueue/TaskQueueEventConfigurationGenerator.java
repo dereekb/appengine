@@ -20,7 +20,7 @@ import com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookE
 import com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventDeserializerImpl;
 import com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventSerializerImpl;
 import com.dereekb.gae.server.event.webhook.service.impl.WebHookEventConverterImpl;
-import com.dereekb.gae.web.taskqueue.server.hook.WebHookTaskQueueTaskControllerEntry;
+import com.dereekb.gae.web.taskqueue.server.webhook.WebHookTaskQueueTaskControllerEntry;
 
 /**
  * {@link AbstractRemoteModelConfigurationGenerator}
@@ -61,9 +61,9 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		builder.comment("Model Event Service");
-		builder.bean(modelConfig.getModelBeanPrefix() + "EventSerializer").beanClass(ModelEventServiceEntryImpl.class)
-		        .c().ref(this.getAppConfig().getAppBeans().getEventServiceId())
-		        .ref(modelConfig.getModelKeyListAccessorFactoryId()).ref(modelConfig.getModelDataConverterBeanId());
+		builder.bean(modelConfig.getModelEventServiceEntryBeanId()).beanClass(ModelEventServiceEntryImpl.class).c()
+		        .ref(this.getAppConfig().getAppBeans().getEventServiceId())
+		        .ref(modelConfig.getModelKeyListAccessorFactoryId());
 
 		builder.comment("Web Hook Serializers");
 		builder.bean(modelConfig.getModelBeanPrefix() + "WebHookEventSerializer")
@@ -123,17 +123,23 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		String webHookEventSerializerBeanId = "webHookEventSerializer";
 		String webHookEventDeserializerBeanId = "webHookEventDeserializer";
 
+		// Entry
 		builder.comment("Task Controller");
 		builder.bean("webHookTaskQueueTaskControllerEntry").beanClass(WebHookTaskQueueTaskControllerEntry.class).c()
 		        .ref(this.getAppConfig().getAppBeans().getEventServiceId()).ref(webHookEventDeserializerBeanId);
 
-		builder.comment("Converter");
+		// Sender Listener
 
+
+		// Converter
+		builder.comment("Converter");
 		builder.bean(webHookEventConverterBeanId).beanClass(WebHookEventConverterImpl.class).c()
 		        .ref(webHookEventSerializerBeanId).ref(webHookEventDeserializerBeanId);
 
-		SpringBeansXMLMapBuilder<?> groupEventSerializer = builder.bean(webHookEventSerializerBeanId).beanClass(GroupWebHookEventSerializerImpl.class).c().map();
-		SpringBeansXMLMapBuilder<?> groupEventDeserializer = builder.bean(webHookEventDeserializerBeanId).beanClass(GroupWebHookEventDeserializerImpl.class).c().map();
+		SpringBeansXMLMapBuilder<?> groupEventSerializer = builder.bean(webHookEventSerializerBeanId)
+		        .beanClass(GroupWebHookEventSerializerImpl.class).c().map();
+		SpringBeansXMLMapBuilder<?> groupEventDeserializer = builder.bean(webHookEventDeserializerBeanId)
+		        .beanClass(GroupWebHookEventDeserializerImpl.class).c().map();
 
 		// Model
 		groupEventSerializer.entry("model").valueRef("modelWebHookEventSerializer");

@@ -19,6 +19,7 @@ import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.i
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
 import com.dereekb.gae.server.auth.model.key.taskqueue.LoginKeyLoginPointerQueryTaskRequestBuilder;
 import com.dereekb.gae.server.auth.model.login.Login;
@@ -130,10 +131,12 @@ public class LoginGroupConfigurationGen {
 			}
 
 			@Override
-			protected void configureProcessDeleteTask() {
+			protected void configureProcessDeleteTaskList(SpringBeansXMLListBuilder<?> taskListBuilder) {
 				// Add Delete Children Task
-				this.createProcessDeleteTask().c().list().ref(
-				        LoginPointerIterateControllerConfigurer.LoginPointerDeleteByParentIterateTaskConfigurer.SCHEDULE_TASK_NAME);
+				taskListBuilder.ref(LoginPointerIterateControllerConfigurer.LoginPointerDeleteByParentIterateTaskConfigurer.SCHEDULE_TASK_NAME);
+
+				// Add Default Tasks
+				super.configureProcessDeleteTaskList(taskListBuilder);
 			}
 
 			@Override
@@ -165,10 +168,13 @@ public class LoginGroupConfigurationGen {
 			}
 
 			@Override
-			protected void configureProcessDeleteTask() {
+			protected void configureProcessDeleteTaskList(SpringBeansXMLListBuilder<?> taskListBuilder) {
 				// Add Delete Children Task
-				this.createProcessDeleteTask().c().list().ref(
+				taskListBuilder.ref(
 				        LoginKeyIterateControllerConfigurer.LoginKeyDeleteByParentIterateTaskConfigurer.SCHEDULE_TASK_NAME);
+
+				// Add Default Tasks
+				super.configureProcessDeleteTaskList(taskListBuilder);
 			}
 
 			@Override

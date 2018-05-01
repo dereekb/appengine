@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestDataType;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
@@ -26,6 +27,8 @@ public class TaskRequestImpl
 
 	private static final Method DEFAULT_METHOD = Method.PUT;
 
+	private TaskRequestDataType dataType = TaskRequestDataType.PARAMETERS;
+
 	private String name;
 
 	/**
@@ -39,6 +42,8 @@ public class TaskRequestImpl
 	private Collection<KeyedEncodedParameter> headers;
 
 	private Collection<KeyedEncodedParameter> parameters;
+
+	private String requestData;
 
 	private TaskRequestTiming timings;
 
@@ -146,10 +151,11 @@ public class TaskRequestImpl
 	public void setParameters(Collection<? extends KeyedEncodedParameter> parameters) {
 		this.parameters = ListUtility.safeCopy(parameters);
 	}
-	
+
 	public void setParameters(Map<String, String> parameters) {
 		if (parameters != null) {
-			List<KeyedEncodedParameterImpl> keyedParameters = KeyedEncodedParameterImpl.makeParametersWithMap(parameters);
+			List<KeyedEncodedParameterImpl> keyedParameters = KeyedEncodedParameterImpl
+			        .makeParametersWithMap(parameters);
 			this.setParameters(keyedParameters);
 		} else {
 			this.parameters = null;
@@ -162,6 +168,32 @@ public class TaskRequestImpl
 
 	public void replaceParameter(KeyedEncodedParameter replacement) {
 		this.setParameters(KeyedEncodedParameterImpl.replaceInCollection(this.parameters, replacement));
+	}
+
+	@Override
+	public TaskRequestDataType getDataType() {
+		return this.dataType;
+	}
+
+	@Override
+	public String getRequestData() {
+		return this.requestData;
+	}
+
+	@Override
+	public void setRequestData(String requestData) {
+		this.setRequestData(TaskRequestDataType.JSON, requestData);
+	}
+
+	@Override
+	public void setRequestData(TaskRequestDataType dataType,
+	                           String requestData) {
+		if (requestData == null) {
+			dataType = TaskRequestDataType.PARAMETERS;
+		}
+
+		this.dataType = dataType;
+		this.requestData = requestData;
 	}
 
 	@Override
@@ -178,12 +210,14 @@ public class TaskRequestImpl
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((this.dataType == null) ? 0 : this.dataType.hashCode());
 		result = prime * result + ((this.headers == null) ? 0 : this.headers.hashCode());
 		result = prime * result + ((this.method == null) ? 0 : this.method.hashCode());
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.parameters == null) ? 0 : this.parameters.hashCode());
-		result = prime * result + ((this.timings == null) ? 0 : this.timings.hashCode());
 		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
+		result = prime * result + ((this.requestData == null) ? 0 : this.requestData.hashCode());
+		result = prime * result + ((this.timings == null) ? 0 : this.timings.hashCode());
 		return result;
 	}
 
@@ -195,10 +229,13 @@ public class TaskRequestImpl
 		if (obj == null) {
 			return false;
 		}
-		if (this.getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		TaskRequestImpl other = (TaskRequestImpl) obj;
+		if (this.dataType != other.dataType) {
+			return false;
+		}
 		if (this.headers == null) {
 			if (other.headers != null) {
 				return false;
@@ -223,18 +260,25 @@ public class TaskRequestImpl
 		} else if (!this.parameters.equals(other.parameters)) {
 			return false;
 		}
-		if (this.timings == null) {
-			if (other.timings != null) {
-				return false;
-			}
-		} else if (!this.timings.equals(other.timings)) {
-			return false;
-		}
 		if (this.path == null) {
 			if (other.path != null) {
 				return false;
 			}
 		} else if (!this.path.equals(other.path)) {
+			return false;
+		}
+		if (this.requestData == null) {
+			if (other.requestData != null) {
+				return false;
+			}
+		} else if (!this.requestData.equals(other.requestData)) {
+			return false;
+		}
+		if (this.timings == null) {
+			if (other.timings != null) {
+				return false;
+			}
+		} else if (!this.timings.equals(other.timings)) {
 			return false;
 		}
 		return true;

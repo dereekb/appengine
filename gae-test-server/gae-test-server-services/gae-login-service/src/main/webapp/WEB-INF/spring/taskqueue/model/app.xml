@@ -13,10 +13,45 @@
     </constructor-arg>
   </bean>
   <!--Iterate Controller CRUD Tasks-->
-  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appTaskQueuePostCreateTask"/>
-  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appTaskQueuePostUpdateTask"/>
+  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appTaskQueuePostCreateTask">
+    <constructor-arg index="0">
+      <list>
+        <bean factory-bean="appModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="CREATED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="appTaskQueuePostUpdateTask">
+    <constructor-arg index="0">
+      <list>
+        <bean factory-bean="appModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="UPDATED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
   <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask" id="appTaskQueueProcessDeleteTask">
     <constructor-arg index="0" ref="appRegistry"/>
+    <constructor-arg index="1">
+      <list>
+        <bean factory-bean="appModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="DELETED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
   </bean>
   <!--Iterate Controller Tasks-->
 </beans>

@@ -157,7 +157,24 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 
 		@Override
 		public Collection<KeyedEncodedParameter> getParameters() {
-			return this.request.getParameters();
+			switch (this.request.getDataType()) {
+				case PARAMETERS:
+					return this.request.getParameters();
+				case JSON:
+				default:
+					return null;
+			}
+		}
+
+		@Override
+		public String getPayload() {
+			switch (this.request.getDataType()) {
+				case JSON:
+					return this.request.getRequestData();
+				case PARAMETERS:
+				default:
+					return null;
+			}
 		}
 
 	}
@@ -175,6 +192,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			options = this.updateTimings(options);
 			options = this.appendHeaders(options);
 			options = this.appendParameters(options);
+			options = this.appendPayload(options);
 			return options;
 		}
 
@@ -206,16 +224,6 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			return options;
 		}
 
-		private TaskOptions appendParameters(TaskOptions options) {
-			Collection<KeyedEncodedParameter> parameters = this.reader.getParameters();
-
-			if (parameters != null) {
-				options = TaskOptionsUtility.appendParameters(options, parameters);
-			}
-
-			return options;
-		}
-
 		private TaskOptions appendHeaders(TaskOptions options) {
 			Collection<KeyedEncodedParameter> headers = this.reader.getHeaders();
 
@@ -226,6 +234,25 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			return options;
 		}
 
+		private TaskOptions appendParameters(TaskOptions options) {
+			Collection<KeyedEncodedParameter> parameters = this.reader.getParameters();
+
+			if (parameters != null) {
+				options = TaskOptionsUtility.appendParameters(options, parameters);
+			}
+
+			return options;
+		}
+
+		private TaskOptions appendPayload(TaskOptions options) {
+			String payload = this.reader.getPayload();
+
+			if (payload != null) {
+				options = options.payload(payload);
+			}
+
+			return options;
+		}
 	}
 
 }

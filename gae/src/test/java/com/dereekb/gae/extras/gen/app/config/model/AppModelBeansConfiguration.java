@@ -74,4 +74,6 @@ public interface AppModelBeansConfiguration {
 
 	public String getModelSecurityContextServiceEntryBeanId();
 
+	public String getModelEventServiceEntryBeanId();
+
 }

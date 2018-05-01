@@ -159,6 +159,11 @@ public class SpringBeansXMLBuilderImpl
 	}
 
 	@Override
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> enumBean(String id, Enum<?> value) {
+		return this.bean(id).beanClass(value.getClass()).factoryMethod("valueOf").c().value(value.name()).up();
+	}
+
+	@Override
 	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id) {
 		return new SpringBeansXMLListBuilderImpl<SpringBeansXMLBuilder>(this, this.beansBuilder, id);
 	}
@@ -621,6 +626,11 @@ public class SpringBeansXMLBuilderImpl
 		public SpringBeansXMLBeanConstructorBuilder<T> nullArg() {
 			this.nextArgBuilder().e(SpringBeansXMLBeanConstructor.NULL_ELEMENT);
 			return this;
+		}
+
+		@Override
+		public SpringBeansXMLBeanConstructorBuilder<T> enumBean(Enum<?> value) {
+			return this.bean().beanClass(value.getClass()).factoryMethod("valueOf").c().value(value.name()).up().up();
 		}
 
 		@Override

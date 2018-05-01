@@ -50,6 +50,7 @@ public class AppModelBeansConfigurationImpl
 	private String stringModelKeyConverter;
 	private String modelQueryServiceId;
 	private String modelSecurityContextServiceEntryBeanId;
+	private String modelEventServiceEntryBeanId;
 
 	public AppModelBeansConfigurationImpl(String modelType, ModelKeyType modelKeyType) {
 		String modelBeanPrefix = StringUtility.firstLetterLowerCase(modelType);
@@ -86,6 +87,7 @@ public class AppModelBeansConfigurationImpl
 		this.setStringModelKeyConverter(AppBeansConfiguration.getModelKeyConverterBeanId(modelKeyType));
 		this.setModelQueryServiceId(modelBeanPrefix + "QueryService");
 		this.setModelSecurityContextServiceEntryBeanId(modelBeanPrefix + "SecurityContextServiceEntry");
+		this.setModelEventServiceEntryBeanId(modelBeanPrefix + "ModelEventService");
 	}
 
 	public ModelKeyType getModelKeyType() {
@@ -488,6 +490,19 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelSecurityContextServiceEntryBeanId = modelSecurityContextServiceEntryBeanId;
+	}
+
+	@Override
+	public String getModelEventServiceEntryBeanId() {
+		return this.modelEventServiceEntryBeanId;
+	}
+
+	public void setModelEventServiceEntryBeanId(String modelEventServiceEntryBeanId) {
+		if (modelEventServiceEntryBeanId == null) {
+			throw new IllegalArgumentException("modelEventServiceEntryBeanId cannot be null.");
+		}
+
+		this.modelEventServiceEntryBeanId = modelEventServiceEntryBeanId;
 	}
 
 	@Override

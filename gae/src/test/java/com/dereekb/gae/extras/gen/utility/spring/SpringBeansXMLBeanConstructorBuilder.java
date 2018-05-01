@@ -21,6 +21,8 @@ public interface SpringBeansXMLBeanConstructorBuilder<T>
 
 	public SpringBeansXMLBeanConstructorBuilder<T> nullArg();
 
+	public SpringBeansXMLBeanConstructorBuilder<T> enumBean(Enum<?> value);
+
 	public SpringBeansXMLBeanBuilder<SpringBeansXMLBeanConstructorBuilder<T>> bean();
 
 	public SpringBeansXMLMapBuilder<SpringBeansXMLBeanConstructorBuilder<T>> map();

@@ -79,6 +79,8 @@ public interface SpringBeansXMLBuilder
 	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> longBean(String id,
 	                                                                 Long value);
 
+	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> enumBean(String id, Enum<?> value);
+
 	public SpringBeansXMLListBuilder<SpringBeansXMLBuilder> list(String id);
 
 	public SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> map(String id);

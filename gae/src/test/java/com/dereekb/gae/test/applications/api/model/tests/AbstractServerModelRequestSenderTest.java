@@ -47,6 +47,7 @@ public abstract class AbstractServerModelRequestSenderTest<T extends MutableUniq
 	// Model Roles
 	private ModelClientRolesContextServiceRequestSenderTestUtility<T> modelRolesRequestUtility;
 
+	// Events
 	public AbstractServerModelRequestSenderTest() {
 		super();
 	}
