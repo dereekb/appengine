@@ -13,6 +13,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigurationGen {
 
+	@Override
 	public AppConfiguration makeAppConfiguration() {
 
 		// Login
@@ -26,7 +27,7 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(modelConfigurations);
 
-		configuration.setAppName("gae-test-login");
+		configuration.setAppName("gae-login-service");
 		configuration.setAppVersion("v1");
 		configuration.setAppServiceName("login");
 		configuration.setAppTaskQueueName("login");

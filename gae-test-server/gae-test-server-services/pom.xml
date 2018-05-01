@@ -372,9 +372,9 @@
 		
 		<!-- Test Server Services -->
 		<module>gae-login-service</module>
+		<module>gae-event-service</module>
 		
 		<!-- 
-		<module>gae-webhook</module>
 		<module>gae-data</module>
 		<module>gae-payment</module>
 		 -->

@@ -26,6 +26,7 @@ public abstract class AbstractServiceAppConfigurationGen {
 	public void makeConfigurations() throws IOException {
 		AppConfiguration configuration = this.makeAppConfiguration();
 		this.makeAppConfiguration(configuration);
+		this.makeTestClentConfiguration(configuration);
 	}
 
 	public abstract AppConfiguration makeAppConfiguration();

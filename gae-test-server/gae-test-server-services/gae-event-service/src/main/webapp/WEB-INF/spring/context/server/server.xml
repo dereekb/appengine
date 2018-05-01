@@ -1,0 +1,28 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--App Info-->
+  <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl" id="productionAppInfo">
+    <constructor-arg index="0" ref="serverAppKey"/>
+    <constructor-arg index="1" ref="serverAppName"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl" id="appInfoFactory">
+    <property name="productionSingleton" ref="productionAppInfo"/>
+  </bean>
+  <bean factory-bean="appInfoFactory" factory-method="make" id="serverAppInfo"/>
+  <bean class="com.dereekb.gae.server.datastore.models.keys.ModelKey" id="serverAppKey">
+    <constructor-arg index="0" ref="serverAppId"/>
+  </bean>
+  <bean class="java.lang.Long" id="serverAppId">
+    <constructor-arg index="0" value="1"/>
+  </bean>
+  <bean class="java.lang.String" id="serverAppName">
+    <constructor-arg index="0" value="gae-event-service"/>
+  </bean>
+  <!--Import-->
+  <import resource="/database.xml"/>
+  <import resource="/key.xml"/>
+  <import resource="/mail.xml"/>
+  <import resource="/ref.xml"/>
+  <import resource="/taskqueue.xml"/>
+  <import resource="/security.xml"/>
+  <import resource="/login.xml"/>
+</beans>

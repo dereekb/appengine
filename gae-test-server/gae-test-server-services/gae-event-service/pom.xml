@@ -3,7 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<name>Google App Engine Test Server Login API</name>
-	<description>Google App Engine Test Server Login Microservice</description>
+	<description>Google App Engine Test Server Event Microservice.
+
+Handles WebHooks and inter-service events and user notifications.</description>
 
 	<parent>
 		<groupId>com.dereekb.gae.server</groupId>
@@ -11,7 +13,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>gae-login-service</artifactId>
+	<artifactId>gae-event-service</artifactId>
 	<packaging>war</packaging>
 
 	<dependencies>
