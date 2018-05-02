@@ -13,9 +13,15 @@ import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 public class ClientScheduleTaskRequestImpl extends ClientServerRequestImpl
         implements ClientScheduleTaskRequest {
 
+	public static final String DEFAULT_PATH = "/scheduler/schedule";
+
 	private ApiScheduleTaskRequest taskRequest;
 
 	public ClientScheduleTaskRequestImpl() {}
+
+	public ClientScheduleTaskRequestImpl(ApiScheduleTaskRequest taskRequest) {
+		this(DEFAULT_PATH, taskRequest);
+	}
 
 	public ClientScheduleTaskRequestImpl(String requestUrl, ApiScheduleTaskRequest taskRequest) {
 		super(requestUrl);

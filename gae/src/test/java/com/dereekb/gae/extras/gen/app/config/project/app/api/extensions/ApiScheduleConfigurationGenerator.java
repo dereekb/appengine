@@ -7,7 +7,7 @@ import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
-import com.dereekb.gae.web.api.server.hook.HookApiScheduleTaskControllerEntry;
+import com.dereekb.gae.web.api.server.hook.WebHookApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskController;
 
 public class ApiScheduleConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
@@ -32,8 +32,8 @@ public class ApiScheduleConfigurationGenerator extends AbstractSingleConfigurati
 		SpringBeansXMLMapBuilder<?> map = builder.map("apiScheduleTaskControllerEntries");
 
 		builder.comment("Hooks/Events");
-		map.entry("webhooks").valueRef("scheduleWebHookEvent");
-		builder.bean("scheduleWebHookEvent").beanClass(HookApiScheduleTaskControllerEntry.class);
+		map.entry(WebHookApiScheduleTaskControllerEntry.SCHEDULE_TASK_ENTRY_KEY).valueRef("scheduleWebHookEvent");
+		builder.bean("scheduleWebHookEvent").beanClass(WebHookApiScheduleTaskControllerEntry.class);
 
 		builder.comment("Patches");
 

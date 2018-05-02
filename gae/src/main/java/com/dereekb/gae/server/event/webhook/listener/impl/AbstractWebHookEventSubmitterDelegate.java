@@ -51,10 +51,21 @@ public abstract class AbstractWebHookEventSubmitterDelegate
 	// MARK: WebHookEventSubmitterDelegate
 	@Override
 	public final void submitEvent(WebHookEvent webHookEvent) {
+		this.submitEvent(webHookEvent, true);
+	}
+
+	@Override
+	public final void submitEvent(WebHookEvent webHookEvent,
+	                              boolean scheduleRetryOnFailure)
+	        throws WebHookEventSubmitException {
 		try {
 			this.trySubmitEvent(webHookEvent);
 		} catch (WebHookEventSubmitException e) {
-			this.rescheduleEventSubmit(webHookEvent);
+			if (scheduleRetryOnFailure) {
+				this.rescheduleEventSubmit(webHookEvent);
+			} else {
+				throw e;
+			}
 		}
 	}
 

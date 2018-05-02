@@ -6,28 +6,28 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
-import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
-import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
+import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.dereekb.gae.web.api.server.schedule.impl.AbstractSingleTaskApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.util.attribute.exception.KeyedInvalidAttributeException;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
-import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController;
 import com.dereekb.gae.web.taskqueue.server.webhook.TaskQueueWebHookController;
-import com.dereekb.gae.web.taskqueue.server.webhook.WebHookTaskQueueTaskControllerEntry;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * {@link AbstractSingleTaskApiScheduleTaskControllerEntry} for receiving
- * webhook events and building a task for the {@link TaskQueueWebHookController}.
+ * {@link ApiScheduleTaskControllerEntry} for receiving web hook events and
+ * building a task for the {@link TaskQueueWebHookController}.
  *
- * @author dereekb
+ * @author dereekbs
  *
  */
-public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiScheduleTaskControllerEntry {
+public class WebHookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiScheduleTaskControllerEntry {
 
-	public static final String ENTRY_KEY = "webhook";
+	/**
+	 * Key used by this entry.
+	 */
+	public static final String SCHEDULE_TASK_ENTRY_KEY = "webhook";
 
 	private ObjectMapper mapper = ObjectMapperUtilityBuilderImpl.MAPPER;
 
@@ -59,18 +59,10 @@ public class HookApiScheduleTaskControllerEntry extends AbstractSingleTaskApiSch
 		// TODO: Consider validating the events before passing them on.
 
 		try {
-			TaskRequestImpl taskRequest = new TaskRequestImpl();
-
-			// TODO: Update and sent task to TaskQueueWebHookController
-
-			String path = TaskQueueTaskController.pathForTask(WebHookTaskQueueTaskControllerEntry.TASK_ENTRY_KEY);
-			taskRequest.setPath(path);
+			TaskRequestImpl taskRequest = new TaskRequestImpl(TaskQueueWebHookController.WEBHOOK_EVENT_PATH);
 
 			String jsonEventData = this.mapper.writeValueAsString(requestData);
-
-			KeyedEncodedParameter eventDataParam = new KeyedEncodedParameterImpl(
-			        WebHookTaskQueueTaskControllerEntry.WEB_HOOK_DATA_PARAM, jsonEventData);
-			taskRequest.replaceParameter(eventDataParam);
+			taskRequest.setRequestData(jsonEventData);
 
 			return taskRequest;
 		} catch (IOException e) {

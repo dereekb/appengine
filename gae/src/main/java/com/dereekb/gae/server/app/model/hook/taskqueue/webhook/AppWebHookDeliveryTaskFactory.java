@@ -22,7 +22,7 @@ import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.dereekb.gae.web.api.server.hook.HookApiScheduleTaskControllerEntry;
+import com.dereekb.gae.web.api.server.hook.WebHookApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.server.schedule.ApiScheduleTaskRequest;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTaskFactory;
 import com.googlecode.objectify.Key;
@@ -46,7 +46,7 @@ public class AppWebHookDeliveryTaskFactory
 	private GetterSetter<AppHook> appHookGetterSetter;
 	private ClientScheduleTaskService scheduleService;
 
-	private String scheduleTaskName = HookApiScheduleTaskControllerEntry.ENTRY_KEY;
+	private String scheduleTaskName = WebHookApiScheduleTaskControllerEntry.SCHEDULE_TASK_ENTRY_KEY;
 
 	public AppWebHookDeliveryTaskFactory(ObjectifyKeyedGetter<App> appGetter,
 	        GetterSetter<AppHook> appHookGetterSetter,

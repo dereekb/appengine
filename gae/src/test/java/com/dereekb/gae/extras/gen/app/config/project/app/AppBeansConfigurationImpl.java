@@ -16,6 +16,7 @@ public class AppBeansConfigurationImpl
 
 	public static final String OBJECTIFY_DATABASE_BEAN_ID = "objectifyDatabase";
 	public static final String EVENT_SERVICE_BEAN_ID = "eventService";
+	public static final String WEB_HOOK_EVENT_SUBMITTER_BEAN_ID = "webHookEventSubmitter";
 	public static final String LINK_SERVICE_BEAN_ID = "linkService";
 	public static final String TASK_SCHEDULER_BEAN_ID = "taskScheduler";
 	public static final String TASK_QUEUE_NAME_BEAN_ID = "taskQueueName";
@@ -38,6 +39,7 @@ public class AppBeansConfigurationImpl
 
 	private String objectifyDatabaseId = OBJECTIFY_DATABASE_BEAN_ID;
 	private String eventServiceId = EVENT_SERVICE_BEAN_ID;
+	private String webHookEventSubmitterBeanId = WEB_HOOK_EVENT_SUBMITTER_BEAN_ID;
 	private String linkServiceId = LINK_SERVICE_BEAN_ID;
 	private String taskSchedulerId = TASK_SCHEDULER_BEAN_ID;
 	private String taskQueueNameId = TASK_QUEUE_NAME_BEAN_ID;
@@ -129,6 +131,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.eventServiceId = eventServiceId;
+	}
+
+	@Override
+	public String getWebHookEventSubmitterBeanId() {
+		return this.webHookEventSubmitterBeanId;
+	}
+
+	public void setWebHookEventSubmitterBeanId(String webHookEventSubmitterBeanId) {
+		if (webHookEventSubmitterBeanId == null) {
+			throw new IllegalArgumentException("webHookEventSubmitterBeanId cannot be null.");
+		}
+
+		this.webHookEventSubmitterBeanId = webHookEventSubmitterBeanId;
 	}
 
 	@Override

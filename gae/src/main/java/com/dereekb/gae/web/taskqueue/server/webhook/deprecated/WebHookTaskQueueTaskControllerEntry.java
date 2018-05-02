@@ -9,7 +9,7 @@ import com.dereekb.gae.server.event.webhook.WebHookEvent;
 import com.dereekb.gae.server.event.webhook.impl.JsonWebHookEventImpl;
 import com.dereekb.gae.server.event.webhook.service.WebHookEventDeserializer;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
-import com.dereekb.gae.web.api.server.hook.HookApiScheduleTaskControllerEntry;
+import com.dereekb.gae.web.api.server.hook.WebHookApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskControllerEntry;
 import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskControllerRequest;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @deprecated Use {@link TaskQueueWebHookController} instead.
  *
- * @see {@link HookApiScheduleTaskControllerEntry} for scheduling tasks through
+ * @see {@link WebHookApiScheduleTaskControllerEntry} for scheduling tasks through
  *      the REST API.
  */
 @Deprecated

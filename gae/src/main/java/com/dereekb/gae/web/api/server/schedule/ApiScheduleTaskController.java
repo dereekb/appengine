@@ -79,7 +79,7 @@ public class ApiScheduleTaskController {
 			List<? extends TaskRequest> requests = entry.makeTaskRequests(request);
 			this.scheduler.schedule(requests);
 			response = new ApiResponseImpl();
-		} catch (UnavailableSchedulerTaskException e)  {
+		} catch (UnavailableSchedulerTaskException e) {
 			throw new WrappedApiUnprocessableEntityException(e);
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);

@@ -13,13 +13,13 @@ import com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType
 import com.dereekb.gae.server.event.webhook.impl.WebHookEventImpl;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.web.api.server.hook.HookApiScheduleTaskControllerEntry;
+import com.dereekb.gae.web.api.server.hook.WebHookApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.server.schedule.impl.ApiScheduleTaskRequestImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Ignore
-public class HookApiScheduleTaskControllerTest extends ApiApplicationTestContext {
+public class WebHookApiScheduleTaskControllerTest extends ApiApplicationTestContext {
 
 	// MARK: Client Tests
 	@Test
@@ -36,7 +36,7 @@ public class HookApiScheduleTaskControllerTest extends ApiApplicationTestContext
 
 		ClientApiScheduleTaskRequestImpl test = new ClientApiScheduleTaskRequestImpl();
 
-		test.setTask(HookApiScheduleTaskControllerEntry.ENTRY_KEY);
+		test.setTask(WebHookApiScheduleTaskControllerEntry.SCHEDULE_TASK_ENTRY_KEY);
 		test.setRawData(json);
 
 		String requestJson = mapper.writeValueAsString(test);

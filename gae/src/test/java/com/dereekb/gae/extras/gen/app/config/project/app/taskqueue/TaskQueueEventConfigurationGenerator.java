@@ -17,10 +17,13 @@ import com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventD
 import com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventSerializerImpl;
 import com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookEventDeserializerImpl;
 import com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookEventSerializerImpl;
+import com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterDelegateImpl;
+import com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterImpl;
 import com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventDeserializerImpl;
 import com.dereekb.gae.server.event.webhook.service.impl.GroupWebHookEventSerializerImpl;
 import com.dereekb.gae.server.event.webhook.service.impl.WebHookEventConverterImpl;
-import com.dereekb.gae.web.taskqueue.server.webhook.WebHookTaskQueueTaskControllerEntry;
+import com.dereekb.gae.web.taskqueue.server.webhook.TaskQueueWebHookController;
+import com.dereekb.gae.web.taskqueue.server.webhook.impl.TaskQueueWebHookControllerDelegateImpl;
 
 /**
  * {@link AbstractRemoteModelConfigurationGenerator}
@@ -100,9 +103,19 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		builder.imp("/webhook.xml");
 
 		builder.comment("Shared");
+		String eventServiceListenersBeanId = "eventServiceListeners";
+
 		builder.bean("eventService").beanClass(AppEventServiceImpl.class).c()
-		        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId());
+		        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId()).ref(eventServiceListenersBeanId);
 		builder.stringBean("modelEventGroup", "model");
+
+		builder.comment("Event Listener");
+
+		String webHookEventSubmitterBeanId = this.getAppConfig().getAppBeans().getWebHookEventSubmitterBeanId();
+		String modelKeyEventServiceListenerBeanId = "modelKeyEventServiceListener";
+
+		builder.list(eventServiceListenersBeanId).ref(modelKeyEventServiceListenerBeanId)
+		        .ref(webHookEventSubmitterBeanId);
 
 		builder.comment("Multi-event Listener");
 		builder.bean("modelKeyEventServiceListener").beanClass(MultiTypeModelKeyEventServiceListener.class).c()
@@ -111,7 +124,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 		builder.comment("Entries");
 		SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> entriesMap = builder.map("modelKeyEventServiceListenerEntries");
 
-		// TODO: Add each listener to map.
+		// TODO: Add model listeners to map.
 
 		return this.makeFileWithXML(EVENT_FILE_NAME, builder);
 	}
@@ -119,17 +132,33 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 	public GenFile makeModelsWebHookXmlFile() {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
+		String webHookEventSubmitterBeanId = this.getAppConfig().getAppBeans().getWebHookEventSubmitterBeanId();
+		String webHookEventSubmitterDelegateBeanId = "webHookEventSubmitterDelegate";
+
 		String webHookEventConverterBeanId = "webHookEventConverter";
 		String webHookEventSerializerBeanId = "webHookEventSerializer";
 		String webHookEventDeserializerBeanId = "webHookEventDeserializer";
 
-		// Entry
+		// Controller
 		builder.comment("Task Controller");
-		builder.bean("webHookTaskQueueTaskControllerEntry").beanClass(WebHookTaskQueueTaskControllerEntry.class).c()
-		        .ref(this.getAppConfig().getAppBeans().getEventServiceId()).ref(webHookEventDeserializerBeanId);
 
-		// Sender Listener
+		String taskQueueWebHookControllerDelegateBeanId = "taskQueueWebHookControllerDelegate";
 
+		builder.bean("taskQueueWebHookController").beanClass(TaskQueueWebHookController.class).c()
+		        .ref(taskQueueWebHookControllerDelegateBeanId);
+
+		builder.bean(taskQueueWebHookControllerDelegateBeanId).beanClass(TaskQueueWebHookControllerDelegateImpl.class)
+		        .c().ref(this.getAppConfig().getAppBeans().getEventServiceId()).ref(webHookEventDeserializerBeanId)
+		        .ref(webHookEventSubmitterBeanId);
+
+		builder.comment("Event Submitter / Listener");
+		builder.bean(webHookEventSubmitterBeanId).beanClass(WebHookEventSubmitterImpl.class).c()
+		        .ref(webHookEventConverterBeanId).ref(webHookEventSubmitterDelegateBeanId);
+
+		// TODO: Retrieve proper ref!
+		String eventClientScheduleTaskService = "";
+		builder.bean(webHookEventSubmitterDelegateBeanId).beanClass(WebHookEventSubmitterDelegateImpl.class).c()
+		        .ref(this.getAppConfig().getAppBeans().getTaskSchedulerId()).ref(eventClientScheduleTaskService);
 
 		// Converter
 		builder.comment("Converter");
