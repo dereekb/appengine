@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.app;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 
@@ -30,7 +31,11 @@ public interface AppConfiguration {
 	 */
 	public String getAppTaskQueueName();
 
+	public AppServiceConfigurationInfo getAppServiceConfigurationInfo();
+
 	public AppBeansConfiguration getAppBeans();
+
+	public AppSecurityBeansConfigurer getAppSecurityBeansConfigurer();
 
 	public AppServicesConfigurer getAppServicesConfigurer();
 

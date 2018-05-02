@@ -638,7 +638,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		}
 
 		private String getServiceApiPath() {
-			return "/api/" + this.getAppConfig().getAppServiceName() + "/" + this.getAppConfig().getAppVersion();
+			return this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath();
 		}
 
 	}

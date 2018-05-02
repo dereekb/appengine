@@ -1,14 +1,12 @@
-package com.dereekb.gae.extras.gen.app.config.app.model.impl;
+package com.dereekb.gae.extras.gen.app.config.app.impl;
 
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
-import com.dereekb.gae.extras.gen.app.config.app.impl.GaeAppServiceConfigurationInfo;
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
-import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationImpl;
@@ -26,18 +24,27 @@ public class AppConfigurationImpl
 	private String appName = "app";
 	private String appTaskQueueName = "app";
 
-	private AppServicesConfigurer appServicesConfigurer = new AppServicesConfigurerImpl();
-	private AppServiceConfigurationInfo serviceConfigurationInfo = new GaeAppServiceConfigurationInfo("app", "app");
+	private AppServicesConfigurer appServicesConfigurer;
+	private AppServiceConfigurationInfo appServiceConfigurationInfo = new GaeAppServiceConfigurationInfo("app", "app");
 
 	private boolean isRootServer = false;
 	private boolean isLoginServer = true;
 
-	private AppSecurityBeansConfigurer appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 	private AppBeansConfiguration appBeans = new AppBeansConfigurationImpl();
-	private List<AppModelConfigurationGroup> modelConfigurations;
+	private AppSecurityBeansConfigurer appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
+	private List<AppModelConfigurationGroup> localModelConfigurations;
 
-	public AppConfigurationImpl(List<AppModelConfigurationGroup> modelConfigurations) {
-		this.setModelConfigurations(modelConfigurations);
+	public AppConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
+	        AppServicesConfigurer appServicesConfigurer) {
+		this.setAppServicesConfigurer(appServicesConfigurer);
+	}
+
+	public AppConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
+	        AppServicesConfigurer appServicesConfigurer,
+	        List<AppModelConfigurationGroup> localModelConfigurations) {
+		this.setAppServiceConfigurationInfo(appServiceConfigurationInfo);
+		this.setAppServicesConfigurer(appServicesConfigurer);
+		this.setLocalModelConfigurations(localModelConfigurations);
 	}
 
 	// MARK: AppConfiguration
@@ -93,16 +100,17 @@ public class AppConfigurationImpl
 		this.appServicesConfigurer = appServicesConfigurer;
 	}
 
-	public AppServiceConfigurationInfo getServiceConfigurationInfo() {
-		return this.serviceConfigurationInfo;
+	@Override
+	public AppServiceConfigurationInfo getAppServiceConfigurationInfo() {
+		return this.appServiceConfigurationInfo;
 	}
 
-	public void setServiceConfigurationInfo(AppServiceConfigurationInfo serviceConfigurationInfo) {
-		if (serviceConfigurationInfo == null) {
-			throw new IllegalArgumentException("serviceConfigurationInfo cannot be null.");
+	public void setAppServiceConfigurationInfo(AppServiceConfigurationInfo appServiceConfigurationInfo) {
+		if (appServiceConfigurationInfo == null) {
+			throw new IllegalArgumentException("appServiceConfigurationInfo cannot be null.");
 		}
 
-		this.serviceConfigurationInfo = serviceConfigurationInfo;
+		this.appServiceConfigurationInfo = appServiceConfigurationInfo;
 	}
 
 	@Override
@@ -137,21 +145,37 @@ public class AppConfigurationImpl
 	}
 
 	@Override
+	public AppSecurityBeansConfigurer getAppSecurityBeansConfigurer() {
+		return this.appSecurityBeansConfigurer;
+	}
+
+	public void setAppSecurityBeansConfigurer(AppSecurityBeansConfigurer appSecurityBeansConfigurer) {
+		if (appSecurityBeansConfigurer == null) {
+			throw new IllegalArgumentException("appSecurityBeansConfigurer cannot be null.");
+		}
+
+		this.appSecurityBeansConfigurer = appSecurityBeansConfigurer;
+	}
+
+	@Override
 	public List<AppModelConfigurationGroup> getModelConfigurations() {
-		return this.modelConfigurations;
+
+		// TODO: Return both local and remote model configurations.
+
+		return this.localModelConfigurations;
 	}
 
 	@Override
 	public List<AppModelConfigurationGroup> getLocalModelConfigurations() {
-		return this.modelConfigurations;
+		return this.localModelConfigurations;
 	}
 
-	public void setModelConfigurations(List<AppModelConfigurationGroup> modelConfigurations) {
-		if (modelConfigurations == null) {
-			throw new IllegalArgumentException("modelConfigurations cannot be null.");
+	public void setLocalModelConfigurations(List<AppModelConfigurationGroup> localModelConfigurations) {
+		if (localModelConfigurations == null) {
+			throw new IllegalArgumentException("localModelConfigurations cannot be null.");
 		}
 
-		this.modelConfigurations = modelConfigurations;
+		this.localModelConfigurations = localModelConfigurations;
 	}
 
 }
