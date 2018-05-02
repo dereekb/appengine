@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.test.TestConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFolder;

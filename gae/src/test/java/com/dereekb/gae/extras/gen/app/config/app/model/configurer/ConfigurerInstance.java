@@ -1,4 +1,4 @@
-package com.dereekb.gae.extras.gen.app.config.model.configurer;
+package com.dereekb.gae.extras.gen.app.config.app.model.configurer;
 
 /**
  * Instance used for configuring options.

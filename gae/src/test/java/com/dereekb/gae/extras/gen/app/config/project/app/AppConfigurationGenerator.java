@@ -2,8 +2,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app;
 
 import java.util.Properties;
 
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.ApiConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.ContextConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.taskqueue.TaskQueueConfigurationGenerator;

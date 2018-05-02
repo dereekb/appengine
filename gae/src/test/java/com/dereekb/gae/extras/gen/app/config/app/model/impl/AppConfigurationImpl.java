@@ -1,10 +1,15 @@
-package com.dereekb.gae.extras.gen.app.config.model.impl;
+package com.dereekb.gae.extras.gen.app.config.app.model.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
-import com.dereekb.gae.extras.gen.app.config.model.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
+import com.dereekb.gae.extras.gen.app.config.app.impl.GaeAppServiceConfigurationInfo;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationImpl;
 
@@ -19,9 +24,10 @@ public class AppConfigurationImpl
 
 	private Long appId = 1L;
 	private String appName = "app";
-	private String appServiceName = "app";
 	private String appTaskQueueName = "app";
-	private String appVersion = "v1";
+
+	private AppServicesConfigurer appServicesConfigurer = new AppServicesConfigurerImpl();
+	private AppServiceConfigurationInfo serviceConfigurationInfo = new GaeAppServiceConfigurationInfo("app", "app");
 
 	private boolean isRootServer = false;
 	private boolean isLoginServer = true;
@@ -62,19 +68,6 @@ public class AppConfigurationImpl
 	}
 
 	@Override
-	public String getAppServiceName() {
-		return this.appServiceName;
-	}
-
-	public void setAppServiceName(String appServiceName) {
-		if (appServiceName == null) {
-			throw new IllegalArgumentException("appServiceName cannot be null.");
-		}
-
-		this.appServiceName = appServiceName;
-	}
-
-	@Override
 	public String getAppTaskQueueName() {
 		return this.appTaskQueueName;
 	}
@@ -88,16 +81,28 @@ public class AppConfigurationImpl
 	}
 
 	@Override
-	public String getAppVersion() {
-		return this.appVersion;
+	public AppServicesConfigurer getAppServicesConfigurer() {
+		return this.appServicesConfigurer;
 	}
 
-	public void setAppVersion(String appVersion) {
-		if (appVersion == null) {
-			throw new IllegalArgumentException("appVersion cannot be null.");
+	public void setAppServicesConfigurer(AppServicesConfigurer appServicesConfigurer) {
+		if (appServicesConfigurer == null) {
+			throw new IllegalArgumentException("appServicesConfigurer cannot be null.");
 		}
 
-		this.appVersion = appVersion;
+		this.appServicesConfigurer = appServicesConfigurer;
+	}
+
+	public AppServiceConfigurationInfo getServiceConfigurationInfo() {
+		return this.serviceConfigurationInfo;
+	}
+
+	public void setServiceConfigurationInfo(AppServiceConfigurationInfo serviceConfigurationInfo) {
+		if (serviceConfigurationInfo == null) {
+			throw new IllegalArgumentException("serviceConfigurationInfo cannot be null.");
+		}
+
+		this.serviceConfigurationInfo = serviceConfigurationInfo;
 	}
 
 	@Override
@@ -132,20 +137,12 @@ public class AppConfigurationImpl
 	}
 
 	@Override
-	public AppSecurityBeansConfigurer getAppSecurityBeansConfigurer() {
-		return this.appSecurityBeansConfigurer;
-	}
-
-	public void setAppSecurityBeansConfigurer(AppSecurityBeansConfigurer appSecurityBeansConfigurer) {
-		if (appSecurityBeansConfigurer == null) {
-			throw new IllegalArgumentException("appSecurityBeansConfigurer cannot be null.");
-		}
-
-		this.appSecurityBeansConfigurer = appSecurityBeansConfigurer;
+	public List<AppModelConfigurationGroup> getModelConfigurations() {
+		return this.modelConfigurations;
 	}
 
 	@Override
-	public List<AppModelConfigurationGroup> getModelConfigurations() {
+	public List<AppModelConfigurationGroup> getLocalModelConfigurations() {
 		return this.modelConfigurations;
 	}
 
@@ -155,11 +152,6 @@ public class AppConfigurationImpl
 		}
 
 		this.modelConfigurations = modelConfigurations;
-	}
-
-	@Override
-	public String getRootAppApiPath() {
-		return "/api/" + this.getAppServiceName() + "/" + this.getAppVersion();
 	}
 
 }

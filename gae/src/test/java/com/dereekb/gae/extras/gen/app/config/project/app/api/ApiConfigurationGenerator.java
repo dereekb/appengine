@@ -4,8 +4,8 @@ import java.util.Properties;
 
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLinkConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLoginConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiModelContextConfigurationGenerator;

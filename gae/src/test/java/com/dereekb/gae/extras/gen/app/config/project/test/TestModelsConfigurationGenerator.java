@@ -13,10 +13,10 @@ import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.Clie
 import com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
 import com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;

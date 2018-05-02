@@ -1,6 +1,6 @@
-package com.dereekb.gae.extras.gen.app.config.model;
+package com.dereekb.gae.extras.gen.app.config.app.model;
 
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomModelContextConfigurer;
 import com.dereekb.gae.model.extension.data.conversion.ModelDataConversionInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
@@ -67,10 +67,10 @@ public interface AppModelConfiguration
 
 	// Custom Configuration
 	/**
-	 * Returns the custom configuration for configuration local modeel context.
+	 * Returns the custom configuration for configuring model contexts.
 	 *
-	 * @return {@link CustomLocalModelContextConfigurer}. Never {@code null}.
+	 * @return {@link CustomModelContextConfigurer}. Never {@code null}.
 	 */
-	public CustomLocalModelContextConfigurer getCustomLocalModelContextConfigurer();
+	public CustomModelContextConfigurer getCustomModelContextConfigurer();
 
 }

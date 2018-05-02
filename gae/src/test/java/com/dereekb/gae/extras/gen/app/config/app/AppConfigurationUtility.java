@@ -1,8 +1,10 @@
-package com.dereekb.gae.extras.gen.app.config.model;
+package com.dereekb.gae.extras.gen.app.config.app;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
 public class AppConfigurationUtility {

@@ -1,6 +1,6 @@
-package com.dereekb.gae.extras.gen.app.config.model.impl;
+package com.dereekb.gae.extras.gen.app.config.app.model.impl;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppModelBeansConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.data.StringUtility;

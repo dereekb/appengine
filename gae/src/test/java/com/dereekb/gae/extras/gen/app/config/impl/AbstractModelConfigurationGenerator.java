@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;

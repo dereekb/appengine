@@ -1,7 +1,7 @@
-package com.dereekb.gae.extras.gen.app.config.model.impl;
+package com.dereekb.gae.extras.gen.app.config.app.services.local;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl;

@@ -1,9 +1,9 @@
-package com.dereekb.gae.extras.gen.app.gae;
+package com.dereekb.gae.extras.gen.app.gae.local;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationGroupImpl;
-import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationGroupImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelContextConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelCrudConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelRoleSetLoaderConfigurerImpl;
@@ -36,7 +36,7 @@ public class AppGroupConfigurationGen {
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
 		        new SecurityModelQueryInitializerConfigurerImpl("loginOwnedModelQuerySecurityDelegate"));
 
-		appModel.setCustomLocalModelContextConfigurer(customLocalModelContextConfigurer);
+		appModel.setCustomModelContextConfigurer(customLocalModelContextConfigurer);
 
 		return appModel;
 	}
@@ -51,7 +51,7 @@ public class AppGroupConfigurationGen {
 		customLocalModelContextConfigurer
 		        .setCustomLocalModelRoleSetLoaderConfigurer(new AppParentSecurityRoleConfigurer());
 
-		appHookModel.setCustomLocalModelContextConfigurer(customLocalModelContextConfigurer);
+		appHookModel.setCustomModelContextConfigurer(customLocalModelContextConfigurer);
 
 		return appHookModel;
 	}

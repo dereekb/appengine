@@ -37,8 +37,8 @@ public class AppServiceVersionInfoUtility {
 	                                             AppInfo b)
 	        throws AppServiceInequalityException {
 
-		String aService = a.getAppServiceVersionInfo().getAppId();
-		String bService = b.getAppServiceVersionInfo().getAppId();
+		String aService = a.getAppServiceVersionInfo().getAppProjectId();
+		String bService = b.getAppServiceVersionInfo().getAppProjectId();
 		return aService.equals(bService);
 	}
 

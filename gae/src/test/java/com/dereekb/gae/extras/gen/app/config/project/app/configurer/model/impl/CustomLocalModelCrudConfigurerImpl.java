@@ -2,9 +2,9 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import java.lang.reflect.Constructor;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.configurer.impl.AbstractBuilderConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.configurer.impl.AbstractBuilderConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelCrudConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;

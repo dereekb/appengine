@@ -109,4 +109,10 @@ public class GoogleAppEngineUtility {
 		return new AppVersionImpl(split[0], split[1]);
 	}
 
+	public static String urlForService(String appProjectId,
+	                                   String appServiceName,
+	                                   String appVersion) {
+		throw new UnsupportedOperationException("TODO");
+	}
+
 }

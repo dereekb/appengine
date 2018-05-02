@@ -8,7 +8,7 @@ package com.dereekb.gae.server.app.model.app.info;
  */
 public interface AppServiceVersionInfo {
 
-	public String getAppId();
+	public String getAppProjectId();
 
 	public AppVersion getAppVersion();
 

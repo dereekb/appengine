@@ -1,13 +1,13 @@
-package com.dereekb.gae.extras.gen.app.gae;
+package com.dereekb.gae.extras.gen.app.gae.local;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.configurer.ConfigurerInstance;
-import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationGroupImpl;
-import com.dereekb.gae.extras.gen.app.config.model.impl.AppModelConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.configurer.ConfigurerInstance;
+import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationGroupImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.AdminOnlySecuredQueryInitializerConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelContextConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelCrudConfigurerImpl;
@@ -32,6 +32,12 @@ import com.dereekb.gae.server.auth.model.pointer.taskqueue.LoginPointerLoginQuer
 import com.dereekb.gae.server.datastore.models.keys.accessor.task.ModelKeyListAccessorTaskFilter;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
+/**
+ * Local model configuration for {@link Login}.
+ *
+ * @author dereekb
+ *
+ */
 public class LoginGroupConfigurationGen {
 
 	public static AppModelConfigurationGroupImpl makeLocalLoginGroupConfig() {
@@ -57,7 +63,7 @@ public class LoginGroupConfigurationGen {
 		customLocalModelContextConfigurer
 		        .setSecuredQueryInitializerConfigurer(new AdminOnlySecuredQueryInitializerConfigurerImpl());
 
-		loginModel.setCustomLocalModelContextConfigurer(customLocalModelContextConfigurer);
+		loginModel.setCustomModelContextConfigurer(customLocalModelContextConfigurer);
 
 		return loginModel;
 	}
@@ -75,7 +81,7 @@ public class LoginGroupConfigurationGen {
 		customLocalModelContextConfigurer
 		        .setCustomLocalModelRoleSetLoaderConfigurer(new LoginParentSecurityRoleConfigurer());
 
-		loginPointerModel.setCustomLocalModelContextConfigurer(customLocalModelContextConfigurer);
+		loginPointerModel.setCustomModelContextConfigurer(customLocalModelContextConfigurer);
 
 		return loginPointerModel;
 	}
@@ -94,7 +100,7 @@ public class LoginGroupConfigurationGen {
 		customLocalModelContextConfigurer
 		        .setCustomLocalModelRoleSetLoaderConfigurer(new LoginParentSecurityRoleConfigurer());
 
-		loginKeyModel.setCustomLocalModelContextConfigurer(customLocalModelContextConfigurer);
+		loginKeyModel.setCustomModelContextConfigurer(customLocalModelContextConfigurer);
 
 		return loginKeyModel;
 	}
@@ -133,7 +139,8 @@ public class LoginGroupConfigurationGen {
 			@Override
 			protected void configureProcessDeleteTaskList(SpringBeansXMLListBuilder<?> taskListBuilder) {
 				// Add Delete Children Task
-				taskListBuilder.ref(LoginPointerIterateControllerConfigurer.LoginPointerDeleteByParentIterateTaskConfigurer.SCHEDULE_TASK_NAME);
+				taskListBuilder.ref(
+				        LoginPointerIterateControllerConfigurer.LoginPointerDeleteByParentIterateTaskConfigurer.SCHEDULE_TASK_NAME);
 
 				// Add Default Tasks
 				super.configureProcessDeleteTaskList(taskListBuilder);

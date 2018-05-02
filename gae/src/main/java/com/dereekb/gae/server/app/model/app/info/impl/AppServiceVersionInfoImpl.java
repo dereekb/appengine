@@ -12,27 +12,27 @@ import com.dereekb.gae.server.app.model.app.info.AppVersion;
 public class AppServiceVersionInfoImpl
         implements AppServiceVersionInfo {
 
-	private String appId;
+	private String appProjectId;
 	private String appService;
 	private AppVersion appVersion;
 
-	public AppServiceVersionInfoImpl(String appId, String appService, AppVersion appVersion) {
-		this.setAppId(appId);
+	public AppServiceVersionInfoImpl(String appProjectId, String appService, AppVersion appVersion) {
+		this.setAppProjectId(appProjectId);
 		this.setAppService(appService);
 		this.setAppVersion(appVersion);
 	}
 
 	@Override
-	public String getAppId() {
-		return this.appId;
+	public String getAppProjectId() {
+		return this.appProjectId;
 	}
 
-	public void setAppId(String appId) {
-		if (appId == null) {
-			throw new IllegalArgumentException("appId cannot be null.");
+	public void setAppProjectId(String appProjectId) {
+		if (appProjectId == null) {
+			throw new IllegalArgumentException("appProjectId cannot be null.");
 		}
 
-		this.appId = appId;
+		this.appProjectId = appProjectId;
 	}
 
 	@Override
@@ -63,9 +63,8 @@ public class AppServiceVersionInfoImpl
 
 	@Override
 	public String toString() {
-		return "AppVersionInfoImpl [appId=" + this.appId + ", appService=" + this.appService + ", appVersion="
-		        + this.appVersion + "]";
+		return "AppVersionInfoImpl [appProjectId=" + this.appProjectId + ", appService=" + this.appService
+		        + ", appVersion=" + this.appVersion + "]";
 	}
 
 }
-

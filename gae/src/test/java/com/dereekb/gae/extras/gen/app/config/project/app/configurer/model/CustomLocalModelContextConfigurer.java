@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model;
 
 /**
- * Builds custom configurations for each model.
+ * Custom configuration generator for a local model.
  *
  * @author dereekb
  *

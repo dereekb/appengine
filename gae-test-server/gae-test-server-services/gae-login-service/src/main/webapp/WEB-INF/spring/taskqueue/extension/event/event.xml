@@ -6,10 +6,16 @@
   <!--Shared-->
   <bean class="com.dereekb.gae.server.event.event.service.impl.AppEventServiceImpl" id="eventService">
     <constructor-arg index="0" ref="serverAppInfo"/>
+    <constructor-arg index="1" ref="eventServiceListeners"/>
   </bean>
   <bean class="java.lang.String" id="modelEventGroup">
     <constructor-arg index="0" value="model"/>
   </bean>
+  <!--Event Listener-->
+  <util:list id="eventServiceListeners">
+    <ref bean="modelKeyEventServiceListener"/>
+    <ref bean="webHookEventSubmitter"/>
+  </util:list>
   <!--Multi-event Listener-->
   <bean class="com.dereekb.gae.server.event.model.shared.event.service.listener.impl.MultiTypeModelKeyEventServiceListener" id="modelKeyEventServiceListener">
     <constructor-arg index="0" ref="modelKeyEventServiceListenerEntries"/>

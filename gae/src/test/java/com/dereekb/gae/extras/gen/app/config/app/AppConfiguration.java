@@ -1,24 +1,40 @@
-package com.dereekb.gae.extras.gen.app.config.model;
+package com.dereekb.gae.extras.gen.app.config.app;
 
 import java.util.List;
 
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 
+/**
+ * App configuration used for app XML generation.
+ *
+ * @author dereekb
+ *
+ */
 public interface AppConfiguration {
 
 	public Long getAppId();
 
+	/**
+	 * Returns the human-readable name.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
 	public String getAppName();
 
-	public String getAppServiceName();
-
+	/**
+	 * Returns the taskqueue dedicated to this service.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
 	public String getAppTaskQueueName();
-
-	public String getAppVersion();
 
 	public AppBeansConfiguration getAppBeans();
 
-	public AppSecurityBeansConfigurer getAppSecurityBeansConfigurer();
+	public AppServicesConfigurer getAppServicesConfigurer();
+
+	public List<AppModelConfigurationGroup> getLocalModelConfigurations();
 
 	public List<AppModelConfigurationGroup> getModelConfigurations();
 
@@ -34,10 +50,5 @@ public interface AppConfiguration {
 	public boolean isRootServer();
 
 	public boolean isLoginServer();
-
-	/**
-	 * Returns the root API path for this app.
-	 */
-	public String getRootAppApiPath();
 
 }

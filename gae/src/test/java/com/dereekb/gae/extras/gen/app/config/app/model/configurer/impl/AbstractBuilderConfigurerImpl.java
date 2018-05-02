@@ -1,8 +1,8 @@
-package com.dereekb.gae.extras.gen.app.config.model.configurer.impl;
+package com.dereekb.gae.extras.gen.app.config.app.model.configurer.impl;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.configurer.ConfigurerInstance;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.configurer.ConfigurerInstance;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**

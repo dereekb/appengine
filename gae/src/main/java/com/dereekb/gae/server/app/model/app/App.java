@@ -200,7 +200,7 @@ public class App extends DatedDatabaseModel
 
 	public void setAppServiceVersionInfo(AppServiceVersionInfo info) {
 		if (info != null) {
-			this.setApp(info.getAppId());
+			this.setApp(info.getAppProjectId());
 			this.setService(info.getAppService());
 			this.setAppVersion(info.getAppVersion());
 		} else {

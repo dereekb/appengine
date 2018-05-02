@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model;
 
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateControllerEntry;
 

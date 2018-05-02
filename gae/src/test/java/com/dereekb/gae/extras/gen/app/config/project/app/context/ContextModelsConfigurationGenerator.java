@@ -3,12 +3,12 @@ package com.dereekb.gae.extras.gen.app.config.project.app.context;
 import java.util.List;
 import java.util.Properties;
 
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -237,7 +237,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 		@Override
 		public void makeXMLConfigurationFile(SpringBeansXMLBuilder builder) {
-			this.getModelConfig().getCustomLocalModelContextConfigurer()
+			this.getModelConfig().getCustomModelContextConfigurer()
 			        .configureCrudServiceComponents(this.getAppConfig(), this.modelConfig, builder);
 		}
 
@@ -328,7 +328,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			        .bean(securedQueryInitializerId)
 			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId);
 
-			CustomLocalModelContextConfigurer configuration = this.modelConfig.getCustomLocalModelContextConfigurer();
+			CustomLocalModelContextConfigurer configuration = this.modelConfig.getCustomModelContextConfigurer();
 			configuration.configureSecuredQueryInitializer(this.getAppConfig(), this.modelConfig,
 			        securedLoginQueryInitializer);
 
@@ -370,7 +370,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			String modelRoleSetLoader = this.modelConfig.getModelRoleSetLoaderBeanId();
 
 			CustomLocalModelContextConfigurer customConfigurer = this.getModelConfig()
-			        .getCustomLocalModelContextConfigurer();
+			        .getCustomModelContextConfigurer();
 			customConfigurer.configureModelRoleSetLoaderComponents(this.getAppConfig(), this.modelConfig, builder);
 
 			builder.bean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())

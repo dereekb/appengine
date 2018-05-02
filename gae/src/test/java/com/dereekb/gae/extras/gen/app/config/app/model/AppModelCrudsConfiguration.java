@@ -1,4 +1,4 @@
-package com.dereekb.gae.extras.gen.app.config.model;
+package com.dereekb.gae.extras.gen.app.config.app.model;
 
 import com.dereekb.gae.model.crud.services.impl.CrudServiceImpl;
 

@@ -6,4 +6,5 @@
   <!--Import-->
   <import resource="/model/model.xml"/>
   <import resource="/server/server.xml"/>
+  <import resource="/remote/remote.xml"/>
 </beans>

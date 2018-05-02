@@ -2,9 +2,9 @@ package com.dereekb.gae.extras.gen.app.config.project.app.taskqueue;
 
 import java.util.Properties;
 
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -44,29 +44,13 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 		builder.comment("Imports");
 		builder.importResources(folder.getFiles());
 
-		// NOTE: Deprecated and moved into Iterate. Remove later.
-		/*
-		 * builder.comment("Edit Controller");
-		 * SpringBeansXMLMapBuilder<?> map =
-		 * builder.bean("taskQueueEditController")
-		 * .beanClass(TaskQueueEditController.class).c()
-		 * .ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).
-		 * map();
-		 *
-		 * for (AppModelConfiguration model :
-		 * this.getAllApplicableConfigurations()) {
-		 * map.keyValueRefEntry(model.getModelTypeBeanId(),
-		 * model.getModelBeanPrefix() + "TaskQueueEditControllerEntry");
-		 * }
-		 */
-
 		builder.comment("Iterate");
 		SpringBeansXMLMapBuilder<?> iterateEntryMap = builder.bean("taskQueueIterateController")
 		        .beanClass(TaskQueueIterateController.class).c().ref("taskScheduler").ref("modelKeyTypeConverter")
 		        .map();
 
 		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
-			if (model.getCustomLocalModelContextConfigurer().hasIterateControllerEntry()) {
+			if (model.getCustomModelContextConfigurer().hasIterateControllerEntry()) {
 				iterateEntryMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 				        model.getModelBeanPrefix() + "TaskQueueIterateControllerEntry");
 			}
@@ -80,32 +64,8 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		CustomLocalModelContextConfigurer customConfigurer = modelConfig.getCustomLocalModelContextConfigurer();
+		CustomLocalModelContextConfigurer customConfigurer = modelConfig.getCustomModelContextConfigurer();
 		customConfigurer.configureIterateControllerTasks(this.getAppConfig(), modelConfig, builder);
-		// NOTE: Deprecated and moved into Iterate. Remove later.
-		/*
-		 * builder.comment("Edit Controller");
-		 * builder.bean(modelConfig.getModelBeanPrefix() +
-		 * "TaskQueueEditControllerEntry")
-		 * .beanClass(TaskQueueEditControllerEntryImpl.class).c().ref(
-		 * modelConfig.getModelRegistryId())
-		 * .ref(modelConfig.getModelBeanPrefix() + "TaskQueuePostCreateTask")
-		 * .ref(modelConfig.getModelBeanPrefix() + "TaskQueuePostUpdateTask")
-		 * .ref(modelConfig.getModelBeanPrefix() +
-		 * "TaskQueueProcessDeleteTask");
-		 *
-		 * builder.bean(modelConfig.getModelBeanPrefix() +
-		 * "TaskQueuePostCreateTask").beanClass(TaskQueueModelTask.class)
-		 * .c().list();
-		 *
-		 * builder.bean(modelConfig.getModelBeanPrefix() +
-		 * "TaskQueuePostUpdateTask").beanClass(TaskQueueModelTask.class)
-		 * .c().list();
-		 *
-		 * builder.bean(modelConfig.getModelBeanPrefix() +
-		 * "TaskQueueProcessDeleteTask")
-		 * .beanClass(TaskQueueModelTask.class).c().list();
-		 */
 
 		return builder;
 	}
