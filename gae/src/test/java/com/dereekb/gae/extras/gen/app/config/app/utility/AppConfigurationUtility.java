@@ -22,7 +22,7 @@ public class AppConfigurationUtility {
 		List<LocalModelConfiguration> configs = new ArrayList<LocalModelConfiguration>();
 
 		for (LocalModelConfigurationGroup group : groups) {
-			configs.addAll(group.getModelConfigurations());
+			configs.addAll(group.getLocalModelConfigurations());
 		}
 
 		return configs;

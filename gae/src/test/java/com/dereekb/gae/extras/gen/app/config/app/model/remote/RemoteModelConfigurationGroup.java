@@ -1,14 +1,14 @@
-package com.dereekb.gae.extras.gen.app.config.app.model.local;
+package com.dereekb.gae.extras.gen.app.config.app.model.remote;
 
 import java.util.List;
 
 /**
- * Represents a group of configured models.
+ * Represents a group of model configurations.
  *
  * @author dereekb
  *
  */
-public interface LocalModelConfigurationGroup {
+public interface RemoteModelConfigurationGroup {
 
 	/**
 	 * Group name, or {@code null} if the default unnamed group.
@@ -21,6 +21,6 @@ public interface LocalModelConfigurationGroup {
 	 *
 	 * @return {@link List}. Never {@code null}.
 	 */
-	public List<LocalModelConfiguration> getLocalModelConfigurations();
+	public List<RemoteModelConfiguration> getRemoteModelConfigurations();
 
 }

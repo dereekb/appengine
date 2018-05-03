@@ -136,7 +136,7 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 			// Break into local/remote
 			for (LocalModelConfigurationGroup groupConfig : groups) {
 				FilterResults<LocalModelConfiguration> results = filter
-				        .filterObjects(groupConfig.getModelConfigurations());
+				        .filterObjects(groupConfig.getLocalModelConfigurations());
 				localModels.addAll(results.getPassingObjects());
 				remoteModels.addAll(results.getFailingObjects());
 			}

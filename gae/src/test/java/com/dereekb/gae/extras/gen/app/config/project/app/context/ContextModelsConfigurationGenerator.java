@@ -69,7 +69,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
 			String groupFolderPath = group.getGroupName().toLowerCase();
 
-			List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+			List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
 			for (LocalModelConfiguration modelConfig : modelConfigs) {
 				if (modelConfig.isLocalModel()) {
 					String modelName = modelConfig.getModelType().toLowerCase();
@@ -90,7 +90,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
 			modelKeyTypeMap.getRawXMLBuilder().comment(group.getGroupName().toUpperCase());
 
-			List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+			List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
 			for (LocalModelConfiguration modelConfig : modelConfigs) {
 				if (modelConfig.isLocalModel()) {
 					modelKeyTypeMap.keyRefValueRefEntry(modelConfig.getModelTypeBeanId(),

@@ -102,7 +102,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 	}
 
 	public GenFolderImpl makeModelClientConfigurationsForModels(LocalModelConfigurationGroup group) {
-		return this.makeModelClientConfigurationsForModels(group.getGroupName(), group.getModelConfigurations());
+		return this.makeModelClientConfigurationsForModels(group.getGroupName(), group.getLocalModelConfigurations());
 	}
 
 	public GenFolderImpl makeModelClientConfigurationsForModels(String folderName,
@@ -212,7 +212,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 			GenFolderImpl folder = new GenFolderImpl(AbstractModelConfigurationGenerator.this.resultsFolderName);
 
 			for (LocalModelConfigurationGroup group : groups) {
-				folder.merge(makeModelClientConfigurationsForModels(group.getModelConfigurations()));
+				folder.merge(makeModelClientConfigurationsForModels(group.getLocalModelConfigurations()));
 			}
 
 			return folder;
@@ -229,7 +229,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		List<LocalModelConfiguration> configs = new ArrayList<LocalModelConfiguration>();
 
 		for (LocalModelConfigurationGroup groupConfig : groups) {
-			for (LocalModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
+			for (LocalModelConfiguration modelConfig : groupConfig.getLocalModelConfigurations()) {
 				if (this.shouldMakeModelConfiguration(modelConfig)) {
 					configs.add(modelConfig);
 				}
@@ -247,7 +247,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		List<LocalModelConfiguration> configs = new ArrayList<LocalModelConfiguration>();
 
 		for (LocalModelConfigurationGroup groupConfig : groups) {
-			for (LocalModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
+			for (LocalModelConfiguration modelConfig : groupConfig.getLocalModelConfigurations()) {
 				if (modelConfig.isLocalModel()) {
 					configs.add(modelConfig);
 				}

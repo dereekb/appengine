@@ -147,7 +147,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
-				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+				List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
 
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
 					if (modelConfig.isLocalModel()) {
@@ -233,7 +233,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
-				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+				List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
 
 					if (modelConfig.isLocalModel()) {
