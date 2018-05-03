@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
@@ -13,6 +12,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
@@ -29,23 +29,11 @@ import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
-import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityDetailsServiceImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityServiceImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecuritySigningServiceImpl;
 import com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl;
-import com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl;
-import com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl;
-import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
-import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginAuthenticationServiceImpl;
-import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginStatusServiceManagerImpl;
-import com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl;
-import com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl;
-import com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl;
-import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceEmailDelegateImpl;
-import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceImpl;
-import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceTokenDelegateImpl;
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl;
@@ -59,11 +47,7 @@ import com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExce
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter;
 import com.dereekb.gae.server.auth.security.token.filter.handlers.LoginTokenAuthenticationFailureHandler;
 import com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl;
-import com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory;
-import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl;
-import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
-import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
@@ -212,11 +196,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-			if (this.getAppConfig().isLoginServer()) {
-				this.addLoginServerLoginTokenBeansToXMLConfigurationFile(builder);
-			} else {
-				this.addRemoteLoginServerLoginTokenBeansToXMLConfigurationFile(builder);
-			}
+			this.getAppConfig().getAppServicesConfigurer().getAppLoginTokenSecurityConfigurer()
+			        .configureLoginTokenSecurityServiceComponents(this.getAppConfig(), builder);
 
 			// Common Components
 			this.addCommonLoginTokenBeansToXMLConfigurationFile(builder);
@@ -224,101 +205,18 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			return builder;
 		}
 
-		public void addLoginServerLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
-
-			AppSecurityBeansConfigurer appSecurityBeansConfigurer = this.getAppConfig().getAppSecurityBeansConfigurer();
-
-			builder.comment("Login Server");
-			builder.comment("Signatures");
-
-			// TODO: Update to pull signatures from JSON file or similar file
-			// not included in git.
-
-			String loginTokenSignatureFactoryId = appSecurityBeansConfigurer.getLoginTokenSignatureFactoryBeanId();
-			String refreshTokenSignatureFactoryId = appSecurityBeansConfigurer.getRefreshTokenSignatureFactoryBeanId();
-
-			builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).getRawXMLBuilder()
-			        .comment("TODO: Add production source.");
-			builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class)
-			        .getRawXMLBuilder().comment("TODO: Add production source.");
-
-			builder.comment("LoginToken Service");
-
-			SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder.bean("loginTokenEncoderDecoder");
-			appSecurityBeansConfigurer.configureTokenEncoderDecoder(this.getAppConfig(),
-			        loginTokenEncoderDecoderBuilder);
-
-			SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean("loginTokenBuilder");
-			appSecurityBeansConfigurer.configureTokenBuilder(this.getAppConfig(), loginTokenBuilderBuilder);
-
-			builder.bean("loginTokenService").beanClass(LoginTokenServiceImpl.class).c().ref("loginTokenBuilder")
-			        .ref("loginTokenEncoderDecoder");
-
-			builder.comment("LoginPointer Service");
-			builder.bean("loginPointerService").beanClass(LoginPointerServiceImpl.class).c().ref("loginPointerRegistry")
-			        .ref("loginPointerScheduleCreateReview");
-
-			builder.comment("Password Service");
-			builder.bean("passwordEncoder").beanClass(BCryptPasswordEncoder.class);
-
-			builder.bean("passwordLoginService").beanClass(PasswordLoginServiceImpl.class).c().ref("passwordEncoder")
-			        .ref("loginPointerService");
-
-			builder.bean("passwordRecoveryService").beanClass(PasswordRecoveryServiceImpl.class).c().ref("mailService")
-			        .bean().beanClass(PasswordRecoveryServiceTokenDelegateImpl.class).c().ref("loginPointerService")
-			        .ref(this.getAppConfig().getAppBeans().getLoginTokenServiceBeanId()).up().up().bean()
-			        .beanClass(PasswordRecoveryServiceEmailDelegateImpl.class);
-
-			builder.comment("OAuth Service");
-			builder.bean("oAuthLoginService").beanClass(OAuthLoginServiceImpl.class).c().ref("loginPointerService");
-
-			builder.bean("oAuthServiceManager").beanClass(OAuthServiceManagerImpl.class).c().ref("oAuthLoginService")
-			        .map().keyType(LoginPointerType.class);
-
-			builder.comment("KeyLogin Service");
-			builder.bean("keyLoginStatusServiceManager").beanClass(KeyLoginStatusServiceManagerImpl.class).c()
-			        .ref("loginPointerRegistry");
-
-			builder.bean("keyLoginAuthenticationService").beanClass(KeyLoginAuthenticationServiceImpl.class).c()
-			        .ref("loginKeyRegistry").ref("loginPointerRegistry");
-
-			builder.comment("Register Service");
-			builder.bean("loginRegisterService").beanClass(LoginRegisterServiceImpl.class).c().ref("newLoginGenerator")
-			        .ref("loginRegistry").ref("loginPointerRegistry");
-
-			builder.bean("newLoginGenerator").beanClass(NewLoginGeneratorImpl.class).c().ref("loginRegistry")
-			        .ref("loginScheduleCreateReview");
-
-			builder.comment("Refresh Token Service");
-			builder.bean("refreshTokenService").beanClass(RefreshTokenServiceImpl.class).c().ref("loginRegistry")
-			        .ref("loginPointerRegistry");
-
-			builder.bean("refreshTokenEncoderDecoder").beanClass(RefreshTokenEncoderDecoder.class).c().bean()
-			        .factoryBean("refreshTokenSignatureFactory").factoryMethod("make");
-
-		}
-
-		public void addRemoteLoginServerLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
-
-			builder.comment("Remote Login Service");
-
-			// TODO: For Test, use local dencoder.
-			// TODO: For Dev, send requests to the dev login service.
-			// TODO: For Prod, send requests to the prod login service.
-
-			builder.comment("Register Service");
-
-		}
-
 		public void addCommonLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
 			builder.comment("Login Token Utilities");
 			builder.comment("Login Models Service");
 
-			builder.bean("loginTokenModelContextService").beanClass(LoginTokenModelContextServiceImpl.class).c()
-			        .ref("loginTokenModelContextServiceEntries");
+			String loginTokenModelContextServiceEntriesBeanId = "loginTokenModelContextServiceEntries";
 
-			builder.alias("loginTokenModelContextService", "anonymousModelRoleSetContextService");
+			builder.bean("loginTokenModelContextService").beanClass(LoginTokenModelContextServiceImpl.class).c()
+			        .ref(loginTokenModelContextServiceEntriesBeanId);
+
+			builder.alias("loginTokenModelContextService",
+			        this.getAppConfig().getAppBeans().getAnonymousModelRoleSetContextServiceBeanId());
 
 			builder.bean("loginTokenModelContextSetDencoder")
 			        .beanClass(LoginTokenModelContextSetEncoderDecoderImpl.class).c()
@@ -328,9 +226,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .beanClass(SecurityContextAnonymousModelRoleSetContextService.class);
 
 			// Service Entries
-			SpringBeansXMLListBuilder<?> entitiesList = builder.list("loginTokenModelContextServiceEntries");
+			SpringBeansXMLListBuilder<?> entitiesList = builder.list(loginTokenModelContextServiceEntriesBeanId);
 
-			for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+			// Local Types
+			for (AppModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
@@ -343,8 +242,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				}
 			}
 
-			builder.alias("loginTokenModelContextServiceEntries", "loginTokenModelContextServiceDencoderEntries");
+			// Remote Types
+			for (AppRemoteServiceConfiguration remoteService : this.getAppConfig().getRemoteServices()) {
+				// TODO: Add ModelRoleSet retrieval pieces here.
+			}
 
+			builder.alias(loginTokenModelContextServiceEntriesBeanId, "loginTokenModelContextServiceDencoderEntries");
 		}
 
 	}

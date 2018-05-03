@@ -7,7 +7,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.AppRemoteServiceConfigurer;
 
 /**
  * {@link AppRemoteServiceConfiguration} implementation
@@ -22,19 +22,20 @@ public class AppRemoteServiceConfigurationImpl
 
 	private AppServiceConfigurationInfo appServiceConfigurationInfo;
 	private AppRemoteServiceBeansConfiguration serviceBeansConfiguration;
-	private AppRemoteServiceConfigurer appRemoteServiceConfiguration;
+	private AppRemoteServiceConfigurer appRemoteServiceConfigurer;
 	private List<AppModelConfigurationGroup> serviceModelConfigurations;
 
 	public AppRemoteServiceConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
-	        AppRemoteServiceConfigurer appRemoteServiceConfiguration) {
-		this(appServiceConfigurationInfo, appRemoteServiceConfiguration, Collections.emptyList());
+	        AppRemoteServiceConfigurer appRemoteServiceConfigurer) {
+		this(appServiceConfigurationInfo, appRemoteServiceConfigurer, Collections.emptyList());
 	}
 
 	public AppRemoteServiceConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
-	        AppRemoteServiceConfigurer appRemoteServiceConfiguration,
+	        AppRemoteServiceConfigurer appRemoteServiceConfigurer,
 	        List<AppModelConfigurationGroup> serviceModelConfigurations) {
 		super();
 		this.setAppServiceConfigurationInfo(appServiceConfigurationInfo);
+		this.setAppRemoteServiceConfigurer(appRemoteServiceConfigurer);
 		this.setServiceModelConfigurations(serviceModelConfigurations);
 		this.setServiceBeansConfiguration(new AppRemoteServiceBeansConfigurationImpl(appServiceConfigurationInfo));
 	}
@@ -89,16 +90,16 @@ public class AppRemoteServiceConfigurationImpl
 	}
 
 	@Override
-	public AppRemoteServiceConfigurer getAppRemoteServiceConfiguration() {
-		return this.appRemoteServiceConfiguration;
+	public AppRemoteServiceConfigurer getAppRemoteServiceConfigurer() {
+		return this.appRemoteServiceConfigurer;
 	}
 
-	public void setAppRemoteServiceConfiguration(AppRemoteServiceConfigurer appRemoteServiceConfiguration) {
-		if (appRemoteServiceConfiguration == null) {
-			throw new IllegalArgumentException("appRemoteServiceConfiguration cannot be null.");
+	public void setAppRemoteServiceConfigurer(AppRemoteServiceConfigurer appRemoteServiceConfigurer) {
+		if (appRemoteServiceConfigurer == null) {
+			throw new IllegalArgumentException("appRemoteServiceConfigurer cannot be null.");
 		}
 
-		this.appRemoteServiceConfiguration = appRemoteServiceConfiguration;
+		this.appRemoteServiceConfigurer = appRemoteServiceConfigurer;
 	}
 
 }

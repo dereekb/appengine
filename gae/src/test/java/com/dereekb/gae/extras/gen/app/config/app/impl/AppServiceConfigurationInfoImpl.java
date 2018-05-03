@@ -9,18 +9,18 @@ import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
  * @author dereekb
  *
  */
-public class GaeAppServiceConfigurationInfo
+public class AppServiceConfigurationInfoImpl
         implements AppServiceConfigurationInfo {
 
 	public String appProjectId;
 	public String appServiceName;
 	public String appVersion;
 
-	public GaeAppServiceConfigurationInfo(String appProjectId, String appServiceName) {
+	public AppServiceConfigurationInfoImpl(String appProjectId, String appServiceName) {
 		this(appProjectId, appServiceName, "v1");
 	}
 
-	public GaeAppServiceConfigurationInfo(String appProjectId, String appServiceName, String appVersion) {
+	public AppServiceConfigurationInfoImpl(String appProjectId, String appServiceName, String appVersion) {
 		this.setAppProjectId(appProjectId);
 		this.setAppServiceName(appServiceName);
 		this.setAppVersion(appVersion);

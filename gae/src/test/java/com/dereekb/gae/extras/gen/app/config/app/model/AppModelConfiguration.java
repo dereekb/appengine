@@ -53,7 +53,10 @@ public interface AppModelConfiguration
 	 * <p>
 	 * In most cases however, you should rely on remote retrieval instead of
 	 * local.
+	 *
+	 * @deprecated Always use remote retrieval.
 	 */
+	@Deprecated
 	public boolean isLocalReadOnly();
 
 	/**

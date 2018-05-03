@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.AppRemoteServiceConfigurer;
 
 /**
  * Configuration for connecting to a remote server/service.
@@ -34,7 +35,7 @@ public interface AppRemoteServiceConfiguration {
 	 *
 	 * @return {@link AppRemoteServiceConfigurer}. Never {@code null}.
 	 */
-	public AppRemoteServiceConfigurer getAppRemoteServiceConfiguration();
+	public AppRemoteServiceConfigurer getAppRemoteServiceConfigurer();
 
 	/**
 	 * Whether or not the service is a sibling or not.

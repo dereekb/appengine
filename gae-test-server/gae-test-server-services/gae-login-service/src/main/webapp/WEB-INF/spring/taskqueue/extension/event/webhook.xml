@@ -15,7 +15,10 @@
   </bean>
   <bean class="com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterDelegateImpl" id="webHookEventSubmitterDelegate">
     <constructor-arg index="0" ref="taskScheduler"/>
-    <constructor-arg index="1" ref=""/>
+    <constructor-arg index="1" ref="eventClientScheduleTaskService"/>
+  </bean>
+  <bean class="com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderImpl" id="eventClientScheduleTaskService">
+    <constructor-arg index="0" ref="eventServiceClientApiRequestSender"/>
   </bean>
   <!--Converter-->
   <bean class="com.dereekb.gae.server.event.webhook.service.impl.WebHookEventConverterImpl" id="webHookEventConverter">

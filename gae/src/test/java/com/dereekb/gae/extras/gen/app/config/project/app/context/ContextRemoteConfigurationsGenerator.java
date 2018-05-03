@@ -3,9 +3,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app.context;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.impl.AbstractRemoteModelConfigurationGenerator;
-import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.impl.AbstractRemoteServiceConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 
@@ -18,7 +17,7 @@ import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
  * @author dereekb
  *
  */
-public class ContextRemoteConfigurationsGenerator extends AbstractRemoteModelConfigurationGenerator {
+public class ContextRemoteConfigurationsGenerator extends AbstractRemoteServiceConfigurationGenerator {
 
 	public ContextRemoteConfigurationsGenerator(AppConfiguration appConfig) {
 		this(appConfig, null);
@@ -26,27 +25,16 @@ public class ContextRemoteConfigurationsGenerator extends AbstractRemoteModelCon
 
 	public ContextRemoteConfigurationsGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
-		this.setIgnoreLocal(true);	// No Local Models
-		this.setRemoteFolderName(this.getModelsFolderName());
-		this.setModelsFolderName("remote");
+		this.setResultsFolderName("remote");
 	}
 
 	// MARK: AbstractRemoteModelConfigurationGenerator
 	@Override
-	public GenFolderImpl generateConfigurations() {
-		GenFolderImpl folder = super.generateConfigurations();
-
-		return folder;
-	}
-
-	@Override
-	public SpringBeansXMLBuilder makeRemoteXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeXMLServiceConfigurationFile(AppRemoteServiceConfiguration service)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		builder.comment("Shared Remote Model Components");
-		modelConfig.getCustomModelContextConfigurer().configureRemoteModelSharedContextComponents(this.getAppConfig(),
-		        modelConfig, builder);
+		service.getAppRemoteServiceConfigurer().configureSharedContextComponents(this.getAppConfig(), builder);
 
 		return builder;
 	}

@@ -29,7 +29,6 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 	private boolean splitByGroup = false;
 	private boolean ignoreLocal = false;
 	private boolean ignoreRemote = true;
-	private boolean makeImportFile = true;
 
 	public AbstractModelConfigurationGenerator(AppConfiguration appConfig) {
 		this(appConfig, null);
@@ -81,14 +80,6 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 
 	public void setIgnoreRemote(boolean ignoreRemote) {
 		this.ignoreRemote = ignoreRemote;
-	}
-
-	public boolean isMakeImportFile() {
-		return this.makeImportFile;
-	}
-
-	public void setMakeImportFile(boolean makeImportFile) {
-		this.makeImportFile = makeImportFile;
 	}
 
 	// MARK: AbstractConfigurationFileGenerator

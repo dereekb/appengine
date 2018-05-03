@@ -69,6 +69,17 @@ public class GenFolderImpl
 	}
 
 	// MARK: Folders
+	@Override
+	public GenFile getFileWithName(String filename) {
+		for (GenFile file : this.getFiles()) {
+			if (file.getFileName().equalsIgnoreCase(filename)) {
+				return file;
+			}
+		}
+
+		return null;
+	}
+
 	public void merge(List<GenFolder> folders) {
 		for (GenFolder folder : folders) {
 			this.merge(folder);

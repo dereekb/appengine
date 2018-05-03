@@ -1,5 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.impl;
 
+import java.util.List;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.ConfigurationFileGenerator;
@@ -62,15 +63,46 @@ public abstract class AbstractConfigurationFileGenerator
 
 	// MARK: Utility
 	public GenFile makeImportFile(GenFolder folder) {
-		return this.makeImportFile(folder.getFolderName(), folder);
+		return this.makeImportFile(folder, false);
+	}
+
+	public GenFile makeImportFile(GenFolder folder,
+	                              boolean importSubFoldersMainFile) {
+		return this.makeImportFile(folder.getFolderName(), folder, importSubFoldersMainFile);
 	}
 
 	public GenFile makeImportFile(String filename,
-	                              GenFolder folder) {
+	                              GenFolder folder,
+	                              boolean importSubFoldersMainFile) {
+		return this.makeImportFile(filename, folder, true, importSubFoldersMainFile);
+	}
+
+	public GenFile makeImportFile(GenFolder folder,
+	                              boolean importResources,
+	                              boolean importSubFoldersMainFile) {
+		return this.makeImportFile(folder.getFolderName(), folder, true, importSubFoldersMainFile);
+	}
+
+	public GenFile makeImportFile(String filename,
+	                              GenFolder folder,
+	                              boolean importResources,
+	                              boolean importSubFoldersMainFile) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		builder.comment("Import");
 		builder.importResources(folder.getFiles());
+
+		if (importSubFoldersMainFile) {
+			List<GenFolder> subFolders = folder.getFolders();
+
+			for (GenFolder subFolder : subFolders) {
+				GenFile file = subFolder.getFileWithName(subFolder.getFolderName());
+
+				if (file != null) {
+					builder.importResource(subFolder.getFolderName() + "/" + file.getOutputFileName());
+				}
+			}
+		}
 
 		return this.makeFileWithXML(filename, builder);
 	}

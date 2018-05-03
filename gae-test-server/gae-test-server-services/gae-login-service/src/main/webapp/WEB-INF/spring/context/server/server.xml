@@ -15,7 +15,7 @@
     <constructor-arg index="0" value="1"/>
   </bean>
   <bean class="java.lang.String" id="serverAppName">
-    <constructor-arg index="0" value="gae-login-service"/>
+    <constructor-arg index="0" value="GAE Test Login Service"/>
   </bean>
   <!--Import-->
   <import resource="/database.xml"/>

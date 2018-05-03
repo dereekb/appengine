@@ -5,6 +5,7 @@ import java.util.List;
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 
 /**
@@ -38,6 +39,8 @@ public interface AppConfiguration {
 	public AppSecurityBeansConfigurer getAppSecurityBeansConfigurer();
 
 	public AppServicesConfigurer getAppServicesConfigurer();
+
+	public List<AppRemoteServiceConfiguration> getRemoteServices();
 
 	public List<AppModelConfigurationGroup> getLocalModelConfigurations();
 

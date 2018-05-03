@@ -28,7 +28,7 @@ public class AppConfigurationImpl
 	private String appTaskQueueName = "app";
 
 	private AppServicesConfigurer appServicesConfigurer;
-	private AppServiceConfigurationInfo appServiceConfigurationInfo = new GaeAppServiceConfigurationInfo("app", "app");
+	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");
 
 	private boolean isRootServer = false;
 	private boolean isLoginServer = true;
@@ -162,8 +162,13 @@ public class AppConfigurationImpl
 		this.appSecurityBeansConfigurer = appSecurityBeansConfigurer;
 	}
 
+	@Override
 	public List<AppRemoteServiceConfiguration> getRemoteServices() {
 		return this.remoteServices;
+	}
+
+	public void setRemoteServices(AppRemoteServiceConfiguration... remoteServices) {
+		this.setRemoteServices(ListUtility.toList(remoteServices));
 	}
 
 	public void setRemoteServices(List<AppRemoteServiceConfiguration> remoteServices) {
