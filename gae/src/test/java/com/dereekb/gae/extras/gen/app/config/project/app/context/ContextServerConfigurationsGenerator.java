@@ -8,11 +8,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.AppConfigurationUtility;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
@@ -144,12 +144,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			SpringBeansXMLListBuilder<?> entitiesList = builder.list(OBJECTIFY_DATABASE_ENTITIES_KEY);
 
-			for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+			for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
-				List<AppModelConfiguration> modelConfigs = group.getModelConfigurations();
+				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
 
-				for (AppModelConfiguration modelConfig : modelConfigs) {
+				for (LocalModelConfiguration modelConfig : modelConfigs) {
 					if (modelConfig.isLocalModel()) {
 						entitiesList.ref(modelConfig.getModelObjectifyEntryBeanId());
 					}
@@ -229,12 +229,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			SpringBeansXMLListBuilder<?> entitiesList = builder.list(loginTokenModelContextServiceEntriesBeanId);
 
 			// Local Types
-			for (AppModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
+			for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
-				List<AppModelConfiguration> modelConfigs = group.getModelConfigurations();
-				for (AppModelConfiguration modelConfig : modelConfigs) {
+				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+				for (LocalModelConfiguration modelConfig : modelConfigs) {
 
 					if (modelConfig.isLocalModel()) {
 						entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
@@ -479,7 +479,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.comment("Secure Model Types");
 			SpringBeansXMLListBuilder<?> secureModelsList = builder.list(secureModelTypesBeanId);
 
-			for (AppModelConfiguration modelConfig : AppConfigurationUtility
+			for (LocalModelConfiguration modelConfig : AppConfigurationUtility
 			        .readModelConfigurations(this.getAppConfig())) {
 				secureModelsList.ref(modelConfig.getModelTypeBeanId());
 			}

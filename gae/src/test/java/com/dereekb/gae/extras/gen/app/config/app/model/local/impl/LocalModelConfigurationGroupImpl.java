@@ -1,10 +1,10 @@
-package com.dereekb.gae.extras.gen.app.config.app.model.impl;
+package com.dereekb.gae.extras.gen.app.config.app.model.local.impl;
 
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 
 /**
  * {@link AppConfiguration} implementation.
@@ -12,17 +12,17 @@ import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGrou
  * @author dereekb
  *
  */
-public class AppModelConfigurationGroupImpl
-        implements AppModelConfigurationGroup {
+public class LocalModelConfigurationGroupImpl
+        implements LocalModelConfigurationGroup {
 
 	private String groupName;
-	private List<AppModelConfiguration> modelConfigurations;
+	private List<LocalModelConfiguration> modelConfigurations;
 
-	public AppModelConfigurationGroupImpl(List<AppModelConfiguration> modelConfigurations) {
+	public LocalModelConfigurationGroupImpl(List<LocalModelConfiguration> modelConfigurations) {
 		this(null, modelConfigurations);
 	}
 
-	public AppModelConfigurationGroupImpl(String groupName, List<AppModelConfiguration> modelConfigurations) {
+	public LocalModelConfigurationGroupImpl(String groupName, List<LocalModelConfiguration> modelConfigurations) {
 		this.setGroupName(groupName);
 		this.setModelConfigurations(modelConfigurations);
 	}
@@ -38,11 +38,11 @@ public class AppModelConfigurationGroupImpl
 	}
 
 	@Override
-	public List<AppModelConfiguration> getModelConfigurations() {
+	public List<LocalModelConfiguration> getModelConfigurations() {
 		return this.modelConfigurations;
 	}
 
-	public void setModelConfigurations(List<AppModelConfiguration> modelConfigurations) {
+	public void setModelConfigurations(List<LocalModelConfiguration> modelConfigurations) {
 		if (modelConfigurations == null) {
 			throw new IllegalArgumentException("modelConfigurations cannot be null.");
 		}

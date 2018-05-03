@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.SecuredQueryInitializerConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 
@@ -32,7 +32,7 @@ public class AdminOnlySecuredQueryInitializerConfigurerImpl
 	// MARK: SecuredQueryInitializerConfigurer
 	@Override
 	public void configureSecuredQueryInitializer(AppConfiguration appConfig,
-	                                             AppModelConfiguration modelConfig,
+	                                             LocalModelConfiguration modelConfig,
 	                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
 		beanConstructor.ref(this.securityOverrideTaskBean);
 	}

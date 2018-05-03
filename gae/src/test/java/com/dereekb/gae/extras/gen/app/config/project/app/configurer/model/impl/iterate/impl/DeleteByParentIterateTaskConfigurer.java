@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.model.crud.taskqueue.ModelKeyListAccessorDeleteTask;
 import com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.ListAccessorTaskRequestSenderImpl;
@@ -75,7 +75,7 @@ public class DeleteByParentIterateTaskConfigurer extends AbstractIterateConfigur
 	// MARK: AbstractIterateConfigurerInstanceTaskEntryImpl
 	@Override
 	protected void configureTaskBeans(AppConfiguration appConfig,
-	                                  AppModelConfiguration modelConfig,
+	                                  LocalModelConfiguration modelConfig,
 	                                  SpringBeansXMLBuilder builder) {
 
 		builder.comment("Task");
@@ -86,12 +86,12 @@ public class DeleteByParentIterateTaskConfigurer extends AbstractIterateConfigur
 		this.configureScheduleTask(modelConfig, builder);
 	}
 
-	protected void configureScheduleTask(AppModelConfiguration modelConfig,
+	protected void configureScheduleTask(LocalModelConfiguration modelConfig,
 	                                     SpringBeansXMLBuilder builder) {
 		this.configureScheduleTask(modelConfig, builder, this.hasFilter);
 	}
 
-	protected void configureScheduleTask(AppModelConfiguration modelConfig,
+	protected void configureScheduleTask(LocalModelConfiguration modelConfig,
 	                                     SpringBeansXMLBuilder builder,
 	                                     boolean hasFilter) {
 		String filteredSchedulingTaskBeanId = "schedule"
@@ -114,14 +114,14 @@ public class DeleteByParentIterateTaskConfigurer extends AbstractIterateConfigur
 		this.configureScheduleTaskBuilder(modelConfig, builder, taskBuilderBeanId);
 	}
 
-	protected void configureFilteredScheduleTask(AppModelConfiguration modelConfig,
+	protected void configureFilteredScheduleTask(LocalModelConfiguration modelConfig,
 	                                             SpringBeansXMLBuilder builder,
 	                                             String filteredSchedulingTaskBeanId,
 	                                             String schedulingTaskBeanId) {
 		throw new UnsupportedOperationException("Override in sub class.");
 	}
 
-	protected void configureScheduleTaskBuilder(AppModelConfiguration modelConfig,
+	protected void configureScheduleTaskBuilder(LocalModelConfiguration modelConfig,
 	                                            SpringBeansXMLBuilder builder,
 	                                            String taskBuilderBeanId) {
 

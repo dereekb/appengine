@@ -3,7 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.taskqueue;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractRemoteModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -49,7 +49,7 @@ public class TaskQueueRemoteModelConfigurationGenerator extends AbstractRemoteMo
 	}
 
 	@Override
-	public SpringBeansXMLBuilder makeRemoteXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeRemoteXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 

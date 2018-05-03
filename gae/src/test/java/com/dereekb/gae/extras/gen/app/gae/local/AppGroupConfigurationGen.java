@@ -1,9 +1,9 @@
 package com.dereekb.gae.extras.gen.app.gae.local;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationGroupImpl;
-import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelContextConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelCrudConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelRoleSetLoaderConfigurerImpl;
@@ -17,20 +17,20 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 public class AppGroupConfigurationGen {
 
-	public static AppModelConfigurationGroupImpl makeLocalAppGroupConfig() {
+	public static LocalModelConfigurationGroupImpl makeLocalAppGroupConfig() {
 
 		// App
-		AppModelConfigurationImpl appModel = makeAppModelConfig();
-		AppModelConfigurationImpl appHookModel = makeAppHookModelConfig();
+		LocalModelConfigurationImpl appModel = makeAppModelConfig();
+		LocalModelConfigurationImpl appHookModel = makeAppHookModelConfig();
 
-		AppModelConfigurationGroupImpl appGroup = new AppModelConfigurationGroupImpl("app",
+		LocalModelConfigurationGroupImpl appGroup = new LocalModelConfigurationGroupImpl("app",
 		        ListUtility.toList(appModel, appHookModel));
 
 		return appGroup;
 	}
 
-	public static AppModelConfigurationImpl makeAppModelConfig() {
-		AppModelConfigurationImpl appModel = new AppModelConfigurationImpl(App.class);
+	public static LocalModelConfigurationImpl makeAppModelConfig() {
+		LocalModelConfigurationImpl appModel = new LocalModelConfigurationImpl(App.class);
 
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
@@ -41,8 +41,8 @@ public class AppGroupConfigurationGen {
 		return appModel;
 	}
 
-	public static AppModelConfigurationImpl makeAppHookModelConfig() {
-		AppModelConfigurationImpl appHookModel = new AppModelConfigurationImpl(AppHook.class);
+	public static LocalModelConfigurationImpl makeAppHookModelConfig() {
+		LocalModelConfigurationImpl appHookModel = new LocalModelConfigurationImpl(AppHook.class);
 
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setCustomLocalModelCrudConfigurer(new AppHookCrudConfigurer());
@@ -61,7 +61,7 @@ public class AppGroupConfigurationGen {
 
 		@Override
 		public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
-		                                                  AppModelConfiguration modelConfig,
+		                                                  LocalModelConfiguration modelConfig,
 		                                                  SpringBeansXMLBuilder builder) {
 			this.saferMakeRoleBuilderComponent(modelConfig, builder).c().ref("appParentModelRoleSetContextReader");
 			this.makeRoleSetLoaderComponent(modelConfig, builder, true);
@@ -73,7 +73,7 @@ public class AppGroupConfigurationGen {
 
 		@Override
 		public void configureCrudServiceComponents(AppConfiguration appConfig,
-		                                           AppModelConfiguration modelConfig,
+		                                           LocalModelConfiguration modelConfig,
 		                                           SpringBeansXMLBuilder builder) {
 			new AppHookCrudConfigurerInstance(appConfig, modelConfig, builder).configure();
 		}
@@ -81,7 +81,7 @@ public class AppGroupConfigurationGen {
 		protected class AppHookCrudConfigurerInstance extends CrudConfigurerInstance {
 
 			public AppHookCrudConfigurerInstance(AppConfiguration appConfig,
-			        AppModelConfiguration modelConfig,
+			        LocalModelConfiguration modelConfig,
 			        SpringBeansXMLBuilder builder) {
 				super(appConfig, modelConfig, builder);
 			}

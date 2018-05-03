@@ -1,29 +1,20 @@
-package com.dereekb.gae.extras.gen.app.config.app.model.impl;
+package com.dereekb.gae.extras.gen.app.config.app.model.local.impl;
 
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelBeansConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelBeansConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
-import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
- * {@link AppModelBeansConfiguration} implementation.
+ * {@link LocalModelBeansConfiguration} implementation.
  *
  * @author dereekb
  *
  */
-public class AppModelBeansConfigurationImpl
-        implements AppModelBeansConfiguration {
+public class LocalModelBeansConfigurationImpl extends AppModelBeansConfigurationImpl
+        implements LocalModelBeansConfiguration {
 
-	private ModelKeyType modelKeyType;
-
-	private String modelBeanPrefix;
-	private String modelTypeBeanId;
-	private String modelIdTypeBeanId;
-	private String modelClassBeanId;
-	private String modelDtoClassBeanId;
 	private String modelObjectifyEntryBeanId;
-	private String modelDtoBeanId;
-	private String modelDataConverterBeanId;
 	private String modelRegistryId;
 	private String modelSetterTaskBeanId;
 	private String modelQueryInitializerBeanId;
@@ -52,18 +43,11 @@ public class AppModelBeansConfigurationImpl
 	private String modelSecurityContextServiceEntryBeanId;
 	private String modelEventServiceEntryBeanId;
 
-	public AppModelBeansConfigurationImpl(String modelType, ModelKeyType modelKeyType) {
-		String modelBeanPrefix = StringUtility.firstLetterLowerCase(modelType);
+	public LocalModelBeansConfigurationImpl(String modelType, ModelKeyType modelKeyType) {
+		super(modelType, modelKeyType);
+		String modelBeanPrefix = this.getModelBeanPrefix();
 
-		this.setModelKeyType(modelKeyType);
-		this.setModelBeanPrefix(modelBeanPrefix);
-		this.setModelTypeBeanId(modelBeanPrefix + "Type");
-		this.setModelIdTypeBeanId(modelBeanPrefix + "IdType");
-		this.setModelClassBeanId(modelBeanPrefix + "Class");
-		this.setModelDtoClassBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelObjectifyEntryBeanId(modelBeanPrefix + "ObjectifyEntry");
-		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
-		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
 		this.setModelSetterTaskBeanId(modelBeanPrefix + "SetterTask");
 		this.setModelQueryInitializerBeanId(modelBeanPrefix + "QueryInitializer");
@@ -90,83 +74,6 @@ public class AppModelBeansConfigurationImpl
 		this.setModelEventServiceEntryBeanId(modelBeanPrefix + "ModelEventService");
 	}
 
-	public ModelKeyType getModelKeyType() {
-		return this.modelKeyType;
-	}
-
-	public void setModelKeyType(ModelKeyType modelKeyType) {
-		if (modelKeyType == null) {
-			throw new IllegalArgumentException("modelKeyType cannot be null.");
-		}
-
-		this.modelKeyType = modelKeyType;
-	}
-
-	@Override
-	public String getModelBeanPrefix() {
-		return this.modelBeanPrefix;
-	}
-
-	public void setModelBeanPrefix(String modelBeanPrefix) {
-		if (modelBeanPrefix == null) {
-			throw new IllegalArgumentException("modelBeanPrefix cannot be null.");
-		}
-
-		this.modelBeanPrefix = modelBeanPrefix;
-	}
-
-	@Override
-	public String getModelTypeBeanId() {
-		return this.modelTypeBeanId;
-	}
-
-	public void setModelTypeBeanId(String modelTypeBeanId) {
-		if (modelTypeBeanId == null) {
-			throw new IllegalArgumentException("modelTypeBeanId cannot be null.");
-		}
-
-		this.modelTypeBeanId = modelTypeBeanId;
-	}
-
-	@Override
-	public String getModelIdTypeBeanId() {
-		return this.modelIdTypeBeanId;
-	}
-
-	public void setModelIdTypeBeanId(String modelIdTypeBeanId) {
-		if (modelIdTypeBeanId == null) {
-			throw new IllegalArgumentException("modelIdTypeBeanId cannot be null.");
-		}
-
-		this.modelIdTypeBeanId = modelIdTypeBeanId;
-	}
-
-	@Override
-	public String getModelClassBeanId() {
-		return this.modelClassBeanId;
-	}
-
-	public void setModelClassBeanId(String modelClassBeanId) {
-		if (modelClassBeanId == null) {
-			throw new IllegalArgumentException("modelClassBeanId cannot be null.");
-		}
-
-		this.modelClassBeanId = modelClassBeanId;
-	}
-
-	@Override
-	public String getModelDtoClassBeanId() {
-		return this.modelDtoClassBeanId;
-	}
-
-	public void setModelDtoClassBeanId(String modelDtoClassBeanId) {
-		if (modelDtoClassBeanId == null) {
-			throw new IllegalArgumentException("modelDtoClassBeanId cannot be null.");
-		}
-
-		this.modelDtoClassBeanId = modelDtoClassBeanId;
-	}
-
 	@Override
 	public String getModelObjectifyEntryBeanId() {
 		return this.modelObjectifyEntryBeanId;
@@ -178,32 +85,6 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelObjectifyEntryBeanId = modelObjectifyEntryBeanId;
-	}
-
-	@Override
-	public String getModelDtoBeanId() {
-		return this.modelDtoBeanId;
-	}
-
-	public void setModelDtoBeanId(String modelDtoBeanId) {
-		if (modelDtoBeanId == null) {
-			throw new IllegalArgumentException("modelDtoBeanId cannot be null.");
-		}
-
-		this.modelDtoBeanId = modelDtoBeanId;
-	}
-
-	@Override
-	public String getModelDataConverterBeanId() {
-		return this.modelDataConverterBeanId;
-	}
-
-	public void setModelDataConverterBeanId(String modelDataConverterBeanId) {
-		if (modelDataConverterBeanId == null) {
-			throw new IllegalArgumentException("modelDataConverterBeanId cannot be null.");
-		}
-
-		this.modelDataConverterBeanId = modelDataConverterBeanId;
 	}
 
 	@Override
@@ -454,6 +335,19 @@ public class AppModelBeansConfigurationImpl
 	}
 
 	@Override
+	public String getModelRoleSetLoaderBeanId() {
+		return this.modelRoleSetLoaderBeanId;
+	}
+
+	public void setModelRoleSetLoaderBeanId(String modelRoleSetLoaderBeanId) {
+		if (modelRoleSetLoaderBeanId == null) {
+			throw new IllegalArgumentException("modelRoleSetLoaderBeanId cannot be null.");
+		}
+
+		this.modelRoleSetLoaderBeanId = modelRoleSetLoaderBeanId;
+	}
+
+	@Override
 	public String getStringModelKeyConverter() {
 		return this.stringModelKeyConverter;
 	}
@@ -503,19 +397,6 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelEventServiceEntryBeanId = modelEventServiceEntryBeanId;
-	}
-
-	@Override
-	public String getModelRoleSetLoaderBeanId() {
-		return this.modelRoleSetLoaderBeanId;
-	}
-
-	public void setModelRoleSetLoaderBeanId(String modelRoleSetLoaderBeanId) {
-		if (modelRoleSetLoaderBeanId == null) {
-			throw new IllegalArgumentException("modelRoleSetLoaderBeanId cannot be null.");
-		}
-
-		this.modelRoleSetLoaderBeanId = modelRoleSetLoaderBeanId;
 	}
 
 }

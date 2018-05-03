@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.utilities.filters.FilterResult;
@@ -101,7 +101,7 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 	}
 
 	@Override
-	public final SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public final SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		if (modelConfig.isLocalModel()) {
 			return this.makeLocalXMLModelClientConfigurationFile(modelConfig);
@@ -110,12 +110,12 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 		}
 	}
 
-	public SpringBeansXMLBuilder makeLocalXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeLocalXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		return super.makeXMLModelClientConfigurationFile(modelConfig);
 	}
 
-	public SpringBeansXMLBuilder makeRemoteXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeRemoteXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		return super.makeXMLModelClientConfigurationFile(modelConfig);
 	}
@@ -125,17 +125,17 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 	        implements ModelClientConfigurationGenerator {
 
 		@Override
-		public GenFolderImpl makeModelConfigurations(List<AppModelConfigurationGroup> groups) {
+		public GenFolderImpl makeModelConfigurations(List<LocalModelConfigurationGroup> groups) {
 			GenFolderImpl folder = new GenFolderImpl(AbstractRemoteModelConfigurationGenerator.this.modelsFolderName);
 
 			LocalModelFilter filter = new LocalModelFilter();
 
-			List<AppModelConfiguration> localModels = new ArrayList<AppModelConfiguration>();
-			List<AppModelConfiguration> remoteModels = new ArrayList<AppModelConfiguration>();
+			List<LocalModelConfiguration> localModels = new ArrayList<LocalModelConfiguration>();
+			List<LocalModelConfiguration> remoteModels = new ArrayList<LocalModelConfiguration>();
 
 			// Break into local/remote
-			for (AppModelConfigurationGroup groupConfig : groups) {
-				FilterResults<AppModelConfiguration> results = filter
+			for (LocalModelConfigurationGroup groupConfig : groups) {
+				FilterResults<LocalModelConfiguration> results = filter
 				        .filterObjects(groupConfig.getModelConfigurations());
 				localModels.addAll(results.getPassingObjects());
 				remoteModels.addAll(results.getFailingObjects());
@@ -184,10 +184,10 @@ public abstract class AbstractRemoteModelConfigurationGenerator extends Abstract
 
 	}
 
-	public static class LocalModelFilter extends AbstractFilter<AppModelConfiguration> {
+	public static class LocalModelFilter extends AbstractFilter<LocalModelConfiguration> {
 
 		@Override
-		public FilterResult filterObject(AppModelConfiguration object) {
+		public FilterResult filterObject(LocalModelConfiguration object) {
 			return FilterResult.valueOf(object.isLocalModel());
 		}
 

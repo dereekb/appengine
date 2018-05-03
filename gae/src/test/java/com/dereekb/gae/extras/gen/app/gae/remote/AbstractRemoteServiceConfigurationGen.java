@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.AppRemoteServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.impl.AppRemoteServiceConfigurerImpl;
@@ -44,7 +44,7 @@ public class AbstractRemoteServiceConfigurationGen
 	public AppRemoteServiceConfigurationImpl make() throws FactoryMakeFailureException {
 
 		AppRemoteServiceConfigurer configurer = this.makeRemoteServiceConfigurer();
-		List<AppModelConfigurationGroup> models = this.makeModelsConfiguration();
+		List<LocalModelConfigurationGroup> models = this.makeModelsConfiguration();
 
 		AppRemoteServiceConfigurationImpl config = new AppRemoteServiceConfigurationImpl(this.serviceConfigurationInfo,
 		        configurer, models);
@@ -58,7 +58,7 @@ public class AbstractRemoteServiceConfigurationGen
 		return configurer;
 	}
 
-	protected List<AppModelConfigurationGroup> makeModelsConfiguration() {
+	protected List<LocalModelConfigurationGroup> makeModelsConfiguration() {
 		return Collections.emptyList();
 	}
 

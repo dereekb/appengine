@@ -3,7 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.taskqueue;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
@@ -49,7 +49,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 		        .beanClass(TaskQueueIterateController.class).c().ref("taskScheduler").ref("modelKeyTypeConverter")
 		        .map();
 
-		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
+		for (LocalModelConfiguration model : this.getAllApplicableConfigurations()) {
 			if (model.getCustomModelContextConfigurer().hasIterateControllerEntry()) {
 				iterateEntryMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 				        model.getModelBeanPrefix() + "TaskQueueIterateControllerEntry");
@@ -60,7 +60,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 	}
 
 	@Override
-	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 

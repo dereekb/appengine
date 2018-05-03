@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomRemoteModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomRemoteModelSharedContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomRemoteModelTaskQueueContextConfigurer;
@@ -46,7 +46,7 @@ public class CustomRemoteModelContextConfigurerImpl extends AbstractCustomModelC
 	// MARK: CustomRemoteModelContextConfigurer
 	@Override
 	public void configureRemoteModelSharedContextComponents(AppConfiguration appConfig,
-	                                                        AppModelConfiguration modelConfig,
+	                                                        LocalModelConfiguration modelConfig,
 	                                                        SpringBeansXMLBuilder builder) {
 		if (this.customRemoteModelSharedContextConfigurer != null) {
 			this.customRemoteModelSharedContextConfigurer.configureRemoteModelSharedContextComponents(appConfig,
@@ -56,7 +56,7 @@ public class CustomRemoteModelContextConfigurerImpl extends AbstractCustomModelC
 
 	@Override
 	public void configureRemoteModelTaskQueueContextComponents(AppConfiguration appConfig,
-	                                                           AppModelConfiguration modelConfig,
+	                                                           LocalModelConfiguration modelConfig,
 	                                                           SpringBeansXMLBuilder builder) {
 		if (this.customRemoteModelTaskQueueContextConfigurer != null) {
 			this.customRemoteModelTaskQueueContextConfigurer.configureRemoteModelTaskQueueContextComponents(appConfig,

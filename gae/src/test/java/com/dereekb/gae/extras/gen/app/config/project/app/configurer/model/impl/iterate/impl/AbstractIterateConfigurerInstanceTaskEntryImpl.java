@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate.IterateConfigurerInstanceTaskEntry;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
@@ -52,14 +52,14 @@ public abstract class AbstractIterateConfigurerInstanceTaskEntryImpl
 
 	// MARK: IterateConfigurerInstanceTaskEntry
 	@Override
-	public void configureMapEntry(AppModelConfiguration modelConfig,
+	public void configureMapEntry(LocalModelConfiguration modelConfig,
 	                              SpringBeansXMLMapBuilder<?> map) {
 		map.entry(this.getTaskKeyBeanId(modelConfig), true).valueRef(this.getTaskBeanId(modelConfig));
 	}
 
 	@Override
 	public final void configureTaskComponents(AppConfiguration appConfig,
-	                                          AppModelConfiguration modelConfig,
+	                                          LocalModelConfiguration modelConfig,
 	                                          SpringBeansXMLBuilder builder) {
 		builder.comment(this.getTaskName() + " Task");
 		builder.comment(" ---- ");
@@ -69,21 +69,21 @@ public abstract class AbstractIterateConfigurerInstanceTaskEntryImpl
 	}
 
 	protected void configureTaskKey(AppConfiguration appConfig,
-	                                AppModelConfiguration modelConfig,
+	                                LocalModelConfiguration modelConfig,
 	                                SpringBeansXMLBuilder builder) {
 		builder.stringBean(this.getTaskKeyBeanId(modelConfig), this.taskKey);
 	}
 
 	protected abstract void configureTaskBeans(AppConfiguration appConfig,
-	                                           AppModelConfiguration modelConfig,
+	                                           LocalModelConfiguration modelConfig,
 	                                           SpringBeansXMLBuilder builder);
 
 	// MARK: Internal
-	protected String getTaskKeyBeanId(AppModelConfiguration modelConfig) {
+	protected String getTaskKeyBeanId(LocalModelConfiguration modelConfig) {
 		return this.getTaskBeanId(modelConfig) + "Key";
 	}
 
-	protected String getTaskBeanId(AppModelConfiguration modelConfig) {
+	protected String getTaskBeanId(LocalModelConfiguration modelConfig) {
 		String prefix = (this.addModelPrefix) ? modelConfig.getModelBeanPrefix() : "";
 		return prefix + this.taskName + "Task";
 	}

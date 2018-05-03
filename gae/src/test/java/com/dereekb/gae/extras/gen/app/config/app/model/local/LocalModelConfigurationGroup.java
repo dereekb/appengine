@@ -1,4 +1,4 @@
-package com.dereekb.gae.extras.gen.app.config.app.model;
+package com.dereekb.gae.extras.gen.app.config.app.model.local;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * @author dereekb
  *
  */
-public interface AppModelConfigurationGroup {
+public interface LocalModelConfigurationGroup {
 
 	/**
 	 * Group name, or {@code null} if the default unnamed group.
@@ -21,6 +21,6 @@ public interface AppModelConfigurationGroup {
 	 *
 	 * @return {@link List}. Never {@code null}.
 	 */
-	public List<AppModelConfiguration> getModelConfigurations();
+	public List<LocalModelConfiguration> getModelConfigurations();
 
 }

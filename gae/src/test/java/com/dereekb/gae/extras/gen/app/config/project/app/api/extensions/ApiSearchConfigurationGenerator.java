@@ -3,8 +3,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app.api.extensions;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
@@ -37,8 +37,8 @@ public class ApiSearchConfigurationGenerator extends AbstractSingleConfiguration
 		SpringBeansXMLMapBuilder<?> searchMap = builder.bean("searchExtensionApiControllerDelegate")
 		        .beanClass(ApiSearchDelegateImpl.class).c().map();
 
-		for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
-			for (AppModelConfiguration model : group.getModelConfigurations()) {
+		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+			for (LocalModelConfiguration model : group.getModelConfigurations()) {
 				if (model.isLocalModel()) {
 					searchMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 					        model.getModelBeanPrefix() + "SearchDelegateEntry");

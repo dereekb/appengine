@@ -1,5 +1,6 @@
-package com.dereekb.gae.extras.gen.app.config.app.model;
+package com.dereekb.gae.extras.gen.app.config.app.model.local;
 
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelCrudsConfiguration;
 import com.dereekb.gae.model.crud.services.impl.CrudServiceImpl;
 
 /**
@@ -8,15 +9,8 @@ import com.dereekb.gae.model.crud.services.impl.CrudServiceImpl;
  * @author dereekb
  *
  */
-public interface AppModelCrudsConfiguration {
-
-	public boolean hasCrudService();
-
-	public boolean hasCreateService();
-
-	public boolean hasUpdateService();
-
-	public boolean hasDeleteService();
+public interface LocalModelCrudsConfiguration
+        extends AppModelCrudsConfiguration {
 
 	public boolean hasValidatedCreate();
 

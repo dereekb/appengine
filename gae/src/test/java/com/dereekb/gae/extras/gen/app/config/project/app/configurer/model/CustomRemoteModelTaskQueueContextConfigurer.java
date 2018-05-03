@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.context.ContextRemoteConfigurationsGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
@@ -18,7 +18,7 @@ public interface CustomRemoteModelTaskQueueContextConfigurer {
 	 * taskqueue context.
 	 */
 	public void configureRemoteModelTaskQueueContextComponents(AppConfiguration appConfig,
-	                                                           AppModelConfiguration modelConfig,
+	                                                           LocalModelConfiguration modelConfig,
 	                                                           SpringBeansXMLBuilder builder);
 
 }

@@ -4,9 +4,9 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.configurer.ConfigurerInstance;
-import com.dereekb.gae.extras.gen.app.config.app.model.configurer.impl.AbstractBuilderConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.ConfigurerInstance;
+import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.impl.AbstractModelBuilderConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelIterateControllerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.iterate.IterateConfigurerInstanceTaskEntry;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
@@ -35,19 +35,19 @@ public class CustomLocalModelIterateControllerConfigurerImpl
 
 	@Override
 	public void configureIterateControllerTasks(AppConfiguration appConfig,
-	                                            AppModelConfiguration modelConfig,
+	                                            LocalModelConfiguration modelConfig,
 	                                            SpringBeansXMLBuilder builder) {
 		this.makeInstance(appConfig, modelConfig, builder).configure();
 	}
 
 	protected ConfigurerInstance makeInstance(AppConfiguration appConfig,
-	                                          AppModelConfiguration modelConfig,
+	                                          LocalModelConfiguration modelConfig,
 	                                          SpringBeansXMLBuilder builder) {
 		return new IterateConfigurerInstance(appConfig, modelConfig, builder);
 	}
 
 	// MARK: IterateConfigurerInstance
-	protected class IterateConfigurerInstance extends AbstractBuilderConfigurerImpl {
+	protected class IterateConfigurerInstance extends AbstractModelBuilderConfigurerImpl {
 
 		private boolean addEventTaskForCrud = true;
 
@@ -58,7 +58,7 @@ public class CustomLocalModelIterateControllerConfigurerImpl
 		private transient List<IterateConfigurerInstanceTaskEntry> taskEntries;
 
 		public IterateConfigurerInstance(AppConfiguration appConfig,
-		        AppModelConfiguration modelConfig,
+		        LocalModelConfiguration modelConfig,
 		        SpringBeansXMLBuilder builder) {
 			super(appConfig, modelConfig, builder);
 		}

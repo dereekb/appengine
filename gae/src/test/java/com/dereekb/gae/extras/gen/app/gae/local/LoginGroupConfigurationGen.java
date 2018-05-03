@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.configurer.ConfigurerInstance;
-import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationGroupImpl;
-import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelCrudsConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.ConfigurerInstance;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.AdminOnlySecuredQueryInitializerConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelContextConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomLocalModelCrudConfigurerImpl;
@@ -40,22 +41,24 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  */
 public class LoginGroupConfigurationGen {
 
-	public static AppModelConfigurationGroupImpl makeLocalLoginGroupConfig() {
+	public static LocalModelConfigurationGroupImpl makeLocalLoginGroupConfig() {
 
 		// Login
-		AppModelConfigurationImpl loginModel = makeLoginModelConfig();
-		AppModelConfigurationImpl loginPointerModel = makeLoginPointerModelConfig();
-		AppModelConfigurationImpl loginKeyModel = makeLoginKeyModelConfig();
+		LocalModelConfigurationImpl loginModel = makeLoginModelConfig();
+		LocalModelConfigurationImpl loginPointerModel = makeLoginPointerModelConfig();
+		LocalModelConfigurationImpl loginKeyModel = makeLoginKeyModelConfig();
 
-		AppModelConfigurationGroupImpl loginGroup = new AppModelConfigurationGroupImpl("login",
+		LocalModelConfigurationGroupImpl loginGroup = new LocalModelConfigurationGroupImpl("login",
 		        ListUtility.toList(loginModel, loginPointerModel, loginKeyModel));
 		return loginGroup;
 	}
 
-	public static AppModelConfigurationImpl makeLoginModelConfig() {
-		AppModelConfigurationImpl loginModel = new AppModelConfigurationImpl(Login.class);
+	public static LocalModelConfigurationImpl makeLoginModelConfig() {
+		LocalModelConfigurationImpl loginModel = new LocalModelConfigurationImpl(Login.class);
 
-		loginModel.setHasCreateService(false);
+		LocalModelCrudsConfigurationImpl crudsConfiguration = new LocalModelCrudsConfigurationImpl(loginModel);
+		crudsConfiguration.setHasCreateService(false);
+		loginModel.setCrudsConfiguration(crudsConfiguration);
 
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer
@@ -68,10 +71,12 @@ public class LoginGroupConfigurationGen {
 		return loginModel;
 	}
 
-	public static AppModelConfigurationImpl makeLoginPointerModelConfig() {
-		AppModelConfigurationImpl loginPointerModel = new AppModelConfigurationImpl(LoginPointer.class);
+	public static LocalModelConfigurationImpl makeLoginPointerModelConfig() {
+		LocalModelConfigurationImpl loginPointerModel = new LocalModelConfigurationImpl(LoginPointer.class);
 
-		loginPointerModel.setHasCreateService(false);
+		LocalModelCrudsConfigurationImpl crudsConfiguration = new LocalModelCrudsConfigurationImpl(loginPointerModel);
+		crudsConfiguration.setHasCreateService(false);
+		loginPointerModel.setCrudsConfiguration(crudsConfiguration);
 
 		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer
@@ -86,8 +91,8 @@ public class LoginGroupConfigurationGen {
 		return loginPointerModel;
 	}
 
-	public static AppModelConfigurationImpl makeLoginKeyModelConfig() {
-		AppModelConfigurationImpl loginKeyModel = new AppModelConfigurationImpl(LoginKey.class);
+	public static LocalModelConfigurationImpl makeLoginKeyModelConfig() {
+		LocalModelConfigurationImpl loginKeyModel = new LocalModelConfigurationImpl(LoginKey.class);
 
 		// loginKeyModel.setHasCreateService(false);
 
@@ -110,7 +115,7 @@ public class LoginGroupConfigurationGen {
 
 		@Override
 		public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
-		                                                  AppModelConfiguration modelConfig,
+		                                                  LocalModelConfiguration modelConfig,
 		                                                  SpringBeansXMLBuilder builder) {
 
 			this.saferMakeRoleBuilderComponent(modelConfig, builder).c().ref("loginParentModelRoleSetContextReader");
@@ -123,7 +128,7 @@ public class LoginGroupConfigurationGen {
 
 		@Override
 		protected ConfigurerInstance makeInstance(AppConfiguration appConfig,
-		                                          AppModelConfiguration modelConfig,
+		                                          LocalModelConfiguration modelConfig,
 		                                          SpringBeansXMLBuilder builder) {
 			return new LoginIterateConfigurerInstance(appConfig, modelConfig, builder);
 		}
@@ -131,7 +136,7 @@ public class LoginGroupConfigurationGen {
 		protected class LoginIterateConfigurerInstance extends IterateConfigurerInstance {
 
 			public LoginIterateConfigurerInstance(AppConfiguration appConfig,
-			        AppModelConfiguration modelConfig,
+			        LocalModelConfiguration modelConfig,
 			        SpringBeansXMLBuilder builder) {
 				super(appConfig, modelConfig, builder);
 			}
@@ -161,7 +166,7 @@ public class LoginGroupConfigurationGen {
 
 		@Override
 		protected ConfigurerInstance makeInstance(AppConfiguration appConfig,
-		                                          AppModelConfiguration modelConfig,
+		                                          LocalModelConfiguration modelConfig,
 		                                          SpringBeansXMLBuilder builder) {
 			return new LoginIterateConfigurerInstance(appConfig, modelConfig, builder);
 		}
@@ -169,7 +174,7 @@ public class LoginGroupConfigurationGen {
 		protected class LoginIterateConfigurerInstance extends IterateConfigurerInstance {
 
 			public LoginIterateConfigurerInstance(AppConfiguration appConfig,
-			        AppModelConfiguration modelConfig,
+			        LocalModelConfiguration modelConfig,
 			        SpringBeansXMLBuilder builder) {
 				super(appConfig, modelConfig, builder);
 			}
@@ -219,7 +224,7 @@ public class LoginGroupConfigurationGen {
 
 		@Override
 		public void configureCrudServiceComponents(AppConfiguration appConfig,
-		                                           AppModelConfiguration modelConfig,
+		                                           LocalModelConfiguration modelConfig,
 		                                           SpringBeansXMLBuilder builder) {
 			new LoginKeyCrudConfigurerInstance(appConfig, modelConfig, builder).configure();
 		}
@@ -227,7 +232,7 @@ public class LoginGroupConfigurationGen {
 		protected class LoginKeyCrudConfigurerInstance extends CrudConfigurerInstance {
 
 			public LoginKeyCrudConfigurerInstance(AppConfiguration appConfig,
-			        AppModelConfiguration modelConfig,
+			        LocalModelConfiguration modelConfig,
 			        SpringBeansXMLBuilder builder) {
 				super(appConfig, modelConfig, builder);
 			}
@@ -247,7 +252,7 @@ public class LoginGroupConfigurationGen {
 
 		@Override
 		protected ConfigurerInstance makeInstance(AppConfiguration appConfig,
-		                                          AppModelConfiguration modelConfig,
+		                                          LocalModelConfiguration modelConfig,
 		                                          SpringBeansXMLBuilder builder) {
 			return new LoginIterateConfigurerInstance(appConfig, modelConfig, builder);
 		}
@@ -255,7 +260,7 @@ public class LoginGroupConfigurationGen {
 		protected class LoginIterateConfigurerInstance extends IterateConfigurerInstance {
 
 			public LoginIterateConfigurerInstance(AppConfiguration appConfig,
-			        AppModelConfiguration modelConfig,
+			        LocalModelConfiguration modelConfig,
 			        SpringBeansXMLBuilder builder) {
 				super(appConfig, modelConfig, builder);
 			}
@@ -290,7 +295,7 @@ public class LoginGroupConfigurationGen {
 			}
 
 			@Override
-			protected void configureFilteredScheduleTask(AppModelConfiguration modelConfig,
+			protected void configureFilteredScheduleTask(LocalModelConfiguration modelConfig,
 			                                             SpringBeansXMLBuilder builder,
 			                                             String filteredSchedulingTaskBeanId,
 			                                             String schedulingTaskBeanId) {

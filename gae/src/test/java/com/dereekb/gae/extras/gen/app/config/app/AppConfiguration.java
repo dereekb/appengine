@@ -2,7 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.app;
 
 import java.util.List;
 
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
@@ -42,9 +42,9 @@ public interface AppConfiguration {
 
 	public List<AppRemoteServiceConfiguration> getRemoteServices();
 
-	public List<AppModelConfigurationGroup> getLocalModelConfigurations();
+	public List<LocalModelConfigurationGroup> getLocalModelConfigurations();
 
-	public List<AppModelConfigurationGroup> getModelConfigurations();
+	public List<LocalModelConfigurationGroup> getModelConfigurations();
 
 	/**
 	 * Whether or not the server is the initial server.

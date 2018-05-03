@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.AppRemoteServiceConfigurer;
@@ -23,7 +23,7 @@ public class AppRemoteServiceConfigurationImpl
 	private AppServiceConfigurationInfo appServiceConfigurationInfo;
 	private AppRemoteServiceBeansConfiguration serviceBeansConfiguration;
 	private AppRemoteServiceConfigurer appRemoteServiceConfigurer;
-	private List<AppModelConfigurationGroup> serviceModelConfigurations;
+	private List<LocalModelConfigurationGroup> serviceModelConfigurations;
 
 	public AppRemoteServiceConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
 	        AppRemoteServiceConfigurer appRemoteServiceConfigurer) {
@@ -32,7 +32,7 @@ public class AppRemoteServiceConfigurationImpl
 
 	public AppRemoteServiceConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
 	        AppRemoteServiceConfigurer appRemoteServiceConfigurer,
-	        List<AppModelConfigurationGroup> serviceModelConfigurations) {
+	        List<LocalModelConfigurationGroup> serviceModelConfigurations) {
 		super();
 		this.setAppServiceConfigurationInfo(appServiceConfigurationInfo);
 		this.setAppRemoteServiceConfigurer(appRemoteServiceConfigurer);
@@ -64,11 +64,11 @@ public class AppRemoteServiceConfigurationImpl
 	}
 
 	@Override
-	public List<AppModelConfigurationGroup> getServiceModelConfigurations() {
+	public List<LocalModelConfigurationGroup> getServiceModelConfigurations() {
 		return this.serviceModelConfigurations;
 	}
 
-	public void setServiceModelConfigurations(List<AppModelConfigurationGroup> serviceModelConfigurations) {
+	public void setServiceModelConfigurations(List<LocalModelConfigurationGroup> serviceModelConfigurations) {
 		if (serviceModelConfigurations == null) {
 			throw new IllegalArgumentException("serviceModelConfigurations cannot be null.");
 		}

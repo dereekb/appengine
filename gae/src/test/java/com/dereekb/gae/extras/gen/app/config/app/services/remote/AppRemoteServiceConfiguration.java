@@ -3,7 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services.remote;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.AppRemoteServiceConfigurer;
 
 /**
@@ -21,7 +21,7 @@ public interface AppRemoteServiceConfiguration {
 	 *
 	 * @return {@link List}. Never {@code null}.
 	 */
-	public List<AppModelConfigurationGroup> getServiceModelConfigurations();
+	public List<LocalModelConfigurationGroup> getServiceModelConfigurations();
 
 	/**
 	 * Returns the beans configuration.

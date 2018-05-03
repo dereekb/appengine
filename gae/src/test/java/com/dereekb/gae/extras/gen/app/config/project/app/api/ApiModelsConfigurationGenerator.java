@@ -3,7 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.api;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -48,7 +48,7 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 		SpringBeansXMLMapBuilder<?> readControllerMap = builder.bean("readController").beanClass(ReadController.class)
 		        .lazy(false).c().ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).map();
 
-		for (AppModelConfiguration model : this.getAllApplicableConfigurations()) {
+		for (LocalModelConfiguration model : this.getAllApplicableConfigurations()) {
 			readControllerMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 			        model.getModelBeanPrefix() + "ReadControllerEntry");
 		}
@@ -57,7 +57,7 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 	}
 
 	@Override
-	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 

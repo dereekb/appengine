@@ -3,8 +3,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 import java.lang.reflect.Constructor;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.configurer.impl.AbstractBuilderConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.impl.AbstractModelBuilderConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelCrudConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
@@ -33,19 +33,19 @@ public class CustomLocalModelCrudConfigurerImpl
 
 	@Override
 	public void configureCrudServiceComponents(AppConfiguration appConfig,
-	                                           AppModelConfiguration modelConfig,
+	                                           LocalModelConfiguration modelConfig,
 	                                           SpringBeansXMLBuilder builder) {
 		new CrudConfigurerInstance(appConfig, modelConfig, builder).configure();
 	}
 
-	public static class CrudConfigurerInstance extends AbstractBuilderConfigurerImpl {
+	public static class CrudConfigurerInstance extends AbstractModelBuilderConfigurerImpl {
 
 		private boolean filterWithModelConfig = true;
 		private boolean addTodoWarnings = false;
 		private boolean assertTodoOverridden = true;
 
 		public CrudConfigurerInstance(AppConfiguration appConfig,
-		        AppModelConfiguration modelConfig,
+		        LocalModelConfiguration modelConfig,
 		        SpringBeansXMLBuilder builder) {
 			super(appConfig, modelConfig, builder);
 		}

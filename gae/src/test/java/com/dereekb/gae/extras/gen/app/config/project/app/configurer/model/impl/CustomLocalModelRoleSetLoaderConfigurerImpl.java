@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelRoleSetLoaderConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
@@ -19,7 +19,7 @@ public class CustomLocalModelRoleSetLoaderConfigurerImpl
 
 	@Override
 	public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
-	                                                  AppModelConfiguration modelConfig,
+	                                                  LocalModelConfiguration modelConfig,
 	                                                  SpringBeansXMLBuilder builder) {
 		boolean madeBuilder = false;
 
@@ -33,7 +33,7 @@ public class CustomLocalModelRoleSetLoaderConfigurerImpl
 		this.makeRoleSetLoaderComponent(modelConfig, builder, madeBuilder);
 	}
 
-	protected void makeRoleSetLoaderComponent(AppModelConfiguration modelConfig,
+	protected void makeRoleSetLoaderComponent(LocalModelConfiguration modelConfig,
 	                                          SpringBeansXMLBuilder builder,
 	                                          boolean addDefaultBuilderRef) {
 
@@ -48,7 +48,7 @@ public class CustomLocalModelRoleSetLoaderConfigurerImpl
 		}
 	}
 
-	protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> saferMakeRoleBuilderComponent(AppModelConfiguration modelConfig,
+	protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> saferMakeRoleBuilderComponent(LocalModelConfiguration modelConfig,
 	                                                                                         SpringBeansXMLBuilder builder)
 	        throws RuntimeException {
 		try {
@@ -58,7 +58,7 @@ public class CustomLocalModelRoleSetLoaderConfigurerImpl
 		}
 	}
 
-	protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> makeRoleBuilderComponent(AppModelConfiguration modelConfig,
+	protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> makeRoleBuilderComponent(LocalModelConfiguration modelConfig,
 	                                                                                    SpringBeansXMLBuilder builder)
 	        throws ClassNotFoundException {
 		String defaultModelRoleBuilderComponentName = getDefaultModelRoleBuilderComponentName(modelConfig);
@@ -66,19 +66,19 @@ public class CustomLocalModelRoleSetLoaderConfigurerImpl
 		return builder.bean(defaultModelRoleBuilderComponentName).beanClass(defaultModelRoleBuilderClass);
 	}
 
-	protected Class<?> getDefaultModelRoleBuilderClass(AppModelConfiguration modelConfig)
+	protected Class<?> getDefaultModelRoleBuilderClass(LocalModelConfiguration modelConfig)
 	        throws ClassNotFoundException {
 		String defaultModelRoleBuilderClassPath = modelConfig.getBaseClassPath() + ".security."
 		        + modelConfig.getBaseClassSimpleName() + "ModelRoleBuilderComponent";
 		return Class.forName(defaultModelRoleBuilderClassPath);
 	}
 
-	protected String getDefaultModelRoleBuilderComponentName(AppModelConfiguration modelConfig) {
+	protected String getDefaultModelRoleBuilderComponentName(LocalModelConfiguration modelConfig) {
 		String defaultModelRoleBuilderComponentName = modelConfig.getModelBeanPrefix() + "ModelRoleBuilderComponent";
 		return defaultModelRoleBuilderComponentName;
 	}
 
-	protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> makeRoleSetLoaderBuilder(AppModelConfiguration modelConfig,
+	protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> makeRoleSetLoaderBuilder(LocalModelConfiguration modelConfig,
 	                                                                                    SpringBeansXMLBuilder builder) {
 		String modelRoleSetLoader = modelConfig.getModelRoleSetLoaderBeanId();
 		return builder.bean(modelRoleSetLoader).beanClass(ModelRoleSetLoaderImpl.class);

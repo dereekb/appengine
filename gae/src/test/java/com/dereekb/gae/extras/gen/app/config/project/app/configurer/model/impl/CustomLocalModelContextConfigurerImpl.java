@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelChildrenRoleComponentConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelCrudConfigurer;
@@ -89,7 +89,7 @@ public class CustomLocalModelContextConfigurerImpl extends AbstractCustomModelCo
 	// MARK: CustomLocalModelContextConfigurer
 	@Override
 	public void configureSecuredQueryInitializer(AppConfiguration appConfig,
-	                                             AppModelConfiguration modelConfig,
+	                                             LocalModelConfiguration modelConfig,
 	                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
 		this.securedQueryInitializerConfigurer.configureSecuredQueryInitializer(appConfig, modelConfig,
 		        beanConstructor);
@@ -101,7 +101,7 @@ public class CustomLocalModelContextConfigurerImpl extends AbstractCustomModelCo
 
 		@Override
 		public void configureSecuredQueryInitializer(AppConfiguration appConfig,
-		                                             AppModelConfiguration modelConfig,
+		                                             LocalModelConfiguration modelConfig,
 		                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
 			beanConstructor.nextArgBuilder().comment("TODO: Complete Configuration");
 		}
@@ -110,14 +110,14 @@ public class CustomLocalModelContextConfigurerImpl extends AbstractCustomModelCo
 
 	@Override
 	public void configureCrudServiceComponents(AppConfiguration appConfig,
-	                                           AppModelConfiguration modelConfig,
+	                                           LocalModelConfiguration modelConfig,
 	                                           SpringBeansXMLBuilder builder) {
 		this.customLocalModelCrudConfigurer.configureCrudServiceComponents(appConfig, modelConfig, builder);
 	}
 
 	@Override
 	public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
-	                                                  AppModelConfiguration modelConfig,
+	                                                  LocalModelConfiguration modelConfig,
 	                                                  SpringBeansXMLBuilder builder) {
 		this.customLocalModelRoleSetLoaderConfigurer.configureModelRoleSetLoaderComponents(appConfig, modelConfig,
 		        builder);
@@ -125,7 +125,7 @@ public class CustomLocalModelContextConfigurerImpl extends AbstractCustomModelCo
 
 	@Override
 	public void configureModelChildrenRoleComponents(AppConfiguration appConfig,
-	                                                 AppModelConfiguration modelConfig,
+	                                                 LocalModelConfiguration modelConfig,
 	                                                 SpringBeansXMLBuilder builder) {
 		this.customLocalModelChildrenRoleComponentConfigurer.configureModelChildrenRoleComponents(appConfig,
 		        modelConfig, builder);
@@ -138,7 +138,7 @@ public class CustomLocalModelContextConfigurerImpl extends AbstractCustomModelCo
 
 	@Override
 	public void configureIterateControllerTasks(AppConfiguration appConfig,
-	                                            AppModelConfiguration modelConfig,
+	                                            LocalModelConfiguration modelConfig,
 	                                            SpringBeansXMLBuilder builder) {
 		this.customLocalModelIterateControllerConfigurer.configureIterateControllerTasks(appConfig, modelConfig,
 		        builder);

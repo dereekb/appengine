@@ -14,7 +14,7 @@ import com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
 import com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
@@ -110,7 +110,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 		// MARK: Client Configurations
 		@Override
-		public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+		public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 		        throws UnsupportedOperationException {
 
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
@@ -203,7 +203,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		}
 
 		@Override
-		public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+		public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 		        throws UnsupportedOperationException {
 
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();

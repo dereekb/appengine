@@ -1,7 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomRemoteModelContextConfigurer;
@@ -21,7 +21,7 @@ public class AbstractCustomModelContextConfigurer
 	// MARK: CustomLocalModelContextConfigurer
 	@Override
 	public void configureCrudServiceComponents(AppConfiguration appConfig,
-	                                           AppModelConfiguration modelConfig,
+	                                           LocalModelConfiguration modelConfig,
 	                                           SpringBeansXMLBuilder builder) {
 		// Override in sub-class
 	}
@@ -33,28 +33,28 @@ public class AbstractCustomModelContextConfigurer
 
 	@Override
 	public void configureIterateControllerTasks(AppConfiguration appConfig,
-	                                            AppModelConfiguration modelConfig,
+	                                            LocalModelConfiguration modelConfig,
 	                                            SpringBeansXMLBuilder builder) {
 		// Override in sub-class
 	}
 
 	@Override
 	public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
-	                                                  AppModelConfiguration modelConfig,
+	                                                  LocalModelConfiguration modelConfig,
 	                                                  SpringBeansXMLBuilder builder) {
 		// Override in sub-class
 	}
 
 	@Override
 	public void configureModelChildrenRoleComponents(AppConfiguration appConfig,
-	                                                 AppModelConfiguration modelConfig,
+	                                                 LocalModelConfiguration modelConfig,
 	                                                 SpringBeansXMLBuilder builder) {
 		// Override in sub-class
 	}
 
 	@Override
 	public void configureSecuredQueryInitializer(AppConfiguration appConfig,
-	                                             AppModelConfiguration modelConfig,
+	                                             LocalModelConfiguration modelConfig,
 	                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
 		// Override in sub-class
 	}
@@ -62,14 +62,14 @@ public class AbstractCustomModelContextConfigurer
 	// MARK: CustomRemoteModelContextConfigurer
 	@Override
 	public void configureRemoteModelSharedContextComponents(AppConfiguration appConfig,
-	                                                        AppModelConfiguration modelConfig,
+	                                                        LocalModelConfiguration modelConfig,
 	                                                        SpringBeansXMLBuilder builder) {
 		// Override in sub-class
 	}
 
 	@Override
 	public void configureRemoteModelTaskQueueContextComponents(AppConfiguration appConfig,
-	                                                           AppModelConfiguration modelConfig,
+	                                                           LocalModelConfiguration modelConfig,
 	                                                           SpringBeansXMLBuilder builder) {
 		// Override in sub-class
 	}

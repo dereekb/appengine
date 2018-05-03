@@ -6,8 +6,8 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
 import com.dereekb.gae.extras.gen.app.config.app.impl.AppConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.app.impl.AppServiceConfigurationInfoImpl;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
-import com.dereekb.gae.extras.gen.app.config.app.model.impl.AppModelConfigurationGroupImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
@@ -30,13 +30,13 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 
 		// Models
 		// Login
-		AppModelConfigurationGroupImpl loginGroup = LoginGroupConfigurationGen.makeLocalLoginGroupConfig();
+		LocalModelConfigurationGroupImpl loginGroup = LoginGroupConfigurationGen.makeLocalLoginGroupConfig();
 
 		// App
-		AppModelConfigurationGroupImpl appGroup = AppGroupConfigurationGen.makeLocalAppGroupConfig();
+		LocalModelConfigurationGroupImpl appGroup = AppGroupConfigurationGen.makeLocalAppGroupConfig();
 
-		List<AppModelConfigurationGroup> modelConfigurations = ListUtility
-		        .toList((AppModelConfigurationGroup) loginGroup, appGroup);
+		List<LocalModelConfigurationGroup> modelConfigurations = ListUtility
+		        .toList((LocalModelConfigurationGroup) loginGroup, appGroup);
 
 		AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl(appProjectId,
 		        "login", "v1");

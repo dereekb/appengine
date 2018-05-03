@@ -1,10 +1,10 @@
 package com.dereekb.gae.extras.gen.app.config.app.services.remote;
 
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelBeansConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceContextAvailability;
 
 /**
- * Similar to {@link AppModelBeansConfiguration}, but with common remote service
+ * Similar to {@link LocalModelBeansConfiguration}, but with common remote service
  * components/beans.
  *
  * @author dereekb

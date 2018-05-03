@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
@@ -36,7 +36,7 @@ public class AppConfigurationImpl
 	private AppBeansConfiguration appBeans = new AppBeansConfigurationImpl();
 	private AppSecurityBeansConfigurer appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 
-	private List<AppModelConfigurationGroup> localModelConfigurations;
+	private List<LocalModelConfigurationGroup> localModelConfigurations;
 	private List<AppRemoteServiceConfiguration> remoteServices = Collections.emptyList();
 
 	public AppConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
@@ -46,7 +46,7 @@ public class AppConfigurationImpl
 
 	public AppConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
 	        AppServicesConfigurer appServicesConfigurer,
-	        List<AppModelConfigurationGroup> localModelConfigurations) {
+	        List<LocalModelConfigurationGroup> localModelConfigurations) {
 		this.setAppServiceConfigurationInfo(appServiceConfigurationInfo);
 		this.setAppServicesConfigurer(appServicesConfigurer);
 		this.setLocalModelConfigurations(localModelConfigurations);
@@ -180,8 +180,8 @@ public class AppConfigurationImpl
 	}
 
 	@Override
-	public List<AppModelConfigurationGroup> getModelConfigurations() {
-		List<AppModelConfigurationGroup> models = ListUtility.copy(this.localModelConfigurations);
+	public List<LocalModelConfigurationGroup> getModelConfigurations() {
+		List<LocalModelConfigurationGroup> models = ListUtility.copy(this.localModelConfigurations);
 
 		for (AppRemoteServiceConfiguration service : this.remoteServices) {
 			models.addAll(service.getServiceModelConfigurations());
@@ -191,11 +191,11 @@ public class AppConfigurationImpl
 	}
 
 	@Override
-	public List<AppModelConfigurationGroup> getLocalModelConfigurations() {
+	public List<LocalModelConfigurationGroup> getLocalModelConfigurations() {
 		return this.localModelConfigurations;
 	}
 
-	public void setLocalModelConfigurations(List<AppModelConfigurationGroup> localModelConfigurations) {
+	public void setLocalModelConfigurations(List<LocalModelConfigurationGroup> localModelConfigurations) {
 		if (localModelConfigurations == null) {
 			throw new IllegalArgumentException("localModelConfigurations cannot be null.");
 		}

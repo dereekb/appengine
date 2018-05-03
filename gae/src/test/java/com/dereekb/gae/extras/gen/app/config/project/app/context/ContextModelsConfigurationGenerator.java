@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
@@ -66,11 +66,11 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.comment("Imports");
 		builder.comment("Models");
 
-		for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
 			String groupFolderPath = group.getGroupName().toLowerCase();
 
-			List<AppModelConfiguration> modelConfigs = group.getModelConfigurations();
-			for (AppModelConfiguration modelConfig : modelConfigs) {
+			List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+			for (LocalModelConfiguration modelConfig : modelConfigs) {
 				if (modelConfig.isLocalModel()) {
 					String modelName = modelConfig.getModelType().toLowerCase();
 					String modelPath = PathUtility.buildPath(groupFolderPath, modelName, modelName + ".xml");
@@ -87,11 +87,11 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .bean(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId())
 		        .beanClass(TypeModelKeyConverterImpl.class).c().map().valueType(ModelKeyType.class);
 
-		for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
 			modelKeyTypeMap.getRawXMLBuilder().comment(group.getGroupName().toUpperCase());
 
-			List<AppModelConfiguration> modelConfigs = group.getModelConfigurations();
-			for (AppModelConfiguration modelConfig : modelConfigs) {
+			List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+			for (LocalModelConfiguration modelConfig : modelConfigs) {
 				if (modelConfig.isLocalModel()) {
 					modelKeyTypeMap.keyRefValueRefEntry(modelConfig.getModelTypeBeanId(),
 					        modelConfig.getModelIdTypeBeanId());
@@ -138,13 +138,13 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.comment("Entries");
 		SpringBeansXMLListBuilder<?> entriesListBuilder = builder.list(linkSystemEntriesId);
 
-		List<AppModelConfiguration> localModelConfigs = this.getAllLocalConfigurations();
-		for (AppModelConfiguration modelConfig : localModelConfigs) {
+		List<LocalModelConfiguration> localModelConfigs = this.getAllLocalConfigurations();
+		for (LocalModelConfiguration modelConfig : localModelConfigs) {
 			entriesListBuilder.ref(modelConfig.getModelLinkSystemBuilderEntryBeanId());
 		}
 
 		builder.comment("Accessors");
-		for (AppModelConfiguration modelConfig : localModelConfigs) {
+		for (LocalModelConfiguration modelConfig : localModelConfigs) {
 			builder.bean(modelConfig.getModelLinkModelAccessorId()).factoryBean(linkModificationSystemBuilderId)
 			        .factoryMethod("getAccessorForType").c().ref(modelConfig.getModelTypeBeanId());
 		}
@@ -154,7 +154,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	// MARK: Model
 	@Override
-	public GenFolderImpl makeModelClientConfiguration(AppModelConfiguration modelConfig) {
+	public GenFolderImpl makeModelClientConfiguration(LocalModelConfiguration modelConfig) {
 		GenFolderImpl folder = super.makeModelClientConfiguration(modelConfig);
 
 		// Crud
@@ -167,7 +167,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	}
 
 	@Override
-	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(AppModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
@@ -230,7 +230,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public class CrudConfigurationGenerator extends AbstractSingleModelConfigurationFileGenerator {
 
-		public CrudConfigurationGenerator(AppModelConfiguration modelConfig) {
+		public CrudConfigurationGenerator(LocalModelConfiguration modelConfig) {
 			super(modelConfig);
 			this.setFileName("crud");
 		}
@@ -245,7 +245,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public class DataExtensionConfigurationGenerator extends AbstractSingleModelConfigurationFileGenerator {
 
-		public DataExtensionConfigurationGenerator(AppModelConfiguration modelConfig) {
+		public DataExtensionConfigurationGenerator(LocalModelConfiguration modelConfig) {
 			super(modelConfig);
 			this.setFileName("data");
 		}
@@ -271,7 +271,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public class LinkExtensionConfigurationGenerator extends AbstractSingleModelConfigurationFileGenerator {
 
-		public LinkExtensionConfigurationGenerator(AppModelConfiguration modelConfig) {
+		public LinkExtensionConfigurationGenerator(LocalModelConfiguration modelConfig) {
 			super(modelConfig);
 			this.setFileName("link");
 		}
@@ -290,7 +290,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public class GenerationExtensionConfigurationGenerator extends AbstractSingleModelConfigurationFileGenerator {
 
-		public GenerationExtensionConfigurationGenerator(AppModelConfiguration modelConfig) {
+		public GenerationExtensionConfigurationGenerator(LocalModelConfiguration modelConfig) {
 			super(modelConfig);
 			this.setFileName("generation");
 		}
@@ -308,7 +308,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public class SearchExtensionConfigurationGenerator extends AbstractSingleModelConfigurationFileGenerator {
 
-		public SearchExtensionConfigurationGenerator(AppModelConfiguration modelConfig) {
+		public SearchExtensionConfigurationGenerator(LocalModelConfiguration modelConfig) {
 			super(modelConfig);
 			this.setFileName("search");
 		}
@@ -357,7 +357,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public class SecurityExtensionConfigurationGenerator extends AbstractSingleModelConfigurationFileGenerator {
 
-		public SecurityExtensionConfigurationGenerator(AppModelConfiguration modelConfig) {
+		public SecurityExtensionConfigurationGenerator(LocalModelConfiguration modelConfig) {
 			super(modelConfig);
 			this.setFileName("security");
 		}
@@ -383,7 +383,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	}
 
 	// MARK: Model Extensions
-	public GenFolderImpl makeModelExtensionsConfigurationsFolder(AppModelConfiguration modelConfig) {
+	public GenFolderImpl makeModelExtensionsConfigurationsFolder(LocalModelConfiguration modelConfig) {
 		GenFolderImpl folder = new GenFolderImpl("extensions");
 
 		folder.addFile(new DataExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
@@ -397,17 +397,17 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public abstract class AbstractSingleModelConfigurationFileGenerator extends AbstractSingleConfigurationFileGenerator {
 
-		protected final AppModelConfiguration modelConfig;
+		protected final LocalModelConfiguration modelConfig;
 
-		public AppModelConfiguration getModelConfig() {
+		public LocalModelConfiguration getModelConfig() {
 			return this.modelConfig;
 		}
 
-		public AbstractSingleModelConfigurationFileGenerator(AppModelConfiguration modelConfig) {
+		public AbstractSingleModelConfigurationFileGenerator(LocalModelConfiguration modelConfig) {
 			this(modelConfig, ContextModelsConfigurationGenerator.this);
 		}
 
-		public AbstractSingleModelConfigurationFileGenerator(AppModelConfiguration modelConfig,
+		public AbstractSingleModelConfigurationFileGenerator(LocalModelConfiguration modelConfig,
 		        AbstractConfigurationFileGenerator generator) {
 			super(generator);
 			this.modelConfig = modelConfig;
