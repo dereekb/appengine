@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
 import com.dereekb.gae.extras.gen.app.config.app.model.AppModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfigurer;
 
 /**
  * {@link AppRemoteServiceConfiguration} implementation
@@ -19,17 +21,22 @@ public class AppRemoteServiceConfigurationImpl
 	private boolean siblingService = true;
 
 	private AppServiceConfigurationInfo appServiceConfigurationInfo;
+	private AppRemoteServiceBeansConfiguration serviceBeansConfiguration;
+	private AppRemoteServiceConfigurer appRemoteServiceConfiguration;
 	private List<AppModelConfigurationGroup> serviceModelConfigurations;
 
-	public AppRemoteServiceConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo) {
-		this(appServiceConfigurationInfo, Collections.emptyList());
+	public AppRemoteServiceConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
+	        AppRemoteServiceConfigurer appRemoteServiceConfiguration) {
+		this(appServiceConfigurationInfo, appRemoteServiceConfiguration, Collections.emptyList());
 	}
 
 	public AppRemoteServiceConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
+	        AppRemoteServiceConfigurer appRemoteServiceConfiguration,
 	        List<AppModelConfigurationGroup> serviceModelConfigurations) {
 		super();
 		this.setAppServiceConfigurationInfo(appServiceConfigurationInfo);
 		this.setServiceModelConfigurations(serviceModelConfigurations);
+		this.setServiceBeansConfiguration(new AppRemoteServiceBeansConfigurationImpl(appServiceConfigurationInfo));
 	}
 
 	// MARK: AppRemoteServiceConfiguration
@@ -66,6 +73,32 @@ public class AppRemoteServiceConfigurationImpl
 		}
 
 		this.serviceModelConfigurations = serviceModelConfigurations;
+	}
+
+	@Override
+	public AppRemoteServiceBeansConfiguration getServiceBeansConfiguration() {
+		return this.serviceBeansConfiguration;
+	}
+
+	public void setServiceBeansConfiguration(AppRemoteServiceBeansConfiguration serviceBeansConfiguration) {
+		if (serviceBeansConfiguration == null) {
+			throw new IllegalArgumentException("serviceBeansConfiguration cannot be null.");
+		}
+
+		this.serviceBeansConfiguration = serviceBeansConfiguration;
+	}
+
+	@Override
+	public AppRemoteServiceConfigurer getAppRemoteServiceConfiguration() {
+		return this.appRemoteServiceConfiguration;
+	}
+
+	public void setAppRemoteServiceConfiguration(AppRemoteServiceConfigurer appRemoteServiceConfiguration) {
+		if (appRemoteServiceConfiguration == null) {
+			throw new IllegalArgumentException("appRemoteServiceConfiguration cannot be null.");
+		}
+
+		this.appRemoteServiceConfiguration = appRemoteServiceConfiguration;
 	}
 
 }

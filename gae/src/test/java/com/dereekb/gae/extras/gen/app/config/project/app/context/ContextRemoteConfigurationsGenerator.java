@@ -27,16 +27,14 @@ public class ContextRemoteConfigurationsGenerator extends AbstractRemoteModelCon
 	public ContextRemoteConfigurationsGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
 		this.setIgnoreLocal(true);	// No Local Models
-		this.setModelsFolderName(this.getRemoteFolderName());
+		this.setRemoteFolderName(this.getModelsFolderName());
+		this.setModelsFolderName("remote");
 	}
 
 	// MARK: AbstractRemoteModelConfigurationGenerator
 	@Override
 	public GenFolderImpl generateConfigurations() {
 		GenFolderImpl folder = super.generateConfigurations();
-
-		// Flatten "remote" models into this folder.
-		folder.flatten();
 
 		return folder;
 	}

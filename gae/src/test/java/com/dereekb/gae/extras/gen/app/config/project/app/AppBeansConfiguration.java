@@ -45,6 +45,8 @@ public interface AppBeansConfiguration {
 
 	public String getWebHookEventSubmitterBeanId();
 
+	public String getWebHookEventConverterBeanId();
+
 	// Global / Utility
 	public static final String STRING_LONG_MODEL_KEY_CONVERTER = "stringLongModelKeyConverter";
 	public static final String STRING_NAME_MODEL_KEY_CONVERTER = "stringModelKeyConverter";
