@@ -7,6 +7,8 @@ import java.util.Properties;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -23,12 +25,17 @@ import com.dereekb.gae.utilities.data.ValueUtility;
  */
 public abstract class AbstractModelConfigurationGenerator extends AbstractConfigurationFileGenerator {
 
-	private String resultsFolderName = "results";
+	private String resultsFolderName = "model";
+	private String remoteModelResultsFolderName = "remote";
+	private String localModelResultsFolderName = "local";
 
+	private boolean splitByRemote = false;
 	private boolean splitByModel = false;
 	private boolean splitByGroup = false;
 	private boolean ignoreLocal = false;
 	private boolean ignoreRemote = true;
+
+	private boolean makeImportFiles = true;
 
 	public AbstractModelConfigurationGenerator(AppConfiguration appConfig) {
 		this(appConfig, null);
@@ -42,12 +49,44 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		return this.resultsFolderName;
 	}
 
-	public void setResultsFolderName(String resultsFolderName) {
+	public void setResultsFolderName(String remoteResultsFolderName) {
+		if (remoteResultsFolderName == null) {
+			throw new IllegalArgumentException("remoteResultsFolderName cannot be null.");
+		}
+
+		this.resultsFolderName = remoteResultsFolderName;
+	}
+
+	public String getLocalModelResultsFolderName() {
+		return this.localModelResultsFolderName;
+	}
+
+	public void setLocalModelResultsFolderName(String resultsFolderName) {
 		if (resultsFolderName == null) {
 			throw new IllegalArgumentException("resultsFolderName cannot be null.");
 		}
 
-		this.resultsFolderName = resultsFolderName;
+		this.localModelResultsFolderName = resultsFolderName;
+	}
+
+	public String getRemoteModelResultsFolderName() {
+		return this.remoteModelResultsFolderName;
+	}
+
+	public void setRemoteModelResultsFolderName(String remoteModelResultsFolderName) {
+		if (remoteModelResultsFolderName == null) {
+			throw new IllegalArgumentException("remoteModelResultsFolderName cannot be null.");
+		}
+
+		this.remoteModelResultsFolderName = remoteModelResultsFolderName;
+	}
+
+	public boolean isSplitByRemote() {
+		return this.splitByRemote;
+	}
+
+	public void setSplitByRemote(boolean splitByRemote) {
+		this.splitByRemote = splitByRemote;
 	}
 
 	public boolean isSplitByModel() {
@@ -89,8 +128,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 	}
 
 	private final GenFolderImpl makeModelClientConfigurations() {
-		return this.makeGeneratorForConfiguration()
-		        .makeModelConfigurations(this.getAppConfig().getModelConfigurations());
+		return this.makeGeneratorForConfiguration().makeModelConfigurations(this.getAppConfig());
 	}
 
 	public ModelClientConfigurationGenerator makeGeneratorForConfiguration() {
@@ -101,8 +139,9 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		}
 	}
 
+	// MARK: Local
 	public GenFolderImpl makeModelClientConfigurationsForModels(LocalModelConfigurationGroup group) {
-		return this.makeModelClientConfigurationsForModels(group.getGroupName(), group.getLocalModelConfigurations());
+		return this.makeModelClientConfigurationsForModels(group.getGroupName(), group.getModelConfigurations());
 	}
 
 	public GenFolderImpl makeModelClientConfigurationsForModels(String folderName,
@@ -123,23 +162,11 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 			}
 		}
 
-		if (!this.splitByModel) {
-			GenFolderImpl folder = new GenFolderImpl("merge");
-			folder.merge(results);
-			return ListUtility.wrap(folder);
-		}
-
 		return results;
 	}
 
 	protected boolean shouldMakeModelConfiguration(LocalModelConfiguration modelConfig) {
-		boolean local = modelConfig.isLocalModel();
-
-		if (local) {
-			return !this.ignoreLocal;
-		} else {
-			return !this.ignoreRemote;
-		}
+		return !this.ignoreLocal;
 	}
 
 	public GenFolderImpl makeModelClientConfiguration(LocalModelConfiguration modelConfig) {
@@ -181,22 +208,205 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		throw new UnsupportedOperationException("Override in subclass to use.");
 	}
 
+	// MARK: Remote
+	public GenFolderImpl makeModelClientConfigurationsForRemoteModels(RemoteModelConfigurationGroup group) {
+		return this.makeModelClientConfigurationsForRemoteModels(group.getGroupName(), group.getModelConfigurations());
+	}
+
+	public GenFolderImpl makeModelClientConfigurationsForRemoteModels(String folderName,
+	                                                                  List<RemoteModelConfiguration> modelConfigs) {
+		GenFolderImpl folder = new GenFolderImpl(ValueUtility.defaultTo(folderName, "default"));
+		List<GenFolder> results = this.makeModelClientConfigurationsForRemoteModels(modelConfigs);
+		folder.addFolders(results);
+		return folder;
+	}
+
+	public List<GenFolder> makeModelClientConfigurationsForRemoteModels(List<RemoteModelConfiguration> modelConfigs) {
+		List<GenFolder> results = new ArrayList<GenFolder>();
+
+		for (RemoteModelConfiguration modelConfig : modelConfigs) {
+			if (this.shouldMakeRemoteModelConfiguration(modelConfig)) {
+				GenFolder result = this.makeRemoteModelClientConfiguration(modelConfig);
+				results.add(result);
+			}
+		}
+
+		if (!this.splitByModel) {
+			GenFolderImpl folder = new GenFolderImpl("merge");
+			folder.merge(results);
+			return ListUtility.wrap(folder);
+		}
+
+		return results;
+	}
+
+	protected boolean shouldMakeRemoteModelConfiguration(RemoteModelConfiguration modelConfig) {
+		return !this.ignoreRemote;
+	}
+
+	public GenFolderImpl makeRemoteModelClientConfiguration(RemoteModelConfiguration modelConfig) {
+		GenFolderImpl folder = new GenFolderImpl(modelConfig.getModelType());
+		this.makeRemoteModelClientConfiguration(folder, modelConfig);
+		return folder;
+	}
+
+	/**
+	 * Override this if the implementation should make a folder of configuration
+	 * per model.
+	 */
+	public void makeRemoteModelClientConfiguration(GenFolderImpl modelResultsFolder,
+	                                               RemoteModelConfiguration modelConfig) {
+		GenFile file = this.makeRemoteModelClientConfigurationFile(modelConfig);
+		modelResultsFolder.addFile(file);
+	}
+
+	/**
+	 * Override this for convenience if the implementation only creates a single
+	 * file that doesn't return XML.
+	 */
+	public GenFile makeRemoteModelClientConfigurationFile(RemoteModelConfiguration modelConfig)
+	        throws UnsupportedOperationException {
+		SpringBeansXMLBuilder builder = this.makeXMLRemoteModelClientConfigurationFile(modelConfig);
+		String fileName = modelConfig.getModelType().toLowerCase();
+		return this.makeFileWithXML(fileName, builder);
+	}
+
+	/**
+	 * Override this for convenience if the implementation only creates a single
+	 * file.
+	 *
+	 * @throws UnsupportedOperationException
+	 *             thrown by default if not overridden.
+	 */
+	public SpringBeansXMLBuilder makeXMLRemoteModelClientConfigurationFile(RemoteModelConfiguration modelConfig)
+	        throws UnsupportedOperationException {
+		throw new UnsupportedOperationException("Override in subclass to use.");
+	}
+
 	// MARK: Generator
 	public interface ModelClientConfigurationGenerator {
 
-		public GenFolderImpl makeModelConfigurations(List<LocalModelConfigurationGroup> groups);
+		public GenFolderImpl makeModelConfigurations(AppConfiguration appConfig);
+
+		public GenFolderImpl makeLocalModelConfigurations(List<LocalModelConfigurationGroup> groups);
+
+		public GenFolderImpl makeRemoteModelConfigurations(List<RemoteModelConfigurationGroup> groups);
 
 	}
 
-	public class SplitByGroupModelClientConfigurationGenerator
+	/**
+	 * Abstract {@link ModelClientConfigurationGenerator} implementation.
+	 *
+	 * @author dereekb
+	 *
+	 */
+	public abstract class AbstractModelClientConfigurationGenerator
 	        implements ModelClientConfigurationGenerator {
 
+		private boolean ignoreLocal = AbstractModelConfigurationGenerator.this.ignoreLocal;
+		private boolean ignoreRemote = AbstractModelConfigurationGenerator.this.ignoreRemote;
+		private boolean splitByModel = AbstractModelConfigurationGenerator.this.splitByModel;
+		private boolean splitByRemote = AbstractModelConfigurationGenerator.this.splitByRemote;
+		private boolean makeImportFiles = AbstractModelConfigurationGenerator.this.makeImportFiles;
+
+		public boolean isIgnoreLocal() {
+			return this.ignoreLocal;
+		}
+
+		public void setIgnoreLocal(boolean ignoreLocal) {
+			this.ignoreLocal = ignoreLocal;
+		}
+
+		public boolean isIgnoreRemote() {
+			return this.ignoreRemote;
+		}
+
+		public void setIgnoreRemote(boolean ignoreRemote) {
+			this.ignoreRemote = ignoreRemote;
+		}
+
+		public boolean isSplitByModel() {
+			return this.splitByModel;
+		}
+
+		public void setSplitByModel(boolean splitByModel) {
+			this.splitByModel = splitByModel;
+		}
+
+		public boolean isSplitByRemote() {
+			return this.splitByRemote;
+		}
+
+		public void setSplitByRemote(boolean splitByRemote) {
+			this.splitByRemote = splitByRemote;
+		}
+
+		public boolean isMakeImportFiles() {
+			return this.makeImportFiles;
+		}
+
+		public void setMakeImportFiles(boolean makeImportFiles) {
+			this.makeImportFiles = makeImportFiles;
+		}
+
+		// MARK: ModelClientConfigurationGenerator
 		@Override
-		public GenFolderImpl makeModelConfigurations(List<LocalModelConfigurationGroup> groups) {
+		public GenFolderImpl makeModelConfigurations(AppConfiguration appConfig) {
 			GenFolderImpl folder = new GenFolderImpl(AbstractModelConfigurationGenerator.this.resultsFolderName);
 
-			for (LocalModelConfigurationGroup groupConfig : groups) {
-				folder.addFolder(makeModelClientConfigurationsForModels(groupConfig));
+			GenFolderImpl local = null;
+			GenFolderImpl remote = null;
+
+			if (!this.ignoreLocal) {
+				local = this.makeLocalModelConfigurations(appConfig.getLocalModelConfigurations());
+			}
+
+			if (!this.ignoreRemote) {
+				remote = this.makeRemoteModelConfigurations(appConfig.getRemoteModelConfigurations());
+			}
+
+			if (this.splitByRemote) {
+				folder.safeAddFolder(local);
+				folder.safeAddFolder(remote);
+
+				if (this.makeImportFiles) {
+					if (local != null) {
+						makeImportFile(local, true);
+					}
+
+					if (remote != null) {
+						makeImportFile(remote, true);
+					}
+
+					makeImportFile(folder, true);
+				}
+			} else {
+				folder.safeMerge(local);
+				folder.safeMerge(remote);
+
+				if (this.makeImportFiles) {
+					makeImportFile(folder, true);
+				}
+			}
+
+			return folder;
+		}
+
+		public GenFolderImpl makeLocalModelConfigurationsForGroup(LocalModelConfigurationGroup group) {
+			GenFolderImpl folder = makeModelClientConfigurationsForModels(group);
+
+			if (!this.splitByModel) {
+				folder.flatten();
+			}
+
+			return folder;
+		}
+
+		public GenFolderImpl makeRemoteModelConfigurationsForGroup(RemoteModelConfigurationGroup group) {
+			GenFolderImpl folder = makeModelClientConfigurationsForRemoteModels(group);
+
+			if (!this.splitByModel) {
+				folder.flatten();
 			}
 
 			return folder;
@@ -204,17 +414,62 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 
 	}
 
-	public class TogetherModelClientConfigurationGenerator
+	/**
+	 * {@link ModelClientConfigurationGenerator} with each group put into their
+	 * own folder.
+	 *
+	 * @author dereekb
+	 *
+	 */
+	public class SplitByGroupModelClientConfigurationGenerator extends AbstractModelClientConfigurationGenerator {
+
+		@Override
+		public GenFolderImpl makeLocalModelConfigurations(List<LocalModelConfigurationGroup> groups) {
+			GenFolderImpl folder = new GenFolderImpl(
+			        AbstractModelConfigurationGenerator.this.localModelResultsFolderName);
+
+			for (LocalModelConfigurationGroup groupConfig : groups) {
+				folder.addFolder(this.makeLocalModelConfigurationsForGroup(groupConfig));
+			}
+
+			return folder;
+		}
+
+		@Override
+		public GenFolderImpl makeRemoteModelConfigurations(List<RemoteModelConfigurationGroup> groups) {
+			GenFolderImpl folder = new GenFolderImpl(
+			        AbstractModelConfigurationGenerator.this.localModelResultsFolderName);
+
+			for (RemoteModelConfigurationGroup groupConfig : groups) {
+				folder.addFolder(this.makeRemoteModelConfigurationsForGroup(groupConfig));
+			}
+
+			return folder;
+		}
+
+	}
+
+	/**
+	 * {@link ModelClientConfigurationGenerator} with all groups together in a
+	 * single folder.
+	 *
+	 * @author dereekb
+	 *
+	 */
+	public class TogetherModelClientConfigurationGenerator extends SplitByGroupModelClientConfigurationGenerator
 	        implements ModelClientConfigurationGenerator {
 
 		@Override
-		public GenFolderImpl makeModelConfigurations(List<LocalModelConfigurationGroup> groups) {
-			GenFolderImpl folder = new GenFolderImpl(AbstractModelConfigurationGenerator.this.resultsFolderName);
+		public GenFolderImpl makeLocalModelConfigurations(List<LocalModelConfigurationGroup> groups) {
+			GenFolderImpl folder = super.makeLocalModelConfigurations(groups);
+			folder.flatten();
+			return folder;
+		}
 
-			for (LocalModelConfigurationGroup group : groups) {
-				folder.merge(makeModelClientConfigurationsForModels(group.getLocalModelConfigurations()));
-			}
-
+		@Override
+		public GenFolderImpl makeRemoteModelConfigurations(List<RemoteModelConfigurationGroup> groups) {
+			GenFolderImpl folder = super.makeRemoteModelConfigurations(groups);
+			folder.flatten();
 			return folder;
 		}
 
@@ -222,14 +477,14 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 
 	// MARK: Utility
 	protected List<LocalModelConfiguration> getAllApplicableConfigurations() {
-		return this.getAllApplicableConfigurations(this.getAppConfig().getModelConfigurations());
+		return this.getAllApplicableConfigurations(this.getAppConfig().getLocalModelConfigurations());
 	}
 
 	protected List<LocalModelConfiguration> getAllApplicableConfigurations(List<LocalModelConfigurationGroup> groups) {
 		List<LocalModelConfiguration> configs = new ArrayList<LocalModelConfiguration>();
 
 		for (LocalModelConfigurationGroup groupConfig : groups) {
-			for (LocalModelConfiguration modelConfig : groupConfig.getLocalModelConfigurations()) {
+			for (LocalModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
 				if (this.shouldMakeModelConfiguration(modelConfig)) {
 					configs.add(modelConfig);
 				}
@@ -240,14 +495,14 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 	}
 
 	protected List<LocalModelConfiguration> getAllLocalConfigurations() {
-		return this.getAllLocalConfigurations(this.getAppConfig().getModelConfigurations());
+		return this.getAllLocalConfigurations(this.getAppConfig().getLocalModelConfigurations());
 	}
 
 	protected List<LocalModelConfiguration> getAllLocalConfigurations(List<LocalModelConfigurationGroup> groups) {
 		List<LocalModelConfiguration> configs = new ArrayList<LocalModelConfiguration>();
 
 		for (LocalModelConfigurationGroup groupConfig : groups) {
-			for (LocalModelConfiguration modelConfig : groupConfig.getLocalModelConfigurations()) {
+			for (LocalModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
 				if (modelConfig.isLocalModel()) {
 					configs.add(modelConfig);
 				}

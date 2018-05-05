@@ -37,8 +37,8 @@ public class ApiSearchConfigurationGenerator extends AbstractSingleConfiguration
 		SpringBeansXMLMapBuilder<?> searchMap = builder.bean("searchExtensionApiControllerDelegate")
 		        .beanClass(ApiSearchDelegateImpl.class).c().map();
 
-		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
-			for (LocalModelConfiguration model : group.getLocalModelConfigurations()) {
+		for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
+			for (LocalModelConfiguration model : group.getModelConfigurations()) {
 				if (model.isLocalModel()) {
 					searchMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 					        model.getModelBeanPrefix() + "SearchDelegateEntry");

@@ -10,8 +10,8 @@ import com.dereekb.gae.utilities.collections.SingleItem;
 
 public class AppConfigurationUtility {
 
-	public static List<LocalModelConfiguration> readModelConfigurations(AppConfiguration config) {
-		return AppConfigurationUtility.readModelConfigurations(config.getModelConfigurations());
+	public static List<LocalModelConfiguration> readLocalModelConfigurations(AppConfiguration config) {
+		return AppConfigurationUtility.readModelConfigurations(config.getLocalModelConfigurations());
 	}
 
 	public static List<LocalModelConfiguration> readModelConfigurations(LocalModelConfigurationGroup group) {
@@ -22,7 +22,7 @@ public class AppConfigurationUtility {
 		List<LocalModelConfiguration> configs = new ArrayList<LocalModelConfiguration>();
 
 		for (LocalModelConfigurationGroup group : groups) {
-			configs.addAll(group.getLocalModelConfigurations());
+			configs.addAll(group.getModelConfigurations());
 		}
 
 		return configs;

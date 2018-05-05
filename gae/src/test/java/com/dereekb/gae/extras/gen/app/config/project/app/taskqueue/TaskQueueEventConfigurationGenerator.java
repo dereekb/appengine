@@ -4,7 +4,8 @@ import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.impl.AbstractRemoteModelConfigurationGenerator;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -29,7 +30,7 @@ import com.dereekb.gae.web.taskqueue.server.webhook.impl.TaskQueueWebHookControl
  * @author dereekb
  *
  */
-public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelConfigurationGenerator {
+public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
 	public static final String EVENT_FOLDER_NAME = "event";
 	public static final String EVENT_FILE_NAME = "event";
@@ -37,8 +38,8 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 
 	public TaskQueueEventConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
+		this.setLocalModelResultsFolderName(EVENT_FOLDER_NAME);
 		this.setResultsFolderName(EVENT_FOLDER_NAME);
-		this.setModelsFolderName(EVENT_FOLDER_NAME);
 	}
 
 	public TaskQueueEventConfigurationGenerator(AppConfiguration appConfig) {
@@ -57,7 +58,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 	}
 
 	@Override
-	public SpringBeansXMLBuilder makeLocalXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
@@ -78,7 +79,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractRemoteModelCon
 	}
 
 	@Override
-	public SpringBeansXMLBuilder makeRemoteXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
+	public SpringBeansXMLBuilder makeXMLRemoteModelClientConfigurationFile(RemoteModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 

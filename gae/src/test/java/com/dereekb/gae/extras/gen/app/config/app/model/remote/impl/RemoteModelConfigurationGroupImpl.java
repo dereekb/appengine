@@ -26,7 +26,7 @@ public class RemoteModelConfigurationGroupImpl extends AppModelConfigurationGrou
 
 	// MARK: AppModelConfigurationGroup
 	@Override
-	public List<RemoteModelConfiguration> getRemoteModelConfigurations() {
+	public List<RemoteModelConfiguration> getModelConfigurations() {
 		return this.getModelConfigurations();
 	}
 

@@ -4,22 +4,22 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
-import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.AppRemoteServiceConfigurer;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.configurer.impl.AppRemoteServiceConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.AppRemoteServiceConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.RemoteServiceContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.impl.RemoteServiceContextConfigurerImpl;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
- * {@link Factory} for {@link AppRemoteServiceConfiguration} values.
+ * {@link Factory} for {@link RemoteServiceConfiguration} values.
  *
  * @author dereekb
  *
  */
 public class AbstractRemoteServiceConfigurationGen
-        implements Factory<AppRemoteServiceConfiguration> {
+        implements Factory<RemoteServiceConfiguration> {
 
 	private AppServiceConfigurationInfo serviceConfigurationInfo;
 
@@ -41,24 +41,24 @@ public class AbstractRemoteServiceConfigurationGen
 
 	// MARK: Factory
 	@Override
-	public AppRemoteServiceConfigurationImpl make() throws FactoryMakeFailureException {
+	public RemoteServiceConfigurationImpl make() throws FactoryMakeFailureException {
 
-		AppRemoteServiceConfigurer configurer = this.makeRemoteServiceConfigurer();
-		List<LocalModelConfigurationGroup> models = this.makeModelsConfiguration();
+		RemoteServiceContextConfigurer configurer = this.makeRemoteServiceContextConfigurer();
+		List<RemoteModelConfigurationGroup> models = this.makeModelsConfiguration();
 
-		AppRemoteServiceConfigurationImpl config = new AppRemoteServiceConfigurationImpl(this.serviceConfigurationInfo,
+		RemoteServiceConfigurationImpl config = new RemoteServiceConfigurationImpl(this.serviceConfigurationInfo,
 		        configurer, models);
 
 		return config;
 	}
 
-	protected AppRemoteServiceConfigurer makeRemoteServiceConfigurer() {
-		AppRemoteServiceConfigurerImpl configurer = new AppRemoteServiceConfigurerImpl();
+	protected RemoteServiceContextConfigurer makeRemoteServiceContextConfigurer() {
+		RemoteServiceContextConfigurerImpl configurer = new RemoteServiceContextConfigurerImpl();
 
 		return configurer;
 	}
 
-	protected List<LocalModelConfigurationGroup> makeModelsConfiguration() {
+	protected List<RemoteModelConfigurationGroup> makeModelsConfiguration() {
 		return Collections.emptyList();
 	}
 

@@ -15,12 +15,6 @@ public interface LocalModelBeansConfiguration
 
 	public String getModelLinkSystemBuilderEntryBeanId();
 
-	/**
-	 * Generally returns the registry, but for remote models it will return the
-	 * factory.
-	 */
-	public String getModelKeyListAccessorFactoryId();
-
 	public String getNewModelFactoryBeanId();
 
 	public String getModelCrudServiceId();

@@ -3,7 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services.remote.impl;
 import com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterDelegateImpl;
 import com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterImpl;
@@ -18,17 +18,17 @@ import com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterI
 public class RemoteAppWebHookEventServiceConfigurerImpl
         implements AppWebHookEventServiceConfigurer {
 
-	private AppRemoteServiceConfiguration eventServiceConfiguration;
+	private RemoteServiceConfiguration eventServiceConfiguration;
 
-	public RemoteAppWebHookEventServiceConfigurerImpl(AppRemoteServiceConfiguration eventServiceConfiguration) {
+	public RemoteAppWebHookEventServiceConfigurerImpl(RemoteServiceConfiguration eventServiceConfiguration) {
 		this.setEventServiceConfiguration(eventServiceConfiguration);
 	}
 
-	public AppRemoteServiceConfiguration getEventServiceConfiguration() {
+	public RemoteServiceConfiguration getEventServiceConfiguration() {
 		return this.eventServiceConfiguration;
 	}
 
-	public void setEventServiceConfiguration(AppRemoteServiceConfiguration eventServiceConfiguration) {
+	public void setEventServiceConfiguration(RemoteServiceConfiguration eventServiceConfiguration) {
 		if (eventServiceConfiguration == null) {
 			throw new IllegalArgumentException("eventServiceConfiguration cannot be null.");
 		}

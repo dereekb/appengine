@@ -2,25 +2,22 @@ package com.dereekb.gae.extras.gen.app.config.app.model.local;
 
 import java.util.List;
 
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfigurationGroup;
+
 /**
  * Represents a group of configured models.
  *
  * @author dereekb
  *
  */
-public interface LocalModelConfigurationGroup {
-
-	/**
-	 * Group name, or {@code null} if the default unnamed group.
-	 *
-	 * @return {@link String}. Never {@code null}.
-	 */
-	public String getGroupName();
+public interface LocalModelConfigurationGroup
+        extends AppModelConfigurationGroup {
 
 	/**
 	 *
 	 * @return {@link List}. Never {@code null}.
 	 */
-	public List<LocalModelConfiguration> getLocalModelConfigurations();
+	@Override
+	public List<LocalModelConfiguration> getModelConfigurations();
 
 }

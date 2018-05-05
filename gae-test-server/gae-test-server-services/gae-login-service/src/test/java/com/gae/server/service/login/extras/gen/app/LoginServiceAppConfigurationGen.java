@@ -13,8 +13,8 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalAppLoginTokenSecurityConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.service.AbstractServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.AppGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.LoginGroupConfigurationGen;
@@ -43,7 +43,7 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 
 		// Services
 		RemoteEventServiceConfigurationGen remoteEventServiceGen = new RemoteEventServiceConfigurationGen(appProjectId);
-		AppRemoteServiceConfiguration remoteEventService = remoteEventServiceGen.make();
+		RemoteServiceConfigurationImpl remoteEventService = remoteEventServiceGen.make();
 
 		// Configuration
 		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new LocalAppLoginTokenSecurityConfigurerImpl();

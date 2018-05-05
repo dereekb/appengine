@@ -50,6 +50,11 @@ public class ApiConfigurationGenerator extends AbstractConfigurationFileGenerato
 		        this.getOutputProperties());
 		folder.addFolder(modelsGen.generateConfigurations());
 
+		// Remote
+		ApiRemoteConfigurationsGenerator remoteGen = new ApiRemoteConfigurationsGenerator(this.getAppConfig(),
+		        this.getOutputProperties());
+		folder.addFolder(remoteGen.generateConfigurations());
+
 		// Extensions
 		folder.addFolder(this.generateExtensions());
 

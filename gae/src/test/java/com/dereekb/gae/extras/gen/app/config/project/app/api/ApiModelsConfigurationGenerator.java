@@ -24,7 +24,7 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 
 	public ApiModelsConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
-		this.setResultsFolderName(MODELS_FILE_NAME);
+		this.setLocalModelResultsFolderName(MODELS_FILE_NAME);
 		this.setIgnoreRemote(true);
 	}
 

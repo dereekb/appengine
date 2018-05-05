@@ -86,6 +86,12 @@ public class GenFolderImpl
 		}
 	}
 
+	public void safeMerge(GenFolder folder) {
+		if (folder != null) {
+			this.merge(folder);
+		}
+	}
+
 	public void merge(GenFolder folder) {
 		this.addFolders(folder.getFolders());
 		this.addFiles(folder.getFiles());
@@ -112,6 +118,12 @@ public class GenFolderImpl
 
 		for (GenFolder folder : folders) {
 			this.merge(folder);
+		}
+	}
+
+	public void safeAddFolder(GenFolder folder) {
+		if (folder != null) {
+			this.addFolder(folder);
 		}
 	}
 

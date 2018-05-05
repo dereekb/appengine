@@ -1,15 +1,18 @@
 package com.dereekb.gae.extras.gen.app.config.app.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
@@ -37,7 +40,7 @@ public class AppConfigurationImpl
 	private AppSecurityBeansConfigurer appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 
 	private List<LocalModelConfigurationGroup> localModelConfigurations;
-	private List<AppRemoteServiceConfiguration> remoteServices = Collections.emptyList();
+	private List<RemoteServiceConfiguration> remoteServices = Collections.emptyList();
 
 	public AppConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
 	        AppServicesConfigurer appServicesConfigurer) {
@@ -163,15 +166,15 @@ public class AppConfigurationImpl
 	}
 
 	@Override
-	public List<AppRemoteServiceConfiguration> getRemoteServices() {
+	public List<RemoteServiceConfiguration> getRemoteServices() {
 		return this.remoteServices;
 	}
 
-	public void setRemoteServices(AppRemoteServiceConfiguration... remoteServices) {
+	public void setRemoteServices(RemoteServiceConfiguration... remoteServices) {
 		this.setRemoteServices(ListUtility.toList(remoteServices));
 	}
 
-	public void setRemoteServices(List<AppRemoteServiceConfiguration> remoteServices) {
+	public void setRemoteServices(List<RemoteServiceConfiguration> remoteServices) {
 		if (remoteServices == null) {
 			throw new IllegalArgumentException("remoteServices cannot be null.");
 		}
@@ -180,10 +183,19 @@ public class AppConfigurationImpl
 	}
 
 	@Override
-	public List<LocalModelConfigurationGroup> getModelConfigurations() {
-		List<LocalModelConfigurationGroup> models = ListUtility.copy(this.localModelConfigurations);
+	public List<? extends AppModelConfigurationGroup> getModelConfigurations() {
+		List<AppModelConfigurationGroup> models = ListUtility.copy(this.getLocalModelConfigurations());
 
-		for (AppRemoteServiceConfiguration service : this.remoteServices) {
+		models.addAll(this.getRemoteModelConfigurations());
+
+		return models;
+	}
+
+	@Override
+	public List<RemoteModelConfigurationGroup> getRemoteModelConfigurations() {
+		List<RemoteModelConfigurationGroup> models = new ArrayList<RemoteModelConfigurationGroup>();
+
+		for (RemoteServiceConfiguration service : this.remoteServices) {
 			models.addAll(service.getServiceModelConfigurations());
 		}
 

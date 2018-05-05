@@ -3,7 +3,6 @@ package com.dereekb.gae.extras.gen.app.config.app.model.shared.impl;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelCrudsConfiguration;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomModelContextConfigurer;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
@@ -17,7 +16,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
  * @param <B>
  *            AppModelBeansConfiguration type
  */
-public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfiguration, B extends AppModelBeansConfiguration>
+public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfiguration, B extends AppModelBeansConfiguration, M>
         implements AppModelConfiguration {
 
 	private boolean localModel;
@@ -37,8 +36,7 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 
 	private C crudsConfiguration;
 	private B beansConfiguration;
-
-	private CustomModelContextConfigurer customModelContextConfigurer;
+	private M customModelContextConfigurer;
 
 	public AppModelConfigurationImpl(Class<?> modelClass) {
 		this(modelClass, ModelKey.readModelKeyType(modelClass));
@@ -100,7 +98,7 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 
 	protected abstract B makeModelBeansConfiguration();
 
-	protected abstract CustomModelContextConfigurer makeCustomModelContextConfigurer();
+	protected abstract M makeCustomModelContextConfigurer();
 
 	// MARK: AppModelConfiguration
 	@Override
@@ -231,12 +229,11 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 		this.beansConfiguration = beansConfiguration;
 	}
 
-	@Override
-	public CustomModelContextConfigurer getCustomModelContextConfigurer() {
+	public M getCustomModelContextConfigurer() {
 		return this.customModelContextConfigurer;
 	}
 
-	public void setCustomModelContextConfigurer(CustomModelContextConfigurer customModelContextConfigurer) {
+	public void setCustomModelContextConfigurer(M customModelContextConfigurer) {
 		if (customModelContextConfigurer == null) {
 			throw new IllegalArgumentException("customModelContextConfigurer cannot be null.");
 		}
@@ -297,6 +294,11 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 	@Override
 	public String getModelDataConverterBeanId() {
 		return this.beansConfiguration.getModelDataConverterBeanId();
+	}
+
+	@Override
+	public String getModelKeyListAccessorFactoryId() {
+		return this.beansConfiguration.getModelKeyListAccessorFactoryId();
 	}
 
 }

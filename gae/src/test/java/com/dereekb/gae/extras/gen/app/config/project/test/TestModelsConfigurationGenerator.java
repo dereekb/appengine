@@ -64,7 +64,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 		// Model Client Configurations Folder
 		TestClientConfigurationGenerator clientGenerator = new TestClientConfigurationGenerator();
-		clientGenerator.setResultsFolderName("client");
+		clientGenerator.setLocalModelResultsFolderName("client");
 
 		GenFolder clientFolder = clientGenerator.generateConfigurations();
 		folder.addFolder(clientFolder);

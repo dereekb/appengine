@@ -26,8 +26,8 @@ public class LocalModelConfigurationGroupImpl extends AppModelConfigurationGroup
 
 	// MARK: AppModelConfigurationGroup
 	@Override
-	public List<LocalModelConfiguration> getLocalModelConfigurations() {
-		return this.getModelConfigurations();
+	public List<LocalModelConfiguration> getModelConfigurations() {
+		return super.getModelConfigurations();
 	}
 
 }

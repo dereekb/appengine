@@ -1,15 +1,17 @@
 package com.gae.server.service.event.extras.gen.app;
 
-import java.util.List;
-
-import com.dereekb.gae.extras.gen.app.config.model.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.model.AppModelConfigurationGroup;
-import com.dereekb.gae.extras.gen.app.config.model.impl.AppConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.service.AbstractServiceAppConfigurationGen;
-import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigurationGen {
 
+	@Override
+	public AppConfiguration makeAppConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
 	@Override
 	public AppConfiguration makeAppConfiguration() {
 
@@ -27,5 +29,6 @@ public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigura
 
 		return configuration;
 	}
+	*/
 
 }

@@ -1,6 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.app.model.local;
 
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 
 /**
  * {@link AppModelConfiguration} extension for local models.
@@ -30,5 +31,13 @@ public interface LocalModelConfiguration
 	public Class<?> getModelEditControllerClass();
 
 	public Class<?> getModelOwnedModelQuerySecurityDelegateClass();
+
+	// Custom Configuration
+	/**
+	 * Returns the custom configuration for configuring model contexts.
+	 *
+	 * @return {@link CustomLocalModelContextConfigurer}. Never {@code null}.
+	 */
+	public CustomLocalModelContextConfigurer getCustomModelContextConfigurer();
 
 }

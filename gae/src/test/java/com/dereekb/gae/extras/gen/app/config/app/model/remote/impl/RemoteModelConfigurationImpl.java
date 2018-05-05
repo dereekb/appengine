@@ -4,14 +4,14 @@ import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelBeansCo
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelCrudsConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelConfigurationImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomModelContextConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.impl.CustomRemoteModelContextConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.remote.RemoteModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.remote.impl.RemoteModelContextConfigurerImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 /**
  * {@link RemoteModelConfiguration} implementation.
  */
-public class RemoteModelConfigurationImpl extends AppModelConfigurationImpl<RemoteModelCrudsConfiguration, RemoteModelBeansConfiguration>
+public class RemoteModelConfigurationImpl extends AppModelConfigurationImpl<RemoteModelCrudsConfiguration, RemoteModelBeansConfiguration, RemoteModelContextConfigurer>
         implements RemoteModelConfiguration, RemoteModelCrudsConfiguration, RemoteModelBeansConfiguration {
 
 	public RemoteModelConfigurationImpl(Class<?> modelClass) {
@@ -45,8 +45,8 @@ public class RemoteModelConfigurationImpl extends AppModelConfigurationImpl<Remo
 	}
 
 	@Override
-	protected CustomModelContextConfigurer makeCustomModelContextConfigurer() {
-		return new CustomRemoteModelContextConfigurerImpl();
+	protected RemoteModelContextConfigurer makeCustomModelContextConfigurer() {
+		return new RemoteModelContextConfigurerImpl();
 	}
 
 	// MARK: RemoteModelBeansConfiguration
@@ -79,5 +79,6 @@ public class RemoteModelConfigurationImpl extends AppModelConfigurationImpl<Remo
 	public String getModelClientQueryServiceBeanId() {
 		return this.getBeansConfiguration().getModelClientQueryServiceBeanId();
 	}
+
 
 }

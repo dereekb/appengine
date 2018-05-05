@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfigurationGroup;
 
 /**
  * {@link AppConfiguration} implementation.
@@ -11,7 +12,8 @@ import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfigurat
  * @author dereekb
  *
  */
-public abstract class AppModelConfigurationGroupImpl<T extends AppModelConfiguration> {
+public abstract class AppModelConfigurationGroupImpl<T extends AppModelConfiguration>
+        implements AppModelConfigurationGroup {
 
 	private String groupName;
 	private List<T> modelConfigurations;
@@ -26,6 +28,7 @@ public abstract class AppModelConfigurationGroupImpl<T extends AppModelConfigura
 	}
 
 	// MARK: AppModelConfigurationGroup
+	@Override
 	public String getGroupName() {
 		return this.groupName;
 	}
@@ -34,6 +37,7 @@ public abstract class AppModelConfigurationGroupImpl<T extends AppModelConfigura
 		this.groupName = groupName;
 	}
 
+	@Override
 	public List<T> getModelConfigurations() {
 		return this.modelConfigurations;
 	}

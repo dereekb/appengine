@@ -11,7 +11,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
@@ -144,15 +144,13 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			SpringBeansXMLListBuilder<?> entitiesList = builder.list(OBJECTIFY_DATABASE_ENTITIES_KEY);
 
-			for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+			for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
-				List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
+				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
 
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
-					if (modelConfig.isLocalModel()) {
-						entitiesList.ref(modelConfig.getModelObjectifyEntryBeanId());
-					}
+					entitiesList.ref(modelConfig.getModelObjectifyEntryBeanId());
 				}
 			}
 
@@ -233,7 +231,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
-				List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
+				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
 
 					if (modelConfig.isLocalModel()) {
@@ -243,7 +241,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			}
 
 			// Remote Types
-			for (AppRemoteServiceConfiguration remoteService : this.getAppConfig().getRemoteServices()) {
+			for (RemoteServiceConfiguration remoteService : this.getAppConfig().getRemoteServices()) {
 				// TODO: Add ModelRoleSet retrieval pieces here.
 			}
 
@@ -480,7 +478,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			SpringBeansXMLListBuilder<?> secureModelsList = builder.list(secureModelTypesBeanId);
 
 			for (LocalModelConfiguration modelConfig : AppConfigurationUtility
-			        .readModelConfigurations(this.getAppConfig())) {
+			        .readLocalModelConfigurations(this.getAppConfig())) {
 				secureModelsList.ref(modelConfig.getModelTypeBeanId());
 			}
 

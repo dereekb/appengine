@@ -3,7 +3,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app.context;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.AppRemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.utility.AppSpringContextType;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractRemoteServiceConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
@@ -30,11 +31,12 @@ public class ContextRemoteConfigurationsGenerator extends AbstractRemoteServiceC
 
 	// MARK: AbstractRemoteModelConfigurationGenerator
 	@Override
-	public SpringBeansXMLBuilder makeXMLServiceConfigurationFile(AppRemoteServiceConfiguration service)
+	public SpringBeansXMLBuilder makeXMLServiceConfigurationFile(RemoteServiceConfiguration service)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		service.getAppRemoteServiceConfigurer().configureSharedContextComponents(this.getAppConfig(), builder);
+		service.getRemoteServiceContextConfigurer().configureRemoteServiceContextComponents(AppSpringContextType.SHARED,
+		        service, builder);
 
 		return builder;
 	}

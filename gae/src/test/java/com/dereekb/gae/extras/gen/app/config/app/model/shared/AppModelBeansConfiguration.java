@@ -33,4 +33,10 @@ public interface AppModelBeansConfiguration {
 
 	public String getModelDataConverterBeanId();
 
+	/**
+	 * Generally returns the registry, but for remote models it will return the
+	 * factory.
+	 */
+	public String getModelKeyListAccessorFactoryId();
+
 }

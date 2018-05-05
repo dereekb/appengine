@@ -18,7 +18,6 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 	private String modelRegistryId;
 	private String modelSetterTaskBeanId;
 	private String modelQueryInitializerBeanId;
-	private String modelKeyListAccessorFactoryId;
 
 	private String newModelFactoryBeanId;
 	private String modelCrudServiceId;
@@ -51,7 +50,6 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
 		this.setModelSetterTaskBeanId(modelBeanPrefix + "SetterTask");
 		this.setModelQueryInitializerBeanId(modelBeanPrefix + "QueryInitializer");
-		this.setModelKeyListAccessorFactoryId(modelBeanPrefix + "KeyListAccessorFactory");
 		this.setNewModelFactoryBeanId(modelBeanPrefix + "Factory");
 		this.setModelCrudServiceId(modelBeanPrefix + "CrudService");
 		this.setModelCreateServiceId(modelBeanPrefix + "CreateService");
@@ -124,19 +122,6 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		}
 
 		this.modelQueryInitializerBeanId = modelQueryInitializerBeanId;
-	}
-
-	@Override
-	public String getModelKeyListAccessorFactoryId() {
-		return this.modelKeyListAccessorFactoryId;
-	}
-
-	public void setModelKeyListAccessorFactoryId(String modelKeyListAccessorFactoryId) {
-		if (modelKeyListAccessorFactoryId == null) {
-			throw new IllegalArgumentException("modelKeyListAccessorFactoryId cannot be null.");
-		}
-
-		this.modelKeyListAccessorFactoryId = modelKeyListAccessorFactoryId;
 	}
 
 	@Override

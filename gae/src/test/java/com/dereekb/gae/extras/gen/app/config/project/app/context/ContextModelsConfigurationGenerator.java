@@ -40,7 +40,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 	public ContextModelsConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
-		this.setResultsFolderName(MODELS_FILE_NAME);
+		this.setLocalModelResultsFolderName(MODELS_FILE_NAME);
 		this.setIgnoreRemote(true);
 		this.setSplitByGroup(true);
 		this.setSplitByModel(true);
@@ -66,16 +66,14 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.comment("Imports");
 		builder.comment("Models");
 
-		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+		for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 			String groupFolderPath = group.getGroupName().toLowerCase();
 
-			List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
+			List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
 			for (LocalModelConfiguration modelConfig : modelConfigs) {
-				if (modelConfig.isLocalModel()) {
-					String modelName = modelConfig.getModelType().toLowerCase();
-					String modelPath = PathUtility.buildPath(groupFolderPath, modelName, modelName + ".xml");
-					builder.imp(modelPath);
-				}
+				String modelName = modelConfig.getModelType().toLowerCase();
+				String modelPath = PathUtility.buildPath(groupFolderPath, modelName, modelName + ".xml");
+				builder.imp(modelPath);
 			}
 		}
 
@@ -87,15 +85,13 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .bean(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId())
 		        .beanClass(TypeModelKeyConverterImpl.class).c().map().valueType(ModelKeyType.class);
 
-		for (LocalModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
+		for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 			modelKeyTypeMap.getRawXMLBuilder().comment(group.getGroupName().toUpperCase());
 
-			List<LocalModelConfiguration> modelConfigs = group.getLocalModelConfigurations();
+			List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
 			for (LocalModelConfiguration modelConfig : modelConfigs) {
-				if (modelConfig.isLocalModel()) {
-					modelKeyTypeMap.keyRefValueRefEntry(modelConfig.getModelTypeBeanId(),
-					        modelConfig.getModelIdTypeBeanId());
-				}
+				modelKeyTypeMap.keyRefValueRefEntry(modelConfig.getModelTypeBeanId(),
+				        modelConfig.getModelIdTypeBeanId());
 			}
 		}
 
