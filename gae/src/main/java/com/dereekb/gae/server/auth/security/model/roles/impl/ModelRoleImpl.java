@@ -1,11 +1,15 @@
 package com.dereekb.gae.server.auth.security.model.roles.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * {@link ModelRole} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -29,6 +33,16 @@ public class ModelRoleImpl
 		}
 
 		this.role = role;
+	}
+
+	public static List<ModelRole> make(Collection<String> roles) {
+		List<ModelRole> list = new ArrayList<ModelRole>();
+
+		for (String role : roles) {
+			list.add(new ModelRoleImpl(role));
+		}
+
+		return list;
 	}
 
 	@Override

@@ -49,8 +49,6 @@ public interface LocalModelBeansConfiguration
 
 	public String getStringModelKeyConverter();
 
-	public String getModelSecurityContextServiceEntryBeanId();
-
 	public String getModelEventServiceEntryBeanId();
 
 }

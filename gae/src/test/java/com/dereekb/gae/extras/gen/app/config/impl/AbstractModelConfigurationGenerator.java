@@ -9,6 +9,8 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -139,6 +141,11 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		}
 	}
 
+	// MARK: Models
+	protected boolean shouldMakeModelConfiguration(AppModelConfiguration modelConfig) {
+		return (modelConfig.isLocalModel()) ? !this.ignoreLocal : !this.ignoreRemote;
+	}
+
 	// MARK: Local
 	public GenFolderImpl makeModelClientConfigurationsForModels(LocalModelConfigurationGroup group) {
 		return this.makeModelClientConfigurationsForModels(group.getGroupName(), group.getModelConfigurations());
@@ -156,7 +163,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		List<GenFolder> results = new ArrayList<GenFolder>();
 
 		for (LocalModelConfiguration modelConfig : modelConfigs) {
-			if (this.shouldMakeModelConfiguration(modelConfig)) {
+			if (this.shouldMakeLocalModelConfiguration(modelConfig)) {
 				GenFolder result = this.makeModelClientConfiguration(modelConfig);
 				results.add(result);
 			}
@@ -165,7 +172,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		return results;
 	}
 
-	protected boolean shouldMakeModelConfiguration(LocalModelConfiguration modelConfig) {
+	protected boolean shouldMakeLocalModelConfiguration(LocalModelConfiguration modelConfig) {
 		return !this.ignoreLocal;
 	}
 
@@ -476,15 +483,15 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 	}
 
 	// MARK: Utility
-	protected List<LocalModelConfiguration> getAllApplicableConfigurations() {
-		return this.getAllApplicableConfigurations(this.getAppConfig().getLocalModelConfigurations());
+	protected List<AppModelConfiguration> getAllApplicableModelConfigurations() {
+		return this.getAllApplicableModelConfigurations(this.getAppConfig().getModelConfigurations());
 	}
 
-	protected List<LocalModelConfiguration> getAllApplicableConfigurations(List<LocalModelConfigurationGroup> groups) {
-		List<LocalModelConfiguration> configs = new ArrayList<LocalModelConfiguration>();
+	protected List<AppModelConfiguration> getAllApplicableModelConfigurations(List<? extends AppModelConfigurationGroup> list) {
+		List<AppModelConfiguration> configs = new ArrayList<AppModelConfiguration>();
 
-		for (LocalModelConfigurationGroup groupConfig : groups) {
-			for (LocalModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
+		for (AppModelConfigurationGroup groupConfig : list) {
+			for (AppModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
 				if (this.shouldMakeModelConfiguration(modelConfig)) {
 					configs.add(modelConfig);
 				}
@@ -503,9 +510,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 
 		for (LocalModelConfigurationGroup groupConfig : groups) {
 			for (LocalModelConfiguration modelConfig : groupConfig.getModelConfigurations()) {
-				if (modelConfig.isLocalModel()) {
-					configs.add(modelConfig);
-				}
+				configs.add(modelConfig);
 			}
 		}
 

@@ -48,7 +48,7 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 		SpringBeansXMLMapBuilder<?> readControllerMap = builder.bean("readController").beanClass(ReadController.class)
 		        .lazy(false).c().ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).map();
 
-		for (LocalModelConfiguration model : this.getAllApplicableConfigurations()) {
+		for (LocalModelConfiguration model : this.getAllLocalConfigurations()) {
 			readControllerMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 			        model.getModelBeanPrefix() + "ReadControllerEntry");
 		}

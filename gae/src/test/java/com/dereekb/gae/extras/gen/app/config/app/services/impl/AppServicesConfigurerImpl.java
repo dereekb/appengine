@@ -1,5 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.app.services.impl;
 
+import com.dereekb.gae.extras.gen.app.config.app.services.AppEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
@@ -15,12 +16,15 @@ public class AppServicesConfigurerImpl
 
 	private AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer;
 	private AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer;
+	private AppEventListenerConfigurer appEventListenerConfigurer;
 
 	public AppServicesConfigurerImpl(AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
-	        AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer) {
+	        AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer,
+	        AppEventListenerConfigurer appEventListenerConfigurer) {
 		super();
 		this.setAppLoginTokenSecurityConfigurer(appLoginTokenSecurityConfigurer);
 		this.setAppWebHookEventServiceConfigurer(appWebHookEventServiceConfigurer);
+		this.setAppEventListenerConfigurer(appEventListenerConfigurer);
 	}
 
 	@Override
@@ -47,6 +51,19 @@ public class AppServicesConfigurerImpl
 		}
 
 		this.appWebHookEventServiceConfigurer = appWebHookEventServiceConfigurer;
+	}
+
+	@Override
+	public AppEventListenerConfigurer getAppEventListenerConfigurer() {
+		return this.appEventListenerConfigurer;
+	}
+
+	public void setAppEventListenerConfigurer(AppEventListenerConfigurer appEventListenerConfigurer) {
+		if (appEventListenerConfigurer == null) {
+			throw new IllegalArgumentException("appEventListenerConfigurer cannot be null.");
+		}
+
+		this.appEventListenerConfigurer = appEventListenerConfigurer;
 	}
 
 }

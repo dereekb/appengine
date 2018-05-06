@@ -301,4 +301,9 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 		return this.beansConfiguration.getModelKeyListAccessorFactoryId();
 	}
 
+	@Override
+	public String getModelSecurityContextServiceEntryBeanId() {
+		return this.beansConfiguration.getModelSecurityContextServiceEntryBeanId();
+	}
+
 }

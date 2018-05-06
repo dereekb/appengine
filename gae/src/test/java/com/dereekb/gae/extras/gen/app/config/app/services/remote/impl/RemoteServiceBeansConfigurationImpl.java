@@ -19,6 +19,7 @@ public class RemoteServiceBeansConfigurationImpl
 	private String serviceBeanPrefix;
 
 	private String clientApiRequestSenderBeanId;
+	private String clientModelRolesContextServiceBeanId;
 
 	public RemoteServiceBeansConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo) {
 		this(appServiceConfigurationInfo.getAppServiceName() + "Service");
@@ -27,6 +28,7 @@ public class RemoteServiceBeansConfigurationImpl
 	public RemoteServiceBeansConfigurationImpl(String serviceBeanPrefix) {
 		this.setServiceBeanPrefix(serviceBeanPrefix);
 		this.setClientApiRequestSenderBeanId(serviceBeanPrefix + "ClientApiRequestSender");
+		this.setClientModelRolesContextServiceBeanId(serviceBeanPrefix + "ClientModelRolesContextService");
 	}
 
 	// MARK: AppRemoteServiceBeansConfiguration
@@ -67,6 +69,19 @@ public class RemoteServiceBeansConfigurationImpl
 		}
 
 		this.clientApiRequestSenderBeanId = clientApiRequestSenderBeanId;
+	}
+
+	@Override
+	public String getClientModelRolesContextServiceBeanId() {
+		return this.clientModelRolesContextServiceBeanId;
+	}
+
+	public void setClientModelRolesContextServiceBeanId(String clientModelRolesContextServiceBeanId) {
+		if (clientModelRolesContextServiceBeanId == null) {
+			throw new IllegalArgumentException("clientModelRolesContextServiceBeanId cannot be null.");
+		}
+
+		this.clientModelRolesContextServiceBeanId = clientModelRolesContextServiceBeanId;
 	}
 
 }

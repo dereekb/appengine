@@ -39,10 +39,8 @@ public class ApiSearchConfigurationGenerator extends AbstractSingleConfiguration
 
 		for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 			for (LocalModelConfiguration model : group.getModelConfigurations()) {
-				if (model.isLocalModel()) {
-					searchMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
-					        model.getModelBeanPrefix() + "SearchDelegateEntry");
-				}
+				searchMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
+				        model.getModelBeanPrefix() + "SearchDelegateEntry");
 			}
 		}
 

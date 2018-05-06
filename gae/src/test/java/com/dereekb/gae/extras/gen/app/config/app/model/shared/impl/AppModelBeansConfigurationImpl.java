@@ -23,6 +23,7 @@ public class AppModelBeansConfigurationImpl
 	private String modelDtoBeanId;
 	private String modelDataConverterBeanId;
 	private String modelKeyListAccessorFactoryId;
+	private String modelSecurityContextServiceEntryBeanId;
 
 	public AppModelBeansConfigurationImpl(String modelType, ModelKeyType modelKeyType) {
 		String modelBeanPrefix = StringUtility.firstLetterLowerCase(modelType);
@@ -36,6 +37,7 @@ public class AppModelBeansConfigurationImpl
 		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
 		this.setModelKeyListAccessorFactoryId(modelBeanPrefix + "KeyListAccessorFactory");
+		this.setModelSecurityContextServiceEntryBeanId(modelBeanPrefix + "SecurityContextServiceEntry");
 	}
 
 	public ModelKeyType getModelKeyType() {
@@ -152,6 +154,19 @@ public class AppModelBeansConfigurationImpl
 		}
 
 		this.modelKeyListAccessorFactoryId = modelKeyListAccessorFactoryId;
+	}
+
+	@Override
+	public String getModelSecurityContextServiceEntryBeanId() {
+		return this.modelSecurityContextServiceEntryBeanId;
+	}
+
+	public void setModelSecurityContextServiceEntryBeanId(String modelSecurityContextServiceEntryBeanId) {
+		if (modelSecurityContextServiceEntryBeanId == null) {
+			throw new IllegalArgumentException("modelSecurityContextServiceEntryBeanId cannot be null.");
+		}
+
+		this.modelSecurityContextServiceEntryBeanId = modelSecurityContextServiceEntryBeanId;
 	}
 
 }

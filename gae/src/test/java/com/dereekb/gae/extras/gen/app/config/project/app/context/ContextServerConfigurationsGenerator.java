@@ -10,6 +10,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
@@ -233,16 +234,21 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
-
-					if (modelConfig.isLocalModel()) {
-						entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
-					}
+					entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
 				}
 			}
 
 			// Remote Types
+			entitiesList.getRawXMLBuilder().c("Remote");
 			for (RemoteServiceConfiguration remoteService : this.getAppConfig().getRemoteServices()) {
-				// TODO: Add ModelRoleSet retrieval pieces here.
+				entitiesList.getRawXMLBuilder().c(remoteService.getAppServiceConfigurationInfo().getAppServiceName() + " Service");
+				for (RemoteModelConfigurationGroup group : remoteService.getServiceModelConfigurations()) {
+					String groupName = group.getGroupName();
+					entitiesList.getRawXMLBuilder().c(groupName);
+
+
+
+				}
 			}
 
 			builder.alias(loginTokenModelContextServiceEntriesBeanId, "loginTokenModelContextServiceDencoderEntries");

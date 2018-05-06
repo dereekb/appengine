@@ -32,6 +32,10 @@ public interface LocalModelConfiguration
 
 	public Class<?> getModelOwnedModelQuerySecurityDelegateClass();
 
+	@Override
+	@Deprecated
+	public boolean isLocalModel();
+
 	// Custom Configuration
 	/**
 	 * Returns the custom configuration for configuring model contexts.

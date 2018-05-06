@@ -23,4 +23,6 @@ public interface RemoteServiceBeansConfiguration {
 
 	public String getClientApiRequestSenderBeanId();
 
+	public String getClientModelRolesContextServiceBeanId();
+
 }

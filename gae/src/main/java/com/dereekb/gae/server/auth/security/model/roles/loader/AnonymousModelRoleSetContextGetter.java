@@ -29,7 +29,7 @@ public interface AnonymousModelRoleSetContextGetter
 	/**
 	 * Attempts to load contexts for each of the input values.
 	 * <p>
-	 * Values that do not exist may still be returned, but
+	 * Values that do not exist may still be returned, but will not contain any roles.
 	 *
 	 * @param keys
 	 *            {@link Iterable}. Never {@code null}.

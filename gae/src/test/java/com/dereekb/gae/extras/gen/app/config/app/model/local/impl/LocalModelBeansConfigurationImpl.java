@@ -39,7 +39,6 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 
 	private String stringModelKeyConverter;
 	private String modelQueryServiceId;
-	private String modelSecurityContextServiceEntryBeanId;
 	private String modelEventServiceEntryBeanId;
 
 	public LocalModelBeansConfigurationImpl(String modelType, ModelKeyType modelKeyType) {
@@ -68,7 +67,6 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		this.setModelRoleSetLoaderBeanId(modelBeanPrefix + "ModelRoleSetLoader");
 		this.setStringModelKeyConverter(AppBeansConfiguration.getModelKeyConverterBeanId(modelKeyType));
 		this.setModelQueryServiceId(modelBeanPrefix + "QueryService");
-		this.setModelSecurityContextServiceEntryBeanId(modelBeanPrefix + "SecurityContextServiceEntry");
 		this.setModelEventServiceEntryBeanId(modelBeanPrefix + "ModelEventService");
 	}
 
@@ -356,19 +354,6 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		}
 
 		this.modelQueryServiceId = modelQueryServiceId;
-	}
-
-	@Override
-	public String getModelSecurityContextServiceEntryBeanId() {
-		return this.modelSecurityContextServiceEntryBeanId;
-	}
-
-	public void setModelSecurityContextServiceEntryBeanId(String modelSecurityContextServiceEntryBeanId) {
-		if (modelSecurityContextServiceEntryBeanId == null) {
-			throw new IllegalArgumentException("modelSecurityContextServiceEntryBeanId cannot be null.");
-		}
-
-		this.modelSecurityContextServiceEntryBeanId = modelSecurityContextServiceEntryBeanId;
 	}
 
 	@Override

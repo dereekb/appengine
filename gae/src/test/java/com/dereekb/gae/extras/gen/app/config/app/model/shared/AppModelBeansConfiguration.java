@@ -2,6 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.app.model.shared;
 
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelBeansConfiguration;
+import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenModelContextServiceEntry;
 
 /**
  * Basic app model beans configuration.
@@ -38,5 +39,10 @@ public interface AppModelBeansConfiguration {
 	 * factory.
 	 */
 	public String getModelKeyListAccessorFactoryId();
+
+	/**
+	 * @see LoginTokenModelContextServiceEntry
+	 */
+	public String getModelSecurityContextServiceEntryBeanId();
 
 }

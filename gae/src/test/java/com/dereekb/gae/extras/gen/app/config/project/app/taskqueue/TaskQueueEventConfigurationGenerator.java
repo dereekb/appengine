@@ -1,10 +1,13 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.taskqueue;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -57,6 +60,10 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		return folder;
 	}
 
+	/**
+	 * Local models get an event service, and model
+	 * serialization/deserialization.
+	 */
 	@Override
 	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
@@ -78,13 +85,15 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		return builder;
 	}
 
+	/**
+	 * Remote models only get deserializers.
+	 */
 	@Override
 	public SpringBeansXMLBuilder makeXMLRemoteModelClientConfigurationFile(RemoteModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		builder.comment("Remote Model");
-
 		builder.bean(modelConfig.getModelBeanPrefix() + "WebHookEventDeserializer")
 		        .beanClass(ModelWebHookEventDeserializerImpl.class).c()
 		        .ref(modelConfig.getModelKeyListAccessorFactoryId()).ref(modelConfig.getModelDataConverterBeanId());
@@ -123,7 +132,11 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		builder.comment("Entries");
 		SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> entriesMap = builder.map("modelKeyEventServiceListenerEntries");
 
-		// TODO: Add model listeners to map.
+		Map<String, String> entries = this.getAppConfig().getAppServicesConfigurer().getAppEventListenerConfigurer().configureEventListenerEntries(this.getAppConfig(), builder);
+
+		for (Entry<String, String> entry : entries.entrySet()) {
+			entriesMap.keyValueRefEntry(entry.getKey(), entry.getValue());
+		}
 
 		return this.makeFileWithXML(EVENT_FILE_NAME, builder);
 	}
@@ -132,7 +145,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		String webHookEventSubmitterBeanId = this.getAppConfig().getAppBeans().getWebHookEventSubmitterBeanId();
-		String webHookEventConverterBeanId =  this.getAppConfig().getAppBeans().getWebHookEventConverterBeanId();
+		String webHookEventConverterBeanId = this.getAppConfig().getAppBeans().getWebHookEventConverterBeanId();
 
 		String webHookEventSerializerBeanId = "webHookEventSerializer";
 		String webHookEventDeserializerBeanId = "webHookEventDeserializer";
@@ -150,7 +163,8 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		        .ref(webHookEventSubmitterBeanId);
 
 		builder.comment("Event Submitter / Listener");
-		this.getAppConfig().getAppServicesConfigurer().getAppWebHookEventServiceConfigurer().configureWebHookEventSubmitter(this.getAppConfig(), builder);
+		this.getAppConfig().getAppServicesConfigurer().getAppWebHookEventServiceConfigurer()
+		        .configureWebHookEventSubmitter(this.getAppConfig(), builder);
 
 		// Converter
 		builder.comment("Converter");
@@ -173,7 +187,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		        .beanClass(TypedModelWebHookEventDeserializerImpl.class).c().map();
 
 		// Make Typed Serializers
-		for (LocalModelConfiguration model : this.getAllApplicableConfigurations()) {
+		for (AppModelConfiguration model : this.getAllApplicableModelConfigurations()) {
 
 			// Only Add Serializers for local models.
 			if (model.isLocalModel()) {

@@ -49,7 +49,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 		        .beanClass(TaskQueueIterateController.class).c().ref("taskScheduler").ref("modelKeyTypeConverter")
 		        .map();
 
-		for (LocalModelConfiguration model : this.getAllApplicableConfigurations()) {
+		for (LocalModelConfiguration model : this.getAllLocalConfigurations()) {
 			if (model.getCustomModelContextConfigurer().hasIterateControllerEntry()) {
 				iterateEntryMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 				        model.getModelBeanPrefix() + "TaskQueueIterateControllerEntry");

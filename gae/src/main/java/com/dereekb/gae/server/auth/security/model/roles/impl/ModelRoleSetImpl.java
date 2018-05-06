@@ -10,7 +10,7 @@ import com.dereekb.gae.utilities.collections.list.SetUtility;
 
 /**
  * {@link ModelRoleSet} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -26,12 +26,16 @@ public class ModelRoleSetImpl extends AbstractModelRoleSet {
 		this.setRoles(roles);
 	}
 
+	public static ModelRoleSetImpl makeWithStringRoles(Collection<String> roles) {
+		return new ModelRoleSetImpl(ModelRoleImpl.make(roles));
+	}
+
 	// MARK: ModelRoleSet
 	@Override
 	public boolean isEmpty() {
 		return this.roles.isEmpty();
 	}
-	
+
 	@Override
 	public Set<ModelRole> getRoles() {
 		return this.roles;
