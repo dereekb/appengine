@@ -10,6 +10,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
@@ -246,8 +247,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 					String groupName = group.getGroupName();
 					entitiesList.getRawXMLBuilder().c(groupName);
 
-
-
+					List<RemoteModelConfiguration> modelConfigs = group.getModelConfigurations();
+					for (RemoteModelConfiguration modelConfig : modelConfigs) {
+						entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
+					}
 				}
 			}
 

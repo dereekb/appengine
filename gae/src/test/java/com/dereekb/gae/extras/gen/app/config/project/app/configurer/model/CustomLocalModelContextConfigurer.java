@@ -1,5 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model;
 
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelEventListenerConfigurer;
+
 /**
  * Custom configuration generator for a local model.
  *
@@ -7,8 +9,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model;
  *
  */
 public interface CustomLocalModelContextConfigurer
-        extends CustomLocalModelCrudConfigurer, CustomLocalModelIterateControllerConfigurer,
-        CustomLocalModelRoleSetLoaderConfigurer, CustomLocalModelChildrenRoleComponentConfigurer,
-        SecuredQueryInitializerConfigurer {
+        extends CustomLocalModelCrudConfigurer, CustomLocalModelEventListenerConfigurer,
+        CustomLocalModelIterateControllerConfigurer, CustomLocalModelRoleSetLoaderConfigurer,
+        CustomLocalModelChildrenRoleComponentConfigurer, SecuredQueryInitializerConfigurer {
 
 }

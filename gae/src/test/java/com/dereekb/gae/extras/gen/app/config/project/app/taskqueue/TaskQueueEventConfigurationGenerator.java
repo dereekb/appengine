@@ -1,7 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.taskqueue;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
@@ -9,6 +8,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -132,10 +132,17 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		builder.comment("Entries");
 		SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> entriesMap = builder.map("modelKeyEventServiceListenerEntries");
 
-		Map<String, String> entries = this.getAppConfig().getAppServicesConfigurer().getAppEventListenerConfigurer().configureEventListenerEntries(this.getAppConfig(), builder);
+		Map<String, String> appListenerEntries = this.getAppConfig().getAppServicesConfigurer().getAppEventListenerConfigurer().configureEventListenerEntries(this.getAppConfig(), builder);
+		entriesMap.getRawXMLBuilder().c("App Entries");
 
-		for (Entry<String, String> entry : entries.entrySet()) {
-			entriesMap.keyValueRefEntry(entry.getKey(), entry.getValue());
+		entriesMap.keyValueRefEntries(appListenerEntries);
+
+		entriesMap.getRawXMLBuilder().c("Model Entries");
+		for (LocalModelConfiguration model : this.getAllLocalConfigurations()) {
+			CustomLocalModelContextConfigurer modelConfigurer = model.getCustomModelContextConfigurer();
+
+			Map<String, String> entries = modelConfigurer.configureEventListenerEntries(this.getAppConfig(), model, builder);
+			entriesMap.keyValueRefEntries(entries);
 		}
 
 		return this.makeFileWithXML(EVENT_FILE_NAME, builder);

@@ -1,5 +1,7 @@
 package com.dereekb.gae.extras.gen.utility.spring;
 
+import java.util.Map;
+
 /**
  * Builder for an XML list.
  *
@@ -37,6 +39,8 @@ public interface SpringBeansXMLMapBuilder<T>
 	// Utility
 	public SpringBeansXMLMapBuilder<T> keyValueRefEntry(String key,
 	                                                    String valueRef);
+
+	public SpringBeansXMLMapBuilder<T> keyValueRefEntries(Map<String, String> keyValueRefsMap);
 
 	public SpringBeansXMLMapBuilder<T> keyRefValueRefEntry(String keyRef,
 	                                                       String valueRef);

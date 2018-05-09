@@ -1,6 +1,8 @@
 package com.dereekb.gae.extras.gen.utility.spring.impl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.http.HttpMethod;
 import org.w3c.dom.Node;
@@ -474,6 +476,14 @@ public class SpringBeansXMLBuilderImpl
 		public SpringBeansXMLMapBuilder<T> value(String key,
 		                                         String value) {
 			this.entry().key(key).value(value);
+			return this;
+		}
+
+		@Override
+		public SpringBeansXMLMapBuilder<T> keyValueRefEntries(Map<String, String> keyValueRefsMap) {
+			for (Entry<String, String> entry : keyValueRefsMap.entrySet()) {
+				this.keyValueRefEntry(entry.getKey(), entry.getValue());
+			}
 			return this;
 		}
 

@@ -1,5 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl;
 
+import java.util.Map;
+
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelChildrenRoleComponentConfigurer;
@@ -24,6 +26,7 @@ public class CustomLocalModelContextConfigurerImpl
 	private CustomLocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer = new CustomLocalModelIterateControllerConfigurerImpl();
 	private CustomLocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new CustomLocalModelRoleSetLoaderConfigurerImpl();
 	private CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new CustomLocalModelChildrenRoleComponentConfigurerImpl();
+	private CustomLocalModelEventListenerConfigurer customLocalModelEventListenerConfigurer = new NoOpCustomLocalModelEventListenerConfigurerImpl();
 	private SecuredQueryInitializerConfigurer securedQueryInitializerConfigurer = new TodoSecuredQueryInitializerConfigurerImpl();
 
 	public CustomLocalModelCrudConfigurer getCustomLocalModelCrudConfigurer() {
@@ -141,6 +144,14 @@ public class CustomLocalModelContextConfigurerImpl
 	                                            LocalModelConfiguration modelConfig,
 	                                            SpringBeansXMLBuilder builder) {
 		this.customLocalModelIterateControllerConfigurer.configureIterateControllerTasks(appConfig, modelConfig,
+		        builder);
+	}
+
+	@Override
+	public Map<String, String> configureEventListenerEntries(AppConfiguration appConfiguration,
+	                                                         LocalModelConfiguration modelConfig,
+	                                                         SpringBeansXMLBuilder builder) {
+		return this.customLocalModelEventListenerConfigurer.configureEventListenerEntries(appConfiguration, modelConfig,
 		        builder);
 	}
 
