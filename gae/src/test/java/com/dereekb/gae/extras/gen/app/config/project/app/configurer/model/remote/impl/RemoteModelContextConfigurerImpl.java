@@ -10,12 +10,14 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 public class RemoteModelContextConfigurerImpl
         implements RemoteModelContextConfigurer {
 
+	// MARK: RemoteModelContextConfigurer
 	@Override
 	public void configureRemoteModelContextComponents(AppSpringContextType springContext,
 	                                                  RemoteServiceConfiguration remoteServiceConfig,
 	                                                  RemoteModelConfiguration modelConfig,
 	                                                  SpringBeansXMLBuilder builder) {
-		// TODO Auto-generated method stub
+
+
 
 	}
 

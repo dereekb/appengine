@@ -1,0 +1,58 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Iterate Controller Entry-->
+  <bean class="com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.TaskQueueIterateControllerEntryImpl" id="loginTaskQueueIterateControllerEntry">
+    <constructor-arg index="0" ref="loginRegistry"/>
+    <constructor-arg index="1">
+      <map key-type="java.lang.String">
+        <!--CRUD-->
+        <entry key="create" value-ref="loginTaskQueuePostCreateTask"/>
+        <entry key="update" value-ref="loginTaskQueuePostUpdateTask"/>
+        <entry key="delete" value-ref="loginTaskQueueProcessDeleteTask"/>
+        <!--TASKS-->
+      </map>
+    </constructor-arg>
+  </bean>
+  <!--Iterate Controller CRUD Tasks-->
+  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="loginTaskQueuePostCreateTask">
+    <constructor-arg index="0">
+      <list>
+        <bean factory-bean="loginModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="CREATED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask" id="loginTaskQueuePostUpdateTask">
+    <constructor-arg index="0">
+      <list>
+        <bean factory-bean="loginModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="UPDATED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask" id="loginTaskQueueProcessDeleteTask">
+    <constructor-arg index="0" ref="loginRegistry"/>
+    <constructor-arg index="1">
+      <list>
+        <ref bean="scheduleLoginPointerDeleteByLoginTask"/>
+        <bean factory-bean="loginModelEventService" factory-method="makeSubmitEventTask">
+          <constructor-arg index="0">
+            <bean class="com.dereekb.gae.server.event.model.shared.event.impl.CommonModelEventType" factory-method="valueOf">
+              <constructor-arg index="0" value="DELETED"/>
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+  <!--Iterate Controller Tasks-->
+</beans>

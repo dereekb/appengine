@@ -5,7 +5,7 @@ import java.util.Properties;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
-import com.dereekb.gae.extras.gen.utility.GenFile;
+import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
@@ -20,7 +20,6 @@ import com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventD
 public class TaskQueueRemoteModelConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
 	public static final String REMOTE_MODEL_FOLDER_NAME = "remote";
-	public static final String REMOTE_MODEL_FILE_NAME = "remote";
 
 	public TaskQueueRemoteModelConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
@@ -28,7 +27,6 @@ public class TaskQueueRemoteModelConfigurationGenerator extends AbstractModelCon
 		this.setIgnoreLocal(true);
 		this.setSplitByModel(true);
 		this.setResultsFolderName(REMOTE_MODEL_FOLDER_NAME);
-		this.setRemoteModelResultsFolderName(REMOTE_MODEL_FOLDER_NAME);
 	}
 
 	public TaskQueueRemoteModelConfigurationGenerator(AppConfiguration appConfig) {
@@ -40,12 +38,14 @@ public class TaskQueueRemoteModelConfigurationGenerator extends AbstractModelCon
 	public GenFolderImpl generateConfigurations() {
 		GenFolderImpl folder = super.generateConfigurations();
 
-		GenFile remote = makeImportFile(folder);
-		folder.addFile(remote);
-
-		// folder.addFile(this.makeModelsXmlFile());
-
 		return folder;
+	}
+
+	@Override
+	public SpringBeansXMLBuilder makePrimaryFolderImportFileBuilder(GenFolder primary) {
+		SpringBeansXMLBuilder builder = super.makePrimaryFolderImportFileBuilder(primary);
+
+		return builder;
 	}
 
 	@Override
@@ -59,18 +59,6 @@ public class TaskQueueRemoteModelConfigurationGenerator extends AbstractModelCon
 		        .ref(modelConfig.getModelKeyListAccessorFactoryId()).ref(modelConfig.getModelDataConverterBeanId());
 
 		return builder;
-	}
-
-	// MARK: XML Files
-	public GenFile makeModelsXmlFile() {
-		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
-
-		builder.comment("Imports");
-		builder.imp("/local/local.xml");
-		builder.imp("/remote/remote.xml");
-		builder.imp("/webhook.xml");
-
-		return this.makeFileWithXML(REMOTE_MODEL_FILE_NAME, builder);
 	}
 
 }

@@ -19,6 +19,7 @@ public class RemoteAppWebHookEventServiceConfigurerImpl
         implements AppWebHookEventServiceConfigurer {
 
 	private RemoteServiceConfiguration eventServiceConfiguration;
+	private String eventClientScheduleTaskServiceBeanId = "eventClientScheduleTaskService";
 
 	public RemoteAppWebHookEventServiceConfigurerImpl(RemoteServiceConfiguration eventServiceConfiguration) {
 		this.setEventServiceConfiguration(eventServiceConfiguration);
@@ -36,6 +37,18 @@ public class RemoteAppWebHookEventServiceConfigurerImpl
 		this.eventServiceConfiguration = eventServiceConfiguration;
 	}
 
+	public String getEventClientScheduleTaskServiceBeanId() {
+		return this.eventClientScheduleTaskServiceBeanId;
+	}
+
+	public void setEventClientScheduleTaskServiceBeanId(String eventClientScheduleTaskServiceBeanId) {
+		if (eventClientScheduleTaskServiceBeanId == null) {
+			throw new IllegalArgumentException("eventClientScheduleTaskServiceBeanId cannot be null.");
+		}
+
+		this.eventClientScheduleTaskServiceBeanId = eventClientScheduleTaskServiceBeanId;
+	}
+
 	// MARK: AppWebHookEventServiceConfigurer
 	@Override
 	public void configureWebHookEventSubmitter(AppConfiguration appConfig,
@@ -49,13 +62,12 @@ public class RemoteAppWebHookEventServiceConfigurerImpl
 		builder.bean(webHookEventSubmitterBeanId).beanClass(WebHookEventSubmitterImpl.class).c()
 		        .ref(webHookEventConverterBeanId).ref(webHookEventSubmitterDelegateBeanId);
 
-		String eventClientScheduleTaskServiceBeanId = "eventClientScheduleTaskService";
 		builder.bean(webHookEventSubmitterDelegateBeanId).beanClass(WebHookEventSubmitterDelegateImpl.class).c()
-		        .ref(appConfig.getAppBeans().getTaskSchedulerId()).ref(eventClientScheduleTaskServiceBeanId);
+		        .ref(appConfig.getAppBeans().getTaskSchedulerId()).ref(this.eventClientScheduleTaskServiceBeanId);
 
-		builder.bean(eventClientScheduleTaskServiceBeanId).beanClass(ClientScheduleTaskServiceRequestSenderImpl.class)
-		        .c().ref(this.getEventServiceConfiguration().getServiceBeansConfiguration()
-		                .getClientApiRequestSenderBeanId());
+		builder.bean(this.eventClientScheduleTaskServiceBeanId)
+		        .beanClass(ClientScheduleTaskServiceRequestSenderImpl.class).c().ref(this.getEventServiceConfiguration()
+		                .getServiceBeansConfiguration().getClientApiRequestSenderBeanId());
 
 	}
 

@@ -21,7 +21,13 @@ public interface RemoteServiceBeansConfiguration {
 
 	public String getServiceBeanPrefix();
 
+	public String getServiceSystemTokenFactoryBeanId();
+
+	public String getClientRequestSenderBeanId();
+
 	public String getClientApiRequestSenderBeanId();
+
+	public String getSecuredClientApiRequestSenderBeanId();
 
 	public String getClientModelRolesContextServiceBeanId();
 

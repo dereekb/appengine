@@ -149,6 +149,12 @@ public class GenFolderImpl
 	}
 
 	// MARK: Files
+	public void safeAddFile(GenFile file) {
+		if (file != null) {
+			this.addFile(file);
+		}
+	}
+
 	public void addFile(GenFile file) {
 		this.files.add(file);
 	}

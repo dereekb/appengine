@@ -10,6 +10,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfigurat
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
+import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
@@ -41,7 +42,11 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 
 	public TaskQueueEventConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
-		this.setLocalModelResultsFolderName(EVENT_FOLDER_NAME);
+		this.setSplitByModel(false);
+		this.setSplitByGroup(false);
+		this.setSplitByRemote(true);
+		this.setIgnoreRemote(false);
+		this.setMakeImportFiles(true);
 		this.setResultsFolderName(EVENT_FOLDER_NAME);
 	}
 
@@ -54,12 +59,12 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 	public GenFolderImpl generateConfigurations() {
 		GenFolderImpl folder = super.generateConfigurations();
 
-		folder.addFile(this.makeModelsXmlFile());
 		folder.addFile(this.makeModelsWebHookXmlFile());
 
 		return folder;
 	}
 
+	// MARK: Models
 	/**
 	 * Local models get an event service, and model
 	 * serialization/deserialization.
@@ -102,12 +107,10 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 	}
 
 	// MARK: XML Files
-	public GenFile makeModelsXmlFile() {
-		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+	@Override
+	public SpringBeansXMLBuilder makePrimaryFolderImportFileBuilder(GenFolder primary) {
+		SpringBeansXMLBuilder builder = super.makePrimaryFolderImportFileBuilder(primary);
 
-		builder.comment("Imports");
-		builder.imp("/local/local.xml");
-		builder.imp("/remote/remote.xml");
 		builder.imp("/webhook.xml");
 
 		builder.comment("Shared");
@@ -145,7 +148,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 			entriesMap.keyValueRefEntries(entries);
 		}
 
-		return this.makeFileWithXML(EVENT_FILE_NAME, builder);
+		return builder;
 	}
 
 	public GenFile makeModelsWebHookXmlFile() {

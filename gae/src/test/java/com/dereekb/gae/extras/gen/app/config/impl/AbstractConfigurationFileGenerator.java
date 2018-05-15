@@ -87,12 +87,19 @@ public abstract class AbstractConfigurationFileGenerator
 	                              GenFolder folder,
 	                              boolean importResources,
 	                              boolean importSubFoldersMainFile) {
+		SpringBeansXMLBuilder builder = this.makeImportFileBuilder(folder, importResources, importSubFoldersMainFile);
+		return this.makeFileWithXML(filename, builder);
+	}
+
+	public SpringBeansXMLBuilder makeImportFileBuilder(GenFolder folder,
+	                                                   boolean importResources,
+	                                                   boolean importSubFoldersMainFile) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		builder.comment("Import");
 		this.importFilesWithBuilder(builder, folder, importResources, importSubFoldersMainFile);
 
-		return this.makeFileWithXML(filename, builder);
+		return builder;
 	}
 
 	public void importFilesWithBuilder(SpringBeansXMLBuilder builder,

@@ -83,6 +83,14 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		this.remoteModelResultsFolderName = remoteModelResultsFolderName;
 	}
 
+	public boolean isMakeImportFiles() {
+		return this.makeImportFiles;
+	}
+
+	public void setMakeImportFiles(boolean makeImportFiles) {
+		this.makeImportFiles = makeImportFiles;
+	}
+
 	public boolean isSplitByRemote() {
 		return this.splitByRemote;
 	}
@@ -290,6 +298,27 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		throw new UnsupportedOperationException("Override in subclass to use.");
 	}
 
+	// MARK: Folders
+	public GenFile makeLocalFolderImportFile(GenFolder local) {
+		return makeImportFile(local, true);
+	}
+
+	public GenFile makeRemoteFolderImportFile(GenFolder remote) {
+		return makeImportFile(remote, true);
+	}
+
+	public GenFile makePrimaryFolderImportFile(GenFolder primary) {
+		SpringBeansXMLBuilder builder = this.makePrimaryFolderImportFileBuilder(primary);
+		return this.makeFileWithXML(primary.getFolderName(), builder);
+	}
+
+	/**
+	 * Override this on the sub-class for easy additions to the primary file.
+	 */
+	public SpringBeansXMLBuilder makePrimaryFolderImportFileBuilder(GenFolder primary) {
+		return this.makeImportFileBuilder(primary, true, true);
+	}
+
 	// MARK: Generator
 	public interface ModelClientConfigurationGenerator {
 
@@ -361,6 +390,8 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		public GenFolderImpl makeModelConfigurations(AppConfiguration appConfig) {
 			GenFolderImpl folder = new GenFolderImpl(AbstractModelConfigurationGenerator.this.resultsFolderName);
 
+			GenFile importFile = null;
+
 			GenFolderImpl local = null;
 			GenFolderImpl remote = null;
 
@@ -378,25 +409,39 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 
 				if (this.makeImportFiles) {
 					if (local != null) {
-						makeImportFile(local, true);
+						local.addFile(this.makeLocalFolderImportFile(local));
 					}
 
 					if (remote != null) {
-						makeImportFile(remote, true);
+						remote.addFile(this.makeRemoteFolderImportFile(remote));
 					}
 
-					makeImportFile(folder, true);
+					importFile = makePrimaryFolderImportFile(folder);
 				}
 			} else {
 				folder.safeMerge(local);
 				folder.safeMerge(remote);
 
 				if (this.makeImportFiles) {
-					makeImportFile(folder, true);
+					importFile = makePrimaryFolderImportFile(folder);
 				}
 			}
 
+			folder.safeAddFile(importFile);
+
 			return folder;
+		}
+
+		public GenFile makeLocalFolderImportFile(GenFolder local) {
+			return AbstractModelConfigurationGenerator.this.makeLocalFolderImportFile(local);
+		}
+
+		public GenFile makeRemoteFolderImportFile(GenFolder local) {
+			return AbstractModelConfigurationGenerator.this.makeRemoteFolderImportFile(local);
+		}
+
+		public GenFile makePrimaryFolderImportFile(GenFolder folder) {
+			return AbstractModelConfigurationGenerator.this.makePrimaryFolderImportFile(folder);
 		}
 
 		public GenFolderImpl makeLocalModelConfigurationsForGroup(LocalModelConfigurationGroup group) {
@@ -445,7 +490,7 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 		@Override
 		public GenFolderImpl makeRemoteModelConfigurations(List<RemoteModelConfigurationGroup> groups) {
 			GenFolderImpl folder = new GenFolderImpl(
-			        AbstractModelConfigurationGenerator.this.localModelResultsFolderName);
+			        AbstractModelConfigurationGenerator.this.remoteModelResultsFolderName);
 
 			for (RemoteModelConfigurationGroup groupConfig : groups) {
 				folder.addFolder(this.makeRemoteModelConfigurationsForGroup(groupConfig));

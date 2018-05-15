@@ -26,7 +26,6 @@ import com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl;
 import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
 import com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl;
 import com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase;
-import com.dereekb.gae.utilities.misc.path.PathUtility;
 
 /**
  * Generator for unit/integration test client components.
@@ -70,7 +69,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		folder.addFolder(clientFolder);
 
 		// Models File
-		GenFile modelsfile = this.makeSharedModelXMLFile(modelFiles, clientFolder);
+		GenFile modelsfile = this.makeSharedModelXMLFile(folder);
 		folder.addFile(modelsfile);
 
 		return folder;
@@ -78,17 +77,12 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 	public static final String SHARED_MODEL_FILE_NAME = "models";
 
-	public GenFile makeSharedModelXMLFile(GenFolder modelFiles,
-	                                      GenFolder clientFolder) {
+	public GenFile makeSharedModelXMLFile(GenFolder folder) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		// Model Imports
-		builder.getRawXMLBuilder().comment("Models");
-		builder.importResources(modelFiles.getFiles());
-
-		// Client Import
-		builder.getRawXMLBuilder().comment("Client");
-		builder.imp(PathUtility.buildPath(clientFolder.getFolderName(), CLIENT_SHARED_FILE_FULL_NAME));
+		builder.getRawXMLBuilder().comment("Imports");
+		this.importFilesWithBuilder(builder, folder, true, true);
 
 		// Objectify Override
 		builder.comment("Objectify Override");
@@ -105,6 +99,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		public TestModelConfigurationGenerator() {
 			super(TestModelsConfigurationGenerator.this.getAppConfig(),
 			        TestModelsConfigurationGenerator.this.getOutputProperties());
+			this.setResultsFolderName(SHARED_MODEL_FILE_NAME);
 			this.setSplitByGroup(false);
 		}
 
@@ -139,8 +134,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 	}
 
-	public static final String CLIENT_SHARED_FILE_NAME = "client";
-	public static final String CLIENT_SHARED_FILE_FULL_NAME = CLIENT_SHARED_FILE_NAME + ".xml";
+	public static final String CLIENT_FOLDER_NAME = "client";
 
 	private class TestClientConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
@@ -148,6 +142,8 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		public TestClientConfigurationGenerator() {
 			super(TestModelsConfigurationGenerator.this.getAppConfig(),
 			        TestModelsConfigurationGenerator.this.getOutputProperties());
+			this.setResultsFolderName(CLIENT_FOLDER_NAME);
+			this.setSplitByGroup(false);
 		}
 
 		// MARK: Client Configurations
@@ -155,18 +151,12 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		public GenFolderImpl generateConfigurations() {
 			GenFolderImpl folder = super.generateConfigurations();
 
-			folder.addFile(this.makeSharedClientXMLFile(folder));
-
 			return folder;
 		}
 
-		public GenFile makeSharedClientXMLFile(GenFolderImpl folder) {
-			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
-
-			// Models Import
-			builder.comment("Models");
-
-			builder.importResources(folder.getFiles());
+		@Override
+		public SpringBeansXMLBuilder makePrimaryFolderImportFileBuilder(GenFolder primary) {
+			SpringBeansXMLBuilder builder = super.makePrimaryFolderImportFileBuilder(primary);
 
 			// Base Client-Request Sender
 			builder.comment("Base Client Sender");
@@ -199,7 +189,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 				        .ref("securedClientRequestSender");
 			}
 
-			return this.makeFileWithXML(CLIENT_SHARED_FILE_NAME, builder);
+			return builder;
 		}
 
 		@Override

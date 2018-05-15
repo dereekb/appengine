@@ -35,8 +35,13 @@ public class ContextRemoteConfigurationsGenerator extends AbstractRemoteServiceC
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		service.getRemoteServiceContextConfigurer().configureRemoteServiceContextComponents(AppSpringContextType.SHARED,
+		builder.comment("Remote Service Security");
+		service.getRemoteServiceContextConfigurer().configureRemoteServiceSecurityComponents(this.getAppConfig(),
 		        service, builder);
+
+		builder.comment("Remote Service Shared Components");
+		service.getRemoteServiceContextConfigurer().configureRemoteServiceContextComponents(AppSpringContextType.SHARED,
+		        this.getAppConfig(), service, builder);
 
 		return builder;
 	}

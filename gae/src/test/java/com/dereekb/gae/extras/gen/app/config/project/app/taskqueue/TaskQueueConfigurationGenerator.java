@@ -76,7 +76,7 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		extensions.addFolder(remoteFolder);
 		extensionsFile.importResource(
 		        PathUtility.buildPath(TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FOLDER_NAME,
-		                TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FILE_NAME + ".xml"));
+		                TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FOLDER_NAME + ".xml"));
 
 		// Events
 		TaskQueueEventConfigurationGenerator eventGen = new TaskQueueEventConfigurationGenerator(this.getAppConfig(),

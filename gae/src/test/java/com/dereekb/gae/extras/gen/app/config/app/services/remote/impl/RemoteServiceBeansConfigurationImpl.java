@@ -18,7 +18,10 @@ public class RemoteServiceBeansConfigurationImpl
 
 	private String serviceBeanPrefix;
 
+	private String serviceSystemTokenFactoryBeanId;
+	private String clientRequestSenderBeanId;
 	private String clientApiRequestSenderBeanId;
+	private String securedClientApiRequestSenderBeanId;
 	private String clientModelRolesContextServiceBeanId;
 
 	public RemoteServiceBeansConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo) {
@@ -27,7 +30,11 @@ public class RemoteServiceBeansConfigurationImpl
 
 	public RemoteServiceBeansConfigurationImpl(String serviceBeanPrefix) {
 		this.setServiceBeanPrefix(serviceBeanPrefix);
+
+		this.setServiceSystemTokenFactoryBeanId(serviceBeanPrefix + "SystemTokenFactory");
+		this.setClientRequestSenderBeanId(serviceBeanPrefix + "ClientRequestSender");
 		this.setClientApiRequestSenderBeanId(serviceBeanPrefix + "ClientApiRequestSender");
+		this.setSecuredClientApiRequestSenderBeanId(serviceBeanPrefix + "SecuredClientApiRequestSender");
 		this.setClientModelRolesContextServiceBeanId(serviceBeanPrefix + "ClientModelRolesContextService");
 	}
 
@@ -59,6 +66,32 @@ public class RemoteServiceBeansConfigurationImpl
 	}
 
 	@Override
+	public String getServiceSystemTokenFactoryBeanId() {
+		return this.serviceSystemTokenFactoryBeanId;
+	}
+
+	public void setServiceSystemTokenFactoryBeanId(String serviceSystemTokenFactoryBeanId) {
+		if (serviceSystemTokenFactoryBeanId == null) {
+			throw new IllegalArgumentException("serviceSystemTokenFactoryBeanId cannot be null.");
+		}
+
+		this.serviceSystemTokenFactoryBeanId = serviceSystemTokenFactoryBeanId;
+	}
+
+	@Override
+	public String getClientRequestSenderBeanId() {
+		return this.clientRequestSenderBeanId;
+	}
+
+	public void setClientRequestSenderBeanId(String clientRequestSenderBeanId) {
+		if (clientRequestSenderBeanId == null) {
+			throw new IllegalArgumentException("clientRequestSenderBeanId cannot be null.");
+		}
+
+		this.clientRequestSenderBeanId = clientRequestSenderBeanId;
+	}
+
+	@Override
 	public String getClientApiRequestSenderBeanId() {
 		return this.clientApiRequestSenderBeanId;
 	}
@@ -69,6 +102,19 @@ public class RemoteServiceBeansConfigurationImpl
 		}
 
 		this.clientApiRequestSenderBeanId = clientApiRequestSenderBeanId;
+	}
+
+	@Override
+	public String getSecuredClientApiRequestSenderBeanId() {
+		return this.securedClientApiRequestSenderBeanId;
+	}
+
+	public void setSecuredClientApiRequestSenderBeanId(String securedClientApiRequestSenderBeanId) {
+		if (securedClientApiRequestSenderBeanId == null) {
+			throw new IllegalArgumentException("securedClientApiRequestSenderBeanId cannot be null.");
+		}
+
+		this.securedClientApiRequestSenderBeanId = securedClientApiRequestSenderBeanId;
 	}
 
 	@Override

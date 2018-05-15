@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Read Controller Entry-->
+  <bean class="com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryImpl" id="loginPointerReadControllerEntry" lazy-init="false">
+    <constructor-arg index="0" ref="loginPointerReadService"/>
+    <constructor-arg index="1" ref="loginPointerDataConverter"/>
+    <constructor-arg index="2" ref="loginPointerInclusionReader"/>
+  </bean>
+  <bean class="com.dereekb.gae.model.extension.inclusion.reader.impl.ModelInclusionReaderImpl" id="loginPointerInclusionReader">
+    <constructor-arg index="0" ref="loginPointerLinkModelAccessor"/>
+  </bean>
+  <!--Edit Controller-->
+  <bean class="com.dereekb.gae.web.api.model.controllers.LoginPointerEditController" id="loginPointerEditController">
+    <constructor-arg index="0" ref="loginPointerEditControllerDelegate"/>
+    <constructor-arg index="1" ref="loginPointerEditControllerConversionDelegate"/>
+  </bean>
+  <bean class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerDelegateImpl" id="loginPointerEditControllerDelegate">
+    <constructor-arg index="0" ref="loginPointerCrudService"/>
+  </bean>
+  <bean class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerConversionDelegateImpl" id="loginPointerEditControllerConversionDelegate">
+    <constructor-arg index="0" ref="loginPointerType"/>
+    <constructor-arg index="1" ref="stringModelKeyConverter"/>
+    <constructor-arg index="2" ref="loginPointerDataConverter"/>
+  </bean>
+  <!--Search/Query Components-->
+  <bean class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl" id="loginPointerSearchDelegateEntry">
+    <constructor-arg index="0" ref="loginPointerType"/>
+    <constructor-arg index="1" ref="loginPointerQueryService"/>
+    <constructor-arg index="2" ref="loginPointerDataConverter"/>
+  </bean>
+</beans>

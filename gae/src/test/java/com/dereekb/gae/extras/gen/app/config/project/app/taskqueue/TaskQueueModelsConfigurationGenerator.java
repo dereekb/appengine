@@ -6,7 +6,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
-import com.dereekb.gae.extras.gen.utility.GenFile;
+import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
@@ -16,11 +16,10 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateCon
 public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
 	public static final String MODELS_FOLDER_NAME = "model";
-	public static final String MODELS_FILE_NAME = "model";
 
 	public TaskQueueModelsConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
-		this.setLocalModelResultsFolderName(MODELS_FILE_NAME);
+		this.setResultsFolderName(MODELS_FOLDER_NAME);
 		this.setIgnoreRemote(true);
 	}
 
@@ -33,16 +32,13 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 	public GenFolderImpl generateConfigurations() {
 		GenFolderImpl folder = super.generateConfigurations();
 
-		folder.addFile(this.makeModelsXmlFile(folder));
-
 		return folder;
 	}
 
-	public GenFile makeModelsXmlFile(GenFolderImpl folder) {
-		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
-
-		builder.comment("Imports");
-		builder.importResources(folder.getFiles());
+	// MARK: Primary File
+	@Override
+	public SpringBeansXMLBuilder makePrimaryFolderImportFileBuilder(GenFolder primary) {
+		SpringBeansXMLBuilder builder = super.makePrimaryFolderImportFileBuilder(primary);
 
 		builder.comment("Iterate");
 		SpringBeansXMLMapBuilder<?> iterateEntryMap = builder.bean("taskQueueIterateController")
@@ -56,9 +52,11 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 			}
 		}
 
-		return this.makeFileWithXML(MODELS_FILE_NAME, builder);
+		return builder;
 	}
 
+
+	// MARK: Models
 	@Override
 	public SpringBeansXMLBuilder makeXMLModelClientConfigurationFile(LocalModelConfiguration modelConfig)
 	        throws UnsupportedOperationException {

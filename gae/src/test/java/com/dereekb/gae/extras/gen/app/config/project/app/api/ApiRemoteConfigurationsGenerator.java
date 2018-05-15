@@ -36,7 +36,7 @@ public class ApiRemoteConfigurationsGenerator extends AbstractRemoteServiceConfi
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		service.getRemoteServiceContextConfigurer().configureRemoteServiceContextComponents(AppSpringContextType.API,
-		        service, builder);
+		        this.getAppConfig(), service, builder);
 
 		return builder;
 	}
