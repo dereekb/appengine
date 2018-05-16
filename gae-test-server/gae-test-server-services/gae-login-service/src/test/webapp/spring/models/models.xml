@@ -5,7 +5,6 @@
   <import resource="/loginkey.xml"/>
   <import resource="/app.xml"/>
   <import resource="/apphook.xml"/>
-  <import resource="/models.xml"/>
   <import resource="/client/client.xml"/>
   <!--Objectify Override-->
   <bean class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase" id="objectifyDatabase" lazy-init="false" primary="true">

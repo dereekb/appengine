@@ -67,7 +67,7 @@ public class RemoteAppWebHookEventServiceConfigurerImpl
 
 		builder.bean(this.eventClientScheduleTaskServiceBeanId)
 		        .beanClass(ClientScheduleTaskServiceRequestSenderImpl.class).c().ref(this.getEventServiceConfiguration()
-		                .getServiceBeansConfiguration().getClientApiRequestSenderBeanId());
+		                .getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId());
 
 	}
 

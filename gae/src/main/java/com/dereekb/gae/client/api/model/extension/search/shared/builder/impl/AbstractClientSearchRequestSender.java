@@ -13,6 +13,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.dereekb.gae.utilities.model.search.exception.KeysOnlySearchException;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
@@ -35,6 +36,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O, R extends SearchRequest, S> extends AbstractConfiguredClientModelRequestSender<T, O, R, S> {
 
 	private ObjectifyKeyConverter<T, ModelKey> keyConverter;
+
+	public AbstractClientSearchRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
+	        TypeModelKeyConverter keyTypeConverter,
+	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
+		this(typedConverter, keyTypeConverter, requestSender, ObjectifyModelKeyUtil.converterForType(
+		        typedConverter.getModelClass(), keyTypeConverter.typeForModelType(typedConverter.getModelType())));
+	}
 
 	public AbstractClientSearchRequestSender(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,

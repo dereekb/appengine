@@ -4,6 +4,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppSpringContextType;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.RemoteServiceSpringContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.shared.remote.AbstractAppSpringContextTypeFilteredConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
@@ -12,30 +13,15 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
  * @author dereekb
  *
  */
-public abstract class AbstractRemoteServiceSpringContextConfigurer
+public abstract class AbstractRemoteServiceSpringContextConfigurer extends AbstractAppSpringContextTypeFilteredConfigurer
         implements RemoteServiceSpringContextConfigurer {
 
-	private AppSpringContextType springContext;
-
 	public AbstractRemoteServiceSpringContextConfigurer() {
-		this(AppSpringContextType.API);
+		super();
 	}
 
 	public AbstractRemoteServiceSpringContextConfigurer(AppSpringContextType springContext) {
-		super();
-		this.springContext = springContext;
-	}
-
-	public AppSpringContextType getSpringContext() {
-		return this.springContext;
-	}
-
-	public void setSpringContext(AppSpringContextType springContext) {
-		if (springContext == null) {
-			throw new IllegalArgumentException("springContext cannot be null.");
-		}
-
-		this.springContext = springContext;
+		super(springContext);
 	}
 
 	// MAARK: RemoteServiceSpringContextConfigurer
@@ -44,7 +30,7 @@ public abstract class AbstractRemoteServiceSpringContextConfigurer
 	                                                    AppConfiguration appConfig,
 	                                                    RemoteServiceConfiguration appRemoteServiceConfiguration,
 	                                                    SpringBeansXMLBuilder builder) {
-		if (this.springContext == springContext) {
+		if (this.matchesSpringContext(springContext)) {
 			this.configureRemoteServiceContextComponents(appConfig, appRemoteServiceConfiguration, builder);
 		}
 	}

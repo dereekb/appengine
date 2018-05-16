@@ -112,7 +112,12 @@ public class GoogleAppEngineUtility {
 	public static String urlForService(String appProjectId,
 	                                   String appServiceName,
 	                                   String appVersion) {
-		throw new UnsupportedOperationException("TODO");
+
+		// TODO: Complete!
+
+		return "";
+
+		// throw new UnsupportedOperationException("TODO");
 	}
 
 }

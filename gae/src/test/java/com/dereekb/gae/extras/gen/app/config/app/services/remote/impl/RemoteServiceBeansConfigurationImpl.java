@@ -22,7 +22,9 @@ public class RemoteServiceBeansConfigurationImpl
 	private String clientRequestSenderBeanId;
 	private String clientApiRequestSenderBeanId;
 	private String securedClientApiRequestSenderBeanId;
+	private String clientScheduleTaskServiceBeanId;
 	private String clientModelRolesContextServiceBeanId;
+	private String clientModelLinkServiceBeanId;
 
 	public RemoteServiceBeansConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo) {
 		this(appServiceConfigurationInfo.getAppServiceName() + "Service");
@@ -35,7 +37,9 @@ public class RemoteServiceBeansConfigurationImpl
 		this.setClientRequestSenderBeanId(serviceBeanPrefix + "ClientRequestSender");
 		this.setClientApiRequestSenderBeanId(serviceBeanPrefix + "ClientApiRequestSender");
 		this.setSecuredClientApiRequestSenderBeanId(serviceBeanPrefix + "SecuredClientApiRequestSender");
+		this.setClientScheduleTaskServiceBeanId(serviceBeanPrefix + "ScheduleTaskService");
 		this.setClientModelRolesContextServiceBeanId(serviceBeanPrefix + "ClientModelRolesContextService");
+		this.setClientModelLinkServiceBeanId(serviceBeanPrefix + "ClientLinkService");
 	}
 
 	// MARK: AppRemoteServiceBeansConfiguration
@@ -118,6 +122,19 @@ public class RemoteServiceBeansConfigurationImpl
 	}
 
 	@Override
+	public String getClientScheduleTaskServiceBeanId() {
+		return this.clientScheduleTaskServiceBeanId;
+	}
+
+	public void setClientScheduleTaskServiceBeanId(String clientScheduleTaskServiceBeanId) {
+		if (clientScheduleTaskServiceBeanId == null) {
+			throw new IllegalArgumentException("clientScheduleTaskServiceBeanId cannot be null.");
+		}
+
+		this.clientScheduleTaskServiceBeanId = clientScheduleTaskServiceBeanId;
+	}
+
+	@Override
 	public String getClientModelRolesContextServiceBeanId() {
 		return this.clientModelRolesContextServiceBeanId;
 	}
@@ -128,6 +145,19 @@ public class RemoteServiceBeansConfigurationImpl
 		}
 
 		this.clientModelRolesContextServiceBeanId = clientModelRolesContextServiceBeanId;
+	}
+
+	@Override
+	public String getClientModelLinkServiceBeanId() {
+		return this.clientModelLinkServiceBeanId;
+	}
+
+	public void setClientModelLinkServiceBeanId(String clientModelLinkServiceBeanId) {
+		if (clientModelLinkServiceBeanId == null) {
+			throw new IllegalArgumentException("clientModelLinkServiceBeanId cannot be null.");
+		}
+
+		this.clientModelLinkServiceBeanId = clientModelLinkServiceBeanId;
 	}
 
 }

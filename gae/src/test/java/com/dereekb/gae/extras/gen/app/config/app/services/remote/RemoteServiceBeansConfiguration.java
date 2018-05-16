@@ -29,6 +29,10 @@ public interface RemoteServiceBeansConfiguration {
 
 	public String getSecuredClientApiRequestSenderBeanId();
 
+	public String getClientScheduleTaskServiceBeanId();
+
 	public String getClientModelRolesContextServiceBeanId();
+
+	public String getClientModelLinkServiceBeanId();
 
 }

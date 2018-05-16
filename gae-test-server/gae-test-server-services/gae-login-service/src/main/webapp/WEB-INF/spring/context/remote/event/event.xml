@@ -2,4 +2,14 @@
   <!--Remote Service Security-->
   <alias alias="eventServiceSystemTokenFactory" name="systemLoginTokenFactory"/>
   <!--Remote Service Shared Components-->
+  <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderImpl" id="eventServiceClientRequestSender">
+    <constructor-arg index="0" value="/api/event/v1"/>
+  </bean>
+  <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl" id="eventServiceClientApiRequestSender">
+    <constructor-arg index="0" ref="eventServiceClientRequestSender"/>
+  </bean>
+  <bean class="com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl" id="eventServiceSecuredClientApiRequestSender">
+    <constructor-arg index="0" ref="eventServiceClientApiRequestSender"/>
+    <constructor-arg index="1" ref="eventServiceSystemTokenFactory"/>
+  </bean>
 </beans>

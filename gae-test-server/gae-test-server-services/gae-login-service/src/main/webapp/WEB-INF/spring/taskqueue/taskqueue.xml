@@ -7,7 +7,5 @@
   <bean class="com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController" id="taskQueueTaskController">
     <constructor-arg index="0" ref="taskQueueTaskControllerEntries"/>
   </bean>
-  <util:map id="taskQueueTaskControllerEntries" key-type="java.lang.String">
-    <entry key="webhooks" value-ref="webHookTaskQueueTaskControllerEntry"/>
-  </util:map>
+  <util:map id="taskQueueTaskControllerEntries" key-type="java.lang.String"/>
 </beans>

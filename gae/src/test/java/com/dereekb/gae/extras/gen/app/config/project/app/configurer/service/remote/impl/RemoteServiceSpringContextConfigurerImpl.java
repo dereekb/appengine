@@ -5,7 +5,6 @@ import java.util.List;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppSpringContextType;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.RemoteServiceContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.RemoteServiceSpringContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
@@ -19,18 +18,18 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 public class RemoteServiceSpringContextConfigurerImpl
         implements RemoteServiceSpringContextConfigurer {
 
-	private HashMapWithList<AppSpringContextType, RemoteServiceContextConfigurer> configurers;
+	private HashMapWithList<AppSpringContextType, RemoteServiceSpringContextConfigurer> configurers;
 
 	public RemoteServiceSpringContextConfigurerImpl(
-	        HashMapWithList<AppSpringContextType, RemoteServiceContextConfigurer> configurers) {
+	        HashMapWithList<AppSpringContextType, RemoteServiceSpringContextConfigurer> configurers) {
 		this.setConfigurers(configurers);
 	}
 
-	public HashMapWithList<AppSpringContextType, RemoteServiceContextConfigurer> getConfigurers() {
+	public HashMapWithList<AppSpringContextType, RemoteServiceSpringContextConfigurer> getConfigurers() {
 		return this.configurers;
 	}
 
-	public void setConfigurers(HashMapWithList<AppSpringContextType, RemoteServiceContextConfigurer> configurers) {
+	public void setConfigurers(HashMapWithList<AppSpringContextType, RemoteServiceSpringContextConfigurer> configurers) {
 		if (configurers == null) {
 			throw new IllegalArgumentException("configurers cannot be null.");
 		}
@@ -38,16 +37,27 @@ public class RemoteServiceSpringContextConfigurerImpl
 		this.configurers = configurers;
 	}
 
-	// MARK: RemoteServiceContextConfigurer
+	// MARK: RemoteServiceSpringContextConfigurer
 	@Override
 	public void configureRemoteServiceContextComponents(AppSpringContextType springContext,
 	                                                    AppConfiguration appConfig,
-	                                                    RemoteServiceConfiguration appRemoteServiceConfiguration, SpringBeansXMLBuilder builder) {
-		List<RemoteServiceContextConfigurer> configurersList = this.configurers.get(springContext);
+	                                                    RemoteServiceConfiguration appRemoteServiceConfiguration,
+	                                                    SpringBeansXMLBuilder builder) {
+		List<RemoteServiceSpringContextConfigurer> configurersList = this.configurers.get(springContext);
 
-		for (RemoteServiceContextConfigurer configurer : configurersList) {
-			configurer.configureRemoteServiceContextComponents(springContext, appConfig, appRemoteServiceConfiguration, builder);
+		if (configurersList == null) {
+			return;
 		}
+
+		for (RemoteServiceSpringContextConfigurer configurer : configurersList) {
+			configurer.configureRemoteServiceContextComponents(springContext, appConfig, appRemoteServiceConfiguration,
+			        builder);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "RemoteServiceSpringContextConfigurerImpl [configurers=" + this.configurers + "]";
 	}
 
 }

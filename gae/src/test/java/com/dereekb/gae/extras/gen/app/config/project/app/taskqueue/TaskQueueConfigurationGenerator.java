@@ -59,7 +59,8 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		        .ref("taskQueueTaskControllerEntries");
 
 		SpringBeansXMLMapBuilder<?> map = builder.map("taskQueueTaskControllerEntries").keyType(String.class);
-		map.entry("webhooks").valueRef("webHookTaskQueueTaskControllerEntry");
+
+		// TODO: Add custom taskqueue controller entries!
 
 		return this.makeFileWithXML("taskqueue", builder);
 	}

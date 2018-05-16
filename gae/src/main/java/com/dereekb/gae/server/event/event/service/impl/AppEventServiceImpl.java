@@ -48,7 +48,6 @@ public class AppEventServiceImpl extends EventServiceImpl {
 	}
 
 	private void tryUpdateScopeOnEvent(Event event) {
-		this.tryUpdateScopeOnEvent(event);
 		if (event.getScope() == null && BasicEventImpl.class.isAssignableFrom(event.getClass())) {
 			String scope = this.appInfo.getAppServiceVersionInfo().getAppService();
 			((BasicEventImpl) event).setScope(scope);

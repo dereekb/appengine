@@ -35,7 +35,11 @@ public class ModelKeyEventImpl extends EventImpl
 
 	@Override
 	public void setEventData(EventData eventData) {
-		throw new UnsupportedOperationException("Can only set model event data.");
+		if (ModelKeyEventData.class.isAssignableFrom(eventData.getClass())) {
+			this.setEventData((ModelKeyEventData) eventData);
+		} else {
+			throw new UnsupportedOperationException("Can only set model event data.");
+		}
 	}
 
 	public void setEventData(ModelKeyEventData eventData) {

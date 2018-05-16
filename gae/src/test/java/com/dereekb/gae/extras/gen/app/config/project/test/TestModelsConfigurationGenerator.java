@@ -99,6 +99,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		public TestModelConfigurationGenerator() {
 			super(TestModelsConfigurationGenerator.this.getAppConfig(),
 			        TestModelsConfigurationGenerator.this.getOutputProperties());
+			this.setMakeImportFiles(false);	// Files are imported in models.xml, instead of created here.
 			this.setResultsFolderName(SHARED_MODEL_FILE_NAME);
 			this.setSplitByGroup(false);
 		}
@@ -218,7 +219,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 			builder.bean(modelPrefix + "ClientQueryRequestSender").beanClass(ClientQueryRequestSenderImpl.class).c()
 			        .ref(modelConfig.getModelDataConverterBeanId()).ref("modelKeyTypeConverter")
-			        .ref("securedClientRequestSender").ref(modelConfig.getModelRegistryId());
+			        .ref("securedClientRequestSender"); //.ref(modelConfig.getModelRegistryId());
 
 			return builder;
 		}

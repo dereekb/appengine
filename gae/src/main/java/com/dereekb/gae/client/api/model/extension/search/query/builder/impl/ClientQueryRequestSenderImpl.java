@@ -54,6 +54,12 @@ public class ClientQueryRequestSenderImpl<T extends UniqueModel, O> extends Abst
 
 	public ClientQueryRequestSenderImpl(TypedBidirectionalConverter<T, O> typedConverter,
 	        TypeModelKeyConverter keyTypeConverter,
+	        SecuredClientApiRequestSender requestSender) throws IllegalArgumentException {
+		super(typedConverter, keyTypeConverter, requestSender);
+	}
+
+	public ClientQueryRequestSenderImpl(TypedBidirectionalConverter<T, O> typedConverter,
+	        TypeModelKeyConverter keyTypeConverter,
 	        SecuredClientApiRequestSender requestSender,
 	        ObjectifyKeyConverter<T, ModelKey> keyConverter) throws IllegalArgumentException {
 		super(typedConverter, keyTypeConverter, requestSender, keyConverter);
