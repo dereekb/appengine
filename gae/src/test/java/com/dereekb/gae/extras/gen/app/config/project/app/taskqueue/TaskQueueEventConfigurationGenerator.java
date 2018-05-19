@@ -1,5 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.taskqueue;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -13,6 +14,7 @@ import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.server.event.event.service.impl.AppEventServiceImpl;
@@ -121,30 +123,36 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		builder.stringBean("modelEventGroup", "model");
 
 		builder.comment("Event Listener");
-
-		String webHookEventSubmitterBeanId = this.getAppConfig().getAppBeans().getWebHookEventSubmitterBeanId();
 		String modelKeyEventServiceListenerBeanId = "modelKeyEventServiceListener";
 
-		builder.list(eventServiceListenersBeanId).ref(modelKeyEventServiceListenerBeanId)
-		        .ref(webHookEventSubmitterBeanId);
+		// Web Hooks Event
+		SpringBeansXMLListBuilder<SpringBeansXMLBuilder> eventListenersList = builder.list(eventServiceListenersBeanId).ref(modelKeyEventServiceListenerBeanId);
+
+		List<String> eventListenerBeanIds = this.getAppConfig().getAppServicesConfigurer()
+		        .getAppEventServiceListenersConfigurer().configureEventServiceListeners(this.getAppConfig(), builder);
+
+		eventListenersList.refs(eventListenerBeanIds);
 
 		builder.comment("Multi-event Listener");
 		builder.bean("modelKeyEventServiceListener").beanClass(MultiTypeModelKeyEventServiceListener.class).c()
 		        .ref("modelKeyEventServiceListenerEntries");
 
-		builder.comment("Entries");
+		builder.comment("Model Key Event Entries");
 		SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> entriesMap = builder.map("modelKeyEventServiceListenerEntries");
 
-		Map<String, String> appListenerEntries = this.getAppConfig().getAppServicesConfigurer().getAppEventListenerConfigurer().configureEventListenerEntries(this.getAppConfig(), builder);
+		Map<String, String> appModelKeyEventListenerEntries = this.getAppConfig().getAppServicesConfigurer()
+		        .getAppModelKeyEventListenerConfigurer()
+		        .configureModelKeyEventListenerEntries(this.getAppConfig(), builder);
 		entriesMap.getRawXMLBuilder().c("App Entries");
 
-		entriesMap.keyValueRefEntries(appListenerEntries);
+		entriesMap.keyValueRefEntries(appModelKeyEventListenerEntries);
 
 		entriesMap.getRawXMLBuilder().c("Model Entries");
 		for (LocalModelConfiguration model : this.getAllLocalConfigurations()) {
 			CustomLocalModelContextConfigurer modelConfigurer = model.getCustomModelContextConfigurer();
 
-			Map<String, String> entries = modelConfigurer.configureEventListenerEntries(this.getAppConfig(), model, builder);
+			Map<String, String> entries = modelConfigurer.configureEventListenerEntries(this.getAppConfig(), model,
+			        builder);
 			entriesMap.keyValueRefEntries(entries);
 		}
 

@@ -135,7 +135,7 @@ public class AppConfigurationImpl
 		return this.isLoginServer;
 	}
 
-	public void setLoginServer(boolean isLoginServer) {
+	public void setIsLoginServer(boolean isLoginServer) {
 		this.isLoginServer = isLoginServer;
 	}
 

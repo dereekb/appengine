@@ -319,6 +319,15 @@ public class SpringBeansXMLBuilderImpl
 		}
 
 		@Override
+		public SpringBeansXMLListBuilder<T> refs(List<String> refs) {
+			for (String ref : refs) {
+				this.ref(ref);
+			}
+
+			return this;
+		}
+
+		@Override
 		public SpringBeansXMLListBuilder<T> value(String value) {
 			this.builder.e("value").text(value);
 			return this;

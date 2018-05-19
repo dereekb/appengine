@@ -3,9 +3,8 @@
   <bean class="com.dereekb.gae.web.api.auth.controller.model.LoginTokenModelContextController" id="loginTokenModelContextController">
     <constructor-arg index="0" ref="loginTokenModelContextControllerDelegate"/>
   </bean>
-  <bean class="com.dereekb.gae.web.api.auth.controller.model.impl.LoginTokenModelContextControllerDelegateImpl" id="loginTokenModelContextControllerDelegate">
+  <bean class="com.dereekb.gae.web.api.auth.controller.model.impl.LimitedLoginTokenModelContextControllerDelegateImpl" id="loginTokenModelContextControllerDelegate">
     <constructor-arg index="0" ref="loginTokenModelContextService"/>
     <constructor-arg index="1" ref="loginTokenModelContextSetDencoder"/>
-    <constructor-arg index="2" ref="loginTokenEncoderDecoder"/>
   </bean>
 </beans>

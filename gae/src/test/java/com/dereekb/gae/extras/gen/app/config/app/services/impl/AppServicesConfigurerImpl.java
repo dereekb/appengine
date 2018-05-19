@@ -1,7 +1,8 @@
 package com.dereekb.gae.extras.gen.app.config.app.services.impl;
 
-import com.dereekb.gae.extras.gen.app.config.app.services.AppEventListenerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 
@@ -15,16 +16,19 @@ public class AppServicesConfigurerImpl
         implements AppServicesConfigurer {
 
 	private AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer;
+	private AppEventServiceListenersConfigurer appEventServiceListenersConfigurer;
 	private AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer;
-	private AppEventListenerConfigurer appEventListenerConfigurer;
+	private AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer;
 
 	public AppServicesConfigurerImpl(AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
+	        AppEventServiceListenersConfigurer appEventServiceListenersConfigurer,
 	        AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer,
-	        AppEventListenerConfigurer appEventListenerConfigurer) {
+	        AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer) {
 		super();
 		this.setAppLoginTokenSecurityConfigurer(appLoginTokenSecurityConfigurer);
+		this.setAppEventServiceListenersConfigurer(appEventServiceListenersConfigurer);
 		this.setAppWebHookEventServiceConfigurer(appWebHookEventServiceConfigurer);
-		this.setAppEventListenerConfigurer(appEventListenerConfigurer);
+		this.setAppModelKeyEventListenerConfigurer(appModelKeyEventListenerConfigurer);
 	}
 
 	@Override
@@ -41,6 +45,19 @@ public class AppServicesConfigurerImpl
 	}
 
 	@Override
+	public AppEventServiceListenersConfigurer getAppEventServiceListenersConfigurer() {
+		return this.appEventServiceListenersConfigurer;
+	}
+
+	public void setAppEventServiceListenersConfigurer(AppEventServiceListenersConfigurer appEventServiceListenersConfigurer) {
+		if (appEventServiceListenersConfigurer == null) {
+			throw new IllegalArgumentException("appEventServiceListenersConfigurer cannot be null.");
+		}
+
+		this.appEventServiceListenersConfigurer = appEventServiceListenersConfigurer;
+	}
+
+	@Override
 	public AppWebHookEventServiceConfigurer getAppWebHookEventServiceConfigurer() {
 		return this.appWebHookEventServiceConfigurer;
 	}
@@ -54,16 +71,16 @@ public class AppServicesConfigurerImpl
 	}
 
 	@Override
-	public AppEventListenerConfigurer getAppEventListenerConfigurer() {
-		return this.appEventListenerConfigurer;
+	public AppModelKeyEventListenerConfigurer getAppModelKeyEventListenerConfigurer() {
+		return this.appModelKeyEventListenerConfigurer;
 	}
 
-	public void setAppEventListenerConfigurer(AppEventListenerConfigurer appEventListenerConfigurer) {
-		if (appEventListenerConfigurer == null) {
-			throw new IllegalArgumentException("appEventListenerConfigurer cannot be null.");
+	public void setAppModelKeyEventListenerConfigurer(AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer) {
+		if (appModelKeyEventListenerConfigurer == null) {
+			throw new IllegalArgumentException("appModelKeyEventListenerConfigurer cannot be null.");
 		}
 
-		this.appEventListenerConfigurer = appEventListenerConfigurer;
+		this.appModelKeyEventListenerConfigurer = appModelKeyEventListenerConfigurer;
 	}
 
 }

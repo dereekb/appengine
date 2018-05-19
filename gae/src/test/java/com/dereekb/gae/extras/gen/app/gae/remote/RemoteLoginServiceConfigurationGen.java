@@ -1,28 +1,41 @@
 package com.dereekb.gae.extras.gen.app.gae.remote;
 
-import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
-import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationImpl;
-import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.extras.gen.app.config.app.impl.AppServiceConfigurationInfoImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.RemoteServiceContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.impl.ClientRemoteServiceSpringContextConfigurerBuilder;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.impl.RemoteServiceContextConfigurerImpl;
 
-public class RemoteLoginServiceConfigurationGen {
+/**
+ * {@link RemoteServiceConfigurationGen} for the login service.
+ *
+ * @author dereekb
+ *
+ */
+public class RemoteLoginServiceConfigurationGen extends AbstractRemoteServiceConfigurationGen {
 
-	public LocalModelConfigurationGroupImpl makeRemoteLoginGroupConfig() {
+	public static final String DEFAULT_SERVICE_NAME = "login";
 
-		// Login
-		LocalModelConfigurationImpl loginModel = makeLoginModelConfig();
-		LocalModelConfigurationImpl loginPointerModel = makeLoginPointerModelConfig();
-
-		LocalModelConfigurationGroupImpl loginGroup = new LocalModelConfigurationGroupImpl("login",
-		        ListUtility.toList(loginModel, loginPointerModel));
-		return loginGroup;
+	public RemoteLoginServiceConfigurationGen(String projectAppId) {
+		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME));
 	}
 
-	public LocalModelConfigurationImpl makeLoginModelConfig() {
-		return null;
+	public RemoteLoginServiceConfigurationGen(String projectAppId, String appVersion) {
+		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME, appVersion));
 	}
 
-	public LocalModelConfigurationImpl makeLoginPointerModelConfig() {
-		return null;
+	// MARK: Override
+	@Override
+	protected RemoteServiceContextConfigurer makeRemoteServiceContextConfigurer() {
+		RemoteServiceContextConfigurerImpl configurer = new RemoteServiceContextConfigurerImpl();
+
+		// Spring Config
+		ClientRemoteServiceSpringContextConfigurerBuilder springConfigurerBuilder = new ClientRemoteServiceSpringContextConfigurerBuilder();
+
+		// TODO: Configure?
+
+		configurer.setSpringContextConfigurer(springConfigurerBuilder.make());
+
+		return configurer;
 	}
 
 }

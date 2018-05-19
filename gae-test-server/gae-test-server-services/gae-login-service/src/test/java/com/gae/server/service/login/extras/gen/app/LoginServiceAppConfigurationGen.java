@@ -10,14 +10,16 @@ import com.dereekb.gae.extras.gen.app.config.app.impl.AppConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.app.impl.AppServiceConfigurationInfoImpl;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
-import com.dereekb.gae.extras.gen.app.config.app.services.AppEventListenerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalAppLoginTokenSecurityConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.event.WebHookEventSubmitterImplEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.service.AbstractServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.AppGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.LoginGroupConfigurationGen;
@@ -31,6 +33,8 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 	public AppConfiguration makeAppConfiguration() {
 
 		String appProjectId = "gae-test-server";
+		String appProjectService = "login";
+		String appProjectVersion = "v1";
 
 		// Models
 		// Login
@@ -43,7 +47,7 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		        .toList((LocalModelConfigurationGroup) loginGroup, appGroup);
 
 		AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl(appProjectId,
-		        "login", "v1");
+		        appProjectService, appProjectVersion);
 
 		// Services
 		RemoteEventServiceConfigurationGen remoteEventServiceGen = new RemoteEventServiceConfigurationGen(appProjectId);
@@ -51,20 +55,22 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 
 		// Configuration
 		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new LocalAppLoginTokenSecurityConfigurerImpl();
+		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new WebHookEventSubmitterImplEventListenerConfigurer();
 		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new RemoteAppWebHookEventServiceConfigurerImpl(
 		        remoteEventService);
-		AppEventListenerConfigurer appEventListenerConfigurer = new AppEventListenerConfigurer() {
+		AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer = new AppModelKeyEventListenerConfigurer() {
 
 			@Override
-			public Map<String, String> configureEventListenerEntries(AppConfiguration appConfiguration,
-			                                                         SpringBeansXMLBuilder builder) {
+			public Map<String, String> configureModelKeyEventListenerEntries(AppConfiguration appConfiguration,
+			                                                                 SpringBeansXMLBuilder builder) {
 				return Collections.emptyMap();
 			}
 
 		};
 
 		AppServicesConfigurer appServicesConfigurer = new AppServicesConfigurerImpl(appLoginTokenSecurityConfigurer,
-		        appWebHookEventServiceConfigurer, appEventListenerConfigurer);
+		        appEventServiceListenersConfigurer, appWebHookEventServiceConfigurer,
+		        appModelKeyEventListenerConfigurer);
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);

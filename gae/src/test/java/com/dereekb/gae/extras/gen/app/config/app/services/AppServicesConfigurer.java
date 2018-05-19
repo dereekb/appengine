@@ -10,7 +10,9 @@ public interface AppServicesConfigurer {
 
 	public AppLoginTokenSecurityConfigurer getAppLoginTokenSecurityConfigurer();
 
-	public AppEventListenerConfigurer getAppEventListenerConfigurer();
+	public AppEventServiceListenersConfigurer getAppEventServiceListenersConfigurer();
+
+	public AppModelKeyEventListenerConfigurer getAppModelKeyEventListenerConfigurer();
 
 	public AppWebHookEventServiceConfigurer getAppWebHookEventServiceConfigurer();
 

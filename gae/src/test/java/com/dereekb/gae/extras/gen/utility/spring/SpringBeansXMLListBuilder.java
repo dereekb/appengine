@@ -1,5 +1,7 @@
 package com.dereekb.gae.extras.gen.utility.spring;
 
+import java.util.List;
+
 /**
  * Builder for an XML list.
  *
@@ -28,6 +30,8 @@ public interface SpringBeansXMLListBuilder<T>
 	public SpringBeansXMLListBuilder<T> type(Class<T> type);
 
 	public SpringBeansXMLListBuilder<T> ref(String ref);
+
+	public SpringBeansXMLListBuilder<T> refs(List<String> refs);
 
 	public SpringBeansXMLListBuilder<T> value(String ref);
 
