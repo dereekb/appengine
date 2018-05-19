@@ -32,27 +32,30 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 	public GenFolder generateConfigurations() {
 		GenFolderImpl folder = new GenFolderImpl("taskqueue");
 
-		folder.addFile(this.makeTaskQueueFile());
-
 		// Models
 		TaskQueueModelsConfigurationGenerator modelsGen = new TaskQueueModelsConfigurationGenerator(this.getAppConfig(),
 		        this.getOutputProperties());
 		folder.addFolder(modelsGen.generateConfigurations());
 
+		// Remote
+		TaskQueueRemoteConfigurationsGenerator remoteGen = new TaskQueueRemoteConfigurationsGenerator(
+		        this.getAppConfig(), this.getOutputProperties());
+		folder.addFolder(remoteGen.generateConfigurations());
+
 		// Extensions
 		folder.addFolder(this.generateExtensions());
+
+
+		folder.addFile(this.makeTaskQueueFile(folder));
 
 		return folder;
 	}
 
-	public GenFile makeTaskQueueFile() {
+	public GenFile makeTaskQueueFile(GenFolder folder) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		builder.comment("Models");
-		builder.imp("/model/model.xml");
-
-		builder.comment("Extensions");
-		builder.imp("/extension/extension.xml");
+		builder.comment("Imports");
+		this.importFilesWithBuilder(builder, folder, true, true);
 
 		builder.comment("Task");
 		builder.bean("taskQueueTaskController").beanClass(TaskQueueTaskController.class).c()
@@ -69,15 +72,6 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		GenFolderImpl extensions = new GenFolderImpl("extension");
 
 		SpringBeansXMLBuilder extensionsFile = SpringBeansXMLBuilderImpl.make();
-
-		// Remote Models
-		TaskQueueRemoteModelConfigurationGenerator remoteGen = new TaskQueueRemoteModelConfigurationGenerator(
-		        this.getAppConfig(), this.getOutputProperties());
-		GenFolderImpl remoteFolder = remoteGen.generateConfigurations();
-		extensions.addFolder(remoteFolder);
-		extensionsFile.importResource(
-		        PathUtility.buildPath(TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FOLDER_NAME,
-		                TaskQueueRemoteModelConfigurationGenerator.REMOTE_MODEL_FOLDER_NAME + ".xml"));
 
 		// Events
 		TaskQueueEventConfigurationGenerator eventGen = new TaskQueueEventConfigurationGenerator(this.getAppConfig(),

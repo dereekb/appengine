@@ -16,6 +16,10 @@ public class AppServiceVersionInfoImpl
 	private String appService;
 	private AppVersion appVersion;
 
+	public AppServiceVersionInfoImpl(String appProjectId, String appService, String majorAppVersion) {
+		this(appProjectId, appService, new AppVersionImpl(majorAppVersion));
+	}
+
 	public AppServiceVersionInfoImpl(String appProjectId, String appService, AppVersion appVersion) {
 		this.setAppProjectId(appProjectId);
 		this.setAppService(appService);

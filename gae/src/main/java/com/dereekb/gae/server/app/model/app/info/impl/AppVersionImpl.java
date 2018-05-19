@@ -11,8 +11,14 @@ import com.dereekb.gae.server.app.model.app.info.AppVersion;
 public class AppVersionImpl
         implements AppVersion {
 
+	public static final String DEFAULT_MINOR_VERSION = "0";
+
 	private String majorVersion;
 	private String minorVersion;
+
+	public AppVersionImpl(String majorVersion) {
+		this(majorVersion, DEFAULT_MINOR_VERSION);
+	}
 
 	public AppVersionImpl(String majorVersion, String minorVersion) {
 		this.setMajorVersion(majorVersion);

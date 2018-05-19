@@ -16,7 +16,10 @@ import com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventD
  *
  * @author dereekb
  *
+ * @deprecated Replaced by other generators.
+ *
  */
+@Deprecated
 public class TaskQueueRemoteModelConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
 	public static final String REMOTE_MODEL_FOLDER_NAME = "remote";
@@ -53,7 +56,6 @@ public class TaskQueueRemoteModelConfigurationGenerator extends AbstractModelCon
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		builder.comment("Remote Model");
-
 		builder.bean(modelConfig.getModelBeanPrefix() + "WebHookEventDeserializer")
 		        .beanClass(ModelWebHookEventDeserializerImpl.class).c()
 		        .ref(modelConfig.getModelKeyListAccessorFactoryId()).ref(modelConfig.getModelDataConverterBeanId());

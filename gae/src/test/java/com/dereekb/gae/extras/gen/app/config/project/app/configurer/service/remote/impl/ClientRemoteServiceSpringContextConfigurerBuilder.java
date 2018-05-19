@@ -1,6 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.impl;
 
 import com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkRequestSenderImpl;
+import com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderFactory;
 import com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl;
 import com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderImpl;
@@ -11,6 +12,7 @@ import com.dereekb.gae.extras.gen.app.config.app.utility.AppSpringContextType;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.RemoteServiceSpringContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
+import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * Builder for a {@link RemoteServiceSpringContextConfigurer} implementation
@@ -143,7 +145,7 @@ public class ClientRemoteServiceSpringContextConfigurerBuilder {
 
 	}
 
-	protected class ScheduleTaskServiceConfigurerImpl extends AbstractRemoteServiceSpringContextConfigurer {
+	public static class ScheduleTaskServiceConfigurerImpl extends AbstractRemoteServiceSpringContextConfigurer {
 
 		public ScheduleTaskServiceConfigurerImpl() {
 			super();
@@ -159,10 +161,30 @@ public class ClientRemoteServiceSpringContextConfigurerBuilder {
 		                                                    RemoteServiceConfiguration appRemoteServiceConfiguration,
 		                                                    SpringBeansXMLBuilder builder) {
 
-			builder.bean(
-			        appRemoteServiceConfiguration.getServiceBeansConfiguration().getClientScheduleTaskServiceBeanId())
+			String clientScheduleTaskServiceBeanId = appRemoteServiceConfiguration.getServiceBeansConfiguration()
+			        .getClientScheduleTaskServiceBeanId();
+
+			String productionClientScheduleTaskServiceBeanId = "production"
+			        + StringUtility.firstLetterUpperCase(clientScheduleTaskServiceBeanId);
+
+			String clientScheduleTaskServiceFactoryBeanId = clientScheduleTaskServiceBeanId + "Factory";
+
+			builder.bean(productionClientScheduleTaskServiceBeanId)
 			        .beanClass(ClientScheduleTaskServiceRequestSenderImpl.class).c().ref(appRemoteServiceConfiguration
 			                .getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId());
+
+			builder.bean(clientScheduleTaskServiceFactoryBeanId)
+			        .beanClass(ClientScheduleTaskServiceRequestSenderFactory.class).property("productionSingleton")
+			        .ref(productionClientScheduleTaskServiceBeanId);
+
+			builder.bean(clientScheduleTaskServiceBeanId).factoryBean(clientScheduleTaskServiceFactoryBeanId)
+			        .factoryMethod("make");
+
+			/*
+			builder.bean(clientScheduleTaskServiceBeanId).beanClass(ClientScheduleTaskServiceRequestSenderImpl.class)
+			        .c().ref(appRemoteServiceConfiguration.getServiceBeansConfiguration()
+			                .getSecuredClientApiRequestSenderBeanId());
+			  */
 
 		}
 

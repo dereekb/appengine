@@ -1,6 +1,5 @@
 package com.dereekb.gae.extras.gen.app.config.app.services.remote.impl;
 
-import com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
@@ -65,10 +64,10 @@ public class RemoteAppWebHookEventServiceConfigurerImpl
 		builder.bean(webHookEventSubmitterDelegateBeanId).beanClass(WebHookEventSubmitterDelegateImpl.class).c()
 		        .ref(appConfig.getAppBeans().getTaskSchedulerId()).ref(this.eventClientScheduleTaskServiceBeanId);
 
-		builder.bean(this.eventClientScheduleTaskServiceBeanId)
-		        .beanClass(ClientScheduleTaskServiceRequestSenderImpl.class).c().ref(this.getEventServiceConfiguration()
-		                .getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId());
-
+		// Make as an alias of the schedule task bean.
+		String eventServiceScheduleBean = this.eventServiceConfiguration.getServiceBeansConfiguration()
+		        .getClientScheduleTaskServiceBeanId();
+		builder.alias(eventServiceScheduleBean, this.eventClientScheduleTaskServiceBeanId);
 	}
 
 }

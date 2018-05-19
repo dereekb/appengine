@@ -45,6 +45,10 @@ public class ClientScheduleTaskServiceRequestSenderImpl extends AbstractSecuredC
 	@Override
 	public ClientRequest buildClientRequest(ClientScheduleTaskRequest request) {
 
+		if (request.getTaskRequest().getTask() == null) {
+			throw new IllegalArgumentException("Task name should not be null.");
+		}
+
 		ClientRequestUrl url = new ClientRequestUrlImpl(request.getRequestUrl());
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.POST);
 

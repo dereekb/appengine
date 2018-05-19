@@ -17,9 +17,7 @@
     <constructor-arg index="0" ref="taskScheduler"/>
     <constructor-arg index="1" ref="eventClientScheduleTaskService"/>
   </bean>
-  <bean class="com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderImpl" id="eventClientScheduleTaskService">
-    <constructor-arg index="0" ref="eventServiceSecuredClientApiRequestSender"/>
-  </bean>
+  <alias alias="eventClientScheduleTaskService" name="eventServiceScheduleTaskService"/>
   <!--Converter-->
   <bean class="com.dereekb.gae.server.event.webhook.service.impl.WebHookEventConverterImpl" id="webHookEventConverter">
     <constructor-arg index="0" ref="webHookEventSerializer"/>

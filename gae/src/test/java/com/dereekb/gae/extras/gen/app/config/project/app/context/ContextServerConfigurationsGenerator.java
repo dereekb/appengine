@@ -31,6 +31,7 @@ import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
+import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityDetailsServiceImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityServiceImpl;
@@ -108,8 +109,16 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		AppBeansConfiguration appBeans = this.getAppConfig().getAppBeans();
 
 		builder.comment("App Info");
+
+		String productionAppServiceInfoBeanId = "productionAppServiceInfo";
+
+		builder.bean(productionAppServiceInfoBeanId).beanClass(AppServiceVersionInfoImpl.class).c()
+		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppProjectId())
+		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppServiceName())
+		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppVersion());
+
 		builder.bean("productionAppInfo").beanClass(AppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
-		        .ref(appBeans.getAppNameBeanId());
+		        .ref(appBeans.getAppNameBeanId()).ref(productionAppServiceInfoBeanId);
 
 		String appInfoFactoryBeanId = "appInfoFactory";
 		builder.bean(appInfoFactoryBeanId).beanClass(AppInfoFactoryImpl.class).property("productionSingleton")
@@ -242,7 +251,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			// Remote Types
 			entitiesList.getRawXMLBuilder().c("Remote");
 			for (RemoteServiceConfiguration remoteService : this.getAppConfig().getRemoteServices()) {
-				entitiesList.getRawXMLBuilder().c(remoteService.getAppServiceConfigurationInfo().getAppServiceName() + " Service");
+				entitiesList.getRawXMLBuilder()
+				        .c(remoteService.getAppServiceConfigurationInfo().getAppServiceName() + " Service");
 				for (RemoteModelConfigurationGroup group : remoteService.getServiceModelConfigurations()) {
 					String groupName = group.getGroupName();
 					entitiesList.getRawXMLBuilder().c(groupName);

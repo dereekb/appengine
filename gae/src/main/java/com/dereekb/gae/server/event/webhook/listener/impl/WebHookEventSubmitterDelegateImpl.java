@@ -8,6 +8,7 @@ import com.dereekb.gae.server.event.webhook.WebHookEvent;
 import com.dereekb.gae.server.event.webhook.listener.WebHookEventSubmitterDelegate;
 import com.dereekb.gae.server.event.webhook.listener.exception.WebHookEventSubmitException;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
+import com.dereekb.gae.web.api.server.hook.WebHookApiScheduleTaskControllerEntry;
 import com.dereekb.gae.web.api.server.schedule.impl.ApiScheduleTaskRequestImpl;
 
 /**
@@ -41,7 +42,7 @@ public class WebHookEventSubmitterDelegateImpl extends AbstractWebHookEventSubmi
 	@Override
 	protected void trySubmitEvent(WebHookEvent event) throws WebHookEventSubmitException {
 		try {
-			ApiScheduleTaskRequestImpl request = new ApiScheduleTaskRequestImpl();
+			ApiScheduleTaskRequestImpl request = new ApiScheduleTaskRequestImpl(WebHookApiScheduleTaskControllerEntry.SCHEDULE_TASK_ENTRY_KEY);
 			request.setData(event.getJsonNode());
 
 			ClientScheduleTaskRequestImpl clientRequest = new ClientScheduleTaskRequestImpl(request);
