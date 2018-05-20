@@ -193,6 +193,13 @@ public class ObjectMapperUtilityBuilderImpl
 		}
 
 		@Override
+		public <X> X map(String json,
+		                 Class<X> type)
+		        throws IOException {
+			return this.map(this.mapper.readTree(json), type);
+		}
+
+		@Override
 		public <X> X map(JsonNode jsonNode,
 		                 Class<X> type)
 		        throws IOException {

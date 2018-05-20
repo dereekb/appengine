@@ -262,9 +262,10 @@ public class LoginTokenImpl
 
 	@Override
 	public String toString() {
-		return "LoginTokenImpl [subject=" + this.subject + ", login=" + this.login + ", loginPointer="
-		        + this.loginPointer + ", roles=" + this.roles + ", issued=" + this.issued + ", expiration="
-		        + this.expiration + ", pointerType=" + this.pointerType + "]";
+		return "LoginTokenImpl [subject=" + this.subject + ", app=" + this.app + ", login=" + this.login
+		        + ", loginPointer=" + this.loginPointer + ", refreshAllowed=" + this.refreshAllowed + ", roles="
+		        + this.roles + ", issued=" + this.issued + ", expiration=" + this.expiration + ", pointerType="
+		        + this.pointerType + ", encodedModelContextSet=" + this.encodedModelContextSet + "]";
 	}
 
 }

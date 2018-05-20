@@ -17,7 +17,7 @@ public class RoleConfigImpl
 		this.setAccess(access);
 	}
 
-	public static RoleConfig makel(String access) {
+	public static RoleConfig make(String access) {
 		return new RoleConfigImpl(access);
 	}
 

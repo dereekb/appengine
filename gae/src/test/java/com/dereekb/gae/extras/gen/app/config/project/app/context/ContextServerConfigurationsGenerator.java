@@ -32,10 +32,6 @@ import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
-import com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl;
-import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityDetailsServiceImpl;
-import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityServiceImpl;
-import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecuritySigningServiceImpl;
 import com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl;
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
@@ -44,7 +40,6 @@ import com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideAdm
 import com.dereekb.gae.server.auth.security.model.roles.impl.CrudModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl;
-import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl;
 import com.dereekb.gae.server.auth.security.token.entry.TokenAuthenticationEntryPoint;
 import com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler;
 import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter;
@@ -397,7 +392,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_USER"), HttpMethod.POST);
 
 			http.getRawXMLBuilder().c("Everything Else Is Denied");
-			http.intercept("/**", RoleConfigImpl.makel("denyAll"));
+			http.intercept("/**", RoleConfigImpl.make("denyAll"));
 
 			http.accessDeniedHandlerRef("accessDeniedHandler");
 
@@ -460,38 +455,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .factoryMethod("withStringMap").c().map().keyType(Integer.class).valueType(String.class)
 			        .value("0", "ROLE_ADMIN");
 
-			builder.comment("Login Token System");
-
-			String systemEncodedRolesId = "systemEncodedRoles";
-
-			builder.bean(this.getAppConfig().getAppBeans().getSystemLoginTokenFactoryBeanId())
-			        .beanClass(SystemLoginTokenFactoryImpl.class).c()
-			        .ref(this.getAppConfig().getAppBeans().getAppLoginSecuritySigningServiceBeanId())
-			        .ref(this.getAppConfig().getAppBeans().getLoginTokenServiceBeanId()).ref(systemEncodedRolesId);
-
-			Long adminEncodedRole = 1L;
-			builder.longBean(systemEncodedRolesId, adminEncodedRole);
-
-			builder.comment("App Security");
-			String appLoginSecurityDetailsServiceId = "appLoginSecurityDetailsService";
-			String appLoginSecurityVerifierServiceId = "appLoginSecurityVerifierService";
-			String appLoginSecuritySigningServiceId = this.getAppConfig().getAppBeans()
-			        .getAppLoginSecuritySigningServiceBeanId();
-
-			builder.bean(this.getAppConfig().getAppBeans().getAppLoginSecurityServiceBeanId())
-			        .beanClass(AppLoginSecurityServiceImpl.class).c().bean()
-			        .beanClass(AppLoginSecuritySigningServiceImpl.class).up().ref(appLoginSecurityDetailsServiceId);
-
-			builder.alias(this.getAppConfig().getAppBeans().getAppLoginSecurityServiceBeanId(),
-			        appLoginSecurityVerifierServiceId);
-
-			builder.bean(appLoginSecurityDetailsServiceId).beanClass(AppLoginSecurityDetailsServiceImpl.class).c()
-			        .ref("appRegistry");
-
-			builder.bean(appLoginSecuritySigningServiceId)
-			        .beanClass(AppConfiguredAppLoginSecuritySigningServiceImpl.class).c()
-			        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId())
-			        .ref(this.getAppConfig().getAppBeans().getAppLoginSecurityServiceBeanId());
+			builder.comment("Login Token System Factory");
+			this.getAppConfig().getAppSecurityBeansConfigurer().configureSystemLoginTokenFactory(this.getAppConfig(), builder);
 
 			builder.comment("Secure Model Types");
 			SpringBeansXMLListBuilder<?> secureModelsList = builder.list(secureModelTypesBeanId);
@@ -525,14 +490,15 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			http.getRawXMLBuilder().c("Only allow this service to access the taskqueue.");
 			http.getRawXMLBuilder().c("Authentication Matched");
-			http.intercept(serviceApiPath + "/login/auth/pass", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
-			http.intercept(serviceApiPath + "/login/auth/pass/**", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
-			http.intercept(serviceApiPath + "/login/auth/oauth/**", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
-			http.intercept(serviceApiPath + "/login/auth/key", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/pass", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/pass/**", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/oauth/**", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/key", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
 
 			http.getRawXMLBuilder().c("Token Matched");
-			http.intercept(serviceApiPath + "/login/auth/token/**", RoleConfigImpl.makel("permitAll"), HttpMethod.POST);
-			http.intercept(serviceApiPath + "/**", RoleConfigImpl.makel("denyAll"));
+			http.intercept(serviceApiPath + "/login/auth/system/token", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/token/**", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/**", RoleConfigImpl.make("denyAll"));
 
 			http.accessDeniedHandlerRef("accessDeniedHandler").anonymous(true).noCsrf();
 
@@ -546,7 +512,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .ref(authControllersMainPatternMatcherBeanId).ref(authControllersTokenPatternMatcherBeanId);
 
 			builder.bean("authControllersMainPatternMatcher").beanClass(MultiTypeAntRequestMatcher.class).c()
-			        .value(serviceApiPath + "/login/auth/{type}/**").list().value("pass").value("oauth").value("key")
+			        .value(serviceApiPath + "/login/auth/{type}/**").list().value("pass").value("oauth").value("key").value("system")
 			        .up().up().property("methodMatcher").bean().beanClass(RequestMethodMatcherImpl.class).c()
 			        .value("POST");
 

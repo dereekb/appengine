@@ -130,4 +130,26 @@ public class LoginTokenTests {
 		Assert.assertTrue(decodedToken.isRefreshAllowed());
 	}
 
+	@Test
+	public void testEncodingAndDecodingWithStringAppIdMatches() {
+		LoginTokenEncoderDecoderImpl encoder = new LoginTokenEncoderDecoderImpl(SIGNATURE);
+		LoginTokenEncoderDecoderImpl decoder = new LoginTokenEncoderDecoderImpl((SignatureConfiguration) null);
+
+		String invalidAppId = "INVALID_APP_ID";
+
+		LoginTokenImpl loginToken = new LoginTokenImpl();
+		loginToken.setApp(invalidAppId);
+		loginToken.setPointerType(LoginPointerType.SYSTEM);
+		loginToken.setExpiration(new Date(new Date().getTime() + (60 * 1000)));
+		loginToken.setIssued(new Date());
+		loginToken.setRefreshAllowed(true);
+
+		String encodedToken = encoder.encodeLoginToken(loginToken);
+		Assert.assertNotNull(encodedToken);
+
+		LoginToken decodedToken = decoder.decodeLoginToken(encodedToken).getLoginToken();
+		Assert.assertTrue("Should atleast match...", decodedToken.getApp().equals(invalidAppId));
+
+	}
+
 }

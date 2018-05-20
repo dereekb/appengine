@@ -162,6 +162,4 @@ public class LoginTokenController {
 		return response;
 	}
 
-	// TODO: System/App Access Token Generation
-
 }

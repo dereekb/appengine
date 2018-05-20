@@ -9,7 +9,8 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
  * @author dereekb
  *
  */
-public interface AppSecurityBeansConfigurer {
+public interface AppSecurityBeansConfigurer
+        extends SystemLoginTokenFactoryConfigurer {
 
 	// Beans
 	public String getLoginTokenSignatureFactoryBeanId();

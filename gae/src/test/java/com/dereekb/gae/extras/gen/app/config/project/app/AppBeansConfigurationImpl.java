@@ -22,6 +22,7 @@ public class AppBeansConfigurationImpl
 	public static final String TASK_SCHEDULER_BEAN_ID = "taskScheduler";
 	public static final String TASK_QUEUE_NAME_BEAN_ID = "taskQueueName";
 	public static final String MODEL_KEY_TYPE_CONVERTER_ID = "modelKeyTypeConverter";
+	public static final String SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID = "systemLoginTokenService";
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
 
 	public static final String CRUD_READ_MODEL_ROLE_REF_BEAN_ID = "crudReadModelRole";
@@ -46,6 +47,7 @@ public class AppBeansConfigurationImpl
 	private String taskSchedulerId = TASK_SCHEDULER_BEAN_ID;
 	private String taskQueueNameId = TASK_QUEUE_NAME_BEAN_ID;
 	private String modelKeyTypeConverterId = MODEL_KEY_TYPE_CONVERTER_ID;
+	private String systemLoginTokenServiceBeanId = SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
 	private String anonymousModelRoleSetContextServiceBeanId = ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID;
 
@@ -211,6 +213,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.modelKeyTypeConverterId = modelKeyTypeConverterId;
+	}
+
+	@Override
+	public String getSystemLoginTokenServiceBeanId() {
+		return this.systemLoginTokenServiceBeanId;
+	}
+
+	public void setSystemLoginTokenServiceBeanId(String systemLoginTokenServiceBeanId) {
+		if (systemLoginTokenServiceBeanId == null) {
+			throw new IllegalArgumentException("systemLoginTokenServiceBeanId cannot be null.");
+		}
+
+		this.systemLoginTokenServiceBeanId = systemLoginTokenServiceBeanId;
 	}
 
 	@Override

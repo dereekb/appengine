@@ -8,10 +8,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.test.spring.WebServiceTester;
 import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
+import com.dereekb.gae.web.api.auth.controller.system.impl.ApiSystemLoginTokenRequest;
 import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
 import com.dereekb.gae.web.api.auth.controller.token.impl.TokenValidationRequestImpl;
+import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -105,7 +109,7 @@ public class LoginApiTestUtility {
 	        throws Exception {
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder registerRequestBuilder = serviceRequestBuilder
-		        .post("/login/auth/register/tokenss");
+		        .post("/login/auth/register/tokens");
 
 		ObjectMapper mapper = new ObjectMapper();
 		String content = mapper.writeValueAsString(tokens);
@@ -257,6 +261,30 @@ public class LoginApiTestUtility {
 		Assert.assertNotNull(token);
 
 		return token;
+	}
+
+	// MARK: System
+	public EncodedLoginToken createSystemLoginToken(String appId) throws Exception {
+		MockHttpServletResponse response = this.sendCreateSystemLoginToken(appId).getResponse();
+
+		String json = response.getContentAsString();
+
+		Assert.assertTrue("Failed getting server token: " + json, response.getStatus() == 200);
+		LoginTokenPair pair = ObjectMapperUtilityBuilderImpl.SINGLETON.make().map(json, LoginTokenPair.class);
+		return pair;
+	}
+
+	public MvcResult sendCreateSystemLoginToken(String appId) throws Exception {
+
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder systemRequestBuilder = serviceRequestBuilder.post("/login/auth/system/token");
+		systemRequestBuilder.contentType(MediaType.APPLICATION_JSON);
+
+		ApiSystemLoginTokenRequest tokenRequest = new ApiSystemLoginTokenRequest(appId);
+		String content = ObjectMapperUtilityBuilderImpl.MAPPER.writeValueAsString(tokenRequest);
+		systemRequestBuilder.content(content);
+
+		return this.webServiceTester.mockMvcPerform(systemRequestBuilder).andReturn();
 	}
 
 }

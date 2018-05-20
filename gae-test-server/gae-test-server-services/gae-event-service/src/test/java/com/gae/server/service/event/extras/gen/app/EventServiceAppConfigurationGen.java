@@ -16,9 +16,11 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppEventServiceListenersConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppLoginTokenSecurityConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteSystemLoginTokenFactoryConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.service.AbstractServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.remote.RemoteLoginServiceConfigurationGen;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -67,10 +69,16 @@ public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
 
+		RemoteSystemLoginTokenFactoryConfigurerImpl remoteSystemLoginTokenFactory = new RemoteSystemLoginTokenFactoryConfigurerImpl(
+		        remoteLoginService);
+		LoginTokenAppSecurityBeansConfigurerImpl securityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl(
+		        remoteSystemLoginTokenFactory);
+
 		configuration.setAppName("GAE Test Login Service");
 
 		configuration.setAppTaskQueueName("login");
 		configuration.setAppId(1L);
+		configuration.setAppSecurityBeansConfigurer(securityBeansConfigurer);
 
 		configuration.setIsLoginServer(false);
 		configuration.setRemoteServices(remoteLoginService);

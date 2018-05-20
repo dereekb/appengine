@@ -9,6 +9,7 @@
     <security:intercept-url access="permitAll" method="POST" pattern="/api/login/v1/login/auth/oauth/**"/>
     <security:intercept-url access="permitAll" method="POST" pattern="/api/login/v1/login/auth/key"/>
     <!--Token Matched-->
+    <security:intercept-url access="permitAll" method="POST" pattern="/api/login/v1/login/auth/system/token"/>
     <security:intercept-url access="permitAll" method="POST" pattern="/api/login/v1/login/auth/token/**"/>
     <security:intercept-url access="denyAll" pattern="/api/login/v1/**"/>
     <security:access-denied-handler ref="accessDeniedHandler"/>
@@ -31,6 +32,7 @@
         <value>pass</value>
         <value>oauth</value>
         <value>key</value>
+        <value>system</value>
       </list>
     </constructor-arg>
     <property name="methodMatcher">
@@ -190,11 +192,15 @@
       </map>
     </constructor-arg>
   </bean>
+  <!--Login Token System Factory-->
   <!--Login Token System-->
-  <bean class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl" id="systemLoginTokenFactory">
-    <constructor-arg index="0" ref="appLoginSecuritySigningService"/>
+  <bean class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenServiceImpl" id="systemLoginTokenService">
+    <constructor-arg index="0" ref="systemEncodedRoles"/>
     <constructor-arg index="1" ref="loginTokenService"/>
-    <constructor-arg index="2" ref="systemEncodedRoles"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl" id="systemLoginTokenFactory">
+    <constructor-arg index="0" ref="systemLoginTokenService"/>
+    <constructor-arg index="1" ref="appLoginSecuritySigningService"/>
   </bean>
   <bean class="java.lang.Long" id="systemEncodedRoles">
     <constructor-arg index="0" value="1"/>

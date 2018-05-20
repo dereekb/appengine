@@ -2,7 +2,10 @@ package com.dereekb.gae.extras.gen.app.config.app.services.local;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.SystemLoginTokenFactoryConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalSystemLoginTokenFactoryConfigurerImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
@@ -28,6 +31,18 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	private Class<?> loginSecurityModelQueryTaskOverrideClass = LoginSecurityModelQueryTaskOverrideImpl.class;
 
+	private SystemLoginTokenFactoryConfigurer systemLoginTokenFactoryConfigurer;
+
+	public LoginTokenAppSecurityBeansConfigurerImpl() {
+		this(new LocalSystemLoginTokenFactoryConfigurerImpl());
+	}
+
+	public LoginTokenAppSecurityBeansConfigurerImpl(
+	        SystemLoginTokenFactoryConfigurer systemLoginTokenFactoryConfigurer) {
+		this.setSystemLoginTokenFactoryConfigurer(systemLoginTokenFactoryConfigurer);
+	}
+
+	@Override
 	public String getLoginTokenSignatureFactoryBeanId() {
 		return this.loginTokenSignatureFactoryBeanId;
 	}
@@ -40,6 +55,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		this.loginTokenSignatureFactoryBeanId = loginTokenSignatureFactoryBeanId;
 	}
 
+	@Override
 	public String getRefreshTokenSignatureFactoryBeanId() {
 		return this.refreshTokenSignatureFactoryBeanId;
 	}
@@ -100,6 +116,14 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		this.loginTokenUserDetailsBuilderClass = loginTokenUserDetailsBuilderClass;
 	}
 
+	public SystemLoginTokenFactoryConfigurer getSystemLoginTokenFactoryConfigurer() {
+		return this.systemLoginTokenFactoryConfigurer;
+	}
+
+	public void setSystemLoginTokenFactoryConfigurer(SystemLoginTokenFactoryConfigurer systemLoginTokenFactoryConfigurer) {
+		this.systemLoginTokenFactoryConfigurer = systemLoginTokenFactoryConfigurer;
+	}
+
 	// MARK: AppSecurityBeansConfigurer
 	@Override
 	public Class<?> getLoginSecurityModelQueryTaskOverrideClass() {
@@ -138,6 +162,13 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	                                             SpringBeansXMLBeanBuilder<?> beanBuilder) {
 		beanBuilder.beanClass(LoginTokenUserDetailsBuilderImpl.class).c().ref("loginTokenModelContextSetDencoder")
 		        .ref("loginTokenGrantedAuthorityBuilder").ref("loginRegistry").ref("loginPointerRegistry");
+	}
+
+	@Override
+	public void configureSystemLoginTokenFactory(AppConfiguration appConfig,
+	                                             SpringBeansXMLBuilder beanBuilder) {
+		SystemLoginTokenFactoryConfigurer configurer = this.systemLoginTokenFactoryConfigurer;
+		configurer.configureSystemLoginTokenFactory(appConfig, beanBuilder);
 	}
 
 }

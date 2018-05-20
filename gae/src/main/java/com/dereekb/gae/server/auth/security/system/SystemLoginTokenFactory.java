@@ -2,7 +2,6 @@ package com.dereekb.gae.server.auth.security.system;
 
 import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
-import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
 /**
  * Factory for creating encoded login token instances that are used by the
@@ -15,25 +14,6 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
  *
  */
 public interface SystemLoginTokenFactory {
-
-	/**
-	 * Makes an encoded system token.
-	 *
-	 * @return {@link String} token. Never {@code null}.
-	 *
-	 * @throws FactoryMakeFailureException
-	 *             thrown if the token fails to be generated.
-	 */
-	@Deprecated
-	public String makeEncodedToken() throws FactoryMakeFailureException;
-
-	/**
-	 *
-	 * @return
-	 * @throws FactoryMakeFailureException
-	 */
-	@Deprecated
-	public KeyedEncodedParameter makeTokenHeader() throws FactoryMakeFailureException;
 
 	/**
 	 * Generates an encoded system token for the current system.

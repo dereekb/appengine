@@ -50,6 +50,10 @@ public interface ObjectMapperUtility {
 	                                  Class<X> type)
 	        throws IOException;
 
+	public <X> X map(String json,
+	                 Class<X> type)
+	        throws IOException;
+
 	public <X> X map(JsonNode jsonNode,
 	                 Class<X> type)
 	        throws IOException;

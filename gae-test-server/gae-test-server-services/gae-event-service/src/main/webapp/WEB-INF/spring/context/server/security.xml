@@ -127,21 +127,6 @@
   <bean class="java.lang.Long" id="systemEncodedRoles">
     <constructor-arg index="0" value="1"/>
   </bean>
-  <!--App Security-->
-  <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityServiceImpl" id="appLoginSecurityService">
-    <constructor-arg index="0">
-      <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecuritySigningServiceImpl"/>
-    </constructor-arg>
-    <constructor-arg index="1" ref="appLoginSecurityDetailsService"/>
-  </bean>
-  <alias alias="appLoginSecurityVerifierService" name="appLoginSecurityService"/>
-  <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecurityDetailsServiceImpl" id="appLoginSecurityDetailsService">
-    <constructor-arg index="0" ref="appRegistry"/>
-  </bean>
-  <bean class="com.dereekb.gae.server.auth.security.app.service.impl.AppConfiguredAppLoginSecuritySigningServiceImpl" id="appLoginSecuritySigningService">
-    <constructor-arg index="0" ref="serverAppInfo"/>
-    <constructor-arg index="1" ref="appLoginSecurityService"/>
-  </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes"/>
   <!--Exception Handler-->

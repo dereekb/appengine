@@ -138,19 +138,17 @@ public class ClientLoginTokenValidationServiceRequestSenderImpl extends Abstract
 		return new ClientLoginTokenValidationResponseImpl(request, response);
 	}
 
-	private class ClientLoginTokenValidationResponseImpl
+	private class ClientLoginTokenValidationResponseImpl extends AbstractSerializedResponse
 	        implements ClientLoginTokenValidationResponse {
 
 		private transient Map<String, String> claimsMap;
 
 		private final ClientLoginTokenValidationRequest request;
-		private final ClientApiResponse response;
 
 		public ClientLoginTokenValidationResponseImpl(ClientLoginTokenValidationRequest request,
 		        ClientApiResponse response) {
-			super();
+			super(response);
 			this.request = request;
-			this.response = response;
 		}
 
 		// MARK: ClientLoginTokenValidationResponse

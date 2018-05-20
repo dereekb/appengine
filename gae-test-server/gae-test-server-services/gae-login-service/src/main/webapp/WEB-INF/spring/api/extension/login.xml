@@ -17,6 +17,13 @@
     <constructor-arg index="2" ref="refreshTokenService"/>
     <constructor-arg index="3" ref="appLoginSecurityService"/>
   </bean>
+  <!--System Token Controller-->
+  <bean class="com.dereekb.gae.web.api.auth.controller.system.SystemLoginTokenController" id="systemLoginTokenController">
+    <constructor-arg index="0" ref="systemLoginTokenControllerDelegate"/>
+  </bean>
+  <bean class="com.dereekb.gae.web.api.auth.controller.system.impl.SystemLoginTokenControllerDelegateImpl" id="systemLoginTokenControllerDelegate">
+    <constructor-arg index="0" ref="systemLoginTokenService"/>
+  </bean>
   <!--Anonymous Login Controller-->
   <!--Password Login Controller-->
   <bean class="com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController" id="passwordLoginController">

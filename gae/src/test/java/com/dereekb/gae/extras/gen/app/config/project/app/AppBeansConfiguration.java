@@ -24,6 +24,8 @@ public interface AppBeansConfiguration {
 
 	public String getTaskQueueNameId();
 
+	public String getSystemLoginTokenServiceBeanId();
+
 	public String getSystemLoginTokenFactoryBeanId();
 
 	public String getCrudReadModelRoleRefBeanId();

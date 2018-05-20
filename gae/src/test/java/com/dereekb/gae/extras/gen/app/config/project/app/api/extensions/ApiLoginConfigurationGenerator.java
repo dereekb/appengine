@@ -14,6 +14,8 @@ import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginControllerDelegateImpl;
 import com.dereekb.gae.web.api.auth.controller.register.LoginRegisterController;
 import com.dereekb.gae.web.api.auth.controller.register.impl.LoginRegisterControllerDelegateImpl;
+import com.dereekb.gae.web.api.auth.controller.system.SystemLoginTokenController;
+import com.dereekb.gae.web.api.auth.controller.system.impl.SystemLoginTokenControllerDelegateImpl;
 import com.dereekb.gae.web.api.auth.controller.token.LoginTokenController;
 import com.dereekb.gae.web.api.auth.controller.token.impl.LoginTokenControllerDelegateImpl;
 import com.dereekb.gae.web.api.auth.exception.handler.ApiLoginExceptionHandler;
@@ -50,6 +52,15 @@ public class ApiLoginConfigurationGenerator extends AbstractSingleConfigurationF
 		builder.bean(loginTokenControllerDelegateBeanId).beanClass(LoginTokenControllerDelegateImpl.class).c()
 		        .ref("refreshTokenEncoderDecoder").ref(this.getAppConfig().getAppBeans().getLoginTokenServiceBeanId())
 		        .ref("refreshTokenService").ref("appLoginSecurityService");
+
+		builder.comment("System Token Controller");
+		String systemLoginTokenControllerDelegateBeanId = "systemLoginTokenControllerDelegate";
+
+		builder.bean("systemLoginTokenController").beanClass(SystemLoginTokenController.class).c()
+		        .ref(systemLoginTokenControllerDelegateBeanId);
+
+		builder.bean(systemLoginTokenControllerDelegateBeanId).beanClass(SystemLoginTokenControllerDelegateImpl.class)
+		        .c().ref(this.getAppConfig().getAppBeans().getSystemLoginTokenServiceBeanId());
 
 		builder.comment("Anonymous Login Controller");
 
