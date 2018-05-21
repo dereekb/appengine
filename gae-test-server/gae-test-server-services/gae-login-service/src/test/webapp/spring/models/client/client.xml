@@ -30,4 +30,7 @@
   <bean class="com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationServiceRequestSenderImpl" id="clientLoginTokenValidationServiceRequestSender">
     <constructor-arg index="0" ref="securedClientRequestSender"/>
   </bean>
+  <bean class="com.dereekb.gae.client.api.auth.system.impl.ClientSystemLoginTokenServiceRequestSenderImpl" id="clientSystemLoginTokenServiceRequestSender">
+    <constructor-arg index="0" ref="securedClientRequestSender"/>
+  </bean>
 </beans>

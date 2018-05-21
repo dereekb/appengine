@@ -24,7 +24,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
 import com.dereekb.gae.utilities.collections.map.impl.CaseInsensitiveEntryContainerImpl;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
-import com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryRequestImpl;
+import com.dereekb.gae.web.api.model.crud.controller.impl.ReadControllerEntryRequestImpl;
+import com.dereekb.gae.web.api.model.crud.controller.impl.ReadControllerExistsRequestImpl;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.model.exception.TooManyRequestKeysException;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
@@ -111,7 +112,6 @@ public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadContro
 	 *            Inclusive filter of related elements to load.
 	 * @return {@link ApiResponse}
 	 */
-
 	@ResponseBody
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = "application/json")
 	public ApiResponse readModels(@PathVariable("type") String modelType,
@@ -146,6 +146,45 @@ public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadContro
 
 			ReadControllerEntryResponse readResponse = this.read(entry, request);
 			response = this.buildApiResponse(request, readResponse);
+		} catch (AtomicOperationException e) {
+			AtomicOperationFailureResolver.resolve(e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/{type}/exists", method = RequestMethod.GET, produces = "application/json")
+	public ApiResponse exists(@PathVariable("type") String modelType,
+	                          @RequestParam(name = KEYS_PARAM, required = true) List<String> keys,
+	                          @RequestParam(name = ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic)
+	        throws TooManyRequestKeysException,
+	            UnavailableTypesException {
+
+		TooManyRequestKeysException.assertKeysCount(keys, this.maxKeysAllowed);
+
+		ApiResponseImpl response = null;
+		ReadControllerEntry entry = this.getEntryForType(modelType);
+
+		if (keys.isEmpty()) {
+			return this.buildNoKeysApiResponse(modelType);
+		}
+
+		List<ModelKey> modelKeys = null;
+
+		try {
+			modelKeys = this.keyTypeConverter.convertKeys(modelType, keys);
+		} catch (ConversionFailureException e) {
+			throw new ApiIllegalArgumentException(e);
+		}
+
+		try {
+			ReadControllerExistsRequestImpl request = new ReadControllerExistsRequestImpl(modelType, atomic, modelKeys);
+
+			ReadControllerExistsResponse existsResponse = this.exists(entry, request);
+			response = this.buildApiResponse(request, existsResponse);
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {
@@ -227,6 +266,27 @@ public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadContro
 		return response;
 	}
 
+	private ApiResponseImpl buildApiResponse(ReadControllerExistsRequest request,
+	                                         ReadControllerExistsResponse existsResponse) {
+		String modelType = request.getModelType();
+		ApiResponseImpl response = new ApiResponseImpl();
+
+		Collection<String> objects = ModelKey.readStringKeys(existsResponse.getExists());
+		ApiResponseDataImpl data = new ApiResponseDataImpl(modelType, objects);
+		response.setData(data);
+
+		// Append Missing
+		Collection<ModelKey> missing = existsResponse.getUnavailableModelKeys();
+
+		if (missing.size() != 0) {
+			List<String> missingKeys = ModelKey.keysAsStrings(missing);
+			ApiResponseErrorImpl error = MissingRequiredResourceException.makeApiError(missingKeys, "Missing keys.");
+			response.addError(error);
+		}
+
+		return response;
+	}
+
 	private ApiResponseDataImpl readRelated(String modelType,
 	                                        Set<ModelKey> keys)
 	        throws InclusionTypeUnavailableException {
@@ -248,6 +308,11 @@ public class ReadController extends CaseInsensitiveEntryContainerImpl<ReadContro
 	private ReadControllerEntryResponse read(ReadControllerEntry entry,
 	                                         ReadControllerEntryRequest request) {
 		return entry.read(request);
+	}
+
+	private ReadControllerExistsResponse exists(ReadControllerEntry entry,
+	                                            ReadControllerExistsRequest request) {
+		return entry.exists(request);
 	}
 
 	@Override

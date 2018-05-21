@@ -13,7 +13,14 @@ import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
+import com.dereekb.gae.web.api.auth.controller.system.SystemLoginTokenController;
 
+/**
+ * Tests for {@link SystemLoginTokenController}.
+ *
+ * @author dereekb
+ *
+ */
 public class SystemLoginTokenControllerTest extends ApiApplicationTestContext {
 
 	@Autowired
@@ -21,6 +28,24 @@ public class SystemLoginTokenControllerTest extends ApiApplicationTestContext {
 	private LoginTokenService<LoginToken> loginTokenService;
 
 	// MARK: Mock Test
+	@Test
+	public void testAuthenticateWithSystemLoginToken() throws Exception {
+
+		String appId = "1234";
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+
+		EncodedLoginToken encodedLoginToken = testUtility.createSystemLoginToken(appId);
+		String tokenString = encodedLoginToken.getEncodedLoginToken();
+
+		Assert.assertTrue(tokenString.isEmpty() == false);
+
+		DecodedLoginToken<LoginToken> decodedLoginToken = this.loginTokenService.decodeLoginToken(tokenString);
+		LoginToken loginToken = decodedLoginToken.getLoginToken();
+
+		Assert.assertTrue(loginToken.getPointerType() == LoginPointerType.SYSTEM);
+		Assert.assertTrue(loginToken.getApp().equals(appId));
+	}
+
 	@Test
 	public void testMakeSystemLoginToken() throws Exception {
 

@@ -23,7 +23,7 @@ public interface ReadService<T> {
 	 * @return {@link ReadResponse}. Never {@code null}.
 	 * @throws AtomicOperationException
 	 *             Occurs when the request specifies "atomic" and not all
-	 *             objects requested can be read.
+	 *             objects requested exist.
 	 */
 	public ReadResponse<ModelKey> exists(ReadRequest request) throws AtomicOperationException;
 

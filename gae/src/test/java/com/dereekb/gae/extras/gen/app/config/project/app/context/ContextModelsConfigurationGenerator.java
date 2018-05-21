@@ -190,7 +190,8 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelKeyListAccessorFactoryId());
 
-		builder.comment("Configured Setters");
+		builder.comment("Configured Aliasees");
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelGetterBeanId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelStorerBeanId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelUpdaterBeanId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelDeleterBeanId());

@@ -55,15 +55,21 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		        .comment("TODO: Add production source.");
 
 		builder.comment("LoginToken Service");
-		SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder.bean("loginTokenEncoderDecoder");
+		String loginTokenEncoderDecoderBeanId = "loginTokenEncoderDecoder";
+
+		SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder.bean(loginTokenEncoderDecoderBeanId);
 		appSecurityBeansConfigurer.configureTokenEncoderDecoder(appConfig, loginTokenEncoderDecoderBuilder);
 
 		SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean("loginTokenBuilder");
 		appSecurityBeansConfigurer.configureTokenBuilder(appConfig, loginTokenBuilderBuilder);
 
-		builder.bean("loginTokenService").beanClass(LoginTokenServiceImpl.class).c().ref("loginTokenBuilder")
-		        .ref("loginTokenEncoderDecoder");
+		builder.bean(appConfig.getAppBeans().getLoginTokenServiceBeanId()).beanClass(LoginTokenServiceImpl.class).c()
+		        .ref("loginTokenBuilder").ref(loginTokenEncoderDecoderBeanId);
 
+		// Alias the decoder
+		builder.alias(appConfig.getAppBeans().getLoginTokenServiceBeanId(), appConfig.getAppBeans().getLoginTokenDecoderBeanId());
+
+		// MARK: Local Login Service
 		builder.comment("LoginPointer Service");
 		builder.bean("loginPointerService").beanClass(LoginPointerServiceImpl.class).c().ref("loginPointerRegistry")
 		        .ref("loginPointerScheduleCreateReview");

@@ -30,6 +30,7 @@ import com.dereekb.gae.server.auth.security.system.SystemLoginTokenRequest;
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenResponse;
 import com.dereekb.gae.server.auth.security.system.exception.SystemLoginTokenServiceException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.dereekb.gae.web.api.auth.controller.system.impl.ApiSystemLoginTokenRequest;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -48,9 +49,17 @@ public class ClientSystemLoginTokenServiceRequestSenderImpl extends AbstractSecu
 
 	private String path = DEFAULT_PATH;
 
+	private LoginTokenDecoder<?> loginTokenDecoder;
+
 	public ClientSystemLoginTokenServiceRequestSenderImpl(SecuredClientApiRequestSender requestSender)
 	        throws IllegalArgumentException {
+		this(requestSender, null);
+	}
+
+	public ClientSystemLoginTokenServiceRequestSenderImpl(SecuredClientApiRequestSender requestSender,
+	        LoginTokenDecoder<?> loginTokenDecoder) throws IllegalArgumentException {
 		super(requestSender);
+		this.setLoginTokenDecoder(loginTokenDecoder);
 	}
 
 	public String getPath() {
@@ -65,10 +74,18 @@ public class ClientSystemLoginTokenServiceRequestSenderImpl extends AbstractSecu
 		this.path = path;
 	}
 
-	// MARK: ClientSystemLoginTokenServiceRequestSender
+	public LoginTokenDecoder<?> getLoginTokenDecoder() {
+		return this.loginTokenDecoder;
+	}
 
+	public void setLoginTokenDecoder(LoginTokenDecoder<?> loginTokenDecoder) {
+		this.loginTokenDecoder = loginTokenDecoder;
+	}
+
+	// MARK: ClientSystemLoginTokenServiceRequestSender
 	@Override
-	public SystemLoginTokenResponse makeSystemToken(SystemLoginTokenRequest request) throws SystemLoginTokenServiceException {
+	public SystemLoginTokenResponse makeSystemToken(SystemLoginTokenRequest request)
+	        throws SystemLoginTokenServiceException {
 		try {
 			return this.sendRequest(request, ClientRequestSecurityImpl.none()).getSerializedResponse();
 		} catch (NotClientApiResponseException | ClientRequestFailureException e) {
@@ -106,7 +123,7 @@ public class ClientSystemLoginTokenServiceRequestSenderImpl extends AbstractSecu
 
 	@Override
 	public SystemLoginTokenResponse serializeResponseData(SystemLoginTokenRequest request,
-	                                                 ClientApiResponse response)
+	                                                      ClientApiResponse response)
 	        throws ClientResponseSerializationException {
 		return new ClientSystemLoginTokenServiceResponse(request, response);
 	}
@@ -150,9 +167,12 @@ public class ClientSystemLoginTokenServiceRequestSenderImpl extends AbstractSecu
 		}
 
 		private LoginToken decodeLoginToken() {
-			// TODO: Either build using the available decoder, set without a
-			// signature, or
-			throw new UnsupportedOperationException();
+			if (ClientSystemLoginTokenServiceRequestSenderImpl.this.loginTokenDecoder != null) {
+				return ClientSystemLoginTokenServiceRequestSenderImpl.this.loginTokenDecoder
+				        .decodeLoginToken(this.encodedLoginToken).getLoginToken();
+			} else {
+				throw new UnsupportedOperationException();
+			}
 		}
 
 	}

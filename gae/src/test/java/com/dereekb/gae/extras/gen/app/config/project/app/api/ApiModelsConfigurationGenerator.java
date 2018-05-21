@@ -12,9 +12,9 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.model.extension.inclusion.reader.impl.ModelInclusionReaderImpl;
 import com.dereekb.gae.web.api.model.crud.controller.ReadController;
-import com.dereekb.gae.web.api.model.crud.impl.EditModelControllerConversionDelegateImpl;
-import com.dereekb.gae.web.api.model.crud.impl.EditModelControllerDelegateImpl;
-import com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryImpl;
+import com.dereekb.gae.web.api.model.crud.controller.impl.EditModelControllerConversionDelegateImpl;
+import com.dereekb.gae.web.api.model.crud.controller.impl.EditModelControllerDelegateImpl;
+import com.dereekb.gae.web.api.model.crud.controller.impl.ReadControllerEntryImpl;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl;
 
 public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationGenerator {

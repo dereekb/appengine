@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.crud.impl;
+package com.dereekb.gae.web.api.model.crud.controller.impl;
 
 import com.dereekb.gae.model.crud.services.CrudService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;

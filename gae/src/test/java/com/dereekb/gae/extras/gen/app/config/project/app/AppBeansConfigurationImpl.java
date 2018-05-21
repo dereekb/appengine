@@ -33,6 +33,7 @@ public class AppBeansConfigurationImpl
 	public static final String APP_LOGIN_SECURITY_SERVICE_BEAN_ID = "appLoginSecurityService";
 	public static final String APP_LOGIN_SECURITY_SIGNING_SERVICE_BEAN_ID = "appLoginSecuritySigningService";
 	public static final String LOGIN_TOKEN_SERVICE_BEAN_ID = "loginTokenService";
+	public static final String LOGIN_TOKEN_DECODER_BEAN_ID = "loginTokenDecoder";
 
 	private String appInfoBeanId = APP_INFO_BEAN_ID;
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
@@ -54,6 +55,7 @@ public class AppBeansConfigurationImpl
 	private String appLoginSecurityServiceBeanId = APP_LOGIN_SECURITY_SERVICE_BEAN_ID;
 	private String appLoginSecuritySigningServiceBeanId = APP_LOGIN_SECURITY_SIGNING_SERVICE_BEAN_ID;
 	private String loginTokenServiceBeanId = LOGIN_TOKEN_SERVICE_BEAN_ID;
+	private String loginTokenDecoderBeanId = LOGIN_TOKEN_DECODER_BEAN_ID;
 
 	private String crudReadModelRoleRefBeanId = CRUD_READ_MODEL_ROLE_REF_BEAN_ID;
 	private String crudUpdateModelRoleRefBeanId = CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID;
@@ -291,6 +293,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.loginTokenServiceBeanId = loginTokenServiceBeanId;
+	}
+
+	@Override
+	public String getLoginTokenDecoderBeanId() {
+		return this.loginTokenDecoderBeanId;
+	}
+
+	public void setLoginTokenDecoderBeanId(String loginTokenDecoderBeanId) {
+		if (loginTokenDecoderBeanId == null) {
+			throw new IllegalArgumentException("loginTokenDecoderBeanId cannot be null.");
+		}
+
+		this.loginTokenDecoderBeanId = loginTokenDecoderBeanId;
 	}
 
 	@Override

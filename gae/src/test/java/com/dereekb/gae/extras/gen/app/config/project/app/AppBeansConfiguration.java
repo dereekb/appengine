@@ -42,6 +42,8 @@ public interface AppBeansConfiguration {
 
 	public String getLoginTokenServiceBeanId();
 
+	public String getLoginTokenDecoderBeanId();
+
 	// TaskQueue
 	public String getEventServiceId();
 

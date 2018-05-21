@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.crud.impl;
+package com.dereekb.gae.web.api.model.crud.controller.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +18,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.model.crud.controller.ReadControllerEntry;
 import com.dereekb.gae.web.api.model.crud.controller.ReadControllerEntryRequest;
 import com.dereekb.gae.web.api.model.crud.controller.ReadControllerEntryResponse;
+import com.dereekb.gae.web.api.model.crud.controller.ReadControllerExistsRequest;
+import com.dereekb.gae.web.api.model.crud.controller.ReadControllerExistsResponse;
 
 /**
  * {@link ReadControllerEntry} implementation.
@@ -104,17 +106,30 @@ public class ReadControllerEntryImpl<T extends UniqueModel>
 		// Analysis
 		if (request.loadRelatedTypes()) {
 			InclusionReaderSetAnalysis analysis = null;
-			
-			if (this.inclusionReader != null) { 
+
+			if (this.inclusionReader != null) {
 				analysis = this.inclusionReader.analyzeInclusionsForModels(available);
 			} else {
 				analysis = EmptyInclusionReaderSetAnalysis.make();
 			}
-			
+
 			response.setAnalysis(analysis);
 		}
 
 		return response;
+	}
+
+	@Override
+	public ReadControllerExistsResponse exists(ReadControllerExistsRequest request) throws AtomicOperationException {
+		boolean atomic = request.isAtomic();
+		Collection<ModelKey> keys = request.getModelKeys();
+		ReadRequest readRequest = new KeyReadRequest(keys, atomic);
+		ReadResponse<ModelKey> readResponse = this.readService.exists(readRequest);
+
+		Collection<ModelKey> exists = readResponse.getModels();
+		Collection<ModelKey> missing = readResponse.getUnavailable();
+
+		return new ReadControllerExistsResponseImpl(exists, missing);
 	}
 
 	@Override

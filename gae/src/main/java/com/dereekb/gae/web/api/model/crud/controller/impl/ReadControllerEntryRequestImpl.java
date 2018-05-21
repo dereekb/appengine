@@ -1,8 +1,9 @@
-package com.dereekb.gae.web.api.model.crud.impl;
+package com.dereekb.gae.web.api.model.crud.controller.impl;
 
 import java.util.Collection;
 import java.util.Set;
 
+import com.dereekb.gae.server.datastore.models.impl.TypedModelImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.web.api.model.crud.controller.ReadControllerEntryRequest;
 
@@ -12,10 +13,8 @@ import com.dereekb.gae.web.api.model.crud.controller.ReadControllerEntryRequest;
  * @author dereekb
  *
  */
-public class ReadControllerEntryRequestImpl
+public class ReadControllerEntryRequestImpl extends TypedModelImpl
         implements ReadControllerEntryRequest {
-
-	private String modelType;
 
 	private boolean atomic;
 	private Collection<ModelKey> modelKeys;
@@ -24,9 +23,7 @@ public class ReadControllerEntryRequestImpl
 	private Set<String> relatedTypesFilter;
 
 	public ReadControllerEntryRequestImpl(String modelType, boolean atomic, Collection<ModelKey> modelKeys) {
-		this.modelType = modelType;
-		this.atomic = atomic;
-		this.modelKeys = modelKeys;
+		this(modelType, atomic, modelKeys, false, null);
 	}
 
 	public ReadControllerEntryRequestImpl(String modelType,
@@ -34,20 +31,11 @@ public class ReadControllerEntryRequestImpl
 	        Collection<ModelKey> modelKeys,
 	        boolean loadRelatedTypes,
 	        Set<String> relatedTypesFilter) {
-		this.modelType = modelType;
-		this.atomic = atomic;
-		this.modelKeys = modelKeys;
-		this.loadRelatedTypes = loadRelatedTypes;
-		this.relatedTypesFilter = relatedTypesFilter;
-	}
-
-	@Override
-	public String getModelType() {
-		return this.modelType;
-	}
-
-	public void setModelType(String modelType) {
-		this.modelType = modelType;
+		super(modelType);
+		this.setAtomic(atomic);
+		this.setModelKeys(modelKeys);
+		this.setLoadRelatedTypes(loadRelatedTypes);
+		this.setRelatedTypesFilter(relatedTypesFilter);
 	}
 
 	@Override
@@ -65,7 +53,15 @@ public class ReadControllerEntryRequestImpl
 	}
 
 	public void setModelKeys(Collection<ModelKey> modelKeys) {
+		if (modelKeys == null) {
+			throw new IllegalArgumentException("modelKeys cannot be null.");
+		}
+
 		this.modelKeys = modelKeys;
+	}
+
+	public boolean isLoadRelatedTypes() {
+		return this.loadRelatedTypes;
 	}
 
 	@Override

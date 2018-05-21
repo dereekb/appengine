@@ -30,7 +30,6 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	private Class<Object> modelSecurityContextServiceEntryClass;
 
 	private Class<Object> modelEditControllerClass;
-
 	private Class<Object> modelOwnedModelQuerySecurityDelegateClass;
 
 	public LocalModelConfigurationImpl(Class<?> modelClass) {

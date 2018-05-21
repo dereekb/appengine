@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.model.crud.impl;
+package com.dereekb.gae.web.api.model.crud.controller.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;

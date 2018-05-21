@@ -44,7 +44,8 @@ public class RemoteSystemLoginTokenFactoryConfigurerImpl
 		String systemLoginTokenServiceBeanId = appConfig.getAppBeans().getSystemLoginTokenServiceBeanId();
 
 		builder.bean(systemLoginTokenServiceBeanId).beanClass(ClientSystemLoginTokenServiceRequestSenderImpl.class).c()
-		        .ref(this.remoteLoginService.getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId());
+		        .ref(this.remoteLoginService.getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId())
+		        .ref(appConfig.getAppBeans().getLoginTokenDecoderBeanId());
 
 		builder.bean(appConfig.getAppBeans().getSystemLoginTokenFactoryBeanId())
 		        .beanClass(SystemLoginTokenFactoryImpl.class).c().ref(systemLoginTokenServiceBeanId)

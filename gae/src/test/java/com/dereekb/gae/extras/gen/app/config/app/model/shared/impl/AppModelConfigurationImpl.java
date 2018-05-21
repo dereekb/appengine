@@ -297,6 +297,11 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 	}
 
 	@Override
+	public String getModelGetterBeanId() {
+		return this.beansConfiguration.getModelGetterBeanId();
+	}
+
+	@Override
 	public String getModelKeyListAccessorFactoryId() {
 		return this.beansConfiguration.getModelKeyListAccessorFactoryId();
 	}

@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.auth.token.impl;
 
 import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationRequest;
+import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
@@ -19,6 +20,14 @@ public class ClientLoginTokenValidationRequestImpl
 
 	public ClientLoginTokenValidationRequestImpl(String token) {
 		this(token, true);
+	}
+
+	public ClientLoginTokenValidationRequestImpl(SignedEncodedLoginToken signedEncodedToken) {
+		this(signedEncodedToken, true);
+	}
+
+	public ClientLoginTokenValidationRequestImpl(SignedEncodedLoginToken signedEncodedToken, Boolean includeClaims) {
+		this(signedEncodedToken.getEncodedLoginToken(), signedEncodedToken.getTokenSignature(), includeClaims);
 	}
 
 	public ClientLoginTokenValidationRequestImpl(String token, Boolean includeClaims) {

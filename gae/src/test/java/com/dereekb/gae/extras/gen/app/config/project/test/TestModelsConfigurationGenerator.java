@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.project.test;
 import java.util.Properties;
 
 import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl;
+import com.dereekb.gae.client.api.auth.system.impl.ClientSystemLoginTokenServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientCreateRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientDeleteRequestSenderImpl;
@@ -99,7 +100,8 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		public TestModelConfigurationGenerator() {
 			super(TestModelsConfigurationGenerator.this.getAppConfig(),
 			        TestModelsConfigurationGenerator.this.getOutputProperties());
-			this.setMakeImportFiles(false);	// Files are imported in models.xml, instead of created here.
+			this.setMakeImportFiles(false);	// Files are imported in models.xml,
+			                               	// instead of created here.
 			this.setResultsFolderName(SHARED_MODEL_FILE_NAME);
 			this.setSplitByGroup(false);
 		}
@@ -188,6 +190,10 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 				builder.bean("clientLoginTokenValidationServiceRequestSender")
 				        .beanClass(ClientLoginTokenValidationServiceRequestSenderImpl.class).c()
 				        .ref("securedClientRequestSender");
+
+				builder.bean("clientSystemLoginTokenServiceRequestSender")
+				        .beanClass(ClientSystemLoginTokenServiceRequestSenderImpl.class).c()
+				        .ref("securedClientRequestSender");
 			}
 
 			return builder;
@@ -219,7 +225,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 			builder.bean(modelPrefix + "ClientQueryRequestSender").beanClass(ClientQueryRequestSenderImpl.class).c()
 			        .ref(modelConfig.getModelDataConverterBeanId()).ref("modelKeyTypeConverter")
-			        .ref("securedClientRequestSender"); //.ref(modelConfig.getModelRegistryId());
+			        .ref("securedClientRequestSender"); // .ref(modelConfig.getModelRegistryId());
 
 			return builder;
 		}

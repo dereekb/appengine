@@ -148,7 +148,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	@Override
 	public void configureTokenBuilder(AppConfiguration appConfig,
 	                                  SpringBeansXMLBeanBuilder<?> beanBuilder) {
-		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref("loginRegistry");
+		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref("loginGetter");
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	public void configureTokenUserDetailsBuilder(AppConfiguration appConfig,
 	                                             SpringBeansXMLBeanBuilder<?> beanBuilder) {
 		beanBuilder.beanClass(LoginTokenUserDetailsBuilderImpl.class).c().ref("loginTokenModelContextSetDencoder")
-		        .ref("loginTokenGrantedAuthorityBuilder").ref("loginRegistry").ref("loginPointerRegistry");
+		        .ref("loginTokenGrantedAuthorityBuilder").ref("loginGetter").ref("loginPointerGetter");
 	}
 
 	@Override
