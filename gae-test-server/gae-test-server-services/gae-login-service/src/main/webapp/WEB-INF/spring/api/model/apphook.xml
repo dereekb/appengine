@@ -1,6 +1,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
   <!--Read Controller Entry-->
-  <bean class="com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryImpl" id="appHookReadControllerEntry" lazy-init="false">
+  <bean class="com.dereekb.gae.web.api.model.crud.controller.impl.ReadControllerEntryImpl" id="appHookReadControllerEntry" lazy-init="false">
     <constructor-arg index="0" ref="appHookReadService"/>
     <constructor-arg index="1" ref="appHookDataConverter"/>
     <constructor-arg index="2" ref="appHookInclusionReader"/>
@@ -13,10 +13,10 @@
     <constructor-arg index="0" ref="appHookEditControllerDelegate"/>
     <constructor-arg index="1" ref="appHookEditControllerConversionDelegate"/>
   </bean>
-  <bean class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerDelegateImpl" id="appHookEditControllerDelegate">
+  <bean class="com.dereekb.gae.web.api.model.crud.controller.impl.EditModelControllerDelegateImpl" id="appHookEditControllerDelegate">
     <constructor-arg index="0" ref="appHookCrudService"/>
   </bean>
-  <bean class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerConversionDelegateImpl" id="appHookEditControllerConversionDelegate">
+  <bean class="com.dereekb.gae.web.api.model.crud.controller.impl.EditModelControllerConversionDelegateImpl" id="appHookEditControllerConversionDelegate">
     <constructor-arg index="0" ref="appHookType"/>
     <constructor-arg index="1" ref="stringLongModelKeyConverter"/>
     <constructor-arg index="2" ref="appHookDataConverter"/>

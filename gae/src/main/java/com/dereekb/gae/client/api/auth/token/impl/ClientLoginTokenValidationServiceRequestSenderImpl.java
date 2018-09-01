@@ -23,8 +23,10 @@ import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.ClientApiRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
+import com.dereekb.gae.client.api.service.sender.security.impl.NoneSecuredClientApiRequestSenderImpl;
 import com.dereekb.gae.utilities.data.ValueUtility;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
@@ -42,6 +44,11 @@ public class ClientLoginTokenValidationServiceRequestSenderImpl extends Abstract
 	private static final String DEFAULT_PATH = "/login/auth/token/validate";
 
 	private String path = DEFAULT_PATH;
+
+	public ClientLoginTokenValidationServiceRequestSenderImpl(ClientApiRequestSender requestSender)
+	        throws IllegalArgumentException {
+		super(NoneSecuredClientApiRequestSenderImpl.make(requestSender));
+	}
 
 	public ClientLoginTokenValidationServiceRequestSenderImpl(SecuredClientApiRequestSender requestSender)
 	        throws IllegalArgumentException {

@@ -48,7 +48,7 @@ public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		RemoteServiceConfigurationImpl remoteLoginService = remoteLoginServiceGen.make();
 
 		// Configuration
-		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new RemoteAppLoginTokenSecurityConfigurerImpl();
+		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new RemoteAppLoginTokenSecurityConfigurerImpl(remoteLoginService);
 		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new AppEventServiceListenersConfigurerImpl();
 		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new RemoteAppWebHookEventServiceConfigurerImpl(
 		        remoteLoginService);

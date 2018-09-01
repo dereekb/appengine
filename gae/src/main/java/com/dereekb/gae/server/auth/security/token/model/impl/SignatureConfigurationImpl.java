@@ -13,6 +13,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class SignatureConfigurationImpl
         implements SignatureConfiguration {
 
+	private static final String DEFAULT_SECRET = "DEFAULT_SECRET";
 	public static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureAlgorithm.HS256;
 
 	private String secret;
@@ -25,6 +26,10 @@ public class SignatureConfigurationImpl
 	public SignatureConfigurationImpl(String secret, SignatureAlgorithm algorithm) {
 		this.setSecret(secret);
 		this.setAlgorithm(algorithm);
+	}
+
+	public static SignatureConfiguration defaultSignature() {
+		return new SignatureConfigurationImpl(DEFAULT_SECRET);
 	}
 
 	@Override

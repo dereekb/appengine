@@ -93,8 +93,8 @@
   <bean class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl" id="loginTokenUserDetailsBuilder">
     <constructor-arg index="0" ref="loginTokenModelContextSetDencoder"/>
     <constructor-arg index="1" ref="loginTokenGrantedAuthorityBuilder"/>
-    <constructor-arg index="2" ref="loginRegistry"/>
-    <constructor-arg index="3" ref="loginPointerRegistry"/>
+    <constructor-arg index="2" ref="loginGetter"/>
+    <constructor-arg index="3" ref="loginPointerGetter"/>
   </bean>
   <bean class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenGrantedAuthorityBuilderImpl" id="loginTokenGrantedAuthorityBuilder">
     <constructor-arg index="0" ref="loginGrantedAuthorityDecoder"/>
@@ -118,15 +118,21 @@
       </map>
     </constructor-arg>
   </bean>
+  <!--Login Token System Factory-->
   <!--Login Token System-->
+  <bean class="com.dereekb.gae.client.api.auth.system.impl.ClientSystemLoginTokenServiceRequestSenderImpl" id="systemLoginTokenService">
+    <constructor-arg index="0">
+      <bean class="com.dereekb.gae.client.api.service.sender.security.impl.NoneSecuredClientApiRequestSenderImpl">
+        <constructor-arg index="0" ref="loginServiceClientApiRequestSender"/>
+      </bean>
+    </constructor-arg>
+    <constructor-arg index="1" ref="loginTokenDecoder"/>
+  </bean>
   <bean class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl" id="systemLoginTokenFactory">
-    <constructor-arg index="0" ref="appLoginSecuritySigningService"/>
-    <constructor-arg index="1" ref="loginTokenService"/>
-    <constructor-arg index="2" ref="systemEncodedRoles"/>
+    <constructor-arg index="0" ref="systemLoginTokenService"/>
+    <constructor-arg index="1" ref="appLoginSecuritySigningService"/>
   </bean>
-  <bean class="java.lang.Long" id="systemEncodedRoles">
-    <constructor-arg index="0" value="1"/>
-  </bean>
+  <!--TODO!-->
   <!--Secure Model Types-->
   <util:list id="secureModelTypes"/>
   <!--Exception Handler-->

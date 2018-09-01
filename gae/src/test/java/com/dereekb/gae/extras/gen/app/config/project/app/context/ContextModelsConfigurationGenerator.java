@@ -189,8 +189,9 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .ref(modelConfig.getModelClassBeanId());
 
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelKeyListAccessorFactoryId());
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelKeyListAccessorFactoryId());
 
-		builder.comment("Configured Aliasees");
+		builder.comment("Configured Aliases");
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelGetterBeanId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelStorerBeanId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelUpdaterBeanId());

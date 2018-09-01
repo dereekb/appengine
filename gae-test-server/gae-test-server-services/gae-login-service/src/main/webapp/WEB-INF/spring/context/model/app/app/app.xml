@@ -23,7 +23,9 @@
     <constructor-arg index="0" ref="appClass"/>
   </bean>
   <alias alias="appKeyListAccessorFactory" name="appRegistry"/>
-  <!--Configured Setters-->
+  <alias alias="appKeyListAccessorFactory" name="appRegistry"/>
+  <!--Configured Aliases-->
+  <alias alias="appGetter" name="appRegistry"/>
   <alias alias="appStorer" name="appRegistry"/>
   <alias alias="appUpdater" name="appRegistry"/>
   <alias alias="appDeleter" name="appRegistry"/>

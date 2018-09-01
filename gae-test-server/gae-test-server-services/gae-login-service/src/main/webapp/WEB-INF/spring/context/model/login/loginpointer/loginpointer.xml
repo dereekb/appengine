@@ -23,7 +23,9 @@
     <constructor-arg index="0" ref="loginPointerClass"/>
   </bean>
   <alias alias="loginPointerKeyListAccessorFactory" name="loginPointerRegistry"/>
-  <!--Configured Setters-->
+  <alias alias="loginPointerKeyListAccessorFactory" name="loginPointerRegistry"/>
+  <!--Configured Aliases-->
+  <alias alias="loginPointerGetter" name="loginPointerRegistry"/>
   <alias alias="loginPointerStorer" name="loginPointerRegistry"/>
   <alias alias="loginPointerUpdater" name="loginPointerRegistry"/>
   <alias alias="loginPointerDeleter" name="loginPointerRegistry"/>

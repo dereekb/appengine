@@ -23,7 +23,9 @@
     <constructor-arg index="0" ref="loginClass"/>
   </bean>
   <alias alias="loginKeyListAccessorFactory" name="loginRegistry"/>
-  <!--Configured Setters-->
+  <alias alias="loginKeyListAccessorFactory" name="loginRegistry"/>
+  <!--Configured Aliases-->
+  <alias alias="loginGetter" name="loginRegistry"/>
   <alias alias="loginStorer" name="loginRegistry"/>
   <alias alias="loginUpdater" name="loginRegistry"/>
   <alias alias="loginDeleter" name="loginRegistry"/>

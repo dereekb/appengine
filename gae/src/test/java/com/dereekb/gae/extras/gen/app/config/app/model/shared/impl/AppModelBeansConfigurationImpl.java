@@ -37,7 +37,7 @@ public class AppModelBeansConfigurationImpl
 		this.setModelDtoClassBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDtoBeanId(modelBeanPrefix + "DtoClass");
 		this.setModelDataConverterBeanId(modelBeanPrefix + "DataConverter");
-		this.setModelGetterBeanId(modelBeanPrefix + "ModelGetter");
+		this.setModelGetterBeanId(modelBeanPrefix + "Getter");
 		this.setModelKeyListAccessorFactoryId(modelBeanPrefix + "KeyListAccessorFactory");
 		this.setModelSecurityContextServiceEntryBeanId(modelBeanPrefix + "SecurityContextServiceEntry");
 	}

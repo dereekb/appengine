@@ -14,12 +14,13 @@
     </constructor-arg>
   </bean>
   <bean class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl" id="loginTokenBuilder">
-    <constructor-arg index="0" ref="loginRegistry"/>
+    <constructor-arg index="0" ref="loginGetter"/>
   </bean>
   <bean class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl" id="loginTokenService">
     <constructor-arg index="0" ref="loginTokenBuilder"/>
     <constructor-arg index="1" ref="loginTokenEncoderDecoder"/>
   </bean>
+  <alias alias="loginTokenDecoder" name="loginTokenService"/>
   <!--LoginPointer Service-->
   <bean class="com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl" id="loginPointerService">
     <constructor-arg index="0" ref="loginPointerRegistry"/>
