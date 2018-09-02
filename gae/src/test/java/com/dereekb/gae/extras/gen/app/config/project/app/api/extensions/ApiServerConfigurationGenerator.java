@@ -6,8 +6,6 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
-import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
-import com.dereekb.gae.web.api.server.initialize.impl.ApiInitializeServerControllerDelegateImpl;
 
 public class ApiServerConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
@@ -24,6 +22,8 @@ public class ApiServerConfigurationGenerator extends AbstractSingleConfiguration
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		// The Root Service has no initialization...
+		// TODO: Interface with the login server to set the app as initialized or whatnot.
+		/*
 		if (this.getAppConfig().isRootServer() == false) {
 			builder.comment("Initialize Server Controller");
 			builder.bean("apiInitializeServerController").beanClass(ApiInitializeServerController.class).c()
@@ -32,6 +32,7 @@ public class ApiServerConfigurationGenerator extends AbstractSingleConfiguration
 			        .beanClass(ApiInitializeServerControllerDelegateImpl.class).c()
 			        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId()).ref("appRegistry");
 		}
+		*/
 
 		return builder;
 	}

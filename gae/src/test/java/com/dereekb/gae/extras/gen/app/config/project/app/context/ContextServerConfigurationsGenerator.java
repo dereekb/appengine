@@ -124,6 +124,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		builder.bean(appBeans.getAppKeyBeanId()).beanClass(ModelKey.class).c().ref(appBeans.getAppIdBeanId());
 		builder.longBean(appBeans.getAppIdBeanId(), this.getAppConfig().getAppId());
 		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());
+		builder.stringBean(appBeans.getAppSecretBeanId(), this.getAppConfig().getAppSecret());
 
 		builder.comment("Import");
 		builder.importResources(folder.getFiles());
@@ -427,7 +428,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean("securityEntryPoint").beanClass(TokenAuthenticationEntryPoint.class);
 
 			builder.bean("authenticationFilter").beanClass(LoginTokenAuthenticationFilter.class).c().bean()
-			        .beanClass(LoginTokenAuthenticationFilterDelegateImpl.class).c().ref("loginTokenService")
+			        .beanClass(LoginTokenAuthenticationFilterDelegateImpl.class).c()
+			        .ref(this.getAppConfig().getAppBeans().getLoginTokenDecoderBeanId())
 			        .ref("loginAuthenticationManager").bean()
 			        .beanClass(LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl.class).c()
 			        .ref("appLoginSecurityVerifierService").up().up().up().up().nullArg().bean()

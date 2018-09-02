@@ -29,6 +29,7 @@ public class AppConfigurationImpl
 	private Long appId = 1L;
 	private String appName = "app";
 	private String appTaskQueueName = "app";
+	private String appSecret = null;
 
 	private AppServicesConfigurer appServicesConfigurer;
 	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");
@@ -93,6 +94,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appTaskQueueName = appTaskQueueName;
+	}
+
+	@Override
+	public String getAppSecret() {
+		return this.appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		if (appSecret == null) {
+			throw new IllegalArgumentException("appSecret cannot be null.");
+		}
+
+		this.appSecret = appSecret;
 	}
 
 	@Override

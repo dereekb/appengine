@@ -34,6 +34,13 @@ public interface AppConfiguration {
 	 */
 	public String getAppTaskQueueName();
 
+	/**
+	 * Returns the app secret. Is only required for remote apps.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppSecret();
+
 	public AppServiceConfigurationInfo getAppServiceConfigurationInfo();
 
 	public AppBeansConfiguration getAppBeans();

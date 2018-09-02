@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.app.impl;
 
 import com.dereekb.gae.server.app.model.app.AppLoginSecurityLevel;
+import com.dereekb.gae.server.app.model.app.info.AppInfo;
 import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.datastore.models.impl.UniqueModelImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -17,6 +18,17 @@ public class AppLoginSecurityDetailsImpl extends UniqueModelImpl
 	public String appName;
 	public String appSecret;
 	public AppLoginSecurityLevel appLoginSecurityLevel;
+
+	public AppLoginSecurityDetailsImpl(AppInfo info,
+	        String appSecret) {
+		this(info, appSecret, AppLoginSecurityLevel.SYSTEM);
+	}
+
+	public AppLoginSecurityDetailsImpl(AppInfo info,
+	        String appSecret,
+	        AppLoginSecurityLevel appLoginSecurityLevel) {
+		this(info.getModelKey(), info.getAppName(), appSecret, appLoginSecurityLevel);
+	}
 
 	public AppLoginSecurityDetailsImpl(ModelKey modelKey,
 	        String appName,

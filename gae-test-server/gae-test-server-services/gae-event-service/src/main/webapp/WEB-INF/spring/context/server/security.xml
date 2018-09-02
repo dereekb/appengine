@@ -67,7 +67,7 @@
   <bean class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter" id="authenticationFilter">
     <constructor-arg index="0">
       <bean class="com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl">
-        <constructor-arg index="0" ref="loginTokenService"/>
+        <constructor-arg index="0" ref="loginTokenDecoder"/>
         <constructor-arg index="1" ref="loginAuthenticationManager"/>
         <constructor-arg index="2">
           <bean class="com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl">
@@ -132,7 +132,14 @@
     <constructor-arg index="0" ref="systemLoginTokenService"/>
     <constructor-arg index="1" ref="appLoginSecuritySigningService"/>
   </bean>
-  <!--TODO!-->
+  <!--App Security-->
+  <bean class="com.dereekb.gae.server.auth.security.app.impl.AppLoginSecurityDetailsImpl" id="appLoginSecurityDetails">
+    <constructor-arg index="0" ref="serverAppInfo"/>
+    <constructor-arg index="1" ref="serverAppSecret"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.app.service.impl.PreConfiguredAppLoginSecuritySigningServiceImpl" id="appLoginSecuritySigningService">
+    <constructor-arg index="0" ref="appLoginSecurityDetails"/>
+  </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes"/>
   <!--Exception Handler-->

@@ -13,6 +13,8 @@ public interface AppBeansConfiguration {
 
 	public String getAppIdBeanId();
 
+	public String getAppSecretBeanId();
+
 	// Context
 	public String getObjectifyDatabaseId();
 

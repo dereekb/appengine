@@ -79,6 +79,7 @@ public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		configuration.setAppTaskQueueName("login");
 		configuration.setAppId(1L);
 		configuration.setAppSecurityBeansConfigurer(securityBeansConfigurer);
+		configuration.setAppSecret("SECRET");
 
 		configuration.setIsLoginServer(false);
 		configuration.setRemoteServices(remoteLoginService);

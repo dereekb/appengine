@@ -23,6 +23,9 @@
   <bean class="java.lang.String" id="serverAppName">
     <constructor-arg index="0" value="GAE Test Login Service"/>
   </bean>
+  <bean class="java.lang.String" id="serverAppSecret">
+    <constructor-arg index="0" value="SECRET"/>
+  </bean>
   <!--Import-->
   <import resource="/database.xml"/>
   <import resource="/key.xml"/>

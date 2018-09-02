@@ -16,6 +16,10 @@ public abstract class AbstractConfiguredAppLoginSecuritySigningServiceImpl
 
 	private AppLoginSecuritySigningService service;
 
+	public AbstractConfiguredAppLoginSecuritySigningServiceImpl() {
+		this(AppLoginSecuritySigningServiceImpl.HmacSHA256());
+	}
+
 	public AbstractConfiguredAppLoginSecuritySigningServiceImpl(AppLoginSecuritySigningService service) {
 		super();
 		this.setService(service);

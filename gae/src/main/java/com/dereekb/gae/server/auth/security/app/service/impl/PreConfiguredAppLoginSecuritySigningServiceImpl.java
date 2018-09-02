@@ -15,6 +15,10 @@ public class PreConfiguredAppLoginSecuritySigningServiceImpl extends AbstractCon
 
 	private AppLoginSecurityDetails appSecurityDetails;
 
+	public PreConfiguredAppLoginSecuritySigningServiceImpl(AppLoginSecurityDetails appSecurityDetails) {
+		this(AppLoginSecuritySigningServiceImpl.HmacSHA256(), appSecurityDetails);
+	}
+
 	public PreConfiguredAppLoginSecuritySigningServiceImpl(AppLoginSecuritySigningService service,
 	        AppLoginSecurityDetails appSecurityDetails) {
 		super(service);
