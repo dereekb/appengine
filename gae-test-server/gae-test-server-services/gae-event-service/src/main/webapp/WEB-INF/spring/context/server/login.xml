@@ -41,6 +41,10 @@
   <util:list id="loginTokenModelContextServiceEntries">
     <!--Remote-->
     <!--login Service-->
+    <!--login-->
+    <ref bean="loginSecurityContextServiceEntry"/>
+    <ref bean="loginPointerSecurityContextServiceEntry"/>
+    <ref bean="loginKeySecurityContextServiceEntry"/>
   </util:list>
   <alias alias="loginTokenModelContextServiceDencoderEntries" name="loginTokenModelContextServiceEntries"/>
 </beans>

@@ -39,7 +39,11 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 	private M customModelContextConfigurer;
 
 	public AppModelConfigurationImpl(Class<?> modelClass) {
-		this(modelClass, ModelKey.readModelKeyType(modelClass));
+		this(modelClass, ModelKey.readModelKeyType(modelClass), true);
+	}
+
+	public AppModelConfigurationImpl(Class<?> modelClass, boolean localModel) {
+		this(modelClass, ModelKey.readModelKeyType(modelClass), localModel);
 	}
 
 	public AppModelConfigurationImpl(Class<?> modelClass, ModelKeyType modelKeyType) {

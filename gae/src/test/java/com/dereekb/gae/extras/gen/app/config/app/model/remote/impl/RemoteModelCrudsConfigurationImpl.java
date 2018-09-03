@@ -12,4 +12,10 @@ import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelCruds
 public class RemoteModelCrudsConfigurationImpl extends AppModelCrudsConfigurationImpl
         implements RemoteModelCrudsConfiguration {
 
+	public RemoteModelCrudsConfigurationImpl() {}
+
+	public RemoteModelCrudsConfigurationImpl(RemoteModelConfigurationImpl model) {
+		// Does nothing?
+	}
+
 }

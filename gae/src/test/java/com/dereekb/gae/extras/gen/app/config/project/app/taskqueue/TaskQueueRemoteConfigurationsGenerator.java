@@ -35,6 +35,7 @@ public class TaskQueueRemoteConfigurationsGenerator extends AbstractRemoteServic
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
+		builder.comment("Remote Service TaskQueue Components");
 		service.getRemoteServiceContextConfigurer().configureRemoteServiceContextComponents(AppSpringContextType.TASKQUEUE,
 		        this.getAppConfig(), service, builder);
 

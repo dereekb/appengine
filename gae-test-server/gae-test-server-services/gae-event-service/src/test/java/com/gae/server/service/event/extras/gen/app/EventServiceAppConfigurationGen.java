@@ -36,7 +36,7 @@ public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		String appProjectVersion = "v1";
 
 		// Models
-		// TODO: Add Notifications
+		// TODO: Add Notification Models
 
 		List<LocalModelConfigurationGroup> modelConfigurations = ListUtility.toList();
 
@@ -46,6 +46,7 @@ public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		// Services
 		RemoteLoginServiceConfigurationGen remoteLoginServiceGen = new RemoteLoginServiceConfigurationGen(appProjectId);
 		RemoteServiceConfigurationImpl remoteLoginService = remoteLoginServiceGen.make();
+
 
 		// Configuration
 		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new RemoteAppLoginTokenSecurityConfigurerImpl(remoteLoginService);

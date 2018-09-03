@@ -52,4 +52,10 @@ public class AppModelCrudsConfigurationImpl
 		this.deleteService = deleteService;
 	}
 
+	public void setIsReadOnly() {
+		this.setHasCreateService(false);
+		this.setHasUpdateService(false);
+		this.setHasDeleteService(false);
+	}
+
 }

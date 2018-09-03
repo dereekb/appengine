@@ -8,6 +8,9 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelCrudsConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.impl.RemoteModelConfigurationGroupImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.impl.RemoteModelConfigurationImpl;
+import com.dereekb.gae.extras.gen.app.config.app.model.remote.impl.RemoteModelCrudsConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.ConfigurerInstance;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.AdminOnlySecuredQueryInitializerConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelContextConfigurerImpl;
@@ -41,6 +44,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  */
 public class LoginGroupConfigurationGen {
 
+	// MARK: Local
 	public static LocalModelConfigurationGroupImpl makeLocalLoginGroupConfig() {
 
 		// Login
@@ -312,6 +316,55 @@ public class LoginGroupConfigurationGen {
 
 		}
 
+	}
+
+	// MARK: Remote
+	public static RemoteModelConfigurationGroupImpl makeRemoteLoginGroupConfig() {
+
+		// Login
+		RemoteModelConfigurationImpl loginModel = makeRemoteLoginModelConfig();
+		RemoteModelConfigurationImpl loginPointerModel = makeRemoteLoginPointerModelConfig();
+		RemoteModelConfigurationImpl loginKeyModel = makeRemoteLoginKeyModelConfig();
+
+		RemoteModelConfigurationGroupImpl loginGroup = new RemoteModelConfigurationGroupImpl("login",
+		        ListUtility.toList(loginModel, loginPointerModel, loginKeyModel));
+
+		return loginGroup;
+	}
+
+	public static RemoteModelConfigurationImpl makeRemoteLoginModelConfig() {
+		RemoteModelConfigurationImpl loginModel = new RemoteModelConfigurationImpl(Login.class);
+
+		RemoteModelCrudsConfigurationImpl crudsConfiguration = new RemoteModelCrudsConfigurationImpl(loginModel);
+		crudsConfiguration.setIsReadOnly();
+
+		loginModel.setCrudsConfiguration(crudsConfiguration);
+
+		loginModel.setLocalModel(false);
+
+		return loginModel;
+	}
+
+	public static RemoteModelConfigurationImpl makeRemoteLoginPointerModelConfig() {
+		RemoteModelConfigurationImpl loginPointerModel = new RemoteModelConfigurationImpl(LoginPointer.class);
+
+		RemoteModelCrudsConfigurationImpl crudsConfiguration = new RemoteModelCrudsConfigurationImpl(loginPointerModel);
+		crudsConfiguration.setIsReadOnly();
+
+		loginPointerModel.setCrudsConfiguration(crudsConfiguration);
+
+		return loginPointerModel;
+	}
+
+	public static RemoteModelConfigurationImpl makeRemoteLoginKeyModelConfig() {
+		RemoteModelConfigurationImpl loginKeyModel = new RemoteModelConfigurationImpl(LoginKey.class);
+
+		RemoteModelCrudsConfigurationImpl crudsConfiguration = new RemoteModelCrudsConfigurationImpl(loginKeyModel);
+		crudsConfiguration.setIsReadOnly();
+
+		loginKeyModel.setCrudsConfiguration(crudsConfiguration);
+
+		return loginKeyModel;
 	}
 
 }

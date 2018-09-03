@@ -15,22 +15,27 @@ public class RemoteModelConfigurationImpl extends AppModelConfigurationImpl<Remo
         implements RemoteModelConfiguration, RemoteModelCrudsConfiguration, RemoteModelBeansConfiguration {
 
 	public RemoteModelConfigurationImpl(Class<?> modelClass) {
-		super(modelClass);
+		super(modelClass, false);
 	}
 
 	public RemoteModelConfigurationImpl(Class<?> modelClass, ModelKeyType modelKeyType) {
-		super(modelClass, modelKeyType);
-	}
-
-	public RemoteModelConfigurationImpl(Class<?> modelClass, ModelKeyType modelKeyType, boolean localModel) {
-		super(modelClass, modelKeyType, localModel);
+		super(modelClass, modelKeyType, false);
 	}
 
 	public RemoteModelConfigurationImpl(Class<?> modelClass,
 	        ModelKeyType modelKeyType,
-	        String modelType,
-	        boolean localModel) {
-		super(modelClass, modelKeyType, modelType, localModel);
+	        String modelType) {
+		super(modelClass, modelKeyType, modelType, false);
+	}
+
+	@Override
+	public boolean isLocalModel() {
+		return false;
+	}
+
+	@Override
+	public void setLocalModel(boolean localModel) {
+		super.setLocalModel(false);
 	}
 
 	// MARK: AppModelConfigurationImpl

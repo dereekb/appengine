@@ -45,7 +45,11 @@
   </bean>
   <bean class="com.dereekb.gae.server.event.model.shared.webhook.impl.TypedModelWebHookEventDeserializerImpl" id="modelWebHookEventDeserializer">
     <constructor-arg index="0">
-      <map key-type="java.lang.String"/>
+      <map key-type="java.lang.String">
+        <entry key-ref="loginType" value-ref="loginWebHookEventDeserializer"/>
+        <entry key-ref="loginPointerType" value-ref="loginPointerWebHookEventDeserializer"/>
+        <entry key-ref="loginKeyType" value-ref="loginKeyWebHookEventDeserializer"/>
+      </map>
     </constructor-arg>
   </bean>
 </beans>
