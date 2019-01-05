@@ -9,7 +9,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
@@ -332,7 +332,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			        .bean(securedQueryInitializerId)
 			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId);
 
-			CustomLocalModelContextConfigurer configuration = this.modelConfig.getCustomModelContextConfigurer();
+			LocalModelContextConfigurer configuration = this.modelConfig.getCustomModelContextConfigurer();
 			configuration.configureSecuredQueryInitializer(this.getAppConfig(), this.modelConfig,
 			        securedLoginQueryInitializer);
 
@@ -373,7 +373,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 			String modelRoleSetLoader = this.modelConfig.getModelRoleSetLoaderBeanId();
 
-			CustomLocalModelContextConfigurer customConfigurer = this.getModelConfig()
+			LocalModelContextConfigurer customConfigurer = this.getModelConfig()
 			        .getCustomModelContextConfigurer();
 			customConfigurer.configureModelRoleSetLoaderComponents(this.getAppConfig(), this.modelConfig, builder);
 

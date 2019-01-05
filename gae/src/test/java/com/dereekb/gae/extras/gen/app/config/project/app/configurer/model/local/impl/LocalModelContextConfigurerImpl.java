@@ -4,36 +4,36 @@ import java.util.Map;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelChildrenRoleComponentConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelCrudConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelIterateControllerConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelRoleSetLoaderConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.SecuredQueryInitializerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelChildrenRoleComponentConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelCrudConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelIterateControllerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelRoleSetLoaderConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
- * {@link CustomLocalModelContextConfigurer} implementation.
+ * {@link LocalModelContextConfigurer} implementation.
  *
  * @author dereekb
  *
  */
-public class CustomLocalModelContextConfigurerImpl
-        implements CustomLocalModelContextConfigurer {
+public class LocalModelContextConfigurerImpl
+        implements LocalModelContextConfigurer {
 
-	private CustomLocalModelCrudConfigurer customLocalModelCrudConfigurer = new CustomLocalModelCrudConfigurerImpl();
-	private CustomLocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer = new CustomLocalModelIterateControllerConfigurerImpl();
-	private CustomLocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new CustomLocalModelRoleSetLoaderConfigurerImpl();
-	private CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new CustomLocalModelChildrenRoleComponentConfigurerImpl();
-	private CustomLocalModelEventListenerConfigurer customLocalModelEventListenerConfigurer = new NoOpCustomLocalModelEventListenerConfigurerImpl();
+	private LocalModelCrudConfigurer customLocalModelCrudConfigurer = new LocalModelCrudConfigurerImpl();
+	private LocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer = new LocalModelIterateControllerConfigurerImpl();
+	private LocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new LocalModelRoleSetLoaderConfigurerImpl();
+	private LocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new LocalModelChildrenRoleComponentConfigurerImpl();
+	private LocalModelEventListenerConfigurer customLocalModelEventListenerConfigurer = new NoOpCustomLocalModelEventListenerConfigurerImpl();
 	private SecuredQueryInitializerConfigurer securedQueryInitializerConfigurer = new TodoSecuredQueryInitializerConfigurerImpl();
 
-	public CustomLocalModelCrudConfigurer getCustomLocalModelCrudConfigurer() {
+	public LocalModelCrudConfigurer getCustomLocalModelCrudConfigurer() {
 		return this.customLocalModelCrudConfigurer;
 	}
 
-	public void setCustomLocalModelCrudConfigurer(CustomLocalModelCrudConfigurer customLocalModelCrudConfigurer) {
+	public void setCustomLocalModelCrudConfigurer(LocalModelCrudConfigurer customLocalModelCrudConfigurer) {
 		if (customLocalModelCrudConfigurer == null) {
 			throw new IllegalArgumentException("customLocalModelCrudConfigurer cannot be null.");
 		}
@@ -41,11 +41,11 @@ public class CustomLocalModelContextConfigurerImpl
 		this.customLocalModelCrudConfigurer = customLocalModelCrudConfigurer;
 	}
 
-	public CustomLocalModelIterateControllerConfigurer getCustomLocalModelIterateControllerConfigurer() {
+	public LocalModelIterateControllerConfigurer getCustomLocalModelIterateControllerConfigurer() {
 		return this.customLocalModelIterateControllerConfigurer;
 	}
 
-	public void setCustomLocalModelIterateControllerConfigurer(CustomLocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer) {
+	public void setCustomLocalModelIterateControllerConfigurer(LocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer) {
 		if (customLocalModelIterateControllerConfigurer == null) {
 			throw new IllegalArgumentException("customLocalModelIterateControllerConfigurer cannot be null.");
 		}
@@ -65,11 +65,11 @@ public class CustomLocalModelContextConfigurerImpl
 		this.securedQueryInitializerConfigurer = securedQueryInitializerConfigurer;
 	}
 
-	public CustomLocalModelRoleSetLoaderConfigurer getCustomLocalModelRoleSetLoaderConfigurer() {
+	public LocalModelRoleSetLoaderConfigurer getCustomLocalModelRoleSetLoaderConfigurer() {
 		return this.customLocalModelRoleSetLoaderConfigurer;
 	}
 
-	public void setCustomLocalModelRoleSetLoaderConfigurer(CustomLocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer) {
+	public void setCustomLocalModelRoleSetLoaderConfigurer(LocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer) {
 		if (customLocalModelRoleSetLoaderConfigurer == null) {
 			throw new IllegalArgumentException("customLocalModelRoleSetLoaderConfigurer cannot be null.");
 		}
@@ -77,11 +77,11 @@ public class CustomLocalModelContextConfigurerImpl
 		this.customLocalModelRoleSetLoaderConfigurer = customLocalModelRoleSetLoaderConfigurer;
 	}
 
-	public CustomLocalModelChildrenRoleComponentConfigurer getCustomLocalModelChildrenRoleComponentConfigurer() {
+	public LocalModelChildrenRoleComponentConfigurer getCustomLocalModelChildrenRoleComponentConfigurer() {
 		return this.customLocalModelChildrenRoleComponentConfigurer;
 	}
 
-	public void setCustomLocalModelChildrenRoleComponentConfigurer(CustomLocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer) {
+	public void setCustomLocalModelChildrenRoleComponentConfigurer(LocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer) {
 		if (customLocalModelChildrenRoleComponentConfigurer == null) {
 			throw new IllegalArgumentException("customLocalModelChildrenRoleComponentConfigurer cannot be null.");
 		}

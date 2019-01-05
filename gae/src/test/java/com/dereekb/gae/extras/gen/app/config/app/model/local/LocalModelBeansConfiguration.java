@@ -2,6 +2,12 @@ package com.dereekb.gae.extras.gen.app.config.app.model.local;
 
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelBeansConfiguration;
 
+/**
+ * {@link AppModelBeansConfiguration} interface extension for local models.
+ *
+ * @author dereekb
+ *
+ */
 public interface LocalModelBeansConfiguration
         extends AppModelBeansConfiguration {
 

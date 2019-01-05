@@ -6,8 +6,8 @@ import java.util.List;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.ConfigurerInstance;
-import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.impl.AbstractModelBuilderConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelIterateControllerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.impl.AbstractLocalModelBuilderConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelIterateControllerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.iterate.IterateConfigurerInstanceTaskEntry;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -19,13 +19,13 @@ import com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.TaskQueueIterateControllerEntryImpl;
 
 /**
- * {@link CustomLocalModelIterateControllerConfigurerImpl} implementation.
+ * {@link LocalModelIterateControllerConfigurerImpl} implementation.
  *
  * @author dereekb
  *
  */
-public class CustomLocalModelIterateControllerConfigurerImpl
-        implements CustomLocalModelIterateControllerConfigurer {
+public class LocalModelIterateControllerConfigurerImpl
+        implements LocalModelIterateControllerConfigurer {
 
 	// MARK: CustomLocalModelIterateControllerConfigurer
 	@Override
@@ -47,7 +47,7 @@ public class CustomLocalModelIterateControllerConfigurerImpl
 	}
 
 	// MARK: IterateConfigurerInstance
-	protected class IterateConfigurerInstance extends AbstractModelBuilderConfigurerImpl {
+	protected class IterateConfigurerInstance extends AbstractLocalModelBuilderConfigurerImpl {
 
 		private boolean addEventTaskForCrud = true;
 
@@ -117,20 +117,20 @@ public class CustomLocalModelIterateControllerConfigurerImpl
 
 		protected void configureTaskControllerEntry() {
 			this.builder.comment("Iterate Controller Entry");
-			String taskQueueIterateControllerEntryId = this.modelConfig.getModelBeanPrefix()
+			String taskQueueIterateControllerEntryId = this.getModelConfig().getModelBeanPrefix()
 			        + "TaskQueueIterateControllerEntry";
 
 			SpringBeansXMLMapBuilder<?> map = this.builder.bean(taskQueueIterateControllerEntryId)
-			        .beanClass(TaskQueueIterateControllerEntryImpl.class).c().ref(this.modelConfig.getModelRegistryId())
+			        .beanClass(TaskQueueIterateControllerEntryImpl.class).c().ref(this.getModelConfig().getModelRegistryId())
 			        .map();
 			this.configureTaskControllerEntryMap(map);
 		}
 
 		protected void configureTaskControllerEntryMap(SpringBeansXMLMapBuilder<?> map) {
 
-			String postCreateTaskBeanId = this.modelConfig.getModelBeanPrefix() + "TaskQueuePostCreateTask";
-			String postUpdateTaskBeanId = this.modelConfig.getModelBeanPrefix() + "TaskQueuePostUpdateTask";
-			String processDeleteTaskBeanId = this.modelConfig.getModelBeanPrefix() + "TaskQueueProcessDeleteTask";
+			String postCreateTaskBeanId = this.getModelConfig().getModelBeanPrefix() + "TaskQueuePostCreateTask";
+			String postUpdateTaskBeanId = this.getModelConfig().getModelBeanPrefix() + "TaskQueuePostUpdateTask";
+			String processDeleteTaskBeanId = this.getModelConfig().getModelBeanPrefix() + "TaskQueueProcessDeleteTask";
 
 			map.getRawXMLBuilder().comment("CRUD");
 
@@ -141,7 +141,7 @@ public class CustomLocalModelIterateControllerConfigurerImpl
 			map.getRawXMLBuilder().comment("TASKS");
 
 			for (IterateConfigurerInstanceTaskEntry entry : this.getTaskEntries()) {
-				entry.configureMapEntry(this.modelConfig, map);
+				entry.configureMapEntry(this.getModelConfig(), map);
 			}
 		}
 
@@ -169,37 +169,37 @@ public class CustomLocalModelIterateControllerConfigurerImpl
 		}
 
 		protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> createPostCreateTask() {
-			return this.builder.bean(this.modelConfig.getModelBeanPrefix() + "TaskQueuePostCreateTask")
+			return this.builder.bean(this.getModelConfig().getModelBeanPrefix() + "TaskQueuePostCreateTask")
 			        .beanClass(TaskQueueModelTask.class);
 		}
 
 		protected void configurePostCreateTaskList(SpringBeansXMLListBuilder<?> taskListBuilder) {
 			if (this.addEventTaskForCrud) {
-				taskListBuilder.bean().factoryBean(this.modelConfig.getModelEventServiceEntryBeanId())
+				taskListBuilder.bean().factoryBean(this.getModelConfig().getModelEventServiceEntryBeanId())
 				        .factoryMethod("makeSubmitEventTask").c().enumBean(CommonModelEventType.CREATED);
 			}
 		}
 
 		protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> createPostUpdateTask() {
-			return this.builder.bean(this.modelConfig.getModelBeanPrefix() + "TaskQueuePostUpdateTask")
+			return this.builder.bean(this.getModelConfig().getModelBeanPrefix() + "TaskQueuePostUpdateTask")
 			        .beanClass(TaskQueueModelTask.class);
 		}
 
 		protected void configurePostUpdateTaskList(SpringBeansXMLListBuilder<?> taskListBuilder) {
 			if (this.addEventTaskForCrud) {
-				taskListBuilder.bean().factoryBean(this.modelConfig.getModelEventServiceEntryBeanId())
+				taskListBuilder.bean().factoryBean(this.getModelConfig().getModelEventServiceEntryBeanId())
 				        .factoryMethod("makeSubmitEventTask").c().enumBean(CommonModelEventType.UPDATED);
 			}
 		}
 
 		protected SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> createProcessDeleteTask() {
-			return this.builder.bean(this.modelConfig.getModelBeanPrefix() + "TaskQueueProcessDeleteTask")
-			        .beanClass(TaskQueueDeleteModelTask.class).c().ref(this.modelConfig.getModelRegistryId()).up();
+			return this.builder.bean(this.getModelConfig().getModelBeanPrefix() + "TaskQueueProcessDeleteTask")
+			        .beanClass(TaskQueueDeleteModelTask.class).c().ref(this.getModelConfig().getModelRegistryId()).up();
 		}
 
 		protected void configureProcessDeleteTaskList(SpringBeansXMLListBuilder<?> taskListBuilder) {
 			if (this.addEventTaskForCrud) {
-				taskListBuilder.bean().factoryBean(this.modelConfig.getModelEventServiceEntryBeanId())
+				taskListBuilder.bean().factoryBean(this.getModelConfig().getModelEventServiceEntryBeanId())
 				        .factoryMethod("makeSubmitEventTask").c().enumBean(CommonModelEventType.DELETED);
 			}
 		}
@@ -209,7 +209,7 @@ public class CustomLocalModelIterateControllerConfigurerImpl
 			this.builder.comment("Iterate Controller Tasks");
 
 			for (IterateConfigurerInstanceTaskEntry entry : this.getTaskEntries()) {
-				entry.configureTaskComponents(this.appConfig, this.modelConfig, this.builder);
+				entry.configureTaskComponents(this.appConfig, this.getModelConfig(), this.builder);
 			}
 		}
 

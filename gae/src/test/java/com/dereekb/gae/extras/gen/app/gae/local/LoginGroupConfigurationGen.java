@@ -13,10 +13,10 @@ import com.dereekb.gae.extras.gen.app.config.app.model.remote.impl.RemoteModelCo
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.impl.RemoteModelCrudsConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.ConfigurerInstance;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.AdminOnlySecuredQueryInitializerConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelContextConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelCrudConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelIterateControllerConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelRoleSetLoaderConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelContextConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelCrudConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelIterateControllerConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelRoleSetLoaderConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.SecurityModelQueryInitializerConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.iterate.IterateConfigurerInstanceTaskEntry;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.iterate.impl.DeleteByParentIterateTaskConfigurer;
@@ -64,7 +64,7 @@ public class LoginGroupConfigurationGen {
 		crudsConfiguration.setHasCreateService(false);
 		loginModel.setCrudsConfiguration(crudsConfiguration);
 
-		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
+		LocalModelContextConfigurerImpl customLocalModelContextConfigurer = new LocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer
 		        .setCustomLocalModelIterateControllerConfigurer(new LoginIterateControllerConfigurer());
 		customLocalModelContextConfigurer
@@ -82,7 +82,7 @@ public class LoginGroupConfigurationGen {
 		crudsConfiguration.setHasCreateService(false);
 		loginPointerModel.setCrudsConfiguration(crudsConfiguration);
 
-		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
+		LocalModelContextConfigurerImpl customLocalModelContextConfigurer = new LocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer
 		        .setCustomLocalModelIterateControllerConfigurer(new LoginPointerIterateControllerConfigurer());
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
@@ -100,7 +100,7 @@ public class LoginGroupConfigurationGen {
 
 		// loginKeyModel.setHasCreateService(false);
 
-		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
+		LocalModelContextConfigurerImpl customLocalModelContextConfigurer = new LocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer
 		        .setCustomLocalModelIterateControllerConfigurer(new LoginKeyIterateControllerConfigurer());
 		customLocalModelContextConfigurer.setCustomLocalModelCrudConfigurer(new LoginKeyCrudConfigurer());
@@ -115,7 +115,7 @@ public class LoginGroupConfigurationGen {
 	}
 
 	// MARK: Internal
-	private static class LoginParentSecurityRoleConfigurer extends CustomLocalModelRoleSetLoaderConfigurerImpl {
+	private static class LoginParentSecurityRoleConfigurer extends LocalModelRoleSetLoaderConfigurerImpl {
 
 		@Override
 		public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
@@ -128,7 +128,7 @@ public class LoginGroupConfigurationGen {
 
 	}
 
-	private static class LoginIterateControllerConfigurer extends CustomLocalModelIterateControllerConfigurerImpl {
+	private static class LoginIterateControllerConfigurer extends LocalModelIterateControllerConfigurerImpl {
 
 		@Override
 		protected ConfigurerInstance makeInstance(AppConfiguration appConfig,
@@ -166,7 +166,7 @@ public class LoginGroupConfigurationGen {
 
 	}
 
-	public static class LoginPointerIterateControllerConfigurer extends CustomLocalModelIterateControllerConfigurerImpl {
+	public static class LoginPointerIterateControllerConfigurer extends LocalModelIterateControllerConfigurerImpl {
 
 		@Override
 		protected ConfigurerInstance makeInstance(AppConfiguration appConfig,
@@ -224,7 +224,7 @@ public class LoginGroupConfigurationGen {
 
 	}
 
-	public static class LoginKeyCrudConfigurer extends CustomLocalModelCrudConfigurerImpl {
+	public static class LoginKeyCrudConfigurer extends LocalModelCrudConfigurerImpl {
 
 		@Override
 		public void configureCrudServiceComponents(AppConfiguration appConfig,
@@ -252,7 +252,7 @@ public class LoginGroupConfigurationGen {
 
 	}
 
-	public static class LoginKeyIterateControllerConfigurer extends CustomLocalModelIterateControllerConfigurerImpl {
+	public static class LoginKeyIterateControllerConfigurer extends LocalModelIterateControllerConfigurerImpl {
 
 		@Override
 		protected ConfigurerInstance makeInstance(AppConfiguration appConfig,

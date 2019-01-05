@@ -6,7 +6,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
-public interface CustomLocalModelEventListenerConfigurer {
+public interface LocalModelEventListenerConfigurer {
 
 	/**
 	 *

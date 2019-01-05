@@ -2,20 +2,20 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelRoleSetLoaderConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelRoleSetLoaderConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLArrayBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.ModelRoleSetLoaderImpl;
 
 /**
- * Default {@link CustomLocalModelRoleSetLoaderConfigurer} implementation.
+ * Default {@link LocalModelRoleSetLoaderConfigurer} implementation.
  *
  * @author dereekb
  *
  */
-public class CustomLocalModelRoleSetLoaderConfigurerImpl
-        implements CustomLocalModelRoleSetLoaderConfigurer {
+public class LocalModelRoleSetLoaderConfigurerImpl
+        implements LocalModelRoleSetLoaderConfigurer {
 
 	@Override
 	public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,

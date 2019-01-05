@@ -8,14 +8,14 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
- * {@link CustomLocalModelEventListenerConfigurer} implementation that does
+ * {@link LocalModelEventListenerConfigurer} implementation that does
  * nothing.
  *
  * @author dereekb
  *
  */
 public class NoOpCustomLocalModelEventListenerConfigurerImpl
-        implements CustomLocalModelEventListenerConfigurer {
+        implements LocalModelEventListenerConfigurer {
 
 	@Override
 	public Map<String, String> configureEventListenerEntries(AppConfiguration appConfiguration,

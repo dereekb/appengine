@@ -4,9 +4,9 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelContextConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelCrudConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelRoleSetLoaderConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelContextConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelCrudConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelRoleSetLoaderConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.SecurityModelQueryInitializerConfigurerImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
@@ -32,7 +32,7 @@ public class AppGroupConfigurationGen {
 	public static LocalModelConfigurationImpl makeAppModelConfig() {
 		LocalModelConfigurationImpl appModel = new LocalModelConfigurationImpl(App.class);
 
-		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
+		LocalModelContextConfigurerImpl customLocalModelContextConfigurer = new LocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
 		        new SecurityModelQueryInitializerConfigurerImpl("loginOwnedModelQuerySecurityDelegate"));
 
@@ -44,7 +44,7 @@ public class AppGroupConfigurationGen {
 	public static LocalModelConfigurationImpl makeAppHookModelConfig() {
 		LocalModelConfigurationImpl appHookModel = new LocalModelConfigurationImpl(AppHook.class);
 
-		CustomLocalModelContextConfigurerImpl customLocalModelContextConfigurer = new CustomLocalModelContextConfigurerImpl();
+		LocalModelContextConfigurerImpl customLocalModelContextConfigurer = new LocalModelContextConfigurerImpl();
 		customLocalModelContextConfigurer.setCustomLocalModelCrudConfigurer(new AppHookCrudConfigurer());
 		customLocalModelContextConfigurer.setSecuredQueryInitializerConfigurer(
 		        new SecurityModelQueryInitializerConfigurerImpl("appOwnedModelQuerySecurityDelegate"));
@@ -57,7 +57,7 @@ public class AppGroupConfigurationGen {
 	}
 
 	// MARK: Internal
-	private static class AppParentSecurityRoleConfigurer extends CustomLocalModelRoleSetLoaderConfigurerImpl {
+	private static class AppParentSecurityRoleConfigurer extends LocalModelRoleSetLoaderConfigurerImpl {
 
 		@Override
 		public void configureModelRoleSetLoaderComponents(AppConfiguration appConfig,
@@ -69,7 +69,7 @@ public class AppGroupConfigurationGen {
 
 	}
 
-	public static class AppHookCrudConfigurer extends CustomLocalModelCrudConfigurerImpl {
+	public static class AppHookCrudConfigurer extends LocalModelCrudConfigurerImpl {
 
 		@Override
 		public void configureCrudServiceComponents(AppConfiguration appConfig,

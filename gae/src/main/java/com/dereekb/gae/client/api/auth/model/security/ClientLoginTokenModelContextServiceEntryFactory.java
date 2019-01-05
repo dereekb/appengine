@@ -15,6 +15,7 @@ import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecu
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenTypedModelContextSet;
+import com.dereekb.gae.server.auth.security.model.context.encoded.LoginTokenModelContextSetEncoderDecoderEntry;
 import com.dereekb.gae.server.auth.security.model.context.service.LoginTokenModelContextServiceEntry;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
 import com.dereekb.gae.server.auth.security.model.roles.impl.ModelRoleSetImpl;
@@ -79,7 +80,7 @@ public class ClientLoginTokenModelContextServiceEntryFactory {
 	 *
 	 */
 	protected class ClientLoginTokenModelContextServiceEntryImpl extends TypedModelImpl
-	        implements LoginTokenModelContextServiceEntry {
+	        implements LoginTokenModelContextServiceEntry, LoginTokenModelContextSetEncoderDecoderEntry {
 
 		private ClientModelRolesContextService clientContextService;
 
@@ -295,6 +296,19 @@ public class ClientLoginTokenModelContextServiceEntryFactory {
 
 			}
 
+		}
+
+		// MARK: LoginTokenModelContextSetEncoderDecoderEntry
+		@Override
+		public String encode(LoginTokenTypedModelContextSet typedSet) {
+			// TODO Auto-generated method stub
+			throw new UnsupportedOperationException("Encode is not yet available.");
+		}
+
+		@Override
+		public List<LoginTokenModelContext> decode(String encodedContext) {
+			// TODO Auto-generated method stub
+			throw new UnsupportedOperationException("Decode is not yet available.");
 		}
 
 	}

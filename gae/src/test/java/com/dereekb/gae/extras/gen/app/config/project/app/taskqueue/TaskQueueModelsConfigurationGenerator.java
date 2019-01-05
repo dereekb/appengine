@@ -5,7 +5,7 @@ import java.util.Properties;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -62,7 +62,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		CustomLocalModelContextConfigurer customConfigurer = modelConfig.getCustomModelContextConfigurer();
+		LocalModelContextConfigurer customConfigurer = modelConfig.getCustomModelContextConfigurer();
 		customConfigurer.configureIterateControllerTasks(this.getAppConfig(), modelConfig, builder);
 
 		return builder;

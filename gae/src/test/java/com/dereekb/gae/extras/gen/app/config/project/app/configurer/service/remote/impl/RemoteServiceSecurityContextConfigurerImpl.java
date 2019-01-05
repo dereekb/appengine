@@ -2,6 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.rem
 
 import java.util.List;
 
+import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.impl.RemoteModelConfigurationGroupImpl;
@@ -31,6 +32,14 @@ public class RemoteServiceSecurityContextConfigurerImpl
 		        .getServiceSystemTokenFactoryBeanId();
 
 		builder.alias(appSystemTokenFactory, serviceSystemTokenFactory);
+
+		// MARK: Client Model Roles Context Service
+		builder.comment("Service Model Roles Security");
+		builder.bean(appRemoteServiceConfiguration.getServiceBeansConfiguration().getClientModelRolesContextServiceBeanId())
+			.beanClass(ClientModelRolesContextServiceRequestSenderImpl.class)
+			.c()
+			.ref(appConfig.getAppBeans().getModelKeyTypeConverterId())
+			.ref(appRemoteServiceConfiguration.getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId());
 
 		// MARK: Security Contexts
 		builder.comment("Security Context Service Entries");

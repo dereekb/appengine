@@ -6,8 +6,8 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConf
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelCrudsConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelConfigurationImpl;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.CustomLocalModelContextConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelContextConfigurerImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
@@ -15,7 +15,7 @@ import com.dereekb.gae.utilities.misc.path.PathUtility;
 /**
  * {@link LocalModelConfiguration} implementation.
  */
-public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<LocalModelCrudsConfiguration, LocalModelBeansConfiguration, CustomLocalModelContextConfigurer>
+public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<LocalModelCrudsConfiguration, LocalModelBeansConfiguration, LocalModelContextConfigurer>
         implements LocalModelConfiguration, LocalModelCrudsConfiguration, LocalModelBeansConfiguration {
 
 	private Class<Object> modelDataBuilderClass;
@@ -119,8 +119,8 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	}
 
 	@Override
-	protected CustomLocalModelContextConfigurer makeCustomModelContextConfigurer() {
-		return new CustomLocalModelContextConfigurerImpl();
+	protected LocalModelContextConfigurer makeCustomModelContextConfigurer() {
+		return new LocalModelContextConfigurerImpl();
 	}
 
 	@Override

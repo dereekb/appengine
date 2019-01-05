@@ -1,22 +1,22 @@
 package com.dereekb.gae.extras.gen.app.config.app.utility.configurer.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
-import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.configurer.ConfigurerInstance;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
- * Abstract {@link ConfigurerInstance}.
+ * Abstract {@link ConfigurerInstance} that takes in a {@link AppModelConfiguration}.
  *
  * @author dereekb
  *
  */
-public abstract class AbstractModelBuilderConfigurerImpl extends AbstractAppBuilderConfigurerImpl {
+public abstract class AbstractAppModelBuilderConfigurerImpl extends AbstractAppBuilderConfigurerImpl {
 
-	protected final LocalModelConfiguration modelConfig;
+	protected final AppModelConfiguration modelConfig;
 
-	public AbstractModelBuilderConfigurerImpl(AppConfiguration appConfig,
-	        LocalModelConfiguration modelConfig,
+	public AbstractAppModelBuilderConfigurerImpl(AppConfiguration appConfig,
+	        AppModelConfiguration modelConfig,
 	        SpringBeansXMLBuilder builder) {
 		super(appConfig, builder);
 
@@ -27,7 +27,7 @@ public abstract class AbstractModelBuilderConfigurerImpl extends AbstractAppBuil
 		this.modelConfig = modelConfig;
 	}
 
-	public LocalModelConfiguration getModelConfig() {
+	public AppModelConfiguration getModelConfig() {
 		return this.modelConfig;
 	}
 

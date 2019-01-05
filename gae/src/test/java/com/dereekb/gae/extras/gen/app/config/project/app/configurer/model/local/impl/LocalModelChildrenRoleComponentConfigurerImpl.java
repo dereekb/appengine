@@ -2,11 +2,11 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelChildrenRoleComponentConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelChildrenRoleComponentConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
- * Default {@link CustomLocalModelChildrenRoleComponentConfigurer}
+ * Default {@link LocalModelChildrenRoleComponentConfigurer}
  * implementation.
  * <p>
  * Attempts to find the default parent context reader class. If not found, will
@@ -15,8 +15,8 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
  * @author dereekb
  *
  */
-public class CustomLocalModelChildrenRoleComponentConfigurerImpl
-        implements CustomLocalModelChildrenRoleComponentConfigurer {
+public class LocalModelChildrenRoleComponentConfigurerImpl
+        implements LocalModelChildrenRoleComponentConfigurer {
 
 	private boolean leaveTodo = true;
 

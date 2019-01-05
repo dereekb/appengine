@@ -9,7 +9,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
-import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.CustomLocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -149,7 +149,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 
 		entriesMap.getRawXMLBuilder().c("Model Entries");
 		for (LocalModelConfiguration model : this.getAllLocalConfigurations()) {
-			CustomLocalModelContextConfigurer modelConfigurer = model.getCustomModelContextConfigurer();
+			LocalModelContextConfigurer modelConfigurer = model.getCustomModelContextConfigurer();
 
 			Map<String, String> entries = modelConfigurer.configureEventListenerEntries(this.getAppConfig(), model,
 			        builder);
