@@ -2,6 +2,12 @@ package com.dereekb.gae.extras.gen.app.config.project.app;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
+/**
+ * App-wide beans configuration.
+ *
+ * @author dereekb
+ *
+ */
 public interface AppBeansConfiguration {
 
 	// App
@@ -45,6 +51,9 @@ public interface AppBeansConfiguration {
 	public String getLoginTokenServiceBeanId();
 
 	public String getLoginTokenDecoderBeanId();
+
+	// Utility
+	public AppUtilityBeansConfiguration getUtilityBeans();
 
 	// TaskQueue
 	public String getEventServiceId();

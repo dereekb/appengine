@@ -48,6 +48,11 @@ public class ClientLoginTokenModelContextServiceEntryFactory {
 	private Partitioner keyPartitioner = DEFAULT_PARTITIONER;
 	private TypeModelKeyConverter keyConverter;
 
+	public ClientLoginTokenModelContextServiceEntryFactory(TypeModelKeyConverter keyConverter) {
+		super();
+		this.setKeyConverter(keyConverter);
+	}
+
 	public TypeModelKeyConverter getKeyConverter() {
 		return this.keyConverter;
 	}

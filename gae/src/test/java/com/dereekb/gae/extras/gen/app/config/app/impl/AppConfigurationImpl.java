@@ -180,6 +180,11 @@ public class AppConfigurationImpl
 	}
 
 	@Override
+	public boolean hasRemoteServices() {
+		return !this.remoteServices.isEmpty();
+	}
+
+	@Override
 	public List<RemoteServiceConfiguration> getRemoteServices() {
 		return this.remoteServices;
 	}

@@ -34,4 +34,5 @@
   <import resource="/taskqueue.xml"/>
   <import resource="/security.xml"/>
   <import resource="/login.xml"/>
+  <import resource="/util.xml"/>
 </beans>

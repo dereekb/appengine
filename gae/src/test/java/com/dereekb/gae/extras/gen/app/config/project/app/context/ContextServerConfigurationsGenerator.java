@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.dereekb.gae.client.api.auth.model.security.ClientLoginTokenModelContextServiceEntryFactory;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
@@ -91,6 +92,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new LoginConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new UtilityConfigurationGenerator().generateConfigurationFile());
 
 		// Main Server File
 		folder.addFile(this.makeServerFile(folder));
@@ -234,6 +236,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			SpringBeansXMLListBuilder<?> entitiesList = builder.list(loginTokenModelContextServiceEntriesBeanId);
 
 			// Local Types
+			/*
+			 * These are configured within the
+			 * SecurityExtensionConfigurationGenerator in
+			 * ContextModelsConfigurationGenerator.
+			 */
 			for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
@@ -312,6 +319,38 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			}
 
 			return builder;
+		}
+
+	}
+
+	public class UtilityConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public UtilityConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("util");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			if (this.getAppConfig().hasRemoteServices()) {
+				this.makeRemoteUtilityBeans(builder);
+			}
+
+			return builder;
+		}
+
+		protected void makeRemoteUtilityBeans(SpringBeansXMLBuilder builder) {
+			builder.comment("Remote Utilities");
+
+			AppConfiguration appConfig = this.getAppConfig();
+
+			// MARK: Remote Utilities
+			builder.comment("Remote Service Security");
+			builder.bean(appConfig.getAppBeans().getUtilityBeans().getClientLoginTokenModelContextServiceEntryFactoryBeanId())
+			        .beanClass(ClientLoginTokenModelContextServiceEntryFactory.class).c()
+			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId());
 		}
 
 	}
@@ -458,7 +497,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .value("0", "ROLE_ADMIN");
 
 			builder.comment("Login Token System Factory");
-			this.getAppConfig().getAppSecurityBeansConfigurer().configureSystemLoginTokenFactory(this.getAppConfig(), builder);
+			this.getAppConfig().getAppSecurityBeansConfigurer().configureSystemLoginTokenFactory(this.getAppConfig(),
+			        builder);
 
 			builder.comment("Secure Model Types");
 			SpringBeansXMLListBuilder<?> secureModelsList = builder.list(secureModelTypesBeanId);
@@ -498,7 +538,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			http.intercept(serviceApiPath + "/login/auth/key", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
 
 			http.getRawXMLBuilder().c("Token Matched");
-			http.intercept(serviceApiPath + "/login/auth/system/token", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/login/auth/system/token", RoleConfigImpl.make("permitAll"),
+			        HttpMethod.POST);
 			http.intercept(serviceApiPath + "/login/auth/token/**", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
 			http.intercept(serviceApiPath + "/**", RoleConfigImpl.make("denyAll"));
 
@@ -514,9 +555,9 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .ref(authControllersMainPatternMatcherBeanId).ref(authControllersTokenPatternMatcherBeanId);
 
 			builder.bean("authControllersMainPatternMatcher").beanClass(MultiTypeAntRequestMatcher.class).c()
-			        .value(serviceApiPath + "/login/auth/{type}/**").list().value("pass").value("oauth").value("key").value("system")
-			        .up().up().property("methodMatcher").bean().beanClass(RequestMethodMatcherImpl.class).c()
-			        .value("POST");
+			        .value(serviceApiPath + "/login/auth/{type}/**").list().value("pass").value("oauth").value("key")
+			        .value("system").up().up().property("methodMatcher").bean()
+			        .beanClass(RequestMethodMatcherImpl.class).c().value("POST");
 
 			builder.bean("authControllersTokenPatternMatcher").beanClass(MultiTypeAntRequestMatcher.class).c()
 			        .value(serviceApiPath + "/login/auth/token/{type}").list().value("login").value("refresh")

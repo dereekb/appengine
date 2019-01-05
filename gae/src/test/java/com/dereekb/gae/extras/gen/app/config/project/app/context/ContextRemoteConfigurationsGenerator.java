@@ -29,6 +29,8 @@ public class ContextRemoteConfigurationsGenerator extends AbstractRemoteServiceC
 		this.setResultsFolderName("remote");
 	}
 
+
+
 	// MARK: AbstractRemoteModelConfigurationGenerator
 	@Override
 	public SpringBeansXMLBuilder makeXMLServiceConfigurationFile(RemoteServiceConfiguration service)

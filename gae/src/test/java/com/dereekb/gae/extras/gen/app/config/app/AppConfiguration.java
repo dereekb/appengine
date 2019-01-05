@@ -49,6 +49,8 @@ public interface AppConfiguration {
 
 	public AppServicesConfigurer getAppServicesConfigurer();
 
+	public boolean hasRemoteServices();
+
 	public List<RemoteServiceConfiguration> getRemoteServices();
 
 	public List<LocalModelConfigurationGroup> getLocalModelConfigurations();

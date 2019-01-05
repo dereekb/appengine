@@ -36,6 +36,8 @@ public class AppBeansConfigurationImpl
 	public static final String LOGIN_TOKEN_SERVICE_BEAN_ID = "loginTokenService";
 	public static final String LOGIN_TOKEN_DECODER_BEAN_ID = "loginTokenDecoder";
 
+	public static final String CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID = "clientLoginTokenModelContextServiceEntryFactory";
+
 	private String appInfoBeanId = APP_INFO_BEAN_ID;
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
 	private String appNameBeanId = APP_NAME_BEAN_ID;
@@ -63,6 +65,29 @@ public class AppBeansConfigurationImpl
 	private String crudUpdateModelRoleRefBeanId = CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID;
 	private String crudDeleteModelRoleRefBeanId = CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID;
 
+	private AppUtilityBeansConfiguration utilityBeansConfiguration = new AppUtilityBeansConfigurationImpl();
+
+	public static class AppUtilityBeansConfigurationImpl implements AppUtilityBeansConfiguration {
+
+		private String clientLoginTokenModelContextServiceEntryFactoryBeanId = CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID;
+
+		// MARK: AppUtilityBeansConfiguration
+		@Override
+		public String getClientLoginTokenModelContextServiceEntryFactoryBeanId() {
+			return this.clientLoginTokenModelContextServiceEntryFactoryBeanId;
+		}
+
+		public void setClientLoginTokenModelContextServiceEntryFactoryBeanId(String clientLoginTokenModelContextServiceEntryFactoryBeanId) {
+			if (clientLoginTokenModelContextServiceEntryFactoryBeanId == null) {
+				throw new IllegalArgumentException("clientLoginTokenModelContextServiceEntryFactoryBeanId cannot be null.");
+			}
+
+			this.clientLoginTokenModelContextServiceEntryFactoryBeanId = clientLoginTokenModelContextServiceEntryFactoryBeanId;
+		}
+
+	}
+
+	// MARK: AppBeansConfiguration
 	@Override
 	public String getAppInfoBeanId() {
 		return this.appInfoBeanId;
@@ -321,6 +346,23 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.loginTokenDecoderBeanId = loginTokenDecoderBeanId;
+	}
+
+	@Override
+	public AppUtilityBeansConfiguration getUtilityBeans() {
+		return this.getUtilityBeansConfiguration();
+	}
+
+	public AppUtilityBeansConfiguration getUtilityBeansConfiguration() {
+		return this.utilityBeansConfiguration;
+	}
+
+	public void setUtilityBeansConfiguration(AppUtilityBeansConfiguration utilityBeansConfiguration) {
+		if (utilityBeansConfiguration == null) {
+			throw new IllegalArgumentException("utilityBeansConfiguration cannot be null.");
+		}
+
+		this.utilityBeansConfiguration = utilityBeansConfiguration;
 	}
 
 	@Override

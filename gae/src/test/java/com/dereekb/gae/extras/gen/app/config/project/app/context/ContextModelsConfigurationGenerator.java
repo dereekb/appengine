@@ -33,6 +33,12 @@ import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.factory.impl.BasicFactory;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 
+/**
+ * {@link AbstractModelConfigurationGenerator} implementation for local model configurations.
+ *
+ * @author dereekb
+ *
+ */
 public class ContextModelsConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
 	public static final String MODELS_FOLDER_NAME = "model";
