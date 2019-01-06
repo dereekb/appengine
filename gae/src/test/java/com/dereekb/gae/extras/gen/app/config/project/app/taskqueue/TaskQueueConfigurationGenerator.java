@@ -13,6 +13,12 @@ import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController;
 
+/**
+ * The primary TaskQueue configuration generator for an app.
+ *
+ * @author dereekb
+ *
+ */
 public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGenerator {
 
 	public TaskQueueConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
@@ -45,7 +51,7 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		// Extensions
 		folder.addFolder(this.generateExtensions());
 
-
+		// Task Queue File
 		folder.addFile(this.makeTaskQueueFile(folder));
 
 		return folder;

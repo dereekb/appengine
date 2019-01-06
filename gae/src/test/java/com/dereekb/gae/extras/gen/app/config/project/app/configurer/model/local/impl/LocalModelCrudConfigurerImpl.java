@@ -23,7 +23,7 @@ import com.dereekb.gae.model.crud.task.impl.filtered.FilteredUpdateTaskImpl;
 import com.jamesmurty.utils.XMLBuilder2;
 
 /**
- * {@link LocalModelCrudConfigurer}
+ * {@link LocalModelCrudConfigurer} implementation.
  *
  * @author dereekb
  *
@@ -35,16 +35,16 @@ public class LocalModelCrudConfigurerImpl
 	public void configureCrudServiceComponents(AppConfiguration appConfig,
 	                                           LocalModelConfiguration modelConfig,
 	                                           SpringBeansXMLBuilder builder) {
-		new CrudConfigurerInstance(appConfig, modelConfig, builder).configure();
+		new LocalModelCrudConfigurerInstance(appConfig, modelConfig, builder).configure();
 	}
 
-	public static class CrudConfigurerInstance extends AbstractLocalModelBuilderConfigurerImpl {
+	public static class LocalModelCrudConfigurerInstance extends AbstractLocalModelBuilderConfigurerImpl {
 
 		private boolean filterWithModelConfig = true;
 		private boolean addTodoWarnings = false;
 		private boolean assertTodoOverridden = true;
 
-		public CrudConfigurerInstance(AppConfiguration appConfig,
+		public LocalModelCrudConfigurerInstance(AppConfiguration appConfig,
 		        LocalModelConfiguration modelConfig,
 		        SpringBeansXMLBuilder builder) {
 			super(appConfig, modelConfig, builder);

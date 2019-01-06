@@ -233,7 +233,7 @@ public class LoginGroupConfigurationGen {
 			new LoginKeyCrudConfigurerInstance(appConfig, modelConfig, builder).configure();
 		}
 
-		protected class LoginKeyCrudConfigurerInstance extends CrudConfigurerInstance {
+		protected class LoginKeyCrudConfigurerInstance extends LocalModelCrudConfigurerInstance {
 
 			public LoginKeyCrudConfigurerInstance(AppConfiguration appConfig,
 			        LocalModelConfiguration modelConfig,

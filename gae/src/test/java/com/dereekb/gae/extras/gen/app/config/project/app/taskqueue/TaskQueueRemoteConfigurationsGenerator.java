@@ -6,6 +6,9 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppSpringContextType;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractRemoteServiceConfigurationGenerator;
+import com.dereekb.gae.extras.gen.utility.GenFile;
+import com.dereekb.gae.extras.gen.utility.GenFolder;
+import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 
@@ -31,6 +34,19 @@ public class TaskQueueRemoteConfigurationsGenerator extends AbstractRemoteServic
 
 	// MARK: AbstractRemoteModelConfigurationGenerator
 	@Override
+	public void makeServiceConfiguration(GenFolderImpl serviceResultsFolder,
+	                                     RemoteServiceConfiguration service) {
+		// Services
+		GenFile serviceConfigFile = this.makeServiceConfigurationFile(service);
+		serviceResultsFolder.addFile(serviceConfigFile);
+
+		// Models
+		GenFolder serviceModelsFolder = this.makeModelConfigurationsForService(service);
+		serviceResultsFolder.addFolder(serviceModelsFolder);
+	}
+
+	// MARK: Services
+	@Override
 	public SpringBeansXMLBuilder makeXMLServiceConfigurationFile(RemoteServiceConfiguration service)
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
@@ -40,6 +56,12 @@ public class TaskQueueRemoteConfigurationsGenerator extends AbstractRemoteServic
 		        this.getAppConfig(), service, builder);
 
 		return builder;
+	}
+
+	// MARK: Models
+	protected GenFolder makeModelConfigurationsForService(RemoteServiceConfiguration service) {
+		return new GenFolderImpl("models", service.getRemoteServiceContextConfigurer()
+		        .configureRemoteServiceModelComponents(AppSpringContextType.SHARED, this.getAppConfig(), service));
 	}
 
 	@Override

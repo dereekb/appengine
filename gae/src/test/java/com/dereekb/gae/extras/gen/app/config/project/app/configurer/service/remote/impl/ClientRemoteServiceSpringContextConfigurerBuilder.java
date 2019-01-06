@@ -16,7 +16,9 @@ import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * Builder for a {@link RemoteServiceSpringContextConfigurer} implementation
- * that builds client components and configuration.
+ * that builds client components and configuration for a remote service.
+ * <p>
+ * These do not reference any specific models, but are general components.
  *
  * @author dereekb
  *

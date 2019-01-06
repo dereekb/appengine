@@ -78,7 +78,7 @@ public class AppGroupConfigurationGen {
 			new AppHookCrudConfigurerInstance(appConfig, modelConfig, builder).configure();
 		}
 
-		protected class AppHookCrudConfigurerInstance extends CrudConfigurerInstance {
+		protected class AppHookCrudConfigurerInstance extends LocalModelCrudConfigurerInstance {
 
 			public AppHookCrudConfigurerInstance(AppConfiguration appConfig,
 			        LocalModelConfiguration modelConfig,

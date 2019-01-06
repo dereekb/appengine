@@ -31,7 +31,7 @@ import com.dereekb.gae.web.taskqueue.server.webhook.TaskQueueWebHookController;
 import com.dereekb.gae.web.taskqueue.server.webhook.impl.TaskQueueWebHookControllerDelegateImpl;
 
 /**
- * {@link AbstractRemoteModelConfigurationGenerator}
+ * {@link AbstractRemoteModelConfigurationGenerator} for taskqueue events and webhook configurations.
  *
  * @author dereekb
  *

@@ -26,7 +26,11 @@ public class GenFolderImpl
 	}
 
 	public GenFolderImpl(GenFolder folder) {
-		this(folder.getFolderName(), ListUtility.copy(folder.getFolders()), ListUtility.copy(folder.getFiles()));
+		this(folder.getFolderName(), folder);
+	}
+
+	public GenFolderImpl(String folderName, GenFolder folder) {
+		this(folderName, ListUtility.copy(folder.getFolders()), ListUtility.copy(folder.getFiles()));
 	}
 
 	@Override

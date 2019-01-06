@@ -7,6 +7,6 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.rem
  *
  */
 public interface RemoteServiceContextConfigurer
-        extends RemoteServiceSecurityContextConfigurer, RemoteServiceSpringContextConfigurer {
+        extends RemoteServiceModelsContextConfigurer, RemoteServiceSecurityContextConfigurer, RemoteServiceSpringContextConfigurer {
 
 }

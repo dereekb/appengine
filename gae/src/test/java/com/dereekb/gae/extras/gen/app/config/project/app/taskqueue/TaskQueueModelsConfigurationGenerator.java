@@ -13,6 +13,12 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
 
+/**
+ * Used for generating local model configurations, generally iterate task entries.
+ *
+ * @author dereekb
+ *
+ */
 public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
 	public static final String MODELS_FOLDER_NAME = "model";

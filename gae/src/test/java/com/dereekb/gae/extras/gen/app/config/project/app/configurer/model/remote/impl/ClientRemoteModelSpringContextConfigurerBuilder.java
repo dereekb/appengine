@@ -113,6 +113,11 @@ public class ClientRemoteModelSpringContextConfigurerBuilder {
 			        new ClientRemoteModelEditContextConfigurerImpl(this.clientEditServiceContext));
 		}
 
+		if (this.createClientQueryService) {
+			configurers.add(this.clientQueryServiceContext,
+			        new ClientRemoteModelQueryContextConfigurerImpl(this.clientQueryServiceContext));
+		}
+
 		RemoteModelSpringContextConfigurerImpl configurer = new RemoteModelSpringContextConfigurerImpl(configurers);
 		return configurer;
 	}
