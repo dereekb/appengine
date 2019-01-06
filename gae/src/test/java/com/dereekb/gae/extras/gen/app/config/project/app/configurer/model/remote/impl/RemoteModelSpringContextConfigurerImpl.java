@@ -11,7 +11,8 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 
 /**
- * {@link RemoteModelSpringContextConfigurer} implementation.
+ * {@link RemoteModelSpringContextConfigurer} implementation that wraps several
+ * implementations.
  *
  * @author dereekb
  *
@@ -39,7 +40,6 @@ public class RemoteModelSpringContextConfigurerImpl
 	}
 
 	// MARK: RemoteModelSpringContextConfigurer
-
 	@Override
 	public void configureRemoteModelContextComponents(AppSpringContextType springContext,
 	                                                  AppConfiguration appConfig,

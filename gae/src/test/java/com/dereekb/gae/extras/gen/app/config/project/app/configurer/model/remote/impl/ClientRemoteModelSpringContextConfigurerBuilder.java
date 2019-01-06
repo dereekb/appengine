@@ -100,7 +100,6 @@ public class ClientRemoteModelSpringContextConfigurerBuilder {
 	}
 
 	public RemoteModelSpringContextConfigurer make() {
-
 		HashMapWithList<AppSpringContextType, RemoteModelSpringContextConfigurer> configurers = new HashMapWithList<AppSpringContextType, RemoteModelSpringContextConfigurer>();
 
 		if (this.createClientReadService) {

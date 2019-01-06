@@ -339,7 +339,6 @@ public class LoginGroupConfigurationGen {
 		crudsConfiguration.setIsReadOnly();
 
 		loginModel.setCrudsConfiguration(crudsConfiguration);
-
 		loginModel.setLocalModel(false);
 
 		return loginModel;

@@ -30,4 +30,5 @@
     <constructor-arg index="0" ref="loginServiceClientApiRequestSender"/>
     <constructor-arg index="1" ref="loginServiceSystemTokenFactory"/>
   </bean>
+  <import resource="/models/models.xml"/>
 </beans>

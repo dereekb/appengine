@@ -5,6 +5,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigu
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelCrudsConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.remote.RemoteModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.remote.impl.ClientRemoteModelSpringContextConfigurerBuilder;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.remote.impl.RemoteModelContextConfigurerImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
@@ -51,7 +52,12 @@ public class RemoteModelConfigurationImpl extends AppModelConfigurationImpl<Remo
 
 	@Override
 	protected RemoteModelContextConfigurer makeCustomModelContextConfigurer() {
-		return new RemoteModelContextConfigurerImpl();
+		RemoteModelContextConfigurerImpl configurer = new RemoteModelContextConfigurerImpl();
+
+		// Set the default CRUDS configurer.
+		configurer.setSpringContextConfigurer(ClientRemoteModelSpringContextConfigurerBuilder.makeDefault());
+
+		return configurer;
 	}
 
 	// MARK: RemoteModelBeansConfiguration

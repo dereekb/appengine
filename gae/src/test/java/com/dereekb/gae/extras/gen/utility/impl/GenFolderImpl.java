@@ -7,12 +7,24 @@ import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
+/**
+ * {@link GenFolder} implementation.
+ *
+ * @author dereekb
+ *
+ */
 public class GenFolderImpl
         implements GenFolder {
+
+	private static String DEFAULT_FOLDER_NAME = "folder";
 
 	private String folderName;
 	private List<GenFolder> folders;
 	private List<GenFile> files;
+
+	public GenFolderImpl() {
+		this(GenFolderImpl.DEFAULT_FOLDER_NAME);
+	}
 
 	public GenFolderImpl(String folderName) {
 		this(folderName, new ArrayList<>(), new ArrayList<>());
@@ -73,6 +85,11 @@ public class GenFolderImpl
 	}
 
 	// MARK: Folders
+	@Override
+	public boolean hasFileWithName(String filename) {
+		return this.getFileWithName(filename) != null;
+	}
+
 	@Override
 	public GenFile getFileWithName(String filename) {
 		for (GenFile file : this.getFiles()) {

@@ -21,7 +21,7 @@ import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 public class RemoteServiceModelsContextConfigurerImpl
         implements RemoteServiceModelsContextConfigurer {
 
-	private boolean splitModelConfigs = true;
+	private boolean splitModelConfigs = false;
 	private Properties outputProperties = null;
 
 	public boolean isSplitModelConfigs() {
@@ -58,6 +58,8 @@ public class RemoteServiceModelsContextConfigurerImpl
 		        AppConfiguration appConfig,
 		        RemoteServiceConfiguration appRemoteServiceConfiguration) {
 			super(appConfig, RemoteServiceModelsContextConfigurerImpl.this.outputProperties);
+			this.setIgnoreLocal(true);
+			this.setIgnoreRemote(false);
 			this.setSplitByGroup(false);
 			this.setSplitByModel(RemoteServiceModelsContextConfigurerImpl.this.splitModelConfigs);
 

@@ -1,5 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -7,6 +8,7 @@ import com.dereekb.gae.extras.gen.app.config.ConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
+import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.impl.XMLGenFileImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
@@ -102,12 +104,40 @@ public abstract class AbstractConfigurationFileGenerator
 		return builder;
 	}
 
+	public List<GenFolder> generateImportFilesForFolders(List<GenFolder> folder) {
+		return this.generateImportFilesForFolders(folder, false);
+	}
+
+	public List<GenFolder> generateImportFilesForFolders(List<GenFolder> folders, boolean recursive) {
+		List<GenFolder> newFolders = new ArrayList<GenFolder>();
+
+		for (GenFolder folder : folders) {
+			GenFolderImpl newFolder = new GenFolderImpl(folder);
+			GenFile importFile = this.makeImportFile(folder);
+
+			if (!newFolder.hasFileWithName(importFile.getFileName())) {
+				newFolder.addFile(importFile);
+			}
+
+			if (recursive) {
+				// TODO: Add recursion.
+				throw new UnsupportedOperationException("Recursion not yet implemented.");
+			}
+
+			newFolders.add(newFolder);
+		}
+
+		return newFolders;
+	}
+
 	public void importFilesWithBuilder(SpringBeansXMLBuilder builder,
 	                                   GenFolder folder,
-	                                   boolean importResources,
+	                                   boolean importFolderResources,
 	                                   boolean importSubFoldersMainFile) {
 
-		builder.importResources(folder.getFiles());
+		if (importFolderResources) {
+			builder.importResources(folder.getFiles());
+		}
 
 		if (importSubFoldersMainFile) {
 			List<GenFolder> subFolders = folder.getFolders();
