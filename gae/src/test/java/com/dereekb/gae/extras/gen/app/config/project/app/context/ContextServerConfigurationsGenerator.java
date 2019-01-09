@@ -64,7 +64,8 @@ import com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl;
 
 /**
- * Used for generating all server-specific shared context configurations within the application.
+ * Used for generating all server-specific shared context configurations within
+ * the application.
  * <p>
  * Configurations are generally output to the "server" folder.
  *
@@ -356,7 +357,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			// MARK: Remote Utilities
 			builder.comment("Remote Service Security");
-			builder.bean(appConfig.getAppBeans().getUtilityBeans().getClientLoginTokenModelContextServiceEntryFactoryBeanId())
+			builder.bean(appConfig.getAppBeans().getUtilityBeans()
+			        .getClientLoginTokenModelContextServiceEntryFactoryBeanId())
 			        .beanClass(ClientLoginTokenModelContextServiceEntryFactory.class).c()
 			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId());
 		}
@@ -382,6 +384,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			String securedModelPatternMatcherBeanId = "securedModelPatternMatcher";
 			String securedModelReadPatternMatcherBeanId = "securedModelReadPatternMatcher";
 			String securedModelResourcePatternMatcherBeanId = "securedModelResourcePatternMatcher";
+
+			List<LocalModelConfiguration> secureLocalModelConfigs = AppConfigurationUtility
+			        .readLocalModelConfigurations(this.getAppConfig());
+			boolean hasSecureLocalModelConfigs = (secureLocalModelConfigs.isEmpty() == false);
 
 			builder.comment("No HTTP Security For Google App Engine Test Server");
 			builder.httpSecurity().pattern("/_ah/**").security("none");
@@ -413,13 +419,15 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        .access(HasAnyRoleConfig.not("ROLE_LOGINTYPE_API", "ROLE_ANON"));
 			}
 
-			http.getRawXMLBuilder().c("Secured Owned Model Patterns");
-			http.intercept().matcherRef(securedModelPatternMatcherBeanId).access(HasRoleConfig.make("ROLE_USER"));
+			if (hasSecureLocalModelConfigs) {
+				http.getRawXMLBuilder().c("Secured Owned Model Patterns");
+				http.intercept().matcherRef(securedModelPatternMatcherBeanId).access(HasRoleConfig.make("ROLE_USER"));
+			}
 
 			http.getRawXMLBuilder().c("Other Extension Resources");
 			http.intercept(serviceApiPath + "/search/**", HasRoleConfig.make("ROLE_ADMIN"));
 
-			// Login Restriation Patterns
+			// Login Registration Patterns
 			if (this.getAppConfig().isLoginServer()) {
 				http.getRawXMLBuilder().c("Register Patterns");
 				http.intercept(serviceApiPath + "/login/auth/register", HasRoleConfig.make("ROLE_NEW_USER"),
@@ -456,19 +464,25 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			// Security
 			builder.comment("Secure Model Pattern Matchers");
-			builder.bean(securedModelPatternMatcherBeanId).beanClass(MultiRequestMatcher.class).c().list()
-			        .ref(securedModelReadPatternMatcherBeanId).ref(securedModelResourcePatternMatcherBeanId);
 
-			builder.bean(securedModelReadPatternMatcherBeanId).beanClass(MultiTypeAntRequestMatcher.class).c()
-			        .value(serviceApiPath + "/{type}").ref(secureModelTypesBeanId).up().property("methodMatcher").bean()
-			        .beanClass(RequestMethodMatcherImpl.class).c().value("GET");
+			if (hasSecureLocalModelConfigs) {
+				builder.bean(securedModelPatternMatcherBeanId).beanClass(MultiRequestMatcher.class).c().list()
+				        .ref(securedModelReadPatternMatcherBeanId).ref(securedModelResourcePatternMatcherBeanId);
 
-			builder.bean(securedModelResourcePatternMatcherBeanId).beanClass(MultiTypeMapAntRequestMatcher.class).c()
-			        .value(serviceApiPath + "/{type}/{res}").map().keyValueRefEntry("type", secureModelTypesBeanId)
-			        .keyValueRefEntry("res", securedModelResourcesBeanId);
+				builder.bean(securedModelReadPatternMatcherBeanId).beanClass(MultiTypeAntRequestMatcher.class).c()
+				        .value(serviceApiPath + "/{type}").ref(secureModelTypesBeanId).up().property("methodMatcher")
+				        .bean().beanClass(RequestMethodMatcherImpl.class).c().value("GET");
 
-			builder.list(securedModelResourcesBeanId).values("create", "read", "update", "delete", "query", "search",
-			        "link");
+				builder.bean(securedModelResourcePatternMatcherBeanId).beanClass(MultiTypeMapAntRequestMatcher.class)
+				        .c().value(serviceApiPath + "/{type}/{res}").map()
+				        .keyValueRefEntry("type", secureModelTypesBeanId)
+				        .keyValueRefEntry("res", securedModelResourcesBeanId);
+
+				builder.list(securedModelResourcesBeanId).values("create", "read", "update", "delete", "query",
+				        "search", "link");
+			} else {
+				builder.comment("There are no models for this service.");
+			}
 
 			builder.comment("Security");
 			builder.bean("securityRequestMatcher").beanClass(AntPathRequestMatcher.class).c().value("/**").nullArg()
@@ -513,8 +527,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.comment("Secure Model Types");
 			SpringBeansXMLListBuilder<?> secureModelsList = builder.list(secureModelTypesBeanId);
 
-			for (LocalModelConfiguration modelConfig : AppConfigurationUtility
-			        .readLocalModelConfigurations(this.getAppConfig())) {
+			for (LocalModelConfiguration modelConfig : secureLocalModelConfigs) {
 				secureModelsList.ref(modelConfig.getModelTypeBeanId());
 			}
 

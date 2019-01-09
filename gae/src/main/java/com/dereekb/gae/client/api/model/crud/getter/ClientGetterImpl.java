@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.getter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -15,9 +16,15 @@ import com.dereekb.gae.server.datastore.exception.UninitializedModelException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.impl.TypedModelImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
+import com.dereekb.gae.server.datastore.models.keys.accessor.impl.LoadedModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAccessorImpl;
+import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
 
 /**
- * {@link Getter} implementation.
+ * {@link Getter} and {@link ModelKeyListAccessor} implementation that uses
+ * {@link ClientReadRequestSender}.
  *
  * @author dereekb
  *
@@ -25,9 +32,10 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *            model type
  */
 public class ClientGetterImpl<T extends UniqueModel> extends TypedModelImpl
-        implements Getter<T> {
+        implements Getter<T>, ModelKeyListAccessorFactory<T> {
 
 	private ClientReadRequestSender<T> readRequestSender;
+	private transient StringModelKeyConverter stringModelKeyTypeConverter;
 
 	public ClientGetterImpl(ClientReadRequestSender<T> readRequestSender) {
 		super();
@@ -44,6 +52,7 @@ public class ClientGetterImpl<T extends UniqueModel> extends TypedModelImpl
 		}
 
 		this.readRequestSender = readRequestSender;
+		this.stringModelKeyTypeConverter = ModelKey.converterForKeyType(readRequestSender.getModelKeyType());
 	}
 
 	// MARK: Getter
@@ -112,6 +121,33 @@ public class ClientGetterImpl<T extends UniqueModel> extends TypedModelImpl
 	public Set<ModelKey> getExisting(Iterable<ModelKey> keys) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	// MARK: ModelKeyListAccessorFactory<T>
+	@Override
+	public ModelKeyListAccessor<T> createAccessor() {
+		return new ModelKeyListAccessorImpl<T>(this.getModelType(), this);
+	}
+
+	@Override
+	public ModelKeyListAccessor<T> createAccessor(Collection<ModelKey> keys) {
+		return new ModelKeyListAccessorImpl<T>(this.getModelType(), this, keys);
+	}
+
+	@Override
+	public ModelKeyListAccessor<T> createAccessorWithStringKeys(Collection<String> keys) {
+		List<ModelKey> modelKeys = this.stringModelKeyTypeConverter.convert(keys);
+		return this.createAccessor(modelKeys);
+	}
+
+	@Override
+	public ModelKeyListAccessor<T> createAccessorWithModels(Collection<T> models) {
+		return new LoadedModelKeyListAccessor<T>(this.getModelType(), models);
+	}
+
+	@Override
+	public String toString() {
+		return "ClientGetterImpl [readRequestSender=" + this.readRequestSender + "]";
 	}
 
 }

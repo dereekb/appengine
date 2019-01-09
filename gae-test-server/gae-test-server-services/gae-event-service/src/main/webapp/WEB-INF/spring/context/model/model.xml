@@ -6,7 +6,12 @@
   <!--Shared-->
   <bean class="com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverterImpl" id="modelKeyTypeConverter">
     <constructor-arg index="0">
-      <map key-type="java.lang.String" value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType"/>
+      <map key-type="java.lang.String" value-type="com.dereekb.gae.server.datastore.models.keys.ModelKeyType">
+        <!--LOGIN-->
+        <entry key-ref="loginType" value-ref="loginIdType"/>
+        <entry key-ref="loginPointerType" value-ref="loginPointerIdType"/>
+        <entry key-ref="loginKeyType" value-ref="loginKeyIdType"/>
+      </map>
     </constructor-arg>
   </bean>
 </beans>

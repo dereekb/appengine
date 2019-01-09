@@ -26,6 +26,12 @@ import com.dereekb.gae.extras.gen.app.gae.remote.RemoteLoginServiceConfiguration
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
+/**
+ * Configuration for the event service.
+ *
+ * @author dereekb
+ *
+ */
 public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigurationGen {
 
 	@Override

@@ -13,7 +13,7 @@ import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseE
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
-import com.dereekb.gae.server.datastore.models.TypedModel;
+import com.dereekb.gae.server.datastore.models.KeyTypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
@@ -26,7 +26,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  *            model type
  */
 public interface ClientReadRequestSender<T extends UniqueModel>
-        extends ClientReadService<T>, SecuredClientModelRequestSender<ReadRequest, SimpleReadResponse<T>>, TypedModel {
+        extends ClientReadService<T>, SecuredClientModelRequestSender<ReadRequest, SimpleReadResponse<T>>, KeyTypedModel {
 
 	/**
 	 * {@inheritDoc}

@@ -6,6 +6,8 @@ import java.util.Properties;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
@@ -91,11 +93,11 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .bean(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId())
 		        .beanClass(TypeModelKeyConverterImpl.class).c().map().valueType(ModelKeyType.class);
 
-		for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
+		for (AppModelConfigurationGroup group : this.getAppConfig().getModelConfigurations()) {
 			modelKeyTypeMap.getRawXMLBuilder().comment(group.getGroupName().toUpperCase());
 
-			List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
-			for (LocalModelConfiguration modelConfig : modelConfigs) {
+			List<? extends AppModelConfiguration> modelConfigs = group.getModelConfigurations();
+			for (AppModelConfiguration modelConfig : modelConfigs) {
 				modelKeyTypeMap.keyRefValueRefEntry(modelConfig.getModelTypeBeanId(),
 				        modelConfig.getModelIdTypeBeanId());
 			}
@@ -187,7 +189,6 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .factoryBean(getAppConfig().getAppBeans().getObjectifyDatabaseId()).factoryMethod("makeRegistry").c()
 		        .ref(modelConfig.getModelClassBeanId());
 
-		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelKeyListAccessorFactoryId());
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelKeyListAccessorFactoryId());
 
 		builder.comment("Configured Aliases");

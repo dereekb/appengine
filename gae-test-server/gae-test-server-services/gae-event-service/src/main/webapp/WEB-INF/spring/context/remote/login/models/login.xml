@@ -30,4 +30,5 @@
   <bean class="com.dereekb.gae.client.api.model.crud.getter.ClientGetterImpl" id="loginGetter">
     <constructor-arg index="0" ref="loginClientReadService"/>
   </bean>
+  <alias alias="loginKeyListAccessorFactory" name="loginGetter"/>
 </beans>

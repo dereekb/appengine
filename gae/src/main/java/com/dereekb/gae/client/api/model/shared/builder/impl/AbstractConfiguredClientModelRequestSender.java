@@ -12,9 +12,10 @@ import com.dereekb.gae.client.api.service.response.error.ClientResponseErrorInfo
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConverter;
-import com.dereekb.gae.server.datastore.models.TypedModel;
+import com.dereekb.gae.server.datastore.models.KeyTypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,7 +36,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  *            serialized response type
  */
 public abstract class AbstractConfiguredClientModelRequestSender<T extends UniqueModel, O, R, S> extends AbstractSecuredClientModelRequestSender<R, S>
-        implements JsonModelResultsSerializer<T, O>, TypedModel {
+        implements JsonModelResultsSerializer<T, O>, KeyTypedModel {
 
 	private String pathFormat;
 
@@ -69,6 +70,11 @@ public abstract class AbstractConfiguredClientModelRequestSender<T extends Uniqu
 	@Override
 	public final String getModelType() {
 		return this.typedConverter.getModelType();
+	}
+
+	@Override
+	public ModelKeyType getModelKeyType() {
+		return this.keyTypeConverter.typeForModelType(this.getModelType());
 	}
 
 	public TypedBidirectionalConverter<T, O> getTypedConverter() {

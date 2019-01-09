@@ -185,11 +185,11 @@ public class ClientRemoteModelSpringContextConfigurerBuilder {
 			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId())
 			        .ref(remoteServiceConfig.getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId());
 
-			// MARK:
+			// MARK: Getter / Model
 			String getterServiceBeanId = modelConfig.getModelGetterBeanId();
 
 			builder.bean(getterServiceBeanId).beanClass(ClientGetterImpl.class).c().ref(readServiceBeanId);
-
+			builder.alias(getterServiceBeanId, modelConfig.getModelKeyListAccessorFactoryId());
 		}
 
 	}

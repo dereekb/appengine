@@ -6,8 +6,6 @@
     <security:custom-filter position="PRE_AUTH_FILTER" ref="authenticationFilter"/>
     <!--Only allow this service to access the taskqueue.-->
     <security:intercept-url access="hasRole('ROLE_LOGINTYPE_SYSTEM')" pattern="/taskqueue/**"/>
-    <!--Secured Owned Model Patterns-->
-    <security:intercept-url access="hasRole('ROLE_USER')" request-matcher-ref="securedModelPatternMatcher"/>
     <!--Other Extension Resources-->
     <security:intercept-url access="hasRole('ROLE_ADMIN')" pattern="/api/event/v1/search/**"/>
     <!--Scheduling Pattern-->
@@ -20,41 +18,7 @@
     <security:csrf disabled="true"/>
   </security:http>
   <!--Secure Model Pattern Matchers-->
-  <bean class="com.dereekb.gae.utilities.web.matcher.MultiRequestMatcher" id="securedModelPatternMatcher">
-    <constructor-arg index="0">
-      <list>
-        <ref bean="securedModelReadPatternMatcher"/>
-        <ref bean="securedModelResourcePatternMatcher"/>
-      </list>
-    </constructor-arg>
-  </bean>
-  <bean class="com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher" id="securedModelReadPatternMatcher">
-    <constructor-arg index="0" value="/api/event/v1/{type}"/>
-    <constructor-arg index="1" ref="secureModelTypes"/>
-    <property name="methodMatcher">
-      <bean class="com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl">
-        <constructor-arg index="0" value="GET"/>
-      </bean>
-    </property>
-  </bean>
-  <bean class="com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher" id="securedModelResourcePatternMatcher">
-    <constructor-arg index="0" value="/api/event/v1/{type}/{res}"/>
-    <constructor-arg index="1">
-      <map key-type="java.lang.String">
-        <entry key="type" value-ref="secureModelTypes"/>
-        <entry key="res" value-ref="securedModelResources"/>
-      </map>
-    </constructor-arg>
-  </bean>
-  <util:list id="securedModelResources">
-    <value>create</value>
-    <value>read</value>
-    <value>update</value>
-    <value>delete</value>
-    <value>query</value>
-    <value>search</value>
-    <value>link</value>
-  </util:list>
+  <!--There are no models for this service.-->
   <!--Security-->
   <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher" id="securityRequestMatcher">
     <constructor-arg index="0" value="/**"/>
