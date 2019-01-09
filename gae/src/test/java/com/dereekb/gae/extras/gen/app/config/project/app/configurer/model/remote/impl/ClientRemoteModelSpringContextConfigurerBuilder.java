@@ -4,12 +4,14 @@ import com.dereekb.gae.client.api.model.crud.builder.impl.ClientCreateRequestSen
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientDeleteRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientUpdateRequestSenderImpl;
+import com.dereekb.gae.client.api.model.crud.getter.ClientGetterImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppSpringContextType;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.remote.RemoteModelSpringContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.shared.AppModelBeansConfigurationWriterUtility;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 
@@ -22,6 +24,9 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithList;
  */
 public class ClientRemoteModelSpringContextConfigurerBuilder {
 
+	// Utility
+	private boolean createClientUtility = true;
+
 	// Read
 	private boolean createClientReadService = true;
 	private AppSpringContextType clientReadServiceContext = AppSpringContextType.SHARED;
@@ -33,6 +38,14 @@ public class ClientRemoteModelSpringContextConfigurerBuilder {
 	// Query
 	private boolean createClientQueryService = true;
 	private AppSpringContextType clientQueryServiceContext = AppSpringContextType.TASKQUEUE;
+
+	public boolean isCreateClientUtility() {
+		return this.createClientUtility;
+	}
+
+	public void setCreateClientUtility(boolean createClientUtility) {
+		this.createClientUtility = createClientUtility;
+	}
 
 	public boolean isCreateClientReadService() {
 		return this.createClientReadService;
@@ -102,6 +115,11 @@ public class ClientRemoteModelSpringContextConfigurerBuilder {
 	public RemoteModelSpringContextConfigurer make() {
 		HashMapWithList<AppSpringContextType, RemoteModelSpringContextConfigurer> configurers = new HashMapWithList<AppSpringContextType, RemoteModelSpringContextConfigurer>();
 
+		if (this.createClientUtility) {
+			configurers.add(this.clientReadServiceContext,
+			        new ClientRemoteModelUtilityContextConfigurerImpl(this.clientReadServiceContext));
+		}
+
 		if (this.createClientReadService) {
 			configurers.add(this.clientReadServiceContext,
 			        new ClientRemoteModelReadContextConfigurerImpl(this.clientReadServiceContext));
@@ -122,6 +140,30 @@ public class ClientRemoteModelSpringContextConfigurerBuilder {
 	}
 
 	// MARK: Internal
+	protected class ClientRemoteModelUtilityContextConfigurerImpl extends AbstractRemoteModelSpringContextConfigurer {
+
+		public ClientRemoteModelUtilityContextConfigurerImpl(AppSpringContextType springContext) {
+			super(springContext);
+		}
+
+		// MARK: AbstractRemoteModelSpringContextConfigurer
+		@Override
+		public void configureRemoteModelContextComponents(AppConfiguration appConfig,
+		                                                  RemoteServiceConfiguration remoteServiceConfig,
+		                                                  RemoteModelConfiguration modelConfig,
+		                                                  SpringBeansXMLBuilder builder) {
+			AppModelBeansConfigurationWriterUtility utility = new AppModelBeansConfigurationWriterUtility(modelConfig);
+
+			// MARK: Type
+			utility.insertModelTypeInformation(builder);
+
+			// MARK: Conversions
+			utility.insertDataConversionBeans(builder);
+
+		}
+
+	}
+
 	protected class ClientRemoteModelReadContextConfigurerImpl extends AbstractRemoteModelSpringContextConfigurer {
 
 		public ClientRemoteModelReadContextConfigurerImpl(AppSpringContextType springContext) {
@@ -135,12 +177,18 @@ public class ClientRemoteModelSpringContextConfigurerBuilder {
 		                                                  RemoteModelConfiguration modelConfig,
 		                                                  SpringBeansXMLBuilder builder) {
 
+			// MARK: Client Read Service
 			String readServiceBeanId = modelConfig.getModelClientReadServiceBeanId();
 
 			builder.bean(readServiceBeanId).beanClass(ClientReadRequestSenderImpl.class).c()
 			        .ref(modelConfig.getModelDataConverterBeanId())
 			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId())
 			        .ref(remoteServiceConfig.getServiceBeansConfiguration().getSecuredClientApiRequestSenderBeanId());
+
+			// MARK:
+			String getterServiceBeanId = modelConfig.getModelGetterBeanId();
+
+			builder.bean(getterServiceBeanId).beanClass(ClientGetterImpl.class).c().ref(readServiceBeanId);
 
 		}
 

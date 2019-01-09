@@ -1,7 +1,33 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Type-->
+  <bean class="java.lang.String" id="loginKeyType">
+    <constructor-arg index="0" value="LoginKey"/>
+  </bean>
+  <bean class="java.lang.Class" factory-method="forName" id="loginKeyClass">
+    <constructor-arg index="0" value="com.dereekb.gae.server.auth.model.key.LoginKey"/>
+  </bean>
+  <bean class="java.lang.Class" factory-method="forName" id="loginKeyDtoClass">
+    <constructor-arg index="0" value="com.dereekb.gae.server.auth.model.key.dto.LoginKeyData"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf" id="loginKeyIdType">
+    <constructor-arg index="0" value="NUMBER"/>
+  </bean>
+  <!--Dto-->
+  <bean class="com.dereekb.gae.server.auth.model.key.dto.LoginKeyDataBuilder" id="loginKeyDataBuilder"/>
+  <bean class="com.dereekb.gae.server.auth.model.key.dto.LoginKeyDataReader" id="loginKeyDataReader"/>
+  <bean class="com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl" id="loginKeyDataConverter">
+    <constructor-arg index="0" ref="loginKeyDataBuilder"/>
+    <constructor-arg index="1" ref="loginKeyDataReader"/>
+    <constructor-arg index="2" ref="loginKeyType"/>
+    <constructor-arg index="3" ref="loginKeyClass"/>
+    <constructor-arg index="4" ref="loginKeyDtoClass"/>
+  </bean>
   <bean class="com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl" id="loginKeyClientReadService">
     <constructor-arg index="0" ref="loginKeyDataConverter"/>
     <constructor-arg index="1" ref="modelKeyTypeConverter"/>
     <constructor-arg index="2" ref="loginServiceSecuredClientApiRequestSender"/>
+  </bean>
+  <bean class="com.dereekb.gae.client.api.model.crud.getter.ClientGetterImpl" id="loginKeyGetter">
+    <constructor-arg index="0" ref="loginKeyClientReadService"/>
   </bean>
 </beans>

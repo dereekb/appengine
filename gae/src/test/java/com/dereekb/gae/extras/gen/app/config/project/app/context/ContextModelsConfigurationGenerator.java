@@ -10,6 +10,7 @@ import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGener
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.context.shared.AppModelBeansConfigurationWriterUtility;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
@@ -19,7 +20,6 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask;
-import com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl;
 import com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemBuilder;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl;
@@ -173,14 +173,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	        throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		builder.comment("Type");
-		builder.stringBean(modelConfig.getModelTypeBeanId(), modelConfig.getModelType());
-		builder.bean(modelConfig.getModelClassBeanId()).beanClass(Class.class).factoryMethod("forName").c()
-		        .value(modelConfig.getModelClass().getCanonicalName());
-		builder.bean(modelConfig.getModelDtoClassBeanId()).beanClass(Class.class).factoryMethod("forName").c()
-		        .value(modelConfig.getModelDataClass().getCanonicalName());
-		builder.bean(modelConfig.getModelIdTypeBeanId()).beanClass(ModelKeyType.class).factoryMethod("valueOf").c()
-		        .value(modelConfig.getModelKeyType().name());
+		new AppModelBeansConfigurationWriterUtility(modelConfig).insertModelTypeInformation(builder);
 
 		builder.comment("Database");
 
@@ -256,19 +249,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 		@Override
 		public void makeXMLConfigurationFile(SpringBeansXMLBuilder builder) {
-
-			builder.comment("Dto");
-
-			String dataBuilderId = this.modelConfig.getModelBeanPrefix() + "DataBuilder";
-			String dataReaderId = this.modelConfig.getModelBeanPrefix() + "DataReader";
-
-			builder.bean(dataBuilderId).beanClass(this.modelConfig.getModelDataBuilderClass());
-			builder.bean(dataReaderId).beanClass(this.modelConfig.getModelDataReaderClass());
-			builder.bean(this.modelConfig.getModelBeanPrefix() + "DataConverter")
-			        .beanClass(TypedBidirectionalConverterImpl.class).c().ref(dataBuilderId).ref(dataReaderId)
-			        .ref(this.modelConfig.getModelTypeBeanId()).ref(this.modelConfig.getModelBeanPrefix() + "Class")
-			        .ref(this.modelConfig.getModelBeanPrefix() + "DtoClass");
-
+			new AppModelBeansConfigurationWriterUtility(this.modelConfig).insertDataConversionBeans(builder);
 		}
 
 	}

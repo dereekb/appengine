@@ -29,6 +29,11 @@ public class ClientGetterImpl<T extends UniqueModel> extends TypedModelImpl
 
 	private ClientReadRequestSender<T> readRequestSender;
 
+	public ClientGetterImpl(ClientReadRequestSender<T> readRequestSender) {
+		super();
+		this.setReadRequestSender(readRequestSender);
+	}
+
 	public ClientReadRequestSender<T> getReadRequestSender() {
 		return this.readRequestSender;
 	}

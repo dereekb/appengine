@@ -8,6 +8,12 @@ import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
+/**
+ * {@link AbstractConfigurationFileGenerator} extension targeted for a single file.
+ *
+ * @author dereekb
+ *
+ */
 public class AbstractSingleConfigurationFileGenerator extends AbstractConfigurationFileGenerator {
 
 	private String folderName = "result";
