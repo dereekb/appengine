@@ -1,6 +1,5 @@
 package com.dereekb.gae.test.server.auth.impl;
 
-import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
@@ -12,7 +11,6 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
-import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -24,13 +22,9 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
  * @author dereekb
  *
  */
-public class TestPasswordLoginTokenContextImpl
+public class TestPasswordLoginTokenContextImpl extends AbstractTestLoginTokenContextImpl
         implements TestLoginTokenContext {
 
-	private static final String TEST_USERNAME = "username";
-	private static final String TEST_PASSWORD = "password";
-
-	private boolean refreshAllowed = true;
 	private PasswordLoginController passwordController;
 	private LoginRegisterService registerService;
 	private LoginTokenService<LoginToken> service;
@@ -38,18 +32,7 @@ public class TestPasswordLoginTokenContextImpl
 	public ObjectifyRegistry<LoginPointer> loginPointerRegistry;
 	public ObjectifyRegistry<Login> loginRegistry;
 
-	private Factory<ModelKey> nameFactory = new LongModelKeyGenerator();
-
 	private LoginPointer pointer = null;
-
-	private Long encodedRoles = null;
-	private Long encodedAdminRoles = null;
-	private Integer group = null;
-
-	private boolean defaultToAnonymous = true;
-
-	private String username = TEST_USERNAME;
-	private String password = TEST_PASSWORD;
 
 	public TestPasswordLoginTokenContextImpl(PasswordLoginController passwordController,
 	        LoginRegisterService registerService,
@@ -111,61 +94,13 @@ public class TestPasswordLoginTokenContextImpl
 		this.pointer = pointer;
 	}
 
-	public Long getEncodedRoles() {
-		return this.encodedRoles;
-	}
-
-	public void setEncodedRoles(Long encodedRoles) {
-		this.encodedRoles = encodedRoles;
-	}
-
-	public Long getEncodedAdminRoles() {
-		return this.encodedAdminRoles;
-	}
-
-	public void setEncodedAdminRoles(Long encodedAdminRoles) {
-		this.encodedAdminRoles = encodedAdminRoles;
-	}
-
-	public Integer getGroup() {
-		return this.group;
-	}
-
-	public void setGroup(Integer group) {
-		this.group = group;
-	}
-
-	public String getUsername() {
-		return this.username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return this.password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean isDefaultToAnonymous() {
-		return this.defaultToAnonymous;
-	}
-
-	public void setDefaultToAnonymous(boolean defaultToAnonymous) {
-		this.defaultToAnonymous = defaultToAnonymous;
-	}
-
 	// MARK: TestLoginTokenContext
 	@Override
 	public String getToken() {
 		String token = null;
 
 		if (this.pointer != null) {
-			token = this.service.encodeLoginToken(this.pointer, this.refreshAllowed);
+			token = this.service.encodeLoginToken(this.pointer, this.isRefreshAllowed());
 		} else if (this.isDefaultToAnonymous()) {
 			token = this.service.encodeAnonymousLoginToken("LOGIN-TOKEN");
 		}
@@ -185,29 +120,9 @@ public class TestPasswordLoginTokenContextImpl
 	}
 
 	@Override
-	public TestLoginTokenPair generateSystemAdmin() {
-		return this.generateSystemAdmin(this.nameFactory.make().toString());
-	}
-
-	@Override
-	public TestLoginTokenPair generateSystemAdmin(String username) {
-		return this.generateLogin(username, this.encodedAdminRoles);
-	}
-
-	@Override
-	public TestLoginTokenPair generateLogin() {
-		return this.generateLogin(this.nameFactory.make().toString());
-	}
-
-	@Override
-	public TestLoginTokenPair generateLogin(String username) {
-		return this.generateLogin(username, this.encodedRoles);
-	}
-
-	@Override
 	public TestLoginTokenPair generateLogin(String username,
 	                                        Long roles) {
-		LoginTokenPair primary = this.passwordController.create(username, this.password);
+		LoginTokenPair primary = this.passwordController.create(username, this.getPassword());
 		LoginPointer pointer = this.loginPointerRegistry.get(primary.getLoginPointerKey());
 		Login login;
 
@@ -220,7 +135,7 @@ public class TestPasswordLoginTokenContextImpl
 		}
 
 		login.setRoot(true);
-		login.setGroup(this.group);
+		login.setGroup(this.getGroup());
 		login.setRoles(roles);
 		this.loginRegistry.update(login);
 
@@ -254,47 +169,17 @@ public class TestPasswordLoginTokenContextImpl
 	 * @author dereekb
 	 *
 	 */
-	private class TestLoginTokenPairImpl
+	private class TestLoginTokenPairImpl extends AbstractTestLoginTokenPairImpl
 	        implements TestLoginTokenPair {
 
-		private Login login;
-		private LoginPointer loginPointer;
-		private String token;
-
 		public TestLoginTokenPairImpl(Login login, LoginPointer loginPointer) {
-			this.login = login;
-			this.loginPointer = loginPointer;
+			super(login, loginPointer);
 		}
 
 		@Override
-		public Login getLogin() {
-			return this.login;
-		}
-
-		@Override
-		public LoginPointer getLoginPointer() {
-			return this.loginPointer;
-		}
-
-		@Override
-		public String getTokenSignature() {
-			return null;
-		}
-
-		@Override
-		public String getEncodedLoginToken() {
-			if (this.token == null) {
-				this.token = this.regenerateToken();
-			}
-
-			return this.token;
-		}
-
-		@Override
-		public String regenerateToken() {
-			this.token = TestPasswordLoginTokenContextImpl.this.service.encodeLoginToken(this.loginPointer,
-			        TestPasswordLoginTokenContextImpl.this.refreshAllowed);
-			return this.token;
+		public String makeNewToken() {
+			return TestPasswordLoginTokenContextImpl.this.service.encodeLoginToken(this.getLoginPointer(),
+			        TestPasswordLoginTokenContextImpl.this.isRefreshAllowed());
 		}
 
 	}

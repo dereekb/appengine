@@ -19,20 +19,10 @@
   <!--Import-->
   <import resource="/models/models.xml"/>
   <!--Override-->
-  <bean class="com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl" id="testLoginTokenContext">
-    <constructor-arg index="0" ref="passwordLoginController"/>
-    <constructor-arg index="1" ref="loginRegisterService"/>
-    <constructor-arg index="2" ref="loginTokenService"/>
-    <constructor-arg index="3" ref="loginPointerRegistry"/>
-    <constructor-arg index="4" ref="loginRegistry"/>
+  <bean class="com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl" id="testLoginTokenContext">
     <!--Admin Login-->
     <property name="encodedAdminRoles" value="3"/>
     <property name="encodedRoles" value="0"/>
-  </bean>
-  <bean class="com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter" id="testSystemAuthenticationContextSetter">
-    <constructor-arg index="0" ref="loginTokenService"/>
-    <constructor-arg index="1" ref="systemLoginTokenFactory"/>
-    <constructor-arg index="2" ref="loginTokenAuthenticationProvider"/>
   </bean>
   <!--Overrides the BCrypt Password Encoder For Testing-->
   <bean class="com.dereekb.gae.test.server.auth.security.login.password.impl.TestPasswordEncoderImpl" id="passwordEncoder" primary="true" scope="singleton"/>

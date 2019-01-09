@@ -20,6 +20,13 @@ import com.dereekb.gae.web.api.auth.controller.token.LoginTokenController;
 import com.dereekb.gae.web.api.auth.controller.token.impl.LoginTokenControllerDelegateImpl;
 import com.dereekb.gae.web.api.auth.exception.handler.ApiLoginExceptionHandler;
 
+/**
+ * Used for generating the login and registration controllers configuration for
+ * a login server.
+ *
+ * @author dereekb
+ *
+ */
 public class ApiLoginConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
 	public static final String LOGIN_FILE_NAME = "login";

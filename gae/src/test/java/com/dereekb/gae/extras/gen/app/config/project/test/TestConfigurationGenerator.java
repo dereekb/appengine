@@ -13,6 +13,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl;
+import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 import com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter;
 import com.dereekb.gae.test.server.auth.security.login.password.impl.TestPasswordEncoderImpl;
 import com.dereekb.gae.test.spring.google.LocalDatastoreServiceTestConfigFactory;
@@ -27,6 +28,12 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
 import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig;
 
+/**
+ * Used for building test configuration that is used for local unit tests.
+ *
+ * @author dereekb
+ *
+ */
 public class TestConfigurationGenerator extends AbstractConfigurationFileGenerator {
 
 	private static final String TESTING_XML = "testing";
@@ -134,13 +141,17 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 		builder.bean("defaultSecurityServletPath").beanClass(String.class).c().ref("productionApiServletPath");
 
-		builder.stringBean("productionApiServletPath", this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath());
+		builder.stringBean("productionApiServletPath",
+		        this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath());
 
 		builder.stringBean("productionTaskqueueServletPath", "/taskqueue");
 
-		builder.bean("testServiceRequestBuilder").beanClass(ServletAwareWebServiceRequestBuilder.class).property("defaultServletPath").ref("defaultSecurityServletPath").up().property("servletMappings").ref("testProductionServletMappings");
+		builder.bean("testServiceRequestBuilder").beanClass(ServletAwareWebServiceRequestBuilder.class)
+		        .property("defaultServletPath").ref("defaultSecurityServletPath").up().property("servletMappings")
+		        .ref("testProductionServletMappings");
 
-		builder.map("testProductionServletMappings").keyValueRefEntry("/taskqueue/**", "productionTaskqueueServletPath");
+		builder.map("testProductionServletMappings").keyValueRefEntry("/taskqueue/**",
+		        "productionTaskqueueServletPath");
 
 		builder.comment("Import");
 
@@ -152,13 +163,25 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 		builder.comment("Override");
 
-		SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> loginTokenContextBuilder = builder.bean("testLoginTokenContext").beanClass(TestPasswordLoginTokenContextImpl.class).c().ref("passwordLoginController").ref("loginRegisterService").ref("loginTokenService").ref("loginPointerRegistry").ref("loginRegistry").up();
+		SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> loginTokenContextBuilder = builder
+		        .bean("testLoginTokenContext");
+
+		if (this.getAppConfig().isLoginServer()) {
+			loginTokenContextBuilder.beanClass(TestPasswordLoginTokenContextImpl.class).c()
+			        .ref("passwordLoginController").ref("loginRegisterService").ref("loginTokenService")
+			        .ref("loginPointerRegistry").ref("loginRegistry").up();
+
+			// ???
+			builder.bean("testSystemAuthenticationContextSetter").beanClass(TestSystemAuthenticationContextSetter.class).c()
+			        .ref("loginTokenService").ref("systemLoginTokenFactory").ref("loginTokenAuthenticationProvider");
+		} else {
+			loginTokenContextBuilder.beanClass(TestRemoteLoginSystemLoginTokenContextImpl.class);
+		}
+
 		loginTokenContextBuilder.getRawXMLBuilder().comment("Admin Login");
 
 		loginTokenContextBuilder.property("encodedAdminRoles").value("3");
 		loginTokenContextBuilder.property("encodedRoles").value("0");
-
-		builder.bean("testSystemAuthenticationContextSetter").beanClass(TestSystemAuthenticationContextSetter.class).c().ref("loginTokenService").ref("systemLoginTokenFactory").ref("loginTokenAuthenticationProvider");
 
 		builder.comment("Overrides the BCrypt Password Encoder For Testing");
 		builder.bean("passwordEncoder").beanClass(TestPasswordEncoderImpl.class).primary().scope("singleton");
