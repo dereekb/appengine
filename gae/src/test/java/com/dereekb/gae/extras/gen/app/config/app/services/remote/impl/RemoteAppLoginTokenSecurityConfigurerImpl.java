@@ -48,7 +48,7 @@ public class RemoteAppLoginTokenSecurityConfigurerImpl
 
 		AppSecurityBeansConfigurer appSecurityBeansConfigurer = appConfig.getAppSecurityBeansConfigurer();
 
-		String clientLoginTokenValidationServiceBeanId = "clientLoginTokenValidationService";
+		String clientLoginTokenValidationServiceBeanId = appSecurityBeansConfigurer.getClientLoginTokenValidationServiceBeanId();
 
 		builder.comment("Remote Login Service");
 		builder.comment("Login Token Signature");

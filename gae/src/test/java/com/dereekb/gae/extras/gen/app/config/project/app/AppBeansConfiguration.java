@@ -46,6 +46,8 @@ public interface AppBeansConfiguration {
 
 	public String getAppLoginSecurityServiceBeanId();
 
+	public String getAppLoginSecurityVerifierServiceBeanId();
+
 	public String getAppLoginSecuritySigningServiceBeanId();
 
 	public String getLoginTokenServiceBeanId();

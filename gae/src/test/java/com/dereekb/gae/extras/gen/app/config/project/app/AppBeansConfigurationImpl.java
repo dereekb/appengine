@@ -32,6 +32,7 @@ public class AppBeansConfigurationImpl
 	public static final String ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID = "anonymousModelRoleSetContextService";
 
 	public static final String APP_LOGIN_SECURITY_SERVICE_BEAN_ID = "appLoginSecurityService";
+	public static final String APP_LOGIN_SECURITY_VERIFIER_SERVICE_BEAN_ID = "appLoginSecurityVerifierService";
 	public static final String APP_LOGIN_SECURITY_SIGNING_SERVICE_BEAN_ID = "appLoginSecuritySigningService";
 	public static final String LOGIN_TOKEN_SERVICE_BEAN_ID = "loginTokenService";
 	public static final String LOGIN_TOKEN_DECODER_BEAN_ID = "loginTokenDecoder";
@@ -57,6 +58,7 @@ public class AppBeansConfigurationImpl
 	private String anonymousModelRoleSetContextServiceBeanId = ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID;
 
 	private String appLoginSecurityServiceBeanId = APP_LOGIN_SECURITY_SERVICE_BEAN_ID;
+	private String appLoginSecurityVerifierServiceBeanId = APP_LOGIN_SECURITY_VERIFIER_SERVICE_BEAN_ID;
 	private String appLoginSecuritySigningServiceBeanId = APP_LOGIN_SECURITY_SIGNING_SERVICE_BEAN_ID;
 	private String loginTokenServiceBeanId = LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String loginTokenDecoderBeanId = LOGIN_TOKEN_DECODER_BEAN_ID;
@@ -67,7 +69,8 @@ public class AppBeansConfigurationImpl
 
 	private AppUtilityBeansConfiguration utilityBeansConfiguration = new AppUtilityBeansConfigurationImpl();
 
-	public static class AppUtilityBeansConfigurationImpl implements AppUtilityBeansConfiguration {
+	public static class AppUtilityBeansConfigurationImpl
+	        implements AppUtilityBeansConfiguration {
 
 		private String clientLoginTokenModelContextServiceEntryFactoryBeanId = CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID;
 
@@ -79,7 +82,8 @@ public class AppBeansConfigurationImpl
 
 		public void setClientLoginTokenModelContextServiceEntryFactoryBeanId(String clientLoginTokenModelContextServiceEntryFactoryBeanId) {
 			if (clientLoginTokenModelContextServiceEntryFactoryBeanId == null) {
-				throw new IllegalArgumentException("clientLoginTokenModelContextServiceEntryFactoryBeanId cannot be null.");
+				throw new IllegalArgumentException(
+				        "clientLoginTokenModelContextServiceEntryFactoryBeanId cannot be null.");
 			}
 
 			this.clientLoginTokenModelContextServiceEntryFactoryBeanId = clientLoginTokenModelContextServiceEntryFactoryBeanId;
@@ -307,6 +311,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.appLoginSecurityServiceBeanId = appLoginSecurityServiceBeanId;
+	}
+
+	@Override
+	public String getAppLoginSecurityVerifierServiceBeanId() {
+		return this.appLoginSecurityVerifierServiceBeanId;
+	}
+
+	public void setAppLoginSecurityVerifierServiceBeanId(String appLoginSecurityVerifierServiceBeanId) {
+		if (appLoginSecurityVerifierServiceBeanId == null) {
+			throw new IllegalArgumentException("appLoginSecurityVerifierServiceBeanId cannot be null.");
+		}
+
+		this.appLoginSecurityVerifierServiceBeanId = appLoginSecurityVerifierServiceBeanId;
 	}
 
 	@Override

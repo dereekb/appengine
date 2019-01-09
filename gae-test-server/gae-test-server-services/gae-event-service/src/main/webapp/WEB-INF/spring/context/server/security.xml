@@ -137,6 +137,9 @@
     <constructor-arg index="0" ref="serverAppInfo"/>
     <constructor-arg index="1" ref="serverAppSecret"/>
   </bean>
+  <bean class="com.dereekb.gae.client.api.auth.token.impl.ClientAppLoginSecurityVerifierServiceImpl" id="appLoginSecurityVerifierService">
+    <constructor-arg index="0" ref="clientLoginTokenValidationService"/>
+  </bean>
   <bean class="com.dereekb.gae.server.auth.security.app.service.impl.PreConfiguredAppLoginSecuritySigningServiceImpl" id="appLoginSecuritySigningService">
     <constructor-arg index="0" ref="appLoginSecurityDetails"/>
   </bean>

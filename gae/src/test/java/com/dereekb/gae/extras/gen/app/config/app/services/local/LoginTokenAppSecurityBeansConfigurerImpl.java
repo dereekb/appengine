@@ -23,6 +23,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	private String loginTokenSignatureFactoryBeanId = "loginTokenSignatureFactory";
 	private String refreshTokenSignatureFactoryBeanId = "refreshTokenSignatureFactory";
+	private String clientLoginTokenValidationServiceBeanId = "clientLoginTokenValidationService";
 
 	private Class<?> loginTokenEncoderDecoderClass = LoginTokenEncoderDecoderImpl.class;
 	private Class<?> loginTokenBuilderClass = LoginTokenBuilderImpl.class;
@@ -66,6 +67,19 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		}
 
 		this.refreshTokenSignatureFactoryBeanId = refreshTokenSignatureFactoryBeanId;
+	}
+
+	@Override
+	public String getClientLoginTokenValidationServiceBeanId() {
+		return this.clientLoginTokenValidationServiceBeanId;
+	}
+
+	public void setClientLoginTokenValidationServiceBeanId(String clientLoginTokenValidationServiceBeanId) {
+		if (clientLoginTokenValidationServiceBeanId == null) {
+			throw new IllegalArgumentException("clientLoginTokenValidationServiceBeanId cannot be null.");
+		}
+
+		this.clientLoginTokenValidationServiceBeanId = clientLoginTokenValidationServiceBeanId;
 	}
 
 	public Class<?> getLoginTokenEncoderDecoderClass() {

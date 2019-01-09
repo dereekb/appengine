@@ -63,6 +63,14 @@ import com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.method.impl.RequestMethodMatcherImpl;
 
+/**
+ * Used for generating all server-specific shared context configurations within the application.
+ * <p>
+ * Configurations are generally output to the "server" folder.
+ *
+ * @author dereekb
+ *
+ */
 public class ContextServerConfigurationsGenerator extends AbstractConfigurationFileGenerator {
 
 	public static final String SERVER_FILE_NAME = "server";
@@ -411,6 +419,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			http.getRawXMLBuilder().c("Other Extension Resources");
 			http.intercept(serviceApiPath + "/search/**", HasRoleConfig.make("ROLE_ADMIN"));
 
+			// Login Restriation Patterns
 			if (this.getAppConfig().isLoginServer()) {
 				http.getRawXMLBuilder().c("Register Patterns");
 				http.intercept(serviceApiPath + "/login/auth/register", HasRoleConfig.make("ROLE_NEW_USER"),
@@ -428,6 +437,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        HttpMethod.POST);
 			}
 
+			// Server Scheduler Routes
 			http.getRawXMLBuilder().c("Scheduling Pattern");
 			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_USER"), HttpMethod.POST);
 

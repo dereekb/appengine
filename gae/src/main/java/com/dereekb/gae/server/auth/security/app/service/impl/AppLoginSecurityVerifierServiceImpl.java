@@ -25,7 +25,7 @@ import com.dereekb.gae.utilities.data.ValueUtility;
  * @author dereekb
  *
  */
-public class AppLoginSecurityVerifierServiceImpl
+public class AppLoginSecurityVerifierServiceImpl extends AbstractAppLoginSecurityVerifierServiceImpl
         implements AppLoginSecurityVerifierService {
 
 	private AppLoginSecurityDetailsService detailsService;
@@ -62,17 +62,7 @@ public class AppLoginSecurityVerifierServiceImpl
 		this.signingService = signingService;
 	}
 
-	// MARK:
-	@Override
-	public boolean isValidTokenSignature(LoginTokenVerifierRequest request) {
-		try {
-			this.assertValidTokenSignature(request);
-			return true;
-		} catch (TokenException e) {
-			return false;
-		}
-	}
-
+	// MARK: AppLoginSecurityVerifierService
 	@Override
 	public void assertValidTokenSignature(LoginTokenVerifierRequest request) throws TokenException {
 

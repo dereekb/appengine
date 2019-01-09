@@ -1,5 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.app.services;
 
+import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationService;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 
@@ -16,6 +17,15 @@ public interface AppSecurityBeansConfigurer
 	public String getLoginTokenSignatureFactoryBeanId();
 
 	public String getRefreshTokenSignatureFactoryBeanId();
+
+	/**
+	 * Bean id of the {@link ClientLoginTokenValidationService}.
+	 * <p>
+	 * Useful only for microservices that have a remote login/auth system.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getClientLoginTokenValidationServiceBeanId();
 
 	// Models
 	public Class<?> getLoginSecurityModelQueryTaskOverrideClass();

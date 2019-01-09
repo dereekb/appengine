@@ -11,8 +11,8 @@ import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryI
 import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenServiceImpl;
 
 /**
- * {@link SystemLoginTokenFactoryConfigurer} implementation for a local token
- * security type.
+ * {@link SystemLoginTokenFactoryConfigurer} implementation for a system that
+ * verifies its own login tokens.
  *
  * @author dereekb
  *
@@ -46,7 +46,7 @@ public class LocalSystemLoginTokenFactoryConfigurerImpl
 
 		builder.comment("App Security");
 		String appLoginSecurityDetailsServiceId = "appLoginSecurityDetailsService";
-		String appLoginSecurityVerifierServiceId = "appLoginSecurityVerifierService";
+		String appLoginSecurityVerifierServiceId = appConfig.getAppBeans().getAppLoginSecurityVerifierServiceBeanId();
 		String appLoginSecuritySigningServiceId = appConfig.getAppBeans().getAppLoginSecuritySigningServiceBeanId();
 
 		builder.bean(appConfig.getAppBeans().getAppLoginSecurityServiceBeanId())
