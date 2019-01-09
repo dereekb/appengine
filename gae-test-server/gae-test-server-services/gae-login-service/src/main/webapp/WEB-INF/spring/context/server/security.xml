@@ -141,7 +141,7 @@
   <bean class="com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter" id="authenticationFilter">
     <constructor-arg index="0">
       <bean class="com.dereekb.gae.server.auth.security.token.filter.impl.LoginTokenAuthenticationFilterDelegateImpl">
-        <constructor-arg index="0" ref="loginTokenService"/>
+        <constructor-arg index="0" ref="loginTokenDecoder"/>
         <constructor-arg index="1" ref="loginAuthenticationManager"/>
         <constructor-arg index="2">
           <bean class="com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl">

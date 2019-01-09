@@ -26,8 +26,14 @@ import com.dereekb.gae.web.taskqueue.server.task.impl.lifecycle.apps.AllocateApp
  *
  * @author dereekb
  *
+ * @deprecated Is incomplete or provides no real use aside from development
+ *             purposes. Extend
+ *             {@link AbstractApiInitializeServerControllerDelegateImpl}
+ *             instead.
+ *
  * @see AllocateAppsTask for allocating apps.
  */
+@Deprecated
 public class ApiInitializeServerControllerDelegateImpl
         implements ApiInitializeServerControllerDelegate {
 
@@ -149,6 +155,8 @@ public class ApiInitializeServerControllerDelegateImpl
 
 		// Set Initialized
 		app.setInitialized(true);
+
+		// TODO: Not saved?
 
 		return app;
 	}

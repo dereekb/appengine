@@ -13,9 +13,9 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConf
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
-import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalAppLoginTokenSecurityConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
@@ -27,6 +27,14 @@ import com.dereekb.gae.extras.gen.app.gae.remote.RemoteEventServiceConfiguration
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
+/**
+ * Login Service Application configuration generator.
+ * <p>
+ * Not to be confused with the LoginService groups configuration.
+ *
+ * @author dereekb
+ *
+ */
 public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigurationGen {
 
 	@Override
@@ -58,6 +66,7 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new WebHookEventSubmitterImplEventListenerConfigurer();
 		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new RemoteAppWebHookEventServiceConfigurerImpl(
 		        remoteEventService);
+
 		AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer = new AppModelKeyEventListenerConfigurer() {
 
 			@Override
@@ -68,15 +77,19 @@ public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigura
 
 		};
 
-		AppServicesConfigurer appServicesConfigurer = new AppServicesConfigurerImpl(appLoginTokenSecurityConfigurer,
+		AppServicesConfigurerImpl appServicesConfigurer = new AppServicesConfigurerImpl(appLoginTokenSecurityConfigurer,
 		        appEventServiceListenersConfigurer, appWebHookEventServiceConfigurer,
 		        appModelKeyEventListenerConfigurer);
+
+		appServicesConfigurer
+		        .setAppServerInitializationConfigurer(new LoginServerAppServerInitializationConfigurerImpl());
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
 
 		configuration.setAppName("GAE Test Login Service");
 
+		configuration.setIsLoginServer(true);
 		configuration.setAppTaskQueueName("login");
 		configuration.setAppId(1L);
 

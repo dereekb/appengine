@@ -154,6 +154,7 @@ public class AppWebHookDeliveryTaskFactory
 					// sender.
 					break;
 				case SYSTEM:
+				case ROOT:
 					// Send current system's credentials.
 					security = ClientRequestSecurityImpl.systemSecurity();
 					break;

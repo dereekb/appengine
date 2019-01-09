@@ -8,6 +8,12 @@ package com.dereekb.gae.extras.gen.app.config.app.services;
  */
 public interface AppServicesConfigurer {
 
+	/**
+	 * @return {@link AppServerInitializationConfigurer}, or {@code null} if no
+	 *         initialization is necessary.
+	 */
+	public AppServerInitializationConfigurer getAppServerInitializationConfigurer();
+
 	public AppLoginTokenSecurityConfigurer getAppLoginTokenSecurityConfigurer();
 
 	public AppEventServiceListenersConfigurer getAppEventServiceListenersConfigurer();

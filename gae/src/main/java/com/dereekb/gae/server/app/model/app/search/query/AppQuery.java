@@ -2,11 +2,13 @@ package com.dereekb.gae.server.app.model.app.search.query;
 
 import java.util.Map;
 
+import com.dereekb.gae.server.app.model.app.AppLoginSecurityLevel;
 import com.dereekb.gae.server.auth.model.login.misc.owned.query.MutableLoginOwnedQuery;
 import com.dereekb.gae.server.auth.security.model.query.impl.AbstractOwnedModelQuery;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
 
@@ -20,10 +22,12 @@ public class AppQuery extends AbstractOwnedModelQuery
         implements ConfigurableEncodedQueryParameters, MutableLoginOwnedQuery {
 
 	public static final String LOGIN_FIELD = "login";
+	public static final String LEVEL_FIELD = "level";
 
 	private static final ModelKeyQueryFieldParameterBuilder LOGIN_FIELD_BUILDER = ModelKeyQueryFieldParameterBuilder.NUMBER_SINGLETON;
 
 	private ModelKeyQueryFieldParameter login;
+	private IntegerQueryFieldParameter level;
 
 	public AppQuery() {
 		super();
@@ -53,12 +57,35 @@ public class AppQuery extends AbstractOwnedModelQuery
 		this.login = LOGIN_FIELD_BUILDER.make(LOGIN_FIELD, login);
 	}
 
+	public IntegerQueryFieldParameter getLevel() {
+		return this.level;
+	}
+
+	public void setLevel(AppLoginSecurityLevel level) {
+		Integer levelInteger = null;
+
+		if (level != null) {
+			levelInteger = level.code;
+		}
+
+		this.setLevel(levelInteger);
+	}
+
+	public void setLevel(String level) {
+		this.level = IntegerQueryFieldParameter.make(LEVEL_FIELD, level);
+	}
+
+	public void setLevel(Integer level) {
+		this.level = IntegerQueryFieldParameter.make(LEVEL_FIELD, level);
+	}
+
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
 		Map<String, String> parameters = super.getParameters();
 
 		ParameterUtility.put(parameters, this.login);
+		ParameterUtility.put(parameters, this.level);
 
 		return parameters;
 	}
@@ -67,6 +94,7 @@ public class AppQuery extends AbstractOwnedModelQuery
 	public void setParameters(Map<String, String> parameters) {
 		super.setParameters(parameters);
 		this.setLogin(parameters.get(LOGIN_FIELD));
+		this.setLevel(parameters.get(LEVEL_FIELD));
 	}
 
 }

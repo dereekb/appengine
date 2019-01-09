@@ -18,6 +18,11 @@ import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
  */
 public interface AppConfiguration {
 
+	/**
+	 * Returns the registered app id.
+	 *
+	 * @return {@link Long}. Never {@code null}.
+	 */
 	public Long getAppId();
 
 	/**

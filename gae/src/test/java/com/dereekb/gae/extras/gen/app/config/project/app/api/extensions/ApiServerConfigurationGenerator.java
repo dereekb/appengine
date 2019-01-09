@@ -3,10 +3,17 @@ package com.dereekb.gae.extras.gen.app.config.project.app.api.extensions;
 import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 
+/**
+ * Generates server configuration for the initialization of an app.
+ *
+ * @author dereekb
+ *
+ */
 public class ApiServerConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
 	public static final String SERVER_FILE_NAME = "server";
@@ -21,18 +28,11 @@ public class ApiServerConfigurationGenerator extends AbstractSingleConfiguration
 	public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-		// The Root Service has no initialization...
-		// TODO: Interface with the login server to set the app as initialized or whatnot.
-		/*
-		if (this.getAppConfig().isRootServer() == false) {
-			builder.comment("Initialize Server Controller");
-			builder.bean("apiInitializeServerController").beanClass(ApiInitializeServerController.class).c()
-			        .ref("apiInitializeServerControllerDelegate");
-			builder.bean("apiInitializeServerControllerDelegate")
-			        .beanClass(ApiInitializeServerControllerDelegateImpl.class).c()
-			        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId()).ref("appRegistry");
+		AppServerInitializationConfigurer initializationConfigurer = this.getAppConfig().getAppServicesConfigurer().getAppServerInitializationConfigurer();
+
+		if (initializationConfigurer != null) {
+			initializationConfigurer.configureServerInitializationComponents(this.getAppConfig(), builder);
 		}
-		*/
 
 		return builder;
 	}

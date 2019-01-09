@@ -24,6 +24,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteSyst
 import com.dereekb.gae.extras.gen.app.config.project.service.AbstractServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.remote.RemoteLoginServiceConfigurationGen;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
@@ -85,7 +86,7 @@ public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigura
 		configuration.setAppTaskQueueName("login");
 		configuration.setAppId(1L);
 		configuration.setAppSecurityBeansConfigurer(securityBeansConfigurer);
-		configuration.setAppSecret("SECRET");
+		configuration.setAppSecret(App.DEFAULT_DEVELOPMENT_SECRET);
 
 		configuration.setIsLoginServer(false);
 		configuration.setRemoteServices(remoteLoginService);

@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services.impl;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 
@@ -15,6 +16,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventService
 public class AppServicesConfigurerImpl
         implements AppServicesConfigurer {
 
+	private AppServerInitializationConfigurer appServerInitializationConfigurer;
 	private AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer;
 	private AppEventServiceListenersConfigurer appEventServiceListenersConfigurer;
 	private AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer;
@@ -29,6 +31,14 @@ public class AppServicesConfigurerImpl
 		this.setAppEventServiceListenersConfigurer(appEventServiceListenersConfigurer);
 		this.setAppWebHookEventServiceConfigurer(appWebHookEventServiceConfigurer);
 		this.setAppModelKeyEventListenerConfigurer(appModelKeyEventListenerConfigurer);
+	}
+
+	public AppServerInitializationConfigurer getAppServerInitializationConfigurer() {
+		return this.appServerInitializationConfigurer;
+	}
+
+	public void setAppServerInitializationConfigurer(AppServerInitializationConfigurer appServerInitializationConfigurer) {
+		this.appServerInitializationConfigurer = appServerInitializationConfigurer;
 	}
 
 	@Override
@@ -82,5 +92,7 @@ public class AppServicesConfigurerImpl
 
 		this.appModelKeyEventListenerConfigurer = appModelKeyEventListenerConfigurer;
 	}
+
+
 
 }

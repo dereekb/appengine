@@ -107,7 +107,7 @@ public class AllocateAppsTask
 		this.makeApps(this.request);
 	}
 
-	protected AllocateAppsResponse makeApps(AllocateAppsRequest request) {
+	public AllocateAppsResponse makeApps(AllocateAppsRequest request) {
 		List<App> apps = GeneratorUtility.generate(request.getAppCount(), this.appGenerator);
 		this.appStorer.store(apps);
 

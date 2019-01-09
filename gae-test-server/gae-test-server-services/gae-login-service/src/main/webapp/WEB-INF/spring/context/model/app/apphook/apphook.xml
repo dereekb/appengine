@@ -23,7 +23,6 @@
     <constructor-arg index="0" ref="appHookClass"/>
   </bean>
   <alias alias="appHookKeyListAccessorFactory" name="appHookRegistry"/>
-  <alias alias="appHookKeyListAccessorFactory" name="appHookRegistry"/>
   <!--Configured Aliases-->
   <alias alias="appHookGetter" name="appHookRegistry"/>
   <alias alias="appHookStorer" name="appHookRegistry"/>

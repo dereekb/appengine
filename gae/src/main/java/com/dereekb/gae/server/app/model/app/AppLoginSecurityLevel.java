@@ -23,7 +23,14 @@ public enum AppLoginSecurityLevel implements IndexCoded {
 	 * <p>
 	 * Can make all types of requests.
 	 */
-	SYSTEM(1, true);
+	SYSTEM(1, true),
+
+	/**
+	 * Root system application. Value is used for querying.
+	 * <p>
+	 * Can make all types of requests. There should only be one application with this level.
+	 */
+	ROOT(2, true);
 
 	public final int code;
 	public final boolean admin;
@@ -48,6 +55,8 @@ public enum AppLoginSecurityLevel implements IndexCoded {
 				return AppLoginSecurityLevel.APP;
 			case 1:
 				return AppLoginSecurityLevel.SYSTEM;
+			case 2:
+				return AppLoginSecurityLevel.ROOT;
 			default:
 				throw new UnknownIndexCodeException();
 		}

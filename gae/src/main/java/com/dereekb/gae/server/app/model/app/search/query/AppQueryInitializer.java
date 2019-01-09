@@ -58,6 +58,7 @@ public class AppQueryInitializer extends AbstractObjectifyQueryRequestLimitedBui
 		public void configure(ObjectifyQueryRequestLimitedBuilder request) {
 			LOGIN_BUILDER.configure(request, this.getLogin());
 			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getOwnerId());
+			ObjectifyAbstractQueryFieldParameter.tryConfigure(request, this.getLevel());
 		}
 
 	}

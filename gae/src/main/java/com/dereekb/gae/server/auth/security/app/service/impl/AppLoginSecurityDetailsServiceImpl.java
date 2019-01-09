@@ -38,12 +38,12 @@ public class AppLoginSecurityDetailsServiceImpl
 	// MARK: AppLoginSecurityDetailsService
 	@Override
 	public AppLoginSecurityDetails getAppLoginDetails(ModelKey appId) {
-		App login = this.appGetter.get(appId);
+		App app = this.appGetter.get(appId);
 
-		if (login == null) {
-			throw new UnavailableAppLoginSecurityDetails();
+		if (app == null) {
+			throw new UnavailableAppLoginSecurityDetails("The app '" + appId + "' is unavailable.");
 		} else {
-			return login;
+			return app;
 		}
 	}
 

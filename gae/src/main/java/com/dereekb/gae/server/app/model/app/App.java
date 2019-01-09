@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.app.model.app;
 
-import com.dereekb.gae.server.app.model.app.info.AppInfo;
+import com.dereekb.gae.server.app.model.app.info.AppConfigInfo;
 import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfo;
 import com.dereekb.gae.server.app.model.app.info.AppVersion;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
@@ -36,11 +36,16 @@ import com.googlecode.objectify.condition.IfZero;
 @Entity
 @ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public class App extends DatedDatabaseModel
-        implements ObjectifyModel<App>, AppInfo, AppLoginSecurityDetails, LoginOwnedModel {
+        implements ObjectifyModel<App>, AppConfigInfo, AppLoginSecurityDetails, LoginOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final Integer DEFAULT_LEVEL = AppLoginSecurityLevel.APP.code;
+
+	/**
+	 * While not actually set as the default, this value is used in development.
+	 */
+	public static final String DEFAULT_DEVELOPMENT_SECRET = "SECRET";
 
 	/**
 	 * Database identifier.

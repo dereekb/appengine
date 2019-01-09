@@ -15,6 +15,12 @@ import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.server.app.model.hook.AppHook;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
+/**
+ * Local {@link App} group generation.
+ *
+ * @author dereekb
+ *
+ */
 public class AppGroupConfigurationGen {
 
 	public static LocalModelConfigurationGroupImpl makeLocalAppGroupConfig() {
