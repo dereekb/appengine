@@ -1,0 +1,33 @@
+version: '3'
+services:
+  gae-install: 
+    build: ./docker/shared
+    volumes:
+      - ./tmp/.m2:/root/.m2
+  gae-default-service:
+    build: ./gae-default-service
+    volumes:
+      - ./tmp/.m2:/root/.m2
+    ports:
+     - "4203:9229"
+     - "4202:5858"
+     - "4201:1337"
+     - "4200:80"
+    depends_on:
+     - "gae-install"
+  gae-event-service:
+    build: ./gae-event-service
+    volumes:
+      - ./tmp/.m2:/root/.m2
+    ports:
+      - "27017:27017"
+    depends_on:
+     - "gae-install"
+  gae-login-service:
+    build: ./gae-login-service
+    volumes:
+      - ./tmp/.m2:/root/.m2
+    ports:
+      - "5432"
+    depends_on:
+     - "gae-install"
