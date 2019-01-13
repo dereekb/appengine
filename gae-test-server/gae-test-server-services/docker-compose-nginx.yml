@@ -4,12 +4,8 @@ services:
     build: ./docker/nginx
     ports:
      - "80"
-     - "4204:80"
+     - "4400:4400"
     networks:
      - default
-     - gae-test-server-app-network
     depends_on:
       - "gae-login-service"
-networks:
-  gae-test-server-network:
-    external: true

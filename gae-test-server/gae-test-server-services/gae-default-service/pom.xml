@@ -36,6 +36,12 @@
 			</plugin>
 
 			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<!-- Inherited Config -->
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
@@ -56,22 +62,6 @@
 							<targetPath>static</targetPath>
 						</resource>
 					</webResources>
-				</configuration>
-			</plugin>
-
-			<!-- Maven Appengine Plugin -->
-			<plugin>
-				<groupId>com.google.appengine</groupId>
-				<artifactId>appengine-maven-plugin</artifactId>
-				<!-- Default Development Server Config -->
-				<configuration>
-					<fullScanSeconds>10</fullScanSeconds>
-         			<port>8181</port>
-					<jvmFlags>
-						<jvmFlag>-Xdebug</jvmFlag>
-						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8989,server=y,suspend=n</jvmFlag>
-					</jvmFlags>
-					<disableUpdateCheck>true</disableUpdateCheck>
 				</configuration>
 			</plugin>
 

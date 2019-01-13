@@ -16,6 +16,8 @@
 	<packaging>pom</packaging>
 
 	<properties>
+		<appEngineDevelopmentPort>8080</appEngineDevelopmentPort>
+		<appEngineDevelopmentJVMPort>8888</appEngineDevelopmentJVMPort>
 		<com.dereekb.gae.server.version>0.0.1-SNAPSHOT</com.dereekb.gae.server.version>
 	</properties>
 
@@ -29,6 +31,16 @@
 		</dependency>
 		
 	</dependencies>
+
+	<!-- TODO: Add Repositories -->
+	<!--
+	<repositories>
+		<repository>
+			<id>dereekb-repository</id>
+			<url>http://repo.dereekb.com/repo</url>
+		</repository>
+	</repositories>
+	-->
 	
 	<build>
 		<!-- Plugin Configuration -->
@@ -266,10 +278,10 @@
 					<!-- Default Development Server Config -->
 					<configuration>
 						<fullScanSeconds>10</fullScanSeconds>
-        				<port>8080</port>
+        		<port>${appEngineDevelopmentPort}</port>
 						<jvmFlags>
 							<jvmFlag>-Xdebug</jvmFlag>
-							<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8888,server=y,suspend=n</jvmFlag>
+							<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=${appEngineDevelopmentJVMPort},server=y,suspend=n</jvmFlag>
 						</jvmFlags>
 						<disableUpdateCheck>true</disableUpdateCheck>
 					</configuration>
