@@ -21,7 +21,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppL
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteSystemLoginTokenFactoryConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.project.service.AbstractServiceAppConfigurationGen;
+import com.dereekb.gae.extras.gen.app.config.project.service.AbstractWebServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.remote.RemoteLoginServiceConfigurationGen;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.app.model.app.App;
@@ -33,7 +33,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  * @author dereekb
  *
  */
-public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigurationGen {
+public class EventServiceAppConfigurationGen extends AbstractWebServiceAppConfigurationGen {
 
 	@Override
 	public AppConfiguration makeAppSpringConfiguration() {

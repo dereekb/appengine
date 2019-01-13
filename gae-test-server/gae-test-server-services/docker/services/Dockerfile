@@ -29,6 +29,7 @@ ARG APP_DIR=/usr/src/app
 # Configuration
 
 # Copy Maven Configuration to .m2
+RUN mkdir -p $MAVEN_CONFIG_DIR
 COPY $MAVEN_SETTINGS_PATH $MAVEN_CONFIG_DIR
 
 # Make Folders
