@@ -82,16 +82,20 @@ public class WebInfConfigurationGenerator extends AbstractConfigurationFileGener
 		builder.addSpringServletMapping(taskqueueServletName, taskQueuePattern);
 
 		// Security Constraint
+		builder.getRawXMLBuilder().comment("Restrict outside access to taskqueue API calls.");
 		XMLBuilder2 adminTaskQueueConstraint = builder.makeSecurityContraintElement(taskqueueServletName, taskQueuePattern);
 		builder.addAuthConstraintElementsTo(adminTaskQueueConstraint, "admin");
 
 		// MARK: Filters
+		builder.getRawXMLBuilder().comment("Filters");
+		builder.getRawXMLBuilder().comment("Objectify");
 		String objectifyFilterName = "ObjectifyFilter";
 
 		builder.addFilter(objectifyFilterName, com.googlecode.objectify.ObjectifyFilter.class);
 		builder.addFilterMapping(objectifyFilterName, apiServletName);
 		builder.addFilterMapping(objectifyFilterName, taskqueueServletName);
 
+		builder.getRawXMLBuilder().comment("Spring Security");
 		String springSecurityFilterChainName = "springSecurityFilter";
 
 		builder.addFilter(springSecurityFilterChainName, org.springframework.web.filter.DelegatingFilterProxy.class);
@@ -99,6 +103,7 @@ public class WebInfConfigurationGenerator extends AbstractConfigurationFileGener
 		builder.addFilterMapping(springSecurityFilterChainName, taskqueueServletName);
 
 		// MARK: Route Protection
+		builder.getRawXMLBuilder().comment("HTTPS Security Enforcement");
 		XMLBuilder2 httpsSecurityConstraint = builder.makeSecurityContraintElement("all", "/*");
 		builder.addHttpsTransportConstraint(httpsSecurityConstraint);
 
