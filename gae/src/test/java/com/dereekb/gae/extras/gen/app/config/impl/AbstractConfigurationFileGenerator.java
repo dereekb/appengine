@@ -11,6 +11,7 @@ import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.impl.XMLGenFileImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.XMLBuilderObject;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.jamesmurty.utils.XMLBuilder2;
 
@@ -108,7 +109,8 @@ public abstract class AbstractConfigurationFileGenerator
 		return this.generateImportFilesForFolders(folder, false);
 	}
 
-	public List<GenFolder> generateImportFilesForFolders(List<GenFolder> folders, boolean recursive) {
+	public List<GenFolder> generateImportFilesForFolders(List<GenFolder> folders,
+	                                                     boolean recursive) {
 		List<GenFolder> newFolders = new ArrayList<GenFolder>();
 
 		for (GenFolder folder : folders) {
@@ -153,7 +155,7 @@ public abstract class AbstractConfigurationFileGenerator
 	}
 
 	public GenFile makeFileWithXML(String fileName,
-	                               SpringBeansXMLBuilder builder) {
+	                               XMLBuilderObject builder) {
 		return this.makeFileWithXML(fileName, builder.getRawXMLBuilder());
 	}
 

@@ -9,7 +9,7 @@ package com.dereekb.gae.extras.gen.utility.spring;
  *            parent type
  */
 public interface SpringBeansXMLBuilderEntity<T>
-        extends SpringBeansXMLObject {
+        extends XMLBuilderObject {
 
 	/**
 	 * Completes the entity and goes up to the parent.

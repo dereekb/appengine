@@ -51,7 +51,12 @@ public class GenFilesWriterImpl
 	// MARK: GenFilesWriter
 	@Override
 	public void writeFiles(GenFolder folder) throws IOException {
-		new GenFolderWriterImpl(folder, this.rootFolder).writeFiles();
+		new GenFolderWriterImpl(folder, this.rootFolder).writeFilesAndFolders();
+	}
+
+	@Override
+	public void writeFilesInFolder(GenFolder folder) throws IOException {
+		new GenFolderWriterImpl(folder, this.rootFolder.getFolderFile()).writeFilesAndFolders();
 	}
 
 	public static class WriteFolder {
@@ -119,11 +124,18 @@ public class GenFilesWriterImpl
 			this.outputFolder = new WriteFolder(folderFile);
 		}
 
-		public void writeFiles() throws IOException {
-			for (GenFolder folder : this.folder.getFolders()) {
-				new GenFolderWriterImpl(folder, this.outputFolder).writeFiles();
-			}
+		public void writeFilesAndFolders() throws IOException {
+			this.writeFolders();
+			this.writeFiles();
+		}
 
+		public void writeFolders() throws IOException {
+			for (GenFolder folder : this.folder.getFolders()) {
+				new GenFolderWriterImpl(folder, this.outputFolder).writeFilesAndFolders();
+			}
+		}
+
+		public void writeFiles() throws IOException {
 			for (GenFile file : this.folder.getFiles()) {
 				new GenFileWriterImpl(file, this.outputFolder).writeFile();
 			}

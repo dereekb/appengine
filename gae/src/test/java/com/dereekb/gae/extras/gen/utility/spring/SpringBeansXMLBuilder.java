@@ -13,7 +13,7 @@ import com.jamesmurty.utils.XMLBuilder2;
  *
  */
 public interface SpringBeansXMLBuilder
-        extends SpringBeansXMLObject {
+        extends XMLBuilderObject {
 
 	// Bean
 	public SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> bean();

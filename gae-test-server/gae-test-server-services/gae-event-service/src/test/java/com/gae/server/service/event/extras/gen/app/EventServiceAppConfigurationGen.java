@@ -36,7 +36,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 public class EventServiceAppConfigurationGen extends AbstractServiceAppConfigurationGen {
 
 	@Override
-	public AppConfiguration makeAppConfiguration() {
+	public AppConfiguration makeAppSpringConfiguration() {
 
 		String appProjectId = "gae-test-server";
 		String appProjectService = "event";

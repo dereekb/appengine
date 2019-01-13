@@ -14,6 +14,12 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 
+/**
+ * Used for generating Spring configuration for an app.
+ *
+ * @author dereekb
+ *
+ */
 public class AppConfigurationGenerator extends AbstractConfigurationFileGenerator {
 
 	public static final String APP_FILE_NAME = "app";

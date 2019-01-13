@@ -20,7 +20,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalAppLog
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.event.WebHookEventSubmitterImplEventListenerConfigurer;
-import com.dereekb.gae.extras.gen.app.config.project.service.AbstractServiceAppConfigurationGen;
+import com.dereekb.gae.extras.gen.app.config.project.service.AbstractWebServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.AppGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.LoginGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.remote.RemoteEventServiceConfigurationGen;
@@ -35,10 +35,10 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  * @author dereekb
  *
  */
-public class LoginServiceAppConfigurationGen extends AbstractServiceAppConfigurationGen {
+public class LoginServiceAppConfigurationGen extends AbstractWebServiceAppConfigurationGen {
 
 	@Override
-	public AppConfiguration makeAppConfiguration() {
+	public AppConfiguration makeAppSpringConfiguration() {
 
 		String appProjectId = "gae-test-server";
 		String appProjectService = "login";

@@ -2,7 +2,7 @@ package com.dereekb.gae.extras.gen.utility.spring;
 
 import com.jamesmurty.utils.XMLBuilder2;
 
-public interface SpringBeansXMLObject {
+public interface XMLBuilderObject {
 
 	/**
 	 * Returns the raw XML builder for this type.
