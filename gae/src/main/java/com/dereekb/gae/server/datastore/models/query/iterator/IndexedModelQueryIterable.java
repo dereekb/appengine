@@ -1,6 +1,7 @@
-package com.dereekb.gae.server.datastore.objectify.query.iterator;
+package com.dereekb.gae.server.datastore.models.query.iterator;
 
 import com.dereekb.gae.server.datastore.models.query.ModelQueryIterable;
+import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
 
 /**
@@ -16,10 +17,10 @@ import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
  *
  * @see ObjectifyQueryIterableFactory
  */
-public interface ObjectifyQueryIterable<T>
+public interface IndexedModelQueryIterable<T>
         extends ModelQueryIterable<T>, IndexedIterable<T> {
 
 	@Override
-	public ObjectifyQueryIterator<T> iterator();
+	public IndexedModelQueryIterator<T> iterator();
 
 }

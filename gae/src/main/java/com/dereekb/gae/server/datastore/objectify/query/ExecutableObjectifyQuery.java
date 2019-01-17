@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.query;
 
+import com.dereekb.gae.server.datastore.models.query.iterator.ExecutableIndexedModelQuery;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 
 /**
@@ -11,6 +12,6 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
  *            model type
  */
 public interface ExecutableObjectifyQuery<T extends ObjectifyModel<T>>
-        extends ObjectifyQueryModelResponse<T>, ObjectifyQueryRequest<T> {
+        extends ExecutableIndexedModelQuery<T>, ObjectifyQueryModelResponse<T>, ObjectifyQueryRequest<T> {
 
 }

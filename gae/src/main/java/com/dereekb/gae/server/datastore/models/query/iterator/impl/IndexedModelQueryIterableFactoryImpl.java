@@ -1,18 +1,16 @@
-package com.dereekb.gae.server.datastore.objectify.query.iterator.impl;
+package com.dereekb.gae.server.datastore.models.query.iterator.impl;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestBuilder;
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestBuilderFactory;
+import com.dereekb.gae.server.datastore.models.query.iterator.ExecutableIndexedModelQuery;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
+import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterableFactory;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterator;
-import com.dereekb.gae.server.datastore.models.query.iterator.impl.IndexedModelQueryIterableFactoryImpl;
-import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
-import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilderFactory;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
 import com.google.appengine.api.datastore.Cursor;
@@ -20,7 +18,7 @@ import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
- * {@link ObjectifyQueryIterableFactory} implementation using a {@link ObjectifyQueryService},
+ * {@link IndexedModelQueryIterableFactory} implementation using a {@link IndexedModelQueryService},
  * which is used to iterate over models in the database.
  *
  * @author dereekb
@@ -28,42 +26,48 @@ import com.googlecode.objectify.cmd.SimpleQuery;
  * @param <T>
  *            model type
  */
-public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> extends IndexedModelQueryIterableFactoryImpl<T>
-        implements ObjectifyQueryIterableFactory<T> {
+public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
+        implements IndexedModelQueryIterableFactory<T> {
 
-	public static final Integer MIN_CHUNK_SIZE = 10;
+	public static final Integer MAX_ITERATION_LIMIT = 1000;
 
 	/**
-	 * Overrides the default chunk size used by queries. Use to tune
-	 * performance.
+	 * The maximum amount of models to iterate over in a single instance.
 	 */
-	private Integer chunkSize = null;
+	private int iterateLimit = MAX_ITERATION_LIMIT;
 
-	private ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory;
+	private IndexedModelQueryRequestBuilderFactory<T> queryBuilderFactory;
 
-	public ObjectifyQueryIterableFactoryImpl(ObjectifyQueryRequestBuilderFactory<T> queryBuilderFactory) {
-		super(queryBuilderFactory);
+	public IndexedModelQueryIterableFactoryImpl(IndexedModelQueryRequestBuilderFactory<T> queryBuilderFactory) {
+		this.queryBuilderFactory = queryBuilderFactory;
 	}
 
-	@Override
-	public ObjectifyQueryRequestBuilderFactory<T> getQueryBuilderFactory() {
-		return (ObjectifyQueryRequestBuilderFactory<T>) super.getQueryBuilderFactory();
+	public IndexedModelQueryRequestBuilderFactory<T> getQueryBuilderFactory() {
+		return this.queryBuilderFactory;
 	}
 
-	public Integer getChunkSize() {
-		return this.chunkSize;
-	}
-
-	public void setChunkSize(Integer chunkSize) {
-		if (chunkSize != null && (chunkSize < MIN_CHUNK_SIZE || chunkSize > MAX_ITERATION_LIMIT)) {
-			throw new IllegalArgumentException(
-			        "Iterate limit restricted to between " + MIN_CHUNK_SIZE + " and " + MAX_ITERATION_LIMIT + ".");
+	public void setQueryBuilderFactory(IndexedModelQueryRequestBuilderFactory<T> queryBuilderFactory) {
+		if (queryBuilderFactory == null) {
+			throw new IllegalArgumentException("Query Builder cannot be null.");
 		}
 
-		this.chunkSize = chunkSize;
+		this.queryBuilderFactory = queryBuilderFactory;
 	}
 
-	// MARK: ObjectifyQueryIterableFactory
+	public int getIterateLimit() {
+		return this.iterateLimit;
+	}
+
+	public void setIterateLimit(int iterateLimit) throws IllegalArgumentException {
+		if (iterateLimit < 1 || iterateLimit > MAX_ITERATION_LIMIT) {
+			throw new IllegalArgumentException(
+			        "Iterate limit restricted to between 1 and " + MAX_ITERATION_LIMIT + ".");
+		}
+
+		this.iterateLimit = iterateLimit;
+	}
+
+	// MARK: IndexedModelQueryIterableFactory
 	@Override
 	public IterableInstance makeIterable() {
 		return new IterableInstance();
@@ -194,17 +198,17 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 			}
 
 			// Set Chunk size override.
-			if (ObjectifyQueryIterableFactoryImpl.this.chunkSize != null) {
-				query = query.chunk(ObjectifyQueryIterableFactoryImpl.this.chunkSize);
+			if (IndexedModelQueryIterableFactoryImpl.this.chunkSize != null) {
+				query = query.chunk(IndexedModelQueryIterableFactoryImpl.this.chunkSize);
 			}
 
 			this.query = query;
 		}
 
 		protected SimpleQuery<T> makeQuery(Map<String, String> parameters) {
-			ObjectifyQueryRequestBuilder<T> builder = ObjectifyQueryIterableFactoryImpl.this.queryBuilderFactory
+			IndexedModelQueryRequestBuilder<T> builder = IndexedModelQueryIterableFactoryImpl.this.queryBuilderFactory
 			        .makeQuery(parameters);
-			ExecutableObjectifyQuery<T> query = builder.buildExecutableQuery();
+			ExecutableIndexedModelQuery<T> query = builder.buildExecutableQuery();
 			return query.getQuery();
 		}
 
@@ -262,7 +266,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 		private int iteratorBatchLimit;
 
 		private IteratorInstance(Cursor startCursor) {
-			this.iteratorBatchLimit = ObjectifyQueryIterableFactoryImpl.this.iterateLimit;
+			this.iteratorBatchLimit = IndexedModelQueryIterableFactoryImpl.this.iterateLimit;
 			this.startCursor = startCursor;
 			this.iteratorCursor = this.startCursor;
 		}
@@ -453,7 +457,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 
 	@Override
 	public String toString() {
-		return "IterableObjectifyQueryImpl [iterateLimit=" + this.iterateLimit + ", queryBuilderFactory="
+		return "IterableIndexedModelQueryImpl [iterateLimit=" + this.iterateLimit + ", queryBuilderFactory="
 		        + this.queryBuilderFactory + "]";
 	}
 

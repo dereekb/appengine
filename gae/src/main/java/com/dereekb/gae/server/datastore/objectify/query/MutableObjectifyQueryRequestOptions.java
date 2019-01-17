@@ -1,16 +1,16 @@
 package com.dereekb.gae.server.datastore.objectify.query;
 
-import com.dereekb.gae.utilities.model.search.request.MutableSearchOptions;
+import com.dereekb.gae.server.datastore.models.query.MutableIndexedModelQueryRequestOptions;
 import com.google.appengine.api.datastore.Cursor;
 
 /**
- * {@link ObjectifyQueryRequestOptions} extension that is mutable.
- * 
+ * Mutable {@link ObjectifyQueryRequestOptions} extension.
+ *
  * @author dereekb
  *
  */
 public interface MutableObjectifyQueryRequestOptions
-        extends ObjectifyQueryRequestOptions, MutableSearchOptions {
+        extends ObjectifyQueryRequestOptions, MutableIndexedModelQueryRequestOptions {
 
 	public void setAllowCache(boolean cache);
 

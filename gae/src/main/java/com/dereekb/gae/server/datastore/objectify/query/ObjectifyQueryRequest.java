@@ -2,6 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.query;
 
 import java.util.List;
 
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.utilities.collections.chain.Chain;
@@ -14,8 +15,13 @@ import com.dereekb.gae.utilities.collections.chain.Chain;
  * @param <T>
  *            model type
  */
-public interface ObjectifyQueryRequest<T extends ObjectifyModel<T>> {
+public interface ObjectifyQueryRequest<T extends ObjectifyModel<T>>
+        extends IndexedModelQueryRequest {
 
+	/**
+	 * @return {@link ObjectifyQueryRequestOptions}. Never {@code null}.
+	 */
+	@Override
 	public ObjectifyQueryRequestOptions getOptions();
 
 	/**

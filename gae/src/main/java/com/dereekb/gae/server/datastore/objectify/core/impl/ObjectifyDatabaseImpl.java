@@ -19,6 +19,8 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.LoadedModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAccessorImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.query.impl.AbstractIndexedModelQueryKeyResponse;
+import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistryFactory;
@@ -47,7 +49,6 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOpt
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyKeyInSetFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestBuilderImpl;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQueryIterableFactoryImpl;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
@@ -1077,28 +1078,39 @@ public class ObjectifyDatabaseImpl
 
 		// MARK: ObjectifyQueryIterableFactory
 		@Override
-		public ObjectifyQueryIterable<T> makeIterable() {
+		public IndexedModelQueryIterable<T> makeIterable() {
 			return this.iterableFactory.makeIterable();
 		}
 
 		@Override
-		public ObjectifyQueryIterable<T> makeIterable(Cursor cursor) {
+		public IndexedModelQueryIterable<T> makeIterable(String cursor) {
 			return this.iterableFactory.makeIterable(cursor);
 		}
 
 		@Override
-		public ObjectifyQueryIterable<T> makeIterable(Map<String, String> parameters,
+		public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters,
+		                                                 String cursor) {
+			return this.iterableFactory.makeIterable(parameters, cursor);
+		}
+
+		@Override
+		public IndexedModelQueryIterable<T> makeIterable(Cursor cursor) {
+			return this.iterableFactory.makeIterable(cursor);
+		}
+
+		@Override
+		public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters,
 		                                              Cursor cursor) {
 			return this.iterableFactory.makeIterable(parameters, cursor);
 		}
 
 		@Override
-		public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query) {
+		public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query) {
 			return this.iterableFactory.makeIterable(query);
 		}
 
 		@Override
-		public ObjectifyQueryIterable<T> makeIterable(SimpleQuery<T> query,
+		public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query,
 		                                              Cursor cursor) {
 			return this.iterableFactory.makeIterable(query, cursor);
 		}
@@ -1238,7 +1250,7 @@ public class ObjectifyDatabaseImpl
 
 		}
 
-		private class ObjectifyQueryKeyResponseImpl
+		private class ObjectifyQueryKeyResponseImpl extends AbstractIndexedModelQueryKeyResponse
 		        implements ObjectifyQueryKeyResponse<T> {
 
 			protected final SimpleQuery<T> query;
@@ -1252,13 +1264,13 @@ public class ObjectifyDatabaseImpl
 			}
 
 			@Override
-			public boolean hasResults() {
-				return this.getResultCount() > 0;
+			public Integer getResultCount() {
+				return this.query.count();
 			}
 
 			@Override
-			public Integer getResultCount() {
-				return this.query.count();
+			public String getCursorString() throws NoSearchCursorException {
+				return this.getCursor().toWebSafeString();
 			}
 
 			@Override

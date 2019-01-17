@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.datastore.objectify.query.iterator;
+package com.dereekb.gae.server.datastore.models.query.iterator;
 
 import com.dereekb.gae.server.datastore.models.query.ModelQueryIterator;
 import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterator;
@@ -12,7 +12,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterator;
  * @param <T>
  *            model type
  */
-public interface ObjectifyQueryIterator<T>
+public interface IndexedModelQueryIterator<T>
         extends ModelQueryIterator<T>, IndexedIterator<T> {
 
 }

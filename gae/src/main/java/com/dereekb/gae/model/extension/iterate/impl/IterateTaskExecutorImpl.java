@@ -10,10 +10,10 @@ import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedException;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessorFactory;
+import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
+import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterator;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
-import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterator;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.batch.Batch;
 import com.dereekb.gae.utilities.collections.batch.BatchBuilder;
@@ -120,8 +120,8 @@ public class IterateTaskExecutorImpl<T extends ObjectifyModel<T>>
 			}
 
 			Map<String, String> parameters = this.input.getParameters();
-			ObjectifyQueryIterable<T> iterable = IterateTaskExecutorImpl.this.query.makeIterable(parameters, cursor);
-			ObjectifyQueryIterator<T> iterator = iterable.iterator();
+			IndexedModelQueryIterable<T> iterable = IterateTaskExecutorImpl.this.query.makeIterable(parameters, cursor);
+			IndexedModelQueryIterator<T> iterator = iterable.iterator();
 			LimitedIterator<T> limitedIterator = new LimitedIteratorImpl<T>(iterator,
 			        IterateTaskExecutorImpl.this.iteratorLimit);
 
