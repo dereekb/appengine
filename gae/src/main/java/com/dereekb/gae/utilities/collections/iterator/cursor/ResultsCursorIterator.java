@@ -16,9 +16,11 @@ public interface ResultsCursorIterator<T>
         extends Iterator<T> {
 
 	/**
-	 * Returns the cursor this iterator began at, if available.
+	 * Returns the cursor this iterator began at, if available. It is up to the
+	 * implementation to determine if null or a "start" value cursor should be
+	 * returned in cases where no explicit cursor was specified.
 	 *
-	 * @return {@link ResultsCursor}. Never {@code null}.
+	 * @return {@link ResultsCursor}, or {@code null} if not available.
 	 * @throws UnavailableIteratorIndexException
 	 *             If the index is unavailable.
 	 */

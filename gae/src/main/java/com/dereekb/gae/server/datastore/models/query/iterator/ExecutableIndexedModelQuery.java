@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.datastore.models.query.iterator;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryModelResponse;
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequest;
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryResponse;
 
@@ -14,6 +15,6 @@ import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryResponse;
  *            model type
  */
 public interface ExecutableIndexedModelQuery<T extends UniqueModel>
-        extends IndexedModelQueryResponse, IndexedModelQueryRequest {
+        extends IndexedModelQueryModelResponse<T>, IndexedModelQueryRequest {
 
 }

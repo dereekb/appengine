@@ -1,8 +1,8 @@
 package com.dereekb.gae.server.datastore.objectify.query.impl;
 
+import com.dereekb.gae.server.datastore.models.query.impl.IndexedModelQueryRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.objectify.query.MutableObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
-import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.google.appengine.api.datastore.Cursor;
 
@@ -12,7 +12,7 @@ import com.google.appengine.api.datastore.Cursor;
  * @author dereekb
  *
  */
-public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
+public class ObjectifyQueryRequestOptionsImpl extends IndexedModelQueryRequestOptionsImpl
         implements MutableObjectifyQueryRequestOptions {
 
 	private boolean allowCache = true;

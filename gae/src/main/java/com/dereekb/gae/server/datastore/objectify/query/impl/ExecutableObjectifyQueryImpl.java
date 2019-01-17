@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore.objectify.query.impl;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryModelResultIterator;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyEntityQueryService;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
@@ -129,13 +130,18 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public QueryResultIterator<T> queryModelsIterator() {
-		return this.getResponse().queryModelsIterator();
+	public QueryResultIterator<T> objectifyQueryModelsIterator() {
+		return this.getResponse().objectifyQueryModelsIterator();
 	}
 
 	@Override
 	public QueryResultIterator<Key<T>> queryObjectifyKeyIterator() {
 		return this.getResponse().queryObjectifyKeyIterator();
+	}
+
+	@Override
+	public IndexedModelQueryModelResultIterator<T> queryModelResultsIterator() {
+		return this.getResponse().queryModelResultsIterator();
 	}
 
 	// MARK: ObjectifyQueryRequest

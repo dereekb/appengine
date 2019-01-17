@@ -19,6 +19,7 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.LoadedModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.impl.ModelKeyListAccessorImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.StringModelKeyConverter;
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryModelResultIterator;
 import com.dereekb.gae.server.datastore.models.query.impl.AbstractIndexedModelQueryKeyResponse;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
@@ -49,6 +50,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOpt
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyKeyInSetFilter;
+import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryModelResultIteratorImpl;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestBuilderImpl;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQueryIterableFactoryImpl;
@@ -1107,7 +1109,7 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters,
-		                                              Cursor cursor) {
+		                                                 Cursor cursor) {
 			return this.iterableFactory.makeIterable(parameters, cursor);
 		}
 
@@ -1118,7 +1120,7 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query,
-		                                              Cursor cursor) {
+		                                                 Cursor cursor) {
 			return this.iterableFactory.makeIterable(query, cursor);
 		}
 
@@ -1251,8 +1253,21 @@ public class ObjectifyDatabaseImpl
 			}
 
 			@Override
-			public QueryResultIterator<T> queryModelsIterator() {
-				return this.queryModelsIterator();
+			public QueryResultIterator<T> objectifyQueryModelsIterator() {
+				return super.query.iterator();
+			}
+
+			@Override
+			public IndexedModelQueryModelResultIterator<T> queryModelResultsIterator() {
+				return new IndexedModelQueryModelResultIteratorImpl();
+			}
+
+			private class IndexedModelQueryModelResultIteratorImpl extends ObjectifyQueryModelResultIteratorImpl<T> {
+
+				private IndexedModelQueryModelResultIteratorImpl() {
+					super(objectifyQueryModelsIterator());
+				}
+
 			}
 
 		}

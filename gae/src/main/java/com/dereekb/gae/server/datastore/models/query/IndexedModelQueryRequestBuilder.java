@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.objectify.query.exception.InvalidQuerySo
  *            model type
  */
 public interface IndexedModelQueryRequestBuilder<T extends UniqueModel>
-        extends IndexedModelQueryRequest {
+        extends IndexedModelQueryRequest, IndexedModelQueryRequestLimitedBuilder {
 
 	public ExecutableIndexedModelQuery<T> buildExecutableQuery() throws InvalidQuerySortingException;
 

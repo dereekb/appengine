@@ -3,6 +3,7 @@ package com.dereekb.gae.server.datastore.objectify.query.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyEntityQueryService;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
@@ -26,7 +27,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  *
  * @param <T>
  *            model type
- * 
+ *
  * @see {@linkplain https://cloud.google.com/appengine/docs/standard/go/datastore/query-restrictions}
  */
 public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
@@ -141,6 +142,11 @@ public class ObjectifyQueryRequestBuilderImpl<T extends ObjectifyModel<T>>
 	@Override
 	public ObjectifyQueryRequestOptions getOptions() {
 		return this.options;
+	}
+
+	@Override
+	public void setOptions(IndexedModelQueryRequestOptions options) {
+		this.setOptions(new ObjectifyQueryRequestOptionsImpl(options));
 	}
 
 	@Override

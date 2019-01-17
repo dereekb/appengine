@@ -27,6 +27,14 @@ public class ObjectifyCursor
 		return new ObjectifyCursor(cursor);
 	}
 
+	public static ObjectifyCursor wrap(Cursor cursor) {
+		if (cursor != null) {
+			return new ObjectifyCursor(cursor);
+		}
+
+		return null;
+	}
+
 	public static ObjectifyCursor make(ResultsCursor cursor) {
 		ObjectifyCursor objectifyCursor = null;
 

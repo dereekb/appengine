@@ -20,6 +20,6 @@ public interface ObjectifyQueryModelResponse<T extends ObjectifyModel<T>>
 	 *
 	 * @return {@link QueryResultIterator}. Never {@code null}.
 	 */
-	public QueryResultIterator<T> queryModelsIterator();
+	public QueryResultIterator<T> objectifyQueryModelsIterator();
 
 }

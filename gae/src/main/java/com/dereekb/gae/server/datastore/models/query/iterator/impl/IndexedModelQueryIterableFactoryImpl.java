@@ -5,9 +5,10 @@ import java.util.NoSuchElementException;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryModelResultIterator;
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestBuilderFactory;
-import com.dereekb.gae.server.datastore.models.query.iterator.ExecutableIndexedModelQuery;
+import com.dereekb.gae.server.datastore.models.query.impl.IndexedModelQueryRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterableFactory;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterator;
@@ -15,14 +16,11 @@ import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
-import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.QueryResultIterator;
-import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
  * {@link IndexedModelQueryIterableFactory} implementation using a
- * {@link IndexedModelQueryService},
- * which is used to iterate over models in the database.
+ * {@link IndexedModelQueryService}, which is used to iterate over models from a
+ * {@link IndexedModelQueryRequestBuilderFactory}.
  *
  * @author dereekb
  *
@@ -37,6 +35,8 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 
 	/**
 	 * The maximum amount of models to iterate over in a single instance.
+	 * <p>
+	 * Note, the actual number of models may be greater than this value.
 	 */
 	private int iterateLimit = MAX_ITERATION_LIMIT;
 
@@ -131,74 +131,54 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 
 		// MARK: IndexedIterable
 		@Override
-		public ModelKey getStartIndex() {
-			return IndexUtility.convertCursor(this.startCursor);
-		}
-
-		@Override
-		public void setStartIndex(ModelKey index) throws InvalidIteratorIndexException {
-			this.startCursor = IndexUtility.convertCursor(index);
-		}
-
-		@Override
 		public IteratorInstance iterator() {
-			return new ConfiguredIteratorInstance(this.startCursor, this.parameters);
+			return new GenericIteratorInstance(this.startCursor, this.parameters);
 		}
 
 	}
 
 	// MARK: Instance
-	private class ConfiguredIteratorInstance extends IteratorInstance {
+	protected final class GenericIteratorInstance extends AbstractGenericIteratorInstance<IndexedModelQueryRequestBuilder<T>> {
 
-		private SimpleQuery<T> query;
-
-		protected ConfiguredIteratorInstance(Cursor startCursor) {
-			super(startCursor);
+		protected GenericIteratorInstance(ResultsCursor startCursor, Map<String, String> parameters) {
+			super(startCursor, parameters);
 		}
 
-		private ConfiguredIteratorInstance(Cursor startCursor, SimpleQuery<T> query) {
-			super(startCursor);
-			this.setQuery(query);
-		}
-
-		private ConfiguredIteratorInstance(Cursor startCursor, Map<String, String> parameters) {
-			super(startCursor);
-			this.setQuery(parameters);
-		}
-
-		public void setQuery(Map<String, String> parameters) {
-			this.setQuery(this.makeQuery(parameters));
-		}
-
-		public void setQuery(SimpleQuery<T> query) {
-			if (query == null) {
-				query = this.makeQuery(null);
-			}
-
-			// Set Chunk size override.
-			if (IndexedModelQueryIterableFactoryImpl.this.chunkSize != null) {
-				query = query.chunk(IndexedModelQueryIterableFactoryImpl.this.chunkSize);
-			}
-
-			this.query = query;
-		}
-
-		protected SimpleQuery<T> makeQuery(Map<String, String> parameters) {
-			IndexedModelQueryRequestBuilder<T> builder = IndexedModelQueryIterableFactoryImpl.this.queryBuilderFactory
-			        .makeQuery(parameters);
-			ExecutableIndexedModelQuery<T> query = builder.buildExecutableQuery();
-			return query.getQuery();
-		}
-
+		// MARK: AbstractGenericIteratorInstance
 		@Override
-		protected QueryResultIterator<T> continueQuery() {
-			SimpleQuery<T> query = this.query;
-			Cursor iteratorCursor = this.getIteratorCursor();
+		protected IndexedModelQueryRequestBuilder<T> newBuilder(Map<String, String> parameters) {
+			return IndexedModelQueryIterableFactoryImpl.this.queryBuilderFactory.makeQuery(parameters);
+		}
 
-			query = query.startAt(iteratorCursor);
-			query = query.limit(this.getIteratorBatchLimit());
+	}
 
-			return query.iterator();
+	protected abstract class AbstractGenericIteratorInstance<B extends IndexedModelQueryRequestBuilder<T>> extends IteratorInstance {
+
+		private B builder;
+
+		protected AbstractGenericIteratorInstance(ResultsCursor startCursor, Map<String, String> parameters) {
+			super(startCursor);
+			this.resetBuilder(parameters);
+		}
+
+		private void resetBuilder(Map<String, String> parameters) {
+			this.builder = this.newBuilder(parameters);
+		}
+
+		protected abstract B newBuilder(Map<String, String> parameters);
+
+		// MARK: IteratorInstance
+		@Override
+		protected IndexedModelQueryModelResultIterator<T> continueQuery() {
+			this.updateBuilderOptionsForNextQuery(this.builder, this.getIteratorCursor(), this.getIteratorBatchLimit());
+			return this.builder.buildExecutableQuery().queryModelResultsIterator();
+		}
+
+		protected void updateBuilderOptionsForNextQuery(B builder, ResultsCursor cursor, Integer limit) {
+			IndexedModelQueryRequestOptionsImpl options = new IndexedModelQueryRequestOptionsImpl();
+			options.setCursor(cursor);
+			options.setLimit(limit);
+			builder.setOptions(options);
 		}
 
 	}
@@ -212,29 +192,32 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 	        implements IndexedModelQueryIterator<T> {
 
 		/**
-		 * The current index.
+		 * The current numeric index for the current iterator.
+		 * <p>
+		 * This does not correspond to anything aside from how many items have
+		 * been iterated through.
 		 */
 		private int iteratorIndex = 0;
 
 		/**
-		 * Cursor this iterator starts on.
+		 * ResultsCursor this iterator starts on.
 		 */
-		private Cursor startCursor;
+		private ResultsCursor startCursor;
 
 		/**
-		 * Cursor used by the iterator.
+		 * ResultsCursor used by the iterator.
 		 */
-		private Cursor iteratorCursor;
+		private ResultsCursor iteratorCursor;
 
 		/**
-		 * Cursor this iterator ended on.
+		 * ResultsCursor this iterator ended on.
 		 */
-		private Cursor endCursor;
+		private ResultsCursor endCursor;
 
 		/**
 		 * Current iterator.
 		 */
-		private QueryResultIterator<T> iterator;
+		private IndexedModelQueryModelResultIterator<T> iterator;
 
 		/**
 		 * Whether or not the iterator has finished.
@@ -243,7 +226,7 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 
 		private int iteratorBatchLimit;
 
-		private IteratorInstance(Cursor startCursor) {
+		protected IteratorInstance(ResultsCursor startCursor) {
 			this.iteratorBatchLimit = IndexedModelQueryIterableFactoryImpl.this.iterateLimit;
 			this.startCursor = startCursor;
 			this.iteratorCursor = this.startCursor;
@@ -270,7 +253,7 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 				return false;
 			}
 
-			QueryResultIterator<T> iterator = this.getIterator();
+			IndexedModelQueryModelResultIterator<T> iterator = this.getIterator();
 			boolean hasNext = iterator.hasNext();
 
 			if (hasNext == false) {
@@ -297,7 +280,7 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 		 * Resets the iterator for reuse if reusable.
 		 */
 		private void finished() {
-			this.endCursor = this.iterator.getCursor();
+			this.endCursor = this.iterator.getEndCursor();
 			this.finished = true;
 		}
 
@@ -321,16 +304,16 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 			return next;
 		}
 
-		protected abstract QueryResultIterator<T> continueQuery();
+		protected abstract IndexedModelQueryModelResultIterator<T> continueQuery();
 
-		private QueryResultIterator<T> getNextIterator() {
-			this.iteratorCursor = this.iterator.getCursor();
+		private IndexedModelQueryModelResultIterator<T> getNextIterator() {
+			this.iteratorCursor = this.iterator.getEndCursor();
 			this.iterator = null;
 			return this.getIterator();
 		}
 
-		private QueryResultIterator<T> getIterator() {
-			QueryResultIterator<T> iterator = this.iterator;
+		private IndexedModelQueryModelResultIterator<T> getIterator() {
+			IndexedModelQueryModelResultIterator<T> iterator = this.iterator;
 
 			if (iterator == null) {
 				iterator = this.continueQuery();
@@ -345,31 +328,21 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 			return this.startCursor;
 		}
 
-		public Cursor getIteratorCursor() {
+		public ResultsCursor getIteratorCursor() {
 			return this.iteratorCursor;
 		}
 
 		@Override
 		public ResultsCursor getEndCursor() {
-			Cursor cursor = null;
+			ResultsCursor cursor = null;
 
 			if (this.iterator != null) {
-				cursor = this.iterator.getCursor();
+				cursor = this.iterator.getEndCursor();
 			} else {
 				cursor = this.endCursor;
 			}
 
 			return cursor;
-		}
-
-		@Override
-		public ModelKey getStartIndex() throws UnavailableIteratorIndexException {
-			return IndexUtility.safeConvertCursor(this.getStartCursor());
-		}
-
-		@Override
-		public ModelKey getEndIndex() throws UnavailableIteratorIndexException {
-			return IndexUtility.safeConvertCursor(this.getEndCursor());
 		}
 
 	}
