@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.model.search.request;
 
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 
 /**
@@ -16,7 +17,7 @@ public interface SearchOptions
 	 *
 	 * @return {@link String} cursor. {@link null} if not specified.
 	 */
-	public String getCursor();
+	public ResultsCursor getCursor();
 
 	/**
 	 * Returns the max number of elements to retrieve.

@@ -25,14 +25,14 @@ import com.dereekb.gae.server.search.document.query.expression.ExpressionOperato
 import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.collections.chain.Chain;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
-import com.google.appengine.api.datastore.Cursor;
 
 /**
  * Collection of tests related to querying the datastore.
- * 
+ *
  * Tests are conducted using the {@link Login} type.
- * 
+ *
  * @author dereekb
  *
  */
@@ -114,12 +114,9 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		List<ModelKey> resultsA = queryA.queryModelKeys();
 		Assert.assertTrue(resultsA.size() == limit);
 
-		Cursor cursorA = queryA.getCursor();
-
+		ResultsCursor cursorA = queryA.getCursor();
 		Assert.assertNotNull(cursorA);
-
-		String cursorAString = cursorA.toWebSafeString();
-		options.setCursor(cursorAString);
+		options.setCursor(cursorA);
 
 		queryBuilder.setOptions(options);
 		ExecutableObjectifyQuery<Login> queryB = queryBuilder.buildExecutableQuery();
@@ -252,7 +249,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
 		Assert.assertTrue(chain.getValue().getField().equals(fieldB));
 	}
-	
+
 	@Test
 	public void testRequestBuilderMultipleInequalitysFail() {
 		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry

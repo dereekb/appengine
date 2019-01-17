@@ -3,6 +3,7 @@ package com.dereekb.gae.utilities.model.search.request;
 import java.util.Collection;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 
 /**
  * Generic model response to a {@link SearchRequest}.
@@ -17,7 +18,7 @@ public interface SearchResponse {
 	 * 
 	 * @return {@link String}. {@code null} if unavailable.
 	 */
-	public String getSearchCursor();
+	public ResultsCursor getSearchCursor();
 
 	/**
 	 * Returns the {@link ModelKey} search results.

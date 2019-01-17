@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.datastore.models.query;
 
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 
 /**
@@ -31,6 +32,6 @@ public interface IndexedModelQueryResponse {
 	 * @throws NoSearchCursorException
 	 *             if no cursor is available.
 	 */
-	public String getCursorString() throws NoSearchCursorException;
+	public ResultsCursor getCursor() throws NoSearchCursorException;
 
 }

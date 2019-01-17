@@ -15,12 +15,13 @@ import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryReque
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.KeysOnlySearchException;
 import com.dereekb.gae.utilities.model.search.request.MutableSearchRequest;
 
 /**
  * Test utility for {@link ClientQueryRequestSender}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -62,7 +63,7 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 		Collection<ModelKey> firstResultKeys = firstResponse.getKeyResults();
 		Assert.assertFalse(firstResultKeys.isEmpty());
 
-		String searchCursor = firstResponse.getSearchCursor();
+		ResultsCursor searchCursor = firstResponse.getSearchCursor();
 		Assert.assertNotNull(searchCursor);
 
 		// Set the search cursor
@@ -99,7 +100,7 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 		Collection<ModelKey> firstResultKeys = firstResponse.getKeyResults();
 		Assert.assertTrue(firstResultKeys.size() == limit);
 
-		String searchCursor = firstResponse.getSearchCursor();
+		ResultsCursor searchCursor = firstResponse.getSearchCursor();
 		Assert.assertNotNull(searchCursor);
 
 		Assert.assertFalse(models.isEmpty());

@@ -47,6 +47,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBui
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyKeyInSetFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestBuilderImpl;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
@@ -54,6 +55,7 @@ import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQ
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.server.datastore.utility.GetterUtility;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.google.appengine.api.datastore.Cursor;
@@ -1083,13 +1085,18 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
-		public IndexedModelQueryIterable<T> makeIterable(String cursor) {
+		public IndexedModelQueryIterable<T> makeIterable(ResultsCursor cursor) {
 			return this.iterableFactory.makeIterable(cursor);
 		}
 
 		@Override
+		public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters) {
+			return this.iterableFactory.makeIterable(parameters);
+		}
+
+		@Override
 		public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters,
-		                                                 String cursor) {
+		                                                 ResultsCursor cursor) {
 			return this.iterableFactory.makeIterable(parameters, cursor);
 		}
 
@@ -1155,7 +1162,7 @@ public class ObjectifyDatabaseImpl
 			private Query<T> applyOptions(Query<T> query) {
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
-				Cursor cursor = options.getQueryCursor();
+				Cursor cursor = options.getObjectifyQueryCursor();
 				Integer offset = options.getOffset();
 				Integer limit = options.getLimit();
 				Integer chunk = options.getChunk();
@@ -1269,12 +1276,12 @@ public class ObjectifyDatabaseImpl
 			}
 
 			@Override
-			public String getCursorString() throws NoSearchCursorException {
-				return this.getCursor().toWebSafeString();
+			public ResultsCursor getCursor() throws NoSearchCursorException {
+				return ObjectifyCursor.make(this.getObjectifyCursor());
 			}
 
 			@Override
-			public Cursor getCursor() throws NoSearchCursorException {
+			public Cursor getObjectifyCursor() throws NoSearchCursorException {
 				Cursor cursor = this.getResult().getCursor();
 
 				if (cursor == null) {

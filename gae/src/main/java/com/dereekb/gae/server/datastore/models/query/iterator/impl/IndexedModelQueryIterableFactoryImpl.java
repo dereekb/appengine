@@ -11,6 +11,8 @@ import com.dereekb.gae.server.datastore.models.query.iterator.ExecutableIndexedM
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterableFactory;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterator;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
+import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
 import com.google.appengine.api.datastore.Cursor;
@@ -18,7 +20,8 @@ import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
- * {@link IndexedModelQueryIterableFactory} implementation using a {@link IndexedModelQueryService},
+ * {@link IndexedModelQueryIterableFactory} implementation using a
+ * {@link IndexedModelQueryService},
  * which is used to iterate over models in the database.
  *
  * @author dereekb
@@ -29,6 +32,7 @@ import com.googlecode.objectify.cmd.SimpleQuery;
 public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
         implements IndexedModelQueryIterableFactory<T> {
 
+	public static final Integer MIN_ITERATION_LIMIT = 1;
 	public static final Integer MAX_ITERATION_LIMIT = 1000;
 
 	/**
@@ -74,64 +78,46 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 	}
 
 	@Override
-	public IterableInstance makeIterable(Cursor cursor) {
+	public IndexedModelQueryIterable<T> makeIterable(ResultsCursor cursor) {
 		return new IterableInstance(cursor);
 	}
 
 	@Override
-	public IterableInstance makeIterable(Map<String, String> parameters,
-	                                     Cursor startCursor) {
-		return new IterableInstance(parameters, startCursor);
+	public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters) {
+		return this.makeIterable(parameters, null);
 	}
 
 	@Override
-	public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query) {
-		return new IterableInstance(query, null);
-	}
-
-	@Override
-	public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query,
-	                                              Cursor cursor) {
-		return new IterableInstance(query, cursor);
+	public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters,
+	                                                 ResultsCursor cursor) {
+		return new IterableInstance(parameters, cursor);
 	}
 
 	// MARK: Internal Classes
 	public class IterableInstance
 	        implements IndexedModelQueryIterable<T> {
 
-		private Cursor startCursor;
-		private SimpleQuery<T> query;
+		private ResultsCursor startCursor;
 		private Map<String, String> parameters;
 
 		public IterableInstance() {}
 
-		public IterableInstance(Cursor startCursor) {
+		public IterableInstance(ResultsCursor startCursor) {
 			this.setStartCursor(startCursor);
 		}
 
-		public IterableInstance(SimpleQuery<T> query, Cursor startCursor) {
-			this.setQuery(query);
-			this.setStartCursor(startCursor);
-		}
-
-		public IterableInstance(Map<String, String> parameters, Cursor startCursor) {
+		public IterableInstance(Map<String, String> parameters, ResultsCursor startCursor) {
 			this.setStartCursor(startCursor);
 			this.setParameters(parameters);
 		}
 
-		public SimpleQuery<T> getQuery() {
-			return this.query;
-		}
-
-		public void setQuery(SimpleQuery<T> query) {
-			this.query = query;
-		}
-
-		public Cursor getStartCursor() {
+		@Override
+		public ResultsCursor getStartCursor() {
 			return this.startCursor;
 		}
 
-		public void setStartCursor(Cursor startCursor) {
+		@Override
+		public void setStartCursor(ResultsCursor startCursor) {
 			this.startCursor = startCursor;
 		}
 
@@ -151,20 +137,12 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 
 		@Override
 		public void setStartIndex(ModelKey index) throws InvalidIteratorIndexException {
-			this.startCursor = IndexUtility.convertIndex(index);
+			this.startCursor = IndexUtility.convertCursor(index);
 		}
 
 		@Override
 		public IteratorInstance iterator() {
-			ConfiguredIteratorInstance instance;
-
-			if (this.query != null) {
-				instance = new ConfiguredIteratorInstance(this.startCursor, this.query);
-			} else {
-				instance = new ConfiguredIteratorInstance(this.startCursor, this.parameters);
-			}
-
-			return instance;
+			return new ConfiguredIteratorInstance(this.startCursor, this.parameters);
 		}
 
 	}
@@ -363,7 +341,7 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 		}
 
 		@Override
-		public Cursor getStartCursor() {
+		public ResultsCursor getStartCursor() {
 			return this.startCursor;
 		}
 
@@ -372,18 +350,7 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 		}
 
 		@Override
-		public Cursor getCurrentCursor() {
-			Cursor cursor = null;
-
-			if (this.iterator != null) {
-				cursor = this.iterator.getCursor();
-			}
-
-			return cursor;
-		}
-
-		@Override
-		public Cursor getEndCursor() {
+		public ResultsCursor getEndCursor() {
 			Cursor cursor = null;
 
 			if (this.iterator != null) {
@@ -401,11 +368,6 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 		}
 
 		@Override
-		public ModelKey getCurrentIndex() throws UnavailableIteratorIndexException {
-			return IndexUtility.safeConvertCursor(this.getCurrentCursor());
-		}
-
-		@Override
 		public ModelKey getEndIndex() throws UnavailableIteratorIndexException {
 			return IndexUtility.safeConvertCursor(this.getEndCursor());
 		}
@@ -413,40 +375,40 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 	}
 
 	/**
-	 * Used for conversions.
+	 * Used for conversions and throwing the necessary exceptions.
 	 *
 	 * @author dereekb
 	 */
-	private static class IndexUtility {
+	protected static class IndexUtility {
 
-		private static ModelKey safeConvertCursor(Cursor cursor) {
+		protected static ModelKey safeConvertCursor(ResultsCursor cursor) throws UnavailableIteratorIndexException {
 			if (cursor == null) {
 				throw new UnavailableIteratorIndexException("Index was unavailable.");
 			} else {
-				return convertCursor(cursor);
+				return convertCursor(cursor.getCursorString());
 			}
 		}
 
-		private static ModelKey convertCursor(Cursor cursor) {
+		protected static ModelKey convertCursor(String cursorString) {
 			ModelKey index = null;
 
-			if (cursor != null) {
-				index = ModelKey.safe(cursor.toWebSafeString());
+			if (cursorString != null) {
+				index = ModelKey.safe(cursorString);
 			}
 
 			return index;
 		}
 
-		private static Cursor convertIndex(ModelKey index) throws InvalidIteratorIndexException {
-			Cursor cursor = null;
+		protected static ResultsCursor convertIndex(ModelKey index) throws InvalidIteratorIndexException {
+			ResultsCursor cursor = null;
 
 			if (index != null) {
 				String cursorString = index.getName();
 
 				if (cursorString == null) {
-					throw new InvalidIteratorIndexException("Expected web-safe cursor string value.");
+					throw new InvalidIteratorIndexException("Expected a cursor string value.");
 				} else {
-					cursor = Cursor.fromWebSafeString(index.getName());
+					cursor = ResultsCursorImpl.make(cursorString);
 				}
 			}
 

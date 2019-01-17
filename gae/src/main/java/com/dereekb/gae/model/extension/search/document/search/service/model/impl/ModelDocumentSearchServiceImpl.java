@@ -20,6 +20,8 @@ import com.dereekb.gae.model.extension.search.document.search.utility.SearchDocu
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
+import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.ScoredDocument;
@@ -180,9 +182,9 @@ public class ModelDocumentSearchServiceImpl<T extends UniqueModel, R>
 		}
 
 		@Override
-		public String getSearchCursor() {
+		public ResultsCursor getSearchCursor() {
 			try {
-				return this.getResultsCursor().toWebSafeString();
+				return new ResultsCursorImpl(this.getResultsCursor().toWebSafeString());
 			} catch (NoSearchCursorException e) {
 				return null;
 			}

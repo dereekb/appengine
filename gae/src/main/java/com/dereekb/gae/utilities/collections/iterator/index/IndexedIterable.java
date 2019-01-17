@@ -1,6 +1,7 @@
 package com.dereekb.gae.utilities.collections.iterator.index;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursorIterable;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 
 /**
@@ -12,6 +13,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIte
  * @param <T>
  *            Type to iterate.
  * @see IndexedIterator
+ * @see ResultsCursorIterable
  */
 public interface IndexedIterable<T>
         extends Iterable<T> {

@@ -3,6 +3,8 @@ package com.dereekb.gae.server.search.model.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
+import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.model.search.request.MutableSearchOptions;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 
@@ -20,7 +22,7 @@ public class SearchOptionsImpl
 	public static final String LIMIT_PARAM = "limit";
 	public static final String OFFSET_PARAM = "offset";
 
-	private String cursor;
+	private ResultsCursor cursor;
 	private Integer offset;
 	private Integer limit;
 
@@ -36,6 +38,12 @@ public class SearchOptionsImpl
 		this.setLimit(limit);
 	}
 
+	public SearchOptionsImpl(ResultsCursor cursor, Integer offset, Integer limit) {
+		this.setCursor(cursor);
+		this.setOffset(offset);
+		this.setLimit(limit);
+	}
+
 	public void setOptions(SearchOptions options) {
 		this.setCursor(options.getCursor());
 		this.setOffset(options.getOffset());
@@ -43,12 +51,17 @@ public class SearchOptionsImpl
 	}
 
 	@Override
-	public String getCursor() {
+	public ResultsCursor getCursor() {
 		return this.cursor;
 	}
 
 	@Override
 	public void setCursor(String cursor) {
+		this.setCursor(new ResultsCursorImpl(cursor));
+	}
+
+	@Override
+	public void setCursor(ResultsCursor cursor) {
 		this.cursor = cursor;
 	}
 
@@ -86,7 +99,7 @@ public class SearchOptionsImpl
 		Map<String, String> parameters = new HashMap<String, String>();
 
 		if (this.cursor != null) {
-			parameters.put(CURSOR_PARAM, this.cursor);
+			parameters.put(CURSOR_PARAM, this.cursor.getCursorString());
 		}
 
 		if (this.limit != null) {

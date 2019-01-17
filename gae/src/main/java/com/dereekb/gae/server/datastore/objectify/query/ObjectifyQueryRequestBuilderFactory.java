@@ -14,7 +14,8 @@ import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
  * @param <T>
  *            model type
  */
-public interface ObjectifyQueryRequestBuilderFactory<T extends ObjectifyModel<T>> extends IndexedModelQueryRequestBuilderFactory<T> {
+public interface ObjectifyQueryRequestBuilderFactory<T extends ObjectifyModel<T>>
+        extends IndexedModelQueryRequestBuilderFactory<T> {
 
 	/**
 	 * Creates a new {@link ObjectifyQueryRequestBuilder}.

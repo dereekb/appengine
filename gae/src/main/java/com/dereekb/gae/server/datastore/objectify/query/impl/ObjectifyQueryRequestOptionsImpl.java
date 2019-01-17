@@ -74,11 +74,11 @@ public class ObjectifyQueryRequestOptionsImpl extends SearchOptionsImpl
 	}
 
 	@Override
-	public Cursor getQueryCursor() {
+	public Cursor getObjectifyQueryCursor() {
 		Cursor cursor = null;
 
 		if (this.getCursor() != null) {
-			cursor = Cursor.fromWebSafeString(this.getCursor());
+			cursor = Cursor.fromWebSafeString(this.getCursor().getCursorString());
 		}
 
 		return cursor;

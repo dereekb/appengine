@@ -5,6 +5,7 @@ import com.dereekb.gae.model.extension.search.document.search.service.DocumentSe
 import com.dereekb.gae.server.search.system.SearchDocumentQuerySystem;
 import com.dereekb.gae.server.search.system.request.impl.DocumentQueryRequestImpl;
 import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.dereekb.gae.utilities.task.Task;
 import com.google.appengine.api.search.Cursor;
@@ -75,9 +76,9 @@ public class DocumentSearchServiceImpl
 
 		if (options != null) {
 			//Cursor
-			String cursorString = options.getCursor();
-			if (cursorString != null) {
-				builder.setCursor(Cursor.newBuilder().build(cursorString));
+			ResultsCursor cursor = options.getCursor();
+			if (cursor != null) {
+				builder.setCursor(Cursor.newBuilder().build(cursor.getCursorString()));
 			}
 
 			//Limit

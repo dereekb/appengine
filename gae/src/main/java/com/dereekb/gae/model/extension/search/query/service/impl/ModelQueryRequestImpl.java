@@ -46,7 +46,7 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
 	public ModelQueryRequestImpl(ModelQueryRequest request) throws IllegalArgumentException {
 		super(request);
 		this.setAllowCache(request.getAllowCache());
-		this.setQueryCursor(request.getQueryCursor());
+		this.setQueryCursor(request.getObjectifyQueryCursor());
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
 	}
 
 	@Override
-	public Cursor getQueryCursor() {
+	public Cursor getObjectifyQueryCursor() {
 		return this.queryCursor;
 	}
 

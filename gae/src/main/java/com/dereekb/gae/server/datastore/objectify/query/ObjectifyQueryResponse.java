@@ -28,6 +28,6 @@ public interface ObjectifyQueryResponse extends IndexedModelQueryResponse {
 	 * @throws NoSearchCursorException
 	 *             if no cursor is available.
 	 */
-	public Cursor getCursor() throws NoSearchCursorException;
+	public Cursor getObjectifyCursor() throws NoSearchCursorException;
 
 }

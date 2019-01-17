@@ -13,6 +13,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilderFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
 import com.google.appengine.api.datastore.Cursor;
@@ -92,25 +93,25 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 	}
 
 	// MARK: Internal Classes
-	public class IterableInstance
-	        implements IndexedModelQueryIterable<T> {
+	public class ObjectifyIterableInstance extends IterableInstance {
 
 		private Cursor startCursor;
 		private SimpleQuery<T> query;
-		private Map<String, String> parameters;
 
-		public IterableInstance() {}
+		public ObjectifyIterableInstance() {
+			super();
+		}
 
-		public IterableInstance(Cursor startCursor) {
+		public ObjectifyIterableInstance(Cursor startCursor) {
 			this.setStartCursor(startCursor);
 		}
 
-		public IterableInstance(SimpleQuery<T> query, Cursor startCursor) {
+		public ObjectifyIterableInstance(SimpleQuery<T> query, Cursor startCursor) {
 			this.setQuery(query);
 			this.setStartCursor(startCursor);
 		}
 
-		public IterableInstance(Map<String, String> parameters, Cursor startCursor) {
+		public ObjectifyIterableInstance(Map<String, String> parameters, Cursor startCursor) {
 			this.setStartCursor(startCursor);
 			this.setParameters(parameters);
 		}
@@ -123,20 +124,13 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 			this.query = query;
 		}
 
+		@Override
 		public Cursor getStartCursor() {
 			return this.startCursor;
 		}
 
 		public void setStartCursor(Cursor startCursor) {
 			this.startCursor = startCursor;
-		}
-
-		public Map<String, String> getParameters() {
-			return this.parameters;
-		}
-
-		public void setParameters(Map<String, String> parameters) {
-			this.parameters = parameters;
 		}
 
 		// MARK: IndexedIterable
@@ -359,7 +353,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 		}
 
 		@Override
-		public Cursor getStartCursor() {
+		public ResultsCursor getStartCursor() {
 			return this.startCursor;
 		}
 
@@ -368,7 +362,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 		}
 
 		@Override
-		public Cursor getCurrentCursor() {
+		public ResultsCursor getCurrentCursor() {
 			Cursor cursor = null;
 
 			if (this.iterator != null) {
@@ -379,7 +373,7 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 		}
 
 		@Override
-		public Cursor getEndCursor() {
+		public ResultsCursor getEndCursor() {
 			Cursor cursor = null;
 
 			if (this.iterator != null) {
@@ -408,52 +402,9 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 
 	}
 
-	/**
-	 * Used for conversions.
-	 *
-	 * @author dereekb
-	 */
-	private static class IndexUtility {
-
-		private static ModelKey safeConvertCursor(Cursor cursor) {
-			if (cursor == null) {
-				throw new UnavailableIteratorIndexException("Index was unavailable.");
-			} else {
-				return convertCursor(cursor);
-			}
-		}
-
-		private static ModelKey convertCursor(Cursor cursor) {
-			ModelKey index = null;
-
-			if (cursor != null) {
-				index = ModelKey.safe(cursor.toWebSafeString());
-			}
-
-			return index;
-		}
-
-		private static Cursor convertIndex(ModelKey index) throws InvalidIteratorIndexException {
-			Cursor cursor = null;
-
-			if (index != null) {
-				String cursorString = index.getName();
-
-				if (cursorString == null) {
-					throw new InvalidIteratorIndexException("Expected web-safe cursor string value.");
-				} else {
-					cursor = Cursor.fromWebSafeString(index.getName());
-				}
-			}
-
-			return cursor;
-		}
-
-	}
-
 	@Override
 	public String toString() {
-		return "IterableObjectifyQueryImpl [iterateLimit=" + this.iterateLimit + ", queryBuilderFactory="
+		return "IterableObjectifyQueryImpl [iterateLimit=" + this.getIterateLimit() + ", queryBuilderFactory="
 		        + this.queryBuilderFactory + "]";
 	}
 

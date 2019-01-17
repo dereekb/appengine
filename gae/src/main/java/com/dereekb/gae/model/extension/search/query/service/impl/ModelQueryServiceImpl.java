@@ -14,6 +14,7 @@ import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilderInitializer;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.googlecode.objectify.Key;
@@ -150,9 +151,9 @@ public class ModelQueryServiceImpl<T extends ObjectifyModel<T>>
 		}
 
 		@Override
-		public String getSearchCursor() {
+		public ResultsCursor getSearchCursor() {
 			try {
-				return this.query.getCursor().toWebSafeString();
+				return this.query.getCursor();
 			} catch (NoSearchCursorException e) {
 				return null;
 			}

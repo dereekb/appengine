@@ -6,6 +6,7 @@ import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryKeyRespons
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
  * {@link ObjectifyQueryResponse} extension that provides actual key results.
@@ -17,6 +18,14 @@ import com.googlecode.objectify.Key;
  */
 public interface ObjectifyQueryKeyResponse<T extends ObjectifyModel<T>>
         extends IndexedModelQueryKeyResponse, ObjectifyQueryResponse {
+
+	/**
+	 * Returns the created query.
+	 *
+	 * @return {@link SimpleQuery} used. Never {@code null}.
+	 */
+	@Override
+	public SimpleQuery<T> getQuery();
 
 	/**
 	 * Retrieves {@link Key} values of the models that meet the query

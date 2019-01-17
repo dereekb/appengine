@@ -18,6 +18,7 @@ import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.batch.Batch;
 import com.dereekb.gae.utilities.collections.batch.BatchBuilder;
 import com.dereekb.gae.utilities.collections.batch.Partition;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.limit.LimitedIterator;
 import com.dereekb.gae.utilities.collections.iterator.limit.impl.LimitedIteratorImpl;
 import com.dereekb.gae.utilities.task.Task;
@@ -129,8 +130,8 @@ public class IterateTaskExecutorImpl<T extends ObjectifyModel<T>>
 
 			// Schedule Continuation
 			if (limitedIterator.hasReachedIteratorLimit()) {
-				Cursor endCursor = iterator.getEndCursor();
-				String endCursorString = endCursor.toWebSafeString();
+				ResultsCursor endCursor = iterator.getEndCursor();
+				String endCursorString = endCursor.getCursorString();
 				throw new IterationLimitReachedException(endCursorString);
 			}
 		}

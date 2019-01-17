@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.model.search.request;
 
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.misc.parameters.MutableParameters;
 
 /**
@@ -16,8 +17,17 @@ public interface MutableSearchOptions
 	 * 
 	 * @param cursor
 	 *            {@link String}, or {@code null} to not use cursor.
+	 * @deprecated Use {@link #setCursor(ResultsCursor)} instead
 	 */
 	public void setCursor(String cursor);
+
+	/**
+	 * Sets the results cursor.
+	 * 
+	 * @param cursor
+	 *            {@link String}, or {@code null} to not use cursor.
+	 */
+	public void setCursor(ResultsCursor cursor);
 
 	/**
 	 * Sets the results offset.

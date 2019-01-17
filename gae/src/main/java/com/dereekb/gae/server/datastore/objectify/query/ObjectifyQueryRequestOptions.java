@@ -17,7 +17,7 @@ public interface ObjectifyQueryRequestOptions
 
 	public boolean getAllowHybrid();
 
-	public Cursor getQueryCursor();
+	public Cursor getObjectifyQueryCursor();
 
 	public Integer getChunk();
 

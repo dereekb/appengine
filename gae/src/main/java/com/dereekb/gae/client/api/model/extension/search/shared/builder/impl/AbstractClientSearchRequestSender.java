@@ -14,6 +14,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
+import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.model.search.exception.KeysOnlySearchException;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
@@ -129,7 +131,7 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 		}
 
 		@Override
-		public String getSearchCursor() {
+		public ResultsCursor getSearchCursor() {
 			return this.getDataSerializer().getSearchCursor();
 		}
 
@@ -184,7 +186,11 @@ public abstract class AbstractClientSearchRequestSender<T extends UniqueModel, O
 			return AbstractClientSearchRequestSender.this.serializeModels(dataNode);
 		}
 
-		public String getSearchCursor() {
+		public ResultsCursor getSearchCursor() {
+			return ResultsCursorImpl.wrap(this.getStringSearchCursor());
+		}
+
+		public String getStringSearchCursor() {
 			if (this.data.has(CURSOR_KEY)) {
 				return this.data.get(CURSOR_KEY).asText();
 			} else {

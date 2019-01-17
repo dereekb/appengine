@@ -3,8 +3,10 @@ package com.dereekb.gae.web.api.model.extension.search.impl;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.TypedModel;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseDataImpl;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -64,6 +66,17 @@ public class ApiSearchResponseData
 
 	public String getCursor() {
 		return this.cursor;
+	}
+
+	@JsonIgnore
+	public void setResultsCursor(ResultsCursor cursor) {
+		String stringCursor = null;
+
+		if (cursor != null) {
+			stringCursor = cursor.getCursorString();
+		}
+
+		this.setCursor(stringCursor);
 	}
 
 	public void setCursor(String cursor) {

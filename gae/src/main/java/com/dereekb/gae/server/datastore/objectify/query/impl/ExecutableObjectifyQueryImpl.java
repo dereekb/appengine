@@ -11,8 +11,10 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryModelRespo
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifySimpleQueryFilter;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.utilities.collections.chain.Chain;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -92,11 +94,6 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public Cursor getCursor() throws NoSearchCursorException {
-		return this.getResponse().getCursor();
-	}
-
-	@Override
 	public boolean hasResults() {
 		return this.getResponse().hasResults();
 	}
@@ -104,6 +101,16 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	@Override
 	public SimpleQuery<T> getQuery() {
 		return this.getResponse().getQuery();
+	}
+
+	@Override
+	public ResultsCursor getCursor() throws NoSearchCursorException {
+		return this.getResponse().getCursor();
+	}
+
+	@Override
+	public Cursor getObjectifyCursor() throws NoSearchCursorException {
+		return ObjectifyCursor.make(this.getCursor()).getCursor();
 	}
 
 	@Override

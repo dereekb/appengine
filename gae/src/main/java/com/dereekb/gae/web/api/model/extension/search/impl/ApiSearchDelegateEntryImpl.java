@@ -12,6 +12,7 @@ import com.dereekb.gae.model.extension.search.query.service.ModelQueryService;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchDelegateEntry;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
@@ -151,8 +152,8 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 			searchResponseData = this.convertModelResponse(models);
 		}
 
-		String cursor = response.getSearchCursor();
-		searchResponseData.setCursor(cursor);
+		ResultsCursor cursor = response.getSearchCursor();
+		searchResponseData.setResultsCursor(cursor);
 
 		return searchResponseData;
 	}
