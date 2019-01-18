@@ -6,6 +6,8 @@ import com.dereekb.gae.utilities.collections.iterator.index.exception.Unavailabl
 
 /**
  * {@link Iterator} that is keyed using a {@link ResultsCursor} values.
+ * <p>
+ * The cursors returned reference the start and end of the {@link Iterator}. The {@link Iterator} behaves like normal.
  *
  * @author dereekb
  *

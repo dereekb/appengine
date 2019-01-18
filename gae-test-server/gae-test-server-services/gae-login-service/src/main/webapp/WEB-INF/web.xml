@@ -73,7 +73,7 @@
     <filter-name>springSecurityFilter</filter-name>
     <servlet-name>taskqueue</servlet-name>
   </filter-mapping>
-  <!--Routes-->
+  <!--HTTPS Security Enforcement-->
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>all</web-resource-name>
