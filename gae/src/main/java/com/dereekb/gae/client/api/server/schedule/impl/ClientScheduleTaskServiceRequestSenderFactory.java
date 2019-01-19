@@ -65,7 +65,7 @@ public class ClientScheduleTaskServiceRequestSenderFactory extends GoogleAppEngi
 			}
 
 			LOGGER.log(Level.INFO,
-			        "Scheduling Task Request: \n" + "TO: " + request.getRequestUrl() + "\n" + "TASK: "
+			        "Test Scheduling Task Request: \n" + "TO: " + request.getRequestUrl() + "\n" + "TASK: "
 			                + request.getTaskRequest().getTask() + "\n" + "HEADERS: "
 			                + request.getTaskRequest().getEncodedHeaders() + "\n" + "PARAMETERS: "
 			                + request.getTaskRequest().getEncodedParameters() + "\n" + "DATA: "

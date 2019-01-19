@@ -30,6 +30,7 @@ public class AppConfigurationImpl
 	private String appName = "app";
 	private String appTaskQueueName = "app";
 	private String appSecret = null;
+	private String appAdminEmail = "dereekb@gmail.com";
 
 	private AppServicesConfigurer appServicesConfigurer;
 	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");
@@ -45,7 +46,7 @@ public class AppConfigurationImpl
 
 	public AppConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
 	        AppServicesConfigurer appServicesConfigurer) {
-		this.setAppServicesConfigurer(appServicesConfigurer);
+		this(appServiceConfigurationInfo, appServicesConfigurer, Collections.emptyList());
 	}
 
 	public AppConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo,
@@ -107,6 +108,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appSecret = appSecret;
+	}
+
+	@Override
+	public String getAppAdminEmail() {
+		return this.appAdminEmail;
+	}
+
+	public void setAppAdminEmail(String appAdminEmail) {
+		if (appAdminEmail == null) {
+			throw new IllegalArgumentException("appAdminEmail cannot be null.");
+		}
+
+		this.appAdminEmail = appAdminEmail;
 	}
 
 	@Override

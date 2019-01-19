@@ -12,7 +12,7 @@ import com.dereekb.gae.utilities.collections.list.SetUtility;
 
 /**
  * {@link MailServiceRequest} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -25,6 +25,10 @@ public class MailServiceRequestImpl
 	private List<MailServiceRequestAttachment> attachments;
 
 	public MailServiceRequestImpl() {}
+
+	public MailServiceRequestImpl(MailRecipient recipient, MailServiceRequestBody body) {
+		this(null, SetUtility.wrap(recipient), body, null);
+	}
 
 	public MailServiceRequestImpl(Set<MailRecipient> recipients, MailServiceRequestBody body) {
 		this(null, recipients, body, null);
@@ -59,7 +63,7 @@ public class MailServiceRequestImpl
 	public void setRecipient(MailRecipient recipient) {
 		this.setRecipients(SetUtility.wrap(recipient));
 	}
-	
+
 	public void setRecipients(Set<MailRecipient> recipients) {
 		if (recipients == null || recipients.isEmpty()) {
 			throw new IllegalArgumentException("recipients cannot be null or empty.");

@@ -25,6 +25,7 @@ public class AppBeansConfigurationImpl
 	public static final String MODEL_KEY_TYPE_CONVERTER_ID = "modelKeyTypeConverter";
 	public static final String SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID = "systemLoginTokenService";
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
+	public static final String MAIL_SERVICE_BEAN_ID = "mailService";
 
 	public static final String CRUD_READ_MODEL_ROLE_REF_BEAN_ID = "crudReadModelRole";
 	public static final String CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID = "crudUpdateModelRole";
@@ -38,6 +39,8 @@ public class AppBeansConfigurationImpl
 	public static final String LOGIN_TOKEN_DECODER_BEAN_ID = "loginTokenDecoder";
 
 	public static final String CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID = "clientLoginTokenModelContextServiceEntryFactory";
+	public static final String PASSWORD_LOGIN_SERVICE_BEAN_ID = "passwordLoginService";
+	public static final String LOGIN_REGISTER_SERVICE_BEAN_ID = "loginRegisterService";
 
 	private String appInfoBeanId = APP_INFO_BEAN_ID;
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
@@ -55,6 +58,7 @@ public class AppBeansConfigurationImpl
 	private String modelKeyTypeConverterId = MODEL_KEY_TYPE_CONVERTER_ID;
 	private String systemLoginTokenServiceBeanId = SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
+	private String mailServiceBeanId = MAIL_SERVICE_BEAN_ID;
 	private String anonymousModelRoleSetContextServiceBeanId = ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID;
 
 	private String appLoginSecurityServiceBeanId = APP_LOGIN_SECURITY_SERVICE_BEAN_ID;
@@ -73,6 +77,8 @@ public class AppBeansConfigurationImpl
 	        implements AppUtilityBeansConfiguration {
 
 		private String clientLoginTokenModelContextServiceEntryFactoryBeanId = CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID;
+		private String passwordLoginServiceBeanId = PASSWORD_LOGIN_SERVICE_BEAN_ID;
+		private String loginRegisterServiceBeanId = LOGIN_REGISTER_SERVICE_BEAN_ID;
 
 		// MARK: AppUtilityBeansConfiguration
 		@Override
@@ -87,6 +93,32 @@ public class AppBeansConfigurationImpl
 			}
 
 			this.clientLoginTokenModelContextServiceEntryFactoryBeanId = clientLoginTokenModelContextServiceEntryFactoryBeanId;
+		}
+
+		@Override
+		public String getPasswordLoginServiceBeanId() {
+			return this.passwordLoginServiceBeanId;
+		}
+
+		public void setPasswordLoginServiceBeanId(String passwordLoginServiceBeanId) {
+			if (passwordLoginServiceBeanId == null) {
+				throw new IllegalArgumentException("passwordLoginServiceBeanId cannot be null.");
+			}
+
+			this.passwordLoginServiceBeanId = passwordLoginServiceBeanId;
+		}
+
+		@Override
+		public String getLoginRegisterServiceBeanId() {
+			return this.loginRegisterServiceBeanId;
+		}
+
+		public void setLoginRegisterServiceBeanId(String loginRegisterServiceBeanId) {
+			if (loginRegisterServiceBeanId == null) {
+				throw new IllegalArgumentException("loginRegisterServiceBeanId cannot be null.");
+			}
+
+			this.loginRegisterServiceBeanId = loginRegisterServiceBeanId;
 		}
 
 	}
@@ -272,6 +304,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.systemLoginTokenServiceBeanId = systemLoginTokenServiceBeanId;
+	}
+
+	@Override
+	public String getMailServiceBeanId() {
+		return this.mailServiceBeanId;
+	}
+
+	public void setMailServiceBeanId(String mailServiceBeanId) {
+		if (mailServiceBeanId == null) {
+			throw new IllegalArgumentException("mailServiceBeanId cannot be null.");
+		}
+
+		this.mailServiceBeanId = mailServiceBeanId;
 	}
 
 	@Override

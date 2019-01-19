@@ -50,10 +50,15 @@ public class LoginServerAppServerInitializationConfigurerImpl extends AbstractAp
 	@Override
 	protected void configureServerDelegateComponent(AppConfiguration appConfig,
 	                                                SpringBeansXMLBuilder builder) {
-		// TODO Auto-generated method stub
 
 		builder.bean(this.getDelegateBeanId()).beanClass(RootServerApiInitializeServerControllerDelegateImpl.class).c()
-		        .ref(appConfig.getAppBeans().getAppInfoBeanId()).ref("appRegistry");
+		        .ref(appConfig.getAppBeans().getAppInfoBeanId())
+		        .ref("appRegistry")
+		        .up()
+		        .property("adminEmail").value(appConfig.getAppAdminEmail()).up()
+		        .property("mailService").ref(appConfig.getAppBeans().getMailServiceBeanId()).up()
+		        .property("passwordLoginService").ref(appConfig.getAppBeans().getUtilityBeans().getPasswordLoginServiceBeanId()).up()
+		        .property("loginRegisterService").ref(appConfig.getAppBeans().getUtilityBeans().getLoginRegisterServiceBeanId());
 
 		// TODO: Add beans for default app infos, etc.
 		/*

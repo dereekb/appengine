@@ -29,6 +29,25 @@ public interface PasswordLoginService {
 	public LoginPointer create(PasswordLoginPair pair) throws LoginExistsException, PasswordRestrictionException;
 
 	/**
+	 * Creates a new {@link LoginPointer} with the specified credentials with
+	 * options to skips the password restrictions.
+	 *
+	 * @param pair
+	 *            {@link PasswordLoginPair}. Never {@code null}.
+	 * @param skipRestrictions
+	 *            Whether or not to skip the password restrictions.
+	 * @return {@link LoginPointer} for the newly created element.
+	 * @throws LoginExistsException
+	 *             Thrown if a login with this identifier already exists.
+	 * @throws PasswordRestrictionException
+	 *             thrown if the password does not pass the restrictions.
+	 */
+	public LoginPointer create(PasswordLoginPair pair,
+	                           boolean skipRestrictions)
+	        throws LoginExistsException,
+	            PasswordRestrictionException;
+
+	/**
 	 * Retrieves a {@link LoginPointer} for the given username, if the password
 	 * matches.
 	 *

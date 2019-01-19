@@ -36,6 +36,8 @@ public class CoreServiceTestingContext {
 
 	public static final String BASE_MAIN_PATH = SRC_PATH + "main/webapp/WEB-INF/";
 
+	protected boolean initializeServerWithCoreServices = true;
+
 	private Closeable session;
 
 	@Autowired
@@ -56,9 +58,15 @@ public class CoreServiceTestingContext {
 			this.helper.setUp();
 			this.session = ObjectifyService.begin();
 
-			this.initializeServer();
-			this.resetAuthContext();
+			if (this.initializeServerWithCoreServices) {
+				this.initializeServerAndAuthContext();
+			}
 		}
+	}
+
+	public void initializeServerAndAuthContext() {
+		this.initializeServer();
+		this.resetAuthContext();
 	}
 
 	public final void resetAuthContext() {

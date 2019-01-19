@@ -54,6 +54,8 @@ public interface AppBeansConfiguration {
 
 	public String getLoginTokenDecoderBeanId();
 
+	public String getMailServiceBeanId();
+
 	// Utility
 	public AppUtilityBeansConfiguration getUtilityBeans();
 

@@ -12,6 +12,7 @@ import com.dereekb.gae.server.event.webhook.service.WebHookEventConverter;
  *
  */
 @Deprecated
+@SuppressWarnings("unused")
 public class LocalWebHookEventSubmitterDelegateImpl
         implements WebHookEventSubmitterDelegate {
 

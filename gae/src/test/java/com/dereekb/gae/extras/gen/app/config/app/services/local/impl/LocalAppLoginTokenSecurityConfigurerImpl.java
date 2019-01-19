@@ -67,7 +67,8 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		        .ref("loginTokenBuilder").ref(loginTokenEncoderDecoderBeanId);
 
 		// Alias the decoder
-		builder.alias(appConfig.getAppBeans().getLoginTokenServiceBeanId(), appConfig.getAppBeans().getLoginTokenDecoderBeanId());
+		builder.alias(appConfig.getAppBeans().getLoginTokenServiceBeanId(),
+		        appConfig.getAppBeans().getLoginTokenDecoderBeanId());
 
 		// MARK: Local Login Service
 		builder.comment("LoginPointer Service");
@@ -77,8 +78,8 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		builder.comment("Password Service");
 		builder.bean("passwordEncoder").beanClass(BCryptPasswordEncoder.class);
 
-		builder.bean("passwordLoginService").beanClass(PasswordLoginServiceImpl.class).c().ref("passwordEncoder")
-		        .ref("loginPointerService");
+		builder.bean(appConfig.getAppBeans().getUtilityBeans().getPasswordLoginServiceBeanId())
+		        .beanClass(PasswordLoginServiceImpl.class).c().ref("passwordEncoder").ref("loginPointerService");
 
 		builder.bean("passwordRecoveryService").beanClass(PasswordRecoveryServiceImpl.class).c().ref("mailService")
 		        .bean().beanClass(PasswordRecoveryServiceTokenDelegateImpl.class).c().ref("loginPointerService")
@@ -99,8 +100,9 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		        .ref("loginKeyRegistry").ref("loginPointerRegistry");
 
 		builder.comment("Register Service");
-		builder.bean("loginRegisterService").beanClass(LoginRegisterServiceImpl.class).c().ref("newLoginGenerator")
-		        .ref("loginRegistry").ref("loginPointerRegistry");
+		builder.bean(appConfig.getAppBeans().getUtilityBeans().getLoginRegisterServiceBeanId())
+		        .beanClass(LoginRegisterServiceImpl.class).c().ref("newLoginGenerator").ref("loginRegistry")
+		        .ref("loginPointerRegistry");
 
 		builder.bean("newLoginGenerator").beanClass(NewLoginGeneratorImpl.class).c().ref("loginRegistry")
 		        .ref("loginScheduleCreateReview");

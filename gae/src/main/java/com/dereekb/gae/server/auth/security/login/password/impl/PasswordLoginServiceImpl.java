@@ -89,10 +89,20 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
 
 	@Override
 	public LoginPointer create(PasswordLoginPair pair) throws PasswordRestrictionException, LoginExistsException {
+		return this.create(pair, false);
+	}
+
+	@Override
+	public LoginPointer create(PasswordLoginPair pair,
+	                           boolean skipRestrictions)
+	        throws LoginExistsException,
+	            PasswordRestrictionException {
 		String username = pair.getUsername();
 		String password = pair.getPassword();
 
-		this.restriction.assertIsValidPassword(password);
+		if (skipRestrictions == false) {
+			this.restriction.assertIsValidPassword(password);
+		}
 
 		LoginPointer loginPointer = new LoginPointer();
 

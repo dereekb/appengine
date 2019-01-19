@@ -2,7 +2,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app;
 
 /**
  * Utility beans used within the App Config.
- *Ï
+ * Ï
+ *
  * @author dereekb
  *
  */
@@ -13,5 +14,10 @@ public interface AppUtilityBeansConfiguration {
 	 * May only by available at runtime when a remote service is provided.
 	 */
 	public String getClientLoginTokenModelContextServiceEntryFactoryBeanId();
+
+	// MARK: Login Service
+	public String getPasswordLoginServiceBeanId();
+
+	public String getLoginRegisterServiceBeanId();
 
 }

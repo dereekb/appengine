@@ -74,7 +74,16 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 
 	private MockMvc mockMvc;
 
+	public WebServiceTestingContextImpl() {
+		this.initializeServerWithCoreServices = false;
+	}
+
 	@Before
+	public void setupServices() {
+		this.setUpWebServices();
+		this.initializeServerAndAuthContext();
+	}
+
 	public void setUpWebServices() {
 		DefaultMockMvcBuilder mockMvcBuilder = MockMvcBuilders.webAppContextSetup(this.webApplicationContext);
 
@@ -92,18 +101,28 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		this.mockMvc = mockMvcBuilder.build();
 		TestLocalTaskQueueCallback.serviceRequestBuilder = this.serviceRequestBuilder;
 		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
+	}
 
+	/*
+	@Override
+	@Before
+	public void setUpCoreServices() {
+
+		// Wait for the web services to be set up.=
+		// this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
+		super.setUpCoreServices();
+	}
+	*/
+
+	@Override
+	public void initializeServerAndAuthContext() {
+		super.initializeServerAndAuthContext();
+
+		// Initialize the system admin for the security chain
 		if (this.springSecurityFilterChain != null && this.testLoginTokenContext != null) {
 			this.testLoginTokenContext.generateSystemAdmin();
 			TestLocalTaskQueueCallback.waitUntilComplete();
 		}
-	}
-
-	@Override
-	@Before
-	public void setUpCoreServices() {
-		// this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
-		super.setUpCoreServices();
 	}
 
 	@Override

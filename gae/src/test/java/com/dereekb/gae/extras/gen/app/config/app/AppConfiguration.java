@@ -46,6 +46,13 @@ public interface AppConfiguration {
 	 */
 	public String getAppSecret();
 
+	/**
+	 * Returns the app's admin email account.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppAdminEmail();
+
 	public AppServiceConfigurationInfo getAppServiceConfigurationInfo();
 
 	public AppBeansConfiguration getAppBeans();
