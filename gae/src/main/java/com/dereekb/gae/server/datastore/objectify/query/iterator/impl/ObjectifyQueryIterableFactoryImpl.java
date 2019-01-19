@@ -170,7 +170,10 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 			}
 
 			query = query.limit(this.getIteratorBatchLimit());
-			query = query.chunk(ObjectifyQueryIterableFactoryImpl.this.chunkSize);
+
+			if (ObjectifyQueryIterableFactoryImpl.this.chunkSize != null) {
+				query = query.chunk(ObjectifyQueryIterableFactoryImpl.this.chunkSize);
+			}
 
 			return new ObjectifyQueryModelResultIteratorImpl<T>(query.iterator());
 		}

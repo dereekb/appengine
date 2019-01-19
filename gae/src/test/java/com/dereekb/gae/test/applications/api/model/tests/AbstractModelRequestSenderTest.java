@@ -37,7 +37,8 @@ public abstract class AbstractModelRequestSenderTest<T extends MutableUniqueMode
 	protected ClientLinkServiceRequestSender linkRequestSender;
 
 	// Model Roles
-	@Autowired
+	@Autowired(required=true)
+	@Qualifier("clientModelRolesContextServiceRequestSender")
 	protected ClientModelRolesContextServiceRequestSender modelRolesRequestSender;
 
 	public TestModelGenerator<T> getTestModelGenerator() {

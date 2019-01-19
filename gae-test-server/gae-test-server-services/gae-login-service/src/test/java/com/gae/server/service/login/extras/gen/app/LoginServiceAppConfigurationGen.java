@@ -86,6 +86,7 @@ public class LoginServiceAppConfigurationGen extends AbstractWebServiceAppConfig
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
+		configuration.setAppDevelopmentProxyUrl("http://gae-nginx:80");
 
 		configuration.setAppName("GAE Test Login Service");
 

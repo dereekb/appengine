@@ -134,11 +134,16 @@ public class GoogleAppEngineContextualFactoryImpl<T>
 		T item = null;
 
 		switch (GoogleAppEngineUtility.getEnvironmentType()) {
-			case PRODUCTION:
-				item = this.getProductionSingleton();
-				break;
 			case DEVELOPMENT:
 				item = this.getDevelopmentSingleton();
+
+				if (item != null) {
+					break;
+				}
+
+				// Fall-through otherwise to production.
+			case PRODUCTION:
+				item = this.getProductionSingleton();
 				break;
 			case UNIT_TESTING:
 				item = this.getTestSingleton();

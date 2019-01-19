@@ -75,4 +75,7 @@ public interface AppBeansConfiguration {
 		        : STRING_NAME_MODEL_KEY_CONVERTER;
 	}
 
+	// Development
+	public String getAppDevelopmentProxyUrlBeanId();
+
 }

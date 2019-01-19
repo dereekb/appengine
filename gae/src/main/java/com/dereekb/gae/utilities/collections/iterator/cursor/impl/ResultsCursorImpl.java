@@ -32,7 +32,7 @@ public final class ResultsCursorImpl
 	 * @return {@link ResultsCursorImpl} or {@code null}.
 	 */
 	public static ResultsCursorImpl wrap(String cursorString) {
-		if (StringUtility.isEmptyString(cursorString)) {
+		if (StringUtility.isEmptyString(cursorString) == false) {
 			return make(cursorString);
 		}
 

@@ -31,6 +31,7 @@ public class AppConfigurationImpl
 	private String appTaskQueueName = "app";
 	private String appSecret = null;
 	private String appAdminEmail = "dereekb@gmail.com";
+	private String appDevelopmentProxyUrl = "http://development:8080";
 
 	private AppServicesConfigurer appServicesConfigurer;
 	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");
@@ -121,6 +122,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appAdminEmail = appAdminEmail;
+	}
+
+	@Override
+	public String getAppDevelopmentProxyUrl() {
+		return this.appDevelopmentProxyUrl;
+	}
+
+	public void setAppDevelopmentProxyUrl(String appDevelopmentProxyUrl) {
+		if (appDevelopmentProxyUrl == null) {
+			throw new IllegalArgumentException("appDevelopmentProxyUrl cannot be null.");
+		}
+
+		this.appDevelopmentProxyUrl = appDevelopmentProxyUrl;
 	}
 
 	@Override

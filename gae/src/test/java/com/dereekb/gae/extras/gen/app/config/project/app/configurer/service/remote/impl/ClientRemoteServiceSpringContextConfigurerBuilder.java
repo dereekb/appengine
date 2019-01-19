@@ -4,7 +4,7 @@ import com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkRequestSen
 import com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderFactory;
 import com.dereekb.gae.client.api.server.schedule.impl.ClientScheduleTaskServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl;
-import com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderImpl;
+import com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderFactory;
 import com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
@@ -122,12 +122,17 @@ public class ClientRemoteServiceSpringContextConfigurerBuilder {
 		                                                    RemoteServiceConfiguration appRemoteServiceConfiguration,
 		                                                    SpringBeansXMLBuilder builder) {
 
-			String baseApiUrl = appRemoteServiceConfiguration.getAppServiceConfigurationInfo().getFullAppApiPath();
+			String baseApiUrl = appRemoteServiceConfiguration.getAppServiceConfigurationInfo().getRootAppApiPath();
 
 			String clientRequestSenderBeanId = appRemoteServiceConfiguration.getServiceBeansConfiguration()
 			        .getClientRequestSenderBeanId();
+			String clientRequestSenderFactoryBeanId = clientRequestSenderBeanId + "Factory";
 
-			builder.bean(clientRequestSenderBeanId).beanClass(ClientRequestSenderImpl.class).c().value(baseApiUrl);
+			builder.bean(clientRequestSenderFactoryBeanId).beanClass(ClientRequestSenderFactory.class)
+			        .property("baseApiUrl").value(baseApiUrl).up()
+			        .property("developmentDomainUrl").value(appConfig.getAppBeans().getAppDevelopmentProxyUrlBeanId());
+
+			builder.bean(clientRequestSenderBeanId).factoryBean(clientRequestSenderFactoryBeanId).factoryMethod("make");
 
 			String clientApiRequestSenderBeanId = appRemoteServiceConfiguration.getServiceBeansConfiguration()
 			        .getClientApiRequestSenderBeanId();
@@ -183,10 +188,12 @@ public class ClientRemoteServiceSpringContextConfigurerBuilder {
 			        .factoryMethod("make");
 
 			/*
-			builder.bean(clientScheduleTaskServiceBeanId).beanClass(ClientScheduleTaskServiceRequestSenderImpl.class)
-			        .c().ref(appRemoteServiceConfiguration.getServiceBeansConfiguration()
-			                .getSecuredClientApiRequestSenderBeanId());
-			  */
+			 * builder.bean(clientScheduleTaskServiceBeanId).beanClass(
+			 * ClientScheduleTaskServiceRequestSenderImpl.class)
+			 * .c().ref(appRemoteServiceConfiguration.
+			 * getServiceBeansConfiguration()
+			 * .getSecuredClientApiRequestSenderBeanId());
+			 */
 
 		}
 

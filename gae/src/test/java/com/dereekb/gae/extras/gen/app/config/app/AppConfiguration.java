@@ -53,6 +53,13 @@ public interface AppConfiguration {
 	 */
 	public String getAppAdminEmail();
 
+	/**
+	 * Returns the app's proxy URL for development.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppDevelopmentProxyUrl();
+
 	public AppServiceConfigurationInfo getAppServiceConfigurationInfo();
 
 	public AppBeansConfiguration getAppBeans();

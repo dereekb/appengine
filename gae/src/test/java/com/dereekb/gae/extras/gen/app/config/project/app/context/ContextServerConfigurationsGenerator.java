@@ -137,6 +137,9 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());
 		builder.stringBean(appBeans.getAppSecretBeanId(), this.getAppConfig().getAppSecret());
 
+		builder.comment("Development");
+		builder.stringBean(appBeans.getAppDevelopmentProxyUrlBeanId(), this.getAppConfig().getAppDevelopmentProxyUrl());
+
 		builder.comment("Import");
 		builder.importResources(folder.getFiles());
 

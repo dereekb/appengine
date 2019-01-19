@@ -42,6 +42,8 @@ public class AppBeansConfigurationImpl
 	public static final String PASSWORD_LOGIN_SERVICE_BEAN_ID = "passwordLoginService";
 	public static final String LOGIN_REGISTER_SERVICE_BEAN_ID = "loginRegisterService";
 
+	public static final String APP_DEVELOPMENT_PROXY_URL_BEAN_ID = "appDevelopmentProxyUrl";
+
 	private String appInfoBeanId = APP_INFO_BEAN_ID;
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
 	private String appNameBeanId = APP_NAME_BEAN_ID;
@@ -70,6 +72,8 @@ public class AppBeansConfigurationImpl
 	private String crudReadModelRoleRefBeanId = CRUD_READ_MODEL_ROLE_REF_BEAN_ID;
 	private String crudUpdateModelRoleRefBeanId = CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID;
 	private String crudDeleteModelRoleRefBeanId = CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID;
+
+	private String appDevelopmentProxyUrlBeanId = APP_DEVELOPMENT_PROXY_URL_BEAN_ID;
 
 	private AppUtilityBeansConfiguration utilityBeansConfiguration = new AppUtilityBeansConfigurationImpl();
 
@@ -464,6 +468,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.crudDeleteModelRoleRefBeanId = crudDeleteModelRoleRefBeanId;
+	}
+
+	@Override
+	public String getAppDevelopmentProxyUrlBeanId() {
+		return this.appDevelopmentProxyUrlBeanId;
+	}
+
+	public void setAppDevelopmentProxyUrlBeanId(String appDevelopmentProxyUrlBeanId) {
+		if (appDevelopmentProxyUrlBeanId == null) {
+			throw new IllegalArgumentException("appDevelopmentProxyUrlBeanId cannot be null.");
+		}
+
+		this.appDevelopmentProxyUrlBeanId = appDevelopmentProxyUrlBeanId;
 	}
 
 }

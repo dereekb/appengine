@@ -6,6 +6,7 @@ import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfo;
 import com.dereekb.gae.server.app.model.app.info.AppVersion;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppVersionImpl;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.api.utils.SystemProperty.Environment.Value;
 import com.google.apphosting.api.ApiProxy;
@@ -15,6 +16,12 @@ public class GoogleAppEngineUtility {
 
 	public static final String VERSION_JOINER = ".";
 	public static final String VERSION_SPLITTER = "\\.";
+	public static final String APP_ENGINE_APP_DOMAIN = "appspot.com";
+
+	/**
+	 * @see https://cloud.google.com/appengine/docs/standard/java/how-requests-are-routed
+	 */
+	public static final String APP_ENGINE_HTTPS_URL_DOT = "-dot-";
 
 	// MARK: Environment
 	/**
@@ -78,6 +85,10 @@ public class GoogleAppEngineUtility {
 	}
 
 	public static AppServiceVersionInfo getApplicationInfo() {
+		// TODO: Consider using the recommended modules service instead,
+		// described at
+		// https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/modules/ModulesService#i7
+
 		Environment environment = getApiEnvironment();
 
 		String app = environment.getAppId();
@@ -109,15 +120,32 @@ public class GoogleAppEngineUtility {
 		return new AppVersionImpl(split[0], split[1]);
 	}
 
+	public static String urlForCurrentService() {
+		return urlForCurrentService(false);
+	}
+
+	public static String urlForCurrentService(boolean includeVersion) {
+		AppServiceVersionInfo appInfo = getApplicationInfo();
+		return urlForService(appInfo.getAppProjectId(), appInfo.getAppService(),
+		        (includeVersion) ? appInfo.getAppVersion().getMajorVersion() : null);
+	}
+
+	public static String urlForService(String appProjectId,
+	                                   String appServiceName) {
+		return urlForService(appProjectId, appServiceName, null);
+	}
+
 	public static String urlForService(String appProjectId,
 	                                   String appServiceName,
-	                                   String appVersion) {
+	                                   String appMajorVersion) {
 
-		// TODO: Complete!
+		String subdomain = StringUtility.joinValues(APP_ENGINE_HTTPS_URL_DOT, appMajorVersion, appServiceName,
+		        appProjectId);
 
-		return "";
-
-		// throw new UnsupportedOperationException("TODO");
+		// https://[MY_PROJECT_ID].appspot.com
+		// https://[SERVICE_ID]-dot-[MY_PROJECT_ID].appspot.com
+		// https://[VERSION_ID]-dot-[SERVICE_ID]-dot-[MY_PROJECT_ID].appspot.com
+		return "https://" + subdomain + "." + APP_ENGINE_APP_DOMAIN;
 	}
 
 }

@@ -75,6 +75,7 @@ public class EventServiceAppConfigurationGen extends AbstractWebServiceAppConfig
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
+		configuration.setAppDevelopmentProxyUrl("http://gae-nginx:80");
 
 		RemoteSystemLoginTokenFactoryConfigurerImpl remoteSystemLoginTokenFactory = new RemoteSystemLoginTokenFactoryConfigurerImpl(
 		        remoteLoginService);
