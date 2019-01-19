@@ -51,7 +51,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
-import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
@@ -160,7 +160,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-			builder.bean("objectifyDatabase").beanClass(ObjectifyDatabase.class).primary().lazy(false).c()
+			builder.bean("objectifyDatabase").beanClass(ObjectifyDatabaseImpl.class).primary().lazy(false).c()
 			        .ref(OBJECTIFY_DATABASE_ENTITIES_KEY);
 
 			SpringBeansXMLListBuilder<?> entitiesList = builder.list(OBJECTIFY_DATABASE_ENTITIES_KEY);
@@ -510,7 +510,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			appSecurityBeansConfigurer.configureTokenAuthenticationProvider(this.getAppConfig(),
 			        loginTokenAuthenticationProviderBuilder);
 
-			SpringBeansXMLBeanBuilder<?> loginTokenUserDetailsBuilder = builder.bean("loginTokenUserDetailsBuilder");
+			SpringBeansXMLBeanBuilder<?> loginTokenUserDetailsBuilder = builder
+			        .bean(this.getAppConfig().getAppBeans().getUtilityBeans().getLoginTokenUserDetailsBuilderBeanId());
 			appSecurityBeansConfigurer.configureTokenUserDetailsBuilder(this.getAppConfig(),
 			        loginTokenUserDetailsBuilder);
 

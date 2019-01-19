@@ -9,8 +9,8 @@
   <!--Security Context Service Entries-->
   <!--Remote Service Shared Components-->
   <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderFactory" id="eventServiceClientRequestSenderFactory">
-    <property name="baseApiUrl" value="https://v1-dot-event-dot-gae-test-server.appspot.com/api/event/v1"/>
-    <property name="developmentDomainUrl" value="appDevelopmentProxyUrl"/>
+    <property name="baseApiUrl" value="/api/event/v1"/>
+    <property name="developmentDomainUrl" ref="appDevelopmentProxyUrl"/>
   </bean>
   <bean factory-bean="eventServiceClientRequestSenderFactory" factory-method="make" id="eventServiceClientRequestSender"/>
   <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl" id="eventServiceClientApiRequestSender">

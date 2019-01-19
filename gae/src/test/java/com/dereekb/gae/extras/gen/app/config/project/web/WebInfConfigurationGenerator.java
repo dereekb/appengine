@@ -96,7 +96,7 @@ public class WebInfConfigurationGenerator extends AbstractConfigurationFileGener
 		builder.addFilterMapping(objectifyFilterName, taskqueueServletName);
 
 		builder.getRawXMLBuilder().comment("Spring Security");
-		String springSecurityFilterChainName = "springSecurityFilter";
+		String springSecurityFilterChainName = "springSecurityFilterChain";
 
 		builder.addFilter(springSecurityFilterChainName, org.springframework.web.filter.DelegatingFilterProxy.class);
 		builder.addFilterMapping(springSecurityFilterChainName, apiServletName);

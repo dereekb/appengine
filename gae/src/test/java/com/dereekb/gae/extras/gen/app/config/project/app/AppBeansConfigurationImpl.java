@@ -41,6 +41,7 @@ public class AppBeansConfigurationImpl
 	public static final String CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID = "clientLoginTokenModelContextServiceEntryFactory";
 	public static final String PASSWORD_LOGIN_SERVICE_BEAN_ID = "passwordLoginService";
 	public static final String LOGIN_REGISTER_SERVICE_BEAN_ID = "loginRegisterService";
+	public static final String LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID = "loginTokenUserDetailsBuilder";
 
 	public static final String APP_DEVELOPMENT_PROXY_URL_BEAN_ID = "appDevelopmentProxyUrl";
 
@@ -83,6 +84,7 @@ public class AppBeansConfigurationImpl
 		private String clientLoginTokenModelContextServiceEntryFactoryBeanId = CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID;
 		private String passwordLoginServiceBeanId = PASSWORD_LOGIN_SERVICE_BEAN_ID;
 		private String loginRegisterServiceBeanId = LOGIN_REGISTER_SERVICE_BEAN_ID;
+		private String loginTokenUserDetailsBuilderBeanId = LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID;
 
 		// MARK: AppUtilityBeansConfiguration
 		@Override
@@ -123,6 +125,19 @@ public class AppBeansConfigurationImpl
 			}
 
 			this.loginRegisterServiceBeanId = loginRegisterServiceBeanId;
+		}
+
+		@Override
+		public String getLoginTokenUserDetailsBuilderBeanId() {
+			return this.loginTokenUserDetailsBuilderBeanId;
+		}
+
+		public void setLoginTokenUserDetailsBuilderBeanId(String loginTokenUserDetailsBuilderBeanId) {
+			if (loginTokenUserDetailsBuilderBeanId == null) {
+				throw new IllegalArgumentException("loginTokenUserDetailsBuilderBeanId cannot be null.");
+			}
+
+			this.loginTokenUserDetailsBuilderBeanId = loginTokenUserDetailsBuilderBeanId;
 		}
 
 	}

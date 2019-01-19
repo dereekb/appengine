@@ -14,8 +14,6 @@ import com.dereekb.gae.utilities.gae.GoogleAppEngineContextualFactory;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.utilities.gae.impl.GoogleAppEngineContextualFactoryImpl;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
-import com.dereekb.gae.utilities.model.source.Source;
-import com.dereekb.gae.utilities.model.source.impl.SourceImpl;
 
 /**
  * {@link GoogleAppEngineContextualFactory} for {@link ClientRequestSender}.
@@ -71,45 +69,45 @@ public class ClientRequestSenderFactory extends GoogleAppEngineContextualFactory
 
 	// MARK: Implementations
 	@Override
-	public Source<ClientRequestSender> getProductionSource() {
-		Source<ClientRequestSender> source = super.getProductionSource();
+	public ClientRequestSender getProductionSingleton() {
+		ClientRequestSender singleton = super.getProductionSingleton();
 
-		if (source == null) {
-			source = this.tryMakeProductionSource();
+		if (singleton == null) {
+			singleton = this.tryMakeProductionSender();
 		}
 
-		return source;
+		return singleton;
 	}
 
 	@Override
-	public Source<ClientRequestSender> getDevelopmentSource() {
-		Source<ClientRequestSender> source = super.getDevelopmentSource();
+	public ClientRequestSender getDevelopmentSingleton() {
+		ClientRequestSender singleton = super.getDevelopmentSingleton();
 
-		if (source == null) {
-			source = this.tryMakeDevelopmentSource();
+		if (singleton == null) {
+			singleton = this.tryMakeDevelopmentSender();
 		}
 
-		return source;
+		return singleton;
 	}
 
-	protected Source<ClientRequestSender> tryMakeProductionSource() {
+	protected ClientRequestSender tryMakeProductionSender() {
 		String productionBaseUrl = this.getProductionBaseUrl();
 
 		if (productionBaseUrl == null) {
 			return null;
 		}
 
-		return new SourceImpl<ClientRequestSender>(new ClientRequestSenderImpl(productionBaseUrl));
+		return new ClientRequestSenderImpl(productionBaseUrl);
 	}
 
-	protected Source<ClientRequestSender> tryMakeDevelopmentSource() {
+	protected ClientRequestSender tryMakeDevelopmentSender() {
 		String developmentBaseUrl = this.getDevelopmentBaseUrl();
 
 		if (developmentBaseUrl == null) {
 			return null;
 		}
 
-		return new SourceImpl<ClientRequestSender>(new ClientRequestSenderImpl(developmentBaseUrl));
+		return new ClientRequestSenderImpl(developmentBaseUrl);
 	}
 
 	protected String getProductionBaseUrl() {

@@ -168,7 +168,8 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	@Override
 	public void configureTokenAuthenticationProvider(AppConfiguration appConfig,
 	                                                 SpringBeansXMLBeanBuilder<?> beanBuilder) {
-		beanBuilder.beanClass(this.loginTokenAuthenticationProviderClass);
+		beanBuilder.beanClass(this.loginTokenAuthenticationProviderClass).c()
+		        .ref(appConfig.getAppBeans().getUtilityBeans().getLoginTokenUserDetailsBuilderBeanId());
 	}
 
 	@Override

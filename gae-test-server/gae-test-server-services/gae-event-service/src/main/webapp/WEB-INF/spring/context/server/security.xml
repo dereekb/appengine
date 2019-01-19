@@ -53,7 +53,9 @@
     <security:authentication-provider ref="loginTokenAuthenticationProvider"/>
   </security:authentication-manager>
   <!--Authentication-->
-  <bean class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl" id="loginTokenAuthenticationProvider"/>
+  <bean class="com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl" id="loginTokenAuthenticationProvider">
+    <constructor-arg index="0" ref="loginTokenUserDetailsBuilder"/>
+  </bean>
   <bean class="com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl" id="loginTokenUserDetailsBuilder">
     <constructor-arg index="0" ref="loginTokenModelContextSetDencoder"/>
     <constructor-arg index="1" ref="loginTokenGrantedAuthorityBuilder"/>

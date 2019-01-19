@@ -20,9 +20,11 @@
     <constructor-arg index="1" ref="loginServiceClientModelRolesContextService"/>
   </bean>
   <!--Remote Service Shared Components-->
-  <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderImpl" id="loginServiceClientRequestSender">
-    <constructor-arg index="0" value="/api/login/v1"/>
+  <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderFactory" id="loginServiceClientRequestSenderFactory">
+    <property name="baseApiUrl" value="/api/login/v1"/>
+    <property name="developmentDomainUrl" ref="appDevelopmentProxyUrl"/>
   </bean>
+  <bean factory-bean="loginServiceClientRequestSenderFactory" factory-method="make" id="loginServiceClientRequestSender"/>
   <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl" id="loginServiceClientApiRequestSender">
     <constructor-arg index="0" ref="loginServiceClientRequestSender"/>
   </bean>

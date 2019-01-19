@@ -130,7 +130,7 @@ public class ClientRemoteServiceSpringContextConfigurerBuilder {
 
 			builder.bean(clientRequestSenderFactoryBeanId).beanClass(ClientRequestSenderFactory.class)
 			        .property("baseApiUrl").value(baseApiUrl).up()
-			        .property("developmentDomainUrl").value(appConfig.getAppBeans().getAppDevelopmentProxyUrlBeanId());
+			        .property("developmentDomainUrl").ref(appConfig.getAppBeans().getAppDevelopmentProxyUrlBeanId());
 
 			builder.bean(clientRequestSenderBeanId).factoryBean(clientRequestSenderFactoryBeanId).factoryMethod("make");
 

@@ -3,6 +3,7 @@ package com.dereekb.gae.utilities.gae.impl;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineContextualFactory;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
+import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility.EnvironmentType;
 import com.dereekb.gae.utilities.model.source.Source;
 import com.dereekb.gae.utilities.model.source.impl.SourceImpl;
 
@@ -133,7 +134,9 @@ public class GoogleAppEngineContextualFactoryImpl<T>
 	public T make() throws FactoryMakeFailureException {
 		T item = null;
 
-		switch (GoogleAppEngineUtility.getEnvironmentType()) {
+		EnvironmentType environmentType = GoogleAppEngineUtility.getEnvironmentType();
+
+		switch (environmentType) {
 			case DEVELOPMENT:
 				item = this.getDevelopmentSingleton();
 
@@ -156,7 +159,7 @@ public class GoogleAppEngineContextualFactoryImpl<T>
 			item = this.getDefaultSingleton();
 
 			if (item == null && this.assertNotNull) {
-				throw new NullPointerException();
+				throw new NullPointerException("No source configured for environment: " + environmentType);
 			}
 		}
 

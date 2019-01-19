@@ -20,4 +20,7 @@ public interface AppUtilityBeansConfiguration {
 
 	public String getLoginRegisterServiceBeanId();
 
+	// MARK: Login Token Services
+	public String getLoginTokenUserDetailsBuilderBeanId();
+
 }
