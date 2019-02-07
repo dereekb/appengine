@@ -27,13 +27,13 @@
           </snapshots>
           <id>central</id>
           <name>libs-release</name>
-          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory}}/libs-release</url>
+          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}/libs-release</url>
         </repository>
         <repository>
           <snapshots />
           <id>snapshots</id>
           <name>libs-snapshot</name>
-          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory}}/libs-snapshot</url>
+          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}/libs-snapshot</url>
         </repository>
       </repositories>
       <pluginRepositories>
@@ -43,13 +43,13 @@
           </snapshots>
           <id>central</id>
           <name>libs-release</name>
-          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory}}/libs-release</url>
+          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}/libs-release</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots />
           <id>snapshots</id>
           <name>libs-snapshot</name>
-          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory}}/libs-snapshot</url>
+          <url>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}/libs-snapshot</url>
         </pluginRepository>
       </pluginRepositories>
       <id>artifactory</id>
