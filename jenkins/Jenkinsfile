@@ -2,10 +2,18 @@ pipeline {
     agent {
         docker {
             image 'maven:3-alpine'
-            args '-v $HOME/.m2:/root/.m2'
         }
     }
+    environment {
+        ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
+        ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
+    }
     stages {
+        stage('Initialize') {
+            steps {
+                sh './jenkins/scripts/initialize.sh'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
@@ -21,13 +29,9 @@ pipeline {
                 }
             }
         }
-        stage('Deploy To Artifactory') {
-            environment {
-                ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
-                ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
-            }
+        stage('Deploy') {
             steps {
-                sh './jenkins/scripts/artifactory-deploy.sh'
+                sh './jenkins/scripts/deploy.sh'
             }
         }
     }
