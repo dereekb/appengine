@@ -39,12 +39,11 @@
 			<version>${appengine.target.version}</version>
 		</dependency>
 		
-		
 		<dependency>
-    <groupId>com.google.appengine.tools</groupId>
-    <artifactId>appengine-gcs-client</artifactId>
-    <version>0.8</version>
-</dependency>
+			<groupId>com.google.appengine.tools</groupId>
+			<artifactId>appengine-gcs-client</artifactId>
+			<version>0.8</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -378,28 +377,38 @@
 
 			<!-- Artifactory Deploy -->
 			<plugin>
-            <groupId>org.jfrog.buildinfo</groupId>
-            <artifactId>artifactory-maven-plugin</artifactId>
-            <version>2.6.1</version>
-            <inherited>false</inherited>
-            <executions>
-                <execution>
-                    <id>build-info</id>
-                    <goals>
-                        <goal>publish</goal>
-                    </goals>
-                    <configuration>
-                        <publisher>
-                            <contextUrl>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}</contextUrl>
-                            <username>{{ARTIFACTORY_CREDS_USR}}</username>
-                            <password>{{ARTIFACTORY_CREDS_PSW}}</password>
-                            <repoKey>libs-release-local</repoKey>
-                            <snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
-                        </publisher>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+				<groupId>org.jfrog.buildinfo</groupId>
+				<artifactId>artifactory-maven-plugin</artifactId>
+				<version>2.6.1</version>
+				<inherited>false</inherited>
+				<executions>
+						<execution>
+								<id>build-info</id>
+								<goals>
+										<goal>publish</goal>
+								</goals>
+								<configuration>
+										<artifactory>
+												<includeEnvVars>true</includeEnvVars>
+												<envVarsExcludePatterns>*ARTIFACTORY_CREDS_USR*,*ARTIFACTORY_CREDS_PSW*</envVarsExcludePatterns>
+												<timeoutSec>20</timeoutSec>
+										</artifactory>
+										<publisher>
+												<contextUrl>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}</contextUrl>
+												<username>{{ARTIFACTORY_CREDS_USR}}</username>
+												<password>{{ARTIFACTORY_CREDS_PSW}}</password>
+												<repoKey>libs-release-local</repoKey>
+												<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+										</publisher>
+										<buildInfo>
+												<buildName>gae-core</buildName>
+												<buildNumber>${buildnumber}</buildNumber>
+												<buildUrl>https://dereekb.com</buildUrl>
+										</buildInfo>
+								</configuration>
+						</execution>
+				</executions>
+      </plugin>
 
 		</plugins>
 	</build>

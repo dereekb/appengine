@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Deploying to artifactory."
-mvn publish
+# Deploy to artifactory
+# 
+echo "Deploying to Artifactory."
+mvn deploy
