@@ -399,12 +399,8 @@
 												<password>{{ARTIFACTORY_CREDS_PSW}}</password>
 												<repoKey>libs-release-local</repoKey>
 												<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+  											<publishBuildInfo>false</publishBuildInfo>
 										</publisher>
-										<buildInfo>
-												<buildName>gae-core</buildName>
-												<buildNumber>${buildnumber}</buildNumber>
-												<buildUrl>https://dereekb.com</buildUrl>
-										</buildInfo>
 								</configuration>
 						</execution>
 				</executions>
