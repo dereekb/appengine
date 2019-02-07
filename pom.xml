@@ -390,7 +390,7 @@
 								<configuration>
 										<artifactory>
 												<includeEnvVars>true</includeEnvVars>
-												<envVarsExcludePatterns>*ARTIFACTORY_CREDS_USR*,*ARTIFACTORY_CREDS_PSW*</envVarsExcludePatterns>
+												<envVarsExcludePatterns>*ARTIFACTORY_CREDS*,*ARTIFACTORY_CREDS_USR*,*ARTIFACTORY_CREDS_PSW*</envVarsExcludePatterns>
 												<timeoutSec>20</timeoutSec>
 										</artifactory>
 										<publisher>
