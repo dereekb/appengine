@@ -401,12 +401,15 @@
 												<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
   											<publishBuildInfo>true</publishBuildInfo>
 										</publisher>
+										<buildInfo>
+											<buildName>appengine</buildName>
+											<buildNumber>${buildnumber}</buildNumber>
+											<buildRetentionCount>10</buildRetentionCount>
+										</buildInfo>
 								</configuration>
 						</execution>
 				</executions>
       </plugin>
-
 		</plugins>
 	</build>
-
 </project>

@@ -3,4 +3,4 @@
 # Deploy to artifactory
 # 
 echo "Deploying to Artifactory."
-mvn deploy -Dbuildnumber=${buildnumber} -DskipTests=true
+mvn deploy -DskipTests=true

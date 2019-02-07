@@ -57,3 +57,4 @@ appengine-generated/
 .classpath
 .factorypath
 .settings
+.vscode
