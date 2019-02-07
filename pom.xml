@@ -399,7 +399,7 @@
 												<password>{{ARTIFACTORY_CREDS_PSW}}</password>
 												<repoKey>libs-release-local</repoKey>
 												<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
-  											<publishBuildInfo>false</publishBuildInfo>
+  											<publishBuildInfo>true</publishBuildInfo>
 										</publisher>
 								</configuration>
 						</execution>
