@@ -52,3 +52,9 @@ buildNumber.properties
 
 # App Engine Generated Files #
 appengine-generated/
+
+## Other
+.classpath
+.factorypath
+.settings
+.vscode
