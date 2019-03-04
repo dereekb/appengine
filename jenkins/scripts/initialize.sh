@@ -5,4 +5,4 @@ echo "Initializing Maven.";
 cp ./jenkins/maven/settings.xml /root/.m2/settings.xml
 
 # Install Dependencies
-mvn install
+mvn install -DskipTests
