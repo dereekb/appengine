@@ -5,7 +5,7 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
-import com.google.appengine.api.datastore.QueryResultIterator;
+import com.google.cloud.datastore.QueryResults;
 
 /**
  * {@link IndexedModelQueryModelResultIterator} implementation that wraps a
@@ -19,17 +19,17 @@ import com.google.appengine.api.datastore.QueryResultIterator;
 public class ObjectifyQueryModelResultIteratorImpl<T extends ObjectifyModel<T>>
         implements IndexedModelQueryModelResultIterator<T> {
 
-	private final QueryResultIterator<T> resultIterator;
+	private final QueryResults<T> resultIterator;
 	private final transient ObjectifyCursor startCursor;
 
-	public ObjectifyQueryModelResultIteratorImpl(QueryResultIterator<T> resultIterator) {
+	public ObjectifyQueryModelResultIteratorImpl(QueryResults<T> resultIterator) {
 		this.resultIterator = resultIterator;
 
 		// Get the initial cursor before iterating.
-		this.startCursor = ObjectifyCursor.make(this.resultIterator.getCursor());
+		this.startCursor = ObjectifyCursor.make(this.resultIterator.getCursorAfter());
 	}
 
-	public QueryResultIterator<T> getResultIterator() {
+	public QueryResults<T> getResultIterator() {
 		return this.resultIterator;
 	}
 
@@ -41,7 +41,7 @@ public class ObjectifyQueryModelResultIteratorImpl<T extends ObjectifyModel<T>>
 
 	@Override
 	public ResultsCursor getEndCursor() throws UnavailableIteratorIndexException {
-		return ObjectifyCursor.make(this.resultIterator.getCursor());
+		return ObjectifyCursor.make(this.resultIterator.getCursorAfter());
 	}
 
 	@Override

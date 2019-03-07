@@ -4,14 +4,13 @@ import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyTransactionUtility;
 import com.dereekb.gae.server.datastore.objectify.helpers.PartitionDelegate;
-import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
+import com.dereekb.gae.server.datastore.objectify.helpers.impl.RunnablePartitionDelegateImpl;
 
 /**
  * {@link AtomicTaskImpl} extension that performs
  * {@link #usePairs(Iterable, AtomicTaskConfig)} within a Google App Engine
  * transaction.
- * 
+ *
  * @author dereekb
  *
  * @param <P>
@@ -30,18 +29,11 @@ public abstract class TransactionAtomicTaskImpl<P, C extends AtomicTaskConfig> e
 	                        final C config)
 	        throws AtomicOperationException {
 
-		final PartitionDelegate<P, Void> TRANS_DELEGATE = new PartitionDelegate<P, Void>() {
+		final PartitionDelegate<P, Void> TRANS_DELEGATE = new RunnablePartitionDelegateImpl<P>() {
 
 			@Override
-			public Work<Void> makeWorkForInput(final Iterable<P> input) {
-				return new VoidWork() {
-
-					@Override
-					public void vrun() {
-						TransactionAtomicTaskImpl.super.usePairs(input, config);
-					}
-
-				};
+			public void run(final Iterable<P> input) {
+				TransactionAtomicTaskImpl.super.usePairs(input, config);
 			}
 
 		};

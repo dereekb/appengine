@@ -17,8 +17,8 @@ import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrde
 import com.dereekb.gae.utilities.collections.chain.Chain;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
-import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.QueryResultIterator;
+import com.google.cloud.datastore.Cursor;
+import com.google.cloud.datastore.QueryResults;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
@@ -130,12 +130,12 @@ public class ExecutableObjectifyQueryImpl<T extends ObjectifyModel<T>>
 	}
 
 	@Override
-	public QueryResultIterator<T> objectifyQueryModelsIterator() {
+	public QueryResults<T> objectifyQueryModelsIterator() {
 		return this.getResponse().objectifyQueryModelsIterator();
 	}
 
 	@Override
-	public QueryResultIterator<Key<T>> queryObjectifyKeyIterator() {
+	public QueryResults<Key<T>> queryObjectifyKeyIterator() {
 		return this.getResponse().queryObjectifyKeyIterator();
 	}
 

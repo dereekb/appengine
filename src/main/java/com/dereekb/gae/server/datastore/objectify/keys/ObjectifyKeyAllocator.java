@@ -1,8 +1,9 @@
 package com.dereekb.gae.server.datastore.objectify.keys;
 
+import java.util.List;
+
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.KeyRange;
 
 /**
  * Used for allocating a range of Objectify {@link Key}s.
@@ -26,6 +27,6 @@ public interface ObjectifyKeyAllocator<T extends ObjectifyModel<T>> {
 	 * @param count Positive count.
 	 * @return {@link KeyRange}. Never {@code null}.
 	 */
-	public KeyRange<T> allocateIds(int count);
+	public List<Key<T>> allocateIds(int count);
 
 }

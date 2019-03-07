@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query;
 
 import com.dereekb.gae.server.datastore.models.query.MutableIndexedModelQueryRequestOptions;
-import com.google.appengine.api.datastore.Cursor;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 
 /**
  * Mutable {@link ObjectifyQueryRequestOptions} extension.
@@ -16,7 +16,7 @@ public interface MutableObjectifyQueryRequestOptions
 
 	public void setAllowHybrid(boolean allowHybrid);
 
-	public void setQueryCursor(Cursor cursor);
+	public void setQueryCursor(ObjectifyCursor cursor);
 
 	public void setChunk(Integer chunk);
 

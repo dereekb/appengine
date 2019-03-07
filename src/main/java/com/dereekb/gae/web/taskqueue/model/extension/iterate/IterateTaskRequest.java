@@ -1,7 +1,7 @@
 package com.dereekb.gae.web.taskqueue.model.extension.iterate;
 
 import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 
 /**
  * Request that contains {@link IterateTaskInput} and allows scheduling a

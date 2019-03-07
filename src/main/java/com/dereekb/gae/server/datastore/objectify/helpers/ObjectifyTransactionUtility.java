@@ -223,6 +223,20 @@ public class ObjectifyTransactionUtility {
 			return this.doTransaction(work);
 		}
 
+
+		@Override
+		public void doTransaction(Runnable work) {
+			this.doTransaction(new Work<Boolean>() {
+
+				@Override
+				public Boolean run() {
+					work.run();
+					return null;
+				}
+
+			});
+		}
+
 		@Override
 		public abstract <X> X doTransaction(Work<X> work);
 

@@ -36,12 +36,11 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.VoidWork;
 
 /**
  * Abstract {@link LinkModificationSystemEntry} implementation for changes on
  * the same microservice.
- * 
+ *
  * @author dereekb
  *
  */
@@ -252,7 +251,7 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 					LinkModificationSystemModelChangeSet changeSet = changeInstances.get(key);
 
 					if (changeSet.isOptional() == false) {
-						
+
 						// Add failed to set.
 						nonOptionalKeys.add(key);
 
@@ -293,10 +292,10 @@ public class LinkModificationSystemEntryImpl<T extends UniqueModel>
 				List<ModelKey> modifiedModelKeys = ModelKey.readModelKeys(changeInstances.keySet());
 				final ReadRequest request = new KeyReadRequest(modifiedModelKeys, false);
 
-				ObjectifyService.ofy().transactNew(new VoidWork() {
+				ObjectifyService.ofy().transactNew(new Runnable() {
 
 					@Override
-					public void vrun() {
+					public void run() {
 
 						ReadResponse<? extends MutableLinkModelAccessorPair<T>> response = LinkModificationSystemEntryImpl.this.accessor
 						        .readMutableLinkModels(request);

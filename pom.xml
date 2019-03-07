@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -38,7 +39,7 @@
 			<artifactId>appengine-api-1.0-sdk</artifactId>
 			<version>${appengine.target.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.appengine.tools</groupId>
 			<artifactId>appengine-gcs-client</artifactId>
@@ -86,7 +87,7 @@
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
-			<version>5.1.14</version>
+			<version>6.0.3</version>
 		</dependency>
 
 		<!-- Dates -->
@@ -382,38 +383,39 @@
 				<version>2.6.1</version>
 				<inherited>false</inherited>
 				<executions>
-						<execution>
-								<id>build-info</id>
-								<goals>
-										<goal>publish</goal>
-								</goals>
-								<configuration>
-										<artifactory>
-												<includeEnvVars>true</includeEnvVars>
-												<envVarsExcludePatterns>*ARTIFACTORY_CREDS*,*ARTIFACTORY_CREDS_USR*,*ARTIFACTORY_CREDS_PSW*</envVarsExcludePatterns>
-												<timeoutSec>20</timeoutSec>
-										</artifactory>
-										<publisher>
-												<contextUrl>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}</contextUrl>
-												<username>{{ARTIFACTORY_CREDS_USR}}</username>
-												<password>{{ARTIFACTORY_CREDS_PSW}}</password>
-												<repoKey>libs-release-local</repoKey>
-												<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
-  											<publishBuildInfo>true</publishBuildInfo>
-										</publisher>
-										<buildInfo>
-											<buildName>appengine</buildName>
-											<buildNumber>${buildnumber}</buildNumber>
-											<buildRetentionCount>10</buildRetentionCount>
-										</buildInfo>
-								</configuration>
-						</execution>
+					<execution>
+						<id>build-info</id>
+						<goals>
+							<goal>publish</goal>
+						</goals>
+						<configuration>
+							<artifactory>
+								<includeEnvVars>true</includeEnvVars>
+								<envVarsExcludePatterns>*ARTIFACTORY_CREDS*,*ARTIFACTORY_CREDS_USR*,*ARTIFACTORY_CREDS_PSW*</envVarsExcludePatterns>
+								<timeoutSec>20</timeoutSec>
+							</artifactory>
+							<publisher>
+								<contextUrl>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}</contextUrl>
+								<username>{{ARTIFACTORY_CREDS_USR}}</username>
+								<password>{{ARTIFACTORY_CREDS_PSW}}</password>
+								<repoKey>libs-release-local</repoKey>
+								<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+								<publishBuildInfo>true</publishBuildInfo>
+							</publisher>
+							<buildInfo>
+								<buildName>appengine</buildName>
+								<buildNumber>${buildnumber}</buildNumber>
+								<buildRetentionCount>10</buildRetentionCount>
+							</buildInfo>
+						</configuration>
+					</execution>
 				</executions>
-      </plugin>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>

@@ -1,7 +1,8 @@
 package com.dereekb.gae.server.datastore.objectify.query.cursor.impl;
 
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
-import com.google.appengine.api.datastore.Cursor;
+import com.dereekb.gae.utilities.data.StringUtility;
+import com.google.cloud.datastore.Cursor;
 
 /**
  * {@link ResultsCursor} implementation that wraps a {@link Cursor}.
@@ -16,7 +17,7 @@ public class ObjectifyCursor
 	private transient String cursorString;
 
 	public ObjectifyCursor(String webSafeString) {
-		this.setCursor(Cursor.fromWebSafeString(webSafeString));
+		this.setCursor(Cursor.fromUrlSafe(webSafeString));
 	}
 
 	public ObjectifyCursor(Cursor cursor) {
@@ -45,6 +46,14 @@ public class ObjectifyCursor
 		return objectifyCursor;
 	}
 
+	public static ObjectifyCursor safe(String webSafeString) {
+		if (StringUtility.isEmptyString(webSafeString)) {
+			return null;
+		} else {
+			return ObjectifyCursor.make(webSafeString);
+		}
+	}
+
 	public static ObjectifyCursor make(String webSafeString) {
 		return new ObjectifyCursor(webSafeString);
 	}
@@ -66,7 +75,7 @@ public class ObjectifyCursor
 	@Override
 	public String getCursorString() {
 		if (this.cursorString == null) {
-			this.cursorString = this.cursor.toWebSafeString();
+			this.cursorString = this.cursor.toUrlSafe();
 		}
 
 		return this.cursorString;

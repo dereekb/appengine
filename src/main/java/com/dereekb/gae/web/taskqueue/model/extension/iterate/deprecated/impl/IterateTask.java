@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.iteration.ConfiguredIterationTask;
 import com.dereekb.gae.utilities.task.iteration.exception.IncompleteTaskIterationException;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.deprecated.request.IterateTaskContinuation;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 
 /**
  * {@link Task} for iterating over {@link ObjectifyModel} models using a

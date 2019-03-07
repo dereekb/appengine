@@ -3,7 +3,7 @@ package com.dereekb.gae.server.datastore.models.query;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.UniqueModel;
-import com.google.appengine.api.datastore.QueryResultIterator;
+
 
 /**
  * {@link IndexedModelQueryKeyResponse} extension that provides model query results.
@@ -25,7 +25,7 @@ public interface IndexedModelQueryModelResponse<T extends UniqueModel>
 	 * {@link IndexedModelQueryModelResultIterator} instance for iterating over
 	 * results.
 	 *
-	 * @return {@link QueryResultIterator}. Never {@code null}.
+	 * @return {@link QueryResults}. Never {@code null}.
 	 */
 	public IndexedModelQueryModelResultIterator<T> queryModelResultsIterator();
 
