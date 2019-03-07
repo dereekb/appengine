@@ -1,19 +1,28 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-  <!--Imports-->
+  <!--Import-->
   <import resource="/local/local.xml"/>
   <import resource="/remote/remote.xml"/>
   <import resource="/webhook.xml"/>
   <!--Shared-->
   <bean class="com.dereekb.gae.server.event.event.service.impl.AppEventServiceImpl" id="eventService">
     <constructor-arg index="0" ref="serverAppInfo"/>
+    <constructor-arg index="1" ref="eventServiceListeners"/>
   </bean>
   <bean class="java.lang.String" id="modelEventGroup">
     <constructor-arg index="0" value="model"/>
   </bean>
+  <!--Event Listener-->
+  <util:list id="eventServiceListeners">
+    <ref bean="modelKeyEventServiceListener"/>
+    <ref bean="webHookEventSubmitter"/>
+  </util:list>
   <!--Multi-event Listener-->
   <bean class="com.dereekb.gae.server.event.model.shared.event.service.listener.impl.MultiTypeModelKeyEventServiceListener" id="modelKeyEventServiceListener">
     <constructor-arg index="0" ref="modelKeyEventServiceListenerEntries"/>
   </bean>
-  <!--Entries-->
-  <util:map id="modelKeyEventServiceListenerEntries" key-type="java.lang.String"/>
+  <!--Model Key Event Entries-->
+  <util:map id="modelKeyEventServiceListenerEntries" key-type="java.lang.String">
+    <!--App Entries-->
+    <!--Model Entries-->
+  </util:map>
 </beans>

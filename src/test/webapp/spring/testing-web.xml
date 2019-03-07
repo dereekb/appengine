@@ -1,40 +1,39 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-
-	<import resource="models/models.xml" />
-
-	<bean id="testLoginTokenContext"
-		class="com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl">
-		<constructor-arg index="0" ref="passwordLoginController" />
-		<constructor-arg index="1" ref="loginRegisterService" />
-		<constructor-arg index="2" ref="loginTokenService" />
-		<constructor-arg index="3" ref="loginPointerRegistry" />
-		<constructor-arg index="4" ref="loginRegistry" />
-		<!-- Admin Login -->
-		<property name="encodedRoles" value="0" />
-		<property name="encodedAdminRoles" value="3" />
-	</bean>
-
-	<bean id="testSystemAuthenticationContextSetter"
-		class="com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter">
-		<constructor-arg index="0" ref="loginTokenService" />
-		<constructor-arg index="1" ref="systemLoginTokenFactory" />
-		<constructor-arg index="2"
-			ref="loginTokenAuthenticationProvider" />
-	</bean>
-
-	<!-- Overrides the BCrypt Password Encoder For Testing -->
-	<bean id="passwordEncoder"
-		class="com.dereekb.gae.test.server.auth.security.login.password.impl.TestPasswordEncoderImpl"
-		primary="true" scope="singleton">
-	</bean>
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Simulates all requests coming to production API path.-->
+  <bean class="java.lang.String" id="defaultSecurityServletPath">
+    <constructor-arg index="0" ref="productionApiServletPath"/>
+  </bean>
+  <bean class="java.lang.String" id="productionApiServletPath">
+    <constructor-arg index="0" value="/api/foo/v1"/>
+  </bean>
+  <bean class="java.lang.String" id="productionTaskqueueServletPath">
+    <constructor-arg index="0" value="/taskqueue"/>
+  </bean>
+  <bean class="com.dereekb.gae.test.spring.web.builder.ServletAwareWebServiceRequestBuilder" id="testServiceRequestBuilder">
+    <property name="defaultServletPath" ref="defaultSecurityServletPath"/>
+    <property name="servletMappings" ref="testProductionServletMappings"/>
+  </bean>
+  <util:map id="testProductionServletMappings" key-type="java.lang.String">
+    <entry key="/taskqueue/**" value-ref="productionTaskqueueServletPath"/>
+  </util:map>
+  <!--Import-->
+  <import resource="/models/models.xml"/>
+  <!--Override-->
+  <bean class="com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl" id="testLoginTokenContext">
+    <constructor-arg index="0" ref="passwordLoginController"/>
+    <constructor-arg index="1" ref="loginRegisterService"/>
+    <constructor-arg index="2" ref="loginTokenService"/>
+    <constructor-arg index="3" ref="loginPointerRegistry"/>
+    <constructor-arg index="4" ref="loginRegistry"/>
+    <!--Admin Login-->
+    <property name="encodedAdminRoles" value="3"/>
+    <property name="encodedRoles" value="0"/>
+  </bean>
+  <bean class="com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter" id="testSystemAuthenticationContextSetter">
+    <constructor-arg index="0" ref="loginTokenService"/>
+    <constructor-arg index="1" ref="systemLoginTokenFactory"/>
+    <constructor-arg index="2" ref="loginTokenAuthenticationProvider"/>
+  </bean>
+  <!--Overrides the BCrypt Password Encoder For Testing-->
+  <bean class="com.dereekb.gae.test.server.auth.security.login.password.impl.TestPasswordEncoderImpl" id="passwordEncoder" primary="true" scope="singleton"/>
 </beans>

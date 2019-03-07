@@ -1,89 +1,41 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-
-	<!-- Validator -->
-	<bean id="validator"
-		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
-	<!-- GAE Specific -->
-	<bean id="localServiceTestHelper"
-		class="com.google.appengine.tools.development.testing.LocalServiceTestHelper"
-		lazy-init="false">
-		<constructor-arg index="0">
-			<array>
-				<ref bean="localMemcacheServiceTestConfig" />
-				<ref bean="localBlobstoreServiceTestConfig" />
-				<ref bean="localDatastoreServiceTestConfig" />
-				<ref bean="localSearchServiceTestConfig" />
-				<ref bean="localTaskQueueServiceTestConfig" />
-				<ref bean="localImagesServiceTestConfig" />
-				<ref bean="localURLFetchServiceTestConfig" />
-				<ref bean="localAppIdentityServiceTestConfig" />
-			</array>
-		</constructor-arg>
-	</bean>
-
-	<bean id="localMemcacheServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig">
-	</bean>
-
-	<bean id="localBlobstoreServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig">
-	</bean>
-
-	<bean id="localDatastoreServiceTestConfig"
-		init-method="setApplyAllHighRepJobPolicy"
-		factory-bean='localDatastoreServiceTestConfigFactory'
-		factory-method="make">
-	</bean>
-
-	<bean id="localDatastoreServiceTestConfigFactory"
-		class="com.dereekb.gae.test.spring.google.LocalDatastoreServiceTestConfigFactory">
-		<property name="noStorage" value="true" />
-		<property name="noIndexAutoGen" value="true" />
-	</bean>
-
-	<bean id="localSearchServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig">
-	</bean>
-
-	<bean id="localImagesServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig">
-	</bean>
-
-	<bean id="localURLFetchServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig">
-	</bean>
-
-	<bean id="localAppIdentityServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalAppIdentityServiceTestConfig">
-	</bean>
-
-	<bean id="datastoreIndexesXmlPath" class="java.lang.String">
-		<constructor-arg index="0"
-			value="src/test/webapp/datastore-indexes.xml" />
-	</bean>
-
-	<bean id="taskQueueXmlPath" class="java.lang.String" lazy-init="false">
-		<constructor-arg index="0" value="src/test/webapp/queue.xml" />
-	</bean>
-
-	<bean id="localTaskQueueServiceTestConfig"
-		class="com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig">
-		<property name="queueXmlPath">
-			<ref bean="taskQueueXmlPath" />
-		</property>
-		<property name="callbackClass"
-			value="com.dereekb.gae.test.spring.WebServiceTestingContextImpl.TestLocalTaskQueueCallback" />
-		<property name="disableAutoTaskExecution" value="false"></property>
-	</bean>
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Validator-->
+  <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" id="validator"/>
+  <!--GAE Specific-->
+  <bean class="com.google.appengine.tools.development.testing.LocalServiceTestHelper" id="localServiceTestHelper" lazy-init="false">
+    <constructor-arg index="0">
+      <array>
+        <ref bean="localMemcacheServiceTestConfig"/>
+        <ref bean="localBlobstoreServiceTestConfig"/>
+        <ref bean="localDatastoreServiceTestConfig"/>
+        <ref bean="localSearchServiceTestConfig"/>
+        <ref bean="localTaskQueueServiceTestConfig"/>
+        <ref bean="localImagesServiceTestConfig"/>
+        <ref bean="localURLFetchServiceTestConfig"/>
+        <ref bean="localAppIdentityServiceTestConfig"/>
+      </array>
+    </constructor-arg>
+  </bean>
+  <bean class="com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig" id="localMemcacheServiceTestConfig"/>
+  <bean class="com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig" id="localBlobstoreServiceTestConfig"/>
+  <bean factory-bean="localDatastoreServiceTestConfigFactory" factory-method="make" id="localDatastoreServiceTestConfig"/>
+  <bean class="com.dereekb.gae.test.spring.google.LocalDatastoreServiceTestConfigFactory" id="localDatastoreServiceTestConfigFactory">
+    <property name="noStorage" value="true"/>
+    <property name="noIndexAutoGen" value="true"/>
+  </bean>
+  <bean class="com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig" id="localSearchServiceTestConfig"/>
+  <bean class="com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig" id="localImagesServiceTestConfig"/>
+  <bean class="com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig" id="localURLFetchServiceTestConfig"/>
+  <bean class="com.google.appengine.tools.development.testing.LocalAppIdentityServiceTestConfig" id="localAppIdentityServiceTestConfig"/>
+  <bean class="java.lang.String" id="datastoreIndexesXmlPath">
+    <constructor-arg index="0" value="src/main/webapp/WEB-INF/datastore-indexes.xml"/>
+  </bean>
+  <bean class="java.lang.String" id="taskQueueXmlPath">
+    <constructor-arg index="0" value="src/main/webapp/WEB-INF/queue.xml"/>
+  </bean>
+  <bean class="com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig" id="localTaskQueueServiceTestConfig">
+    <property name="queueXmlPath" ref="taskQueueXmlPath"/>
+    <property name="callbackClass" value="com.dereekb.gae.test.spring.WebServiceTestingContextImpl.TestLocalTaskQueueCallback"/>
+    <property name="disableAutoTaskExecution" value="false"/>
+  </bean>
 </beans>

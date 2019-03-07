@@ -43,6 +43,9 @@ public class AppBeansConfigurationImpl
 	public static final String LOGIN_REGISTER_SERVICE_BEAN_ID = "loginRegisterService";
 	public static final String LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID = "loginTokenUserDetailsBuilder";
 
+	public static final String ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "adminOnlySecurityModelQueryTask";
+	public static final String ALLOW_ALL_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "allowAllSecurityModelQueryTask";
+
 	public static final String APP_DEVELOPMENT_PROXY_URL_BEAN_ID = "appDevelopmentProxyUrl";
 
 	private String appInfoBeanId = APP_INFO_BEAN_ID;
@@ -138,6 +141,16 @@ public class AppBeansConfigurationImpl
 			}
 
 			this.loginTokenUserDetailsBuilderBeanId = loginTokenUserDetailsBuilderBeanId;
+		}
+
+		@Override
+		public String getAdminOnlySecurityModelQueryTaskBeanId() {
+			return ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID;
+		}
+
+		@Override
+		public String getAllowAllSecurityModelQueryTaskBeanId() {
+			return ALLOW_ALL_SECURITY_MODEL_QUERY_TASK_BEAN_ID;
 		}
 
 	}

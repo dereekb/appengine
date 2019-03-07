@@ -84,8 +84,21 @@ public class ObjectifyDatabaseImpl
 	private Map<String, Class<?>> aliases = new HashMap<>();
 	private Map<Class<?>, ObjectifyDatabaseEntityDefinition> definitions = new HashMap<>();
 
+	private static void initObjectify(ObjectifyFactory factory) {
+		if (factory != null) {
+			ObjectifyService.init(factory);
+		} else {
+			ObjectifyService.init();
+		}
+	}
+
 	public ObjectifyDatabaseImpl(Iterable<ObjectifyDatabaseEntityDefinition> entities) {
+		this(null, entities);
+	}
+
+	public ObjectifyDatabaseImpl(ObjectifyFactory factory, Iterable<ObjectifyDatabaseEntityDefinition> entities) {
 		super();
+		ObjectifyDatabaseImpl.initObjectify(factory);		// Must be called once.
 		this.addEntityDefinitions(entities);
 	}
 

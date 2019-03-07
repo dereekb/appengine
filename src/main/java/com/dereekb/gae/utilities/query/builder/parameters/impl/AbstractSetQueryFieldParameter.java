@@ -18,7 +18,7 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 
 	public static final Integer MAX_KEYS_ALLOWED = 30;
 
-	private static final Set<ExpressionOperator> ALLOWED_SET_OPERATORS = SetUtility.makeSet(ExpressionOperator.IN,
+	private static final Set<ExpressionOperator> ALLOWED_SET_OPERATORS = SetUtility.makeSet(ExpressionOperator.HAS,
 	        ExpressionOperator.EQUAL);
 
 	protected AbstractSetQueryFieldParameter() {};
@@ -40,7 +40,7 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 	protected AbstractSetQueryFieldParameter(String field, Collection<T> value) throws IllegalArgumentException {
 		this.setField(field);
 		this.setValue(value);
-		this.setOperator(ExpressionOperator.IN);
+		this.setOperator(ExpressionOperator.HAS);
 	}
 
 	// MARK: Override

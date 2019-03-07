@@ -48,7 +48,7 @@ public class AppModelRoleBuilderComponent extends AbstractParentChildCrudModelRo
 		public boolean isOwnedInSecurityContext(App model) throws NoSecurityContextException {
 			LoginTokenUserDetails<LoginToken> principal = LoginSecurityContext.getPrincipal();
 			ModelKey loginKey = principal.getLoginKey();
-			return ModelKey.isEqual(loginKey, model.getModelKey());
+			return ModelKey.isEqual(loginKey, model.getLoginOwnerKey());
 		}
 	}
 

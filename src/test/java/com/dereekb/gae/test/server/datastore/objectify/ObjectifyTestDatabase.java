@@ -9,6 +9,7 @@ import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEnt
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.cmd.Query;
@@ -21,8 +22,8 @@ import com.googlecode.objectify.cmd.Query;
  */
 public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 
-	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition> entities) {
-		super(entities);
+	public ObjectifyTestDatabase(ObjectifyFactory factory, Iterable<ObjectifyDatabaseEntityDefinition> entities) {
+		super(factory, entities);
 	}
 
 	@Override

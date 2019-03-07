@@ -1,0 +1,16 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Model Event Service-->
+  <bean class="com.dereekb.gae.server.event.model.shared.event.service.impl.ModelEventServiceEntryImpl" id="appEventSerializer">
+    <constructor-arg index="0" ref="eventService"/>
+    <constructor-arg index="1" ref="appKeyListAccessorFactory"/>
+    <constructor-arg index="2" ref="appDataConverter"/>
+  </bean>
+  <!--Web Hook Serializers-->
+  <bean class="com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventSerializerImpl" id="appWebHookEventSerializer">
+    <constructor-arg index="0" ref="appDataConverter"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.event.model.shared.webhook.impl.ModelWebHookEventDeserializerImpl" id="appWebHookEventDeserializer">
+    <constructor-arg index="0" ref="appKeyListAccessorFactory"/>
+    <constructor-arg index="1" ref="appDataConverter"/>
+  </bean>
+</beans>

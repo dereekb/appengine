@@ -22,7 +22,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeySetQueryF
  */
 public abstract class AbstractModelKeySetFieldTaskOverrideDelegate<D extends LoginTokenUserDetails<?>, Q> extends AbstractModelQueryFieldTaskOverrideDelegateImpl<ModelKeySetQueryFieldParameter, D, Q> {
 
-	private static final Set<ExpressionOperator> DEFAULT_ALLOWED_OPERATORS = SetUtility.makeSet(ExpressionOperator.IN,
+	private static final Set<ExpressionOperator> DEFAULT_ALLOWED_OPERATORS = SetUtility.makeSet(ExpressionOperator.HAS,
 	        ExpressionOperator.EQUAL);
 
 	public AbstractModelKeySetFieldTaskOverrideDelegate(String field) {

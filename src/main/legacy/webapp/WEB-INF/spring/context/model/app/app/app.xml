@@ -1,0 +1,76 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Type -->
+	<bean id="appType" class="java.lang.String">
+		<constructor-arg index="0" value="App" />
+	</bean>
+
+	<bean id="appClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.server.app.model.app.App" />
+	</bean>
+
+	<bean id="appDtoClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.server.app.model.app.dto.AppData" />
+	</bean>
+
+	<bean id="appIdType"
+		class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType"
+		factory-method="valueOf">
+		<constructor-arg index="0" value="NUMBER" />
+	</bean>
+
+	<!-- Database -->
+	<bean id="appObjectifyEntry"
+		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
+		lazy-init="false">
+		<constructor-arg index="0" ref="appType" />
+		<constructor-arg index="1" ref="appClass" />
+		<constructor-arg index="2" ref="appIdType" />
+		<constructor-arg index="3" ref="appQueryInitializer" />
+	</bean>
+
+	<bean id="appRegistry" factory-bean="objectifyDatabase"
+		factory-method="makeRegistry">
+		<constructor-arg index="0" ref="appClass" />
+	</bean>
+
+	<alias alias="appKeyListAccessorFactory" name="appRegistry" />
+
+	<!-- Configured Setters -->
+	<alias name="appRegistry" alias="appStorer" />
+	<alias name="appRegistry" alias="appUpdater" />
+	<alias name="appRegistry" alias="appDeleter" />
+
+	<!-- Update Scheduler -->
+	<bean id="appScheduleUpdateReview"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
+		<constructor-arg index="0" ref="appType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="appTaskConfiguredUpdater"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl">
+		<constructor-arg index="0" ref="appScheduleUpdateReview" />
+		<constructor-arg index="1" ref="appRegistry" />
+	</bean>
+
+	<!-- Imported -->
+	<import resource="crud.xml" />
+	<import resource="extension/data.xml" />
+	<import resource="extension/link.xml" />
+	<import resource="extension/generation.xml" />
+	<import resource="extension/search.xml" />
+	<import resource="extension/security.xml" />
+
+</beans>

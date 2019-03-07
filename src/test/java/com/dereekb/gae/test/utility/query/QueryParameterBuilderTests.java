@@ -34,13 +34,13 @@ public class QueryParameterBuilderTests {
 
 		ModelKeySetQueryFieldParameterBuilder builder = ModelKeySetQueryFieldParameterBuilder.number();
 
-		String parameterString = "in,1,2,3,4,5,6";
+		String parameterString = "has,1,2,3,4,5,6";
 
 		ModelKeySetQueryFieldParameter parameter = builder.makeModelKeyParameter("field", parameterString);
 		Set<ModelKey> keys = parameter.getValue();
 
 		Assert.assertTrue(keys.size() == 6);
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.HAS);
 	}
 
 	@Test
@@ -51,15 +51,15 @@ public class QueryParameterBuilderTests {
 		String decimalValue = "1234.123";
 		BigDecimal decimal = new BigDecimal(decimalValue);
 		Long convertedLong = LongBigDecimalUtilityImpl.THREE_PRECISION_UTILITY.fromDecimal(decimal);
-		
+
 		LongBigDecimalQueryFieldParameter parameter = builder.make("test", decimal);
-		
+
 		Long value = parameter.getValue();
 		Assert.assertTrue(value.equals(convertedLong));
-		
+
 		EncodedQueryParameter queryParameter = parameter.getParameterRepresentation();
 		String qValue = queryParameter.getValue();
-		
+
 		Assert.assertTrue(qValue.equals(decimalValue));
 	}
 

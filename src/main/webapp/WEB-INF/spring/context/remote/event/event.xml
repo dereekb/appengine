@@ -1,0 +1,24 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Remote Service Security-->
+  <alias alias="eventServiceSystemTokenFactory" name="systemLoginTokenFactory"/>
+  <!--Service Model Roles Security-->
+  <bean class="com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl" id="eventServiceClientModelRolesContextService">
+    <constructor-arg index="0" ref="modelKeyTypeConverter"/>
+    <constructor-arg index="1" ref="eventServiceSecuredClientApiRequestSender"/>
+  </bean>
+  <!--Security Context Service Entries-->
+  <!--Remote Service Shared Components-->
+  <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderFactory" id="eventServiceClientRequestSenderFactory">
+    <property name="baseApiUrl" value="/api/event/v1"/>
+    <property name="developmentDomainUrl" ref="appDevelopmentProxyUrl"/>
+  </bean>
+  <bean factory-bean="eventServiceClientRequestSenderFactory" factory-method="make" id="eventServiceClientRequestSender"/>
+  <bean class="com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl" id="eventServiceClientApiRequestSender">
+    <constructor-arg index="0" ref="eventServiceClientRequestSender"/>
+  </bean>
+  <bean class="com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl" id="eventServiceSecuredClientApiRequestSender">
+    <constructor-arg index="0" ref="eventServiceClientApiRequestSender"/>
+    <constructor-arg index="1" ref="eventServiceSystemTokenFactory"/>
+  </bean>
+  <import resource="/models/models.xml"/>
+</beans>

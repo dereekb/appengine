@@ -73,9 +73,9 @@ public class QueryFieldParameterTests {
 	public void testDecodingCommaSeparatedValuesNull() {
 		String value = "1,2,3,4,5,6,7,8,9";
 
-		EncodedQueryParameter parameter = dencoder.decodeString("in," + value);
+		EncodedQueryParameter parameter = dencoder.decodeString("has," + value);
 
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.HAS);
 		Assert.assertTrue(parameter.getValue().equals(value));
 	}
 
@@ -115,21 +115,21 @@ public class QueryFieldParameterTests {
 		Assert.assertTrue(decoded.equals(parameters));
 
 	}
-	
+
 	@Test
 	public void testDecodingDateParameters() {
-		
+
 		String field = "field";
-		
+
 		Date start = new Date(0);
 		Date end = new Date(1000);
-		
+
 		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
 		parameter.searchRange(start, end);
-		
+
 		String parameterString = parameter.getParameterString();
 		DateQueryFieldParameter decoded = new DateQueryFieldParameter(field, parameterString);
-		
+
 		Assert.assertTrue(decoded.getValue().equals(start));
 		Assert.assertTrue(decoded.getSecondFilter() != null);
 		Assert.assertTrue(decoded.getSecondFilter().getValue().equals(end));

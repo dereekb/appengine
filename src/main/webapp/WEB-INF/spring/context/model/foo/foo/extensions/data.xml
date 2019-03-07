@@ -1,0 +1,12 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Dto-->
+  <bean class="com.dereekb.gae.extras.gen.test.model.foo.dto.FooDataBuilder" id="fooDataBuilder"/>
+  <bean class="com.dereekb.gae.extras.gen.test.model.foo.dto.FooDataReader" id="fooDataReader"/>
+  <bean class="com.dereekb.gae.model.extension.data.conversion.impl.TypedBidirectionalConverterImpl" id="fooDataConverter">
+    <constructor-arg index="0" ref="fooDataBuilder"/>
+    <constructor-arg index="1" ref="fooDataReader"/>
+    <constructor-arg index="2" ref="fooType"/>
+    <constructor-arg index="3" ref="fooClass"/>
+    <constructor-arg index="4" ref="fooDtoClass"/>
+  </bean>
+</beans>

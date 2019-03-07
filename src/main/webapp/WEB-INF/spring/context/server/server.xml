@@ -1,50 +1,42 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
-	<!-- Domain -->
-	<bean id="appDomainInfo"
-		class="com.dereekb.gae.server.app.model.app.info.impl.AppDomainInfoImpl">
-		<constructor-arg index="0" value="test.com"/>
-	</bean>
-
-	<!-- App -->
-	<bean id="serverAppInfo"
-		class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl">
-		<constructor-arg index="0" ref="serverAppKey"/>
-		<constructor-arg index="1" ref="serverAppName"/>
-	</bean>
-	
-	<bean id="serverAppKey"
-		class="com.dereekb.gae.server.datastore.models.keys.ModelKey">
-		<constructor-arg index="0" ref="serverAppId"/>
-	</bean>
-	
-	<bean id="serverAppId" class="java.lang.Long">
-		<constructor-arg index="0" value="1234" />
-	</bean>
-
-	<bean id="serverAppName" class="java.lang.String">
-		<constructor-arg index="0" value="Demo" />
-	</bean>
-
-	<!-- Imports -->
-	<import resource="login.xml" />
-	<import resource="taskqueue.xml" />
-	<import resource="database.xml" />
-	<import resource="keys.xml" />
-	<import resource="mail.xml" />
-	<import resource="ref.xml" />
-	<import resource="security.xml" />
-	<import resource="storage.xml" />
-	<import resource="search.xml" />
-	<import resource="image.xml" />
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--App Info-->
+  <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl" id="productionAppServiceInfo">
+    <constructor-arg index="0" value="gae-test"/>
+    <constructor-arg index="1" value="foo"/>
+    <constructor-arg index="2" value="v1"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl" id="productionAppInfo">
+    <constructor-arg index="0" ref="serverAppKey"/>
+    <constructor-arg index="1" ref="serverAppName"/>
+    <constructor-arg index="2" ref="productionAppServiceInfo"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl" id="appInfoFactory">
+    <property name="productionSingleton" ref="productionAppInfo"/>
+  </bean>
+  <bean factory-bean="appInfoFactory" factory-method="make" id="serverAppInfo"/>
+  <bean class="com.dereekb.gae.server.datastore.models.keys.ModelKey" id="serverAppKey">
+    <constructor-arg index="0" ref="serverAppId"/>
+  </bean>
+  <bean class="java.lang.Long" id="serverAppId">
+    <constructor-arg index="0" value="1"/>
+  </bean>
+  <bean class="java.lang.String" id="serverAppName">
+    <constructor-arg index="0" value="GAE Core Test App"/>
+  </bean>
+  <bean class="java.lang.String" id="serverAppSecret">
+    <constructor-arg index="0" value=""/>
+  </bean>
+  <!--Development-->
+  <bean class="java.lang.String" id="appDevelopmentProxyUrl">
+    <constructor-arg index="0" value="http://development:8080"/>
+  </bean>
+  <!--Import-->
+  <import resource="/database.xml"/>
+  <import resource="/key.xml"/>
+  <import resource="/mail.xml"/>
+  <import resource="/ref.xml"/>
+  <import resource="/taskqueue.xml"/>
+  <import resource="/security.xml"/>
+  <import resource="/login.xml"/>
+  <import resource="/util.xml"/>
 </beans>

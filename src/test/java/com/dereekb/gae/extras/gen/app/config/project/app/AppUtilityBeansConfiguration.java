@@ -23,4 +23,9 @@ public interface AppUtilityBeansConfiguration {
 	// MARK: Login Token Services
 	public String getLoginTokenUserDetailsBuilderBeanId();
 
+	// MARK: Model Query Security Tasks
+	public String getAdminOnlySecurityModelQueryTaskBeanId();
+
+	public String getAllowAllSecurityModelQueryTaskBeanId();
+
 }
