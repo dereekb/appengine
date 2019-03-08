@@ -54,6 +54,7 @@ public class CoreServiceTestingContext {
 
 	@Before
 	public void setUpCoreServices() {
+		this.testObjectifyInitializer.begin();
 		this.helper.setUp();
 
 		if (this.initializeServerWithCoreServices) {
