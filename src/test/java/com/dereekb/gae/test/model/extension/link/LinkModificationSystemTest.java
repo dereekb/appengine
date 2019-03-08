@@ -38,7 +38,7 @@ import com.dereekb.gae.model.extension.links.system.mutable.impl.MutableLinkChan
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
-import com.dereekb.gae.test.model.extension.link.LinkSystemTests.LinkSystemCreationInfo;
+import com.dereekb.gae.test.model.extension.link.LinkSystemTest.LinkSystemCreationInfo;
 import com.dereekb.gae.test.model.extension.link.model.TestLinkModelA;
 import com.dereekb.gae.test.model.extension.link.model.TestLinkModelALinkSystemBuilderEntry;
 import com.dereekb.gae.test.model.extension.link.model.TestLinkModelB;
@@ -54,7 +54,7 @@ import com.dereekb.gae.utilities.collections.list.SetUtility;
  * @author dereekb
  *
  */
-public class LinkModificationSystemTests extends CoreServiceTestingContext {
+public class LinkModificationSystemTest extends CoreServiceTestingContext {
 
 	private LinkModificationSystemInfo testSystem;
 
@@ -64,7 +64,7 @@ public class LinkModificationSystemTests extends CoreServiceTestingContext {
 	}
 
 	public static LinkModificationSystemInfo makeLinkModificationSystem(TestObjectifyInitializerImpl testObjectifyInitializer) {
-		LinkSystemCreationInfo testLinkSystem = LinkSystemTests.makeTestLinkSystem(testObjectifyInitializer);
+		LinkSystemCreationInfo testLinkSystem = LinkSystemTest.makeTestLinkSystem(testObjectifyInitializer);
 
 		LinkModificationSystemEntryImpl<TestLinkModelA> aEntry = new LinkModificationSystemEntryImpl<TestLinkModelA>(testLinkSystem.aAccessor, testLinkSystem.aEntity, new TaskRequestSender<TestLinkModelA>() {
 

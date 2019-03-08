@@ -46,7 +46,7 @@ import com.dereekb.gae.test.model.extension.link.model.TestLinkModelBLinkSystemB
 import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
 import com.dereekb.gae.test.spring.CoreServiceTestingContext;
 
-public class LinkSystemTests extends CoreServiceTestingContext {
+public class LinkSystemTest extends CoreServiceTestingContext {
 
 	private LinkSystemCreationInfo testSystem;
 

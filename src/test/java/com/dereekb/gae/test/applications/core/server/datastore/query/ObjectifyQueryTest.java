@@ -36,7 +36,7 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  * @author dereekb
  *
  */
-public class ObjectifyQueryTests extends CoreApplicationTestContext {
+public class ObjectifyQueryTest extends CoreApplicationTestContext {
 
 	@Autowired
 	@Qualifier("fooRegistry")
