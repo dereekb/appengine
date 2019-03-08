@@ -43,7 +43,7 @@ public class CoreServiceTestingContext {
 	@Autowired
 	protected LocalServiceTestHelper helper;
 
-	@Autowired(required = false)
+	@Autowired(required = true)
 	protected TestObjectifyInitializerImpl testObjectifyInitializer;
 
 	@Autowired(required = false)

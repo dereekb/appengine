@@ -30,6 +30,7 @@ public class TestObjectifyInitializerImpl extends ObjectifyInitializerImpl {
 
 	// MARK: Testing
 	public void begin() {
+		this.initialize();
 		this.start();
 
 		if (this.session == null) {
@@ -47,14 +48,15 @@ public class TestObjectifyInitializerImpl extends ObjectifyInitializerImpl {
 	// MARK: Initialization
 	public void start() {
 		if (!this.started) {
+			this.started = true;
+			this.initialize();
+
 			try {
 				this.datastoreHelper.start();
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-
-			this.started = true;
 		}
 	}
 

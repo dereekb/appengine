@@ -16,6 +16,7 @@ import com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl;
 import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 import com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter;
 import com.dereekb.gae.test.server.auth.security.login.password.impl.TestPasswordEncoderImpl;
+import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
 import com.dereekb.gae.test.spring.google.LocalDatastoreServiceTestConfigFactory;
 import com.dereekb.gae.test.spring.web.builder.ServletAwareWebServiceRequestBuilder;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
@@ -125,6 +126,10 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		builder.stringBean("datastoreIndexesXmlPath", "src/main/webapp/WEB-INF/datastore-indexes.xml");
 
 		builder.stringBean("taskQueueXmlPath", "src/main/webapp/WEB-INF/queue.xml");
+
+		// Objectify Initializer is here as a helper. Required by CoreServiceTestingContext.
+		builder.bean(this.getAppConfig().getAppBeans().getObjectifyInitializerId())
+			.beanClass(TestObjectifyInitializerImpl.class);
 
 		builder.bean("localTaskQueueServiceTestConfig").beanClass(LocalTaskQueueTestConfig.class)
 		        .property("queueXmlPath").ref("taskQueueXmlPath").up().property("callbackClass")
