@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  */
 public final class FooGenerator extends AbstractModelGenerator<Foo> {
 
-	public FooGenerator(Generator<ModelKey> keyGenerator) {
+	public FooGenerator() {
 		super(Foo.class, LongModelKeyGenerator.GENERATOR);
 	};
 

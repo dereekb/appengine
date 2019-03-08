@@ -34,6 +34,7 @@ import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKe
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcer;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityReader;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityWriter;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyInitializer;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifySource;
 import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
@@ -75,6 +76,8 @@ import com.googlecode.objectify.cmd.SimpleQuery;
 /**
  * Objectify Database Singleton used for performing changes using Objectify.
  *
+ * It is important that Objectify already be initialized.
+ *
  * @author dereekb
  *
  */
@@ -84,21 +87,9 @@ public class ObjectifyDatabaseImpl
 	private Map<String, Class<?>> aliases = new HashMap<>();
 	private Map<Class<?>, ObjectifyDatabaseEntityDefinition> definitions = new HashMap<>();
 
-	private static void initObjectify(ObjectifyFactory factory) {
-		if (factory != null) {
-			ObjectifyService.init(factory);
-		} else {
-			ObjectifyService.init();
-		}
-	}
-
-	public ObjectifyDatabaseImpl(Iterable<ObjectifyDatabaseEntityDefinition> entities) {
-		this(null, entities);
-	}
-
-	public ObjectifyDatabaseImpl(ObjectifyFactory factory, Iterable<ObjectifyDatabaseEntityDefinition> entities) {
+	public ObjectifyDatabaseImpl(ObjectifyInitializer initializer, Iterable<ObjectifyDatabaseEntityDefinition> entities) {
 		super();
-		ObjectifyDatabaseImpl.initObjectify(factory);		// Must be called once.
+		initializer.initialize();				// Call initialize to prepare it for use.
 		this.addEntityDefinitions(entities);
 	}
 

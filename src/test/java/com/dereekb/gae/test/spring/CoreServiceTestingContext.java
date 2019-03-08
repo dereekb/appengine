@@ -10,10 +10,9 @@ import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
+import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
 import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.util.Closeable;
 
 /**
  * Testing context that initializes a Google App Engine
@@ -38,29 +37,27 @@ public class CoreServiceTestingContext {
 
 	protected boolean initializeServerWithCoreServices = true;
 
-	private Closeable session;
-
 	@Autowired
 	protected ApplicationContext applicationContext;
 
 	@Autowired
 	protected LocalServiceTestHelper helper;
 
-	@Autowired(required=false)
+	@Autowired(required = false)
+	protected TestObjectifyInitializerImpl testObjectifyInitializer;
+
+	@Autowired(required = false)
 	protected TestAuthenticationContext authContext;
 
-	@Autowired(required=false)
+	@Autowired(required = false)
 	protected ApiInitializeServerController initializeServerController;
 
 	@Before
 	public void setUpCoreServices() {
-		if (this.session == null) {
-			this.helper.setUp();
-			this.session = ObjectifyService.begin();
+		this.helper.setUp();
 
-			if (this.initializeServerWithCoreServices) {
-				this.initializeServerAndAuthContext();
-			}
+		if (this.initializeServerWithCoreServices) {
+			this.initializeServerAndAuthContext();
 		}
 	}
 
@@ -83,10 +80,8 @@ public class CoreServiceTestingContext {
 
 	@After
 	public void tearDownCoreServices() {
-		if (this.session != null) {
-			this.session.close();
-			this.helper.tearDown();
-		}
+		this.testObjectifyInitializer.reset();
+		this.helper.tearDown();
 	}
 
 	public ApplicationContext getApplicationContext() {

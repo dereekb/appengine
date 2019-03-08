@@ -8,6 +8,7 @@ import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.dereekb.gae.web.taskqueue.server.task.TaskQueueTaskController;
@@ -66,9 +67,10 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		builder.bean("taskQueueTaskController").beanClass(TaskQueueTaskController.class).c()
 		        .ref("taskQueueTaskControllerEntries");
 
-		// SpringBeansXMLMapBuilder<?> map = builder.map("taskQueueTaskControllerEntries").keyType(String.class);
+		SpringBeansXMLMapBuilder<?> map = builder.map("taskQueueTaskControllerEntries").keyType(String.class);
 
 		// TODO: Add custom taskqueue controller entries!
+		map.up();
 
 		return this.makeFileWithXML("taskqueue", builder);
 	}

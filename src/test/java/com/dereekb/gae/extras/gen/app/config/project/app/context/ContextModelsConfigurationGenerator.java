@@ -32,7 +32,7 @@ import com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQuer
 import com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl;
 import com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
-import com.dereekb.gae.utilities.factory.impl.BasicFactory;
+import com.dereekb.gae.utilities.factory.impl.BasicFactoryImpl;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 
 /**
@@ -285,7 +285,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		public void makeXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
 			builder.comment("Factory");
-			builder.bean(this.modelConfig.getNewModelFactoryBeanId()).beanClass(BasicFactory.class).c()
+			builder.bean(this.modelConfig.getNewModelFactoryBeanId()).beanClass(BasicFactoryImpl.class).c()
 			        .ref(this.modelConfig.getModelClassBeanId());
 
 		}

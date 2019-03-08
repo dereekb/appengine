@@ -22,6 +22,8 @@ public interface AppBeansConfiguration {
 	public String getAppSecretBeanId();
 
 	// Context
+	public String getObjectifyInitializerId();
+
 	public String getObjectifyDatabaseId();
 
 	public String getModelKeyTypeConverterId();

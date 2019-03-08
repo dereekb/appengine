@@ -10,12 +10,12 @@ import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
  *
  * @param <T>
  */
-public class BasicFactory<T>
+public class BasicFactoryImpl<T>
         implements Factory<T> {
 
 	private final Class<T> type;
 
-	public BasicFactory(Class<T> type) {
+	public BasicFactoryImpl(Class<T> type) {
 		this.type = type;
 	}
 

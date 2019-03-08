@@ -27,6 +27,7 @@ import com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl;
 import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
 import com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl;
 import com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase;
+import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
 
 /**
  * Generator for unit/integration test client components.
@@ -87,7 +88,10 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 
 		// Objectify Override
 		builder.comment("Objectify Override");
-		builder.bean("objectifyDatabase").beanClass(ObjectifyTestDatabase.class).primary().lazy(false).c()
+		builder.bean("testObjectifyInitializer").beanClass(TestObjectifyInitializerImpl.class);
+
+		builder.bean(this.getAppConfig().getAppBeans().getObjectifyDatabaseId()).beanClass(ObjectifyTestDatabase.class).primary().lazy(false).c()
+				.ref("testObjectifyInitializer")
 		        .ref("objectifyDatabaseEntities");
 
 		return this.makeFileWithXML(SHARED_MODEL_FILE_NAME, builder);

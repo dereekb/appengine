@@ -43,6 +43,7 @@ import com.dereekb.gae.test.model.extension.link.model.TestLinkModelALinkSystemB
 import com.dereekb.gae.test.model.extension.link.model.TestLinkModelB;
 import com.dereekb.gae.test.model.extension.link.model.TestLinkModelBGenerator;
 import com.dereekb.gae.test.model.extension.link.model.TestLinkModelBLinkSystemBuilderEntry;
+import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
 import com.dereekb.gae.test.spring.CoreServiceTestingContext;
 
 public class LinkSystemTests extends CoreServiceTestingContext {
@@ -51,12 +52,12 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 
 	@Before
 	public void initSystem() {
-		this.testSystem = makeTestLinkSystem();
+		this.testSystem = makeTestLinkSystem(this.testObjectifyInitializer);
 	}
 
-	public static LinkSystemCreationInfo makeTestLinkSystem() {
+	public static LinkSystemCreationInfo makeTestLinkSystem(TestObjectifyInitializerImpl testObjectifyInitializer) {
 
-		ObjectifyDatabaseImpl database = makeDatabase();
+		ObjectifyDatabaseImpl database = makeDatabase(testObjectifyInitializer);
 
 		// MARK: Model A
 		ObjectifyDatabaseEntity<TestLinkModelA> aEntity = database.getDatabaseEntity(TestLinkModelA.class);
@@ -146,14 +147,14 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 
 			this.aAccessor = aAccessor;
 			this.bAccessor = bAccessor;
-			
+
 			this.aEntityGenerator = new TestModelGeneratorImpl<TestLinkModelA>(aEntity, new TestLinkModelAGenerator());
 			this.bEntityGenerator = new TestModelGeneratorImpl<TestLinkModelB>(bEntity, new TestLinkModelBGenerator());
 		}
 
 	}
 
-	public static ObjectifyDatabaseImpl makeDatabase() {
+	public static ObjectifyDatabaseImpl makeDatabase(TestObjectifyInitializerImpl testObjectifyInitializer) {
 
 		ObjectifyDatabaseEntityDefinitionImpl testModelADefinition = new ObjectifyDatabaseEntityDefinitionImpl(
 		        TestLinkModelA.MODEL_ENTITY_NAME, TestLinkModelA.class, ModelKeyType.NUMBER);
@@ -164,7 +165,7 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 		definitions.add(testModelADefinition);
 		definitions.add(testModelBDefinition);
 
-		ObjectifyDatabaseImpl database = new ObjectifyDatabaseImpl(definitions);
+		ObjectifyDatabaseImpl database = new ObjectifyDatabaseImpl(testObjectifyInitializer, definitions);
 		return database;
 	}
 
@@ -255,7 +256,7 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 
 		Assert.assertTrue(modified.containsAll(childrenKeys));
 		Assert.assertTrue(redundant.isEmpty());
-		
+
 		// Clear Children
 		MutableLinkChange clearBChildren = MutableLinkChangeImpl.clear();
 
@@ -265,7 +266,7 @@ public class LinkSystemTests extends CoreServiceTestingContext {
 
 		Assert.assertTrue(modified.containsAll(childrenKeys));
 		Assert.assertTrue(redundant.isEmpty());
-		
+
 	}
 
 }

@@ -5,7 +5,7 @@ import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailu
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.impl.BasicFactory;
+import com.dereekb.gae.utilities.factory.impl.BasicFactoryImpl;
 
 /**
  * Abstract {@link DirectionalConverter} for a {@link DatabaseModel} to
@@ -23,7 +23,7 @@ public abstract class DatabaseModelDataBuilder<M extends DatabaseModel, D extend
 	private Factory<D> factory;
 
 	public DatabaseModelDataBuilder(Class<D> type) throws IllegalArgumentException {
-		this(new BasicFactory<D>(type));
+		this(new BasicFactoryImpl<D>(type));
 	}
 
 	public DatabaseModelDataBuilder(Factory<D> factory) throws IllegalArgumentException {
