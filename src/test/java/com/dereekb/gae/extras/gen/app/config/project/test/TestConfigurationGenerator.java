@@ -128,7 +128,7 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		builder.stringBean("taskQueueXmlPath", "src/main/webapp/WEB-INF/queue.xml");
 
 		// Objectify Initializer is here as a helper. Required by CoreServiceTestingContext.
-		builder.bean(this.getAppConfig().getAppBeans().getObjectifyInitializerId())
+		builder.bean("test_" + this.getAppConfig().getAppBeans().getObjectifyInitializerId()).primary().lazy(false)
 			.beanClass(TestObjectifyInitializerImpl.class);
 
 		builder.bean("localTaskQueueServiceTestConfig").beanClass(LocalTaskQueueTestConfig.class)

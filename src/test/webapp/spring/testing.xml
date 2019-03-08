@@ -33,7 +33,7 @@
   <bean class="java.lang.String" id="taskQueueXmlPath">
     <constructor-arg index="0" value="src/main/webapp/WEB-INF/queue.xml"/>
   </bean>
-  <bean class="com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl" id="objectifyInitializer"/>
+  <bean class="com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl" id="test_objectifyInitializer" lazy-init="false" primary="true"/>
   <bean class="com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig" id="localTaskQueueServiceTestConfig">
     <property name="queueXmlPath" ref="taskQueueXmlPath"/>
     <property name="callbackClass" value="com.dereekb.gae.test.spring.WebServiceTestingContextImpl.TestLocalTaskQueueCallback"/>

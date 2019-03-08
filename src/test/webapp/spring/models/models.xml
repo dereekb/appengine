@@ -9,7 +9,7 @@
   <import resource="/client/client.xml"/>
   <!--Objectify Override-->
   <bean class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase" id="objectifyDatabase" lazy-init="false" primary="true">
-    <constructor-arg index="0" ref="objectifyInitializer"/>
+    <constructor-arg index="0" ref="test_objectifyInitializer"/>
     <constructor-arg index="1" ref="objectifyDatabaseEntities"/>
   </bean>
 </beans>

@@ -89,7 +89,7 @@ public class TestModelsConfigurationGenerator extends AbstractConfigurationFileG
 		builder.comment("Objectify Override");
 
 		builder.bean(this.getAppConfig().getAppBeans().getObjectifyDatabaseId()).beanClass(ObjectifyTestDatabase.class).primary().lazy(false).c()
-				.ref(this.getAppConfig().getAppBeans().getObjectifyInitializerId())
+				.ref("test_" + this.getAppConfig().getAppBeans().getObjectifyInitializerId())
 		        .ref("objectifyDatabaseEntities");
 
 		return this.makeFileWithXML(SHARED_MODEL_FILE_NAME, builder);

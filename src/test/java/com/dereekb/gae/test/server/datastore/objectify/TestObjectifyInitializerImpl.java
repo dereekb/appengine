@@ -62,7 +62,8 @@ public class TestObjectifyInitializerImpl extends ObjectifyInitializerImpl {
 
 	@Override
 	public void reset() {
-		super.reset();
+		// Don't call reset in super class. No need to discard the factory.
+
 		this.close();
 
 		try {

@@ -163,10 +163,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			String objectifyInitializerBean = this.getAppConfig().getAppBeans().getObjectifyInitializerId();
 
-			builder.bean(objectifyInitializerBean).beanClass(ObjectifyInitializerImpl.class).primary().lazy(false);
+			builder.bean(objectifyInitializerBean).beanClass(ObjectifyInitializerImpl.class).lazy(false);
 
 			builder.bean(this.getAppConfig().getAppBeans().getObjectifyDatabaseId())
-			        .beanClass(ObjectifyDatabaseImpl.class).primary().lazy(false).c().ref(objectifyInitializerBean)
+			        .beanClass(ObjectifyDatabaseImpl.class).lazy(false).c().ref(objectifyInitializerBean)
 			        .ref(OBJECTIFY_DATABASE_ENTITIES_KEY);
 
 			SpringBeansXMLListBuilder<?> entitiesList = builder.list(OBJECTIFY_DATABASE_ENTITIES_KEY);
