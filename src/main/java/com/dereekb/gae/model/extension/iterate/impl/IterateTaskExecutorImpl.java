@@ -114,7 +114,7 @@ public class IterateTaskExecutorImpl<T extends ObjectifyModel<T>>
 
 			// Initialize Iterator
 			String cursorString = this.input.getStepCursor();
-			ObjectifyCursor cursor = ObjectifyCursor.safe(cursorString);
+			ObjectifyCursor cursor = ObjectifyCursor.wrap(cursorString);
 
 			Map<String, String> parameters = this.input.getParameters();
 			IndexedModelQueryIterable<T> iterable = IterateTaskExecutorImpl.this.query.makeIterable(parameters, cursor);

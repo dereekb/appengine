@@ -57,7 +57,7 @@ public class SearchOptionsImpl
 
 	@Override
 	public void setCursor(String cursor) {
-		this.setCursor(new ResultsCursorImpl(cursor));
+		this.setCursor(ResultsCursorImpl.wrap(cursor));
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.server.auth.model.login.Login;
+import com.dereekb.gae.extras.gen.test.model.foo.Foo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
@@ -31,7 +31,7 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 /**
  * Collection of tests related to querying the datastore.
  *
- * Tests are conducted using the {@link Login} type.
+ * Tests are conducted using the {@link Foo} type.
  *
  * @author dereekb
  *
@@ -39,12 +39,12 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 	@Autowired
-	@Qualifier("loginRegistry")
-	private ObjectifyRegistry<Login> registry;
+	@Qualifier("fooRegistry")
+	private ObjectifyRegistry<Foo> registry;
 
 	@Autowired
-	@Qualifier("loginTestModelGenerator")
-	private TestModelGenerator<Login> modelGenerator;
+	@Qualifier("fooTestModelGenerator")
+	private TestModelGenerator<Foo> modelGenerator;
 
 	@Test
 	public void testQuerying() {
@@ -52,8 +52,8 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 		this.modelGenerator.generate(count);
 
-		ObjectifyQueryRequestBuilder<Login> queryBuilder = this.registry.makeQuery();
-		ExecutableObjectifyQuery<Login> query = queryBuilder.buildExecutableQuery();
+		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
+		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		Integer resultsCount = query.getResultCount();
 
 		Assert.assertTrue(resultsCount == count);
@@ -65,11 +65,11 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 		this.modelGenerator.generate(limit * 2);
 
-		ObjectifyQueryRequestBuilder<Login> queryBuilder = this.registry.makeQuery();
+		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
 		ObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl(limit);
 		queryBuilder.setOptions(options);
 
-		ExecutableObjectifyQuery<Login> query = queryBuilder.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		Integer resultsCount = query.getResultCount();
 
 		Assert.assertTrue(resultsCount == limit);
@@ -85,11 +85,12 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 		this.modelGenerator.generate(total);
 
-		ObjectifyQueryRequestBuilder<Login> queryBuilder = this.registry.makeQuery();
+		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
+
 		ObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl(offset, limit);
 		queryBuilder.setOptions(options);
 
-		ExecutableObjectifyQuery<Login> query = queryBuilder.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		Integer resultsCount = query.getResultCount();
 
 		Assert.assertTrue(String.format("Expected %s but got %s", expected, resultsCount), resultsCount == expected);
@@ -102,14 +103,14 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 		this.modelGenerator.generate(count);
 
-		ObjectifyQueryRequestBuilder<Login> queryBuilder = this.registry.makeQuery();
+		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
 		MutableObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl();
 
 		options.setLimit(limit);
 
 		queryBuilder.setOptions(options);
 
-		ExecutableObjectifyQuery<Login> queryA = queryBuilder.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> queryA = queryBuilder.buildExecutableQuery();
 
 		List<ModelKey> resultsA = queryA.queryModelKeys();
 		Assert.assertTrue(resultsA.size() == limit);
@@ -119,7 +120,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		options.setCursor(cursorA);
 
 		queryBuilder.setOptions(options);
-		ExecutableObjectifyQuery<Login> queryB = queryBuilder.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> queryB = queryBuilder.buildExecutableQuery();
 		List<ModelKey> resultsB = queryB.queryModelKeys();
 
 		Assert.assertTrue(resultsB.size() == limit);
@@ -132,15 +133,15 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 		this.modelGenerator.generate(count);
 
-		ObjectifyQueryRequestBuilder<Login> queryBuilder = this.registry.makeQuery();
+		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
 		ObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl();
 		queryBuilder.setOptions(options);
 
-		ExecutableObjectifyQuery<Login> query = queryBuilder.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		List<ModelKey> keys = query.queryModelKeys();
 		Assert.assertNotNull(keys);
 
-		List<Login> models = query.queryModels();
+		List<Foo> models = query.queryModels();
 		Assert.assertNotNull(models);
 
 		List<ModelKey> modelKeys = ModelKey.readModelKeys(models);
@@ -154,7 +155,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 	// MARK: Request Builder
 	@Test
 	public void testRequestBuilderOrderReorderingWithoutInequality() {
-		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		ObjectifyQueryRequestBuilderImpl<Foo> impl = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
 		        .makeQuery();
 
 		String fieldA = "fieldA";
@@ -173,7 +174,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		impl.addResultsOrdering(bOrder);	// Add b first.
 		impl.addResultsOrdering(aOrder);
 
-		ExecutableObjectifyQuery<Login> executable = impl.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> executable = impl.buildExecutableQuery();
 
 		// Check that
 		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
@@ -182,7 +183,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 	@Test
 	public void testRequestBuilderOrderReorderingWithInequality() {
-		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		ObjectifyQueryRequestBuilderImpl<Foo> impl = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
 		        .makeQuery();
 
 		String fieldA = "fieldA";
@@ -204,7 +205,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		impl.addResultsOrdering(aOrder);
 		impl.addResultsOrdering(bOrder);
 
-		ExecutableObjectifyQuery<Login> executable = impl.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> executable = impl.buildExecutableQuery();
 
 		Assert.assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
 
@@ -215,7 +216,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 	@Test
 	public void testRequestBuilderOrderReorderingWithDoubleInequality() {
-		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		ObjectifyQueryRequestBuilderImpl<Foo> impl = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
 		        .makeQuery();
 
 		String fieldA = "fieldA";
@@ -240,7 +241,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 		impl.addResultsOrdering(aOrder);
 		impl.addResultsOrdering(bOrder);
 
-		ExecutableObjectifyQuery<Login> executable = impl.buildExecutableQuery();
+		ExecutableObjectifyQuery<Foo> executable = impl.buildExecutableQuery();
 		executable.queryModelKeys();
 
 		Assert.assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
@@ -252,7 +253,7 @@ public class ObjectifyQueryTests extends CoreApplicationTestContext {
 
 	@Test
 	public void testRequestBuilderMultipleInequalitysFail() {
-		ObjectifyQueryRequestBuilderImpl<Login> impl = (ObjectifyQueryRequestBuilderImpl<Login>) this.registry
+		ObjectifyQueryRequestBuilderImpl<Foo> impl = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
 		        .makeQuery();
 
 		String fieldA = "fieldA";

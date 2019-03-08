@@ -46,7 +46,7 @@ public class ObjectifyCursor
 		return objectifyCursor;
 	}
 
-	public static ObjectifyCursor safe(String webSafeString) {
+	public static ObjectifyCursor wrap(String webSafeString) {
 		if (StringUtility.isEmptyString(webSafeString)) {
 			return null;
 		} else {
