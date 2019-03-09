@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.misc.SecurityUtility;
-import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenGrantedAuthorityBuilder;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetailsBuilder;
@@ -89,7 +89,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	// MARK: LoginTokenUserDetailsBuilder
 	@Override
-	public LoginTokenUserDetails buildDetails(LoginToken loginToken) throws IllegalArgumentException {
+	public LoginTokenUserDetails buildDetails(DecodedLoginToken loginToken) throws IllegalArgumentException {
 		LoginTokenUserDetails details;
 
 		if (loginToken.isAnonymous()) {
@@ -102,29 +102,29 @@ public class LoginTokenUserDetailsBuilderImpl
 	}
 
 	// MARK: Anonymous
-	protected class AnonymousLoginTokenUserDetailsImpl extends AbstractAnonymousLoginTokenUserDetailsImpl<LoginToken> {
+	protected class AnonymousLoginTokenUserDetailsImpl extends AbstractAnonymousLoginTokenUserDetailsImpl<DecodedLoginToken> {
 
 		private static final long serialVersionUID = 1L;
 
-		protected AnonymousLoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+		protected AnonymousLoginTokenUserDetailsImpl(DecodedLoginToken loginToken) throws IllegalArgumentException {
 			super(loginToken);
 		}
 
 	}
 
 	// MARK: LoginTokenUserDetails
-	protected class LoginTokenUserDetailsImpl extends AbstractLoginTokenUserDetailsImpl<LoginToken> {
+	protected class LoginTokenUserDetailsImpl extends AbstractLoginTokenUserDetailsImpl<DecodedLoginToken> {
 
 		private static final long serialVersionUID = 1L;
 
-		protected LoginTokenUserDetailsImpl(LoginToken loginToken) throws IllegalArgumentException {
+		protected LoginTokenUserDetailsImpl(DecodedLoginToken loginToken) throws IllegalArgumentException {
 			super(loginToken);
 		}
 
 	}
 
 	// MARK: Abstract/Internals
-	protected class AbstractAnonymousLoginTokenUserDetailsImpl<T extends LoginToken> extends AbstractLoginTokenUserDetailsImpl<T> {
+	protected class AbstractAnonymousLoginTokenUserDetailsImpl<T extends DecodedLoginToken> extends AbstractLoginTokenUserDetailsImpl<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -174,7 +174,7 @@ public class LoginTokenUserDetailsBuilderImpl
 
 	}
 
-	protected class AbstractLoginTokenUserDetailsImpl<T extends LoginToken>
+	protected class AbstractLoginTokenUserDetailsImpl<T extends DecodedLoginToken>
 	        implements LoginTokenUserDetails {
 
 		private static final long serialVersionUID = 1L;
@@ -332,7 +332,17 @@ public class LoginTokenUserDetailsBuilderImpl
 		@Override
 		public LoginTokenUserType getUserType() {
 			if (this.userType == null) {
-				this.userType = (this.isAdministrator()) ? LoginTokenUserType.ADMINISTRATOR : LoginTokenUserType.USER;
+				LoginTokenUserType userType;
+
+				if (this.isAdministrator()) {
+					userType = LoginTokenUserType.ADMINISTRATOR;
+				} else {
+					// Is never anonymous here due to separate type.
+					userType = (this.getLoginToken().isNewUser()) ? LoginTokenUserType.NEW_USER
+					        : LoginTokenUserType.USER;
+				}
+
+				this.userType = userType;
 			}
 
 			return this.userType;

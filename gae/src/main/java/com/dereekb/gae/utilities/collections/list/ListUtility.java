@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.dereekb.gae.utilities.collections.IteratorUtility;
+
 public class ListUtility {
 
 	public static <T> List<T> copy(Collection<? extends T> input) {
@@ -36,7 +38,7 @@ public class ListUtility {
 	public static <T> List<T> wrap(T element) {
 		List<T> list;
 
-		if (element == null) {
+		if (element != null) {
 			list = new ArrayList<T>(1);
 			list.add(element);
 		} else {
@@ -113,6 +115,71 @@ public class ListUtility {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Creates a new list with the input element reference copied n times.
+	 * <p>
+	 * Example: [1] -> [1,1,...]
+	 * 
+	 * @param element
+	 *            element to reference multiple times in the new List.
+	 * @param count
+	 *            number of times to copy references in new list
+	 * @return {@link List}. Never {@code null}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             thrown if the count is not greater than 0.
+	 */
+	public static <T> List<T> cloneReferences(T element,
+	                                          int count)
+	        throws IllegalArgumentException {
+		if (count < 1) {
+			throw new IllegalArgumentException("Count must be greater than 0.");
+		}
+
+		List<T> list = new ArrayList<T>(count);
+
+		for (int i = 0; i < count; i += 1) {
+			list.add(element);
+		}
+
+		return list;
+	}
+
+	/**
+	 * Creates a new list with the input element references copied n times. The
+	 * order is kept, so if the input is [1,2], the result will be [1,2,1,2,...]
+	 * 
+	 * @param elements
+	 *            elements to reference multiple times in the new List.
+	 * @param count
+	 *            number of times to copy references in new list
+	 * @return {@link List}. Never {@code null}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             thrown if the count is not greater than 0.
+	 */
+	public static <T> List<T> cloneReferences(Iterable<? extends T> elements,
+	                                          int count)
+	        throws IllegalArgumentException {
+		if (count < 1) {
+			throw new IllegalArgumentException("Count must be greater than 0.");
+		}
+
+		List<T> elementsList = IteratorUtility.iterableToList(elements);
+
+		if (count == 1) {
+			return elementsList;
+		}
+
+		List<T> list = new ArrayList<T>(count * elementsList.size());
+
+		for (int i = 0; i < count; i += 1) {
+			list.addAll(elementsList);
+		}
+
+		return list;
 	}
 
 }

@@ -88,7 +88,7 @@ public class RelatedLoginModelDeleteTest extends ApiApplicationTestContext {
 		keyA.setLoginPointer(pointer.getObjectifyKey());
 
 		List<LoginKey> otherKeys = this.loginKeyGenerator.generate(5);
-		this.loginKeyRegistry.save(keyA, true);
+		this.loginKeyRegistry.update(keyA);
 
 		// Delete Login Pointer
 		DeleteRequest request = new DeleteRequestImpl(pointer);
@@ -129,7 +129,7 @@ public class RelatedLoginModelDeleteTest extends ApiApplicationTestContext {
 			DeleteRequest request = new DeleteRequestImpl(login);
 			DeleteResponse<Login> response = this.loginCrudService.delete(request);
 
-			Assert.assertFalse(response.getDeletedModels().isEmpty());
+			Assert.assertFalse(response.getModels().isEmpty());
 		} catch (AtomicOperationException e) {
 
 			// Directly schedule it since filters may have inhibited removal.

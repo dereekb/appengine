@@ -40,13 +40,8 @@
 	</bean>
 
 	<!-- Configured Setters -->
-	<alias name="storedImageRegistry" alias="storedImageAsyncConfiguredSetter" />
-
-	<bean id="storedImageSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
-		<constructor-arg index="0" ref="storedImageRegistry" />
-		<constructor-arg index="1" value="false" />
-	</bean>
+	<alias name="storedImageRegistry" alias="storedImageUpdater" />
+	<alias name="storedImageRegistry" alias="storedImageStorer" />
 
 	<!-- Update Scheduler -->
 	<bean id="storedImageScheduleUpdateReview"
@@ -55,8 +50,8 @@
 		<constructor-arg index="1" ref="taskScheduler" />
 	</bean>
 
-	<bean id="storedImageUpdateConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
+	<bean id="storedImageTaskConfiguredUpdater"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl">
 		<constructor-arg index="0"
 			ref="storedImageScheduleUpdateReview" />
 		<constructor-arg index="1" ref="storedImageRegistry" />

@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
-import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthenticationException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthServiceUnavailableException;
-import com.dereekb.gae.web.api.auth.exception.ApiLoginErrorException;
+import com.dereekb.gae.server.auth.security.login.oauth.exception.handler.OAuthFailureResolver;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
-import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiCaughtRuntimeException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 
 /**
  * Controller for logging in using oAuth.
@@ -25,8 +23,8 @@ import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
  *
  */
 @RestController
-@RequestMapping("/login/oauth")
-public class OAuthLoginController {
+@RequestMapping("/login/auth/oauth")
+public final class OAuthLoginController {
 
 	private OAuthLoginControllerDelegate delegate;
 
@@ -48,6 +46,42 @@ public class OAuthLoginController {
 
 	// MARK: Controller
 	/**
+	 * OAuth Login used by applications that have only received an
+	 * authorization code.
+	 *
+	 * @param type
+	 *            OAuth service/type. Example "google".
+	 * @param authCode
+	 *            OAuth authorization code.
+	 * @param codeType
+	 *            Optional code type. May be {@code null}.
+	 * @return {@link LoginTokenPair}. Never {@code null}.
+	 */
+	@ResponseBody
+	@RequestMapping(path = "/{type}/code", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
+	public final LoginTokenPair loginWithAuthCode(@PathVariable("type") String type,
+	                                              @RequestParam("code") @NotEmpty String authCode,
+	                                              @RequestParam(name = "type", required = false) String codeType)
+	        throws ApiLoginException,
+	            ApiCaughtRuntimeException {
+		LoginTokenPair response = null;
+
+		try {
+			response = this.delegate.loginWithAuthCode(type, authCode, codeType);
+		} catch (OAuthAuthenticationException e) {
+			OAuthFailureResolver.resolve(e);
+		} catch (OAuthServiceUnavailableException e) {
+			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNSUPPORTED, e);
+		} catch (RuntimeException e) {
+			RuntimeExceptionResolver.resolve(e);
+		}
+
+		return response;
+	}
+
+	/**
+	 * OAuth Login used by applications that have already retrieved an access
+	 * token.
 	 *
 	 * @param type
 	 *            OAuth service/type. Example "google".
@@ -56,25 +90,21 @@ public class OAuthLoginController {
 	 * @return {@link LoginTokenPair}. Never {@code null}.
 	 */
 	@ResponseBody
-	@RequestMapping(path = "/{type}", method = RequestMethod.POST, produces = "application/json")
-	public final LoginTokenPair login(@PathVariable("type") String type,
-	                                  @RequestParam @NotEmpty String accessToken)
+	@RequestMapping(path = "/{type}/token", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
+	public final LoginTokenPair loginWithAccessToken(@PathVariable("type") String type,
+	                                                 @RequestParam("token") @NotEmpty String accessToken)
 	        throws ApiLoginException,
-	            ApiRuntimeException {
+	            ApiCaughtRuntimeException {
 		LoginTokenPair response = null;
 
 		try {
-			response = this.delegate.login(type, accessToken);
-		} catch (OAuthAuthorizationTokenRequestException e) {
-			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS, e);
+			response = this.delegate.loginWithAccessToken(type, accessToken);
+		} catch (OAuthAuthenticationException e) {
+			OAuthFailureResolver.resolve(e);
 		} catch (OAuthServiceUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNSUPPORTED, e);
-		} catch (OAuthInsufficientException e) {
-			throw new ApiLoginInvalidException(e);
-		} catch (OAuthConnectionException e) {
-			throw new ApiLoginErrorException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

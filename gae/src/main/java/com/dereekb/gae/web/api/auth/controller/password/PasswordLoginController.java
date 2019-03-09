@@ -16,7 +16,7 @@ import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 
 /**
  * API used for simple username/password logins.
@@ -25,7 +25,7 @@ import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
  *
  */
 @RestController
-@RequestMapping("/login/pass")
+@RequestMapping("/login/auth/pass")
 public final class PasswordLoginController {
 
 	private PasswordLoginControllerDelegate delegate;
@@ -61,7 +61,7 @@ public final class PasswordLoginController {
 		} catch (InvalidLoginCredentialsException e) {
 			throw new ApiLoginInvalidException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -79,7 +79,7 @@ public final class PasswordLoginController {
 		} catch (LoginExistsException e) {
 			throw new ApiLoginExistsException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

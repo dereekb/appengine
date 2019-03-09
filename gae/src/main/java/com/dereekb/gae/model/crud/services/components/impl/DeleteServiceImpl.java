@@ -98,6 +98,8 @@ public class DeleteServiceImpl<T extends UniqueModel>
 			filteredKeys.addAll(filtered);
 
 			deleteResponse = new DeleteResponseImpl<T>(deletedModels, filteredKeys, unavailable);
+		} catch (AtomicOperationException e) {
+			throw e;	// Pass Atomic Operation Through
 		} catch (Exception e) {
 			List<ModelKey> failed = ModelKey.readModelKeys(models);
 			throw new AtomicOperationException(failed, e);

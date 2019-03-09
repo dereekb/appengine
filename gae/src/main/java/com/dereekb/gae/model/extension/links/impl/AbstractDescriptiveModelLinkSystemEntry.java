@@ -10,8 +10,8 @@ import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
 import com.dereekb.gae.model.extension.links.descriptor.UniqueDescribedModel;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 
 public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDescribedModel> extends AbstractModelLinkSystemEntry<T> {
 
@@ -20,17 +20,17 @@ public abstract class AbstractDescriptiveModelLinkSystemEntry<T extends UniqueDe
 	public AbstractDescriptiveModelLinkSystemEntry(String modelType,
 	        ReadService<T> readService,
 	        DeleteService<T> deleteService,
-	        ConfiguredSetter<T> setter) {
-		super(modelType, readService, deleteService, setter);
+	        Updater<T> updater) {
+		super(modelType, readService, deleteService, updater);
 		this.descriptiveLinkInfo = new ArrayList<DescribedModelLinkInfo>();
 	}
 
 	public AbstractDescriptiveModelLinkSystemEntry(String modelType,
 	        ReadService<T> readService,
 	        DeleteService<T> deleteService,
-	        ConfiguredSetter<T> setter,
+	        Updater<T> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(modelType, readService, deleteService, setter);
+		super(modelType, readService, deleteService, updater);
 		this.descriptiveLinkInfo = info;
 	}
 

@@ -43,8 +43,8 @@ public final class BidirectionalLinkModel
 	}
 
 	@Override
-	public ModelKey getKeyValue() {
-		return this.model.getKeyValue();
+	public ModelKey keyValue() {
+		return this.model.keyValue();
 	}
 
 	@Override

@@ -13,12 +13,15 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.exception.InvalidModelKeyTypeException;
+import com.dereekb.gae.server.datastore.models.keys.exception.UninitializedModelKeyException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.HandlerPair;
+import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.misc.keyed.AlwaysKeyed;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
-import com.google.common.base.Joiner;
 
 /**
  * Represents a key for a model.
@@ -33,7 +36,7 @@ import com.google.common.base.Joiner;
 public final class ModelKey
         implements UniqueModel {
 
-	public static final Long DEFAULT_KEY = 0L;
+	public static final Long UNINITIALIZED_KEY = 0L;
 
 	private final int hashCode;
 	private final ModelKeyType type;
@@ -41,13 +44,20 @@ public final class ModelKey
 	private final String name;
 	private final Long id;
 
+	private ModelKey() throws IllegalArgumentException {
+		this.id = null;
+		this.name = null;
+		this.hashCode = 0;
+		this.type = ModelKeyType.NULL;
+	}
+
 	public ModelKey(Integer id) throws IllegalArgumentException {
 		this((id != null) ? new Long(id) : null);
 	}
 
 	public ModelKey(Long id) throws IllegalArgumentException {
 		if (id == null || id < 0) {
-			throw new IllegalArgumentException("Invalid number key '" + id + "'. Must be non-null and greater than 0.");
+			throw new IllegalArgumentException("Invalid number key '" + id + "'. Must be non-null and non-negative.");
 		}
 
 		this.id = id;
@@ -67,6 +77,10 @@ public final class ModelKey
 		this.type = ModelKeyType.NAME;
 	}
 
+	public static ModelKey emptyKey() {
+		return new ModelKey();
+	}
+
 	public ModelKeyType getType() {
 		return this.type;
 	}
@@ -83,8 +97,17 @@ public final class ModelKey
 		return key.type == this.type;
 	}
 
+	@Deprecated
 	public boolean isDefaultKey(ModelKey key) {
 		return key.type == ModelKeyType.DEFAULT;
+	}
+
+	public boolean isNullKey(ModelKey key) {
+		return key.type == ModelKeyType.NULL;
+	}
+
+	public boolean isInitialized() {
+		return this.type == ModelKeyType.NAME || this.id != UNINITIALIZED_KEY;
 	}
 
 	@Override
@@ -93,7 +116,7 @@ public final class ModelKey
 	}
 
 	@Override
-	public ModelKey getKeyValue() {
+	public ModelKey keyValue() {
 		return this;
 	}
 
@@ -103,10 +126,16 @@ public final class ModelKey
 	public String keyAsString() {
 		String string;
 
-		if (this.type == ModelKeyType.NAME) {
-			string = this.name;
-		} else {
-			string = this.id.toString();
+		switch (this.type) {
+			case NAME:
+				string = this.name;
+				break;
+			case NUMBER:
+				string = this.id.toString();
+				break;
+			default:
+				string = null;
+				break;
 		}
 
 		return string;
@@ -156,12 +185,29 @@ public final class ModelKey
 		return isEqual;
 	}
 
-	public static List<ModelKey> readModelKeys(Iterable<? extends UniqueModel> models) {
+	public static List<ModelKey> readModelKeysFromKeyed(Iterable<? extends AlwaysKeyed<? extends UniqueModel>> keyedModels) {
+		List<ModelKey> values = new ArrayList<>();
+
+		if (keyedModels != null) {
+			for (AlwaysKeyed<? extends UniqueModel> keyModel : keyedModels) {
+				UniqueModel model = keyModel.keyValue();
+				ModelKey key = model.keyValue();
+
+				if (key != null) {
+					values.add(key);
+				}
+			}
+		}
+
+		return values;
+	}
+
+	public static List<ModelKey> readModelKeys(Iterable<? extends Keyed<? extends ModelKey>> models) {
 		List<ModelKey> values = new ArrayList<>();
 
 		if (models != null) {
-			for (UniqueModel model : models) {
-				ModelKey key = model.getModelKey();
+			for (Keyed<? extends ModelKey> model : models) {
+				ModelKey key = model.keyValue();
 
 				if (key != null) {
 					values.add(key);
@@ -292,14 +338,23 @@ public final class ModelKey
 
 	private static final String SPLITTER = ",";
 
+	public static String keysAsString(Iterable<? extends UniqueModel> models) {
+		return ModelKey.keysAsString(models, SPLITTER);
+	}
+
+	public static String keysAsString(Iterable<? extends UniqueModel> models,
+	                                  String splitter) {
+		Set<ModelKey> keys = ModelKey.makeModelKeySet(models);
+		return ModelKey.keysAsString(keys, splitter);
+	}
+
 	public static String keysAsString(Set<ModelKey> keys) {
 		return keysAsString(keys, SPLITTER);
 	}
 
 	public static String keysAsString(Set<ModelKey> keys,
 	                                  String splitter) {
-		Joiner joiner = Joiner.on(splitter).skipNulls();
-		return joiner.join(keys);
+		return StringUtility.joinValues(splitter, keys);
 	}
 
 	public static List<ModelKey> convertKeysInString(ModelKeyType keyType,
@@ -579,6 +634,22 @@ public final class ModelKey
 		}
 
 		return keys;
+	}
+
+	public static void assertAreAllInitializedKeys(List<ModelKey> modelKeys) throws UninitializedModelKeyException {
+		if (areAllInitialized(modelKeys) == false) {
+			throw new UninitializedModelKeyException();
+		}
+	}
+
+	public static boolean areAllInitialized(Iterable<ModelKey> modelKeys) {
+		for (ModelKey key : modelKeys) {
+			if (key.isInitialized() == false) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

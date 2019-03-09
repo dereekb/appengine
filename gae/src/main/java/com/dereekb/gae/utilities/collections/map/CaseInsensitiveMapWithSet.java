@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import com.dereekb.gae.utilities.collections.set.CaseInsensitiveSet;
+
 /**
  * {@link HashMapWithSet} extension that is keyed by case-insensitive strings.
  *
@@ -24,6 +26,11 @@ public class CaseInsensitiveMapWithSet<U> extends HashMapWithSet<String, U> {
 
 	public CaseInsensitiveMapWithSet(Map<? extends String, ? extends Collection<? extends U>> map) {
 		super(map);
+	}
+
+	@Override
+	public CaseInsensitiveSet keySet() {
+		return new CaseInsensitiveSet(super.keySet());
 	}
 
 	// MARK: Override

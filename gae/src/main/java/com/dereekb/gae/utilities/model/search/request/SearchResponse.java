@@ -15,7 +15,7 @@ public interface SearchResponse {
 	/**
 	 * Returns the cursor to continue the request.
 	 * 
-	 * @return {@link String}. {@code null} if end of the index.
+	 * @return {@link String}. {@code null} if unavailable.
 	 */
 	public String getSearchCursor();
 

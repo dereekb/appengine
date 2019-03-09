@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.crud.task.impl.delegate;
 
-import com.dereekb.gae.model.crud.exception.AttributeFailureException;
 import com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl;
+import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * {@link UpdateTaskImpl} delegate.
@@ -22,10 +22,10 @@ public interface UpdateTaskDelegate<T> {
 	 *            Template model to use for updating. Never {@code null}.
 	 * @param target
 	 *            Model to be updated. Never {@code null}.
-	 * @throws AttributeFailureException
+	 * @throws InvalidAttributeException
 	 *             If the update fails.
 	 */
 	public void updateTarget(T target,
-	                         T template) throws AttributeFailureException;
+	                         T template) throws InvalidAttributeException;
 
 }

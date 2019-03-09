@@ -69,7 +69,7 @@ public class UpdateServiceTester<T extends UniqueModel>
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(template);
 		UpdateResponse<T> response = this.updateService.update(request);
 
-		Collection<T> updated = response.getUpdatedModels();
+		Collection<T> updated = response.getModels();
 		Assert.assertTrue(updated.size() == 1);
 
 		T updatedModel = updated.iterator().next();
@@ -81,7 +81,7 @@ public class UpdateServiceTester<T extends UniqueModel>
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(templates);
 		UpdateResponse<T> response = this.updateService.update(request);
 
-		Collection<T> updated = response.getUpdatedModels();
+		Collection<T> updated = response.getModels();
 		Assert.assertTrue(updated.size() == this.genCount);
 	}
 
@@ -93,7 +93,7 @@ public class UpdateServiceTester<T extends UniqueModel>
 	private void testUpdatingAtomicUnavailable() {
 		T template = this.modelGenerator.generate();
 		ModelKey key = template.getModelKey();
-		this.getterSetter.delete(template, true);
+		this.getterSetter.delete(template);
 
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(template);
 
@@ -108,14 +108,14 @@ public class UpdateServiceTester<T extends UniqueModel>
 
 	private void testUpdatingNonAtomicUnavailable() {
 		T template = this.modelGenerator.generate();
-		this.getterSetter.delete(template, true);
+		this.getterSetter.delete(template);
 
 		UpdateRequestOptionsImpl options = new UpdateRequestOptionsImpl(false);
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(template, options);
 
 		try {
 			UpdateResponse<T> response = this.updateService.update(request);
-			Assert.assertTrue(response.getUpdatedModels().size() == 0);
+			Assert.assertTrue(response.getModels().size() == 0);
 		} catch (AtomicOperationException e) {
 			Assert.fail("Should not have failed atomic operation.");
 		}
@@ -126,7 +126,7 @@ public class UpdateServiceTester<T extends UniqueModel>
 		UpdateRequest<T> request = new UpdateRequestImpl<T>(templates);
 		UpdateResponse<T> response = this.updateService.update(request);
 
-		Assert.assertTrue(response.getUpdatedModels().isEmpty());
+		Assert.assertTrue(response.getModels().isEmpty());
 	}
 
 }

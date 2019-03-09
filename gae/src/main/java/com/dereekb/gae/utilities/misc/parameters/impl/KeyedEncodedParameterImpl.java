@@ -41,7 +41,7 @@ public class KeyedEncodedParameterImpl
 	}
 
 	@Override
-	public String getKeyValue() {
+	public String keyValue() {
 		return this.getParameterKey();
 	}
 

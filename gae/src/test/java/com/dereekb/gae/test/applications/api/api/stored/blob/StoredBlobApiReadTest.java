@@ -7,6 +7,7 @@ import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.test.applications.api.api.tests.ApiReadTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Deprecated
 public class StoredBlobApiReadTest extends ApiReadTest<StoredBlob> {
 
 	@Override

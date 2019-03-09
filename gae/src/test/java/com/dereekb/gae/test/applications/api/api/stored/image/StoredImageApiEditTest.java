@@ -10,8 +10,9 @@ import com.dereekb.gae.model.stored.image.dto.StoredImageData;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.test.applications.api.api.tests.ApiEditTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.web.api.model.controller.EditModelController;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
+@Deprecated
 public class StoredImageApiEditTest extends ApiEditTest<StoredImage, StoredImageData> {
 
 	@Override

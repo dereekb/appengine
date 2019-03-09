@@ -19,7 +19,7 @@
 		class="com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry">
 		<constructor-arg index="0" ref="loginPointerCrudService" />
 		<constructor-arg index="1"
-			ref="loginPointerUpdateConfiguredSetter" />
+			ref="loginPointerTaskConfiguredUpdater" />
 		<!-- Reverse Links Configuration -->
 		<property name="reverseLinkNames">
 			<map key-type="java.lang.String" value-type="java.lang.String">

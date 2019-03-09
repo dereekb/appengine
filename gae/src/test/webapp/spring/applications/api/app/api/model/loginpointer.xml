@@ -11,7 +11,7 @@
 
 	<!-- Read Controller -->
 	<bean id="loginPointerReadControllerEntry"
-		class="com.dereekb.gae.web.api.model.controller.impl.ReadControllerEntryImpl"
+		class="com.dereekb.gae.web.api.model.crud.impl.ReadControllerEntryImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="loginPointerReadService" />
 		<constructor-arg index="1" ref="loginPointerDataConverter" />
@@ -27,7 +27,7 @@
 
 	<!-- Edit Controller -->
 	<bean id="loginPointerEditController"
-		class="com.dereekb.gae.web.api.controllers.models.LoginPointerEditController"
+		class="com.dereekb.gae.web.api.model.controllers.LoginPointerEditController"
 		lazy-init="false">
 		<constructor-arg index="0"
 			ref="loginPointerEditControllerDelegate" />
@@ -36,12 +36,12 @@
 	</bean>
 
 	<bean id="loginPointerEditControllerDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerDelegateImpl">
+		class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerDelegateImpl">
 		<constructor-arg index="0" ref="loginPointerCrudService" />
 	</bean>
 
 	<bean id="loginPointerEditControllerConversionDelegate"
-		class="com.dereekb.gae.web.api.model.controller.impl.EditModelControllerConversionDelegateImpl">
+		class="com.dereekb.gae.web.api.model.crud.impl.EditModelControllerConversionDelegateImpl">
 		<constructor-arg index="0" ref="loginPointerType" />
 		<constructor-arg index="1" ref="stringModelKeyConverter" />
 		<constructor-arg index="2" ref="loginPointerDataConverter" />

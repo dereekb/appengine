@@ -12,20 +12,20 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  *
  * @author dereekb
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class SearchableDatabaseModelData extends OwnedDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String searchIdentifier;
+	protected String searchId = null;
 
-	public String getSearchIdentifier() {
-		return this.searchIdentifier;
+	public String getSearchId() {
+		return this.searchId;
 	}
 
-	public void setSearchIdentifier(String searchIdentifier) {
-		this.searchIdentifier = searchIdentifier;
+	public void setSearchId(String searchId) {
+		this.searchId = searchId;
 	}
 
 }

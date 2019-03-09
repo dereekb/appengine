@@ -18,9 +18,16 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.api.tests.ApiEditTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.web.api.model.controller.EditModelController;
-import com.dereekb.gae.web.api.model.request.ApiDeleteRequest;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
+import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
+import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 
+/**
+ * 
+ * @author dereekb
+ * @deprecated Use Client api tests instead.
+ */
+@Deprecated
 public class StoredBlobApiEditTest extends ApiEditTest<StoredBlob, StoredBlobData> {
 
 	@Autowired
@@ -73,7 +80,7 @@ public class StoredBlobApiEditTest extends ApiEditTest<StoredBlob, StoredBlobDat
 		storedBlob.setDescriptorId("id");
 		storedBlob.setDescriptorType("type");
 
-		this.storedBlobRegistry.save(storedBlob, false);
+		this.storedBlobRegistry.update(storedBlob);
 
 		Assert.assertNotNull(storedBlob.getDescriptor());
 
@@ -82,13 +89,13 @@ public class StoredBlobApiEditTest extends ApiEditTest<StoredBlob, StoredBlobDat
 		try {
 			this.controller.delete(request);
 			Assert.fail();
-		} catch (AtomicOperationException e) {
-			Assert.assertFalse(e.getUnavailableStringKeys().isEmpty());
-			Assert.assertTrue(e.getUnavailableStringKeys().containsAll(stringIdentifiers));
+		} catch (MissingRequiredResourceException e) {
+			Assert.assertFalse(e.getResources().isEmpty());
+			Assert.assertTrue(e.getResources().containsAll(stringIdentifiers));
 		}
 
 		storedBlob.setDescriptor(null);
-		this.storedBlobRegistry.save(storedBlob, false);
+		this.storedBlobRegistry.update(storedBlob);
 
 		try {
 			this.controller.delete(request);

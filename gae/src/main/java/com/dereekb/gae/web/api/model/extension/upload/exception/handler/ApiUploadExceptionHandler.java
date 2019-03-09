@@ -1,5 +1,7 @@
 package com.dereekb.gae.web.api.model.extension.upload.exception.handler;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +21,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  *
  */
 @ControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApiUploadExceptionHandler {
 
 	@ResponseBody
@@ -26,9 +29,8 @@ public class ApiUploadExceptionHandler {
 	@ExceptionHandler(FileUploadUrlCreationException.class)
 	public ApiResponseImpl handleException(FileUploadUrlCreationException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("UPLOAD_URL_EXCEPTION");
 
-		error.setCode("UPLOAD_URL_EXCEPTION");
 		error.setTitle("URL Creation Exception");
 		error.setData(exception.getMessage());
 
@@ -41,9 +43,8 @@ public class ApiUploadExceptionHandler {
 	@ExceptionHandler(InvalidUploadTypeException.class)
 	public ApiResponseImpl handleException(InvalidUploadTypeException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("INVALID_UPLOAD_TYPE");
 
-		error.setCode("INVALID_UPLOAD_TYPE");
 		error.setTitle("Invalid Upload Type");
 		error.setData(exception.getType());
 
@@ -56,9 +57,8 @@ public class ApiUploadExceptionHandler {
 	@ExceptionHandler(FileUploadFailedException.class)
 	public ApiResponseImpl handleException(FileUploadFailedException exception) {
 		ApiResponseImpl response = new ApiResponseImpl(false);
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl();
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl("FAILED_UPLOAD");
 
-		error.setCode("FAILED_UPLOAD");
 		error.setTitle("Failed Upload");
 		error.setDetail(exception.getMessage());
 

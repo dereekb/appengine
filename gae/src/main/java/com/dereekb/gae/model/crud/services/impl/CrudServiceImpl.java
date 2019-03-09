@@ -32,45 +32,77 @@ public class CrudServiceImpl<T extends UniqueModel>
 	private UpdateService<T> updateService;
 	private DeleteService<T> deleteService;
 
+	public CrudServiceImpl(ReadService<T> readService) {
+		this(null, readService, null, null);
+	}
+
 	public CrudServiceImpl(CreateService<T> createService,
 	        ReadService<T> readService,
 	        UpdateService<T> updateService,
 	        DeleteService<T> deleteService) {
-		this.createService = createService;
-		this.readService = readService;
-		this.updateService = updateService;
-		this.deleteService = deleteService;
-	}
-
-	public CreateService<T> getCreateService() {
-		return this.createService;
+		this.setCreateService(createService);
+		this.setReadService(readService);
+		this.setUpdateService(updateService);
+		this.setDeleteService(deleteService);
 	}
 
 	public void setCreateService(CreateService<T> createService) {
+		if (createService == null) {
+			createService = new CreateService<T>() {
+
+				@Override
+				public CreateResponse<T> create(CreateRequest<T> request) throws AtomicOperationException {
+					throw new UnsupportedOperationException();
+				}
+
+			};
+		}
+
 		this.createService = createService;
 	}
 
-	public ReadService<T> getReadService() {
-		return this.readService;
-	}
-
 	public void setReadService(ReadService<T> readService) {
+		if (readService == null) {
+			readService = new ReadService<T>() {
+
+				@Override
+				public ReadResponse<T> read(ReadRequest request) throws AtomicOperationException {
+					throw new UnsupportedOperationException();
+				}
+
+			};
+		}
+
 		this.readService = readService;
 	}
 
-	public UpdateService<T> getUpdateService() {
-		return this.updateService;
-	}
-
 	public void setUpdateService(UpdateService<T> updateService) {
+		if (updateService == null) {
+			updateService = new UpdateService<T>() {
+
+				@Override
+				public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException {
+					throw new UnsupportedOperationException();
+				}
+
+			};
+		}
+
 		this.updateService = updateService;
 	}
 
-	public DeleteService<T> getDeleteService() {
-		return this.deleteService;
-	}
-
 	public void setDeleteService(DeleteService<T> deleteService) {
+		if (deleteService == null) {
+			deleteService = new DeleteService<T>() {
+
+				@Override
+				public DeleteResponse<T> delete(DeleteRequest request) throws AtomicOperationException {
+					throw new UnsupportedOperationException();
+				}
+
+			};
+		}
+
 		this.deleteService = deleteService;
 	}
 

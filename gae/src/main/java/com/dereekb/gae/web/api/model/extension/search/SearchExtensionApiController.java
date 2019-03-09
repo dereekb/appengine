@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
-import com.dereekb.gae.web.api.model.exception.ApiIllegalArgumentException;
-import com.dereekb.gae.web.api.model.exception.ApiRuntimeException;
+import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
+import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchReadRequestImpl;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchUpdateRequestImpl;
@@ -85,7 +85,7 @@ public class SearchExtensionApiController {
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -124,7 +124,7 @@ public class SearchExtensionApiController {
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -165,7 +165,7 @@ public class SearchExtensionApiController {
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;
@@ -187,7 +187,7 @@ public class SearchExtensionApiController {
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (RuntimeException e) {
-			throw new ApiRuntimeException(e);
+			RuntimeExceptionResolver.resolve(e);
 		}
 
 		return response;

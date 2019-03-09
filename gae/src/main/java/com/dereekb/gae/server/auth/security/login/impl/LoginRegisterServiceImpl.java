@@ -132,18 +132,12 @@ public class LoginRegisterServiceImpl
 
 		this.assertPointersAreUnclaimed(loginKey, pointers);
 
-		Set<Key<LoginPointer>> currentPointers = login.getPointers();
-
 		for (LoginPointer pointer : pointers) {
-			Key<LoginPointer> pointerKey = pointer.getObjectifyKey();
-
 			pointer.setLogin(loginKey);
 			pointer.setOwnerId(ownerId);
-			currentPointers.add(pointerKey);
 		}
 
-		this.loginGetterSetter.save(login, true);
-		this.loginPointerGetterSetter.save(pointers, true);
+		this.loginPointerGetterSetter.update(pointers);
 	}
 
 	private void assertPointersAreUnclaimed(Key<Login> newLogin,

@@ -2,8 +2,13 @@ package com.dereekb.gae.utilities.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 public class JsonUtility {
+
+	public static final JsonParser PARSER = new JsonParser();
 
 	public static String getString(JsonElement element,
 	                               String key) {
@@ -13,6 +18,30 @@ public class JsonUtility {
 	public static Boolean getBoolean(JsonElement element,
 	                                 String key) {
 		return new JsonObjectReader(element).getBoolean(key);
+	}
+
+	public static JsonElement safeParseJson(String json) {
+		try {
+			return parseJson(json);
+		} catch (JsonParseException e) {
+
+		}
+
+		return null;
+	}
+
+	public static JsonElement parseJson(String json) throws JsonParseException, JsonSyntaxException {
+		return PARSER.parse(json);
+	}
+
+	public static boolean isJson(String json) {
+		if (json == null) {
+			return false;
+		}
+
+		JsonElement element = safeParseJson(json);
+
+		return element != null && element.isJsonObject();
 	}
 
 	// MARK: Reader

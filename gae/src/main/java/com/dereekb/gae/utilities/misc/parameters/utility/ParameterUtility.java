@@ -17,7 +17,6 @@ public class ParameterUtility {
 
 	public static void put(Map<String, String> parameters,
 	                       KeyedEncodedParameter parameter) {
-
 		if (parameter != null) {
 			parameters.put(parameter.getParameterKey(), parameter.getParameterString());
 		}

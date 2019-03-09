@@ -8,20 +8,16 @@ import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.components.ReadService;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
-import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.DescribedModelLinkInfo;
-import com.dereekb.gae.model.extension.links.components.impl.link.LinkCollectionImpl;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
 import com.dereekb.gae.model.extension.links.impl.AbstractDescriptiveModelLinkSystemEntry;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.link.LoginPointerLinkSystemEntry;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
-import com.googlecode.objectify.Key;
 
 /**
  * {@link LinkSystemEntry} implementation for {@link Login}.
@@ -41,27 +37,27 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	private LinkTarget loginPointerTarget = new LinkTargetImpl(LoginPointerLinkSystemEntry.LOGIN_POINTER_LINK_TYPE,
 	        ModelKeyType.NAME);
 
-	public LoginLinkSystemEntry(CrudService<Login> crudService, ConfiguredSetter<Login> setter) {
-		super(LOGIN_LINK_TYPE, crudService, crudService, setter);
+	public LoginLinkSystemEntry(CrudService<Login> crudService, Updater<Login> updater) {
+		super(LOGIN_LINK_TYPE, crudService, crudService, updater);
 	}
 
 	public LoginLinkSystemEntry(CrudService<Login> crudService,
-	        ConfiguredSetter<Login> setter,
+	        Updater<Login> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(LOGIN_LINK_TYPE, crudService, crudService, setter, info);
+		super(LOGIN_LINK_TYPE, crudService, crudService, updater, info);
 	}
 
 	public LoginLinkSystemEntry(ReadService<Login> readService,
 	        DeleteService<Login> deleteService,
-	        ConfiguredSetter<Login> setter) {
-		super(LOGIN_LINK_TYPE, readService, deleteService, setter);
+	        Updater<Login> updater) {
+		super(LOGIN_LINK_TYPE, readService, deleteService, updater);
 	}
 
 	public LoginLinkSystemEntry(ReadService<Login> readService,
 	        DeleteService<Login> deleteService,
-	        ConfiguredSetter<Login> setter,
+	        Updater<Login> updater,
 	        List<DescribedModelLinkInfo> info) {
-		super(LOGIN_LINK_TYPE, readService, deleteService, setter, info);
+		super(LOGIN_LINK_TYPE, readService, deleteService, updater, info);
 	}
 
 	public String getLoginPointersLinkName() {
@@ -89,13 +85,7 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	public List<Link> makeDefinedLinksForModel(final Login model) {
 		List<Link> links = new ArrayList<Link>();
 
-		ModelKey key = model.getModelKey();
-
-		// Pointers Link
-		LinkInfoImpl loginPointersLinkInfo = new LinkInfoImpl(this.loginPointersLinkName, key, this.loginPointerTarget);
-		LinkCollectionImpl<Key<LoginPointer>> imagesLink = new LinkCollectionImpl<Key<LoginPointer>>(
-		        loginPointersLinkInfo, model.getPointers(), loginPointerUtil);
-		links.add(imagesLink);
+		// No Links.
 
 		return links;
 	}
@@ -104,7 +94,7 @@ public class LoginLinkSystemEntry extends AbstractDescriptiveModelLinkSystemEntr
 	public String toString() {
 		return "LoginLinkSystemEntry [loginPointersLinkName=" + this.loginPointersLinkName + ", loginPointerTarget="
 		        + this.loginPointerTarget + ", modelType=" + this.modelType + ", readService=" + this.readService
-		        + ", setter=" + this.setter + ", reviewer=" + this.reviewer + ", validator=" + this.validator
+		        + ", updater=" + this.updater + ", reviewer=" + this.reviewer + ", validator=" + this.validator
 		        + ", deleteService=" + this.deleteService + ", deleteChangesMap=" + this.deleteChangesMap + "]";
 	}
 

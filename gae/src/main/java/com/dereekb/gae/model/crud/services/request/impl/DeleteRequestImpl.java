@@ -21,11 +21,11 @@ public class DeleteRequestImpl
 	private Collection<ModelKey> targetKeys;
 	private DeleteRequestOptions options;
 
-	public <T extends UniqueModel> DeleteRequestImpl(T target) {
+	public DeleteRequestImpl(UniqueModel target) {
 		this(SingleItem.withValue(target.getModelKey()));
 	}
 
-	public <T extends UniqueModel> DeleteRequestImpl(T target, DeleteRequestOptions options) {
+	public DeleteRequestImpl(UniqueModel target, DeleteRequestOptions options) {
 		this(SingleItem.withValue(target.getModelKey()), options);
 	}
 
@@ -37,17 +37,16 @@ public class DeleteRequestImpl
 		this(SingleItem.withValue(targetKey), options);
 	}
 
-	public DeleteRequestImpl(Collection<ModelKey> targetKeys) {
-		this(targetKeys, null);
+	public DeleteRequestImpl(Collection<? extends UniqueModel> uniqueModels) {
+		this(uniqueModels, null);
 	}
 
-	public DeleteRequestImpl(Collection<ModelKey> targetKeys, DeleteRequestOptions options) {
-
-		if (targetKeys == null) {
+	public DeleteRequestImpl(Collection<? extends UniqueModel> uniqueModels, DeleteRequestOptions options) {
+		if (uniqueModels == null) {
 			throw new IllegalArgumentException("Keys cannot be null.");
 		}
 
-		this.targetKeys = targetKeys;
+		this.targetKeys = ModelKey.readModelKeys(uniqueModels);
 		this.setOptions(options);
 	}
 

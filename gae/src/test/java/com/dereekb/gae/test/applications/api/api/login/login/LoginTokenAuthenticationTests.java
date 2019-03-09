@@ -13,6 +13,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.LoginRegisterService;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRejectedException;
+import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
@@ -24,7 +25,6 @@ import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.web.api.auth.controller.anonymous.AnonymousLoginController;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
-
 
 public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 
@@ -70,12 +70,12 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 		Login login = this.registerService.register(pointer);
 
 		login.setRoles(0b0111L);
-		this.loginRegistry.save(login, false);
+		this.loginRegistry.forceStore(login);
 
 		LoginTokenPair tokenPair = this.passwordController.login(TEST_USERNAME, TEST_PASSWORD);
 		String token = tokenPair.getToken();
 
-		LoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
+		DecodedLoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
 		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
 
 		LoginToken authLoginToken = authentication.getCredentials();
@@ -99,7 +99,7 @@ public class LoginTokenAuthenticationTests extends ApiApplicationTestContext {
 		LoginTokenPair pair = this.anonymousController.login(null);
 		String token = pair.getToken();
 
-		LoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
+		DecodedLoginToken decodedToken = this.loginTokenService.decodeLoginToken(token);
 		LoginTokenAuthentication authentication = this.authenticationProvider.authenticate(decodedToken, null);
 
 		LoginToken authLoginToken = authentication.getCredentials();

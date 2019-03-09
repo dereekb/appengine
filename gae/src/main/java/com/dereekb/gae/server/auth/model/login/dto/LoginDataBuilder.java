@@ -4,7 +4,6 @@ import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.search.document.dto.DescribedModelDataBuilder;
 import com.dereekb.gae.server.auth.model.login.Login;
-import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.utilities.factory.Factory;
 
 /**
@@ -28,12 +27,10 @@ public final class LoginDataBuilder extends DescribedModelDataBuilder<Login, Log
 		LoginData data = super.convertSingle(input);
 
 		// Data
-		data.setDate(input.getDate());
+		data.setDateValue(input.getDate());
 		data.setRoles(input.getRoles());
 		data.setGroup(input.getGroup());
-
-		// Links
-		data.setPointers(ObjectifyKeyUtility.readKeyNames(input.getPointers()));
+		data.setAuthResetValue(input.getAuthReset());
 
 		return data;
 	}

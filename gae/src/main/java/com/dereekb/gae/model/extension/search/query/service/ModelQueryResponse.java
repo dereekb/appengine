@@ -17,6 +17,12 @@ import com.googlecode.objectify.Key;
 public interface ModelQueryResponse<T>
         extends ModelSearchResponse<T> {
 
-	public List<Key<T>> getResponseObjectifyKeys();
+	/**
+	 * Returns a list of objectify keys corresponding to the results in
+	 * {@link #getKeyResults()};
+	 * 
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public List<Key<T>> getObjectifyKeyResults();
 
 }

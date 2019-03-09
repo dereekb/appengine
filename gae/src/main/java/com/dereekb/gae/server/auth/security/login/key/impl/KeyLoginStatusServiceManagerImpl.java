@@ -26,9 +26,9 @@ public class KeyLoginStatusServiceManagerImpl
         implements KeyLoginStatusServiceManager {
 
 	private String DEFAULT_FORMAT = "%s_API";
-	
-	private String loginPointerFormat = DEFAULT_FORMAT;
-	
+
+	private String loginPointerFormat = this.DEFAULT_FORMAT;
+
 	private ObjectifyRegistry<LoginPointer> loginPointerRegistry;
 
 	public KeyLoginStatusServiceManagerImpl(ObjectifyRegistry<LoginPointer> loginPointerRegistry)
@@ -37,15 +37,15 @@ public class KeyLoginStatusServiceManagerImpl
 	}
 
 	public String getLoginPointerFormat() {
-		return loginPointerFormat;
+		return this.loginPointerFormat;
 	}
-	
+
 	public void setLoginPointerFormat(String loginPointerFormat) {
 		this.loginPointerFormat = loginPointerFormat;
 	}
 
 	public ObjectifyRegistry<LoginPointer> getLoginPointerRegistry() {
-		return loginPointerRegistry;
+		return this.loginPointerRegistry;
 	}
 
 	public void setLoginPointerRegistry(ObjectifyRegistry<LoginPointer> loginPointerRegistry)
@@ -104,22 +104,22 @@ public class KeyLoginStatusServiceManagerImpl
 		@Override
 		public LoginPointer getKeyLoginPointer() throws KeyLoginUnavailableException {
 			Key<LoginPointer> keyLoginPointer = this.getKeyLoginPointerKey();
-			return loginPointerRegistry.get(keyLoginPointer);
+			return KeyLoginStatusServiceManagerImpl.this.loginPointerRegistry.get(keyLoginPointer);
 		}
 
 		@Override
 		public boolean isEnabled() {
 			boolean isEnabled = true;
-			
+
 			try {
-			this.getKeyLoginPointerKey();
+				this.getKeyLoginPointerKey();
 			} catch (KeyLoginUnavailableException e) {
 				isEnabled = false;
 			}
-			
+
 			return isEnabled;
 		}
-		
+
 		@Override
 		public LoginPointer enable() throws KeyLoginExistsException {
 			try {
@@ -129,25 +129,26 @@ public class KeyLoginStatusServiceManagerImpl
 
 				Key<Login> loginKey = this.login.getObjectifyKey();
 				Long id = loginKey.getId();
-				
+
 				LoginPointer pointer = new LoginPointer();
-				String pointerString = String.format(loginPointerFormat, id);
-				
+				String pointerString = String.format(KeyLoginStatusServiceManagerImpl.this.loginPointerFormat, id);
+
 				pointer.setIdentifier(pointerString);
 				pointer.setLogin(loginKey);
 				pointer.setLoginPointerType(LoginPointerType.API_KEY);
 
-				loginPointerRegistry.save(pointer, false);
+				KeyLoginStatusServiceManagerImpl.this.loginPointerRegistry.store(pointer);
 
 				this.cachedLoginPointer = pointer.getObjectifyKey();
-				
+
 				return pointer;
 			}
 		}
 
 		// MARK: Internal
 		private Key<LoginPointer> queryKeyLoginPointerKey() throws KeyLoginUnavailableException {
-			ObjectifyQueryRequestBuilder<LoginPointer> queryBuilder = loginPointerRegistry.makeQuery();
+			ObjectifyQueryRequestBuilder<LoginPointer> queryBuilder = KeyLoginStatusServiceManagerImpl.this.loginPointerRegistry
+			        .makeQuery();
 			LoginPointerQueryInitializer.ObjectifyLoginPointerQuery queryConfig = new LoginPointerQueryInitializer.ObjectifyLoginPointerQuery();
 
 			Key<Login> loginKey = this.login.getObjectifyKey();
@@ -172,14 +173,15 @@ public class KeyLoginStatusServiceManagerImpl
 
 		@Override
 		public String toString() {
-			return "KeyLoginStatusServiceImpl [login=" + login + ", loginPointerRegistry=" + loginPointerRegistry + "]";
+			return "KeyLoginStatusServiceImpl [login=" + this.login + ", loginPointerRegistry="
+			        + KeyLoginStatusServiceManagerImpl.this.loginPointerRegistry + "]";
 		}
 
 	}
 
 	@Override
 	public String toString() {
-		return "KeyLoginStatusServiceManagerImpl [loginPointerRegistry=" + loginPointerRegistry + "]";
+		return "KeyLoginStatusServiceManagerImpl [loginPointerRegistry=" + this.loginPointerRegistry + "]";
 	}
-	
+
 }

@@ -11,11 +11,11 @@ import com.dereekb.gae.model.crud.task.config.UpdateTaskConfig;
 import com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl;
 import com.dereekb.gae.model.crud.task.impl.delegate.UpdateTaskDelegate;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.task.IterableUpdateTask;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.collections.map.MapUtility;
 import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterResults;
-import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
  * {@link UpdateTaskImpl} extension that adds a filter to filter objects from
@@ -30,14 +30,14 @@ public class FilteredUpdateTaskImpl<T extends UniqueModel> extends UpdateTaskImp
 
 	private Filter<T> filter;
 
-	public FilteredUpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableTask<T> saveTask, Filter<T> filter)
+	public FilteredUpdateTaskImpl(UpdateTaskDelegate<T> delegate, IterableUpdateTask<T> saveTask, Filter<T> filter)
 	        throws IllegalArgumentException {
 		super(delegate, saveTask);
 		this.setFilter(filter);
 	}
 
 	public FilteredUpdateTaskImpl(UpdateTaskDelegate<T> delegate,
-	        IterableTask<T> saveTask,
+	        IterableUpdateTask<T> saveTask,
 	        TaskRequestSender<T> sender,
 	        Filter<T> filter) throws IllegalArgumentException {
 		super(delegate, saveTask, sender);

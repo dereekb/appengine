@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
 import com.dereekb.gae.web.api.shared.response.ApiResponseError;
@@ -21,14 +22,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dereekb
  * @see <a href="http://jsonapi.org/format/">JSON API</a>
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_DEFAULT)
 public class ApiResponseImpl
         implements ApiResponse {
+
+	public static final boolean DEFAULT_SUCCESS = true;
 
 	/**
 	 * Whether or not the processed request was successful.
 	 */
-	protected Boolean success = true;
+	protected Boolean success = DEFAULT_SUCCESS;
 
 	/**
 	 * Primary data type.
@@ -43,7 +46,7 @@ public class ApiResponseImpl
 	/**
 	 * List of errors, if any are available.
 	 */
-	private List<ApiResponseError> errors = new ArrayList<ApiResponseError>();
+	private List<ApiResponseError> errors;
 
 	public ApiResponseImpl() {
 		this(true);
@@ -55,7 +58,16 @@ public class ApiResponseImpl
 	}
 
 	public ApiResponseImpl(boolean success) {
-		this.success = success;
+		this.setSuccess(success);
+	}
+
+	public static ApiResponseImpl makeFailure(ApiResponseErrorConvertable errorConvertable) {
+		ApiResponseImpl response = new ApiResponseImpl(false);
+
+		ApiResponseError error = errorConvertable.asResponseError();
+		response.setError(error);
+
+		return response;
 	}
 
 	@JsonInclude(Include.NON_DEFAULT)
@@ -63,6 +75,7 @@ public class ApiResponseImpl
 		return this.success;
 	}
 
+	@JsonInclude(Include.NON_DEFAULT)
 	public void setSuccess(Boolean success) {
 		this.success = success;
 	}
@@ -83,6 +96,7 @@ public class ApiResponseImpl
 		}
 	}
 
+	@JsonInclude(Include.NON_EMPTY)
 	public Map<String, ApiResponseData> getIncluded() {
 		this.initializeIncluded();
 		return this.included;
@@ -106,6 +120,7 @@ public class ApiResponseImpl
 		}
 	}
 
+	@JsonInclude(Include.NON_EMPTY)
 	public List<ApiResponseError> getErrors() {
 		this.initializeErrors();
 		return this.errors;
@@ -116,17 +131,19 @@ public class ApiResponseImpl
 		this.addError(error);
 	}
 
-	public void setErrors(Collection<ApiResponseError> errors) {
+	public void setErrors(Collection<? extends ApiResponseError> errors) {
 		this.errors = null;
 		this.addErrors(errors);
 	}
 
 	public void addError(ApiResponseError error) {
-		this.initializeErrors();
-		this.errors.add(error);
+		if (error != null) {
+			this.initializeErrors();
+			this.errors.add(error);
+		}
 	}
 
-	public void addErrors(Collection<ApiResponseError> errors) {
+	public void addErrors(Collection<? extends ApiResponseError> errors) {
 		this.initializeErrors();
 		this.errors.addAll(errors);
 	}

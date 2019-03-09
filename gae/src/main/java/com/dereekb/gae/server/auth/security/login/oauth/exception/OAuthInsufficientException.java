@@ -6,7 +6,7 @@ package com.dereekb.gae.server.auth.security.login.oauth.exception;
  * @author dereekb
  *
  */
-public class OAuthInsufficientException extends OAuthException {
+public class OAuthInsufficientException extends OAuthAuthenticationException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,12 +14,12 @@ public class OAuthInsufficientException extends OAuthException {
 		super();
 	}
 
-	public OAuthInsufficientException(String message) {
-		super(message);
+	public OAuthInsufficientException(String message, String encodedData) {
+		super(message, encodedData);
 	}
 
-	public OAuthInsufficientException(Throwable cause) {
-		super(cause);
+	public OAuthInsufficientException(String message) {
+		super(message);
 	}
 
 }

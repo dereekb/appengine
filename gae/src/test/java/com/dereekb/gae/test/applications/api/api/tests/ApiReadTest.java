@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.applications.api.api.tests.client.ClientApiCrudTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
-import com.dereekb.gae.web.api.model.controller.ReadController;
+import com.dereekb.gae.web.api.model.crud.controller.ReadController;
 import com.dereekb.gae.web.api.model.exception.MissingRequiredResourceException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.ApiResponseData;
@@ -22,7 +23,10 @@ import com.dereekb.gae.web.api.shared.response.ApiResponseError;
  * Tests reading models through the API.
  *
  * @author dereekb
+ * 
+ * @deprecated Use {@link ClientApiCrudTest} instead.
  */
+@Deprecated
 public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationTestContext {
 
 	private Integer genCount = 5;

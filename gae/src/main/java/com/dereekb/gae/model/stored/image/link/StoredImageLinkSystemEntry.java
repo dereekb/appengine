@@ -18,10 +18,10 @@ import com.dereekb.gae.model.extension.links.impl.AbstractModelLinkSystemEntry;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.link.StoredBlobLinkSystemEntry;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ExtendedObjectifyModelKeyUtil;
-import com.dereekb.gae.server.datastore.utility.ConfiguredSetter;
 import com.googlecode.objectify.Key;
 
 /**
@@ -42,14 +42,14 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 	private LinkTarget blobTarget = new LinkTargetImpl(StoredBlobLinkSystemEntry.STORED_BLOB_LINK_TYPE,
 	        ModelKeyType.NUMBER);
 
-	public StoredImageLinkSystemEntry(CrudService<StoredImage> crudService, ConfiguredSetter<StoredImage> setter) {
-		super(STORED_IMAGE_LINK_TYPE, crudService, crudService, setter);
+	public StoredImageLinkSystemEntry(CrudService<StoredImage> crudService, Updater<StoredImage> updater) {
+		super(STORED_IMAGE_LINK_TYPE, crudService, crudService, updater);
 	}
 
 	public StoredImageLinkSystemEntry(ReadService<StoredImage> readService,
 	        DeleteService<StoredImage> deleteService,
-	        ConfiguredSetter<StoredImage> setter) {
-		super(STORED_IMAGE_LINK_TYPE, readService, deleteService, setter);
+	        Updater<StoredImage> updater) {
+		super(STORED_IMAGE_LINK_TYPE, readService, deleteService, updater);
 	}
 
 	public String getStoredBlobLinkName() {
@@ -100,7 +100,7 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 	@Override
 	public String toString() {
 		return "StoredImageLinkSystemEntry [blobLinkName=" + this.blobLinkName + ", blobTarget=" + this.blobTarget
-		        + ", modelType=" + this.modelType + ", indexService=" + this.readService + ", setter=" + this.setter
+		        + ", modelType=" + this.modelType + ", indexService=" + this.readService + ", updater=" + this.updater
 		        + ", reviewer=" + this.reviewer + ", validator=" + this.validator + ", reverseLinkNames="
 		        + this.getReverseLinkNames() + "]";
 	}

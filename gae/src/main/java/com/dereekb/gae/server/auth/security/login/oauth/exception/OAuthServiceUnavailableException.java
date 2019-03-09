@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.auth.security.login.oauth.exception;
 
 /**
- * Thrown when a service
+ * Thrown when a requested service is not available.
  * 
  * @author dereekb
  *

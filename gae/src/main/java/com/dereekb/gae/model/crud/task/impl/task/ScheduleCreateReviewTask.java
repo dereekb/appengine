@@ -4,7 +4,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
-import com.dereekb.gae.web.taskqueue.controller.crud.TaskQueueEditController;
+import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**

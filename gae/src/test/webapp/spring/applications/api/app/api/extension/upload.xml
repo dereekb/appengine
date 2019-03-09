@@ -111,7 +111,7 @@
 		<constructor-arg index="0" value="PNG" />
 		<constructor-arg index="1" ref="storageSystem" />
 		<constructor-arg index="2"
-			ref="storedBlobAsyncConfiguredSetter" />
+			ref="storedBlobUpdater" />
 		<constructor-arg index="3"
 			ref="iconStoredBlobUploadHandlerDelegate" />
 		<constructor-arg index="4" ref="blobstoreDownloadKeyService" />
@@ -122,7 +122,7 @@
 		class="com.dereekb.gae.model.stored.image.storage.impl.ImageUploadHandler">
 		<constructor-arg index="0" value="ICON" />
 		<constructor-arg index="1"
-			ref="storedImageSynchronousConfiguredSetter" />
+			ref="storedImageStorer" />
 		<constructor-arg index="2"
 			ref="iconStoredBlobFilePathResolver" />
 	</bean>
@@ -170,7 +170,7 @@
 		<constructor-arg index="0" value="JPG" />
 		<constructor-arg index="1" ref="storageSystem" />
 		<constructor-arg index="2"
-			ref="storedBlobAsyncConfiguredSetter" />
+			ref="storedBlobUpdater" />
 		<constructor-arg index="3"
 			ref="hdImageStoredBlobUploadHandlerDelegate" />
 		<constructor-arg index="4" ref="blobstoreDownloadKeyService" />
@@ -181,7 +181,7 @@
 		class="com.dereekb.gae.model.stored.image.storage.impl.ImageUploadHandler">
 		<constructor-arg index="0" value="HD_IMAGE" />
 		<constructor-arg index="1"
-			ref="storedImageSynchronousConfiguredSetter" />
+			ref="storedImageStorer" />
 		<constructor-arg index="2"
 			ref="hdImageStoredBlobFilePathResolver" />
 	</bean>

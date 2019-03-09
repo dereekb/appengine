@@ -9,6 +9,12 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.test.applications.api.model.tests.crud.core.CrudServiceTester;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+/**
+ * 
+ * @author dereekb
+ * @deprecated use client api tests instead.
+ */
+@Deprecated
 public class StoredBlobCrudTest extends CrudServiceTester<StoredBlob> {
 
 	@Override

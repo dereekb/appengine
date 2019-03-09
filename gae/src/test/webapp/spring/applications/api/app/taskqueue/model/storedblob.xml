@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<bean id="storedBlobTaskQueueEditControllerEntry"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		class="com.dereekb.gae.web.taskqueue.model.crud.impl.TaskQueueEditControllerEntryImpl">
 		<constructor-arg index="0" ref="storedBlobRegistry" />
 		<constructor-arg index="1"
 			ref="storedBlobTaskQueuePostCreateTask" />
@@ -21,7 +21,7 @@
 	</bean>
 
 	<bean id="storedBlobTaskQueuePostCreateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -30,7 +30,7 @@
 	</bean>
 
 	<bean id="storedBlobTaskQueuePostUpdateTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueModelTask">
 		<constructor-arg index="0">
 			<list>
 				<ref bean="typedDocumentIndexServiceIndexTask" />
@@ -39,7 +39,7 @@
 	</bean>
 
 	<bean id="storedBlobTaskQueueProcessDeleteTask"
-		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+		class="com.dereekb.gae.web.taskqueue.model.crud.task.TaskQueueDeleteModelTask">
 		<constructor-arg index="0" ref="storedBlobRegistry" />
 		<constructor-arg index="1">
 			<list>

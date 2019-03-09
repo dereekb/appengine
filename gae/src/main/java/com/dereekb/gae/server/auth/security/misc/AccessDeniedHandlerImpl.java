@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +23,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  *
  */
 @ControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class AccessDeniedHandlerImpl extends AbstractResponseHandler
         implements AccessDeniedHandler {
 
@@ -70,7 +73,7 @@ public class AccessDeniedHandlerImpl extends AbstractResponseHandler
 
 	@Override
 	public String toString() {
-		return "AccessDeniedHandlerImpl [errorCode=" + errorCode + ", errorTitle=" + errorTitle + "]";
+		return "AccessDeniedHandlerImpl [errorCode=" + this.errorCode + ", errorTitle=" + this.errorTitle + "]";
 	}
 
 }

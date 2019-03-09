@@ -21,7 +21,7 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
  */
 public abstract class PartitionedTaskRequestBuilder<T> {
 
-	protected static final Integer DEFAULT_PARTITION_SIZE = 25;
+	protected static final Integer DEFAULT_PARTITION_SIZE = 40;
 
 	private static final Partitioner DEFAULT_PARTITIONER = new PartitionerImpl(DEFAULT_PARTITION_SIZE);
 

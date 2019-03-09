@@ -26,15 +26,17 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @author dereekb
  *
  */
-public class KeyLoginControllerDelegateImpl implements KeyLoginControllerDelegate {
+public class KeyLoginControllerDelegateImpl
+        implements KeyLoginControllerDelegate {
 
 	private static final String EXISTED_KEY = "Existed";
 	private static final String ENABLED_KEY = "Enabled";
-	
+
+	private boolean refreshAllowed = true;
 	private LoginTokenService tokenService;
 	private KeyLoginStatusServiceManager serviceManager;
 	private KeyLoginAuthenticationService authenticationService;
-	
+
 	public KeyLoginControllerDelegateImpl(LoginTokenService tokenService,
 	        KeyLoginStatusServiceManager serviceManager,
 	        KeyLoginAuthenticationService authenticationService) {
@@ -45,48 +47,48 @@ public class KeyLoginControllerDelegateImpl implements KeyLoginControllerDelegat
 	}
 
 	public LoginTokenService getTokenService() {
-		return tokenService;
+		return this.tokenService;
 	}
 
 	public void setTokenService(LoginTokenService tokenService) {
 		if (tokenService == null) {
 			throw new IllegalArgumentException("TokenService cannot be null.");
 		}
-		
+
 		this.tokenService = tokenService;
 	}
 
 	public KeyLoginStatusServiceManager getServiceManager() {
-		return serviceManager;
+		return this.serviceManager;
 	}
-	
+
 	public void setServiceManager(KeyLoginStatusServiceManager serviceManager) {
 		if (serviceManager == null) {
 			throw new IllegalArgumentException("ServiceManager cannot be null.");
 		}
-		
+
 		this.serviceManager = serviceManager;
 	}
-	
+
 	public KeyLoginAuthenticationService getAuthenticationService() {
-		return authenticationService;
+		return this.authenticationService;
 	}
 
 	public void setAuthenticationService(KeyLoginAuthenticationService authenticationService) {
 		if (authenticationService == null) {
 			throw new IllegalArgumentException("Authentication service cannot be null.");
 		}
-		
+
 		this.authenticationService = authenticationService;
 	}
 
-	//MARK: KeyLoginControllerDelegate
+	// MARK: KeyLoginControllerDelegate
 	@Override
 	public ApiResponse enableKeyLogin() {
 		KeyLoginStatusService service = this.getLoginStatusService();
-		
+
 		ApiResponseImpl response = new ApiResponseImpl();
-		
+
 		try {
 			service.enable();
 		} catch (KeyLoginExistsException e) {
@@ -95,7 +97,7 @@ public class KeyLoginControllerDelegateImpl implements KeyLoginControllerDelegat
 			data.setData(true);
 			response.setData(data);
 		}
-		
+
 		return response;
 	}
 
@@ -115,38 +117,40 @@ public class KeyLoginControllerDelegateImpl implements KeyLoginControllerDelegat
 		ApiResponseDataImpl data = new ApiResponseDataImpl();
 		data.setType(ENABLED_KEY);
 		data.setData(enabled);
-		
+
 		response.setData(data);
-		
+
 		return response;
 	}
 
 	@Override
 	public LoginTokenPair login(String key,
-	                            String verification) throws KeyLoginRejectedException, KeyLoginUnavailableException {
-		
+	                            String verification)
+	        throws KeyLoginRejectedException,
+	            KeyLoginUnavailableException {
+
 		KeyLoginInfo keyLoginInfo = new KeyLoginInfoImpl(key, verification);
 		LoginPointer loginPointer = this.authenticationService.login(keyLoginInfo);
 
 		String loginPointerId = loginPointer.getIdentifier();
-		String loginToken = this.tokenService.encodeLoginToken(loginPointer);
+		String loginToken = this.tokenService.encodeLoginToken(loginPointer, this.refreshAllowed);
 
 		return new LoginTokenPair(loginPointerId, loginToken);
 	}
-	
-	//MARK: Internal
+
+	// MARK: Internal
 	private KeyLoginStatusService getLoginStatusService() {
 		LoginTokenAuthentication authentication = LoginSecurityContext.getAuthentication();
 		LoginTokenUserDetails details = authentication.getPrincipal();
-		
+
 		Login login = details.getLogin();
 		return this.serviceManager.getService(login);
 	}
 
 	@Override
 	public String toString() {
-		return "KeyLoginControllerDelegateImpl [serviceManager=" + serviceManager + ", authenticationService="
-		        + authenticationService + "]";
+		return "KeyLoginControllerDelegateImpl [serviceManager=" + this.serviceManager + ", authenticationService="
+		        + this.authenticationService + "]";
 	}
 
 }

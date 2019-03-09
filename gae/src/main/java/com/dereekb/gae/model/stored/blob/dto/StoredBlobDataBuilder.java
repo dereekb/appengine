@@ -37,7 +37,7 @@ public final class StoredBlobDataBuilder extends DescribedModelDataBuilder<Store
 		StoredBlobData data = super.convertSingle(input);
 
 		// Data
-		data.setDate(input.getDate());
+		data.setDateValue(input.getDate());
 		data.setType(input.getTypeId());
 
 		String download = this.downloadBuilder.downloadLinkForStoredBlob(input);

@@ -29,7 +29,7 @@ public final class LoginKeyDataBuilder extends OwnedDatabaseModelDataBuilder<Log
 		LoginKeyData data = super.convertSingle(input);
 
 		// Data
-		data.setDate(input.getDate());
+		data.setDateValue(input.getDate());
 		data.setName(input.getName());
 		data.setMask(input.getMask());
 		data.setVerification(input.getVerification());

@@ -30,6 +30,7 @@ public class TestPasswordLoginTokenContextImpl
 	private static final String TEST_USERNAME = "username";
 	private static final String TEST_PASSWORD = "password";
 
+	private boolean refreshAllowed = true;
 	private PasswordLoginController passwordController;
 	private LoginRegisterService registerService;
 	private LoginTokenService service;
@@ -164,7 +165,7 @@ public class TestPasswordLoginTokenContextImpl
 		String token = null;
 
 		if (this.pointer != null) {
-			token = this.service.encodeLoginToken(this.pointer);
+			token = this.service.encodeLoginToken(this.pointer, this.refreshAllowed);
 		} else if (this.isDefaultToAnonymous()) {
 			token = this.service.encodeAnonymousLoginToken("LOGIN-TOKEN");
 		}
@@ -221,7 +222,7 @@ public class TestPasswordLoginTokenContextImpl
 		login.setRoot(true);
 		login.setGroup(this.group);
 		login.setRoles(roles);
-		this.loginRegistry.save(login, false);
+		this.loginRegistry.update(login);
 
 		pointer.setLogin(login.getObjectifyKey());
 		this.setLogin(pointer);

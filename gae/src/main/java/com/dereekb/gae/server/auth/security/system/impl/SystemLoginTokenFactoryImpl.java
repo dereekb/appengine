@@ -2,13 +2,13 @@ package com.dereekb.gae.server.auth.security.system.impl;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenFactory;
-import com.dereekb.gae.server.auth.security.token.filter.LoginTokenAuthenticationFilter;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
+import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterBuilder;
+import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
-import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 
 /**
  * {@link SystemLoginTokenFactory} implementation.
@@ -19,13 +19,12 @@ import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 public class SystemLoginTokenFactoryImpl
         implements SystemLoginTokenFactory {
 
-	// 20 minute expiration
+	// 20 minute expiration, long enough for the taskqueue
 	public static final Long DEFAULT_EXPIRATION_TIME = 20 * 60 * 1000L;
 	public static final String DEFAULT_SUBJECT = "SYSTEM TOKEN";
 	public static final Long DEFAULT_ROLES = 0L;
 
-	private String headerKey = LoginTokenAuthenticationFilter.DEFAULT_HEADER_STRING;
-	private String headerFormat = LoginTokenAuthenticationFilter.DEFAULT_BEARER_PREFIX + "%s";
+	private AuthenticationParameterBuilder authParameterBuilder = AuthenticationParameterServiceImpl.SINGLETON;
 
 	private LoginPointerType pointerType = LoginPointerType.SYSTEM;
 
@@ -44,28 +43,16 @@ public class SystemLoginTokenFactoryImpl
 		this.setRoles(roles);
 	}
 
-	public String getHeaderKey() {
-		return this.headerKey;
+	public AuthenticationParameterBuilder getAuthParameterBuilder() {
+		return this.authParameterBuilder;
 	}
 
-	public void setHeaderKey(String headerKey) throws IllegalArgumentException {
-		if (headerKey == null) {
-			throw new IllegalArgumentException("HeaderKey cannot be null.");
+	public void setAuthParameterBuilder(AuthenticationParameterBuilder authParameterBuilder) {
+		if (authParameterBuilder == null) {
+			throw new IllegalArgumentException("AuthParameterBuilder cannot be null.");
 		}
 
-		this.headerKey = headerKey;
-	}
-
-	public String getHeaderFormat() {
-		return this.headerFormat;
-	}
-
-	public void setHeaderFormat(String headerFormat) throws IllegalArgumentException {
-		if (headerFormat == null) {
-			throw new IllegalArgumentException("HeaderFormat cannot be null.");
-		}
-
-		this.headerFormat = headerFormat;
+		this.authParameterBuilder = authParameterBuilder;
 	}
 
 	public LoginPointerType getPointerType() {
@@ -124,24 +111,20 @@ public class SystemLoginTokenFactoryImpl
 	@Override
 	public KeyedEncodedParameter makeTokenHeader() throws FactoryMakeFailureException {
 		String tokenString = this.makeTokenString();
-
-		String headerKey = this.headerKey;
-		String headerValue = String.format(this.headerFormat, tokenString);
-
-		return new KeyedEncodedParameterImpl(headerKey, headerValue);
+		return this.authParameterBuilder.buildAuthenticationParameter(tokenString);
 	}
 
 	@Override
 	public String makeTokenString() throws FactoryMakeFailureException {
-		LoginToken token = this.make();
+		LoginToken token = this.makeLoginToken();
 		return this.encoder.encodeLoginToken(token);
 	}
 
-	@Override
-	public LoginTokenImpl make() throws FactoryMakeFailureException {
+	public LoginTokenImpl makeLoginToken() throws FactoryMakeFailureException {
 		LoginTokenImpl token = new LoginTokenImpl(this.pointerType);
 
 		token.setRoles(this.roles);
+		token.setRefreshAllowed(false);
 		token.setExpiration(this.expirationTime);
 
 		return token;

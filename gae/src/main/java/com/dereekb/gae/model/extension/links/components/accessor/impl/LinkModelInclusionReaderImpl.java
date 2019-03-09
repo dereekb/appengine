@@ -14,7 +14,7 @@ import com.dereekb.gae.model.extension.links.components.ReadOnlyLink;
 import com.dereekb.gae.model.extension.links.components.accessor.LinkReader;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
+import com.dereekb.gae.utilities.collections.map.CaseInsensitiveMapWithSet;
 
 /**
  * {@link ModelInclusionReader} implementation.
@@ -46,7 +46,7 @@ public class LinkModelInclusionReaderImpl<T extends UniqueModel>
 	// MARK: ModelInclusionReader
 	@Override
 	public ModelInclusionReaderAnalysis<T> analyzeInclusionsForModel(T model) throws IllegalArgumentException {
-		HashMapWithSet<String, ModelKey> relations = new HashMapWithSet<String, ModelKey>();
+		CaseInsensitiveMapWithSet<ModelKey> relations = new CaseInsensitiveMapWithSet<ModelKey>();
 		List<? extends ReadOnlyLink> links = this.reader.getLinks(model);
 
 		for (ReadOnlyLink link : links) {

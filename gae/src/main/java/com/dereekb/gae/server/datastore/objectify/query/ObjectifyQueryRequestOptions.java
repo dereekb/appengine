@@ -15,6 +15,8 @@ public interface ObjectifyQueryRequestOptions
 
 	public boolean getAllowCache();
 
+	public boolean getAllowHybrid();
+
 	public Cursor getQueryCursor();
 
 	public Integer getChunk();

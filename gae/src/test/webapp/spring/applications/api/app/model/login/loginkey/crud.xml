@@ -42,24 +42,22 @@
 	</bean>
 
 	<!-- Save/Delete Tasks -->
-	<bean id="loginKeySynchronousSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0"
-			ref="loginKeySynchronousConfiguredSetter" />
+	<bean id="loginKeySetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="loginKeyRegistry" />
 	</bean>
-
-	<bean id="loginKeyAsyncSaveTask"
-		class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelsTask">
-		<constructor-arg index="0" ref="loginKeyAsyncConfiguredSetter" />
-	</bean>
+	
+	<alias name="loginKeySetterTask" alias="loginKeyStorerTask" />
+	<alias name="loginKeySetterTask" alias="loginKeyUpdaterTask" />
+	<alias name="loginKeySetterTask" alias="loginKeyDeleterTask" />
 
 	<!-- Create -->
 	<bean id="loginKeyCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
 		<constructor-arg index="0" ref="loginKeyCreateTaskDelegate" />
 		<constructor-arg index="1">
-			<bean class="com.dereekb.gae.model.crud.task.save.ConfiguredSetterModelMultiIterableTask">
+			<bean class="com.dereekb.gae.server.datastore.task.impl.IterableStoreMultiTaskImpl">
 				<constructor-arg index="0" ref="securitySetOwnershipRolesTask"/>
-				<constructor-arg index="1" ref="loginKeySynchronousSaveTask"/>
+				<constructor-arg index="1" ref="loginKeyStorerTask"/>
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="2" ref="loginKeyScheduleCreateReview" />
@@ -95,7 +93,7 @@
 	<!-- Update -->
 	<bean id="loginKeyUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
 		<constructor-arg index="0" ref="loginKeyAttributeUpdater" />
-		<constructor-arg index="1" ref="loginKeyAsyncSaveTask" />
+		<constructor-arg index="1" ref="loginKeyUpdaterTask" />
 		<constructor-arg index="2" ref="loginKeyScheduleUpdateReview" />
 	</bean>
 

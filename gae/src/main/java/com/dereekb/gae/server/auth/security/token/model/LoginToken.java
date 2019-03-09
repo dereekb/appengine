@@ -26,10 +26,25 @@ public interface LoginToken
 	public String getSubject();
 
 	/**
-	 *
 	 * @return {@code true} if it is an Anoynmous login.
 	 */
 	public boolean isAnonymous();
+
+	/**
+	 * Whether or not this is a new user. Generally true if
+	 * {{@link #getLoginId()} returns {@code null}, {@link #isAnonymous()}
+	 * returns false, and the pointer type is not special.
+	 * 
+	 * @return {@code true} if it is a new user.
+	 */
+	public boolean isNewUser();
+
+	/**
+	 * Whether or not this token can be used to create a new refresh token.
+	 * 
+	 * @return {@code true} if can create a new refresh token.
+	 */
+	public boolean isRefreshAllowed();
 
 	/**
 	 * Returns role codes for the user.
@@ -72,7 +87,7 @@ public interface LoginToken
 	/**
 	 * Token issue date.
 	 *
-	 * @return{@link Date} token was issued. Never {@code null}.
+	 * @return {@link Date} token was issued. Never {@code null}.
 	 */
 	public Date getIssued();
 

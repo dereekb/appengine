@@ -22,6 +22,7 @@ public interface ObjectifyDatabaseEntityReader<T extends ObjectifyModel<T>> {
 
 	public List<T> keysGet(Iterable<Key<T>> list);
 
+	@Deprecated
 	public List<T> refsGet(Iterable<Ref<T>> list);
 
 	// MARK: Query

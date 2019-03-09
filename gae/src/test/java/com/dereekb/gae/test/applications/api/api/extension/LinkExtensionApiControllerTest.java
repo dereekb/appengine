@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.web.api.model.extension.link.ApiLinkChange;
@@ -43,7 +42,7 @@ public class LinkExtensionApiControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testLinkingFailure() throws Exception {
-		MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/geoplace/link");
+		MockHttpServletRequestBuilder requestBuilder = this.serviceRequestBuilder.put("/geoplace/link");
 		requestBuilder.accept("application/json");
 		requestBuilder.contentType("application/json");
 

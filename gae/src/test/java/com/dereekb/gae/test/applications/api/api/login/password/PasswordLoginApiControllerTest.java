@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
@@ -100,7 +99,7 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 	public void testLoginRequests() throws Exception {
 		JsonParser parser = new JsonParser();
 
-		MockHttpServletRequestBuilder createRequestBuilder = MockMvcRequestBuilders.post("/login/pass/create");
+		MockHttpServletRequestBuilder createRequestBuilder = this.serviceRequestBuilder.post("/login/auth/pass/create");
 		createRequestBuilder.param("username", TEST_USERNAME);
 		createRequestBuilder.param("password", TEST_PASSWORD);
 		createRequestBuilder.accept("application/json");
@@ -113,7 +112,7 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 		        createResponse.getStatus() == 200);
 		Assert.assertNotNull(createResponseData);
 
-		TestLocalTaskQueueCallback.waitUntilComplete();
+		this.waitForTaskQueueToComplete();
 
 		JsonElement createResponseJson = parser.parse(createResponseData);
 		JsonObject object = createResponseJson.getAsJsonObject();
@@ -127,6 +126,17 @@ public class PasswordLoginApiControllerTest extends ApiApplicationTestContext {
 			Assert.fail("Should decode token.");
 		}
 
+		MockHttpServletRequestBuilder loginRequestBuilder = this.serviceRequestBuilder.post("/login/auth/pass");
+		loginRequestBuilder.param("username", TEST_USERNAME);
+		loginRequestBuilder.param("password", TEST_PASSWORD);
+		loginRequestBuilder.accept("application/json");
+
+		MvcResult loginResult = this.mockMvcPerform(loginRequestBuilder).andReturn();
+		MockHttpServletResponse loginResponse = loginResult.getResponse();
+		String loginResponseData = loginResponse.getContentAsString();
+
+		Assert.assertTrue("Expected 200 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 200);
+		Assert.assertNotNull(loginResponseData);
 	}
 
 }

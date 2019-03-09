@@ -1,12 +1,20 @@
 package com.dereekb.gae.server.datastore.objectify.keys.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.utilities.cache.map.CacheMap;
 import com.dereekb.gae.utilities.cache.map.CacheMapDelegate;
 import com.dereekb.gae.utilities.cache.map.impl.CacheMapImpl;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
+import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.googlecode.objectify.Key;
 
 /**
@@ -112,6 +120,53 @@ public class ObjectifyKeyUtility<T> extends ObjectifyUtility {
 		}
 
 		return name;
+	}
+
+	public static <T extends ObjectifyModel<T>> Map<Key<T>, T> makeMap(Iterable<? extends T> models) {
+		Map<Key<T>, ObjectifyKeyWrapper<T>> wrapperMap = makeWrapperKeyMap(models);
+		Map<Key<T>, T> modelsMap = new HashMap<Key<T>, T>();
+
+		for (Entry<Key<T>, ObjectifyKeyWrapper<T>> entity : wrapperMap.entrySet()) {
+			modelsMap.put(entity.getKey(), entity.getValue().getModel());
+		}
+
+		return modelsMap;
+	}
+
+	public static <T extends ObjectifyModel<T>> Map<Key<T>, ObjectifyKeyWrapper<T>> makeWrapperKeyMap(Iterable<? extends T> models) {
+		List<ObjectifyKeyWrapper<T>> wrappers = wrapModels(models);
+		return KeyedUtility.toMap(wrappers);
+	}
+
+	public static <T extends ObjectifyModel<T>> List<ObjectifyKeyWrapper<T>> wrapModels(Iterable<? extends T> models) {
+		List<ObjectifyKeyWrapper<T>> wrappers = new ArrayList<ObjectifyKeyWrapper<T>>();
+
+		for (T model : models) {
+			wrappers.add(new ObjectifyKeyWrapper<T>(model));
+		}
+
+		return wrappers;
+	}
+
+	public static class ObjectifyKeyWrapper<T extends ObjectifyModel<T>>
+	        implements Keyed<Key<T>> {
+
+		private final T model;
+
+		private ObjectifyKeyWrapper(T model) {
+			this.model = model;
+		}
+
+		public T getModel() {
+			return this.model;
+		}
+
+		// MARK: Keyed
+		@Override
+		public Key<T> keyValue() {
+			return this.model.getObjectifyKey();
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")

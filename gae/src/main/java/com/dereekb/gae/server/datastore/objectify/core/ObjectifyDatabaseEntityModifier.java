@@ -12,20 +12,39 @@ import com.googlecode.objectify.Ref;
  * @param <T>
  *            model type
  */
+@Deprecated
 public interface ObjectifyDatabaseEntityModifier<T extends ObjectifyModel<T>> {
 
-	public boolean isAsyncronous();
+	/**
+	 * Whether or not to perform changes asynchronously.
+	 * 
+	 * @return {@code true} if asynchronous.
+	 */
+	public boolean isAsync();
 
 	// MARK: Put
+	/**
+	 * Performs a put on multiple entities.
+	 * 
+	 * @param entity
+	 *            Entity. Can be {@code null}.
+	 */
 	public void put(T entity);
 
+	/**
+	 * Performs a put on multiple entities.
+	 * 
+	 * @param entities
+	 *            Iterable of entities. Can be {@code null}.
+	 */
 	public void put(Iterable<T> entities);
 
 	// MARK: Delete
 	public void delete(T entity);
 
-	public void delete(Key<T> key);
+	public void deleteWithKey(Key<T> key);
 
+	@Deprecated
 	public void delete(Ref<T> ref);
 
 	public void delete(Iterable<T> list);

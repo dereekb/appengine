@@ -1,39 +1,12 @@
 package com.dereekb.gae.server.datastore;
 
 /**
- * Interface for saving models.
- *
+ * Interface for saving. Implements both {@link Updater} and {@link Storer}.
+ * 
  * @author dereekb
  *
  * @param <T>
- *            Model type.
+ *            model type
  */
-public interface Saver<T> {
-
-	/**
-	 * Saves a single entity. Saving synchronously will update entities with
-	 * identifiers, if
-	 * they are not already set.
-	 *
-	 * @param entity
-	 *            Entity model to save to a source.
-	 * @param async
-	 *            Whether or not to save asynchronously.
-	 */
-	public void save(T entity,
-	                 boolean async);
-
-	/**
-	 * Saves an iterable list of entities to a source. Saving synchronously will
-	 * update entities with identifiers, if
-	 * they are not already set.
-	 *
-	 * @param entities
-	 *            Iterable list of models to save to a source.
-	 * @param async
-	 *            Whether or not to save asynchronously.
-	 */
-	public void save(Iterable<T> entities,
-	                 boolean async);
-
-}
+public interface Saver<T>
+        extends Updater<T>, Storer<T> {}
