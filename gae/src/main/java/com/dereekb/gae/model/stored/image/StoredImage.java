@@ -1,7 +1,8 @@
 package com.dereekb.gae.model.stored.image;
 
+import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorImpl;
 import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
-import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobInfoType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -12,23 +13,27 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfNotDefault;
 import com.googlecode.objectify.condition.IfNotNull;
-import com.googlecode.objectify.condition.IfNotZero;
-import com.googlecode.objectify.condition.IfNull;
-import com.googlecode.objectify.condition.IfZero;
 
 /**
  * Is an {@link StoredBlobInfoType} for a {@link StoredBlob}.
  *
  * @author dereekb
+ *
  */
 @Cache
 @Entity
 public final class StoredImage extends SearchableDatabaseModel
-        implements ObjectifyModel<StoredImage>, StoredBlobInfoType {
+        implements ObjectifyModel<StoredImage>, StoredBlobInfoType, Descriptor {
+
+	public static final String DESCRIPTOR_TYPE = "StoredImage";
 
 	private static final long serialVersionUID = 1L;
+
+	public static final Integer DEFAULT_IMAGE_TYPE = StoredImageType.IMAGE.id;
 
 	/**
 	 * Database identifier.
@@ -57,27 +62,21 @@ public final class StoredImage extends SearchableDatabaseModel
 	/**
 	 * Describes the image type.
 	 */
-	@Index({ IfNotZero.class, IfNotNull.class })
-	@IgnoreSave({ IfZero.class })
-	protected Integer type = 0;
+	@Index({ IfNotDefault.class, IfNotNull.class })
+	@IgnoreSave({ IfDefault.class })
+	protected Integer type = DEFAULT_IMAGE_TYPE;
 
 	/**
 	 * Must be set.
 	 *
 	 * Key to the {@link StoredBlob} that this image describes.
 	 */
-	private Key<StoredBlob> blob;
-
-	/**
-	 * (Optional) {@link GeoPlace} entry that places this image into the world.
-	 */
-	@IgnoreSave(IfNull.class)
-	private Key<GeoPlace> place;
+	private Key<StoredBlob> storedBlob;
 
 	public StoredImage() {}
 
-	public StoredImage(Key<StoredBlob> blob) {
-		this.blob = blob;
+	public StoredImage(Key<StoredBlob> storedBlob) {
+		this.storedBlob = storedBlob;
 	}
 
 	public Long getIdentifier() {
@@ -112,63 +111,61 @@ public final class StoredImage extends SearchableDatabaseModel
 		this.tags = tags;
 	}
 
+	public StoredImageType getType() {
+		return StoredImageType.valueOf(this.type);
+	}
+
+	public void setType(StoredImageType type) {
+		if (type == null) {
+			this.setTypeId(null);
+		} else {
+			this.type = type.getId();
+		}
+	}
+
 	public Integer getTypeId() {
 		return this.type;
 	}
 
-	public StoredImageType getType() {
-		return StoredImageType.typeForId(this.type);
+	public void setTypeId(Integer type) {
+		if (type == null) {
+			this.type = DEFAULT_IMAGE_TYPE;
+		} else {
+			this.type = type;
+		}
 	}
 
-	public void setType(StoredImageType type) {
-		this.type = type.getType();
+	public Key<StoredBlob> getStoredBlob() {
+		return this.storedBlob;
 	}
 
-	public Key<StoredBlob> getBlob() {
-		return this.blob;
-	}
-
-	public void setBlob(Key<StoredBlob> blob) {
-		this.blob = blob;
+	public void setStoredBlob(Key<StoredBlob> storedBlob) {
+		this.storedBlob = storedBlob;
 	}
 
 	@Override
 	public ModelKey getStoredBlobKey() {
-		return new ModelKey(this.blob.getId());
+		return new ModelKey(this.storedBlob.getId());
 	}
 
 	public Long getBlobId() {
 		Long id = null;
 
-		if (this.blob != null) {
-			id = this.blob.getId();
+		if (this.storedBlob != null) {
+			id = this.storedBlob.getId();
 		}
 
 		return id;
-	}
-
-	public Key<GeoPlace> getPlace() {
-		return this.place;
-	}
-
-	public Long getPlaceId() {
-		Long id = null;
-
-		if (this.place != null) {
-			id = this.place.getId();
-		}
-
-		return id;
-	}
-
-	public void setPlace(Key<GeoPlace> point) {
-		this.place = point;
 	}
 
 	// Unique Model
 	@Override
 	public ModelKey getModelKey() {
-		return new ModelKey(this.identifier);
+		return ModelKey.safe(this.identifier);
+	}
+
+	public void setModelKey(ModelKey key) {
+		this.identifier = ModelKey.readIdentifier(key);
 	}
 
 	// Database Model
@@ -183,10 +180,27 @@ public final class StoredImage extends SearchableDatabaseModel
 		return Key.create(StoredImage.class, this.identifier);
 	}
 
+	// Descriptor
+	@Override
+	public String getDescriptorType() {
+		return DESCRIPTOR_TYPE;
+	}
+
+	@Override
+	public String getDescriptorId() {
+		return this.identifier.toString();
+	}
+
+	@Override
+	public boolean equals(Descriptor descriptor) {
+		return DescriptorImpl.descriptorsAreEqual(this, descriptor);
+	}
+
 	@Override
 	public String toString() {
 		return "StoredImage [identifier=" + this.identifier + ", name=" + this.name + ", summary=" + this.summary
-		        + ", tags=" + this.tags + ", type=" + this.type + ", blob=" + this.blob + ", point=" + this.place + "]";
+		        + ", tags=" + this.tags + ", type=" + this.type + ", storedBlob=" + this.storedBlob
+		        + ", searchIdentifier=" + this.searchIdentifier + "]";
 	}
 
 }

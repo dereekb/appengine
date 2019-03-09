@@ -16,7 +16,8 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  * @author dereekb
  *
  * @param <S>
- *            "Source" object. The object being used to influence the other object.
+ *            "Source" object. The object being used to influence the other
+ *            object.
  * @param <R>
  *            "Results" object. The object being edited generally.
  */

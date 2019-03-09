@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.googlecode.objectify.Key;
 
-
 /**
  * Takes in object instances and converts them {@link Key} instances.
  *
@@ -19,6 +18,6 @@ public interface ObjectifyKeyWriter<T, E> {
 
 	public Key<T> writeKey(E element) throws IllegalKeyConversionException;
 
-	public List<Key<T>> writeKeys(Iterable<E> elements) throws IllegalKeyConversionException;
+	public List<Key<T>> writeKeys(Iterable<? extends E> elements) throws IllegalKeyConversionException;
 
 }

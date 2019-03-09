@@ -6,7 +6,7 @@ import java.util.List;
 import com.dereekb.gae.utilities.collections.tree.map.MapTree;
 import com.dereekb.gae.utilities.collections.tree.map.builder.MapTreeBuilder;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 /**
  * Factory that builds a map tree node from a list of strings using a {@link MapTreeBuilder} and a list of tree strings that are marged

@@ -12,21 +12,22 @@ import com.dereekb.gae.model.extension.links.components.exception.UnavailableLin
  *
  */
 public interface Link
-        extends LinkInfo {
+        extends ReadOnlyLink {
 
 	/**
-	 * Adds a new relation to this link. When complete, this link should contain
-	 * the relation.
+	 * Adds a new relation to this link.
+	 * <p>
+	 * When complete, this link should contain the relation.
 	 *
 	 * @param change
 	 *            {@link Relation} to add. Never null.
-	 *
+	 * @return {@link RelationResult} for this change.
 	 * @throws RelationChangeException
 	 *             if the relation cannot be changed.
 	 * @throws UnavailableLinkException
 	 *             if a required link cannot be loaded.
 	 */
-	public void addRelation(Relation change) throws RelationChangeException, UnavailableLinkException;
+	public RelationResult addRelation(Relation change) throws RelationChangeException, UnavailableLinkException;
 
 	/**
 	 * Removes a relation from this link. When complete, this link shouldn't
@@ -34,22 +35,31 @@ public interface Link
 	 *
 	 * @param change
 	 *            {@link Relation} to remove. Never null.
-	 *
+	 * @return {@link RelationResult} for this change.
 	 * @throws RelationChangeException
 	 *             if the relation cannot be changed.
 	 */
-	public void removeRelation(Relation change) throws RelationChangeException;
+	public RelationResult removeRelation(Relation change) throws RelationChangeException;
 
 	/**
-	 * Returns a {@link LinkData} instance that describes this link.
+	 * Sets the relation for this link. Is a combination of
+	 * {@link #clearRelations()}, followed by {@link #addRelation(Relation)}.
 	 *
-	 * @return New {@link Relation} instance. Never null.
+	 * @param change
+	 *            {@link Relation} to set. Never null.
+	 * @return {@link RelationResult} for this change.
+	 * @throws RelationChangeException
+	 *             if the relation cannot be changed.
+	 * @throws UnavailableLinkException
+	 *             if a required link cannot be loaded.
 	 */
-	public LinkData getLinkData();
+	public RelationResult setRelation(Relation change) throws RelationChangeException, UnavailableLinkException;
 
 	/**
 	 * Clears all relations from this link.
+	 *
+	 * @return {@link RelationResult} for this change.
 	 */
-	public void clearRelations();
+	public RelationResult clearRelations();
 
 }

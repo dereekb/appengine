@@ -3,36 +3,47 @@ package com.dereekb.gae.model.crud.services.components.impl;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.model.crud.function.CreateFunction;
-import com.dereekb.gae.model.crud.function.pairs.CreatePair;
+import com.dereekb.gae.model.crud.pairs.CreatePair;
 import com.dereekb.gae.model.crud.services.components.CreateService;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
-import com.dereekb.gae.model.crud.services.request.CreateRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.CreateRequestOptions;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.impl.CreateResponseImpl;
+import com.dereekb.gae.model.crud.task.CreateTask;
+import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
+import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.pairs.ResultsPair;
-import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.filters.FilterResult;
+import com.dereekb.gae.utilities.task.IterableTask;
 
 /**
- * Default implementation of {@link CreateService} using a {@link Factory} for
- * {@link CreateFunction}.
+ * Default implementation of {@link CreateService} using a {@link IterableTask}
+ * with {@link CreatePair} to create models.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class CreateServiceImpl<T extends UniqueModel>
         implements CreateService<T> {
 
-	private final Factory<CreateFunction<T>> factory;
+	private CreateTask<T> createTask;
 
-	public CreateServiceImpl(Factory<CreateFunction<T>> factory) {
-		this.factory = factory;
+	public CreateServiceImpl(CreateTask<T> createTask) {
+		this.createTask = createTask;
+	}
+
+	public CreateTask<T> getCreateTask() {
+		return this.createTask;
+	}
+
+	public void setCreateTask(CreateTask<T> createTask) {
+		this.createTask = createTask;
 	}
 
 	@Override
@@ -43,14 +54,13 @@ public class CreateServiceImpl<T extends UniqueModel>
 		CreateRequestOptions options = request.getOptions();
 
 		List<CreatePair<T>> pairs = CreatePair.createPairsForModels(templates);
-		CreateFunction<T> function = this.factory.make();
-		function.addObjects(pairs);
 
 		try {
-			function.run();
+			CreateTaskConfig config = new CreateTaskConfigImpl(options.isAtomic());
+			this.createTask.doTask(pairs, config);
 
 			HashMapWithList<FilterResult, CreatePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
-			List<CreatePair<T>> errorPairs = results.getObjects(FilterResult.FAIL);
+			List<CreatePair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
 			List<T> errorTemplates = CreatePair.getKeys(errorPairs);
 
 			if (errorTemplates.size() > 0 && options.isAtomic()) {
@@ -67,6 +77,11 @@ public class CreateServiceImpl<T extends UniqueModel>
 		}
 
 		return createResponse;
+	}
+
+	@Override
+	public String toString() {
+		return "CreateServiceImpl [createTask=" + this.createTask + "]";
 	}
 
 }

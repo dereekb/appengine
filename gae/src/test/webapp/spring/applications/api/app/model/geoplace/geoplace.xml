@@ -10,40 +10,63 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Type -->
-	<bean id="geoPlaceType" class="java.lang.String" scope="singleton">
-		<constructor-arg index="0" value="GeoPoint" />
+	<bean id="geoPlaceType" class="java.lang.String">
+		<constructor-arg index="0" value="GeoPlace" />
+	</bean>
+
+	<bean id="geoPlaceClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.model.geo.place.GeoPlace" />
+	</bean>
+
+	<bean id="geoPlaceIdType" class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType" factory-method="valueOf">
+		<constructor-arg index="0" value="NUMBER" />
 	</bean>
 
 	<!-- Database -->
 	<bean id="geoPlaceObjectifyEntry"
-		class="com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinitionImpl"
+		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
 		lazy-init="false">
 		<constructor-arg index="0" ref="geoPlaceType" />
-		<constructor-arg index="1" type="java.lang.Class"
-			value="com.dereekb.gae.model.geo.place.GeoPlace" />
-		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="1" ref="geoPlaceClass" />
+		<constructor-arg index="2" ref="geoPlaceIdType" />
+		<constructor-arg index="3" ref="geoPlaceQueryInitializer" />
 	</bean>
 
 	<bean id="geoPlaceRegistry" factory-bean="objectifyDatabase"
-		factory-method="makeRegistry" scope="singleton">
-		<constructor-arg index="0" type="java.lang.Class"
-			value="com.dereekb.gae.model.geo.place.GeoPlace" />
+		factory-method="makeRegistry">
+		<constructor-arg index="0" ref="geoPlaceClass" />
 	</bean>
 
 	<!-- Configured Setters -->
 	<alias name="geoPlaceRegistry" alias="geoPlaceAsyncConfiguredSetter" />
+	<alias name="geoPlaceRegistry" alias="geoPlaceAsyncConfiguredDeleter" />
 
 	<bean id="geoPlaceSynchronousConfiguredSetter"
-		class="com.dereekb.gae.server.datastore.utility.ConfiguredSetterImpl">
+		class="com.dereekb.gae.server.datastore.utility.impl.ConfiguredSetterImpl">
 		<constructor-arg index="0" ref="geoPlaceRegistry" />
 		<constructor-arg index="1" value="false" />
+	</bean>
+
+	<!-- Update Scheduler -->
+	<bean id="geoPlaceScheduleUpdateReview"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
+		<constructor-arg index="0" ref="geoPlaceType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="geoPlaceUpdateConfiguredSetter"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredSetterImpl">
+		<constructor-arg index="0" ref="geoPlaceScheduleUpdateReview" />
+		<constructor-arg index="1" ref="geoPlaceRegistry" />
 	</bean>
 
 	<!-- Imported -->
 	<import resource="test.xml" />
 	<import resource="crud.xml" />
 	<import resource="extension/data.xml" />
+	<import resource="extension/link.xml" />
 	<import resource="extension/generation.xml" />
-	<import resource="extension/taskqueue.xml" />
+	<import resource="extension/search.xml" />
 
 </beans>

@@ -15,6 +15,16 @@ public enum AtomicOperationExceptionReason {
 	/**
 	 * An exception occured.
 	 */
-	EXCEPTION
+	EXCEPTION,
+
+	/**
+	 * The operation couldn't be completed due to filtering.
+	 */
+	FILTERED,
+
+	/**
+	 * Reason is unspecified.
+	 */
+	UNSPECIFIED
 
 }

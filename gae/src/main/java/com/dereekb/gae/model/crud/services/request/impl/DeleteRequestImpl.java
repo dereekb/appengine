@@ -3,29 +3,29 @@ package com.dereekb.gae.model.crud.services.request.impl;
 import java.util.Collection;
 
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
-import com.dereekb.gae.model.crud.services.request.DeleteRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.DeleteRequestOptions;
+import com.dereekb.gae.model.crud.services.request.options.impl.DeleteRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
 /**
- * Default implementation of {@link DeleteRequest}.
+ * {@link DeleteRequest} implementation.
  *
  * @author dereekb
  *
- * @param <T>
  */
-public final class DeleteRequestImpl<T extends UniqueModel>
-        implements DeleteRequest<T> {
+public class DeleteRequestImpl
+        implements DeleteRequest {
 
 	private Collection<ModelKey> targetKeys;
 	private DeleteRequestOptions options;
 
-	public DeleteRequestImpl(T target) {
+	public <T extends UniqueModel> DeleteRequestImpl(T target) {
 		this(SingleItem.withValue(target.getModelKey()));
 	}
 
-	public DeleteRequestImpl(T target, DeleteRequestOptions options) {
+	public <T extends UniqueModel> DeleteRequestImpl(T target, DeleteRequestOptions options) {
 		this(SingleItem.withValue(target.getModelKey()), options);
 	}
 
@@ -38,8 +38,7 @@ public final class DeleteRequestImpl<T extends UniqueModel>
 	}
 
 	public DeleteRequestImpl(Collection<ModelKey> targetKeys) {
-		this.targetKeys = targetKeys;
-		this.setOptions(this.options);
+		this(targetKeys, null);
 	}
 
 	public DeleteRequestImpl(Collection<ModelKey> targetKeys, DeleteRequestOptions options) {
@@ -68,7 +67,7 @@ public final class DeleteRequestImpl<T extends UniqueModel>
 
 	public void setOptions(DeleteRequestOptions options) {
 		if (options == null) {
-			options = new DeleteRequestOptions();
+			options = new DeleteRequestOptionsImpl();
 		}
 
 		this.options = options;

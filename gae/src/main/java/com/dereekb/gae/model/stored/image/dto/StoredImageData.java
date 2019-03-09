@@ -1,32 +1,47 @@
 package com.dereekb.gae.model.stored.image.dto;
 
-import com.dereekb.gae.server.datastore.models.dto.DatabaseModelData;
+import java.util.List;
+
+import javax.validation.constraints.Size;
+
+import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
+import com.dereekb.gae.model.stored.image.StoredImage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * DTO of the {@link StoredImageData} class.
+ * DTO of the {@link StoredImage} class.
  *
  * @author dereekb
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class StoredImageData extends DatabaseModelData {
+public final class StoredImageData extends SearchableDatabaseModelData {
+
+	public static final int MAX_NAME_LENGTH = 50;
+	public static final int MAX_SUMMARY_LENGTH = 250;
+	public static final int MAX_TYPE_LENGTH = 50;
+	public static final int MAX_TAGS_LENGTH = 200;
 
 	private static final long serialVersionUID = 1L;
 
+	@Size(max = MAX_NAME_LENGTH)
 	private String name;
 
+	@Size(max = MAX_SUMMARY_LENGTH)
 	private String summary;
 
+	@Size(max = MAX_TAGS_LENGTH)
 	private String tags;
 
 	private Integer type;
 
-	private Long blobId;
+	private Long blob;
 
-	private Long placeId;
+	private Long geoPlace;
+
+	private List<Long> imageSets;
 
 	public StoredImageData() {}
 
@@ -62,27 +77,36 @@ public final class StoredImageData extends DatabaseModelData {
 		this.type = type;
 	}
 
-	public Long getBlobId() {
-		return this.blobId;
+	public Long getBlob() {
+		return this.blob;
 	}
 
-	public void setBlobId(Long blobId) {
-		this.blobId = blobId;
+	public void setBlob(Long blob) {
+		this.blob = blob;
 	}
 
-	public Long getPlaceId() {
-		return this.placeId;
+	public Long getGeoPlace() {
+		return this.geoPlace;
 	}
 
-	public void setPlaceId(Long placeId) {
-		this.placeId = placeId;
+	public void setGeoPlace(Long geoPlace) {
+		this.geoPlace = geoPlace;
+	}
+
+	public List<Long> getImageSets() {
+		return this.imageSets;
+	}
+
+	public void setImageSets(List<Long> imageSets) {
+		this.imageSets = imageSets;
 	}
 
 	@Override
-    public String toString() {
-	    return "StoredImageData [name=" + this.name + ", summary=" + this.summary + ", tags=" + this.tags + ", type=" + this.type
- + ", storedBlobId=" + this.blobId + ", geoPointId=" + this.placeId
-		        + ", identifier=" + this.identifier + ", created=" + this.created + "]";
-    }
+	public String toString() {
+		return "StoredImageData [name=" + this.name + ", summary=" + this.summary + ", tags=" + this.tags + ", type="
+		        + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace + ", imageSets=" + this.imageSets
+		        + ", searchIdentifier=" + this.searchIdentifier + ", identifier=" + this.key + ", created="
+		        + this.date + "]";
+	}
 
 }

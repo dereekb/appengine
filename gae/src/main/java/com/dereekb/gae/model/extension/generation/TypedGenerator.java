@@ -8,6 +8,7 @@ import java.util.List;
  * @author dereekb
  * 
  * @param <T>
+ *            model type
  */
 public interface TypedGenerator<T>
         extends Generator<T> {
@@ -18,8 +19,9 @@ public interface TypedGenerator<T>
 	 * @param count
 	 *            Amount of objects to generate.
 	 * @param type
-	 *            Type parameter. Affect this has on results is up to the implementation.
-	 * @return Single generated object.
+	 *            Type parameter. Effect this has on results is up to the
+	 *            implementation.
+	 * @return New object. Never {@code null}.
 	 */
 	public T generate(String type);
 
@@ -29,8 +31,9 @@ public interface TypedGenerator<T>
 	 * @param count
 	 *            Amount of objects to generate.
 	 * @param type
-	 *            Type parameter. Affect this has on results is up to the implementation.
-	 * @return List of generated objects.
+	 *            Type parameter. Effect this has on results is up to the
+	 *            implementation.
+	 * @return {@link List} of new objects. Never {@code null}.
 	 */
 	public List<T> generate(int count,
 	                        String type);

@@ -11,7 +11,7 @@ import com.thevisitcompany.gae.deprecated.web.api.ApiRequest;
  *
  * @param <T>
  */
-public class CreateRequest<T, K> extends ApiRequest<List<T>> {
+public class CreateRequest<T, K> extends ApiRequest<T>> {
 
 	/**
 	 * Type of this create request. Used for differentiating.

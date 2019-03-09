@@ -6,6 +6,10 @@ import java.util.Map;
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelChange;
+import com.dereekb.gae.model.extension.links.components.model.change.impl.LinkModelChangeImpl;
+import com.dereekb.gae.model.extension.links.components.model.change.impl.LinkModelLinkWrapper;
+import com.dereekb.gae.model.extension.links.components.model.change.impl.LinkModelLinkWrapper.WrapperPair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -19,6 +23,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public final class LinkModelImpl<T extends UniqueModel>
         implements LinkModel {
 
+	private LinkModelChange linkChanges;
 	private Map<String, Link> links;
 
 	private final T model;
@@ -39,9 +44,14 @@ public final class LinkModelImpl<T extends UniqueModel>
 
 	// LinkModel
 	@Override
-    public ModelKey getModelKey() {
+	public ModelKey getModelKey() {
 		return this.model.getModelKey();
-    }
+	}
+
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
+	}
 
 	@Override
 	public String getType() {
@@ -54,11 +64,11 @@ public final class LinkModelImpl<T extends UniqueModel>
 		Link link = map.get(name);
 
 		if (link == null) {
-			throw new UnavailableLinkException();
+			throw UnavailableLinkException.withLink(name);
 		}
 
 		return link;
-    }
+	}
 
 	@Override
 	public Collection<Link> getLinks() {
@@ -66,10 +76,23 @@ public final class LinkModelImpl<T extends UniqueModel>
 		return map.values();
 	}
 
+	@Override
+	public LinkModelChange getModelChanges() {
+		if (this.linkChanges == null) {
+			this.linkChanges = LinkModelChangeImpl.empty(this);
+		}
+
+		return this.linkChanges;
+	}
+
 	// Internal
 	private Map<String, Link> getLinksMap() {
 		if (this.links == null) {
-			this.links = this.delegate.buildLinks(this.model);
+			Map<String, Link> links = this.delegate.buildLinks(this.model);
+
+			WrapperPair pair = LinkModelLinkWrapper.wrapLinks(this, links);
+			this.links = pair.getWrappedLinks();
+			this.linkChanges = pair.getLinkChanges();
 		}
 
 		return this.links;

@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- CRUDs Controller -->
+	<bean id="loginPointerTaskQueueEditControllerEntry"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.impl.TaskQueueEditControllerEntryImpl">
+		<constructor-arg index="0" ref="loginPointerRegistry" />
+		<constructor-arg index="1"
+			ref="loginPointerTaskQueuePostCreateTask" />
+		<constructor-arg index="2"
+			ref="loginPointerTaskQueuePostUpdateTask" />
+		<constructor-arg index="3"
+			ref="loginPointerTaskQueueProcessDeleteTask" />
+	</bean>
+
+	<bean id="loginPointerTaskQueuePostCreateTask"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		<constructor-arg index="0">
+			<list>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="loginPointerTaskQueuePostUpdateTask"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueModelTask">
+		<constructor-arg index="0">
+			<list>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="loginPointerTaskQueueProcessDeleteTask"
+		class="com.dereekb.gae.web.taskqueue.controller.crud.task.TaskQueueDeleteModelTask">
+		<constructor-arg index="0" ref="loginPointerRegistry" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="scheduleLoginKeyDeleteByParentTask" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+</beans>

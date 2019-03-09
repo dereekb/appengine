@@ -7,24 +7,25 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
  * Service that updates existing objects.
- *
+ * <p>
  * Should be a thread-safe implementation.
  *
  * @author dereekb
  *
  * @param <T>
- *            Model type that implements the {@link UniqueModel} interface.
+ *            model type
  */
 public interface UpdateService<T extends UniqueModel> {
 
 	/**
-	 * Updates objects.
+	 * Updates objects using the input request.
 	 *
 	 * @param request
+	 *            {@link UpdateRequest}. Never {@code null}.
 	 * @return {@link UpdateResponse} instance.
 	 * @throws AtomicOperationException
 	 *             Occurs when not all objects requested can be updated.
 	 */
-	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException;
+	public UpdateResponse<T> update(UpdateRequest<T> request) throws AtomicOperationException, IllegalArgumentException;
 
 }

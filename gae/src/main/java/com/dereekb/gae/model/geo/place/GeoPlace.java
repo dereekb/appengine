@@ -2,9 +2,8 @@ package com.dereekb.gae.model.geo.place;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.extension.links.UniqueDescriptivelyLinkedModel;
+import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedDatabaseModel;
 import com.dereekb.gae.model.extension.objectify.annotation.IfNew;
-import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.Region;
 import com.dereekb.gae.model.general.geo.annotation.IfEmptyRegion;
@@ -16,6 +15,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfNull;
 
 /**
@@ -25,8 +25,8 @@ import com.googlecode.objectify.condition.IfNull;
  */
 @Cache
 @Entity
-public final class GeoPlace extends SearchableDatabaseModel
-        implements ObjectifyModel<GeoPlace>, UniqueDescriptivelyLinkedModel {
+public final class GeoPlace extends DescribedDatabaseModel
+        implements ObjectifyModel<GeoPlace> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,20 +53,11 @@ public final class GeoPlace extends SearchableDatabaseModel
 	/**
 	 * Parent {@link GeoPlace} that is related to/contains this place.
 	 */
-	@Index
+	@Index({ IfNotNull.class })
+	@IgnoreSave({ IfNull.class })
 	private Key<GeoPlace> parent;
 
-	// Info
-	/**
-	 * Info type.
-	 */
-	@Index
-	private String infoType;
-
-	/**
-	 * Info type's identifier.
-	 */
-	private String infoIdentifier;
+	// TODO: Add address and other related info?
 
 	public GeoPlace() {}
 
@@ -118,38 +109,8 @@ public final class GeoPlace extends SearchableDatabaseModel
 		return this.parent;
 	}
 
-	public Long getParentLongKey() {
-		Long key = null;
-
-		if (this.parent != null) {
-			key = this.parent.getId();
-		}
-
-		return key;
-	}
-
 	public void setParent(Key<GeoPlace> parent) {
 		this.parent = parent;
-	}
-
-	@Override
-    public String getInfoType() {
-		return this.infoType;
-	}
-
-	@Override
-    public void setInfoType(String infoType) {
-		this.infoType = infoType;
-	}
-
-	@Override
-    public String getInfoIdentifier() {
-		return this.infoIdentifier;
-	}
-
-	@Override
-    public void setInfoIdentifier(String infoIdentifier) {
-		this.infoIdentifier = infoIdentifier;
 	}
 
 	// Unique Model
@@ -176,9 +137,9 @@ public final class GeoPlace extends SearchableDatabaseModel
 
 	@Override
 	public String toString() {
-		return "GeoPlace [identifier=" + this.identifier + ", date=" + this.date + ", point=" + this.point
-		        + ", region=" + this.region + ", parent=" + this.parent + ", infoType=" + this.infoType
-		        + ", infoIdentifier=" + this.infoIdentifier + "]";
+		return "GeoPlace [identifier=" + this.identifier + ", date=" + this.date + ", point=" + this.point + ", region="
+		        + this.region + ", parent=" + this.parent + ", descriptorType=" + this.descriptorType
+		        + ", descriptorId=" + this.descriptorId + ", searchIdentifier=" + this.searchIdentifier + "]";
 	}
 
 }

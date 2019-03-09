@@ -10,7 +10,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  * Push request that is used for creating new tasks for the task queue.
  *
  * @author dereekb
- * @see {@link TaskQueueManager} for using these requests.
+ * @see TaskQueueManager
  * @deprecated Replaced by {@link TaskRequest}
  */
 @Deprecated

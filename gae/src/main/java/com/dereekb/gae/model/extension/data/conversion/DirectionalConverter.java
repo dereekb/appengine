@@ -27,6 +27,6 @@ public interface DirectionalConverter<I, O> {
 	 * @throws ConversionFailureException
 	 *             If any of the input models fail to be converted.
 	 */
-	public List<O> convert(Collection<I> input) throws ConversionFailureException;
+	public List<O> convert(Collection<? extends I> input) throws ConversionFailureException;
 
 }

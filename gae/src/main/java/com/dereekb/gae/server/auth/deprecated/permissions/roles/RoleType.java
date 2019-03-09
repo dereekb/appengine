@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.deprecated.permissions.roles;
 
 import org.springframework.security.core.GrantedAuthority;
 
+@Deprecated
 public enum RoleType implements GrantedAuthority, Comparable<RoleType>{
 
 	ADMIN (0, AdminRole.class),
@@ -10,7 +11,7 @@ public enum RoleType implements GrantedAuthority, Comparable<RoleType>{
     USER (3, UserRole.class),
     NEW_USER (4, NewUserRole.class),
     PUBLIC (5, PublicRole.class);
-	
+
 	private final Class<? extends Role> roleClass;
     private final Integer bit;
 
@@ -27,9 +28,9 @@ public enum RoleType implements GrantedAuthority, Comparable<RoleType>{
     }
 
 	public static RoleType typeWithBit(int bit) {
-		
+
 		RoleType type = null;
-		
+
 		switch(bit) {
 			case 0: type = ADMIN; break;
 			case 1: type = DEVELOPER; break;
@@ -38,23 +39,23 @@ public enum RoleType implements GrantedAuthority, Comparable<RoleType>{
 			case 4: type = NEW_USER; break;
 			case 5: type = PUBLIC; break;
 		}
-		
+
 		return type;
 	}
-	
+
     public Integer getBit() {
-        return bit;
+        return this.bit;
     }
-    
+
     public Role roleInstance() {
 		Role role = null;
-		
+
 		try {
 			role = this.roleClass.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
-    		
+
 		return role;
     }
 
@@ -62,5 +63,5 @@ public enum RoleType implements GrantedAuthority, Comparable<RoleType>{
 	public String getAuthority() {
         return this.toString();
 	}
-    
+
 }

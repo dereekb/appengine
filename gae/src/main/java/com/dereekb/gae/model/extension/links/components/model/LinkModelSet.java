@@ -4,13 +4,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveException;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
  * Contains a set of {@link LinkModel} instances read from the
  * {@link LinkSystem}.
- *
+ * <p>
  * This object can also load additional models into it if necessary.
  *
  * @author dereekb
@@ -64,14 +67,48 @@ public interface LinkModelSet {
 	/**
 	 * Loads an additional model into this set.
 	 *
+	 * @param key
+	 *            Key of the model to load. Never {@code null}.
+	 */
+	public void loadModel(ModelKey key);
+
+	/**
+	 * Loads an additional model into this set.
+	 *
 	 * @param keys
-	 *            Keys of the models to load.
+	 *            Keys of the models to load. Never {@code null}.
 	 */
 	public void loadModels(Collection<ModelKey> keys);
 
 	/**
-	 * Saves all link changes.
+	 * Returns all link changes made to this set.
+	 *
+	 * @return {@link LinkModelSetChange} containing changes made to this set.
+	 *         Never null.
 	 */
-	public void save();
+	public LinkModelSetChange getChanges();
+
+	/**
+	 * Validates the changes made to this {@link LinkModelSet}.
+	 *
+	 * @throws LinkSaveConditionException
+	 *             thrown if an invalid change is encountered.
+	 */
+	public void validateChanges() throws LinkSaveConditionException;
+
+	/**
+	 * Saves all link changes, validating them before hand if {@code validate}
+	 * is {@code true}.
+	 *
+	 * @param validate
+	 *            Whether or not to validate before saving. The
+	 *            {@link LinkModelSet} implementation has a choice of whether or
+	 *            not to use this value.
+	 * @throws LinkSaveException
+	 *             thrown if the save fails.
+	 * @throws LinkSaveConditionException
+	 *             thrown if an invalid change is encountered.
+	 */
+	public void save(boolean validate) throws LinkSaveException, LinkSaveConditionException;
 
 }

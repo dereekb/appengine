@@ -25,7 +25,7 @@ public interface BidirectionalConverter<I, O> {
 	 * @return
 	 * @throws ConversionFailureException
 	 */
-	public List<O> convertTo(Collection<I> input) throws ConversionFailureException;
+	public List<O> convertTo(Collection<? extends I> input) throws ConversionFailureException;
 
 	/**
 	 * Converts to the output type.
@@ -35,6 +35,6 @@ public interface BidirectionalConverter<I, O> {
 	 * @return
 	 * @throws ConversionFailureException
 	 */
-	public List<I> convertFrom(Collection<O> input) throws ConversionFailureException;
+	public List<I> convertFrom(Collection<? extends O> input) throws ConversionFailureException;
 
 }

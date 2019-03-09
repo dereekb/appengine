@@ -5,16 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dereekb.gae.utilities.AnnotationsRetriever;
-import com.dereekb.gae.utilities.cache.HandlerCache;
+import com.dereekb.gae.utilities.cache.CachePair;
 
 /**
  * Support class that looks up methods in a class that are annotated with an {@link LinksMethod} annotation.
  * 
  * @author dereekb
  */
+@Deprecated
 public class LinksMethodRetriever {
 
-	private static final class LinksHandlerCache extends HandlerCache<Method, String> {
+	private static final class LinksHandlerCache extends CachePair<Method, String> {
 
 		public LinksHandlerCache(String key, Method cachedValue) {
 			super(key, cachedValue);

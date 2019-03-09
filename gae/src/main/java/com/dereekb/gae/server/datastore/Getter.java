@@ -13,16 +13,26 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  *
  * @param <T>
  *            Model that implements the {@link UniqueModel} interface.
- * @see {@link Setter} for saving and deleting models from a source.
+ * 
+ * @see Setter
  */
 public interface Getter<T extends UniqueModel> {
+
+	/**
+	 * Check that the model still exists.
+	 * 
+	 * @param model
+	 *            Model. Never {@code null}.
+	 * @return {@code true} if the model exists, false otherwise.
+	 */
+	public boolean exists(T model);
 
 	/**
 	 * Checks that the model exists.
 	 *
 	 * @param key
-	 *            Identifier of the model.
-	 * @return True if the object exists, false otherwise.
+	 *            Identifier of the model. Never {@code null}.
+	 * @return {@code true} if the object exists, false otherwise.
 	 */
 	public boolean exists(ModelKey key);
 
@@ -30,8 +40,8 @@ public interface Getter<T extends UniqueModel> {
 	 * Checks that all the target models exist.
 	 *
 	 * @param keys
-	 *            Iterable list of keys.
-	 * @return True if all objects exist with the specified keys.
+	 *            Iterable list of keys. Never {@code null}.
+	 * @return {@code true} if all objects exist with the specified keys.
 	 */
 	public boolean allExist(Iterable<ModelKey> keys);
 

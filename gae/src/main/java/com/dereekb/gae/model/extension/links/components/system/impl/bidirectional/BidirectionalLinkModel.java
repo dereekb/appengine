@@ -6,8 +6,10 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.links.components.Link;
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.exception.UnavailableLinkException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelChange;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
@@ -41,6 +43,11 @@ public final class BidirectionalLinkModel
 	}
 
 	@Override
+	public ModelKey getKeyValue() {
+		return this.model.getKeyValue();
+	}
+
+	@Override
 	public String getType() {
 		return this.model.getType();
 	}
@@ -48,44 +55,52 @@ public final class BidirectionalLinkModel
 	@Override
 	public Link getLink(String name) throws UnavailableLinkException {
 		Link link = this.model.getLink(name);
-		BidirectionalLink wrappedLink = new BidirectionalLink(this, link);
-		return wrappedLink;
+
+		if (this.delegate.isBidirectional(link)) {
+			link = new BidirectionalLink(this, link);
+		}
+
+		return link;
 	}
 
 	@Override
 	public Collection<Link> getLinks() {
-		Collection<Link> rawLinks = this.model.getLinks();
-		List<Link> wrappedLinks = new ArrayList<Link>();
+		Collection<? extends Link> rawLinks = this.model.getLinks();
+		List<Link> links = new ArrayList<Link>();
 
 		for (Link link : rawLinks) {
-			BidirectionalLink wrappedLink = new BidirectionalLink(this, link);
-			wrappedLinks.add(wrappedLink);
+			if (this.delegate.isBidirectional(link)) {
+				link = new BidirectionalLink(this, link);
+			}
+
+			links.add(link);
 		}
 
-		return wrappedLinks;
+		return links;
+	}
+
+	@Override
+	public LinkModelChange getModelChanges() {
+		return this.model.getModelChanges();
 	}
 
 	// BidirectionalLinkDelegate
 	@Override
 	public List<Link> getReverseLinks(LinkInfo info,
-	                                  List<ModelKey> keys) throws UnavailableLinkException {
+	                                  List<ModelKey> keys)
+	        throws NoReverseLinksException,
+	            UnavailableLinkException {
 
+		String reverseLinkName = this.delegate.getReverseLinkName(info);
 		List<LinkModel> models = this.delegate.getReverseLinkModels(info, keys);
 		List<Link> links = new ArrayList<Link>();
 
 		if (models.isEmpty() == false) {
-			String reverseLinkName = this.delegate.getReverseLinkName(info);
 
-			/*
-			 * TODO: If no reverse is specified/known, use the target type...
-			 * This might actually be unwanted behavior. Also, if the remote type is known by both parties, then the reverse name should always be available anyways.
-			 */
-
-			/*
 			if (reverseLinkName == null) {
-				reverseLinkName = targetType;
+				throw new UnavailableLinkException("Reverse link for link '" + info.getLinkName() + "' on type '"
+				        + this.getType() + "' is not registered.");
 			}
-			*/
 
 			for (LinkModel model : models) {
 				Link link = model.getLink(reverseLinkName);

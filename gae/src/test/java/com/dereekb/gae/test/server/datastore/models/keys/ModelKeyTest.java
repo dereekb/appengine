@@ -1,12 +1,15 @@
 package com.dereekb.gae.test.server.datastore.models.keys;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 
 /**
  * Tests for {@link ModelKey}.
@@ -43,6 +46,37 @@ public class ModelKeyTest {
 		Assert.assertNotNull(a);
 		Assert.assertTrue(a.equals("A"));
 
+	}
+
+	@Test
+	public void testModelKeyEquality() {
+		ModelKey string = new ModelKey("0");
+		ModelKey number = new ModelKey(0);
+
+		Assert.assertTrue(string.equals(number));
+	}
+
+	@Test
+	public void testModelKeysInSet() {
+		ModelKey string = new ModelKey("0");
+		ModelKey number = new ModelKey(0);
+
+		Set<ModelKey> sets = new HashSet<ModelKey>();
+		sets.add(number);
+		sets.add(string);
+
+		Assert.assertTrue(sets.contains(string));
+		Assert.assertTrue(sets.contains(number));
+		Assert.assertTrue(sets.size() == 1);
+	}
+
+	@Test
+	public void testModelKeyConversion() {
+		ModelKey string = new ModelKey("0");
+		ModelKey number = ModelKey.convert("0");
+
+		Assert.assertTrue(string.equals(number));
+		Assert.assertTrue(number.getType().equals(ModelKeyType.NUMBER));
 	}
 
 }

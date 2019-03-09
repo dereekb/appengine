@@ -9,6 +9,24 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<mvc:annotation-driven />
+
+	<bean id="apiExceptionHandler"
+		class="com.dereekb.gae.web.api.model.exception.handler.ApiExceptionHandler">
+	</bean>
+
+	<bean id="modelRequestExceptionHandler"
+		class="com.dereekb.gae.web.api.model.exception.handler.ModelRequestExceptionHandler">
+	</bean>
+
+	<!-- MODELS -->
 	<import resource="model/model.xml" />
+
+	<!-- EXTENSIONs -->
+	<import resource="extension/link.xml" />
+	<import resource="extension/login.xml" />
+	<import resource="extension/search.xml" />
+	<import resource="extension/upload.xml" />
+	<import resource="extension/download.xml" />
 
 </beans>

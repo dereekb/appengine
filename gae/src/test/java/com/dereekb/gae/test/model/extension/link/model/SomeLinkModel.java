@@ -34,7 +34,6 @@ public class SomeLinkModel
 		this.identifier = identifier;
 	}
 
-
 	public Set<String> getDifferentModelLinks() {
 		return this.differentModelLinks;
 	}
@@ -58,7 +57,12 @@ public class SomeLinkModel
 	// UniqueModel
 	@Override
 	public ModelKey getModelKey() {
-		return new ModelKey(this.identifier);
+		return ModelKey.safe(this.identifier);
+	}
+
+	@Override
+	public ModelKey getKeyValue() {
+		return this.getModelKey();
 	}
 
 }

@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Search Controller -->
+	<bean id="searchExtensionApiController"
+		class="com.dereekb.gae.web.api.model.extension.search.SearchExtensionApiController">
+		<constructor-arg index="0"
+			ref="searchExtensionApiControllerDelegate" />
+	</bean>
+
+	<bean id="searchExtensionApiControllerDelegate"
+
+		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateImpl">
+		<constructor-arg index="0">
+			<map key-type="java.lang.String">
+				<entry key-ref="geoPlaceSearchType" value-ref="geoPlaceSearchDelegateEntry" />
+				<entry key-ref="storedBlobSearchType" value-ref="storedBlobSearchDelegateEntry" />
+				<entry key-ref="storedImageSearchType" value-ref="storedImageSearchDelegateEntry" />
+				<entry key-ref="storedImageSetSearchType" value-ref="storedImageSetSearchDelegateEntry" />
+				<entry key-ref="loginSearchType" value-ref="loginSearchDelegateEntry" />
+				<entry key-ref="loginKeySearchType" value-ref="loginKeySearchDelegateEntry" />
+				<entry key-ref="loginPointerSearchType" value-ref="loginPointerSearchDelegateEntry" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+
+</beans>

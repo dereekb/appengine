@@ -1,35 +1,42 @@
 package com.dereekb.gae.model.extension.inclusion.reader;
 
+import java.util.Collection;
+
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+
 /**
- * Used to build a map of models for the
+ * Used for analyzing related/included types for a model.
  *
  * @author dereekb
  *
- * @param <T>
- *            Primary model
  */
-public interface InclusionReader<T> {
+public interface InclusionReader {
 
 	/**
-	 * Analyzes the input model.
+	 * Analyzes the model at the specified key.
 	 *
 	 * @param model
 	 *            Model to analyze.
-	 * @return {@link InclusionReaderAnalysis} for the input model.
+	 * @return {@link ModelInclusionReaderAnalysis} for the input model.
 	 * @throws IllegalArgumentException
 	 *             if the model is null.
 	 */
-	public InclusionReaderAnalysis<T> analyzeInclusions(T model) throws IllegalArgumentException;
+	public InclusionReaderAnalysis analyzeInclusions(ModelKey modelKey)
+	        throws AtomicOperationException,
+	            IllegalArgumentException;
 
 	/**
-	 * Analyzes the input models.
+	 * Analyzes the models with the specified key.
 	 *
 	 * @param models
 	 *            Models to analyze.
-	 * @return {@link InclusionReadersetAnalysis} containing the input models.
+	 * @return {@link InclusionReaderSetAnalysis} containing the input models.
 	 * @throws IllegalArgumentException
 	 *             if the models are null or empty.
 	 */
-	public InclusionReaderSetAnalysis<T> analyzeInclusions(Iterable<T> models) throws IllegalArgumentException;
+	public InclusionReaderSetAnalysis analyzeInclusions(Collection<ModelKey> modelKeys)
+	        throws AtomicOperationException,
+	            IllegalArgumentException;
 
 }

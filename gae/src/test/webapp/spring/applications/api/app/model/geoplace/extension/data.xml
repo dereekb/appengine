@@ -10,19 +10,14 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- Type -->
-	<bean id="geoPlaceDataBuilder"
-		class="com.dereekb.gae.model.geo.place.dto.GeoPlaceDataBuilder"
-		scope="singleton" lazy-init="true">
+	<bean id="geoPlaceDataBuilder" class="com.dereekb.gae.model.geo.place.dto.GeoPlaceDataBuilder">
 	</bean>
 
-	<bean id="geoPlaceDataReader"
-		class="com.dereekb.gae.model.geo.place.dto.GeoPlaceDataReader"
-		scope="singleton" lazy-init="true">
+	<bean id="geoPlaceDataReader" class="com.dereekb.gae.model.geo.place.dto.GeoPlaceDataReader">
 	</bean>
 
 	<bean id="geoPlaceDataConverter"
-		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl"
-		scope="singleton" lazy-init="true">
+		class="com.dereekb.gae.model.extension.data.conversion.impl.BidirectionalConverterImpl">
 		<constructor-arg index="0" ref="geoPlaceDataBuilder" />
 		<constructor-arg index="1" ref="geoPlaceDataReader" />
 	</bean>

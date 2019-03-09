@@ -2,12 +2,13 @@ package com.dereekb.gae.model.geo.place.search.document.index;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.extension.search.document.index.component.builder.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.StagedDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.derivative.AbstractDerivableDocumentBuilderStep;
+import com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util.ModelDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.geo.place.GeoPlace;
 import com.google.appengine.api.search.Document.Builder;
-import com.google.appengine.api.search.Field;
 
 /**
  * Implementation of {@link StagedDocumentBuilderStep} for adding
@@ -15,46 +16,52 @@ import com.google.appengine.api.search.Field;
  *
  * @author dereekb
  */
-public final class GeoPlaceDocumentBuilderStep
-        implements StagedDocumentBuilderStep<GeoPlace> {
+public class GeoPlaceDocumentBuilderStep extends AbstractDerivableDocumentBuilderStep<GeoPlace> {
 
+	public static final String REGION_FIELD = "region";
+
+	public static final String DERIVATIVE_PREFIX = "GP_";
+	public static final String DERIVATIVE_FIELD_FORMAT = DERIVATIVE_PREFIX + "%s";
+
+	public GeoPlaceDocumentBuilderStep() {
+		super();
+	}
+
+	public GeoPlaceDocumentBuilderStep(String format, boolean inclusionStep) {
+		super(format, inclusionStep);
+	}
+
+	// MARK: StagedDocumentBuilderStep
 	@Override
-	public void updateBuilder(GeoPlace model,
-	                          Builder builder) {
+	protected void performSharedStep(GeoPlace model,
+	                                 Builder builder) {
 
-		Long identifier = model.getIdentifier();
-		Date date = model.getDate();
+		Date date = null;
+		Point point = null;
+		boolean isRegion = false;
 
-		Point point = model.getPoint();
-		boolean isRegion = model.isRegion();
+		if (model != null) {
+			point = model.getPoint();
+			date = model.getDate();
 
-		String infoType = model.getInfoType();
-		String infoTypeId = model.getInfoIdentifier();
-
-		// Place Identifier
-		Field.Builder identifierField = SearchDocumentBuilderUtility.atomField("id", identifier.toString());
-		builder.addField(identifierField);
+			isRegion = model.isRegion();
+		}
 
 		// Creation Date
-		Field.Builder dateField = SearchDocumentBuilderUtility.dateField("date", date);
-		builder.addField(dateField);
+		ModelDocumentBuilderUtility.addDate(this.format, date, builder);
 
 		// Point Field
-		Field.Builder pointField = SearchDocumentBuilderUtility.geoPointField("point", point);
-		builder.addField(pointField);
+		ModelDocumentBuilderUtility.addPoint(this.format, point, builder);
 
 		// Is Region Field
-		Field.Builder isRegionField = SearchDocumentBuilderUtility.booleanField("isRegion", isRegion);
-		builder.addField(isRegionField);
-
-		// Info Type
-		Field.Builder typeField = SearchDocumentBuilderUtility.atomField("infoType", infoType);
-		builder.addField(typeField);
-
-		// Info Type Id
-		Field.Builder typeIdField = SearchDocumentBuilderUtility.atomField("infoTypeId", infoTypeId);
-		builder.addField(typeIdField);
+		String isRegionFieldFormat = String.format(this.format, REGION_FIELD);
+		SearchDocumentBuilderUtility.addBoolean(isRegionFieldFormat, isRegion, builder);
 
 	}
+
+	@Override
+    public String toString() {
+		return "GeoPlaceDocumentBuilderStep [format=" + this.format + ", inclusionStep=" + this.inclusionStep + "]";
+    }
 
 }

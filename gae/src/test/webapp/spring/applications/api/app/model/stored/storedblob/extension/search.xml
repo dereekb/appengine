@@ -1,0 +1,93 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="storedBlobSearchIndex" class="java.lang.String">
+		<constructor-arg index="0" ref="storedBlobType" />
+	</bean>
+
+	<!-- Index -->
+	<bean id="storedBlobKeyedDocumentIndexService"
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.KeyedDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="storedBlobReadService" />
+		<constructor-arg index="1"
+			ref="storedBlobDocumentIndexService" />
+	</bean>
+
+	<bean id="storedBlobDocumentIndexService"
+		class="com.dereekb.gae.model.extension.search.document.index.service.impl.SavingDocumentIndexServiceImpl">
+		<constructor-arg index="0" ref="searchSystem" />
+		<constructor-arg index="1"
+			ref="storedBlobIndexingDocumentBuilder" />
+		<constructor-arg index="2"
+			ref="storedBlobAsyncConfiguredSetter" />
+	</bean>
+
+	<!-- Search Indexing -->
+	<bean id="storedBlobIndexingDocumentBuilder"
+		class="com.dereekb.gae.model.extension.search.document.index.component.impl.IndexingDocumentBuilderImpl">
+		<constructor-arg index="0" ref="storedBlobSearchIndex" />
+		<constructor-arg index="1"
+			ref="storedBlobSearchDocumentBuilder" />
+	</bean>
+
+	<bean id="storedBlobSearchDocumentBuilder"
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.StagedDocumentBuilder">
+		<constructor-arg index="0">
+			<bean
+				class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.initializer.impl.ModelStagedDocumentBuilderInitializer">
+				<constructor-arg index="0" ref="storedBlobType" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<list>
+				<bean
+					class="com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobDocumentBuilderStep">
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<!-- Derivative Indexing -->
+	<bean id="storedBlobIncludedDocumentBuilderStep"
+		class="com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.impl.ModelStagedDocumentBuilderStepImpl">
+		<constructor-arg index="0" ref="storedBlobRegistry" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.model.stored.blob.search.document.index.StoredBlobIncludedDocumentBuilderStep" />
+		</constructor-arg>
+	</bean>
+
+	<!-- Search Services -->
+	<bean id="storedBlobSearchService"
+		class="com.dereekb.gae.model.extension.search.document.search.service.model.impl.ModelDocumentSearchServiceImpl">
+		<constructor-arg index="0" ref="storedBlobReadService" />
+		<constructor-arg index="1" ref="modelDocumentSearchService" />
+		<constructor-arg index="2">
+			<bean
+				class="com.dereekb.gae.model.stored.blob.search.document.query.StoredBlobSearchRequestConverter">
+				<constructor-arg index="0" ref="storedBlobSearchIndex" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="3" ref="scoredDocumentLongKeyReader" />
+	</bean>
+
+	<!-- Query Services -->
+	<bean id="storedBlobQueryService"
+		class="com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl">
+		<constructor-arg index="0" ref="storedBlobRegistry" />
+		<constructor-arg index="1" ref="storedBlobQueryInitializer" />
+	</bean>
+
+	<bean id="storedBlobQueryInitializer"
+		class="com.dereekb.gae.model.stored.blob.search.query.StoredBlobQueryInitializer">
+	</bean>
+
+</beans>

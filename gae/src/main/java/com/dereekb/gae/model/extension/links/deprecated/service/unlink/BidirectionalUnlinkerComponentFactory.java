@@ -3,7 +3,7 @@ package com.dereekb.gae.model.extension.links.deprecated.service.unlink;
 import com.dereekb.gae.model.extension.links.deprecated.functions.BidirectionalLinkerFunction;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.factory.Factory;
-import com.dereekb.gae.utilities.factory.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 
 public class BidirectionalUnlinkerComponentFactory<T extends UniqueModel>
         implements Factory<BidirectionalUnlinkerComponent<T>> {

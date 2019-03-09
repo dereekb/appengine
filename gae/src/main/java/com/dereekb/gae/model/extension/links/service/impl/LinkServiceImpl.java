@@ -3,10 +3,16 @@ package com.dereekb.gae.model.extension.links.service.impl;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
+import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystem;
-import com.dereekb.gae.model.extension.links.service.LinkChange;
 import com.dereekb.gae.model.extension.links.service.LinkService;
 import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
+import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
+import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
 /**
  * {@link LinkService} implementation.
@@ -31,10 +37,13 @@ public class LinkServiceImpl
 		this.system = system;
 	}
 
+	// MARK: LinkService
 	@Override
-	public void updateLinks(LinkServiceRequest request) throws LinkChangesException, AtomicOperationException {
-		List<LinkChange> changes = request.getLinkChanges();
-		LinkChangesRunner runner = new LinkChangesRunner(this.system);
+	public LinkServiceImplResponse updateLinks(LinkServiceRequest request)
+	        throws LinkSystemChangesException,
+	            AtomicOperationException {
+		List<LinkSystemChange> changes = request.getLinkChanges();
+		LinkSystemChangesRunner runner = new LinkSystemChangesRunner(this.system);
 
 		try {
 			runner.runChanges(changes);
@@ -42,13 +51,38 @@ public class LinkServiceImpl
 			throw new AtomicOperationException(e);
 		}
 
-		List<LinkChangeException> failures = runner.getFailures();
+		List<LinkSystemChangeException> failures = runner.getFailures();
+		boolean hasMissingKeys = runner.hasMissingKeys();
 
-		if (failures.isEmpty() == false) {
-			runner.saveChanges();
+		if (failures.isEmpty()) {
+			if (hasMissingKeys && request.isAtomic()) {
+				HashMapWithSet<String, ModelKey> missing = runner.getMissing();
+				throw new AtomicOperationException(missing.valuesSet(), AtomicOperationExceptionReason.UNAVAILABLE);
+			} else {
+				runner.saveChanges();
+			}
 		} else {
-			throw new LinkChangesException(failures);
+			throw new LinkSystemChangesException(failures);
 		}
+
+		return new LinkServiceImplResponse(runner);
+	}
+
+	public static class LinkServiceImplResponse
+	        implements LinkServiceResponse {
+
+		private final LinkSystemChangesRunner runner;
+
+		public LinkServiceImplResponse(LinkSystemChangesRunner runner) {
+			this.runner = runner;
+		}
+
+		// MARK: LinkServiceResponse
+		@Override
+		public HashMapWithSet<String, ModelKey> getMissingKeys() {
+			return this.runner.getMissing();
+		}
+
 	}
 
 }

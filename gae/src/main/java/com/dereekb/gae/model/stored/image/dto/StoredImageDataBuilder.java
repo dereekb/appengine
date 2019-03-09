@@ -1,12 +1,10 @@
 package com.dereekb.gae.model.stored.image.dto;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
+import com.dereekb.gae.model.extension.search.document.dto.SearchableModelDataBuilder;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
  * {@link DirectionalConverter} for converting a {@link StoredImage} to
@@ -14,35 +12,24 @@ import com.dereekb.gae.model.stored.image.StoredImage;
  *
  * @author dereekb
  */
-public class StoredImageDataBuilder
-        implements DirectionalConverter<StoredImage, StoredImageData> {
+public class StoredImageDataBuilder extends SearchableModelDataBuilder<StoredImage, StoredImageData> {
 
-	public StoredImageDataBuilder() {}
-
-	@Override
-	public List<StoredImageData> convert(Collection<StoredImage> input) throws ConversionFailureException {
-		List<StoredImageData> list = new ArrayList<StoredImageData>();
-
-		for (StoredImage image : input) {
-			StoredImageData data = this.convert(image);
-			list.add(data);
-		}
-
-		return list;
+	public StoredImageDataBuilder() throws IllegalArgumentException {
+		super(StoredImageData.class);
 	}
 
-	public StoredImageData convert(StoredImage image) {
-		StoredImageData data = new StoredImageData();
+	@Override
+	public StoredImageData convertSingle(StoredImage input) throws ConversionFailureException {
+		StoredImageData data = super.convertSingle(input);
 
-		data.setIdentifier(image.getModelKey());
+		// Data
+		data.setName(input.getName());
+		data.setSummary(input.getSummary());
+		data.setTags(input.getTags());
+		data.setType(input.getTypeId());
 
-		data.setName(image.getName());
-		data.setSummary(image.getSummary());
-		data.setTags(image.getTags());
-		data.setType(image.getTypeId());
-
-		data.setBlobId(image.getBlobId());
-		data.setPlaceId(image.getPlaceId());
+		// Links
+		data.setBlob(ObjectifyKeyUtility.idFromKey(input.getStoredBlob()));
 
 		return data;
 	}

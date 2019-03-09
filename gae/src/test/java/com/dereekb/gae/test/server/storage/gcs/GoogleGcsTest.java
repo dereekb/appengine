@@ -54,7 +54,7 @@ public class GoogleGcsTest {
 	private static class ExampleClass {
 
 		/**
-		 * This is the service from which all requests are initiated. The retry
+		 * This is the indexService from which all requests are initiated. The retry
 		 * and exponential backoff settings are configured here.
 		 */
 		private final GcsService gcsService = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());

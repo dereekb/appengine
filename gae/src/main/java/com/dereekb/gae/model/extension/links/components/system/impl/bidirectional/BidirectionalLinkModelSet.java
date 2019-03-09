@@ -11,8 +11,12 @@ import java.util.Set;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
 import com.dereekb.gae.model.extension.links.components.LinkTarget;
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveConditionException;
+import com.dereekb.gae.model.extension.links.components.exception.LinkSaveException;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 import com.dereekb.gae.model.extension.links.components.model.LinkModel;
 import com.dereekb.gae.model.extension.links.components.model.LinkModelSet;
+import com.dereekb.gae.model.extension.links.components.model.change.LinkModelSetChange;
 import com.dereekb.gae.model.extension.links.components.system.exception.UnrelatedLinkException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -119,16 +123,45 @@ public final class BidirectionalLinkModelSet
 	}
 
 	@Override
+	public void loadModel(ModelKey key) {
+		this.primarySet.loadModel(key);
+	}
+
+	@Override
 	public void loadModels(Collection<ModelKey> keys) {
 		this.primarySet.loadModels(keys);
 	}
 
 	@Override
-	public void save() {
-		this.primarySet.save();
+	public LinkModelSetChange getChanges() {
+		return this.primarySet.getChanges();
+	}
+
+	@Override
+	public void validateChanges() throws LinkSaveConditionException {
+		this.primarySet.validateChanges();
 
 		for (LinkModelSet set : this.secondarySets.values()) {
-			set.save();
+			set.validateChanges();
+		}
+	}
+
+	@Override
+	public void save(boolean validate) throws LinkSaveException, LinkSaveConditionException {
+		if (validate) {
+			this.validateChanges();
+		}
+
+		try {
+			this.primarySet.save(false);
+
+			for (LinkModelSet set : this.secondarySets.values()) {
+				set.save(false);
+			}
+		} catch (LinkSaveException e) {
+			throw e; // Forward the exception.
+		} catch (RuntimeException e) {
+			throw new LinkSaveException(e);
 		}
 	}
 
@@ -147,6 +180,19 @@ public final class BidirectionalLinkModelSet
 		}
 
 		return linkModels;
+	}
+
+	@Override
+	public boolean isBidirectional(LinkInfo info) {
+		boolean isBidirectional = true;
+
+		try {
+			isBidirectional = (this.delegate.getReverseLinkName(this.setModelType, info) != null);
+		} catch (NoReverseLinksException e) {
+			isBidirectional = false;
+		}
+
+		return isBidirectional;
 	}
 
 	@Override

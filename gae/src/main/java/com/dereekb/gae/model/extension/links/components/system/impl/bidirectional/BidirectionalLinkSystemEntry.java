@@ -1,7 +1,7 @@
 package com.dereekb.gae.model.extension.links.components.system.impl.bidirectional;
 
 import com.dereekb.gae.model.extension.links.components.LinkInfo;
-import com.dereekb.gae.model.extension.links.components.system.exception.UnknownReverseLinkException;
+import com.dereekb.gae.model.extension.links.components.exception.NoReverseLinksException;
 
 /**
  * Entry for a {@link BidirectionalLinkSystem} that describes how elements in a
@@ -21,7 +21,7 @@ public interface BidirectionalLinkSystemEntry {
 	 *
 	 * @param info
 	 *            {@link LinkInfo} of the link requesting it's reverse.
-	 * @return true if the type is bi-directionally linked.
+	 * @return {@code true} if the type is bi-directionally linked.
 	 */
 	public boolean isBidirectionallyLinked(LinkInfo info);
 
@@ -29,9 +29,10 @@ public interface BidirectionalLinkSystemEntry {
 	 * Returns the reverse name for a link.
 	 *
 	 * @return Name of the reverse link that is expected on the other type.
-	 * @throws UnknownReverseLinkException
-	 *             if the reverse type is unknown.
+	 *
+	 * @throws NoReverseLinksException
+	 *             if there is no reverse link.
 	 */
-	public String getReverseLinkName(LinkInfo info) throws UnknownReverseLinkException;
+	public String getReverseLinkName(LinkInfo info) throws NoReverseLinksException;
 
 }

@@ -56,7 +56,7 @@ public class BidirectionalLinkerFunction<T extends UniqueModel, S extends Unique
 	protected void link(Iterable<LinksPair<T>> pairs) {
 		HashMapWithSet<ModelKey, LinksPair<T>> mapping = this.buildSecondaryMappingSet(pairs);
 
-		Set<ModelKey> secondaryIds = mapping.getKeySet();
+		Set<ModelKey> secondaryIds = mapping.keySet();
 		List<S> secondaryObjects = this.secondaryGetter.getWithKeys(secondaryIds);
 
 		if (this.safe && (secondaryIds.size() != secondaryObjects.size())) {
@@ -115,9 +115,9 @@ public class BidirectionalLinkerFunction<T extends UniqueModel, S extends Unique
 			actionsMap.add(action, primaryPair);
 		}
 
-		Set<LinksAction> actions = actionsMap.getKeySet();
+		Set<LinksAction> actions = actionsMap.keySet();
 		for (LinksAction action : actions) {
-			List<LinksPair<T>> pairsForAction = actionsMap.getObjects(action);
+			List<LinksPair<T>> pairsForAction = actionsMap.get(action);
 			HashMapWithList<String, LinksPair<T>> typeMap = new HashMapWithList<String, LinksPair<T>>();
 
 			for (LinksPair<T> pairForAction : pairsForAction) {
@@ -125,7 +125,7 @@ public class BidirectionalLinkerFunction<T extends UniqueModel, S extends Unique
 				typeMap.add(type, pairForAction);
 			}
 
-			Set<String> types = typeMap.getKeySet();
+			Set<String> types = typeMap.keySet();
 			for (String type : types) {
 				List<LinksPair<T>> similarRequests = typeMap.getObjects(type);
 				String secondaryPairingType = this.typeDelegate.linkerTypeForType(type);

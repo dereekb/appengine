@@ -1,10 +1,8 @@
 package com.dereekb.gae.model.extension.search.document.search.service.model;
 
-import java.util.List;
-
-import com.dereekb.gae.model.crud.services.response.ReadResponse;
-import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.search.system.response.SearchDocumentQueryResponse;
+import com.dereekb.gae.utilities.model.search.response.ModelSearchResponse;
 
 /**
  * Contains {@link ModelKey} search results and model returns.
@@ -12,10 +10,9 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
-public interface ModelDocumentSearchResponse<T extends UniqueModel>
-        extends ReadResponse<T> {
-
-	public List<ModelKey> getKeySearchResults();
+public interface ModelDocumentSearchResponse<T>
+        extends ModelSearchResponse<T>, SearchDocumentQueryResponse {
 
 }

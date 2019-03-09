@@ -119,11 +119,11 @@ public class TaskQueueManager {
 	}
 
 	public void purgeQueue() {
-		// TODO: Purge/Delete all tasks
+		// todo Purge/Delete all tasks
 	}
 
 	public void removeTasks(String task) {
-		// TODO: Remove task
+		// todo Remove task
 	}
 
 	private class TaskQueueRequestBuilder {
@@ -139,10 +139,13 @@ public class TaskQueueManager {
 			String name = this.request.getName();
 
 			/*
-			 * TODO: Removed, since the Task Queue does not immediately delete names of tasks that have been cleared.
-			 * Task names can take up to 7 days, so using the task queue to avoid rapid updating of a target is not ideal for now.
-			 * In the future, can think of a way to make hash codes that also incorporate periods of time.
-			 * See: https://developers.google.com/appengine/docs/java/taskqueue/#Java_Task_names
+			 * Removed, since the Task Queue does not immediately delete names
+			 * of tasks that have been cleared. Task names can take up to 7
+			 * days, so using the task queue to avoid rapid updating of a target
+			 * is not ideal for now. In the future, can think of a way to make
+			 * hash codes that also incorporate periods of time. See:
+			 * https://developers
+			 * .google.com/appengine/docs/java/taskqueue/#Java_Task_names
 			 */
 			// if (name == null) {
 			// Integer hashcode = request.hashCode();

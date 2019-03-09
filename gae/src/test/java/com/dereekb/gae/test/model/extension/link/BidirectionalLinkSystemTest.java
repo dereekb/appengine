@@ -73,7 +73,7 @@ public class BidirectionalLinkSystemTest {
 		ModelKey loadedModelKey = model.getModelKey();
 		Assert.assertTrue(keyA.equals(loadedModelKey));
 
-		Collection<Link> links = model.getLinks();
+		Collection<? extends Link> links = model.getLinks();
 		Assert.assertTrue(links != null);
 
 		Link differentModelLink = model.getLink(SomeLinkModel.DIFFERENT_MODEL_LINKS_NAME);
@@ -94,7 +94,7 @@ public class BidirectionalLinkSystemTest {
 		Assert.assertTrue(relationKeys.contains(stringModelKey));
 
 		// Save the changes
-		set.save();
+		set.save(false);
 
 		// Changes are complete, check to see if the other is in the set.
 		// Remember that LinkModelSet are singletons for these tests.

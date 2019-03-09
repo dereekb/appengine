@@ -15,6 +15,10 @@ public class LinkTargetImpl
 	private String targetType;
 	private ModelKeyType targetKeyType;
 
+	public LinkTargetImpl(String targetType) {
+		this(targetType, ModelKeyType.NUMBER);
+	}
+
 	public LinkTargetImpl(String targetType, ModelKeyType targetKeyType) {
 		this.targetType = targetType;
 		this.targetKeyType = targetKeyType;

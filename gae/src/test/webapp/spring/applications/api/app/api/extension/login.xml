@@ -1,0 +1,85 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Register Controller -->
+	<bean id="loginRegisterController"
+		class="com.dereekb.gae.web.api.auth.controller.register.LoginRegisterController">
+		<constructor-arg index="0"
+			ref="loginRegisterControllerDelegate" />
+	</bean>
+
+	<bean id="loginRegisterControllerDelegate"
+
+		class="com.dereekb.gae.web.api.auth.controller.register.impl.LoginRegisterControllerDelegateImpl">
+		<constructor-arg index="0" ref="loginRegisterService" />
+		<constructor-arg index="1" ref="loginTokenService" />
+	</bean>
+
+	<!-- Anonymous Login Controller -->
+	<bean id="anonymousLoginController"
+		class="com.dereekb.gae.web.api.auth.controller.anonymous.AnonymousLoginController">
+		<constructor-arg index="0"
+			ref="anonymousLoginControllerDelegate" />
+	</bean>
+
+	<bean id="anonymousLoginControllerDelegate"
+
+		class="com.dereekb.gae.web.api.auth.controller.anonymous.impl.AnonymousLoginControllerDelegateImpl">
+		<constructor-arg index="0" ref="loginTokenService" />
+	</bean>
+
+	<!-- Password Login Controller -->
+	<bean id="passwordLoginController"
+		class="com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController">
+		<constructor-arg index="0"
+			ref="passwordLoginControllerDelegate" />
+	</bean>
+
+	<bean id="passwordLoginControllerDelegate"
+
+		class="com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginControllerDelegateImpl">
+		<constructor-arg index="0" ref="passwordLoginService" />
+		<constructor-arg index="1" ref="loginTokenService" />
+	</bean>
+
+	<!-- OAuth -->
+	<bean id="oAuthLoginController"
+		class="com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginController">
+		<constructor-arg index="0" ref="oAuthLoginControllerDelegate" />
+	</bean>
+
+	<bean id="oAuthLoginControllerDelegate"
+
+		class="com.dereekb.gae.web.api.auth.controller.oauth.impl.OAuthLoginControllerDelegateImpl">
+		<constructor-arg index="0" ref="oAuthServiceManager" />
+		<constructor-arg index="1" ref="loginTokenService" />
+	</bean>
+
+	<!-- API Login Controller -->
+	<bean id="keyLoginController"
+		class="com.dereekb.gae.web.api.auth.controller.key.KeyLoginController">
+		<constructor-arg index="0" ref="keyLoginControllerDelegate" />
+	</bean>
+
+	<bean id="keyLoginControllerDelegate"
+
+		class="com.dereekb.gae.web.api.auth.controller.key.impl.KeyLoginControllerDelegateImpl">
+		<constructor-arg index="0" ref="loginTokenService" />
+		<constructor-arg index="1" ref="keyLoginStatusServiceManager" />
+		<constructor-arg index="2" ref="keyLoginAuthenticationService" />
+	</bean>
+
+	<!-- Exception Handler -->
+	<bean id="loginExceptionHandler"
+		class="com.dereekb.gae.web.api.auth.exception.handler.ApiLoginExceptionHandler">
+	</bean>
+
+</beans>

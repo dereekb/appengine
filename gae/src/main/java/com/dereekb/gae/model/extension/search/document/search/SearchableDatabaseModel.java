@@ -2,6 +2,7 @@ package com.dereekb.gae.model.extension.search.document.search;
 
 import com.dereekb.gae.model.extension.search.document.SearchableUniqueModel;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
+import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 
 /**
  * Extension of {@link DatabaseModel} that implements the
@@ -10,12 +11,12 @@ import com.dereekb.gae.server.datastore.models.DatabaseModel;
  * @author dereekb
  *
  */
-public abstract class SearchableDatabaseModel extends DatabaseModel
+public abstract class SearchableDatabaseModel extends OwnedDatabaseModel
         implements SearchableUniqueModel {
 
 	private static final long serialVersionUID = 1L;
 
-	private String searchIdentifier;
+	protected String searchIdentifier;
 
 	@Override
 	public String getSearchIdentifier() {

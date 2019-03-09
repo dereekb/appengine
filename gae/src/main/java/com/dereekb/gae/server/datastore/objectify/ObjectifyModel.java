@@ -9,13 +9,15 @@ import com.googlecode.objectify.Key;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface ObjectifyModel<T>
         extends UniqueModel {
 
 	/**
-	 * Returns the objectify key for this model.
-	 * @return
+	 * Returns the Objectify key for this model.
+	 * 
+	 * @return {@link Key}. {@code null} if no identifier.
 	 */
 	public Key<T> getObjectifyKey();
 

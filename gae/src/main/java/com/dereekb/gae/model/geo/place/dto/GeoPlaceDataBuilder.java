@@ -4,6 +4,7 @@ import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.model.geo.place.GeoPlace;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
  * {@link DirectionalConverter} for converting a {@link GeoPlace} to
@@ -21,14 +22,13 @@ public final class GeoPlaceDataBuilder extends AbstractDirectionalConverter<GeoP
 		GeoPlaceData data = new GeoPlaceData();
 
 		// Id
-		data.setIdentifier(geoPlace.getModelKey());
-		data.setCreated(geoPlace.getDate());
+		data.setModelKey(geoPlace.getModelKey());
+		data.setDate(geoPlace.getDate());
+		data.setSearchIdentifier(geoPlace.getSearchIdentifier());
 
 		// Links
-		data.setParent(geoPlace.getParentLongKey());
-
-		data.setInfoType(geoPlace.getInfoType());
-		data.setInfoIdentifier(geoPlace.getInfoIdentifier());
+		data.setParent(ObjectifyKeyUtility.idFromKey(geoPlace.getParent()));
+		data.setDescriptor(geoPlace.getDescriptor());
 
 		// Data
 		data.setPoint(geoPlace.getPoint());
