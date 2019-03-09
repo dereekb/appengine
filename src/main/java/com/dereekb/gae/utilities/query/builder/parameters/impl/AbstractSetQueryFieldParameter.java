@@ -18,8 +18,7 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 
 	public static final Integer MAX_KEYS_ALLOWED = 30;
 
-	private static final Set<ExpressionOperator> ALLOWED_SET_OPERATORS = SetUtility.makeSet(ExpressionOperator.HAS,
-	        ExpressionOperator.EQUAL);
+	private static final Set<ExpressionOperator> ALLOWED_SET_OPERATORS = SetUtility.makeSet(ExpressionOperator.EQUAL);
 
 	protected AbstractSetQueryFieldParameter() {};
 
@@ -37,10 +36,20 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 		this.setParameterString(parameterString);
 	}
 
+	/**
+	 * @deprecated {@link ExpressionOperator#IN} is no longer supported.
+	 */
+	@Deprecated
 	protected AbstractSetQueryFieldParameter(String field, Collection<T> value) throws IllegalArgumentException {
 		this.setField(field);
 		this.setValue(value);
-		this.setOperator(ExpressionOperator.HAS);
+
+		if (value != null && value.size() > 1) {
+			this.setOperator(ExpressionOperator.IN);
+			throw new IllegalArgumentException("Multiple values are not supported currently. Specify only one.");
+		} else {
+			this.setOperator(ExpressionOperator.EQUAL);
+		}
 	}
 
 	// MARK: Override

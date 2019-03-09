@@ -20,7 +20,7 @@ import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
  * @author dereekb
  *
  */
-public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTest {
+public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTests {
 
 	@Test
 	public void testQuerying() {
@@ -31,6 +31,7 @@ public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTest {
 		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
 		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		Integer resultsCount = query.getResultCount();
+
 
 		Assert.assertTrue(resultsCount == count);
 	}

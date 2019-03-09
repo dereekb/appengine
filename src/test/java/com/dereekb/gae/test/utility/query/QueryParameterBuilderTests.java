@@ -29,18 +29,19 @@ public class QueryParameterBuilderTests {
 		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testModelKeySetQueryFieldParameterBuilderDencoding() {
 
 		ModelKeySetQueryFieldParameterBuilder builder = ModelKeySetQueryFieldParameterBuilder.number();
 
-		String parameterString = "has,1,2,3,4,5,6";
+		String parameterString = "in,1,2,3,4,5,6";
 
 		ModelKeySetQueryFieldParameter parameter = builder.makeModelKeyParameter("field", parameterString);
 		Set<ModelKey> keys = parameter.getValue();
 
 		Assert.assertTrue(keys.size() == 6);
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.HAS);
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
 	}
 
 	@Test

@@ -16,7 +16,7 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
  * @author dereekb
  *
  */
-public abstract class AbstractObjectifyQueryTest extends CoreApplicationTestContext {
+public abstract class AbstractObjectifyQueryTests extends CoreApplicationTestContext {
 
 	@Autowired
 	@Qualifier("fooRegistry")

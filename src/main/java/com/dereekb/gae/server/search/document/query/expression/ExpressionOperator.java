@@ -33,13 +33,6 @@ public enum ExpressionOperator {
 	GREATER_OR_LESS_BUT_NOT_EQUAL_TO("<>", true),
 
 	/**
-	 * Used to check that the value is contained in a collection.
-	 *
-	 * This is similar to {@link #IN}, but checks the collection contains each referenced values via <i>AND</i>.
-	 */
-	HAS("has", false),
-
-	/**
 	 * Used to check that one or more items of one collection are in another.
 	 *
 	 * I.E. will check if EITHER object A <i>OR</i> B are referenced within a
@@ -102,9 +95,6 @@ public enum ExpressionOperator {
 				break;
 			case "<>":
 				operation = GREATER_OR_LESS_BUT_NOT_EQUAL_TO;
-				break;
-			case "has":
-				operation = HAS;
 				break;
 			case "in":
 				operation = IN;

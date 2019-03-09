@@ -1,9 +1,13 @@
 package com.dereekb.gae.test.applications.core.server.datastore.query;
 
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.dereekb.gae.extras.gen.test.model.foo.Foo;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.exception.TooManyQueryInequalitiesException;
@@ -13,6 +17,8 @@ import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrde
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.collections.chain.Chain;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
@@ -21,7 +27,86 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  * @author dereekb
  *
  */
-public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTest {
+public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
+
+	protected static final Integer NUMBER_A = 1;
+	protected static final Integer NUMBER_B = 2;
+	protected static final String STRING_A = "a";
+
+
+	// MARK: Query Fields
+	@Test
+	public void testQueryingArrayFieldForSingleValue() {
+
+		Foo foo = this.generateTestFoo();
+
+		ObjectifyQueryRequestBuilderImpl<Foo> builder = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
+		        .makeQuery();
+
+		ObjectifyQueryFilter filter = new ObjectifyConditionQueryFilter("numberList", ExpressionOperator.EQUAL, NUMBER_A);
+		builder.addQueryFilter(filter);
+
+		ExecutableObjectifyQuery<Foo> executable = builder.buildExecutableQuery();
+		List<ModelKey> keys = executable.queryModelKeys();
+
+		Assert.assertTrue(keys.contains(foo.getModelKey()));
+	}
+
+	@Test
+	public void testQueryingSetFieldForSingleValue() {
+
+		Foo foo = this.generateTestFoo();
+
+		ObjectifyQueryRequestBuilderImpl<Foo> builder = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
+		        .makeQuery();
+
+		ObjectifyQueryFilter filter = new ObjectifyConditionQueryFilter("stringSet", ExpressionOperator.EQUAL, STRING_A);
+		builder.addQueryFilter(filter);
+
+		ExecutableObjectifyQuery<Foo> executable = builder.buildExecutableQuery();
+		List<ModelKey> keys = executable.queryModelKeys();
+
+		Assert.assertTrue(keys.contains(foo.getModelKey()));
+	}
+
+	@Test
+	public void testQueryingArrayFieldForMultipleValuesUsingInFails() {
+
+		Foo foo = this.generateTestFoo();
+
+		try {
+			ObjectifyQueryRequestBuilderImpl<Foo> builder = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
+			        .makeQuery();
+
+			@SuppressWarnings("deprecation")
+			ObjectifyQueryFilter filter = new ObjectifyConditionQueryFilter("numberList", ExpressionOperator.IN, ListUtility.toList(NUMBER_A, NUMBER_B));
+			builder.addQueryFilter(filter);
+
+			ExecutableObjectifyQuery<Foo> executable = builder.buildExecutableQuery();
+			List<ModelKey> keys = executable.queryModelKeys();
+
+			Assert.assertTrue(keys.contains(foo.getModelKey()));
+		} catch (Exception e) {
+			Assert.assertTrue(UnsupportedOperationException.class.isAssignableFrom(e.getClass()));
+		}
+	}
+
+
+	private Foo generateTestFoo() {
+		Foo foo = this.modelGenerator.generate();
+
+		foo.setNumber(NUMBER_A);
+
+		List<Integer> numberList = ListUtility.toList(NUMBER_A, NUMBER_B, 3);
+		foo.setNumberList(numberList);
+
+		Set<String> stringSet = SetUtility.makeSet(STRING_A, "b", "c");
+		foo.setStringSet(stringSet);
+
+		this.registry.update(foo);
+
+		return foo;
+	}
 
 	// MARK: Request Builder Ordering
 	@Test

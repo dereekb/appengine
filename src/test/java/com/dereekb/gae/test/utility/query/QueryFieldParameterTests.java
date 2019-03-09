@@ -69,13 +69,14 @@ public class QueryFieldParameterTests {
 		Assert.assertTrue(parameter.getValue().equals("=n,"));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testDecodingCommaSeparatedValuesNull() {
 		String value = "1,2,3,4,5,6,7,8,9";
 
-		EncodedQueryParameter parameter = dencoder.decodeString("has," + value);
+		EncodedQueryParameter parameter = dencoder.decodeString("in," + value);
 
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.HAS);
+		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
 		Assert.assertTrue(parameter.getValue().equals(value));
 	}
 
