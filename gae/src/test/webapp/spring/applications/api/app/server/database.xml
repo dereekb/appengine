@@ -14,6 +14,7 @@
 		class="com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase"
 		primary="true" lazy-init="false">
 		<constructor-arg index="0" ref="objectifyDatabaseEntities" />
+		<constructor-arg index="1" value="false" />
 	</bean>
 
 	<util:list id="objectifyDatabaseEntities">
