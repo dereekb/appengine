@@ -1,15 +1,12 @@
 package com.dereekb.gae.model.crud.exception;
 
-import com.dereekb.gae.model.crud.task.impl.AtomicTaskImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 
 /**
- * Used by an atomic task to capture expected failures/exceptions between
- * models.
+ * Used by an atomic function to capture expected failures/exceptions.
  *
  * @author dereekb
  *
- * @see AtomicTaskImpl
  */
 public class AtomicFunctionException extends RuntimeException {
 
@@ -18,20 +15,18 @@ public class AtomicFunctionException extends RuntimeException {
 	private UniqueModel model;
 	private RuntimeException cause;
 
-	public AtomicFunctionException(UniqueModel model, RuntimeException cause) throws IllegalArgumentException {
-		this.setModel(model);
-		this.setCause(cause);
+	public AtomicFunctionException() {}
+
+	public AtomicFunctionException(UniqueModel model, RuntimeException cause) {
+		this.model = model;
+		this.cause = cause;
 	}
 
 	public UniqueModel getModel() {
 		return this.model;
 	}
 
-	public void setModel(UniqueModel model) throws IllegalArgumentException {
-		if (model == null) {
-			throw new IllegalArgumentException("model cannot be null.");
-		}
-
+	public void setModel(UniqueModel model) {
 		this.model = model;
 	}
 
@@ -40,11 +35,7 @@ public class AtomicFunctionException extends RuntimeException {
 		return this.cause;
 	}
 
-	public void setCause(RuntimeException cause) throws IllegalArgumentException {
-		if (cause == null) {
-			throw new IllegalArgumentException("cause cannot be null.");
-		}
-
+	public void setCause(RuntimeException cause) {
 		this.cause = cause;
 	}
 
