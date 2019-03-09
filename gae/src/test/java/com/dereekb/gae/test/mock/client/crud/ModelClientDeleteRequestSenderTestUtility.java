@@ -46,7 +46,7 @@ public class ModelClientDeleteRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<ClientDeleteResponse<T>> response = this.deleteRequestSender
 		        .sendRequest(clientDeleteRequest, security);
 
-		ClientDeleteResponse<T> deleteResponse = response.getSerializedPrimaryData();
+		ClientDeleteResponse<T> deleteResponse = response.getSerializedResponse();
 		Collection<T> models = deleteResponse.getModels();
 
 		Assert.assertFalse(models.isEmpty());

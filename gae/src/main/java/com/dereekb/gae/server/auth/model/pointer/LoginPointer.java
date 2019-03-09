@@ -159,11 +159,6 @@ public class LoginPointer extends OwnedDatabaseModel
 		this.identifier = ModelKey.strictReadName(key);
 	}
 
-	@Override
-	public void setModelKey(ModelKey key) {
-		this.identifier = ModelKey.strictReadName(key);
-	}
-
 	// Database Model
 	@Override
 	protected Object getDatabaseIdentifier() {

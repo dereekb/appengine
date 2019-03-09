@@ -4,6 +4,10 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
+import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
+import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
+import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
 
 /**
@@ -22,6 +26,12 @@ public abstract class ClientApiApplicationTestContext extends ApiApplicationTest
 	@Before
 	public void initializeMockRequestSender() {
 		this.mockRequestSender.setWebServiceTester(this);
+	}
+
+	// MARK: Utility
+	public ClientRequestSecurity getRequestSecurity() {
+		EncodedLoginToken overrideToken = new EncodedLoginTokenImpl(this.testLoginTokenContext.getToken());
+		return new ClientRequestSecurityImpl(overrideToken);
 	}
 
 }

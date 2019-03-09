@@ -182,4 +182,17 @@ public class ListUtility {
 		return list;
 	}
 
+	/**
+	 * Asserts that no object input is null.
+	 * 
+	 * @param components
+	 */
+	public static void assertNoNulls(Object[] components) throws NullPointerException {
+		for (Object component : components) {
+			if (component == null) {
+				throw new NullPointerException();
+			}
+		}
+	}
+
 }

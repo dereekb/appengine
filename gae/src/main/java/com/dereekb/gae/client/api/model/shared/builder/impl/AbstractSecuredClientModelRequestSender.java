@@ -13,6 +13,7 @@ import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseE
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
+import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -95,12 +96,22 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
 
+		ClientApiResponse clientResponse = this.sendRequest(clientRequest, security);
+		return new SerializedClientApiResponseImpl(request, clientResponse);
+	}
+
+	protected ClientApiResponse sendRequest(ClientRequest clientRequest,
+	                                        ClientRequestSecurity security)
+	        throws NoSecurityContextException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
 		if (security == null) {
 			security = this.getDefaultServiceSecurity();
 		}
 
 		ClientApiResponse clientResponse = this.requestSender.sendRequest(clientRequest, security);
-		return new SerializedClientApiResponseImpl(request, clientResponse);
+		return clientResponse;
 	}
 
 	// MARK: Abstract
@@ -178,10 +189,6 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 		}
 
 		public void setRequest(R request) {
-			if (request == null) {
-				throw new IllegalArgumentException("Request cannot be null.");
-			}
-
 			this.request = request;
 		}
 
@@ -195,22 +202,42 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 
 		// MARK: SerializedClientApiResponse
 		@Override
-		public S getSerializedPrimaryData() throws ClientResponseSerializationException {
+		public S getSerializedResponse() throws ClientRequestFailureException, ClientResponseSerializationException {
 			if (this.serializedData == null) {
-				this.assertResponseSuccess();
-				this.serializedData = AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request,
-				        this.response, this.security);
+				this.serializedData = this.serializeResponse();
 			}
 
 			return this.serializedData;
 		}
 
-		protected void assertResponseSuccess() throws ClientResponseSerializationException {
-			if (this.response.getSuccess() == false) {
-				throw new ClientResponseSerializationException("Request was not successful.");
-			}
+		protected S serializeResponse() throws ClientResponseSerializationException, ClientRequestFailureException {
+			this.assertResponseSuccess();
+			return AbstractSecuredClientModelRequestSender.this.serializeResponseData(this.request, this.response,
+			        this.security);
 		}
 
+		protected void assertResponseSuccess()
+		        throws ClientResponseSerializationException,
+		            ClientRequestFailureException {
+			AbstractSecuredClientModelRequestSender.this.assertSuccessfulResponse(this);
+		}
+
+	}
+
+	/**
+	 * Asserts that the request was successful.
+	 * 
+	 * @param clientResponse
+	 *            {@link ClientApiResponse}. Never {@code null}.
+	 * @throws ClientRequestFailureException
+	 *             asserted exception.
+	 */
+	protected void assertSuccessfulResponse(ClientApiResponse response)
+	        throws ClientResponseSerializationException,
+	            ClientRequestFailureException {
+		if (response.getSuccess() == false) {
+			throw new ClientRequestFailureException(response);
+		}
 	}
 
 	protected class AbstractSerializedResponse {

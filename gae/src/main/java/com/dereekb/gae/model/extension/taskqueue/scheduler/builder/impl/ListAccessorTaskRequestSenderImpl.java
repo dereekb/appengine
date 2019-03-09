@@ -60,4 +60,9 @@ public class ListAccessorTaskRequestSenderImpl<T extends UniqueModel> extends Ab
 		this.scheduleTasks(requests);
 	}
 
+	@Override
+	public String toString() {
+		return "ListAccessorTaskRequestSenderImpl [builder=" + this.builder + "]";
+	}
+
 }

@@ -6,6 +6,7 @@ package com.dereekb.gae.utilities.filters;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface Filter<T> {
 
@@ -37,7 +38,10 @@ public interface Filter<T> {
 	 * @param delegate
 	 *            Delegate to read the filtered types from.
 	 * @return {@link FilterResults} with the input source objects.
+	 * 
+	 * @deprecated This pattern belongs in its own type.
 	 */
+	@Deprecated
 	public <W> FilterResults<W> filterObjectsWithDelegate(Iterable<? extends W> sources,
 	                                                      FilterDelegate<T, W> delegate);
 

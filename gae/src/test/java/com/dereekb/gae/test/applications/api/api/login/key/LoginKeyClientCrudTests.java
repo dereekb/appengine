@@ -87,7 +87,7 @@ public class LoginKeyClientCrudTests extends ClientApiCrudTest<LoginKey> {
 		SerializedClientApiResponse<CreateResponse<LoginKey>> response = createRequestSender.sendRequest(createRequest,
 		        security);
 
-		CreateResponse<LoginKey> responseKey = response.getSerializedPrimaryData();
+		CreateResponse<LoginKey> responseKey = response.getSerializedResponse();
 		Collection<LoginKey> apiKeys = responseKey.getModels();
 
 		Assert.assertFalse(apiKeys.isEmpty());

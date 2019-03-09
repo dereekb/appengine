@@ -31,8 +31,9 @@ public class ApiLinkChangeConverterImpl
 	}
 
 	@Override
-    public List<LinkSystemChange> convert(String primaryType,
-	                                      Collection<ApiLinkChange> input) throws ConversionFailureException {
+	public List<LinkSystemChange> convert(String primaryType,
+	                                      Collection<? extends ApiLinkChange> input)
+	        throws ConversionFailureException {
 		List<LinkSystemChange> changes = new ArrayList<LinkSystemChange>();
 
 		SingleDirectionalConverter<String, ModelKey> converter;
@@ -47,7 +48,7 @@ public class ApiLinkChangeConverterImpl
 			LinkSystemChangeImpl change = new LinkSystemChangeImpl();
 
 			String actionString = inputChange.getAction();
-			LinkChangeAction action = LinkChangeAction.withString(actionString);
+			LinkChangeAction action = LinkChangeAction.fromString(actionString);
 			change.setAction(action);
 
 			change.setPrimaryType(primaryType);

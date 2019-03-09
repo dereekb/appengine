@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameters;
 
 /**
- * {@link AbstractQueryIterateTaskRequestBuilder} extension that only allows
+ * {@link AbstractKeyQueryIterateTaskRequestBuilder} extension that only allows
  * individual requests.
  * 
  * @author dereekb
@@ -19,9 +19,9 @@ import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameters
  * @param <T>
  *            model type
  */
-public abstract class AbstractSingleQueryIterateTaskRequestBuilder<T extends UniqueModel> extends AbstractQueryIterateTaskRequestBuilder<T> {
+public abstract class AbstractSingleKeyQueryIterateTaskRequestBuilder<T extends UniqueModel> extends AbstractKeyQueryIterateTaskRequestBuilder<T> {
 
-	public AbstractSingleQueryIterateTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
+	public AbstractSingleKeyQueryIterateTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
 		super(true, baseRequest);
 	}
 
@@ -35,7 +35,7 @@ public abstract class AbstractSingleQueryIterateTaskRequestBuilder<T extends Uni
 		super.setAsIndividualRequests(requests);
 	}
 
-	// MARK:
+	// MARK: AbstractKeyQueryIterateTaskRequestBuilder
 	@Override
 	protected Collection<? extends KeyedEncodedParameter> buildRequestParameters(List<ModelKey> partition) {
 		EncodedQueryParameters parameters = this.getParametersForModelKey(partition.get(0));

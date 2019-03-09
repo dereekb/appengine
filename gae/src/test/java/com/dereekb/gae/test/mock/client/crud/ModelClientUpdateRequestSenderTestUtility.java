@@ -58,7 +58,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
 
-		SimpleUpdateResponse<T> updateResponse = response.getSerializedPrimaryData();
+		SimpleUpdateResponse<T> updateResponse = response.getSerializedResponse();
 		Collection<T> models = updateResponse.getModels();
 
 		Assert.assertFalse(models.isEmpty());
@@ -86,9 +86,9 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		Assert.assertTrue(response.getError().getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR);
 
 		try {
-			response.getSerializedPrimaryData();
+			response.getSerializedResponse();
 			Assert.fail("Should not have succeeeded.");
-		} catch (ClientResponseSerializationException e) {
+		} catch (ClientRequestFailureException e) {
 			// Pass
 		}
 
@@ -132,7 +132,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		// Get Serialized Primary Data
 		try {
-			SimpleUpdateResponse<T> simpleUpdateResponse = response.getSerializedPrimaryData();
+			SimpleUpdateResponse<T> simpleUpdateResponse = response.getSerializedResponse();
 
 			Collection<T> successfulModels = simpleUpdateResponse.getModels();
 			Assert.assertFalse(successfulModels.isEmpty());

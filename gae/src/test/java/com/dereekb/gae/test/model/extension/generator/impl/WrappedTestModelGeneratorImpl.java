@@ -38,6 +38,11 @@ public abstract class WrappedTestModelGeneratorImpl<T extends UniqueModel>
 	}
 
 	@Override
+	public String getTypeName() {
+		return this.generator.getTypeName();
+	}
+
+	@Override
 	public ModelKey generateKey() {
 		return this.generator.generateKey();
 	}

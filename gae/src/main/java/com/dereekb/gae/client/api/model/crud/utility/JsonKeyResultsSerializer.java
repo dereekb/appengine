@@ -17,6 +17,15 @@ public interface JsonKeyResultsSerializer {
 
 	public List<ModelKey> serializeKeys(ClientApiResponseData data) throws ClientResponseSerializationException;
 
+	/**
+	 * Serializes {@link ModelKey} values from the input json node.
+	 * 
+	 * @param keysArrayNode
+	 *            {@link JsonNode}. Never {@code null}.
+	 * @return {@link List}. Never {@code null}, but can be empty.
+	 * 
+	 * @throws ClientResponseSerializationException
+	 */
 	public List<ModelKey> serializeKeys(JsonNode keysArrayNode) throws ClientResponseSerializationException;
 
 }

@@ -13,10 +13,9 @@ import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.request.impl.ClientReadRequestImpl;
+import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
-import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
-import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
@@ -57,10 +56,9 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 
 		ReadRequest readRequest = new ModelReadRequest(logins);
 
-		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
-		        security);
+		SerializedClientReadApiResponse<T> response = this.readRequestSender.sendRequest(readRequest, security);
 
-		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 
 		Assert.assertTrue(logins.size() == models.size());
@@ -79,10 +77,9 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		ReadRequest readRequest = new ModelReadRequest(logins);
 
 		ClientReadRequest clientReadRequest = new ClientReadRequestImpl(true, readRequest);
-		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender
-		        .sendRequest(clientReadRequest, security);
+		SerializedClientReadApiResponse<T> response = this.readRequestSender.sendRequest(clientReadRequest, security);
 
-		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 
 		Assert.assertTrue(logins.size() == models.size());
@@ -114,10 +111,9 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		ReadRequestOptions options = new ReadRequestOptionsImpl(false);
 		ReadRequest readRequest = new KeyReadRequest(modelKeys, options);
 
-		SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender.sendRequest(readRequest,
-		        security);
+		SerializedClientReadApiResponse<T> response = this.readRequestSender.sendRequest(readRequest, security);
 
-		SimpleReadResponse<T> readResponse = response.getSerializedPrimaryData();
+		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 		Assert.assertTrue(logins.size() == models.size());
 
@@ -143,12 +139,11 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		ReadRequest readRequest = new KeyReadRequest(unavailableKeys, options);
 
 		try {
-			SerializedClientApiResponse<SimpleReadResponse<T>> response = this.readRequestSender
-			        .sendRequest(readRequest, security);
-			response.getSerializedPrimaryData();
+			SerializedClientReadApiResponse<T> response = this.readRequestSender.sendRequest(readRequest, security);
+			response.getSerializedResponse();
 			Assert.fail("Cannot serialize response data with request failure.");
-		} catch (ClientResponseSerializationException e) {
-
+		} catch (ClientRequestFailureException e) {
+			// Pass
 		}
 
 		try {

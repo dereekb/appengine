@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureResolver;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchReadRequestImpl;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchUpdateRequestImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.google.appengine.api.datastore.DatastoreNeedIndexException;
 
 /**
  * Controller for the Search API components.
@@ -158,12 +159,14 @@ public class SearchExtensionApiController {
 			request.setKeysOnly(keysOnly);
 
 			response = this.delegate.query(type, request);
-		} catch (LinkSystemChangesException e) {
+		} catch (LinkSystemChangeSetException e) {
 			throw e;
 		} catch (AtomicOperationException e) {
 			AtomicOperationFailureResolver.resolve(e);
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
+		} catch (DatastoreNeedIndexException e) {
+			throw e;
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}

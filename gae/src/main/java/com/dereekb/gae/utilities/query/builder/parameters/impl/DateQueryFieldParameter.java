@@ -55,6 +55,10 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 		super(parameter);
 	}
 
+	public static DateQueryFieldParameter make() {
+		return new DateQueryFieldParameter(DEFAULT_DATE_FIELD);
+	}
+
 	/**
 	 * Search originating from now in descending order.
 	 */

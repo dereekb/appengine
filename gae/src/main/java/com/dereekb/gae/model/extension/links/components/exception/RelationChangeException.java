@@ -22,17 +22,6 @@ public class RelationChangeException extends ApiLinkException {
 	private final ModelKey primary;
 	private final Relation relation;
 
-	public RelationChangeException(String message) {
-		super(message);
-		this.relation = null;
-		this.primary = null;
-	}
-
-	public RelationChangeException(ModelKey primary, Relation relation) {
-		this.primary = primary;
-		this.relation = relation;
-	}
-
 	public RelationChangeException(ModelKey primary, Relation relation, Throwable cause) {
 		super(cause);
 		this.primary = primary;
@@ -45,21 +34,11 @@ public class RelationChangeException extends ApiLinkException {
 		this.relation = relation;
 	}
 
-	public ModelKey getPrimary() {
-		return this.primary;
-	}
-
-	public Relation getRelation() {
-		return this.relation;
-	}
-
+	// MARK: ApiResponseErrorConvertable
 	@Override
-	public ApiResponseError getResponseError() {
-		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE);
-
-		error.setTitle(ERROR_TITLE);
+	public ApiResponseError asResponseError() {
+		ApiResponseErrorImpl error = new ApiResponseErrorImpl(ERROR_CODE, ERROR_TITLE);
 		error.setDetail(this.getMessage());
-
 		return error;
 	}
 

@@ -28,11 +28,11 @@ public final class GeoPlaceGenerator extends AbstractModelGenerator<GeoPlace> {
 	private Generator<Region> regionGenerator;
 
 	public GeoPlaceGenerator() {
-		super(LongModelKeyGenerator.GENERATOR);
+		this(LongModelKeyGenerator.GENERATOR);
 	};
 
 	public GeoPlaceGenerator(Generator<ModelKey> keyGenerator) {
-		super(keyGenerator);
+		super(GeoPlace.class, keyGenerator);
 	};
 
 	public GeoPlaceGenerator(Generator<Descriptor> descriptorGenerator,
@@ -68,6 +68,7 @@ public final class GeoPlaceGenerator extends AbstractModelGenerator<GeoPlace> {
 		this.regionGenerator = regionGenerator;
 	}
 
+	// MARK: ModelGenerator
 	@Override
 	public GeoPlace generateModel(ModelKey key,
 	                              GeneratorArg arg) {

@@ -36,5 +36,12 @@
 		class="com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl">
 		<property name="securityContextType" value="SYSTEM" />
 	</bean>
+	
+	<!-- Shared -->
+	<bean id="clientLinkRequestSender"
+		class="com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkRequestSenderImpl">
+		<constructor-arg index="0" ref="modelKeyTypeConverter" />
+		<constructor-arg index="1" ref="securedClientRequestSender" />
+	</bean>
 
 </beans>

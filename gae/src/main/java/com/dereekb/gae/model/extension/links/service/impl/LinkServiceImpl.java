@@ -10,7 +10,7 @@ import com.dereekb.gae.model.extension.links.service.LinkServiceRequest;
 import com.dereekb.gae.model.extension.links.service.LinkServiceResponse;
 import com.dereekb.gae.model.extension.links.service.LinkSystemChange;
 import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeException;
-import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangesException;
+import com.dereekb.gae.model.extension.links.service.exception.LinkSystemChangeSetException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 
@@ -40,7 +40,7 @@ public class LinkServiceImpl
 	// MARK: LinkService
 	@Override
 	public LinkServiceImplResponse updateLinks(LinkServiceRequest request)
-	        throws LinkSystemChangesException,
+	        throws LinkSystemChangeSetException,
 	            AtomicOperationException {
 		List<LinkSystemChange> changes = request.getLinkChanges();
 		LinkSystemChangesRunner runner = new LinkSystemChangesRunner(this.system);
@@ -56,13 +56,13 @@ public class LinkServiceImpl
 
 		if (failures.isEmpty()) {
 			if (hasMissingKeys && request.isAtomic()) {
-				HashMapWithSet<String, ModelKey> missing = runner.getMissing();
+				HashMapWithSet<String, ModelKey> missing = runner.getMissingPrimaryKeys();
 				throw new AtomicOperationException(missing.valuesSet(), AtomicOperationExceptionReason.UNAVAILABLE);
 			} else {
 				runner.saveChanges();
 			}
 		} else {
-			throw new LinkSystemChangesException(failures);
+			throw new LinkSystemChangeSetException(failures);
 		}
 
 		return new LinkServiceImplResponse(runner);
@@ -79,8 +79,8 @@ public class LinkServiceImpl
 
 		// MARK: LinkServiceResponse
 		@Override
-		public HashMapWithSet<String, ModelKey> getMissingKeys() {
-			return this.runner.getMissing();
+		public HashMapWithSet<String, ModelKey> getMissingPrimaryKeysSet() {
+			return this.runner.getMissingPrimaryKeys();
 		}
 
 	}

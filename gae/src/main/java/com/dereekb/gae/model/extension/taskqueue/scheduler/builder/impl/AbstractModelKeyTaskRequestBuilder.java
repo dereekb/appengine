@@ -19,6 +19,9 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl.Partition
  * @author dereekb
  *
  * @param <T>
+ *            model type
+ * 
+ * @see AbstractModelTaskRequestBuilder for model task building.
  */
 public abstract class AbstractModelKeyTaskRequestBuilder<T extends UniqueModel> extends PartitionedTaskRequestBuilder<ModelKey>
         implements TaskRequestBuilder<T>, ListAccessorTaskRequestBuilder<T> {

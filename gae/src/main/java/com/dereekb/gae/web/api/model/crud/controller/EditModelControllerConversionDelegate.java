@@ -6,6 +6,7 @@ import com.dereekb.gae.model.crud.services.request.UpdateRequest;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.DeleteResponse;
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
+import com.dereekb.gae.model.extension.data.conversion.BidirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.web.api.model.crud.exception.NoTemplateDataExeption;
@@ -26,7 +27,8 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  * 
  * @see EditModelController
  */
-public interface EditModelControllerConversionDelegate<T extends UniqueModel, I> {
+public interface EditModelControllerConversionDelegate<T extends UniqueModel, I>
+        extends BidirectionalConverter<T, I> {
 
 	// MARK: Requests
 	public CreateRequest<T> convert(ApiCreateRequest<I> request) throws NoTemplateDataExeption;

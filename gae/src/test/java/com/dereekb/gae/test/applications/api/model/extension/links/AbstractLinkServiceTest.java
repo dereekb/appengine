@@ -18,6 +18,14 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.utilities.collections.SingleItem;
 
+/**
+ * 
+ * @author dereekb
+ *
+ * @deprecated Links should be tested using a test context. Use a client test
+ *             instead.
+ */
+@Deprecated
 public abstract class AbstractLinkServiceTest extends ApiApplicationTestContext {
 
 	@Autowired
@@ -81,9 +89,9 @@ public abstract class AbstractLinkServiceTest extends ApiApplicationTestContext 
 	}
 
 	protected void unlinkModels(String linkType,
-	                          UniqueModel primaryModel,
-	                          String linkName,
-	                          Collection<? extends UniqueModel> targetModels) {
+	                            UniqueModel primaryModel,
+	                            String linkName,
+	                            Collection<? extends UniqueModel> targetModels) {
 		LinkModelSet linkSet = this.linkSystem.loadSet(linkType);
 		linkSet.loadModel(primaryModel.getModelKey());
 		LinkModel model = linkSet.getModelForKey(primaryModel.getModelKey());

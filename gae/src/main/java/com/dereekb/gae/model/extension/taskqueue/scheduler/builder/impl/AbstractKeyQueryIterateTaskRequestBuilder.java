@@ -21,31 +21,31 @@ import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameters
  * {@link EncodedQueryParameters} instance and creates a
  * {@link MutableTaskRequest}. Due to this, the input {@link ModelKey} may or
  * may not refer to the same type that the queue will be executed against.
- * 
+ * <p>
  * By default has a default partition size of 10.
  * 
  * @author dereekb
  *
  */
-public abstract class AbstractQueryIterateTaskRequestBuilder<T extends UniqueModel> extends AbstractModelKeyTaskRequestBuilder<T> {
+public abstract class AbstractKeyQueryIterateTaskRequestBuilder<T extends UniqueModel> extends AbstractModelKeyTaskRequestBuilder<T> {
 
-	public static final Integer DEFAULT_QUERY_PARTITION_SIZE = 10;
+	public static final Integer DEFAULT_QUERY_KEY_PARTITION_SIZE = 10;
 
-	private static final Partitioner DEFAULT_PARTITIONER = new PartitionerImpl(DEFAULT_QUERY_PARTITION_SIZE);
+	private static final Partitioner DEFAULT_KEY_PARTITIONER = new PartitionerImpl(DEFAULT_QUERY_KEY_PARTITION_SIZE);
 
-	public AbstractQueryIterateTaskRequestBuilder(boolean asIndividualRequests, TaskRequest baseRequest)
+	public AbstractKeyQueryIterateTaskRequestBuilder(boolean asIndividualRequests, TaskRequest baseRequest)
 	        throws IllegalArgumentException {
 		super(asIndividualRequests, baseRequest);
 	}
 
-	public AbstractQueryIterateTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
+	public AbstractKeyQueryIterateTaskRequestBuilder(TaskRequest baseRequest) throws IllegalArgumentException {
 		super(baseRequest);
 	}
 
 	// MARK: Override
 	@Override
 	protected Partitioner createDefaultPartitioner() {
-		return DEFAULT_PARTITIONER;
+		return DEFAULT_KEY_PARTITIONER;
 	}
 
 	// MARK: PartitionedTaskRequestBuilder

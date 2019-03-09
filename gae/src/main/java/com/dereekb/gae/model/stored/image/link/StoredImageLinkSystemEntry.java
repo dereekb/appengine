@@ -11,6 +11,7 @@ import com.dereekb.gae.model.extension.links.components.LinkTarget;
 import com.dereekb.gae.model.extension.links.components.impl.LinkInfoImpl;
 import com.dereekb.gae.model.extension.links.components.impl.LinkTargetImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.LinkImpl;
+import com.dereekb.gae.model.extension.links.components.impl.link.ReadOnlyLinkImpl;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLink;
 import com.dereekb.gae.model.extension.links.components.impl.link.SingleLinkDelegate;
 import com.dereekb.gae.model.extension.links.components.system.LinkSystemEntry;
@@ -76,7 +77,7 @@ public class StoredImageLinkSystemEntry extends AbstractModelLinkSystemEntry<Sto
 
 		// Blob Link
 		LinkInfoImpl blobLinkInfo = new LinkInfoImpl(this.blobLinkName, key, this.blobTarget);
-		LinkImpl blobLink = new LinkImpl(blobLinkInfo, new SingleLink(new SingleLinkDelegate() {
+		LinkImpl blobLink = new ReadOnlyLinkImpl(blobLinkInfo, new SingleLink(new SingleLinkDelegate() {
 
 			@Override
 			public ModelKey getKey() {

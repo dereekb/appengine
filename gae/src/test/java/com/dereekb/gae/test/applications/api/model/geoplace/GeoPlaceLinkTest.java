@@ -11,6 +11,7 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.applications.api.model.extension.links.AbstractLinkServiceTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
+@Deprecated
 public class GeoPlaceLinkTest extends AbstractLinkServiceTest {
 
 	@Autowired

@@ -92,8 +92,7 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	        throws ClientAtomicOperationException,
 	            ClientRequestFailureException {
 		SerializedClientApiResponse<ClientDeleteResponse<T>> clientResponse = this.sendRequest(request, security);
-		this.assertSuccessfulResponse(clientResponse);
-		return clientResponse.getSerializedPrimaryData();
+		return clientResponse.getSerializedResponse();
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender

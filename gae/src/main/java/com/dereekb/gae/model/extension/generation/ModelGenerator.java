@@ -11,9 +11,17 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public interface ModelGenerator<T extends UniqueModel>
         extends Generator<T> {
+
+	/**
+	 * Returns the type name as a String.
+	 * 
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getTypeName();
 
 	/**
 	 * Generates a new model key.

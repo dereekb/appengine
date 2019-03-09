@@ -3,8 +3,11 @@ package com.dereekb.gae.server.datastore;
 import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 
 /**
- * Interface for saving models that had been previously created via a
- * {@link Storer}.
+ * Interface for saving models that have previously been created via a
+ * {@link Storer} (I.E. already have an identifier and are in the system).
+ * <p>
+ * By default, the updater saves synchronously to ensure that the datastore is
+ * updated immediately to reflect the changes.
  *
  * @author dereekb
  *

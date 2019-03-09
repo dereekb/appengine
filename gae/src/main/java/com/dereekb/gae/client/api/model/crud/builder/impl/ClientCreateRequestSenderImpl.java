@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
+import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
+import com.dereekb.gae.client.api.model.crud.response.SerializedClientCreateApiResponse;
 import com.dereekb.gae.client.api.model.crud.services.ClientCreateService;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
@@ -15,8 +18,8 @@ import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestDataImpl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
-import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
+import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
@@ -77,12 +80,23 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	        throws ClientAtomicOperationException,
 	            ClientKeyedInvalidAttributeException,
 	            ClientRequestFailureException {
-		SerializedClientApiResponse<CreateResponse<T>> clientResponse = this.sendRequest(request, security);
-		this.assertSuccessfulResponse(clientResponse);
-		return clientResponse.getSerializedPrimaryData();
+		SerializedClientCreateApiResponse<T> clientResponse = this.sendRequest(request, security);
+		return clientResponse.getSerializedResponse();
 	}
 
 	// MARK: AbstractSecuredClientModelRequestSender
+	@Override
+	public SerializedClientCreateApiResponse<T> sendRequest(CreateRequest<T> request,
+	                                                        ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+		ClientRequest clientRequest = this.buildClientRequest(request);
+		ClientApiResponse clientResponse = this.sendRequest(clientRequest, security);
+		return new SerializedClientCreateApiResponseImpl(request, clientResponse, security);
+	}
+
 	@Override
 	public ClientRequest buildClientRequest(CreateRequest<T> request) {
 
@@ -115,7 +129,18 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		return new ClientCreateResponseImpl(request, response);
 	}
 
-	private class ClientCreateResponseImpl extends AbstractClientServiceModelResponseImpl
+	protected class SerializedClientCreateApiResponseImpl extends SerializedClientApiResponseImpl
+	        implements SerializedClientCreateApiResponse<T> {
+
+		public SerializedClientCreateApiResponseImpl(CreateRequest<T> request,
+		        ClientApiResponse response,
+		        ClientRequestSecurity security) {
+			super(request, response, security);
+		}
+
+	}
+
+	protected class ClientCreateResponseImpl extends AbstractClientServiceModelResponseImpl
 	        implements CreateResponse<T> {
 
 		private CreateRequest<T> request;

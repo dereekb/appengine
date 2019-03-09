@@ -15,14 +15,17 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public abstract class AbstractModelGenerator<T extends UniqueModel> extends AbstractGenerator<T>
         implements ModelGenerator<T> {
 
+	private final String type;
 	private Generator<ModelKey> keyGenerator;
 
-	public AbstractModelGenerator(Generator<ModelKey> keyGenerator) {
+	public AbstractModelGenerator(Class<?> type, Generator<ModelKey> keyGenerator) {
 		this.setKeyGenerator(keyGenerator);
+		this.type = type.getSimpleName();
 	}
 
 	public Generator<ModelKey> getKeyGenerator() {
@@ -72,6 +75,11 @@ public abstract class AbstractModelGenerator<T extends UniqueModel> extends Abst
 	}
 
 	// ModelGenerator
+	@Override
+	public String getTypeName() {
+		return this.type;
+	}
+
 	public T generateModel() {
 		ModelKey key = this.generateKey();
 		return this.generateModel(key);
