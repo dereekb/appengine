@@ -1,158 +1,29 @@
 package com.dereekb.gae.test.applications.core.server.datastore.query;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.extras.gen.test.model.foo.Foo;
-import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
-import com.dereekb.gae.server.datastore.objectify.query.MutableObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
-import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.exception.TooManyQueryInequalitiesException;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestBuilderImpl;
-import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
-import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.collections.chain.Chain;
-import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 
 /**
- * Collection of tests related to querying the datastore.
- *
- * Tests are conducted using the {@link Foo} type.
+ * Tests the Objectify Fields
  *
  * @author dereekb
  *
  */
-public class ObjectifyQueryTest extends CoreApplicationTestContext {
+public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTest {
 
-	@Autowired
-	@Qualifier("fooRegistry")
-	private ObjectifyRegistry<Foo> registry;
-
-	@Autowired
-	@Qualifier("fooTestModelGenerator")
-	private TestModelGenerator<Foo> modelGenerator;
-
-	@Test
-	public void testQuerying() {
-		Integer count = 10;
-
-		this.modelGenerator.generate(count);
-
-		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
-		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
-		Integer resultsCount = query.getResultCount();
-
-		Assert.assertTrue(resultsCount == count);
-	}
-
-	@Test
-	public void testLimitQuerying() {
-		Integer limit = 10;
-
-		this.modelGenerator.generate(limit * 2);
-
-		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
-		ObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl(limit);
-		queryBuilder.setOptions(options);
-
-		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
-		Integer resultsCount = query.getResultCount();
-
-		Assert.assertTrue(resultsCount == limit);
-	}
-
-	@Test
-	public void testLimitOffsetQuerying() {
-		Integer limit = 10;
-		Integer total = limit * 2;
-		Integer offset = 15;
-
-		Integer expected = total - offset;
-
-		this.modelGenerator.generate(total);
-
-		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
-
-		ObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl(offset, limit);
-		queryBuilder.setOptions(options);
-
-		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
-		Integer resultsCount = query.getResultCount();
-
-		Assert.assertTrue(String.format("Expected %s but got %s", expected, resultsCount), resultsCount == expected);
-	}
-
-	@Test
-	public void testCursor() {
-		Integer limit = 5;
-		Integer count = 10;
-
-		this.modelGenerator.generate(count);
-
-		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
-		MutableObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl();
-
-		options.setLimit(limit);
-
-		queryBuilder.setOptions(options);
-
-		ExecutableObjectifyQuery<Foo> queryA = queryBuilder.buildExecutableQuery();
-
-		List<ModelKey> resultsA = queryA.queryModelKeys();
-		Assert.assertTrue(resultsA.size() == limit);
-
-		ResultsCursor cursorA = queryA.getCursor();
-		Assert.assertNotNull(cursorA);
-		options.setCursor(cursorA);
-
-		queryBuilder.setOptions(options);
-		ExecutableObjectifyQuery<Foo> queryB = queryBuilder.buildExecutableQuery();
-		List<ModelKey> resultsB = queryB.queryModelKeys();
-
-		Assert.assertTrue(resultsB.size() == limit);
-		Assert.assertFalse(resultsA.contains(resultsB.get(0)));
-	}
-
-	@Test
-	public void testQueryingConsistency() {
-		Integer count = 10;
-
-		this.modelGenerator.generate(count);
-
-		ObjectifyQueryRequestBuilder<Foo> queryBuilder = this.registry.makeQuery();
-		ObjectifyQueryRequestOptions options = new ObjectifyQueryRequestOptionsImpl();
-		queryBuilder.setOptions(options);
-
-		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
-		List<ModelKey> keys = query.queryModelKeys();
-		Assert.assertNotNull(keys);
-
-		List<Foo> models = query.queryModels();
-		Assert.assertNotNull(models);
-
-		List<ModelKey> modelKeys = ModelKey.readModelKeys(models);
-
-		Assert.assertTrue(keys.size() == models.size());
-		Assert.assertTrue(modelKeys.containsAll(keys));
-		Assert.assertTrue(query.hasResults());
-		Assert.assertTrue(query.getResultCount() == count);
-	}
-
-	// MARK: Request Builder
+	// MARK: Request Builder Ordering
 	@Test
 	public void testRequestBuilderOrderReorderingWithoutInequality() {
 		ObjectifyQueryRequestBuilderImpl<Foo> impl = (ObjectifyQueryRequestBuilderImpl<Foo>) this.registry
