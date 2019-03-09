@@ -37,7 +37,7 @@ import com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthentic
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl;
-import com.dereekb.gae.server.auth.security.model.query.task.SecurityOverrideAdminOnlyModelQueryTask;
+import com.dereekb.gae.server.auth.security.model.query.task.impl.AdminOnlySecurityModelQueryTask;
 import com.dereekb.gae.server.auth.security.model.roles.impl.CrudModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl;
@@ -52,6 +52,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKey
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
+import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializerImpl;
 import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
@@ -160,7 +161,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-			builder.bean("objectifyDatabase").beanClass(ObjectifyDatabaseImpl.class).primary().lazy(false).c()
+			String objectifyInitializerBean = this.getAppConfig().getAppBeans().getObjectifyInitializerId();
+
+			builder.bean(objectifyInitializerBean).beanClass(ObjectifyInitializerImpl.class).lazy(false);
+
+			builder.bean(this.getAppConfig().getAppBeans().getObjectifyDatabaseId())
+			        .beanClass(ObjectifyDatabaseImpl.class).lazy(false).c().ref(objectifyInitializerBean)
 			        .ref(OBJECTIFY_DATABASE_ENTITIES_KEY);
 
 			SpringBeansXMLListBuilder<?> entitiesList = builder.list(OBJECTIFY_DATABASE_ENTITIES_KEY);
@@ -541,8 +547,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			builder.comment("Other Security");
 			builder.comment("Query Overrides");
-			builder.bean("securityOverrideAdminOnlyModelQueryTask")
-			        .beanClass(SecurityOverrideAdminOnlyModelQueryTask.class);
+			builder.bean(this.getAppConfig().getAppBeans().getUtilityBeans().getAdminOnlySecurityModelQueryTaskBeanId())
+			        .beanClass(AdminOnlySecurityModelQueryTask.class);
+			builder.bean(this.getAppConfig().getAppBeans().getUtilityBeans().getAllowAllSecurityModelQueryTaskBeanId())
+			        .beanClass(AdminOnlySecurityModelQueryTask.class);
 
 			return builder;
 		}

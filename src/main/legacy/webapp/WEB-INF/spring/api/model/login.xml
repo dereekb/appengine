@@ -1,0 +1,59 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Read Controller -->
+	<bean id="loginReadControllerEntry"
+		class="com.dereekb.gae.web.api.model.crud.controller.impl.ReadControllerEntryImpl"
+		lazy-init="false">
+		<constructor-arg index="0" ref="loginReadService" />
+		<constructor-arg index="1" ref="loginDataConverter" />
+	</bean>
+
+	<!-- Edit Controller -->
+	<bean id="loginEditController"
+		class="com.dereekb.gae.web.api.model.controllers.LoginEditController"
+		lazy-init="false">
+		<constructor-arg index="0" ref="loginEditControllerDelegate" />
+		<constructor-arg index="1"
+			ref="loginEditControllerConversionDelegate" />
+	</bean>
+
+	<bean id="loginEditControllerDelegate"
+		class="com.dereekb.gae.web.api.model.crud.controller.impl.EditModelControllerDelegateImpl">
+		<constructor-arg index="0" ref="loginCrudService" />
+	</bean>
+
+	<bean id="loginEditControllerConversionDelegate"
+		class="com.dereekb.gae.web.api.model.crud.controller.impl.EditModelControllerConversionDelegateImpl">
+		<constructor-arg index="0" ref="loginType" />
+		<constructor-arg index="1" ref="stringLongModelKeyConverter" />
+		<constructor-arg index="2" ref="loginDataConverter" />
+	</bean>
+
+	<!-- Search Component -->
+	<alias name="loginType" alias="loginSearchType" />
+
+	<bean id="loginSearchDelegateEntry"
+		class="com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl">
+		<constructor-arg index="0" ref="loginSearchType" />
+		<constructor-arg index="1" ref="loginQueryService" />
+		<constructor-arg index="2" ref="loginSearchService" />
+		<constructor-arg index="3">
+			<bean id="loginSearchRequestBuilder"
+				class="com.dereekb.gae.server.auth.model.login.search.document.query.LoginSearchRequestBuilder">
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="4" ref="loginSearchResultConverter" />
+	</bean>
+
+	<alias name="loginDataConverter" alias="loginSearchResultConverter" />
+
+</beans>

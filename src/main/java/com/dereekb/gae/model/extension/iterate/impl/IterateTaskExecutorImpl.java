@@ -13,6 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterator;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.batch.Batch;
@@ -23,7 +24,6 @@ import com.dereekb.gae.utilities.collections.iterator.limit.LimitedIterator;
 import com.dereekb.gae.utilities.collections.iterator.limit.impl.LimitedIteratorImpl;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.google.appengine.api.datastore.Cursor;
 
 /**
  * {@link IterateTaskExecutor} implementation.
@@ -114,11 +114,7 @@ public class IterateTaskExecutorImpl<T extends ObjectifyModel<T>>
 
 			// Initialize Iterator
 			String cursorString = this.input.getStepCursor();
-			Cursor cursor = null;
-
-			if (cursorString != null) {
-				cursor = Cursor.fromWebSafeString(cursorString);
-			}
+			ObjectifyCursor cursor = ObjectifyCursor.wrap(cursorString);
 
 			Map<String, String> parameters = this.input.getParameters();
 			IndexedModelQueryIterable<T> iterable = IterateTaskExecutorImpl.this.query.makeIterable(parameters, cursor);

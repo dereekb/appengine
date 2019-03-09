@@ -4,7 +4,7 @@ import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
 import com.dereekb.gae.server.taskqueue.system.TaskRequest;
 import com.dereekb.gae.server.taskqueue.system.TaskRequestSystem;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.deprecated.request.IterateTaskContinuation;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 
 /**
  * {@link IterateTaskContinuation} implementation.

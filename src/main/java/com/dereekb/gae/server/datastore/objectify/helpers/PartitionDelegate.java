@@ -4,7 +4,7 @@ import com.googlecode.objectify.Work;
 
 /**
  * {@link ObjectifyTransactionFactory} delegate.
- * 
+ *
  * @author dereekb
  *
  * @param <T>

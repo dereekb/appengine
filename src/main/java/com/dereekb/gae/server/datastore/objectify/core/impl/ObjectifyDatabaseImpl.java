@@ -34,6 +34,7 @@ import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKe
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcer;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityReader;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityWriter;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyInitializer;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifySource;
 import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
@@ -60,10 +61,9 @@ import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
-import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.QueryResultIterator;
+import com.google.cloud.datastore.Cursor;
+import com.google.cloud.datastore.QueryResults;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.KeyRange;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
@@ -76,6 +76,8 @@ import com.googlecode.objectify.cmd.SimpleQuery;
 /**
  * Objectify Database Singleton used for performing changes using Objectify.
  *
+ * It is important that Objectify already be initialized.
+ *
  * @author dereekb
  *
  */
@@ -85,8 +87,9 @@ public class ObjectifyDatabaseImpl
 	private Map<String, Class<?>> aliases = new HashMap<>();
 	private Map<Class<?>, ObjectifyDatabaseEntityDefinition> definitions = new HashMap<>();
 
-	public ObjectifyDatabaseImpl(Iterable<ObjectifyDatabaseEntityDefinition> entities) {
+	public ObjectifyDatabaseImpl(ObjectifyInitializer initializer, Iterable<ObjectifyDatabaseEntityDefinition> entities) {
 		super();
+		initializer.initialize();				// Call initialize to prepare it for use.
 		this.addEntityDefinitions(entities);
 	}
 
@@ -236,7 +239,7 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
-		public KeyRange<T> allocateIds(int count) {
+		public List<Key<T>> allocateIds(int count) {
 			if (count < 1) {
 				throw new IllegalArgumentException("Count must be positive and non-zero.");
 			}
@@ -1103,13 +1106,13 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
-		public IndexedModelQueryIterable<T> makeIterable(Cursor cursor) {
+		public IndexedModelQueryIterable<T> makeIterable(ObjectifyCursor cursor) {
 			return this.iterableFactory.makeIterable(cursor);
 		}
 
 		@Override
 		public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters,
-		                                                 Cursor cursor) {
+		                                                 ObjectifyCursor cursor) {
 			return this.iterableFactory.makeIterable(parameters, cursor);
 		}
 
@@ -1120,7 +1123,7 @@ public class ObjectifyDatabaseImpl
 
 		@Override
 		public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query,
-		                                                 Cursor cursor) {
+		                                                 ObjectifyCursor cursor) {
 			return this.iterableFactory.makeIterable(query, cursor);
 		}
 
@@ -1164,7 +1167,7 @@ public class ObjectifyDatabaseImpl
 			private Query<T> applyOptions(Query<T> query) {
 				ObjectifyQueryRequestOptions options = this.request.getOptions();
 
-				Cursor cursor = options.getObjectifyQueryCursor();
+				ObjectifyCursor cursor = options.getObjectifyQueryCursor();
 				Integer offset = options.getOffset();
 				Integer limit = options.getLimit();
 				Integer chunk = options.getChunk();
@@ -1178,7 +1181,7 @@ public class ObjectifyDatabaseImpl
 				}
 
 				if (cursor != null) {
-					query = query.startAt(cursor);
+					query = query.startAt(cursor.getCursor());
 				}
 
 				if (chunk != null) {
@@ -1253,7 +1256,7 @@ public class ObjectifyDatabaseImpl
 			}
 
 			@Override
-			public QueryResultIterator<T> objectifyQueryModelsIterator() {
+			public QueryResults<T> objectifyQueryModelsIterator() {
 				return super.query.iterator();
 			}
 
@@ -1323,7 +1326,7 @@ public class ObjectifyDatabaseImpl
 			}
 
 			@Override
-			public QueryResultIterator<Key<T>> queryObjectifyKeyIterator() {
+			public QueryResults<Key<T>> queryObjectifyKeyIterator() {
 				return this.keysQuery.iterator();
 			}
 
@@ -1337,10 +1340,10 @@ public class ObjectifyDatabaseImpl
 			}
 
 			private Result executeQuery() {
-				QueryResultIterator<Key<T>> iterator = this.queryObjectifyKeyIterator();
+				QueryResults<Key<T>> iterator = this.queryObjectifyKeyIterator();
 
 				List<Key<T>> keys = IteratorUtility.iteratorToList(iterator);
-				Cursor cursor = iterator.getCursor();
+				Cursor cursor = iterator.getCursorAfter();
 
 				return new Result(keys, cursor);
 			}

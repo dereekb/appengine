@@ -22,7 +22,7 @@ import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryReque
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.impl.ObjectifyQueryIterableFactoryImpl;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
@@ -272,8 +272,8 @@ public class ObjectifyQueryServiceImpl<T extends ObjectifyModel<T>> extends Obje
 	}
 
 	@Override
-    public QueryResultIterator<T> queryIterator(ConfiguredObjectifyQuery<T> query) {
-		QueryResultIterator<T> results = this.database.queryForIterable(query);
+    public QueryResults<T> queryIterator(ConfiguredObjectifyQuery<T> query) {
+		QueryResults<T> results = this.database.queryForIterable(query);
 		return results;
 	}
 	*/

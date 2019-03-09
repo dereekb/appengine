@@ -1,0 +1,19 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Role Builder Components-->
+  <bean class="com.dereekb.gae.server.auth.model.key.security.LoginKeyModelRoleBuilderComponent" id="loginKeyModelRoleBuilderComponent">
+    <constructor-arg index="0" ref="loginParentModelRoleSetContextReader"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.ModelRoleSetLoaderImpl" id="loginKeyModelRoleSetLoader">
+    <constructor-arg index="0">
+      <array>
+        <ref bean="loginKeyModelRoleBuilderComponent"/>
+      </array>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.model.key.security.LoginKeySecurityContextServiceEntry" id="loginKeySecurityContextServiceEntry">
+    <constructor-arg index="0" ref="loginKeyRegistry"/>
+    <constructor-arg index="1" ref="loginKeyModelRoleSetLoader"/>
+  </bean>
+  <!--Children-->
+  <!--TODO: Complete if applicable.-->
+</beans>

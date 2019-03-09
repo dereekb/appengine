@@ -70,6 +70,7 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 		SpringBeansXMLMapBuilder<?> map = builder.map("taskQueueTaskControllerEntries").keyType(String.class);
 
 		// TODO: Add custom taskqueue controller entries!
+		map.up();
 
 		return this.makeFileWithXML("taskqueue", builder);
 	}

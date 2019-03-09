@@ -8,13 +8,13 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.LongModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
-import com.dereekb.gae.test.model.extension.link.LinkSystemTests;
+import com.dereekb.gae.test.model.extension.link.LinkSystemTest;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 /**
- * Model "B" used by {@link LinkSystemTests}.
+ * Model "B" used by {@link LinkSystemTest}.
  * <p>
  * Has a string identifier and links to a parent.
  * 

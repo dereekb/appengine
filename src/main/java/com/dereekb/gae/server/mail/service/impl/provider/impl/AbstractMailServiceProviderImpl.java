@@ -1,12 +1,12 @@
 package com.dereekb.gae.server.mail.service.impl.provider.impl;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.codec.Base64;
 
 import com.dereekb.gae.server.mail.service.MailRecipient;
 import com.dereekb.gae.server.mail.service.MailService;
@@ -259,7 +259,7 @@ public abstract class AbstractMailServiceProviderImpl<I extends MailServiceProvi
 	protected static String makeBasicAuthHeader(String username,
 	                                            String password) {
 		String auth = username + ":" + password;
-		byte[] encodedAuth = Base64.encode(auth.getBytes(Charset.forName("US-ASCII")));
+		byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(Charset.forName("US-ASCII")));
 		return "Basic " + new String(encodedAuth);
 	}
 

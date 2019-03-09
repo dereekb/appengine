@@ -1,0 +1,164 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Login Server -->
+	<!-- Login Service -->
+	<bean id="loginTokenSignatureFactory"
+		class="com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory">
+		<!-- TODO: Add production source. -->
+	</bean>
+
+	<bean id="refreshTokenSignatureFactory"
+		class="com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory">
+		<!-- TODO: Add production source. -->
+	</bean>
+
+	<bean id="loginTokenEncoderDecoder"
+		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl">
+		<constructor-arg index="0">
+			<bean factory-bean="loginTokenSignatureFactory" factory-method="make">
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="loginTokenService"
+		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl">
+		<constructor-arg index="0" ref="loginTokenBuilder" />
+		<constructor-arg index="1" ref="loginTokenEncoderDecoder" />
+	</bean>
+
+	<bean id="loginTokenBuilder"
+		class="com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+	</bean>
+
+	<!-- Login Pointer Service -->
+	<bean id="loginPointerService"
+		class="com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl">
+		<constructor-arg index="0" ref="loginPointerRegistry" />
+		<constructor-arg index="1"
+			ref="loginPointerScheduleCreateReview" />
+	</bean>
+
+	<!-- Password Service -->
+	<bean id="passwordEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+	</bean>
+
+	<bean id="passwordLoginService"
+		class="com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginServiceImpl">
+		<constructor-arg index="0" ref="passwordEncoder" />
+		<constructor-arg index="1" ref="loginPointerService" />
+	</bean>
+
+	<bean id="passwordRecoveryService"
+		class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceImpl">
+		<constructor-arg index="0" ref="mailService" />
+		<constructor-arg index="1">
+			<bean
+				class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceTokenDelegateImpl">
+				<constructor-arg index="0" ref="loginPointerService" />
+				<constructor-arg index="1" ref="loginTokenService" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<bean id="passwordRecoveryServiceEmailDelegate"
+				class="com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceEmailDelegateImpl">
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<!-- OAuth Services -->
+	<bean id="oAuthServiceManager"
+		class="com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl">
+		<constructor-arg index="0" ref="oAuthLoginService" />
+		<constructor-arg index="1">
+			<map key-type="com.dereekb.gae.server.auth.model.pointer.LoginPointerType">
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="oAuthLoginService"
+		class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl">
+		<constructor-arg index="0" ref="loginPointerService" />
+	</bean>
+
+	<!-- KeyLogin Services -->
+	<bean id="keyLoginStatusServiceManager"
+		class="com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginStatusServiceManagerImpl">
+		<constructor-arg index="0" ref="loginPointerRegistry" />
+	</bean>
+
+	<bean id="keyLoginAuthenticationService"
+		class="com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginAuthenticationServiceImpl">
+		<constructor-arg index="0" ref="loginKeyRegistry" />
+		<constructor-arg index="1" ref="loginPointerRegistry" />
+	</bean>
+
+	<!-- Register Service -->
+	<bean id="loginRegisterService"
+		class="com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl">
+		<constructor-arg index="0" ref="newLoginGenerator" />
+		<constructor-arg index="1" ref="loginRegistry" />
+		<constructor-arg index="2" ref="loginPointerRegistry" />
+	</bean>
+
+	<bean id="newLoginGenerator"
+		class="com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="loginScheduleCreateReview" />
+	</bean>
+
+	<!-- Refresh Token Service -->
+	<bean id="refreshTokenService"
+		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+		<constructor-arg index="1" ref="loginPointerRegistry" />
+	</bean>
+
+	<bean id="refreshTokenEncoderDecoder"
+		class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder">
+		<constructor-arg index="0">
+			<bean factory-bean="refreshTokenSignatureFactory"
+				factory-method="make">
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<!-- Login Token Utilities -->
+	<!-- Login Models Service -->
+	<bean id="loginTokenModelContextService"
+		class="com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl">
+		<constructor-arg index="0"
+			ref="loginTokenModelContextServiceEntries" />
+	</bean>
+
+	<alias name="loginTokenModelContextService" alias="anonymousModelRoleSetContextService" />
+
+	<bean id="loginTokenModelContextSetDencoder"
+		class="com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl">
+		<constructor-arg index="0"
+			ref="loginTokenModelContextServiceDencoderEntries" />
+	</bean>
+
+	<bean id="securityContextAnonymousModelRoleSetContextService"
+		class="com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService">
+	</bean>
+
+	<util:list id="loginTokenModelContextServiceEntries">
+		<ref bean="loginSecurityContextServiceEntry" />
+		<ref bean="loginKeySecurityContextServiceEntry" />
+		<ref bean="loginPointerSecurityContextServiceEntry" />
+	</util:list>
+
+	<alias name="loginTokenModelContextServiceEntries" alias="loginTokenModelContextServiceDencoderEntries" />
+
+</beans>

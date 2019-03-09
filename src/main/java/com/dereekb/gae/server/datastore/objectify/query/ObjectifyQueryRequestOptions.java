@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query;
 
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestOptions;
-import com.google.appengine.api.datastore.Cursor;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 
 /**
  * Container for Objectify query options.
@@ -17,7 +17,7 @@ public interface ObjectifyQueryRequestOptions
 
 	public boolean getAllowHybrid();
 
-	public Cursor getObjectifyQueryCursor();
+	public ObjectifyCursor getObjectifyQueryCursor();
 
 	public Integer getChunk();
 

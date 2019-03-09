@@ -15,6 +15,7 @@ public class AppBeansConfigurationImpl
 	public static final String APP_ID_BEAN_ID = "serverAppId";
 	public static final String APP_SECRET_BEAN_ID = "serverAppSecret";
 
+	public static final String OBJECTIFY_INITIALIZER_BEAN_ID = "objectifyInitializer";
 	public static final String OBJECTIFY_DATABASE_BEAN_ID = "objectifyDatabase";
 	public static final String EVENT_SERVICE_BEAN_ID = "eventService";
 	public static final String WEB_HOOK_EVENT_SUBMITTER_BEAN_ID = "webHookEventSubmitter";
@@ -43,6 +44,9 @@ public class AppBeansConfigurationImpl
 	public static final String LOGIN_REGISTER_SERVICE_BEAN_ID = "loginRegisterService";
 	public static final String LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID = "loginTokenUserDetailsBuilder";
 
+	public static final String ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "adminOnlySecurityModelQueryTask";
+	public static final String ALLOW_ALL_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "allowAllSecurityModelQueryTask";
+
 	public static final String APP_DEVELOPMENT_PROXY_URL_BEAN_ID = "appDevelopmentProxyUrl";
 
 	private String appInfoBeanId = APP_INFO_BEAN_ID;
@@ -51,6 +55,7 @@ public class AppBeansConfigurationImpl
 	private String appIdBeanId = APP_ID_BEAN_ID;
 	private String appSecretBeanId = APP_SECRET_BEAN_ID;
 
+	private String objectifyInitializerId = OBJECTIFY_INITIALIZER_BEAN_ID;
 	private String objectifyDatabaseId = OBJECTIFY_DATABASE_BEAN_ID;
 	private String eventServiceId = EVENT_SERVICE_BEAN_ID;
 	private String webHookEventSubmitterBeanId = WEB_HOOK_EVENT_SUBMITTER_BEAN_ID;
@@ -140,6 +145,16 @@ public class AppBeansConfigurationImpl
 			this.loginTokenUserDetailsBuilderBeanId = loginTokenUserDetailsBuilderBeanId;
 		}
 
+		@Override
+		public String getAdminOnlySecurityModelQueryTaskBeanId() {
+			return ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID;
+		}
+
+		@Override
+		public String getAllowAllSecurityModelQueryTaskBeanId() {
+			return ALLOW_ALL_SECURITY_MODEL_QUERY_TASK_BEAN_ID;
+		}
+
 	}
 
 	// MARK: AppBeansConfiguration
@@ -206,6 +221,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.appSecretBeanId = appSecretBeanId;
+	}
+
+	@Override
+	public String getObjectifyInitializerId() {
+		return this.objectifyInitializerId;
+	}
+
+	public void setObjectifyInitializerId(String objectifyInitializerId) {
+		if (objectifyInitializerId == null) {
+			throw new IllegalArgumentException("objectifyInitializerId cannot be null.");
+		}
+
+		this.objectifyInitializerId = objectifyInitializerId;
 	}
 
 	@Override

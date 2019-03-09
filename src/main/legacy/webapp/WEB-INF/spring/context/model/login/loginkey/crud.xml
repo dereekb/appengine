@@ -1,0 +1,114 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Cruds -->
+	<bean id="loginKeyCrudService"
+		class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl">
+		<constructor-arg index="0" ref="loginKeyCreateService" />
+		<constructor-arg index="1" ref="loginKeyReadService" />
+		<constructor-arg index="2" ref="loginKeyUpdateService" />
+		<constructor-arg index="3" ref="loginKeyDeleteService" />
+	</bean>
+
+	<!-- Services -->
+	<bean id="loginKeyCreateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl">
+		<constructor-arg index="0" ref="loginKeyCreateTask" />
+	</bean>
+
+	<bean id="loginKeyReadService"
+		class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl">
+		<constructor-arg index="0" ref="loginKeyReadTask" />
+	</bean>
+
+	<bean id="loginKeyUpdateService"
+		class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl">
+		<constructor-arg index="0" ref="loginKeyReadService" />
+		<constructor-arg index="1" ref="loginKeyUpdateTask" />
+		<constructor-arg index="2" ref="loginKeyScheduleUpdateReview" />
+	</bean>
+
+	<bean id="loginKeyDeleteService"
+		class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl">
+		<constructor-arg index="0" ref="loginKeyReadService" />
+		<constructor-arg index="1" ref="loginKeyDeleteTask" />
+	</bean>
+
+	<!-- Save/Delete Tasks -->
+	<bean id="loginKeySetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="loginKeyRegistry" />
+	</bean>
+
+	<alias name="loginKeySetterTask" alias="loginKeyStorerTask" />
+	<alias name="loginKeySetterTask" alias="loginKeyUpdaterTask" />
+	<alias name="loginKeySetterTask" alias="loginKeyDeleterTask" />
+
+	<!-- Create -->
+	<bean id="loginKeyCreateTask" class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl">
+		<constructor-arg index="0" ref="loginKeyCreateTaskDelegate" />
+		<constructor-arg index="1" ref="loginKeyStorerTask" />
+		<constructor-arg index="2" ref="loginKeyScheduleCreateReview" />
+	</bean>
+
+	<bean id="loginKeyScheduleCreateReview"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask">
+		<constructor-arg index="0" ref="loginKeyType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<bean id="loginKeyCreateTaskDelegate"
+		class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl">
+		<constructor-arg index="0" ref="loginKeyFactory" />
+		<constructor-arg index="1"
+			ref="loginKeyAuthenticationAttributeUpdater" />
+	</bean>
+
+	<bean id="loginKeyAuthenticationAttributeUpdater"
+		class="com.dereekb.gae.server.auth.model.key.crud.LoginKeyAuthenticationAttributeUpdater">
+		<constructor-arg index="0" ref="loginKeyAttributeUpdater" />
+		<constructor-arg index="1" ref="loginPointerRegistry" />
+		<constructor-arg index="2" ref="keyLoginStatusServiceManager" />
+	</bean>
+
+	<!--Read -->
+	<bean
+		class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl"
+		id="loginKeyReadTask">
+		<constructor-arg index="0" ref="loginKeyRegistry" />
+		<constructor-arg index="1">
+			<bean factory-bean="loginKeySecurityContextServiceEntry"
+				factory-method="makeRoleFilter">
+				<constructor-arg index="0" ref="crudReadModelRole" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<!-- Update -->
+	<bean id="loginKeyUpdateTask" class="com.dereekb.gae.model.crud.task.impl.UpdateTaskImpl">
+		<constructor-arg index="0" ref="loginKeyAttributeUpdater" />
+		<constructor-arg index="1" ref="loginKeyUpdaterTask" />
+	</bean>
+
+	<bean id="loginKeyAttributeUpdater"
+		class="com.dereekb.gae.server.auth.model.key.crud.LoginKeyAttributeUpdater">
+	</bean>
+
+	<!-- Delete -->
+	<alias name="loginKeyScheduleDeleteTask" alias="loginKeyDeleteTask" />
+
+	<bean id="loginKeyScheduleDeleteTask"
+		class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask">
+		<constructor-arg index="0" ref="loginKeyType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+</beans>

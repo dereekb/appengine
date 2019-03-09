@@ -28,6 +28,17 @@ public class ListUtility {
 		}
 	}
 
+
+	public static <T> List<T> newList(Collection<T> input) {
+		List<T> list = new ArrayList<T>();
+
+		if (input != null) {
+			list.addAll(input);
+		}
+
+		return list;
+	}
+
 	/**
 	 * Wraps the input element. If it is null, returns an empty list created via
 	 * {@link java.util.Collections#emptyList()}.

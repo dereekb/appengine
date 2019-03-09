@@ -3,8 +3,8 @@ package com.dereekb.gae.server.datastore.objectify.query.impl;
 import com.dereekb.gae.server.datastore.models.query.impl.IndexedModelQueryRequestOptionsImpl;
 import com.dereekb.gae.server.datastore.objectify.query.MutableObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
-import com.google.appengine.api.datastore.Cursor;
 
 /**
  * {@link ObjectifyQueryRequestOptions} implementation.
@@ -74,25 +74,13 @@ public class ObjectifyQueryRequestOptionsImpl extends IndexedModelQueryRequestOp
 	}
 
 	@Override
-	public Cursor getObjectifyQueryCursor() {
-		Cursor cursor = null;
-
-		if (this.getCursor() != null) {
-			cursor = Cursor.fromWebSafeString(this.getCursor().getCursorString());
-		}
-
-		return cursor;
+	public ObjectifyCursor getObjectifyQueryCursor() {
+		return ObjectifyCursor.make(this.getCursor());
 	}
 
 	@Override
-	public void setQueryCursor(Cursor cursor) {
-		String cursorString = null;
-
-		if (cursor != null) {
-			cursorString = cursor.toWebSafeString();
-		}
-
-		this.setCursor(cursorString);
+	public void setQueryCursor(ObjectifyCursor cursor) {
+		this.setCursor(cursor);
 	}
 
 	@Override

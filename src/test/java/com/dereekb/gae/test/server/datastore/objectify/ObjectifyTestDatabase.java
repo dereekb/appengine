@@ -5,6 +5,7 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntity;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityDefinition;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyInitializer;
 import com.dereekb.gae.server.datastore.objectify.core.exception.UnregisteredEntryTypeException;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.googlecode.objectify.Key;
@@ -21,8 +22,8 @@ import com.googlecode.objectify.cmd.Query;
  */
 public class ObjectifyTestDatabase extends ObjectifyDatabaseImpl {
 
-	public ObjectifyTestDatabase(Iterable<ObjectifyDatabaseEntityDefinition> entities) {
-		super(entities);
+	public ObjectifyTestDatabase(ObjectifyInitializer initializer, Iterable<ObjectifyDatabaseEntityDefinition> entities) {
+		super(initializer, entities);
 	}
 
 	@Override

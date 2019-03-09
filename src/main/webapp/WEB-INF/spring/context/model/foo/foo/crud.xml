@@ -1,0 +1,69 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <bean class="com.dereekb.gae.model.crud.services.impl.CrudServiceImpl" id="fooCrudService">
+    <constructor-arg index="0" ref="fooCreateService"/>
+    <constructor-arg index="1" ref="fooReadService"/>
+    <constructor-arg index="2" ref="fooUpdateService"/>
+    <constructor-arg index="3" ref="fooDeleteService"/>
+  </bean>
+  <!--Create Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.CreateServiceImpl" id="fooCreateService">
+    <constructor-arg index="0" ref="fooCreateTask"/>
+  </bean>
+  <!--Create Task-->
+  <bean class="com.dereekb.gae.model.crud.task.impl.CreateTaskImpl" id="fooCreateTask">
+    <constructor-arg index="0" ref="fooCreateTaskDelegate"/>
+    <constructor-arg index="1" ref="fooSetterTask"/>
+    <constructor-arg index="2" ref="fooScheduleCreateReview"/>
+  </bean>
+  <bean class="com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl" id="fooCreateTaskDelegate">
+    <constructor-arg index="0" ref="fooFactory"/>
+    <constructor-arg index="1" ref="fooCreateAttributeUpdater"/>
+  </bean>
+  <alias alias="fooCreateAttributeUpdater" name="fooAttributeUpdater"/>
+  <!--Read Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.ReadServiceImpl" id="fooReadService">
+    <constructor-arg index="0" ref="fooReadTask"/>
+  </bean>
+  <!--Read Task-->
+  <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl" id="fooReadTask">
+    <constructor-arg index="0" ref="fooRegistry"/>
+    <constructor-arg index="1">
+      <bean factory-bean="fooSecurityContextServiceEntry" factory-method="makeRoleFilter">
+        <constructor-arg index="0" ref="crudReadModelRole"/>
+      </bean>
+    </constructor-arg>
+  </bean>
+  <!--Update Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.SafeUpdateServiceImpl" id="fooUpdateService">
+    <constructor-arg index="0" ref="fooReadService"/>
+    <constructor-arg index="1" ref="fooUpdateTask"/>
+    <constructor-arg index="2" ref="fooScheduleUpdateReview"/>
+  </bean>
+  <!--Update Task-->
+  <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredUpdateTaskImpl" id="fooUpdateTask">
+    <constructor-arg index="0" ref="fooAttributeUpdater"/>
+    <constructor-arg index="1" ref="fooSetterTask"/>
+    <constructor-arg index="2">
+      <bean factory-bean="fooSecurityContextServiceEntry" factory-method="makeRoleFilter">
+        <constructor-arg index="0" ref="crudUpdateModelRole"/>
+      </bean>
+    </constructor-arg>
+  </bean>
+  <bean class="com.dereekb.gae.extras.gen.test.model.foo.crud.FooAttributeUpdater" id="fooAttributeUpdater"/>
+  <!--Delete Service-->
+  <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="fooDeleteService">
+    <constructor-arg index="0" ref="fooReadService"/>
+    <constructor-arg index="1" ref="fooDeleteTask"/>
+  </bean>
+  <!--Delete Task-->
+  <alias alias="fooDeleteTask" name="fooScheduleDeleteTask"/>
+  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="fooScheduleDeleteTask">
+    <constructor-arg index="0" ref="fooType"/>
+    <constructor-arg index="1" ref="taskScheduler"/>
+    <property name="deleteFilter">
+      <bean factory-bean="fooSecurityContextServiceEntry" factory-method="makeRoleFilter">
+        <constructor-arg index="0" ref="crudDeleteModelRole"/>
+      </bean>
+    </property>
+  </bean>
+</beans>

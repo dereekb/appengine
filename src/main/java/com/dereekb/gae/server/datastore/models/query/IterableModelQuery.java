@@ -3,7 +3,7 @@ package com.dereekb.gae.server.datastore.models.query;
 import java.util.Map;
 
 import com.dereekb.gae.utilities.factory.Factory;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 
 /**
  * Iterator (although it implements the {@link Iterable} interface) of the App Engine Datastore. Can set the cursor to resume from a

@@ -1,6 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.app.model.local.impl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
@@ -17,6 +18,8 @@ import com.dereekb.gae.utilities.misc.path.PathUtility;
  */
 public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<LocalModelCrudsConfiguration, LocalModelBeansConfiguration, LocalModelContextConfigurer>
         implements LocalModelConfiguration, LocalModelCrudsConfiguration, LocalModelBeansConfiguration {
+
+	private static final Logger LOGGER = Logger.getLogger(LocalModelConfigurationImpl.class.getName());
 
 	private Class<Object> modelDataBuilderClass;
 	private Class<Object> modelDataReaderClass;
@@ -90,10 +93,15 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 
 			this.modelSecurityContextServiceEntryClass = (Class<Object>) Class
 			        .forName(modelSecurityContextServiceEntry);
-
-			this.modelEditControllerClass = (Class<Object>) Class.forName(editControllerClass);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
+		}
+
+		// Optional Controller Class
+		try {
+			this.modelEditControllerClass = (Class<Object>) Class.forName(editControllerClass);
+		} catch (ClassNotFoundException e) {
+			LOGGER.warning("Could not find edit controller class: " + editControllerClass);
 		}
 
 		// Optional Classes

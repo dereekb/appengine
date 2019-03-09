@@ -59,4 +59,6 @@ public interface ObjectifyTransactionFactory {
 
 	public <X> X doTransaction(Work<X> work);
 
+	public void doTransaction(Runnable work);
+
 }

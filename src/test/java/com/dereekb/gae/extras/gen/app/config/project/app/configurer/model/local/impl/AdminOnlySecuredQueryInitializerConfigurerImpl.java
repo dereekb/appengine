@@ -7,7 +7,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBu
 
 /**
  * {@link SecuredQueryInitializerConfigurer} implementation that injects
- * securityOverrideAdminOnlyModelQueryTask.
+ * the AdminOnlySecurityModelQueryTask bean.
  *
  * @author dereekb
  *
@@ -15,32 +15,17 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBu
 public class AdminOnlySecuredQueryInitializerConfigurerImpl
         implements SecuredQueryInitializerConfigurer {
 
-	private String securityOverrideTaskBean = "securityOverrideAdminOnlyModelQueryTask";
-
-	public String getSecurityOverrideTaskBean() {
-		return this.securityOverrideTaskBean;
-	}
-
-	public void setSecurityOverrideTaskBean(String securityOverrideTaskBean) {
-		if (securityOverrideTaskBean == null) {
-			throw new IllegalArgumentException("securityOverrideTaskBean cannot be null.");
-		}
-
-		this.securityOverrideTaskBean = securityOverrideTaskBean;
-	}
-
 	// MARK: SecuredQueryInitializerConfigurer
 	@Override
 	public void configureSecuredQueryInitializer(AppConfiguration appConfig,
 	                                             LocalModelConfiguration modelConfig,
 	                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
-		beanConstructor.ref(this.securityOverrideTaskBean);
+		beanConstructor.ref(appConfig.getAppBeans().getUtilityBeans().getAdminOnlySecurityModelQueryTaskBeanId());
 	}
 
 	@Override
 	public String toString() {
-		return "AdminOnlySecuredQueryInitializerConfigurerImpl [securityOverrideTaskBean="
-		        + this.securityOverrideTaskBean + "]";
+		return "AdminOnlySecuredQueryInitializerConfigurerImpl []";
 	}
 
 }

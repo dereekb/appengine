@@ -69,6 +69,7 @@ public class QueryFieldParameterTests {
 		Assert.assertTrue(parameter.getValue().equals("=n,"));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testDecodingCommaSeparatedValuesNull() {
 		String value = "1,2,3,4,5,6,7,8,9";
@@ -115,21 +116,21 @@ public class QueryFieldParameterTests {
 		Assert.assertTrue(decoded.equals(parameters));
 
 	}
-	
+
 	@Test
 	public void testDecodingDateParameters() {
-		
+
 		String field = "field";
-		
+
 		Date start = new Date(0);
 		Date end = new Date(1000);
-		
+
 		DateQueryFieldParameter parameter = new DateQueryFieldParameter(field);
 		parameter.searchRange(start, end);
-		
+
 		String parameterString = parameter.getParameterString();
 		DateQueryFieldParameter decoded = new DateQueryFieldParameter(field, parameterString);
-		
+
 		Assert.assertTrue(decoded.getValue().equals(start));
 		Assert.assertTrue(decoded.getSecondFilter() != null);
 		Assert.assertTrue(decoded.getSecondFilter().getValue().equals(end));

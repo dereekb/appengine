@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
 import com.dereekb.gae.utilities.factory.Factory;
 import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.IterateTask;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 
 /**
  * Task that iterates over models, building batches of models, and a subtask

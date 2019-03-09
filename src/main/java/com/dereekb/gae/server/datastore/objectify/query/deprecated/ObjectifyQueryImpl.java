@@ -6,7 +6,7 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryOrdering;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.Query;
 import com.googlecode.objectify.cmd.SimpleQuery;

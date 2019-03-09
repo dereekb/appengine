@@ -3,10 +3,10 @@ package com.dereekb.gae.model.extension.search.query.service.impl;
 import java.util.Map;
 
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryRequest;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.dereekb.gae.server.search.model.impl.SearchRequestImpl;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
-import com.google.appengine.api.datastore.Cursor;
 
 /**
  * {@link ModelQueryRequest} implementation.
@@ -20,7 +20,7 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
 	private boolean allowCache;
 	private boolean allowHybrid;
 
-	private Cursor queryCursor;
+	private ObjectifyCursor queryCursor;
 
 	public ModelQueryRequestImpl() {
 		super();
@@ -68,11 +68,11 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
 	}
 
 	@Override
-	public Cursor getObjectifyQueryCursor() {
+	public ObjectifyCursor getObjectifyQueryCursor() {
 		return this.queryCursor;
 	}
 
-	public void setQueryCursor(Cursor queryCursor) {
+	public void setQueryCursor(ObjectifyCursor queryCursor) {
 		this.queryCursor = queryCursor;
 	}
 

@@ -14,7 +14,6 @@ import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCur
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryModelResultIteratorImpl;
 import com.dereekb.gae.server.datastore.objectify.query.iterator.ObjectifyQueryIterableFactory;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
-import com.google.appengine.api.datastore.Cursor;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
@@ -66,14 +65,14 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 	}
 
 	@Override
-	public IterableInstance makeIterable(Cursor startCursor) {
-		return new ObjectifyIterableInstance(ObjectifyCursor.wrap(startCursor));
+	public IterableInstance makeIterable(ObjectifyCursor startCursor) {
+		return new ObjectifyIterableInstance(startCursor);
 	}
 
 	@Override
 	public IterableInstance makeIterable(Map<String, String> parameters,
-	                                     Cursor startCursor) {
-		return new ObjectifyIterableInstance(parameters, ObjectifyCursor.wrap(startCursor));
+	                                     ObjectifyCursor startCursor) {
+		return new ObjectifyIterableInstance(parameters, startCursor);
 	}
 
 	@Override
@@ -83,8 +82,8 @@ public class ObjectifyQueryIterableFactoryImpl<T extends ObjectifyModel<T>> exte
 
 	@Override
 	public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query,
-	                                              Cursor cursor) {
-		return new ObjectifyIterableInstance(query, ObjectifyCursor.wrap(cursor));
+	                                                 ObjectifyCursor cursor) {
+		return new ObjectifyIterableInstance(query, cursor);
 	}
 
 	// MARK: Internal Classes

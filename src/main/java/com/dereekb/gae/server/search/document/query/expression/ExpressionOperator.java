@@ -25,15 +25,22 @@ public enum ExpressionOperator {
 	LESS_OR_EQUAL_TO("<=", true),
 
     // Query Only
+	/**
+	 *
+	 * @deprecated No longer supported by Google Cloud, for now.
+	 */
 	NOT_EQUAL("!=", false),
 	GREATER_OR_LESS_BUT_NOT_EQUAL_TO("<>", true),
 
 	/**
 	 * Used to check that one or more items of one collection are in another.
 	 *
-	 * I.E. will check if EITHER object A or B are referenced within a
+	 * I.E. will check if EITHER object A <i>OR</i> B are referenced within a
 	 * collection.
+	 *
+	 * @deprecated No longer supported by Google Cloud, for now.
 	 */
+	@Deprecated
 	IN("in", false),
 
     // Special

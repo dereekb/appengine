@@ -11,7 +11,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.security.token.model.impl.SignatureConfigurationImpl;
-import com.dereekb.gae.utilities.factory.impl.SingletonFactory;
+import com.dereekb.gae.utilities.factory.impl.SingletonFactoryImpl;
 
 /**
  * {@link AppLoginTokenSecurityConfigurer} implementation for a remote login
@@ -54,7 +54,7 @@ public class RemoteAppLoginTokenSecurityConfigurerImpl
 		builder.comment("Login Token Signature");
 		String loginTokenSignatureFactoryId = appSecurityBeansConfigurer.getLoginTokenSignatureFactoryBeanId();
 
-		builder.bean(loginTokenSignatureFactoryId).beanClass(SingletonFactory.class).c().bean()
+		builder.bean(loginTokenSignatureFactoryId).beanClass(SingletonFactoryImpl.class).c().bean()
 		        .beanClass(SignatureConfigurationImpl.class).factoryMethod("defaultSignature");
 
 		builder.comment("Login Token Validation Service");

@@ -12,7 +12,7 @@ import com.dereekb.gae.server.taskqueue.system.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.system.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.server.taskqueue.system.impl.TaskRequestImpl;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**

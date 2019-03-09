@@ -1,69 +1,39 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
-	<!-- SERVICE -->
-	<bean id="linkService"
-		class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl">
-		<constructor-arg index="0" ref="linkModificationSystem" />
-	</bean>
-
-	<!-- SYSTEM -->
-	<bean id="linkModificationSystem" lazy-init="false"
-		factory-bean="linkModificationSystemBuilder" factory-method="makeLinkModifictionSystem">
-	</bean>
-
-	<bean id="linkSystem" lazy-init="false" factory-bean="linkModificationSystemBuilder"
-		factory-method="makeLinkSystem">
-	</bean>
-
-	<!-- LinkInfoSystem -->
-	<bean id="linkModificationSystemBuilder"
-		class="com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemBuilder">
-		<constructor-arg index="0" ref="linkSystemEntries" />
-	</bean>
-
-	<!-- Entries -->
-	<util:list id="linkSystemEntries">
-		<ref bean="storedBlobLinkSystemEntry" />
-		<ref bean="storedImageLinkSystemEntry" />
-		<ref bean="storedImageSetLinkSystemEntry" />
-		<ref bean="loginLinkSystemEntry" />
-		<ref bean="loginKeyLinkSystemEntry" />
-		<ref bean="loginPointerLinkSystemEntry" />
-	</util:list>
-
-	<!-- Accessors -->
-	<bean id="loginKeyLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
-		factory-method="getAccessorForType">
-		<constructor-arg index="0" ref="loginKeyType" />
-	</bean>
-
-	<bean id="loginPointerLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
-		factory-method="getAccessorForType">
-		<constructor-arg index="0" ref="loginPointerType" />
-	</bean>
-	
-	<bean id="storedBlobLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
-		factory-method="getAccessorForType">
-		<constructor-arg index="0" ref="storedBlobType" />
-	</bean>
-	
-	<bean id="storedImageLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
-		factory-method="getAccessorForType">
-		<constructor-arg index="0" ref="storedImageType" />
-	</bean>
-	
-	<bean id="storedImageSetLinkModelAccessor" factory-bean="linkModificationSystemBuilder"
-		factory-method="getAccessorForType">
-		<constructor-arg index="0" ref="storedImageSetType" />
-	</bean>
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--Service-->
+  <bean class="com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl" id="linkService">
+    <constructor-arg index="0" ref="linkModificationSystem"/>
+  </bean>
+  <!--System-->
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="makeLinkModifictionSystem" id="linkModificationSystem" lazy-init="false"/>
+  <bean class="com.dereekb.gae.model.extension.links.system.modification.utility.LinkModificationSystemBuilder" id="linkModificationSystemBuilder">
+    <constructor-arg index="0" ref="linkSystemEntries"/>
+  </bean>
+  <!--Entries-->
+  <util:list id="linkSystemEntries">
+    <ref bean="loginLinkSystemBuilderEntry"/>
+    <ref bean="loginPointerLinkSystemBuilderEntry"/>
+    <ref bean="loginKeyLinkSystemBuilderEntry"/>
+    <ref bean="appLinkSystemBuilderEntry"/>
+    <ref bean="appHookLinkSystemBuilderEntry"/>
+    <ref bean="fooLinkSystemBuilderEntry"/>
+  </util:list>
+  <!--Accessors-->
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginLinkModelAccessor">
+    <constructor-arg index="0" ref="loginType"/>
+  </bean>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginPointerLinkModelAccessor">
+    <constructor-arg index="0" ref="loginPointerType"/>
+  </bean>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginKeyLinkModelAccessor">
+    <constructor-arg index="0" ref="loginKeyType"/>
+  </bean>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="appLinkModelAccessor">
+    <constructor-arg index="0" ref="appType"/>
+  </bean>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="appHookLinkModelAccessor">
+    <constructor-arg index="0" ref="appHookType"/>
+  </bean>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="fooLinkModelAccessor">
+    <constructor-arg index="0" ref="fooType"/>
+  </bean>
 </beans>

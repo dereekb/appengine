@@ -12,15 +12,14 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccesso
 import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelKeyListAccessorTask;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyTransactionUtility;
 import com.dereekb.gae.server.datastore.objectify.helpers.PartitionDelegate;
+import com.dereekb.gae.server.datastore.objectify.helpers.impl.RunnablePartitionDelegateImpl;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
-import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
 
 /**
  * Abstract {@link AbstractModelKeyListAccessorTask} implementation that reads
  * and modifies the target models using a delegate, objectify/google app engine
  * transactions, and an {@link Updater}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -34,7 +33,7 @@ public abstract class AbstractTransactionModelUpdaterTask<T extends UniqueModel>
 	public AbstractTransactionModelUpdaterTask(GetterSetter<T> getterSetter) {
 		this(getterSetter, getterSetter);
 	}
-	
+
 	public AbstractTransactionModelUpdaterTask(Getter<T> getter, Updater<T> updater) {
 		super();
 		this.setGetter(getter);
@@ -79,30 +78,22 @@ public abstract class AbstractTransactionModelUpdaterTask<T extends UniqueModel>
 
 	protected abstract PartitionDelegate<ModelKey, ?> makeUpdatePartitionDelegate();
 
-	protected abstract class PartitionDelegateImpl
-	        implements PartitionDelegate<ModelKey, Void> {
+	protected abstract class PartitionDelegateImpl extends RunnablePartitionDelegateImpl<ModelKey> {
 
 		@Override
-		public Work<Void> makeWorkForInput(final Iterable<ModelKey> input) {
-			return new VoidWork() {
+		public void run(final Iterable<ModelKey> input) {
+			List<T> models = AbstractTransactionModelUpdaterTask.this.getModels(input);
+			List<T> updated = new ArrayList<T>();
 
-				@Override
-				public void vrun() {
-					List<T> models = AbstractTransactionModelUpdaterTask.this.getModels(input);
-					List<T> updated = new ArrayList<T>();
-
-					for (T model : models) {
-						if (PartitionDelegateImpl.this.updateModel(model)) {
-							updated.add(model);
-						}
-					}
-
-					if (updated.isEmpty() == false) {
-						AbstractTransactionModelUpdaterTask.this.updateModels(updated);
-					}
+			for (T model : models) {
+				if (PartitionDelegateImpl.this.updateModel(model)) {
+					updated.add(model);
 				}
+			}
 
-			};
+			if (updated.isEmpty() == false) {
+				AbstractTransactionModelUpdaterTask.this.updateModels(updated);
+			}
 		}
 
 		protected abstract boolean updateModel(T model);

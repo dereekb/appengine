@@ -5,7 +5,7 @@ import java.util.Map;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterable;
 import com.dereekb.gae.server.datastore.models.query.iterator.IndexedModelQueryIterableFactory;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
-import com.google.appengine.api.datastore.Cursor;
+import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
@@ -23,11 +23,11 @@ public interface ObjectifyQueryIterableFactory<T extends ObjectifyModel<T>> exte
 	public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query);
 
 	public IndexedModelQueryIterable<T> makeIterable(SimpleQuery<T> query,
-	                                              Cursor cursor);
+	                                                 ObjectifyCursor cursor);
 
-	public IndexedModelQueryIterable<T> makeIterable(Cursor cursor);
+	public IndexedModelQueryIterable<T> makeIterable(ObjectifyCursor cursor);
 
 	public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters,
-	                                              Cursor cursor);
+	                                                 ObjectifyCursor cursor);
 
 }

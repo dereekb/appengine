@@ -1,0 +1,86 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Type -->
+	<bean id="loginType" class="java.lang.String">
+		<constructor-arg index="0" value="Login" />
+	</bean>
+
+	<bean id="loginClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.server.auth.model.login.Login" />
+	</bean>
+
+	<bean id="loginDtoClass" class="java.lang.Class" factory-method="forName">
+		<constructor-arg index="0"
+			value="com.dereekb.gae.server.auth.model.login.dto.LoginData" />
+	</bean>
+
+	<bean id="loginIdType"
+		class="com.dereekb.gae.server.datastore.models.keys.ModelKeyType"
+		factory-method="valueOf">
+		<constructor-arg index="0" value="NUMBER" />
+	</bean>
+
+	<!-- Database -->
+	<bean id="loginObjectifyEntry"
+		class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl"
+		lazy-init="false">
+		<constructor-arg index="0" ref="loginType" />
+		<constructor-arg index="1" ref="loginClass" />
+		<constructor-arg index="2" ref="loginIdType" />
+		<constructor-arg index="3" ref="loginQueryInitializer" />
+	</bean>
+
+	<bean id="loginRegistry" factory-bean="objectifyDatabase"
+		factory-method="makeRegistry">
+		<constructor-arg index="0" ref="loginClass" />
+	</bean>
+
+	<alias alias="loginKeyListAccessorFactory" name="loginRegistry" />
+
+	<!-- Configured Setters -->
+	<alias name="loginRegistry" alias="loginStorer" />
+	<alias name="loginRegistry" alias="loginUpdater" />
+	<alias name="loginRegistry" alias="loginDeleter" />
+
+	<!-- Setter Tasks -->
+	<bean id="loginSetterTask"
+		class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl">
+		<constructor-arg index="0" ref="loginRegistry" />
+	</bean>
+
+	<alias name="loginSetterTask" alias="loginStorerTask" />
+	<alias name="loginSetterTask" alias="loginUpdaterTask" />
+	<alias name="loginSetterTask" alias="loginDeleterTask" />
+
+	<!-- Update Scheduler -->
+	<bean id="loginTaskConfiguredUpdater"
+		class="com.dereekb.gae.server.datastore.utility.impl.TaskConfiguredUpdaterImpl">
+		<constructor-arg index="0" ref="loginScheduleUpdateReview" />
+		<constructor-arg index="1" ref="loginRegistry" />
+	</bean>
+
+	<bean id="loginScheduleUpdateReview"
+		class="com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask">
+		<constructor-arg index="0" ref="loginType" />
+		<constructor-arg index="1" ref="taskScheduler" />
+	</bean>
+
+	<!-- Imported -->
+	<import resource="crud.xml" />
+	<import resource="extension/data.xml" />
+	<import resource="extension/link.xml" />
+	<import resource="extension/generation.xml" />
+	<import resource="extension/search.xml" />
+	<import resource="extension/security.xml" />
+
+</beans>

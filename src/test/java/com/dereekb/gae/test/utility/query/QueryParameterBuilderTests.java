@@ -29,6 +29,7 @@ public class QueryParameterBuilderTests {
 		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testModelKeySetQueryFieldParameterBuilderDencoding() {
 
@@ -51,15 +52,15 @@ public class QueryParameterBuilderTests {
 		String decimalValue = "1234.123";
 		BigDecimal decimal = new BigDecimal(decimalValue);
 		Long convertedLong = LongBigDecimalUtilityImpl.THREE_PRECISION_UTILITY.fromDecimal(decimal);
-		
+
 		LongBigDecimalQueryFieldParameter parameter = builder.make("test", decimal);
-		
+
 		Long value = parameter.getValue();
 		Assert.assertTrue(value.equals(convertedLong));
-		
+
 		EncodedQueryParameter queryParameter = parameter.getParameterRepresentation();
 		String qValue = queryParameter.getValue();
-		
+
 		Assert.assertTrue(qValue.equals(decimalValue));
 	}
 

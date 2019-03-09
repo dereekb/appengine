@@ -2,7 +2,7 @@ package com.dereekb.gae.server.datastore.objectify.query;
 
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryResponse;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
-import com.google.appengine.api.datastore.Cursor;
+import com.google.cloud.datastore.Cursor;
 import com.googlecode.objectify.cmd.SimpleQuery;
 
 /**
