@@ -6,9 +6,9 @@ import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.dereekb.gae.test.app.mock.context.AbstractAppContextOnlyTestingContext;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.spring.CoreServiceTestingContext;
-import com.dereekb.gae.test.spring.context.AbstractAppContextOnlyTestingContext;
 
 /**
  * Initializes the application but skips all web configuration.

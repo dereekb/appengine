@@ -24,7 +24,7 @@ import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.model.extension.generation.impl.DerivedGeneratorImpl;
-import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
+import com.dereekb.gae.test.app.mock.client.crud.MockClientRequestSender;
 import com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl;
 import com.dereekb.gae.test.server.datastore.objectify.ObjectifyTestDatabase;
 

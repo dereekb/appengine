@@ -10,9 +10,9 @@ import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
 import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
-import com.dereekb.gae.test.spring.context.AbstractAppTestingContext;
 import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 

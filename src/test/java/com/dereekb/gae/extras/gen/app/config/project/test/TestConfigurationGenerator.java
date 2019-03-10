@@ -12,6 +12,7 @@ import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext.TaskQueueCallbackHandler;
 import com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl;
 import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 import com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter;
@@ -133,7 +134,7 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 		builder.bean("localTaskQueueServiceTestConfig").beanClass(LocalTaskQueueTestConfig.class)
 		        .property("queueXmlPath").ref("taskQueueXmlPath").up().property("callbackClass")
-		        .value("com.dereekb.gae.test.spring.WebServiceTestingContextImpl.TestLocalTaskQueueCallback").up()
+		        .value(TaskQueueCallbackHandler.class.getCanonicalName()).up()
 		        .property("disableAutoTaskExecution").value("false");
 
 		return this.makeFileWithXML(TESTING_XML, builder);

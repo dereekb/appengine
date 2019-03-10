@@ -2,18 +2,12 @@ package com.dereekb.gae.test.spring;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.servlet.ServletException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,16 +20,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterService;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext.TaskQueueCallbackHandler;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.test.spring.web.builder.ServletAwareWebServiceRequestBuilder;
 import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
-import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
-import com.google.appengine.api.taskqueue.dev.LocalTaskQueueCallback;
-import com.google.appengine.api.urlfetch.URLFetchServicePb.URLFetchRequest;
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
-import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.util.Closeable;
 
 /**
  * {@link CoreServiceTestContext} extension that adds access to a
@@ -101,8 +92,9 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		}
 
 		this.mockMvc = mockMvcBuilder.build();
-		TestLocalTaskQueueCallback.serviceRequestBuilder = this.serviceRequestBuilder;
-		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
+
+		TaskQueueCallbackHandler.serviceRequestBuilder = this.serviceRequestBuilder;
+		TaskQueueCallbackHandler.mockMvc = this.mockMvc;
 	}
 
 	/*
@@ -111,7 +103,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	public void setUpCoreServices() {
 
 		// Wait for the web services to be set up.=
-		// this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
+		// this.taskQueueTestConfig.setTaskExecutionLatch(TaskQueueCallbackHandler.countDownLatch);
 		super.setUpCoreServices();
 	}
 	*/
@@ -123,7 +115,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		// Initialize the system admin for the security chain
 		if (this.springSecurityFilterChain != null && this.testLoginTokenContext != null) {
 			this.testLoginTokenContext.generateSystemAdmin();
-			TestLocalTaskQueueCallback.waitUntilComplete();
+			TaskQueueCallbackHandler.waitUntilComplete();
 		}
 	}
 
@@ -217,143 +209,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	}
 
 	public static void waitUntilTaskQueueCompletes() {
-		TestLocalTaskQueueCallback.waitUntilComplete();
-	}
-
-	public static class TestLocalTaskQueueCallback
-	        implements LocalTaskQueueCallback {
-
-		private static final long serialVersionUID = 1L;
-
-		private static boolean LOG_EVENTS = true;
-		private static boolean FINE_LOG_EVENTS = false;
-
-		public static MockMvc mockMvc;
-
-		public static WebServiceRequestBuilder serviceRequestBuilder;
-
-		public static final AtomicLong ATOMIC_COUNTER = new AtomicLong(0L);
-
-		private static final int MAX_WAITS = 20;
-		private static final int WAIT_TIME = 200;
-
-		public static final void safeWaitForLatch() throws InterruptedException {
-			int waits = 0;
-
-			if (FINE_LOG_EVENTS) {
-				System.out.println("Waiting for latch....");
-			}
-
-			waitForLatch(0);
-
-			while (ATOMIC_COUNTER.get() != 0) {
-				waits += 1;
-
-				if (FINE_LOG_EVENTS) {
-					System.out.println("Still waiting...");
-				}
-
-				waitForLatch(waits);
-
-				if (waits >= MAX_WAITS) {
-					System.out.println("Reached maximum wait limit.");
-					break;
-				}
-			}
-		}
-
-		private static final void waitForLatch(int waits) throws InterruptedException {
-			Thread.sleep(WAIT_TIME + (waits * WAIT_TIME));
-		}
-
-		private static final void increaseLatchCounter() {
-			Long count = ATOMIC_COUNTER.incrementAndGet();
-
-			if (FINE_LOG_EVENTS) {
-				System.out.println(String.format("Latch increasing to %s.", count));
-			}
-		}
-
-		private static final void decreaseLatchCounter() {
-			Long count = ATOMIC_COUNTER.decrementAndGet();
-
-			if (FINE_LOG_EVENTS) {
-				System.out.println(String.format("Latch decreased to %s.", count));
-			}
-		}
-
-		private static final int TASKQUEUE_TASK_WAIT_TIME = 10;
-
-		@Override
-		public int execute(URLFetchRequest arg0) {
-			increaseLatchCounter();
-
-			if (LOG_EVENTS) {
-				System.out.println(String.format("Executing TQ task %s -> %s", arg0.getMethod(), arg0.getUrl()));
-			}
-
-			MockHttpServletRequestBuilder requestBuilder;
-
-			try {
-				requestBuilder = this.buildRequest(arg0);
-			} catch (UnsupportedEncodingException e) {
-				System.out.println(String.format("Exception decoding URL: %s.", arg0.getUrl()));
-				e.printStackTrace();
-				decreaseLatchCounter();
-				return 0;
-			}
-
-			try {
-				Thread.sleep(ATOMIC_COUNTER.get() * TASKQUEUE_TASK_WAIT_TIME);
-			} catch (InterruptedException e1) {
-
-			}
-
-			// Start Objectify service for the thread.
-			Closeable ofy = ObjectifyService.begin();
-
-			try {
-				ResultActions resultActions = mockMvc.perform(requestBuilder);
-				MockHttpServletResponse response = resultActions.andReturn().getResponse();
-				int status = response.getStatus();
-				// String error = response.getErrorMessage();
-				return status;
-			} catch (ServletException e) {
-				e.printStackTrace();
-				return 500;
-			} catch (Exception e) {
-				System.out.println(String.format("Exception occured while executing TQ task %s.", arg0.getUrl()));
-				e.printStackTrace();
-				return 0;
-			} finally {
-				if (LOG_EVENTS) {
-					System.out.println(String.format("Finished TQ task at %s.", arg0.getUrl()));
-				}
-
-				ofy.close();
-				decreaseLatchCounter();
-			}
-		}
-
-		private MockHttpServletRequestBuilder buildRequest(URLFetchRequest arg0) throws UnsupportedEncodingException {
-			return MockHttpServletRequestBuilderUtility.convert(arg0, serviceRequestBuilder);
-		}
-
-		@Override
-		public void initialize(Map<String, String> arg0) {}
-
-		public static void waitUntilComplete() {
-			try {
-				safeWaitForLatch();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			if (FINE_LOG_EVENTS) {
-				System.out.println("Stopped waiting for TaskQueue operation.");
-			}
-		}
-
+		TaskQueueCallbackHandler.waitUntilComplete();
 	}
 
 }

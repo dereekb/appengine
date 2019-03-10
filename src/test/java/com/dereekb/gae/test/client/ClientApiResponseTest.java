@@ -1,13 +1,17 @@
 package com.dereekb.gae.test.client;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.client.api.service.response.ClientApiResponseAccessor;
 import com.dereekb.gae.client.api.service.response.builder.impl.ClientApiResponseAccessorBuilderImpl;
@@ -48,16 +52,16 @@ public class ClientApiResponseTest {
 		ClientResponseImpl clientResponse = new ClientResponseImpl(200, responseJson);
 		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
-		Assert.assertTrue(accessor.isSuccessful());
+		assertTrue(accessor.isSuccessful());
 
 		try {
 			accessor.getPrimaryData();
-			Assert.fail();
+			fail();
 		} catch (NoClientResponseDataException e) {
 
 		}
 
-		Assert.assertNotNull(accessor.getIncludedData());
+		assertNotNull(accessor.getIncludedData());
 	}
 
 	@Test
@@ -76,12 +80,12 @@ public class ClientApiResponseTest {
 		ClientResponseImpl clientResponse = new ClientResponseImpl(missingTokenHttpResponseCode, responseJson);
 		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
-		Assert.assertTrue(accessor.isSuccessful());
-		Assert.assertNotNull(accessor.getIncludedData());
+		assertTrue(accessor.isSuccessful());
+		assertNotNull(accessor.getIncludedData());
 
 		try {
 			accessor.getPrimaryData();
-			Assert.fail();
+			fail();
 		} catch (NoClientResponseDataException e) {
 
 		}
@@ -89,13 +93,13 @@ public class ClientApiResponseTest {
 		ClientResponseError clientResponseError = accessor.getError();
 		ClientApiResponseErrorType clientErrorType = clientResponseError.getErrorType();
 
-		Assert.assertTrue(clientErrorType == ClientApiResponseErrorType.AUTHENTICATION_ERROR);
-		Assert.assertFalse(clientResponseError.getErrorInfo().isEmpty());
+		assertTrue(clientErrorType == ClientApiResponseErrorType.AUTHENTICATION_ERROR);
+		assertFalse(clientResponseError.getErrorInfo().isEmpty());
 
 		List<ClientResponseErrorInfo> errorInfoList = clientResponseError.getErrorInfo();
 		ErrorInfo errorInfo = errorInfoList.get(0);
 
-		Assert.assertTrue(errorInfo.getErrorCode().equals(error.getErrorCode()));
+		assertTrue(errorInfo.getErrorCode().equals(error.getErrorCode()));
 	}
 
 	@Test
@@ -121,20 +125,20 @@ public class ClientApiResponseTest {
 		ClientResponseImpl clientResponse = new ClientResponseImpl(200, responseJson);
 		ClientApiResponseAccessor accessor = builder.buildAccessor(clientResponse);
 
-		Assert.assertTrue(accessor.isSuccessful());
-		Assert.assertNotNull(accessor.getIncludedData());
+		assertTrue(accessor.isSuccessful());
+		assertNotNull(accessor.getIncludedData());
 
 		try {
 			ClientApiResponseData responseData = accessor.getPrimaryData();
 
-			Assert.assertTrue(responseData.getDataType().equalsIgnoreCase(listName));
+			assertTrue(responseData.getDataType().equalsIgnoreCase(listName));
 
 			JsonNode jsonData = responseData.getJsonNode();
 			String[] marshalledData = mapper.treeToValue(jsonData, String[].class);
-			Assert.assertTrue(marshalledData.length == dataStrings.size());
+			assertTrue(marshalledData.length == dataStrings.size());
 
 		} catch (NoClientResponseDataException e) {
-			Assert.fail();
+			fail();
 		}
 
 	}
@@ -174,10 +178,10 @@ public class ClientApiResponseTest {
 		Map<String, ClientApiResponseData> responseData = accessor.getIncludedData();
 
 		ClientApiResponseData includedAData = responseData.get(includedDataAName);
-		Assert.assertTrue(includedAData.getDataType().equals(includedDataAName));
+		assertTrue(includedAData.getDataType().equals(includedDataAName));
 
 		ClientApiResponseData includedBData = responseData.get(includedDataBName);
-		Assert.assertTrue(includedBData.getDataType().equals(includedDataBName));
+		assertTrue(includedBData.getDataType().equals(includedDataBName));
 
 	}
 

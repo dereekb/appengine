@@ -22,8 +22,8 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLim
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ConfigurableObjectifyQueryRequestConfigurer;
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyQueryRequestOptionsImpl;
+import com.dereekb.gae.test.app.mock.client.extension.ModelClientQueryRequestSenderTestUtility;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.dereekb.gae.test.mock.client.extension.ModelClientQueryRequestSenderTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.google.gson.JsonArray;
