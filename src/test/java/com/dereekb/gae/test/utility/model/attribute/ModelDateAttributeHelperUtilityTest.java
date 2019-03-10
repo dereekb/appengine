@@ -2,8 +2,8 @@ package com.dereekb.gae.test.utility.model.attribute;
 
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.model.attribute.ModelAttributeUtilityInstance;
 import com.dereekb.gae.utilities.model.attribute.impl.ModelDateAttributeHelperUtilityImpl;
@@ -22,8 +22,8 @@ public class ModelDateAttributeHelperUtilityTest extends AbstractModelAttributeH
 		ModelDateAttributeHelperUtilityImpl utility = new ModelDateAttributeHelperUtilityImpl();
 
 		utility.future(0L, FAIL_CODE);
-		Assert.assertTrue(utility.isAssertFuture());
-		Assert.assertTrue(utility.getFutureCode().equals(FAIL_CODE));
+		assertTrue(utility.isAssertFuture());
+		assertTrue(utility.getFutureCode().equals(FAIL_CODE));
 
 		ModelAttributeUtilityInstance<Date> instance = utility.makeInstance(ATTRIBUTE);
 
@@ -31,7 +31,7 @@ public class ModelDateAttributeHelperUtilityTest extends AbstractModelAttributeH
 
 		try {
 			instance.assertValidDecodedValue(nonEpoch);
-			Assert.fail("Should have failed on non-future value.");
+			fail("Should have failed on non-future value.");
 		} catch (InvalidAttributeException e) {
 
 		}

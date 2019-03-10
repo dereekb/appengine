@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.app.mock.web.impl;
 
 import com.dereekb.gae.test.app.mock.web.MockWebServiceTestUtility;
-import com.dereekb.gae.test.spring.WebServiceTester;
+import com.dereekb.gae.test.app.mock.web.WebServiceTester;
 
 /**
  * Abstract {@link MockWebServiceTestUtility}.

@@ -19,7 +19,7 @@
   <bean class="com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig" id="localMemcacheServiceTestConfig"/>
   <bean class="com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig" id="localBlobstoreServiceTestConfig"/>
   <bean factory-bean="localDatastoreServiceTestConfigFactory" factory-method="make" id="localDatastoreServiceTestConfig"/>
-  <bean class="com.dereekb.gae.test.spring.google.LocalDatastoreServiceTestConfigFactory" id="localDatastoreServiceTestConfigFactory">
+  <bean class="com.dereekb.gae.test.app.mock.google.LocalDatastoreServiceTestConfigFactory" id="localDatastoreServiceTestConfigFactory">
     <property name="noStorage" value="true"/>
     <property name="noIndexAutoGen" value="true"/>
   </bean>
@@ -36,7 +36,7 @@
   <bean class="com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl" id="test_objectifyInitializer" lazy-init="false" primary="true"/>
   <bean class="com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig" id="localTaskQueueServiceTestConfig">
     <property name="queueXmlPath" ref="taskQueueXmlPath"/>
-    <property name="callbackClass" value="com.dereekb.gae.test.spring.WebServiceTestingContextImpl.TestLocalTaskQueueCallback"/>
+    <property name="callbackClass" value="com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext.TaskQueueCallbackHandler"/>
     <property name="disableAutoTaskExecution" value="false"/>
   </bean>
 </beans>

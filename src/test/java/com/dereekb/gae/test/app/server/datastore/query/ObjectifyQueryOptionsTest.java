@@ -1,8 +1,8 @@
 package com.dereekb.gae.test.app.server.datastore.query;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -73,7 +73,7 @@ public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTests {
 		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		Integer resultsCount = query.getResultCount();
 
-		assertTrue(String.format("Expected %s but got %s", expected, resultsCount), resultsCount == expected);
+		assertTrue(resultsCount == expected, String.format("Expected %s but got %s", expected, resultsCount));
 	}
 
 	@Test

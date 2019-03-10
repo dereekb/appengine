@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.model.general.time;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.impl.TimeImpl;
 import com.dereekb.gae.model.general.time.impl.TimeSpanImpl;
@@ -14,7 +14,7 @@ public class TimeSpanSimplifierImplTest {
 	@Test
 	public void testCanMerge() {
 
-		Assert.assertTrue(this.impl.canMerge(TimeSpanImpl.allDay(), TimeSpanImpl.fromMidnight(TimeImpl.noon())));
+		assertTrue(this.impl.canMerge(TimeSpanImpl.allDay(), TimeSpanImpl.fromMidnight(TimeImpl.noon())));
 
 	}
 

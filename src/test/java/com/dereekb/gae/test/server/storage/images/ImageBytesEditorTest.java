@@ -1,10 +1,11 @@
 package com.dereekb.gae.test.server.storage.images;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dereekb.gae.server.storage.services.images.ImageBytesEditor;
@@ -18,19 +19,19 @@ public class ImageBytesEditorTest {
 	@Autowired
 	protected LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalImagesServiceTestConfig());
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.helper.setUp();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		this.helper.tearDown();
 	}
 
 	private static final TestImageByteGenerator imageGenerator = new TestImageByteGenerator();
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpImageGenerator() {
 		imageGenerator.setHeight(512);
 		imageGenerator.setWidth(512);
@@ -44,11 +45,11 @@ public class ImageBytesEditorTest {
 		byte[] bytes = imageGenerator.generateBytes();
 
 		ImageBytesEditor.Instance newInstance = editor.newInstance(bytes);
-		Assert.assertNotNull(newInstance);
+		assertNotNull(newInstance);
 
 		Image testImage = newInstance.getImage();
 		ImageBytesEditor.Instance forImage = editor.newInstance(testImage);
-		Assert.assertNotNull(forImage);
+		assertNotNull(forImage);
 
 	}
 
@@ -59,25 +60,25 @@ public class ImageBytesEditorTest {
 		byte[] bytes = imageGenerator.generateBytes();
 
 		ImageBytesEditor.Instance cropTest = editor.newInstance(bytes);
-		Assert.assertNotNull(cropTest);
+		assertNotNull(cropTest);
 
 		cropTest.cropImage(0.5, 0.5);
 		Image cropImage = cropTest.createEditedImage();
-		Assert.assertNotNull(cropImage);
+		assertNotNull(cropImage);
 
 		ImageBytesEditor.Instance rotateTest = editor.newInstance(bytes);
-		Assert.assertNotNull(rotateTest);
+		assertNotNull(rotateTest);
 
 		rotateTest.rotateImage(90);
 		Image rotateImage = rotateTest.createEditedImage();
-		Assert.assertNotNull(rotateImage);
+		assertNotNull(rotateImage);
 
 		ImageBytesEditor.Instance resizeTest = editor.newInstance(bytes);
-		Assert.assertNotNull(resizeTest);
+		assertNotNull(resizeTest);
 
 		resizeTest.resizeImage(90, 90);
 		Image resizeImage = resizeTest.createEditedImage();
-		Assert.assertNotNull(resizeImage);
+		assertNotNull(resizeImage);
 
 	}
 
@@ -93,6 +94,6 @@ public class ImageBytesEditorTest {
 		instance.resizeImage(90, 90);
 
 		Image finalImage = instance.createEditedImage();
-		Assert.assertNotNull(finalImage);
+		assertNotNull(finalImage);
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
@@ -63,11 +63,11 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SimpleUpdateResponse<T> updateResponse = response.getSerializedResponse();
 		Collection<T> results = updateResponse.getModels();
 
-		Assert.assertFalse(results.isEmpty());
+		assertFalse(results.isEmpty());
 
 		// Update again.
 		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
-		Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
+		assertTrue(simpleUpdateResponse.getModels().contains(model));
 	}
 
 	public void testMockUpdateManyRequest(ClientRequestSecurity security)
@@ -87,11 +87,11 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SimpleUpdateResponse<T> updateResponse = response.getSerializedResponse();
 		Collection<T> results = updateResponse.getModels();
 
-		Assert.assertFalse(results.isEmpty());
+		assertFalse(results.isEmpty());
 
 		// Update again.
 		SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
-		Assert.assertTrue(simpleUpdateResponse.getModels().containsAll(models));
+		assertTrue(simpleUpdateResponse.getModels().containsAll(models));
 	}
 
 	public void testMockAtomicUnavailableUpdateRequest(ClientRequestSecurity security)
@@ -108,12 +108,12 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
 
-		Assert.assertFalse(response.isSuccessful());
-		Assert.assertTrue(response.getError().getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR);
+		assertFalse(response.isSuccessful());
+		assertTrue(response.getError().getErrorType() == ClientApiResponseErrorType.OTHER_BAD_RESPONSE_ERROR);
 
 		try {
 			response.getSerializedResponse();
-			Assert.fail("Should not have succeeeded.");
+			fail("Should not have succeeeded.");
 		} catch (ClientRequestFailureException e) {
 			// Pass
 		}
@@ -121,12 +121,12 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		// Try again. Should get ClientAtomicOperationException
 		try {
 			this.updateRequestSender.update(updateRequest, security);
-			Assert.fail();
+			fail();
 		} catch (ClientAtomicOperationException e) {
 			List<ModelKey> missingKeys = e.getMissingKeys();
-			Assert.assertTrue(missingKeys.contains(template.getModelKey()));
+			assertTrue(missingKeys.contains(template.getModelKey()));
 		} catch (Exception e) {
-			Assert.fail();
+			fail();
 			throw e;
 		}
 	}
@@ -154,20 +154,20 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
 		        .sendRequest(updateRequest, security);
 
-		Assert.assertTrue(response.isSuccessful());
+		assertTrue(response.isSuccessful());
 
 		// Get Serialized Primary Data
 		try {
 			SimpleUpdateResponse<T> simpleUpdateResponse = response.getSerializedResponse();
 
 			Collection<T> successfulModels = simpleUpdateResponse.getModels();
-			Assert.assertFalse(successfulModels.isEmpty());
-			Assert.assertTrue(successfulModels.contains(template));
+			assertFalse(successfulModels.isEmpty());
+			assertTrue(successfulModels.contains(template));
 
 			Collection<ModelKey> missingKeys = simpleUpdateResponse.getMissingKeys();
-			Assert.assertTrue(missingKeys.contains(unavailableTemplate.getModelKey()));
+			assertTrue(missingKeys.contains(unavailableTemplate.getModelKey()));
 		} catch (ClientResponseSerializationException e) {
-			Assert.fail("Should parse fine.");
+			fail("Should parse fine.");
 		}
 
 		// ClientUpdateService
@@ -175,15 +175,15 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
 
 			Collection<T> successfulModels = simpleUpdateResponse.getModels();
-			Assert.assertFalse(successfulModels.isEmpty());
-			Assert.assertTrue(successfulModels.contains(template));
+			assertFalse(successfulModels.isEmpty());
+			assertTrue(successfulModels.contains(template));
 
 			Collection<ModelKey> missingKeys = simpleUpdateResponse.getMissingKeys();
-			Assert.assertTrue(missingKeys.contains(unavailableTemplate.getModelKey()));
+			assertTrue(missingKeys.contains(unavailableTemplate.getModelKey()));
 		} catch (ClientAtomicOperationException e) {
-			Assert.fail("Is not an atomic operation.");
+			fail("Is not an atomic operation.");
 		} catch (Exception e) {
-			Assert.fail();
+			fail();
 			throw e;
 		}
 
@@ -204,7 +204,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		// Update again.
 		try {
 			SimpleUpdateResponse<T> simpleUpdateResponse = this.updateRequestSender.update(updateRequest, security);
-			Assert.assertTrue(simpleUpdateResponse.getModels().contains(model));
+			assertTrue(simpleUpdateResponse.getModels().contains(model));
 		} catch (Exception e) {
 
 		}
@@ -222,7 +222,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 		// Update again.
 		try {
 			this.updateRequestSender.update(updateRequest, security);
-			Assert.fail();
+			fail();
 		} catch (Exception e) {
 
 		}

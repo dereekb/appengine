@@ -3,8 +3,8 @@ package com.dereekb.gae.test.server.auth.security.model.roles;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.security.model.roles.ModelRoleSet;
@@ -34,10 +34,10 @@ public class ModelRoleSetLoaderBuilderTests {
 		Login login = new Login();
 		ModelRoleSet set = loader.loadRolesForModel(login);
 
-		Assert.assertFalse(set.hasRole(CrudModelRole.OWNED));
-		Assert.assertTrue(set.hasRole(CrudModelRole.READ));
-		Assert.assertTrue(set.hasRole(CrudModelRole.UPDATE));
-		Assert.assertFalse(set.hasRole(CrudModelRole.DELETE));
+		assertFalse(set.hasRole(CrudModelRole.OWNED));
+		assertTrue(set.hasRole(CrudModelRole.READ));
+		assertTrue(set.hasRole(CrudModelRole.UPDATE));
+		assertFalse(set.hasRole(CrudModelRole.DELETE));
 	}
 
 	// MARK: Setup

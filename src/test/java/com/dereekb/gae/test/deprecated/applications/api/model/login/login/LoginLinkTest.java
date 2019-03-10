@@ -11,7 +11,7 @@ import com.dereekb.gae.test.deprecated.applications.api.model.extension.links.Ab
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 @Deprecated
-@Ignore
+@Disabled
 public class LoginLinkTest extends AbstractLinkServiceTest {
 
 	@Autowired

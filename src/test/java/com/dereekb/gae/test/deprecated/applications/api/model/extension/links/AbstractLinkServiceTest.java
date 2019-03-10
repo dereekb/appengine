@@ -2,7 +2,7 @@ package com.dereekb.gae.test.applications.api.model.extension.links;
 
 import java.util.Collection;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -73,7 +73,7 @@ public abstract class AbstractLinkServiceTest extends ApiApplicationTestContext 
 
 		Link newLink = model.getLink(linkName);
 
-		Assert.assertNotNull(newLink);
+		assertNotNull(newLink);
 
 		RelationImpl setBlob = new RelationImpl(ModelKey.readModelKeys(targetModels));
 		newLink.addRelation(setBlob);
@@ -98,7 +98,7 @@ public abstract class AbstractLinkServiceTest extends ApiApplicationTestContext 
 
 		Link newLink = model.getLink(linkName);
 
-		Assert.assertNotNull(newLink);
+		assertNotNull(newLink);
 
 		RelationImpl setBlob = new RelationImpl(ModelKey.readModelKeys(targetModels));
 		newLink.removeRelation(setBlob);

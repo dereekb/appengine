@@ -1,22 +1,24 @@
 package com.dereekb.gae.test.utility.misc;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.nio.ByteBuffer;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.misc.LongBitAccessor;
+import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
 /**
  * {@link LongBitAccessor} tests.
  *
  * @author dereekb
  *
+ * @deprecated The LongBitAccessor has been replaced by {@link LongBitContainer}.
  */
 @Deprecated
-@RunWith(JUnit4.class)
 public class BitAccessorTest {
 
 	@Test
@@ -26,10 +28,10 @@ public class BitAccessorTest {
 
 		LongBitAccessor accessor = new LongBitAccessor(value);
 		accessor.writeBit(true, index);
-		Assert.assertTrue(accessor.readBit(index));
+		assertTrue(accessor.readBit(index));
 
 		accessor.writeBit(false, index);
-		Assert.assertFalse(accessor.readBit(index));
+		assertFalse(accessor.readBit(index));
 	}
 
 	@Test
@@ -43,11 +45,11 @@ public class BitAccessorTest {
 		accessor.writeBit(true, index);
 		accessor.shiftLeft(indexLeftShift);
 
-		Assert.assertTrue(accessor.readBit(index + indexLeftShift));
+		assertTrue(accessor.readBit(index + indexLeftShift));
 
 		accessor.shiftRight(indexRightShift);
-		Assert.assertFalse(accessor.readBit(index + indexLeftShift));
-		Assert.assertTrue(accessor.readBit(index + indexLeftShift - indexRightShift));
+		assertFalse(accessor.readBit(index + indexLeftShift));
+		assertTrue(accessor.readBit(index + indexLeftShift - indexRightShift));
 	}
 
 	@Test
@@ -59,13 +61,13 @@ public class BitAccessorTest {
 		LongBitAccessor accessor = new LongBitAccessor(value);
 		Long readValue = accessor.readByteValue(index);
 
-		Assert.assertTrue(readValue.equals(value));
+		assertTrue(readValue.equals(value));
 
 		accessor.shiftLeft(LongBitAccessor.BITS_IN_BYTE * shiftLeft);
 		Long focusedReadValue = accessor.focusByteValue(shiftLeft);
 
 		// Still equivalent since we just focused on it.
-		Assert.assertTrue(focusedReadValue.equals(value));
+		assertTrue(focusedReadValue.equals(value));
 
 		// Add another byte to it.
 		accessor = accessor.or(value);
@@ -75,22 +77,22 @@ public class BitAccessorTest {
 	@Test
 	public void testMaskMaking() {
 		Long leftBitMask = LongBitAccessor.makeLeftBitMask(3);
-		Assert.assertTrue(leftBitMask == 0xfffffffffffffff8L);
+		assertTrue(leftBitMask == 0xfffffffffffffff8L);
 
 		Long leftOctalMask = LongBitAccessor.makeLeftHexMask(3);
-		Assert.assertTrue(leftOctalMask == 0xfffffffffffff000L);
+		assertTrue(leftOctalMask == 0xfffffffffffff000L);
 
 		Long leftByteMask = LongBitAccessor.makeLeftByteMask(3);
-		Assert.assertTrue(leftByteMask == 0xffffffffff000000L);
+		assertTrue(leftByteMask == 0xffffffffff000000L);
 
 		Long rightBitMask = LongBitAccessor.makeRightBitMask(3);
-		Assert.assertTrue(rightBitMask == 7L); // 0111
+		assertTrue(rightBitMask == 7L); // 0111
 
 		Long rightOctalMask = LongBitAccessor.makeRightHexMask(3);
-		Assert.assertTrue(rightOctalMask == 0xfffL);
+		assertTrue(rightOctalMask == 0xfffL);
 
 		Long rightByteMask = LongBitAccessor.makeRightByteMask(3);
-		Assert.assertTrue(rightByteMask == 0xffffffL);
+		assertTrue(rightByteMask == 0xffffffL);
 	}
 
 	@Test
@@ -105,8 +107,8 @@ public class BitAccessorTest {
 			accessor.writeValue(value, i);
 		}
 
-		Assert.assertTrue(accessor.focusByteValue(index) == LongBitAccessor.BYTE_MASK);
-		Assert.assertTrue(accessor.getValue() == 0xffffffffffffffffL);
+		assertTrue(accessor.focusByteValue(index) == LongBitAccessor.BYTE_MASK);
+		assertTrue(accessor.getValue() == 0xffffffffffffffffL);
 	}
 
 	@Test
@@ -122,7 +124,7 @@ public class BitAccessorTest {
 		//System.out.println("Value: " + value + " " + Long.toHexString(value));
 		//System.out.println("Expected: " + expected + " " + Long.toHexString(expected));
 
-		Assert.assertTrue(value.equals(expected));
+		assertTrue(value.equals(expected));
 	}
 
 	@Test
@@ -140,7 +142,7 @@ public class BitAccessorTest {
 		System.out.println("Expected: " + expected + " " + Long.toHexString(expected));
 		 */
 
-		Assert.assertTrue(value.equals(expected));
+		assertTrue(value.equals(expected));
 	}
 
 	@Test
@@ -151,10 +153,10 @@ public class BitAccessorTest {
 		try {
 			for (int i = 0; i < LongBitAccessor.MAX_BIT_INDEX; i += 1) {
 				accessor.writeBit(true, i);
-				Assert.assertTrue(accessor.readBit(i));
+				assertTrue(accessor.readBit(i));
 			}
 		} catch (Exception e) {
-			Assert.fail();
+			fail();
 		}
 	}
 
@@ -177,7 +179,7 @@ public class BitAccessorTest {
 		System.out.println(Long.toHexString(expected));
 		System.out.println(Long.toHexString(longValue));
 
-		Assert.assertTrue(expected.equals(longValue));
+		assertTrue(expected.equals(longValue));
 
 	}
 
@@ -194,7 +196,7 @@ public class BitAccessorTest {
 		System.out.println(Long.toHexString(expected));
 		System.out.println(Long.toHexString(longValue));
 
-		Assert.assertTrue(expected.equals(longValue));
+		assertTrue(expected.equals(longValue));
 
 	}
 
@@ -211,7 +213,7 @@ public class BitAccessorTest {
 		System.out.println(Integer.toHexString(expectedValue));
 		System.out.println(Integer.toHexString(intValue));
 
-		Assert.assertTrue(expectedValue.equals(intValue));
+		assertTrue(expectedValue.equals(intValue));
 
 	}
 }

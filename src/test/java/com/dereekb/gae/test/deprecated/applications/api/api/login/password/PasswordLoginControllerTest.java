@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.applications.api.api.login.password;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -62,18 +62,18 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		String pointer = pair.getLoginPointer();
 		String token = pair.getToken();
 
-		Assert.assertNotNull(pointer);
-		Assert.assertNotNull(token);
+		assertNotNull(pointer);
+		assertNotNull(token);
 
-		Assert.assertTrue(this.loginPointerRegistry.exists(pair.getLoginPointerKey()));
+		assertTrue(this.loginPointerRegistry.exists(pair.getLoginPointerKey()));
 
 		try {
 			LoginToken loginToken = this.loginTokenService.decodeLoginToken(token).getLoginToken();
-			Assert.assertNotNull(loginToken);
+			assertNotNull(loginToken);
 
-			Assert.assertTrue(pointer.equals(loginToken.getLoginPointerId()));
+			assertTrue(pointer.equals(loginToken.getLoginPointerId()));
 		} catch (Exception e) {
-			Assert.fail("Login token failed decoding.");
+			fail("Login token failed decoding.");
 		}
 	}
 
@@ -82,16 +82,16 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		LoginTokenPair createPair = this.passwordController.create(TEST_USERNAME, TEST_PASSWORD);
 		LoginTokenPair loginPair = this.passwordController.login(TEST_USERNAME, TEST_PASSWORD);
 
-		Assert.assertTrue(createPair.getLoginPointer().equals(loginPair.getLoginPointer()));
+		assertTrue(createPair.getLoginPointer().equals(loginPair.getLoginPointer()));
 	}
 
 	@Test
 	public void testLoginAttemptWithoutLoginAvailable() {
 		try {
 			this.passwordController.login(TEST_USERNAME, TEST_PASSWORD);
-			Assert.fail("Login should not exist.");
+			fail("Login should not exist.");
 		} catch (ApiLoginException e) {
-			Assert.assertTrue(e.getReason().equals(ApiLoginException.LoginExceptionReason.UNAVAILABLE));
+			assertTrue(e.getReason().equals(ApiLoginException.LoginExceptionReason.UNAVAILABLE));
 		}
 	}
 
@@ -101,9 +101,9 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 
 		try {
 			this.passwordController.login(TEST_USERNAME, "InvalidPassword");
-			Assert.fail("Login info should be invalid.");
+			fail("Login info should be invalid.");
 		} catch (ApiLoginException e) {
-			Assert.assertTrue(e.getReason().equals(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS));
+			assertTrue(e.getReason().equals(ApiLoginException.LoginExceptionReason.INVALID_CREDENTIALS));
 		}
 	}
 
@@ -120,9 +120,9 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse createResponse = createResult.getResponse();
 		String createResponseData = createResponse.getContentAsString();
 
-		Assert.assertTrue("Expected 200 but got " + createResponse.getStatus() + ".",
+		assertTrue("Expected 200 but got " + createResponse.getStatus() + ".",
 		        createResponse.getStatus() == 200);
-		Assert.assertNotNull(createResponseData);
+		assertNotNull(createResponseData);
 
 		this.waitForTaskQueueToComplete();
 
@@ -130,21 +130,21 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		JsonObject object = createResponseJson.getAsJsonObject();
 		String token = object.get("token").getAsString();
 
-		Assert.assertNotNull(token);
+		assertNotNull(token);
 
 		try {
 			DecodedLoginToken<LoginToken> decoded = this.loginTokenService.decodeLoginToken(token);
-			Assert.assertTrue(decoded.getLoginToken().getPointerType() == LoginPointerType.PASSWORD);
+			assertTrue(decoded.getLoginToken().getPointerType() == LoginPointerType.PASSWORD);
 		} catch (Exception e) {
-			Assert.fail("Should decode token.");
+			fail("Should decode token.");
 		}
 
 		MvcResult loginResult = testUtility.sendLoginWithPassword(TEST_USERNAME, TEST_PASSWORD);
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
-		Assert.assertTrue("Expected 200 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 200);
-		Assert.assertNotNull(loginResponseData);
+		assertTrue("Expected 200 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 200);
+		assertNotNull(loginResponseData);
 	}
 
 	@Test
@@ -153,7 +153,7 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
 
 		DecodedLoginToken<LoginToken> decodedPasswordToken = this.loginTokenService.decodeLoginToken(token);
-		Assert.assertTrue(decodedPasswordToken.getLoginToken().getPointerType() == LoginPointerType.PASSWORD);
+		assertTrue(decodedPasswordToken.getLoginToken().getPointerType() == LoginPointerType.PASSWORD);
 	}
 
 	@Test
@@ -163,7 +163,7 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		MvcResult createResult = testUtility.sendCreatePasswordLogin(TEST_USERNAME, "");
 		MockHttpServletResponse createResponse = createResult.getResponse();
 
-		Assert.assertTrue(createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
+		assertTrue(createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		MvcResult createResult = testUtility.sendCreatePasswordLogin(TEST_USERNAME, shortPassword);
 		MockHttpServletResponse createResponse = createResult.getResponse();
 
-		Assert.assertTrue(createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
+		assertTrue(createResponse.getStatus() == HttpStatus.BAD_REQUEST.value());
 	}
 
 	// TODO: Test recover components!

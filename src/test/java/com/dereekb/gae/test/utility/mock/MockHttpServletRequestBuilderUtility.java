@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilderImpl;
+import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
+import com.dereekb.gae.test.app.mock.web.builder.impl.WebServiceRequestBuilderImpl;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
 import com.dereekb.gae.utilities.misc.path.SimplePath;

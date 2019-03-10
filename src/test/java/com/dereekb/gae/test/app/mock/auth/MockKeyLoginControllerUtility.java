@@ -1,16 +1,18 @@
 package com.dereekb.gae.test.app.mock.auth;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Assert;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.dereekb.gae.test.app.mock.web.MockWebServiceTestUtility;
+import com.dereekb.gae.test.app.mock.web.WebServiceTester;
+import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.test.app.mock.web.impl.AbstractMockWebServiceTestUtility;
-import com.dereekb.gae.test.spring.WebServiceTester;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.web.api.auth.controller.key.KeyLoginController;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -43,8 +45,7 @@ public class MockKeyLoginControllerUtility extends AbstractMockWebServiceTestUti
 
 	public void assertMockEnableApiKey(String overrideToken) throws Exception {
 		MockHttpServletResponse enableResponse = this.mockEnableApiKey(overrideToken);
-		Assert.assertTrue("Failed enabling API Key. Status: " + enableResponse.getStatus(),
-		        enableResponse.getStatus() == HttpServletResponse.SC_OK);
+		assertTrue(enableResponse.getStatus() == HttpServletResponse.SC_OK, "Failed enabling API Key. Status: " + enableResponse.getStatus());
 	}
 
 	public MockHttpServletResponse mockEnableApiKey() throws Exception {
@@ -72,7 +73,7 @@ public class MockKeyLoginControllerUtility extends AbstractMockWebServiceTestUti
 		boolean success = loginResultResponse.getStatus() == 200;
 
 		if (assertSuccess) {
-			Assert.assertTrue("API Key Authentication Failed: " + loginResultResponse.getContentAsString(), success);
+			assertTrue(success, "API Key Authentication Failed: " + loginResultResponse.getContentAsString());
 		}
 
 		String apiKeyLoginToken = null;
@@ -84,8 +85,8 @@ public class MockKeyLoginControllerUtility extends AbstractMockWebServiceTestUti
 			apiKeyLoginToken = loginResultElement.getAsJsonObject().get("token").getAsString();
 
 			if (assertSuccess) {
-				Assert.assertFalse(loginResultContent.isEmpty());
-				Assert.assertFalse(apiKeyLoginToken.isEmpty());
+				assertFalse(loginResultContent.isEmpty());
+				assertFalse(apiKeyLoginToken.isEmpty());
 			}
 		}
 

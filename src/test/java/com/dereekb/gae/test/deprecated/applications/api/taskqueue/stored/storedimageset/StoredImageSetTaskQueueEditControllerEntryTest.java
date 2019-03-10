@@ -10,7 +10,7 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.test.deprecated.applications.api.taskqueue.tests.crud.SearchableTaskQueueEditControllerEntryTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
-@Ignore
+@Disabled
 @Deprecated
 public class StoredImageSetTaskQueueEditControllerEntryTest extends SearchableTaskQueueEditControllerEntryTest<StoredImageSet> {
 

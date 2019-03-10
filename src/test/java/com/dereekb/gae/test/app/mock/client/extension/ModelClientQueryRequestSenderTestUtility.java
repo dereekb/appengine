@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.ClientQueryRequestSender;
@@ -55,16 +55,16 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 		try {
 			firstResultModels = firstResponse.getModelResults();
 		} catch (KeysOnlySearchException e) {
-			Assert.fail("Should be a model search.");
+			fail("Should be a model search.");
 		}
 
-		Assert.assertTrue(firstResultModels.size() == limit);
+		assertTrue(firstResultModels.size() == limit);
 
 		Collection<ModelKey> firstResultKeys = firstResponse.getKeyResults();
-		Assert.assertFalse(firstResultKeys.isEmpty());
+		assertFalse(firstResultKeys.isEmpty());
 
 		ResultsCursor searchCursor = firstResponse.getSearchCursor();
-		Assert.assertNotNull(searchCursor);
+		assertNotNull(searchCursor);
 
 		// Set the search cursor
 		queryRequest.setCursor(searchCursor);
@@ -75,7 +75,7 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 		Set<ModelKey> secondResultKeySet = new HashSet<ModelKey>(secondResultKeys);
 
 		// Should not contain any of the first results.
-		Assert.assertFalse(secondResultKeySet.contains(firstResultKeys.iterator().next()));
+		assertFalse(secondResultKeySet.contains(firstResultKeys.iterator().next()));
 	}
 
 	public void testMockQueryRequestKeysOnly(ClientRequestSecurity security) throws ClientRequestFailureException {
@@ -92,18 +92,18 @@ public class ModelClientQueryRequestSenderTestUtility<T extends MutableUniqueMod
 
 		try {
 			firstResponse.getModelResults();
-			Assert.fail("Should be a keys only search.");
+			fail("Should be a keys only search.");
 		} catch (KeysOnlySearchException e) {
 
 		}
 
 		Collection<ModelKey> firstResultKeys = firstResponse.getKeyResults();
-		Assert.assertTrue(firstResultKeys.size() == limit);
+		assertTrue(firstResultKeys.size() == limit);
 
 		ResultsCursor searchCursor = firstResponse.getSearchCursor();
-		Assert.assertNotNull(searchCursor);
+		assertNotNull(searchCursor);
 
-		Assert.assertFalse(models.isEmpty());
+		assertFalse(models.isEmpty());
 	}
 
 }

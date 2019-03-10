@@ -10,7 +10,7 @@ import com.dereekb.gae.utilities.data.StringUtility;
 /**
  * {@link AbstractSetQueryFieldParameter} implementation for {@link String}
  * values.
- * 
+ *
  * @author dereekb
  *
  */

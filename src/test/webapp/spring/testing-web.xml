@@ -9,7 +9,7 @@
   <bean class="java.lang.String" id="productionTaskqueueServletPath">
     <constructor-arg index="0" value="/taskqueue"/>
   </bean>
-  <bean class="com.dereekb.gae.test.spring.web.builder.ServletAwareWebServiceRequestBuilder" id="testServiceRequestBuilder">
+  <bean class="com.dereekb.gae.test.app.mock.web.builder.ServletAwareWebServiceRequestBuilder" id="testServiceRequestBuilder">
     <property name="defaultServletPath" ref="defaultSecurityServletPath"/>
     <property name="servletMappings" ref="testProductionServletMappings"/>
   </bean>
@@ -17,7 +17,7 @@
     <entry key="/taskqueue/**" value-ref="productionTaskqueueServletPath"/>
   </util:map>
   <!--Import-->
-  <import resource="/models/models.xml"/>
+  <import resource="/api/api.xml"/>
   <!--Override-->
   <bean class="com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl" id="testLoginTokenContext">
     <constructor-arg index="0" ref="passwordLoginController"/>

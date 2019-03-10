@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.applications.api.api.login.oauth;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthService;
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
@@ -21,7 +21,7 @@ public abstract class AbstractOAuthTests extends ApiApplicationTestContext {
 	@Test
 	public void testOAuthService() {
 		String url = this.service.getAuthorizationCodeRequestUrl();
-		Assert.assertNotNull(url);
+		assertNotNull(url);
 	}
 
 }

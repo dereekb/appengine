@@ -2,8 +2,8 @@ package com.dereekb.gae.test.utility.query;
 
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
@@ -34,39 +34,39 @@ public class QueryFieldParameterTests {
 		String encoding = dencoder.encodeString(parameters);
 
 		EncodedQueryParameter decoded = dencoder.decodeString(encoding);
-		Assert.assertTrue(decoded.getValue().equals(value));
-		Assert.assertTrue(decoded.equals(parameters));
+		assertTrue(decoded.getValue().equals(value));
+		assertTrue(decoded.equals(parameters));
 
 	}
 
 	@Test
 	public void testDecodingShort() {
 		EncodedQueryParameter parameter = dencoder.decodeString("=,2");
-		Assert.assertTrue(parameter.getValue().equals("2"));
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
+		assertTrue(parameter.getValue().equals("2"));
+		assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
 	}
 
 	@Test
 	public void testEncodingEqualsNull() {
 		EncodedQueryParameterImpl parameter = new EncodedQueryParameterImpl("null", ExpressionOperator.IS_NULL);
 		String encoded = dencoder.encodeString(parameter);
-		Assert.assertTrue(encoded.equals("=n,null"));
+		assertTrue(encoded.equals("=n,null"));
 	}
 
 	@Test
 	public void testDecodingShortEqualsNull() {
 		EncodedQueryParameter parameter = dencoder.decodeString("=n,null");
 
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IS_NULL);
-		Assert.assertTrue(parameter.getValue().equals("null"));
+		assertTrue(parameter.getOperator() == ExpressionOperator.IS_NULL);
+		assertTrue(parameter.getValue().equals("null"));
 	}
 
 	@Test
 	public void testDecodingShortEqualsNullWithoutValueDecodesEquivalency() {
 		EncodedQueryParameter parameter = dencoder.decodeString("=n,");
 
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
-		Assert.assertTrue(parameter.getValue().equals("=n,"));
+		assertTrue(parameter.getOperator() == ExpressionOperator.EQUAL);
+		assertTrue(parameter.getValue().equals("=n,"));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -76,8 +76,8 @@ public class QueryFieldParameterTests {
 
 		EncodedQueryParameter parameter = dencoder.decodeString("in," + value);
 
-		Assert.assertTrue(parameter.getOperator() == ExpressionOperator.IN);
-		Assert.assertTrue(parameter.getValue().equals(value));
+		assertTrue(parameter.getOperator() == ExpressionOperator.IN);
+		assertTrue(parameter.getValue().equals(value));
 	}
 
 	@Test
@@ -94,12 +94,12 @@ public class QueryFieldParameterTests {
 		String encoding = dencoder.encodeString(parameters);
 
 		EncodedQueryParameter decoded = dencoder.decodeString(encoding);
-		Assert.assertTrue(decoded.getValue().equals(value));
-		Assert.assertTrue(decoded.getOperator().equals(operator));
-		Assert.assertTrue(decoded.getSecondFilter() != null);
-		Assert.assertTrue(decoded.getSecondFilter().getValue().equals(secondValue));
-		Assert.assertTrue(decoded.getSecondFilter().getOperator().equals(secondOperator));
-		Assert.assertTrue(decoded.equals(parameters));
+		assertTrue(decoded.getValue().equals(value));
+		assertTrue(decoded.getOperator().equals(operator));
+		assertTrue(decoded.getSecondFilter() != null);
+		assertTrue(decoded.getSecondFilter().getValue().equals(secondValue));
+		assertTrue(decoded.getSecondFilter().getOperator().equals(secondOperator));
+		assertTrue(decoded.equals(parameters));
 	}
 
 	@Test
@@ -112,8 +112,8 @@ public class QueryFieldParameterTests {
 		String encoding = dencoder.encodeString(parameters);
 
 		EncodedQueryParameter decoded = dencoder.decodeString(encoding);
-		Assert.assertTrue(decoded.getValue().equals(value));
-		Assert.assertTrue(decoded.equals(parameters));
+		assertTrue(decoded.getValue().equals(value));
+		assertTrue(decoded.equals(parameters));
 
 	}
 
@@ -131,9 +131,9 @@ public class QueryFieldParameterTests {
 		String parameterString = parameter.getParameterString();
 		DateQueryFieldParameter decoded = new DateQueryFieldParameter(field, parameterString);
 
-		Assert.assertTrue(decoded.getValue().equals(start));
-		Assert.assertTrue(decoded.getSecondFilter() != null);
-		Assert.assertTrue(decoded.getSecondFilter().getValue().equals(end));
+		assertTrue(decoded.getValue().equals(start));
+		assertTrue(decoded.getSecondFilter() != null);
+		assertTrue(decoded.getSecondFilter().getValue().equals(end));
 	}
 
 	@Test
@@ -142,13 +142,13 @@ public class QueryFieldParameterTests {
 
 		ModelKeyQueryFieldParameter parameter = builder.makeNullModelKeyParameter("field");
 
-		Assert.assertTrue(parameter.getOperator().equals(ExpressionOperator.IS_NULL));
+		assertTrue(parameter.getOperator().equals(ExpressionOperator.IS_NULL));
 
 		String encoded = parameter.getParameterString();
 
 		ModelKeyQueryFieldParameter decoded = builder.makeModelKeyParameter("field", encoded);
 
-		Assert.assertTrue(decoded.getOperator().equals(ExpressionOperator.IS_NULL));
+		assertTrue(decoded.getOperator().equals(ExpressionOperator.IS_NULL));
 	}
 
 }

@@ -2,8 +2,8 @@ package com.dereekb.gae.test.model.general.time;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.impl.TimeImpl;
@@ -17,7 +17,7 @@ public class TimeImplTest {
 		Time b = new TimeImpl(6, 0);
 
 		List<Integer> hours = TimeImpl.getMilitaryHoursBetween(a, b);
-		Assert.assertTrue(hours.size() == 6); // Should be 0,1,2,3,4,5
+		assertTrue(hours.size() == 6); // Should be 0,1,2,3,4,5
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class TimeImplTest {
 		Time b = new TimeImpl(6, 45);
 
 		List<Integer> hours = TimeImpl.getMilitaryHoursBetween(a, b);
-		Assert.assertTrue(hours.size() == 6); // Should be 0,1,2,3,4,5
+		assertTrue(hours.size() == 6); // Should be 0,1,2,3,4,5
 	}
 
 	@Test
@@ -35,10 +35,10 @@ public class TimeImplTest {
 		Time b = new TimeImpl(8, 45);
 
 		List<Integer> hours = TimeImpl.getMilitaryHoursBetween(a, b);
-		Assert.assertTrue(hours.size() == 6); // Should be 2,3,4,5,6,7
+		assertTrue(hours.size() == 6); // Should be 2,3,4,5,6,7
 
-		Assert.assertTrue(hours.contains(2));
-		Assert.assertTrue(hours.contains(7));
+		assertTrue(hours.contains(2));
+		assertTrue(hours.contains(7));
 	}
 
 }

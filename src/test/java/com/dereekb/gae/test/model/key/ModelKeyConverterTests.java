@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.extension.generation.impl.keys.LongModelKeyGenerator;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -49,7 +49,7 @@ public class ModelKeyConverterTests {
 	                                   List<String> strings) {
 		List<ModelKey> convertedKeys = converter.convert(strings);
 		Set<ModelKey> keysSet = new HashSet<>(convertedKeys);
-		Assert.assertTrue(keysSet.containsAll(keys));
+		assertTrue(keysSet.containsAll(keys));
 	}
 
 }

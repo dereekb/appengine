@@ -25,10 +25,10 @@ public class Permissions implements Serializable {
 
 	private Set<Integer> roleIdentifiers = new HashSet<Integer>(1);
 
-	@Ignore
+	@Disabled
 	private transient Set<RoleType> roleTypes;
 
-	@Ignore
+	@Disabled
 	private transient List<Role> roles;
 
 	public void addRoleTypes(RoleType... types) {

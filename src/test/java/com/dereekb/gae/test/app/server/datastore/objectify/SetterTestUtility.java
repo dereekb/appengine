@@ -1,6 +1,8 @@
 package com.dereekb.gae.test.app.server.datastore.objectify;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.Getter;
@@ -78,16 +80,16 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		// Test Storing New
 		T template = this.delegate.makeNew();
 
-		Assert.assertTrue(template.getModelKey() == null);
+		assertTrue(template.getModelKey() == null);
 
 		storer.store(template);
 
-		Assert.assertFalse(template.getModelKey() == null);
+		assertFalse(template.getModelKey() == null);
 
 		// Test Storing existing fails.
 		try {
 			storer.store(template);
-			Assert.fail();
+			fail();
 		} catch (StoreKeyedEntityException e) {
 
 		}
@@ -99,7 +101,7 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 
 		try {
 			storer.store(template);
-			Assert.fail();
+			fail();
 		} catch (StoreKeyedEntityException e) {
 
 		}
@@ -116,7 +118,7 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		// Test Updating un-initiated fails.
 		try {
 			updater.update(template);
-			Assert.fail();
+			fail();
 		} catch (UpdateUnkeyedEntityException e) {
 
 		}
@@ -128,11 +130,11 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		// Test Updating deleted object does nothing.
 		deleter.delete(template);
 
-		Assert.assertFalse(this.getter.exists(template));
+		assertFalse(this.getter.exists(template));
 
 		updater.update(template);
 
-		Assert.assertFalse("Should still not exist.", this.getter.exists(template));
+		assertFalse(this.getter.exists(template), "Should still not exist.");
 	}
 
 	// MARK: Deleter
@@ -150,10 +152,10 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		T template = this.delegate.makeNew();
 		storer.store(template);
 
-		Assert.assertTrue(this.getter.exists(template));
+		assertTrue(this.getter.exists(template));
 		deleter.delete(template);
 
-		Assert.assertFalse("Should not exist.", this.getter.exists(template));
+		assertFalse(this.getter.exists(template), "Should not exist.");
 
 	}
 

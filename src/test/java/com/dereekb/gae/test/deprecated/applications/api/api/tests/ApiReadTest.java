@@ -3,8 +3,8 @@ package com.dereekb.gae.test.applications.api.api.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -80,12 +80,12 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 			ApiResponse response = this.controller.readModels(this.modelType, stringKeys, true, false, null);
 
 			ApiResponseData responseData = response.getResponsePrimaryData();
-			Assert.assertNotNull(responseData);
+			assertNotNull(responseData);
 
 			Object data = responseData.getResponseData();
-			Assert.assertNotNull(data);
+			assertNotNull(data);
 		} catch (Exception e) {
-			Assert.fail();
+			fail();
 		}
 	}
 
@@ -99,12 +99,12 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 
 		try {
 			this.controller.readModels(this.modelType, stringKeys, true, false, null);
-			Assert.fail();
+			fail();
 		} catch (MissingRequiredResourceException e) {
 			List<String> resources = e.getResources();
-			Assert.assertNotNull(resources);
-			Assert.assertTrue(resources.size() == stringKeys.size());
-			Assert.assertTrue(resources.containsAll(stringKeys));
+			assertNotNull(resources);
+			assertTrue(resources.size() == stringKeys.size());
+			assertTrue(resources.containsAll(stringKeys));
 		}
 	}
 
@@ -124,12 +124,12 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 			ApiResponse response = this.controller.readModels(this.modelType, stringKeys, false, false, null);
 
 			List<ApiResponseError> errors = response.getResponseErrors();
-			Assert.assertNotNull(errors);
-			Assert.assertFalse(errors.isEmpty());
+			assertNotNull(errors);
+			assertFalse(errors.isEmpty());
 
 			// TODO: Check response further to make sure they match.
 		} catch (MissingRequiredResourceException e) {
-			Assert.fail();
+			fail();
 		}
 	}
 
@@ -142,12 +142,12 @@ public abstract class ApiReadTest<T extends UniqueModel> extends ApiApplicationT
 			ApiResponse response = this.controller.readModels(this.modelType, stringKeys, true, true, null);
 
 			ApiResponseData responseData = response.getResponsePrimaryData();
-			Assert.assertNotNull(responseData);
+			assertNotNull(responseData);
 
 			Object data = responseData.getResponseData();
-			Assert.assertNotNull(data);
+			assertNotNull(data);
 		} catch (Exception e) {
-			Assert.fail();
+			fail();
 		}
 	}
 

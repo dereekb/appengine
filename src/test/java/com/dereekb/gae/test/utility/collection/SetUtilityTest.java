@@ -3,8 +3,8 @@ package com.dereekb.gae.test.utility.collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.collections.list.SetUtility.SetDifferenceImpl;
@@ -24,11 +24,11 @@ public class SetUtilityTest {
 		setB.add(2); // Included in both
 		setB.add(3); // Included in both
 	
-		Assert.assertTrue(SetUtility.containsAnyElementsOf(setA, setB));
+		assertTrue(SetUtility.containsAnyElementsOf(setA, setB));
 		
 		setB.remove(2);
 		
-		Assert.assertFalse(SetUtility.containsAnyElementsOf(setA, setB));
+		assertFalse(SetUtility.containsAnyElementsOf(setA, setB));
 	}
 
 	@Test()
@@ -50,10 +50,10 @@ public class SetUtilityTest {
 		
 		Set<Integer> intersection = difference.getIntersection();
 		
-		Assert.assertFalse(intersection.contains(1));
-		Assert.assertTrue(intersection.contains(2));
-		Assert.assertTrue(intersection.contains(3));
-		Assert.assertFalse(intersection.contains(4));
+		assertFalse(intersection.contains(1));
+		assertTrue(intersection.contains(2));
+		assertTrue(intersection.contains(3));
+		assertFalse(intersection.contains(4));
 	}
 
 	@Test()
@@ -75,10 +75,10 @@ public class SetUtilityTest {
 		
 		Set<Integer> compliment = difference.getCompliment();
 		
-		Assert.assertFalse(compliment.contains(1));
-		Assert.assertFalse(compliment.contains(2));
-		Assert.assertFalse(compliment.contains(3));
-		Assert.assertTrue(compliment.contains(4));
+		assertFalse(compliment.contains(1));
+		assertFalse(compliment.contains(2));
+		assertFalse(compliment.contains(3));
+		assertTrue(compliment.contains(4));
 	}
 
 	@Test()
@@ -100,10 +100,10 @@ public class SetUtilityTest {
 		
 		Set<Integer> setDifference = difference.getDifference();
 		
-		Assert.assertTrue(setDifference.contains(1));
-		Assert.assertFalse(setDifference.contains(2));
-		Assert.assertFalse(setDifference.contains(3));
-		Assert.assertTrue(setDifference.contains(4));
+		assertTrue(setDifference.contains(1));
+		assertFalse(setDifference.contains(2));
+		assertFalse(setDifference.contains(3));
+		assertTrue(setDifference.contains(4));
 	}
 
 	@Test()
@@ -125,10 +125,10 @@ public class SetUtilityTest {
 		
 		Set<Integer> setDifference = difference.getUnique();
 		
-		Assert.assertTrue(setDifference.contains(1));
-		Assert.assertFalse(setDifference.contains(2));
-		Assert.assertFalse(setDifference.contains(3));
-		Assert.assertFalse(setDifference.contains(4));
+		assertTrue(setDifference.contains(1));
+		assertFalse(setDifference.contains(2));
+		assertFalse(setDifference.contains(3));
+		assertFalse(setDifference.contains(4));
 	}
 
 	@Test()
@@ -148,16 +148,16 @@ public class SetUtilityTest {
 
 		Set<Integer> setC = new HashSet<Integer>(setA);
 
-		Assert.assertFalse(SetUtility.isEquivalent(setA, setB));
-		Assert.assertTrue(SetUtility.isEquivalent(setA, setA));
+		assertFalse(SetUtility.isEquivalent(setA, setB));
+		assertTrue(SetUtility.isEquivalent(setA, setA));
 		
-		Assert.assertTrue(SetUtility.isEquivalent(setA, setC));
-		Assert.assertTrue(SetUtility.isEquivalent(setC, setA));
+		assertTrue(SetUtility.isEquivalent(setA, setC));
+		assertTrue(SetUtility.isEquivalent(setC, setA));
 		
 		setC.add(4);
 		
-		Assert.assertFalse(SetUtility.isEquivalent(setA, setC));
-		Assert.assertFalse(SetUtility.isEquivalent(setC, setA));
+		assertFalse(SetUtility.isEquivalent(setA, setC));
+		assertFalse(SetUtility.isEquivalent(setC, setA));
 		
 	}
 

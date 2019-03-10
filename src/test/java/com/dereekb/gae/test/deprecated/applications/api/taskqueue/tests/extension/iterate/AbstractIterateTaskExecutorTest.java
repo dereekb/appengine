@@ -2,8 +2,8 @@ package com.dereekb.gae.test.applications.api.taskqueue.tests.extension.iterate;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.extension.iterate.exception.IterationLimitReachedException;
 import com.dereekb.gae.model.extension.iterate.impl.IterateTaskExecutorFactoryImpl;
@@ -53,20 +53,20 @@ public abstract class AbstractIterateTaskExecutorTest<T extends ObjectifyModel<T
 			IterateTaskInputImpl input = new IterateTaskInputImpl(null, null, null, null);
 			executor.executeTask(input);
 
-			Assert.fail("Should not have iterated more than the limit.");
+			fail("Should not have iterated more than the limit.");
 
 		} catch (IterationLimitReachedException e) {
-			Assert.assertTrue(task.getCount() == limit);
-			Assert.assertNotNull(e.getCursor());
+			assertTrue(task.getCount() == limit);
+			assertNotNull(e.getCursor());
 
 			// Execute again.
 			IterateTaskInputImpl input = new IterateTaskInputImpl(null, null, e.getCursor(), 1, null);
 
 			try {
 				executor.executeTask(input);
-				Assert.assertTrue(task.getCount() == total);
+				assertTrue(task.getCount() == total);
 			} catch (Exception f) {
-				Assert.fail("Should have started iteration from cursor.");
+				fail("Should have started iteration from cursor.");
 			}
 		}
 

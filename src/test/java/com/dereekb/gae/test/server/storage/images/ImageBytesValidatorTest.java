@@ -1,13 +1,16 @@
 package com.dereekb.gae.test.server.storage.images;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dereekb.gae.server.storage.upload.data.image.ImageBytesValidator;
@@ -22,12 +25,12 @@ public class ImageBytesValidatorTest {
 	@Autowired
 	protected LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalImagesServiceTestConfig());
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.helper.setUp();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		this.helper.tearDown();
 	}
@@ -35,7 +38,7 @@ public class ImageBytesValidatorTest {
 	private static final TestImageByteGenerator imageGenerator = new TestImageByteGenerator();
 	private static final Integer imageDimension = 512;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpImageGenerator() {
 		imageGenerator.setHeight(imageDimension);
 		imageGenerator.setWidth(imageDimension);
@@ -57,7 +60,7 @@ public class ImageBytesValidatorTest {
 		byte[] bytes = imageGenerator.generateBytes();
 		boolean isValid = validator.safeValidateContent(bytes);
 
-		Assert.assertTrue(isValid);
+		assertTrue(isValid);
 	}
 
 	@Test
@@ -74,7 +77,7 @@ public class ImageBytesValidatorTest {
 
 		try {
 			validator.safeValidateContent(bytes);
-			Assert.fail();
+			fail();
 		} catch (IllegalArgumentException e) {
 
 		}
@@ -89,13 +92,13 @@ public class ImageBytesValidatorTest {
 
 		byte[] bytes = imageGenerator.generateBytes();
 		boolean isValid = validator.safeValidateContent(bytes);
-		Assert.assertTrue(isValid);
+		assertTrue(isValid);
 
 		validator.setMinHeight(imageDimension * 2);
 		validator.setMinWidth(imageDimension * 2);
 
 		isValid = validator.safeValidateContent(bytes);
-		Assert.assertFalse(isValid);
+		assertFalse(isValid);
 	}
 
 	@Test
@@ -110,14 +113,14 @@ public class ImageBytesValidatorTest {
 
 		byte[] bytes = imageGenerator.generateBytes();
 		boolean isValid = validator.safeValidateContent(bytes);
-		Assert.assertTrue(isValid);
+		assertTrue(isValid);
 
 		imageGenerator.setWidth(1600);
 		imageGenerator.setHeight(1199);
 
 		bytes = imageGenerator.generateBytes();
 		isValid = validator.safeValidateContent(bytes);
-		Assert.assertFalse(isValid);
+		assertFalse(isValid);
 
 		validator.setAspectRatio(1.0);
 		imageGenerator.setWidth(1600);
@@ -125,14 +128,14 @@ public class ImageBytesValidatorTest {
 
 		bytes = imageGenerator.generateBytes();
 		isValid = validator.safeValidateContent(bytes);
-		Assert.assertTrue(isValid);
+		assertTrue(isValid);
 
 		imageGenerator.setWidth(1600);
 		imageGenerator.setHeight(1599);
 
 		bytes = imageGenerator.generateBytes();
 		isValid = validator.safeValidateContent(bytes);
-		Assert.assertFalse(isValid);
+		assertFalse(isValid);
 
 		validator.setAspectRatio(1.6180); // Golden Ratio
 		imageGenerator.setWidth(1618);
@@ -140,14 +143,14 @@ public class ImageBytesValidatorTest {
 
 		bytes = imageGenerator.generateBytes();
 		isValid = validator.safeValidateContent(bytes);
-		Assert.assertTrue(isValid);
+		assertTrue(isValid);
 
 		imageGenerator.setWidth(1617);
 		imageGenerator.setHeight(999);
 
 		bytes = imageGenerator.generateBytes();
 		isValid = validator.safeValidateContent(bytes);
-		Assert.assertFalse(isValid);
+		assertFalse(isValid);
 	}
 
 	@Test
@@ -162,7 +165,7 @@ public class ImageBytesValidatorTest {
 
 		byte[] bytes = imageGenerator.generateBytes();
 		boolean isValid = validator.safeValidateContent(bytes);
-		Assert.assertTrue(isValid);
+		assertTrue(isValid);
 
 		// All formats allowed
 		Set<Format> noAcceptableFormats = new HashSet<Format>();
@@ -173,7 +176,7 @@ public class ImageBytesValidatorTest {
 		validator.setAcceptableFormats(jpgOnlyFormats);
 
 		isValid = validator.safeValidateContent(bytes);
-		Assert.assertFalse(isValid);
+		assertFalse(isValid);
 	}
 
 }

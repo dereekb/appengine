@@ -3,9 +3,9 @@ package com.dereekb.gae.test.applications.api.taskqueue.tests.crud;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -44,7 +44,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *
  * @deprecated {@link TaskQueueEditController} is deprecated.
  */
-@Ignore
+@Disabled
 @Deprecated
 public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> extends ApiApplicationTestContext {
 
@@ -187,7 +187,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 		models = this.getterSetter.get(models);
 
-		Assert.assertTrue(this.isProperlyInitialized(models));
+		assertTrue(this.isProperlyInitialized(models));
 	}
 
 	protected final boolean isProperlyInitialized(List<T> models) {
@@ -219,7 +219,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 		models = this.getterSetter.get(models);
 
-		Assert.assertTrue(this.isProperlyInitialized(models));
+		assertTrue(this.isProperlyInitialized(models));
 
 		this.controller.reviewUpdate(this.modelTaskQueueType, keys);
 	}
@@ -238,11 +238,11 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 		models = this.getterSetter.get(models);
 
-		Assert.assertTrue(this.isProperlyInitialized(models));
+		assertTrue(this.isProperlyInitialized(models));
 
 		this.controller.processDelete(this.modelTaskQueueType, keys);
 
-		Assert.assertTrue(this.isProperlyDeleted(models));
+		assertTrue(this.isProperlyDeleted(models));
 	}
 
 	@Test
@@ -250,14 +250,14 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 		List<T> models = this.create(true);
 		List<MutableTaskRequest> requests = this.deleteTask.getBuilder().buildRequests(models);
 
-		Assert.assertNotNull(requests);
+		assertNotNull(requests);
 
 		for (TaskRequest request : requests) {
-			Assert.assertNotNull(request.getPath());
-			Assert.assertTrue(request.getMethod() == Method.DELETE);
+			assertNotNull(request.getPath());
+			assertTrue(request.getMethod() == Method.DELETE);
 
 			Collection<KeyedEncodedParameter> parameters = request.getParameters();
-			Assert.assertFalse(parameters.isEmpty());
+			assertFalse(parameters.isEmpty());
 		}
 
 	}
@@ -288,7 +288,7 @@ public abstract class TaskQueueEditControllerEntryTest<T extends UniqueModel> ex
 
 	// MARK: API Test
 	@Test
-	@Ignore
+	@Disabled
 	public void testTaskQueueApiCreateReview() throws Exception {
 
 		// NOTE: Not really a necessary test.

@@ -20,12 +20,12 @@ import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerI
 @DirtiesContext
 @ExtendWith(SpringExtension.class)
 @SpringJUnitConfig( name = "context", locations = {
-        AbstractAppContextOnlyTestingContext.APP_CONTEXT_XML_PATH, AbstractAppContextOnlyTestingContext.WEB_TESTING_XML_PATH })
+        AbstractAppContextOnlyTestingContext.APP_CONTEXT_XML_PATH, AbstractAppContextOnlyTestingContext.TESTING_CONTEXT_XML_PATH })
 public abstract class AbstractAppContextOnlyTestingContext extends AbstractGaeTestingContext {
 
 	public static final String APP_CONTEXT_XML_PATH = AbstractAppContextOnlyTestingContext.BASE_MAIN_PATH + "spring/context/context.xml";
 
-	public static final String WEB_TESTING_XML_PATH = BASE_TESTING_PATH + "testing-web.xml";
+	public static final String TESTING_CONTEXT_XML_PATH = BASE_TESTING_PATH + "testing-context.xml";
 
 	@Autowired
 	protected ObjectifyDatabase testObjectifyDatabase;

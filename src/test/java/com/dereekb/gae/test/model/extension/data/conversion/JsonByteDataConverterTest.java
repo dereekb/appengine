@@ -1,16 +1,15 @@
 package com.dereekb.gae.test.model.extension.data.conversion;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.extension.data.conversion.json.JsonByteDataConverter;
 import com.dereekb.gae.model.extension.data.conversion.json.JsonByteDataConverterDelegate;
 import com.dereekb.gae.utilities.json.JsonConverter;
 import com.google.gson.reflect.TypeToken;
 
-@RunWith(JUnit4.class)
 public class JsonByteDataConverterTest {
 
 	@Test
@@ -27,11 +26,11 @@ public class JsonByteDataConverterTest {
 
 		// Convert to Bytes
 		byte[] bytes = byteConverter.convertToBytes(target);
-		Assert.assertNotNull(bytes);
+		assertNotNull(bytes);
 
 		// Convert Back
 		TestConversionTarget<Integer> readTarget = byteConverter.convertToObject(bytes);
-		Assert.assertTrue(readTarget.value == target.getValue());
+		assertTrue(readTarget.value == target.getValue());
 	}
 
 	@SuppressWarnings("unused")

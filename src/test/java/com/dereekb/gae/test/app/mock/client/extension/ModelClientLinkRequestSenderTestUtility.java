@@ -3,7 +3,7 @@ package com.dereekb.gae.test.app.mock.client.extension;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequest;
@@ -99,15 +99,15 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 
 		try {
 			this.linkRequestSender.updateLinks(request, security);
-			Assert.fail("Unavailable link was apparently available...");
+			fail("Unavailable link was apparently available...");
 		} catch (ClientLinkServiceChangeException e) {
 			ClientLinkSystemChangeErrorSet set = e.getErrorSet();
 			List<ClientLinkSystemChangeError> errors = set.getErrors();
 
-			Assert.assertFalse(errors.isEmpty());
+			assertFalse(errors.isEmpty());
 
 			ClientLinkSystemChangeError error = errors.get(0);
-			Assert.assertTrue(error.getReason() == LinkExceptionReason.LINK_UNAVAILABLE);
+			assertTrue(error.getReason() == LinkExceptionReason.LINK_UNAVAILABLE);
 		}
 	}
 
@@ -129,10 +129,10 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 
 		try {
 			this.linkRequestSender.updateLinks(request, security);
-			Assert.fail("Model was apparently available..?");
+			fail("Model was apparently available..?");
 		} catch (ClientAtomicOperationException e) {
 			List<ModelKey> keys = e.getMissingKeys();
-			Assert.assertTrue(keys.contains(primaryKey));
+			assertTrue(keys.contains(primaryKey));
 		}
 	}
 
@@ -155,9 +155,9 @@ public class ModelClientLinkRequestSenderTestUtility<T extends MutableUniqueMode
 		try {
 			ClientLinkServiceResponse response = this.linkRequestSender.updateLinks(request, security);
 			List<ModelKey> keys = response.getMissing();
-			Assert.assertTrue(keys.contains(primaryKey));
+			assertTrue(keys.contains(primaryKey));
 		} catch (ClientAtomicOperationException e) {
-			Assert.fail("Atomic operation exception raised on non-atomic request.");
+			fail("Atomic operation exception raised on non-atomic request.");
 		}
 	}
 

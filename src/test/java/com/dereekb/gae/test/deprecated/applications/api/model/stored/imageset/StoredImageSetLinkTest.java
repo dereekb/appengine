@@ -3,9 +3,9 @@ package com.dereekb.gae.test.applications.api.model.stored.imageset.d;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -29,7 +29,7 @@ import com.googlecode.objectify.Key;
  * 
  * @deprecated Replace with client tests.
  */
-@Ignore
+@Disabled
 @Deprecated
 public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
@@ -93,7 +93,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 		imagesInSet = this.storedImageRegistry.get(imagesInSet);
 
-		Assert.assertTrue(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
+		assertTrue(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 
 		// Test Unlinking
 		this.unlinkModels(this.storedImageSetLinkType, storedImageSet, this.storedImageSetIconLinkName, storedImage);
@@ -103,7 +103,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 		imagesInSet = this.storedImageRegistry.get(imagesInSet);
 
-		Assert.assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
+		assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 
-		Assert.assertTrue(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
+		assertTrue(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
 
 		// Test Unlinking
 		this.unlinkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetImagesLinkName,
@@ -132,7 +132,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 
-		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
+		assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
 	}
 
 	@Test
@@ -155,7 +155,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
 		Set<Key<StoredImage>> setKeys = storedImageSet.getImages();
 		List<Key<StoredImage>> objectifyKeys = this.storedImageKeysUtil.convertFrom(keys);
-		Assert.assertTrue(setKeys.containsAll(objectifyKeys));
+		assertTrue(setKeys.containsAll(objectifyKeys));
 
 		// Test Unlinking
 		this.unlinkModels(this.storedImageSetLinkType, storedImageSet.getModelKey(), this.storedImageSetImagesLinkName,
@@ -163,7 +163,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 
-		Assert.assertFalse(storedImageSet.getImages().containsAll(objectifyKeys));
+		assertFalse(storedImageSet.getImages().containsAll(objectifyKeys));
 	}
 
 	@Test
@@ -193,7 +193,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
 		imagesInSet = this.storedImageRegistry.get(imagesInSet);
 
-		Assert.assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
+		assertFalse(storedImage.getObjectifyKey().equals(storedImageSet.getIcon()));
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class StoredImageSetLinkTest extends AbstractLinkServiceTest {
 		this.waitForTaskQueueToComplete();
 
 		storedImageSet = this.storedImageSetRegistry.get(storedImageSet);
-		Assert.assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
+		assertFalse(storedImageSet.getImages().contains(storedImage.getObjectifyKey()));
 	}
 
 }

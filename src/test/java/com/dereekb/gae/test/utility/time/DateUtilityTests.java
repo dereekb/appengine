@@ -1,9 +1,12 @@
 package com.dereekb.gae.test.utility.time;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.time.DateUtility;
 
@@ -20,7 +23,7 @@ public class DateUtilityTests {
 		Date date = new Date(5L);
 		Date earlier = new Date(2L);
 
-		Assert.assertTrue(DateUtility.dateIsAfterDate(date, earlier, 0L));
+		assertTrue(DateUtility.dateIsAfterDate(date, earlier, 0L));
 	}
 
 	@Test
@@ -32,7 +35,7 @@ public class DateUtilityTests {
 		Date issued = new Date(1488075542000L);
 
 		if (DateUtility.dateIsAfterDate(reset, issued, precision)) {
-			Assert.fail();
+			fail();
 		}
 	}
 
@@ -43,10 +46,10 @@ public class DateUtilityTests {
 		Date origin = new Date(0);
 		Date now = new Date(time * 2);	// 10 seconds
 
-		Assert.assertTrue(DateUtility.timeHasPassed(now, origin, time));
-		Assert.assertTrue(DateUtility.timeHasPassed(new Date(time), origin, time));
-		Assert.assertFalse(DateUtility.timeHasPassed(origin, origin, time));
-		Assert.assertFalse(DateUtility.timeHasPassed(new Date(time - 5), origin, time));
+		assertTrue(DateUtility.timeHasPassed(now, origin, time));
+		assertTrue(DateUtility.timeHasPassed(new Date(time), origin, time));
+		assertFalse(DateUtility.timeHasPassed(origin, origin, time));
+		assertFalse(DateUtility.timeHasPassed(new Date(time - 5), origin, time));
 	}
 
 }

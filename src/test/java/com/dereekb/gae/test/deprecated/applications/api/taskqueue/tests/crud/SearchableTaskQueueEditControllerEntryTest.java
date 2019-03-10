@@ -9,7 +9,7 @@ import com.dereekb.gae.server.search.system.request.DocumentIdentifierRequest;
 import com.dereekb.gae.server.search.system.request.impl.DocumentIdentifierRequestImpl;
 import com.dereekb.gae.server.search.system.response.SearchDocumentReadResponse;
 
-@Ignore
+@Disabled
 @Deprecated
 public abstract class SearchableTaskQueueEditControllerEntryTest<T extends SearchableUniqueModel> extends TaskQueueEditControllerEntryTest<T> {
 

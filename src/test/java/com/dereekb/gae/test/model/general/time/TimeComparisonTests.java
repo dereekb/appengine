@@ -1,7 +1,9 @@
 package com.dereekb.gae.test.model.general.time;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.tools.ant.types.resources.selectors.Compare;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Hour;
 import com.dereekb.gae.model.general.time.Time;
@@ -24,21 +26,21 @@ public class TimeComparisonTests {
 		Time a = TimeImpl.midnight();
 		Time b = TimeImpl.noon();
 
-		Assert.assertTrue(TimeImpl.noon().equals(TimeImpl.noon()));
+		assertTrue(TimeImpl.noon().equals(TimeImpl.noon()));
 
 		int abComparison = a.compareTo(b);
-		Assert.assertTrue(abComparison < 0); // A is before/less than B
+		assertTrue(abComparison < 0); // A is before/less than B
 
 		int aaComparison = a.compareTo(a);
-		Assert.assertTrue(aaComparison == 0); // A is the same as A.
+		assertTrue(aaComparison == 0); // A is the same as A.
 
 		int baComparison = b.compareTo(a);
-		Assert.assertTrue(baComparison > 0); // B is after/greater than B.
+		assertTrue(baComparison > 0); // B is after/greater than B.
 
-		Assert.assertTrue(TimeImpl.isBefore(a, b));
-		Assert.assertTrue(TimeImpl.isAfter(b, a));
-		Assert.assertTrue(TimeImpl.isAfterOrEqual(a, TimeImpl.midnight()));
-		Assert.assertTrue(TimeImpl.isAfterOrEqual(b, TimeImpl.noon()));
+		assertTrue(TimeImpl.isBefore(a, b));
+		assertTrue(TimeImpl.isAfter(b, a));
+		assertTrue(TimeImpl.isAfterOrEqual(a, TimeImpl.midnight()));
+		assertTrue(TimeImpl.isAfterOrEqual(b, TimeImpl.noon()));
 	}
 
 	@Test
@@ -47,13 +49,13 @@ public class TimeComparisonTests {
 		Hour b = HourImpl.noon();
 
 		int abComparison = a.compareTo(b);
-		Assert.assertTrue(abComparison < 0); // A is before/less than B
+		assertTrue(abComparison < 0); // A is before/less than B
 
 		int aaComparison = a.compareTo(a);
-		Assert.assertTrue(aaComparison == 0); // A is the same as A.
+		assertTrue(aaComparison == 0); // A is the same as A.
 
 		int baComparison = b.compareTo(a);
-		Assert.assertTrue(baComparison > 0); // B is after/greater than B.
+		assertTrue(baComparison > 0); // B is after/greater than B.
 	}
 
 	@Test
@@ -66,13 +68,13 @@ public class TimeComparisonTests {
 		TimeSpan b = new TimeSpanImpl(timeA, timeC);
 
 		int abComparison = a.compareTo(b);
-		Assert.assertTrue(abComparison < 0); // A is before/less than B.
+		assertTrue(abComparison < 0); // A is before/less than B.
 
 		int aaComparison = a.compareTo(a);
-		Assert.assertTrue(aaComparison == 0); // A is the same as A.
+		assertTrue(aaComparison == 0); // A is the same as A.
 
 		int baComparison = b.compareTo(a);
-		Assert.assertTrue(baComparison > 0); // B is after/greater than B.
+		assertTrue(baComparison > 0); // B is after/greater than B.
 	}
 
 	@Test
@@ -85,13 +87,13 @@ public class TimeComparisonTests {
 		TimeSpan b = new TimeSpanImpl(timeB, timeC);
 
 		int abComparison = a.compareTo(b);
-		Assert.assertTrue(abComparison < 0); // A is before/less than B.
+		assertTrue(abComparison < 0); // A is before/less than B.
 
 		int aaComparison = a.compareTo(a);
-		Assert.assertTrue(aaComparison == 0); // A is the same as A.
+		assertTrue(aaComparison == 0); // A is the same as A.
 
 		int baComparison = b.compareTo(a);
-		Assert.assertTrue(baComparison > 0); // B is after/greater than B.
+		assertTrue(baComparison > 0); // B is after/greater than B.
 	}
 
 }

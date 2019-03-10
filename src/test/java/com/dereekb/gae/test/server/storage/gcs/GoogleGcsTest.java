@@ -1,5 +1,19 @@
 package com.dereekb.gae.test.server.storage.gcs;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 /*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
@@ -28,27 +42,10 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.common.io.ByteStreams;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 /**
  * A main method to show how to use the GCS client locally.
- * 
+ *
  */
-@RunWith(JUnit4.class)
 public class GoogleGcsTest {
 
 	private static class ExampleClass {
@@ -64,13 +61,13 @@ public class GoogleGcsTest {
 		 * serialization. One could use this same technique to write many
 		 * objects, or with another format such as Json or XML or just a
 		 * DataOutputStream.
-		 * 
+		 *
 		 * Notice at the end closing the ObjectOutputStream is not done in a
 		 * finally block. See below for why.
 		 */
 		private void writeObjectToFile(	GcsFilename fileName,
 										Object content) throws IOException {
-			GcsOutputChannel outputChannel = gcsService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
+			GcsOutputChannel outputChannel = this.gcsService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
 			ObjectOutputStream oout = new ObjectOutputStream(Channels.newOutputStream(outputChannel));
 			oout.writeObject(content);
 			oout.close();
@@ -85,7 +82,7 @@ public class GoogleGcsTest {
 		 */
 		private void writeToFile(	GcsFilename fileName,
 									byte[] content) throws IOException {
-			GcsOutputChannel outputChannel = gcsService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
+			GcsOutputChannel outputChannel = this.gcsService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
 			outputChannel.write(ByteBuffer.wrap(content));
 			outputChannel.close();
 		}
@@ -94,7 +91,7 @@ public class GoogleGcsTest {
 		 * Reads an object from the specified file using Java serialization. One
 		 * could use this same technique to read many objects, or with another
 		 * format such as Json or XML or just a DataInputStream.
-		 * 
+		 *
 		 * The final parameter to openPrefetchingReadChannel is a buffer size.
 		 * It will attempt to buffer the input by at least this many bytes.
 		 * (This must be at least 1kb and less than 10mb) If buffering is
@@ -102,7 +99,7 @@ public class GoogleGcsTest {
 		 * unbuffered.
 		 */
 		private Object readObjectFromFile(GcsFilename fileName) throws IOException, ClassNotFoundException {
-			GcsInputChannel readChannel = gcsService.openPrefetchingReadChannel(fileName, 0, 1024 * 1024 * 2);
+			GcsInputChannel readChannel = this.gcsService.openPrefetchingReadChannel(fileName, 0, 1024 * 1024 * 2);
 			ObjectInputStream oin = new ObjectInputStream(Channels.newInputStream(readChannel));
 			try {
 				return oin.readObject();
@@ -115,7 +112,7 @@ public class GoogleGcsTest {
 		 * Reads an object from the specified file using Java serialization. One
 		 * could use this same technique to read many objects, or with another
 		 * format such as Json or XML or just a DataInputStream.
-		 * 
+		 *
 		 * The final parameter to openPrefetchingReadChannel is a buffer size.
 		 * It will attempt to buffer the input by at least this many bytes.
 		 * (This must be at least 1kb and less than 10mb) If buffering is
@@ -124,7 +121,7 @@ public class GoogleGcsTest {
 		 */
 		private byte[] readFromFileWithStream(GcsFilename fileName) throws IOException, ClassNotFoundException {
 
-			GcsInputChannel readChannel = gcsService.openPrefetchingReadChannel(fileName, 0, 1024 * 1024 * 1);
+			GcsInputChannel readChannel = this.gcsService.openPrefetchingReadChannel(fileName, 0, 1024 * 1024 * 1);
 			InputStream stream = Channels.newInputStream(readChannel);
 
 			byte[] data = null;
@@ -144,15 +141,15 @@ public class GoogleGcsTest {
 		 * whole file in a single call. (Because it calls openReadChannel
 		 * instead of openPrefetchingReadChannel there is no buffering, and thus
 		 * there is no need to wrap the read call in a loop)
-		 * 
+		 *
 		 * This is really only a good idea for small files. Large files should
 		 * be streamed out using the prefetchingReadChannel and processed
 		 * incrementally.
 		 */
 		private byte[] readFromFile(GcsFilename fileName) throws IOException {
-			int fileSize = (int) gcsService.getMetadata(fileName).getLength();
+			int fileSize = (int) this.gcsService.getMetadata(fileName).getLength();
 			ByteBuffer result = ByteBuffer.allocate(fileSize);
-			GcsInputChannel readChannel = gcsService.openReadChannel(fileName, 0);
+			GcsInputChannel readChannel = this.gcsService.openReadChannel(fileName, 0);
 			try {
 				readChannel.read(result);
 			} finally {
@@ -170,12 +167,12 @@ public class GoogleGcsTest {
 	private static final LocalServiceTestHelper helper = new LocalServiceTestHelper(
 			new LocalBlobstoreServiceTestConfig(), new LocalDatastoreServiceTestConfig());
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		helper.setUp();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		helper.tearDown();
 	}
@@ -235,7 +232,7 @@ public class GoogleGcsTest {
 	 * suppress stderr as there is a lot of noise)
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void testByteObjectTimes() throws IOException, ClassNotFoundException {
 		ExampleClass example = new ExampleClass();
 
@@ -265,7 +262,7 @@ public class GoogleGcsTest {
 	 * suppress stderr as there is a lot of noise)
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void testByteTimes() throws IOException, ClassNotFoundException {
 		ExampleClass example = new ExampleClass();
 
@@ -292,7 +289,7 @@ public class GoogleGcsTest {
 	 * suppress stderr as there is a lot of noise)
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void testByteStreamTimes() throws IOException, ClassNotFoundException {
 		ExampleClass example = new ExampleClass();
 
@@ -318,7 +315,7 @@ public class GoogleGcsTest {
 	 * standard out. Then does the same for a byte array. (You may wish to
 	 * suppress stderr as there is a lot of noise)
 	 */
-	@Ignore
+	@Disabled
 	@Test
 	public void testBigByteTimes() throws IOException, ClassNotFoundException {
 		ExampleClass example = new ExampleClass();
@@ -345,7 +342,7 @@ public class GoogleGcsTest {
 	 * standard out. Then does the same for a byte array. (You may wish to
 	 * suppress stderr as there is a lot of noise)
 	 */
-	@Ignore
+	@Disabled
 	@Test
 	public void testBigByteStreamTimes() throws IOException, ClassNotFoundException {
 		ExampleClass example = new ExampleClass();

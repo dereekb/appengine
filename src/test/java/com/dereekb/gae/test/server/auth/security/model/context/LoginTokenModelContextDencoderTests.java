@@ -2,8 +2,8 @@ package com.dereekb.gae.test.server.auth.security.model.context;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContext;
 import com.dereekb.gae.server.auth.security.model.context.LoginTokenModelContextSet;
@@ -40,7 +40,7 @@ public class LoginTokenModelContextDencoderTests {
 		LoginTokenModelContextSetImpl contextSet = new LoginTokenModelContextSetImpl();
 		EncodedLoginTokenModelContextSet encodedSet = dencoder.encodeSet(contextSet);
 
-		Assert.assertTrue(encodedSet.getEncodedModelContextTypes().isEmpty());
+		assertTrue(encodedSet.getEncodedModelContextTypes().isEmpty());
 	}
 
 	@Test
@@ -63,18 +63,18 @@ public class LoginTokenModelContextDencoderTests {
 
 		// Encode
 		EncodedLoginTokenModelContextSet encodedSet = dencoder.encodeSet(contextSet);
-		Assert.assertFalse(encodedSet.getEncodedModelContextTypes().isEmpty());
-		Assert.assertTrue(encodedSet.getEncodedModelContextTypes().contains(aTypeCode));
-		Assert.assertNotNull(encodedSet.getEncodedModelTypeContext(aTypeCode));
+		assertFalse(encodedSet.getEncodedModelContextTypes().isEmpty());
+		assertTrue(encodedSet.getEncodedModelContextTypes().contains(aTypeCode));
+		assertNotNull(encodedSet.getEncodedModelTypeContext(aTypeCode));
 
 		// Decode
 		LoginTokenModelContextSet decoded = dencoder.decodeSet(encodedSet);
 
 		LoginTokenTypedModelContextSet decodedContextA = decoded.getContextsForType(aType);
 
-		Assert.assertNotNull(decodedContextA);
-		Assert.assertTrue(decodedContextA.getModelType().equals(aType));
-		Assert.assertFalse(decodedContextA.getContexts().isEmpty());
+		assertNotNull(decodedContextA);
+		assertTrue(decodedContextA.getModelType().equals(aType));
+		assertFalse(decodedContextA.getContexts().isEmpty());
 	}
 
 	@Test
@@ -109,11 +109,11 @@ public class LoginTokenModelContextDencoderTests {
 		// Encode
 		EncodedLoginTokenModelContextSet encodedSet = dencoder.encodeSet(contextSet);
 
-		Assert.assertFalse(encodedSet.getEncodedModelContextTypes().isEmpty());
-		Assert.assertTrue(encodedSet.getEncodedModelContextTypes().contains(aTypeCode));
-		Assert.assertTrue(encodedSet.getEncodedModelContextTypes().contains(bTypeCode));
-		Assert.assertNotNull(encodedSet.getEncodedModelTypeContext(aTypeCode));
-		Assert.assertNotNull(encodedSet.getEncodedModelTypeContext(bTypeCode));
+		assertFalse(encodedSet.getEncodedModelContextTypes().isEmpty());
+		assertTrue(encodedSet.getEncodedModelContextTypes().contains(aTypeCode));
+		assertTrue(encodedSet.getEncodedModelContextTypes().contains(bTypeCode));
+		assertNotNull(encodedSet.getEncodedModelTypeContext(aTypeCode));
+		assertNotNull(encodedSet.getEncodedModelTypeContext(bTypeCode));
 
 		// Decode
 		LoginTokenModelContextSet decoded = dencoder.decodeSet(encodedSet);
@@ -121,13 +121,13 @@ public class LoginTokenModelContextDencoderTests {
 		LoginTokenTypedModelContextSet decodedContextA = decoded.getContextsForType(aType);
 		LoginTokenTypedModelContextSet decodedContextB = decoded.getContextsForType(bType);
 
-		Assert.assertNotNull(decodedContextA);
-		Assert.assertTrue(decodedContextA.getModelType().equals(aType));
-		Assert.assertFalse(decodedContextA.getContexts().isEmpty());
+		assertNotNull(decodedContextA);
+		assertTrue(decodedContextA.getModelType().equals(aType));
+		assertFalse(decodedContextA.getContexts().isEmpty());
 
-		Assert.assertNotNull(decodedContextB);
-		Assert.assertTrue(decodedContextB.getModelType().equals(bType));
-		Assert.assertFalse(decodedContextB.getContexts().isEmpty());
+		assertNotNull(decodedContextB);
+		assertTrue(decodedContextB.getModelType().equals(bType));
+		assertFalse(decodedContextB.getContexts().isEmpty());
 	}
 
 	// MARK: Utilities

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -45,10 +45,10 @@ public abstract class ApiLinkTest<T extends UniqueModel> extends ApiApplicationT
 	protected void performRequest(ApiLinkChangeRequest request) {
 		try {
 			ApiResponse response = this.controller.link(this.modelType, request);
-			Assert.assertTrue(response.getResponseSuccess());
+			assertTrue(response.getResponseSuccess());
 		} catch (Exception e) {
 			e.printStackTrace();
-			Assert.fail();
+			fail();
 		}
 	}
 

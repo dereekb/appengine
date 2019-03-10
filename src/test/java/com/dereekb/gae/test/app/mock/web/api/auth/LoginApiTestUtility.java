@@ -1,8 +1,8 @@
 package com.dereekb.gae.test.app.mock.web.api.auth;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
-import com.dereekb.gae.test.spring.WebServiceTester;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
+import com.dereekb.gae.test.app.mock.web.WebServiceTester;
+import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.dereekb.gae.web.api.auth.controller.system.impl.ApiSystemLoginTokenRequest;
 import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
@@ -251,8 +251,7 @@ public class LoginApiTestUtility {
 	public String getTokenFromResponse(MockHttpServletResponse response) throws Exception {
 		String responseData = response.getContentAsString();
 
-		assertTrue("Expected 200 but got " + response.getStatus() + ". " + responseData,
-		        response.getStatus() == 200);
+		assertTrue(response.getStatus() == 200, "Expected 200 but got " + response.getStatus() + ". " + responseData);
 		assertNotNull(responseData);
 
 		this.webServiceTester.waitForTaskQueueToComplete();
@@ -272,7 +271,7 @@ public class LoginApiTestUtility {
 
 		String json = response.getContentAsString();
 
-		assertTrue("Failed getting server token: " + json, response.getStatus() == 200);
+		assertTrue(response.getStatus() == 200, "Failed getting server token: " + json);
 		LoginTokenPair pair = ObjectMapperUtilityBuilderImpl.SINGLETON.make().map(json, LoginTokenPair.class);
 		return pair;
 	}

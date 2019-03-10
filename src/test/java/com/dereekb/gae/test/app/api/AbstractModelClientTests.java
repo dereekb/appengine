@@ -1,10 +1,13 @@
 package com.dereekb.gae.test.app.api;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -302,7 +305,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
-					Assert.fail("Request failure.");
+					fail("Request failure.");
 					throw new RuntimeException(e);
 				}
 			}
@@ -342,7 +345,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
-					Assert.fail("Failed updating.");
+					fail("Failed updating.");
 					throw new RuntimeException(e);
 				}
 			}
@@ -362,10 +365,10 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				try {
 					ClientDeleteResponse<T> deleteResponse = this.deleteRequestSender.delete(deleteRequest,
 					        AbstractTestingInstance.this.getSecurity());
-					Assert.assertFalse(deleteResponse.getModelKeys().isEmpty());
+					assertFalse(deleteResponse.getModelKeys().isEmpty());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
-					Assert.fail("Failed deleting.");
+					fail("Failed deleting.");
 					throw new RuntimeException(e);
 				}
 			}
@@ -411,7 +414,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					throw new MultiKeyedInvalidAttributeException(e.getInvalidAttributes());
 				} catch (ClientResponseSerializationException | ClientRequestFailureException e) {
 					e.printStackTrace();
-					Assert.fail("Failed querying.");
+					fail("Failed querying.");
 					throw new RuntimeException();
 				}
 			}
@@ -421,7 +424,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					return this.queryRequestSender.sendRequest(queryRequest, AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
-					Assert.fail("Failed querying.");
+					fail("Failed querying.");
 					throw new RuntimeException();
 				}
 			}
@@ -445,7 +448,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 			public void assertDoesNotExist(Iterable<T> models) {
 				ClientReadRequestImpl readRequest = this.makeReadRequest(ModelKey.readModelKeys(models));
 				SimpleReadResponse<T> readResponse = this.simpleRead(readRequest);
-				Assert.assertTrue(readResponse.getModels().isEmpty());
+				assertTrue(readResponse.getModels().isEmpty());
 			}
 
 			// MARK: Read
@@ -496,7 +499,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					return response.getSerializedResponse();
 				} catch (ClientResponseSerializationException | ClientRequestFailureException e) {
 					e.printStackTrace();
-					Assert.fail("Failed serializing response.");
+					fail("Failed serializing response.");
 					throw new RuntimeException(e);
 				}
 			}
@@ -505,7 +508,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				try {
 					return this.readRequestSender.sendRequest(readRequest, AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
-					Assert.fail("Failed reading.");
+					fail("Failed reading.");
 					throw new RuntimeException(e);
 				}
 			}
@@ -579,7 +582,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				return new ArrayList<T>(results);
 			} catch (ClientRequestFailureException e) {
 				e.printStackTrace();
-				Assert.fail("Failed creating.");
+				fail("Failed creating.");
 				throw new RuntimeException(e);
 			}
 		}
@@ -633,13 +636,13 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 
 			try {
 				response.getSerializedResponse();
-				Assert.fail("Should have been an invalid request.");
+				fail("Should have been an invalid request.");
 			} catch (ClientKeyedInvalidAttributeException e) {
 				List<KeyedInvalidAttribute> attributes = e.getInvalidAttributes();
-				Assert.assertFalse(attributes.isEmpty());
+				assertFalse(attributes.isEmpty());
 				delegate.checkAndAssert(attributes);
 			} catch (ClientRequestFailureException e) {
-				Assert.fail();
+				fail();
 			}
 		}
 
@@ -664,12 +667,12 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 		                                                  String failureCode) {
 			KeyedInvalidAttribute attribute = attributes.get(0);
 
-			Assert.assertTrue("Expected attribute name to be '" + attributeName + "' but was '"
-			        + attribute.getAttribute() + "' instead. -> " + attribute, attribute.getAttribute().equals(attributeName));
+			assertTrue(attribute.getAttribute().equals(attributeName), "Expected attribute name to be '" + attributeName + "' but was '"
+			        + attribute.getAttribute() + "' instead. -> " + attribute);
 
 			if (failureCode != null) {
-				Assert.assertTrue("Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode()
-				        + "' instead. -> " + attribute, attribute.getCode().equals(failureCode));
+				assertTrue(attribute.getCode().equals(failureCode), "Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode()
+		        + "' instead. -> " + attribute);
 			}
 		}
 
@@ -683,7 +686,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					        IsUniqueCreateTaskValidatorImpl.MODEL_EXISTS_CODE);
 				} catch (Exception e) {
 					e.printStackTrace();
-					Assert.fail();
+					fail();
 				}
 			}
 		}

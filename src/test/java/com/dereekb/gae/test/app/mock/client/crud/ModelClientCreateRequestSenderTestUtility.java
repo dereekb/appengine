@@ -1,10 +1,12 @@
 package com.dereekb.gae.test.app.mock.client.crud;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.junit.Assert;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
@@ -55,14 +57,14 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 			SerializedClientApiResponse<CreateResponse<T>> response = this.createRequestSender
 			        .sendRequest(createRequest, security);
 			int status = response.getStatus();
-			Assert.assertTrue("Create request should have failed with status 405, but instead got: " + status + " - " + response.getResponseData(), status == 405);
+			assertTrue(status == 405, "Create request should have failed with status 405, but instead got: " + status + " - " + response.getResponseData());
 		} catch (NotClientApiResponseException e) {
-			Assert.fail("Should be wrapped within a client API response.");
+			fail("Should be wrapped within a client API response.");
 		}
 
 		try {
 			this.createRequestSender.create(createRequest, security);
-			Assert.fail();
+			fail();
 		} catch (ClientRequestFailureException e) {
 
 		}
@@ -86,11 +88,11 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		SimpleCreateResponse<T> createResponse = response.getSerializedResponse();
 		Collection<T> models = createResponse.getModels();
 
-		Assert.assertFalse(models.isEmpty());
+		assertFalse(models.isEmpty());
 
 		// Create again.
 		CreateResponse<T> simpleCreateResponse = this.createRequestSender.create(createRequest, security);
-		Assert.assertFalse(simpleCreateResponse.getModels().isEmpty());
+		assertFalse(simpleCreateResponse.getModels().isEmpty());
 	}
 
 	public void testMockCreateNothingRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
@@ -100,7 +102,7 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		try {
 			this.createRequestSender.create(createRequest, security);
-			Assert.fail("Should have failed request.");
+			fail("Should have failed request.");
 		} catch (ClientRequestFailureException e) {
 			//e.printStackTrace();
 		}
@@ -115,7 +117,7 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		try {
 			this.createRequestSender.create(createRequest, security);
-			Assert.fail("Should have failed request.");
+			fail("Should have failed request.");
 		} catch (ClientTooMuchInputException e) {
 
 		}

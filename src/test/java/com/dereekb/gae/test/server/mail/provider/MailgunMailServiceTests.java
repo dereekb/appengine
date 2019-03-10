@@ -1,6 +1,6 @@
 package com.dereekb.gae.test.server.mail.provider;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.mail.service.MailRecipient;
 import com.dereekb.gae.server.mail.service.MailUser;

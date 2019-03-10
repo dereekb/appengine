@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.model.general.time;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Time;
 import com.dereekb.gae.model.general.time.TimeAmPm;
@@ -25,7 +25,7 @@ public class TimeSpanSetImplTest {
 		set.add(spanA);
 		set.add(spanA);
 
-		Assert.assertTrue(set.contains(spanA));
+		assertTrue(set.contains(spanA));
 	}
 
 	@Test
@@ -49,17 +49,17 @@ public class TimeSpanSetImplTest {
 		set.add(spanB);
 		set.add(spanC);
 
-		Assert.assertTrue(set.contains(spanA));
-		Assert.assertTrue(set.contains(spanB));
-		Assert.assertTrue(set.contains(spanC));
-		Assert.assertTrue(set.getTimeSpans().size() == 3);
+		assertTrue(set.contains(spanA));
+		assertTrue(set.contains(spanB));
+		assertTrue(set.contains(spanC));
+		assertTrue(set.getTimeSpans().size() == 3);
 
 		set.add(TimeSpanImpl.allDay());
-		Assert.assertTrue(set.getTimeSpans().size() == 1);
+		assertTrue(set.getTimeSpans().size() == 1);
 
-		Assert.assertTrue(set.contains(spanA));
-		Assert.assertTrue(set.contains(spanB));
-		Assert.assertTrue(set.contains(spanC));
+		assertTrue(set.contains(spanA));
+		assertTrue(set.contains(spanB));
+		assertTrue(set.contains(spanC));
 	}
 
 }

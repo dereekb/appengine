@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.server.storage.gcs;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.storage.object.file.StorableFile;
 import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
@@ -38,13 +38,13 @@ public class StorageFileRequestBuilderTest {
 		GcsFileOptions builtOptions = builder.buildOptions(content);
 
 		String acl = builtOptions.getAcl();
-		Assert.assertNotNull(acl);
+		assertNotNull(acl);
 
 		String cacheControl = builtOptions.getCacheControl();
-		Assert.assertNotNull(cacheControl);
+		assertNotNull(cacheControl);
 
 		String mimetype = builtOptions.getMimeType();
-		Assert.assertNotNull(mimetype);
+		assertNotNull(mimetype);
 	}
 
 }

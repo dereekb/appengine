@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
@@ -63,7 +63,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 
-		Assert.assertTrue(logins.size() == models.size());
+		assertTrue(logins.size() == models.size());
 	}
 
 	/**
@@ -84,11 +84,11 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
 
-		Assert.assertTrue(logins.size() == models.size());
+		assertTrue(logins.size() == models.size());
 
 		// Can't really assert anything here.
 		Map<String, ClientApiResponseData> includedData = response.getIncludedData();
-		Assert.assertNotNull(includedData);
+		assertNotNull(includedData);
 	}
 
 	/**
@@ -117,10 +117,10 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 
 		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
-		Assert.assertTrue(logins.size() == models.size());
+		assertTrue(logins.size() == models.size());
 
 		Collection<ModelKey> responseUnavailableKeys = readResponse.getFailed();
-		Assert.assertTrue(responseUnavailableKeys.size() == unavailableKeys.size());
+		assertTrue(responseUnavailableKeys.size() == unavailableKeys.size());
 	}
 
 	/**
@@ -143,14 +143,14 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		try {
 			SerializedClientReadApiResponse<T> response = this.readRequestSender.sendRequest(readRequest, security);
 			response.getSerializedResponse();
-			Assert.fail("Cannot serialize response data with request failure.");
+			fail("Cannot serialize response data with request failure.");
 		} catch (ClientRequestFailureException e) {
 			// Pass
 		}
 
 		try {
 			this.readRequestSender.read(readRequest, security);
-			Assert.fail("Should have thrown an atomic operation exception.");
+			fail("Should have thrown an atomic operation exception.");
 		} catch (ClientAtomicOperationException e) {
 
 		}
@@ -173,8 +173,8 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 		try {
 			SimpleReadResponse<T> response = this.readRequestSender.read(readRequest, security);
 			Collection<T> models = response.getModels();
-			Assert.assertTrue(models.isEmpty());
-			//Assert.fail("Should have failed request.");
+			assertTrue(models.isEmpty());
+			//fail("Should have failed request.");
 		} catch (ClientRequestFailureException e) {
 			e.printStackTrace();
 		}
@@ -196,7 +196,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 
 		try {
 			this.readRequestSender.read(readRequest, security);
-			Assert.fail("Should have failed request.");
+			fail("Should have failed request.");
 		} catch (ClientTooMuchInputException e) {
 
 		}

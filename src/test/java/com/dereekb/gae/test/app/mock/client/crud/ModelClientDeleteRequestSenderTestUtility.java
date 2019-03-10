@@ -2,7 +2,7 @@ package com.dereekb.gae.test.app.mock.client.crud;
 
 import java.util.Collection;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
@@ -49,7 +49,7 @@ public class ModelClientDeleteRequestSenderTestUtility<T extends MutableUniqueMo
 		ClientDeleteResponse<T> deleteResponse = response.getSerializedResponse();
 		Collection<T> models = deleteResponse.getModels();
 
-		Assert.assertFalse(models.isEmpty());
+		assertFalse(models.isEmpty());
 
 		// Delete again.
 		template = this.testModelGenerator.generate();
@@ -58,7 +58,7 @@ public class ModelClientDeleteRequestSenderTestUtility<T extends MutableUniqueMo
 		clientDeleteRequest = new ClientDeleteRequestImpl(deleteRequest, returnModels);
 
 		ClientDeleteResponse<T> simpleDeleteResponse = this.deleteRequestSender.delete(clientDeleteRequest, security);
-		Assert.assertFalse(simpleDeleteResponse.getModels().isEmpty());
+		assertFalse(simpleDeleteResponse.getModels().isEmpty());
 	}
 
 }

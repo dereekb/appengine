@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.collections.batch.BatchGenerator;
 
@@ -26,10 +26,10 @@ public class BatchGeneratorTest {
 		batchGenerator.setBatchSize(batchSize);
 		List<List<Integer>> batches = batchGenerator.createBatchesWithCollection(items);
 
-		Assert.assertTrue(batches.size() == (itemsCount / batchSize));
+		assertTrue(batches.size() == (itemsCount / batchSize));
 
 		for (List<Integer> batch : batches) {
-			Assert.assertTrue(batch.size() == batchSize);
+			assertTrue(batch.size() == batchSize);
 		}
 	}
 
@@ -45,10 +45,10 @@ public class BatchGeneratorTest {
 		batchGenerator.setBatchSize(batchSize);
 		List<List<Integer>> batches = batchGenerator.createBatchesWithCollection(items);
 
-		Assert.assertTrue(batches.size() == 12); // 100 / 9 = (11 + 1/9)
+		assertTrue(batches.size() == 12); // 100 / 9 = (11 + 1/9)
 
 		for (List<Integer> batch : batches) {
-			Assert.assertTrue(batch.size() <= batchSize);
+			assertTrue(batch.size() <= batchSize);
 		}
 
 	}
@@ -61,8 +61,8 @@ public class BatchGeneratorTest {
 
 		List<List<Integer>> batches = batchGenerator.createBatchesWithCollection(items);
 
-		Assert.assertNotNull(batches);
-		Assert.assertTrue(batches.size() == 0);
+		assertNotNull(batches);
+		assertTrue(batches.size() == 0);
 	}
 
 	private List<Integer> generateRandomList(Integer count) {

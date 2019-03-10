@@ -1,8 +1,8 @@
 package com.dereekb.gae.test.applications.api.taskqueue.tests.crud;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -15,7 +15,7 @@ import com.dereekb.gae.web.taskqueue.model.crud.TaskQueueEditController;
  *
  * @deprecated {@link TaskQueueEditController} is deprecated.
  */
-@Ignore
+@Disabled
 @Deprecated
 public class TaskQueueEditControllerTest extends ApiApplicationTestContext {
 
@@ -25,8 +25,8 @@ public class TaskQueueEditControllerTest extends ApiApplicationTestContext {
 
 	@Test
 	public void testController() {
-		Assert.assertNotNull(this.editController.getKeyTypeConverter());
-		Assert.assertNotNull(this.editController.getEntries());
+		assertNotNull(this.editController.getKeyTypeConverter());
+		assertNotNull(this.editController.getEntries());
 	}
 
 }

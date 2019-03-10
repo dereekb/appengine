@@ -1,13 +1,13 @@
 package com.dereekb.gae.test.app.mock.model.extension.search.query;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Assert;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
@@ -17,7 +17,7 @@ import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
+import com.dereekb.gae.test.app.mock.context.AbstractAppContextOnlyTestingContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
@@ -33,7 +33,7 @@ import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
  * @param <Q>
  *            query type
  */
-public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends CoreApplicationTestContext {
+public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q extends ConfigurableEncodedQueryParameters> extends AbstractAppContextOnlyTestingContext {
 
 	protected final Class<Q> queryClass;
 
@@ -201,10 +201,10 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			ObjectifyQueryRequestBuilder<T> builder = this.modelQueryTest.queryBuilder(query);
 
 			List<T> results = builder.buildExecutableQuery().queryModels();
-			Assert.assertTrue(results.size() == models.size());
-			Assert.assertTrue(results.containsAll(models));
+			assertTrue(results.size() == models.size());
+			assertTrue(results.containsAll(models));
 
-			Assert.assertTrue(ListUtility.checkExactOrder(models, results));
+			assertTrue(ListUtility.checkExactOrder(models, results));
 		}
 
 		public void testQueryingForModelsOnAndAfterDate() {
@@ -436,8 +436,8 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			delegate.configureQueryForValueExpressionTest(query, value, ExpressionOperator.EQUAL);
 
 			List<T> results = this.modelQueryTest.queryModels(query);
-			Assert.assertTrue(results.size() == count);
-			Assert.assertTrue(results.containsAll(models));
+			assertTrue(results.size() == count);
+			assertTrue(results.containsAll(models));
 		}
 
 		public void testQueryingForValueGreaterThanOrEqual() {
@@ -506,17 +506,17 @@ public abstract class AbstractModelQueryTest<T extends ObjectifyModel<T>, Q exte
 			}
 
 			List<T> results = this.modelQueryTest.queryModels(query);
-			Assert.assertTrue(results.size() == expectedSize);
+			assertTrue(results.size() == expectedSize);
 
 			switch (expression) {
 				case EQUAL:
-					Assert.assertTrue(results.contains(models.get(half)));
+					assertTrue(results.contains(models.get(half)));
 					break;
 				case GREATER_OR_EQUAL_TO:
-					Assert.assertTrue(results.containsAll(afterHalf));
+					assertTrue(results.containsAll(afterHalf));
 					break;
 				case LESS_THAN:
-					Assert.assertTrue(results.containsAll(beforeHalf));
+					assertTrue(results.containsAll(beforeHalf));
 					break;
 				default:
 					break;

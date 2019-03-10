@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.server.event;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.event.event.Event;
 import com.dereekb.gae.server.event.event.impl.EventImpl;
@@ -35,7 +35,7 @@ public class EventServiceTest {
 
 		service.submitEvent(event);
 
-		Assert.assertTrue(resultPair.isSuccessful());
+		assertTrue(resultPair.isSuccessful());
 	}
 
 }

@@ -10,8 +10,8 @@ import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalC
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestReader;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilderImpl;
+import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
+import com.dereekb.gae.test.app.mock.web.builder.impl.WebServiceRequestBuilderImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 

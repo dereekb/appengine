@@ -7,20 +7,18 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
-import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext.TaskQueueCallbackHandler;
+import com.dereekb.gae.test.app.mock.google.LocalDatastoreServiceTestConfigFactory;
+import com.dereekb.gae.test.app.mock.web.builder.ServletAwareWebServiceRequestBuilder;
 import com.dereekb.gae.test.server.auth.impl.TestPasswordLoginTokenContextImpl;
 import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 import com.dereekb.gae.test.server.auth.impl.TestSystemAuthenticationContextSetter;
 import com.dereekb.gae.test.server.auth.security.login.password.impl.TestPasswordEncoderImpl;
 import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
-import com.dereekb.gae.test.spring.google.LocalDatastoreServiceTestConfigFactory;
-import com.dereekb.gae.test.spring.web.builder.ServletAwareWebServiceRequestBuilder;
-import com.dereekb.gae.utilities.misc.path.PathUtility;
 import com.google.appengine.tools.development.testing.LocalAppIdentityServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig;
@@ -39,6 +37,7 @@ import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestCo
 public class TestConfigurationGenerator extends AbstractConfigurationFileGenerator {
 
 	private static final String TESTING_XML = "testing";
+	private static final String TESTING_CONTEXT_XML = "testing-context";
 	private static final String TESTING_WEB_XML = "testing-web";
 
 	public static final String APP_FILE_NAME = "test";
@@ -84,11 +83,19 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 	public GenFolderImpl generateConfigurations() {
 		GenFolderImpl folder = new GenFolderImpl(this.testFolderName);
 
-		// Models
-		folder.addFolder(new TestModelsConfigurationGenerator(this).generateConfigurations());
-
 		folder.addFile(this.makeTestingFile(folder));
-		folder.addFile(this.makeTestingWebFile(folder));
+
+		// Context
+		GenFolderImpl context = new GenFolderImpl();
+		context.addFolder(new TestContextModelsConfigurationGenerator(this).generateConfigurations());
+		context.addFile(this.makeTestingContextFile(context));
+		folder.merge(context);
+
+		// API
+		GenFolderImpl api = new GenFolderImpl();
+		api.addFolder(new TestApiModelsConfigurationGenerator(this).generateConfigurations());
+		api.addFile(this.makeTestingApiFile(api));
+		folder.merge(api);
 
 		return folder;
 	}
@@ -140,7 +147,17 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		return this.makeFileWithXML(TESTING_XML, builder);
 	}
 
-	public GenFile makeTestingWebFile(GenFolderImpl folder) {
+	public GenFile makeTestingContextFile(GenFolderImpl folder) {
+		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+		// Import Components
+		builder.comment("Import");
+		this.importFilesWithBuilder(builder, folder, true, true);
+
+		return this.makeFileWithXML(TESTING_CONTEXT_XML, builder);
+	}
+
+	public GenFile makeTestingApiFile(GenFolderImpl folder) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 		builder.comment("Simulates all requests coming to production API path.");
@@ -159,13 +176,9 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		builder.map("testProductionServletMappings").keyValueRefEntry("/taskqueue/**",
 		        "productionTaskqueueServletPath");
 
-		builder.comment("Import");
-
 		// Import Components
-		for (GenFolder subFolder : folder.getFolders()) {
-			builder.importResource(
-			        PathUtility.buildPath(subFolder.getFolderName(), subFolder.getFolderName() + ".xml"));
-		}
+		builder.comment("Import");
+		this.importFilesWithBuilder(builder, folder, true, true);
 
 		builder.comment("Override");
 

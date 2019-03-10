@@ -1,12 +1,12 @@
 package com.dereekb.gae.test.server.search.deprecated;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.assertFalse;
+import static org.junit.assertNotNull;
+import static org.junit.assertNull;
+import static org.junit.assertTrue;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -214,22 +214,22 @@ public class DocumentQueryTest {
 
 		String complexString = "beverage:wine color:(red OR white) NOT country:france a AND b NOT geopoint(x,y)";
 		String sanitizeNothing = sanitizer.sanitizeExpression(complexString);
-		Assert.assertTrue(complexString.equals(sanitizeNothing));
+		assertTrue(complexString.equals(sanitizeNothing));
 
 		sanitizer.setAllowFunctions(false);
 		String sanitizeFunctions = sanitizer.sanitizeExpression(complexString);
-		Assert.assertTrue(sanitizeFunctions.equals("beverage:wine color:(red OR white) NOT country:france a AND b"));
+		assertTrue(sanitizeFunctions.equals("beverage:wine color:(red OR white) NOT country:france a AND b"));
 
 		sanitizer.setAllowFunctions(true);
 		String comparisonAString = "model:gibson date < 1965-01-01";
 		String comparisonASanitized = sanitizer.sanitizeExpression(comparisonAString);
-		Assert.assertTrue(comparisonAString.equals(comparisonASanitized));
+		assertTrue(comparisonAString.equals(comparisonASanitized));
 
 		String comparisonBString = "title:\"Harry Potter\" AND pages<500";
 
 		String comparisonBSanitized = sanitizer.sanitizeExpression(comparisonBString);
 
-		Assert.assertTrue(comparisonBString.equals(comparisonBSanitized));
+		assertTrue(comparisonBString.equals(comparisonBSanitized));
 
 		String sanitizeNotExpected = "a AND b";
 
@@ -237,18 +237,18 @@ public class DocumentQueryTest {
 
 		String sanitizedNotString = sanitizer.sanitizeExpression(sanitizeNotExpected);
 
-		Assert.assertTrue(sanitizeNotExpected.equals(sanitizedNotString));
+		assertTrue(sanitizeNotExpected.equals(sanitizedNotString));
 
 		sanitizer.setAllowNot(true);
 		sanitizer.setAllowFunctions(false);
 
 		String sanitizeFloatingNot = "a AND b NOT";
 		String sanitizedFloatingNotString = sanitizer.sanitizeExpression(sanitizeFloatingNot);
-		Assert.assertTrue(sanitizedFloatingNotString.equals("a AND b"));
+		assertTrue(sanitizedFloatingNotString.equals("a AND b"));
 
 		sanitizer.setAllowFunctions(false);
 		String sanitizeNoCommaOrFunctionExpected = "a AND , AND function(c,b)";
 		String sanitizedNoCommaOrFunctionExpectedString = sanitizer.sanitizeExpression(sanitizeNoCommaOrFunctionExpected);
-		Assert.assertTrue(sanitizedNoCommaOrFunctionExpectedString.equals("a")); // Trims out extra floating ANDs
+		assertTrue(sanitizedNoCommaOrFunctionExpectedString.equals("a")); // Trims out extra floating ANDs
 	}
 }

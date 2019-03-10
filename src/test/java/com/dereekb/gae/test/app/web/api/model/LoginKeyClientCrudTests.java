@@ -1,14 +1,14 @@
 package com.dereekb.gae.test.app.web.api.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -85,7 +85,7 @@ public class LoginKeyClientCrudTests extends AbstractServerModelRequestSenderTes
 
 	private MockKeyLoginControllerUtility utility = new MockKeyLoginControllerUtility(this);
 
-	@Before
+	@BeforeEach
 	public void setupTestsLoginKeyApi() throws Exception {
 		// Run all tests as a normal user.
 		this.testLoginTokenContext.generateLogin("NORMAL_USER");
@@ -160,9 +160,9 @@ public class LoginKeyClientCrudTests extends AbstractServerModelRequestSenderTes
 		keyQueryConfig.configure(query);
 
 		List<LoginKey> results = query.buildExecutableQuery().queryModels();
-		Assert.assertFalse(results.isEmpty());
-		Assert.assertTrue(results.size() == pointers.size());
-		Assert.assertTrue(pointers.containsAll(results));
+		assertFalse(results.isEmpty());
+		assertTrue(results.size() == pointers.size());
+		assertTrue(pointers.containsAll(results));
 	}
 
 }

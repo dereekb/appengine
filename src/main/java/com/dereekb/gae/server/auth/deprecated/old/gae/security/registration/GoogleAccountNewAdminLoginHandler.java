@@ -96,8 +96,8 @@ public class GoogleAccountNewAdminLoginHandler
 
 	@Override
 	public void afterPropertiesSet() throws ServletException {
-		Assert.notNull(this.configuredWriter, "ConfiguredLoginRoleWriter must be set");
-		Assert.notNull(this.authenticationProvider, "GoogleAccountAuthenticationProvider must be set");
+		notNull(this.configuredWriter, "ConfiguredLoginRoleWriter must be set");
+		notNull(this.authenticationProvider, "GoogleAccountAuthenticationProvider must be set");
 	}
 
 }

@@ -147,7 +147,7 @@ public class LoginAuthenticationFilter extends GenericFilterBean {
 
 	@Override
 	public void afterPropertiesSet() throws ServletException {
-		Assert.notNull(authenticationManager, "AuthenticationManager must be set");
+		notNull(authenticationManager, "AuthenticationManager must be set");
 	}
 
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {

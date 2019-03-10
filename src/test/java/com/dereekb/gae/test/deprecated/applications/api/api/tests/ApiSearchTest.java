@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -75,8 +75,8 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 		Map<String, String> parameters = new HashMap<>();
 
 		ApiResponse response = this.controller.searchSingle(this.searchType, parameters, limit, getKeys);
-		Assert.assertNotNull(response);
-		Assert.assertNotNull(response.getResponsePrimaryData());
+		assertNotNull(response);
+		assertNotNull(response.getResponsePrimaryData());
 	}
 
 	@Test
@@ -92,11 +92,11 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 		types.add(this.searchType);
 
 		ApiResponse response = this.controller.searchMultiple(query, types, parameters, limit, getKeys);
-		Assert.assertNotNull(response);
+		assertNotNull(response);
 
 		ApiResponseTypeDataWrapper data = (ApiResponseTypeDataWrapper) response.getResponsePrimaryData();
 		ApiMultiSearchResponseData responseData = (ApiMultiSearchResponseData) data.getResponseData();
-		Assert.assertNotNull(responseData.getResults().get(this.searchType.toLowerCase()));
+		assertNotNull(responseData.getResults().get(this.searchType.toLowerCase()));
 	}
 
 	@Test
@@ -109,8 +109,8 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 		ApiResponse response = this.controller.querySingle(this.searchType, parameters, limit, false);
 		ApiResponseData data = response.getResponsePrimaryData();
 
-		Assert.assertNotNull(response);
-		Assert.assertNotNull(data);
+		assertNotNull(response);
+		assertNotNull(data);
 	}
 
 	@Test
@@ -123,8 +123,8 @@ public abstract class ApiSearchTest<T extends SearchableUniqueModel> extends Api
 		ApiResponse response = this.controller.querySingle(this.searchType, parameters, limit, true);
 		ApiResponseData data = response.getResponsePrimaryData();
 
-		Assert.assertNotNull(response);
-		Assert.assertNotNull(data);
+		assertNotNull(response);
+		assertNotNull(data);
 	}
 
 	protected List<T> generateIndexedModels() {

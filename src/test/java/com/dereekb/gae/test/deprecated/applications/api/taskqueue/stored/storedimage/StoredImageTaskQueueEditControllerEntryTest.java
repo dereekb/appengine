@@ -14,7 +14,7 @@ import com.dereekb.gae.test.deprecated.applications.api.taskqueue.tests.crud.Sea
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.googlecode.objectify.Key;
 
-@Ignore
+@Disabled
 @Deprecated
 public class StoredImageTaskQueueEditControllerEntryTest extends SearchableTaskQueueEditControllerEntryTest<StoredImage> {
 

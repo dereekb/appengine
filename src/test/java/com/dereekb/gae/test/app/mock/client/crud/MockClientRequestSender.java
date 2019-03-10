@@ -10,9 +10,9 @@ import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientResponse;
 import com.dereekb.gae.client.api.service.response.impl.ClientResponseImpl;
 import com.dereekb.gae.client.api.service.sender.ClientRequestSender;
+import com.dereekb.gae.test.app.mock.web.WebServiceTester;
+import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.test.app.mock.web.impl.AbstractMockWebServiceTestUtility;
-import com.dereekb.gae.test.spring.WebServiceTester;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 
 /**

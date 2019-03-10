@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextServiceRequestSender;
 import com.dereekb.gae.client.api.auth.model.ClientModelRolesLoginTokenContextResponse;
@@ -73,16 +73,16 @@ public class ModelClientRolesContextServiceRequestSenderTestUtility<T extends Mu
 
 		LoginTokenPair pair = response.getLoginTokenPair();
 
-		Assert.assertNotNull(pair);
+		assertNotNull(pair);
 
 		ClientModelRolesResponseData responseData = response.getRolesData();
 
-		Assert.assertNotNull(responseData);
+		assertNotNull(responseData);
 
 		Map<ModelKey, Set<String>> roles = responseData.getRolesForType(type);
 
 		if (this.shouldHaveRoles) {
-			Assert.assertTrue(roles.containsKey(model.getModelKey()));
+			assertTrue(roles.containsKey(model.getModelKey()));
 		}
 
 	}
@@ -107,12 +107,12 @@ public class ModelClientRolesContextServiceRequestSenderTestUtility<T extends Mu
 
 		try {
 			this.modelRolesContextRequestSender.getContextForModels(request, requestSecurity);
-			Assert.fail();
+			fail();
 		} catch (ClientAtomicOperationException e) {
 			List<ModelKey> missing = e.getMissingKeys();
-			Assert.assertFalse(missing.isEmpty());
-			Assert.assertTrue(missing.contains(nonExistingModel));
-			Assert.assertTrue(e.getModelType().equals(type));
+			assertFalse(missing.isEmpty());
+			assertTrue(missing.contains(nonExistingModel));
+			assertTrue(e.getModelType().equals(type));
 		} catch (ClientRequestFailureException e) {
 
 		}
@@ -145,18 +145,18 @@ public class ModelClientRolesContextServiceRequestSenderTestUtility<T extends Mu
 
 		LoginTokenPair pair = response.getLoginTokenPair();
 
-		Assert.assertNotNull(pair);
+		assertNotNull(pair);
 
 		ClientModelRolesResponseData responseData = response.getRolesData();
 
-		Assert.assertNotNull(responseData);
+		assertNotNull(responseData);
 
 		Map<ModelKey, Set<String>> roles = responseData.getRolesForType(type);
 
 		if (this.shouldHaveRoles) {
 
 			for (T model : models) {
-				Assert.assertTrue(roles.containsKey(model.getModelKey()));
+				assertTrue(roles.containsKey(model.getModelKey()));
 			}
 		}
 
@@ -188,12 +188,12 @@ public class ModelClientRolesContextServiceRequestSenderTestUtility<T extends Mu
 
 		try {
 			this.modelRolesContextRequestSender.getContextForModels(request, requestSecurity);
-			Assert.fail();
+			fail();
 		} catch (ClientAtomicOperationException e) {
 			List<ModelKey> missing = e.getMissingKeys();
-			Assert.assertFalse(missing.isEmpty());
-			Assert.assertTrue(missing.contains(nonExistingModel));
-			Assert.assertTrue(e.getModelType().equals(type));
+			assertFalse(missing.isEmpty());
+			assertTrue(missing.contains(nonExistingModel));
+			assertTrue(e.getModelType().equals(type));
 		} catch (ClientRequestFailureException e) {
 
 		}
@@ -228,13 +228,13 @@ public class ModelClientRolesContextServiceRequestSenderTestUtility<T extends Mu
 			        .getContextForModels(request, requestSecurity);
 
 			ClientModelRolesResponseData responseData = response.getRolesData();
-			Assert.assertNotNull(responseData);
+			assertNotNull(responseData);
 
 			Map<ModelKey, Set<String>> roles = responseData.getRolesForType(type);
-			Assert.assertFalse(roles.containsKey(nonExistingModel.getModelKey()));
+			assertFalse(roles.containsKey(nonExistingModel.getModelKey()));
 		} catch (ClientRequestFailureException e) {
 			e.printStackTrace();
-			Assert.fail(e.getMessage());
+			fail(e.getMessage());
 		}
 	}
 

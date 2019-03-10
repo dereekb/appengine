@@ -3,8 +3,8 @@ package com.dereekb.gae.test.applications.api.api.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.generation.Generator;
@@ -99,15 +99,15 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 		ApiResponse response = this.controller.create(request);
 
 		ApiResponseData responseData = response.getResponsePrimaryData();
-		Assert.assertNotNull(responseData);
+		assertNotNull(responseData);
 
 		Object data = responseData.getResponseData();
-		Assert.assertNotNull(data);
+		assertNotNull(data);
 
 		@SuppressWarnings("unchecked")
 		List<I> resultData = (List<I>) data;
 
-		Assert.assertTrue(resultData.size() == modelData.size());
+		assertTrue(resultData.size() == modelData.size());
 	}
 
 	@Test
@@ -120,14 +120,14 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 
 		ApiResponse response = this.controller.update(request);
 		ApiResponseData responseData = response.getResponsePrimaryData();
-		Assert.assertNotNull(responseData);
+		assertNotNull(responseData);
 
 		Object data = responseData.getResponseData();
-		Assert.assertNotNull(data);
+		assertNotNull(data);
 
 		@SuppressWarnings("unchecked")
 		List<I> resultData = (List<I>) data;
-		Assert.assertTrue(resultData.size() == modelData.size());
+		assertTrue(resultData.size() == modelData.size());
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 
 		try {
 			this.controller.update(request);
-			Assert.fail("Should fail due to no identifier on input element.");
+			fail("Should fail due to no identifier on input element.");
 		} catch (Exception e) {
 
 		}
@@ -160,7 +160,7 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 		request.setData(modelDatas);
 
 		ApiResponse response = this.controller.update(request);
-		Assert.assertTrue(response.getResponseSuccess());
+		assertTrue(response.getResponseSuccess());
 	}
 
 	@Test
@@ -173,10 +173,10 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 
 		ApiResponse response = this.controller.delete(request);
 		ApiResponseData responseData = response.getResponsePrimaryData();
-		Assert.assertNotNull(responseData);
+		assertNotNull(responseData);
 
 		Object data = responseData.getResponseData();
-		Assert.assertNotNull(data);
+		assertNotNull(data);
 
 		/*
 		 * List<ModelKey> modelKeys = ModelKey.readModelKeys(models);
@@ -184,10 +184,10 @@ public abstract class ApiEditTest<T extends UniqueModel, I extends UniqueModel> 
 		 * @SuppressWarnings("unchecked")
 		 * List<I> resultData = (List<I>) data;
 		 * 
-		 * Assert.assertTrue(resultData.size() == models.size());
+		 * assertTrue(resultData.size() == models.size());
 		 * List<T> reread = this.getter.getWithKeys(modelKeys);
 		 * 
-		 * Assert.assertTrue(reread.isEmpty());
+		 * assertTrue(reread.isEmpty());
 		 */
 	}
 

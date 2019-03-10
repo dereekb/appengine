@@ -2,8 +2,8 @@ package com.dereekb.gae.test.model.general.time;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.DaySpan;
@@ -27,20 +27,20 @@ public class WeekSpanImplTest {
 		WeekTime a = new WeekTimeImpl(aDays, aTimes);
 
 		impl.add(a);
-		Assert.assertTrue(impl.contains(a));
+		assertTrue(impl.contains(a));
 
 		DaySpan bDays = new DaySpanBitImpl(Day.MONDAY);
 		TimeSpan bTimes = new TimeSpanImpl(TimeImpl.noon(), TimeImpl.max());
 		WeekTime b = new WeekTimeImpl(bDays, bTimes);
 
 		impl.add(b);
-		Assert.assertTrue(impl.contains(b));
+		assertTrue(impl.contains(b));
 
 		impl.remove(a);
-		Assert.assertFalse(impl.contains(a));
+		assertFalse(impl.contains(a));
 
 		impl.remove(b);
-		Assert.assertFalse(impl.contains(b));
+		assertFalse(impl.contains(b));
 	}
 
 	@Test
@@ -52,12 +52,12 @@ public class WeekSpanImplTest {
 		WeekTime a = new WeekTimeImpl(aDays, aTimes);
 
 		impl.add(a);
-		Assert.assertTrue(impl.contains(a));
+		assertTrue(impl.contains(a));
 
 		List<DayTimeSpanPair> weekSpanPairs = impl.toDayTimeSpanPairs();
 		List<DayTimeSpanPair> weekTimePairs = a.toDayTimeSpanPairs();
 
-		Assert.assertTrue(weekSpanPairs.size() == weekTimePairs.size());
+		assertTrue(weekSpanPairs.size() == weekTimePairs.size());
 
 
 	}

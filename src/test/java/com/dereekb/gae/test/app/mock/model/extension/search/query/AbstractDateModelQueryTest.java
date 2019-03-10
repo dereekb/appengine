@@ -3,7 +3,7 @@ package com.dereekb.gae.test.app.mock.model.extension.search.query;
 import java.util.Comparator;
 import java.util.Date;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.extension.search.query.parameters.AbstractDateModelQuery;
 import com.dereekb.gae.server.datastore.objectify.model.MutableDatedObjectifyModel;
@@ -13,7 +13,7 @@ import com.dereekb.gae.utilities.time.model.DatedModelAscendingComparator;
 
 /**
  * Abstract ModelQueryTest for {@link AbstractDateModelQuery}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>

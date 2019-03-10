@@ -34,11 +34,11 @@ import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenIm
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterService;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 import com.dereekb.gae.test.app.mock.client.crud.MockClientRequestSender;
+import com.dereekb.gae.test.app.mock.web.WebServiceTester;
+import com.dereekb.gae.test.app.mock.web.builder.ServletAwareWebServiceRequestBuilder;
+import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
-import com.dereekb.gae.test.spring.WebServiceTester;
-import com.dereekb.gae.test.spring.web.builder.ServletAwareWebServiceRequestBuilder;
-import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
@@ -58,11 +58,14 @@ import com.googlecode.objectify.util.Closeable;
 @WebAppConfiguration
 @SpringJUnitConfig( name = "api", locations = {
 		AbstractAppTestingContext.API_APPLICATION_XML_PATH,
-		AbstractAppTestingContext.TASKQUEUE_APPLICATION_XML_PATH })
+		AbstractAppTestingContext.TASKQUEUE_APPLICATION_XML_PATH,
+		AbstractAppTestingContext.WEB_TESTING_XML_PATH })
 public class AbstractAppTestingContext extends AbstractAppContextOnlyTestingContext implements WebServiceTester {
 
 	public static final String API_APPLICATION_XML_PATH = AbstractAppTestingContext.BASE_MAIN_PATH + "spring/api/api.xml";
 	public static final String TASKQUEUE_APPLICATION_XML_PATH = AbstractAppTestingContext.BASE_MAIN_PATH + "spring/taskqueue/taskqueue.xml";
+
+	public static final String WEB_TESTING_XML_PATH = BASE_TESTING_PATH + "testing-web.xml";
 
 	@Autowired(required = false)
 	@Qualifier("testSecurityServletPath")

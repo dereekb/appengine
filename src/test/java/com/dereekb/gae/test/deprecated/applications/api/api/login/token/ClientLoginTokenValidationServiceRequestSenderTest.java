@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -77,10 +77,10 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 			DecodedLoginToken<LoginToken> decoded = this.loginTokenService.decodeLoginTokenFromClaims(claims);
 
 			LoginToken token = decoded.getLoginToken();
-			Assert.assertTrue(token.getLoginId().equals(loginToken.getLoginId()));
+			assertTrue(token.getLoginId().equals(loginToken.getLoginId()));
 
 		} catch (ClientLoginTokenValidationException e) {
-			Assert.fail("Should have not failed.");
+			fail("Should have not failed.");
 		}
 	}
 
@@ -106,11 +106,11 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 
 		try {
 			this.sender.validateToken(request);
-			Assert.fail("Should have failed.");
+			fail("Should have failed.");
 		} catch (ClientLoginTokenExpiredException e) {
 			// Success
 		} catch (ClientLoginTokenValidationException e) {
-			Assert.fail("Should have not failed for this reason.");
+			fail("Should have not failed for this reason.");
 		}
 	}
 
@@ -137,11 +137,11 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 
 		try {
 			this.sender.validateToken(request);
-			Assert.fail("Should have failed.");
+			fail("Should have failed.");
 		} catch (ClientLoginTokenInvalidSignatureException e) {
 			// Success
 		} catch (ClientLoginTokenValidationException e) {
-			Assert.fail("Should have not failed for this reason.");
+			fail("Should have not failed for this reason.");
 		}
 	}
 

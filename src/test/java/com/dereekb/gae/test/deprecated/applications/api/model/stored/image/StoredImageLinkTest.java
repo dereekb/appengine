@@ -1,8 +1,8 @@
 package com.dereekb.gae.test.applications.api.model.stored.image.d;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -21,7 +21,7 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
  * 
  * @deprecated Replace with client tests.
  */
-@Ignore
+@Disabled
 @Deprecated
 public class StoredImageLinkTest extends AbstractLinkServiceTest {
 
@@ -66,7 +66,7 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 	@Qualifier("storedBlobTestModelGenerator")
 	private TestModelGenerator<StoredBlob> storedBlobGenerator;
 
-	@Ignore
+	@Disabled
 	@Deprecated
 	@Test
 	public void testLinkingToStoredBlob() {
@@ -87,8 +87,8 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedBlob = this.storedBlobRegistry.get(storedBlob);
 
-		Assert.assertTrue(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
-		Assert.assertTrue(storedImage.equals(storedBlob.getDescriptor()));
+		assertTrue(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
+		assertTrue(storedImage.equals(storedBlob.getDescriptor()));
 
 		// Test Unlinking
 		this.unlinkModels(this.storedImageLinkType, storedImage.getModelKey(), this.storedImageStoredBlobLinkName,
@@ -97,11 +97,11 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 		storedBlob = this.storedBlobRegistry.get(storedBlob);
 
-		Assert.assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
-		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
+		assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
+		assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 	}
 
-	@Ignore
+	@Disabled
 	@Test
 	public void testLinkDeleter() {
 		StoredImage storedImage = this.storedImageGenerator.generate();
@@ -129,8 +129,8 @@ public class StoredImageLinkTest extends AbstractLinkServiceTest {
 		storedImage = this.storedImageRegistry.get(storedImage);
 
 		// Check Not Linked. Deletable Items should be deleted via taskqueue.
-		Assert.assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
-		Assert.assertFalse(storedImage.equals(storedBlob.getDescriptor()));
+		assertFalse(storedBlob.getObjectifyKey().equals(storedImage.getStoredBlob()));
+		assertFalse(storedImage.equals(storedBlob.getDescriptor()));
 	}
 
 }

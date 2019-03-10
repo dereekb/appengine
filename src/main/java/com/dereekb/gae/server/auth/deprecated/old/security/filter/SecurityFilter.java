@@ -107,9 +107,9 @@ public final class SecurityFilter extends GenericFilterBean {
 
 	@Override
 	public void afterPropertiesSet() throws ServletException {
-		Assert.notNull(this.failureHandler, "AuthenticationFailureHandler must be set");
-		Assert.notNull(this.authenticationManager, "AuthenticationManager must be set");
-		Assert.notNull(this.newLoginHandler, "NewLoginHandler must be set");
+		notNull(this.failureHandler, "AuthenticationFailureHandler must be set");
+		notNull(this.authenticationManager, "AuthenticationManager must be set");
+		notNull(this.newLoginHandler, "NewLoginHandler must be set");
 	}
 
 }

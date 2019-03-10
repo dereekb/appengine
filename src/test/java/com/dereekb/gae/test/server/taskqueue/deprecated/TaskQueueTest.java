@@ -3,8 +3,8 @@ package com.dereekb.gae.test.server.taskqueue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.taskqueue.deprecated.TaskQueueParamPair;
 import com.dereekb.gae.server.taskqueue.deprecated.TaskQueuePushRequest;
@@ -42,12 +42,12 @@ public class TaskQueueTest {
 
 		TaskQueueRequestBuilder builder = new TaskQueueRequestBuilder();
 		List<TaskQueuePushRequest> splitTasks = builder.splitTaskAtParameter(secondParamName, request);
-		Assert.assertTrue(splitTasks.size() == 6);
+		assertTrue(splitTasks.size() == 6);
 
 		for (TaskQueuePushRequest task : splitTasks) {
-			Assert.assertTrue(task.getMethod() == Method.POST);
-			Assert.assertTrue(task.getCountdown() == 20L);
-			Assert.assertTrue(task.getParameters().size() == 2);
+			assertTrue(task.getMethod() == Method.POST);
+			assertTrue(task.getCountdown() == 20L);
+			assertTrue(task.getParameters().size() == 2);
 		}
 	}
 
@@ -62,10 +62,10 @@ public class TaskQueueTest {
 		identifiers.add(5L);
 
 		TaskQueueParamPair pair = TaskQueueParamPair.pairWithCommaSeparatedValue("identifiers", identifiers);
-		Assert.assertTrue(pair.getValue().equals("1,2,3,4,5"));
+		assertTrue(pair.getValue().equals("1,2,3,4,5"));
 
 		List<TaskQueueParamPair> pairs = TaskQueueParamPair.pairsForValues("identifiers", identifiers);
-		Assert.assertTrue(pairs.size() == 5);
+		assertTrue(pairs.size() == 5);
 	}
 
 	@Test
@@ -83,27 +83,27 @@ public class TaskQueueTest {
 
 		TaskQueueRequestBuilder builder = new TaskQueueRequestBuilder();
 		List<TaskQueuePushRequest> splitTasks = builder.splitTaskAtParameter(paramName, request);
-		Assert.assertTrue(splitTasks.size() == 3);
+		assertTrue(splitTasks.size() == 3);
 
 		TaskQueuePushRequest req1 = splitTasks.get(0);
 		TaskQueuePushRequest req2 = splitTasks.get(1);
-		Assert.assertTrue(req1.hashCode() != req2.hashCode());
+		assertTrue(req1.hashCode() != req2.hashCode());
 
 		TaskQueuePushRequest req1Copy = req1.copy();
 		TaskQueueParamPair req1CopyPair = new TaskQueueParamPair(paramName, "1");
 		req1Copy.setParameters(SingleItem.withValue(req1CopyPair));
 
-		Assert.assertTrue(req1.getRequestUrl().hashCode() == req1Copy.getRequestUrl().hashCode());
+		assertTrue(req1.getRequestUrl().hashCode() == req1Copy.getRequestUrl().hashCode());
 
 		// Collections may be different types, however. A SingleItem collection differs from a List collection's hashcode.
-		Assert.assertFalse(req1.getParameters().hashCode() == req1Copy.getParameters().hashCode());
+		assertFalse(req1.getParameters().hashCode() == req1Copy.getParameters().hashCode());
 
 		// Use a separate function for retrieving the hashcode from pairs themselves.
 		Integer req1Hash = req1.getParametersHashcode();
 		Integer req1CopyHash = req1Copy.getParametersHashcode();
-		Assert.assertTrue(req1Hash.equals(req1CopyHash));
+		assertTrue(req1Hash.equals(req1CopyHash));
 
-		Assert.assertTrue(req1.hashCode() == req1Copy.hashCode());
+		assertTrue(req1.hashCode() == req1Copy.hashCode());
 	}
 
 	@Test
@@ -114,21 +114,21 @@ public class TaskQueueTest {
 		request.setMethod(Method.POST);
 		request.setCountdown(60000000L);
 
-		Assert.assertTrue(filter.filterObject(request) == FilterResult.PASS);
+		assertTrue(filter.filterObject(request) == FilterResult.PASS);
 
 		// Attempting to use the request again should result in a fail.
-		Assert.assertTrue(filter.filterObject(request) == FilterResult.FAIL);
+		assertTrue(filter.filterObject(request) == FilterResult.FAIL);
 
 		// Even with the countdown set to null, it should fail, since it has not elapsed yet.
 		request.setCountdown(null);
-		Assert.assertTrue(filter.filterObject(request) == FilterResult.FAIL);
+		assertTrue(filter.filterObject(request) == FilterResult.FAIL);
 
 		request.setRequestUrl("/newTest");
 		request.setCountdown(0L);
 
 		// No countdown means the request isnt added to the map
-		Assert.assertTrue(filter.filterObject(request) == FilterResult.PASS);
-		Assert.assertTrue(filter.filterObject(request) == FilterResult.PASS);
+		assertTrue(filter.filterObject(request) == FilterResult.PASS);
+		assertTrue(filter.filterObject(request) == FilterResult.PASS);
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class TaskQueueTest {
 					} catch (Exception ex) {
 						TaskQueuePushRequest request = new TaskQueuePushRequest("/test");
 						request.setMethod(Method.POST);
-						Assert.assertTrue(filter.filterObject(request) == FilterResult.FAIL);
+						assertTrue(filter.filterObject(request) == FilterResult.FAIL);
 					}
 				}
 			}
@@ -156,7 +156,7 @@ public class TaskQueueTest {
 		TaskQueuePushRequest request = new TaskQueuePushRequest("/test");
 		request.setMethod(Method.POST);
 		request.setCountdown(10L);
-		Assert.assertTrue(filter.filterObject(request) == FilterResult.PASS);
+		assertTrue(filter.filterObject(request) == FilterResult.PASS);
 
 		Thread t1 = new Thread(runnable);
 		Thread t2 = new Thread(runnable);
@@ -168,7 +168,7 @@ public class TaskQueueTest {
 			TaskQueuePushRequest newRequest = new TaskQueuePushRequest("/test/" + i);
 			newRequest.setMethod(Method.POST);
 			newRequest.setCountdown(10000L);
-			Assert.assertTrue(filter.filterObject(newRequest) == FilterResult.PASS);
+			assertTrue(filter.filterObject(newRequest) == FilterResult.PASS);
 		}
 
 		try {
@@ -177,7 +177,7 @@ public class TaskQueueTest {
 			e.printStackTrace();
 		}
 
-		Assert.assertTrue(filter.getCountdownMap().size() == (1 + 20));
+		assertTrue(filter.getCountdownMap().size() == (1 + 20));
 	}
 
 }
