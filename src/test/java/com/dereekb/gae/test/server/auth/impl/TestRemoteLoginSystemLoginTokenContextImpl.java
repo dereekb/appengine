@@ -16,6 +16,12 @@ public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractTestLogi
         implements TestLoginTokenContext {
 
 	@Override
+	public LoginToken getLoginToken() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public TestLoginTokenPair generateLogin(String username,
 	                                        Long roles) {
 		// TODO Auto-generated method stub
@@ -51,5 +57,6 @@ public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractTestLogi
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }
