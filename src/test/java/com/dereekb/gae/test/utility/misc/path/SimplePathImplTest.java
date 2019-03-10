@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.utility.misc.path;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
 
@@ -20,7 +20,7 @@ public class SimplePathImplTest {
 		SimplePathImpl aPath = new SimplePathImpl(a);
 
 		String path = aPath.getPath();
-		Assert.assertTrue(path.equals(aPath.getDivider() + a));
+		assertTrue(path.equals(aPath.getDivider() + a));
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class SimplePathImplTest {
 		SimplePathImpl aPath = new SimplePathImpl(a);
 
 		String path = aPath.getPath();
-		Assert.assertTrue(path.equals(aPath.getDivider()));
+		assertTrue(path.equals(aPath.getDivider()));
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class SimplePathImplTest {
 		String path = cPath.getPath();
 		String expected = aPath.getDivider() + a + aPath.getDivider() + b;
 
-		Assert.assertTrue(path.equals(expected));
+		assertTrue(path.equals(expected));
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class SimplePathImplTest {
 		String path = cPath.getPath();
 		String expected = aPath.getDivider() + 'a' + aPath.getDivider() + 'b';
 
-		Assert.assertTrue(path.equals(expected));
+		assertTrue(path.equals(expected));
 	}
 
 }

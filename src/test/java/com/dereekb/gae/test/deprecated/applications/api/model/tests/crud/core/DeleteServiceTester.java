@@ -3,7 +3,7 @@ package com.dereekb.gae.test.applications.api.model.tests.crud.core;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.model.crud.services.components.DeleteService;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
@@ -91,14 +91,14 @@ public class DeleteServiceTester<T extends UniqueModel>
 		DeleteResponse<T> response = this.deleteService.delete(request);
 
 		Collection<T> deleted = response.getModels();
-		Assert.assertTrue(deleted.size() == 1);
+		assertTrue(deleted.size() == 1);
 
 		T deletedModel = deleted.iterator().next();
 		ModelKey deletedModelKey = deletedModel.getModelKey();
 		targetKey.equals(deletedModelKey);
 
 		T reread = this.getterSetter.get(deletedModel);
-		Assert.assertTrue(reread == null);
+		assertTrue(reread == null);
 	}
 
 	private void testDeletingMultiple() {
@@ -109,10 +109,10 @@ public class DeleteServiceTester<T extends UniqueModel>
 		DeleteResponse<T> response = this.deleteService.delete(request);
 
 		Collection<T> deleted = response.getModels();
-		Assert.assertTrue(deleted.size() == targetKeys.size());
+		assertTrue(deleted.size() == targetKeys.size());
 
 		List<T> reread = this.getterSetter.get(targets);
-		Assert.assertTrue(reread.isEmpty());
+		assertTrue(reread.isEmpty());
 	}
 
 	private void testDeletingNothing() {

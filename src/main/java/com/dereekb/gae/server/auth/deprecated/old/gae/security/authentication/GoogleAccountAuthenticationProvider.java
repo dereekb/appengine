@@ -139,11 +139,11 @@ public class GoogleAccountAuthenticationProvider
 
 	@Override
 	public void afterPropertiesSet() throws ServletException {
-		Assert.notNull(this.loginSystem, "LoginSystem must be set");
-		Assert.notNull(this.loginPointerGetter, "LoginPointerGetter must be set");
-		Assert.notNull(this.loginGetter, "LoginGetter must be set");
-		Assert.notNull(this.loginCreator, "LoginCreator must be set");
-		Assert.notNull(this.authenticationFactory, "LoginAuthenticationFactory must be set");
+		notNull(this.loginSystem, "LoginSystem must be set");
+		notNull(this.loginPointerGetter, "LoginPointerGetter must be set");
+		notNull(this.loginGetter, "LoginGetter must be set");
+		notNull(this.loginCreator, "LoginCreator must be set");
+		notNull(this.authenticationFactory, "LoginAuthenticationFactory must be set");
 	}
 
 }

@@ -1,9 +1,11 @@
 package com.dereekb.gae.test.server.auth;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
@@ -30,12 +32,12 @@ public class LoginTokenTests {
 		loginToken.setRefreshAllowed(true);
 
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
-		Assert.assertNotNull(encodedToken);
+		assertNotNull(encodedToken);
 
 		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
-		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
-		Assert.assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
-		Assert.assertTrue(decodedToken.isRefreshAllowed());
+		assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
+		assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
+		assertTrue(decodedToken.isRefreshAllowed());
 	}
 
 	@Test
@@ -48,14 +50,14 @@ public class LoginTokenTests {
 		loginToken.setExpiration(new Date(new Date().getTime() + (60 * 1000)));
 		loginToken.setIssued(new Date());
 
-		Assert.assertTrue(loginToken.isNewUser());
+		assertTrue(loginToken.isNewUser());
 
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
-		Assert.assertNotNull(encodedToken);
+		assertNotNull(encodedToken);
 
 		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
-		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
-		Assert.assertTrue(decodedToken.isNewUser());
+		assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
+		assertTrue(decodedToken.isNewUser());
 	}
 
 	@Test
@@ -77,10 +79,10 @@ public class LoginTokenTests {
 
 		// 1488072457082
 		// 1488072337082
-		Assert.assertTrue(expectedExpireTime.equals(expireTime));
+		assertTrue(expectedExpireTime.equals(expireTime));
 
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
-		Assert.assertNotNull(encodedToken);
+		assertNotNull(encodedToken);
 
 		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
 
@@ -89,8 +91,8 @@ public class LoginTokenTests {
 		Long roundedIssued = DateUtility.roundDateDownToSecond(loginToken.getIssued()).getTime();
 		Long decodedIssued = decodedToken.getIssued().getTime();
 
-		Assert.assertTrue(decodedIssued.equals(roundedIssued));
-		Assert.assertTrue(
+		assertTrue(decodedIssued.equals(roundedIssued));
+		assertTrue(
 		        decodedToken.getExpiration().equals(DateUtility.roundDateDownToSecond(loginToken.getExpiration())));
 
 	}
@@ -103,10 +105,10 @@ public class LoginTokenTests {
 		loginToken.setPointerType(LoginPointerType.ANONYMOUS);
 
 		String encodedToken = encoderDecoder.encodeLoginToken(loginToken);
-		Assert.assertNotNull(encodedToken);
+		assertNotNull(encodedToken);
 
 		LoginToken decodedToken = encoderDecoder.decodeLoginToken(encodedToken).getLoginToken();
-		Assert.assertTrue(decodedToken.isAnonymous());
+		assertTrue(decodedToken.isAnonymous());
 	}
 
 	@Test
@@ -122,12 +124,12 @@ public class LoginTokenTests {
 		loginToken.setRefreshAllowed(true);
 
 		String encodedToken = encoder.encodeLoginToken(loginToken);
-		Assert.assertNotNull(encodedToken);
+		assertNotNull(encodedToken);
 
 		LoginToken decodedToken = decoder.decodeLoginToken(encodedToken).getLoginToken();
-		Assert.assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
-		Assert.assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
-		Assert.assertTrue(decodedToken.isRefreshAllowed());
+		assertTrue(decodedToken.getLoginPointerId().equals(loginToken.getLoginPointerId()));
+		assertTrue(decodedToken.getLoginId().equals(loginToken.getLoginId()));
+		assertTrue(decodedToken.isRefreshAllowed());
 	}
 
 	@Test
@@ -145,10 +147,10 @@ public class LoginTokenTests {
 		loginToken.setRefreshAllowed(true);
 
 		String encodedToken = encoder.encodeLoginToken(loginToken);
-		Assert.assertNotNull(encodedToken);
+		assertNotNull(encodedToken);
 
 		LoginToken decodedToken = decoder.decodeLoginToken(encodedToken).getLoginToken();
-		Assert.assertTrue("Should atleast match...", decodedToken.getApp().equals(invalidAppId));
+		assertTrue(decodedToken.getApp().equals(invalidAppId), "Should atleast match...");
 
 	}
 

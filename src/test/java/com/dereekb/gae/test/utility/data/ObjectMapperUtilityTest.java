@@ -3,8 +3,8 @@ package com.dereekb.gae.test.utility.data;
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.auth.model.login.dto.LoginData;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
@@ -23,8 +23,8 @@ public class ObjectMapperUtilityTest {
 		JsonNode node = utility.getMapper().valueToTree(testData);
 
 		List<String> serializedTestData = utility.mapArrayToList(node, String.class);
-		Assert.assertTrue(testData.containsAll(serializedTestData));
-		Assert.assertTrue(serializedTestData.containsAll(testData));
+		assertTrue(testData.containsAll(serializedTestData));
+		assertTrue(serializedTestData.containsAll(testData));
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class ObjectMapperUtilityTest {
 
 		try {
 			utility.mapArrayToList(node, LoginData.class);
-			Assert.fail();
+			fail();
 		} catch (IOException e) {
 
 		}

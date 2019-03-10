@@ -7,8 +7,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.MvcResult;
@@ -75,9 +75,9 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 
 		try {
 			Login login = this.registerService.register(pointer);
-			Assert.assertNotNull(login);
+			assertNotNull(login);
 		} catch (LoginExistsException | LoginRegistrationRejectedException e) {
-			Assert.fail();
+			fail();
 		}
 	}
 
@@ -133,7 +133,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		DecodedLoginToken<LoginToken> decodedPasswordToken = this.loginTokenService.decodeLoginToken(token);
 
 		LoginToken passwordLoginToken = decodedPasswordToken.getLoginToken();
-		Assert.assertFalse(passwordLoginToken.isRegistered());
+		assertFalse(passwordLoginToken.isRegistered());
 
 		// Login Again
 		testUtility.loginWithPassword(TEST_USERNAME, TEST_PASSWORD);
@@ -142,7 +142,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		String fullUserToken = testUtility.register(token);
 
 		DecodedLoginToken<LoginToken> decodedFullToken = this.loginTokenService.decodeLoginToken(fullUserToken);
-		Assert.assertTrue(decodedFullToken.getLoginToken().isRegistered());
+		assertTrue(decodedFullToken.getLoginToken().isRegistered());
 	}
 
 	@Test
@@ -153,7 +153,7 @@ public class LoginRegisterControllerTest extends ApiApplicationTestContext {
 		MockHttpServletRequestBuilder registerRequestBuilder = this.serviceRequestBuilder.post(LOGIN_REGISTER_URL);
 		MvcResult result = this.performHttpRequest(registerRequestBuilder).andReturn();
 
-		Assert.assertTrue(result.getResponse().getStatus() == HttpServletResponse.SC_FORBIDDEN);
+		assertTrue(result.getResponse().getStatus() == HttpServletResponse.SC_FORBIDDEN);
 
 	}
 

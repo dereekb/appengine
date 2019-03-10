@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.utility.collection.tree;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.collections.tree.map.MapTree;
 
@@ -13,8 +13,8 @@ public class MapTreeNodeTest {
 		MapTree<String> nodeB = new MapTree<String>("b");
 
 		nodeA.put(nodeB);
-		Assert.assertTrue(nodeA.containsValue("b"));
-		Assert.assertTrue(nodeA.getChildrenValues().contains("b"));
+		assertTrue(nodeA.containsValue("b"));
+		assertTrue(nodeA.getChildrenValues().contains("b"));
 	}
 
 	@Test
@@ -26,12 +26,12 @@ public class MapTreeNodeTest {
 		nodeA.put(4);
 		nodeA.put(5);
 
-		Assert.assertFalse(nodeA.contains(nodeB));
+		assertFalse(nodeA.contains(nodeB));
 
-		Assert.assertTrue(nodeA.childCount() == 3);
+		assertTrue(nodeA.childCount() == 3);
 		nodeA.setWildcard(true);
-		Assert.assertTrue(nodeA.isWildcard());
-		Assert.assertTrue(nodeA.childCount() == 0);
+		assertTrue(nodeA.isWildcard());
+		assertTrue(nodeA.childCount() == 0);
 
 		nodeA.contains(nodeB);
 	}
@@ -46,10 +46,10 @@ public class MapTreeNodeTest {
 
 		nodeA.merge(nodeB);
 
-		Assert.assertTrue(nodeA.getChildrenValues().size() == 3);
-		Assert.assertNotNull(nodeA.getChild("c"));
-		Assert.assertNotNull(nodeA.getChild("d"));
-		Assert.assertNotNull(nodeA.getChild("e"));
+		assertTrue(nodeA.getChildrenValues().size() == 3);
+		assertNotNull(nodeA.getChild("c"));
+		assertNotNull(nodeA.getChild("d"));
+		assertNotNull(nodeA.getChild("e"));
 
 		MapTree<String> nodeC = new MapTree<String>("c");
 		nodeC.put("f");
@@ -58,12 +58,12 @@ public class MapTreeNodeTest {
 
 		MapTree<String> nodeAClone = nodeA.newTree();
 		nodeAClone.mergeChild(nodeC);
-		Assert.assertTrue(nodeAClone.getChild("c").childCount() == 3);
-		Assert.assertNotNull(nodeAClone.getChild("c").getChild("f"));
+		assertTrue(nodeAClone.getChild("c").childCount() == 3);
+		assertNotNull(nodeAClone.getChild("c").getChild("f"));
 
 		nodeA.getChild("c").merge(nodeC);
-		Assert.assertTrue(nodeAClone.getChild("c").childCount() == 3);
-		Assert.assertNotNull(nodeA.getChild("c").getChild("f"));
+		assertTrue(nodeAClone.getChild("c").childCount() == 3);
+		assertNotNull(nodeA.getChild("c").getChild("f"));
 	}
 
 	@Test
@@ -75,24 +75,24 @@ public class MapTreeNodeTest {
 		nodeB.put("e");
 
 		// Trees should be similar to eachother
-		Assert.assertTrue(nodeA.similarTo(nodeA));
-		Assert.assertTrue(nodeB.similarTo(nodeB));
+		assertTrue(nodeA.similarTo(nodeA));
+		assertTrue(nodeB.similarTo(nodeB));
 
 		// a does not exist in b.[c,d,e], and vice-versa.
-		Assert.assertFalse(nodeA.contains(nodeB));
-		Assert.assertFalse(nodeB.contains(nodeA));
+		assertFalse(nodeA.contains(nodeB));
+		assertFalse(nodeB.contains(nodeA));
 
 		// Node B now contains a child 'a'.
 		nodeB.put("a");
-		Assert.assertTrue(nodeB.contains(nodeA));
+		assertTrue(nodeB.contains(nodeA));
 
 		// Node B does not contain a child 'a.c'.
 		nodeA.put("c");
-		Assert.assertFalse(nodeB.contains(nodeA));
+		assertFalse(nodeB.contains(nodeA));
 
 		// Node B contains all the children of node a, [c]
-		Assert.assertTrue(nodeB.containsChildren(nodeA));
-		Assert.assertFalse(nodeA.containsChildren(nodeB));
+		assertTrue(nodeB.containsChildren(nodeA));
+		assertFalse(nodeA.containsChildren(nodeB));
 	}
 
 	@Test
@@ -106,24 +106,24 @@ public class MapTreeNodeTest {
 		nodeB.put("e");
 
 		// Trees should be similar to eachother
-		Assert.assertTrue(nodeA.similarTo(nodeA));
-		Assert.assertTrue(nodeB.similarTo(nodeB));
+		assertTrue(nodeA.similarTo(nodeA));
+		assertTrue(nodeB.similarTo(nodeB));
 
 		// a does not exist in b.[c,d,e], and vice-versa.
-		Assert.assertTrue(nodeA.contains(nodeB));
-		Assert.assertFalse(nodeB.contains(nodeA));
+		assertTrue(nodeA.contains(nodeB));
+		assertFalse(nodeB.contains(nodeA));
 
 		// Node B now contains a child 'a'.
 		nodeB.put("a");
-		Assert.assertFalse(nodeB.contains(nodeA));
+		assertFalse(nodeB.contains(nodeA));
 
 		// Node B does not contain a child 'a.c'.
 		nodeA.put("c");
-		Assert.assertFalse(nodeB.contains(nodeA));
+		assertFalse(nodeB.contains(nodeA));
 
 		nodeB.setWildcard(true);
-		Assert.assertTrue(nodeA.similarTo(nodeB));
-		Assert.assertTrue(nodeB.similarTo(nodeA));
+		assertTrue(nodeA.similarTo(nodeB));
+		assertTrue(nodeB.similarTo(nodeA));
 	}
 
 }

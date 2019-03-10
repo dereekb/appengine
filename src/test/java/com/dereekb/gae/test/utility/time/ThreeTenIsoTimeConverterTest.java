@@ -2,8 +2,8 @@ package com.dereekb.gae.test.utility.time;
 
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
 
@@ -16,7 +16,7 @@ public class ThreeTenIsoTimeConverterTest {
 		String nowString = ThreeTenIsoTimeConverter.INSTANT_CONVERTER.convertToString(now);
 		Date nowConvert = ThreeTenIsoTimeConverter.INSTANT_CONVERTER.convertFromString(nowString);
 
-		Assert.assertTrue(now.equals(nowConvert));
+		assertTrue(now.equals(nowConvert));
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class ThreeTenIsoTimeConverterTest {
 		Date dateConvert = ThreeTenIsoTimeConverter.INSTANT_CONVERTER.convertFromString(timeWithTimeZone);
 		String dateString = ThreeTenIsoTimeConverter.INSTANT_CONVERTER.convertToString(dateConvert);
 
-		Assert.assertTrue(dateString.equals(timeWithTimeZone));
+		assertTrue(dateString.equals(timeWithTimeZone));
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class ThreeTenIsoTimeConverterTest {
 		Date dateConvert = ThreeTenIsoTimeConverter.LOCAL_TIME_CONVERTER.convertFromString(timeWithTimeZone);
 		String dateString = ThreeTenIsoTimeConverter.LOCAL_TIME_CONVERTER.convertToString(dateConvert);
 
-		Assert.assertTrue(dateString.equals(timeWithTimeZone));
+		assertTrue(dateString.equals(timeWithTimeZone));
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.model.general.time;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.TimeSpan;
@@ -18,13 +18,13 @@ public class DayTimeSpanPairImplTest {
 		TimeSpan aTimes = new TimeSpanImpl(TimeImpl.midnight(), TimeImpl.noon());
 
 		DayTimeSpanPairImpl a = new DayTimeSpanPairImpl(Day.TUESDAY, aTimes);
-		Assert.assertTrue(a.compareTo(a) == 0); // A is the same as A
+		assertTrue(a.compareTo(a) == 0); // A is the same as A
 
 		DayTimeSpanPairImpl b = new DayTimeSpanPairImpl(Day.MONDAY, aTimes);
-		Assert.assertTrue(a.compareTo(b) > 0); // A is after B
+		assertTrue(a.compareTo(b) > 0); // A is after B
 
 		DayTimeSpanPairImpl c = new DayTimeSpanPairImpl(Day.WEDNESDAY, aTimes);
-		Assert.assertTrue(a.compareTo(c) < 0); // A is before C
+		assertTrue(a.compareTo(c) < 0); // A is before C
 
 	}
 

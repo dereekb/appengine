@@ -1,11 +1,12 @@
 package com.dereekb.gae.test.server.search;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Calendar;
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
@@ -18,7 +19,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.fiel
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.SimpleExpression;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 
-@RunWith(JUnit4.class)
+
 public class DocumentQueryExpressionBuilderTests {
 
 	private static final String TEST_FIELD_NAME = "field";
@@ -30,7 +31,7 @@ public class DocumentQueryExpressionBuilderTests {
 		ExpressionBuilder builder = new AtomField(TEST_FIELD_NAME, value);
 
 		String expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 	}
 
@@ -41,17 +42,17 @@ public class DocumentQueryExpressionBuilderTests {
 		TextField builder = new TextField(TEST_FIELD_NAME, value);
 
 		String expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 		builder.setStemming(true);
 
 		expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 		builder.setSpecificText(true);
 
 		expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 	}
 
 	@Test
@@ -61,27 +62,33 @@ public class DocumentQueryExpressionBuilderTests {
 		NumberField builder = new NumberField(TEST_FIELD_NAME, value);
 
 		String expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 		builder.setValue(new Integer(10));
 		expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 		builder.setOperator(ExpressionOperator.GREATER_OR_EQUAL_TO);
 		expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 	}
 
 	@Test
 	public void testDateQueryField() {
 		Date firstDate = new Date(0);
-		DateField builder = new DateField(TEST_FIELD_NAME, firstDate, ExpressionOperator.GREATER_THAN);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(firstDate);
 
-		Assert.assertTrue("The year should be set properly", builder.getYear() == 1970);
+		int dateYear = calendar.get(Calendar.YEAR);
+
+		DateField builder = new DateField(TEST_FIELD_NAME, firstDate, ExpressionOperator.GREATER_THAN);
+		int year = builder.getYear();
+
+		assertTrue(year == dateYear, "The year should be set properly");
 
 		String expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 	}
 
 	@Test
@@ -92,7 +99,7 @@ public class DocumentQueryExpressionBuilderTests {
 		GeoDistanceField builder = new GeoDistanceField(TEST_FIELD_NAME, point, radius);
 
 		String expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 	}
 
@@ -104,7 +111,7 @@ public class DocumentQueryExpressionBuilderTests {
 		ExpressionWrap wrap = new ExpressionWrap(builder);
 
 		String expressionValue = wrap.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 	}
 
 	@Test
@@ -114,13 +121,13 @@ public class DocumentQueryExpressionBuilderTests {
 		SimpleExpression builder = new SimpleExpression(value);
 
 		String expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
+		assertNotNull(expressionValue);
 
 		value = "complex OR expression";
 		builder.setExpression(value);
 		expressionValue = builder.getExpressionValue();
-		Assert.assertNotNull(expressionValue);
-		Assert.assertTrue(expressionValue.indexOf("OR") == -1);
+		assertNotNull(expressionValue);
+		assertTrue(expressionValue.indexOf("OR") == -1);
 	}
 
 

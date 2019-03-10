@@ -1,12 +1,14 @@
 package com.dereekb.gae.test.utility.web;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.AntPathMatcher;
 
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
@@ -23,18 +25,18 @@ public class UrlMatchTest {
 		return matcher;
 	}
 
-	@Ignore
+	@Disabled
 	@Test
 	public void testAntMatcher() {
 		String variable = "b";
 		String pattern = "a/{" + variable + "}/c";
 		String path = "a/" + variable + "/c";
 
-		Assert.assertTrue(antMatcher.match(pattern, path));
+		assertTrue(antMatcher.match(pattern, path));
 		Map<String, String> variables = antMatcher.extractUriTemplateVariables(pattern, path);
 
 		String variableValue = variables.get(variable);
-		Assert.assertTrue(variableValue.equals(variable));
+		assertTrue(variableValue.equals(variable));
 	}
 
 	@Test
@@ -43,8 +45,8 @@ public class UrlMatchTest {
 		String directPath = "/a/b/c";
 		String apiPath = "api/service/version" + directPath;
 
-		Assert.assertTrue("Should match the entire path", antMatcher.match(pattern, apiPath));
-		Assert.assertFalse("Will not match the direct path", antMatcher.match(pattern, directPath));
+		assertTrue(antMatcher.match(pattern, apiPath), "Should match the entire path");
+		assertFalse(antMatcher.match(pattern, directPath), "Will not match the direct path");
 	}
 
 	@Test
@@ -57,13 +59,13 @@ public class UrlMatchTest {
 
 		MultiTypeAntRequestMatcher matcher = new MultiTypeAntRequestMatcher(pattern, types);
 
-		Assert.assertTrue(matcher.matchesPath("/a/query"));
-		Assert.assertTrue(matcher.matchesPath("/b/query"));
-		Assert.assertTrue(matcher.matchesPath("/c/query"));
+		assertTrue(matcher.matchesPath("/a/query"));
+		assertTrue(matcher.matchesPath("/b/query"));
+		assertTrue(matcher.matchesPath("/c/query"));
 
-		Assert.assertFalse(matcher.matchesPath("/d/query"));
-		Assert.assertFalse(matcher.matchesPath("/x/y/z"));
-		Assert.assertFalse(matcher.matchesPath("/dfgsdfgsfdg"));
+		assertFalse(matcher.matchesPath("/d/query"));
+		assertFalse(matcher.matchesPath("/x/y/z"));
+		assertFalse(matcher.matchesPath("/dfgsdfgsfdg"));
 	}
 
 	@Test
@@ -83,14 +85,14 @@ public class UrlMatchTest {
 
 		MultiTypeMapAntRequestMatcher matcher = new MultiTypeMapAntRequestMatcher(pattern, map);
 
-		Assert.assertTrue(matcher.matchesPath("/b/y/foo"));
-		Assert.assertTrue(matcher.matchesPath("/b/x/foo"));
-		Assert.assertTrue(matcher.matchesPath("/a/z/foo"));
-		Assert.assertTrue(matcher.matchesPath("/c/x/foo"));
+		assertTrue(matcher.matchesPath("/b/y/foo"));
+		assertTrue(matcher.matchesPath("/b/x/foo"));
+		assertTrue(matcher.matchesPath("/a/z/foo"));
+		assertTrue(matcher.matchesPath("/c/x/foo"));
 
-		Assert.assertFalse(matcher.matchesPath("/d/query"));
-		Assert.assertFalse(matcher.matchesPath("/x/y/z"));
-		Assert.assertFalse(matcher.matchesPath("/dfgsdfgsfdg"));
+		assertFalse(matcher.matchesPath("/d/query"));
+		assertFalse(matcher.matchesPath("/x/y/z"));
+		assertFalse(matcher.matchesPath("/dfgsdfgsfdg"));
 	}
 
 }

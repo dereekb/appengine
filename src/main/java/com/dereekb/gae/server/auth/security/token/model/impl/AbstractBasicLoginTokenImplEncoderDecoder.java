@@ -10,6 +10,7 @@ import com.dereekb.gae.server.auth.security.token.model.LoginTokenDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
+import com.dereekb.gae.utilities.time.DateUtility;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -31,6 +32,8 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 
 	public static final String REFRESH_KEY = "e";
 	public static final String APP_KEY = "app";
+
+	public static final Integer DEFAULT_EXPIRATION_MINUTES = 15;
 
 	public static final SignatureAlgorithm DEFAULT_ALGORITHM = SignatureConfigurationImpl.DEFAULT_ALGORITHM;
 
@@ -78,7 +81,14 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 
 		claims.setSubject(loginToken.getSubject());
 		claims.setIssuedAt(loginToken.getIssued());
-		claims.setExpiration(loginToken.getExpiration());
+
+		Date expiration = loginToken.getExpiration();
+
+		if (expiration == null) {
+			expiration = this.makeDefaultExpirationDate();
+		}
+
+		claims.setExpiration(expiration);
 
 		String app = loginToken.getApp();
 		if (app != null) {
@@ -160,6 +170,12 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		if (refreshAllowed != null) {
 			loginToken.setRefreshAllowed(refreshAllowed);
 		}
+	}
+
+	// MARK: Internal
+	private Date makeDefaultExpirationDate() {
+		Date date = DateUtility.getDateIn(DateUtility.timeInMinutes(DEFAULT_EXPIRATION_MINUTES));
+		return date;
 	}
 
 }

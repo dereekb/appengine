@@ -17,6 +17,11 @@ public interface TestLoginTokenContext {
 	public String getToken();
 
 	/**
+	 * @return {@link LoginToken}. May be {@code null}.
+	 */
+	public LoginToken getLoginToken();
+
+	/**
 	 * Generates a new anonymous login token.
 	 */
 	public String generateAnonymousToken();

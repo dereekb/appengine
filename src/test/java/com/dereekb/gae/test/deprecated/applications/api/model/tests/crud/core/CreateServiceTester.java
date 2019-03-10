@@ -3,7 +3,7 @@ package com.dereekb.gae.test.applications.api.model.tests.crud.core;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.model.crud.services.components.CreateService;
 import com.dereekb.gae.model.crud.services.request.impl.CreateRequestImpl;
@@ -87,8 +87,8 @@ public class CreateServiceTester<T extends UniqueModel>
 		Collection<ModelKey> keys = ModelKey.readModelKeys(response.getModels());
 		Collection<T> created = response.getModels();
 
-		Assert.assertTrue(keys.size() == 1);
-		Assert.assertTrue(created.size() == 1);
+		assertTrue(keys.size() == 1);
+		assertTrue(created.size() == 1);
 	}
 
 	private void testCreatingMultiple() {
@@ -98,8 +98,8 @@ public class CreateServiceTester<T extends UniqueModel>
 
 		Collection<ModelKey> keys = ModelKey.readModelKeys(response.getModels());
 		Collection<T> created = response.getModels();
-		Assert.assertTrue(keys.size() == templates.size());
-		Assert.assertTrue(created.size() == templates.size());
+		assertTrue(keys.size() == templates.size());
+		assertTrue(created.size() == templates.size());
 	}
 
 	private void testCreatingNothing() {

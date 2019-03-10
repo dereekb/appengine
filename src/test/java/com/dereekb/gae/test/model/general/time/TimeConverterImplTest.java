@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.model.general.time;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Hour;
 import com.dereekb.gae.model.general.time.Time;
@@ -39,10 +39,10 @@ public class TimeConverterImplTest {
 		Hour hour = time.getHour();
 
 		TimeAmPm amPm = hour.getAmPm();
-		Assert.assertTrue(amPm.equals(expectedAmPm));
-		Assert.assertTrue(hour.getVisualHour().equals(expectedVisualHour));
-		Assert.assertTrue(hour.getDayHour().equals(expectedDayHour));
-		Assert.assertTrue(time.getMinutes().equals(expectedMinute));
+		assertTrue(amPm.equals(expectedAmPm));
+		assertTrue(hour.getVisualHour().equals(expectedVisualHour));
+		assertTrue(hour.getDayHour().equals(expectedDayHour));
+		assertTrue(time.getMinutes().equals(expectedMinute));
 	}
 
 	@Test
@@ -58,10 +58,10 @@ public class TimeConverterImplTest {
 		Hour hour = time.getHour();
 
 		TimeAmPm amPm = hour.getAmPm();
-		Assert.assertTrue(amPm.equals(expectedAmPm));
-		Assert.assertTrue(hour.getVisualHour().equals(expectedVisualHour));
-		Assert.assertTrue(hour.getDayHour().equals(expectedDayHour));
-		Assert.assertTrue(time.getMinutes().equals(expectedMinute));
+		assertTrue(amPm.equals(expectedAmPm));
+		assertTrue(hour.getVisualHour().equals(expectedVisualHour));
+		assertTrue(hour.getDayHour().equals(expectedDayHour));
+		assertTrue(time.getMinutes().equals(expectedMinute));
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class TimeConverterImplTest {
 		TimeSpan timeSpan = TimeSpanImpl.toMidnight(TimeImpl.noon());
 		String string = stringConverter.convertToString(timeSpan);
 
-		Assert.assertNotNull(string);
+		assertNotNull(string);
 	}
 
 }

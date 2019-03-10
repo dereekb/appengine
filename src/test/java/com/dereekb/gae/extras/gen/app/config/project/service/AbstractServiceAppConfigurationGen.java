@@ -2,7 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.project.service;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppConfigurationGenerator;

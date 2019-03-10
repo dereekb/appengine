@@ -2,8 +2,8 @@ package com.dereekb.gae.test.utility.collection.chain;
 
 import java.util.Iterator;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.collections.chain.impl.ValuesChain;
 
@@ -15,7 +15,7 @@ public class ChainTests {
 		stringChain.chain("b").chain("c").chain("d").chain("e");
 
 		String string = stringChain.toString(",");
-		Assert.assertTrue(string.equals("a,b,c,d,e"));
+		assertTrue(string.equals("a,b,c,d,e"));
 	}
 
 	@Test
@@ -25,19 +25,19 @@ public class ChainTests {
 
 		Iterator<ValuesChain<String>> iterator = stringChain.chainIterable();
 		ValuesChain<String> first = iterator.next(); // a
-		Assert.assertTrue(first.equals(stringChain));
+		assertTrue(first.equals(stringChain));
 
 		ValuesChain<String> second = iterator.next(); // b
-		Assert.assertTrue(second.equals(stringChain.next()));
+		assertTrue(second.equals(stringChain.next()));
 
 		ValuesChain<String> third = iterator.next(); // c
 		ValuesChain<String> secondNext = second.next();
-		Assert.assertTrue(third.equals(secondNext));
+		assertTrue(third.equals(secondNext));
 
 		iterator.remove(); // Remove c
 		ValuesChain<String> fourth = iterator.next();
 		ValuesChain<String> secondNewNext = second.next();
-		Assert.assertTrue(fourth.equals(secondNewNext));
+		assertTrue(fourth.equals(secondNewNext));
 
 	}
 
@@ -51,7 +51,7 @@ public class ChainTests {
 			temp += string.getValue();
 		}
 
-		Assert.assertTrue(temp.equals("abcde"));
+		assertTrue(temp.equals("abcde"));
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class ChainTests {
 			temp += string.getValue();
 		}
 
-		Assert.assertTrue(temp.equals("a"));
+		assertTrue(temp.equals("a"));
 	}
 
 }

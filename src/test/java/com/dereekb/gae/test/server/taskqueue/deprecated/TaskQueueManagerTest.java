@@ -2,8 +2,8 @@ package com.dereekb.gae.test.server.taskqueue;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.taskqueue.deprecated.TaskQueueManager;
 import com.dereekb.gae.server.taskqueue.deprecated.TaskQueueParamPair;
@@ -33,8 +33,8 @@ public class TaskQueueManagerTest {
 
 		String parameter = pair.getParameter();
 		String value = pair.getValue();
-		Assert.assertTrue(expectedValue.equals(value));
-		Assert.assertTrue(parameter.equals(testParam));
+		assertTrue(expectedValue.equals(value));
+		assertTrue(parameter.equals(testParam));
 	}
 
 	@Test
@@ -42,8 +42,8 @@ public class TaskQueueManagerTest {
 
 		String requestUrl = "Request URL";
 		TaskQueuePushRequest request = new TaskQueuePushRequest(requestUrl);
-		Assert.assertNotNull(request.getRequestUrl());
-		Assert.assertTrue(requestUrl.equals(request.getRequestUrl()));
+		assertNotNull(request.getRequestUrl());
+		assertTrue(requestUrl.equals(request.getRequestUrl()));
 
 	}
 
@@ -53,16 +53,16 @@ public class TaskQueueManagerTest {
 
 		TaskQueuePushRequest requestA = new TaskQueuePushRequest("No parameters");
 		TaskOptions optionA = manager.buildTaskOption(requestA);
-		Assert.assertNotNull(optionA);
+		assertNotNull(optionA);
 
 		Long testEta = 10000L;
 		TaskQueuePushRequest requestB = new TaskQueuePushRequest("With ETA");
 		requestB.setEta(testEta);
 
 		TaskOptions optionB = manager.buildTaskOption(requestB);
-		Assert.assertNotNull(optionB);
-		Assert.assertNotNull(optionB.getEtaMillis());
-		Assert.assertTrue(testEta.equals(optionB.getEtaMillis()));
+		assertNotNull(optionB);
+		assertNotNull(optionB.getEtaMillis());
+		assertTrue(testEta.equals(optionB.getEtaMillis()));
 
 	}
 

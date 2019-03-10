@@ -1,8 +1,8 @@
 package com.dereekb.gae.test.deprecated.applications.api.api.login.oauth;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
@@ -38,30 +38,30 @@ public class GoogleOAuthTests extends AbstractOAuthTests {
 		super.setService(googleOAuthService);
 	}
 
-	@Ignore // Comment out when testing with useful auth token.
+	@Disabled // Comment out when testing with useful auth token.
 	@Test
 	public void testProcessAuthorizationCode() {
 
 		OAuthAuthorizationInfo authorizationInfo = this.googleOAuthService
 		        .processAuthorizationCode(this.TEMPORARY_AUTHORIZATION_CODE);
-		Assert.assertNotNull(authorizationInfo);
+		assertNotNull(authorizationInfo);
 
 		OAuthLoginInfo info = authorizationInfo.getLoginInfo();
-		Assert.assertNotNull(info);
+		assertNotNull(info);
 
-		Assert.assertNotNull(info.getEmail());
+		assertNotNull(info.getEmail());
 
 		OAuthAccessToken token = authorizationInfo.getAccessToken();
-		Assert.assertNotNull(token);
+		assertNotNull(token);
 
 	}
 
-	@Ignore // Comment out when testing with useful access token.
+	@Disabled // Comment out when testing with useful access token.
 	@Test
 	public void testGetLoginInfo() {
 		OAuthAccessToken token = new OAuthAccessTokenImpl(this.TEMPORARY_ACCESS_TOKEN);
 		OAuthAuthorizationInfo authorizationInfo = this.googleOAuthService.retrieveAuthorizationInfo(token);
-		Assert.assertNotNull(authorizationInfo);
+		assertNotNull(authorizationInfo);
 	}
 
 }

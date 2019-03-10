@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
@@ -31,9 +31,9 @@ public class ModelKeyTest {
 		int keyBhash = keyB.hashCode();
 		int keyChash = keyC.hashCode();
 
-		Assert.assertTrue(keyAhash == keyChash);
-		Assert.assertTrue(keyAhash != keyBhash);
-		Assert.assertTrue(keyBhash != keyChash);
+		assertTrue(keyAhash == keyChash);
+		assertTrue(keyAhash != keyBhash);
+		assertTrue(keyBhash != keyChash);
 	}
 
 	@Test
@@ -45,8 +45,8 @@ public class ModelKeyTest {
 		keysMap.put(new ModelKey(3L), "C");
 
 		String a = keysMap.get(new ModelKey(1L));
-		Assert.assertNotNull(a);
-		Assert.assertTrue(a.equals("A"));
+		assertNotNull(a);
+		assertTrue(a.equals("A"));
 
 	}
 
@@ -55,7 +55,7 @@ public class ModelKeyTest {
 		ModelKey string = new ModelKey("0");
 		ModelKey number = new ModelKey(0);
 
-		Assert.assertTrue(string.equals(number));
+		assertTrue(string.equals(number));
 	}
 
 	@Test
@@ -67,9 +67,9 @@ public class ModelKeyTest {
 		sets.add(number);
 		sets.add(string);
 
-		Assert.assertTrue(sets.contains(string));
-		Assert.assertTrue(sets.contains(number));
-		Assert.assertTrue(sets.size() == 1);
+		assertTrue(sets.contains(string));
+		assertTrue(sets.contains(number));
+		assertTrue(sets.size() == 1);
 	}
 
 	@Test
@@ -77,8 +77,8 @@ public class ModelKeyTest {
 		ModelKey string = new ModelKey("0");
 		ModelKey number = ModelKey.convert("0");
 
-		Assert.assertTrue(string.equals(number));
-		Assert.assertTrue(number.getType().equals(ModelKeyType.NUMBER));
+		assertTrue(string.equals(number));
+		assertTrue(number.getType().equals(ModelKeyType.NUMBER));
 	}
 
 	@Test
@@ -87,8 +87,8 @@ public class ModelKeyTest {
 		Long b = 200L;
 
 		String name = ModelKey.makeCompositeName(a, b);
-		Assert.assertNotNull(name);
-		Assert.assertTrue(name.equals("100_200"));
+		assertNotNull(name);
+		assertTrue(name.equals("100_200"));
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class ModelKeyTest {
 
 		try {
 			ModelKey.makeCompositeName(a, b);
-			Assert.fail("Name generation should have failed.");
+			fail("Name generation should have failed.");
 		} catch (NullPointerException e) {
 
 		}
@@ -110,7 +110,7 @@ public class ModelKeyTest {
 
 		try {
 			ModelKey.makeCompositeName(a);
-			Assert.fail("Name generation should have failed.");
+			fail("Name generation should have failed.");
 		} catch (IllegalArgumentException e) {
 
 		}
@@ -128,16 +128,16 @@ public class ModelKeyTest {
 		List<ModelKey> ba = ListUtility.wrap(bm);
 
 		String name = ModelKey.makeCompositeName(a, b);
-		Assert.assertNotNull(name);
-		Assert.assertTrue(name.equals("100_200"));
+		assertNotNull(name);
+		assertTrue(name.equals("100_200"));
 
 		List<ModelKey> aabmkeys = ModelKey.makeCompositeKeys(aa, bm);
 		String aabmname = aabmkeys.get(0).getName();
-		Assert.assertTrue(aabmname.equals(name));
+		assertTrue(aabmname.equals(name));
 
 		List<ModelKey> baamkeys = ModelKey.makeCompositeKeys(am, ba);
 		String baamname = baamkeys.get(0).getName();
-		Assert.assertTrue(baamname.equals(name));
+		assertTrue(baamname.equals(name));
 	}
 
 }

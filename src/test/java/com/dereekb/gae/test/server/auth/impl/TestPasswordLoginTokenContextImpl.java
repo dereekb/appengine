@@ -25,6 +25,8 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 public class TestPasswordLoginTokenContextImpl extends AbstractTestLoginTokenContextImpl
         implements TestLoginTokenContext {
 
+	private static String ANONYMOUS_LOGIN_TOKEN_KEY = "LOGIN-TOKEN";
+
 	private PasswordLoginController passwordController;
 	private LoginRegisterService registerService;
 	private LoginTokenService<LoginToken> service;
@@ -98,11 +100,23 @@ public class TestPasswordLoginTokenContextImpl extends AbstractTestLoginTokenCon
 	@Override
 	public String getToken() {
 		String token = null;
+		LoginToken loginToken = this.getLoginToken();
+
+		if (loginToken != null) {
+			token = this.service.encodeLoginToken(loginToken);
+		}
+
+		return token;
+	}
+
+	@Override
+	public LoginToken getLoginToken() {
+		LoginToken token = null;
 
 		if (this.pointer != null) {
-			token = this.service.encodeLoginToken(this.pointer, this.isRefreshAllowed());
-		} else if (this.isDefaultToAnonymous()) {
-			token = this.service.encodeAnonymousLoginToken("LOGIN-TOKEN");
+			token = this.service.buildLoginToken(this.pointer, this.isRefreshAllowed());
+		} else {
+			this.service.buildAnonymousLoginToken(ANONYMOUS_LOGIN_TOKEN_KEY);
 		}
 
 		return token;

@@ -3,8 +3,8 @@ package com.dereekb.gae.test.utility.collection.time;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.collections.time.DatedTimeBlock;
 import com.dereekb.gae.utilities.collections.time.utility.DatedTimeBlockSetOperations;
@@ -34,8 +34,8 @@ public class DatedTimeBlockUtilityTest {
 		Long ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
 		Long floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(2L));
-		Assert.assertTrue(floorRound.equals(ceilRound));
+		assertTrue(ceilRound.equals(2L));
+		assertTrue(floorRound.equals(ceilRound));
 
 		// Time Period with Different floor/ceil values
 		timeInPeriod = 300L;
@@ -43,8 +43,8 @@ public class DatedTimeBlockUtilityTest {
 		ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
 		floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(4L));
-		Assert.assertTrue(floorRound.equals(3L));
+		assertTrue(ceilRound.equals(4L));
+		assertTrue(floorRound.equals(3L));
 
 		// Time Period equal to time
 		timeInPeriod = time;
@@ -52,8 +52,8 @@ public class DatedTimeBlockUtilityTest {
 		ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
 		floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(1L));
-		Assert.assertTrue(floorRound.equals(ceilRound));
+		assertTrue(ceilRound.equals(1L));
+		assertTrue(floorRound.equals(ceilRound));
 
 		// Time Period with greatly larger timeInPeriod
 		timeInPeriod = time * 100000;
@@ -61,8 +61,8 @@ public class DatedTimeBlockUtilityTest {
 		ceilRound = TimeBlockRounding.CEIL.roundBlockSize(time, timeInPeriod);
 		floorRound = TimeBlockRounding.FLOOR.roundBlockSize(time, timeInPeriod);
 
-		Assert.assertTrue(ceilRound.equals(1L));
-		Assert.assertTrue(floorRound.equals(0L));
+		assertTrue(ceilRound.equals(1L));
+		assertTrue(floorRound.equals(0L));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class DatedTimeBlockUtilityTest {
 		
 		Long blocks = reader.getTimeForBlocks(targetBlocks);
 		
-		Assert.assertTrue(expectedLength.equals(blocks));
+		assertTrue(expectedLength.equals(blocks));
 	}
 
 	@Test
@@ -91,8 +91,8 @@ public class DatedTimeBlockUtilityTest {
 		Long ceilBlocks = reader.getBlocksForDates(start, end, TimeBlockRounding.CEIL);
 		Long floorBlocks = reader.getBlocksForDates(start, end, TimeBlockRounding.FLOOR);
 
-		Assert.assertTrue(ceilBlocks.equals(targetBlocks));
-		Assert.assertTrue(floorBlocks.equals(targetBlocks));
+		assertTrue(ceilBlocks.equals(targetBlocks));
+		assertTrue(floorBlocks.equals(targetBlocks));
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class DatedTimeBlockUtilityTest {
 		
 		Date end = reader.getDateEnd(start, targetBlocks);
 		
-		Assert.assertTrue(expectedEnd.equals(end));
+		assertTrue(expectedEnd.equals(end));
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class DatedTimeBlockUtilityTest {
 
 		Date expectedEnd = new Date(timeInPeriod * targetBlocks);
 		
-		Assert.assertTrue(expectedEnd.equals(endDate));
+		assertTrue(expectedEnd.equals(endDate));
 	}
 
 	@Test
@@ -141,8 +141,8 @@ public class DatedTimeBlockUtilityTest {
 		Long ceilBlocks = reader.getBlocksForDates(startDate, ceilDate, TimeBlockRounding.CEIL);
 		Long floorBlocks = reader.getBlocksForDates(startDate, floorDate, TimeBlockRounding.CEIL);
 
-		Assert.assertTrue(ceilBlocks.equals(targetBlocks + 1L));
-		Assert.assertTrue(floorBlocks.equals(targetBlocks));
+		assertTrue(ceilBlocks.equals(targetBlocks + 1L));
+		assertTrue(floorBlocks.equals(targetBlocks));
 	}
 
 	@Test
@@ -162,7 +162,7 @@ public class DatedTimeBlockUtilityTest {
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		Long expectedConnectionIndex = 2L;
-		Assert.assertTrue(operations.getFirstConnectionIndex().equals(expectedConnectionIndex));
+		assertTrue(operations.getFirstConnectionIndex().equals(expectedConnectionIndex));
 	}
 
 	public void testTimeBlockReaderImplUtilityInstanceOperatorHasOverlapWithOverlap() {
@@ -179,7 +179,7 @@ public class DatedTimeBlockUtilityTest {
 		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
-		Assert.assertTrue(operations.hasOverlap());
+		assertTrue(operations.hasOverlap());
 	}
 
 	@Test
@@ -197,7 +197,7 @@ public class DatedTimeBlockUtilityTest {
 		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
-		Assert.assertTrue(operations.isContinuous());
+		assertTrue(operations.isContinuous());
 	}
 	
 	@Test
@@ -215,7 +215,7 @@ public class DatedTimeBlockUtilityTest {
 		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
-		Assert.assertFalse(operations.hasOverlap());
+		assertFalse(operations.hasOverlap());
 	}
 	
 	@Test
@@ -233,7 +233,7 @@ public class DatedTimeBlockUtilityTest {
 		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
-		Assert.assertFalse(operations.hasOverlap());
+		assertFalse(operations.hasOverlap());
 	}
 
 	@Test
@@ -252,7 +252,7 @@ public class DatedTimeBlockUtilityTest {
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		Long firstOverlapIndex = operations.getFirstConnectionIndex();
-		Assert.assertTrue(firstOverlapIndex == (blocks - 1));
+		assertTrue(firstOverlapIndex == (blocks - 1));
 	}
 
 	@Test
@@ -272,13 +272,13 @@ public class DatedTimeBlockUtilityTest {
 
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		DatedTimeBlock union = operations.getUnion();
-		Assert.assertTrue(union.getTimeBlocks() == (blocks * 2) - 1);	// -1 for overlap round down.
-		Assert.assertTrue(union.getTimeBlockStart().equals(start));
+		assertTrue(union.getTimeBlocks() == (blocks * 2) - 1);	// -1 for overlap round down.
+		assertTrue(union.getTimeBlockStart().equals(start));
 		
 		Date unionDateEnd = reader.getDateEnd(union);
 		Date secondDateEnd = reader.getDateEnd(startDatedTimeBlock);
 		Integer comparison = unionDateEnd.compareTo(secondDateEnd);
-		Assert.assertTrue(comparison <= 0);
+		assertTrue(comparison <= 0);
 	}
 
 	@Test
@@ -301,7 +301,7 @@ public class DatedTimeBlockUtilityTest {
 		Date unionDateEnd = reader.getDateEnd(union);
 		Date secondDateEnd = reader.getDateEnd(startDatedTimeBlock);
 		Integer comparison = unionDateEnd.compareTo(secondDateEnd);
-		Assert.assertTrue(comparison <= 0);
+		assertTrue(comparison <= 0);
 	}
 
 	@Test
@@ -320,8 +320,8 @@ public class DatedTimeBlockUtilityTest {
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		DatedTimeBlock unique = operations.getUnique();
-		Assert.assertTrue(datedTimeBlock.getTimeBlocks() == unique.getTimeBlocks());
-		Assert.assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
+		assertTrue(datedTimeBlock.getTimeBlocks() == unique.getTimeBlocks());
+		assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
 	}
 
 	@Test
@@ -343,8 +343,8 @@ public class DatedTimeBlockUtilityTest {
 		DatedTimeBlock unique = operations.getUnique();
 
 		Long expectedUniqueLength = datedTimeBlock.getTimeBlocks() - overlap;
-		Assert.assertTrue(unique.getTimeBlocks().equals(expectedUniqueLength));
-		Assert.assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
+		assertTrue(unique.getTimeBlocks().equals(expectedUniqueLength));
+		assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
 	}
 
 	@Test
@@ -362,12 +362,12 @@ public class DatedTimeBlockUtilityTest {
 		Date secondStart = new Date(timeInPeriod * (blocks - overlap) + (timeInPeriod / 2));
 		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
 
-		Assert.assertFalse(reader.datesAreInline(datedTimeBlock, startDatedTimeBlock));
+		assertFalse(reader.datesAreInline(datedTimeBlock, startDatedTimeBlock));
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		DatedTimeBlock unique = operations.getUnique();
-		Assert.assertTrue((datedTimeBlock.getTimeBlocks() - overlap) == unique.getTimeBlocks());
-		Assert.assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
+		assertTrue((datedTimeBlock.getTimeBlocks() - overlap) == unique.getTimeBlocks());
+		assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
 	}
 
 	@Test
@@ -385,7 +385,7 @@ public class DatedTimeBlockUtilityTest {
 		Date secondStart = new Date(timeInPeriod * (blocks - overlap) + (timeInPeriod / 2));
 		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
 
-		Assert.assertFalse(reader.datesAreInline(datedTimeBlock, startDatedTimeBlock));
+		assertFalse(reader.datesAreInline(datedTimeBlock, startDatedTimeBlock));
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		DatedTimeBlock intersection = operations.getIntersection();
@@ -393,8 +393,8 @@ public class DatedTimeBlockUtilityTest {
 		Date startEnd = reader.getDateEnd(datedTimeBlock);
 		Date intersectionEnd = reader.getDateEnd(intersection);
 		
-		Assert.assertTrue(intersection.getTimeBlocks() == overlap);
-		Assert.assertTrue(startEnd.equals(intersectionEnd));
+		assertTrue(intersection.getTimeBlocks() == overlap);
+		assertTrue(startEnd.equals(intersectionEnd));
 	}
 
 	@Test
@@ -417,8 +417,8 @@ public class DatedTimeBlockUtilityTest {
 		Date startEnd = reader.getDateEnd(datedTimeBlock);
 		Date intersectionEnd = reader.getDateEnd(intersection);
 		
-		Assert.assertTrue(intersection.getTimeBlocks() == 0);
-		Assert.assertTrue(startEnd.equals(intersectionEnd));
+		assertTrue(intersection.getTimeBlocks() == 0);
+		assertTrue(startEnd.equals(intersectionEnd));
 	}
 	@Test
 	public void testTimeBlockReaderImplUtilityInstanceOperatorGetIntersectionWithInlineOverlapAndBiggerStart() {
@@ -442,8 +442,8 @@ public class DatedTimeBlockUtilityTest {
 		Date intersectionEnd = reader.getDateEnd(intersection);
 		
 		Long expectedIntersectionSize = startDatedTimeBlock.getTimeBlocks();
-		Assert.assertTrue(intersection.getTimeBlocks() == expectedIntersectionSize);
-		Assert.assertTrue(secondStartEnd.equals(intersectionEnd));
+		assertTrue(intersection.getTimeBlocks() == expectedIntersectionSize);
+		assertTrue(secondStartEnd.equals(intersectionEnd));
 	}
 
 	@Test
@@ -466,8 +466,8 @@ public class DatedTimeBlockUtilityTest {
 		Date secondStartEnd = reader.getDateEnd(startDatedTimeBlock);
 		Date complimentEnd = reader.getDateEnd(compliment);
 		
-		Assert.assertTrue(compliment.getTimeBlocks() == blocks);
-		Assert.assertTrue(secondStartEnd.equals(complimentEnd));
+		assertTrue(compliment.getTimeBlocks() == blocks);
+		assertTrue(secondStartEnd.equals(complimentEnd));
 	}
 	
 	// MARK: Splitting
@@ -487,13 +487,13 @@ public class DatedTimeBlockUtilityTest {
 		Date secondStart = new Date(timeInPeriod * (blocks - overlap) + (timeInPeriod / 2));
 		DatedTimeBlockImpl startDatedTimeBlock = new DatedTimeBlockImpl(blocks, secondStart);
 		
-		Assert.assertFalse(reader.datesAreInline(datedTimeBlock, startDatedTimeBlock));
+		assertFalse(reader.datesAreInline(datedTimeBlock, startDatedTimeBlock));
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		DatedTimeBlock unique = operations.getUnique();
-		Assert.assertTrue((blocks - overlap) == unique.getTimeBlocks());
-		Assert.assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
-		Assert.assertTrue(unique.getTimeBlockStart().before(startDatedTimeBlock.getTimeBlockStart()));
+		assertTrue((blocks - overlap) == unique.getTimeBlocks());
+		assertTrue(datedTimeBlock.getTimeBlockStart().equals(unique.getTimeBlockStart()));
+		assertTrue(unique.getTimeBlockStart().before(startDatedTimeBlock.getTimeBlockStart()));
 	}
 
 	@Test
@@ -513,9 +513,9 @@ public class DatedTimeBlockUtilityTest {
 		
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		DatedTimeBlock union = operations.getUnion();
-		Assert.assertTrue(union.getTimeBlocks() == blocks * 2);
-		Assert.assertTrue(union.getTimeBlockStart().equals(start));
-		Assert.assertTrue(reader.getDateEnd(union).equals(reader.getDateEnd(startDatedTimeBlock)));
+		assertTrue(union.getTimeBlocks() == blocks * 2);
+		assertTrue(union.getTimeBlockStart().equals(start));
+		assertTrue(reader.getDateEnd(union).equals(reader.getDateEnd(startDatedTimeBlock)));
 	}
 
 	@Test
@@ -537,13 +537,13 @@ public class DatedTimeBlockUtilityTest {
 		DatedTimeBlockSetOperations operations = instance.operatorWith(startDatedTimeBlock);
 		DatedTimeBlock union = operations.getUnion();
 
-		Assert.assertTrue(union.getTimeBlocks() == (blocks * 2) - 1);
-		Assert.assertTrue(union.getTimeBlockStart().equals(start));
+		assertTrue(union.getTimeBlocks() == (blocks * 2) - 1);
+		assertTrue(union.getTimeBlockStart().equals(start));
 		
 		Date unionDateEnd = reader.getDateEnd(union);
 		Date secondDateEnd = reader.getDateEnd(startDatedTimeBlock);
 		Integer comparison = unionDateEnd.compareTo(secondDateEnd);
-		Assert.assertTrue(comparison <= 0);
+		assertTrue(comparison <= 0);
 	}
 
 	@Test
@@ -563,17 +563,17 @@ public class DatedTimeBlockUtilityTest {
 		
 		List<DatedTimeBlock> split = instance.split(splitTimeBlock);
 
-		Assert.assertTrue(split.size() == 2);
+		assertTrue(split.size() == 2);
 		
 		Long totalBlocks = split.get(0).getTimeBlocks() + split.get(1).getTimeBlocks();
 		Long expectedTotalBlocks = allBlocks - (split.size() - 1L);	// Since offset, will be missing blocks.
 		
-		Assert.assertTrue(totalBlocks.equals(expectedTotalBlocks));
-		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
-		Assert.assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
+		assertTrue(totalBlocks.equals(expectedTotalBlocks));
+		assertTrue(split.get(0).getTimeBlocks().equals(blocks));
+		assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
 		
 		// Assert the isSplitBy works here too.
-		Assert.assertTrue(instance.isSplitBy(splitTimeBlock));
+		assertTrue(instance.isSplitBy(splitTimeBlock));
 	}
 
 	@Test
@@ -594,18 +594,18 @@ public class DatedTimeBlockUtilityTest {
 		
 		List<DatedTimeBlock> split = instance.split(splitTimeBlock);
 
-		Assert.assertTrue(split.size() == 3);
+		assertTrue(split.size() == 3);
 		
 		Long totalBlocks = split.get(0).getTimeBlocks() + split.get(1).getTimeBlocks();
 		Long expectedTotalBlocks = allBlocks - (split.size() - 1L);
 		
-		Assert.assertTrue(totalBlocks.equals(expectedTotalBlocks));
-		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
-		Assert.assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
-		Assert.assertTrue(split.get(2).getTimeBlocks().equals(1L));
+		assertTrue(totalBlocks.equals(expectedTotalBlocks));
+		assertTrue(split.get(0).getTimeBlocks().equals(blocks));
+		assertTrue(split.get(1).getTimeBlocks().equals(splitTimeBlock.getTimeBlocks()));
+		assertTrue(split.get(2).getTimeBlocks().equals(1L));
 		
 		// Assert the isSplitBy works here too.
-		Assert.assertTrue(instance.isSplitBy(splitTimeBlock));
+		assertTrue(instance.isSplitBy(splitTimeBlock));
 	}
 
 	@Test
@@ -621,12 +621,12 @@ public class DatedTimeBlockUtilityTest {
 		DatedTimeBlockUtilityInstance instance = reader.makeInstance(datedTimeBlock);
 		List<DatedTimeBlock> split = instance.split(datedTimeBlock);
 		
-		Assert.assertTrue(split.size() == 1);
-		Assert.assertTrue(split.get(0).getTimeBlocks().equals(datedTimeBlock.getTimeBlocks()));
-		Assert.assertTrue(split.get(0).getTimeBlockStart().equals(datedTimeBlock.getTimeBlockStart()));
+		assertTrue(split.size() == 1);
+		assertTrue(split.get(0).getTimeBlocks().equals(datedTimeBlock.getTimeBlocks()));
+		assertTrue(split.get(0).getTimeBlockStart().equals(datedTimeBlock.getTimeBlockStart()));
 		
 		// Assert the isSplitBy works here too.
-		Assert.assertTrue(instance.isSplitBy(datedTimeBlock));
+		assertTrue(instance.isSplitBy(datedTimeBlock));
 	}
 
 	@Test
@@ -646,17 +646,17 @@ public class DatedTimeBlockUtilityTest {
 		
 		List<DatedTimeBlock> split = instance.split(splitTimeBlock);
 
-		Assert.assertTrue(split.size() == 2);
+		assertTrue(split.size() == 2);
 		
 		Long totalBlocks = split.get(0).getTimeBlocks() + split.get(1).getTimeBlocks();
 		Long expectedTotalBlocks = allBlocks;	// Since offset, will be missing blocks.
 		
-		Assert.assertTrue(totalBlocks.equals(expectedTotalBlocks));
-		Assert.assertTrue(split.get(0).getTimeBlocks().equals(blocks));
-		Assert.assertTrue(split.get(1).getTimeBlocks().equals(allBlocks - splitTimeBlock.getTimeBlocks()));
+		assertTrue(totalBlocks.equals(expectedTotalBlocks));
+		assertTrue(split.get(0).getTimeBlocks().equals(blocks));
+		assertTrue(split.get(1).getTimeBlocks().equals(allBlocks - splitTimeBlock.getTimeBlocks()));
 
 		// Assert the isSplitBy works here too.
-		Assert.assertTrue(instance.isSplitBy(splitTimeBlock));
+		assertTrue(instance.isSplitBy(splitTimeBlock));
 	}
 
 }

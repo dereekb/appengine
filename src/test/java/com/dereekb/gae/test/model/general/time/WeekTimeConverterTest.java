@@ -2,8 +2,8 @@ package com.dereekb.gae.test.model.general.time;
 
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.DaySpan;
@@ -41,7 +41,7 @@ public class WeekTimeConverterTest {
 		WeekTimeImpl weekTime = new WeekTimeImpl(daySpan, timeSpan);
 
 		Integer weekTimeNumber = converter.weekTimeToNumber(weekTime);
-		Assert.assertNotNull(weekTimeNumber);
+		assertNotNull(weekTimeNumber);
 
 		// WeekSpan Time Number
 		System.out.println("WeekSpan Time Number: " + Integer.toHexString(weekTimeNumber));
@@ -52,13 +52,13 @@ public class WeekTimeConverterTest {
 
 		Integer daySpanNumber = daySpan.getDaysNumber();
 		Long daySpanFocus = validator.focusBitsWithMask(0xFF000000L, BitIndex.hexIndex(6));
-		Assert.assertTrue(daySpanFocus.equals(daySpanNumber.longValue()));
+		assertTrue(daySpanFocus.equals(daySpanNumber.longValue()));
 
 		Long startTimeFocus = validator.focusBitsWithMask(0x00FFF000L, BitIndex.hexIndex(3));
-		Assert.assertTrue(timeConverter.timeToNumber(startTime).equals(startTimeFocus.intValue()));
+		assertTrue(timeConverter.timeToNumber(startTime).equals(startTimeFocus.intValue()));
 
 		Long endTimeFocus = validator.focusBitsWithMask(0x00000FFFL, BitIndex.hexIndex(0));
-		Assert.assertTrue(timeConverter.timeToNumber(endTime).equals(endTimeFocus.intValue()));
+		assertTrue(timeConverter.timeToNumber(endTime).equals(endTimeFocus.intValue()));
 
 		/*
 		// Focus (Should be d0)
@@ -85,14 +85,14 @@ public class WeekTimeConverterTest {
 		WeekTimeImpl weekTime = new WeekTimeImpl(daySpan, timeSpan);
 
 		Integer weekTimeNumber = converter.weekTimeToNumber(weekTime);
-		Assert.assertNotNull(weekTimeNumber);
+		assertNotNull(weekTimeNumber);
 
 		WeekTime convertedWeekTime = converter.weekTimeFromNumber(weekTimeNumber);
 		DaySpan convertedDaySpan = convertedWeekTime.getDaySpan();
 		TimeSpan convertedTimeSpan = convertedWeekTime.getTimeSpan();
 
-		Assert.assertTrue(convertedDaySpan.equals(daySpan));
-		Assert.assertTrue(convertedTimeSpan.equals(timeSpan));
+		assertTrue(convertedDaySpan.equals(daySpan));
+		assertTrue(convertedTimeSpan.equals(timeSpan));
 	}
 
 	@Test
@@ -110,18 +110,18 @@ public class WeekTimeConverterTest {
 		WeekTimeImpl weekTime = new WeekTimeImpl(daySpan, timeSpan);
 
 		Set<String> tags = converter.buildTags(weekTime);
-		Assert.assertNotNull(tags);
-		Assert.assertTrue(tags.contains(WeekTimeSearchTag.buildTag(day, new HourImpl(23))));
+		assertNotNull(tags);
+		assertTrue(tags.contains(WeekTimeSearchTag.buildTag(day, new HourImpl(23))));
 
 		// Multiple Days
 		daySpan = new DaySpanBitImpl(0xFF);
 		converter.buildTags(weekTime);
-		Assert.assertNotNull(tags);
-		Assert.assertTrue(tags.size() == 24); // 23 hour entries, 0-
+		assertNotNull(tags);
+		assertTrue(tags.size() == 24); // 23 hour entries, 0-
 
 		// Encoded
 		tags = converter.buildTagsForEncoded(WeekTimeConverterImpl.CONVERTER.weekTimeToNumber(weekTime));
-		Assert.assertNotNull(tags);
+		assertNotNull(tags);
 
 	}
 

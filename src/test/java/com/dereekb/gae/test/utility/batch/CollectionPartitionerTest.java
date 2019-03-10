@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 
@@ -31,10 +31,10 @@ public class CollectionPartitionerTest {
 		partitioner.setDefaultPartitionSize(partitionSize);
 		List<List<Integer>> partitions = partitioner.makePartitionsWithCollection(items);
 
-		Assert.assertTrue(partitions.size() == (itemsCount / partitionSize));
+		assertTrue(partitions.size() == (itemsCount / partitionSize));
 
 		for (List<Integer> partition : partitions) {
-			Assert.assertTrue(partition.size() == partitionSize);
+			assertTrue(partition.size() == partitionSize);
 		}
 	}
 
@@ -50,10 +50,10 @@ public class CollectionPartitionerTest {
 		partitioner.setDefaultPartitionSize(partitionSize);
 		List<List<Integer>> partitions = partitioner.makePartitions(items);
 
-		Assert.assertTrue(partitions.size() == 12); // 100 / 9 = (11 + 1/9)
+		assertTrue(partitions.size() == 12); // 100 / 9 = (11 + 1/9)
 
 		for (List<Integer> partition : partitions) {
-			Assert.assertTrue(partition.size() <= partitionSize);
+			assertTrue(partition.size() <= partitionSize);
 		}
 
 	}
@@ -66,8 +66,8 @@ public class CollectionPartitionerTest {
 
 		List<List<Integer>> partitions = partitioner.makePartitionsWithCollection(items);
 
-		Assert.assertNotNull(partitions);
-		Assert.assertTrue(partitions.size() == 0);
+		assertNotNull(partitions);
+		assertTrue(partitions.size() == 0);
 	}
 
 	private List<Integer> generateRandomList(Integer count) {

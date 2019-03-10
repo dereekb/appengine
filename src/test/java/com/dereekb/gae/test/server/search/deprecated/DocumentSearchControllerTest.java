@@ -1,16 +1,16 @@
 package com.dereekb.gae.test.server.search.deprecated;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.assertFalse;
+import static org.junit.assertNotNull;
+import static org.junit.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.server.search.DocumentSearchController;
 import com.dereekb.gae.server.search.DocumentSearchController.DocumentSearchIndexIterator;
@@ -126,14 +126,14 @@ public class DocumentSearchControllerTest extends CoreServiceTestingContext {
 		iterator.setLimit(limit);
 
 		List<String> firstBatch = iterator.getNextDocumentsIdentifiers();
-		Assert.assertTrue(firstBatch.size() == limit);
+		assertTrue(firstBatch.size() == limit);
 
 		List<String> secondBatch = iterator.getNextDocumentsIdentifiers();
-		Assert.assertTrue(secondBatch.size() == limit);
+		assertTrue(secondBatch.size() == limit);
 
 		List<String> thirdBatch = iterator.getNextDocumentsIdentifiers();
-		Assert.assertTrue(thirdBatch.isEmpty());
-		Assert.assertTrue(iterator.hasReachedEnd());
+		assertTrue(thirdBatch.isEmpty());
+		assertTrue(iterator.hasReachedEnd());
 	}
 
 	@Test
@@ -191,8 +191,8 @@ public class DocumentSearchControllerTest extends CoreServiceTestingContext {
 		}
 
 		List<String> finalBatch = iterator.getNextDocumentsIdentifiers();
-		Assert.assertTrue(finalBatch.isEmpty());
-		Assert.assertTrue(iterator.hasReachedEnd());
+		assertTrue(finalBatch.isEmpty());
+		assertTrue(iterator.hasReachedEnd());
 	}
 
 }

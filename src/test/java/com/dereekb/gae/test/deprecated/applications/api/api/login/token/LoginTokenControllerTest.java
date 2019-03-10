@@ -2,8 +2,8 @@ package com.dereekb.gae.test.applications.api.api.login.token;
 
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -56,7 +56,7 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		String refreshToken = testUtility.getRefreshToken(fullUserToken);
 		DecodedLoginToken<LoginTokenImpl> decodedRefreshToken = this.refreshEncoderDecoder
 		        .decodeLoginToken(refreshToken);
-		Assert.assertNotNull(decodedRefreshToken.getLoginToken().getLoginId());
+		assertNotNull(decodedRefreshToken.getLoginToken().getLoginId());
 
 		// Authenticate with the token.
 		String reauthToken = testUtility.authWithRefreshToken(refreshToken);
@@ -66,12 +66,12 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		                                              	// cooldown for test
 
 		String modified = testUtility.resetTokenAuth(reauthToken);
-		Assert.assertNotNull(modified);
+		assertNotNull(modified);
 
 		// Try to authenticate again. It should fail.
 		try {
 			testUtility.authWithRefreshToken(refreshToken);
-			Assert.fail("Should have failed");
+			fail("Should have failed");
 		} catch (AssertionError e) {
 			// Don't throw assertion error.
 		}
@@ -79,7 +79,7 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		// Also try to get a new refresh token. It should fail.
 		try {
 			refreshToken = testUtility.getRefreshToken(fullUserToken);
-			Assert.fail("Should have failed");
+			fail("Should have failed");
 		} catch (AssertionError e) {
 			// Don't throw assertion error.
 		}
@@ -105,7 +105,7 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse response = testUtility.validateLoginToken(request);
 
 		int status = response.getStatus();
-		Assert.assertTrue(status == 200);
+		assertTrue(status == 200);
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 
 		// Reset Authentication
 		MvcResult result = testUtility.sendTokenAuthReset(reauthToken, "");
-		Assert.assertTrue(result.getResponse().getStatus() == 429);
+		assertTrue(result.getResponse().getStatus() == 429);
 	}
 
 	@Test
@@ -148,7 +148,7 @@ public class LoginTokenControllerTest extends ApiApplicationTestContext {
 		// Reset Authentication
 		try {
 			testUtility.getRefreshToken(reauthToken);
-			Assert.fail();
+			fail();
 		} catch (AssertionError e) {
 
 		}

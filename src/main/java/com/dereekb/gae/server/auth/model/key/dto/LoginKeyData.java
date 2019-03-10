@@ -72,8 +72,8 @@ public class LoginKeyData extends OwnedDatabaseModelData {
 	@Override
 	public String toString() {
 		return "LoginKeyData [pointer=" + this.pointer + ", name=" + this.name + ", mask=" + this.mask
-		        + ", verification=" + this.verification + ", expiration=" + this.expiration + ", key=" + key
-		        + ", created=" + date + "]";
+		        + ", verification=" + this.verification + ", expiration=" + this.expiration + ", key=" + this.key
+		        + ", created=" + this.date + "]";
 	}
 
 }

@@ -16,6 +16,7 @@
 		<appengine.target.version>1.9.71</appengine.target.version>
 		<spring.target.version>5.1.4.RELEASE</spring.target.version>
 		<spring-security.target.version>5.1.3.RELEASE</spring-security.target.version>
+		<junit.target.version>5.4.0</junit.target.version>
 		<jackson.target.version>2.9.8</jackson.target.version>
 	</properties>
 
@@ -198,9 +199,16 @@
 
 		<!-- Test Dependencies -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.target.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -349,6 +357,17 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<!-- Surefire Tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.1</version>
+		        <configuration>
+		            <parallel>methods</parallel>
+		            <useUnlimitedThreads>true</useUnlimitedThreads>
+		        </configuration>
 			</plugin>
 
 			<!-- Clean/Delete the generated WEB-INF folder after install. -->

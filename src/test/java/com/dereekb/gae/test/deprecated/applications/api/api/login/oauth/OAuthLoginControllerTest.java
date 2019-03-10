@@ -1,7 +1,7 @@
 package com.dereekb.gae.test.applications.api.api.login.oauth;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
@@ -50,8 +50,8 @@ public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 		OAuthAuthorizationInfo info = new OAuthAuthorizationInfoImpl(loginInfo);
 
 		LoginPointer loginPointer = this.serverManager.login(info);
-		Assert.assertNotNull(loginPointer);
-		Assert.assertNotNull(loginPointer.getIdentifier());
+		assertNotNull(loginPointer);
+		assertNotNull(loginPointer.getIdentifier());
 	}
 
 	// MARK: Mock Tests
@@ -61,17 +61,17 @@ public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
-		Assert.assertTrue("Expected 400 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 400);
-		Assert.assertNotNull(loginResponseData);
+		assertTrue("Expected 400 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 400);
+		assertNotNull(loginResponseData);
 
 		this.waitForTaskQueueToComplete();
 
 		try {
 			JsonElement loginResponseJson = this.parser.parse(loginResponseData);
 			JsonObject object = loginResponseJson.getAsJsonObject();
-			Assert.assertNotNull(object);
+			assertNotNull(object);
 		} catch (JsonSyntaxException e) {
-			Assert.fail("Response should be a JSON string.");
+			fail("Response should be a JSON string.");
 		}
 	}
 
@@ -81,9 +81,9 @@ public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
-		Assert.assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
+		assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
 		        loginResponse.getStatus() == 400);
-		Assert.assertNotNull(loginResponseData);
+		assertNotNull(loginResponseData);
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 		MvcResult loginResult = this.loginTestUtility.sendCreateOAuthLoginWithToken("google", null);
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 
-		Assert.assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
+		assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
 		        loginResponse.getStatus() == 400);
 	}
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.collections.batch.Batch;
 import com.dereekb.gae.utilities.collections.batch.BatchBuilder;
@@ -33,11 +33,11 @@ public class BatchBuilderImplTest {
 
 		Batch<Integer> batches = batchBuilder.makeBatchWithCollection(items);
 
-		Assert.assertTrue(batches.getTotalSize() == itemsCount);
-		Assert.assertTrue(batches.getPartitionCount() == (itemsCount / batchSize));
+		assertTrue(batches.getTotalSize() == itemsCount);
+		assertTrue(batches.getPartitionCount() == (itemsCount / batchSize));
 
 		for (Partition<Integer> partition : batches) {
-			Assert.assertTrue(partition.getPartitionSize() == batchSize);
+			assertTrue(partition.getPartitionSize() == batchSize);
 		}
 	}
 
@@ -52,8 +52,8 @@ public class BatchBuilderImplTest {
 
 		Batch<Integer> batches = batchBuilder.makeBatchWithCollection(items);
 
-		Assert.assertTrue(batches.getTotalSize() == itemsCount);
-		Assert.assertTrue(batches.getPartitionCount() == 12); // 100 / 9 = (11 +
+		assertTrue(batches.getTotalSize() == itemsCount);
+		assertTrue(batches.getPartitionCount() == 12); // 100 / 9 = (11 +
 															  // 1/9)
 	}
 
@@ -66,8 +66,8 @@ public class BatchBuilderImplTest {
 
 		List<List<Integer>> batches = batchGenerator.createBatchesWithCollection(items);
 
-		Assert.assertNotNull(batches);
-		Assert.assertTrue(batches.size() == 0);
+		assertNotNull(batches);
+		assertTrue(batches.size() == 0);
 	}
 	*/
 

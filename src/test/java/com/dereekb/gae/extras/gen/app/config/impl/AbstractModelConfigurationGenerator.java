@@ -39,6 +39,11 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 
 	private boolean makeImportFiles = true;
 
+
+	public AbstractModelConfigurationGenerator(AbstractConfigurationFileGenerator generator) {
+		super(generator);
+	}
+
 	public AbstractModelConfigurationGenerator(AppConfiguration appConfig) {
 		this(appConfig, null);
 	}
