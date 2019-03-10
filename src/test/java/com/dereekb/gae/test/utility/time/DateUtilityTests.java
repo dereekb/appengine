@@ -7,6 +7,12 @@ import org.junit.Test;
 
 import com.dereekb.gae.utilities.time.DateUtility;
 
+/**
+ * Used for testing {@link DateUtility}.
+ *
+ * @author dereekb
+ *
+ */
 public class DateUtilityTests {
 
 	@Test
@@ -14,7 +20,7 @@ public class DateUtilityTests {
 		Date date = new Date(5L);
 		Date earlier = new Date(2L);
 
-		Assert.assertTrue(DateUtility.dateIsAfterDate(date, earlier, 5L));
+		Assert.assertTrue(DateUtility.dateIsAfterDate(date, earlier, 0L));
 	}
 
 	@Test
@@ -26,7 +32,7 @@ public class DateUtilityTests {
 		Date issued = new Date(1488075542000L);
 
 		if (DateUtility.dateIsAfterDate(reset, issued, precision)) {
-			Assert.fail("FUG");
+			Assert.fail();
 		}
 	}
 

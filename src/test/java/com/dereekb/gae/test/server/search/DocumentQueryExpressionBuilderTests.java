@@ -1,11 +1,10 @@
 package com.dereekb.gae.test.server.search;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
@@ -18,7 +17,7 @@ import com.dereekb.gae.server.search.document.query.expression.builder.impl.fiel
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.SimpleExpression;
 import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
 
-@RunWith(JUnit4.class)
+
 public class DocumentQueryExpressionBuilderTests {
 
 	private static final String TEST_FIELD_NAME = "field";
@@ -76,9 +75,15 @@ public class DocumentQueryExpressionBuilderTests {
 	@Test
 	public void testDateQueryField() {
 		Date firstDate = new Date(0);
-		DateField builder = new DateField(TEST_FIELD_NAME, firstDate, ExpressionOperator.GREATER_THAN);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(firstDate);
 
-		Assert.assertTrue("The year should be set properly", builder.getYear() == 1970);
+		int dateYear = calendar.get(Calendar.YEAR);
+
+		DateField builder = new DateField(TEST_FIELD_NAME, firstDate, ExpressionOperator.GREATER_THAN);
+		int year = builder.getYear();
+
+		Assert.assertTrue("The year should be set properly", year == dateYear);
 
 		String expressionValue = builder.getExpressionValue();
 		Assert.assertNotNull(expressionValue);
