@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.extras.gen.test.model.foo.Foo;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
-import com.dereekb.gae.test.applications.core.CoreApplicationTestContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
+import com.dereekb.gae.test.spring.context.AbstractAppContextOnlyTestingContext;
 
 /**
  * Abstract collection of tests related to querying the datastore.
@@ -16,7 +16,7 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
  * @author dereekb
  *
  */
-public abstract class AbstractObjectifyQueryTests extends CoreApplicationTestContext {
+public abstract class AbstractObjectifyQueryTests extends AbstractAppContextOnlyTestingContext {
 
 	@Autowired
 	@Qualifier("fooRegistry")

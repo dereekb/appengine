@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.spring;
+package com.dereekb.gae.test.spring.context;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
@@ -9,13 +9,15 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.ServletException;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,11 +28,15 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterService;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
+import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
+import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
+import com.dereekb.gae.test.spring.WebServiceTester;
 import com.dereekb.gae.test.spring.web.builder.ServletAwareWebServiceRequestBuilder;
 import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
+import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
 import com.google.appengine.api.taskqueue.dev.LocalTaskQueueCallback;
 import com.google.appengine.api.urlfetch.URLFetchServicePb.URLFetchRequest;
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
@@ -38,16 +44,17 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 
 /**
- * {@link CoreServiceTestContext} extension that adds access to a
- * {@link WebApplicationContext}, and sets up Spring Security for logins.
+ * {@link AbstractAppContextOnlyTestingContext} extension that loads the entire Context, Api, and Taskqueue.
  *
  * @author dereekb
  *
- * @deprecated Deprecated with move to JUnit5. Use {@link AbstractAppTestingContext} instead.
  */
-@Deprecated
-public class WebServiceTestingContextImpl extends CoreServiceTestingContext
-        implements WebServiceTester {
+@WebAppConfiguration
+@SpringJUnitConfig( name = "api", locations = {
+		AbstractAppTestingContext.API_APPLICATION_XML_PATH, AbstractAppTestingContext.WEB_TESTING_XML_PATH })
+public class AbstractAppTestingContext extends AbstractAppContextOnlyTestingContext implements WebServiceTester {
+
+	public static final String API_APPLICATION_XML_PATH = AbstractAppTestingContext.BASE_MAIN_PATH + "spring/app.xml";
 
 	public static final String WEB_TESTING_XML_PATH = BASE_TESTING_PATH + "testing-web.xml";
 
@@ -63,10 +70,10 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	protected TestLoginTokenContext testLoginTokenContext;
 
 	@Autowired(required = false)
-	protected FilterChainProxy springSecurityFilterChain;
-
-	@Autowired(required = false)
 	protected AuthenticationParameterService authParameterService = AuthenticationParameterServiceImpl.SINGLETON;
+
+	@Autowired
+	protected FilterChainProxy springSecurityFilterChain;
 
 	@Autowired
 	protected LocalTaskQueueTestConfig taskQueueTestConfig;
@@ -74,18 +81,49 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
 
+	@Autowired
+	protected ApiInitializeServerController initializeServerController;
+
+	@Autowired(required = false)
+	protected TestAuthenticationContext authContext;
+
+	@Autowired
+	@Qualifier("mockClientRequestSender")
+	private MockClientRequestSender mockRequestSender;
+
 	private MockMvc mockMvc;
 
-	public WebServiceTestingContextImpl() {
-		this.initializeServerWithCoreServices = false;
+	public AbstractAppTestingContext() {}
+
+	public WebApplicationContext getWebApplicationContext() {
+		return this.webApplicationContext;
 	}
 
-	@Before
-	public void setupServices() {
+	public MockMvc getMockMvc() {
+		return this.mockMvc;
+	}
+
+	// MARK: Setup
+	@Override
+	@BeforeEach
+	public void setUpAppServices() {
+		super.setUpAppServices();
 		this.setUpWebServices();
+
+		this.initializeMockRequestSender();
 		this.initializeServerAndAuthContext();
 	}
 
+	@Override
+	@AfterEach
+	public void tearDownAppServices() {
+		super.tearDownAppServices();
+
+		// Wait for any tasks to complete first...
+		waitUntilTaskQueueCompletes();
+	}
+
+	// MARK: Initialize
 	public void setUpWebServices() {
 		DefaultMockMvcBuilder mockMvcBuilder = MockMvcBuilders.webAppContextSetup(this.webApplicationContext);
 
@@ -105,20 +143,13 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		TestLocalTaskQueueCallback.mockMvc = this.mockMvc;
 	}
 
-	/*
-	@Override
-	@Before
-	public void setUpCoreServices() {
-
-		// Wait for the web services to be set up.=
-		// this.taskQueueTestConfig.setTaskExecutionLatch(TestLocalTaskQueueCallback.countDownLatch);
-		super.setUpCoreServices();
+	protected void initializeMockRequestSender() {
+		this.mockRequestSender.setWebServiceTester(this);
 	}
-	*/
 
-	@Override
-	public void initializeServerAndAuthContext() {
-		super.initializeServerAndAuthContext();
+	protected void initializeServerAndAuthContext() {
+		this.initializeServer();
+		this.resetAuthContext();
 
 		// Initialize the system admin for the security chain
 		if (this.springSecurityFilterChain != null && this.testLoginTokenContext != null) {
@@ -127,29 +158,16 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		}
 	}
 
-	@Override
-	@After
-	public void tearDownCoreServices() {
-		super.tearDownCoreServices();
-
-		// Wait for any tasks to complete first...
-		waitUntilTaskQueueCompletes();
+	protected final void resetAuthContext() {
+		if (this.authContext != null) {
+			this.authContext.resetContext();
+		}
 	}
 
-	public WebApplicationContext getWebApplicationContext() {
-		return this.webApplicationContext;
-	}
-
-	public void setWebApplicationContext(WebApplicationContext webApplicationContext) {
-		this.webApplicationContext = webApplicationContext;
-	}
-
-	public MockMvc getMockMvc() {
-		return this.mockMvc;
-	}
-
-	public void setMockMvc(MockMvc mockMvc) {
-		this.mockMvc = mockMvc;
+	protected void initializeServer() {
+		if (this.initializeServerController != null) {
+			this.initializeServerController.initialize();
+		}
 	}
 
 	// MARK: Mock Requests
@@ -211,6 +229,7 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		return actions;
 	}
 
+	// MARK: Taskqueue
 	@Override
 	public void waitForTaskQueueToComplete() {
 		waitUntilTaskQueueCompletes();
@@ -220,7 +239,13 @@ public class WebServiceTestingContextImpl extends CoreServiceTestingContext
 		TestLocalTaskQueueCallback.waitUntilComplete();
 	}
 
-	public static class TestLocalTaskQueueCallback
+	/**
+	 * Internal component that handles all Taskqueue callbacks.
+	 *
+	 * @author dereekb
+	 *
+	 */
+	private static class TestLocalTaskQueueCallback
 	        implements LocalTaskQueueCallback {
 
 		private static final long serialVersionUID = 1L;

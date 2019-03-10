@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabase;
 import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
 import com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl;
+import com.dereekb.gae.test.spring.context.AbstractAppTestingContext;
 import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
@@ -21,8 +22,11 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
  *
  * @author dereekb
  *
+ * @deprecated Deprecated with move to JUnit5. Use {@link AbstractAppTestingContext} instead.
+ *
  * @see CoreApiServiceTestingContext
  */
+@Deprecated
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextHierarchy({
         @ContextConfiguration(name = "testing", locations = { CoreServiceTestingContext.GAE_TESTING_XML_PATH }) })
@@ -87,22 +91,6 @@ public class CoreServiceTestingContext {
 	public void tearDownCoreServices() {
 		this.testObjectifyInitializer.reset();
 		this.helper.tearDown();
-	}
-
-	public ApplicationContext getApplicationContext() {
-		return this.applicationContext;
-	}
-
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
-
-	public LocalServiceTestHelper getHelper() {
-		return this.helper;
-	}
-
-	public void setHelper(LocalServiceTestHelper helper) {
-		this.helper = helper;
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
 import com.dereekb.gae.test.spring.CoreServiceTestingContext;
+import com.dereekb.gae.test.spring.context.AbstractAppContextOnlyTestingContext;
 
 /**
  * Initializes the application but skips all web configuration.
@@ -15,7 +16,9 @@ import com.dereekb.gae.test.spring.CoreServiceTestingContext;
  * @author dereekb
  *
  * @see ApiApplicationTestContext
+ * @deprecated Deprecated with move to JUnit5. Use {@link AbstractAppContextOnlyTestingContext} instead.
  */
+@Deprecated
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextHierarchy({ @ContextConfiguration(name = "api", locations = {

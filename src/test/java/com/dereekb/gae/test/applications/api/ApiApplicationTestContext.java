@@ -16,11 +16,12 @@ import com.dereekb.gae.test.spring.WebServiceTestingContextImpl;
 
 /**
  * Initializes the web app.
- * 
+ *
  * @author dereekb
  *
  * @see CoreApplicationTestContext for core-application only.
  */
+@Deprecated
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextHierarchy({ @ContextConfiguration(name = "api", locations = {

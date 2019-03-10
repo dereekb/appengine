@@ -1,10 +1,12 @@
 package com.dereekb.gae.test.applications.core.server.datastore.query;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.extras.gen.test.model.foo.Foo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -49,7 +51,7 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 		ExecutableObjectifyQuery<Foo> executable = builder.buildExecutableQuery();
 		List<ModelKey> keys = executable.queryModelKeys();
 
-		Assert.assertTrue(keys.contains(foo.getModelKey()));
+		assertTrue(keys.contains(foo.getModelKey()));
 	}
 
 	@Test
@@ -66,7 +68,7 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 		ExecutableObjectifyQuery<Foo> executable = builder.buildExecutableQuery();
 		List<ModelKey> keys = executable.queryModelKeys();
 
-		Assert.assertTrue(keys.contains(foo.getModelKey()));
+		assertTrue(keys.contains(foo.getModelKey()));
 	}
 
 	@Test
@@ -85,9 +87,9 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 			ExecutableObjectifyQuery<Foo> executable = builder.buildExecutableQuery();
 			List<ModelKey> keys = executable.queryModelKeys();
 
-			Assert.assertTrue(keys.contains(foo.getModelKey()));
+			assertTrue(keys.contains(foo.getModelKey()));
 		} catch (Exception e) {
-			Assert.assertTrue(UnsupportedOperationException.class.isAssignableFrom(e.getClass()));
+			assertTrue(UnsupportedOperationException.class.isAssignableFrom(e.getClass()));
 		}
 	}
 
@@ -134,7 +136,7 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 
 		// Check that
 		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
-		Assert.assertTrue(chain.getValue().getField().equals(fieldA));
+		assertTrue(chain.getValue().getField().equals(fieldA));
 	}
 
 	@Test
@@ -148,12 +150,12 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 		ObjectifyQueryFilter a = new ObjectifyConditionQueryFilter(fieldA, ExpressionOperator.EQUAL, "VALUE");
 		ObjectifyQueryFilter b = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.GREATER_THAN, "VALUE");
 
-		Assert.assertTrue(b.isInequality());
+		assertTrue(b.isInequality());
 
 		impl.addQueryFilter(a);
 		impl.addQueryFilter(b);
 
-		Assert.assertTrue(impl.getInequalityFilter() != null);
+		assertTrue(impl.getInequalityFilter() != null);
 
 		ObjectifyQueryOrdering aOrder = new ObjectifyQueryOrderingImpl(fieldA, QueryResultsOrdering.Ascending);
 		ObjectifyQueryOrdering bOrder = new ObjectifyQueryOrderingImpl(fieldB, QueryResultsOrdering.Ascending);
@@ -163,11 +165,11 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 
 		ExecutableObjectifyQuery<Foo> executable = impl.buildExecutableQuery();
 
-		Assert.assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
+		assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
 
 		// Check that b's field is first.
 		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
-		Assert.assertTrue(chain.getValue().getField().equals(fieldB));
+		assertTrue(chain.getValue().getField().equals(fieldB));
 	}
 
 	@Test
@@ -182,14 +184,14 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 		ObjectifyQueryFilter b = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.GREATER_THAN, "VALUE");
 		ObjectifyQueryFilter b2 = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.LESS_THAN, "VALUE");
 
-		Assert.assertTrue(b.isInequality());
+		assertTrue(b.isInequality());
 
 		impl.addQueryFilter(a);
 		impl.addQueryFilter(b);
 		impl.addQueryFilter(b2);
 
-		Assert.assertTrue(impl.getInequalityFilter() != null);
-		Assert.assertTrue(impl.getInequalitySecondFilter() != null);
+		assertTrue(impl.getInequalityFilter() != null);
+		assertTrue(impl.getInequalitySecondFilter() != null);
 
 		ObjectifyQueryOrdering aOrder = new ObjectifyQueryOrderingImpl(fieldA, QueryResultsOrdering.Ascending);
 		ObjectifyQueryOrdering bOrder = new ObjectifyQueryOrderingImpl(fieldB, QueryResultsOrdering.Ascending);
@@ -200,11 +202,11 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 		ExecutableObjectifyQuery<Foo> executable = impl.buildExecutableQuery();
 		executable.queryModelKeys();
 
-		Assert.assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
+		assertTrue(executable.getQueryFilters().get(0).getField().equals(fieldB));
 
 		// Check that b's field is first.
 		Chain<ObjectifyQueryOrdering> chain = executable.getResultsOrdering();
-		Assert.assertTrue(chain.getValue().getField().equals(fieldB));
+		assertTrue(chain.getValue().getField().equals(fieldB));
 	}
 
 	@Test
@@ -218,14 +220,14 @@ public class ObjectifyQueryFieldsTest extends AbstractObjectifyQueryTests {
 		ObjectifyQueryFilter a = new ObjectifyConditionQueryFilter(fieldA, ExpressionOperator.GREATER_THAN, "VALUE");
 		ObjectifyQueryFilter b = new ObjectifyConditionQueryFilter(fieldB, ExpressionOperator.GREATER_THAN, "VALUE");
 
-		Assert.assertTrue(a.isInequality());
-		Assert.assertTrue(b.isInequality());
+		assertTrue(a.isInequality());
+		assertTrue(b.isInequality());
 
 		impl.addQueryFilter(a);
 
 		try {
 			impl.addQueryFilter(b);
-			Assert.fail("Should have failed.");
+			fail("Should have failed.");
 		} catch (TooManyQueryInequalitiesException e) {
 
 		}

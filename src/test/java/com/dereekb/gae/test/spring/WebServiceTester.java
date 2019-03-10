@@ -8,6 +8,12 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import com.dereekb.gae.test.spring.web.builder.WebServiceRequestBuilder;
 
+/**
+ * Interface for performing web tests.
+ *
+ * @author dereekb
+ *
+ */
 public interface WebServiceTester {
 
 	public WebServiceRequestBuilder getRequestBuilder();

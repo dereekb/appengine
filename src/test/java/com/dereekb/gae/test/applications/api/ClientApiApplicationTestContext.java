@@ -13,8 +13,9 @@ import com.dereekb.gae.test.mock.client.crud.MockClientRequestSender;
 /**
  * Abstract {@link ApiApplicationTestContext} extension that initializes the
  * mock client request sender.
- * 
+ *
  * @author dereekb
+ * @Deprecated
  *
  */
 public abstract class ClientApiApplicationTestContext extends ApiApplicationTestContext {
@@ -23,6 +24,7 @@ public abstract class ClientApiApplicationTestContext extends ApiApplicationTest
 	@Qualifier("mockClientRequestSender")
 	private MockClientRequestSender mockRequestSender;
 
+	@Override
 	@Before
 	public void initializeMockRequestSender() {
 		this.mockRequestSender.setWebServiceTester(this);

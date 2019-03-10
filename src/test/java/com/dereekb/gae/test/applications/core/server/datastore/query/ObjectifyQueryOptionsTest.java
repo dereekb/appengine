@@ -1,9 +1,12 @@
 package com.dereekb.gae.test.applications.core.server.datastore.query;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.extras.gen.test.model.foo.Foo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -33,7 +36,7 @@ public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTests {
 		Integer resultsCount = query.getResultCount();
 
 
-		Assert.assertTrue(resultsCount == count);
+		assertTrue(resultsCount == count);
 	}
 
 	@Test
@@ -49,7 +52,7 @@ public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTests {
 		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		Integer resultsCount = query.getResultCount();
 
-		Assert.assertTrue(resultsCount == limit);
+		assertTrue(resultsCount == limit);
 	}
 
 	@Test
@@ -70,7 +73,7 @@ public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTests {
 		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		Integer resultsCount = query.getResultCount();
 
-		Assert.assertTrue(String.format("Expected %s but got %s", expected, resultsCount), resultsCount == expected);
+		assertTrue(String.format("Expected %s but got %s", expected, resultsCount), resultsCount == expected);
 	}
 
 	@Test
@@ -90,18 +93,18 @@ public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTests {
 		ExecutableObjectifyQuery<Foo> queryA = queryBuilder.buildExecutableQuery();
 
 		List<ModelKey> resultsA = queryA.queryModelKeys();
-		Assert.assertTrue(resultsA.size() == limit);
+		assertTrue(resultsA.size() == limit);
 
 		ResultsCursor cursorA = queryA.getCursor();
-		Assert.assertNotNull(cursorA);
+		assertNotNull(cursorA);
 		options.setCursor(cursorA);
 
 		queryBuilder.setOptions(options);
 		ExecutableObjectifyQuery<Foo> queryB = queryBuilder.buildExecutableQuery();
 		List<ModelKey> resultsB = queryB.queryModelKeys();
 
-		Assert.assertTrue(resultsB.size() == limit);
-		Assert.assertFalse(resultsA.contains(resultsB.get(0)));
+		assertTrue(resultsB.size() == limit);
+		assertFalse(resultsA.contains(resultsB.get(0)));
 	}
 
 	@Test
@@ -116,17 +119,17 @@ public class ObjectifyQueryOptionsTest extends AbstractObjectifyQueryTests {
 
 		ExecutableObjectifyQuery<Foo> query = queryBuilder.buildExecutableQuery();
 		List<ModelKey> keys = query.queryModelKeys();
-		Assert.assertNotNull(keys);
+		assertNotNull(keys);
 
 		List<Foo> models = query.queryModels();
-		Assert.assertNotNull(models);
+		assertNotNull(models);
 
 		List<ModelKey> modelKeys = ModelKey.readModelKeys(models);
 
-		Assert.assertTrue(keys.size() == models.size());
-		Assert.assertTrue(modelKeys.containsAll(keys));
-		Assert.assertTrue(query.hasResults());
-		Assert.assertTrue(query.getResultCount() == count);
+		assertTrue(keys.size() == models.size());
+		assertTrue(modelKeys.containsAll(keys));
+		assertTrue(query.hasResults());
+		assertTrue(query.getResultCount() == count);
 	}
 
 }
