@@ -14,6 +14,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<appengine.target.version>1.9.71</appengine.target.version>
+		<appengine-cloud.target.version>1.65.0</appengine-cloud.target.version>
 		<spring.target.version>5.1.4.RELEASE</spring.target.version>
 		<spring-security.target.version>5.1.3.RELEASE</spring-security.target.version>
 		<junit.target.version>5.4.0</junit.target.version>
@@ -35,6 +36,12 @@
 		</dependency>
 
 		<!-- Google App Engine -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-datastore</artifactId>
+			<version>${appengine-cloud.target.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
