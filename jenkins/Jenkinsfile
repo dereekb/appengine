@@ -14,24 +14,43 @@ pipeline {
                 sh './jenkins/scripts/initialize.sh'
             }
         }
-        stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+        stage('Testing') {
+            failFast false
+            parallel {
+                stage('Appengine') {
+                    stages {
+                        stage('Build') {
+                            steps {
+                                sh './jenkins/appengine/scripts/build.sh'
+                            }
+                        }
+                        stage('Test') {
+                            steps {
+                                sh './jenkins/appengine/scripts/test.sh'
+                            }
+                            post {
+                                always {
+                                    junit 'appengine/target/surefire-reports/*.xml'
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        stage('Deploy') {
+        stage('E2E') {
             steps {
-                sh './jenkins/scripts/deploy.sh'
+                sh 'echo Testing E2E...'
+            }
+        }
+        stage('Deploy') {
+            failFast false
+            parallel {
+                stage('Appengine') {
+                    steps {
+                        sh './jenkins/appengine/scripts/deploy.sh'
+                    }
+                }
             }
         }
     }
