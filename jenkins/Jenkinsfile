@@ -21,12 +21,12 @@ pipeline {
                     stages {
                         stage('Build') {
                             steps {
-                                sh './jenkins/appengine/scripts/build.sh'
+                                sh './jenkins/scripts/appengine/build.sh'
                             }
                         }
                         stage('Test') {
                             steps {
-                                sh './jenkins/appengine/scripts/test.sh'
+                                sh './jenkins/scripts/appengine/test.sh'
                             }
                             post {
                                 always {
@@ -44,11 +44,11 @@ pipeline {
             }
         }
         stage('Deploy') {
-            failFast false
+            failFast true
             parallel {
                 stage('Appengine') {
                     steps {
-                        sh './jenkins/appengine/scripts/deploy.sh'
+                        sh './jenkins/scripts/appengine/deploy.sh'
                     }
                 }
             }
