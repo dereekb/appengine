@@ -19,12 +19,12 @@ pipeline {
             parallel {
                 stage('Appengine') {
                     stages {
-                        stage('Build') {
+                        stage('Build Appengine') {
                             steps {
                                 sh './jenkins/scripts/appengine/build.sh'
                             }
                         }
-                        stage('Test') {
+                        stage('Test Appengine') {
                             steps {
                                 sh './jenkins/scripts/appengine/test.sh'
                             }
