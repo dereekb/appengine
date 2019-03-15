@@ -1,12 +1,15 @@
 pipeline {
     agent {
-        docker {
-            image 'maven:3-alpine'
+        dockerfile {
+            filename: 'Dockerfile'
+            dir 'jenkins'
+            args '-v $HOME/.m2:/root/.m2'
         }
     }
     environment {
         ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
         ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
+        NPM_TOKEN = credentials('jenkins-verdaccio')
     }
     stages {
         stage('Initialize') {
