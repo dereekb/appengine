@@ -10,11 +10,13 @@ pipeline {
             failFast false
             parallel {
                 stage('Server') {
-                    dockerfile {
-                        label 'maven'
-                        filename 'Dockerfile'
-                        dir 'jenkins/maven'
-                        args '-v $HOME/.m2:/root/.m2'
+                    agent {
+                        dockerfile {
+                            label 'maven'
+                            filename 'Dockerfile'
+                            dir 'jenkins/maven'
+                            args '-v $HOME/.m2:/root/.m2'
+                        }
                     }
                     stages {
                         stage('Initialize') {
@@ -38,7 +40,6 @@ pipeline {
                             }
                         }
                         stage('Deploy') {
-                            agent { label 'maven' }
                             steps {
                                 sh './jenkins/scripts/appengine/deploy.sh'
                             }
@@ -46,10 +47,12 @@ pipeline {
                     }
                 }
                 stage('Web') {
-                    dockerfile {
-                        label 'node'
-                        filename 'Dockerfile'
-                        dir 'jenkins/node'
+                    agent {
+                        dockerfile {
+                            label 'node'
+                            filename 'Dockerfile'
+                            dir 'jenkins/node'
+                        }
                     }
                     stages {
                         stage('Initialize') {
