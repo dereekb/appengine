@@ -4,6 +4,7 @@ pipeline {
         ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
         ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
         NPM_TOKEN = credentials('jenkins-verdaccio')
+        VERDACCIO_LOGIN = credentials('jenkins-verdaccio-login')
         NPM_REPOSITORY_URL = "https://dev.dereekb.com:10000/verdaccio"
     }
     stages {

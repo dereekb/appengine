@@ -2,7 +2,10 @@
 echo "Initializing Angular/npm.";
 
 # Set NPM Repository
-sh -c "npm config set registry ${NPM_REPOSITORY_URL}"
+echo "//${NPM_REGISTRY_AUTH_URL}:_authToken=${NPM_TOKEN}" > .npmrc
+sh -c "npm config set registry ${NPM_REGISTRY_URL}"
+
+echo .npmrc
 
 # Install
 cd "./appengine-web"
