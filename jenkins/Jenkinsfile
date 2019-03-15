@@ -1,5 +1,5 @@
 pipeline {
-    agent: none
+    agent none
     environment {
         ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
         ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
