@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 echo "Initializing Maven.";
 
 # Copy Maven settings to the repo

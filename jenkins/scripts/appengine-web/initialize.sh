@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/sh
 echo "Initializing Angular/npm.";
 
-angularDirectory="angular"
+webAppDirectory="appengine-web"
 
 # Installing
-sh -c "npm install --prefix ${angularDirectory}"
+sh -c "npm install --prefix ${webAppDirectory}"
