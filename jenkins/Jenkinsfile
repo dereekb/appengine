@@ -4,9 +4,10 @@ pipeline {
         ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
         ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
         NPM_TOKEN = credentials('jenkins-verdaccio')
+        NPM_REPOSITORY_URL = "https://dev.dereekb.com:10000/verdaccio"
     }
     stages {
-        stage('Build And Test Individually') {
+        stage('Build') {
             failFast false
             parallel {
                 stage('Server') {
@@ -56,6 +57,16 @@ pipeline {
                         stage('Initialize') {
                             steps {
                                 sh './jenkins/scripts/appengine-web/initialize.sh'
+                            }
+                        }
+                        stage('Test') {
+                            steps {
+                                sh './jenkins/scripts/appengine-web/test.sh'
+                            }
+                            post {
+                                always {
+                                    junit 'appengine-web/tests/*.xml'
+                                }
                             }
                         }
                     }

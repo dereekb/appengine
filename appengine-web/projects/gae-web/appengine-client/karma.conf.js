@@ -7,6 +7,7 @@ module.exports = function (config) {
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
+      require('karma-junit-reporter'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
@@ -20,12 +21,16 @@ module.exports = function (config) {
       reports: ['html', 'lcovonly'],
       fixWebpackSourcePaths: true
     },
-    reporters: ['progress', 'kjhtml'],
+    junitReporter: {
+      outputDir: '../../../tests',
+      outputFile: 'appengine-client.xml'
+    },
+    reporters: ['progress', 'kjhtml', 'dots', 'junit'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chrome', 'ChromeHeadless', 'ChromeHeadlessNoSandbox'],
+    autoWatch: false,
+    browsers: ['ChromeHeadlessNoSandbox'],
     // you can define custom flags
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -33,7 +38,7 @@ module.exports = function (config) {
         flags: ['--no-sandbox']
       }
     },
-    singleRun: false,
-    restartOnFileChange: true
+    singleRun: true,
+    restartOnFileChange: false
   });
 };
