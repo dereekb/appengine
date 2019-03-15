@@ -1,9 +1,15 @@
 pipeline {
     agent {
         dockerfile {
+            label 'maven'
             filename 'Dockerfile'
-            dir 'jenkins'
+            dir 'jenkins/maven'
             args '-v $HOME/.m2:/root/.m2'
+        }
+        dockerfile {
+            label 'node'
+            filename 'Dockerfile'
+            dir 'jenkins/node'
         }
     }
     environment {
@@ -13,14 +19,27 @@ pipeline {
     }
     stages {
         stage('Initialize') {
-            steps {
-                sh './jenkins/scripts/initialize.sh'
+            failFast true
+            parallel {
+                stage('Appengine') {
+                    agent { label 'maven' }
+                    steps {
+                        sh './jenkins/scripts/appengine/initialize.sh'
+                    }
+                }
+                stage('Angular') {
+                    agent { label 'node' }
+                    steps {
+                        sh './jenkins/scripts/appengine-web/initialize.sh'
+                    }
+                }
             }
         }
         stage('Testing') {
             failFast false
             parallel {
                 stage('Appengine') {
+                    agent { label 'maven' }
                     stages {
                         stage('Build Appengine') {
                             steps {
@@ -50,6 +69,7 @@ pipeline {
             failFast true
             parallel {
                 stage('Appengine') {
+                    agent { label 'maven' }
                     steps {
                         sh './jenkins/scripts/appengine/deploy.sh'
                     }
