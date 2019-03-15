@@ -22,6 +22,3 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # Telling node-sass which pre-built binary to fetch.
 # This way we don't need rebuilding node-sass each time!
 ENV SASS_BINARY_NAME=linux-x64-67
-
-## Ready
-ENTRYPOINT ["ng test"]

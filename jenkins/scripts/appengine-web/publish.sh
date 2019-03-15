@@ -1,7 +1,7 @@
 #!/bin/sh
 # Publish To Verdaccio
 set -e
-private_registry="https://dev.dereekb.com:4873/verdaccio"
+private_registry=${NPM_REPOSITORY_URL}
 
 # Publish
 sh -c "npm --registry $private_registry publish"

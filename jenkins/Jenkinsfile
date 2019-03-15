@@ -59,6 +59,11 @@ pipeline {
                                 sh './jenkins/scripts/appengine-web/initialize.sh'
                             }
                         }
+                        stage('Build') {
+                            steps {
+                                sh './jenkins/scripts/appengine-web/build.sh'
+                            }
+                        }
                         stage('Test') {
                             steps {
                                 sh './jenkins/scripts/appengine-web/test.sh'
