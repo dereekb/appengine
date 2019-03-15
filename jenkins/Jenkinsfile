@@ -12,7 +12,6 @@ pipeline {
                 stage('Server') {
                     agent {
                         dockerfile {
-                            label 'maven'
                             filename 'Dockerfile'
                             dir 'jenkins/maven'
                             args '-v $HOME/.m2:/root/.m2'
@@ -49,7 +48,6 @@ pipeline {
                 stage('Web') {
                     agent {
                         dockerfile {
-                            label 'node'
                             filename 'Dockerfile'
                             dir 'jenkins/node'
                         }
