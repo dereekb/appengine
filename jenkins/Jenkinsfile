@@ -1,52 +1,33 @@
 pipeline {
-    agent {
-        dockerfile {
-            label 'maven'
-            filename 'Dockerfile'
-            dir 'jenkins/maven'
-            args '-v $HOME/.m2:/root/.m2'
-        }
-        dockerfile {
-            label 'node'
-            filename 'Dockerfile'
-            dir 'jenkins/node'
-        }
-    }
+    agent: none
     environment {
         ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
         ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
         NPM_TOKEN = credentials('jenkins-verdaccio')
     }
     stages {
-        stage('Initialize') {
-            failFast true
-            parallel {
-                stage('Appengine') {
-                    agent { label 'maven' }
-                    steps {
-                        sh './jenkins/scripts/appengine/initialize.sh'
-                    }
-                }
-                stage('Angular') {
-                    agent { label 'node' }
-                    steps {
-                        sh './jenkins/scripts/appengine-web/initialize.sh'
-                    }
-                }
-            }
-        }
-        stage('Testing') {
+        stage('Build And Test Individually') {
             failFast false
             parallel {
-                stage('Appengine') {
-                    agent { label 'maven' }
+                stage('Server') {
+                    dockerfile {
+                        label 'maven'
+                        filename 'Dockerfile'
+                        dir 'jenkins/maven'
+                        args '-v $HOME/.m2:/root/.m2'
+                    }
                     stages {
-                        stage('Build Appengine') {
+                        stage('Initialize') {
+                            steps {
+                                sh './jenkins/scripts/appengine/initialize.sh'
+                            }
+                        }
+                        stage('Build') {
                             steps {
                                 sh './jenkins/scripts/appengine/build.sh'
                             }
                         }
-                        stage('Test Appengine') {
+                        stage('Test') {
                             steps {
                                 sh './jenkins/scripts/appengine/test.sh'
                             }
@@ -56,22 +37,26 @@ pipeline {
                                 }
                             }
                         }
+                        stage('Deploy') {
+                            agent { label 'maven' }
+                            steps {
+                                sh './jenkins/scripts/appengine/deploy.sh'
+                            }
+                        }
                     }
                 }
-            }
-        }
-        stage('E2E') {
-            steps {
-                sh 'echo Testing E2E...'
-            }
-        }
-        stage('Deploy') {
-            failFast true
-            parallel {
-                stage('Appengine') {
-                    agent { label 'maven' }
-                    steps {
-                        sh './jenkins/scripts/appengine/deploy.sh'
+                stage('Web') {
+                    dockerfile {
+                        label 'node'
+                        filename 'Dockerfile'
+                        dir 'jenkins/node'
+                    }
+                    stages {
+                        stage('Initialize') {
+                            steps {
+                                sh './jenkins/scripts/appengine-web/initialize.sh'
+                            }
+                        }
                     }
                 }
             }
