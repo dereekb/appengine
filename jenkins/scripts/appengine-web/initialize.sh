@@ -2,8 +2,10 @@
 echo "Initializing Angular/npm.";
 
 # Set NPM Repository
-echo "//${NPM_REGISTRY_AUTH_URL}:_authToken=${NPM_TOKEN}" > .npmrc
 sh -c "npm config set registry ${NPM_REGISTRY_URL}"
+
+# Login To Repository
+sh -c "npm-cli-login -r ${NPM_REGISTRY_URL} -u ${VERDACCIO_LOGIN_USR} -p ${VERDACCIO_LOGIN_PWD} -e ${NPM_EMAIL_ADDRESS}"
 
 # Print NPMRC For Testing
 cat .npmrc

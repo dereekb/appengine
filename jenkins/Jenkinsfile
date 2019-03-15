@@ -7,6 +7,7 @@ pipeline {
         VERDACCIO_LOGIN = credentials('jenkins-verdaccio-login')
         NPM_REGISTRY_URL = "https://dev.dereekb.com:10000/verdaccio"
         NPM_REGISTRY_AUTH_URL = "https://dev.dereekb.com:10000/"
+        NPM_EMAIL_ADDRESS = "jenkins@dereekb.com"
     }
     stages {
         stage('Build') {
