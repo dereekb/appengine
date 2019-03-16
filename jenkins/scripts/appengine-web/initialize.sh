@@ -12,6 +12,12 @@ sh -c "npm-cli-login -r ${NPM_REGISTRY_URL} -u ${VERDACCIO_LOGIN_USR} -p ${VERDA
 
 echo "Installing Node Modules";
 
+echo "Root NPMRC";
+sh -c "cat /root/.npmrc"
+
+echo "Home NPMRC";
+sh -c "cat ~/.npmrc"
+
 # Install
 sh -c "ls"
 
