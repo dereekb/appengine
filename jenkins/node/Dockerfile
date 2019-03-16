@@ -1,7 +1,7 @@
 FROM node:11-alpine
 
 ## Install NPM Dependencies
-RUN npm install -g karma -g typescript -g @angular/cli -g npm-cli-login
+RUN npm install -g karma -g typescript -g @angular/cli
 
 ## Install Chromium for running tests via Karma
 # https://github.com/karma-runner/karma-chrome-launcher/issues/189

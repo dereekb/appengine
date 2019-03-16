@@ -12,7 +12,7 @@ echo "Logging Into Repository";
 ##sh -c "npm-cli-login -r ${NPM_REGISTRY_URL} -u ${VERDACCIO_LOGIN_USR} -p ${VERDACCIO_LOGIN_PSW} -e ${NPM_EMAIL_ADDRESS}"
 
 echo "//${NPM_REGISTRY_URL}:_authToken=${NPM_TOKEN}" >> ~/.npmrc
-echo "registry=${NPM_REGISTRY_URL}" >> ~/.npmrc
+echo "registry=https://${NPM_REGISTRY_URL}" >> ~/.npmrc
 # echo "always-auth=true" >> ~/.npmrc
 
 echo "Installing Node Modules";
