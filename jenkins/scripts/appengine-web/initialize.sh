@@ -1,29 +1,17 @@
 #!/bin/sh
 echo "Initializing Angular/npm.";
 
-cd "./appengine-web"
-
 echo "Logging Into Repository";
 
 # Set NPM Repository
 ##sh -c "npm set registry ${NPM_REGISTRY_URL}"
-
-# Login To Repository
 ##sh -c "npm-cli-login -r ${NPM_REGISTRY_URL} -u ${VERDACCIO_LOGIN_USR} -p ${VERDACCIO_LOGIN_PSW} -e ${NPM_EMAIL_ADDRESS}"
 
+# Login To Verdaccio Repository by writing to npmrc
 echo "//${NPM_REGISTRY_URL}:_authToken=${NPM_TOKEN}" >> ~/.npmrc
 echo "registry=https://${NPM_REGISTRY_URL}" >> ~/.npmrc
-# echo "always-auth=true" >> ~/.npmrc
-
-echo "Installing Node Modules";
-
-echo "Root NPMRC";
-sh -c "cat /root/.npmrc"
-
-echo "Home NPMRC";
-sh -c "cat ~/.npmrc"
 
 # Install
-sh -c "ls"
-
+echo "Installing Node Modules";
+cd "./appengine-web"
 sh -c "npm install -dd"
