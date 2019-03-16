@@ -6,6 +6,7 @@ pipeline {
         NPM_TOKEN = credentials('jenkins-verdaccio')
         VERDACCIO_LOGIN = credentials('jenkins-verdaccio-login')
         NPM_REGISTRY_URL = "https://dev.dereekb.com:10000/verdaccio"
+        NPM_REGISTRY_LOGIN_URL = "https://dev.dereekb.com:10000/"
         NPM_EMAIL_ADDRESS = "jenkins@dereekb.com"
     }
     stages {
@@ -54,7 +55,7 @@ pipeline {
                         dockerfile {
                             filename 'Dockerfile'
                             dir 'jenkins/node'
-                            additionalBuildArgs '--build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg NPM_REGISTRY_URL=${NPM_REGISTRY_URL}'
+                            additionalBuildArgs '--build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg NPM_REGISTRY_LOGIN_URL=${NPM_REGISTRY_LOGIN_URL} --build-arg NPM_REGISTRY_URL=${NPM_REGISTRY_URL}'
                             reuseNode true
                         }
                     }
