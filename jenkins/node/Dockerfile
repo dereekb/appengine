@@ -4,10 +4,10 @@ ARG NPM_TOKEN
 ARG NPM_REGISTRY_URL
 
 ## Write the NPM Token
-RUN echo "//${NPM_REGISTRY_URL}:_authToken=${NPM_TOKEN}" > ~/.npmrc
+RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN" > ~/.npmrc
 
 # Set NPM Repository
-RUN npm set registry ${NPM_REGISTRY_URL}
+RUN npm set registry $NPM_REGISTRY_URL
 
 ## Install NPM Dependencies
 RUN npm install -g karma -g typescript -g @angular/cli -g npm-cli-login

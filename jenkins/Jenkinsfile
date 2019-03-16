@@ -53,6 +53,7 @@ pipeline {
                         dockerfile {
                             filename 'Dockerfile'
                             dir 'jenkins/node'
+                            args 'NPM_TOKEN=${NPM_TOKEN} NPM_REGISTRY_URL=${NPM_REGISTRY_URL}'
                         }
                     }
                     stages {
