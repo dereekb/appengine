@@ -54,7 +54,7 @@ pipeline {
                         dockerfile {
                             filename 'Dockerfile'
                             dir 'jenkins/node'
-                            additionalBuildArgs 'NPM_TOKEN=${NPM_TOKEN} NPM_REGISTRY_URL=${NPM_REGISTRY_URL}'
+                            additionalBuildArgs '--build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg NPM_REGISTRY_URL=${NPM_REGISTRY_URL}'
                             reuseNode true
                         }
                     }
