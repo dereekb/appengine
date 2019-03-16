@@ -18,6 +18,7 @@ pipeline {
                             filename 'Dockerfile'
                             dir 'jenkins/maven'
                             args '-v $HOME/.m2:/root/.m2'
+                            reuseNode true
                         }
                     }
                     stages {
@@ -53,7 +54,8 @@ pipeline {
                         dockerfile {
                             filename 'Dockerfile'
                             dir 'jenkins/node'
-                            args 'NPM_TOKEN=${NPM_TOKEN} NPM_REGISTRY_URL=${NPM_REGISTRY_URL}'
+                            additionalBuildArgs 'NPM_TOKEN=${NPM_TOKEN} NPM_REGISTRY_URL=${NPM_REGISTRY_URL}'
+                            reuseNode true
                         }
                     }
                     stages {
