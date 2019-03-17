@@ -9,7 +9,7 @@ services:
     working_dir: /code
     volumes:
       - ../appengine-web:/code
-      - /code/node_modules        # Mask node_modules
+      - ./.tmp/node_modules:/code/node_modules # Expose node_modules through .tmp
     ports:
       - "4200:4200"
     networks:

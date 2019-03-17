@@ -1,12 +1,14 @@
 pipeline {
     agent none
     environment {
-        MAVEN_CREDS = credentials('jenkins-artifactory')
+        ARTIFACTORY_CREDS = credentials('jenkins-artifactory')
         ARTIFACTORY_CONTEXT_URL = "https://dev.dereekb.com:10000/artifactory"
         NPM_TOKEN = credentials('jenkins-verdaccio')
         VERDACCIO_LOGIN = credentials('jenkins-verdaccio-login')
         NPM_REGISTRY_URL = "dev.dereekb.com:10000/verdaccio/"
         NPM_EMAIL_ADDRESS = "jenkins@dereekb.com"
+        MAVEN_CREDS_USR = ${ARTIFACTORY_CREDS_USR}
+        MAVEN_CREDS_PSW = ${ARTIFACTORY_CREDS_PSW}
     }
     stages {
         stage('Build') {

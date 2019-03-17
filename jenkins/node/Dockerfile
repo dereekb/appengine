@@ -26,7 +26,8 @@ ARG NPM_TOKEN
 ARG NPM_REGISTRY_URL=dev.dereekb.com:10000/verdaccio/
 
 # Login To Verdaccio Repository by writing to .npmrc
-RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN\nregistry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
+RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN" >> ~/.npmrc
+RUN echo "registry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
 
 ## Install NPM Dependencies
-RUN npm install -g karma typescript @angular/cli
+RUN npm install -g karma typescript @angular/cli --loglevel info

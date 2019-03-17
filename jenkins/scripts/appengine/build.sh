@@ -1,2 +1,3 @@
 #!/bin/sh
-mvn -f appengine -B -DskipTests clean package
+cd "./appengine"
+sh -c "mvn -B -DskipTests clean package"

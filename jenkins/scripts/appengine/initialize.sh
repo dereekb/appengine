@@ -1,4 +1,5 @@
 #!/bin/sh
 
 # Install
-mvn -f appengine install -DskipTests
+cd "./appengine"
+sh -c "mvn install -DskipTests=true"
