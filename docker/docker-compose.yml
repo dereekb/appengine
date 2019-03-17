@@ -1,0 +1,38 @@
+version: "3.6"
+services:
+  app:
+    build: 
+      context: ../
+      dockerfile: ./jenkins/node/Dockerfile
+      args:
+        - NPM_TOKEN=${NPM_TOKEN}
+    working_dir: /code
+    volumes:
+      - ../appengine-web:/code
+      - /code/node_modules        # Mask node_modules
+    ports:
+      - "4200:4200"
+    networks:
+      - appengine-net
+    command: '/code/serve.sh'
+  server:
+    build:
+      context: ../
+      dockerfile: ./jenkins/maven/Dockerfile
+    ports:
+      - "4201:8080"
+    working_dir: /code
+    environment:
+      - MAVEN_CREDS_USR=${MAVEN_USR}  # Pass at runtime
+      - MAVEN_CREDS_PSW=${MAVEN_PSW}  
+    volumes:
+      - ../appengine:/code
+      - ./.tmp/target:/code/target                   # Expose target through .tmp
+      - ./.tmp/.m2/repository:/root/.m2/repository   # Cache .m2/repository in .tmp
+      - /code/target                                 # Mask target
+    networks:
+      - appengine-net
+    command: 'mvn appengine:devserver -Dmaven.javadoc.skip=true -DskipTests=true' # skip tests and doc gen
+networks:
+  appengine-net:
+    driver: bridge

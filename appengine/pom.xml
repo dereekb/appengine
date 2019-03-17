@@ -417,13 +417,13 @@
 						<configuration>
 							<artifactory>
 								<includeEnvVars>true</includeEnvVars>
-								<envVarsExcludePatterns>*ARTIFACTORY_CREDS*,*ARTIFACTORY_CREDS_USR*,*ARTIFACTORY_CREDS_PSW*</envVarsExcludePatterns>
+								<envVarsExcludePatterns>*MAVEN_CREDS*,*MAVEN_CREDS_USR*,*MAVEN_CREDS_PSW*</envVarsExcludePatterns>
 								<timeoutSec>20</timeoutSec>
 							</artifactory>
 							<publisher>
 								<contextUrl>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}</contextUrl>
-								<username>{{ARTIFACTORY_CREDS_USR}}</username>
-								<password>{{ARTIFACTORY_CREDS_PSW}}</password>
+								<username>{{MAVEN_CREDS_USR}}</username>
+								<password>{{MAVEN_CREDS_PSW}}</password>
 								<repoKey>libs-release-local</repoKey>
 								<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
 								<publishBuildInfo>true</publishBuildInfo>
