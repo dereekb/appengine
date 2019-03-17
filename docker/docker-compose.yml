@@ -21,6 +21,7 @@ services:
       dockerfile: ./jenkins/maven/Dockerfile
     ports:
       - "4201:8080"
+      - "4202:8888"
     working_dir: /code
     environment:
       - MAVEN_CREDS_USR=${MAVEN_USR}  # Pass at runtime
@@ -32,7 +33,7 @@ services:
       - /code/target                                 # Mask target
     networks:
       - appengine-net
-    command: 'mvn appengine:devserver -Dmaven.javadoc.skip=true -DskipTests=true' # skip tests and doc gen
+    command: '/code/serve.sh' # skip tests and doc gen
 networks:
   appengine-net:
     driver: bridge

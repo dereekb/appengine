@@ -3,7 +3,7 @@
   <!--Shared App Context-->
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/spring/context.xml</param-value>
+    <param-value>/WEB-INF/spring/context/context.xml</param-value>
   </context-param>
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -14,7 +14,7 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/spring/api.xml</param-value>
+      <param-value>/WEB-INF/spring/api/api.xml</param-value>
     </init-param>
     <!--Load On Startup.-->
     <load-on-startup>0</load-on-startup>
@@ -29,7 +29,7 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/spring/taskqueue.xml</param-value>
+      <param-value>/WEB-INF/spring/taskqueue/taskqueue.xml</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
