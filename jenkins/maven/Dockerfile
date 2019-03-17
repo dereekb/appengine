@@ -7,5 +7,6 @@ ENV ARTIFACTORY_CONTEXT_URL="https://dev.dereekb.com:10000/artifactory"
 ENV MAVEN_CREDS_USR=
 ENV MAVEN_CREDS_PSW=
 
-# Copy Settings
-COPY ./jenkins/maven/settings.xml /root/.m2/settings.xml
+# Copy settings.xml
+ARG SETTINGS_FOLDER_PATH=./jenkins/maven
+COPY $SETTINGS_FOLDER_PATH/settings.xml /root/.m2/settings.xml

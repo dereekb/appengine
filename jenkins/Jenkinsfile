@@ -18,6 +18,7 @@ pipeline {
                             filename 'Dockerfile'
                             dir 'jenkins/maven'
                             args '-v $HOME/.m2:/root/.m2'
+                            additionalBuildArgs '--build-arg SETTINGS_FOLDER_PATH=./maven'
                             reuseNode true
                         }
                     }
