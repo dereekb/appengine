@@ -1,4 +1,16 @@
 
+export interface Keyed<T> {
+
+  readonly key: T | undefined;
+
+}
+
+export interface AlwaysKeyed<T> extends Keyed<T> {
+
+  readonly key: T;
+
+}
+
 export enum SortDirection {
   Ascending,
   Descending
