@@ -1,4 +1,7 @@
 import { DateTime } from 'luxon';
+import { Observable, Subject } from 'rxjs';
+import { ValueUtility, OneOrMore } from './value';
+import { filter, startWith, debounceTime, map } from 'rxjs/operators';
 
 /**
  * Object that acts as a cache for a value.
@@ -236,6 +239,271 @@ export class PromiseCachedCache<T> implements IPromiseCachedCache<T> {
 
   refresh(): Promise<T> {
     return this._source.refresh();
+  }
+
+}
+
+
+// MARK: Keyed Cache
+export interface IKeyedCacheLoad<K, T> {
+  readonly hits: T[];
+  readonly misses: K[];
+}
+
+export interface IKeyedCache<K, T> {
+
+  keys: Set<K>;
+
+  load(keys: K[]): IKeyedCacheLoad<K, T>;
+
+  put(key: K, model: T);
+
+  get(key: K): T | undefined;
+
+  has(key: K): boolean;
+
+  remove(key: K): T;
+
+  removeAll(keys: K[]): void;
+
+  clear(): void;
+
+}
+
+// MARK: Observable
+export enum KeyedCacheChange {
+  Put,
+  Remove,
+  Clear
+}
+
+export interface IKeyedCacheEvent<K> {
+  readonly change: KeyedCacheChange;
+  readonly keys: Set<K>;  // Set of keys that were changed.
+}
+
+export interface IObservableKeyedCache<K, T> extends IKeyedCache<K, T> {
+
+  /**
+   * Observable of cache events.
+   */
+  readonly events: Observable<IKeyedCacheEvent<K>>;
+
+}
+
+// MARK: Async Cache
+export interface IAsyncKeyedCacheReadConfig {
+  debounce?: number;
+  filterPut?: boolean;
+}
+
+export interface IAsyncKeyedCache<K, T> {
+
+  asyncRead(keys: OneOrMore<K>, config: IAsyncKeyedCacheReadConfig): Observable<IKeyedCacheLoad<K, T>>;
+
+}
+
+export interface IAsyncObservableCache<K, T> extends IAsyncKeyedCache<K, T>, IObservableKeyedCache<K, T> { }
+
+/**
+ * IKeyedCache implementation that uses a map.
+ */
+export class MapKeyedCache<K, T> implements IKeyedCache<K, T> {
+
+  private _keys: Set<K>;
+  private _cache: Map<K, T>;
+
+  constructor(cache = new Map<K, T>()) {
+    this.cache = cache;
+  }
+
+  public set cache(cache: Map<K, T>) {
+    this._cache = cache;
+    this._keys = ValueUtility.mapKeysSet(this._cache);
+  }
+
+  // MARK: Cache
+  get keys(): Set<K> {
+    return this._keys;
+  }
+
+  load(keys: K[]): IKeyedCacheLoad<K, T> {
+    const result: IKeyedCacheLoad<K, T> = {
+      hits: [],
+      misses: []
+    };
+
+    keys.forEach((key) => {
+      const model = this.get(key);
+
+      if (model) {
+        result.hits.push(model);
+      } else {
+        result.misses.push(key);
+      }
+    });
+
+    return result;
+  }
+
+  put(key: K, model: T) {
+    this._cache.set(key, model);
+    this._keys.add(key);
+  }
+
+  get(key: K): T | undefined {
+    return this._cache.get(key);
+  }
+
+  has(key: K): boolean {
+    return this._keys.has(key);
+  }
+
+  remove(key: K): T {
+    const model = this._cache.get(key);
+
+    if (model) {
+      this._cache.delete(key);
+      this._keys.delete(key);
+    }
+
+    return model;
+  }
+
+  removeAll(keys: K[]): void {
+    keys.forEach((key) => {
+      this.remove(key);
+    });
+  }
+
+  clear(): void {
+    this._cache.clear();
+    this._keys.clear();
+  }
+
+}
+
+export abstract class AbstractKeyedCacheWrap<K, T, C extends IKeyedCache<K, T>> implements IKeyedCache<K, T> {
+
+  constructor(protected _cache: C) { }
+
+  get keys(): Set<K> {
+    return this._cache.keys;
+  }
+
+  put(key: K, model: T) {
+    this._cache.put(key, model);
+  }
+
+  load(keys: K[]): IKeyedCacheLoad<K, T> {
+    return this._cache.load(keys);
+  }
+
+  get(key: K): T | undefined {
+    return this._cache.get(key);
+  }
+
+  has(key: K): boolean {
+    return this._cache.has(key);
+  }
+
+  remove(key: K) {
+    return this._cache.remove(key);
+  }
+
+  removeAll(keys: K[]) {
+    keys.forEach((key) => {
+      this.remove(key);
+    });
+  }
+
+  clear() {
+    this._cache.clear();
+  }
+
+}
+
+// MARK: Observable
+export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, IKeyedCache<K, T>> implements IObservableKeyedCache<K, T> {
+
+  private _subject = new Subject<IKeyedCacheEvent<K>>();
+
+  constructor(cache: IKeyedCache<K, T> = new MapKeyedCache<K, T>()) {
+    super(cache);
+  }
+
+  // MARK: Cache
+  put(key: K, model: T) {
+    this._cache.put(key, model);
+    this.next(KeyedCacheChange.Put, key);
+  }
+
+  remove(key: K) {
+    const removed = this._cache.remove(key);
+
+    if (removed) {
+      this.next(KeyedCacheChange.Remove, key);
+    }
+
+    return removed;
+  }
+
+  clear() {
+    const keys = this.keys;
+    this._cache.clear();
+    this._subject.next({
+      change: KeyedCacheChange.Clear,
+      keys
+    });
+  }
+
+  protected next(change: KeyedCacheChange, keys: OneOrMore<K>) {
+    const keysArray = ValueUtility.normalizeArray(keys);
+    const keysSet = ValueUtility.arrayToSet(keysArray);
+
+    this._subject.next({
+      change,
+      keys: keysSet
+    });
+  }
+
+  // MARK: Cache Stream
+  public get events(): Observable<IKeyedCacheEvent<K>> {
+    return this._subject;
+  }
+
+}
+
+// MARK: Async Cache
+export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, IObservableKeyedCache<K, T>> implements IAsyncObservableCache<K, T> {
+
+  constructor(cache: IObservableKeyedCache<K, T> = new ObservableCacheWrap<K, T>()) {
+    super(cache);
+  }
+
+  // MARK: AsyncCache
+  public asyncRead(keys: OneOrMore<K>, { debounce = 20, filterPut = true }): Observable<IKeyedCacheLoad<K, T>> {
+    keys = ValueUtility.normalizeArray(keys);
+
+    let events = this._cache.events;
+
+    if (filterPut) {
+      events = events.pipe(filter((event) => event.change !== KeyedCacheChange.Put));
+    }
+
+    return events.pipe(
+      startWith({
+        change: KeyedCacheChange.Clear,
+        keys: new Set<K>()
+      }),
+      debounceTime(debounce),
+      map(() => this.load(keys as K[]))
+    );
+  }
+
+  // MARK: Observable Cache
+  public get events(): Observable<IKeyedCacheEvent<K>> {
+    return this._cache.events;
   }
 
 }
