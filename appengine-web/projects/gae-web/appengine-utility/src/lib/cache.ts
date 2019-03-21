@@ -2,6 +2,8 @@ import { DateTime } from 'luxon';
 import { Observable, Subject } from 'rxjs';
 import { ValueUtility, OneOrMore } from './value';
 import { filter, startWith, debounceTime, map } from 'rxjs/operators';
+import { ModelKey, ModelOrKey, IUniqueModel, ModelUtility } from './model';
+import { Keyed } from './collection';
 
 /**
  * Object that acts as a cache for a value.
@@ -507,3 +509,66 @@ export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, IObservab
   }
 
 }
+
+// MARK: Model Cache
+export interface IModelCache<T extends Keyed<ModelKey>> extends IKeyedCache<ModelKey, T> {
+
+  putModel(model: T): boolean;
+
+  putModels(models: T[]): void;
+
+  hasModel(modelOrKey: ModelOrKey<T>): boolean;
+
+}
+
+export interface AsyncStreamedModelCache<T extends IUniqueModel> extends IModelCache<T>, IAsyncKeyedCache<ModelKey, T> { }
+
+export class AsyncModelCacheWrap<T extends IUniqueModel> extends AsyncCacheWrap<ModelKey, T> implements AsyncStreamedModelCache<T> {
+
+  // MARK: ModelCache
+  put(key: ModelKey, model: T) {
+      super.put(String(key), model);
+  }
+
+  putModel(model: T): boolean {
+      const key = ModelUtility.readModelKeyString(model);
+
+      if (key) {
+          super.put(key, model);
+          return true;
+      }
+
+      return false;
+  }
+
+  has(key: ModelKey): boolean {
+      return super.has(String(key));
+  }
+
+  remove(key: ModelKey) {
+      return super.remove(String(key));
+  }
+
+  putModels(models: T[]): void {
+      models.forEach((model) => {
+          this.putModel(model);
+      });
+  }
+
+  load(keys: ModelKey[]) {
+      keys = ModelUtility.makeStringModelKeysArray(keys);
+      return super.load(keys);
+  }
+
+  hasModel(modelOrKey: ModelOrKey<T>): boolean {
+      const key = ModelUtility.readModelKeyString(modelOrKey);
+
+      if (key) {
+          return super.has(key);
+      }
+
+      return false;
+  }
+
+}
+

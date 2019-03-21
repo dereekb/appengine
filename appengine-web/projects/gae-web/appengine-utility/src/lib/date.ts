@@ -3,9 +3,9 @@ import { SortDirection } from './collection';
 import { TimedCache } from './cache';
 import { ValueUtility } from './value';
 
-export type ISO8061DateString = string;
+export type ISO8601DateString = string;
 export type DateInput = DateTime | Date | undefined;
-export type FullDateInput = DateInput | ISO8061DateString;
+export type FullDateInput = DateInput | ISO8601DateString;
 
 const TIME_IN_MINUTE = 60 * 1000;
 
