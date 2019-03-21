@@ -1,7 +1,9 @@
+import { LazyCache } from './cache';
 
 export type OneOrMore<T> = T | T[];
 
-export type ExistingObject = string | number | boolean | symbol | object;
+export type ObjectAttribute = string;
+export type ExistingObject = string | number | boolean | symbol | object | any;
 export type PropertyKey = string | number;
 export type MakePropertyKeyFunction<T> = (input: T) => PropertyKey;
 export type MakeMapKeyFunction<K, T> = (input: T) => K | undefined;
@@ -20,6 +22,20 @@ export interface IArrayDelta<T> {
   kept: T[];
   added: T[];
   removed: T[];
+}
+
+export interface IMapRelinkingMergeConfig<A, B, M, K> extends IMapRelinkingConfig<A, B, K> {
+  merge: (b: B, a: A | undefined) => M;
+}
+
+export interface IMapRelinkingConfig<A, B, K> {
+  keyForA: (a: A) => K;
+  keyForB: (b: B) => K;
+}
+
+export interface IRelinkedModel<A, B> {
+  item: B;
+  relinked?: A;
 }
 
 export class ArrayDelta<T> implements ArrayDelta<T> {
@@ -87,6 +103,46 @@ export class ValueUtility {
     }
 
     return object;
+  }
+
+  static batch<T>(array: T[], batchSize: number): T[][] {
+    array = [].concat(array);
+    const batch = [];
+
+    while (array.length > 0) {
+      batch.push(array.splice(0, batchSize));
+    }
+
+    return batch;
+  }
+
+  static reduceArrayFn<T>() {
+    return ((x: T[] = [], y: T) => x.concat(Array.isArray(y) ? y : [y]));
+  }
+
+  static readAttributesToArray(value: any, attributes: ObjectAttribute[], filterUndefined: boolean = false) {
+    const values = attributes.map((x) => value[x]);
+    return (filterUndefined) ? values.filter((x) => x !== undefined) : values;
+  }
+
+  // MARK: Filter
+  static filterUniqueValuesFn<K, T>(filterOn: (x: T) => K = ((x) => x as any)) {
+    const set = new Set<K>();
+    return (x: T) => {
+      const key = filterOn(x);
+
+      if (!set.has(key)) {
+        set.add(key);
+        return true;
+      } else {
+        // Filter Out Repeats
+        return false;
+      }
+    };
+  }
+
+  static filterUniqueValues<T>(values: T[]) {
+    return Array.from(new Set(values));
   }
 
   // MARK: Special
@@ -542,6 +598,71 @@ export class ValueUtility {
     return partitions;
   }
 
+  // MARK: Map
+  static makeValuesGroupMap<K, T>(values: T[], keyForValue: (x: T) => K): Map<K, T[]> {
+    const map = new Map<K, T[]>();
+
+    values.forEach((x) => {
+      const key = keyForValue(x);
+
+      if (map.has(key)) {
+        map.get(key).push(x);
+      } else {
+        map.set(key, [x]);
+      }
+    });
+
+    return map;
+  }
+
+  // MARK: Map Relinking
+  static makeMapRelinkingMergeFunction<A, B, M, K>(items: A[], config: IMapRelinkingMergeConfig<A, B, M, K>): (x: B) => M {
+    return this.makeMapRelinkingMergeFunctionBuilder(config)(items);
+  }
+
+  static makeMapRelinkingMergeFunctionBuilder<A, B, M, K>(config: IMapRelinkingMergeConfig<A, B, M, K>): (items: A[]) => ((x: B) => M) {
+    const builder = this.makeMapRelinkingFunctionBuilder(config);
+    return (items: A[]) => {
+      const relinkingFn = builder(items);
+      return (x) => {
+        const relinked = relinkingFn(x);
+        return config.merge(relinked.item, relinked.relinked);
+      };
+    };
+  }
+
+  static makeMapRelinkingFunction<A, B, K>(items: A[], config: IMapRelinkingConfig<A, B, K>): (x: B) => IRelinkedModel<A, B> {
+    return this.makeMapRelinkingFunctionBuilder(config)(items);
+  }
+
+  static makeMapRelinkingFunctionBuilder<A, B, K>(config: IMapRelinkingConfig<A, B, K>): (items: A[]) => ((x: B) => IRelinkedModel<A, B>) {
+    return (items: A[]) => {
+      // Lazy-load the map when finally requested, instead of mapping initially. Might not be necessary.
+      const mapLoader = new LazyCache<Map<K, A>>({
+        refresh: () => {
+          const map = new Map<K, A>();
+          items.forEach((x) => map.set(config.keyForA(x), x));
+          return map;
+        }
+      });
+
+      return this.relinkingFunction((x) => {
+        const key = config.keyForB(x);
+        return mapLoader.value.get(key);
+      });
+    };
+  }
+
+  static relinkingFunction<A, B>(relink: (x: B) => A | undefined): (x: B) => IRelinkedModel<A, B> {
+    return (x: B) => {
+      const relinked = relink(x);
+      return {
+        item: x,
+        relinked
+      };
+    };
+  }
+
   // MARK: Array-Map Conversions
   static mergeUniqueModelArrays<T>(a: T[], b: T[], keyFn: MakePropertyKeyFunction<T>): T[] {
     const mapA = this.convertArrayToMap(a, keyFn);
@@ -671,15 +792,19 @@ export class ValueUtility {
     return set;
   }
 
-  // MARK: Number
+  // MARK: Number/Math
   static roundToPrecision(value: number, precision: number): number {
     return +(Math.round(Number(value + 'e+' + precision)) + 'e-' + precision);
   }
 
- /**
-  * Attempts to convert an input String or Array of Strings to a map of true or false.
-  * @deprecated
-  */
+  static roundNumberUpToStep(value: number, step: number) {
+    return Math.ceil(value / step) * step;
+  }
+
+  /**
+   * Attempts to convert an input String or Array of Strings to a map of true or false.
+   * @deprecated
+   */
   static normalizeTruthMap(map: object): object {
     return this.normalizeSetObject(map, true);
   }
