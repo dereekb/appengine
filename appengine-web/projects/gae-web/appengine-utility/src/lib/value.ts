@@ -51,7 +51,7 @@ export class ValueUtility {
    * @param value Value or Function to read the value from.
    * @param args Args to pass to the function, if applicable.
    */
-  static readValue(value: any | (() => any), args: any) {
+  static readValue(value: any | (() => any), args?: any) {
     let result;
 
     if (value instanceof Function) {
