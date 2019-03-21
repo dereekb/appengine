@@ -24,6 +24,12 @@
       ],
       "@gae-web/appengine-client/*": [
         "dist/gae-web/appengine-client/*"
+      ],
+      "@gae-web/appengine-utility": [
+        "dist/gae-web/appengine-utility"
+      ],
+      "@gae-web/appengine-utility/*": [
+        "dist/gae-web/appengine-utility/*"
       ]
     }
   }
