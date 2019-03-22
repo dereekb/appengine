@@ -104,7 +104,8 @@ export class ModelUtility {
   }
 
   static modelKeysAsStrings(values: ModelKey[]): string[] {
-    return values.map((x) => x.toString());
+    const result = values.map((x) => x.toString());
+    return result;
   }
 
   static isInitializedModelKey(key: ModelKey | undefined) {
@@ -226,7 +227,7 @@ export class ModelUtility {
   }
 
   static makeModelKeyMappingFunction<T extends Keyed<ModelKey>>(read: ReadModelKeyFunction<T> = (x) => x.key): ReadModelKeyFunction<T> {
-    return (input: T) => {
+    const fn = (input: T) => {
       const key: ModelKey | undefined = read(input);
 
       if (key && ModelUtility.isInitializedModelKey(key)) {
@@ -235,10 +236,12 @@ export class ModelUtility {
         return undefined;
       }
     };
+    return fn;
   }
 
   static makeModelKeysStringFromModels<T extends IUniqueModel>(modelsOrKeys: ModelOrKey<T>[], joiner: string = ' '): string {
-    return this.makeModelKeysString(this.readModelKeysFromModels(modelsOrKeys), joiner);
+    const result = this.makeModelKeysString(this.readModelKeysFromModels(modelsOrKeys), joiner);
+    return result;
   }
 
   static makeModelKeysString(keys: ModelKey[], joiner: string = ' '): string {
@@ -270,7 +273,8 @@ export class ModelUtility {
   }
 
   static filterInitializedModelKeys(keys: ModelKey[]): ModelKey[] {
-    return keys.filter((x) => ModelUtility.isInitializedModelKey(x)) as ModelKey[];
+    const result = keys.filter((x) => ModelUtility.isInitializedModelKey(x)) as ModelKey[];
+    return result;
   }
 
   static isNumberModelKey(value: ModelKey | undefined): boolean {

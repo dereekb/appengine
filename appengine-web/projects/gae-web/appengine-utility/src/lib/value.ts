@@ -24,20 +24,6 @@ export interface IArrayDelta<T> {
   removed: T[];
 }
 
-export interface IMapRelinkingMergeConfig<A, B, M, K> extends IMapRelinkingConfig<A, B, K> {
-  merge: (b: B, a: A | undefined) => M;
-}
-
-export interface IMapRelinkingConfig<A, B, K> {
-  keyForA: (a: A) => K;
-  keyForB: (b: B) => K;
-}
-
-export interface IRelinkedModel<A, B> {
-  item: B;
-  relinked?: A;
-}
-
 export class ArrayDelta<T> implements ArrayDelta<T> {
   kept: T[] = [];
   added: T[] = [];
@@ -64,7 +50,8 @@ export class ValueUtility {
   }
 
   static getObjectProperties<T extends object>(object: T, properties: OneOrMore<PropertyKey>): any[] {
-    return this.readObjectProperties(object, properties).values;
+    const result = this.readObjectProperties(object, properties).values;
+    return result;
   }
 
   /**
@@ -117,7 +104,8 @@ export class ValueUtility {
   }
 
   static reduceArrayFn<T>() {
-    return ((x: T[] = [], y: T) => x.concat(Array.isArray(y) ? y : [y]));
+    const fn = ((x: T[] = [], y: T) => x.concat(Array.isArray(y) ? y : [y]));
+    return fn;
   }
 
   static readAttributesToArray(value: any, attributes: ObjectAttribute[], filterUndefined: boolean = false) {
@@ -147,7 +135,8 @@ export class ValueUtility {
 
   // MARK: Special
   static isNotNullOrUndefined(object: any | null | undefined): boolean {
-    return !this.isNullOrUndefined(object);
+    const result = !this.isNullOrUndefined(object);
+    return result;
   }
 
   static isNullOrUndefined(object: any | null | undefined): boolean {
@@ -412,7 +401,8 @@ export class ValueUtility {
    * @param maxDepth Max depth at which to check the object.
    */
   static isEmptyObject(object: object, recursive: boolean, maxDepth: number = 5): boolean {
-    return this._isEmptyObject(object, recursive, 0, maxDepth);
+    const result = this._isEmptyObject(object, recursive, 0, maxDepth);
+    return result;
   }
 
   private static _isEmptyObject(object: any, recursive: boolean, depth: number, maxDepth: number): boolean {
@@ -454,11 +444,12 @@ export class ValueUtility {
   }
 
   static isJSDate(value: any): boolean {
-    return toString.call(value) === '[object Date]';
+    return Object.prototype.toString.call(value) === '[object Date]';
   }
 
   static undefinedIfNullOrUndefined<T>(value: T): T | undefined {
-    return this.isNotNullOrUndefined(value) ? value : undefined;
+    const result = this.isNotNullOrUndefined(value) ? value : undefined;
+    return result;
   }
 
   static iterateObjectWhileUndefined(object: object, fn): void {
@@ -490,7 +481,8 @@ export class ValueUtility {
    * @param end Index to end at. Defaults at the end.
    */
   static iterateWhileUndefined<T>(array: T[], fn: IterateFunction<T>, start: number = 0, end: number = array.length): void {
-    return this._iterateWhileUndefined(array, fn, start, end);
+    const result = this._iterateWhileUndefined(array, fn, start, end);
+    return result;
   }
 
   private static _iterateWhileUndefined<T>(array: T[], fn: IterateFunction<T>, start: number, end: number): void {
@@ -615,54 +607,6 @@ export class ValueUtility {
     return map;
   }
 
-  // MARK: Map Relinking
-  static makeMapRelinkingMergeFunction<A, B, M, K>(items: A[], config: IMapRelinkingMergeConfig<A, B, M, K>): (x: B) => M {
-    return this.makeMapRelinkingMergeFunctionBuilder(config)(items);
-  }
-
-  static makeMapRelinkingMergeFunctionBuilder<A, B, M, K>(config: IMapRelinkingMergeConfig<A, B, M, K>): (items: A[]) => ((x: B) => M) {
-    const builder = this.makeMapRelinkingFunctionBuilder(config);
-    return (items: A[]) => {
-      const relinkingFn = builder(items);
-      return (x) => {
-        const relinked = relinkingFn(x);
-        return config.merge(relinked.item, relinked.relinked);
-      };
-    };
-  }
-
-  static makeMapRelinkingFunction<A, B, K>(items: A[], config: IMapRelinkingConfig<A, B, K>): (x: B) => IRelinkedModel<A, B> {
-    return this.makeMapRelinkingFunctionBuilder(config)(items);
-  }
-
-  static makeMapRelinkingFunctionBuilder<A, B, K>(config: IMapRelinkingConfig<A, B, K>): (items: A[]) => ((x: B) => IRelinkedModel<A, B>) {
-    return (items: A[]) => {
-      // Lazy-load the map when finally requested, instead of mapping initially. Might not be necessary.
-      const mapLoader = new LazyCache<Map<K, A>>({
-        refresh: () => {
-          const map = new Map<K, A>();
-          items.forEach((x) => map.set(config.keyForA(x), x));
-          return map;
-        }
-      });
-
-      return this.relinkingFunction((x) => {
-        const key = config.keyForB(x);
-        return mapLoader.value.get(key);
-      });
-    };
-  }
-
-  static relinkingFunction<A, B>(relink: (x: B) => A | undefined): (x: B) => IRelinkedModel<A, B> {
-    return (x: B) => {
-      const relinked = relink(x);
-      return {
-        item: x,
-        relinked
-      };
-    };
-  }
-
   // MARK: Array-Map Conversions
   static mergeUniqueModelArrays<T>(a: T[], b: T[], keyFn: MakePropertyKeyFunction<T>): T[] {
     const mapA = this.convertArrayToMap(a, keyFn);
@@ -672,13 +616,14 @@ export class ValueUtility {
     return this.convertMapToArray(map);
   }
 
-  static convertArrayToMirrorMap<T extends PropertyKey>(array: T[]) {
-    return this.convertArrayToMap(array, (value) => {
+  static convertArrayToMirrorMap<T extends PropertyKey>(array: T[]): UniqueArrayMap<T> {
+    const result = this.convertArrayToMap(array, (value) => {
       return value;
     });
+    return result;
   }
 
-  static convertArrayToMap<T>(array: T[], keyFn: MakePropertyKeyFunction<T>) {
+  static convertArrayToMap<T>(array: T[], keyFn: MakePropertyKeyFunction<T>): UniqueArrayMap<T> {
     const map: UniqueArrayMap<T> = {};
 
     array.forEach((value) => {
@@ -739,11 +684,13 @@ export class ValueUtility {
 
   // MARK: Join
   static joinNonFalsyValues<T>(array: OneOrMore<T>, separator?: string): string {
-    return this.filterAndJoin(array, ValueUtility.isTruthy, separator);
+    const result = this.filterAndJoin(array, ValueUtility.isTruthy, separator);
+    return result;
   }
 
   static joinNonNullValues<T>(array: OneOrMore<T>, separator?: string): string {
-    return this.filterAndJoin(array, ValueUtility.isNotNullOrUndefined, separator);
+    const result = this.filterAndJoin(array, ValueUtility.isNotNullOrUndefined, separator);
+    return result;
   }
 
   static filterAndJoin<T>(array: OneOrMore<T>, filter: (value: T, index: number) => boolean, separator?: string): string {
@@ -806,7 +753,8 @@ export class ValueUtility {
    * @deprecated
    */
   static normalizeTruthMap(map: object): object {
-    return this.normalizeSetObject(map, true);
+    const result = this.normalizeSetObject(map, true);
+    return result;
   }
 
   static stringStartsWith(value: string, prefix: string): boolean {

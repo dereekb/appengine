@@ -1,11 +1,11 @@
 /*
  * Public API Surface of appengine-utility
  */
-
 export * from './lib/assert';
 export * from './lib/cache';
 export * from './lib/collection';
 export * from './lib/date';
+export * from './lib/map';
 export * from './lib/model';
 export * from './lib/route';
 export * from './lib/safety';

@@ -102,7 +102,7 @@ export interface IDurationSpanTimingInfo extends IDurationSpan {
   approxTimeSinceEnd: Minutes;
 }
 
-class DurationSpanTimingInfo {
+export class DurationSpanTimingInfoBuilder {
 
   private _timingInfo: IDurationSpanTimingInfo;
 
@@ -169,11 +169,9 @@ class DurationSpanTimingInfo {
 
 }
 
-export class DateTimeUtility {
+const TIME_RELATION_STATES = [TimeRelationState.Before, TimeRelationState.Now, TimeRelationState.After];
 
-  public static get timeRelationStates() {
-    return [TimeRelationState.Before, TimeRelationState.Now, TimeRelationState.After];
-  }
+export class DateTimeUtility {
 
   public static sortDateTimeFn<T>(getTime: (x: T) => FullDateInput, direction: SortDirection = SortDirection.Descending) {
     const sort: (x: DateTime, y: DateTime) => number = (direction === SortDirection.Descending)
@@ -216,18 +214,19 @@ export class DateTimeUtility {
   }
 
   public static makeTimingInfoCache(getObject: () => IDurationSpan, lifetime: number = 60 * 1000) {
-    return new TimedCache<IDurationSpanTimingInfo>({
+    const cache = new TimedCache<IDurationSpanTimingInfo>({
       refresh: () => {
         return DateTimeUtility.makeTimingInfo(getObject());
       }
     }, lifetime);
+    return cache;
   }
 
   public static makeTimingInfo(durationObject: IDurationSpan): IDurationSpanTimingInfo {
-    return new DurationSpanTimingInfo(durationObject).timingInfo;
+    return new DurationSpanTimingInfoBuilder(durationObject).timingInfo;
   }
 
-  public static makeTimingInfoStateValueArray<T extends IDurationSpan>(durationObjects: T[], order: TimeRelationState[] = this.timeRelationStates): IDurationSpanTimingInfoStateValueListEntry<T>[] {
+  public static makeTimingInfoStateValueArray<T extends IDurationSpan>(durationObjects: T[], order: TimeRelationState[] = TIME_RELATION_STATES): IDurationSpanTimingInfoStateValueListEntry<T>[] {
     const result = this.makeTimingInfoStateMap(durationObjects);
 
     return order.map((state) => {
@@ -239,7 +238,7 @@ export class DateTimeUtility {
   public static makeTimingInfoStateValueMap<T extends IDurationSpan>(durationObjects: T[]): IDurationSpanTimingInfoStateValueMap<T> {
     const result = this.makeTimingInfoStateMap(durationObjects);
 
-    this.timeRelationStates
+    TIME_RELATION_STATES
       .forEach((state) => {
         result[state] = result[state].map((x) => x.value);
       });
@@ -504,7 +503,8 @@ export class JSDateUtility {
   }
 
   static isToday(date: Date): boolean {
-    return this.isSameDay(new Date(), date);
+    const result = this.isSameDay(new Date(), date);
+    return result;
   }
 
   static isSameDay(a: Date, b: Date): boolean {
@@ -522,7 +522,8 @@ export class JSDateUtility {
   }
 
   static fullDaysBetweenDates(a: Date, b: Date): number {
-    return Math.floor(this.daysBetweenDates(a, b));
+    const result = Math.floor(this.daysBetweenDates(a, b));
+    return result;
   }
 
   static daysBetweenDates(a: Date, b: Date): number {
