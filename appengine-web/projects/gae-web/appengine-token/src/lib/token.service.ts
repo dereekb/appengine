@@ -1,26 +1,58 @@
 import { Injectable } from '@angular/core';
 
-import { TokenType, DecodedLoginIncludedToken, LoginId, LoginPointerId, EncodedToken, LoginTokenPair } from './token';
-import { ExpiredTokenAuthorizationError, TokenAuthenticationError, PublicLoginTokenService } from './error';
+import { TokenType, EncodedRefreshToken, DecodedLoginIncludedToken, LoginId, LoginPointerId, EncodedToken, LoginTokenPair } from './token';
+import { ExpiredTokenAuthorizationError, TokenAuthorizationError, UnavailableLoginTokenError, TokenExpiredError, TokenLoginError, TokenLoginCommunicationError } from './error';
 
 import { FullStorageObject } from '@gae-web/appengine-utility';
 import { AppTokenStorageService, StoredTokenUnavailableError } from './storage.service';
 
-import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
-import { map, catchError, filter, flatMap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, throwError, empty, forkJoin } from 'rxjs';
+import { map, catchError, filter, flatMap, first, toArray, defaultIfEmpty, concat, throwIfEmpty } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
+import { StorageUtility } from 'projects/gae-web/appengine-utility/src/public-api';
+import { BaseError } from 'make-error';
 
 // Service
+
+/**
+ * Class Interface used by the UserLoginTokenService to authenticate and rerieve refresh tokens.
+ */
+export abstract class UserLoginTokenAuthenticator {
+  /**
+   * Requests a long-term refresh token using the input encoded refresh token.
+   * @param encodedToken EncodedRefreshToken
+   */
+  abstract createRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair>;
+
+  /**
+   * Requests an authentication token using the input encoded refresh token.
+   * @param encodedToken EncodedRefreshToken
+   */
+  abstract loginWithRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair>;
+}
+
+/**
+ * Class Interface used for managing the user token(s) within the application.
+ */
+export abstract class UserLoginTokenService {
+
+  // TODO: ...
+
+}
+
 /**
  * Way the service was declared in the past.
+ * @deprecated
  */
 @Injectable()
-export class LegacyAppTokenUserService {
+export class LegacyAppTokenUserService extends UserLoginTokenService {
 
   private _pair = new BehaviorSubject<AppTokenUserServicePair | undefined>(undefined);
   private _accessor = new AppTokenLoginAccessor();
 
-  constructor(private _storage: AppTokenStorageService, private _tokenService: PublicLoginTokenService) { }
+  constructor(private _storage: AppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) {
+    super();
+  }
 
   // MARK: Accessors
   public isAuthenticated(): Observable<boolean> {
@@ -31,7 +63,8 @@ export class LegacyAppTokenUserService {
         }
 
         return of(false);
-      })
+      }),
+      map(() => true)
     );
   }
 
@@ -106,60 +139,74 @@ export class LegacyAppTokenUserService {
   }
 
   public logout(): Observable<boolean> {
-    return this._storage.clear().flatMap(() => this._accessor.clearLogin()).map((x) => {
-      this._pair.next(undefined);
-      return x;
-    });
+    return this._storage.clear().pipe(
+      flatMap(() => this._accessor.clearLogin()),
+      map((x) => {
+        this._pair.next(undefined);
+        return x;
+      })
+    );
   }
 
   // MARK: Internal
   private getOrLoadAppTokenUserServicePair(): Observable<AppTokenUserServicePair> {
-    return this._pair.first().flatMap((servicePair) => {
-      let obs: Observable<[AppTokenUserServicePair, boolean]>;
+    return this._pair.pipe(
+      first(),
+      flatMap((servicePair) => {
+        let obs: Observable<[AppTokenUserServicePair, boolean]>;
 
-      // Load a login token from the Subject or Last Used Token.
-      if (servicePair) {
-        obs = Observable.of([servicePair, false] as [AppTokenUserServicePair, boolean]);
-      } else {
-        obs = this.loadStoredTokenServicePair().map((x) => [x, true] as [AppTokenUserServicePair, boolean]);
-      }
+        // Load a login token from the Subject or Last Used Token.
+        if (servicePair) {
+          obs = of([servicePair, false] as [AppTokenUserServicePair, boolean]);
+        } else {
+          obs = this.loadStoredTokenServicePair().pipe(
+            map((x) => [x, true] as [AppTokenUserServicePair, boolean])
+          );
+        }
 
-      return obs;
-    }).flatMap(([pair, loaded]) => {
-      return this.getFullTokenAndUpdateStorageRaw(pair)
-        .flatMap(([updatedPair, updated]) => {
-          if (loaded || updated) {
-            return this.setLastLogin(updatedPair).map(() => updatedPair);
-          } else {
-            return Observable.of(updatedPair);
-          }
-        });
-    });
+        return obs;
+      }),
+      flatMap(([pair, loaded]) => {
+        return this.getFullTokenAndUpdateStorageRaw(pair).pipe(
+          flatMap(([updatedPair, updated]) => {
+            if (loaded || updated) {
+              return this.setLastLogin(updatedPair).pipe(map(() => updatedPair));
+            } else {
+              return of(updatedPair);
+            }
+          })
+        );
+      })
+    );
   }
 
   private switchToAppTokenUserServicePair(pair: AppTokenUserServicePair): Observable<AppTokenUserServicePair> {
-
     // Refesh the token if needed.
-    return this.getFullTokenAndUpdateStorage(pair).flatMap((x) => {
-      return this.setLastLogin(x).map(() => x);
-    });
+    return this.getFullTokenAndUpdateStorage(pair).pipe(
+      flatMap((x) => {
+        return this.setLastLogin(x).pipe(map(() => x));
+      })
+    );
   }
 
   private setLastLogin(pair: AppTokenUserServicePair): Observable<boolean> {
 
     // Store the "last login"
-    return this._accessor.setLogin(pair.token.decode().login).map((updated) => {
+    return this._accessor.setLogin(pair.token.decode().login).pipe(
+      map((updated) => {
+        // Update the user internally.
+        this._pair.next(pair);
 
-      // Update the user internally.
-      this._pair.next(pair);
-
-      return updated;
-    });
+        return updated;
+      })
+    );
   }
 
   // MARK: Loading
   private loadStoredTokenServicePair(): Observable<AppTokenUserServicePair> {
-    return this.loadLastLoginId().flatMap((login) => this.loadAppTokenUserServicePairForLogin(login));
+    return this.loadLastLoginId().pipe(
+      flatMap((login) => this.loadAppTokenUserServicePairForLogin(login))
+    );
   }
 
   private loadLastLoginId(): Observable<LoginId> {
@@ -174,37 +221,41 @@ export class LegacyAppTokenUserService {
     return this.loadAppTokenUserServicePairWithFilter((pair: LoginTokenPair) => pair.pointer === pointer);
   }
 
-  private loadAppTokenUserServicePairWithFilter(filter: (pair: LoginTokenPair) => boolean): Observable<AppTokenUserServicePair> {
-    return this.loadStoredTokens().filter(filter).toArray().flatMap((pairs) => this.makeTokenServicePair(pairs));
+  private loadAppTokenUserServicePairWithFilter(pairFilter: (pair: LoginTokenPair) => boolean): Observable<AppTokenUserServicePair> {
+    return this.loadStoredTokens().pipe(
+      filter(pairFilter),
+      toArray(),
+      flatMap((pairs) => this.makeTokenServicePair(pairs))
+    );
   }
 
   private makeTokenServicePair(candidates: LoginTokenPair[]): Observable<AppTokenUserServicePair> {
     if (candidates.length === 0) {
-      return Observable.throw(new UnavailableLoginTokenError('No candidates specified.'));
+      return throwError(new UnavailableLoginTokenError('No candidates specified.'));
     } else {
       const pairs = this.buildPairs(candidates);
       const iter = pairs.values();
       const selected = iter.next().value;
 
       if (selected) {
-        return Observable.of(selected);
+        return of(selected);
       } else {
-        return Observable.throw(new UnavailableLoginTokenError('No candidate was selectable.'));
+        return throwError(new UnavailableLoginTokenError('No candidate was selectable.'));
       }
     }
   }
 
   private buildPairs(candidates: LoginTokenPair[]): Map<LoginId, AppTokenUserServicePair> {
-    const map: Map<LoginId, AppTokenUserServicePair> = new Map();
+    const pairMap: Map<LoginId, AppTokenUserServicePair> = new Map();
 
-    candidates.forEach(function (candidate) {
+    candidates.forEach((candidate) => {
       const decoded = candidate.decode();
-      const login: LoginId = decoded.login!;
-      let pair: AppTokenUserServicePair | undefined = map.get(login);
+      const login: LoginId = decoded.login;
+      let pair: AppTokenUserServicePair | undefined = pairMap.get(login);
 
       if (!pair) {
         pair = new AppTokenUserServicePair();
-        map.set(login, pair);
+        pairMap.set(login, pair);
       }
 
       switch (decoded.type) {
@@ -219,58 +270,72 @@ export class LegacyAppTokenUserService {
       }
     });
 
-    return map;
+    return pairMap;
   }
 
   protected loadNonExpiredTokens(removeExpired: boolean): Observable<LoginTokenPair> {
-    return this.loadStoredTokens().map((x) => {
-      if (x.isExpired) {
-        throw new TokenExpiredError(x);
-      } else {
-        return x;
-      }
-    });
+    return this.loadStoredTokens().pipe(
+      map((x) => {
+        if (x.isExpired) {
+          throw new TokenExpiredError(x);
+        } else {
+          return x;
+        }
+      })
+    );
   }
 
   protected loadStoredTokens(): Observable<LoginTokenPair> {
-    return this._storage.getTokens().catch((e) => {
-      if (e instanceof StoredTokenUnavailableError) {
-        return Observable.empty();
-      } else {
-        return Observable.throw(e); // Throw other exceptions.
-      }
-    }).defaultIfEmpty(function () {
-      return Observable.throw(new UnavailableLoginTokenError('No stored tokens responses.'));
-    });
+    return this._storage.getTokens().pipe(
+      catchError((e) => {
+        if (e instanceof StoredTokenUnavailableError) {
+          return empty();
+        } else {
+          return throwError(e); // Throw other exceptions.
+        }
+      }),
+      throwIfEmpty(() => {
+        return new UnavailableLoginTokenError('No stored tokens responses.');
+      })
+    );
   }
 
   // MARK: Updating
   private getFullTokenAndUpdateStorage(pair: AppTokenUserServicePair): Observable<AppTokenUserServicePair> {
-    return this.getFullTokenAndUpdateStorageRaw(pair).map((updated) => {
-      return updated[0];
-    });
+    return this.getFullTokenAndUpdateStorageRaw(pair).pipe(
+      map((updated) => {
+        return updated[0];
+      })
+    );
   }
 
   private getFullTokenAndUpdateStorageRaw(pair: AppTokenUserServicePair): Observable<[AppTokenUserServicePair, boolean]> {
-    return this.getFullTokenPair(pair).catch((e) => {
-      if (e instanceof TokenLoginError) {
+    return this.getFullTokenPair(pair).pipe(
+      catchError((e) => {
+        if (e instanceof TokenLoginError) {
+          // Delete the token locally then throw the error again.
+          return concat(
+            this.deleteServicePair(pair),
+            throwError(() => {
+              return e;
+            })
+          ) as any;
+        }
 
-        // Delete the token locally.
-        return this.deleteServicePair(pair).map(() => {
-          throw e;  // Throw e again.
-        }) as Observable<any>;
-      }
+        throw e;
+      }),
+      flatMap((updated: [AppTokenUserServicePair, boolean]) => {
+        const fullToken = updated[0].token;
 
-      return Observable.of(e);
-    }).flatMap((updated: [AppTokenUserServicePair, boolean]) => {
-      const fullToken = updated[0].token;
-
-      if (fullToken) {
-        return this.addTokenToStorage(fullToken).map(() => updated).map(() => updated);
-      } else {
-        return Observable.of(updated);
-      }
-    });
+        if (fullToken) {
+          return this.addTokenToStorage(fullToken).pipe(
+            map(() => updated)
+          );
+        } else {
+          return of(updated);
+        }
+      })
+    );
   }
 
   private getFullTokenPair(pair: AppTokenUserServicePair): Observable<[AppTokenUserServicePair, boolean]> {
@@ -280,50 +345,56 @@ export class LegacyAppTokenUserService {
       const refreshToken = pair.refreshToken;
 
       if (refreshToken) {
-        return this.refreshFullToken(refreshToken).map(function (fullToken) {
-          const updatedPair = new AppTokenUserServicePair();
+        return this.refreshFullToken(refreshToken).pipe(
+          map((fullToken) => {
+            const updatedPair = new AppTokenUserServicePair();
 
-          updatedPair.token = fullToken;
-          updatedPair.refreshToken = pair.refreshToken;
+            updatedPair.token = fullToken;
+            updatedPair.refreshToken = pair.refreshToken;
 
-          const result: [AppTokenUserServicePair, boolean] = [updatedPair, true];
-          return result;
-        });
+            const result: [AppTokenUserServicePair, boolean] = [updatedPair, true];
+            return result;
+          })
+        );
       } else {
-        throw Observable.throw(new Error('No refresh token is available to refesh the pair.'));
+        throw throwError(new Error('No refresh token is available to refesh the pair.'));
       }
     } else {
       const result: [AppTokenUserServicePair, boolean] = [pair, false];
-      return Observable.of(result);
+      return of(result);
     }
   }
 
   private refreshFullToken(refreshToken: LoginTokenPair): Observable<LoginTokenPair> {
-    return this._tokenService.loginWithRefreshToken(refreshToken.token).catch((e) => {
-      if (e instanceof TokenAuthenticationError) {
-        if (e instanceof ExpiredTokenAuthorizationError) {
-          throw new TokenExpiredError(refreshToken, e.message);
+    return this._tokenService.loginWithRefreshToken(refreshToken.token).pipe(
+      catchError((e) => {
+        if (e instanceof TokenAuthorizationError) {
+          if (e instanceof ExpiredTokenAuthorizationError) {
+            throw new TokenExpiredError(refreshToken, e.message);
+          } else {
+            throw new TokenLoginError(refreshToken, e.message);
+          }
         } else {
-          throw new TokenLoginError(refreshToken, e.message);
+          throw new TokenLoginCommunicationError(e);
         }
-      } else {
-        return Observable.throw(new TokenLoginCommunicationError(e));
-      }
-    });
+      })
+    );
   }
 
   private getAndAddRememberMe(fullToken: LoginTokenPair): Observable<LoginTokenPair> {
-    return this._tokenService.createRefreshToken(fullToken.token).flatMap((refreshToken) => {
-      return this.addTokenToStorage(refreshToken).map(() => refreshToken);
-    });
+    return this._tokenService.createRefreshToken(fullToken.token).pipe(
+      flatMap((refreshToken) => {
+        return this.addTokenToStorage(refreshToken).pipe(map(() => refreshToken));
+      })
+    );
   }
 
   // MARK: Remove
   private deleteServicePair(pair: AppTokenUserServicePair): Observable<{}> {
-    return Observable
-      .merge(this.removeTokenFromStorage(pair.token), this.removeTokenFromStorage(pair.refreshToken))
-      .toArray()
-      .map(() => undefined);
+    return forkJoin(
+      this.removeTokenFromStorage(pair.token),
+      this.removeTokenFromStorage(pair.refreshToken)
+    );
   }
 
   private removeTokenFromStorage(loginToken: LoginTokenPair): Observable<{}> {
@@ -355,42 +426,51 @@ export class AppTokenLoginAccessor {
 
   private static LOGIN_KEY = 'PRIMARY_LOGIN_ID';
 
-  constructor(private _storage: FullStorageObject = getAvailableLocalStorage()) { };
+  constructor(private _storage: FullStorageObject = StorageUtility.getAvailableLocalStorage()) { }
 
   public hasLogin(): Observable<boolean> {
-    return this.getLogin().map(() => true).catch(() => Observable.of(false));
+    return this.getLogin().pipe(
+      map(() => true),
+      catchError(() => of(false))
+    );
   }
 
   public tryGetLogin(): Observable<LoginId | null> {
-    return this.getLogin().catch(() => Observable.of(null));
+    return this.getLogin().pipe(
+      catchError(() => of(null))
+    );
   }
 
   public getLogin(): Observable<LoginId> {
-    return Observable.of(0).map(() => {
-      const loginIdString: string | null = this._storage.getItem(AppTokenLoginAccessor.LOGIN_KEY);
+    return of(0).pipe(
+      map(() => {
+        const loginIdString: string | null = this._storage.getItem(AppTokenLoginAccessor.LOGIN_KEY);
 
-      if (!loginIdString) {
-        throw new NoLoginSetError();
-      } else {
-        return Number(loginIdString);
-      }
-    });
+        if (!loginIdString) {
+          throw new NoLoginSetError();
+        } else {
+          return Number(loginIdString);
+        }
+      })
+    );
   }
 
   public clearLogin(): Observable<boolean> {
-    return this.setLogin(null).map((x) => !x);
+    return this.setLogin(null).pipe(map((x) => !x));
   }
 
   public setLogin(inputLogin: LoginId | null): Observable<boolean> {
-    return Observable.of(inputLogin).map((login) => {
-      if (login) {
-        this._storage.setItem(AppTokenLoginAccessor.LOGIN_KEY, login.toString());
-        return true;
-      } else {
-        this._storage.removeItem(AppTokenLoginAccessor.LOGIN_KEY);
-        return false;
-      }
-    });
+    return of(inputLogin).pipe(
+      map((login) => {
+        if (login) {
+          this._storage.setItem(AppTokenLoginAccessor.LOGIN_KEY, login.toString());
+          return true;
+        } else {
+          this._storage.removeItem(AppTokenLoginAccessor.LOGIN_KEY);
+          return false;
+        }
+      })
+    );
   }
 
 }

@@ -1,5 +1,5 @@
-
 import { BaseError } from 'make-error';
+import { LoginTokenPair } from './token';
 
 // Exceptions
 export class TokenServiceError extends BaseError { }
@@ -44,4 +44,22 @@ export class UnavailableLoginTokenError extends TokenServiceError {
     super(message);
   }
 
+}
+
+// MARK: Authorization Errors
+
+export class TokenAuthorizationError extends BaseError {
+
+  constructor(message?: string) {
+    super(message);
+  }
+
+}
+
+export class ExpiredTokenAuthorizationError extends TokenAuthorizationError {
+  public static readonly CODE = 'EXPIRED_AUTHORIZATION';
+}
+
+export class InvalidTokenAuthorizationError extends TokenAuthorizationError {
+  public static readonly CODE = 'INVALID_AUTHORIZATION';
 }

@@ -3,6 +3,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export type LoginId = number;
 export type LoginPointerId = string;
 export type EncodedToken = string;
+export type EncodedRefreshToken = EncodedToken;
 
 export enum TokenType {
 

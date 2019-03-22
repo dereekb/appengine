@@ -90,6 +90,20 @@ export interface IReadStoredData<T> extends IStoredData {
   convertedData: T;
 }
 
+export class StorageUtility {
+
+  static getAvailableLocalStorage(): FullStorageObject {
+    let storageObject: FullStorageObject = new FullLocalStorageObjectImpl();
+
+    if (!storageObject.isAvailable) {
+      storageObject = new MemoryStorageObjectImpl();
+    }
+
+    return storageObject;
+  }
+
+}
+
 export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, InstantStorageAccessor<T> {
 
   constructor(protected readonly storageObject: StorageObject, protected readonly prefix: string, protected readonly expiration?: number) { }
@@ -241,16 +255,6 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
     return this.storageObject.removeItem(storeKey);
   }
 
-}
-
-export function getAvailableLocalStorage(): FullStorageObject {
-  let storageObject: FullStorageObject = new FullLocalStorageObjectImpl();
-
-  if (!storageObject.isAvailable) {
-    storageObject = new MemoryStorageObjectImpl();
-  }
-
-  return storageObject;
 }
 
 /**
