@@ -1,0 +1,9 @@
+{
+  "name": "@gae-web/appengine-token",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "make-error": "*",
+    "@auth0/angular-jwt": "*",
+    "@gae-web/appengine-utility": "*"
+  }
+}

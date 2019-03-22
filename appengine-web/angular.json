@@ -204,6 +204,41 @@
           }
         }
       }
+    },
+    "@gae-web/appengine-token": {
+      "root": "projects/gae-web/appengine-token",
+      "sourceRoot": "projects/gae-web/appengine-token/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-token/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-token/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-token/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-token/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-token/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-token/tsconfig.lib.json",
+              "projects/gae-web/appengine-token/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "appengine-web"

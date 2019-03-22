@@ -30,6 +30,12 @@
       ],
       "@gae-web/appengine-utility/*": [
         "dist/gae-web/appengine-utility/*"
+      ],
+      "@gae-web/appengine-token": [
+        "dist/gae-web/appengine-token"
+      ],
+      "@gae-web/appengine-token/*": [
+        "dist/gae-web/appengine-token/*"
       ]
     }
   }
