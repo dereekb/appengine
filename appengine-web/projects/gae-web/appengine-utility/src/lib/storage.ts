@@ -76,16 +76,16 @@ export class DataDoesNotExistError extends StoredDataError {
 
 export class DataIsExpiredError<T> extends StoredDataError {
 
-  constructor(public readonly data: IReadStoredData<T>, message?: string) { super(message); }
+  constructor(public readonly data: ReadStoredData<T>, message?: string) { super(message); }
 
 }
 
-export interface IStoredData {
+export interface StoredData {
   storedAt: string | undefined;
   data: string;
 }
 
-export interface IReadStoredData<T> extends IStoredData {
+export interface ReadStoredData<T> extends StoredData {
   expired: boolean;
   convertedData: T;
 }
@@ -174,7 +174,7 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
 
   protected abstract buildValueFromData(data: string): T;
 
-  protected isExpiredStoredData(storeData: IStoredData) {
+  protected isExpiredStoredData(storeData: StoredData) {
     if (this.expiration) {
       if (storeData.storedAt) {
         const expirationDate = DateTime.fromISO(storeData.storedAt).plus({ milliseconds: this.expiration });
@@ -188,8 +188,8 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
   }
 
   // MARK: Stored Values
-  protected readStoredData(storedDataString: string): IReadStoredData<T> {
-    const storedData: IStoredData = JSON.parse(storedDataString);
+  protected readStoredData(storedDataString: string): ReadStoredData<T> {
+    const storedData: StoredData = JSON.parse(storedDataString);
     const expired = this.isExpiredStoredData(storedData);
     const convertedData = this.buildValueFromData(storedData.data);
 
@@ -200,7 +200,7 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
     };
   }
 
-  protected buildStoredData(value: T): IStoredData {
+  protected buildStoredData(value: T): StoredData {
     return {
       storedAt: DateTime.local().toISO(),
       data: this.stringifyValue(value)
@@ -232,7 +232,7 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
   }
 
   private setWithStoreKeyNow(storeKey: string, value: T) {
-    const storeData: IStoredData = this.buildStoredData(value);
+    const storeData: StoredData = this.buildStoredData(value);
     const data = JSON.stringify(storeData);
 
     this.storageObject.setItem(storeKey, data);

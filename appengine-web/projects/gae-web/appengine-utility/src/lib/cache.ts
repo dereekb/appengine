@@ -2,13 +2,13 @@ import { DateTime } from 'luxon';
 import { Observable, Subject } from 'rxjs';
 import { ValueUtility, OneOrMore } from './value';
 import { filter, startWith, debounceTime, map } from 'rxjs/operators';
-import { ModelKey, ModelOrKey, IUniqueModel, ModelUtility } from './model';
+import { ModelKey, ModelOrKey, UniqueModel, ModelUtility } from './model';
 import { Keyed } from './collection';
 
 /**
  * Object that acts as a cache for a value.
  */
-export interface ICache<T> {
+export interface Cache<T> {
 
   /**
    * Value from the source.
@@ -17,7 +17,7 @@ export interface ICache<T> {
 
 }
 
-export interface IRefreshableCache<T> extends ICache<T> {
+export interface RefreshableCache<T> extends Cache<T> {
 
   /**
    * Whether or not the current cache value has expired or not.
@@ -31,7 +31,7 @@ export interface IRefreshableCache<T> extends ICache<T> {
 
 }
 
-export interface ITimedCache<T> extends ICache<T> {
+export interface TimedRefreshableCache<T> extends RefreshableCache<T> {
 
   /**
    * Time at which the item is set to expire at. If undefined, the item will not expire.
@@ -41,9 +41,9 @@ export interface ITimedCache<T> extends ICache<T> {
 }
 
 /**
- * Basic ICache implementation.
+ * Basic Cache implementation.
  */
-export class Cache<T> implements ICache<T> {
+export class SimpleCache<T> implements Cache<T> {
 
   constructor(protected _value?: T) { }
 
@@ -58,9 +58,9 @@ export class Cache<T> implements ICache<T> {
 }
 
 /**
- * ICache implementation.
+ * Cache implementation.
  */
-export abstract class AbstractRefreshableCache<T> extends Cache<T> implements ICache<T> {
+export abstract class AbstractRefreshableCache<T> extends SimpleCache<T> implements Cache<T> {
 
   constructor() {
     super();
@@ -111,7 +111,7 @@ export abstract class AbstractRefreshableCache<T> extends Cache<T> implements IC
 
 }
 
-export interface ICacheValueDelegate<T> {
+export interface CacheValueDelegate<T> {
   refresh(): T;
 }
 
@@ -122,7 +122,7 @@ export class LazyCache<T> extends AbstractRefreshableCache<T> {
 
   private _loaded: boolean;
 
-  constructor(private _delegate: ICacheValueDelegate<T>) {
+  constructor(private _delegate: CacheValueDelegate<T>) {
     super();
   }
 
@@ -152,15 +152,15 @@ export class LazyCache<T> extends AbstractRefreshableCache<T> {
 }
 
 /**
- * ITimedCache implementation that uses a delegate for refreshing, and time for checking expiration.
+ * TimedRefreshableCache implementation that uses a delegate for refreshing, and time for checking expiration.
  */
-export class TimedCache<T> extends AbstractRefreshableCache<T> implements ITimedCache<T> {
+export class TimedCache<T> extends AbstractRefreshableCache<T> implements TimedRefreshableCache<T> {
 
   private _loaded: boolean;
   private _lifetime?: number;
   private _resetTime?: DateTime;
 
-  constructor(private _delegate: ICacheValueDelegate<T>, lifetime?: number) {
+  constructor(private _delegate: CacheValueDelegate<T>, lifetime?: number) {
     super();
     this.lifetime = lifetime;
   }
@@ -223,13 +223,13 @@ export class TimedCache<T> extends AbstractRefreshableCache<T> implements ITimed
 }
 
 // MARK: Promise
-export interface IPromiseCacheValueDelegate<T> extends ICacheValueDelegate<Promise<T>> { }
+export interface PromiseCacheValueDelegate<T> extends CacheValueDelegate<Promise<T>> { }
 
-export interface IPromiseCachedCache<T> extends ICache<Promise<T>> { }
+export interface PromiseCachedCache<T> extends Cache<Promise<T>> { }
 
-export class PromiseCachedCache<T> implements IPromiseCachedCache<T> {
+export class PromiseCachedCache<T> implements PromiseCachedCache<T> {
 
-  constructor(private _source: IRefreshableCache<Promise<T>>) { }
+  constructor(private _source: RefreshableCache<Promise<T>>) { }
 
   get value(): Promise<T> {
     return this._source.value;
@@ -247,16 +247,16 @@ export class PromiseCachedCache<T> implements IPromiseCachedCache<T> {
 
 
 // MARK: Keyed Cache
-export interface IKeyedCacheLoad<K, T> {
+export interface KeyedCacheLoad<K, T> {
   readonly hits: T[];
   readonly misses: K[];
 }
 
-export interface IKeyedCache<K, T> {
+export interface KeyedCache<K, T> {
 
   keys: Set<K>;
 
-  load(keys: K[]): IKeyedCacheLoad<K, T>;
+  load(keys: K[]): KeyedCacheLoad<K, T>;
 
   put(key: K, model: T);
 
@@ -279,38 +279,38 @@ export enum KeyedCacheChange {
   Clear
 }
 
-export interface IKeyedCacheEvent<K> {
+export interface KeyedCacheEvent<K> {
   readonly change: KeyedCacheChange;
   readonly keys: Set<K>;  // Set of keys that were changed.
 }
 
-export interface IObservableKeyedCache<K, T> extends IKeyedCache<K, T> {
+export interface ObservableKeyedCache<K, T> extends KeyedCache<K, T> {
 
   /**
    * Observable of cache events.
    */
-  readonly events: Observable<IKeyedCacheEvent<K>>;
+  readonly events: Observable<KeyedCacheEvent<K>>;
 
 }
 
 // MARK: Async Cache
-export interface IAsyncKeyedCacheReadConfig {
+export interface AsyncKeyedCacheReadConfig {
   debounce?: number;
   filterPut?: boolean;
 }
 
-export interface IAsyncKeyedCache<K, T> {
+export interface AsyncKeyedCache<K, T> {
 
-  asyncRead(keys: OneOrMore<K>, config: IAsyncKeyedCacheReadConfig): Observable<IKeyedCacheLoad<K, T>>;
+  asyncRead(keys: OneOrMore<K>, config: AsyncKeyedCacheReadConfig): Observable<KeyedCacheLoad<K, T>>;
 
 }
 
-export interface IAsyncObservableCache<K, T> extends IAsyncKeyedCache<K, T>, IObservableKeyedCache<K, T> { }
+export interface AsyncObservableCache<K, T> extends AsyncKeyedCache<K, T>, ObservableKeyedCache<K, T> { }
 
 /**
- * IKeyedCache implementation that uses a map.
+ * KeyedCache implementation that uses a map.
  */
-export class MapKeyedCache<K, T> implements IKeyedCache<K, T> {
+export class MapKeyedCache<K, T> implements KeyedCache<K, T> {
 
   private _keys: Set<K>;
   private _cache: Map<K, T>;
@@ -329,8 +329,8 @@ export class MapKeyedCache<K, T> implements IKeyedCache<K, T> {
     return this._keys;
   }
 
-  load(keys: K[]): IKeyedCacheLoad<K, T> {
-    const result: IKeyedCacheLoad<K, T> = {
+  load(keys: K[]): KeyedCacheLoad<K, T> {
+    const result: KeyedCacheLoad<K, T> = {
       hits: [],
       misses: []
     };
@@ -385,7 +385,7 @@ export class MapKeyedCache<K, T> implements IKeyedCache<K, T> {
 
 }
 
-export abstract class AbstractKeyedCacheWrap<K, T, C extends IKeyedCache<K, T>> implements IKeyedCache<K, T> {
+export abstract class AbstractKeyedCacheWrap<K, T, C extends KeyedCache<K, T>> implements KeyedCache<K, T> {
 
   constructor(protected _cache: C) { }
 
@@ -397,7 +397,7 @@ export abstract class AbstractKeyedCacheWrap<K, T, C extends IKeyedCache<K, T>> 
     this._cache.put(key, model);
   }
 
-  load(keys: K[]): IKeyedCacheLoad<K, T> {
+  load(keys: K[]): KeyedCacheLoad<K, T> {
     return this._cache.load(keys);
   }
 
@@ -426,11 +426,11 @@ export abstract class AbstractKeyedCacheWrap<K, T, C extends IKeyedCache<K, T>> 
 }
 
 // MARK: Observable
-export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, IKeyedCache<K, T>> implements IObservableKeyedCache<K, T> {
+export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, KeyedCache<K, T>> implements ObservableKeyedCache<K, T> {
 
-  private _subject = new Subject<IKeyedCacheEvent<K>>();
+  private _subject = new Subject<KeyedCacheEvent<K>>();
 
-  constructor(cache: IKeyedCache<K, T> = new MapKeyedCache<K, T>()) {
+  constructor(cache: KeyedCache<K, T> = new MapKeyedCache<K, T>()) {
     super(cache);
   }
 
@@ -470,21 +470,21 @@ export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, IKey
   }
 
   // MARK: Cache Stream
-  public get events(): Observable<IKeyedCacheEvent<K>> {
+  public get events(): Observable<KeyedCacheEvent<K>> {
     return this._subject;
   }
 
 }
 
 // MARK: Async Cache
-export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, IObservableKeyedCache<K, T>> implements IAsyncObservableCache<K, T> {
+export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, ObservableKeyedCache<K, T>> implements AsyncObservableCache<K, T> {
 
-  constructor(cache: IObservableKeyedCache<K, T> = new ObservableCacheWrap<K, T>()) {
+  constructor(cache: ObservableKeyedCache<K, T> = new ObservableCacheWrap<K, T>()) {
     super(cache);
   }
 
   // MARK: AsyncCache
-  public asyncRead(keys: OneOrMore<K>, { debounce = 20, filterPut = true }): Observable<IKeyedCacheLoad<K, T>> {
+  public asyncRead(keys: OneOrMore<K>, { debounce = 20, filterPut = true }): Observable<KeyedCacheLoad<K, T>> {
     keys = ValueUtility.normalizeArray(keys);
 
     let events = this._cache.events;
@@ -504,14 +504,14 @@ export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, IObservab
   }
 
   // MARK: Observable Cache
-  public get events(): Observable<IKeyedCacheEvent<K>> {
+  public get events(): Observable<KeyedCacheEvent<K>> {
     return this._cache.events;
   }
 
 }
 
 // MARK: Model Cache
-export interface IModelCache<T extends Keyed<ModelKey>> extends IKeyedCache<ModelKey, T> {
+export interface ModelCache<T extends Keyed<ModelKey>> extends KeyedCache<ModelKey, T> {
 
   putModel(model: T): boolean;
 
@@ -521,9 +521,9 @@ export interface IModelCache<T extends Keyed<ModelKey>> extends IKeyedCache<Mode
 
 }
 
-export interface AsyncStreamedModelCache<T extends IUniqueModel> extends IModelCache<T>, IAsyncKeyedCache<ModelKey, T> { }
+export interface AsyncStreamedModelCache<T extends UniqueModel> extends ModelCache<T>, AsyncKeyedCache<ModelKey, T> { }
 
-export class AsyncModelCacheWrap<T extends IUniqueModel> extends AsyncCacheWrap<ModelKey, T> implements AsyncStreamedModelCache<T> {
+export class AsyncModelCacheWrap<T extends UniqueModel> extends AsyncCacheWrap<ModelKey, T> implements AsyncStreamedModelCache<T> {
 
   // MARK: ModelCache
   put(key: ModelKey, model: T) {

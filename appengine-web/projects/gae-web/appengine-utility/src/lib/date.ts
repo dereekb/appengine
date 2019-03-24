@@ -57,34 +57,34 @@ export interface DatedModel {
 /**
  * Represents a span of time starting from the specified date for the specified duration in minutes.
  */
-export interface IDurationSpan {
+export interface DurationSpan {
   date: FullDateInput;
   duration: Minutes;
 }
 
-export interface IDurationSpanTimingInfoStateValueListEntry<T extends IDurationSpan> {
+export interface DurationSpanTimingInfoStateValueListEntry<T extends DurationSpan> {
   state: TimeRelationState;
   values: T[];
 }
 
-export interface IDurationSpanTimingInfoStateValueMap<T extends IDurationSpan> {
+export interface DurationSpanTimingInfoStateValueMap<T extends DurationSpan> {
   before: T[];
   now: T[];
   after: T[];
 }
 
-export interface IDurationSpanTimingInfoStateMap<T extends IDurationSpan> {
-  before: IDurationSpanTimingInfoStateMapEntry<T>[];
-  now: IDurationSpanTimingInfoStateMapEntry<T>[];
-  after: IDurationSpanTimingInfoStateMapEntry<T>[];
+export interface DurationSpanTimingInfoStateMap<T extends DurationSpan> {
+  before: DurationSpanTimingInfoStateMapEntry<T>[];
+  now: DurationSpanTimingInfoStateMapEntry<T>[];
+  after: DurationSpanTimingInfoStateMapEntry<T>[];
 }
 
-export interface IDurationSpanTimingInfoStateMapEntry<T extends IDurationSpan> {
+export interface DurationSpanTimingInfoStateMapEntry<T extends DurationSpan> {
   value: T;
-  timing: IDurationSpanTimingInfo;
+  timing: DurationSpanTimingInfo;
 }
 
-export interface IDurationSpanTimingInfo extends IDurationSpan {
+export interface DurationSpanTimingInfo extends DurationSpan {
   date: DateTime;
   end: DateTime;
   time: number;
@@ -104,9 +104,9 @@ export interface IDurationSpanTimingInfo extends IDurationSpan {
 
 export class DurationSpanTimingInfoBuilder {
 
-  private _timingInfo: IDurationSpanTimingInfo;
+  private _timingInfo: DurationSpanTimingInfo;
 
-  constructor(private _durationObject: IDurationSpan) { }
+  constructor(private _durationObject: DurationSpan) { }
 
   get durationObject() {
     return this._durationObject;
@@ -121,7 +121,7 @@ export class DurationSpanTimingInfoBuilder {
     return this._timingInfo;
   }
 
-  _buildTimingInfo(): IDurationSpanTimingInfo {
+  _buildTimingInfo(): DurationSpanTimingInfo {
     const now = DateTime.local();
     const date = DateTimeUtility.dateTimeFromInput(this.durationObject.date);
 
@@ -213,8 +213,8 @@ export class DateTimeUtility {
     }
   }
 
-  public static makeTimingInfoCache(getObject: () => IDurationSpan, lifetime: number = 60 * 1000) {
-    const cache = new TimedCache<IDurationSpanTimingInfo>({
+  public static makeTimingInfoCache(getObject: () => DurationSpan, lifetime: number = 60 * 1000) {
+    const cache = new TimedCache<DurationSpanTimingInfo>({
       refresh: () => {
         return DateTimeUtility.makeTimingInfo(getObject());
       }
@@ -222,11 +222,11 @@ export class DateTimeUtility {
     return cache;
   }
 
-  public static makeTimingInfo(durationObject: IDurationSpan): IDurationSpanTimingInfo {
+  public static makeTimingInfo(durationObject: DurationSpan): DurationSpanTimingInfo {
     return new DurationSpanTimingInfoBuilder(durationObject).timingInfo;
   }
 
-  public static makeTimingInfoStateValueArray<T extends IDurationSpan>(durationObjects: T[], order: TimeRelationState[] = TIME_RELATION_STATES): IDurationSpanTimingInfoStateValueListEntry<T>[] {
+  public static makeTimingInfoStateValueArray<T extends DurationSpan>(durationObjects: T[], order: TimeRelationState[] = TIME_RELATION_STATES): DurationSpanTimingInfoStateValueListEntry<T>[] {
     const result = this.makeTimingInfoStateMap(durationObjects);
 
     return order.map((state) => {
@@ -235,7 +235,7 @@ export class DateTimeUtility {
     });
   }
 
-  public static makeTimingInfoStateValueMap<T extends IDurationSpan>(durationObjects: T[]): IDurationSpanTimingInfoStateValueMap<T> {
+  public static makeTimingInfoStateValueMap<T extends DurationSpan>(durationObjects: T[]): DurationSpanTimingInfoStateValueMap<T> {
     const result = this.makeTimingInfoStateMap(durationObjects);
 
     TIME_RELATION_STATES
@@ -246,7 +246,7 @@ export class DateTimeUtility {
     return result as any;
   }
 
-  public static makeTimingInfoStateMap<T extends IDurationSpan>(durationObjects: T[]): IDurationSpanTimingInfoStateMap<T> {
+  public static makeTimingInfoStateMap<T extends DurationSpan>(durationObjects: T[]): DurationSpanTimingInfoStateMap<T> {
     const map = {
       before: [],
       now: [],

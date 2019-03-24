@@ -16,13 +16,7 @@ export interface ObjectPropertiesReading {
   readonly missing: PropertyKey[];
 }
 
-export interface IArrayDelta<T> {
-  kept: T[];
-  added: T[];
-  removed: T[];
-}
-
-export class ArrayDelta<T> implements ArrayDelta<T> {
+export class ArrayDelta<T> {
   kept: T[] = [];
   added: T[] = [];
   removed: T[] = [];
@@ -310,7 +304,7 @@ export class ValueUtility {
     }
   }
 
-  static arrayDelta<T>(from: T[], to: T[]): IArrayDelta<T> {
+  static arrayDelta<T>(from: T[], to: T[]): ArrayDelta<T> {
     const toSet: Set<T> = this.arrayToSet(to);
     const visited = new Set<T>();
 

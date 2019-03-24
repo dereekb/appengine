@@ -1,4 +1,4 @@
-import { IUniqueModel, ReadModelKeyFunction, ModelUtility } from './model';
+import { UniqueModel, ReadModelKeyFunction, ModelUtility } from './model';
 
 export type SrefExpression = string;
 export type SrefString = string;
@@ -7,7 +7,7 @@ export type MakeSrefFn<T> = ((input: T) => SrefString | undefined);
 
 export class RouteUtility {
 
-  static makeSrefPathForUniqueModelFn<T extends IUniqueModel>(basePath: SrefString, read?: ReadModelKeyFunction<T>) {
+  static makeSrefPathForUniqueModelFn<T extends UniqueModel>(basePath: SrefString, read?: ReadModelKeyFunction<T>) {
     const fn = this.makeSrefPathForModelFn(basePath, (x: T) => ({ id: ModelUtility.readModelKey(x, read) }));
     return fn;
   }

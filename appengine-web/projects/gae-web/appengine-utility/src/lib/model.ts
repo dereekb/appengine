@@ -32,14 +32,14 @@ export type ModelOrKey<T extends Keyed<ModelKey>> = T | ModelKey;
 /**
  * Interface for unique models.
  */
-export interface IUniqueModel extends Keyed<ModelKey> {
+export interface UniqueModel extends Keyed<ModelKey> {
   modelKey: ModelKey | undefined;
 }
 
 /**
- * IUniqueModel that also has a name associated with it.
+ * UniqueModel that also has a name associated with it.
  */
-export interface INamedUniqueModel extends IUniqueModel {
+export interface NamedUniqueModel extends UniqueModel {
 
   uniqueModelName: string | undefined;
 
@@ -48,7 +48,7 @@ export interface INamedUniqueModel extends IUniqueModel {
 /**
  * Map of unique models keyed by their modelKey value.
  */
-export interface IModelMap<T extends IUniqueModel> {
+export interface ModelMap<T extends UniqueModel> {
   [key: string]: T;
 }
 
@@ -68,7 +68,7 @@ export class ModelUtility {
    *
    * Unordered keys are ignored.
    */
-  static orderModels<T extends IUniqueModel>(keys: ModelKey[], models: T[]): T[] {
+  static orderModels<T extends UniqueModel>(keys: ModelKey[], models: T[]): T[] {
     const map = this.makeModelKeyMap(models, undefined, true);
     const array: T[] = [];
 
@@ -183,7 +183,7 @@ export class ModelUtility {
     return set;
   }
 
-  static makeModelMap<T extends IUniqueModel, M extends IModelMap<T>>(input: T[], read?: ReadModelKeyFunction<T>): M {
+  static makeModelMap<T extends UniqueModel, M extends ModelMap<T>>(input: T[], read?: ReadModelKeyFunction<T>): M {
     const map = {} as M;
     input.forEach((x) => map[ModelUtility.readModelKey(x, read)] = x);
     return map;
@@ -198,7 +198,7 @@ export class ModelUtility {
       .filter(ValueUtility.filterUniqueValuesFn());
   }
 
-  static readModelKeysFromModels<T extends IUniqueModel>(models: ModelOrKey<T>[], read?: ReadModelKeyFunction<T>): ModelKey[] {
+  static readModelKeysFromModels<T extends UniqueModel>(models: ModelOrKey<T>[], read?: ReadModelKeyFunction<T>): ModelKey[] {
     const keys: ModelKey[] = models.map((x) => ModelUtility.readModelKey(x, read));
     return ModelUtility.filterInitializedModelKeys(keys);
   }
@@ -239,7 +239,7 @@ export class ModelUtility {
     return fn;
   }
 
-  static makeModelKeysStringFromModels<T extends IUniqueModel>(modelsOrKeys: ModelOrKey<T>[], joiner: string = ' '): string {
+  static makeModelKeysStringFromModels<T extends UniqueModel>(modelsOrKeys: ModelOrKey<T>[], joiner: string = ' '): string {
     const result = this.makeModelKeysString(this.readModelKeysFromModels(modelsOrKeys), joiner);
     return result;
   }
@@ -308,12 +308,12 @@ export class ModelUtility {
     return true;
   }
 
-  static readModelKeyString<T extends IUniqueModel>(input: ModelOrKey<T> | undefined, read?: ReadModelKeyFunction<T>): string | undefined {
+  static readModelKeyString<T extends UniqueModel>(input: ModelOrKey<T> | undefined, read?: ReadModelKeyFunction<T>): string | undefined {
     const key = this.readModelKey(input, read);
     return ModelUtility.modelKeyToString(key);
   }
 
-  static readModelKey<T extends IUniqueModel>(input: ModelOrKey<T> | undefined, read: ReadModelKeyFunction<T> = (x) => x.key): ModelKey {
+  static readModelKey<T extends UniqueModel>(input: ModelOrKey<T> | undefined, read: ReadModelKeyFunction<T> = (x) => x.key): ModelKey {
     let key: ModelKey = 0;
 
     switch (typeof input) {
@@ -333,7 +333,7 @@ export class ModelUtility {
     return key;
   }
 
-  static isModelKey<T extends IUniqueModel>(input: ModelOrKey<T>) {
+  static isModelKey<T extends UniqueModel>(input: ModelOrKey<T>) {
     switch (typeof input) {
       case 'number':
       case 'string':
