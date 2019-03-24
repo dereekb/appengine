@@ -8,15 +8,15 @@ import { HttpResponse, HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 import { AppengineApiRouteConfiguration } from '../api.config';
 
-export interface ClientServiceConfig {
+export abstract class ClientServiceConfig {
     readonly httpClient: HttpClient;
     readonly routeConfig: AppengineApiRouteConfiguration;
 }
 
-export interface ClientModelServiceConfig<T, O> extends ClientServiceConfig {
+export abstract class ClientModelServiceConfig<T, O> extends ClientServiceConfig {
     readonly type: string;
     readonly serializer: ClientModelSerializer<T, O>;
 }
@@ -138,7 +138,7 @@ export class ClientModelUtility {
 
 }
 
-export class AbstractClientModelResponseImpl<T> extends RawClientResponseAccessor {
+export class ClientModelResponse<T> extends RawClientResponseAccessor {
 
     private _models: T[];
 

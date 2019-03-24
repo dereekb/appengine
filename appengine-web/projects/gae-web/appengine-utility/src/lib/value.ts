@@ -420,7 +420,7 @@ export class ValueUtility {
         };
 
         const checkChildFn = makeFn();
-        const test = (this.iterateObjectWhileUndefined(object, checkChildFn) === undefined);
+        isEmpty = (this.iterateObjectWhileUndefined(object, checkChildFn) === undefined);
       }
     }
 

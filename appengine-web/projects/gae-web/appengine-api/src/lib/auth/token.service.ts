@@ -4,12 +4,12 @@ import { catchError, map, share } from 'rxjs/operators';
 
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { AppengineApiRouteConfiguration } from '../api.config';
-import { LoginTokenPairJson, EncodedToken, LoginTokenPair } from '@gae-web/appengine-token/lib/token';
+import { LoginTokenPairJson, EncodedToken, LoginTokenPair } from '@gae-web/appengine-token';
 import { ApiResponseJson, ApiResponse } from '../api';
-import { ExpiredTokenAuthorizationError, InvalidTokenAuthorizationError } from '@gae-web/appengine-token/lib/error';
+import { ExpiredTokenAuthorizationError, InvalidTokenAuthorizationError } from '@gae-web/appengine-token';
 import { TokenAuthenticationError } from './error';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { AuthUtility } from './token.utility';
+import { AuthUtility } from './auth.utility';
 
 const LOGIN_TOKEN_SERVICE_PATH = '/login/auth/token';
 
@@ -22,7 +22,7 @@ export class PublicLoginTokenService {
   private _servicePath: string;
 
   constructor(private _httpClient: HttpClient, private _config: AppengineApiRouteConfiguration) {
-    this._servicePath = _config.root + LOGIN_TOKEN_SERVICE_PATH;
+    this._servicePath = this._config.root + LOGIN_TOKEN_SERVICE_PATH;
   }
 
   // MARK: Secured Requests
@@ -86,7 +86,7 @@ export class PrivateLoginTokenService {
   private _servicePath: string;
 
   constructor(private _httpClient: HttpClient, private _config: AppengineApiRouteConfiguration) {
-    this._servicePath = _config.root + LOGIN_TOKEN_SERVICE_PATH;
+    this._servicePath = this._config.root + LOGIN_TOKEN_SERVICE_PATH;
   }
 
   // MARK: Refresh Tokens

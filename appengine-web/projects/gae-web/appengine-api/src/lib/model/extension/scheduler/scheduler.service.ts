@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ClientAtomicOperationError } from '../../crud/errors';
+import { ClientAtomicOperationError } from '../../crud/error';
 import { AbstractClientService, ClientServiceConfig } from '../../client.service';
 import { Observable } from 'rxjs';
 import { ApiResponseJson } from '../../../api';

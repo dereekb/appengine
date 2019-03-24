@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { ClientAtomicOperationError } from '../../crud/errors';
+import { ClientAtomicOperationError } from '../../crud/error';
 import { ClientLinkServiceChangeError } from './error';
 import { AbstractClientService, ClientServiceConfig } from '../../client.service';
 import { ClientApiResponse, ClientApiResponseError, RawClientResponseAccessor } from '../../client';
 
 import { Observable } from 'rxjs';
 import { ApiResponseJson } from '../../../api';
-import { ModelUtility, ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { catchError, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { LinkService, LinkRequest, LinkChange, LinkResponse } from './link';

@@ -1,6 +1,6 @@
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { NumberModelKey } from '@gae-web/appengine-utility/lib/model';
-import { StringModelKey } from '@gae-web/appengine-utility/lib/model';
+import { NumberModelKey } from '@gae-web/appengine-utility';
+import { StringModelKey } from '@gae-web/appengine-utility';
 import { HttpResponse } from '@angular/common/http';
 
 export type LoginId = NumberModelKey;

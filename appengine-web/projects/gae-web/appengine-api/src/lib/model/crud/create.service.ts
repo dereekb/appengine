@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { ValueUtility, NumberModelKey } from '@gae-web/appengine-utility';
 
-import { ClientRequestError } from './errors';
+import { ClientRequestError } from './error';
 import { EditApiRequest } from './request';
-import { AbstractClientTemplateResponseImpl, TemplateResponse, AbstractTemplateCrudService } from './template.service';
+import { AbstractClientTemplateResponse, TemplateResponse, AbstractTemplateCrudService } from './template.service';
 import { ClientApiResponse, RawClientResponseAccessor } from '../client';
-import { KeyedInvalidAttributeImpl, KeyedInvalidAttribute } from './errors';
+import { InvalidAttribute, KeyedInvalidAttribute } from './error';
 
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
@@ -28,21 +28,8 @@ export interface CreateResponse<T> extends TemplateResponse<T> {
     readonly invalidTemplates: InvalidCreateTemplatePair<T>[];
 }
 
-export interface InvalidCreateTemplatePair<T> extends KeyedInvalidAttribute {
-    readonly template: T;
-}
-
 export interface CreateService<T> {
     create(request: CreateRequest<T>): Observable<CreateResponse<T>>;
-}
-
-// MARK: Client Interfaces
-export interface ClientCreateResponse<T> extends CreateResponse<T>, RawClientResponseAccessor {
-
-}
-
-export interface ClientCreateService<T> extends CreateService<T> {
-    create(request: CreateRequest<T>): Observable<ClientCreateResponse<T>>;
 }
 
 // MARK: Implementation
@@ -51,7 +38,7 @@ export const DEFAULT_CREATE_OPTIONS: CreateRequestOptions = {
 };
 
 @Injectable()
-export class ClientCreateServiceImpl<T, O> extends AbstractTemplateCrudService<T, O> implements ClientCreateService<T> {
+export class ClientCreateService<T, O> extends AbstractTemplateCrudService<T, O> implements CreateService<T> {
 
     constructor(config: CrudServiceConfig<T, O>) {
         super(config);
@@ -90,16 +77,16 @@ export class ClientCreateServiceImpl<T, O> extends AbstractTemplateCrudService<T
     }
 
     protected buildCreateResponse(request: CreateRequest<T>, response: ClientApiResponse): ClientCreateResponse<T> {
-        return new ClientCreateResponseImpl<T>(request, response, this);
+        return new ClientCreateResponse<T>(request, response, this);
     }
 
 }
 
-export class ClientCreateResponseImpl<T> extends AbstractClientTemplateResponseImpl<T> implements ClientCreateResponse<T> {
+export class ClientCreateResponse<T> extends AbstractClientTemplateResponse<T> implements CreateResponse<T> {
 
     private _invalidTemplatePairs: InvalidCreateTemplatePair<T>[];
 
-    constructor(private _request: CreateRequest<T>, response: ClientApiResponse, private _createService: ClientCreateServiceImpl<T, {}>) {
+    constructor(private _request: CreateRequest<T>, response: ClientApiResponse, _createService: ClientCreateService<T, {}>) {
         super(response, _createService);
     }
 
@@ -123,7 +110,7 @@ export class ClientCreateResponseImpl<T> extends AbstractClientTemplateResponseI
             const index: NumberModelKey = Number(invalidTemplate.key);
             const template = templates[index];
 
-            return new InvalidCreateTemplatePairImpl<T>(template, invalidTemplate);
+            return new InvalidCreateTemplatePair<T>(template, invalidTemplate);
         });
     }
 
@@ -136,7 +123,7 @@ export class ClientCreateResponseImpl<T> extends AbstractClientTemplateResponseI
  */
 export class CreateApiRequest<T> extends EditApiRequest<T> { }
 
-class InvalidCreateTemplatePairImpl<T> extends KeyedInvalidAttributeImpl implements InvalidCreateTemplatePair<T> {
+export class InvalidCreateTemplatePair<T> extends KeyedInvalidAttribute {
 
     constructor(private _template: T, attribute: KeyedInvalidAttribute) {
         super(attribute.key, attribute);

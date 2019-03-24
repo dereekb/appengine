@@ -47,7 +47,6 @@ export class UnavailableLoginTokenError extends TokenServiceError {
 }
 
 // MARK: Authorization Errors
-
 export class TokenAuthorizationError extends BaseError {
 
   constructor(message?: string) {

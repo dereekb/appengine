@@ -1,10 +1,10 @@
 import { ClientApiResponse } from '../client';
-import { ClientAtomicOperationError } from './errors';
+import { ClientAtomicOperationError } from './error';
 
-import { ClientModelServiceConfig, AbstractClientModelService, AbstractClientModelResponseImpl } from '../client.service';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ClientModelServiceConfig, AbstractClientModelService, ClientModelResponse } from '../client.service';
+import { ModelKey } from '@gae-web/appengine-utility';
 
-export type CrudServiceConfig<T, O>  = ClientModelServiceConfig<T, O>;
+export abstract class CrudServiceConfig<T, O> extends ClientModelServiceConfig<T, O> {}
 
 export abstract class AbstractCrudService<T, O> extends AbstractClientModelService<T, O> {
 
@@ -18,11 +18,11 @@ export abstract class AbstractCrudService<T, O> extends AbstractClientModelServi
 
 }
 
-export class AbstractCrudModelResponseImpl<T> extends AbstractClientModelResponseImpl<T> {
+export class CrudModelResponse<T> extends ClientModelResponse<T> {
 
     private _missing: ModelKey[];
 
-    constructor(response: ClientApiResponse, private _crudService: AbstractCrudService<T, {}>) {
+    constructor(response: ClientApiResponse, _crudService: AbstractCrudService<T, {}>) {
         super(response, _crudService);
     }
 

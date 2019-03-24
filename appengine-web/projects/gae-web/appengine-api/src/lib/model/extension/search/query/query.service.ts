@@ -4,7 +4,7 @@ import { ClientApiResponse } from '../../../client';
 import { AbstractSearchService, AbstractSearchServiceResponse, ModelSearchResponse, SearchRequest } from '../search.service';
 
 import { Observable } from 'rxjs';
-import { UniqueModel } from '@gae-web/appengine-utility/lib/model';
+import { UniqueModel } from '@gae-web/appengine-utility';
 import { ApiResponseJson } from '../../../../api';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';

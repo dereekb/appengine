@@ -1,4 +1,4 @@
-import { EncodedToken } from '@gae-web/appengine-token/lib/token';
+import { EncodedToken } from '@gae-web/appengine-token';
 
 export class AuthUtility {
 

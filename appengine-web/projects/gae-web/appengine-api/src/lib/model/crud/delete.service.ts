@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { AbstractCrudService, AbstractCrudModelResponseImpl, CrudServiceConfig } from './crud.service';
-import { ClientRequestError } from './errors';
+import { AbstractCrudService, CrudModelResponse, CrudServiceConfig } from './crud.service';
+import { ClientRequestError } from './error';
 import { ModelServiceResponse } from './response';
 import { ClientApiResponse, RawClientResponseAccessor } from '../client';
 
 import { Observable } from 'rxjs';
-import { ModelKey, UniqueModel, ModelUtility } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey, UniqueModel, ModelUtility } from '@gae-web/appengine-utility';
 import { ApiResponseJson } from '../../api';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -31,24 +31,13 @@ export interface DeleteService<T> {
     delete(request: DeleteRequest): Observable<DeleteResponse<T>>;
 }
 
-// MARK: Client Interfaces
-export interface ClientDeleteResponse<T> extends DeleteResponse<T>, RawClientResponseAccessor {
-
-}
-
-export interface ClientDeleteService<T> extends DeleteService<T> {
-
-    delete(request: DeleteRequest): Observable<ClientDeleteResponse<T>>;
-
-}
-
 // MARK: Implementation
-export const DEFAULT_UPDATE_OPTIONS: DeleteRequestOptions = {
+export const DEFAULT_DELETE_OPTIONS: DeleteRequestOptions = {
     atomic: true
 };
 
 @Injectable()
-export class ClientDeleteServiceImpl<T extends UniqueModel, O> extends AbstractCrudService<T, O> implements ClientDeleteService<T> {
+export class ClientDeleteService<T extends UniqueModel, O> extends AbstractCrudService<T, O> implements DeleteService<T> {
 
     static readonly MAX_KEYS_ALLOWED_PER_REQUEST = 25;
 
@@ -61,11 +50,11 @@ export class ClientDeleteServiceImpl<T extends UniqueModel, O> extends AbstractC
         const keysArray = ModelUtility.makeStringModelKeysArray(request.keys);
 
         if (keysArray.length > 0) {
-            if (keysArray.length > ClientDeleteServiceImpl.MAX_KEYS_ALLOWED_PER_REQUEST) {
+            if (keysArray.length > ClientDeleteService.MAX_KEYS_ALLOWED_PER_REQUEST) {
                 return Observable.throw(new ClientRequestError('Too many keys for delete.'));
             }
 
-            const deleteOptions: DeleteRequestOptions = { ...DEFAULT_UPDATE_OPTIONS, ...request.options };
+            const deleteOptions: DeleteRequestOptions = { ...DEFAULT_DELETE_OPTIONS, ...request.options };
             const atomic = deleteOptions.atomic;
             const keysParam = ModelUtility.makeModelKeysParameterWithStringArray(keysArray);
 
@@ -96,16 +85,16 @@ export class ClientDeleteServiceImpl<T extends UniqueModel, O> extends AbstractC
     }
 
     protected buildDeleteResponse(request: DeleteRequest, response: ClientApiResponse): ClientDeleteResponse<T> {
-        return new ClientDeleteResponseImpl<T>(request, response, this);
+        return new ClientDeleteResponse<T>(request, response, this);
     }
 
 }
 
-class ClientDeleteResponseImpl<T extends UniqueModel> extends AbstractCrudModelResponseImpl<T> implements ClientDeleteResponse<T> {
+export class ClientDeleteResponse<T extends UniqueModel> extends CrudModelResponse<T> implements DeleteResponse<T> {
 
     private _keys: ModelKey[];
 
-    constructor(private _request: DeleteRequest, response: ClientApiResponse, private _deleteService: ClientDeleteServiceImpl<T, {}>) {
+    constructor(private _request: DeleteRequest, response: ClientApiResponse, _deleteService: ClientDeleteService<T, {}>) {
         super(response, _deleteService);
     }
 

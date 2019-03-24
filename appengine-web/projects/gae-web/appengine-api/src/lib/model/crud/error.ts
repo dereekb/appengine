@@ -2,7 +2,7 @@ import { ClientApiResponse, ClientApiResponseErrorType, ClientApiResponseError }
 import { ClientModelUtility } from '../client.service';
 
 import { BaseError } from 'make-error';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 import { AlwaysKeyed } from '@gae-web/appengine-utility/public-api';
 
 // MARK: Request Error
@@ -66,15 +66,7 @@ export class ClientKeyedInvalidAttributeError extends ClientApiResponseError  {
 
 }
 
-export interface InvalidAttribute {
-    readonly attribute: string;
-    readonly value: string;
-    readonly detail: string;
-}
-
-export interface KeyedInvalidAttribute extends InvalidAttribute, AlwaysKeyed<ModelKey> { }
-
-export class InvalidAttributeImpl implements InvalidAttribute {
+export class InvalidAttribute {
 
     private _attribute: string;
     private _value: string;
@@ -86,26 +78,26 @@ export class InvalidAttributeImpl implements InvalidAttribute {
         this._detail = detail;
     }
 
-    get attribute() {
+    get attribute(): string {
         return this._attribute;
     }
 
-    get value() {
+    get value(): string {
         return this._value;
     }
 
-    get detail() {
+    get detail(): string {
         return this._detail;
     }
 
 }
 
-export class KeyedInvalidAttributeImpl extends InvalidAttributeImpl implements KeyedInvalidAttribute {
+export class KeyedInvalidAttribute extends InvalidAttribute implements KeyedInvalidAttribute, AlwaysKeyed<ModelKey> {
 
     public static fromJson(json: any) {
         const key = json.key;
-        const invalidAttribute = new InvalidAttributeImpl(json);
-        return new KeyedInvalidAttributeImpl(key, invalidAttribute);
+        const invalidAttribute = new InvalidAttribute(json);
+        return new KeyedInvalidAttribute(key, invalidAttribute);
     }
 
     constructor(private _key: ModelKey, attr: InvalidAttribute) {

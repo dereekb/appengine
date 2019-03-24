@@ -4,10 +4,10 @@ import { CrudServiceConfig } from './crud.service';
 
 import { ValueUtility, ModelKey } from '@gae-web/appengine-utility';
 
-import { ClientRequestError } from './errors';
+import { ClientRequestError } from './error';
 import { EditApiRequest } from './request';
 import { ModelServiceResponse } from './response';
-import { AbstractClientTemplateResponseImpl, TemplateResponse, AbstractTemplateCrudService } from './template.service';
+import { AbstractClientTemplateResponse, TemplateResponse, AbstractTemplateCrudService } from './template.service';
 import { ClientApiResponse, RawClientResponseAccessor } from '../client';
 
 import { Observable } from 'rxjs';
@@ -17,41 +17,21 @@ import { map } from 'rxjs/operators';
 
 // MARK: Generic Interfaces
 export interface UpdateRequest<T> {
-
     readonly templates: T | T[];
     readonly options?: UpdateRequestOptions;
-
 }
 
 export interface UpdateRequestOptions {
-
     readonly atomic: boolean;
-
 }
 
 export interface UpdateResponse<T> extends TemplateResponse<T>, ModelServiceResponse<T> {
-
     readonly models: T[];
-
     readonly missing: ModelKey[];
-
 }
 
 export interface UpdateService<T> {
-
     update(request: UpdateRequest<T>): Observable<UpdateResponse<T>>;
-
-}
-
-// MARK: Client Interfaces
-export interface ClientUpdateResponse<T> extends UpdateResponse<T>, RawClientResponseAccessor {
-
-}
-
-export interface ClientUpdateService<T> extends UpdateService<T> {
-
-    update(request: UpdateRequest<T>): Observable<ClientUpdateResponse<T>>;
-
 }
 
 // MARK: Implementation
@@ -60,7 +40,7 @@ export const DEFAULT_UPDATE_OPTIONS: UpdateRequestOptions = {
 };
 
 @Injectable()
-export class ClientUpdateServiceImpl<T, O> extends AbstractTemplateCrudService<T, O> implements ClientUpdateService<T> {
+export class ClientUpdateService<T, O> extends AbstractTemplateCrudService<T, O> implements UpdateService<T> {
 
     constructor(config: CrudServiceConfig<T, O>) {
         super(config);
@@ -100,20 +80,20 @@ export class ClientUpdateServiceImpl<T, O> extends AbstractTemplateCrudService<T
     }
 
     protected buildUpdateResponse(request: UpdateRequest<T>, response: ClientApiResponse): ClientUpdateResponse<T> {
-        return new ClientUpdateResponseImpl<T>(request, response, this);
+        return new ClientUpdateResponse<T>(request, response, this);
     }
 
 }
 
-export class ClientUpdateResponseImpl<T> extends AbstractClientTemplateResponseImpl<T> implements ClientUpdateResponse<T> {
+export class ClientUpdateResponse<T> extends AbstractClientTemplateResponse<T> implements UpdateResponse<T> {
 
     private _failed: ModelKey[];
 
-    constructor(private _request: UpdateRequest<T>, response: ClientApiResponse, private _updateService: ClientUpdateServiceImpl<T, {}>) {
+    constructor(_request: UpdateRequest<T>, response: ClientApiResponse, _updateService: ClientUpdateService<T, {}>) {
         super(response, _updateService);
     }
 
-    get failed() {
+    get failed(): ModelKey[] {
         if (!this._failed) {
             const templateKeys = super.getInvalidTemplateKeys();
             return templateKeys.concat(this.missing);
@@ -122,7 +102,7 @@ export class ClientUpdateResponseImpl<T> extends AbstractClientTemplateResponseI
         return this._failed;
     }
 
-    get missing() {
+    get missing(): ModelKey[] {
         return this.getSerializedMissingKeys();
     }
 

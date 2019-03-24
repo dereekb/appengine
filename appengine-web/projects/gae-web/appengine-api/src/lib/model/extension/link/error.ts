@@ -2,7 +2,7 @@ import { ApiResponseError, ApiResponseErrorInfo } from '../../../api';
 
 import { ClientApiResponse, ClientApiResponseErrorType, ClientApiResponseError } from '../../client';
 import { LinkChange, LinkChangeAction, LinkName } from './link';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 
 // MARK: Atomic Error
 export const CLIENT_LINK_SERVICE_CHANGE_ERROR_CODE = 'LINK_CHANGE_ERROR_SET';

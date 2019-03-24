@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 
 export type LinkName = string;
 

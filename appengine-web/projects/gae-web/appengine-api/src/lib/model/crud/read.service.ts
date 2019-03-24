@@ -1,51 +1,35 @@
 import { Injectable } from '@angular/core';
 
-import { ClientRequestError, ClientAtomicOperationError } from './errors';
+import { ClientRequestError, ClientAtomicOperationError } from './error';
 
-import { AbstractClientModelResponseImpl } from '../client.service';
+import { ClientModelResponse } from '../client.service';
 import { CrudServiceConfig, AbstractCrudService } from './crud.service';
 import { ModelServiceResponse } from './response';
 import { ClientApiResponse, RawClientResponseAccessor } from '../client';
 
 import { Observable } from 'rxjs';
-import { ModelUtility } from 'projects/gae-web/appengine-utility/src/lib/model';
+import { ModelUtility } from '@gae-web/appengine-utility';
 import { ApiResponseJson } from '../../api';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 
 // MARK: Generic Interfaces
 export interface ReadRequest {
-
     readonly atomic?: boolean;
     readonly modelKeys: ModelKey | ModelKey[];
-
 }
 
 export type ReadResponse<T> = ModelServiceResponse<T>;
 
 export interface ReadService<T> {
-
     readonly type: string;
-
     read(request: ReadRequest): Observable<ReadResponse<T>>;
-
-}
-
-// MARK: Client Interfaces
-export interface ClientReadResponse<T> extends ReadResponse<T>, RawClientResponseAccessor {
-
-}
-
-export interface ClientReadService<T> extends ReadService<T> {
-
-    read(request: ReadRequest): Observable<ClientReadResponse<T>>;
-
 }
 
 // MARK: Implementation
 @Injectable()
-export class ClientReadServiceImpl<T, O> extends AbstractCrudService<T, O> implements ClientReadService<T> {
+export class ClientReadService<T, O> extends AbstractCrudService<T, O> implements ReadService<T> {
 
     static readonly MAX_KEYS_ALLOWED_PER_REQUEST = 40;
 
@@ -62,7 +46,7 @@ export class ClientReadServiceImpl<T, O> extends AbstractCrudService<T, O> imple
         const keysArray: string[] = ModelUtility.makeStringModelKeysArray(request.modelKeys);
 
         if (keysArray.length) {
-            if (keysArray.length > ClientReadServiceImpl.MAX_KEYS_ALLOWED_PER_REQUEST) {
+            if (keysArray.length > ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST) {
                 return Observable.throw(new ClientRequestError('Too many keys requested.'));
             }
 
@@ -94,16 +78,16 @@ export class ClientReadServiceImpl<T, O> extends AbstractCrudService<T, O> imple
     }
 
     protected buildReadResponse(response: ClientApiResponse): ClientReadResponse<T> {
-        return new ClientReadResponseImpl<T>(response, this);
+        return new ClientReadResponse<T>(response, this);
     }
 
 }
 
-class ClientReadResponseImpl<T> extends AbstractClientModelResponseImpl<T> implements ClientReadResponse<T> {
+export class ClientReadResponse<T> extends ClientModelResponse<T> implements ReadResponse<T> {
 
     private _failed: ModelKey[];
 
-    constructor(response: ClientApiResponse, private _readService: ClientReadServiceImpl<T, {}>) {
+    constructor(response: ClientApiResponse, _readService: ClientReadService<T, {}>) {
         super(response, _readService);
     }
 

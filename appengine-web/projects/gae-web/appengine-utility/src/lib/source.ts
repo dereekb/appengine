@@ -178,7 +178,6 @@ export class EndOfSourceError extends BaseError {
 
 }
 
-// MARK: Implementation
 export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implements Source<T>, SingleElementReadSource<T> {
 
     protected readonly _id = Math.random() * 100000;

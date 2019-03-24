@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { AppengineApiRouteConfiguration } from '../api.config';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { share, catchError, map } from 'rxjs/operators';
-import { LoginTokenPair, LoginTokenPairJson } from '@gae-web/appengine-token/lib/token';
+import { LoginTokenPair, LoginTokenPairJson } from '@gae-web/appengine-token';
 
 /**
  * Service for interacting with an Appengine OAuth Token service.
@@ -17,7 +17,7 @@ export class OAuthLoginService {
   private _servicePath: string;
 
   constructor(private _httpClient: HttpClient, private _config: AppengineApiRouteConfiguration) {
-    this._servicePath = _config.root + OAuthLoginService.SERVICE_PATH;
+    this._servicePath = this._config.root + OAuthLoginService.SERVICE_PATH;
   }
 
   // MARK: Service

@@ -1,13 +1,13 @@
 
-import { CrudServiceConfig, AbstractCrudService, AbstractCrudModelResponseImpl } from './crud.service';
-import { ClientKeyedInvalidAttributeError, KEYED_INVALID_ATTRIBUTE_ERROR_CODE, KeyedInvalidAttribute } from './errors';
-import { KeyedInvalidAttributeImpl } from './errors';
+import { CrudServiceConfig, AbstractCrudService, CrudModelResponse } from './crud.service';
+import { ClientKeyedInvalidAttributeError, KEYED_INVALID_ATTRIBUTE_ERROR_CODE, KeyedInvalidAttribute } from './error';
+import { InvalidAttribute } from './error';
 
 import { ApiResponseError } from '../../api';
 import { ClientApiResponse } from '../client';
 import { ModelServiceModelsResponse } from './response';
 import { ClientApiResponseErrorType } from '../client';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 
 export interface TemplateResponse<T> extends ModelServiceModelsResponse<T> {
 
@@ -60,7 +60,7 @@ export abstract class AbstractTemplateCrudService<T, O> extends AbstractCrudServ
         let attributes: KeyedInvalidAttribute[];
 
         if (Array.isArray(json)) {
-            attributes = json.map(KeyedInvalidAttributeImpl.fromJson);
+            attributes = json.map(KeyedInvalidAttribute.fromJson);
         } else {
             throw new Error('Invalid json passed. Expected array.');
         }
@@ -70,7 +70,7 @@ export abstract class AbstractTemplateCrudService<T, O> extends AbstractCrudServ
 
 }
 
-export class AbstractClientTemplateResponseImpl<T> extends AbstractCrudModelResponseImpl<T> implements TemplateResponse<T> {
+export class AbstractClientTemplateResponse<T> extends CrudModelResponse<T> implements TemplateResponse<T> {
 
     private _invalidTemplates: KeyedInvalidAttribute[];
 
