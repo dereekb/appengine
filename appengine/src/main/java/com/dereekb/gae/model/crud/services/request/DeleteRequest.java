@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 public interface DeleteRequest {
 
 	/**
-	 * @return Returns the keys of models to delete. Never null.
+	 * @return Returns the keys of models to delete. Never {@code null}.
 	 */
 	public Collection<ModelKey> getTargetKeys();
 

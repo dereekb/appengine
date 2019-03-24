@@ -30,6 +30,10 @@ public final class ApiDeleteRequest extends ApiEditRequest<String> {
 		super(ids);
 	}
 
+	public ApiDeleteRequest(List<String> ids, boolean atomic) {
+		super(ids, atomic);
+	}
+
 	public boolean getReturnModels() {
 		return this.returnModels;
 	}

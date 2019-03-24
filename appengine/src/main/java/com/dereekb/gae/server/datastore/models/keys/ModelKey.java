@@ -271,7 +271,7 @@ public final class ModelKey
 
 	/**
 	 * Attempts to create a new {@link ModelKey} using the passed value. Returns
-	 * null instead of throws an exception.
+	 * {@code null} instead of throws an exception.
 	 *
 	 * @param identifier
 	 * @return A {@link ModelKey} if the identifier is valid. Null if it is not.

@@ -12,7 +12,6 @@ import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
-import com.dereekb.gae.client.api.service.request.impl.ClientRequestDataImpl;
 import com.dereekb.gae.client.api.service.request.impl.ClientRequestImpl;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
@@ -26,8 +25,8 @@ import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConvert
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
-import com.dereekb.gae.web.api.model.crud.request.ApiDeleteRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
 /**
  * {@link ClientDeleteRequestSender} implementation.
@@ -100,19 +99,14 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.DELETE);
 
-		ObjectMapper mapper = this.getObjectMapper();
-
-		ApiDeleteRequest apiDeleteRequest = new ApiDeleteRequest();
-		apiDeleteRequest.setReturnModels(request.shouldReturnModels());
+		ParametersImpl parameters = new ParametersImpl();
 
 		DeleteRequestOptions options = request.getOptions();
-		apiDeleteRequest.setOptions(options);
+		parameters.addObjectParameter(EditModelController.ATOMIC_PARAM, options.isAtomic());
+		parameters.addObjectParameter(EditModelController.KEYS_PARAM, request.getTargetKeys());
+		parameters.addObjectParameter(EditModelController.RETURN_MODELS_PARAM, request.shouldReturnModels());
 
-		Collection<ModelKey> targetKeys = request.getTargetKeys();
-		apiDeleteRequest.setTargetKeys(targetKeys);
-
-		ClientRequestDataImpl requestData = ClientRequestDataImpl.make(mapper, apiDeleteRequest);
-		clientRequest.setData(requestData);
+		clientRequest.setParameters(parameters);
 
 		return clientRequest;
 	}

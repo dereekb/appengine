@@ -3,13 +3,13 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 import java.util.Collection;
 import java.util.Set;
 
-import com.dereekb.gae.utilities.collections.list.SetUtility;
+import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * {@link AbstractSetQueryFieldParameter} implementation for {@link String}
  * values.
- * 
+ *
  * @author dereekb
  *
  */
@@ -29,12 +29,13 @@ public class StringSetQueryFieldParameter extends AbstractSetQueryFieldParameter
 		super(field, parameter);
 	}
 
-	public StringSetQueryFieldParameter(String field, Collection<String> value) throws IllegalArgumentException {
-		super(field, value);
+	public StringSetQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
+		super(field, parameterString, ExpressionOperator.EQUAL);
 	}
 
-	public StringSetQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
-		super(field, parameterString);
+	@Deprecated
+	public StringSetQueryFieldParameter(String field, Collection<String> value) throws IllegalArgumentException {
+		super(field, value);
 	}
 
 	public static StringSetQueryFieldParameter tryMakeWithSingle(String field,
@@ -51,7 +52,7 @@ public class StringSetQueryFieldParameter extends AbstractSetQueryFieldParameter
 
 	public static StringSetQueryFieldParameter makeWithSingle(String field,
 	                                                          String singleValue) {
-		return new StringSetQueryFieldParameter(field, SetUtility.wrap(singleValue));
+		return new StringSetQueryFieldParameter(field, singleValue);
 	}
 
 	public static StringSetQueryFieldParameter make(String field,

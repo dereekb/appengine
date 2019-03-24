@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
@@ -40,9 +41,13 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
  *            Model Data Transfer Type
  */
 public abstract class EditModelController<T extends UniqueModel, I> {
-	
+
+	public static final String ATOMIC_PARAM = ReadController.ATOMIC_PARAM;
+	public static final String KEYS_PARAM = ReadController.KEYS_PARAM;
+	public static final String RETURN_MODELS_PARAM = "returnModels";
+
 	public static final Integer DEFAULT_MAX_ELEMENTS = ObjectifyTransactionUtility.MAX_TRANSACTION_ELEMENTS;
-	
+
 	private Integer maxElements = DEFAULT_MAX_ELEMENTS;
 
 	private EditModelControllerDelegate<T> delegate;
@@ -86,7 +91,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 		ApiResponse response = null;
 
 		TooManyTemplatesException.assertTemplatesCount(request.getData(), this.maxElements);
-		
+
 		try {
 			CreateRequest<T> createRequest = this.conversionDelegate.convert(request);
 			CreateResponse<T> createResponse = this.delegate.create(createRequest);
@@ -111,7 +116,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 		ApiResponse response = null;
 
 		TooManyTemplatesException.assertTemplatesCount(request.getData(), this.maxElements);
-		
+
 		try {
 			UpdateRequest<T> updateRequest = this.conversionDelegate.convert(request);
 			UpdateResponse<T> updateResponse = this.delegate.update(updateRequest);
@@ -131,12 +136,20 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 
 	@ResponseBody
 	@RequestMapping(value = { "/delete", "/destroy" }, method = RequestMethod.DELETE, produces = "application/json")
-	public ApiResponse delete(@Valid @RequestBody ApiDeleteRequest request) throws TooManyRequestKeysException {
+	public ApiResponse delete(@RequestParam(name = EditModelController.KEYS_PARAM, required = true) List<String> keys,
+                              @RequestParam(name = EditModelController.ATOMIC_PARAM, required = false, defaultValue = "false") boolean atomic,
+                              @RequestParam(name = EditModelController.RETURN_MODELS_PARAM, required = false, defaultValue = "false") boolean returnModels) throws TooManyRequestKeysException {
+		ApiDeleteRequest deleteRequest = new ApiDeleteRequest(keys, atomic);
+		deleteRequest.setReturnModels(returnModels);
+		return this.delete(deleteRequest);
+	}
+
+	private ApiResponse delete(ApiDeleteRequest request) throws TooManyRequestKeysException {
 		ApiResponse response = null;
 
 		List<String> keys = request.getData();
 		TooManyRequestKeysException.assertKeysCount(keys, this.maxElements);
-		
+
 		try {
 			DeleteRequest deleteRequest = this.conversionDelegate.convert(request);
 			DeleteResponse<T> deleteResponse = this.delegate.delete(deleteRequest);

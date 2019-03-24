@@ -39,12 +39,27 @@ public class SingleItem<T>
 	}
 
 	/**
+	 * Creates a new {@link SingleItem} wrapping the input value unless {@code null} is input.
+	 *
+	 * @param value
+	 *            Value to wrap.
+	 * @return {@link SingleItem} or {@code null} if {@code null} is input.
+	 */
+	public static <T> SingleItem<T> safe(T value) {
+		if (value != null) {
+			return withValue(value);
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Creates a new {@link SingleItem} wrapping the input value.
 	 *
 	 * @param value
 	 *            Value to wrap.
-	 * @return
-	 * @throws IllegalArgumentException
+	 * @return {@link SingleItem}. Never {@code null}.
+	 * @throws IllegalArgumentException Throw if {@code null} is input.
 	 */
 	public static <T> SingleItem<T> withValue(T value) throws IllegalArgumentException {
 		return new SingleItem<T>(value);

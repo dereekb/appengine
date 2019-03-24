@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
-import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
 
 /**
@@ -139,17 +138,18 @@ public class ModelKeySetQueryFieldParameterBuilder {
 			super(field, parameter);
 		}
 
-		public ModelKeySetQueryFieldParameter(String field, Collection<ModelKey> value)
-		        throws IllegalArgumentException {
-			super(field, value);
-		}
-
 		public ModelKeySetQueryFieldParameter(String field, ModelKey value) throws IllegalArgumentException {
-			super(field, SetUtility.wrap(value));
+			super(field, value);
 		}
 
 		public ModelKeySetQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
 			super(field, parameterString);
+		}
+
+		@Deprecated
+		public ModelKeySetQueryFieldParameter(String field, Collection<ModelKey> value)
+		        throws IllegalArgumentException {
+			super(field, value);
 		}
 
 		@Override

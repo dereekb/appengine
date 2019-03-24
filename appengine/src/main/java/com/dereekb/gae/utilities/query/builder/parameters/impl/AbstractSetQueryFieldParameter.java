@@ -36,6 +36,16 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 		this.setParameterString(parameterString);
 	}
 
+	protected AbstractSetQueryFieldParameter(String field, T value) throws IllegalArgumentException {
+		this(field, value, ExpressionOperator.EQUAL);
+	}
+
+	protected AbstractSetQueryFieldParameter(String field, T value, ExpressionOperator operator) throws IllegalArgumentException {
+		this.setField(field);
+		this.setSingleValue(value);
+		this.setOperator(operator);
+	}
+
 	/**
 	 * @deprecated {@link ExpressionOperator#IN} is no longer supported.
 	 */
@@ -88,7 +98,7 @@ public abstract class AbstractSetQueryFieldParameter<T> extends AbstractQueryFie
 	@Override
 	public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
 		if (ALLOWED_SET_OPERATORS.contains(operator) == false) {
-			throw new IllegalArgumentException("Disallowed operator. Try using IN.");
+			throw new IllegalArgumentException("Disallowed operator. Try using EQUAL.");
 		}
 
 		super.setOperator(operator);
