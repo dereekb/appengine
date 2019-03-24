@@ -1,8 +1,7 @@
 #!/bin/sh
 
-cd projects/gae-web
-
-for libName in *; do
-    # Build each library.
-    sh -c "ng build @gae-web/$libName"
-done
+# Build in the specific order.
+sh -c "ng build @gae-web/appengine-utility"
+sh -c "ng build @gae-web/appengine-token"
+sh -c "ng build @gae-web/appengine-api"
+sh -c "ng build @gae-web/appengine-client"
