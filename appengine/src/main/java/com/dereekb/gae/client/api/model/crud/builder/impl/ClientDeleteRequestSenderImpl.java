@@ -101,9 +101,12 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 
 		ParametersImpl parameters = new ParametersImpl();
 
+		Iterable<ModelKey> modelKeys = request.getTargetKeys();
+		String keys = ModelKey.keysAsString(modelKeys, ",");
+
 		DeleteRequestOptions options = request.getOptions();
 		parameters.addObjectParameter(EditModelController.ATOMIC_PARAM, options.isAtomic());
-		parameters.addObjectParameter(EditModelController.KEYS_PARAM, request.getTargetKeys());
+		parameters.addObjectParameter(EditModelController.KEYS_PARAM, keys);
 		parameters.addObjectParameter(EditModelController.RETURN_MODELS_PARAM, request.shouldReturnModels());
 
 		clientRequest.setParameters(parameters);
