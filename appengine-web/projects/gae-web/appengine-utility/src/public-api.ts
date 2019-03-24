@@ -4,6 +4,7 @@
 export * from './lib/assert';
 export * from './lib/cache';
 export * from './lib/collection';
+export * from './lib/data';
 export * from './lib/date';
 export * from './lib/map';
 export * from './lib/model';

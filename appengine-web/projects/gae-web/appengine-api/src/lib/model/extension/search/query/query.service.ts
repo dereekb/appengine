@@ -14,10 +14,8 @@ export type QueryRequest = SearchRequest;
 
 export type QueryResponse<T extends UniqueModel> = ModelSearchResponse<T>;
 
-export interface QueryService<T extends UniqueModel> {
-
-    query(request: QueryRequest): Observable<QueryResponse<T>>;
-
+export abstract class QueryService<T extends UniqueModel> {
+    abstract query(request: QueryRequest): Observable<QueryResponse<T>>;
 }
 
 // MARK: Client Interfaces

@@ -30,8 +30,8 @@ export interface UpdateResponse<T> extends TemplateResponse<T>, ModelServiceResp
     readonly missing: ModelKey[];
 }
 
-export interface UpdateService<T> {
-    update(request: UpdateRequest<T>): Observable<UpdateResponse<T>>;
+export abstract class UpdateService<T> {
+    abstract update(request: UpdateRequest<T>): Observable<UpdateResponse<T>>;
 }
 
 // MARK: Implementation

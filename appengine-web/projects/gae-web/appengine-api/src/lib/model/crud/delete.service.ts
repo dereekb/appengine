@@ -27,8 +27,8 @@ export interface DeleteResponse<T> extends ModelServiceResponse<T> {
     readonly isModelsResponse: boolean;
 }
 
-export interface DeleteService<T> {
-    delete(request: DeleteRequest): Observable<DeleteResponse<T>>;
+export abstract class DeleteService<T> {
+    abstract delete(request: DeleteRequest): Observable<DeleteResponse<T>>;
 }
 
 // MARK: Implementation

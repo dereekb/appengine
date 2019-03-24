@@ -31,7 +31,3 @@ export interface LinkResponse {
     readonly successful: string[];
     readonly failed: string[];
 }
-
-export interface LinkService {
-    updateLinks(request: LinkRequest): Observable<LinkResponse>;
-}

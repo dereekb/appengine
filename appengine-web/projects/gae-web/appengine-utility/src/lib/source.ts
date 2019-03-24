@@ -5,10 +5,10 @@ import { map, flatMap, debounceTime } from 'rxjs/operators';
 
 export interface SingleElementSource<T> {
 
-  /**
-   * Observes the first item from elements.
-   */
-  readonly first: Observable<T | undefined>;
+    /**
+     * Observes the first item from elements.
+     */
+    readonly first: Observable<T | undefined>;
 
 }
 
@@ -23,29 +23,47 @@ export interface SingleElementReadSource<T> extends SingleElementSource<T>, Read
  */
 export interface SingleElementConversionSource<I, T> extends SingleElementSource<T>, ReadOnlyConversionSource<I, T> {
 
-  /**
-   * Observes the first item from elements.
-   *
-   * If there is only a single input element, and the corresponding model cannot be loaded,
-   * a ConversionSourceFirstError will be thrown.
-   */
-  readonly first: Observable<T | undefined>;
+    /**
+     * Observes the first item from elements.
+     *
+     * If there is only a single input element, and the corresponding model cannot be loaded,
+     * a ConversionSourceFirstError will be thrown.
+     */
+    readonly first: Observable<T | undefined>;
 
 }
 
 export enum SourceState {
 
-    Reset = 0,      // State was reset.
+    /**
+     * State was reset.
+     */
+    Reset = 0,
 
-    Idle = 1,       // Not loading more elements. (can load more when requested.)
+    /**
+     * Not loading more elements. (can load more when requested.)
+     */
+    Idle = 1,
 
-    Loading = 2,    // Loading more elements.
+    /**
+     * Loading more elements.
+     */
+    Loading = 2,
 
-    Done = 3,        // Expect no more elements (no more will load when requested.)
+    /**
+     * Expect no more elements (no more will load when requested.)
+     */
+    Done = 3,
 
-    Error = 4,       // Encountered an error.
+    /**
+     * Encountered an error.
+     */
+    Error = 4,
 
-    Stopped = 5      // Source has been stopped permenantly.
+    /**
+     * Source has been stopped permenantly.
+     */
+    Stopped = 5
 
 }
 
@@ -57,22 +75,17 @@ export class SourceEvent<T> {
 }
 
 export abstract class SourceFactory<T> {
-
     abstract makeSource(): Source<T>;
-
 }
 
 export abstract class ReadOnlySource<T> {
-
     readonly state: SourceState;
-
     readonly stream: Observable<SourceEvent<T>>;
 
     /**
      * Refreshes the current data, if applicable for the source.
      */
     abstract refresh(): void;
-
 }
 
 /**

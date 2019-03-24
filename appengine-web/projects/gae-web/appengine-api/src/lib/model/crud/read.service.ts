@@ -22,9 +22,9 @@ export interface ReadRequest {
 
 export type ReadResponse<T> = ModelServiceResponse<T>;
 
-export interface ReadService<T> {
+export abstract class ReadService<T> {
     readonly type: string;
-    read(request: ReadRequest): Observable<ReadResponse<T>>;
+    abstract read(request: ReadRequest): Observable<ReadResponse<T>>;
 }
 
 // MARK: Implementation

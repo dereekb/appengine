@@ -33,16 +33,21 @@ export type ModelOrKey<T extends Keyed<ModelKey>> = T | ModelKey;
  * Interface for unique models.
  */
 export interface UniqueModel extends Keyed<ModelKey> {
-  modelKey: ModelKey | undefined;
+  readonly modelKey: ModelKey | undefined;
+}
+
+/**
+ * UniqueModel with a mutable model key.
+ */
+export interface MutableUniqueModel extends UniqueModel {
+  modelKey: ModelKey;
 }
 
 /**
  * UniqueModel that also has a name associated with it.
  */
 export interface NamedUniqueModel extends UniqueModel {
-
-  uniqueModelName: string | undefined;
-
+  readonly uniqueModelName: string | undefined;
 }
 
 /**

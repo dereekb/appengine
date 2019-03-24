@@ -1,4 +1,4 @@
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 
 export interface ModelServiceResponse<T> extends ModelServiceModelsResponse<T>, ModelServiceFailedKeysResponse {}
 

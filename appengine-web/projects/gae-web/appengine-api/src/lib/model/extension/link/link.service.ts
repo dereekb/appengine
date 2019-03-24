@@ -10,7 +10,11 @@ import { ApiResponseJson } from '../../../api';
 import { ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { catchError, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
-import { LinkService, LinkRequest, LinkChange, LinkResponse } from './link';
+import { LinkRequest, LinkChange, LinkResponse } from './link';
+
+export abstract class LinkService {
+    abstract updateLinks(request: LinkRequest): Observable<LinkResponse>;
+}
 
 // MARK: Client
 @Injectable()
@@ -115,7 +119,7 @@ export class ClientLinkService extends AbstractClientService implements LinkServ
 }
 
 // MARK: Internal
-class ClientLinkResponse extends RawClientResponseAccessor implements LinkResponse {
+export class ClientLinkResponse extends RawClientResponseAccessor implements LinkResponse {
 
     private _missing: ModelKey[];
 

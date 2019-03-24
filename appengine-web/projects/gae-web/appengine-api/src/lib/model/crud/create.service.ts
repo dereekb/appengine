@@ -28,8 +28,8 @@ export interface CreateResponse<T> extends TemplateResponse<T> {
     readonly invalidTemplates: InvalidCreateTemplatePair<T>[];
 }
 
-export interface CreateService<T> {
-    create(request: CreateRequest<T>): Observable<CreateResponse<T>>;
+export abstract class CreateService<T> {
+    abstract create(request: CreateRequest<T>): Observable<CreateResponse<T>>;
 }
 
 // MARK: Implementation
