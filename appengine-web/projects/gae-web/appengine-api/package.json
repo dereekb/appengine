@@ -1,0 +1,10 @@
+{
+  "name": "@gae-web/appengine-api",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^7.2.0",
+    "@angular/core": "^7.2.0",
+    "@gae-web/appengine-token": "*",
+    "@gae-web/appengine-utility": "*"
+  }
+}

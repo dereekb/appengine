@@ -1,8 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { UIRouterModule } from '@uirouter/angular';
-
-import { AppTokenLoginAccessor, UserLoginTokenService, LegacyAppTokenUserService } from './token.service';
-
+import { UserLoginTokenService, LegacyAppTokenUserService } from './token.service';
 import { TokenStateService, TokenStateConfig } from './state.service';
 import { AppTokenStorageService, StoredTokenStorageAccessor } from './storage.service';
 
@@ -12,7 +10,7 @@ export function appTokenStorageServiceFactory() {
 }
 
 /**
- * Module that provides authentication tokens for AuthHttp and route guarding.
+ * Module that provides authentication tokens for HttpClient and route guarding.
  */
 @NgModule({
   imports: [UIRouterModule]

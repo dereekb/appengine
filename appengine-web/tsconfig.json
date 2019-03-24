@@ -19,6 +19,12 @@
       "dom"
     ],
     "paths": {
+      "@gae-web/appengine-api": [
+        "dist/gae-web/appengine-api"
+      ],
+      "@gae-web/appengine-api/*": [
+        "dist/gae-web/appengine-api/*"
+      ],
       "@gae-web/appengine-client": [
         "dist/gae-web/appengine-client"
       ],

@@ -1,6 +1,7 @@
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NumberModelKey } from '@gae-web/appengine-utility/lib/model';
 import { StringModelKey } from '@gae-web/appengine-utility/lib/model';
+import { HttpResponse } from '@angular/common/http';
 
 export type LoginId = NumberModelKey;
 export type LoginPointerId = StringModelKey;
@@ -187,6 +188,11 @@ export class DecodedRefreshToken extends DecodedLoginIncludedToken {
 
 }
 
+export interface LoginTokenPairJson {
+  token: EncodedToken;
+  pointer?: LoginPointerId;
+}
+
 /**
  * Appengine login token response.
  */
@@ -197,13 +203,13 @@ export class LoginTokenPair {
 
   private _decoded: LoginToken;
 
-  public static fromResponse(res: Response): LoginTokenPair {
-    return LoginTokenPair.fromJson(res.json());
+  public static fromResponse(res: HttpResponse<LoginTokenPairJson>): LoginTokenPair {
+    return LoginTokenPair.fromJson(res.body);
   }
 
-  public static fromJson(json: any): LoginTokenPair {
+  public static fromJson(json: LoginTokenPairJson): LoginTokenPair {
     const token: EncodedToken = json.token;
-    const pointer: LoginPointerId | undefined = json.pointer;
+    const pointer: LoginPointerId = json.pointer;
     return new LoginTokenPair(token, pointer);
   }
 

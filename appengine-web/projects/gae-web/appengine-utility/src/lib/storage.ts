@@ -93,10 +93,10 @@ export interface ReadStoredData<T> extends StoredData {
 export class StorageUtility {
 
   static getAvailableLocalStorage(): FullStorageObject {
-    let storageObject: FullStorageObject = new FullLocalStorageObjectImpl();
+    let storageObject: FullStorageObject = new FullLocalStorageObject();
 
     if (!storageObject.isAvailable) {
-      storageObject = new MemoryStorageObjectImpl();
+      storageObject = new MemoryStorageObject();
     }
 
     return storageObject;
@@ -262,7 +262,7 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
  *
  * Not necessary.
  */
-export class FullLocalStorageObjectImpl implements FullStorageObject {
+export class FullLocalStorageObject implements FullStorageObject {
 
   constructor(private _localStorage: StorageObject = localStorage) { }
 
@@ -304,7 +304,7 @@ export class FullLocalStorageObjectImpl implements FullStorageObject {
 
 }
 
-export class MemoryStorageObjectImpl extends FullLocalStorageObjectImpl {
+export class MemoryStorageObject extends FullLocalStorageObject {
 
   get isLastingStorage() {
     return false;

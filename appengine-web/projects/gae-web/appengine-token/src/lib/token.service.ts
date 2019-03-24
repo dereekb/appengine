@@ -412,11 +412,9 @@ export class LegacyAppTokenUserService extends UserLoginTokenService {
 /**
  * Internal cache used by an AppTokenUserService instance.
  */
-class AppTokenUserServicePair {
-
+export class AppTokenUserServicePair {
   public token: LoginTokenPair;
   public refreshToken: LoginTokenPair;
-
 }
 
 /**
