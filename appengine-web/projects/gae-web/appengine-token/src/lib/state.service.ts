@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { StateService } from '@uirouter/angular';
 
 export abstract class TokenStateConfig {

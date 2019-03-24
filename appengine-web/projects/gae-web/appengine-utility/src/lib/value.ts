@@ -1,5 +1,3 @@
-import { LazyCache } from './cache';
-
 export type OneOrMore<T> = T | T[];
 
 export type ObjectAttribute = string;

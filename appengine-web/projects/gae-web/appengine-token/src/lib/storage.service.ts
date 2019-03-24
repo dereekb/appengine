@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import {
-  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, getAvailableLocalStorage
+  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, StorageUtility
 } from '@gae-web/appengine-utility';
 
 export class StoredTokenUnavailableError extends DataDoesNotExistError {
@@ -183,7 +183,7 @@ export class StoredTokenStorageAccessor extends AbstractStorageAccessor<StoredTo
     return new StoredTokenStorageAccessor();
   }
 
-  constructor(storageObject: StorageObject = getAvailableLocalStorage(), prefix: string = StoredTokenStorageAccessor.DEFAULT_PREFIX) {
+  constructor(storageObject: StorageObject = StorageUtility.getAvailableLocalStorage(), prefix: string = StoredTokenStorageAccessor.DEFAULT_PREFIX) {
     super(storageObject, prefix);
   }
 

@@ -7,9 +7,9 @@ import { FullStorageObject } from '@gae-web/appengine-utility';
 import { AppTokenStorageService, StoredTokenUnavailableError } from './storage.service';
 
 import { Observable, BehaviorSubject, of, throwError, empty, forkJoin } from 'rxjs';
-import { map, catchError, filter, flatMap, first, toArray, defaultIfEmpty, concat, throwIfEmpty } from 'rxjs/operators';
+import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
-import { StorageUtility } from 'projects/gae-web/appengine-utility/src/public-api';
+import { StorageUtility } from '@gae-web/appengine-utility/public-api';
 import { BaseError } from 'make-error';
 
 // Service

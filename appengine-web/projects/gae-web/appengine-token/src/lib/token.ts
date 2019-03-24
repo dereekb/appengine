@@ -1,8 +1,10 @@
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { NumberModelKey } from '@gae-web/appengine-utility/lib/model';
+import { StringModelKey } from '@gae-web/appengine-utility/lib/model';
 
-export type LoginId = number;
-export type LoginPointerId = string;
-export type EncodedToken = string;
+export type LoginId = NumberModelKey;
+export type LoginPointerId = StringModelKey;
+export type EncodedToken = StringModelKey;
 export type EncodedRefreshToken = EncodedToken;
 
 export enum TokenType {
