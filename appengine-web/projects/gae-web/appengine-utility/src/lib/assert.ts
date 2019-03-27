@@ -89,7 +89,7 @@ export function Assert<T>(assertion: AccessorValueAssertion<T>, options?: Assert
   return makePropertyDescriptorAssertion<T>(assertion, options);
 }
 
-export function makePropertyDescriptorAssertion<T>(assert: AccessorValueAssertion<T>, options?: AssertionOptions, defaultOptions?: AssertionOptions) {
+export function makePropertyDescriptorAssertion<T>(assertValueFn: AccessorValueAssertion<T>, options?: AssertionOptions, defaultOptions?: AssertionOptions) {
 
   // Build options
   options = {
@@ -99,12 +99,12 @@ export function makePropertyDescriptorAssertion<T>(assert: AccessorValueAssertio
 
   return (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<T>) => {
     if (descriptor.set) {
-      const originalSet: SetAccessorFunction<T> = descriptor.set;
+      const setValue: SetAccessorFunction<T> = descriptor.set;
 
       // Override set function with assertion.
-      descriptor.set = (value: T) => {
-        if (assert(value)) {
-          originalSet.call(this, value);  // Call with target as this.
+      descriptor.set = function(value: T) {
+        if (assertValueFn(value)) {
+          setValue.call(this, value);
         } else {
           const error: AssertionIssue = { target, propertyKey, options };
           ASSERTION_HANDLER.handle(error);

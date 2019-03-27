@@ -120,8 +120,8 @@ export class ModelUtility {
   /**
    * Converts the input modelKeys to a single string that contains all input keys in a comma-separated string.
    */
-  static makeModelKeysParameter(keys: ModelKey | ModelKey[], uniqueOnly = true): string | undefined {
-    const keysArray: string[] = this.makeStringModelKeysArray(keys);
+  static makeModelKeysParameter(keys: ModelKey | ModelKey[], uniqueOnly?: boolean): string | undefined {
+    const keysArray: string[] = this.makeStringModelKeysArray(keys, uniqueOnly);
     return this.makeModelKeysParameterWithStringArray(keysArray);
   }
 

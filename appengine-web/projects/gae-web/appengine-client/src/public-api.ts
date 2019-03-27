@@ -10,4 +10,3 @@ export * from './lib/service/model.service';
 export * from './lib/service/query.service';
 export * from './lib/service/source';
 export * from './lib/service/wrapper';
-

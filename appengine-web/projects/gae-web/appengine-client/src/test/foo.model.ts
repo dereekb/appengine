@@ -13,6 +13,7 @@ export class Foo extends AbstractDatabaseModel implements DatedModel {
 
   constructor(key?: NumberModelKey) {
     super();
+
     if (key) {
       this.key = key;
     }

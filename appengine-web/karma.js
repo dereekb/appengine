@@ -1,8 +1,14 @@
-module.exports = function (config) {
+/**
+ * Resuable Karma configuration builder.
+ */
+module.exports = function (config, options = {}) {
+  const allowJUnit = !options.skipJUnit;
+
   return {
-    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    frameworks: ['jasmine', 'jasmine-matchers', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
+      require('karma-jasmine-matchers'),
       require('karma-junit-reporter'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
@@ -12,7 +18,7 @@ module.exports = function (config) {
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    reporters: ['progress', 'kjhtml', 'dots', 'junit'],
+    reporters: ['progress', 'kjhtml', 'dots'].concat((allowJUnit) ? ['junit'] : []),
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

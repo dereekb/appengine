@@ -1,9 +1,9 @@
-import { ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api/public-api';
+import { ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api';
 import { Foo, FooData } from './foo.model';
 import {
   CachedKeySourceCache, ModelServiceWrapper, ModelQueryService, ModelCreateService,
   ModelReadService, ModelUpdateService, ModelDeleteService, ReadSourceFactory, QuerySourceConfiguration, KeyedPredictiveOrderedQueryDelegate, KeyQuerySource
-} from '@gae-web/appengine-client/public-api';
+} from '@gae-web/appengine-client';
 
 export const FOO_MODEL_TYPE = 'foo';
 

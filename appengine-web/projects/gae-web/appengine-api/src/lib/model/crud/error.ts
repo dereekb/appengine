@@ -2,8 +2,7 @@ import { ClientApiResponse, ClientApiResponseErrorType, ClientApiResponseError }
 import { ClientModelUtility } from '../client.service';
 
 import { BaseError } from 'make-error';
-import { ModelKey } from '@gae-web/appengine-utility';
-import { AlwaysKeyed } from '@gae-web/appengine-utility/public-api';
+import { AlwaysKeyed, ModelKey } from '@gae-web/appengine-utility';
 
 // MARK: Request Error
 /**

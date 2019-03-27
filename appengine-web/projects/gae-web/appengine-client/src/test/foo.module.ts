@@ -1,6 +1,5 @@
 import { ApiRouteConfiguration } from '@gae-web/appengine-api';
 import { HttpClient } from '@angular/common/http';
-import { ModelServiceWrapperSet } from '@gae-web/appengine-client/public-api';
 import {
   FOO_MODEL_TYPE, FooClientCreateService, FooClientReadService, FooClientUpdateService, FooClientDeleteService,
   FooClientQueryService, FooServiceWrapper, FooReadService, FooQueryService, FooDefaultQueryConfiguration,
@@ -9,6 +8,7 @@ import {
 import { FooSerializer } from './foo.model';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ClientModule } from '../lib/client.module';
+import { ModelServiceWrapperSet } from '../lib/service/model.service';
 
 export function fooServiceFactory(make: (config: any) => any) {
   return (s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) => {

@@ -3,7 +3,7 @@ import { ReadSourceFactory, ReadSourceConfiguration, ReadSource } from './source
 import { ModelServiceWrapper } from './model.service';
 import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
 import { throwError, of, Observable } from 'rxjs';
-import { flatMap, map, catchError, first, share, tap } from 'rxjs/operators';
+import { flatMap, map, catchError, first, share, tap, skip } from 'rxjs/operators';
 import { WrapperEventType } from './wrapper';
 
 // MARK: Read
@@ -79,7 +79,30 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
 
 }
 
-export class ModelReadService<T extends UniqueModel> implements ReadService<T> {
+/**
+ * ReadService extension that also allows continously watching/reading the requested models.
+ */
+export abstract class ContinousReadService<T> extends ReadService<T> {
+
+  /**
+   * Acts as continuous read source for the requested models.
+   *
+   * If models are updated or deleted, the stream will update to reflect the changes.
+   */
+  abstract continuousRead(request: ReadRequest): Observable<ReadResponse<T>>;
+
+}
+
+/**
+ * ReadService extension that gives notion of a cache, and can skip the cacbe for reads.
+ */
+export abstract class CachedReadService<T> extends ReadService<T> {
+
+  abstract read(request: ReadRequest, skipCache?: boolean): Observable<ReadResponse<T>>;
+
+}
+
+export class ModelReadService<T extends UniqueModel> implements CachedReadService<T>, ContinousReadService<T> {
 
   // Used as a sort of buffer to prevent multiple of the same request from being sent.
   private _working = new Map<string, Observable<ReadResponse<T>>>();
@@ -91,33 +114,30 @@ export class ModelReadService<T extends UniqueModel> implements ReadService<T> {
     return this._readService.type;
   }
 
-  // TODO: Later move to a helper class that only uses a cache and a read service?
-  public cacheReadWithKeys(keys: ModelKey | ModelKey[], atomic?: boolean): Observable<ReadResponse<T>> {
-    return this.cacheRead({
-      modelKeys: keys,
-      atomic
-    });
-  }
-
   /**
    * Single read that checks the cache before sending a request.
    */
-  public cacheRead(request: ReadRequest): Observable<ReadResponse<T>> {
-    return this.asyncCacheRead(request, 0).pipe(
-      first(),
-      share()
-    );
+  public read(request: ReadRequest, skipCache: boolean = false): Observable<ReadResponse<T>> {
+    if (skipCache) {
+      return this._read(request);
+    } else {
+      return this.continuousRead(request, 0).pipe(
+        first(),  // Read only once.
+        share()   // Share the single result with all subscribers.
+      );
+    }
   }
 
   /**
    * Continuous read that checks the cache before reading more.
    */
-  public asyncCacheRead(inputRequest: ReadRequest, debounce?: number): Observable<ReadResponse<T>> {
+  public continuousRead(inputRequest: ReadRequest, debounce?: number): Observable<ReadResponse<T>> {
     const inputKeys = ValueUtility.normalizeArray(inputRequest.modelKeys);
 
     return this._parent.cache
       .asyncRead(inputRequest.modelKeys, { debounce })
       .pipe(
+        // Read requested model keys from the cache.
         flatMap((result: KeyedCacheLoad<ModelKey, T>) => {
           const hits = result.hits;
           const misses = result.misses;
@@ -128,7 +148,7 @@ export class ModelReadService<T extends UniqueModel> implements ReadService<T> {
               atomic: inputRequest.atomic
             };
 
-            return this.read(readRequest).pipe(
+            return this._read(readRequest).pipe(
               map((response: ModelServiceResponse<T>) => {
                 const models = hits.concat(response.models);
                 const ordered = ModelUtility.orderModels(inputKeys, models);
@@ -152,14 +172,17 @@ export class ModelReadService<T extends UniqueModel> implements ReadService<T> {
       );
   }
 
-  public read(request: ReadRequest): Observable<ReadResponse<T>> {
+  /**
+   * Read using the wrapped ReadService, and update the cache.
+   */
+  protected _read(request: ReadRequest): Observable<ReadResponse<T>> {
     const hash = (ModelUtility.makeModelKeysParameter(request.modelKeys) + ((request.atomic) ? '_A' : ''));
 
     if (this._working.has(hash)) {
       return this._working.get(hash);
     } else {
 
-      // TODO: Break up larger requests up into multiple parts and execute in serial.
+      // TODO: Break up larger requests up into multiple parts and execute in parallel.
 
       // Updates the cache with the results.
       const obs = this._readService.read(request).pipe(

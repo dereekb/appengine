@@ -1,12 +1,11 @@
-import { UniqueModel, ModelKey, ModelUtility } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory } from '@gae-web/appengine-utility';
 import { ModelReadService, AppEngineReadSourceFactory, ModelUpdateService, ModelDeleteService } from './crud.service';
 import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventSystem, AnonymousWrapperEvent, WrapperEvent, WrapperEventFilter } from './wrapper';
-import { AsyncModelCacheWrap } from '@gae-web/appengine-utility';
 import { Subject, Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { ReadService, CreateService, UpdateService, DeleteService, QueryService, CreateRequest, CreateResponse } from '@gae-web/appengine-api';
-import { SourceFactory } from '@gae-web/appengine-utility';
 import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate, ModelFilteredKeyedPredictiveOrderedQueryDelegate } from './query.service';
+import { BaseError } from 'make-error';
 
 /**
  * Used for announcing key-only events.
@@ -78,7 +77,9 @@ export class FullModelServiceEventAnnouncer<T extends UniqueModel> extends KeyOn
   }
 
   private _tryReadAndAnnounceEvent(eventType: WrapperEventType, keys: ModelKey[]) {
-    this._reader.cacheReadWithKeys(keys).subscribe((result) => {
+    this._reader.read({
+      modelKeys: keys
+    }, false).subscribe((result) => {
 
       // TODO: Should we enforce the keys to match models?
 
@@ -115,7 +116,7 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
 
   public init(config: ModelServiceWrapperConfig<T>) {
     if (this._config) {
-      throw new Error('ServiceWrapper of type "' + this._type + '" has already been initialized.');
+      throw new ModelWrapperInitializedError(this._type);
     }
 
     this._config = config;
@@ -251,9 +252,9 @@ export class ModelServiceWrapperSet {
   constructor() { }
 
   // MARK: Accessors
-  public initWrapper<T extends UniqueModel>(config: ModelServiceWrapperConfig<T>) {
+  public initWrapper<T extends UniqueModel>(config: ModelServiceWrapperConfig<T>): ModelServiceWrapper<T> {
     const type = config.type;
-    const wrapper = this.getWrapper(type);
+    const wrapper = this.getWrapper<T>(type);
     wrapper.init(config);
 
     wrapper.events.subscribe((event) => {
@@ -263,14 +264,14 @@ export class ModelServiceWrapperSet {
     return wrapper;
   }
 
-  public getWrapper(type: string) {
+  public getWrapper<T extends UniqueModel>(type: string): ModelServiceWrapper<T> {
     type = type.toLowerCase();
 
     if (!this._map.has(type)) {
-      this._map.set(type, new ModelServiceWrapper(type, this));
+      this._map.set(type, new ModelServiceWrapper<T>(type, this));
     }
 
-    return this._map.get(type);
+    return this._map.get(type) as ModelServiceWrapper<T>;
   }
 
   // MARK: Events
@@ -288,6 +289,15 @@ export class ModelServiceWrapperSet {
     }
 
     return obs;
+  }
+
+}
+
+// MARK: Error
+export class ModelWrapperInitializedError extends BaseError {
+
+  constructor(public readonly type: string) {
+    super(`ServiceWrapper of type "${type}" has already been initialized.`);
   }
 
 }
