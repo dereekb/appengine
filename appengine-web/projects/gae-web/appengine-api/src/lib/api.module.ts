@@ -1,22 +1,46 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { AppengineApiRouteConfiguration, AppengineApiModuleInfo, AppengineApiConfiguration } from './api.config';
-import { HttpClient } from '@angular/common/http';
+import { ApiRouteConfiguration, ApiModuleInfo, ApiConfiguration } from './api.config';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ClientLinkService } from './model/extension/link/link.service';
 import { ClientSchedulerService } from './model/extension/scheduler/scheduler.service';
 import { PublicLoginTokenService, PrivateLoginTokenService } from './auth/token.service';
+import { TokenModule, UserLoginTokenService } from '@gae-web/appengine-token';
+import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { OAuthLoginService } from './auth/oauth.service';
+import { RegisterService } from './auth/register.service';
 
-export function appengineApiRouteConfigurationFactory(moduleInfo: AppengineApiModuleInfo) {
-  return AppengineApiRouteConfiguration.makeWithInfo(moduleInfo);
+export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: ApiConfiguration) {
+  const throwNoTokenError = false;
+  const skipWhenExpired = false;
+  const whiteListedDomains = [];
+  const blackListedRoutes = [];
+
+  // TODO: Add black/white list parameters using the module's info.
+
+  return {
+    tokenGetter: () => {
+      const obs = userLoginTokenService.getEncodedLoginToken();
+      return obs.toPromise();
+    },
+    throwNoTokenError,
+    skipWhenExpired,
+    whiteListedDomains,
+    blackListedRoutes
+  };
 }
 
-export function appEngineClientLinkServiceFactory(routeConfig: AppengineApiRouteConfiguration, httpClient: HttpClient) {
+export function apiRouteConfigurationFactory(moduleInfo: ApiModuleInfo) {
+  return ApiRouteConfiguration.makeWithInfo(moduleInfo);
+}
+
+export function clientLinkServiceFactory(routeConfig: ApiRouteConfiguration, httpClient: HttpClient) {
   return new ClientLinkService({
     httpClient,
     routeConfig
   });
 }
 
-export function appEngineClientSchedulerServiceFactory(routeConfig: AppengineApiRouteConfiguration, httpClient: HttpClient) {
+export function clientSchedulerServiceFactory(routeConfig: ApiRouteConfiguration, httpClient: HttpClient) {
   return new ClientSchedulerService({
     httpClient,
     routeConfig
@@ -24,37 +48,61 @@ export function appEngineClientSchedulerServiceFactory(routeConfig: AppengineApi
 }
 
 @NgModule({
-  declarations: [],
-  exports: []
+  imports: [
+    TokenModule,
+    HttpClientModule,
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [UserLoginTokenService, ApiConfiguration]
+      }
+    })
+  ]
 })
-export class AppengineApiModule {
+export class ApiModule {
 
-  static forRoot(config: AppengineApiModuleInfo): ModuleWithProviders {
+  static forTest(): ModuleWithProviders {
+    const testModule = this.forApp({
+      version: 'test',
+      name: 'test'
+    });
+
+    return testModule;
+  }
+
+  static forApp(config: ApiModuleInfo): ModuleWithProviders {
     return {
-      ngModule: AppengineApiModule,
+      ngModule: ApiModule,
       providers: [
-        AppengineApiConfiguration,
-        { provide: AppengineApiModuleInfo, useValue: config },
+        // Configurations
+        ApiConfiguration,
         {
-          provide: AppengineApiRouteConfiguration,
-          useFactory: appengineApiRouteConfigurationFactory,
-          deps: [AppengineApiModuleInfo]
+          provide: ApiModuleInfo,
+          useValue: config
+        },
+        {
+          provide: ApiRouteConfiguration,
+          useFactory: apiRouteConfigurationFactory,
+          deps: [ApiModuleInfo]
         },
         // Link Service
         {
           provide: ClientLinkService,
-          useFactory: appEngineClientLinkServiceFactory,
-          deps: [AppengineApiRouteConfiguration, HttpClient]
+          useFactory: clientLinkServiceFactory,
+          deps: [ApiRouteConfiguration, HttpClient]
         },
         // Scheduler
         {
           provide: ClientSchedulerService,
-          useFactory: appEngineClientSchedulerServiceFactory,
-          deps: [AppengineApiRouteConfiguration, HttpClient]
+          useFactory: clientSchedulerServiceFactory,
+          deps: [ApiRouteConfiguration, HttpClient]
         },
-        // Tokens
+        // Tokens and Auth
         PublicLoginTokenService,
-        PrivateLoginTokenService
+        PrivateLoginTokenService,
+        OAuthLoginService,
+        RegisterService
       ]
     };
   }

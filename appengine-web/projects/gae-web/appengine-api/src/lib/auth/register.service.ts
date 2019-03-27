@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppengineApiRouteConfiguration } from '../api.config';
+import { ApiRouteConfiguration } from '../api.config';
 import { HttpClient } from '@angular/common/http';
 import { EncodedToken, LoginTokenPair, LoginTokenPairJson } from '@gae-web/appengine-token';
 import { AuthUtility } from './auth.utility';
@@ -17,7 +17,7 @@ export class RegisterService {
 
   private _servicePath: string;
 
-  constructor(private _httpClient: HttpClient, private _config: AppengineApiRouteConfiguration) {
+  constructor(private _httpClient: HttpClient, private _config: ApiRouteConfiguration) {
     this._servicePath = this._config.root + RegisterService.SERVICE_PATH;
   }
 

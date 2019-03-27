@@ -1,7 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { UIRouterModule } from '@uirouter/angular';
 import { UserLoginTokenService, LegacyAppTokenUserService } from './token.service';
-import { TokenStateService, TokenStateConfig } from './state.service';
 import { AppTokenStorageService, StoredTokenStorageAccessor } from './storage.service';
 
 export function appTokenStorageServiceFactory() {
@@ -10,17 +8,19 @@ export function appTokenStorageServiceFactory() {
 }
 
 /**
- * Module that provides authentication tokens for HttpClient and route guarding.
+ * Module that provides services for managing JWTs for HttpClient.
+ *
+ * However, this module does not configure those relationships.
  */
 @NgModule({
-  imports: [UIRouterModule]
+  imports: []
 })
 export class TokenModule {
 
-  public static forRoot(config: TokenStateConfig): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders {
     return {
       ngModule: TokenModule,
-      providers: [TokenStateService,
+      providers: [
         {
           provide: UserLoginTokenService,
           useClass: LegacyAppTokenUserService
@@ -28,10 +28,6 @@ export class TokenModule {
         {
           provide: AppTokenStorageService,
           useFactory: appTokenStorageServiceFactory
-        },
-        {
-          provide: TokenStateConfig,
-          useValue: config
         }
       ]
     };

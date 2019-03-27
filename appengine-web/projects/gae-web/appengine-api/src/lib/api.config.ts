@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /**
  * Info configuration for the Appengine module.
  */
-export class AppengineApiModuleInfo {
+export class ApiModuleInfo {
   version: string;
   name: string;
 }
@@ -11,15 +11,15 @@ export class AppengineApiModuleInfo {
 /**
  * Route configuration for all Appengine components.
  */
-export class AppengineApiRouteConfiguration {
+export class ApiRouteConfiguration {
 
   private _fullRoute: string;
 
-  public static makeWithInfo(info: AppengineApiModuleInfo, prefix?: string): AppengineApiRouteConfiguration {
-    return new AppengineApiRouteConfiguration(info.name + '/' + info.version, prefix);
+  public static makeWithInfo(info: ApiModuleInfo, prefix?: string): ApiRouteConfiguration {
+    return new ApiRouteConfiguration(info.name + '/' + info.version, prefix);
   }
 
-  constructor(private _route: string, private _prefix: string = '/api') {
+  constructor(_route: string, _prefix: string = '/api') {
     this._fullRoute = _prefix + '/' + _route;
   }
 
@@ -36,15 +36,15 @@ export class AppengineApiRouteConfiguration {
  * Contains all configuration for Appengine components.
  */
 @Injectable()
-export class AppengineApiConfiguration {
+export class ApiConfiguration {
 
-  constructor(private _info: AppengineApiModuleInfo, private _route: AppengineApiRouteConfiguration) { }
+  constructor(private _info: ApiModuleInfo, private _route: ApiRouteConfiguration) { }
 
-  get info(): AppengineApiModuleInfo {
+  get info(): ApiModuleInfo {
     return this._info;
   }
 
-  get routeConfig(): AppengineApiRouteConfiguration {
+  get routeConfig(): ApiRouteConfiguration {
     return this._route;
   }
 

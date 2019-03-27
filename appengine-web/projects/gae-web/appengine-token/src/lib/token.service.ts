@@ -36,7 +36,9 @@ export abstract class UserLoginTokenAuthenticator {
  */
 export abstract class UserLoginTokenService {
 
-  // TODO: ...
+  abstract getEncodedLoginToken(): Observable<EncodedToken>;
+
+  // TODO: Add DecodedLoginToken type and allow returning it.
 
 }
 
