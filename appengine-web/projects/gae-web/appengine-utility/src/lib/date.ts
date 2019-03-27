@@ -1,4 +1,4 @@
-import DateTime from 'luxon';
+import { DateTime } from 'luxon';
 import { SortDirection } from './collection';
 import { TimedCache } from './cache';
 import { ValueUtility } from './value';
@@ -15,28 +15,28 @@ export type Year = number;
 export type Day = number;
 
 export enum Month {
-    January,
-    February,
-    March,
-    April,
-    May,
-    June,
-    July,
-    August,
-    September,
-    October,
-    November,
-    December,
+  January,
+  February,
+  March,
+  April,
+  May,
+  June,
+  July,
+  August,
+  September,
+  October,
+  November,
+  December,
 }
 
 export enum DayOfWeek {
-    Sunday = 0,
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday
+  Sunday = 0,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday
 }
 
 export enum TimeRelationState {
@@ -46,12 +46,10 @@ export enum TimeRelationState {
 }
 
 /**
- * Represents a model with a date.
+ * Represents a model with a DateTime.
  */
 export interface DatedModel {
-
-  readonly date: Date;
-
+  readonly date: DateTime;
 }
 
 /**
@@ -289,186 +287,182 @@ export class DateTimeUtility {
 }
 
 
-// MARK: Date Collection
-export type getDateFromValue<T> = (T) => Date;
+// MARK: DateTime Collection
+export type getDateTimeFromValue<T> = (T) => DateTime;
 
 export interface DateCollection<T> {
-    add(value: T, date: Date);
+  add(value: T, date: DateTime);
 }
 
 export abstract class AbstractDateCollection<K extends number, C extends DateCollection<T>, T> implements DateCollection<T> {
 
-    private _sortedValues?: C[];
+  private _sortedValues?: C[];
 
-    protected map = new Map<K, C>();
+  protected map = new Map<K, C>();
 
-    protected abstract keyFromDate(date: Date): K;
+  protected abstract keyFromDate(date: DateTime): K;
 
-    public ordered(): C[] {
-        return this.sort();
-    }
+  public ordered(): C[] {
+    return this.sort();
+  }
 
-    protected sort() {
-        if (!this._sortedValues) {
-            let keys: K[] = [];
+  protected sort() {
+    if (!this._sortedValues) {
+      let keys: K[] = [];
 
-            this.map.forEach((value, key) => {
-                keys.push(key);
-            });
+      this.map.forEach((value, key) => {
+        keys.push(key);
+      });
 
-            keys = this.sortKeys(keys);
+      keys = this.sortKeys(keys);
 
-            const values: C[] = [];
+      const values: C[] = [];
 
-            keys.forEach((key) => {
-                const value: C | undefined = this.map.get(key);
+      keys.forEach((key) => {
+        const value: C | undefined = this.map.get(key);
 
-                if (value) {
-                    values.push(value);
-                }
-            });
-
-            this._sortedValues = values;
+        if (value) {
+          values.push(value);
         }
+      });
 
-        return this._sortedValues;
+      this._sortedValues = values;
     }
 
-    protected sortKeys(keys: K[]): K[] {
-        return keys.sort((a: number, b: number) => (b - a));   // Sort in descending order.
-    }
+    return this._sortedValues;
+  }
 
-    public add(value: T, date: Date) {
-        const key = this.keyFromDate(date);
-        const collection = this.getOrMake(key);
-        collection.add(value, date);
-        this._sortedValues = undefined;
-    }
+  protected sortKeys(keys: K[]): K[] {
+    return keys.sort((a: number, b: number) => (b - a));   // Sort in descending order.
+  }
 
-    public getOrMake(key: K): C {
-        return this.map.get(key) || this.addCollection(key);
-    }
+  public add(value: T, date: DateTime) {
+    const key = this.keyFromDate(date);
+    const collection = this.getOrMake(key);
+    collection.add(value, date);
+    this._sortedValues = undefined;
+  }
 
-    protected addCollection(key: K) {
-        const collection = this.makeCollection(key);
-        this.map.set(key, collection);
-        return collection;
-    }
+  public getOrMake(key: K): C {
+    return this.map.get(key) || this.addCollection(key);
+  }
 
-    protected abstract makeCollection(key: K): C;
+  protected addCollection(key: K) {
+    const collection = this.makeCollection(key);
+    this.map.set(key, collection);
+    return collection;
+  }
+
+  protected abstract makeCollection(key: K): C;
 
 }
 
 export class CalendarFlattenedMonth<T> {
 
-    constructor(public readonly year: Year, public readonly monthCollection: CalendarCollectionMonth<T>) { }
+  constructor(public readonly year: Year, public readonly monthCollection: CalendarCollectionMonth<T>) { }
 
-    public get month(): Month {
-        return this.monthCollection.month;
-    }
+  public get month(): Month {
+    return this.monthCollection.month;
+  }
 
-    public get values(): T[] {
-        return this.monthCollection.allDayValues();
-    }
+  public get values(): T[] {
+    return this.monthCollection.allDayValues();
+  }
 
 }
 
 export class CalendarCollection<T> extends AbstractDateCollection<Year, CalendarCollectionYear<T>, T> {
 
-    protected keyFromDate(date: Date): Year {
-        return date.getFullYear();
-    }
+  protected keyFromDate(date: DateTime): Year {
+    return date.year;
+  }
 
-    protected makeCollection(key: Year): CalendarCollectionYear<T> {
-        return new CalendarCollectionYear<T>(key);
-    }
+  protected makeCollection(key: Year): CalendarCollectionYear<T> {
+    return new CalendarCollectionYear<T>(key);
+  }
 
-    public addAll(values: T[], getDate: getDateFromValue<T>) {
-        values.forEach((value) => {
-            this.add(value, getDate(value));
-        });
-    }
+  public addAll(values: T[], getDate: getDateTimeFromValue<T>) {
+    values.forEach((value) => {
+      this.add(value, getDate(value));
+    });
+  }
 
-    public flattenedMonths(): CalendarFlattenedMonth<T>[] {
-        const ordered = this.ordered().map((year) => year.flattenedMonths());
-        return ValueUtility.reduceArray(ordered);
-    }
+  public flattenedMonths(): CalendarFlattenedMonth<T>[] {
+    const ordered = this.ordered().map((year) => year.flattenedMonths());
+    return ValueUtility.reduceArray(ordered);
+  }
 
 }
 
 export class CalendarCollectionYear<T> extends AbstractDateCollection<Month, CalendarCollectionMonth<T>, T> {
 
-    constructor(public readonly year: Year) {
-        super();
-    }
+  constructor(public readonly year: Year) {
+    super();
+  }
 
-    protected keyFromDate(date: Date): Year {
-        return date.getMonth();
-    }
+  protected keyFromDate(date: DateTime): Month {
+    return date.month;
+  }
 
-    protected makeCollection(key: Month): CalendarCollectionMonth<T> {
-        return new CalendarCollectionMonth<T>(key);
-    }
+  protected makeCollection(key: Month): CalendarCollectionMonth<T> {
+    return new CalendarCollectionMonth<T>(key);
+  }
 
-    public flattenedMonths(): CalendarFlattenedMonth<T>[] {
-        return this.ordered().map((month) => new CalendarFlattenedMonth<T>(this.year, month));
-    }
+  public flattenedMonths(): CalendarFlattenedMonth<T>[] {
+    return this.ordered().map((month) => new CalendarFlattenedMonth<T>(this.year, month));
+  }
 
 }
 
 export class CalendarCollectionMonth<T> extends AbstractDateCollection<Day, CalendarCollectionDay<T>, T> {
 
-    constructor(public readonly month: Month) {
-        super();
-    }
+  constructor(public readonly month: Month) {
+    super();
+  }
 
-    protected keyFromDate(date: Date): Day {
-        return date.getDate();
-    }
+  protected keyFromDate(date: DateTime): Day {
+    return date.day;
+  }
 
-    protected makeCollection(key: Month): CalendarCollectionDay<T> {
-        return new CalendarCollectionDay<T>(key);
-    }
+  protected makeCollection(key: Month): CalendarCollectionDay<T> {
+    return new CalendarCollectionDay<T>(key);
+  }
 
-    public allDayValues(): T[] {
-        return ValueUtility.reduceArray(this.ordered().map((x) => x.orderedArray()));
-    }
+  public allDayValues(): T[] {
+    return ValueUtility.reduceArray(this.ordered().map((x) => x.orderedArray()));
+  }
 
 }
 
 export class DateValue<T> {
 
-    constructor(public readonly date: Date, public readonly value: T) { }
+  constructor(public readonly date: DateTime, public readonly value: T) { }
 
 }
 
 export class CalendarCollectionDay<T> implements DateCollection<T> {
 
-    private _sorted = true;
-    private _collection: DateValue<T>[] = [];
+  private _sorted = true;
+  private _collection: DateValue<T>[] = [];
 
-    constructor(public readonly day: Day) { }
+  constructor(public readonly day: Day) { }
 
-    public orderedArray(): T[] {
-        this.sort();
-        return this._collection.map((x) => x.value);
+  public orderedArray(): T[] {
+    this.sort();
+    return this._collection.map((x) => x.value);
+  }
+
+  public sort(): void {
+    if (!this._sorted) {
+      this._collection.sort(DateTimeUtility.sortDateTimeFn(x => x.date, SortDirection.Descending));
+      this._sorted = true;
     }
+  }
 
-    public sort(): void {
-        if (!this._sorted) {
-            this._collection.sort((a, b) => {
-                // Sort in descending order.
-                return -(JSDateUtility.compareDates(a.date, b.date));
-            });
-
-            this._sorted = true;
-        }
-    }
-
-    public add(value: T, date: Date) {
-        this._collection.push(new DateValue(date, value));
-        this._sorted = false;
-    }
+  public add(value: T, date: DateTime) {
+    this._collection.push(new DateValue(date, value));
+    this._sorted = false;
+  }
 
 }
 
@@ -578,107 +572,107 @@ export class JSDateUtility {
     }
   }
 
-    // MARK: Dates
-    static getRelativeDateString(date: Date, today: string = 'Today'): string {
-      if (JSDateUtility.isWithinTheLastWeek(date)) {
-          if (JSDateUtility.isToday(date)) {
-              return today;
-          } else {
-              const day = date.getDay();
-              return this.nameForDay(day);
-          }
+  // MARK: Dates
+  static getRelativeDateString(date: Date, today: string = 'Today'): string {
+    if (JSDateUtility.isWithinTheLastWeek(date)) {
+      if (JSDateUtility.isToday(date)) {
+        return today;
       } else {
-          return JSDateUtility.getShortDateString(date);
+        const day = date.getDay();
+        return this.nameForDay(day);
       }
+    } else {
+      return JSDateUtility.getShortDateString(date);
+    }
   }
 
   static nameForMonth(month: Month): string {
-      return Month[month];
+    return Month[month];
   }
 
   static nameForDay(day: DayOfWeek): string {
-      return DayOfWeek[day];
+    return DayOfWeek[day];
   }
 
   static getDateFromDatedModel(model: DatedModel) {
-      return model.date;
+    return model.date;
   }
 
   static makeCalendarCollection<T extends DatedModel>(values: T[]): CalendarCollection<T> {
-      const calendar = new CalendarCollection<T>();
-      calendar.addAll(values, this.getDateFromDatedModel);
-      return calendar;
+    const calendar = new CalendarCollection<T>();
+    calendar.addAll(values, (x) => DateTimeUtility.dateTimeFromInput(this.getDateFromDatedModel(x)));
+    return calendar;
   }
 
   // MARK: Times
   static makeTimePeriodString(time: number, notAvailableString: string | null = 'Unavailable'): string {
-      time = JSDateUtility.roundDownToMinute(time);
+    time = JSDateUtility.roundDownToMinute(time);
 
-      if (time === Infinity) {
-          return notAvailableString;
-      }
+    if (time === Infinity) {
+      return notAvailableString;
+    }
 
-      let timeNumber: number;
-      let timeString: string;
+    let timeNumber: number;
+    let timeString: string;
 
-      const ago = (time < 0);
+    const ago = (time < 0);
 
-      if (ago) {
-          time = -time;
-      }
+    if (ago) {
+      time = -time;
+    }
 
-      if (time < JSDateUtility.TIME_IN_3_DAYS) {
+    if (time < JSDateUtility.TIME_IN_3_DAYS) {
 
-          // Less than 3 days, show hours or less.
-          if (time < JSDateUtility.TIME_IN_3_HOURS) {
+      // Less than 3 days, show hours or less.
+      if (time < JSDateUtility.TIME_IN_3_HOURS) {
 
-              if (time < JSDateUtility.TIME_IN_MINUTE) {
+        if (time < JSDateUtility.TIME_IN_MINUTE) {
 
-                  // Less than 1 Minute, show seconds.
-                  timeNumber = time / JSDateUtility.TIME_IN_SECOND;
-                  timeString = 'Second';
-              } else {
+          // Less than 1 Minute, show seconds.
+          timeNumber = time / JSDateUtility.TIME_IN_SECOND;
+          timeString = 'Second';
+        } else {
 
-                  // Less than 3 hours, show minutes.
-                  timeNumber = time / JSDateUtility.TIME_IN_MINUTE;
-                  timeString = 'Minute';
-              }
-          } else {
-
-              // More than 3 hours, show hours.
-              timeNumber = time / JSDateUtility.TIME_IN_HOUR;
-              timeString = 'Hour';
-          }
-      } else if (time < JSDateUtility.TIME_IN_90_DAYS) {
-
-          // Less than 90 days.
-          timeNumber = time / JSDateUtility.TIME_IN_DAY;
-          timeString = 'Day';
+          // Less than 3 hours, show minutes.
+          timeNumber = time / JSDateUtility.TIME_IN_MINUTE;
+          timeString = 'Minute';
+        }
       } else {
 
-          timeNumber = time / JSDateUtility.TIME_IN_WEEK;
-          timeString = 'Week';
+        // More than 3 hours, show hours.
+        timeNumber = time / JSDateUtility.TIME_IN_HOUR;
+        timeString = 'Hour';
       }
+    } else if (time < JSDateUtility.TIME_IN_90_DAYS) {
 
-      if (timeNumber !== 1) {
-          timeString = timeString + 's';
-      }
+      // Less than 90 days.
+      timeNumber = time / JSDateUtility.TIME_IN_DAY;
+      timeString = 'Day';
+    } else {
 
-      if (ago) {
-          timeString = timeString + ' Ago';
-      }
+      timeNumber = time / JSDateUtility.TIME_IN_WEEK;
+      timeString = 'Week';
+    }
 
-      return timeNumber.toFixed(1) + ' ' + timeString;
+    if (timeNumber !== 1) {
+      timeString = timeString + 's';
+    }
+
+    if (ago) {
+      timeString = timeString + ' Ago';
+    }
+
+    return timeNumber.toFixed(1) + ' ' + timeString;
   }
 
   static roundDownToMinute(time: number): number {
-      const minutes = Math.floor(time / JSDateUtility.TIME_IN_MINUTE);
-      return minutes * JSDateUtility.TIME_IN_MINUTE;
+    const minutes = Math.floor(time / JSDateUtility.TIME_IN_MINUTE);
+    return minutes * JSDateUtility.TIME_IN_MINUTE;
   }
 
   static roundDownToSecond(time: number): number {
-      const seconds = Math.floor(time / JSDateUtility.TIME_IN_SECOND);
-      return seconds * JSDateUtility.TIME_IN_SECOND;
+    const seconds = Math.floor(time / JSDateUtility.TIME_IN_SECOND);
+    return seconds * JSDateUtility.TIME_IN_SECOND;
   }
 
 }

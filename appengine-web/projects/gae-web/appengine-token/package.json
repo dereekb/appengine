@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "peerDependencies": {
     "rxjs": "*",
+    "luxon": "*",
     "make-error": "*",
     "@auth0/angular-jwt": "*",
     "@gae-web/appengine-utility": "*",

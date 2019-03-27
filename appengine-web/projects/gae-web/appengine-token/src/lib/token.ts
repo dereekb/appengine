@@ -1,7 +1,8 @@
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { NumberModelKey } from '@gae-web/appengine-utility';
+import { NumberModelKey, DateTimeUtility } from '@gae-web/appengine-utility';
 import { StringModelKey } from '@gae-web/appengine-utility';
 import { HttpResponse } from '@angular/common/http';
+import { DateTime } from 'luxon';
 
 export type LoginId = NumberModelKey;
 export type LoginPointerId = StringModelKey;
@@ -126,12 +127,13 @@ export abstract class DecodedLoginToken {
     return this._raw;
   }
 
-  get expiration(): Date {
-    return LoginTokenUtility.JWT_HELPER.getTokenExpirationDate(this._encoded);
+  get expiration(): DateTime {
+    const date: Date = LoginTokenUtility.JWT_HELPER.getTokenExpirationDate(this._encoded);
+    return DateTimeUtility.dateTimeFromInput(date);
   }
 
   get isExpired(): boolean {
-    return this.expiration.getTime() < new Date().getTime();
+    return this.expiration < DateTime.local();
   }
 
   get login(): LoginId | undefined {

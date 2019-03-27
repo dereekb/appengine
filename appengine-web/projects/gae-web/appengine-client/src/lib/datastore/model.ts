@@ -21,9 +21,7 @@ export interface SearchableDatabaseModel extends UniqueModel {
 }
 
 // MARK: Database
-export abstract class AbstractOwnedDatabaseModel implements OwnedDatabaseModel, MutableOwnedModel {
-
-  private _ownerId: OwnerId;
+export abstract class AbstractDatabaseModel {
 
   // MARK: Abstract
   abstract get modelKey(): ModelKey;
@@ -31,6 +29,12 @@ export abstract class AbstractOwnedDatabaseModel implements OwnedDatabaseModel, 
   get key() {
     return this.modelKey;
   }
+
+}
+
+export abstract class AbstractOwnedDatabaseModel extends AbstractDatabaseModel implements MutableOwnedModel {
+
+  private _ownerId: OwnerId;
 
   // MARK: Ownership
   get ownerId() {

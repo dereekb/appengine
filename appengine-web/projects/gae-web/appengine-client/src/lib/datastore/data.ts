@@ -3,16 +3,17 @@ import { DataConverterUtility } from '@gae-web/appengine-utility';
 import { ModelKey, ModelUtility, MutableUniqueModel } from '@gae-web/appengine-utility';
 import { OwnerId, SearchId, AbstractSearchableDatabaseModel, AbstractOwnedDatabaseModel } from './model';
 import { AbstractClientModelSerializer } from '@gae-web/appengine-api';
+import { DateTime } from 'luxon';
 
 export abstract class DatedModelData {
 
     public date?: ISO8601DateString;
 
-    public getDateValue(): Date | undefined {
+    public getDateValue(): DateTime | undefined {
         return DataConverterUtility.dateFromString(this.date);
     }
 
-    public setDateValue(date: Date | undefined): void {
+    public setDateValue(date: DateTime | undefined): void {
         this.date = DataConverterUtility.dateToString(date);
     }
 

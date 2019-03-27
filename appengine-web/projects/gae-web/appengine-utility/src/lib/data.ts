@@ -1,4 +1,5 @@
-import { ISO8601DateString } from './date';
+import { FullDateInput, ISO8601DateString, DateTimeUtility } from './date';
+import { DateTime } from 'luxon';
 
 /**
  * Interface for data that can be converted to JSON.
@@ -22,17 +23,17 @@ export class DataConverterUtility {
   }
 
   // MARK: Date
-  static dateToString(date: Date | undefined): ISO8601DateString | undefined {
+  static dateToString(date: FullDateInput | undefined): ISO8601DateString | undefined {
     if (date) {
-      return date.toISOString();
+      return DateTimeUtility.dateTimeISOFromInput(date);
     } else {
       return undefined;
     }
   }
 
-  static dateFromString(isoDate: ISO8601DateString | undefined): Date | undefined {
+  static dateFromString(isoDate: ISO8601DateString | undefined): DateTime | undefined {
     if (isoDate) {
-      return new Date(isoDate);
+      return DateTimeUtility.dateTimeFromInput(isoDate);
     } else {
       return undefined;
     }

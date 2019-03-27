@@ -1,9 +1,10 @@
 import { TokenType, DecodedLoginIncludedToken, LoginTokenPair, LoginId, LoginPointerId, EncodedToken } from './token';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { DateTime } from 'luxon';
 
 import {
-  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, StorageUtility
+  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, StorageUtility, ISO8601DateString, DateTimeUtility
 } from '@gae-web/appengine-utility';
 
 export class StoredTokenUnavailableError extends DataDoesNotExistError {
@@ -97,7 +98,7 @@ export interface StoredTokenJSON {
   login: LoginId;     // Login ID
   pointer: LoginPointerId;   // Pointer ID, generally used as the key.
   encoded: EncodedToken;   // Encoded Token
-  expires: string;   // Expiration Date
+  expires: ISO8601DateString;   // Expiration Time ISO
 }
 
 /**
@@ -110,7 +111,7 @@ export class StoredToken {
   public login: LoginId;     // Login ID
   public pointer: LoginPointerId;   // Pointer ID, generally used as the key.
   public encoded: EncodedToken;   // Encoded Token
-  public expires: Date;      // Expiration Date
+  public expires: DateTime;      // Expiration Time
 
   public static reviver(key: string, value: any): any {
     return key === '' ? StoredToken.fromJSON(value) : value;
@@ -137,7 +138,7 @@ export class StoredToken {
   }
 
   get isExpired(): boolean {
-    return this.expires.getTime() < new Date().getTime();
+    return this.expires < DateTime.local();
   }
 
   // MARK: Clone
@@ -153,7 +154,7 @@ export class StoredToken {
 
   public copyJsonData(data: StoredTokenJSON) {
     Object.assign(this, data, {
-      expires: new Date(data.expires)
+      expires: DateTimeUtility.dateTimeFromInput(data.expires)
     });
   }
 
