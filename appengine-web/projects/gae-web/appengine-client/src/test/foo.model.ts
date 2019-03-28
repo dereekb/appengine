@@ -1,5 +1,5 @@
 import { AbstractDatabaseModel, AbstractDatabaseModelSerializer, DatabaseModelData } from '@gae-web/appengine-client';
-import { DatedModel, NumberModelKey, AssertValidNumberModelKey, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
+import { DatedModel, NumberModelKey, ValidNumberModelKey, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { DateTime } from 'luxon';
 
 /**
@@ -24,7 +24,7 @@ export class Foo extends AbstractDatabaseModel implements DatedModel {
     return this._key;
   }
 
-  @AssertValidNumberModelKey()
+  @ValidNumberModelKey()
   set key(key: NumberModelKey) {
     this._key = key;
   }

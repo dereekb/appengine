@@ -1,5 +1,6 @@
 import { ValueUtility, OneOrMore, ObjectAttribute } from './value';
 import { Keyed } from './collection';
+import { PropertyDescriptorUtility, DescriptorAssertionOptions } from './assert';
 
 // MARK: ModelKey
 /**
@@ -348,4 +349,32 @@ export class ModelUtility {
     }
   }
 
+}
+
+// MARK: Assertions
+export function AssertValidModelKey(options?: DescriptorAssertionOptions) {
+  const DEFAULT_OPTIONS = { message: 'Value was not a valid ModelKey.' };
+  return PropertyDescriptorUtility.makePropertyDescriptorAssertion<ModelKey>((value: ModelKey) => {
+    return ModelUtility.isValidModelKey(value);
+  }, options, DEFAULT_OPTIONS);
+}
+
+/**
+ * Modifies the input to assert values set are NumberModelKeys, and casts them to numbers.
+ */
+export function ValidNumberModelKey(options?: DescriptorAssertionOptions) {
+  const DEFAULT_OPTIONS = {
+    message: 'Value was not a valid NumberModelKey.',
+    map: (x) => Number(x)
+  };
+  return PropertyDescriptorUtility.makePropertyDescriptorAssertion<NumberModelKey>((value: NumberModelKey) => {
+    return ModelUtility.isValidNumberModelKey(value);
+  }, options, DEFAULT_OPTIONS);
+}
+
+export function ValidStringModelKey(options?: DescriptorAssertionOptions) {
+  const DEFAULT_OPTIONS = { message: 'Value was not a valid StringModelKey.' };
+  return PropertyDescriptorUtility.makePropertyDescriptorAssertion<StringModelKey>((value: StringModelKey) => {
+    return ModelUtility.isValidStringModelKey(value);
+  }, options, DEFAULT_OPTIONS);
 }

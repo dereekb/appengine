@@ -1,12 +1,21 @@
 import { BaseError } from 'make-error';
-import { ModelUtility, NumberModelKey, StringModelKey, ModelKey } from './model';
 
 /**
  * Functions for asserting correctness.
  */
-export interface AssertionOptions {
-
+export interface DescriptorAssertionOptions {
   message?: string;
+}
+
+/**
+ * DescriptorAssertionOptions extension that also maps one value to another.
+ */
+export interface MapDescriptorAssertionOptions<T> extends DescriptorAssertionOptions {
+
+  /**
+   * Maps the value after it has been validated.
+   */
+  map?: (value: T) => T;
 
 }
 
@@ -15,7 +24,7 @@ export interface AssertionIssue {
   target: object;
   propertyKey: string;
 
-  options?: AssertionOptions;
+  options?: DescriptorAssertionOptions;
 
 }
 
@@ -60,17 +69,22 @@ export class AssertionIssueHandler {
 
 export let ASSERTION_HANDLER: AssertionIssueHandler = new AssertionIssueHandler();
 
+// MARK: Generic
+export function Assert<T>(assertion: AccessorValueAssertion<T>, options?: MapDescriptorAssertionOptions<T>) {
+  return PropertyDescriptorUtility.makePropertyDescriptorAssertion<T>(assertion, options);
+}
+
 // MARK: Numbers
-export function AssertMin(min: number, options?: AssertionOptions) {
+export function AssertMin(min: number, options?: DescriptorAssertionOptions) {
   const DEFAULT_OPTIONS = { message: 'Value was less than the minimum "' + min + '".' };
-  return makePropertyDescriptorAssertion<number>((value: number) => {
+  return PropertyDescriptorUtility.makePropertyDescriptorAssertion<number>((value: number) => {
     return value >= min;
   }, options, DEFAULT_OPTIONS);
 }
 
-export function AssertMax(max: number, options?: AssertionOptions) {
+export function AssertMax(max: number, options?: DescriptorAssertionOptions) {
   const DEFAULT_OPTIONS = { message: 'Value was greater than the maximum "' + max + '".' };
-  return makePropertyDescriptorAssertion<number>((value: number) => {
+  return PropertyDescriptorUtility.makePropertyDescriptorAssertion<number>((value: number) => {
     return value <= max;
   }, options, DEFAULT_OPTIONS);
 }
@@ -85,53 +99,54 @@ type SetAccessorFunction<T> = (T) => void;
  */
 export type AccessorValueAssertion<T> = (T) => boolean;
 
-export function Assert<T>(assertion: AccessorValueAssertion<T>, options?: AssertionOptions) {
-  return makePropertyDescriptorAssertion<T>(assertion, options);
+export interface SetValueInterceptorFunctionInput<T> {
+  target: object;
+  propertyKey: string;
+  descriptor: TypedPropertyDescriptor<T>;
+  setValue: (value: T) => void;
 }
 
-export function makePropertyDescriptorAssertion<T>(assertValueFn: AccessorValueAssertion<T>, options?: AssertionOptions, defaultOptions?: AssertionOptions) {
+export type SetValueInterceptorFunctionFactory<T> = (input: SetValueInterceptorFunctionInput<T>) => ((T) => void);
 
-  // Build options
-  options = {
-    ...defaultOptions,
-    ...options
-  };
+export class PropertyDescriptorUtility {
 
-  return (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<T>) => {
-    if (descriptor.set) {
-      const setValue: SetAccessorFunction<T> = descriptor.set;
+  static makePropertyDescriptorAssertion<T>(assertValueFn: AccessorValueAssertion<T>, options?: MapDescriptorAssertionOptions<T>, defaultOptions?: MapDescriptorAssertionOptions<T>) {
 
-      // Override set function with assertion.
-      descriptor.set = function(value: T) {
+    // Build options
+    options = {
+      ...defaultOptions,
+      ...options
+    };
+
+    return this.makeSetPropertyDescriptorInterceptor<T>(({ target, propertyKey, setValue }) => {
+      const map = options.map || ((x) => x);
+
+      return function (value: T) {
         if (assertValueFn(value)) {
-          setValue.call(this, value);
+          const mappedValue = map(value);
+          setValue.call(this, mappedValue);
         } else {
           const error: AssertionIssue = { target, propertyKey, options };
           ASSERTION_HANDLER.handle(error);
         }
       };
-    }
-  };
-}
+    });
+  }
 
-// MARK: Assertions
-export function AssertValidModelKey(options?: AssertionOptions) {
-  const DEFAULT_OPTIONS = { message: 'Value was not a valid ModelKey.' };
-  return makePropertyDescriptorAssertion<ModelKey>((value: ModelKey) => {
-    return ModelUtility.isValidModelKey(value);
-  }, options, DEFAULT_OPTIONS);
-}
+  static makeSetPropertyDescriptorInterceptor<T>(makeSetValueInterceptorFn: SetValueInterceptorFunctionFactory<T>) {
+    const interceptor = (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<T>) => {
+      if (descriptor.set) {
+        const setValue: SetAccessorFunction<T> = descriptor.set;
 
-export function AssertValidNumberModelKey(options?: AssertionOptions) {
-  const DEFAULT_OPTIONS = { message: 'Value was not a valid NumberModelKey.' };
-  return makePropertyDescriptorAssertion<NumberModelKey>((value: NumberModelKey) => {
-    return ModelUtility.isValidNumberModelKey(value);
-  }, options, DEFAULT_OPTIONS);
-}
-
-export function AssertValidStringModelKey(options?: AssertionOptions) {
-  const DEFAULT_OPTIONS = { message: 'Value was not a valid StringModelKey.' };
-  return makePropertyDescriptorAssertion<StringModelKey>((value: StringModelKey) => {
-    return ModelUtility.isValidStringModelKey(value);
-  }, options, DEFAULT_OPTIONS);
+        // Override set function with assertion.
+        descriptor.set = makeSetValueInterceptorFn({
+          target,
+          propertyKey,
+          descriptor,
+          setValue
+        });
+      }
+    };
+    return interceptor;
+  }
 }

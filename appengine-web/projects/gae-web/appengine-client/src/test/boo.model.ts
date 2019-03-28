@@ -1,5 +1,5 @@
 import { AbstractDatabaseModel } from '@gae-web/appengine-client';
-import { DatedModel, StringModelKey, AssertValidStringModelKey, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
+import { DatedModel, StringModelKey, ValidStringModelKey, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { DateTime } from 'luxon';
 
 /**
@@ -23,7 +23,7 @@ export class BooTestModel extends AbstractDatabaseModel implements DatedModel {
     return this._key;
   }
 
-  @AssertValidStringModelKey()
+  @ValidStringModelKey()
   set key(key: StringModelKey) {
     this._key = key;
   }
