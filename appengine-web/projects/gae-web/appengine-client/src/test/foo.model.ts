@@ -1,6 +1,8 @@
 import { AbstractDatabaseModel, AbstractDatabaseModelSerializer, DatabaseModelData } from '@gae-web/appengine-client';
 import { DatedModel, NumberModelKey, ValidNumberModelKey, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { DateTime } from 'luxon';
+import { TestReadService } from './model';
+import { FOO_MODEL_TYPE } from './foo.service';
 
 /**
  * Test model Foo that has a number identifier and some properties.
@@ -90,6 +92,15 @@ export class FooSerializer
 
   protected makeDto(): FooData {
     return new FooData();
+  }
+
+}
+
+// MARK: Services
+export class FooReadService extends TestReadService<Foo> {
+
+  constructor() {
+    super(FOO_MODEL_TYPE, (x) => new Foo(x as NumberModelKey));
   }
 
 }
