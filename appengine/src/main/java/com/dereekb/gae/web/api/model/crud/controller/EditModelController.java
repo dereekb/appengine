@@ -46,9 +46,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	public static final String KEYS_PARAM = ReadController.KEYS_PARAM;
 	public static final String RETURN_MODELS_PARAM = "returnModels";
 
-	public static final Integer DEFAULT_MAX_ELEMENTS = ObjectifyTransactionUtility.MAX_TRANSACTION_ELEMENTS;
-
-	private Integer maxElements = DEFAULT_MAX_ELEMENTS;
+	public static final Integer MAX_ATOMIC_EDIT_SIZE = ObjectifyTransactionUtility.MAX_TRANSACTION_ELEMENTS;
 
 	private EditModelControllerDelegate<T> delegate;
 	private EditModelControllerConversionDelegate<T, I> conversionDelegate;
@@ -90,7 +88,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	public ApiResponse create(@Valid @RequestBody ApiCreateRequest<I> request) {
 		ApiResponse response = null;
 
-		TooManyTemplatesException.assertTemplatesCount(request.getData(), this.maxElements);
+		TooManyTemplatesException.assertTemplatesCount(request.getData(), MAX_ATOMIC_EDIT_SIZE);
 
 		try {
 			CreateRequest<T> createRequest = this.conversionDelegate.convert(request);
@@ -115,7 +113,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 	public ApiResponse update(@Valid @RequestBody ApiUpdateRequest<I> request) {
 		ApiResponse response = null;
 
-		TooManyTemplatesException.assertTemplatesCount(request.getData(), this.maxElements);
+		TooManyTemplatesException.assertTemplatesCount(request.getData(), MAX_ATOMIC_EDIT_SIZE);
 
 		try {
 			UpdateRequest<T> updateRequest = this.conversionDelegate.convert(request);
@@ -148,7 +146,7 @@ public abstract class EditModelController<T extends UniqueModel, I> {
 		ApiResponse response = null;
 
 		List<String> keys = request.getData();
-		TooManyRequestKeysException.assertKeysCount(keys, this.maxElements);
+		TooManyRequestKeysException.assertKeysCount(keys, MAX_ATOMIC_EDIT_SIZE);
 
 		try {
 			DeleteRequest deleteRequest = this.conversionDelegate.convert(request);

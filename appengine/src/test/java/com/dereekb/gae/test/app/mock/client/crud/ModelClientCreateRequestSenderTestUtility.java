@@ -110,7 +110,7 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 
 	public void testMockCreateTooManyRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
 
-		int moreThanMax = EditModelController.DEFAULT_MAX_ELEMENTS + 5;
+		int moreThanMax = EditModelController.MAX_ATOMIC_EDIT_SIZE + 5;
 
 		List<T> tooManyTemplates = this.testModelGenerator.generate(moreThanMax);
 		CreateRequest<T> createRequest = new CreateRequestImpl<T>(tooManyTemplates);

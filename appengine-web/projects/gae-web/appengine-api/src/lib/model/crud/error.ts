@@ -16,6 +16,17 @@ export class ClientRequestError extends BaseError {
 
 }
 
+/**
+ * Thrown when an atomic request is too big.
+ */
+export class LargeAtomicRequestError extends BaseError {
+
+    constructor(message: string = 'The atomic request is too large.') {
+        super(message);
+    }
+
+}
+
 // MARK: Atomic Error
 export const MISSING_REQUIRED_RESOURCE_ERROR_CODE = 'MISSING_RESOURCE';
 

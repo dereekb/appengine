@@ -122,8 +122,9 @@ public abstract class AbstractSecuredClientModelRequestSender<R, S>
 	 * @param request
 	 *            Input request type. Never {@code null}.
 	 * @return {@link ClientApiResponse}. Never {@code null}.
+	 * @throws ClientRequestFailureException thrown if the request is invalid.
 	 */
-	public abstract ClientRequest buildClientRequest(R request);
+	public abstract ClientRequest buildClientRequest(R request) throws ClientRequestFailureException;
 
 	/**
 	 * Serializes response data into a new object.

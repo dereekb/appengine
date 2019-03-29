@@ -1,6 +1,7 @@
 package com.dereekb.gae.client.api.model.crud.builder.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
@@ -9,6 +10,7 @@ import com.dereekb.gae.client.api.model.crud.request.impl.ClientDeleteRequestImp
 import com.dereekb.gae.client.api.model.crud.response.ClientDeleteResponse;
 import com.dereekb.gae.client.api.model.crud.services.ClientDeleteService;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
+import com.dereekb.gae.client.api.model.exception.LargeAtomicRequestException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
@@ -25,6 +27,7 @@ import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConvert
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
 import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
@@ -94,7 +97,16 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 
 	// MARK: AbstractSecuredClientModelRequestSender
 	@Override
-	public ClientRequest buildClientRequest(ClientDeleteRequest request) {
+	public ClientRequest buildClientRequest(ClientDeleteRequest request) throws LargeAtomicRequestException {
+
+		// Assert max atomic request size.
+		if (request.getOptions().isAtomic()) {
+			List<ModelKey> modelKeys = IteratorUtility.iterableToList(request.getTargetKeys());
+
+			if (modelKeys.size() > MAX_ATOMIC_EDIT_SIZE) {
+				throw new LargeAtomicRequestException();
+	 		}
+		}
 
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.DELETE);

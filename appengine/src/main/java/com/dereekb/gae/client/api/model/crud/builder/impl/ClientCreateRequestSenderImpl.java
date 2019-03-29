@@ -12,6 +12,7 @@ import com.dereekb.gae.client.api.model.crud.response.SerializedClientCreateApiR
 import com.dereekb.gae.client.api.model.crud.services.ClientCreateService;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
+import com.dereekb.gae.client.api.model.exception.LargeAtomicRequestException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
 import com.dereekb.gae.client.api.service.request.ClientRequestUrl;
@@ -31,6 +32,7 @@ import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConvert
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,7 +99,16 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	}
 
 	@Override
-	public ClientRequest buildClientRequest(CreateRequest<T> request) {
+	public ClientRequest buildClientRequest(CreateRequest<T> request) throws LargeAtomicRequestException {
+
+		// Assert max atomic request size.
+		if (request.getOptions().isAtomic()) {
+			List<T> templates = IteratorUtility.iterableToList(request.getTemplates());
+
+			if (templates.size() > MAX_ATOMIC_EDIT_SIZE) {
+				throw new LargeAtomicRequestException();
+	 		}
+		}
 
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.POST);
