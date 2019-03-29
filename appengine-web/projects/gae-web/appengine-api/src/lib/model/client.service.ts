@@ -121,7 +121,13 @@ export abstract class AbstractClientModelService<T, O> extends AbstractClientSer
 export class ClientModelUtility {
 
     public static serializeKeysFromError(error: ApiResponseError): ModelKey[] {
-        return ClientModelUtility.serializeKeys(error.data);
+        let data = error.data as any;
+
+        if (data.resources) {
+            data = data.resources;
+        }
+
+        return ClientModelUtility.serializeKeys(data);
     }
 
     public static serializeKeysFromResponse(data: ApiResponseData): ModelKey[] {
@@ -130,7 +136,7 @@ export class ClientModelUtility {
 
     public static serializeKeys(json: any): ModelKey[] {
         if (Array.isArray(json)) {
-            return json.map((x) => x as ModelKey);
+            return json as ModelKey[];
         } else {
             return [json];
         }
@@ -157,8 +163,10 @@ export class ClientModelResponse<T> extends RawClientResponseAccessor {
 
             if (data) {
                 models = this._service.serializedModelsFromResponse(data);
-            } else {
+            } else if (this.raw.success) {
                 throw new Error('No model data was returned where expected.');
+            } else {
+                models = [];
             }
 
             this._models = models;

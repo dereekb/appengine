@@ -1,6 +1,6 @@
-import { AbstractDatabaseModel } from '@gae-web/appengine-client';
 import { DatedModel, StringModelKey, ValidStringModelKey, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { DateTime } from 'luxon';
+import { AbstractDatabaseModel } from '../lib/datastore/model';
 
 /**
  * Test model Foo that has a number identifier and some properties.

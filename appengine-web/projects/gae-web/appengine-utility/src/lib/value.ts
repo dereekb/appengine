@@ -740,6 +740,16 @@ export class ValueUtility {
     return Math.ceil(value / step) * step;
   }
 
+  static range(from: number = 0, to: number): number[] {
+    const range: number[] = [];
+
+    for (let i = from; i < to; i += 1) {
+      range.push(i);
+    }
+
+    return range;
+  }
+
   /**
    * Attempts to convert an input String or Array of Strings to a map of true or false.
    * @deprecated

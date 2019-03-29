@@ -1,11 +1,11 @@
-import { ApiRouteConfiguration } from '@gae-web/appengine-api';
+import { FOO_MODEL_TYPE, ApiRouteConfiguration } from '@gae-web/appengine-api';
 import { HttpClient } from '@angular/common/http';
 import {
-  FOO_MODEL_TYPE, FooClientCreateService, FooClientReadService, FooClientUpdateService, FooClientDeleteService,
+  FooClientCreateService, FooClientReadService, FooClientUpdateService, FooClientDeleteService,
   FooClientQueryService, FooServiceWrapper, FooReadService, FooQueryService, FooDefaultQueryConfiguration,
   FooCachedKeySourceCache, FooCreateService, FooUpdateService, FooDeleteService, FooReadSourceFactory
 } from './foo.service';
-import { FooSerializer } from './foo.model';
+import { FooSerializer } from '../../../appengine-api/src/test/foo.model';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ClientModule } from '../lib/client.module';
 import { ModelServiceWrapperSet } from '../lib/service/model.service';

@@ -117,11 +117,32 @@ export class ClientApiResponse extends ClientResponse {
 
 // MARK: Error
 /**
+ * Base error associated with client responses.
+ */
+export class ClientResponseError extends BaseError {
+
+    constructor(message: string = 'Error with the response.') {
+        super(message);
+    }
+
+}
+
+/**
+ * Thrown if the response was missing some expected data.
+ */
+export class MissingExpectedResponseData extends ClientResponseError {
+
+    constructor(message: string = 'The response was missing expected data.') {
+        super(message);
+    }
+}
+
+/**
  * Generic throwable error.
  */
-export class ClientApiResponseError extends BaseError {
+export class ClientApiResponseError extends ClientResponseError {
 
-    constructor(public readonly response: ClientApiResponse, message: string = 'Request returned an error.') {
+    constructor(public readonly response: ClientApiResponse, message: string = 'Response returned an error.') {
         super(message);
     }
 

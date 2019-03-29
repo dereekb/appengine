@@ -1,11 +1,9 @@
 import { ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api';
-import { Foo, FooData } from './foo.model';
-import {
-  CachedKeySourceCache, ModelServiceWrapper, ModelQueryService, ModelCreateService,
-  ModelReadService, ModelUpdateService, ModelDeleteService, ReadSourceFactory, QuerySourceConfiguration, KeyedPredictiveOrderedQueryDelegate, KeyQuerySource
-} from '@gae-web/appengine-client';
-
-export const FOO_MODEL_TYPE = 'foo';
+import { Foo, FooData } from '../../../appengine-api/src/test/foo.model';
+import { ModelServiceWrapper, ModelCreateService } from '../lib/service/model.service';
+import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate } from '../lib/service/query.service';
+import { ModelReadService, ModelUpdateService, ModelDeleteService } from '../lib/service/crud.service';
+import { ReadSourceFactory, QuerySourceConfiguration, CachedKeySourceCache, KeyQuerySource } from '../lib/service/source';
 
 export class FooClientQueryService extends ClientQueryService<Foo, FooData> { }
 

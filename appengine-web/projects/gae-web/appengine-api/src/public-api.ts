@@ -2,6 +2,8 @@
  * Public API Surface of appengine-api
  */
 
+export * from './lib/datastore/data';
+export * from './lib/datastore/model';
 export * from './lib/auth/auth.utility';
 export * from './lib/auth/error';
 export * from './lib/auth/oauth.service';
@@ -27,3 +29,9 @@ export * from './lib/model/client';
 export * from './lib/api.config';
 export * from './lib/api.module';
 export * from './lib/api';
+
+// Testing
+export * from './test/boo.model';
+export * from './test/foo.model';
+export * from './test/model';
+export * from './test/test';

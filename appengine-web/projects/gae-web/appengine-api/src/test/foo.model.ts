@@ -1,8 +1,10 @@
-import { AbstractDatabaseModel, AbstractDatabaseModelSerializer, DatabaseModelData } from '@gae-web/appengine-client';
 import { DatedModel, NumberModelKey, ValidNumberModelKey, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { DateTime } from 'luxon';
 import { TestReadService } from './model';
-import { FOO_MODEL_TYPE } from './foo.service';
+import { AbstractDatabaseModel } from '../lib/datastore/model';
+import { DatabaseModelData, AbstractDatabaseModelSerializer } from '../lib/datastore/data';
+
+export const FOO_MODEL_TYPE = 'foo';
 
 /**
  * Test model Foo that has a number identifier and some properties.
@@ -52,6 +54,10 @@ export class FooData extends DatabaseModelData {
     return Object.assign(data, json);
   }
 
+  constructor(key?: ModelKey) {
+    super(key);
+  }
+
   // MARK: JSON
   public toJSON(): any {
     return Object.assign({}, this);
@@ -72,7 +78,6 @@ export class FooSerializer
 
   public convertToModel(dto: FooData): Foo {
     const model = super.convertToModel(dto);
-
     const date = dto.getDateValue();
 
     if (date) {

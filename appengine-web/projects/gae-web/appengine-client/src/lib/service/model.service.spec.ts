@@ -1,8 +1,6 @@
 import 'jasmine-expect';
-import { Foo, FooReadService } from '../../test/foo.model';
-import { FOO_MODEL_TYPE } from '../../test/foo.service';
 import { ModelServiceWrapper, ModelServiceWrapperSet, ModelWrapperInitializedError } from './model.service';
-import { ReadService, ReadRequest, ReadResponse } from '@gae-web/appengine-api';
+import { ReadService, ReadRequest, ReadResponse, Foo, FOO_MODEL_TYPE, FooReadService } from '@gae-web/appengine-api';
 import { Observable, of } from 'rxjs';
 import { ModelUtility, ValueUtility, NumberModelKey, ModelKey } from '@gae-web/appengine-utility';
 import { ModelReadService } from './crud.service';

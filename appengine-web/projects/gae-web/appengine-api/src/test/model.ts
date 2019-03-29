@@ -1,6 +1,6 @@
 import { of, Observable } from 'rxjs';
-import { ReadRequest, ReadService, ReadResponse } from '@gae-web/appengine-api';
 import { ValueUtility, ModelKey, NumberModelKey } from '@gae-web/appengine-utility';
+import { ReadService, ReadResponse, ReadRequest } from '../lib/model/crud/read.service';
 
 export class TestReadService<T> implements ReadService<T> {
 

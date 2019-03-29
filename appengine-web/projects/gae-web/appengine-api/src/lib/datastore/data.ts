@@ -2,8 +2,8 @@ import { ISO8601DateString } from '@gae-web/appengine-utility';
 import { DataConverterUtility } from '@gae-web/appengine-utility';
 import { ModelKey, ModelUtility, MutableUniqueModel } from '@gae-web/appengine-utility';
 import { OwnerId, SearchId, AbstractSearchableDatabaseModel, AbstractOwnedDatabaseModel } from './model';
-import { AbstractClientModelSerializer } from '@gae-web/appengine-api';
 import { DateTime } from 'luxon';
+import { AbstractClientModelSerializer } from '../model/client';
 
 export abstract class DatedModelData {
 
@@ -21,7 +21,12 @@ export abstract class DatedModelData {
 
 export abstract class DatabaseModelData extends DatedModelData {
 
-    public key?: string;
+    public key?: ModelKey;
+
+    constructor(key?: ModelKey) {
+        super();
+        this.key = key;
+    }
 
     public setKey(key: ModelKey | undefined) {
         this.key = ModelUtility.modelKeyToString(key);

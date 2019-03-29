@@ -31,7 +31,7 @@ export abstract class ReadService<T> {
 @Injectable()
 export class ClientReadService<T, O> extends AbstractCrudService<T, O> implements ReadService<T> {
 
-    static readonly MAX_KEYS_ALLOWED_PER_REQUEST = 40;
+    public static readonly MAX_KEYS_ALLOWED_PER_REQUEST = 40;
 
     constructor(config: CrudServiceConfig<T, O>) {
         super(config);
@@ -56,18 +56,20 @@ export class ClientReadService<T, O> extends AbstractCrudService<T, O> implement
             return Observable.throw(new ClientRequestError('Too many keys requested.'));
         }
 
-        if (keysBatches.length === 1) {
+        if (keysBatches.length <= 1) {
             return this._read({
                 ...request,
                 modelKeys: keysBatches[0]
             });
         } else {
-            const parallelObs = from(keysBatches.map((modelKeys) => {
+            const requestBatches = keysBatches.map((modelKeys) => {
                 return {
                     ...request,
                     modelKeys
                 };
-            })).pipe(
+            });
+
+            const parallelObs = from(requestBatches).pipe(
                 flatMap((x: ReadRequest) => this._read(x))
             );
 
