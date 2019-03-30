@@ -1,5 +1,5 @@
 
-import { ClientApiResponse, ClientApiResponseError } from './client';
+import { ClientApiResponse, ClientApiResponseError, MissingExpectedResponseData } from './client';
 
 import { ApiResponseError, ApiResponseData, ApiResponseJson } from '../api';
 import { ClientModelSerializer, RawClientResponseAccessor } from './client';
@@ -164,7 +164,7 @@ export class ClientModelResponse<T> extends RawClientResponseAccessor {
             if (data) {
                 models = this._service.serializedModelsFromResponse(data);
             } else if (this.raw.success) {
-                throw new Error('No model data was returned where expected.');
+                throw new MissingExpectedResponseData('No model data was returned where expected.');
             } else {
                 models = [];
             }
@@ -181,7 +181,7 @@ export class ClientModelResponse<T> extends RawClientResponseAccessor {
         if (data) {
             return this._service.serializeKeysFromResponse(data);
         } else {
-            throw new Error('No data was returned from server where expected.');
+            throw new MissingExpectedResponseData('No data was returned from server where expected.');
         }
     }
 

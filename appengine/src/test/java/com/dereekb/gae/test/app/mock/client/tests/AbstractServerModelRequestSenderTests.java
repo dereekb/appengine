@@ -206,9 +206,16 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 	}
 
 	@Test
-	public void testReadMoreThanMax() throws Exception {
+	public void testReadMoreThanMaxThrowsClientError() throws Exception {
 		if (this.readRequestUtility != null) {
-			this.readRequestUtility.testReadMoreThanMax(this.getRequestSecurity());
+			this.readRequestUtility.testReadMoreThanMaxThrowsClientError(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testSendReadMoreThanMaxThrowsApiResponse() throws Exception {
+		if (this.readRequestUtility != null) {
+			this.readRequestUtility.testSendReadMoreThanMaxThrowsApiResponse(this.getRequestSecurity());
 		}
 	}
 

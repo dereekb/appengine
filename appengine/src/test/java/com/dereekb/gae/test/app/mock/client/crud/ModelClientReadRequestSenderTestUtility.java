@@ -1,24 +1,31 @@
 package com.dereekb.gae.test.app.mock.client.crud;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
+import com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.request.ClientReadRequest;
 import com.dereekb.gae.client.api.model.crud.request.impl.ClientReadRequestImpl;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
+import com.dereekb.gae.client.api.model.exception.LargeAtomicRequestException;
+import com.dereekb.gae.client.api.service.request.ClientRequest;
+import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.data.ClientApiResponseData;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
+import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.ReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.KeyReadRequest;
 import com.dereekb.gae.model.crud.services.request.impl.ModelReadRequest;
@@ -181,9 +188,9 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 	}
 
 	/**
-	 * Tests that reading nothing will result in an exception.
+	 * Tests that attempting to read more than the maximum amount will throw a client error.
 	 */
-	public void testReadMoreThanMax(ClientRequestSecurity security)
+	public void testReadMoreThanMaxThrowsClientError(ClientRequestSecurity security)
 	        throws NotClientApiResponseException,
 	            ClientConnectionException,
 	            ClientAuthenticationException,
@@ -196,6 +203,35 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 
 		try {
 			this.readRequestSender.read(readRequest, security);
+			fail("Should have failed request.");
+		} catch (LargeAtomicRequestException e) {
+
+		}
+	}
+
+	/**
+	 * Tests that sending a request with more than the max allowed amount of keys returns a response error.
+	 */
+	public void testSendReadMoreThanMaxThrowsApiResponse(ClientRequestSecurity security)
+	        throws NotClientApiResponseException,
+	            ClientConnectionException,
+	            ClientAuthenticationException,
+	            ClientRequestFailureException {
+
+		List<ModelKey> tooManyKeys = this.testModelGenerator.generateKeys(ReadController.MAX_KEYS_PER_REQUEST + 10);
+		ReadRequestOptions options = new ReadRequestOptionsImpl(true);
+
+		try {
+			@SuppressWarnings("unchecked")
+			ClientReadRequestSenderImpl<T, ?> impl = (ClientReadRequestSenderImpl<T, ?>)this.readRequestSender;
+
+			ClientRequest request = impl.buildClientRequest(tooManyKeys, options, null);
+
+			SecuredClientApiRequestSender requestSender = impl.getRequestSender();
+			ClientApiResponse response = requestSender.sendRequest(request);
+
+			ClientTooMuchInputException.assertNotTooMuchInputException(response);
+
 			fail("Should have failed request.");
 		} catch (ClientTooMuchInputException e) {
 

@@ -171,10 +171,9 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 		return this.buildClientRequest(modelKeys, options, typesRequest);
 	}
 
-	private ClientRequest buildClientRequest(List<ModelKey> modelKeys,
-	                                         ReadRequestOptions options,
-	                                         RelatedTypesRequest typesRequest)
-	        throws LargeAtomicRequestException {
+	public ClientRequest buildClientRequest(List<ModelKey> modelKeys,
+	                                        ReadRequestOptions options,
+	                                        RelatedTypesRequest typesRequest) {
 
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.GET);
@@ -289,7 +288,8 @@ public class ClientReadRequestSenderImpl<T extends UniqueModel, O> extends Abstr
 
 		@Override
 		public JsonNode getApiResponseJsonNode() {
-			throw new UnsupportedOperationException("Api Response Json Node data unavailable for read requests of this size.");
+			throw new UnsupportedOperationException(
+			        "Api Response Json Node data unavailable for read requests of this size.");
 		}
 
 		// MARK: SerializedClientApiResponseImpl
