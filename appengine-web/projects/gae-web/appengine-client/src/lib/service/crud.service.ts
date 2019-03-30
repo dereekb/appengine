@@ -159,7 +159,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
                 };
               }),
               catchError((x) => {
-                return Observable.throw(x);
+                return throwError(x);
               })
             );
           } else {

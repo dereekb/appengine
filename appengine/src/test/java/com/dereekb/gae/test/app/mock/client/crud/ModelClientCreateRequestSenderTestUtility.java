@@ -11,9 +11,14 @@ import java.util.List;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.exception.ClientTooMuchInputException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
+import com.dereekb.gae.client.api.model.crud.builder.impl.ClientCreateRequestSenderImpl;
+import com.dereekb.gae.client.api.model.exception.LargeAtomicRequestException;
+import com.dereekb.gae.client.api.service.request.ClientRequest;
+import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
+import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.CreateRequest;
 import com.dereekb.gae.model.crud.services.request.impl.CreateRequestImpl;
 import com.dereekb.gae.model.crud.services.response.CreateResponse;
@@ -108,7 +113,7 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 		}
 	}
 
-	public void testMockCreateTooManyRequest(ClientRequestSecurity security) throws ClientRequestFailureException {
+	public void testMockCreateTooManyRequestThrowsClientError(ClientRequestSecurity security) throws ClientRequestFailureException {
 
 		int moreThanMax = EditModelController.MAX_ATOMIC_EDIT_SIZE + 5;
 
@@ -117,6 +122,30 @@ public class ModelClientCreateRequestSenderTestUtility<T extends MutableUniqueMo
 
 		try {
 			this.createRequestSender.create(createRequest, security);
+			fail("Should have failed request.");
+		} catch (LargeAtomicRequestException e) {
+
+		}
+	}
+
+	public void testSendMockCreateTooManyRequestThrowsApiResponse(ClientRequestSecurity security) throws ClientRequestFailureException {
+
+		int moreThanMax = EditModelController.MAX_ATOMIC_EDIT_SIZE + 5;
+
+		List<T> tooManyTemplates = this.testModelGenerator.generate(moreThanMax);
+		CreateRequest<T> createRequest = new CreateRequestImpl<T>(tooManyTemplates);
+
+		try {
+			@SuppressWarnings("unchecked")
+			ClientCreateRequestSenderImpl<T, ?> impl = (ClientCreateRequestSenderImpl<T, ?>)this.createRequestSender;
+
+			ClientRequest request = impl.buildClientRequest(tooManyTemplates, createRequest.getOptions());
+
+			SecuredClientApiRequestSender requestSender = impl.getRequestSender();
+			ClientApiResponse response = requestSender.sendRequest(request);
+
+			ClientTooMuchInputException.assertNotTooMuchInputException(response);
+
 			fail("Should have failed request.");
 		} catch (ClientTooMuchInputException e) {
 

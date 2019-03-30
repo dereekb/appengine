@@ -1,6 +1,6 @@
 import { Type } from '@angular/core';
 import { BaseError } from 'make-error';
-import { Observable, Subscription, BehaviorSubject, of } from 'rxjs';
+import { Observable, Subscription, BehaviorSubject, of, throwError } from 'rxjs';
 import { map, flatMap, debounceTime } from 'rxjs/operators';
 
 export interface SingleElementSource<T> {
@@ -382,7 +382,7 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
                 const failed = event.failed[0];
 
                 if (failed) {
-                    return Observable.throw(new ConversionSourceFirstError(failed, 'Failed loading model.'));
+                    return throwError(new ConversionSourceFirstError(failed, 'Failed loading model.'));
                 }
             }
 

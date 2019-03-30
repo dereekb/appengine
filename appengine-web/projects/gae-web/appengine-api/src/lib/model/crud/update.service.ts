@@ -10,7 +10,7 @@ import { ModelServiceResponse } from './response';
 import { AbstractClientTemplateResponse, TemplateResponse, AbstractTemplateCrudService } from './template.service';
 import { ClientApiResponse, RawClientResponseAccessor } from '../client';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ApiResponseJson } from '../../api';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -67,7 +67,7 @@ export class ClientUpdateService<T, O> extends AbstractTemplateCrudService<T, O>
 
             return this.handleUpdateResponse(request, obs);
         } else {
-            return Observable.throw(new ClientRequestError('No templates were provided in the request.'));
+            return throwError(new ClientRequestError('No templates were provided in the request.'));
         }
     }
 

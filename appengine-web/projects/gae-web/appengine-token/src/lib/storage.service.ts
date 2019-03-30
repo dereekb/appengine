@@ -1,5 +1,5 @@
 import { TokenType, DecodedLoginIncludedToken, LoginTokenPair, LoginId, LoginPointerId, EncodedToken } from './token';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DateTime } from 'luxon';
 
@@ -25,7 +25,7 @@ export class AppTokenStorageService {
       catchError((e) => {
         const isMissing = (e instanceof DataDoesNotExistError);
         const error = (isMissing) ? new StoredTokenUnavailableError() : e;
-        return Observable.throw(error);
+        return throwError(error);
       }),
       map((result: StoredToken) => this.convertToLoginTokenPair(result))
     );

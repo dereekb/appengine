@@ -161,9 +161,15 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 	}
 
 	@Test
-	public void testSystemModelClientCreateTooManyRequest() throws Exception {
+	public void testMockCreateTooManyRequestThrowsClientError() throws Exception {
 		if (this.canCreateModel == true && this.createRequestUtility != null) {
-			this.createRequestUtility.testMockCreateTooManyRequest(this.getRequestSecurity());
+			this.createRequestUtility.testMockCreateTooManyRequestThrowsClientError(this.getRequestSecurity());
+		}
+	}
+	@Test
+	public void testSendMockCreateTooManyRequestThrowsApiResponse() throws Exception {
+		if (this.canCreateModel == true && this.createRequestUtility != null) {
+			this.createRequestUtility.testSendMockCreateTooManyRequestThrowsApiResponse(this.getRequestSecurity());
 		}
 	}
 
@@ -269,6 +275,20 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 	public void testMockDeleteRequestReturnModels() throws Exception {
 		if (this.deleteRequestUtility != null) {
 			this.deleteRequestUtility.testMockDeleteRequestReturnModels(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testMockDeleteTooManyRequestThrowsClientError() throws Exception {
+		if (this.deleteRequestUtility != null) {
+			this.deleteRequestUtility.testMockDeleteTooManyRequestThrowsClientError(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testSendMockDeleteTooManyRequestThrowsApiResponse() throws Exception {
+		if (this.deleteRequestUtility != null) {
+			this.deleteRequestUtility.testSendMockDeleteTooManyRequestThrowsApiResponse(this.getRequestSecurity());
 		}
 	}
 

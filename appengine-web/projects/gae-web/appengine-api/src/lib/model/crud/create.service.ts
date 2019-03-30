@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { ValueUtility, NumberModelKey } from '@gae-web/appengine-utility';
 
-import { ClientRequestError } from './error';
+import { ClientRequestError, LargeAtomicRequestError } from './error';
 import { EditApiRequest } from './request';
 import { AbstractClientTemplateResponse, TemplateResponse, AbstractTemplateCrudService } from './template.service';
 import { ClientApiResponse } from '../client';
 import { KeyedInvalidAttribute } from './error';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { ApiResponseJson } from '../../api';
 import { map } from 'rxjs/operators';
@@ -40,6 +40,8 @@ export const DEFAULT_CREATE_OPTIONS: CreateRequestOptions = {
 @Injectable()
 export class ClientCreateService<T, O> extends AbstractTemplateCrudService<T, O> implements CreateService<T> {
 
+    static readonly MAX_TEMPLATES_ALLOWED_PER_REQUEST = 25;
+
     constructor(config: CrudServiceConfig<T, O>) {
         super(config);
     }
@@ -48,24 +50,26 @@ export class ClientCreateService<T, O> extends AbstractTemplateCrudService<T, O>
     public create(request: CreateRequest<T>): Observable<ClientCreateResponse<T>> {
         const templates = ValueUtility.normalizeArray(request.templates);
 
-        if (templates.length > 0) {
-            const url = this.rootPath + '/' + this.type + '/create';
-
-            const createOptions: CreateRequestOptions = { ...DEFAULT_CREATE_OPTIONS, ...request.options };
-
-            const atomic = createOptions.atomic;
-            const templateDtos = this._clientConfig.serializer.convertArrayToDto(templates);
-            const apiRequest = new CreateApiRequest<O>(atomic, templateDtos);
-
-            const body = apiRequest;
-            const obs = this.httpClient.post<ApiResponseJson>(url, body, {
-                observe: 'response'
-            });
-
-            return this.handleCreateResponse(request, obs);
-        } else {
-            return Observable.throw(new ClientRequestError('No templates were provided in the request.'));
+        if (templates.length === 0) {
+            return throwError(new ClientRequestError('No templates were provided in the request.'));
+        } else if (templates.length > ClientCreateService.MAX_TEMPLATES_ALLOWED_PER_REQUEST) {
+            throw new LargeAtomicRequestError('Too many models requested.');
         }
+
+        const url = this.rootPath + '/' + this.type + '/create';
+
+        const createOptions: CreateRequestOptions = { ...DEFAULT_CREATE_OPTIONS, ...request.options };
+
+        const atomic = createOptions.atomic;
+        const templateDtos = this._clientConfig.serializer.convertArrayToDto(templates);
+        const apiRequest = new CreateApiRequest<O>(atomic, templateDtos);
+
+        const body = apiRequest;
+        const obs = this.httpClient.post<ApiResponseJson>(url, body, {
+            observe: 'response'
+        });
+
+        return this.handleCreateResponse(request, obs);
     }
 
     protected handleCreateResponse(request: CreateRequest<T>, obs: Observable<HttpResponse<ApiResponseJson>>): Observable<ClientCreateResponse<T>> {

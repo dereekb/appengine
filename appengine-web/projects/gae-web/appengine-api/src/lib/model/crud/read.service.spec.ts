@@ -123,7 +123,7 @@ describe('ClientReadService', () => {
       expect(response.failed).toBeArray();
     });
 
-    it(`should fail if a read request of over ${ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST} keys throws an error.`, () => {
+    it(`should fail if an atomic read request of over ${ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST} keys throws an error.`, async () => {
       const readRequest: ReadRequest = {
         atomic: true,
         modelKeys: ValueUtility.range(0, (ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST + 2))
@@ -131,6 +131,22 @@ describe('ClientReadService', () => {
 
       expect(() => clientReadService.read(readRequest))
         .toThrowError(LargeAtomicRequestError);
+    });
+
+    it(`should not fail if a non-atomic read request of over ${ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST} keys throws an error.`, (done) => {
+      const modelKeys = ValueUtility.range(0, (ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST + 2));
+
+      const readRequest: ReadRequest = {
+        atomic: false,
+        modelKeys
+      };
+
+      setClientResultResultsModelsForKeys(modelKeys);
+
+      clientReadService.read(readRequest).subscribe((result) => {
+        expect(result.models).toBeArray();
+        done();
+      });
     });
 
   });

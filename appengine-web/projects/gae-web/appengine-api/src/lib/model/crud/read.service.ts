@@ -7,7 +7,7 @@ import { CrudServiceConfig, AbstractCrudService } from './crud.service';
 import { ModelServiceResponse } from './response';
 import { ClientApiResponse, RawClientResponseAccessor } from '../client';
 
-import { Observable, of, from, forkJoin } from 'rxjs';
+import { Observable, of, from, forkJoin, throwError } from 'rxjs';
 import { ModelUtility, ValueUtility } from '@gae-web/appengine-utility';
 import { ApiResponseJson } from '../../api';
 import { HttpResponse } from '@angular/common/http';
@@ -47,13 +47,9 @@ export class ClientReadService<T, O> extends AbstractCrudService<T, O> implement
         const keysBatches = ValueUtility.batch(keysArray, ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST);
 
         if (keysArray.length === 0) {
-            return Observable.throw(new ClientRequestError('No usable keys were passed in the request.'));
+            return throwError(new ClientRequestError('No usable keys were passed in the request.'));
         } else if (keysBatches.length > 1 && request.atomic) {
-            throw new LargeAtomicRequestError();
-        }
-
-        if (keysArray.length > ClientReadService.MAX_KEYS_ALLOWED_PER_REQUEST) {
-            return Observable.throw(new ClientRequestError('Too many keys requested.'));
+            throw new LargeAtomicRequestError('Too many keys requested.');
         }
 
         if (keysBatches.length <= 1) {

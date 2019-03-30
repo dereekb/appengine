@@ -1,7 +1,7 @@
 import { ClientApiResponse, ClientApiResponseError, MissingExpectedResponseData, ClientModelSerializer, RawClientResponseAccessor } from './client';
 import { ApiResponseError, ApiResponseData, ApiResponseJson } from '../api';
 import { HttpResponse, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ModelKey } from '@gae-web/appengine-utility';
 import { ApiRouteConfiguration } from '../api.config';
@@ -43,9 +43,9 @@ export abstract class AbstractClientService {
         if (error instanceof HttpResponse) {
             const response = this.convertToClientApiResponse(error);
             const clientError = new ClientApiResponseError(response);
-            return Observable.throw(clientError);
+            return throwError(clientError);
         } else {
-            return Observable.throw(error);
+            return throwError(error);
         }
     }
 
@@ -53,14 +53,14 @@ export abstract class AbstractClientService {
         if (error instanceof ClientApiResponseError) {
             const response = error.response;
             const newError = this.handleClientApiResponseError(response);
-            return Observable.throw(newError || error);
+            return throwError(newError || error);
         } else {
-            return Observable.throw(error);
+            return throwError(error);
         }
     }
 
     protected handleClientApiResponseError(response: ClientApiResponse): any | undefined {
-        return Observable.throw(response);
+        return throwError(response);
     }
 
     protected convertToClientApiResponse(response: HttpResponse<ApiResponseJson>): ClientApiResponse {

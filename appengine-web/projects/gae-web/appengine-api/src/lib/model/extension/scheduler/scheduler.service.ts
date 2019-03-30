@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { ClientAtomicOperationError } from '../../crud/error';
 import { AbstractClientService, ClientServiceConfig } from '../../client.service';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ApiResponseJson } from '../../../api';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class ClientSchedulerService extends AbstractClientService {
 
             return this.handleScheduleResponse(request, obs);
         } else {
-            return Observable.throw(new Error('Invalid schedule request.'));
+            return throwError(new Error('Invalid schedule request.'));
         }
     }
 

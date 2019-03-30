@@ -108,18 +108,23 @@ public class ClientDeleteRequestSenderImpl<T extends UniqueModel, O> extends Abs
 	 		}
 		}
 
+		Iterable<ModelKey> modelKeys = request.getTargetKeys();
+		DeleteRequestOptions options = request.getOptions();
+		return this.buildClientRequest(modelKeys, options, request.shouldReturnModels());
+	}
+
+	public ClientRequest buildClientRequest(Iterable<ModelKey> modelKeys, DeleteRequestOptions options, boolean shouldReturnModels) throws LargeAtomicRequestException {
+
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.DELETE);
 
 		ParametersImpl parameters = new ParametersImpl();
 
-		Iterable<ModelKey> modelKeys = request.getTargetKeys();
 		String keys = ModelKey.keysAsString(modelKeys, ",");
 
-		DeleteRequestOptions options = request.getOptions();
 		parameters.addObjectParameter(EditModelController.ATOMIC_PARAM, options.isAtomic());
 		parameters.addObjectParameter(EditModelController.KEYS_PARAM, keys);
-		parameters.addObjectParameter(EditModelController.RETURN_MODELS_PARAM, request.shouldReturnModels());
+		parameters.addObjectParameter(EditModelController.RETURN_MODELS_PARAM, shouldReturnModels);
 
 		clientRequest.setParameters(parameters);
 

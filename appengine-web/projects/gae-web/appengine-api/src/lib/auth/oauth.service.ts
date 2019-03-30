@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ApiRouteConfiguration } from '../api.config';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { share, catchError, map } from 'rxjs/operators';
@@ -68,7 +68,7 @@ export class OAuthLoginService {
 
     // TODO: Update error to be more specific?
 
-    return Observable.throw(new Error('An error occured while accessing the Login Server.'));
+    return throwError(new Error('An error occured while accessing the Login Server.'));
   }
 
 }

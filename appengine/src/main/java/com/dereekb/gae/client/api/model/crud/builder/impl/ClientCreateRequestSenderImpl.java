@@ -107,8 +107,17 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 
 			if (templates.size() > MAX_ATOMIC_EDIT_SIZE) {
 				throw new LargeAtomicRequestException();
-	 		}
+			}
 		}
+
+		Collection<T> templates = request.getTemplates();
+		CreateRequestOptions options = request.getOptions();
+		return this.buildClientRequest(templates, options);
+	}
+
+	public ClientRequest buildClientRequest(Collection<T> templates,
+	                                        CreateRequestOptions options)
+	        throws LargeAtomicRequestException {
 
 		ClientRequestUrl url = this.makeRequestUrl();
 		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.POST);
@@ -117,10 +126,7 @@ public class ClientCreateRequestSenderImpl<T extends UniqueModel, O> extends Abs
 
 		ApiCreateRequest<O> createRequest = new ApiCreateRequest<O>();
 
-		CreateRequestOptions options = request.getOptions();
 		createRequest.setOptions(options);
-
-		Collection<T> templates = request.getTemplates();
 		BidirectionalConverter<T, O> converter = this.getTypedConverter();
 
 		List<O> templateDtos = converter.convertTo(templates);

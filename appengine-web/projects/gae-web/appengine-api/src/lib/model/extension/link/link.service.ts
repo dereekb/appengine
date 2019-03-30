@@ -5,7 +5,7 @@ import { ClientLinkServiceChangeError } from './error';
 import { AbstractClientService, ClientServiceConfig } from '../../client.service';
 import { ClientApiResponse, ClientApiResponseError, RawClientResponseAccessor } from '../../client';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ApiResponseJson } from '../../../api';
 import { ModelUtility, ModelKey } from '@gae-web/appengine-utility';
 import { catchError, map } from 'rxjs/operators';
@@ -37,7 +37,7 @@ export class ClientLinkService extends AbstractClientService implements LinkServ
 
             return this.handleLinkResponse(request, obs);
         } else {
-            return Observable.throw(new Error('Invalid changes were requested.'));
+            return throwError(new Error('Invalid changes were requested.'));
         }
     }
 
@@ -102,9 +102,9 @@ export class ClientLinkService extends AbstractClientService implements LinkServ
         if (error instanceof ClientApiResponseError) {
             const response = error.response;
             const newError = this.handleLinkClientApiResponseError(request, response);
-            return Observable.throw(newError || error);
+            return throwError(newError || error);
         } else {
-            return Observable.throw(error);
+            return throwError(error);
         }
     }
 
