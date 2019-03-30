@@ -42,6 +42,12 @@
       ],
       "@gae-web/appengine-token/*": [
         "dist/gae-web/appengine-token/*"
+      ],
+      "@gae-web/appengine-analytics": [
+        "dist/gae-web/appengine-analytics"
+      ],
+      "@gae-web/appengine-analytics/*": [
+        "dist/gae-web/appengine-analytics/*"
       ]
     }
   }
