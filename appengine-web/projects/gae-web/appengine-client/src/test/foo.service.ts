@@ -32,7 +32,9 @@ export class FooReadSourceFactory extends ReadSourceFactory<Foo> { }
 export class FooDefaultQueryConfiguration implements QuerySourceConfiguration {
 
   readonly filters = {
-    date: '_,,DESC' // Sort by newest first
+    parameters: {
+      date: '_,,DESC' // Sort by newest first
+    }
   };
 
 }

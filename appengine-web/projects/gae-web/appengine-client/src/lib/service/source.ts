@@ -304,7 +304,7 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
   private makeInitialResult(): KeyResultPair<T> {
     const defaultRequest: SearchRequest = {
       isKeysOnly: false,
-      searchParameters: this._config.filters,
+      parameters: this._config.filters,
       limit: this._config.limit,
       offset: 0
     };

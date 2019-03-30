@@ -29,4 +29,36 @@ describe('ValueUtility', () => {
 
   });
 
+  describe('#copyObjectProperties()', () => {
+
+    it('should copy all properties from one object to another.', () => {
+      const from = {
+        a: 1,
+        b: 2
+      };
+
+      const to = {} as any;
+
+      ValueUtility.copyObjectProperties(from, to);
+
+      expect(to.a).toBe(1);
+      expect(to.b).toBe(2);
+    });
+
+    it('should copy only expected properties from one object to another.', () => {
+      const from = {
+        a: 1,
+        b: 2
+      };
+
+      const to = {} as any;
+
+      ValueUtility.copyObjectProperties(from, to, ['a']);
+
+      expect(to.a).toBe(1);
+      expect(to.b).toBeUndefined();
+    });
+
+  });
+
 });

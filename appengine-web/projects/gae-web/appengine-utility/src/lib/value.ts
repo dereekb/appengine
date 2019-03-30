@@ -151,15 +151,14 @@ export class ValueUtility {
   /**
    * Copies all object properties from one object and normalizes them into an array and onto the target object.
    */
-  static copyArrayObjectProperties(to: object, from: object, properties: PropertyKey[], returnNull?: boolean) {
+  static copyArrayObjectProperties(from: object, to: object, properties: PropertyKey[] = Object.keys(from), returnNull?: boolean) {
     properties.forEach((property) => {
       const array = from[property];
       to[property] = ValueUtility.normalizeMaybeArrayCopy(array, returnNull);
     });
   }
 
-
-  static copyObjectProperties(to: object, from: object, properties: PropertyKey[], defaults: object = {}) {
+  static copyObjectProperties(from: object, to: object, properties: PropertyKey[] = Object.keys(from), defaults: object = {}) {
     properties.forEach((property: PropertyKey) => {
       let value: any = from[property];
 

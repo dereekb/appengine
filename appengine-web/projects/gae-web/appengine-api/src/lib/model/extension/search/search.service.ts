@@ -6,25 +6,31 @@ import { ValueUtility, ModelKey, UniqueModel, ModelUtility } from '@gae-web/appe
 
 import { BaseError } from 'make-error';
 
-export type SearchCursor = string | undefined;
+export type SearchCursor = string;
+
+export type SearchParameter = string;
+
+export interface SearchParametersSet {
+    [key: string]: SearchParameter;
+}
 
 export interface SearchParameters {
-    [key: string]: string | undefined;
+    readonly parameters: SearchParametersSet;
 }
 
 // MARK: Generic Interfaces
-export interface SearchRequest extends LimitedSearchRequest {
-    readonly searchParameters?: SearchParameters;
+export interface SearchOptions {
+    readonly cursor?: SearchCursor;
+    readonly limit?: number;
+    readonly offset?: number;
 }
 
 export interface LimitedSearchRequest extends SearchOptions {
     readonly isKeysOnly: boolean;
 }
 
-export interface SearchOptions {
-    readonly cursor?: SearchCursor;
-    readonly limit?: number;
-    readonly offset?: number;
+export interface SearchRequest extends LimitedSearchRequest {
+    readonly parameters?: SearchParameters;
 }
 
 export interface ModelSearchResponse<T> extends SearchResponse {
@@ -47,12 +53,8 @@ export abstract class AbstractSearchService<T extends UniqueModel, O> extends Ab
     protected buildUrlSearchParams(request: SearchRequest): object {
         const params = {} as any;
 
-        if (request.searchParameters) {
-            ValueUtility.forEachProperty(request.searchParameters, (value, key) => {
-                if (value !== undefined) {
-                    params[key] = value;
-                }
-            });
+        if (request.parameters) {
+            ValueUtility.copyObjectProperties(request.parameters.parameters, params);
         }
 
         if (request.isKeysOnly !== undefined) {
