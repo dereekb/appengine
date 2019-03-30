@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map, share } from 'rxjs/operators';
-
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ApiRouteConfiguration } from '../api.config';
-import { LoginTokenPairJson, EncodedToken, LoginTokenPair } from '@gae-web/appengine-token';
+import { LoginTokenPairJson, EncodedToken, LoginTokenPair, ExpiredTokenAuthorizationError, InvalidTokenAuthorizationError } from '@gae-web/appengine-token';
 import { ApiResponseJson, ApiResponse } from '../api';
-import { ExpiredTokenAuthorizationError, InvalidTokenAuthorizationError } from '@gae-web/appengine-token';
 import { TokenAuthenticationError } from './error';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthUtility } from './auth.utility';
 
 export const LOGIN_TOKEN_SERVICE_PATH = '/login/auth/token';

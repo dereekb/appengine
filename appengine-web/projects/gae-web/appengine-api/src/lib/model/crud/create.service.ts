@@ -5,8 +5,8 @@ import { ValueUtility, NumberModelKey } from '@gae-web/appengine-utility';
 import { ClientRequestError } from './error';
 import { EditApiRequest } from './request';
 import { AbstractClientTemplateResponse, TemplateResponse, AbstractTemplateCrudService } from './template.service';
-import { ClientApiResponse, RawClientResponseAccessor } from '../client';
-import { InvalidAttribute, KeyedInvalidAttribute } from './error';
+import { ClientApiResponse } from '../client';
+import { KeyedInvalidAttribute } from './error';
 
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';

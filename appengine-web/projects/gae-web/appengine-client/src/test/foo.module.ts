@@ -1,11 +1,10 @@
-import { FOO_MODEL_TYPE, ApiRouteConfiguration } from '@gae-web/appengine-api';
+import { FOO_MODEL_TYPE, ApiRouteConfiguration, FooSerializer } from '@gae-web/appengine-api';
 import { HttpClient } from '@angular/common/http';
 import {
   FooClientCreateService, FooClientReadService, FooClientUpdateService, FooClientDeleteService,
   FooClientQueryService, FooServiceWrapper, FooReadService, FooQueryService, FooDefaultQueryConfiguration,
   FooCachedKeySourceCache, FooCreateService, FooUpdateService, FooDeleteService, FooReadSourceFactory
 } from './foo.service';
-import { FooSerializer } from '../../../appengine-api/src/test/foo.model';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ClientModule } from '../lib/client.module';
 import { ModelServiceWrapperSet } from '../lib/service/model.service';
@@ -84,7 +83,7 @@ export function fooCachedKeySourceCacheFactoryFn(wrapper: FooServiceWrapper, que
 export class FooClientModule {
 
   static forApp(): ModuleWithProviders {
-    return {
+    const moduleWithProviders = {
       ngModule: FooClientModule,
       providers: [
 
@@ -166,5 +165,6 @@ export class FooClientModule {
         }
       ]
     };
+    return moduleWithProviders;
   }
 }

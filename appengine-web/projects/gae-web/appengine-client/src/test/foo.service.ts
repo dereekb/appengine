@@ -1,5 +1,4 @@
-import { ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api';
-import { Foo, FooData } from '../../../appengine-api/src/test/foo.model';
+import { Foo, FooData, ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api';
 import { ModelServiceWrapper, ModelCreateService } from '../lib/service/model.service';
 import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate } from '../lib/service/query.service';
 import { ModelReadService, ModelUpdateService, ModelDeleteService } from '../lib/service/crud.service';

@@ -1,11 +1,6 @@
-
-import { ClientApiResponse, ClientApiResponseError, MissingExpectedResponseData } from './client';
-
+import { ClientApiResponse, ClientApiResponseError, MissingExpectedResponseData, ClientModelSerializer, RawClientResponseAccessor } from './client';
 import { ApiResponseError, ApiResponseData, ApiResponseJson } from '../api';
-import { ClientModelSerializer, RawClientResponseAccessor } from './client';
-
 import { HttpResponse, HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ModelKey } from '@gae-web/appengine-utility';

@@ -1,6 +1,4 @@
-import { ISO8601DateString } from '@gae-web/appengine-utility';
-import { DataConverterUtility } from '@gae-web/appengine-utility';
-import { ModelKey, ModelUtility, MutableUniqueModel } from '@gae-web/appengine-utility';
+import { ISO8601DateString, DataConverterUtility, ModelKey, ModelUtility, MutableUniqueModel } from '@gae-web/appengine-utility';
 import { OwnerId, SearchId, AbstractSearchableDatabaseModel, AbstractOwnedDatabaseModel } from './model';
 import { DateTime } from 'luxon';
 import { AbstractClientModelSerializer } from '../model/client';

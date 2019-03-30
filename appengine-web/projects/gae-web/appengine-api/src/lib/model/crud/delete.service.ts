@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AbstractCrudService, CrudModelResponse, CrudServiceConfig } from './crud.service';
 import { ClientRequestError } from './error';
 import { ModelServiceResponse } from './response';
-import { ClientApiResponse, RawClientResponseAccessor } from '../client';
+import { ClientApiResponse } from '../client';
 
 import { Observable } from 'rxjs';
 import { ModelKey, UniqueModel, ModelUtility } from '@gae-web/appengine-utility';

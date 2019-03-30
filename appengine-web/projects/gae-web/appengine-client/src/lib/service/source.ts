@@ -1,5 +1,5 @@
-import { UniqueModel, ModelKey, ModelUtility } from '@gae-web/appengine-utility';
-import { ConversionSource, AbstractConversionSource, SourceState, SourceFactory, IterableSource, AbstractSource, ControllableSource, SourceEvent } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, ModelUtility, ConversionSource, AbstractConversionSource,
+         SourceState, SourceFactory, IterableSource, AbstractSource, ControllableSource, SourceEvent } from '@gae-web/appengine-utility';
 import { ReadService, ReadRequest, ReadResponse, SearchCursor, SearchParameters, QueryService, SearchRequest, ModelSearchResponse } from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
 import { map, share } from 'rxjs/operators';

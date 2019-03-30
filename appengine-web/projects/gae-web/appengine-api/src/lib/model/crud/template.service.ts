@@ -1,12 +1,9 @@
 
 import { CrudServiceConfig, AbstractCrudService, CrudModelResponse } from './crud.service';
 import { ClientKeyedInvalidAttributeError, KEYED_INVALID_ATTRIBUTE_ERROR_CODE, KeyedInvalidAttribute } from './error';
-import { InvalidAttribute } from './error';
-
 import { ApiResponseError } from '../../api';
-import { ClientApiResponse } from '../client';
+import { ClientApiResponse, ClientApiResponseErrorType } from '../client';
 import { ModelServiceModelsResponse } from './response';
-import { ClientApiResponseErrorType } from '../client';
 import { ModelKey } from '@gae-web/appengine-utility';
 
 export interface TemplateResponse<T> extends ModelServiceModelsResponse<T> {
