@@ -155,7 +155,8 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
 
                 return {
                   models: ordered,
-                  failed: response.failed
+                  failed: response.failed,
+                  result
                 };
               }),
               catchError((x) => {
@@ -165,7 +166,8 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
           } else {
             return of({
               models: hits,
-              failed: []
+              failed: [],
+              result
             });
           }
         })
@@ -188,10 +190,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
       const obs = this._readService.read(request).pipe(
         tap((response) => {
           this._parent.cache.putModels(response.models);  // Put new models into cache.
-
-          // NOTE: This will cause a loop with the asyncRead above.
-          // this._parent.cache.removeAll(response.failed);  // Remove "missing" models from cache.
-
+          this._parent.cache.removeAll(response.failed);  // Remove "missing" models from cache.
           this._working.delete(hash);  // Remove from working.
         }),
         share()

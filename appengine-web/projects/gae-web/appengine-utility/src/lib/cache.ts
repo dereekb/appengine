@@ -484,6 +484,10 @@ export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Keye
 }
 
 // MARK: Async Cache
+export interface KeyedAsyncCacheLoad<K, T> extends KeyedCacheLoad<K, T> {
+  readonly event?: KeyedCacheEvent<K>;
+}
+
 export interface AsyncCacheReadOptions {
   debounce?: number;
   ignoredChanges?: KeyedCacheChange[];
@@ -512,7 +516,7 @@ export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Observabl
         keys: new Set<K>()
       }),
       debounceTime(debounce),
-      map(() => this.load(keys as K[]))
+      map((event) => ({ ...this.load(keys as K[]), event }))
     );
   }
 

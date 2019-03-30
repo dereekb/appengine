@@ -1,4 +1,4 @@
-import { UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory, KeySafeAsyncModelCacheWrap } from '@gae-web/appengine-utility';
 import { ModelReadService, AppEngineReadSourceFactory, ModelUpdateService, ModelDeleteService } from './crud.service';
 import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventSystem, AnonymousWrapperEvent, WrapperEvent, WrapperEventFilter } from './wrapper';
 import { Subject, Observable } from 'rxjs';
@@ -105,7 +105,7 @@ export abstract class ModelServiceWrapperConfig<T extends UniqueModel> {
 
 export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceEventAnnouncer, ModelServiceAnonymousWrapperEventSystem {
 
-  private _cache = new AsyncModelCacheWrap<T>();
+  private _cache = new KeySafeAsyncModelCacheWrap<T>();
   private _events = new Subject<ModelWrapperEvent>();
 
   private _config: ModelServiceWrapperConfig<T>;
