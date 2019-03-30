@@ -184,8 +184,6 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
       return this._working.get(hash);
     } else {
 
-      // TODO: Break up larger requests up into multiple parts and execute in parallel.
-
       // Updates the cache with the results.
       const obs = this._readService.read(request).pipe(
         tap((response) => {
