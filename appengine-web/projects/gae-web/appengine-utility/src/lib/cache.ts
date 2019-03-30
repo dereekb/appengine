@@ -266,7 +266,7 @@ export interface KeyedCache<K, T> {
 
   remove(key: K): T;
 
-  removeAll(keys: K[]): void;
+  removeAll(keys: K[]): T[];
 
   clear(): void;
 
@@ -274,8 +274,19 @@ export interface KeyedCache<K, T> {
 
 // MARK: Observable
 export enum KeyedCacheChange {
+  /**
+   * When an item is put into the cache.
+   */
   Put,
+
+  /**
+   * When an item is removed from the cache.
+   */
   Remove,
+
+  /**
+   * When the entire cache is cleared.
+   */
   Clear
 }
 
@@ -372,10 +383,8 @@ export class MapKeyedCache<K, T> implements KeyedCache<K, T> {
     return model;
   }
 
-  removeAll(keys: K[]): void {
-    keys.forEach((key) => {
-      this.remove(key);
-    });
+  removeAll(keys: K[]): T[] {
+    return keys.map((key) => this.remove(key));
   }
 
   clear(): void {
@@ -414,9 +423,7 @@ export abstract class AbstractKeyedCacheWrap<K, T, C extends KeyedCache<K, T>> i
   }
 
   removeAll(keys: K[]) {
-    keys.forEach((key) => {
-      this.remove(key);
-    });
+    return keys.map((key) => this.remove(key));
   }
 
   clear() {
@@ -477,6 +484,11 @@ export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Keye
 }
 
 // MARK: Async Cache
+export interface AsyncCacheReadOptions {
+  debounce?: number;
+  ignoredChanges?: KeyedCacheChange[];
+}
+
 export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, ObservableKeyedCache<K, T>> implements AsyncObservableCache<K, T> {
 
   constructor(cache: ObservableKeyedCache<K, T> = new ObservableCacheWrap<K, T>()) {
@@ -484,13 +496,14 @@ export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Observabl
   }
 
   // MARK: AsyncCache
-  public asyncRead(keys: OneOrMore<K>, { debounce = 20, filterPut = true }): Observable<KeyedCacheLoad<K, T>> {
+  public asyncRead(keys: OneOrMore<K>, { debounce = 10, ignoredChanges }: AsyncCacheReadOptions): Observable<KeyedCacheLoad<K, T>> {
     keys = ValueUtility.normalizeArray(keys);
 
     let events = this._cache.events;
 
-    if (filterPut) {
-      events = events.pipe(filter((event) => event.change !== KeyedCacheChange.Put));
+    if (ignoredChanges && ignoredChanges.length) {
+      const ignoredTypesSet = ValueUtility.arrayToSet(ignoredChanges);
+      events = events.pipe(filter((event) => !ignoredTypesSet.has(event.change)));
     }
 
     return events.pipe(
@@ -519,56 +532,96 @@ export interface ModelCache<T extends Keyed<ModelKey>> extends KeyedCache<ModelK
 
   hasModel(modelOrKey: ModelOrKey<T>): boolean;
 
+  removeModel(model: T): T;
+
+  removeModels(models: T[]): T[];
+
 }
 
 export interface AsyncStreamedModelCache<T extends UniqueModel> extends ModelCache<T>, AsyncKeyedCache<ModelKey, T> { }
 
+/**
+ * AsyncCacheWrap for UniqueModels of the same type.
+ *
+ * NOTE: Internally all ModelKey values are converted to strings, so misses are returned as string values instead of number values.
+ * Use KeySafeAsyncModelCacheWrap if the "misses" value type should be the original key type input.
+ */
 export class AsyncModelCacheWrap<T extends UniqueModel> extends AsyncCacheWrap<ModelKey, T> implements AsyncStreamedModelCache<T> {
 
   // MARK: ModelCache
   put(key: ModelKey, model: T) {
-      super.put(String(key), model);
+    super.put(String(key), model);
   }
 
   putModel(model: T): boolean {
-      const key = ModelUtility.readModelKeyString(model);
+    const key = ModelUtility.readModelKeyString(model);
 
-      if (key) {
-          super.put(key, model);
-          return true;
-      }
+    if (key) {
+      super.put(key, model);
+      return true;
+    }
 
-      return false;
+    return false;
   }
 
   has(key: ModelKey): boolean {
-      return super.has(String(key));
+    return super.has(String(key));
   }
 
   remove(key: ModelKey) {
-      return super.remove(String(key));
+    return super.remove(String(key));
   }
 
   putModels(models: T[]): void {
-      models.forEach((model) => {
-          this.putModel(model);
-      });
+    models.forEach((model) => this.putModel(model));
   }
 
   load(keys: ModelKey[]) {
-      keys = ModelUtility.makeStringModelKeysArray(keys);
-      return super.load(keys);
+    const stringKeys = ModelUtility.makeStringModelKeysArray(keys, true);
+    return super.load(stringKeys);
   }
 
   hasModel(modelOrKey: ModelOrKey<T>): boolean {
-      const key = ModelUtility.readModelKeyString(modelOrKey);
+    const key = ModelUtility.readModelKeyString(modelOrKey);
 
-      if (key) {
-          return super.has(key);
-      }
+    if (key) {
+      return super.has(key);
+    }
 
-      return false;
+    return false;
+  }
+
+  removeModel(model: T): T {
+    const key = ModelUtility.readModelKeyString(model);
+    return this.remove(key);
+  }
+
+  removeModels(models: T[]): T[] {
+    const modelKeys = ModelUtility.readModelKeysFromModels(models);
+    return this.removeAll(modelKeys);
   }
 
 }
 
+/**
+ * AsyncModelCacheWrap extension that returns any "missed" keys using their original type.
+ */
+export class KeySafeAsyncModelCacheWrap<T extends UniqueModel> extends AsyncModelCacheWrap<T> {
+
+  load(keys: ModelKey[]) {
+    const result = super.load(keys);
+    let misses = result.misses;
+
+    if (result.misses.length > 0) {
+      const keysObjectMapping = ValueUtility.convertArrayToMirrorMap(keys);
+      misses = result.misses.map((x) => keysObjectMapping[x]);
+    }
+
+    return {
+      ...result,
+      misses
+    };
+
+  }
+
+}

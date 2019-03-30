@@ -21,17 +21,17 @@ export class TestReadService<T> implements ReadService<T> {
   // ReadService
   read(request: ReadRequest): Observable<ReadResponse<T>> {
     const modelKeys = ValueUtility.normalizeArray(request.modelKeys);
-    const models = modelKeys.filter((x) => !this._filteredKeysSet.has(x)).map((x: NumberModelKey) => {
-      const foo = this.makeFn(x);
+    const keysSeparation = ValueUtility.separateValues(modelKeys, (x) => !this._filteredKeysSet.has(x));
 
-      // TODO: Initialize any other way?
+    const models = keysSeparation.included.map((x: NumberModelKey) => {
+      const foo = this.makeFn(x);
 
       return foo;
     });
 
     return of({
       models,
-      failed: []
+      failed: keysSeparation.excluded
     });
   }
 

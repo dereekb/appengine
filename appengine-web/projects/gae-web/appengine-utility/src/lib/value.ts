@@ -7,6 +7,15 @@ export type MakePropertyKeyFunction<T> = (input: T) => PropertyKey;
 export type MakeMapKeyFunction<K, T> = (input: T) => K | undefined;
 export type IterateFunction<T> = (x: T, index: number) => any | undefined;
 
+export interface SeparateResult<T> {
+  included: T[];
+  excluded: T[];
+}
+
+export interface GroupingResult<T> {
+  [key: string]: T[];
+}
+
 export interface UniqueArrayMap<T> {
   [key: string]: T;
 }
@@ -582,8 +591,28 @@ export class ValueUtility {
     return partitions;
   }
 
+  // MARK: Grouping
+  static separateValues<T>(values: T[], checkInclusionFn: (T) => boolean): SeparateResult<T> {
+    const result = this.groupValues(values, (x) => {
+      return (checkInclusionFn(x)) ? 'include' : 'exclude';
+    });
+
+    return {
+      included: result.include || [],
+      excluded: result.exclude || []
+    };
+  }
+
+  /**
+   * Similar to makeValuesGroupMap, but returns an object instead of a map.
+   */
+  static groupValues<K extends PropertyKey, T>(values: T[], groupKeyFn: (T) => K): GroupingResult<T> {
+    const map = this.makeValuesGroupMap<K, T>(values, groupKeyFn);
+    return this.mapToObject(map);
+  }
+
   // MARK: Map
-  static makeValuesGroupMap<K, T>(values: T[], keyForValue: (x: T) => K): Map<K, T[]> {
+  static makeValuesGroupMap<K, T>(values: T[], keyForValue: (T) => K): Map<K, T[]> {
     const map = new Map<K, T[]>();
 
     values.forEach((x) => {
@@ -597,6 +626,16 @@ export class ValueUtility {
     });
 
     return map;
+  }
+
+  static mapToObject<K extends PropertyKey, T>(map: Map<K, T>): { [key: string]: T } {
+    const object = {} as any;
+
+    map.forEach((x: T, key: K) => {
+      object[key] = x;
+    });
+
+    return object;
   }
 
   // MARK: Array-Map Conversions
