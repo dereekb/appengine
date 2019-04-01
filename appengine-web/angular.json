@@ -139,7 +139,7 @@
       "root": "projects/gae-web/appengine-client",
       "sourceRoot": "projects/gae-web/appengine-client/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "gae",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -174,7 +174,7 @@
       "root": "projects/gae-web/appengine-utility",
       "sourceRoot": "projects/gae-web/appengine-utility/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "gae",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -209,7 +209,7 @@
       "root": "projects/gae-web/appengine-token",
       "sourceRoot": "projects/gae-web/appengine-token/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "gae",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -244,7 +244,7 @@
       "root": "projects/gae-web/appengine-api",
       "sourceRoot": "projects/gae-web/appengine-api/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "gae",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -279,7 +279,7 @@
       "root": "projects/gae-web/appengine-analytics",
       "sourceRoot": "projects/gae-web/appengine-analytics/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "gae",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -302,6 +302,41 @@
             "tsConfig": [
               "projects/gae-web/appengine-analytics/tsconfig.lib.json",
               "projects/gae-web/appengine-analytics/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-services": {
+      "root": "projects/gae-web/appengine-services",
+      "sourceRoot": "projects/gae-web/appengine-services/src",
+      "projectType": "library",
+      "prefix": "gae",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-services/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-services/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-services/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-services/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-services/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-services/tsconfig.lib.json",
+              "projects/gae-web/appengine-services/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
