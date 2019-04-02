@@ -22,3 +22,48 @@ Run `ng test appengine-services` to execute the unit tests via [Karma](https://k
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+# Services Configuration
+
+## Google index.html Configuration
+
+```javascript
+<!-- Google Sign In -->
+<script>
+    window.___gcfg = {
+        parsetags: 'onload'
+    };
+
+    function googleOnLoadCallback() {}
+</script>
+
+<script src="https://apis.google.com/js/platform.js?onload=googleOnLoadCallback" async defer></script>
+```
+
+
+## Facebook index.html Configuration
+```javascript
+<!-- Facebook -->
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '1814919078756842',
+            cookie: false,
+            xfbml: false,
+            version: 'v2.9'
+        });
+    };
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+```
