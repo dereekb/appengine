@@ -1,0 +1,21 @@
+<div class="auth-box">
+    <div class="auth-box-header">
+        <div class="auth-box-header-logo">
+            <img src="assets/auth/tallynote.png" />
+        </div>
+        <h1>Sign In</h1>
+    </div>
+    <div class="auth-box-content" [gaeSignInGatewaySuccess]="loginHandler">
+        <gae-login-state-view [source]="loginHandler" #loginHandler="gaeSignInGateway" [gaeSignInGateway]="loginTokenHandler" gaeLoginSignInAnalytics #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]">
+            <div class="login" loginView>
+                <gae-oauth-login-view [disabled]="loginHandler.disableLogins" #oauthLogin></gae-oauth-login-view>
+                <hr class="login-divider" />
+                <gae-credentials-login-view></gae-credentials-login-view>
+            </div>
+        </gae-login-state-view>
+    </div>
+    <div class="auth-box-footer" *ngIf="!loginHandler.isDone">
+        <p>Need an account?</p>
+        <button class="link-button" md-button uiSref="signup">Sign Up</button>
+    </div>
+</div>

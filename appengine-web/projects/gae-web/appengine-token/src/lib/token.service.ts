@@ -36,7 +36,11 @@ export abstract class UserLoginTokenAuthenticator {
  */
 export abstract class UserLoginTokenService {
 
+  abstract isAuthenticated(): Observable<boolean>;
   abstract getEncodedLoginToken(): Observable<EncodedToken>;
+
+  abstract login(fullToken: LoginTokenPair, rememberMe: boolean): Observable<LoginTokenPair>;
+  abstract logout(): Observable<boolean>;
 
   // TODO: Add DecodedLoginToken type and allow returning it.
 

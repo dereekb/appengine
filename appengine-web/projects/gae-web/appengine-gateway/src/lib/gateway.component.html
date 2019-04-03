@@ -1,0 +1,15 @@
+<div class="gateway-view tallynote-theme">
+  <div class="gateway-content">
+    <ui-view></ui-view>
+  </div>
+  <div class="gateway-footer">
+    <!-- TODO: Inject TOS/Privacy Policy gateway links.-->
+    <div class="links">
+      <a uiSref="legal">Terms of Service</a>
+      <a uiSref="legal">Privacy Policy</a>
+    </div>
+    <div class="copyright">
+      <span><a uiSref="public">{{ copyright }}</a></span>
+    </div>
+  </div>
+</div>

@@ -3,7 +3,7 @@ import { ApiRouteConfiguration, ApiModuleInfo, ApiConfiguration } from './api.co
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ClientLinkService } from './model/extension/link/link.service';
 import { ClientSchedulerService } from './model/extension/scheduler/scheduler.service';
-import { PublicLoginTokenService, PrivateLoginTokenService } from './auth/token.service';
+import { PublicLoginTokenApiService, PrivateLoginTokenApiService } from './auth/token.service';
 import { TokenModule, UserLoginTokenService } from '@gae-web/appengine-token';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { OAuthLoginService } from './auth/oauth.service';
@@ -99,8 +99,8 @@ export class ApiModule {
           deps: [ApiRouteConfiguration, HttpClient]
         },
         // Tokens and Auth
-        PublicLoginTokenService,
-        PrivateLoginTokenService,
+        PublicLoginTokenApiService,
+        PrivateLoginTokenApiService,
         OAuthLoginService,
         RegisterService
       ]

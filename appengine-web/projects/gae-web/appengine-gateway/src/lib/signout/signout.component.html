@@ -1,0 +1,24 @@
+<div class="auth-box">
+    <!-- <app-token-logout #logout [auto]="true" (onLogout)="setSignedOut()"></app-token-logout> -->
+    <div class="auth-box-header">
+        <div class="auth-box-header-logo">
+            <img src="assets/auth/tallynote.png" />
+        </div>
+        <h1>Sign Out</h1>
+    </div>
+    <div class="auth-box-content" #logout="appLoginTokenLogout" appLoginTokenLogout>
+        <div class="sign-out-content">
+            <div class="sign-out-loading" *ngIf="!logout.done">
+                <md-spinner class="sign-in-loading-spinner"></md-spinner>
+                <p>Signing out...</p>
+            </div>
+            <div class="sign-out-done" *ngIf="logout.done">
+                <p>You've been signed out.</p>
+            </div>
+        </div>
+    </div>
+    <div class="auth-box-footer">
+        <p>Need to sign back in?</p>
+        <button class="link-button" md-button uiSref="signin">Sign In</button>
+    </div>
+</div>

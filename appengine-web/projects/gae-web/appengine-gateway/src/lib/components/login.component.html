@@ -1,0 +1,20 @@
+<div class="login-content">
+    <div [hidden]="isDone">
+        <ng-content select="[loginView]"></ng-content>
+    </div>
+    <div class="sign-in-loading" *ngIf="isWorking">
+        <md-spinner class="sign-in-loading-spinner"></md-spinner>
+    </div>
+    <div class="login-content">
+        <div class="login-complete" *ngIf="isDone">
+            <p class="success-text">Login Success!</p>
+            <md-spinner class="spinner"></md-spinner>
+            <p class="loading-text">Application Loading...</p>
+        </div>
+        <div class="login-error" *ngIf="error">
+            <p>{{ error?.message || 'An error occured.' }}</p>
+            <ng-content select="[errorActionView]"></ng-content>
+        </div>
+    </div>
+    <ng-content select="[footerView]"></ng-content>
+</div>

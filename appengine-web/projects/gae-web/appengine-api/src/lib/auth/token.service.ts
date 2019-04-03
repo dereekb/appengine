@@ -16,7 +16,7 @@ export const LOGIN_WITH_REFRESH_TOKEN_PATH = `${LOGIN_TOKEN_SERVICE_PATH}/login`
  * Service for interacting with an Appengine LoginToken service.
  */
 @Injectable()
-export class PublicLoginTokenService {
+export class PublicLoginTokenApiService {
 
   private _servicePath: string;
 
@@ -80,7 +80,7 @@ export class PublicLoginTokenService {
 }
 
 @Injectable()
-export class PrivateLoginTokenService {
+export class PrivateLoginTokenApiService {
 
   private _servicePath: string;
 

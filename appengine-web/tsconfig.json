@@ -54,6 +54,12 @@
       ],
       "@gae-web/appengine-services/*": [
         "dist/gae-web/appengine-services/*"
+      ],
+      "@gae-web/appengine-gateway": [
+        "dist/gae-web/appengine-gateway"
+      ],
+      "@gae-web/appengine-gateway/*": [
+        "dist/gae-web/appengine-gateway/*"
       ]
     }
   }
