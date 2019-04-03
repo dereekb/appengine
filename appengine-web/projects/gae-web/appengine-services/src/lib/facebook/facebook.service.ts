@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, InjectionToken, Inject } from '@angular/core';
 
 import { AbstractAsyncLoadedService } from '../shared/async';
+
+export const PRELOAD_FACEBOOK_TOKEN = new InjectionToken<string>('PreLoadFacebookService');
 
 export type FacebookLoginStatus = 'connected' | 'not_authorized' | 'other';
 
@@ -54,7 +56,7 @@ export interface FacebookAnalyticsService {
   getUserID(): string | undefined;
   setUserID(userID: string);
   clearUserID();
-  updateUserProperties(parameters: {[key: string]: string | number}, callback?: (resp: {}) => void);
+  updateUserProperties(parameters: { [key: string]: string | number }, callback?: (resp: {}) => void);
 }
 
 export interface FacebookApi {
@@ -65,11 +67,11 @@ export interface FacebookApi {
 }
 
 export class FacebookApiServiceConfig {
-  appId: string;
   version = 'v2.8';
   cookie = false;
   xfbml = false;
   status = true;
+  constructor(public appId: string) { }
 }
 
 /**
@@ -80,12 +82,11 @@ export class FacebookApiServiceConfig {
 @Injectable()
 export class FacebookApiService extends AbstractAsyncLoadedService<FacebookApi> {
 
-  private static FACEBOOK_API_WINDOW_KEY = 'FB';
-  private static FACEBOOK_CALLBACK_KEY = 'fbAsyncInit';
+  public static readonly FACEBOOK_API_WINDOW_KEY = 'FB';
+  public static readonly FACEBOOK_CALLBACK_KEY = 'fbAsyncInit';
 
-  constructor(private _config: FacebookApiServiceConfig) {
-    super(FacebookApiService.FACEBOOK_API_WINDOW_KEY, FacebookApiService.FACEBOOK_CALLBACK_KEY, 'Facebook');
-    this.loadService(); // Pre-load service.
+  constructor(private _config: FacebookApiServiceConfig, @Inject(PRELOAD_FACEBOOK_TOKEN) preload: boolean = true) {
+    super(FacebookApiService.FACEBOOK_API_WINDOW_KEY, FacebookApiService.FACEBOOK_CALLBACK_KEY, 'Facebook', preload);
   }
 
   public getApi(): Promise<FacebookApi> {

@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
   templateUrl: './gateway.component.html',
-  styleUrls: ['./gateway.component.scss'],
+  styleUrls: ['./gateway.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class GatewayComponent {

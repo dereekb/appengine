@@ -1,7 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 
 /**
- * Component used for inputting username/password credentals.
+ * Component used for inputting the username/password credentals.
  */
 @Component({
   selector: 'gae-credentials-login-view',

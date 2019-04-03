@@ -9,7 +9,12 @@ export abstract class AbstractAsyncLoadedService<T> {
     private _service: T;
     private _loading: Promise<T>;
 
-    constructor(private _windowKey: string, private _callbackKey: string, private _serviceName = _windowKey) { }
+    constructor(private _windowKey: string, private _callbackKey: string, private _serviceName = _windowKey, preload = true) {
+        if (preload) {
+            // Begin loading the service immediately.
+            this.loadService();
+        }
+    }
 
     protected syncGetService(): T | undefined {
         return this._service;
@@ -39,7 +44,7 @@ export abstract class AbstractAsyncLoadedService<T> {
                 } else if (windowRef[this._callbackKey]) {
                     windowRef[this._callbackKey] = () => resolve(this.completeLoadingService());
                 } else {
-                    throw new ServiceSetupError(`Project is not setup properly for service "${ this._serviceName}"`);
+                    throw new ServiceSetupError(`Project is not setup properly for service "${this._serviceName}"`);
                 }
             });
         }
@@ -51,7 +56,7 @@ export abstract class AbstractAsyncLoadedService<T> {
         this._service = window[this._windowKey];
 
         if (!this._service) {
-            throw new ServiceLoadingError(`Service "${ this._serviceName}" failed loading.`);
+            throw new ServiceLoadingError(`Service "${this._serviceName}" failed loading.`);
         }
 
         // Init the API

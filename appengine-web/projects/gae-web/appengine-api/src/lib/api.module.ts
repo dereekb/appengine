@@ -6,8 +6,8 @@ import { ClientSchedulerService } from './model/extension/scheduler/scheduler.se
 import { PublicLoginTokenApiService, PrivateLoginTokenApiService } from './auth/token.service';
 import { TokenModule, UserLoginTokenService } from '@gae-web/appengine-token';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { OAuthLoginService } from './auth/oauth.service';
-import { RegisterService } from './auth/register.service';
+import { RegisterApiService } from './auth/register.service';
+import { OAuthLoginApiService } from './auth/oauth.service';
 
 export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: ApiConfiguration) {
   const throwNoTokenError = false;
@@ -101,8 +101,8 @@ export class ApiModule {
         // Tokens and Auth
         PublicLoginTokenApiService,
         PrivateLoginTokenApiService,
-        OAuthLoginService,
-        RegisterService
+        OAuthLoginApiService,
+        RegisterApiService
       ]
     };
   }

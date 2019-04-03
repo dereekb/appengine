@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
 
 import { AbstractAsyncLoadedService } from '../shared/async';
+
+export const PRELOAD_GOOGLE_TOKEN = new InjectionToken<string>('PreLoadGoogleService');
 
 export type GooglePlatformApi = any;
 
@@ -13,12 +15,11 @@ export type GooglePlatformApi = any;
 @Injectable()
 export class GooglePlatformApiService extends AbstractAsyncLoadedService<GooglePlatformApi> {
 
-  private static G_API_WINDOW_KEY = 'gapi';
-  private static G_CALLBACK_KEY = 'googleOnLoadCallback';
+  public static readonly G_API_WINDOW_KEY = 'gapi';
+  public static readonly G_CALLBACK_KEY = 'googleOnLoadCallback';
 
-  constructor() {
-    super(GooglePlatformApiService.G_API_WINDOW_KEY, GooglePlatformApiService.G_CALLBACK_KEY, 'Google');
-    this.loadService(); // Pre-load service.
+  constructor(@Inject(PRELOAD_GOOGLE_TOKEN) preload: boolean = true) {
+    super(GooglePlatformApiService.G_API_WINDOW_KEY, GooglePlatformApiService.G_CALLBACK_KEY, 'Google', preload);
   }
 
   public load(apiName: string): Promise<any> {

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
-import { GooglePlatformApiService } from './google.service';
+import { GooglePlatformApiService, PRELOAD_GOOGLE_TOKEN } from './google.service';
 import { OAuthLoginServiceTokenResponse, OAuthLoginService } from '../shared/oauth.service';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -38,11 +38,9 @@ export interface GoogleAuthResponse {
 }
 
 export class GoogleOAuthServiceConfig {
-
-  public clientId: string;
-  public scope = 'email';
-  public cookies = false;
-
+  scope = 'email';
+  cookies = false;
+  constructor(public clientId: string) { }
 }
 
 @Injectable()
@@ -54,9 +52,12 @@ export class GoogleOAuthService extends OAuthLoginService {
 
   private _listener: GoogleOAuthLoginListener;
 
-  constructor(private _platformService: GooglePlatformApiService, private _config: GoogleOAuthServiceConfig) {
+  constructor(private _platformService: GooglePlatformApiService, private _config: GoogleOAuthServiceConfig, @Inject(PRELOAD_GOOGLE_TOKEN) preload: boolean = true) {
     super(GoogleOAuthService.SERVICE_NAME);
-    this.getListener(); // Get the listener asap.
+
+    if (preload) {
+      this.getListener(); // Get the listener immediately
+    }
   }
 
   // MARK: OAuthSignInService

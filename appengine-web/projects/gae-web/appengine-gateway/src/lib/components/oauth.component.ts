@@ -1,19 +1,19 @@
-import { ViewChild, Component, Input } from '@angular/core';
+import { ViewChild, Component, Input, forwardRef } from '@angular/core';
 
-import { OAuthButtonSignInHandlerDirective } from './oauth.directive';
+import { OAuthButtonSignInDirective } from './oauth.directive';
 import { SignInGateway } from './gateway';
 
 @Component({
-    selector: 'gae-oauth-login-view',
+    selector: 'gae-oauth-sign-in-gateway',
     templateUrl: './oauth.component.html'
 })
-export class OAuthLoginViewComponent implements SignInGateway {
+export class OAuthSignInGatewayComponent implements SignInGateway {
 
     @Input()
     public disabled = false;
 
-    @ViewChild(OAuthButtonSignInHandlerDirective)
-    public readonly buttonHandler: OAuthButtonSignInHandlerDirective;
+    @ViewChild(forwardRef(() => OAuthButtonSignInDirective))
+    public readonly buttonHandler: OAuthButtonSignInDirective;
 
     constructor() { }
 

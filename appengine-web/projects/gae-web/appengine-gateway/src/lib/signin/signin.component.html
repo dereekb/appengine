@@ -8,7 +8,7 @@
     <div class="auth-box-content" [gaeSignInGatewaySuccess]="loginHandler">
         <gae-login-state-view [source]="loginHandler" #loginHandler="gaeSignInGateway" [gaeSignInGateway]="loginTokenHandler" gaeLoginSignInAnalytics #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]">
             <div class="login" loginView>
-                <gae-oauth-login-view [disabled]="loginHandler.disableLogins" #oauthLogin></gae-oauth-login-view>
+                <gae-oauth-sign-in-gateway [disabled]="loginHandler.disableLogins" #oauthLogin></gae-oauth-sign-in-gateway>
                 <hr class="login-divider" />
                 <gae-credentials-login-view></gae-credentials-login-view>
             </div>

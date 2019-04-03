@@ -9,7 +9,7 @@
     <div class="auth-box-content" #logout="appLoginTokenLogout" appLoginTokenLogout>
         <div class="sign-out-content">
             <div class="sign-out-loading" *ngIf="!logout.done">
-                <md-spinner class="sign-in-loading-spinner"></md-spinner>
+                <mat-spinner class="sign-in-loading-spinner"></mat-spinner>
                 <p>Signing out...</p>
             </div>
             <div class="sign-out-done" *ngIf="logout.done">

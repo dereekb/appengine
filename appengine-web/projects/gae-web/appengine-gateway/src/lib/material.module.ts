@@ -2,7 +2,8 @@ import {NgModule} from '@angular/core';
 
 import {
   MatInputModule,
-  MatRippleModule
+  MatRippleModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 
 import { PlatformModule } from '@angular/cdk/platform';
@@ -15,6 +16,7 @@ import { ObserversModule } from '@angular/cdk/observers';
   exports: [
     MatInputModule,
     MatRippleModule,
+    MatProgressSpinnerModule,
     ObserversModule,
     PlatformModule
 

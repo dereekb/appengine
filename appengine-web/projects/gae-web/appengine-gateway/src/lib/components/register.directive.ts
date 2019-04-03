@@ -1,7 +1,7 @@
 import { SignInGateway, SignInGatewayState } from './gateway';
 import { Directive, Input, EventEmitter } from '@angular/core';
 import { LoginTokenPair, DecodedLoginToken, TokenType } from '@gae-web/appengine-token';
-import { RegisterService } from '@gae-web/appengine-api';
+import { RegisterApiService } from '@gae-web/appengine-api';
 import { first, tap } from 'rxjs/operators';
 import { AbstractSignInGatewayDirective } from './gateway.directive';
 
@@ -19,7 +19,7 @@ export class SignInGatewayRegisterDirective extends AbstractSignInGatewayDirecti
   private _existingToken: LoginTokenPair;
   private _registerToken: LoginTokenPair;
 
-  constructor(private _registerService: RegisterService) {
+  constructor(private _registerService: RegisterApiService) {
       super();
   }
 

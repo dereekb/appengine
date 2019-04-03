@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { FacebookApiServiceConfig, FacebookApiService } from './facebook.service';
+import { FacebookApiServiceConfig, FacebookApiService, PRELOAD_FACEBOOK_TOKEN } from './facebook.service';
 import { FacebookOAuthService } from './auth.service';
 import { FacebookSignInButtonDirective } from './button.component';
 
@@ -14,16 +14,20 @@ export { FacebookAnalyticsListenerService };
 })
 export class FacebookModule {
 
-  static forRoot(config: FacebookApiServiceConfig): ModuleWithProviders {
+  static forRoot(config: FacebookApiServiceConfig, preloadService?: boolean): ModuleWithProviders {
     return {
       ngModule: FacebookModule,
       providers: [
-        FacebookApiService,
-        FacebookOAuthService,
         {
           provide: FacebookApiServiceConfig,
           useValue: config
-        }
+        },
+        {
+          provide: PRELOAD_FACEBOOK_TOKEN,
+          useValue: preloadService
+        },
+        FacebookApiService,
+        FacebookOAuthService
       ]
     };
   }

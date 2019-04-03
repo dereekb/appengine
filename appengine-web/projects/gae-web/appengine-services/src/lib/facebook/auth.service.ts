@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { FacebookLoginResponse, FacebookLoginStatus, FacebookApi, FacebookApiService } from './facebook.service';
+import { Injectable, Inject } from '@angular/core';
+import { FacebookLoginResponse, FacebookLoginStatus, FacebookApi, FacebookApiService, PRELOAD_FACEBOOK_TOKEN } from './facebook.service';
 import { OAuthLoginServiceTokenResponse, OAuthLoginService } from '../shared/oauth.service';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,13 +14,16 @@ export class FacebookOAuthService extends OAuthLoginService {
     status: 'other'
   };
 
-  constructor(private _apiService: FacebookApiService) {
+  constructor(private _apiService: FacebookApiService, @Inject(PRELOAD_FACEBOOK_TOKEN) preload: boolean = true) {
     super(FacebookOAuthService.SERVICE_NAME);
-    this.getLoginStatus().then((status) => {
-      this._status = status;
-    }, (error) => {
-      console.log('Error loading facebook login status...');
-    });
+
+    if (preload) {
+      this.getLoginStatus().then((status) => {
+        this._status = status;
+      }, (error) => {
+        console.log('Error loading facebook login status...');
+      });
+    }
   }
 
   // MARK: OAuthSignInService

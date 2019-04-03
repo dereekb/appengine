@@ -1,6 +1,6 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { OAuthLoginService } from '@gae-web/appengine-api';
+import { OAuthLoginApiService } from '@gae-web/appengine-api';
 import { OAuthLoginServiceButton, OAuthButtonEvent, OAuthButtonState, OAuthLoginServiceTokenResponse } from '@gae-web/appengine-services';
 import { timeout } from 'rxjs/operators';
 import { AbstractSignInGateway, SignInGateway } from './gateway';
@@ -8,17 +8,17 @@ import { AbstractSignInGateway, SignInGateway } from './gateway';
 
 // MARK: Handlers
 /**
- * Used for watching OAuth Button events.
+ * Used for watching OAuth Button events from a number of OAuthLoginServiceButtons.
  */
 @Directive({
-    selector: '[gaeOAuthButtonSignInHandler]'
+    selector: '[gaeOAuthButtonSignIn]'
 })
-export class OAuthButtonSignInHandlerDirective extends AbstractSignInGateway implements SignInGateway, OnDestroy {
+export class OAuthButtonSignInDirective extends AbstractSignInGateway implements SignInGateway, OnDestroy {
 
     private _buttons: OAuthLoginServiceButton[];
     private _subs: Subscription[];
 
-    constructor(private _loginService: OAuthLoginService) {
+    constructor(private _loginService: OAuthLoginApiService) {
         super();
     }
 
@@ -29,7 +29,7 @@ export class OAuthButtonSignInHandlerDirective extends AbstractSignInGateway imp
 
     // MARK: Accessors
     @Input()
-    public set appOAuthButtonSignInHandler(buttons: OAuthLoginServiceButton[]) {
+    public set gaeOAuthButtonSignIn(buttons: OAuthLoginServiceButton[]) {
         this._clearSubs();
 
         this._buttons = buttons;

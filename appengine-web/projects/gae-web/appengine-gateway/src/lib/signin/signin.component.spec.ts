@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignInComponent } from './signin.component';
+import { GatewayMaterialModule } from '../material.module';
+import { GatewayDirectivesModule } from '../directives.module';
+import { OAuthSignInGatewayComponent } from '../components/oauth.component';
 
 describe('AppengineGatewayComponent', () => {
   let component: SignInComponent;
@@ -8,7 +11,8 @@ describe('AppengineGatewayComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SignInComponent ]
+      imports: [ GatewayDirectivesModule, GatewayMaterialModule ],
+      declarations: [ OAuthSignInGatewayComponent, SignInComponent ]
     })
     .compileComponents();
   }));
@@ -22,5 +26,6 @@ describe('AppengineGatewayComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });
 

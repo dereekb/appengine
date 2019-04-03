@@ -6,9 +6,9 @@ import { SignUpComponent } from './signup/signup.component';
 import { SignOutComponent } from './signout/signout.component';
 import { GatewayComponent } from './gateway.component';
 import { CredentialsComponent } from './components/credentials.component';
-import { OAuthLoginViewComponent } from './components/oauth.component';
+import { OAuthSignInGatewayComponent } from './components/oauth.component';
 import { LoginStateViewComponent } from './components/login.component';
-import { OAuthButtonSignInHandlerDirective } from './components/oauth.directive';
+import { OAuthButtonSignInDirective } from './components/oauth.directive';
 import { SignInGatewayGroupDirective } from './components/gateway.directive';
 import { SignInGatewayRegisterDirective } from './components/register.directive';
 import { SignInGatewayDirective } from './components/login.directive';
@@ -19,6 +19,7 @@ import { ApiModule } from '@gae-web/appengine-api';
 import { GATEWAY_STATES } from './gateway.states';
 import { GatewayMaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { GatewayDirectivesModule } from './directives.module';
 
 // TODO: as Any temporary to override compiler issues with ui router.)
 export const ROUTER_CONFIG: any = {
@@ -33,18 +34,11 @@ export const ROUTER_CONFIG: any = {
     SignUpComponent,
     SignOutComponent,
     CredentialsComponent,
-    OAuthLoginViewComponent,
-    LoginStateViewComponent,
-    OAuthButtonSignInHandlerDirective,
-    SignInGatewayGroupDirective,
-    SignInGatewayRegisterDirective,
-    SignInGatewayDirective,
-    SignInGatewaySuccessDirective,
-    SignInGatewaySignOutDirective,
-    LoginRegisteredAnalyticsDirective,
-    LoginSignInAnalyticsDirective
+    OAuthSignInGatewayComponent,
+    LoginStateViewComponent
   ],
   imports: [
+    GatewayDirectivesModule,
     CommonModule,
     GatewayMaterialModule,
     FlexLayoutModule,

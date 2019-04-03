@@ -11,14 +11,14 @@ import { map, share } from 'rxjs/operators';
  * Service for interacting with an Appengine Token Register service.
  */
 @Injectable()
-export class RegisterService {
+export class RegisterApiService {
 
   public static SERVICE_PATH = '/login/auth/register';
 
   private _servicePath: string;
 
   constructor(private _httpClient: HttpClient, private _config: ApiRouteConfiguration) {
-    this._servicePath = this._config.root + RegisterService.SERVICE_PATH;
+    this._servicePath = this._config.root + RegisterApiService.SERVICE_PATH;
   }
 
   // MARK: Service

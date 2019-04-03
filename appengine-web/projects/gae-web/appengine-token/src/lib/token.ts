@@ -6,6 +6,9 @@ import { DateTime } from 'luxon';
 
 export type LoginId = NumberModelKey;
 export type LoginPointerId = StringModelKey;
+
+// TODO: Change EncodedToken to an interface, and this value to EncodedTokenString so DecodedToken can implement this interface and it maps the server better.
+
 export type EncodedToken = StringModelKey;
 export type EncodedRefreshToken = EncodedToken;
 

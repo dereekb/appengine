@@ -10,14 +10,14 @@ import { LoginTokenPair, LoginTokenPairJson } from '@gae-web/appengine-token';
  * Service for interacting with an Appengine OAuth Token service.
  */
 @Injectable()
-export class OAuthLoginService {
+export class OAuthLoginApiService {
 
   public static SERVICE_PATH = '/login/auth/oauth';
 
   private _servicePath: string;
 
   constructor(private _httpClient: HttpClient, private _config: ApiRouteConfiguration) {
-    this._servicePath = this._config.root + OAuthLoginService.SERVICE_PATH;
+    this._servicePath = this._config.root + OAuthLoginApiService.SERVICE_PATH;
   }
 
   // MARK: Service
