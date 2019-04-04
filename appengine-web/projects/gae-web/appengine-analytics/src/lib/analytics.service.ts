@@ -103,12 +103,11 @@ export class AnalyticsService implements AnalyticsSender {
   static readonly USER_PROPERTIES_EVENT_NAME = 'user_properties';
 
   private _subject = new Subject<AnalyticsStreamEvent>();
-  private _observable = this._subject.asObservable();
 
   private _user?: AnalyticsUser;
   private _userSub: Subscription;
 
-  constructor(private _config: AnalyticsServiceConfiguration, @Optional() userSource?: AnalyticsUserSource) {
+  constructor(private _config: AnalyticsServiceConfiguration, @Optional() userSource: AnalyticsUserSource = _config.userSource) {
     this._init();
 
     if (userSource) {
@@ -127,7 +126,7 @@ export class AnalyticsService implements AnalyticsSender {
 
   // MARK: Events
   public get events() {
-    return this._observable;
+    return this._subject.asObservable();
   }
 
   /**

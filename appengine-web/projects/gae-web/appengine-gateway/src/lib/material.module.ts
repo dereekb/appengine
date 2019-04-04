@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import {
   MatInputModule,
@@ -6,6 +6,7 @@ import {
   MatProgressSpinnerModule
 } from '@angular/material';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlatformModule } from '@angular/cdk/platform';
 import { ObserversModule } from '@angular/cdk/observers';
 
@@ -18,9 +19,10 @@ import { ObserversModule } from '@angular/cdk/observers';
     MatRippleModule,
     MatProgressSpinnerModule,
     ObserversModule,
-    PlatformModule
+    PlatformModule,
+    BrowserAnimationsModule
 
     // TODO: Add other dependencies.
   ]
 })
-export class GatewayMaterialModule {}
+export class GatewayMaterialModule { }

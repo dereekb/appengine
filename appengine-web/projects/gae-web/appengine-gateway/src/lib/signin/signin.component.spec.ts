@@ -1,12 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OAuthSignInGatewayComponent } from '../components/oauth.component';
-import { GoogleSignInButtonDirective, FacebookSignInButtonDirective, GoogleModule, FacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
+import { GoogleModule, FacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
 import { GatewayDirectivesModule } from '../directives.module';
 import { OAuthLoginApiService, TestUtility } from '@gae-web/appengine-api';
 import { SignInComponent } from './signin.component';
+import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
+import { GatewaySegueService } from '../state.service';
+import { TestGatewaySegueService } from '../../test/state.service';
+import { TestAnalyticsModule } from '@gae-web/appengine-analytics';
 
-describe('AppengineGatewayComponent', () => {
+describe('SignInComponent', () => {
   let component: SignInComponent;
   let fixture: ComponentFixture<SignInComponent>;
 
@@ -15,20 +19,33 @@ describe('AppengineGatewayComponent', () => {
   const httpClient = httpClientSpy as any;
   const testOAuthLoginApiService = new OAuthLoginApiService(httpClient, TestUtility.testApiRouteConfig());
 
+  const storageAccessor = StoredTokenStorageAccessor.getLocalStorageOrBackupAccessor();
+  const tokenAuthenticator: UserLoginTokenAuthenticator = {} as any;
+
+  const testUserLoginTokenService = new LegacyAppTokenUserService(new AppTokenStorageService(storageAccessor), tokenAuthenticator);
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        TestAnalyticsModule.forRoot(),
         GoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
         FacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
         GatewayDirectivesModule
       ],
-      declarations: [ OAuthSignInGatewayComponent, SignInComponent ],
+      declarations: [OAuthSignInGatewayComponent, SignInComponent],
       providers: [{
         provide: OAuthLoginApiService,
         useValue: testOAuthLoginApiService
+      },
+      {
+        provide: UserLoginTokenService,
+        useValue: testUserLoginTokenService
+      },
+      {
+        provide: GatewaySegueService,
+        useValue: new TestGatewaySegueService()
       }]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
