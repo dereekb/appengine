@@ -3,20 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OAuthSignInGatewayComponent } from '../components/oauth.component';
 import { GoogleModule, FacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
 import { GatewayDirectivesModule } from '../directives.module';
-import { OAuthLoginApiService, TestUtility } from '@gae-web/appengine-api';
-import { SignInComponent } from './signin.component';
+import { OAuthLoginApiService, TestUtility, RegisterApiService } from '@gae-web/appengine-api';
+import { SignUpComponent } from './signup.component';
 import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
 import { GatewaySegueService } from '../state.service';
 import { TestGatewaySegueService } from '../../test/state.service';
 import { TestAnalyticsModule } from '@gae-web/appengine-analytics';
 
-describe('SignInComponent', () => {
-  let component: SignInComponent;
-  let fixture: ComponentFixture<SignInComponent>;
+describe('SignUpComponent', () => {
+  let component: SignUpComponent;
+  let fixture: ComponentFixture<SignUpComponent>;
 
   const httpClientSpy: { post: jasmine.Spy } = jasmine.createSpyObj('HttpClient', ['post']);
 
   const httpClient = httpClientSpy as any;
+  const testRegisterApiService = new RegisterApiService(httpClient, TestUtility.testApiRouteConfig());
   const testOAuthLoginApiService = new OAuthLoginApiService(httpClient, TestUtility.testApiRouteConfig());
 
   const storageAccessor = StoredTokenStorageAccessor.getLocalStorageOrBackupAccessor();
@@ -32,10 +33,14 @@ describe('SignInComponent', () => {
         FacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
         GatewayDirectivesModule
       ],
-      declarations: [OAuthSignInGatewayComponent, SignInComponent],
+      declarations: [OAuthSignInGatewayComponent, SignUpComponent],
       providers: [{
         provide: OAuthLoginApiService,
         useValue: testOAuthLoginApiService
+      },
+      {
+        provide: RegisterApiService,
+        useValue: testRegisterApiService
       },
       {
         provide: UserLoginTokenService,
@@ -49,7 +54,7 @@ describe('SignInComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SignInComponent);
+    fixture = TestBed.createComponent(SignUpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

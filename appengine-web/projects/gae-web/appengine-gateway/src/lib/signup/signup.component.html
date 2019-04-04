@@ -5,13 +5,13 @@
         </div>
         <h1>Sign Up</h1>
     </div>
-    <div class="auth-box-content" [appSignInGatewaySuccess]="registerHandler" newUserLogin="true">
-        <app-login-state-view [source]="registerHandler" #registerHandler="appLoginTokenRegisterHandler" [appLoginTokenRegisterHandler]="loginTokenHandler" gaeLoginRegisteredAnalytics #loginTokenHandler="appSignInGatewayHandler" [appSignInGatewayHandler]="[oauthLogin]">
+    <div class="auth-box-content" [gaeSignInGatewaySuccess]="registerHandler" newUserLogin="true">
+        <gae-login-state-view [source]="registerHandler" #registerHandler="gaeSignInGatewayRegister" [gaeSignInGatewayRegister]="loginTokenHandler" gaeLoginRegisteredAnalytics #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]">
             <div class="login" loginView>
                 <div [hidden]="registerHandler.readyToRegister">
-                    <app-oauth-login-view [disabled]="registerHandler.disabledLogin" #oauthLogin></app-oauth-login-view>
+                    <gae-oauth-sign-in-gateway [disabled]="registerHandler.disabledLogin" #oauthLogin></gae-oauth-sign-in-gateway>
                     <hr class="login-divider" />
-                    <app-credentials-login-view></app-credentials-login-view>
+                    <gae-credentials-login-view></gae-credentials-login-view>
                 </div>
                 <div [hidden]="!registerHandler.readyToRegister">
                     <div class="register">
@@ -37,7 +37,7 @@
                     <button md-raised-button (click)="registerHandler.cancelLoginWithExisting()" class="register-cancel-button">Cancel</button>
                 </div>
             </div>
-        </app-login-state-view>
+        </gae-login-state-view>
     </div>
     <div class="auth-box-footer" *ngIf="!registerHandler.hasExistingToken && !registerHandler.isDone">
         <p>Already have an account?</p>

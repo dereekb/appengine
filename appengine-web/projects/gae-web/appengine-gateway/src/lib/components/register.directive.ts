@@ -9,8 +9,8 @@ import { AbstractSignInGatewayDirective } from './gateway.directive';
  * Used for watching a SignInGateway and providing functions for registration.
  */
 @Directive({
-  selector: '[gaeLoginTokenRegisterHandler]',
-  exportAs: 'gaeLoginTokenRegisterHandler'
+  selector: '[gaeSignInGatewayRegister]',
+  exportAs: 'gaeSignInGatewayRegister'
 })
 export class SignInGatewayRegisterDirective extends AbstractSignInGatewayDirective {
 
@@ -25,7 +25,7 @@ export class SignInGatewayRegisterDirective extends AbstractSignInGatewayDirecti
 
   // MARK: Accessors
   @Input()
-  public set gaeLoginTokenRegisterHandler(gateway: SignInGateway) {
+  public set gaeSignInGatewayRegister(gateway: SignInGateway) {
       this.setGateway(gateway);
   }
 

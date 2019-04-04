@@ -15,7 +15,6 @@ describe('OAuthSignInGatewayComponent', () => {
   const httpClient = httpClientSpy as any;
   const testOAuthLoginApiService = new OAuthLoginApiService(httpClient, TestUtility.testApiRouteConfig());
 
-
   const storageAccessor = StoredTokenStorageAccessor.getLocalStorageOrBackupAccessor();
   const tokenAuthenticator: UserLoginTokenAuthenticator = {} as any;
 
