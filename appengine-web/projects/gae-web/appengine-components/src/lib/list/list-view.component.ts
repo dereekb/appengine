@@ -105,7 +105,6 @@ export abstract class AbstractListViewSource<T> implements OnDestroy {
       this.setWaitingForSource();
     } else if (source !== this._inputSource) {
 
-
       this._inputSource = source;
       this._sourceSub = source.stream.subscribe((next) => {
         let state: ListViewSourceState = ListViewSourceState.Idle;

@@ -1,35 +1,45 @@
 import { BehaviorSubject } from 'rxjs';
 
 export interface LoadingEvent {
-  loading?: boolean;
+  isLoading?: boolean;
   error?: any;
 }
 
+export type LoadingContextCheckCompletionFunction = () => any[];
+
+export interface LoadingContextConfiguration {
+  isLoading?: boolean;
+  checkDone?: LoadingContextCheckCompletionFunction;
+}
+
 /**
- * Utility object that helps control a loadingViewComponent.
+ * Utility object for maintaining a isLoading state. Is triggered into isLoading, then can be triggered again to see if elements have all completed isLoading or not.
  */
-export class LoadingViewSubject {
+export class LoadingContext {
 
   private _subject;
   private _error: any;
 
-  constructor(private readonly _checkDoneFunction?: () => any[], loading: boolean = true) {
-    this._subject = new BehaviorSubject<LoadingEvent>({ loading });
+  private _checkDone?: LoadingContextCheckCompletionFunction;
+
+  constructor({ checkDone, isLoading = true }: LoadingContextConfiguration = {}) {
+    this._checkDone = checkDone;
+    this._subject = new BehaviorSubject<LoadingEvent>({ isLoading });
   }
 
   /**
-   * Check the array for objects to see if loading is completed.
+   * Check the array for objects to see if isLoading is completed.
    *
-   * The loading state is always modified unless there is an error or no check function.
+   * The isLoading state is always modified unless there is an error or no check function.
    */
   public check() {
     if (!this.hasError()) {
-      if (this._checkDoneFunction) {
-        const checkArray = this._checkDoneFunction();
+      if (this._checkDone) {
+        const checkArray = this._checkDone();
         let isLoading = true;
 
         if (checkArray.length > 0) {
-          const checkResult = checkArray.filter((x) => x === undefined);  // If any are undefined, still loading.
+          const checkResult = checkArray.filter((x) => x === undefined);  // If any are undefined, still isLoading.
           isLoading = (checkResult.length > 0);
         }
 
@@ -40,8 +50,8 @@ export class LoadingViewSubject {
     }
   }
 
-  public get loading(): boolean {
-    return this._subject.value.loading;
+  public get isLoading(): boolean {
+    return this._subject.value.isLoading;
   }
 
   public hasError(): boolean {
@@ -52,19 +62,19 @@ export class LoadingViewSubject {
     delete this._error;
   }
 
-  public get obs() {
+  public get stream() {
     return this._subject.asObservable();
   }
 
-  public setLoading(loading: boolean = true) {
+  public setLoading(isLoading: boolean = true) {
     this._subject.next({
-      loading
+      isLoading
     });
   }
 
-  public setError(error: any, loading: boolean = false) {
+  public setError(error: any, isLoading: boolean = false) {
     this._subject.next({
-      loading,
+      isLoading,
       error
     });
   }
