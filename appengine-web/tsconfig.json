@@ -60,6 +60,12 @@
       ],
       "@gae-web/appengine-gateway/*": [
         "dist/gae-web/appengine-gateway/*"
+      ],
+      "@gae-web/appengine-components": [
+        "dist/gae-web/appengine-components"
+      ],
+      "@gae-web/appengine-components/*": [
+        "dist/gae-web/appengine-components/*"
       ]
     }
   }

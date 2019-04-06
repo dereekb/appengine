@@ -1,0 +1,18 @@
+<div class="list-view">
+  <div class="list-view-toolbar" *ngIf="showControls">
+    <ng-content name="toolbar" select="[listViewToolbar]"></ng-content>
+  </div>
+  <!-- List Content -->
+  <ng-content></ng-content>
+  <div class="list-content-loading" *ngIf="showLoading">
+    <md-progress-bar mode="indeterminate"></md-progress-bar>
+  </div>
+  <div *ngIf="showDone">
+    <div class="list-content-done" *ngIf="showControls && hasElements">
+      <p>That's all {{ count }} of them!</p>
+    </div>
+    <div *ngIf="!hasElements">
+      <ng-content select="[noCountView]"></ng-content>
+    </div>
+  </div>
+</div>

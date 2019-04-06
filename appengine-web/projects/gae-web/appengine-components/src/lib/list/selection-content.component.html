@@ -1,0 +1,11 @@
+<div class="selection-content">
+  <md-selection-list class="selection-content-list">
+      <md-list-option #listOption class="list-item" (destroyed)="destroyedOption(listOption)" [disabled]="selectionItem.disabled" [value]="selectionItem" *ngFor="let selectionItem of (elements | async)">
+          <md-icon mdListIcon appColorStyle [appStringColor]="selectionItem.key">folder</md-icon>
+          <h4 mdLine>{{ selectionItem.name }}</h4>
+      </md-list-option>
+  </md-selection-list>
+  <button md-button class="list-content-more" (click)="loadMore()" *ngIf="canLoadMore">
+      <md-icon>chevron_right</md-icon><span>Load More</span>
+  </button>
+</div>
