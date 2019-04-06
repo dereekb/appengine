@@ -73,6 +73,8 @@ export class SignInGatewaySuccessDirective implements OnDestroy {
 
 }
 
+export type SignInGatewaySignOutState = 'init' | 'signedin' | 'working' | 'signedout';
+
 /**
  * Directive used for signing out immediately.
  */
@@ -82,19 +84,29 @@ export class SignInGatewaySuccessDirective implements OnDestroy {
 })
 export class SignInGatewaySignOutDirective implements AfterContentInit {
 
-    private _done = false;
+    @Input()
+    public autoLogout = false;
+
+    private _state: SignInGatewaySignOutState = 'init';
 
     constructor(private _service: UserLoginTokenService) { }
 
     ngAfterContentInit(): void {
-        this._service.logout().subscribe(() => {
-            this._done = true;
-        });
+        this._state = 'signedin';
     }
 
     // MARK: Accessors
-    public get done() {
-        return this._done;
+    public get state() {
+        return this._state;
+    }
+
+    // MARK: Sign Out
+    public logout() {
+        this._state = 'working';
+
+        this._service.logout().subscribe(() => {
+            this._state = 'signedout';
+        });
     }
 
 }
