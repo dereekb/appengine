@@ -1,31 +1,15 @@
-<!--
-<div class="loading-view">
-  <div ng-if="!$ctrl.waitFor" class="loading-progress-view">
-    <md-progress-circular ng-if="!$ctrl.linear" md-diameter="96"></md-progress-circular>
-    <md-progress-linear ng-if="$ctrl.linear" md-mode="indeterminate"></md-progress-linear>
-    <div ng-if="$ctrl.text" class="hint text-center">{{ $ctrl.text }}</div>
-  </div>
-  <div ng-if="$ctrl.error">
-    <error-view error="$ctrl.error"></error-view>
-  </div>
-  <div ng-if="$ctrl.waitFor && !$ctrl.error">
-    <div ng-transclude></div>
-  </div>
-</div>
--->
-
-
 <div class="loading-view">
   <div [ngSwitch]="state">
-    <ng-container *ngSwitchCase="0" select="[loading]">
+    <ng-container *ngSwitchCase="0">
       <gae-loading-progress *ngIf="!hasCustomLoading" [text]="text" [linear]="linear"></gae-loading-progress>
       <ng-content select="[loading]"></ng-content>
     </ng-container>
-    <ng-content *ngSwitchCase="1" select="[content]">
-
-    </ng-content>
-    <ng-content *ngSwitchCase="2" select="[error]">
-
-    </ng-content>
+    <ng-container *ngSwitchCase="1">
+      <ng-content select="[content]"></ng-content>
+    </ng-container>
+    <ng-container *ngSwitchCase="2">
+      <gae-error *ngIf="!hasCustomError" [error]="error"></gae-error>
+      <ng-content select="[error]"></ng-content>
+    </ng-container>
   </div>
 </div>

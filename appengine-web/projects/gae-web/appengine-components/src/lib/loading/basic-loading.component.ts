@@ -1,4 +1,5 @@
 import { Component, Input, Output, OnChanges, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { ErrorInput } from 'projects/gae-web/appengine-utility/src/lib/error';
 
 /**
  * GaeBasicLoadingComponent loading state.
@@ -32,7 +33,7 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
   public linear = false;
 
   @Input()
-  public error: Error;
+  public error: ErrorInput;
 
   @ViewChild('error') customErrorContent;
   @ViewChild('loading') customLoadingContent;

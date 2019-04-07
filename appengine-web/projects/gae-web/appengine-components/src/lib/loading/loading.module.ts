@@ -3,20 +3,23 @@ import { CommonModule } from '@angular/common';
 import { GaeBasicLoadingComponent } from './basic-loading.component';
 import { GaeLoadingProgressComponent } from './loading-progress.component';
 import { MatProgressSpinnerModule, MatProgressBarModule } from '@angular/material';
+import { GaeErrorComponent } from './error.component';
 
 @NgModule({
-  declarations: [
-    GaeBasicLoadingComponent,
-    GaeLoadingProgressComponent
-  ],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule
   ],
+  declarations: [
+    GaeBasicLoadingComponent,
+    GaeLoadingProgressComponent,
+    GaeErrorComponent
+  ],
   exports: [
     GaeBasicLoadingComponent,
-    GaeLoadingProgressComponent
+    GaeLoadingProgressComponent,
+    GaeErrorComponent
   ]
 })
 export class GaeLoadingModule { }
