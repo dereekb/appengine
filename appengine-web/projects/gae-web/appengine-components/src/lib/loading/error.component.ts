@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ErrorInput, CodedError, ErrorUtility } from 'projects/gae-web/appengine-utility/src/lib/error';
+import { ErrorInput, CodedError, ErrorUtility } from '@gae-web/appengine-utility';
 
 /**
  * Basic loading component.

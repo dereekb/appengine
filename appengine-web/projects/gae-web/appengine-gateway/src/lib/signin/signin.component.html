@@ -6,13 +6,13 @@
         <h1>Sign In</h1>
     </div>
     <div class="auth-box-content" [gaeSignInGatewaySuccess]="loginHandler">
-        <gae-login-state-view [source]="loginHandler" #loginHandler="gaeSignInGateway" [gaeSignInGateway]="loginTokenHandler" gaeLoginSignInAnalytics #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]">
+        <gae-sign-in-gateway-view [gateway]="loginHandler" #loginHandler="gaeSignInGateway" [gaeSignInGateway]="loginTokenHandler" gaeLoginSignInAnalytics #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]">
             <div class="login" loginView>
                 <gae-oauth-sign-in-gateway [disabled]="loginHandler.disableLogins" #oauthLogin></gae-oauth-sign-in-gateway>
                 <hr class="login-divider" />
                 <gae-credentials-login-view></gae-credentials-login-view>
             </div>
-        </gae-login-state-view>
+        </gae-sign-in-gateway-view>
     </div>
     <div class="auth-box-footer" *ngIf="!loginHandler.isDone">
         <p>Need an account?</p>

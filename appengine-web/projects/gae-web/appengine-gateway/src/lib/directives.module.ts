@@ -6,10 +6,11 @@ import { SignInGatewayDirective } from './components/login.directive';
 import { SignInGatewaySuccessDirective, SignInGatewaySignOutDirective } from './components/token.directive';
 import { LoginRegisteredAnalyticsDirective, LoginSignInAnalyticsDirective } from './components/analytics.components';
 import { ApiModule } from '@gae-web/appengine-api';
-import { LoginStateViewComponent } from './components/login.component';
+import { GaeSignInGatewayViewComponent } from './components/gateway.component';
 import { CredentialsComponent } from './components/credentials.component';
 import { GatewayMaterialModule } from './material.module';
 import { CommonModule } from '@angular/common';
+import { GaeLoadingModule } from '@gae-web/appengine-components';
 
 /**
  * Shared directives and components of Appengine Gateway.
@@ -17,7 +18,7 @@ import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [
     CredentialsComponent,
-    LoginStateViewComponent,
+    GaeSignInGatewayViewComponent,
     OAuthButtonSignInDirective,
     SignInGatewayGroupDirective,
     SignInGatewayRegisterDirective,
@@ -28,8 +29,10 @@ import { CommonModule } from '@angular/common';
     LoginSignInAnalyticsDirective
   ],
   exports: [
+    GaeLoadingModule,
+    GatewayMaterialModule,
     CredentialsComponent,
-    LoginStateViewComponent,
+    GaeSignInGatewayViewComponent,
     OAuthButtonSignInDirective,
     SignInGatewayGroupDirective,
     SignInGatewayRegisterDirective,
@@ -42,6 +45,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     ApiModule,
+    GaeLoadingModule,
     GatewayMaterialModule
   ]
 })

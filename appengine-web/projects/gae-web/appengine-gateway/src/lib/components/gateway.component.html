@@ -1,0 +1,21 @@
+<div class="login-content">
+  <gae-loading [context]="context">
+    <ng-container content>
+      <ng-container *ngIf="showSignIn">
+        <ng-content select="[signin]"></ng-content>
+      </ng-container>
+      <ng-container *ngIf="showSuccess">
+        <div *ngIf="!hasCustomSuccess" class="login-complete">
+          <p class="success-text">Login Success!</p>
+          <mat-spinner class="spinner"></mat-spinner>
+          <p class="loading-text">Application Loading...</p>
+        </div>
+        <ng-content select="[success]"></ng-content>
+      </ng-container>
+    </ng-container>
+    <ng-container error>
+      <ng-content select="[error]"></ng-content>
+    </ng-container>
+  </gae-loading>
+  <ng-content select="[footer]"></ng-content>
+</div>

@@ -96,6 +96,10 @@ export class SignInGatewaySignOutDirective implements AfterContentInit {
     }
 
     // MARK: Accessors
+    public get done() {
+        return this._state === 'signedout';
+    }
+
     public get state() {
         return this._state;
     }

@@ -6,15 +6,11 @@
     <h1>Sign Out</h1>
   </div>
   <div class="auth-box-content" #signOut="gaeSignInGatewaySignOut" gaeSignInGatewaySignOut>
-    <div class="sign-out-content">
-      <div class="sign-out-loading" *ngIf="!signOut.done">
-        <mat-spinner class="sign-in-loading-spinner"></mat-spinner>
-        <p>Signing out...</p>
-      </div>
-      <div class="sign-out-done" *ngIf="signOut.done">
+    <gae-basic-loading text="Signing out..." [waitFor]="!signOut.done">
+      <div content class="sign-out-done" *ngIf="signOut.done">
         <p>You've been signed out.</p>
       </div>
-    </div>
+    </gae-basic-loading>
   </div>
   <div class="auth-box-footer">
     <p>Need to sign back in?</p>

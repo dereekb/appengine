@@ -2,6 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { LoginTokenPair } from '@gae-web/appengine-token';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { AbstractSubscriptionComponent } from '@gae-web/appengine-components';
 
 export enum SignInGatewayState {
   Idle = 0,
@@ -28,17 +29,11 @@ export abstract class SignInGateway {
 /**
  * Abstract SignInGateway
  */
-export abstract class AbstractSignInGateway implements SignInGateway, OnDestroy {
-
-  private _tokenSub: Subscription;
+export abstract class AbstractSignInGateway extends AbstractSubscriptionComponent implements SignInGateway, OnDestroy {
 
   private _stream = new BehaviorSubject<SignInGatewayEvent>({
     state: SignInGatewayState.Idle
   });
-
-  ngOnDestroy() {
-    this._clearTokenSub();
-  }
 
   // MARK: Accessors
   public get state() {
@@ -90,21 +85,13 @@ export abstract class AbstractSignInGateway implements SignInGateway, OnDestroy 
   }
 
   protected setTokenSub(tokenObs: Observable<LoginTokenPair>) {
-    this._clearTokenSub();
-    this._tokenSub = tokenObs.pipe(
+    this.sub = tokenObs.pipe(
       first()
     ).subscribe((token) => {
       this.nextLoginToken(token);
     }, (error) => {
       this.nextError(error);
     });
-  }
-
-  private _clearTokenSub() {
-    if (this._tokenSub) {
-      this._tokenSub.unsubscribe();
-      delete this._tokenSub;
-    }
   }
 
 }

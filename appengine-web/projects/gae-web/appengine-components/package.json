@@ -2,6 +2,11 @@
   "name": "@gae-web/appengine-components",
   "version": "0.0.1",
   "peerDependencies": {
+    "rxjs": "*",
+    "make-error": "*",
+    "@gae-web/appengine-api": "*",
+    "@gae-web/appengine-analytics": "*",
+    "@gae-web/appengine-utility": "*",
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0"
   }

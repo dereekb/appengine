@@ -6,7 +6,7 @@ import { GaeLoadingProgressComponent } from './loading-progress.component';
 import { GaeErrorComponent } from './error.component';
 import { ValuesLoadingContext } from './loading';
 
-describe('LoadingComponent', () => {
+describe('GaeLoadingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

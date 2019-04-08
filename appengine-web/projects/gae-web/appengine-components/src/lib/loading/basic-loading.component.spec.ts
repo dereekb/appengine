@@ -6,7 +6,7 @@ import { GaeLoadingProgressComponent } from './loading-progress.component';
 import { ErrorInput } from '@gae-web/appengine-utility';
 import { GaeErrorComponent } from './error.component';
 
-describe('BasicLoadingComponent', () => {
+describe('GaeBasicLoadingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

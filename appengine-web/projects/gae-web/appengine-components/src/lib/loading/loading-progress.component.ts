@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
   <div class="loading-progress-view">
     <mat-progress-spinner *ngIf="linear" diameter="96"></mat-progress-spinner>
     <mat-progress-bar *ngIf="linear" mode="indeterminate"></mat-progress-bar>
-    <div *ngIf="text" class="hint text-center">{{ $ctrl.text }}</div>
+    <div *ngIf="text" class="hint text-center">{{ text }}</div>
   </div>
   `
 })
