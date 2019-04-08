@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface LoadingEvent {
   isLoading?: boolean;
@@ -12,12 +12,17 @@ export interface LoadingContextConfiguration {
   checkDone?: LoadingContextCheckCompletionFunction;
 }
 
-/**
- * Utility object for maintaining a isLoading state. Is triggered into isLoading, then can be triggered again to see if elements have all completed isLoading or not.
- */
-export class LoadingContext {
+export interface LoadingContext {
+  readonly isLoading: boolean;
+  readonly stream: Observable<LoadingEvent>;
+}
 
-  private _subject;
+/**
+ * Utility object for maintaining a loading stream. Is triggered into isLoading, then can be triggered again to see if elements have all completed isLoading or not.
+ */
+export class ValuesLoadingContext implements LoadingContext {
+
+  private _subject: BehaviorSubject<LoadingEvent>;
   private _error: any;
 
   private _checkDone?: LoadingContextCheckCompletionFunction;

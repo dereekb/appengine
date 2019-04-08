@@ -4,6 +4,7 @@ import { GaeBasicLoadingComponent } from './basic-loading.component';
 import { GaeLoadingProgressComponent } from './loading-progress.component';
 import { MatProgressSpinnerModule, MatProgressBarModule } from '@angular/material';
 import { GaeErrorComponent } from './error.component';
+import { GaeLoadingComponent } from './loading.component';
 
 @NgModule({
   imports: [
@@ -12,11 +13,13 @@ import { GaeErrorComponent } from './error.component';
     MatProgressBarModule
   ],
   declarations: [
+    GaeLoadingComponent,
     GaeBasicLoadingComponent,
     GaeLoadingProgressComponent,
     GaeErrorComponent
   ],
   exports: [
+    GaeLoadingComponent,
     GaeBasicLoadingComponent,
     GaeLoadingProgressComponent,
     GaeErrorComponent

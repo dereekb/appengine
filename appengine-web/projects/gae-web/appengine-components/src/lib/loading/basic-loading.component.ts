@@ -1,5 +1,5 @@
-import { Component, Input, Output, OnChanges, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { ErrorInput } from 'projects/gae-web/appengine-utility/src/lib/error';
+import { Component, Input, OnChanges, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { ErrorInput, ValueUtility } from '@gae-web/appengine-utility';
 
 /**
  * GaeBasicLoadingComponent loading state.
@@ -23,11 +23,10 @@ export enum LoadingComponentState {
 })
 export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
 
-  @Input()
-  public text: string;
+  private _show = true;
 
   @Input()
-  public show = true;
+  public text: string;
 
   @Input()
   public linear = false;
@@ -56,6 +55,15 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
     return this._loading;
   }
 
+  get show() {
+    return this._show;
+  }
+
+  @Input()
+  set show(show: boolean | undefined) {
+    this._show = ValueUtility.isNotNullOrUndefined(show) ? show : true;
+  }
+
   @Input()
   set waitFor(object) {
     this._loading = Boolean(object);
@@ -77,7 +85,7 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
     let state = LoadingComponentState.Error;
 
     if (!this.error) {
-      if (this.show && !this.isLoading) {
+      if (!this.isLoading && this.show) {
         state = LoadingComponentState.Content;
       } else {
         state = LoadingComponentState.Loading;

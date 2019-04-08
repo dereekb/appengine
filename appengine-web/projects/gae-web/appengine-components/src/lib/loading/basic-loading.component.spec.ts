@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { GaeLoadingModule } from './loading.module';
 import { By } from '@angular/platform-browser';
 import { GaeLoadingProgressComponent } from './loading-progress.component';
-import { ErrorInput } from 'projects/gae-web/appengine-utility/src/lib/error';
+import { ErrorInput } from '@gae-web/appengine-utility';
 import { GaeErrorComponent } from './error.component';
 
 describe('BasicLoadingComponent', () => {
@@ -26,52 +26,52 @@ describe('BasicLoadingComponent', () => {
     });
 
     it('should display the content while not loading.', () => {
-      component.loading = false;
-      fixture.detectChanges();
-
       const testContent: HTMLElement = fixture.debugElement.query(By.css('#test-content')).nativeElement;
       expect(testContent).not.toBeNull();
       expect(testContent.innerText).toBe(TEST_CONTENT);
     });
 
-    it('should not display the content while loading.', () => {
-      component.loading = true;
-      fixture.detectChanges();
+    describe('and loading', () => {
 
-      const testContentQueryResult = fixture.debugElement.query(By.css('#test-content'));
-      expect(testContentQueryResult).toBeNull();
+      beforeEach(() => {
+        component.loading = true;
+        fixture.detectChanges();
+      });
+
+      it('should not display the content.', () => {
+        const testContentQueryResult = fixture.debugElement.query(By.css('#test-content'));
+        expect(testContentQueryResult).toBeNull();
+      });
+
+      it('should display the loading progress view.', () => {
+        const loadingProgressQueryResult = fixture.debugElement.query(By.directive(GaeLoadingProgressComponent));
+        expect(loadingProgressQueryResult).not.toBeNull();
+      });
+
     });
 
-    it('should not display the content if there is an error.', () => {
-      component.error = {
-        code: 'Test',
-        message: 'Test'
-      };
 
-      fixture.detectChanges();
+    describe('and error', () => {
 
-      const testContentQueryResult = fixture.debugElement.query(By.css('#test-content'));
-      expect(testContentQueryResult).toBeNull();
-    });
+      beforeEach(() => {
+        component.error = {
+          code: 'Test',
+          message: 'Test'
+        };
 
-    it('should display the loading progress view while loading.', () => {
-      component.loading = true;
-      fixture.detectChanges();
+        fixture.detectChanges();
+      });
 
-      const loadingProgressQueryResult = fixture.debugElement.query(By.directive(GaeLoadingProgressComponent));
-      expect(loadingProgressQueryResult).not.toBeNull();
-    });
+      it('should not display the content.', () => {
+        const testContentQueryResult = fixture.debugElement.query(By.css('#test-content'));
+        expect(testContentQueryResult).toBeNull();
+      });
 
-    it('should display the error view when there is an error.', () => {
-      component.error = {
-        code: 'Test',
-        message: 'Test'
-      };
+      it('should display the error view.', () => {
+        const errorComponentQueryResult = fixture.debugElement.query(By.directive(GaeErrorComponent));
+        expect(errorComponentQueryResult).not.toBeNull();
+      });
 
-      fixture.detectChanges();
-
-      const errorComponentQueryResult = fixture.debugElement.query(By.directive(GaeErrorComponent));
-      expect(errorComponentQueryResult).not.toBeNull();
     });
 
   });
@@ -80,7 +80,7 @@ describe('BasicLoadingComponent', () => {
     let fixture: ComponentFixture<BasicLoadingWithCustomErrorComponent>;
     let component: BasicLoadingWithCustomErrorComponent;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(BasicLoadingWithCustomErrorComponent);
       component = fixture.componentInstance;
 
@@ -90,7 +90,7 @@ describe('BasicLoadingComponent', () => {
       };
 
       fixture.detectChanges();
-    });
+    }));
 
     it('should display the custom error content on error.', () => {
       const customError: HTMLElement = fixture.debugElement.query(By.css('#test-error')).nativeElement;
@@ -104,12 +104,12 @@ describe('BasicLoadingComponent', () => {
     let fixture: ComponentFixture<BasicLoadingWithCustomLoadingComponent>;
     let component: BasicLoadingWithCustomLoadingComponent;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(BasicLoadingWithCustomLoadingComponent);
       component = fixture.componentInstance;
       component.loading = true;
       fixture.detectChanges();
-    });
+    }));
 
     it('should display the custom loading content while loading.', () => {
       fixture.detectChanges();

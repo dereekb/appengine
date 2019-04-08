@@ -1,15 +1,15 @@
 import 'jasmine-expect';
-import { LoadingContext } from './loading';
+import { ValuesLoadingContext, LoadingContext } from './loading';
 
-describe('LoadingContext', () => {
+describe('ValuesLoadingContext', () => {
 
   it('should start in a loading state if nothing is specified', () => {
-    const context: LoadingContext = new LoadingContext();
+    const context = new ValuesLoadingContext();
     expect(context.isLoading).toBeTrue();
   });
 
   it('should not start in a loading state if loading not specified.', () => {
-    const context: LoadingContext = new LoadingContext({ isLoading: false });
+    const context = new ValuesLoadingContext({ isLoading: false });
     expect(context.isLoading).toBeFalse();
   });
 
