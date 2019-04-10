@@ -4,10 +4,6 @@ import { FacebookApiServiceConfig, FacebookApiService, PRELOAD_FACEBOOK_TOKEN } 
 import { FacebookOAuthService } from './auth.service';
 import { FacebookSignInButtonDirective } from './button.component';
 
-import { FacebookAnalyticsListenerService } from './listener.service';
-
-export { FacebookAnalyticsListenerService };
-
 @NgModule({
   declarations: [FacebookSignInButtonDirective],
   exports: [FacebookSignInButtonDirective]

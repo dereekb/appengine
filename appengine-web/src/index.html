@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>AppengineWeb</title>
@@ -8,7 +9,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+
 <body>
-  <app-root></app-root>
+  <ui-view class="app-root-view">
+    <div class="loading-view-wrapper">
+      <div class="loading-view">
+        <img src="/assets/loading/background.png" draggable="false">
+      </div>
+    </div>
+  </ui-view>
+
+  <!-- Google Sign In -->
+  <script>
+    window.___gcfg = {
+      parsetags: 'onload'
+    };
+
+    function googleOnLoadCallback() {}
+
+  </script>
+
+  <script src="https://apis.google.com/js/platform.js?onload=googleOnLoadCallback" async defer></script>
+
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '1814919078756842',
+        cookie: false,
+        xfbml: false,
+        version: 'v2.9'
+      });
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+  </script>
+
 </body>
+
 </html>

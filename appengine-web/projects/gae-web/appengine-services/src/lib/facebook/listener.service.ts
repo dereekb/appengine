@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { AnalyticsStreamEvent, AnalyticsStreamEventType, AnalyticsServiceListener } from '@gae-web/appengine-analytics';
+import { AnalyticsStreamEvent, AnalyticsStreamEventType, AbstractAnalyticsServiceListener } from '@gae-web/appengine-analytics';
 import { FacebookAnalyticsService, FacebookApiService } from './facebook.service';
 
 /**
  * AnalyticsServiceListener adapter for Facebook.
  */
 @Injectable()
-export class FacebookAnalyticsListenerService extends AnalyticsServiceListener {
+export class FacebookAnalyticsListenerService extends AbstractAnalyticsServiceListener {
 
     constructor(private _facebookApi: FacebookApiService) {
         super();

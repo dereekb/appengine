@@ -67,12 +67,17 @@ export abstract class AnalyticsUserSource {
   abstract getAnalyticsUser(): Observable<AnalyticsUser>;
 }
 
+
 export abstract class AnalyticsServiceListener {
+  public abstract listenToService(service: AnalyticsService): void;
+}
+
+export abstract class AbstractAnalyticsServiceListener implements AnalyticsServiceListener {
 
   protected _service: AnalyticsService;
   protected _sub: Subscription;
 
-  public listenToService(service: AnalyticsService) {
+  public listenToService(service: AnalyticsService): void {
     this._service = service;
     this._sub = service.events.pipe(filter((e) => this.filterEvent(e)))
       .subscribe((event) => this.updateOnStreamEvent(event));
