@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OAuthSignInGatewayComponent } from '../components/oauth.component';
 import { GoogleModule, FacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
-import { GatewayDirectivesModule } from '../directives.module';
+import { GatewayComponentsModule } from '../components/components.module';
 import { OAuthLoginApiService, TestUtility, RegisterApiService } from '@gae-web/appengine-api';
 import { SignUpComponent } from './signup.component';
 import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
@@ -31,7 +31,7 @@ describe('SignUpComponent', () => {
         TestAnalyticsModule.forRoot(),
         GoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
         FacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
-        GatewayDirectivesModule
+        GatewayComponentsModule
       ],
       declarations: [OAuthSignInGatewayComponent, SignUpComponent],
       providers: [{

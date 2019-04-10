@@ -11,7 +11,7 @@ import { ApiModule } from '@gae-web/appengine-api';
 import { GATEWAY_STATES } from './gateway.states';
 import { GatewayMaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { GatewayDirectivesModule } from './directives.module';
+import { GatewayComponentsModule } from './components/components.module';
 
 // TODO: as Any temporary to override compiler issues with ui router.)
 export const ROUTER_CONFIG: any = {
@@ -28,7 +28,7 @@ export const ROUTER_CONFIG: any = {
     OAuthSignInGatewayComponent
   ],
   imports: [
-    GatewayDirectivesModule,
+    GatewayComponentsModule,
     CommonModule,
     GatewayMaterialModule,
     FlexLayoutModule,
