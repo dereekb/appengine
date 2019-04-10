@@ -12,11 +12,11 @@ export { FacebookAnalyticsListenerService };
   declarations: [FacebookSignInButtonDirective],
   exports: [FacebookSignInButtonDirective]
 })
-export class FacebookModule {
+export class GaeFacebookModule {
 
   static forRoot(config: FacebookApiServiceConfig, preloadService?: boolean): ModuleWithProviders {
     return {
-      ngModule: FacebookModule,
+      ngModule: GaeFacebookModule,
       providers: [
         {
           provide: FacebookApiServiceConfig,

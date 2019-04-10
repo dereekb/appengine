@@ -1,7 +1,7 @@
 import { ViewChild, Component, Input, forwardRef } from '@angular/core';
 
 import { OAuthButtonSignInDirective } from './oauth.directive';
-import { SignInGateway } from './gateway';
+import { SignInGateway } from '../components/gateway';
 
 @Component({
     selector: 'gae-oauth-sign-in-gateway',

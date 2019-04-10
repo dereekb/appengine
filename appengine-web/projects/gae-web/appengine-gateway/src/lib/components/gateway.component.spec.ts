@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GatewayComponentsModule } from './components.module';
+import { GaeGatewayComponentsModule } from './components.module';
 import { Component } from '@angular/core';
 import { SignInGateway, AbstractSignInGateway } from './gateway';
 import { By } from '@angular/platform-browser';
 import { GaeLoadingProgressComponent } from '@gae-web/appengine-components';
 import { LoginTokenPair } from '@gae-web/appengine-token';
 
-describe('GatewayComponentsModule', () => {
+describe('GaeGatewayComponentsModule', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        GatewayComponentsModule
+        GaeGatewayComponentsModule
       ],
       declarations: [SignInGatewayViewComponent]
     }).compileComponents();

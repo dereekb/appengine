@@ -1,0 +1,14 @@
+<div class="auth-box">
+  <div class="auth-box-header">
+    <div class="auth-box-header-logo">
+      <img [src]="logo" />
+    </div>
+    <h1>{{title}}</h1>
+  </div>
+  <div class="auth-box-content">
+    <ng-content select="[content]"></ng-content>
+  </div>
+  <div class="auth-box-footer">
+    <ng-content select="[footer]"></ng-content>
+  </div>
+</div>

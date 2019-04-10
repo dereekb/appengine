@@ -2,16 +2,16 @@ import { NgModule, ModuleWithProviders, Provider } from '@angular/core';
 import { AnalyticsService } from './analytics.service';
 
 
-export interface AnalyticsModuleOptions {
+export interface GaeAnalyticsModuleOptions {
   analyticsConfigurationProvider?: Provider;
 }
 
 @NgModule()
-export class AnalyticsModule {
+export class GaeAnalyticsModule {
 
-  static forRoot(options: AnalyticsModuleOptions): ModuleWithProviders {
+  static forRoot(options: GaeAnalyticsModuleOptions): ModuleWithProviders {
     return {
-      ngModule: AnalyticsModule,
+      ngModule: GaeAnalyticsModule,
       providers: [
         // Configuration
         options.analyticsConfigurationProvider,

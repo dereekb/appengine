@@ -25,4 +25,4 @@ import { ObserversModule } from '@angular/cdk/observers';
     // TODO: Add other dependencies.
   ]
 })
-export class GatewayMaterialModule { }
+export class GaeGatewayMaterialModule { }

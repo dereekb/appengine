@@ -1,17 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UIRouterModule } from '@uirouter/angular';
-import { SignInComponent } from './signin/signin.component';
-import { SignUpComponent } from './signup/signup.component';
-import { SignOutComponent } from './signout/signout.component';
 import { GatewayComponent } from './gateway.component';
-import { OAuthSignInGatewayComponent } from './components/oauth.component';
-import { GoogleModule, FacebookModule } from '@gae-web/appengine-services';
-import { ApiModule } from '@gae-web/appengine-api';
+import { GaeGoogleModule, GaeFacebookModule } from '@gae-web/appengine-services';
+import { GaeApiModule } from '@gae-web/appengine-api';
 import { GATEWAY_STATES } from './gateway.states';
-import { GatewayMaterialModule } from './material.module';
+import { GaeGatewayMaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { GatewayComponentsModule } from './components/components.module';
+import { GaeGatewayComponentsModule } from './components/components.module';
+import { GaeGatewayViewsModule } from './view/view.module';
 
 // TODO: as Any temporary to override compiler issues with ui router.)
 export const ROUTER_CONFIG: any = {
@@ -21,20 +18,15 @@ export const ROUTER_CONFIG: any = {
 
 @NgModule({
   declarations: [
-    GatewayComponent,
-    SignInComponent,
-    SignUpComponent,
-    SignOutComponent,
-    OAuthSignInGatewayComponent
+    GatewayComponent
+  ],
+  exports: [
+    GatewayComponent
   ],
   imports: [
-    GatewayComponentsModule,
     CommonModule,
-    GatewayMaterialModule,
     FlexLayoutModule,
-    FacebookModule,
-    GoogleModule,
-    ApiModule,
+    GaeGatewayViewsModule,
     UIRouterModule.forChild(ROUTER_CONFIG)
   ]
 })

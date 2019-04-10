@@ -1,0 +1,50 @@
+<gae-gateway-box-view title="Sign Up">
+  <ng-container content>
+    <ng-container [gaeSignInGatewaySuccess]="registerHandler" newUserLogin="true"></ng-container>
+    <gae-sign-in-gateway-view [gateway]="registerHandler" #registerHandler="gaeSignInGatewayRegister"
+      [gaeSignInGatewayRegister]="loginTokenHandler" gaeLoginRegisteredAnalytics
+      #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]">
+      <div class="login" loginView>
+        <div [hidden]="registerHandler.readyToRegister">
+          <gae-oauth-sign-in-gateway [disabled]="registerHandler.disabledLogin" #oauthLogin></gae-oauth-sign-in-gateway>
+          <hr class="login-divider" />
+          <gae-credentials-login-view></gae-credentials-login-view>
+        </div>
+        <div [hidden]="!registerHandler.readyToRegister">
+          <div class="register">
+            <div class="register-text">
+              <h2>Register New Account</h2>
+              <p>This login is not yet registered with an account. You may create a new account by clicking the button
+                below.</p>
+              <p>If you'd like to link this login to an existing account, login to that account first and link it from
+                the settings menu.</p>
+            </div>
+            <div class="register-buttons">
+              <div class="register-agree-text">
+                <p>By clicking Create New Account, I agree to the <a uiSref="legal">Terms of Service</a> and <a
+                    uiSref="legal">Privacy Policy</a>.</p>
+              </div>
+              <button md-raised-button (click)="registerHandler.register()" class="register-create-button">Create New
+                Account</button>
+              <button md-button (click)="registerHandler.cancelRegister()"
+                class="register-cancel-button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div errorActionView>
+        <div class="register-existing-login-buttons" *ngIf="registerHandler.hasExistingToken">
+          <p>Would you like to sign in with this account instead?</p>
+          <button md-raised-button (click)="registerHandler.loginWithExisting()"
+            class="register-login-button">Login</button>
+          <button md-raised-button (click)="registerHandler.cancelLoginWithExisting()"
+            class="register-cancel-button">Cancel</button>
+        </div>
+      </div>
+    </gae-sign-in-gateway-view>
+  </ng-container>
+  <ng-container footer *ngIf="!registerHandler.hasExistingToken && !registerHandler.isDone">
+    <p>Already have an account?</p>
+    <button class="link-button" md-button uiSref="signin">Sign In</button>
+  </ng-container>
+</gae-gateway-box-view>

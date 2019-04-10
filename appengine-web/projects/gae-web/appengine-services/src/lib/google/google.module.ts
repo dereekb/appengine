@@ -8,11 +8,11 @@ import { GoogleSignInButtonDirective } from './button.component';
   declarations: [GoogleSignInButtonDirective],
   exports: [GoogleSignInButtonDirective]
 })
-export class GoogleModule {
+export class GaeGoogleModule {
 
   static forRoot(config: GoogleOAuthServiceConfig, preloadService?: boolean): ModuleWithProviders {
     return {
-      ngModule: GoogleModule,
+      ngModule: GaeGoogleModule,
       providers: [
         {
           provide: GoogleOAuthServiceConfig,

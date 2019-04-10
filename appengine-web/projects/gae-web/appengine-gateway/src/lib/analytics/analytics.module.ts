@@ -15,4 +15,4 @@ import { LoginRegisteredAnalyticsDirective, LoginSignInAnalyticsDirective } from
   ],
   imports: []
 })
-export class GatewayAnalyticsModule { }
+export class GaeGatewayAnalyticsModule { }

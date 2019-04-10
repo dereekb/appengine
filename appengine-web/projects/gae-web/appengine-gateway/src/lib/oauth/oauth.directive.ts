@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { OAuthLoginApiService } from '@gae-web/appengine-api';
 import { OAuthLoginServiceButton, OAuthButtonEvent, OAuthButtonState, OAuthLoginServiceTokenResponse } from '@gae-web/appengine-services';
 import { timeout } from 'rxjs/operators';
-import { AbstractSignInGateway, SignInGateway } from './gateway';
+import { AbstractSignInGateway, SignInGateway } from '../components/gateway';
 
 
 // MARK: Handlers

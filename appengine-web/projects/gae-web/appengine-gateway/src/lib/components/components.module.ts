@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
-import { OAuthButtonSignInDirective } from './oauth.directive';
 import { SignInGatewayGroupDirective } from './gateway.directive';
 import { SignInGatewayRegisterDirective } from './register.directive';
 import { SignInGatewayDirective } from './login.directive';
 import { SignInGatewaySuccessDirective, SignInGatewaySignOutDirective } from './token.directive';
-import { ApiModule } from '@gae-web/appengine-api';
+import { GaeApiModule } from '@gae-web/appengine-api';
 import { GaeSignInGatewayViewComponent } from './gateway.component';
 import { CredentialsComponent } from './credentials.component';
-import { GatewayMaterialModule } from '../material.module';
+import { GaeGatewayMaterialModule } from '../material.module';
 import { CommonModule } from '@angular/common';
 import { GaeLoadingModule } from '@gae-web/appengine-components';
 
@@ -18,7 +17,6 @@ import { GaeLoadingModule } from '@gae-web/appengine-components';
   declarations: [
     CredentialsComponent,
     GaeSignInGatewayViewComponent,
-    OAuthButtonSignInDirective,
     SignInGatewayGroupDirective,
     SignInGatewayRegisterDirective,
     SignInGatewayDirective,
@@ -27,10 +25,9 @@ import { GaeLoadingModule } from '@gae-web/appengine-components';
   ],
   exports: [
     GaeLoadingModule,
-    GatewayMaterialModule,
+    GaeGatewayMaterialModule,
     CredentialsComponent,
     GaeSignInGatewayViewComponent,
-    OAuthButtonSignInDirective,
     SignInGatewayGroupDirective,
     SignInGatewayRegisterDirective,
     SignInGatewayDirective,
@@ -39,9 +36,9 @@ import { GaeLoadingModule } from '@gae-web/appengine-components';
   ],
   imports: [
     CommonModule,
-    ApiModule,
+    GaeApiModule,
     GaeLoadingModule,
-    GatewayMaterialModule
+    GaeGatewayMaterialModule
   ]
 })
-export class GatewayComponentsModule { }
+export class GaeGatewayComponentsModule { }

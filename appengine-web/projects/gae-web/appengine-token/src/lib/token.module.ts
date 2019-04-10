@@ -15,11 +15,11 @@ export function appTokenStorageServiceFactory() {
 @NgModule({
   imports: []
 })
-export class TokenModule {
+export class GaeTokenModule {
 
   public static forRoot(): ModuleWithProviders {
     return {
-      ngModule: TokenModule,
+      ngModule: GaeTokenModule,
       providers: [
         {
           provide: UserLoginTokenService,

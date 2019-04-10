@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders, Provider } from '@angular/core';
 import { AnalyticsService, AnalyticsServiceConfiguration } from '../lib/analytics.service';
-import { AnalyticsModule } from '../lib/analytics.module';
+import { GaeAnalyticsModule } from '../lib/analytics.module';
 
 @NgModule()
 export class TestAnalyticsModule {
@@ -11,7 +11,7 @@ export class TestAnalyticsModule {
       listeners: [] // No listeners.
     };
 
-    return AnalyticsModule.forRoot({
+    return GaeAnalyticsModule.forRoot({
       analyticsConfigurationProvider: {
         provide: AnalyticsServiceConfiguration,
         useValue: config

@@ -4,7 +4,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ClientLinkService } from './model/extension/link/link.service';
 import { ClientSchedulerService } from './model/extension/scheduler/scheduler.service';
 import { PublicLoginTokenApiService, PrivateLoginTokenApiService } from './auth/token.service';
-import { TokenModule, UserLoginTokenService } from '@gae-web/appengine-token';
+import { GaeTokenModule, UserLoginTokenService } from '@gae-web/appengine-token';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { RegisterApiService } from './auth/register.service';
 import { OAuthLoginApiService } from './auth/oauth.service';
@@ -49,7 +49,7 @@ export function clientSchedulerServiceFactory(routeConfig: ApiRouteConfiguration
 
 @NgModule({
   imports: [
-    TokenModule,
+    GaeTokenModule,
     HttpClientModule,
     JwtModule.forRoot({
       jwtOptionsProvider: {
@@ -60,7 +60,7 @@ export function clientSchedulerServiceFactory(routeConfig: ApiRouteConfiguration
     })
   ]
 })
-export class ApiModule {
+export class GaeApiModule {
 
   static forTest(): ModuleWithProviders {
     const testModule = this.forApp({
@@ -73,7 +73,7 @@ export class ApiModule {
 
   static forApp(config: ApiModuleInfo): ModuleWithProviders {
     return {
-      ngModule: ApiModule,
+      ngModule: GaeApiModule,
       providers: [
         // Configurations
         ApiConfiguration,

@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { ApiModule, ClientLinkService } from '@gae-web/appengine-api';
+import { GaeApiModule, ClientLinkService } from '@gae-web/appengine-api';
 import { ModelLinkService } from './service/link.service';
 import { ModelServiceWrapperSet } from './service/model.service';
 
@@ -9,7 +9,7 @@ export function modelLinkServiceFactory(wrapperSet: ModelServiceWrapperSet, clie
 
 @NgModule({
   declarations: [],
-  imports: [ApiModule],
+  imports: [GaeApiModule],
   exports: []
 })
 export class ClientModule {

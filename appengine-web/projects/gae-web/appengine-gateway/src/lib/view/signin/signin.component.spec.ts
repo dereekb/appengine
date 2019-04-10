@@ -1,14 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OAuthSignInGatewayComponent } from '../components/oauth.component';
-import { GoogleModule, FacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
-import { GatewayComponentsModule } from './components.module';
-import { OAuthLoginApiService, TestUtility } from '@gae-web/appengine-api';
+import { GaeGoogleModule, GaeFacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
+import { GaeGatewayViewsModule } from '../view.module';
+import { OAuthLoginApiService, TestUtility, RegisterApiService } from '@gae-web/appengine-api';
+import { GaeSignInComponent } from './signin.component';
 import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
+import { GatewaySegueService } from '../../state.service';
+import { TestGatewaySegueService } from '../../../test/state.service';
+import { TestAnalyticsModule } from '@gae-web/appengine-analytics';
+import { GaeGatewayComponentsModule } from '../../components/components.module';
 
-describe('OAuthSignInGatewayComponent', () => {
-  let component: OAuthSignInGatewayComponent;
-  let fixture: ComponentFixture<OAuthSignInGatewayComponent>;
+describe('GaeSignInComponent', () => {
+  let component: GaeSignInComponent;
+  let fixture: ComponentFixture<GaeSignInComponent>;
 
   const httpClientSpy: { post: jasmine.Spy } = jasmine.createSpyObj('HttpClient', ['post']);
 
@@ -21,14 +25,14 @@ describe('OAuthSignInGatewayComponent', () => {
   const testUserLoginTokenService = new LegacyAppTokenUserService(new AppTokenStorageService(storageAccessor), tokenAuthenticator);
 
   beforeEach(async(() => {
-
     TestBed.configureTestingModule({
       imports: [
-        GoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
-        FacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
-        GatewayComponentsModule
+        TestAnalyticsModule.forRoot(),
+        GaeGoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
+        GaeFacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
+        GaeGatewayComponentsModule,
+        GaeGatewayViewsModule.forRoot({})
       ],
-      declarations: [OAuthSignInGatewayComponent],
       providers: [{
         provide: OAuthLoginApiService,
         useValue: testOAuthLoginApiService
@@ -36,12 +40,16 @@ describe('OAuthSignInGatewayComponent', () => {
       {
         provide: UserLoginTokenService,
         useValue: testUserLoginTokenService
+      },
+      {
+        provide: GatewaySegueService,
+        useValue: new TestGatewaySegueService()
       }]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OAuthSignInGatewayComponent);
+    fixture = TestBed.createComponent(GaeSignInComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -51,4 +59,3 @@ describe('OAuthSignInGatewayComponent', () => {
   });
 
 });
-

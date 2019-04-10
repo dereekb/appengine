@@ -1,21 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GoogleModule, FacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
-import { GatewayComponentsModule } from '../components/components.module';
-import { OAuthLoginApiService, TestUtility } from '@gae-web/appengine-api';
-import { SignOutComponent } from './signout.component';
+import { GaeGoogleModule, GaeFacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
+import { GaeGatewayViewsModule } from '../view.module';
+import { OAuthLoginApiService, TestUtility, RegisterApiService } from '@gae-web/appengine-api';
+import { GaeSignUpComponent } from './signup.component';
 import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
-import { GatewaySegueService } from '../state.service';
-import { TestGatewaySegueService } from '../../test/state.service';
+import { GatewaySegueService } from '../../state.service';
+import { TestGatewaySegueService } from '../../../test/state.service';
 import { TestAnalyticsModule } from '@gae-web/appengine-analytics';
 
-describe('SignOutComponent', () => {
-  let component: SignOutComponent;
-  let fixture: ComponentFixture<SignOutComponent>;
+describe('GaeSignUpComponent', () => {
+  let component: GaeSignUpComponent;
+  let fixture: ComponentFixture<GaeSignUpComponent>;
 
   const httpClientSpy: { post: jasmine.Spy } = jasmine.createSpyObj('HttpClient', ['post']);
 
   const httpClient = httpClientSpy as any;
+  const testRegisterApiService = new RegisterApiService(httpClient, TestUtility.testApiRouteConfig());
   const testOAuthLoginApiService = new OAuthLoginApiService(httpClient, TestUtility.testApiRouteConfig());
 
   const storageAccessor = StoredTokenStorageAccessor.getLocalStorageOrBackupAccessor();
@@ -27,14 +28,17 @@ describe('SignOutComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         TestAnalyticsModule.forRoot(),
-        GoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
-        FacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
-        GatewayComponentsModule
+        GaeGoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
+        GaeFacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
+        GaeGatewayViewsModule.forRoot({})
       ],
-      declarations: [SignOutComponent],
       providers: [{
         provide: OAuthLoginApiService,
         useValue: testOAuthLoginApiService
+      },
+      {
+        provide: RegisterApiService,
+        useValue: testRegisterApiService
       },
       {
         provide: UserLoginTokenService,
@@ -48,7 +52,7 @@ describe('SignOutComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SignOutComponent);
+    fixture = TestBed.createComponent(GaeSignUpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

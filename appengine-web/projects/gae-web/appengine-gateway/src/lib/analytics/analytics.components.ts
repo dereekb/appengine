@@ -2,8 +2,8 @@ import { Host, Directive, AfterContentInit, OnDestroy } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { AnalyticsService, AnalyticsUser, AnalyticsSender } from '@gae-web/appengine-analytics';
 import { LoginTokenPair, DecodedLoginToken, LoginPointerType } from '@gae-web/appengine-token';
-import { SignInGatewayDirective } from './login.directive';
-import { SignInGatewayRegisterDirective } from './register.directive';
+import { SignInGatewayDirective } from '../components/login.directive';
+import { SignInGatewayRegisterDirective } from '../components/register.directive';
 
 export abstract class AbstractLoginTokenAnalyticsDirective implements OnDestroy {
 
