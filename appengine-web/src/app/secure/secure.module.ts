@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { UIRouterModule } from '@uirouter/angular';
 import { SECURE_STATES } from './secure.states';
-import { GaeApiModule } from 'projects/gae-web/appengine-api/src/public-api';
-import { GaeAnalyticsModule } from 'projects/gae-web/appengine-analytics/src/public-api';
+import { GaeApiModule } from '@gae-web/appengine-api';
+import { GaeClientModule } from '@gae-web/appengine-client';
 
 export const ROUTER_CONFIG: any = {
   states: SECURE_STATES
@@ -15,6 +15,7 @@ export const ROUTER_CONFIG: any = {
       version: 'v1',
       name: 'test'
     }),
+    GaeClientModule.forApp(),
     // Routing
     UIRouterModule.forChild(ROUTER_CONFIG)
   ]

@@ -6,7 +6,7 @@ import {
   FooCachedKeySourceCache, FooCreateService, FooUpdateService, FooDeleteService, FooReadSourceFactory
 } from './foo.service';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { ClientModule } from '../lib/client.module';
+import { GaeClientModule } from '../lib/client.module';
 import { ModelServiceWrapperSet } from '../lib/service/model.service';
 
 export function fooServiceFactory(make: (config: any) => any) {
@@ -78,7 +78,7 @@ export function fooCachedKeySourceCacheFactoryFn(wrapper: FooServiceWrapper, que
 }
 
 @NgModule({
-  imports: [ClientModule]
+  imports: [GaeClientModule]
 })
 export class FooClientModule {
 

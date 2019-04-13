@@ -12,11 +12,11 @@ export function modelLinkServiceFactory(wrapperSet: ModelServiceWrapperSet, clie
   imports: [GaeApiModule],
   exports: []
 })
-export class ClientModule {
+export class GaeClientModule {
 
   static forApp(): ModuleWithProviders {
     return {
-      ngModule: ClientModule,
+      ngModule: GaeClientModule,
       providers: [
         // Wrapper
         ModelServiceWrapperSet,

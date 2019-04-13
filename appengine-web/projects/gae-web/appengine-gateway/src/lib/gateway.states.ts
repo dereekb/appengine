@@ -11,7 +11,7 @@ export const gatewayState: Ng2StateDeclaration = {
 };
 
 export const signUpState: Ng2StateDeclaration = {
-  parent: 'auth',
+  parent: 'gateway',
   name: 'signup',
   url: '/signup',
   component: GaeSignUpComponent,
@@ -21,7 +21,7 @@ export const signUpState: Ng2StateDeclaration = {
 };
 
 export const signInState: Ng2StateDeclaration = {
-  parent: 'auth',
+  parent: 'gateway',
   name: 'signin',
   url: '/signin',
   component: GaeSignInComponent,
@@ -31,7 +31,7 @@ export const signInState: Ng2StateDeclaration = {
 };
 
 export const signOutState: Ng2StateDeclaration = {
-  parent: 'auth',
+  parent: 'gateway',
   name: 'signout',
   url: '/signout',
   component: GaeSignOutComponent,

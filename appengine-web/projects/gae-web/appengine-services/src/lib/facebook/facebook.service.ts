@@ -67,10 +67,12 @@ export interface FacebookApi {
 }
 
 export class FacebookApiServiceConfig {
-  version = 'v2.8';
+  version = 'v3.2';
   cookie = false;
   xfbml = false;
   status = true;
+  logging = false;
+  autoLogAppEvents = false;
   constructor(public appId: string) { }
 }
 
@@ -83,10 +85,10 @@ export class FacebookApiServiceConfig {
 export class FacebookApiService extends AbstractAsyncLoadedService<FacebookApi> {
 
   public static readonly FACEBOOK_API_WINDOW_KEY = 'FB';
-  public static readonly FACEBOOK_CALLBACK_KEY = 'fbAsyncInit';
+  public static readonly FACEBOOK_READY_KEY = 'FBReady';
 
   constructor(private _config: FacebookApiServiceConfig, @Inject(PRELOAD_FACEBOOK_TOKEN) preload: boolean = true) {
-    super(FacebookApiService.FACEBOOK_API_WINDOW_KEY, FacebookApiService.FACEBOOK_CALLBACK_KEY, 'Facebook', preload);
+    super(FacebookApiService.FACEBOOK_API_WINDOW_KEY, undefined, 'Facebook', preload);
   }
 
   public getApi(): Promise<FacebookApi> {
@@ -97,9 +99,28 @@ export class FacebookApiService extends AbstractAsyncLoadedService<FacebookApi> 
     return this.syncGetService();
   }
 
+  protected prepareCompleteLoadingService(): Promise<any> {
+    return new Promise((resolve) => {
+      function checkDone() {
+        if (window[FacebookApiService.FACEBOOK_READY_KEY]) {
+          return resolve();
+        } else {
+          setTimeout(checkDone, 300);
+        }
+      }
+
+      checkDone();
+    });
+  }
+
   protected initService(service: FacebookApi): Promise<FacebookApi> {
-    service.init(this._config); // Initialize FB
-    return Promise.resolve(service);
+    try {
+      service.init(this._config); // Initialize FB
+      return Promise.resolve(service);
+    } catch (e) {
+      console.log('Failed to init facebook: ' + e);
+      throw e;
+    }
   }
 
 }

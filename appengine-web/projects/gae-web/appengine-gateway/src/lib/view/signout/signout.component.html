@@ -1,8 +1,8 @@
 <gae-gateway-box-view title="Sign Out">
   <ng-container content>
     <ng-container #signOut="gaeSignInGatewaySignOut" gaeSignInGatewaySignOut></ng-container>
-    <gae-basic-loading text="Signing out..." [waitFor]="!signOut.done">
-      <div content class="sign-out-done" *ngIf="signOut.done">
+    <gae-basic-loading text="Signing out..." [waitFor]="!signOut.isDone">
+      <div content class="sign-out-done" *ngIf="signOut.isDone">
         <p>You've been signed out.</p>
       </div>
     </gae-basic-loading>

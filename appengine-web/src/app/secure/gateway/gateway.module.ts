@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
-import { GaeGatewayModule } from 'projects/gae-web/appengine-gateway/src/public-api';
+import { GaeGatewayModule } from '@gae-web/appengine-gateway';
 
 @NgModule({
   imports: [GaeGatewayModule]
 })
-export class GatewayModule {
-
-}
+export class GatewayModule {}

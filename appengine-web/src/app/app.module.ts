@@ -29,6 +29,7 @@ export function analyticsServiceConfigurationFactory(facebookApi: FacebookApiSer
 
   const config: AnalyticsServiceConfiguration = {
     listeners: [
+      // TODO: Add Google listener.
       facebookListener
     ]
   };
@@ -37,7 +38,9 @@ export function analyticsServiceConfigurationFactory(facebookApi: FacebookApiSer
 }
 
 export const GOOGLE_CONFIG = new GoogleOAuthServiceConfig('');
-export const FACEBOOK_CONFIG = new FacebookApiServiceConfig('');
+export const FACEBOOK_CONFIG = new FacebookApiServiceConfig('431391914300748');
+
+FACEBOOK_CONFIG.logging = true;
 
 @NgModule({
   imports: [

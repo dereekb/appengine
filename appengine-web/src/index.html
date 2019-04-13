@@ -32,28 +32,15 @@
   <script src="https://apis.google.com/js/platform.js?onload=googleOnLoadCallback" async defer></script>
 
   <!-- Facebook -->
+  <div id="fb-root"></div>
   <script>
+    // Called when facebook is done loading.
     window.fbAsyncInit = function () {
-      FB.init({
-        appId: '1814919078756842',
-        cookie: false,
-        xfbml: false,
-        version: 'v2.9'
-      });
+      window.FBReady = true;
     };
 
-    (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s);
-      js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
   </script>
+  <script async defer src="https://connect.facebook.net/en_US/sdk/debug.js"></script>
 
 </body>
 
