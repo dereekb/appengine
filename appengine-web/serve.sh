@@ -6,4 +6,4 @@ sh -c "npm install --loglevel info"
 
 # Run the test server
 echo "Starting Test Server"
-sh -c "ng serve"
+sh -c "ng serve --proxy-config"

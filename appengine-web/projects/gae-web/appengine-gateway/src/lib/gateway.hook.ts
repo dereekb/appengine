@@ -1,6 +1,6 @@
 import { TransitionService, TransitionHookFn, Transition, HookResult, StateService } from '@uirouter/core';
-import { Observable, of } from 'rxjs';
-import { UserLoginTokenService } from '@gae-web/appengine-token/public-api';
+import { of } from 'rxjs';
+import { UserLoginTokenService } from '@gae-web/appengine-token';
 import { catchError, timeout, map } from 'rxjs/operators';
 
 const DEFAULT_SIGN_IN_STATE = 'signin';
