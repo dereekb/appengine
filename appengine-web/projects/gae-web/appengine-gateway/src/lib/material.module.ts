@@ -6,7 +6,6 @@ import {
   MatProgressSpinnerModule
 } from '@angular/material';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlatformModule } from '@angular/cdk/platform';
 import { ObserversModule } from '@angular/cdk/observers';
 
@@ -19,9 +18,7 @@ import { ObserversModule } from '@angular/cdk/observers';
     MatRippleModule,
     MatProgressSpinnerModule,
     ObserversModule,
-    PlatformModule,
-    BrowserAnimationsModule
-
+    PlatformModule
     // TODO: Add other dependencies.
   ]
 })

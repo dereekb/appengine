@@ -22,6 +22,8 @@ export * from './lib/components/register.directive';
 export * from './lib/components/token.directive';
 
 // Views
+export * from './lib/view/view.module';
+export * from './lib/view/view.config';
 export * from './lib/view/box.component';
 export * from './lib/view/signin/signin.component';
 export * from './lib/view/signout/signout.component';

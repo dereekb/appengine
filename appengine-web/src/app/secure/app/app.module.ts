@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { APP_STATES } from './app.states';
 import { AppComponent } from './app.component';
-import { UIRouterModule } from '@uirouter/angular';
+import { UIRouterModule, StatesModule } from '@uirouter/angular';
+import { CommonModule } from '@angular/common';
 
-export const ROUTER_CONFIG: any = {
+export const ROUTER_CONFIG: StatesModule = {
   states: APP_STATES
 };
 
@@ -11,7 +12,8 @@ export const ROUTER_CONFIG: any = {
   declarations: [AppComponent],
   exports: [AppComponent],
   imports: [
+    CommonModule,
     UIRouterModule.forChild(ROUTER_CONFIG)
   ]
 })
-export class AppModule { }
+export class SecureAppModule { }

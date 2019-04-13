@@ -51,16 +51,20 @@ export function clientSchedulerServiceFactory(routeConfig: ApiRouteConfiguration
   imports: [
     GaeTokenModule,
     HttpClientModule,
-    JwtModule.forRoot({
+    JwtModule
+  ]
+})
+export class GaeApiModule {
+
+  static makeJwtModuleForRoot(): ModuleWithProviders {
+    return JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
         useFactory: jwtOptionsFactory,
         deps: [UserLoginTokenService, ApiConfiguration]
       }
-    })
-  ]
-})
-export class GaeApiModule {
+    });
+  }
 
   static forTest(): ModuleWithProviders {
     const testModule = this.forApp({

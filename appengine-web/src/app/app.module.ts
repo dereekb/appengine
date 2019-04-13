@@ -1,13 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector, NgModuleFactoryLoader, SystemJsNgModuleLoader } from '@angular/core';
 
-import { PublicModule } from './public/public.module';
-import { UIRouter } from '@uirouter/core';
+import { UIRouter, Category } from '@uirouter/core';
 import { UIRouterModule, StatesModule, UIView } from '@uirouter/angular';
 import { ROOT_STATES } from './root.states';
 import { AnalyticsService, AnalyticsServiceConfiguration, AnalyticsServiceListener, GaeAnalyticsModule } from '@gae-web/appengine-analytics';
-import { SecureModule } from './secure/secure.module';
 import { GaeGoogleModule, FacebookAnalyticsListenerService, FacebookApiService, GaeFacebookModule, FacebookApiServiceConfig, GoogleOAuthServiceConfig } from '@gae-web/appengine-services';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export function routerConfigFn(router: UIRouter, injector: Injector, module: StatesModule): any {
   const transitionService = router.transitionService;
@@ -18,7 +17,8 @@ export function routerConfigFn(router: UIRouter, injector: Injector, module: Sta
     service.sendPageView();
   });
 
-  // uiRouterInstance.trace.enable();
+  router.trace.enable(Category.TRANSITION);
+
   return undefined;
 }
 
@@ -56,6 +56,7 @@ FACEBOOK_CONFIG.logging = true;
     }),
     // Imports
     BrowserModule,
+    BrowserAnimationsModule,
     UIRouterModule.forRoot({
       states: ROOT_STATES,
       useHash: false,

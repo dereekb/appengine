@@ -8,8 +8,7 @@ import { GaeGatewayViewsModule } from './view/view.module';
 
 // TODO: as Any temporary to override compiler issues with ui router.)
 export const ROUTER_CONFIG: any = {
-  states: GATEWAY_STATES,
-  // config: routerConfigFn // TODO: Add back later for protecting app?
+  states: GATEWAY_STATES
 };
 
 @NgModule({
