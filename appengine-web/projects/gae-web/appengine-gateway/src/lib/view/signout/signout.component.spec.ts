@@ -8,6 +8,7 @@ import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAcc
 import { GatewaySegueService } from '../../state.service';
 import { TestGatewaySegueService } from '../../../test/state.service';
 import { TestAnalyticsModule } from '@gae-web/appengine-analytics';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GaeSignOutComponent', () => {
   let component: GaeSignOutComponent;
@@ -26,6 +27,7 @@ describe('GaeSignOutComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        NoopAnimationsModule,
         TestAnalyticsModule.forRoot(),
         GaeGoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
         GaeFacebookModule.forRoot(new FacebookApiServiceConfig(''), false),

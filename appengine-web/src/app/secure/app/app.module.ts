@@ -3,6 +3,7 @@ import { APP_STATES } from './app.states';
 import { AppComponent } from './app.component';
 import { UIRouterModule, StatesModule } from '@uirouter/angular';
 import { CommonModule } from '@angular/common';
+import { SecureAppImportsModule } from './app.imports';
 
 export const ROUTER_CONFIG: StatesModule = {
   states: APP_STATES
@@ -13,6 +14,7 @@ export const ROUTER_CONFIG: StatesModule = {
   exports: [AppComponent],
   imports: [
     CommonModule,
+    SecureAppImportsModule,
     UIRouterModule.forChild(ROUTER_CONFIG)
   ]
 })

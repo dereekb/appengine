@@ -1,4 +1,7 @@
-import { AnalyticsService, AnalyticsServiceListener, AnalyticsServiceConfiguration, AnalyticsUserSource, AnalyticsUser, AnalyticsStreamEvent, AnalyticsStreamEventType } from './analytics.service';
+import {
+  AnalyticsService, AnalyticsServiceConfiguration,
+  AnalyticsUserSource, AnalyticsUser, AnalyticsStreamEvent, AnalyticsStreamEventType, AbstractAnalyticsServiceListener
+} from './analytics.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 class TestAnalyticsServiceListener extends AbstractAnalyticsServiceListener {

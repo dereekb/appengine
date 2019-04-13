@@ -9,6 +9,7 @@ import { GatewaySegueService } from '../../state.service';
 import { TestGatewaySegueService } from '../../../test/state.service';
 import { TestAnalyticsModule } from '@gae-web/appengine-analytics';
 import { GaeGatewayComponentsModule } from '../../components/components.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GaeSignInComponent', () => {
   let component: GaeSignInComponent;
@@ -27,6 +28,7 @@ describe('GaeSignInComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        NoopAnimationsModule,
         TestAnalyticsModule.forRoot(),
         GaeGoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
         GaeFacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
