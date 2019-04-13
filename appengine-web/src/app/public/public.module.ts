@@ -9,7 +9,6 @@ export const ROUTER_CONFIG: any = {
 
 @NgModule({
   declarations: [PublicComponent],
-  exports: [PublicComponent],
   imports: [
     UIRouterModule.forChild(ROUTER_CONFIG)
   ]

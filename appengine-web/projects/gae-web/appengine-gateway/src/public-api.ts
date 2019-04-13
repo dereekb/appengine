@@ -29,6 +29,7 @@ export * from './lib/view/signup/signup.component';
 
 // Gateway
 export * from './lib/gateway.component';
+export * from './lib/gateway.hook';
 export * from './lib/gateway.module';
 export * from './lib/gateway.states';
 export * from './lib/state.service';

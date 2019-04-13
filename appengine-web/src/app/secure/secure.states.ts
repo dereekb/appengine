@@ -9,6 +9,7 @@ export const gatewayFutureState: Ng2StateDeclaration = {
 
 export const appFutureState: Ng2StateDeclaration = {
   name: 'app.**',
+  redirectTo: 'app.home',
   url: '/app',
   loadChildren: './app/app.module#AppModule'
 };

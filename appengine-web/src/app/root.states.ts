@@ -7,8 +7,9 @@ export const publicFutureState: Ng2StateDeclaration = {
 };
 
 export const secureFutureState: Ng2StateDeclaration = {
-  name: '**',
+  name: '*',
   url: '/app',
+  redirectTo: 'app.home',
   loadChildren: './secure/secure.module#SecureModule'
 };
 
