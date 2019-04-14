@@ -7,6 +7,7 @@ import { SecureAppModule } from './app/app.module';
 import { GaeTokenModule } from '@gae-web/appengine-token';
 import { AppSegueService } from './segue.service';
 import { GaeGatewayModule, secureGatewayHook, GaeGatewayViewsModule, GatewaySegueService } from 'projects/gae-web/appengine-gateway/src/public-api';
+import { HttpClientModule } from '@angular/common/http';
 
 export function routerConfigFn(router: UIRouter) {
   const transitionService = router.transitionService;
@@ -26,13 +27,14 @@ export const ROUTER_CONFIG: StatesModule = {
     GaeGatewayModule,
     SecureAppModule,
     // GAE Configurations
+    HttpClientModule,
+    GaeApiModule.makeJwtModuleForRoot(),
     GaeGatewayViewsModule.forRoot({}),
     GaeTokenModule.forRoot(),
     GaeApiModule.forApp({
       version: 'v1',
       name: 'test'
     }),
-    GaeApiModule.makeJwtModuleForRoot(),
     GaeClientModule.forApp(),
     // Routing
     UIRouterModule.forChild(ROUTER_CONFIG)

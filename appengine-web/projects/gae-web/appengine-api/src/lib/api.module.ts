@@ -5,35 +5,52 @@ import { ClientLinkService } from './model/extension/link/link.service';
 import { ClientSchedulerService } from './model/extension/scheduler/scheduler.service';
 import { PublicLoginTokenApiService, PrivateLoginTokenApiService, ApiUserLoginTokenAuthenticator } from './auth/token.service';
 import { GaeTokenModule, UserLoginTokenService, UserLoginTokenAuthenticator } from '@gae-web/appengine-token';
-import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { JwtModule, JWT_OPTIONS, JwtModuleOptions } from '@auth0/angular-jwt';
 import { RegisterApiService } from './auth/register.service';
 import { OAuthLoginApiService } from './auth/oauth.service';
-import { LazyCache } from '@gae-web/appengine-utility';
+import { catchError, defaultIfEmpty } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
-export function jwtOptionsFactory(injector: Injector, apiConfig: ApiConfiguration) {
+export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: ApiConfiguration) {
   const throwNoTokenError = false;
   const skipWhenExpired = false;
-  const whiteListedDomains = [];
-  const blackListedRoutes = [];
+  const whitelistedDomains = [];
+
+  function makeRouteRegex(route: string, openEnd = true, addRoot = true) {
+    let prefix = '.*';
+
+    if (addRoot) {
+      prefix = prefix + apiConfig.routeConfig.root;
+    }
+
+    route = prefix + route;
+
+    // Escape all route slashes
+    route = route.replace(/\//g, '\\/');
+
+    if (openEnd) {
+      route = route + '.*';
+    }
+
+    return new RegExp(route, 'i');
+  }
+
+  const blacklistedRoutes = [makeRouteRegex(OAuthLoginApiService.SERVICE_PATH)];
 
   // TODO: Add black/white list parameters using the module's info.
 
-  const cache = new LazyCache<UserLoginTokenService>({
-    refresh() {
-      return injector.get(UserLoginTokenService);
-    }
-  });
-
   return {
     tokenGetter: () => {
-      const userLoginTokenService = cache.getValue();
-      const obs = userLoginTokenService.getEncodedLoginToken();
-      return obs.toPromise();
+      const obs = userLoginTokenService.getEncodedLoginToken().pipe(
+        catchError(() => of(null))
+      );
+
+      return obs.toPromise() as Promise<string | null>;
     },
     throwNoTokenError,
     skipWhenExpired,
-    whiteListedDomains,
-    blackListedRoutes
+    whitelistedDomains,
+    blacklistedRoutes
   };
 }
 
@@ -57,8 +74,7 @@ export function clientSchedulerServiceFactory(routeConfig: ApiRouteConfiguration
 
 @NgModule({
   imports: [
-    GaeTokenModule,
-    HttpClientModule
+    GaeTokenModule
   ]
 })
 export class GaeApiModule {

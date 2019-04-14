@@ -4,7 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { ApiRouteConfiguration } from '../api.config';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { share, catchError, map } from 'rxjs/operators';
-import { LoginTokenPair, LoginTokenPairJson } from '@gae-web/appengine-token';
+import { LoginTokenPair, LoginTokenPairJson, NoLoginSetError } from '@gae-web/appengine-token';
+import { ApiJwtConfigurationError } from '../error';
 
 /**
  * Service for interacting with an Appengine OAuth Token service.
@@ -66,7 +67,11 @@ export class OAuthLoginApiService {
 
   private handleRequestError(err: any, caught: Observable<LoginTokenPair>): Observable<LoginTokenPair> {
 
-    // TODO: Update error to be more specific?
+    if ((err instanceof NoLoginSetError)) {
+      throw new ApiJwtConfigurationError(`The OAuthLoginApiService's routes are not blacklisted.`);
+    }
+
+    console.error(err);
 
     return throwError(new Error('An error occured while accessing the Login Server.'));
   }

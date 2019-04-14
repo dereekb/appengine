@@ -1,5 +1,5 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, merge } from 'rxjs';
 import { OAuthLoginApiService } from '@gae-web/appengine-api';
 import { OAuthLoginServiceButton, OAuthButtonEvent, OAuthButtonState, OAuthLoginServiceTokenResponse } from '@gae-web/appengine-services';
 import { timeout } from 'rxjs/operators';
@@ -16,7 +16,7 @@ import { AbstractSignInGateway, SignInGateway } from '../components/gateway';
 export class OAuthButtonSignInDirective extends AbstractSignInGateway implements SignInGateway, OnDestroy {
 
     private _buttons: OAuthLoginServiceButton[];
-    private _subs: Subscription[];
+    private _buttonSub: Subscription;
 
     constructor(private _loginService: OAuthLoginApiService) {
         super();
@@ -24,19 +24,18 @@ export class OAuthButtonSignInDirective extends AbstractSignInGateway implements
 
     ngOnDestroy() {
         super.ngOnDestroy();
-        this._clearSubs();
+        this._clearButtonSub();
     }
 
     // MARK: Accessors
     @Input()
     public set gaeOAuthButtonSignIn(buttons: OAuthLoginServiceButton[]) {
-        this._clearSubs();
+        this._clearButtonSub();
 
         this._buttons = buttons;
 
-        this._subs = buttons.map((button) => {
-            return button.stream.subscribe((event) => this.updateForGatewayEvent(event));
-        });
+        const buttonStreams = buttons.map(x => x.stream);
+        this._buttonSub = merge(...buttonStreams).subscribe(event => this.updateForGatewayEvent(event));
     }
 
     // MAKR: Events
@@ -73,9 +72,9 @@ export class OAuthButtonSignInDirective extends AbstractSignInGateway implements
         super.resetSignInGateway();
     }
 
-    private _clearSubs() {
-        if (this._subs) {
-            this._subs.forEach((x) => x.unsubscribe());
+    private _clearButtonSub() {
+        if (this._buttonSub) {
+            this._buttonSub.unsubscribe();
         }
     }
 

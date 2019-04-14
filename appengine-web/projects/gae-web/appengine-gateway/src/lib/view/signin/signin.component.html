@@ -5,7 +5,7 @@
         [gaeSignInGateway]="loginTokenHandler" gaeLoginSignInAnalytics #loginTokenHandler="gaeSignInGatewayGroup"
         [gaeSignInGatewayGroup]="[oauthLogin]">
         <div class="login" signin>
-          <gae-oauth-sign-in-gateway [disabled]="loginHandler.disableLogins" #oauthLogin></gae-oauth-sign-in-gateway>
+          <gae-oauth-sign-in-gateway #oauthLogin [disabled]="loginHandler.disableLogins"></gae-oauth-sign-in-gateway>
           <hr class="login-divider" />
           <gae-credentials-login-view></gae-credentials-login-view>
         </div>

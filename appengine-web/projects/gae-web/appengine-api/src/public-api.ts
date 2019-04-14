@@ -29,6 +29,7 @@ export * from './lib/model/client';
 export * from './lib/api.config';
 export * from './lib/api.module';
 export * from './lib/api';
+export * from './lib/error';
 
 // Testing
 export * from './test/boo.model';

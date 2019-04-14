@@ -22,6 +22,7 @@ export class FacebookOAuthService extends OAuthLoginService {
         this._status = status;
       }, (error) => {
         console.log('Error loading facebook login status...');
+        throw error;
       });
     }
   }

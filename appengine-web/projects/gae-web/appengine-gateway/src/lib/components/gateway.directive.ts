@@ -7,51 +7,53 @@ import { AbstractSignInGateway, SignInGateway, SignInGatewayEvent, SignInGateway
  * Used for watching different sign in gateways.
  */
 @Directive({
-  selector: '[gaeSignInGatewayGroup]',
-  exportAs: 'gaeSignInGatewayGroup'
+    selector: '[gaeSignInGatewayGroup]',
+    exportAs: 'gaeSignInGatewayGroup'
 })
 export class SignInGatewayGroupDirective extends AbstractSignInGateway implements OnDestroy {
 
-  private _sub: Subscription;
-  private _gateways: SignInGateway[];
+    private _sub: Subscription;
+    private _gateways: SignInGateway[];
 
-  constructor() {
-      super();
-  }
+    constructor() {
+        super();
+    }
 
-  ngOnDestroy() {
-      super.ngOnDestroy();
-      this._clearSub();
-  }
+    ngOnDestroy() {
+        super.ngOnDestroy();
+        this._clearSub();
+    }
 
-  // MARK: Accessors
-  @Input()
-  public set gaeSignInGatewayGroup(gateways: SignInGateway[]) {
-      this._clearSub();
-      this._gateways = gateways;
+    // MARK: Accessors
+    @Input()
+    public set gaeSignInGatewayGroup(gateways: SignInGateway[]) {
+        this._clearSub();
+        this._gateways = gateways;
 
-      const streams = gateways.map((x) => x.stream);
-      this._sub = merge(streams).subscribe();
-  }
+        const streams = gateways.map((x) => x.stream);
+        this._sub = merge(...streams).subscribe((x: SignInGatewayEvent) => {
+            this.updateForGatewayEvent(x);
+        });
+    }
 
-  // MAKR: Events
-  protected updateForGatewayEvent(event: SignInGatewayEvent) {
-      this.next(event);
-  }
+    // MAKR: Events
+    protected updateForGatewayEvent(event: SignInGatewayEvent) {
+        this.next(event);
+    }
 
-  // MARK: Internal
-  public resetSignInGateway() {
-      if (this._gateways) {
-          this._gateways.forEach((x) => x.resetSignInGateway());
-      }
-  }
+    // MARK: Internal
+    public resetSignInGateway() {
+        if (this._gateways) {
+            this._gateways.forEach((x) => x.resetSignInGateway());
+        }
+    }
 
-  private _clearSub() {
-      if (this._sub) {
-          this._sub.unsubscribe();
-          delete this._sub;
-      }
-  }
+    private _clearSub() {
+        if (this._sub) {
+            this._sub.unsubscribe();
+            delete this._sub;
+        }
+    }
 
 }
 
@@ -61,86 +63,86 @@ export class SignInGatewayGroupDirective extends AbstractSignInGateway implement
  */
 export abstract class AbstractSignInGatewayDirective extends AbstractSignInGateway implements OnDestroy {
 
-  @Output()
-  public readonly loginCompleted = new EventEmitter<LoginTokenPair>();
+    @Output()
+    public readonly loginCompleted = new EventEmitter<LoginTokenPair>();
 
-  private _gateway: SignInGateway;
-  private _gatewaySub: Subscription;
+    private _gateway: SignInGateway;
+    private _gatewaySub: Subscription;
 
-  constructor() {
-      super();
-  }
+    constructor() {
+        super();
+    }
 
-  ngOnDestroy() {
-      this.loginCompleted.complete();
-  }
+    ngOnDestroy() {
+        this.loginCompleted.complete();
+    }
 
-  // MARK: Accessors
-  public get isDone() {
-      return this.state === SignInGatewayState.Done;
-  }
+    // MARK: Accessors
+    public get isDone() {
+        return this.state === SignInGatewayState.Done;
+    }
 
-  public get isWorking() {
-      return this.state === SignInGatewayState.Working;
-  }
+    public get isWorking() {
+        return this.state === SignInGatewayState.Working;
+    }
 
-  protected setGateway(gateway: SignInGateway) {
-      this._clearSourceSub();
+    protected setGateway(gateway: SignInGateway) {
+        this._clearSourceSub();
 
-      this._gateway = gateway;
+        this._gateway = gateway;
 
-      if (gateway) {
-          this._gatewaySub = gateway.stream.subscribe((event) => {
-              this.updateForGatewayEvent(event);
-          });
-      }
-  }
+        if (gateway) {
+            this._gatewaySub = gateway.stream.subscribe((event) => {
+                this.updateForGatewayEvent(event);
+            });
+        }
+    }
 
-  // MARK: Handler
-  protected updateForGatewayEvent(event: SignInGatewayEvent) {
-      switch (event.state) {
-          case SignInGatewayState.Done:
-              this.updateWithLoginToken(event.token);
-              break;
-          case SignInGatewayState.Error:
-              this.emitError(event.error);
-              break;
-          default:
-              this.next(event);
-      }
-  }
+    // MARK: Handler
+    protected updateForGatewayEvent(event: SignInGatewayEvent) {
+        switch (event.state) {
+            case SignInGatewayState.Done:
+                this.updateWithLoginToken(event.token);
+                break;
+            case SignInGatewayState.Error:
+                this.emitError(event.error);
+                break;
+            default:
+                this.next(event);
+        }
+    }
 
-  protected abstract updateWithLoginToken(loginToken: LoginTokenPair);
+    protected abstract updateWithLoginToken(loginToken: LoginTokenPair);
 
-  protected nextLoginToken(loginTokenPair: LoginTokenPair) {
-      super.nextLoginToken(loginTokenPair);
-      this.emitLogin(loginTokenPair);
-  }
+    protected nextLoginToken(loginTokenPair: LoginTokenPair) {
+        super.nextLoginToken(loginTokenPair);
+        this.emitLogin(loginTokenPair);
+    }
 
-  protected emitLogin(login: LoginTokenPair) {
-      this.loginCompleted.emit(login);
-  }
+    protected emitLogin(login: LoginTokenPair) {
+        this.loginCompleted.emit(login);
+    }
 
-  protected emitErrorMessage(error: string) {
-      this.emitError(new Error(error));
-  }
+    protected emitErrorMessage(error: string) {
+        this.emitError(new Error(error));
+    }
 
-  protected emitError(error: Error) {
-      this.nextError(error);
-  }
+    protected emitError(error: Error) {
+        this.nextError(error);
+    }
 
-  // MARK: Internal
-  public resetSignInGateway() {
-      if (this._gateway) {
-          this._gateway.resetSignInGateway();
-      }
-  }
+    // MARK: Internal
+    public resetSignInGateway() {
+        if (this._gateway) {
+            this._gateway.resetSignInGateway();
+        }
+    }
 
-  private _clearSourceSub() {
-      if (this._gatewaySub) {
-          this._gatewaySub.unsubscribe();
-          delete this._gatewaySub;
-      }
-  }
+    private _clearSourceSub() {
+        if (this._gatewaySub) {
+            this._gatewaySub.unsubscribe();
+            delete this._gatewaySub;
+        }
+    }
 
 }
