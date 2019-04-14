@@ -170,8 +170,8 @@ export class StoredToken {
 /**
  * Class/Interface for storing StoredToken values.
  */
-export interface StorageTokenAccessor extends StorageAccessor<StoredToken> {
-  setToken(token: StoredToken, key?: string): Observable<{}>;
+export abstract class StorageTokenAccessor extends StorageAccessor<StoredToken> {
+  abstract setToken(token: StoredToken, key?: string): Observable<{}>;
 }
 
 export class StoredTokenStorageAccessor extends AbstractStorageAccessor<StoredToken> implements StorageTokenAccessor {

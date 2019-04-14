@@ -56,6 +56,7 @@
     "karma-jasmine-matchers": "^4.0.1",
     "ng-packagr": "^4.2.0",
     "protractor": "~5.4.0",
+    "scss-bundle": "^2.5.1",
     "ts-node": "~7.0.0",
     "tsickle": ">=0.34.0",
     "tslib": "^1.9.0",

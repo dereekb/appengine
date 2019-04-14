@@ -1,8 +1,8 @@
-<div class="gateway-view tallynote-theme">
-  <div class="gateway-content">
+<div class="gateway-view" fxLayout="column" fxFill>
+  <div class="gateway-content" fxFlex="grow">
     <ui-view></ui-view>
   </div>
-  <div class="gateway-footer">
+  <div class="gateway-footer" fxFlex="nogrow">
     <!-- TODO: Inject TOS/Privacy Policy gateway links.-->
     <div class="links">
       <a uiSref="legal">Terms of Service</a>

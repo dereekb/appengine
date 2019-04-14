@@ -24,9 +24,9 @@
                 <p>By clicking Create New Account, I agree to the <a uiSref="legal">Terms of Service</a> and <a
                     uiSref="legal">Privacy Policy</a>.</p>
               </div>
-              <button md-raised-button (click)="registerHandler.register()" class="register-create-button">Create New
+              <button mat-raised-button (click)="registerHandler.register()" class="register-create-button">Create New
                 Account</button>
-              <button md-button (click)="registerHandler.cancelRegister()"
+              <button mat-button (click)="registerHandler.cancelRegister()"
                 class="register-cancel-button">Cancel</button>
             </div>
           </div>
@@ -35,9 +35,9 @@
       <div errorActionView>
         <div class="register-existing-login-buttons" *ngIf="registerHandler.hasExistingToken">
           <p>Would you like to sign in with this account instead?</p>
-          <button md-raised-button (click)="registerHandler.loginWithExisting()"
+          <button mat-raised-button (click)="registerHandler.loginWithExisting()"
             class="register-login-button">Login</button>
-          <button md-raised-button (click)="registerHandler.cancelLoginWithExisting()"
+          <button mat-raised-button (click)="registerHandler.cancelLoginWithExisting()"
             class="register-cancel-button">Cancel</button>
         </div>
       </div>
@@ -45,6 +45,6 @@
   </ng-container>
   <ng-container footer *ngIf="!registerHandler.hasExistingToken && !registerHandler.isDone">
     <p>Already have an account?</p>
-    <button class="link-button" md-button uiSref="signin">Sign In</button>
+    <button class="link-button" mat-button uiSref="signin">Sign In</button>
   </ng-container>
 </gae-gateway-box-view>

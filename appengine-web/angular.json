@@ -141,6 +141,11 @@
       "sourceRoot": "projects/gae-web/appengine-client/src",
       "projectType": "library",
       "prefix": "gae",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -316,6 +321,11 @@
       "sourceRoot": "projects/gae-web/appengine-services/src",
       "projectType": "library",
       "prefix": "gae",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -351,6 +361,11 @@
       "sourceRoot": "projects/gae-web/appengine-gateway/src",
       "projectType": "library",
       "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -386,6 +401,11 @@
       "sourceRoot": "projects/gae-web/appengine-components/src",
       "projectType": "library",
       "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",

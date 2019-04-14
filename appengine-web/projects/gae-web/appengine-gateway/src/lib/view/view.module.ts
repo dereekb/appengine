@@ -11,6 +11,7 @@ import { GaeGatewayAnalyticsModule } from '../analytics/analytics.module';
 import { GaeGatewayComponentsModule } from '../components/components.module';
 import { GaeGatewayOAuthModule } from '../oauth/oauth.module';
 import { GaeGatewayViewsConfiguration } from './view.config';
+import { UIRouterModule } from '@uirouter/angular';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { GaeGatewayViewsConfiguration } from './view.config';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    UIRouterModule,
     GaeGatewayAnalyticsModule,
     GaeGatewayOAuthModule,
     GaeGatewayComponentsModule,

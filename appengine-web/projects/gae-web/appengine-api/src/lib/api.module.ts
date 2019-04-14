@@ -58,8 +58,7 @@ export function clientSchedulerServiceFactory(routeConfig: ApiRouteConfiguration
 @NgModule({
   imports: [
     GaeTokenModule,
-    HttpClientModule,
-    JwtModule
+    HttpClientModule
   ]
 })
 export class GaeApiModule {

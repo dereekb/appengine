@@ -1,0 +1,234 @@
+// Import library functions for theme creation.
+@import '~@angular/material/theming';
+
+// Define a mixin that accepts a theme and outputs the theme-specific styles.
+@mixin gae-gateway-view-theme($theme) {
+
+  // Extract the palettes you need from the theme definition.
+  $primary: map-get($theme, primary);
+
+  $max-auth-box-content-width: 600px;
+
+  //Box that contains the input, etc.
+  .auth-box {
+    margin: auto;
+    max-width: $max-auth-box-content-width;
+
+    //Margin
+    padding-top: 12px;
+    padding-bottom: 40px;
+
+    @media only screen and (max-device-height: 768px) and (orientation: landscape) {
+      padding-top: 15px;
+    }
+
+    .auth-box-header {
+      text-align: center;
+
+      .auth-box-header-logo {
+        margin: auto;
+
+        img {
+          max-width: 80%;
+          width: 300px;
+        }
+      }
+    }
+
+    .auth-box-content {
+      margin: auto;
+
+      .auth-box-input {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+      }
+
+      padding-bottom: 20px;
+    }
+
+    .auth-box-footer {
+      text-align: center;
+
+      .mat-button {
+        font-size: 1.1em;
+        color: mat-color($primary);
+      }
+    }
+
+  }
+
+  // $footer-height: 90px;
+
+  .auth-footer {
+    $footer-color: #aaa;
+
+    //margin-top: -$footer-height;
+
+    text-align: center;
+    margin: auto;
+    padding: 8px;
+
+    color: $footer-color;
+
+    .links {
+      text-decoration: none;
+      padding-bottom: 5px;
+
+      a {
+        color: $footer-color;
+        font-size: 0.8em;
+        padding: 2px 5px;
+      }
+    }
+
+    .copyright {
+      margin-top: 3px;
+
+      a {
+        color: $footer-color;
+        text-decoration: none;
+        padding: 5px;
+      }
+    }
+  }
+
+  // MARK: Signout
+  .sign-out-content {
+    margin: auto;
+    text-align: center;
+
+    .sign-out-loading {
+      .mat-spinner {
+        margin: auto;
+      }
+    }
+  }
+
+  // MARK: Login
+  .login-buttons {
+    margin: 0 10px;
+    text-align: center;
+
+    .oauth-login-button {
+      padding-left: 40px !important;
+      margin-top: 8px;
+    }
+
+    .google-button {
+      @extend .oauth-login-button;
+
+      background: url('/assets/auth/google.svg') transparent 3px 50% no-repeat;
+      background-size: 29px 29px;
+
+      font-size: 14px;
+      font-weight: bold;
+      font-family: 'Roboto', sans-serif !important;
+    }
+
+    .facebook-button {
+      @extend .oauth-login-button;
+
+      background: url('/assets/auth/facebook.svg') transparent 3px 50% no-repeat;
+      background-size: 29px 29px;
+
+      font-family: 'Roboto', 'Noto Sans', sans-serif !important;
+    }
+  }
+
+  .login-divider {
+    margin: 20px;
+    border-color: teal;
+  }
+
+  // MARK: Credentials
+  .credentials {
+    .credentials-unavailable {
+      text-align: center;
+      color: grey;
+    }
+  }
+
+  // MARK: Signin
+  .sign-in-loading {
+    .sign-in-loading-spinner {
+      margin: auto;
+    }
+  }
+
+  // MARK: Register View
+  .register {
+    padding: 10px 30px 30px;
+    text-align: center;
+
+    .register-text {
+      h2 {
+        font-size: 1.6em;
+      }
+
+      p {
+        font-size: 1.1em;
+      }
+    }
+
+    .register-buttons {
+      margin-top: 10px;
+      border-top: 1px solid teal;
+
+      .register-agree-text {
+
+        a {
+          color: inherit;
+        }
+
+      }
+
+      .register-create-button {
+        background-color: mat-color($primary, 700);
+        color: mat-contrast($primary, 700);
+        padding: 9px 40px;
+      }
+
+      .register-cancel-button {
+        display: block;
+        margin: 15px auto 0;
+      }
+
+    }
+
+  }
+
+  .register-existing-login-buttons {
+
+    p {
+      font-size: 0.8em;
+      color: black;
+    }
+
+    .register-login-button {
+      background-color: mat-color($primary, 700);
+      color: mat-contrast($primary, 700);
+    }
+
+  }
+
+  .login-complete {
+    text-align: center;
+
+    p {
+      margin: 10px 0;
+      font-size: 1.2em;
+    }
+
+    .spinner {
+      margin: 8px auto;
+    }
+  }
+
+  .login-error {
+    text-align: center;
+    font-size: 1.2em;
+    color: red;
+  }
+
+}

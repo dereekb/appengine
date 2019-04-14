@@ -2,7 +2,7 @@ import { Ng2StateDeclaration } from '@uirouter/angular';
 
 export const publicFutureState: Ng2StateDeclaration = {
   name: 'public.**',
-  url: '/public',
+  url: '/',
   loadChildren: './public/public.module#PublicModule'
 };
 

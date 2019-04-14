@@ -7,6 +7,7 @@ import { ROOT_STATES } from './root.states';
 import { AnalyticsService, AnalyticsServiceConfiguration, AnalyticsServiceListener, GaeAnalyticsModule } from '@gae-web/appengine-analytics';
 import { GaeGoogleModule, FacebookAnalyticsListenerService, FacebookApiService, GaeFacebookModule, FacebookApiServiceConfig, GoogleOAuthServiceConfig } from '@gae-web/appengine-services';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GaeGatewayViewsModule } from '@gae-web/appengine-gateway';
 
 export function routerConfigFn(router: UIRouter, injector: Injector, module: StatesModule): any {
   const transitionService = router.transitionService;

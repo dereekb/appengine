@@ -51,26 +51,24 @@ export abstract class UserLoginTokenService {
  * @deprecated
  */
 @Injectable()
-export class LegacyAppTokenUserService extends UserLoginTokenService {
+export class LegacyAppTokenUserService implements UserLoginTokenService {
 
   private _pair = new BehaviorSubject<AppTokenUserServicePair | undefined>(undefined);
   private _accessor = new AppTokenLoginAccessor();
 
-  constructor(private _storage: AppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) {
-    super();
-  }
+  constructor(private _storage: AppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) {}
 
   // MARK: Accessors
   public isAuthenticated(): Observable<boolean> {
     return this.getLoginToken().pipe(
+      map(() => true),
       catchError((x) => {
         if ((x instanceof NoLoginSetError) === false) {
           console.error('Error while checking authentication.');
         }
 
         return of(false);
-      }),
-      map(() => true)
+      })
     );
   }
 
