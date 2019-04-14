@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map, share } from 'rxjs/operators';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import { ApiRouteConfiguration } from '../api.config';
 import {
   LoginTokenPairJson, EncodedToken, LoginTokenPair, ExpiredTokenAuthorizationError,
@@ -47,14 +47,20 @@ export class PublicLoginTokenApiService {
   // MARK: Secured Requests
   public createRefreshToken(encodedToken: EncodedToken): Observable<LoginTokenPair> {
     const url = this._servicePath + '/refresh';
-    const headers = AuthUtility.buildHeaderWithAuthentication(encodedToken);
+    // const headers = AuthUtility.buildHeaderWithAuthentication(encodedToken);
+    // const authorization = headers.Authorization;
 
     // TODO: Update error handling.
+    const body = new HttpParams()
+      .set('accessToken', encodedToken);
 
-    return this._httpClient.get<LoginTokenPairJson>(url, {
+    return this._httpClient.post<LoginTokenPairJson>(url, body, {
       observe: 'response',
-      headers
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
     }).pipe(
+      catchError(this.handleErrorResponse),
       map(LoginTokenPair.fromResponse)
     );
   }
@@ -63,16 +69,17 @@ export class PublicLoginTokenApiService {
   public loginWithRefreshToken(encodedToken: EncodedToken): Observable<LoginTokenPair> {
     const url = this._servicePath + '/login';
 
-    const params = {
-      refreshToken: encodedToken
-    };
+    const body = new HttpParams()
+      .set('refreshToken', encodedToken);
 
-    return this._httpClient.post<LoginTokenPairJson | ApiResponseJson>(url, undefined, {
-      params
+    return this._httpClient.post<LoginTokenPairJson | ApiResponseJson>(url, body, {
+      observe: 'response',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
     }).pipe(
       catchError(this.handleErrorResponse),
-      map((x) => LoginTokenPair.fromJson(x as LoginTokenPairJson)),
-      share()
+      map(LoginTokenPair.fromResponse)
     );
   }
 
@@ -115,8 +122,7 @@ export class PrivateLoginTokenApiService {
     return this._httpClient.get<LoginTokenPairJson>(url, {
       observe: 'response'
     }).pipe(
-      map(LoginTokenPair.fromResponse),
-      share()
+      map(LoginTokenPair.fromResponse)
     );
   }
 

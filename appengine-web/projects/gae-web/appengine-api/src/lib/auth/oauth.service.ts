@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { ApiRouteConfiguration } from '../api.config';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { share, catchError, map } from 'rxjs/operators';
 import { LoginTokenPair, LoginTokenPairJson, NoLoginSetError } from '@gae-web/appengine-token';
 import { ApiJwtConfigurationError } from '../error';
@@ -25,14 +25,15 @@ export class OAuthLoginApiService {
   public loginWithAuthCode(type: string, authCode: string, codeType: string = 'default'): Observable<LoginTokenPair> {
     const url = this._servicePath + '/' + type + '/code';
 
-    const params = {
-      code: authCode,
-      type: codeType
-    };
+    const body = new HttpParams()
+      .set('code', authCode)
+      .set('type', codeType);
 
-    const response = this._httpClient.post<LoginTokenPairJson>(url, undefined, {
-      observe: 'response',
-      params
+    const response = this._httpClient.post<LoginTokenPairJson>(url, body.toString(), {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }),
+      observe: 'response'
     });
 
     return this.handleResponseObs(response);
@@ -45,13 +46,14 @@ export class OAuthLoginApiService {
 
     const url = this._servicePath + '/' + type + '/token';
 
-    const params = {
-      token: accessToken
-    };
+    const body = new HttpParams()
+      .set('token', accessToken);
 
-    const response = this._httpClient.post<LoginTokenPairJson>(url, undefined, {
-      observe: 'response',
-      params
+    const response = this._httpClient.post<LoginTokenPairJson>(url, body.toString(), {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }),
+      observe: 'response'
     });
 
     return this.handleResponseObs(response);

@@ -16,6 +16,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListen
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalAppLoginTokenSecurityConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
@@ -26,6 +27,8 @@ import com.dereekb.gae.extras.gen.app.gae.local.LoginGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.remote.RemoteEventServiceConfigurationGen;
 import com.dereekb.gae.extras.gen.test.app.gae.local.TestModelGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
@@ -40,7 +43,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 	public AppConfiguration makeAppSpringConfiguration() {
 
 		String appProjectId = "gae-test";
-		String appProjectService = "foo";
+		String appProjectService = "test";
 		String appProjectVersion = "v1";
 
 		// Models
@@ -95,6 +98,15 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		configuration.setAppId(1L);
 
 		configuration.setRemoteServices(remoteEventService);
+
+		LoginTokenAppSecurityBeansConfigurerImpl appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
+
+		OAuthClientConfig facebookOAuthConfig = new OAuthClientConfigImpl("431391914300748", "102a10dd9bfa5e2783e57a2f09b0c2ac");
+		appSecurityBeansConfigurer.setFacebookOAuthConfig(facebookOAuthConfig);
+
+		// TODO: Add Google
+
+		configuration.setAppSecurityBeansConfigurer(appSecurityBeansConfigurer);
 
 		return configuration;
 	}

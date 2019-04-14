@@ -60,7 +60,7 @@ public class WebInfConfigurationGenerator extends AbstractConfigurationFileGener
 
 		// Configuration Contexts
 		builder.getRawXMLBuilder().comment("Shared App Context");
-		builder.addSpringContextParam("/WEB-INF/spring/context.xml");
+		builder.addSpringContextParam("/WEB-INF/spring/context/context.xml");
 
 		// Listener
 		builder.addDefaultSpringContextListener();
@@ -68,14 +68,14 @@ public class WebInfConfigurationGenerator extends AbstractConfigurationFileGener
 		// API
 		String apiServletName = "api";
 		builder.getRawXMLBuilder().comment("API Servlet");
-		builder.addSpringServlet(apiServletName, "/WEB-INF/spring/api.xml", 0);
+		builder.addSpringServlet(apiServletName, "/WEB-INF/spring/api/api.xml", 0);
 
 		builder.addSpringServletMapping(apiServletName, this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath() + "/*");
 
 		// Taskqueue
 		String taskqueueServletName = "taskqueue";
 		builder.getRawXMLBuilder().comment("Taskqueue Servlet");
-		builder.addSpringServlet(taskqueueServletName, "/WEB-INF/spring/taskqueue.xml", null);
+		builder.addSpringServlet(taskqueueServletName, "/WEB-INF/spring/taskqueue/taskqueue.xml", null);
 
 		String taskQueuePattern = "taskqueue/*";
 

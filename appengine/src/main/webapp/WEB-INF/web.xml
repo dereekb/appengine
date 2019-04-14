@@ -21,7 +21,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>api</servlet-name>
-    <url-pattern>/api/foo/v1/*</url-pattern>
+    <url-pattern>/api/test/v1/*</url-pattern>
   </servlet-mapping>
   <!--Taskqueue Servlet-->
   <servlet>
