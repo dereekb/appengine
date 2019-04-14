@@ -1,4 +1,4 @@
-import { FOO_MODEL_TYPE, ApiRouteConfiguration, FooSerializer } from '@gae-web/appengine-api';
+import { FOO_MODEL_TYPE, ApiRouteConfiguration, FooSerializer, Foo, QueryService } from '@gae-web/appengine-api';
 import { HttpClient } from '@angular/common/http';
 import {
   FooClientCreateService, FooClientReadService, FooClientUpdateService, FooClientDeleteService,
@@ -7,7 +7,10 @@ import {
 } from './foo.service';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { GaeClientModule } from '../lib/client.module';
-import { ModelServiceWrapperSet } from '../lib/service/model.service';
+import { ModelServiceWrapper, ModelServiceWrapperSet, ModelCreateService } from '../lib/service/model.service';
+import { UniqueModel, SourceFactory } from '@gae-web/appengine-utility';
+import { ModelReadService, ModelDeleteService, ModelUpdateService } from '../lib/service/crud.service';
+import { ModelQueryService } from '../lib/service/query.service';
 
 export function fooServiceFactory(make: (config: any) => any) {
   return (s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) => {
@@ -20,7 +23,7 @@ export function fooServiceFactory(make: (config: any) => any) {
   };
 }
 
-export function fooServiceWrapperFactory(set: ModelServiceWrapperSet) {
+export function fooServiceWrapperFactory(set: ModelServiceWrapperSet): ModelServiceWrapper<UniqueModel> {
   return set.initWrapper({
     type: FOO_MODEL_TYPE,
     init: (fooWrapper, wrapperSet) => {
@@ -49,27 +52,27 @@ export function fooClientQueryServiceFactory(s: FooSerializer, h: HttpClient, r:
   return fooServiceFactory((c) => new FooClientQueryService(c)).apply(null, arguments);
 }
 
-export function fooCreateServiceFactory(wrapper: FooServiceWrapper, service: FooClientCreateService) {
+export function fooCreateServiceFactory(wrapper: FooServiceWrapper, service: FooClientCreateService): ModelCreateService<Foo> {
   return wrapper.wrapCreateService(service);
 }
 
-export function fooReadServiceFactory(wrapper: FooServiceWrapper, service: FooClientReadService) {
+export function fooReadServiceFactory(wrapper: FooServiceWrapper, service: FooClientReadService): ModelReadService<Foo> {
   return wrapper.wrapReadService(service);
 }
 
-export function fooUpdateServiceFactory(wrapper: FooServiceWrapper, service: FooClientUpdateService) {
+export function fooUpdateServiceFactory(wrapper: FooServiceWrapper, service: FooClientUpdateService): ModelUpdateService<Foo> {
   return wrapper.wrapUpdateService(service);
 }
 
-export function fooDeleteServiceFactory(wrapper: FooServiceWrapper, service: FooClientDeleteService) {
+export function fooDeleteServiceFactory(wrapper: FooServiceWrapper, service: FooClientDeleteService): ModelDeleteService<Foo> {
   return wrapper.wrapDeleteService(service);
 }
 
-export function fooQueryServiceFactory(wrapper: FooServiceWrapper, readService: FooReadService, queryService: FooClientQueryService) {
+export function fooQueryServiceFactory(wrapper: FooServiceWrapper, readService: FooReadService, queryService: FooClientQueryService): ModelQueryService<Foo> {
   return wrapper.wrapQueryService(readService, queryService);
 }
 
-export function fooReadSourceFactoryFn(wrapper: FooServiceWrapper, service: FooReadService) {
+export function fooReadSourceFactoryFn(wrapper: FooServiceWrapper, service: FooReadService): SourceFactory<Foo> {
   return wrapper.makeReadSourceFactory(service);
 }
 

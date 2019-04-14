@@ -3,7 +3,10 @@ import { Observable } from 'rxjs';
 import { catchError, map, share } from 'rxjs/operators';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ApiRouteConfiguration } from '../api.config';
-import { LoginTokenPairJson, EncodedToken, LoginTokenPair, ExpiredTokenAuthorizationError, InvalidTokenAuthorizationError } from '@gae-web/appengine-token';
+import {
+  LoginTokenPairJson, EncodedToken, LoginTokenPair, ExpiredTokenAuthorizationError,
+  InvalidTokenAuthorizationError, UserLoginTokenAuthenticator, EncodedRefreshToken
+} from '@gae-web/appengine-token';
 import { ApiResponseJson, ApiResponse } from '../api';
 import { TokenAuthenticationError } from './error';
 import { AuthUtility } from './auth.utility';
@@ -11,6 +14,23 @@ import { AuthUtility } from './auth.utility';
 export const LOGIN_TOKEN_SERVICE_PATH = '/login/auth/token';
 export const CREATE_REFRESH_TOKEN_PATH = `${LOGIN_TOKEN_SERVICE_PATH}/refresh`;
 export const LOGIN_WITH_REFRESH_TOKEN_PATH = `${LOGIN_TOKEN_SERVICE_PATH}/login`;
+
+/**
+ * UserLoginTokenAuthenticator implementation.
+ */
+export class ApiUserLoginTokenAuthenticator implements UserLoginTokenAuthenticator {
+
+  constructor(private _publicLoginTokenApiService: PublicLoginTokenApiService) { }
+
+  createRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair> {
+    return this._publicLoginTokenApiService.createRefreshToken(encodedToken);
+  }
+
+  loginWithRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair> {
+    return this._publicLoginTokenApiService.loginWithRefreshToken(encodedToken);
+  }
+
+}
 
 /**
  * Service for interacting with an Appengine LoginToken service.

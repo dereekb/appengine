@@ -126,11 +126,11 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
     }
   }
 
-  public get type() {
+  public get type(): string {
     return this._type;
   }
 
-  public get parent() {
+  public get parent(): ModelServiceWrapperSet {
     return this._parent;
   }
 
@@ -149,11 +149,11 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
   }
 
   // MARK: Events
-  public nextEvent(event: AnonymousWrapperEvent) {
+  public nextEvent(event: AnonymousWrapperEvent): void {
     this.next(event);
   }
 
-  public next(input: AnonymousWrapperEvent) {
+  public next(input: AnonymousWrapperEvent): void {
     const event = WrapperEvent.make({ ...input, modelType: this.type });
     this._events.next(event);
   }
@@ -179,7 +179,7 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
     return new ModelDeleteService<T>(this, service);
   }
 
-  public wrapQueryService(readService: ModelReadService<T>, queryService: QueryService<T>): QueryService<T> {
+  public wrapQueryService(readService: ModelReadService<T>, queryService: QueryService<T>): ModelQueryService<T> {
     return new ModelQueryService<T>(this, readService, queryService);
   }
 

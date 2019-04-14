@@ -1,15 +1,16 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, Injector } from '@angular/core';
 import { ApiRouteConfiguration, ApiModuleInfo, ApiConfiguration } from './api.config';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ClientLinkService } from './model/extension/link/link.service';
 import { ClientSchedulerService } from './model/extension/scheduler/scheduler.service';
-import { PublicLoginTokenApiService, PrivateLoginTokenApiService } from './auth/token.service';
-import { GaeTokenModule, UserLoginTokenService } from '@gae-web/appengine-token';
+import { PublicLoginTokenApiService, PrivateLoginTokenApiService, ApiUserLoginTokenAuthenticator } from './auth/token.service';
+import { GaeTokenModule, UserLoginTokenService, UserLoginTokenAuthenticator } from '@gae-web/appengine-token';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { RegisterApiService } from './auth/register.service';
 import { OAuthLoginApiService } from './auth/oauth.service';
+import { LazyCache } from '@gae-web/appengine-utility';
 
-export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: ApiConfiguration) {
+export function jwtOptionsFactory(injector: Injector, apiConfig: ApiConfiguration) {
   const throwNoTokenError = false;
   const skipWhenExpired = false;
   const whiteListedDomains = [];
@@ -17,8 +18,15 @@ export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, 
 
   // TODO: Add black/white list parameters using the module's info.
 
+  const cache = new LazyCache<UserLoginTokenService>({
+    refresh() {
+      return injector.get(UserLoginTokenService);
+    }
+  });
+
   return {
     tokenGetter: () => {
+      const userLoginTokenService = cache.getValue();
       const obs = userLoginTokenService.getEncodedLoginToken();
       return obs.toPromise();
     },
@@ -106,7 +114,13 @@ export class GaeApiModule {
         PublicLoginTokenApiService,
         PrivateLoginTokenApiService,
         OAuthLoginApiService,
-        RegisterApiService
+        RegisterApiService,
+        // ApiUserLoginTokenAuthenticator
+        {
+          provide: UserLoginTokenAuthenticator,
+          useClass: ApiUserLoginTokenAuthenticator,
+          deps: [PublicLoginTokenApiService]
+        }
       ]
     };
   }
