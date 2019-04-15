@@ -34,7 +34,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>taskqueue</servlet-name>
-    <url-pattern>taskqueue/*</url-pattern>
+    <url-pattern>/taskqueue/*</url-pattern>
   </servlet-mapping>
   <!--Restrict outside access to taskqueue API calls.-->
   <security-constraint>

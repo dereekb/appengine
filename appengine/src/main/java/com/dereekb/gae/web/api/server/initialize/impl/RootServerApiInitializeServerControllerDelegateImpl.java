@@ -19,6 +19,8 @@ import com.dereekb.gae.server.auth.security.login.exception.LoginRegistrationRej
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginService;
 import com.dereekb.gae.server.datastore.ForceGetterSetter;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
+import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
 import com.dereekb.gae.server.mail.service.MailRecipient;
 import com.dereekb.gae.server.mail.service.MailService;
 import com.dereekb.gae.server.mail.service.MailServiceRequest;
@@ -53,8 +55,14 @@ public class RootServerApiInitializeServerControllerDelegateImpl extends Abstrac
 	private List<AppInfo> defaultSystemApps = Collections.emptyList();
 
 	public RootServerApiInitializeServerControllerDelegateImpl(AppInfo appInfo,
-	        ForceGetterSetter<App> appGetterSetter) {
-		super(appInfo, appGetterSetter);
+	        ObjectifyRegistry<App> appRegistry) {
+		this(appInfo, appRegistry, appRegistry);
+	}
+
+	public RootServerApiInitializeServerControllerDelegateImpl(AppInfo appInfo,
+	        ForceGetterSetter<App> appGetterSetter,
+	        ObjectifyQueryService<App> appQueryService) {
+		super(appInfo, appGetterSetter, appQueryService);
 	}
 
 	public String getAdminEmail() {

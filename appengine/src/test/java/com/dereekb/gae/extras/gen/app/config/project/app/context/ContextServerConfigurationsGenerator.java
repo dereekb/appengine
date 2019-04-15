@@ -394,12 +394,17 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			String securedModelReadPatternMatcherBeanId = "securedModelReadPatternMatcher";
 			String securedModelResourcePatternMatcherBeanId = "securedModelResourcePatternMatcher";
 
+			String serviceApiPath = this.getServiceApiPath();
+
 			List<LocalModelConfiguration> secureLocalModelConfigs = AppConfigurationUtility
 			        .readLocalModelConfigurations(this.getAppConfig());
 			boolean hasSecureLocalModelConfigs = (secureLocalModelConfigs.isEmpty() == false);
 
 			builder.comment("No HTTP Security For Google App Engine Test Server");
 			builder.httpSecurity().pattern("/_ah/**").security("none");
+
+			builder.comment("Allow anyone to initialize the server via GET.");
+			builder.httpSecurity().pattern(serviceApiPath + "/server/initialize").security("none");
 
 			// TODO: Add custom pattern matching components.
 
@@ -415,8 +420,6 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			http.getRawXMLBuilder().c("Only allow this service to access the taskqueue.");
 			http.intercept("/taskqueue/**", HasRoleConfig.make("ROLE_LOGINTYPE_SYSTEM"));
-
-			String serviceApiPath = this.getServiceApiPath();
 
 			if (this.getAppConfig().isLoginServer()) {
 				http.getRawXMLBuilder().c("LoginKey Auth Requests rejected for some roles.");
@@ -576,6 +579,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			http.intercept(serviceApiPath + "/login/auth/system/token", RoleConfigImpl.make("permitAll"),
 			        HttpMethod.POST);
 			http.intercept(serviceApiPath + "/login/auth/token/**", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+
 			http.intercept(serviceApiPath + "/**", RoleConfigImpl.make("denyAll"));
 
 			http.accessDeniedHandlerRef("accessDeniedHandler").anonymous(true).noCsrf();

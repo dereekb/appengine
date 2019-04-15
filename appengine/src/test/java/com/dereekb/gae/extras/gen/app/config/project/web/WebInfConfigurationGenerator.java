@@ -77,7 +77,7 @@ public class WebInfConfigurationGenerator extends AbstractConfigurationFileGener
 		builder.getRawXMLBuilder().comment("Taskqueue Servlet");
 		builder.addSpringServlet(taskqueueServletName, "/WEB-INF/spring/taskqueue/taskqueue.xml", null);
 
-		String taskQueuePattern = "taskqueue/*";
+		String taskQueuePattern = "/taskqueue/*";
 
 		builder.addSpringServletMapping(taskqueueServletName, taskQueuePattern);
 

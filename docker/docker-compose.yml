@@ -1,6 +1,6 @@
 version: "3.6"
 services:
-  app:
+  gae-app:
     build: 
       context: ../
       dockerfile: ./jenkins/node/Dockerfile
@@ -9,13 +9,14 @@ services:
     working_dir: /code
     volumes:
       - ../appengine-web:/code
-      - ./.tmp/node_modules:/code/node_modules # Expose node_modules through .tmp
+      - ../jenkins/node/proxy.conf.json:proxy.conf.json   # Override proxy.conf.json for server.
+      - ./.tmp/node_modules:/code/node_modules            # Expose node_modules through .tmp
     ports:
       - "4200:4200"
     networks:
       - appengine-net
     command: '/code/serve.sh'
-  server:
+  gae-server:
     build:
       context: ../
       dockerfile: ./jenkins/maven/Dockerfile

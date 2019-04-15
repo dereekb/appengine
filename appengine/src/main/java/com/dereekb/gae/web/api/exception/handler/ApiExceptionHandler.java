@@ -140,6 +140,7 @@ public class ApiExceptionHandler {
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(ApiSafeRuntimeException.class)
 	public ApiResponse handleException(ApiSafeRuntimeException e) {
+		LOGGER.log(Level.WARNING, "API Caught API Safe Runtime Error", e);
 		return ApiResponseImpl.makeFailure(e);
 	}
 

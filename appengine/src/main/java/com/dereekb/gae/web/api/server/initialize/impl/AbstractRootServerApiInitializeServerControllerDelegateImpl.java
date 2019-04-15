@@ -24,8 +24,10 @@ public abstract class AbstractRootServerApiInitializeServerControllerDelegateImp
 	private ObjectifyQueryService<App> appQueryService;
 
 	public AbstractRootServerApiInitializeServerControllerDelegateImpl(AppInfo appInfo,
-	        ForceGetterSetter<App> appGetterSetter) {
+	        ForceGetterSetter<App> appGetterSetter,
+	        ObjectifyQueryService<App> appQueryService) {
 		super(appInfo, appGetterSetter);
+		this.setAppQueryService(appQueryService);
 	}
 
 	public ObjectifyQueryService<App> getAppQueryService() {
