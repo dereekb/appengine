@@ -10,6 +10,7 @@ import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfoUtility;
 import com.dereekb.gae.server.app.model.app.info.exception.AppInequalityException;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
+import com.dereekb.gae.utilities.spring.initializer.SpringInitializerFunction;
 import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerControllerDelegate;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
 import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
@@ -21,7 +22,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  *
  */
 public abstract class AbstractApiInitializeServerControllerDelegateImpl
-        implements ApiInitializeServerControllerDelegate {
+        implements ApiInitializeServerControllerDelegate, SpringInitializerFunction {
 
 	protected static final Logger LOGGER = Logger
 	        .getLogger(AbstractApiInitializeServerControllerDelegateImpl.class.getName());
@@ -59,6 +60,12 @@ public abstract class AbstractApiInitializeServerControllerDelegateImpl
 		}
 
 		this.appGetterSetter = appGetterSetter;
+	}
+
+	// MARK: SpringInitializerFunction
+	@Override
+	public void initializeApplication() throws Exception {
+		this.initialize();
 	}
 
 	// MARK: ApiInitializeServerControllerDelegate

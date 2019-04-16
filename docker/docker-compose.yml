@@ -9,7 +9,7 @@ services:
     working_dir: /code
     volumes:
       - ../appengine-web:/code
-      - ../jenkins/node/proxy.conf.json:proxy.conf.json   # Override proxy.conf.json for server.
+      - ../jenkins/node/proxy.conf.json:/code/proxy.conf.json   # Override proxy.conf.json for server.
       - ./.tmp/node_modules:/code/node_modules            # Expose node_modules through .tmp
     ports:
       - "4200:4200"
@@ -23,8 +23,11 @@ services:
     ports:
       - "4201:8080"
       - "4202:8888"
+      - "4203:8181"
     working_dir: /code
     environment:
+      - DATASTORE_EMULATOR_HOST=0.0.0.0:8181
+      - CLOUDSDK_CORE_PROJECT=gae-web-app-237603
       - MAVEN_CREDS_USR=${MAVEN_USR}  # Pass at runtime
       - MAVEN_CREDS_PSW=${MAVEN_PSW}  
     volumes:
