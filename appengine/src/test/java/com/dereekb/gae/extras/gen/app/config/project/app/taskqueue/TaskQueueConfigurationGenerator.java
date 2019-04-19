@@ -2,6 +2,8 @@ package com.dereekb.gae.extras.gen.app.config.project.app.taskqueue;
 
 import java.util.Properties;
 
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
@@ -59,6 +61,11 @@ public class TaskQueueConfigurationGenerator extends AbstractConfigurationFileGe
 
 	public GenFile makeTaskQueueFile(GenFolder folder) {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+		// This ensures that the full path is used, instead of the servlet's path being ignored.
+		builder.comment("Use Full Path Handlers For Taskqueue");
+		builder.bean("handlerMapping").beanClass(RequestMappingHandlerMapping.class)
+		.property("alwaysUseFullPath").value("true");
 
 		builder.comment("Imports");
 		this.importFilesWithBuilder(builder, folder, true, true);

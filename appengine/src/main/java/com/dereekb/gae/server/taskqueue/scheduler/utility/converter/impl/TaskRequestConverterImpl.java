@@ -48,6 +48,10 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 		this(DEFAULT_RESOURCE, null, null);
 	}
 
+	public TaskRequestConverterImpl(String url) {
+		this(new SimplePathImpl(url), null, null);
+	}
+
 	public TaskRequestConverterImpl(SimplePath resource) {
 		this(resource, null, null);
 	}

@@ -12,6 +12,8 @@ import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.initialize.ServerInitializeService;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.utilities.spring.initializer.SpringInitializerFunction;
+import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Work;
 
 /**
  * Abstract {@link ApiInitializeServerControllerDelegate} implementation.
@@ -72,43 +74,54 @@ public abstract class AbstractServerInitializeService
 	}
 
 	protected final App tryInitializeApp() throws AppInequalityException {
-		boolean created = false;
-		App app = null;
+		// Run within the ObjectifyService directly to ensure it takes place within a context.
+		App app = ObjectifyService.run(new InitWork());
+		return app;
+	}
 
-		// Load/Create App
-		try {
-			app = this.loadThisApp();
-		} catch (UnavailableModelException e) {
-			if (GoogleAppEngineUtility.isProductionEnvironment()) {
-				app = this.firstTimeProductionSetup();
-			} else {
-				app = this.firstTimeDevelopmentSetup();
+	protected class InitWork implements Work<App> {
+
+		@Override
+		public App run() {
+			boolean created = false;
+			App app = null;
+
+			// Load/Create App
+			try {
+				app = loadThisApp();
+			} catch (UnavailableModelException e) {
+				if (GoogleAppEngineUtility.isProductionEnvironment()) {
+					app = firstTimeProductionSetup();
+				} else {
+					app = firstTimeDevelopmentSetup();
+				}
+
+				created = true;
 			}
 
-			created = true;
+			// Update If Not Created
+
+			// TODO: Update this, since this assertion and update don't
+			// particularly make sense if we're updating on version changes.
+
+			if (!created) {
+				/*
+				 * try {
+				 * this.assertIsExpectedApp(app);
+				 * } catch (AppInequalityException e) {
+				 * LOGGER.
+				 * severe("App service is not properly configured for the right app. Check configuration."
+				 * );
+				 * throw e;
+				 * }
+				 *
+				 * app = this.tryUpdateApp(app);
+				 */
+			}
+
+			return app;
 		}
 
-		// Update If Not Created
-
-		// TODO: Update this, since this assertion and update don't
-		// particularly make sense if we're updating on version changes.
-
-		if (!created) {
-			/*
-			 * try {
-			 * this.assertIsExpectedApp(app);
-			 * } catch (AppInequalityException e) {
-			 * LOGGER.
-			 * severe("App service is not properly configured for the right app. Check configuration."
-			 * );
-			 * throw e;
-			 * }
-			 *
-			 * app = this.tryUpdateApp(app);
-			 */
-		}
-
-		return app;
 	}
 
 	protected void assertIsExpectedApp(App app) throws AppInequalityException {

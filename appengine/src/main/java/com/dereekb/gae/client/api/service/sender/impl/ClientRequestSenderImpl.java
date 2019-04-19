@@ -76,14 +76,19 @@ public class ClientRequestSenderImpl
 			// Headers
 			HttpHeaders httpHeaders = new HttpHeaders();
 
-			for (Entry<String, String> entry : headers.getParameters().entrySet()) {
-				httpHeaders.add(entry.getKey(), entry.getValue());
+			if (headers != null) {
+				for (Entry<String, String> entry : headers.getParameters().entrySet()) {
+					httpHeaders.add(entry.getKey(), entry.getValue());
+				}
 			}
 
 			// Encode All URL Parameters
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(httpUrl);
-			for (Entry<String, String> entry : parameters.getParameters().entrySet()) {
-				builder.queryParam(entry.getKey(), entry.getValue());
+
+			if (parameters != null) {
+				for (Entry<String, String> entry : parameters.getParameters().entrySet()) {
+					builder.queryParam(entry.getKey(), entry.getValue());
+				}
 			}
 
 			URI httpUri = builder.build().encode().toUri();
