@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.server.initialize.impl;
+package com.dereekb.gae.server.initialize.impl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,11 +9,9 @@ import com.dereekb.gae.server.app.model.app.info.AppInfo;
 import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfoUtility;
 import com.dereekb.gae.server.app.model.app.info.exception.AppInequalityException;
 import com.dereekb.gae.server.datastore.GetterSetter;
+import com.dereekb.gae.server.initialize.ServerInitializeService;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.utilities.spring.initializer.SpringInitializerFunction;
-import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerControllerDelegate;
-import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Abstract {@link ApiInitializeServerControllerDelegate} implementation.
@@ -21,11 +19,10 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
  * @author dereekb
  *
  */
-public abstract class AbstractApiInitializeServerControllerDelegateImpl
-        implements ApiInitializeServerControllerDelegate, SpringInitializerFunction {
+public abstract class AbstractServerInitializeService
+        implements ServerInitializeService, SpringInitializerFunction {
 
-	protected static final Logger LOGGER = Logger
-	        .getLogger(AbstractApiInitializeServerControllerDelegateImpl.class.getName());
+	protected static final Logger LOGGER = Logger.getLogger(AbstractServerInitializeService.class.getName());
 
 	/**
 	 * App Info for the current app.
@@ -33,7 +30,7 @@ public abstract class AbstractApiInitializeServerControllerDelegateImpl
 	private AppInfo appInfo;
 	private GetterSetter<App> appGetterSetter;
 
-	public AbstractApiInitializeServerControllerDelegateImpl(AppInfo appInfo, GetterSetter<App> appGetterSetter) {
+	public AbstractServerInitializeService(AppInfo appInfo, GetterSetter<App> appGetterSetter) {
 		this.setAppInfo(appInfo);
 		this.setAppGetterSetter(appGetterSetter);
 	}
@@ -62,17 +59,16 @@ public abstract class AbstractApiInitializeServerControllerDelegateImpl
 		this.appGetterSetter = appGetterSetter;
 	}
 
+	// MARK: Initialize
+	@Override
+	public void initializeServer() throws Exception {
+		this.tryInitializeApp();
+	}
+
 	// MARK: SpringInitializerFunction
 	@Override
 	public void initializeApplication() throws Exception {
-		this.initialize();
-	}
-
-	// MARK: ApiInitializeServerControllerDelegate
-	@Override
-	public ApiResponse initialize() throws AppInequalityException {
 		this.tryInitializeApp();
-		return new ApiResponseImpl(true);
 	}
 
 	protected final App tryInitializeApp() throws AppInequalityException {
@@ -97,18 +93,19 @@ public abstract class AbstractApiInitializeServerControllerDelegateImpl
 		// TODO: Update this, since this assertion and update don't
 		// particularly make sense if we're updating on version changes.
 
-
 		if (!created) {
 			/*
-			try {
-				this.assertIsExpectedApp(app);
-			} catch (AppInequalityException e) {
-				LOGGER.severe("App service is not properly configured for the right app. Check configuration.");
-				throw e;
-			}
-
-			app = this.tryUpdateApp(app);
-			*/
+			 * try {
+			 * this.assertIsExpectedApp(app);
+			 * } catch (AppInequalityException e) {
+			 * LOGGER.
+			 * severe("App service is not properly configured for the right app. Check configuration."
+			 * );
+			 * throw e;
+			 * }
+			 *
+			 * app = this.tryUpdateApp(app);
+			 */
 		}
 
 		return app;

@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dereekb.gae.server.initialize.ServerInitializeService;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.dereekb.gae.web.api.exception.resolver.RuntimeExceptionResolver;
 import com.dereekb.gae.web.api.server.schedule.exception.UnavailableSchedulerTaskException;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
+import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Service initialization controller. Provides a single GET function for easy
@@ -21,22 +23,22 @@ import com.dereekb.gae.web.api.shared.response.ApiResponse;
 @RequestMapping("/server")
 public class ApiInitializeServerController {
 
-	private ApiInitializeServerControllerDelegate delegate;
+	private ServerInitializeService initializeService;
 
-	public ApiInitializeServerController(ApiInitializeServerControllerDelegate delegate) {
-		this.setDelegate(delegate);
+	public ApiInitializeServerController(ServerInitializeService initializeService) {
+		this.setInitializeService(initializeService);
 	}
 
-	public ApiInitializeServerControllerDelegate getDelegate() {
-		return this.delegate;
+	public ServerInitializeService getInitializeService() {
+		return this.initializeService;
 	}
 
-	public void setDelegate(ApiInitializeServerControllerDelegate delegate) {
-		if (delegate == null) {
-			throw new IllegalArgumentException("delegate cannot be null.");
+	public void setInitializeService(ServerInitializeService initializeService) {
+		if (initializeService == null) {
+			throw new IllegalArgumentException("initializeService cannot be null.");
 		}
 
-		this.delegate = delegate;
+		this.initializeService = initializeService;
 	}
 
 	// MARK: Initialize
@@ -46,7 +48,13 @@ public class ApiInitializeServerController {
 		ApiResponse response = null;
 
 		try {
-			response = this.delegate.initialize();
+			try {
+				this.initializeService.initializeServer();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+
+			response = new ApiResponseImpl(true);
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
 		} catch (RuntimeException e) {
@@ -58,7 +66,7 @@ public class ApiInitializeServerController {
 
 	@Override
 	public String toString() {
-		return "ApiInitializeServerController [delegate=" + this.delegate + "]";
+		return "ApiInitializeServerController [initializeService=" + this.initializeService + "]";
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.server.initialize.impl;
+package com.dereekb.gae.server.initialize.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,15 +34,17 @@ import com.dereekb.gae.utilities.misc.random.StringLongGenerator;
 import com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginPairImpl;
 
 /**
- * {@link AbstractRootServerApiInitializeServerControllerDelegateImpl}
+ * {@link AbstractRootServerInitializeService}
  * implementation that generates an admin login, and mails user accounts.
+ * <p>
+ * To be executed on the root server.
  *
  * @author dereekb
  *
  */
-public class RootServerApiInitializeServerControllerDelegateImpl extends AbstractRootServerApiInitializeServerControllerDelegateImpl {
+public class RootServerInitializeService extends AbstractRootServerInitializeService {
 
-	private static final Logger LOGGER = Logger.getLogger(RootServerApiInitializeServerControllerDelegateImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RootServerInitializeService.class.getName());
 
 	private String adminEmail = null;
 
@@ -54,12 +56,12 @@ public class RootServerApiInitializeServerControllerDelegateImpl extends Abstrac
 
 	private List<AppInfo> defaultSystemApps = Collections.emptyList();
 
-	public RootServerApiInitializeServerControllerDelegateImpl(AppInfo appInfo,
+	public RootServerInitializeService(AppInfo appInfo,
 	        ObjectifyRegistry<App> appRegistry) {
 		this(appInfo, appRegistry, appRegistry);
 	}
 
-	public RootServerApiInitializeServerControllerDelegateImpl(AppInfo appInfo,
+	public RootServerInitializeService(AppInfo appInfo,
 	        ForceGetterSetter<App> appGetterSetter,
 	        ObjectifyQueryService<App> appQueryService) {
 		super(appInfo, appGetterSetter, appQueryService);

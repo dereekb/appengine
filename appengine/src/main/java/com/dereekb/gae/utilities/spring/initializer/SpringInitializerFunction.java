@@ -1,7 +1,9 @@
 package com.dereekb.gae.utilities.spring.initializer;
 
+import com.dereekb.gae.utilities.spring.initializer.impl.SpringInitializerImpl;
+
 /**
- * {@link SpringInitializer} delegate.
+ * {@link SpringInitializerImpl} delegate.
  *
  * @author dereekb
  *

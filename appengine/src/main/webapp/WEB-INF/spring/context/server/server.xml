@@ -31,6 +31,7 @@
     <constructor-arg index="0" value="http://development:8080"/>
   </bean>
   <!--Import-->
+  <import resource="/startup.xml"/>
   <import resource="/database.xml"/>
   <import resource="/key.xml"/>
   <import resource="/mail.xml"/>

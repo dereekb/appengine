@@ -1,45 +1,21 @@
 package com.dereekb.gae.utilities.spring.initializer;
 
-import org.springframework.beans.factory.InitializingBean;
-
-import com.dereekb.gae.utilities.factory.Factory;
 
 /**
- * Used for initializing the application when created.
+ * Used for initializing the spring context.
  *
  * @author dereekb
  *
  */
-public class SpringInitializer
-        implements InitializingBean {
+public interface SpringInitializer {
 
-	private Factory<SpringInitializerFunction> factory;
-
-	public Factory<SpringInitializerFunction> getFactory() {
-		return this.factory;
-	}
-
-	public void setFactory(Factory<SpringInitializerFunction> factory) {
-		if (factory == null) {
-			throw new IllegalArgumentException("factory cannot be null.");
-		}
-
-		this.factory = factory;
-	}
-
-	// MARK: InitializingBean
 	/**
-	 * Performs the initialization.
+	 * Idempotent function that initializes the spring application.
+	 *
+	 * Should be called after the context is set up.
+	 *
+	 * @throws Exception thrown if initialization fails.
 	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		SpringInitializerFunction delegate = this.factory.make();
-		delegate.initializeApplication();
-	}
-
-	@Override
-	public String toString() {
-		return "SpringInitializer [factory=" + this.factory + "]";
-	}
+	void initializeSpring() throws Exception;
 
 }

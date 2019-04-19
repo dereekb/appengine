@@ -1,4 +1,4 @@
-package com.dereekb.gae.web.api.server.initialize.impl;
+package com.dereekb.gae.server.initialize.impl;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -13,17 +13,17 @@ import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQuer
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 
 /**
- * {@link AbstractApiInitializeServerControllerDelegateImpl} extension for root
+ * {@link AbstractServerInitializeService} extension for root
  * servers.
  *
  * @author dereekb
  *
  */
-public abstract class AbstractRootServerApiInitializeServerControllerDelegateImpl extends AbstractApiInitializeServerControllerDelegateImpl {
+public abstract class AbstractRootServerInitializeService extends AbstractServerInitializeService {
 
 	private ObjectifyQueryService<App> appQueryService;
 
-	public AbstractRootServerApiInitializeServerControllerDelegateImpl(AppInfo appInfo,
+	public AbstractRootServerInitializeService(AppInfo appInfo,
 	        ForceGetterSetter<App> appGetterSetter,
 	        ObjectifyQueryService<App> appQueryService) {
 		super(appInfo, appGetterSetter);

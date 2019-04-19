@@ -5,7 +5,7 @@ import com.dereekb.gae.utilities.model.source.Source;
 
 /**
  * {@link Source} implementation.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -24,7 +24,7 @@ public class SourceImpl<T>
 	public static <T> Source<T> nullSource() {
 		return new SourceImpl<T>(null);
 	}
-	
+
 	public static <T> Source<T> make(T object) {
 		return new SourceImpl<T>(object);
 	}
@@ -42,7 +42,7 @@ public class SourceImpl<T>
 	public T loadObject() throws RuntimeException {
 		return this.getObject();
 	}
-	
+
 	public static <T> T safeLoad(Source<T> object) throws RuntimeException {
 		try {
 			return object.loadObject();

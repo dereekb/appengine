@@ -14,6 +14,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
@@ -95,6 +96,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		GenFolderImpl folder = new GenFolderImpl(this.serverFolderName);
 
 		// Server Files
+		folder.addFile(new StartupConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new DatabaseConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new MailConfigurationGenerator().generateConfigurationFile());
@@ -149,6 +151,26 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 	// MARK: Server Files
 	public static final String OBJECTIFY_DATABASE_ENTITIES_KEY = "objectifyDatabaseEntities";
+
+	public class StartupConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public StartupConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("startup");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppServerInitializationConfigurer configurer = appConfig.getAppServicesConfigurer().getAppServerInitializationConfigurer();
+			configurer.configureContextInitializationComponents(appConfig, builder);
+
+			return builder;
+		}
+
+	}
 
 	public class DatabaseConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 

@@ -6,7 +6,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.app.model.app.info.AppInfo;
-import com.dereekb.gae.web.api.server.initialize.impl.RootServerApiInitializeServerControllerDelegateImpl;
+import com.dereekb.gae.server.initialize.impl.RootServerInitializeService;
 
 /**
  * Basic {@link AppServerInitializationConfigurer} implementation that uses a
@@ -48,25 +48,17 @@ public class LoginServerAppServerInitializationConfigurerImpl extends AbstractAp
 
 	// MARK: AbstractAppServerInitializationConfigurerImpl
 	@Override
-	protected void configureServerDelegateComponent(AppConfiguration appConfig,
-	                                                SpringBeansXMLBuilder builder) {
-
-		builder.bean(this.getDelegateBeanId()).beanClass(RootServerApiInitializeServerControllerDelegateImpl.class).c()
-		        .ref(appConfig.getAppBeans().getAppInfoBeanId())
-		        .ref("appRegistry")
-		        .up()
-		        .property("adminEmail").value(appConfig.getAppAdminEmail()).up()
-		        .property("mailService").ref(appConfig.getAppBeans().getMailServiceBeanId()).up()
-		        .property("passwordLoginService").ref(appConfig.getAppBeans().getUtilityBeans().getPasswordLoginServiceBeanId()).up()
-		        .property("loginRegisterService").ref(appConfig.getAppBeans().getUtilityBeans().getLoginRegisterServiceBeanId());
-
-		// TODO: Add beans for default app infos, etc.
-		/*
-		 * builder.bean("productionAppInfo").beanClass(AppInfoImpl.class).c().
-		 * ref(appBeans.getAppKeyBeanId())
-		 * .ref(appBeans.getAppNameBeanId()).ref(productionAppServiceInfoBeanId)
-		 * ;
-		 */
+	protected void configureServerInitializerComponent(AppConfiguration appConfig,
+	                                                   SpringBeansXMLBuilder builder,
+	                                                   String serverInitializerBeanId) {
+		builder.bean(serverInitializerBeanId).beanClass(RootServerInitializeService.class).c()
+        .ref(appConfig.getAppBeans().getAppInfoBeanId())
+        .ref("appRegistry")
+        .up()
+        .property("adminEmail").value(appConfig.getAppAdminEmail()).up()
+        .property("mailService").ref(appConfig.getAppBeans().getMailServiceBeanId()).up()
+        .property("passwordLoginService").ref(appConfig.getAppBeans().getUtilityBeans().getPasswordLoginServiceBeanId()).up()
+        .property("loginRegisterService").ref(appConfig.getAppBeans().getUtilityBeans().getLoginRegisterServiceBeanId());
 
 	}
 
