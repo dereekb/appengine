@@ -2,6 +2,7 @@ package com.dereekb.gae.server.taskqueue.scheduler;
 
 import java.util.Collection;
 
+import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -38,7 +39,7 @@ public interface TaskRequest {
 	/**
 	 * Returns relative target's path.
 	 *
-	 * @return {@link SimplePath}. Never {@code null}.
+	 * @return {@link SimplePath}. Never {@code null} or empty.
 	 */
 	public SimplePath getPath();
 
@@ -70,5 +71,12 @@ public interface TaskRequest {
 	 *         unspecified.
 	 */
 	public TaskRequestTiming getTimings();
+
+	/**
+	 * Returns the host to send this request to.
+	 *
+	 * @return {@link TaskRequestHost}, or {@code null} if no host specified.
+	 */
+	public TaskRequestHost getHost();
 
 }

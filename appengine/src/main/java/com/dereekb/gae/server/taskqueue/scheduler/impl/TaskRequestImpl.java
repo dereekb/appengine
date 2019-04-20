@@ -8,7 +8,9 @@ import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestDataType;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
@@ -46,6 +48,8 @@ public class TaskRequestImpl
 	private String requestData;
 
 	private TaskRequestTiming timings;
+
+	private TaskRequestHost host;
 
 	public TaskRequestImpl() {}
 
@@ -123,6 +127,8 @@ public class TaskRequestImpl
 	public void setPath(SimplePath path) throws IllegalArgumentException {
 		if (path == null) {
 			throw new IllegalArgumentException("Path cannot be null.");
+		} else if (StringUtility.isEmptyString(path.getPath())) {
+			throw new IllegalArgumentException("Path's string can not be empty.");
 		}
 
 		this.path = path;
@@ -204,6 +210,16 @@ public class TaskRequestImpl
 	@Override
 	public void setTimings(TaskRequestTiming timings) {
 		this.timings = timings;
+	}
+
+	@Override
+	public TaskRequestHost getHost() {
+		return this.host;
+	}
+
+	@Override
+	public void setHost(TaskRequestHost host) {
+		this.host = host;
 	}
 
 	@Override
