@@ -22,7 +22,9 @@ import { GaeLoadingComponent } from './loading.component';
     GaeLoadingComponent,
     GaeBasicLoadingComponent,
     GaeLoadingProgressComponent,
-    GaeErrorComponent
+    GaeErrorComponent,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ]
 })
 export class GaeLoadingModule { }

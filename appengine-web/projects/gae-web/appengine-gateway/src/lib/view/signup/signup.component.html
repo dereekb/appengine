@@ -1,10 +1,11 @@
 <gae-gateway-box-view title="Sign Up">
   <ng-container content>
+    <ng-container [gaeSignInGatewayRegister]="loginTokenHandler" #registerHandler="gaeSignInGatewayRegister"
+      gaeLoginRegisteredAnalytics></ng-container>
+    <ng-container [gaeSignInGatewayGroup]="[oauthLogin]" #loginTokenHandler="gaeSignInGatewayGroup"></ng-container>
     <ng-container [gaeSignInGatewaySuccess]="registerHandler" newUserLogin="true"></ng-container>
-    <gae-sign-in-gateway-view [gateway]="registerHandler" #registerHandler="gaeSignInGatewayRegister"
-      [gaeSignInGatewayRegister]="loginTokenHandler" gaeLoginRegisteredAnalytics
-      #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]">
-      <div class="login" loginView>
+    <gae-sign-in-gateway-view [gateway]="registerHandler">
+      <div class="login" signin>
         <div [hidden]="registerHandler.readyToRegister">
           <gae-oauth-sign-in-gateway [disabled]="registerHandler.disabledLogin" #oauthLogin></gae-oauth-sign-in-gateway>
           <hr class="login-divider" />
@@ -32,7 +33,7 @@
           </div>
         </div>
       </div>
-      <div errorActionView>
+      <div error>
         <div class="register-existing-login-buttons" *ngIf="registerHandler.hasExistingToken">
           <p>Would you like to sign in with this account instead?</p>
           <button mat-raised-button (click)="registerHandler.loginWithExisting()"

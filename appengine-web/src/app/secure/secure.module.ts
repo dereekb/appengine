@@ -29,7 +29,9 @@ export const ROUTER_CONFIG: StatesModule = {
     // GAE Configurations
     HttpClientModule,
     GaeApiModule.makeJwtModuleForRoot(),
-    GaeGatewayViewsModule.forRoot({}),
+    GaeGatewayViewsModule.forRoot({
+      logoUrl: 'https://via.placeholder.com/350x150'
+    }),
     GaeTokenModule.forRoot(),
     GaeApiModule.forApp({
       version: 'v1',
@@ -41,10 +43,7 @@ export const ROUTER_CONFIG: StatesModule = {
   ],
   providers: [
     // Configurations
-    {
-      provide: AppSegueService,
-      deps: [StateService]
-    },
+    AppSegueService,
     {
       provide: GatewaySegueService,
       useExisting: AppSegueService

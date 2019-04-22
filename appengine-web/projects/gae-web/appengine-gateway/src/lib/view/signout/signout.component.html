@@ -1,13 +1,13 @@
 <gae-gateway-box-view title="Sign Out">
   <ng-container content>
-    <ng-container #signOut="gaeSignInGatewaySignOut" gaeSignInGatewaySignOut></ng-container>
+    <ng-container #signOut="gaeSignInGatewaySignOut" autoLogout="true" gaeSignInGatewaySignOut></ng-container>
     <gae-basic-loading text="Signing out..." [waitFor]="!signOut.isDone">
       <div content class="sign-out-done" *ngIf="signOut.isDone">
-        <p>You've been signed out.</p>
+        <p class="text-center">You've been signed out.</p>
       </div>
     </gae-basic-loading>
   </ng-container>
-  <ng-container footer *ngIf="!signOut.isDone">
+  <ng-container footer *ngIf="signOut.isDone">
     <p>Need to sign back in?</p>
     <button class="link-button" mat-button uiSref="signin">Sign In</button>
   </ng-container>

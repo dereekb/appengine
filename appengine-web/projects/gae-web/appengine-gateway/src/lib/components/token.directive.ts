@@ -25,7 +25,7 @@ export class SignInGatewaySuccessDirective implements OnDestroy {
 
     private _sub: Subscription;
 
-    constructor(private _service: UserLoginTokenService, private _segueService: GatewaySegueService) { }
+    constructor(private _service: UserLoginTokenService, private _segueService: GatewaySegueService) {}
 
     ngOnDestroy(): void {
         this._clearSub();

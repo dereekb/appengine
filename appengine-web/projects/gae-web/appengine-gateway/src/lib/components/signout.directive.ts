@@ -1,5 +1,7 @@
-import { Directive, Input, AfterContentInit } from '@angular/core';
+import { Directive, Input, AfterContentInit, ChangeDetectorRef } from '@angular/core';
 import { UserLoginTokenService } from '@gae-web/appengine-token';
+import { map, first } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 export type SignInGatewaySignOutState = 'init' | 'signedin' | 'working' | 'signedout';
 
@@ -17,10 +19,14 @@ export class SignInGatewaySignOutDirective implements AfterContentInit {
 
     private _state: SignInGatewaySignOutState = 'init';
 
-    constructor(private _service: UserLoginTokenService) { }
+    constructor(private _service: UserLoginTokenService, private _cdRef: ChangeDetectorRef) { }
 
     ngAfterContentInit(): void {
         this._state = 'signedin';
+
+        if (this.autoLogout) {
+            this.logout();
+        }
     }
 
     // MARK: Accessors
@@ -36,8 +42,18 @@ export class SignInGatewaySignOutDirective implements AfterContentInit {
     public logout() {
         this._state = 'working';
 
-        this._service.logout().subscribe(() => {
+        this._service.isAuthenticated().pipe(
+            map((isAuthenticated) => {
+                if (isAuthenticated) {
+                    return this._service.logout();
+                } else {
+                    return of(true);
+                }
+            }),
+            first() // First
+        ).subscribe(() => {
             this._state = 'signedout';
+            this._cdRef.detectChanges();
         });
     }
 

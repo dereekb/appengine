@@ -4,7 +4,8 @@ import {
   MatInputModule,
   MatRippleModule,
   MatProgressSpinnerModule,
-  MatButtonModule
+  MatButtonModule,
+  MatProgressBarModule
 } from '@angular/material';
 
 import { PlatformModule } from '@angular/cdk/platform';
@@ -18,6 +19,7 @@ import { ObserversModule } from '@angular/cdk/observers';
     MatInputModule,
     MatRippleModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatButtonModule,
     ObserversModule,
     PlatformModule
