@@ -9,11 +9,6 @@ import {
 } from '@gae-web/appengine-token';
 import { ApiResponseJson, ApiResponse } from '../api';
 import { TokenAuthenticationError } from './error';
-import { AuthUtility } from './auth.utility';
-
-export const LOGIN_TOKEN_SERVICE_PATH = '/login/auth/token';
-export const CREATE_REFRESH_TOKEN_PATH = `${LOGIN_TOKEN_SERVICE_PATH}/refresh`;
-export const LOGIN_WITH_REFRESH_TOKEN_PATH = `${LOGIN_TOKEN_SERVICE_PATH}/login`;
 
 /**
  * UserLoginTokenAuthenticator implementation.
@@ -38,17 +33,17 @@ export class ApiUserLoginTokenAuthenticator implements UserLoginTokenAuthenticat
 @Injectable()
 export class PublicLoginTokenApiService {
 
+  public static readonly SERVICE_PATH: string = '/login/auth/token';
+
   private _servicePath: string;
 
   constructor(private _httpClient: HttpClient, private _config: ApiRouteConfiguration) {
-    this._servicePath = this._config.root + LOGIN_TOKEN_SERVICE_PATH;
+    this._servicePath = this._config.root + PublicLoginTokenApiService.SERVICE_PATH;
   }
 
   // MARK: Secured Requests
   public createRefreshToken(encodedToken: EncodedToken): Observable<LoginTokenPair> {
     const url = this._servicePath + '/refresh';
-    // const headers = AuthUtility.buildHeaderWithAuthentication(encodedToken);
-    // const authorization = headers.Authorization;
 
     // TODO: Update error handling.
     const body = new HttpParams()
@@ -102,28 +97,6 @@ export class PublicLoginTokenApiService {
     } else {
       throw new TokenAuthenticationError();
     }
-  }
-
-}
-
-@Injectable()
-export class PrivateLoginTokenApiService {
-
-  private _servicePath: string;
-
-  constructor(private _httpClient: HttpClient, private _config: ApiRouteConfiguration) {
-    this._servicePath = this._config.root + LOGIN_TOKEN_SERVICE_PATH;
-  }
-
-  // MARK: Refresh Tokens
-  public createRefreshToken(): Observable<LoginTokenPair> {
-    const url = this._servicePath + '/refresh';
-
-    return this._httpClient.get<LoginTokenPairJson>(url, {
-      observe: 'response'
-    }).pipe(
-      map(LoginTokenPair.fromResponse)
-    );
   }
 
 }

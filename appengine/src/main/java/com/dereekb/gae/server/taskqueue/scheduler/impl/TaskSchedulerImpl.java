@@ -2,7 +2,6 @@ package com.dereekb.gae.server.taskqueue.scheduler.impl;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
@@ -29,7 +28,7 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 public class TaskSchedulerImpl
         implements TaskScheduler {
 
-	private static final Logger LOGGER = Logger.getLogger(TaskSchedulerImpl.class.getName());
+	// private static final Logger LOGGER = Logger.getLogger(TaskSchedulerImpl.class.getName());
 
 	private Context context;
 	private TaskSchedulerAuthenticator authenticator;

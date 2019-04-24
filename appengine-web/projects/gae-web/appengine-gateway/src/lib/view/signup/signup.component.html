@@ -34,7 +34,7 @@
         </div>
       </div>
       <div error>
-        <div class="register-existing-login-buttons" *ngIf="registerHandler.hasExistingToken">
+        <div class="register-existing-login-buttons text-center" *ngIf="registerHandler.hasExistingToken">
           <p>Would you like to sign in with this account instead?</p>
           <button mat-raised-button (click)="registerHandler.loginWithExisting()"
             class="register-login-button">Login</button>
@@ -44,8 +44,8 @@
       </div>
     </gae-sign-in-gateway-view>
   </ng-container>
-  <ng-container footer *ngIf="!registerHandler.hasExistingToken && !registerHandler.isDone">
+  <div class="text-center" footer *ngIf="!registerHandler.hasExistingToken && !registerHandler.isDone">
     <p>Already have an account?</p>
     <button class="link-button" mat-button uiSref="signin">Sign In</button>
-  </ng-container>
+  </div>
 </gae-gateway-box-view>

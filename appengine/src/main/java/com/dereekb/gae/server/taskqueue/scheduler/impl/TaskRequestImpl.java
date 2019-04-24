@@ -10,7 +10,6 @@ import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestDataType;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
@@ -127,8 +126,6 @@ public class TaskRequestImpl
 	public void setPath(SimplePath path) throws IllegalArgumentException {
 		if (path == null) {
 			throw new IllegalArgumentException("Path cannot be null.");
-		} else if (StringUtility.isEmptyString(path.getPath())) {
-			throw new IllegalArgumentException("Path's string can not be empty.");
 		}
 
 		this.path = path;
@@ -234,6 +231,7 @@ public class TaskRequestImpl
 		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
 		result = prime * result + ((this.requestData == null) ? 0 : this.requestData.hashCode());
 		result = prime * result + ((this.timings == null) ? 0 : this.timings.hashCode());
+		result = prime * result + ((this.host == null) ? 0 : this.host.hashCode());
 		return result;
 	}
 
@@ -295,6 +293,13 @@ public class TaskRequestImpl
 				return false;
 			}
 		} else if (!this.timings.equals(other.timings)) {
+			return false;
+		}
+		if (this.host == null) {
+			if (other.host != null) {
+				return false;
+			}
+		} else if (!this.host.equals(other.host)) {
 			return false;
 		}
 		return true;
