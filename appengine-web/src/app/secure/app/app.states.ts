@@ -5,6 +5,7 @@ export const appState: Ng2StateDeclaration = {
   url: '/app',
   name: 'app',
   component: AppComponent,
+  redirectTo: 'home',
   data: {
     isSecure: true
   }
