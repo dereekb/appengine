@@ -1,5 +1,5 @@
 import { ISO8601DateString, DataConverterUtility, ModelKey, ModelUtility, MutableUniqueModel } from '@gae-web/appengine-utility';
-import { OwnerId, SearchId, AbstractSearchableDatabaseModel, AbstractOwnedDatabaseModel } from './model';
+import { OwnerId, SearchId, AbstractSearchableDatabaseModel, AbstractDescribedDatabaseModel, AbstractOwnedDatabaseModel, Descriptor } from './model';
 import { DateTime } from 'luxon';
 import { AbstractClientModelSerializer } from '../model/client';
 
@@ -108,6 +108,34 @@ export abstract class AbstractSearchableDatabaseModelSerializer<T extends Abstra
 
         if (dto.searchId) {
             dto.searchId = model.searchId;
+        }
+
+        return model;
+    }
+
+}
+
+// Described
+export abstract class DescribedDatabaseModelData extends SearchableDatabaseModelData {
+    public descriptor: Descriptor;
+}
+
+export abstract class AbstractDescribedDatabaseModelSerializer<T extends AbstractDescribedDatabaseModel, O extends DescribedDatabaseModelData>
+    extends AbstractSearchableDatabaseModelSerializer<T, O> {
+
+    public convertToDto(model: T): O {
+        const data = super.convertToDto(model);
+
+        data.descriptor = model.descriptor;
+
+        return data;
+    }
+
+    public convertToModel(dto: O): T {
+        const model = super.convertToModel(dto);
+
+        if (dto.descriptor) {
+            model.descriptor = dto.descriptor;
         }
 
         return model;

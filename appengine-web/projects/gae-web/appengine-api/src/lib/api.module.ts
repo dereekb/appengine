@@ -5,11 +5,11 @@ import { ClientLinkService } from './model/extension/link/link.service';
 import { ClientSchedulerService } from './model/extension/scheduler/scheduler.service';
 import { PublicLoginTokenApiService, ApiUserLoginTokenAuthenticator } from './auth/token.service';
 import { GaeTokenModule, UserLoginTokenService, UserLoginTokenAuthenticator } from '@gae-web/appengine-token';
-import { JwtModule, JWT_OPTIONS, JwtModuleOptions } from '@auth0/angular-jwt';
+import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { RegisterApiService } from './auth/register.service';
 import { OAuthLoginApiService } from './auth/oauth.service';
-import { catchError, defaultIfEmpty } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: ApiConfiguration) {
   const throwNoTokenError = false;

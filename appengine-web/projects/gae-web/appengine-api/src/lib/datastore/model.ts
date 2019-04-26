@@ -20,6 +20,18 @@ export interface SearchableDatabaseModel extends UniqueModel {
   readonly searchId: SearchId;
 }
 
+// MARK: Described
+export interface Descriptor {
+  descriptorType: string;
+  descriptorId: string;
+}
+
+export interface DescribedModel {
+  descriptor: Descriptor;
+}
+
+export interface UniqueDescribedModel extends UniqueModel, DescribedModel { }
+
 // MARK: Database
 export abstract class AbstractDatabaseModel {
 
@@ -59,6 +71,43 @@ export abstract class AbstractSearchableDatabaseModel extends AbstractOwnedDatab
 
   set searchId(searchId) {
     this._searchId = searchId;
+  }
+
+}
+
+// MARK: Described
+export abstract class AbstractDescribedDatabaseModel extends AbstractSearchableDatabaseModel implements UniqueDescribedModel {
+
+  private _descriptorType: string;
+  private _descriptorId: string;
+
+  get descriptorType() {
+    return this._descriptorType;
+  }
+
+  set descriptorType(descriptorType) {
+    this._descriptorType = descriptorType;
+  }
+
+  get descriptorId() {
+    return this._descriptorId;
+  }
+
+  set descriptorId(descriptorId) {
+    this._descriptorId = descriptorId;
+  }
+
+  get descriptor() {
+    return {
+      descriptorType: this._descriptorType,
+      descriptorId: this._descriptorId
+    };
+  }
+
+  set descriptor(descriptor: Descriptor) {
+    descriptor = descriptor || {} as any;
+    this._descriptorType = descriptor.descriptorType;
+    this._descriptorId = descriptor.descriptorId;
   }
 
 }
