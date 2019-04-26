@@ -1,35 +1,35 @@
-import { Foo, FooData, ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api';
+import { TestFoo, TestFooData, ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api';
 import { ModelServiceWrapper, ModelCreateService } from '../lib/service/model.service';
 import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate } from '../lib/service/query.service';
 import { ModelReadService, ModelUpdateService, ModelDeleteService } from '../lib/service/crud.service';
 import { ReadSourceFactory, QuerySourceConfiguration, CachedKeySourceCache, KeyQuerySource } from '../lib/service/source';
 
-export class FooClientQueryService extends ClientQueryService<Foo, FooData> { }
+export class TestFooClientQueryService extends ClientQueryService<TestFoo, TestFooData> { }
 
-export class FooClientCreateService extends ClientCreateService<Foo, FooData> { }
+export class TestFooClientCreateService extends ClientCreateService<TestFoo, TestFooData> { }
 
-export class FooClientReadService extends ClientReadService<Foo, FooData> { }
+export class TestFooClientReadService extends ClientReadService<TestFoo, TestFooData> { }
 
-export class FooClientUpdateService extends ClientUpdateService<Foo, FooData> { }
+export class TestFooClientUpdateService extends ClientUpdateService<TestFoo, TestFooData> { }
 
-export class FooClientDeleteService extends ClientDeleteService<Foo, FooData> { }
+export class TestFooClientDeleteService extends ClientDeleteService<TestFoo, TestFooData> { }
 
-export class FooServiceWrapper extends ModelServiceWrapper<Foo> { }
+export class TestFooServiceWrapper extends ModelServiceWrapper<TestFoo> { }
 
-export class FooQueryService extends ModelQueryService<Foo> { }
+export class TestFooQueryService extends ModelQueryService<TestFoo> { }
 
-export class FooCreateService extends ModelCreateService<Foo> { }
+export class TestFooCreateService extends ModelCreateService<TestFoo> { }
 
-export class FooReadService extends ModelReadService<Foo> { }
+export class TestFooReadService extends ModelReadService<TestFoo> { }
 
-export class FooUpdateService extends ModelUpdateService<Foo> { }
+export class TestFooUpdateService extends ModelUpdateService<TestFoo> { }
 
-export class FooDeleteService extends ModelDeleteService<Foo> { }
+export class TestFooDeleteService extends ModelDeleteService<TestFoo> { }
 
-export class FooReadSourceFactory extends ReadSourceFactory<Foo> { }
+export class TestFooReadSourceFactory extends ReadSourceFactory<TestFoo> { }
 
 // MARK: Query Cache
-export class FooDefaultQueryConfiguration implements QuerySourceConfiguration {
+export class TestFooDefaultQueryConfiguration implements QuerySourceConfiguration {
 
   readonly filters = {
     parameters: {
@@ -39,10 +39,10 @@ export class FooDefaultQueryConfiguration implements QuerySourceConfiguration {
 
 }
 
-export class FooCachedKeySourceCache extends CachedKeySourceCache<Foo> {
+export class TestFooCachedKeySourceCache extends CachedKeySourceCache<TestFoo> {
 
-  constructor(queryService: FooQueryService, delegate: KeyedPredictiveOrderedQueryDelegate<Foo>, config?: QuerySourceConfiguration) {
-    super(new KeyQuerySource<Foo>(queryService, config || new FooDefaultQueryConfiguration()), delegate);
+  constructor(queryService: TestFooQueryService, delegate: KeyedPredictiveOrderedQueryDelegate<TestFoo>, config?: QuerySourceConfiguration) {
+    super(new KeyQuerySource<TestFoo>(queryService, config || new TestFooDefaultQueryConfiguration()), delegate);
   }
 
 }

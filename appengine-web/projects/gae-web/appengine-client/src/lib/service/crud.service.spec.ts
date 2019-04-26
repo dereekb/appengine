@@ -1,6 +1,6 @@
 import 'jasmine-expect';
 import { ModelServiceWrapper, ModelServiceWrapperSet, ModelWrapperInitializedError } from './model.service';
-import { Foo, FOO_MODEL_TYPE, FooReadService, ModelServiceResponse } from '@gae-web/appengine-api';
+import { TestFoo, TEST_FOO_MODEL_TYPE, TestFooReadService, ModelServiceResponse } from '@gae-web/appengine-api';
 import { ModelUtility } from '@gae-web/appengine-utility';
 import { ModelReadService } from './crud.service';
 import { take, takeUntil } from 'rxjs/operators';
@@ -9,23 +9,23 @@ import { timer } from 'rxjs';
 
 describe('Crud Model Services', () => {
 
-  let modelServiceWrapper: ModelServiceWrapper<Foo>;
+  let modelServiceWrapper: ModelServiceWrapper<TestFoo>;
 
-  function makeTestReadService(): FooReadService {
-    return new FooReadService();
+  function makeTestReadService(): TestFooReadService {
+    return new TestFooReadService();
   }
 
   beforeEach(() => {
     const modelServiceWrapperSet = new ModelServiceWrapperSet();
-    modelServiceWrapper = modelServiceWrapperSet.initWrapper<Foo>({
-      type: FOO_MODEL_TYPE
+    modelServiceWrapper = modelServiceWrapperSet.initWrapper<TestFoo>({
+      type: TEST_FOO_MODEL_TYPE
     });
   });
 
   describe('ModelReadService', () => {
 
-    let testReadService: FooReadService;
-    let modelReadService: ModelReadService<Foo>;
+    let testReadService: TestFooReadService;
+    let modelReadService: ModelReadService<TestFoo>;
 
     beforeEach(() => {
       testReadService = makeTestReadService();
@@ -33,7 +33,7 @@ describe('Crud Model Services', () => {
     });
 
     it('#type should return the type.', () => {
-      expect(modelReadService.type).toBe(FOO_MODEL_TYPE);
+      expect(modelReadService.type).toBe(TEST_FOO_MODEL_TYPE);
     });
 
     describe('#read()', () => {
@@ -143,7 +143,7 @@ describe('Crud Model Services', () => {
       it('should suceed if models are re-read and not found.', (done) => {
 
         let updates = 0;
-        let lastReadResult: ModelServiceResponse<Foo>;
+        let lastReadResult: ModelServiceResponse<TestFoo>;
 
         const unavailableTestKey = 3;
         const unavailableTestKeys = [unavailableTestKey];
@@ -180,7 +180,7 @@ describe('Crud Model Services', () => {
       it('should suceed if cache is cleared and models are not found on reload.', (done) => {
 
         let updates = 0;
-        let lastReadResult: ModelServiceResponse<Foo>;
+        let lastReadResult: ModelServiceResponse<TestFoo>;
 
         const unavailableTestKey = 3;
         const unavailableTestKeys = [unavailableTestKey];

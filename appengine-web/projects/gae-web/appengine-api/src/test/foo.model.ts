@@ -4,12 +4,12 @@ import { TestReadService } from './model';
 import { AbstractDatabaseModel } from '../lib/datastore/model';
 import { DatabaseModelData, AbstractDatabaseModelSerializer } from '../lib/datastore/data';
 
-export const FOO_MODEL_TYPE = 'foo';
+export const TEST_FOO_MODEL_TYPE = 'foo';
 
 /**
- * Test model Foo that has a number identifier and some properties.
+ * Test model TestFoo that has a number identifier and some properties.
  */
-export class Foo extends AbstractDatabaseModel implements DatedModel {
+export class TestFoo extends AbstractDatabaseModel implements DatedModel {
 
   private _key: NumberModelKey;
 
@@ -45,12 +45,12 @@ export class Foo extends AbstractDatabaseModel implements DatedModel {
 }
 
 /**
- * DTO for the Foo model.
+ * DTO for the TestFoo model.
  */
-export class FooData extends DatabaseModelData {
+export class TestFooData extends DatabaseModelData {
 
-  public static fromJson(json: any): FooData {
-    const data = new FooData();
+  public static fromJson(json: any): TestFooData {
+    const data = new TestFooData();
     return Object.assign(data, json);
   }
 
@@ -65,10 +65,10 @@ export class FooData extends DatabaseModelData {
 
 }
 
-export class FooSerializer
-  extends AbstractDatabaseModelSerializer<Foo, FooData> {
+export class TestFooSerializer
+  extends AbstractDatabaseModelSerializer<TestFoo, TestFooData> {
 
-  public convertToDto(model: Foo): FooData {
+  public convertToDto(model: TestFoo): TestFooData {
     const data = super.convertToDto(model);
 
     data.setDateValue(model.date);
@@ -76,7 +76,7 @@ export class FooSerializer
     return data;
   }
 
-  public convertToModel(dto: FooData): Foo {
+  public convertToModel(dto: TestFooData): TestFoo {
     const model = super.convertToModel(dto);
     const date = dto.getDateValue();
 
@@ -87,25 +87,25 @@ export class FooSerializer
     return model;
   }
 
-  public convertJsonToDto(json: any): FooData {
-    return FooData.fromJson(json);
+  public convertJsonToDto(json: any): TestFooData {
+    return TestFooData.fromJson(json);
   }
 
-  protected makeModel(): Foo {
-    return new Foo();
+  protected makeModel(): TestFoo {
+    return new TestFoo();
   }
 
-  protected makeDto(): FooData {
-    return new FooData();
+  protected makeDto(): TestFooData {
+    return new TestFooData();
   }
 
 }
 
 // MARK: Services
-export class FooReadService extends TestReadService<Foo> {
+export class TestFooReadService extends TestReadService<TestFoo> {
 
   constructor() {
-    super(FOO_MODEL_TYPE, (x) => new Foo(x as NumberModelKey));
+    super(TEST_FOO_MODEL_TYPE, (x) => new TestFoo(x as NumberModelKey));
   }
 
 }

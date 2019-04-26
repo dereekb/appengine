@@ -1,6 +1,6 @@
 import 'jasmine-expect';
 import { ClientDeleteService, DeleteRequest } from './delete.service';
-import { FOO_MODEL_TYPE, Foo, FooData, FooSerializer } from '../../../test/foo.model';
+import { TEST_FOO_MODEL_TYPE, TestFoo, TestFooData, TestFooSerializer } from '../../../test/foo.model';
 import { TestUtility } from '../../../test/test';
 import { ValueUtility, ModelKey } from '@gae-web/appengine-utility';
 import { LargeAtomicRequestError } from './error';
@@ -13,7 +13,7 @@ describe('ClientDeleteService', () => {
 
     const routeConfig = TestUtility.testApiRouteConfig();
 
-    let clientDeleteService: ClientDeleteService<Foo, FooData>;
+    let clientDeleteService: ClientDeleteService<TestFoo, TestFooData>;
 
     function setClientResult(data, success = true, status = 200, errors?, included?) {
       const httpClientSpy: { delete: jasmine.Spy } = jasmine.createSpyObj('HttpClient', ['delete']);
@@ -34,11 +34,11 @@ describe('ClientDeleteService', () => {
 
       const httpClient = httpClientSpy as any;
 
-      clientDeleteService = new ClientDeleteService<Foo, FooData>({
+      clientDeleteService = new ClientDeleteService<TestFoo, TestFooData>({
         httpClient,
         routeConfig,
-        type: FOO_MODEL_TYPE,
-        serializer: new FooSerializer()
+        type: TEST_FOO_MODEL_TYPE,
+        serializer: new TestFooSerializer()
       });
     }
 

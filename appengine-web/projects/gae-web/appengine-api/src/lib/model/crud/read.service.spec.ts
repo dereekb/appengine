@@ -1,6 +1,6 @@
 import 'jasmine-expect';
 import { ClientReadService, ReadRequest } from './read.service';
-import { FOO_MODEL_TYPE, Foo, FooData, FooSerializer } from '../../../test/foo.model';
+import { TEST_FOO_MODEL_TYPE, TestFoo, TestFooData, TestFooSerializer } from '../../../test/foo.model';
 import { TestUtility } from '../../../test/test';
 import { ValueUtility, ModelKey } from '@gae-web/appengine-utility';
 import { LargeAtomicRequestError, MISSING_REQUIRED_RESOURCE_ERROR_CODE } from './error';
@@ -13,7 +13,7 @@ describe('ClientReadService', () => {
 
     const routeConfig = TestUtility.testApiRouteConfig();
 
-    let clientReadService: ClientReadService<Foo, FooData>;
+    let clientReadService: ClientReadService<TestFoo, TestFooData>;
 
     function setClientResult(data, success = true, status = 200, errors?, included?) {
       const httpClientSpy: { get: jasmine.Spy } = jasmine.createSpyObj('HttpClient', ['get']);
@@ -34,11 +34,11 @@ describe('ClientReadService', () => {
 
       const httpClient = httpClientSpy as any;
 
-      clientReadService = new ClientReadService<Foo, FooData>({
+      clientReadService = new ClientReadService<TestFoo, TestFooData>({
         httpClient,
         routeConfig,
-        type: FOO_MODEL_TYPE,
-        serializer: new FooSerializer()
+        type: TEST_FOO_MODEL_TYPE,
+        serializer: new TestFooSerializer()
       });
 
     }
@@ -70,8 +70,8 @@ describe('ClientReadService', () => {
 
       if (success) {
         data = {
-          type: 'Foo',
-          data: keys.map((x) => new FooData(x).toJSON())
+          type: 'TestFoo',
+          data: keys.map((x) => new TestFooData(x).toJSON())
         } as any;
       }
 

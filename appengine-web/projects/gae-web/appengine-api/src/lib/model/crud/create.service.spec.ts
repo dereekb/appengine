@@ -1,6 +1,6 @@
 import 'jasmine-expect';
 import { ClientCreateService, CreateRequest } from './create.service';
-import { FOO_MODEL_TYPE, Foo, FooData, FooSerializer } from '../../../test/foo.model';
+import { TEST_FOO_MODEL_TYPE, TestFoo, TestFooData, TestFooSerializer } from '../../../test/foo.model';
 import { TestUtility } from '../../../test/test';
 import { ValueUtility, ModelKey } from '@gae-web/appengine-utility';
 import { LargeAtomicRequestError } from './error';
@@ -13,7 +13,7 @@ describe('ClientCreateService', () => {
 
     const routeConfig = TestUtility.testApiRouteConfig();
 
-    let clientCreateService: ClientCreateService<Foo, FooData>;
+    let clientCreateService: ClientCreateService<TestFoo, TestFooData>;
 
     function setClientResult(data, success = true, status = 200, errors?, included?) {
       const httpClientSpy: { create: jasmine.Spy } = jasmine.createSpyObj('HttpClient', ['create']);
@@ -34,19 +34,19 @@ describe('ClientCreateService', () => {
 
       const httpClient = httpClientSpy as any;
 
-      clientCreateService = new ClientCreateService<Foo, FooData>({
+      clientCreateService = new ClientCreateService<TestFoo, TestFooData>({
         httpClient,
         routeConfig,
-        type: FOO_MODEL_TYPE,
-        serializer: new FooSerializer()
+        type: TEST_FOO_MODEL_TYPE,
+        serializer: new TestFooSerializer()
       });
     }
 
     it(`should fail if more than ${ClientCreateService.MAX_TEMPLATES_ALLOWED_PER_REQUEST} models requested to be created.`, async () => {
       const modelKeys = ValueUtility.range(0, (ClientCreateService.MAX_TEMPLATES_ALLOWED_PER_REQUEST + 2));
 
-      const createRequest: CreateRequest<Foo> = {
-        templates: modelKeys.map((x) => new Foo(x))
+      const createRequest: CreateRequest<TestFoo> = {
+        templates: modelKeys.map((x) => new TestFoo(x))
       };
 
       setClientResult({});

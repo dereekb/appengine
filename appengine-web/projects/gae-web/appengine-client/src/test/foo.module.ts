@@ -1,9 +1,9 @@
-import { FOO_MODEL_TYPE, ApiRouteConfiguration, FooSerializer, Foo, QueryService } from '@gae-web/appengine-api';
+import { TEST_FOO_MODEL_TYPE, ApiRouteConfiguration, TestFooSerializer, TestFoo, QueryService } from '@gae-web/appengine-api';
 import { HttpClient } from '@angular/common/http';
 import {
-  FooClientCreateService, FooClientReadService, FooClientUpdateService, FooClientDeleteService,
-  FooClientQueryService, FooServiceWrapper, FooReadService, FooQueryService, FooDefaultQueryConfiguration,
-  FooCachedKeySourceCache, FooCreateService, FooUpdateService, FooDeleteService, FooReadSourceFactory
+  TestFooClientCreateService, TestFooClientReadService, TestFooClientUpdateService, TestFooClientDeleteService,
+  TestFooClientQueryService, TestFooServiceWrapper, TestFooReadService, TestFooQueryService, TestFooDefaultQueryConfiguration,
+  TestFooCachedKeySourceCache, TestFooCreateService, TestFooUpdateService, TestFooDeleteService, TestFooReadSourceFactory
 } from './foo.service';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { GaeClientModule } from '../lib/client.module';
@@ -13,9 +13,9 @@ import { ModelReadService, ModelDeleteService, ModelUpdateService } from '../lib
 import { ModelQueryService } from '../lib/service/query.service';
 
 export function fooServiceFactory(make: (config: any) => any) {
-  return (s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) => {
+  return (s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) => {
     return make({
-      type: FOO_MODEL_TYPE,
+      type: TEST_FOO_MODEL_TYPE,
       serializer: s,
       httpClient: h,
       routeConfig: r
@@ -25,146 +25,146 @@ export function fooServiceFactory(make: (config: any) => any) {
 
 export function fooServiceWrapperFactory(set: ModelServiceWrapperSet): ModelServiceWrapper<UniqueModel> {
   return set.initWrapper({
-    type: FOO_MODEL_TYPE,
+    type: TEST_FOO_MODEL_TYPE,
     init: (fooWrapper, wrapperSet) => {
       // NOTE: Can bind here for watching specific events.
     }
   });
 }
 
-export function fooClientCreateServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
-  return fooServiceFactory((c) => new FooClientCreateService(c)).apply(null, arguments);
+export function fooClientCreateServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+  return fooServiceFactory((c) => new TestFooClientCreateService(c)).apply(null, arguments);
 }
 
-export function fooClientReadServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
-  return fooServiceFactory((c) => new FooClientReadService(c)).apply(null, arguments);
+export function fooClientReadServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+  return fooServiceFactory((c) => new TestFooClientReadService(c)).apply(null, arguments);
 }
 
-export function fooClientUpdateServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
-  return fooServiceFactory((c) => new FooClientUpdateService(c)).apply(null, arguments);
+export function fooClientUpdateServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+  return fooServiceFactory((c) => new TestFooClientUpdateService(c)).apply(null, arguments);
 }
 
-export function fooClientDeleteServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
-  return fooServiceFactory((c) => new FooClientDeleteService(c)).apply(null, arguments);
+export function fooClientDeleteServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+  return fooServiceFactory((c) => new TestFooClientDeleteService(c)).apply(null, arguments);
 }
 
-export function fooClientQueryServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
-  return fooServiceFactory((c) => new FooClientQueryService(c)).apply(null, arguments);
+export function fooClientQueryServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+  return fooServiceFactory((c) => new TestFooClientQueryService(c)).apply(null, arguments);
 }
 
-export function fooCreateServiceFactory(wrapper: FooServiceWrapper, service: FooClientCreateService): ModelCreateService<Foo> {
+export function fooCreateServiceFactory(wrapper: TestFooServiceWrapper, service: TestFooClientCreateService): ModelCreateService<TestFoo> {
   return wrapper.wrapCreateService(service);
 }
 
-export function fooReadServiceFactory(wrapper: FooServiceWrapper, service: FooClientReadService): ModelReadService<Foo> {
+export function fooReadServiceFactory(wrapper: TestFooServiceWrapper, service: TestFooClientReadService): ModelReadService<TestFoo> {
   return wrapper.wrapReadService(service);
 }
 
-export function fooUpdateServiceFactory(wrapper: FooServiceWrapper, service: FooClientUpdateService): ModelUpdateService<Foo> {
+export function fooUpdateServiceFactory(wrapper: TestFooServiceWrapper, service: TestFooClientUpdateService): ModelUpdateService<TestFoo> {
   return wrapper.wrapUpdateService(service);
 }
 
-export function fooDeleteServiceFactory(wrapper: FooServiceWrapper, service: FooClientDeleteService): ModelDeleteService<Foo> {
+export function fooDeleteServiceFactory(wrapper: TestFooServiceWrapper, service: TestFooClientDeleteService): ModelDeleteService<TestFoo> {
   return wrapper.wrapDeleteService(service);
 }
 
-export function fooQueryServiceFactory(wrapper: FooServiceWrapper, readService: FooReadService, queryService: FooClientQueryService): ModelQueryService<Foo> {
+export function fooQueryServiceFactory(wrapper: TestFooServiceWrapper, readService: TestFooReadService, queryService: TestFooClientQueryService): ModelQueryService<TestFoo> {
   return wrapper.wrapQueryService(readService, queryService);
 }
 
-export function fooReadSourceFactoryFn(wrapper: FooServiceWrapper, service: FooReadService): SourceFactory<Foo> {
+export function fooReadSourceFactoryFn(wrapper: TestFooServiceWrapper, service: TestFooReadService): SourceFactory<TestFoo> {
   return wrapper.makeReadSourceFactory(service);
 }
 
-export function fooCachedKeySourceCacheFactoryFn(wrapper: FooServiceWrapper, queryService: FooQueryService, config: FooDefaultQueryConfiguration) {
-  return new FooCachedKeySourceCache(queryService, wrapper.makeKeyedPredictiveOrderedQueryDelegate(), config);
+export function fooCachedKeySourceCacheFactoryFn(wrapper: TestFooServiceWrapper, queryService: TestFooQueryService, config: TestFooDefaultQueryConfiguration) {
+  return new TestFooCachedKeySourceCache(queryService, wrapper.makeKeyedPredictiveOrderedQueryDelegate(), config);
 }
 
 @NgModule({
   imports: [GaeClientModule]
 })
-export class FooClientModule {
+export class TestFooClientModule {
 
   static forApp(): ModuleWithProviders {
     const moduleWithProviders = {
-      ngModule: FooClientModule,
+      ngModule: TestFooClientModule,
       providers: [
 
-        // MARK: Foo
-        FooSerializer,
+        // MARK: TestFoo
+        TestFooSerializer,
         {
-          provide: FooClientCreateService,
+          provide: TestFooClientCreateService,
           useFactory: fooClientCreateServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
         },
         {
-          provide: FooClientReadService,
+          provide: TestFooClientReadService,
           useFactory: fooClientReadServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
         },
         {
-          provide: FooClientUpdateService,
+          provide: TestFooClientUpdateService,
           useFactory: fooClientUpdateServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
         },
         {
-          provide: FooClientDeleteService,
+          provide: TestFooClientDeleteService,
           useFactory: fooClientDeleteServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
         },
         {
-          provide: FooClientQueryService,
+          provide: TestFooClientQueryService,
           useFactory: fooClientQueryServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
         },
         {
-          provide: FooReadSourceFactory,
+          provide: TestFooReadSourceFactory,
           useFactory: fooReadSourceFactoryFn,
-          deps: [FooClientReadService]
+          deps: [TestFooClientReadService]
         },
 
         // MARK: Wrapped
         {
-          provide: FooServiceWrapper,
+          provide: TestFooServiceWrapper,
           useFactory: fooServiceWrapperFactory,
           deps: [ModelServiceWrapperSet]
         },
         {
-          provide: FooCreateService,
+          provide: TestFooCreateService,
           useFactory: fooCreateServiceFactory,
-          deps: [FooServiceWrapper, FooClientCreateService]
+          deps: [TestFooServiceWrapper, TestFooClientCreateService]
         },
         {
-          provide: FooReadService,
+          provide: TestFooReadService,
           useFactory: fooReadServiceFactory,
-          deps: [FooServiceWrapper, FooClientReadService]
+          deps: [TestFooServiceWrapper, TestFooClientReadService]
         },
         {
-          provide: FooUpdateService,
+          provide: TestFooUpdateService,
           useFactory: fooUpdateServiceFactory,
-          deps: [FooServiceWrapper, FooClientUpdateService]
+          deps: [TestFooServiceWrapper, TestFooClientUpdateService]
         },
         {
-          provide: FooDeleteService,
+          provide: TestFooDeleteService,
           useFactory: fooDeleteServiceFactory,
-          deps: [FooServiceWrapper, FooClientDeleteService]
+          deps: [TestFooServiceWrapper, TestFooClientDeleteService]
         },
         {
-          provide: FooQueryService,
+          provide: TestFooQueryService,
           useFactory: fooQueryServiceFactory,
-          deps: [FooServiceWrapper, FooReadService, FooClientQueryService]
+          deps: [TestFooServiceWrapper, TestFooReadService, TestFooClientQueryService]
         },
         {
-          provide: FooReadSourceFactory,
+          provide: TestFooReadSourceFactory,
           useFactory: fooReadSourceFactoryFn,
-          deps: [FooServiceWrapper, FooReadService]
+          deps: [TestFooServiceWrapper, TestFooReadService]
         },
 
-        FooDefaultQueryConfiguration,
+        TestFooDefaultQueryConfiguration,
         {
-          provide: FooCachedKeySourceCache,
+          provide: TestFooCachedKeySourceCache,
           useFactory: fooCachedKeySourceCacheFactoryFn,
-          deps: [FooServiceWrapper, FooQueryService, FooDefaultQueryConfiguration]
+          deps: [TestFooServiceWrapper, TestFooQueryService, TestFooDefaultQueryConfiguration]
         }
       ]
     };

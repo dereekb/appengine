@@ -1,10 +1,10 @@
 import 'jasmine-expect';
 import { TestReadService } from './model';
-import { FooReadService, Foo } from './foo.model';
+import { TestFooReadService, TestFoo } from './foo.model';
 
 describe('TestReadService', () => {
 
-  const testReadService: TestReadService<Foo> = new FooReadService();
+  const testReadService: TestReadService<TestFoo> = new TestFooReadService();
 
   describe('#filteredKeysSet', () => {
 
