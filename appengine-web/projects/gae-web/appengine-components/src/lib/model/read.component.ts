@@ -70,14 +70,13 @@ export abstract class AbstractReadSourceComponent<T extends UniqueModel> extends
 
 }
 
-// TODO: Rename with Gae prefix.
 /**
  * Directive for a read source that sets a single key as the source input.
  */
 @Directive({
   selector: '[gaeReadSourceKey]'
 })
-export class ReadSourceModelKeyDirective<T extends UniqueModel> {
+export class GaeReadSourceKeyDirective<T extends UniqueModel> {
 
   private _source: ReadSourceComponent<T>;
   private _key?: ModelKey;

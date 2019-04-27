@@ -334,21 +334,20 @@ export type TransformationSourceTransformEventFn<I, O> = (event: SourceEvent<I>)
   selector: '[gaeTransformationSource]',
   exportAs: 'gaeTransformationSource'
 })
-export class TransformationSourceDirective<I, O> extends AbstractTransformationSourceComponent<I, O> implements OnDestroy {
+export class GaeTransformationSourceDirective<I, O> extends AbstractTransformationSourceComponent<I, O> implements OnDestroy {
 
   private _transformElementsFn: TransformationSourceTransformElementFn<I, O>;
   private _transformEventFn: TransformationSourceTransformEventFn<I, O>;
 
-  constructor(@Inject(SourceComponent) source: UnknownSourceComponent<I>) {
+  constructor(@Inject(SourceComponent) source: SourceComponent<I>) {
     super(source);
-
   }
 
   ngOnDestroy() {
     delete this._transformElementsFn;
     delete this._transformEventFn;
 
-    this._transformEventFn = (x) => {
+    this._transformEventFn = () => {
       throw new Error('Source Transformation has ended.');
     };
   }
@@ -420,11 +419,11 @@ export class TransformationSourceDirective<I, O> extends AbstractTransformationS
 
 // MARK: Delegates
 /**
- * Delegate for a TransformationSourceDirective that requires the input source.
+ * Delegate for a GaeTransformationSourceDirective that requires the input source.
  */
 export abstract class AnstractSourceDependentTransformationSourceDelegate<S, I, O> {
 
-  constructor(private _transformationSource: TransformationSourceDirective<I, O>) { }
+  constructor(private _transformationSource: GaeTransformationSourceDirective<I, O>) { }
 
   protected setDependentSource(source: Source<S>) {
     if (source) {

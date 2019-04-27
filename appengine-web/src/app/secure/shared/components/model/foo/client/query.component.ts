@@ -1,21 +1,16 @@
 import { Directive, Component, forwardRef } from '@angular/core';
-
-import { AbstractSourceComponent, ProvideIterableSourceComponent } from '../../../../shared/client/resource/source.component';
-import { AbstractConfigurableKeyQuerySourceComponent, AbstractIterableKeySourceComponent } from '../../../../shared/client/resource/query.component';
-
-import { ModelKey } from '../../../../../../shared/appengine/datastore/modelkey';
-
-import { TallyType } from '../../../../../tally/tally/tallytype/tallytype';
-import { TallyTypeQueryService, TallyTypeCachedKeySourceCache } from '../../../../../tally/tally/tallytype/tallytype.service';
+import { ProvideIterableSourceComponent, AbstractConfigurableKeyQuerySourceComponent, AbstractIterableKeySourceComponent } from '@gae-web/appengine-components';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { FooQueryService, FooCachedKeySourceCache } from 'src/app/secure/shared/api/model/foo/foo.service';
 
 @Component({
     template: '',
-    selector: 'app-tally-type-key-query-source',
-    providers: ProvideIterableSourceComponent(TallyTypeQuerySourceComponent)
+    selector: 'app-foo-key-query-source',
+    providers: ProvideIterableSourceComponent(FooQuerySourceComponent)
 })
-export class TallyTypeQuerySourceComponent extends AbstractConfigurableKeyQuerySourceComponent<TallyType> {
+export class FooQuerySourceComponent extends AbstractConfigurableKeyQuerySourceComponent<Foo> {
 
-    constructor(service: TallyTypeQueryService) {
+    constructor(service: FooQueryService) {
         super(service);
     }
 
@@ -23,12 +18,12 @@ export class TallyTypeQuerySourceComponent extends AbstractConfigurableKeyQueryS
 
 @Component({
     template: '',
-    selector: 'app-tally-type-default-query-source',
-    providers: ProvideIterableSourceComponent(TallyTypeDefaultQuerySourceComponent)
+    selector: 'app-foo-default-query-source',
+    providers: ProvideIterableSourceComponent(FooDefaultQuerySourceComponent)
 })
-export class TallyTypeDefaultQuerySourceComponent extends AbstractIterableKeySourceComponent<TallyType> {
+export class FooDefaultQuerySourceComponent extends AbstractIterableKeySourceComponent {
 
-    constructor(service: TallyTypeCachedKeySourceCache) {
+    constructor(service: FooCachedKeySourceCache) {
         super(service.makeNewSource());
     }
 

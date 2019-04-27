@@ -1,40 +1,37 @@
 import { Host, Directive, Component } from '@angular/core';
-import { UpdateActionDirectiveEvent, AbstractUpdateActionDirective } from '../../../../shared/client/action/update.directive';
-import { AbstractActionAnalyticDirective } from '../../../../shared/client/action/action.directive';
-
-import { TallyType } from '../../../../../tally/tally/tallytype/tallytype';
-import { TallyTypeUpdateService } from '../../../../../tally/tally/tallytype/tallytype.service';
-
-import { AnalyticsService, AnalyticsSender } from '../../../../../../shared/analytics/analytics.service';
+import { AbstractUpdateActionDirective, AbstractActionAnalyticDirective, UpdateActionDirectiveEvent } from '@gae-web/appengine-components';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { FooUpdateService } from 'src/app/secure/shared/api/model/foo/foo.service';
+import { AnalyticsService, AnalyticsSender } from '@gae-web/appengine-analytics';
 
 @Directive({
-    selector: '[appTallyTypeUpdateAction]',
-    exportAs: 'appTallyTypeUpdateAction'
+    selector: '[appFooUpdateAction]',
+    exportAs: 'appFooUpdateAction'
 })
-export class TallyTypeUpdateActionDirective extends AbstractUpdateActionDirective<TallyType> {
+export class FooUpdateActionDirective extends AbstractUpdateActionDirective<Foo> {
 
-    constructor(service: TallyTypeUpdateService) {
+    constructor(service: FooUpdateService) {
         super(service);
     }
 
 }
 
 @Directive({
-    selector: '[appTallyTypeUpdateAnalytics]'
+    selector: '[appFooUpdateAnalytics]'
 })
-export class TallyTypeUpdateActionAnalyticDirective extends AbstractActionAnalyticDirective<UpdateActionDirectiveEvent<TallyType>> {
+export class FooUpdateActionAnalyticDirective extends AbstractActionAnalyticDirective<UpdateActionDirectiveEvent<Foo>> {
 
     private static readonly ANALYTICS_EVENT_NAME = 'update_tally_type';
 
-    constructor(@Host() action: TallyTypeUpdateActionDirective, service: AnalyticsService) {
+    constructor(@Host() action: FooUpdateActionDirective, service: AnalyticsService) {
         super(action, service);
     }
 
-    protected updateAnalyticsWithAction(event: UpdateActionDirectiveEvent<TallyType>, analytics: AnalyticsSender) {
+    protected updateAnalyticsWithAction(event: UpdateActionDirectiveEvent<Foo>, analytics: AnalyticsSender) {
 
         // TODO: Update with additional parameters
 
-        analytics.sendEventData(TallyTypeUpdateActionAnalyticDirective.ANALYTICS_EVENT_NAME);
+        analytics.sendEventData(FooUpdateActionAnalyticDirective.ANALYTICS_EVENT_NAME);
     }
 
 }

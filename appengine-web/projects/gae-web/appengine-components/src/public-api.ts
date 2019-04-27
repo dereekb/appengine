@@ -2,6 +2,9 @@
  * Public API Surface of appengine-components
  */
 
+ // Anayltics
+ export * from './lib/analytics/action.directive';
+
  // Loading
 export * from './lib/loading/basic-loading.component';
 export * from './lib/loading/error.component';

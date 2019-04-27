@@ -1,5 +1,5 @@
 import { Input, Host, Directive, Component } from '@angular/core';
-import { AbstractCreateActionDirective, CreateActionDirectiveEvent, AbstractActionAnalyticDirective } from '@gae-web/appengine-components';
+import { AbstractCreateActionDirective, CreateActionDirectiveEvent, AbstractActionAnalyticDirective, ActionState } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { FooCreateService } from 'src/app/secure/shared/api/model/foo/foo.service';
 import { AnalyticsService, AnalyticsSender } from '@gae-web/appengine-analytics';
@@ -64,23 +64,16 @@ export class FooCreateActionAnalyticDirective extends AbstractActionAnalyticDire
 
     protected updateAnalyticsWithAction(event: CreateActionDirectiveEvent<Foo>, analytics: AnalyticsSender) {
         switch (event.state) {
-            case ActionDirectiveState.Reset:
+            case ActionState.Reset:
                 this._start = new Date();
                 break;
-            case ActionDirectiveState.Complete:
+            case ActionState.Complete:
                 const secondsElapsed = (new Date().getTime() - this._start.getTime()) / 1000;
                 const tallyType = event.result.models[0];
-                const verbParts = tallyType.verb.split(' ').length;
 
                 const data = {
                     seconds: secondsElapsed,
                     generator: this.generator,
-                    name: Foo.makeDisplayName(tallyType),
-                    hasDetail: Boolean(tallyType.detail),
-                    hasObject: Boolean(tallyType.noun),
-                    hasUnit: Boolean(tallyType.unit),
-                    unitType: tallyType.type,
-                    verbParts: verbParts,
                     resetCount: this._count
                 };
 
@@ -88,7 +81,7 @@ export class FooCreateActionAnalyticDirective extends AbstractActionAnalyticDire
                 this._start = new Date();
                 this._count += 1;
                 break;
-            case ActionDirectiveState.Working:
+            case ActionState.Working:
                 break;
         }
     }

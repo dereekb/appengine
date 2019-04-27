@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, DebugElement, ViewChild } from '@angular/core';
 import { GaeModelModule } from './model.module';
-import { ProvideReadSourceComponent, AbstractReadSourceComponent, ReadSourceModelKeyDirective, ReadSourceComponent } from './read.component';
+import { ProvideReadSourceComponent, AbstractReadSourceComponent, GaeReadSourceKeyDirective, ReadSourceComponent } from './read.component';
 import { ReadSourceFactory } from '@gae-web/appengine-client';
 import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService } from '@gae-web/appengine-api';
-import { Observable, of } from 'rxjs';
-import { ModelUtility, ModelKey, ValueUtility } from '@gae-web/appengine-utility';
+import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
+import { ModelUtility, ModelKey, ValueUtility, SourceState } from '@gae-web/appengine-utility';
 import { By } from '@angular/platform-browser';
 import { DebugContext } from '@angular/core/src/view';
 
@@ -18,12 +18,12 @@ describe('Read Components', () => {
     }).compileComponents();
   }));
 
-  describe('ReadSourceModelKeyDirective', () => {
+  describe('GaeReadSourceKeyDirective', () => {
     let fixture: ComponentFixture<TestReadSourceKeyComponent>;
     let component: TestReadSourceKeyComponent;
 
     let testReadSourceComponentComponent: TestReadSourceComponent;
-    let readSourceDirectiveComponent: ReadSourceModelKeyDirective<TestModel>;
+    let readSourceDirectiveComponent: GaeReadSourceKeyDirective<TestModel>;
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(TestReadSourceKeyComponent);
@@ -49,6 +49,26 @@ describe('Read Components', () => {
     it('should have set the readSourceKeys value on the ReadSourceComponent', () => {
       expect(testReadSourceComponentComponent.readSourceKeys).toBeDefined();
     });
+
+  });
+
+  describe('AbstractReadSourceComponent', () => {
+
+    let readSourceComponent: TestReadSourceComponent;
+
+    beforeEach(() => {
+      readSourceComponent = new TestReadSourceComponent();
+    });
+
+    describe('with no read source keys set', () => {
+
+      it('should be in a reset state.', () => {
+        expect(readSourceComponent.state).toBe(SourceState.Reset);
+      });
+
+    });
+
+    // TODO: Can test the inputs/outputs, as the component is mainly a pass through for the ReadSourceFactory.
 
   });
 
@@ -105,7 +125,7 @@ class TestReadSourceKeyComponent {
 
   key: ModelKey = 1;
 
-  @ViewChild(ReadSourceModelKeyDirective)
-  public gaeReadSource: ReadSourceModelKeyDirective<TestModel>;
+  @ViewChild(GaeReadSourceKeyDirective)
+  public gaeReadSource: GaeReadSourceKeyDirective<TestModel>;
 
 }

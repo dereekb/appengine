@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule, MatProgressBarModule } from '@angular/material';
-import { ReadSourceModelKeyDirective } from './read.component';
+import { GaeReadSourceKeyDirective } from './read.component';
+import { GaeTransformationSourceDirective } from './source.component';
 
 @NgModule({
   imports: [],
   declarations: [
-    ReadSourceModelKeyDirective,
+    GaeReadSourceKeyDirective,
+    GaeTransformationSourceDirective
   ],
   exports: [
-    ReadSourceModelKeyDirective
+    GaeReadSourceKeyDirective,
+    GaeTransformationSourceDirective
   ]
 })
 export class GaeModelModule { }

@@ -1,27 +1,18 @@
 import { Input, Component, forwardRef } from '@angular/core';
-
-import { AbstractReadSourceComponent, ProvideReadSourceComponent } from '../../../../shared/client/resource/read.component';
-
-import { SingleElementSource } from '../../../../../../shared/utility/source.interface';
-
-import { TallyTypeLinkedModel, TallyType } from '../../../../../tally/tally/tallytype/tallytype';
-import { TallyTypeReadSourceFactory } from '../../../../../tally/tally/tallytype/tallytype.service';
+import { ProvideReadSourceComponent, AbstractReadSourceComponent } from '@gae-web/appengine-components';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { FooReadSourceFactory } from 'src/app/secure/shared/api/model/foo/foo.service';
+import { SingleElementSource } from '@gae-web/appengine-utility/lib/source';
 
 @Component({
     template: '',
-    selector: 'app-tally-type-read-source',
-    providers: [ProvideReadSourceComponent(TallyTypeReadSourceComponent)]
+    selector: 'app-foo-read-source',
+    providers: [ProvideReadSourceComponent(FooReadSourceComponent)]
 })
-export class TallyTypeReadSourceComponent extends AbstractReadSourceComponent<TallyType> {
+export class FooReadSourceComponent extends AbstractReadSourceComponent<Foo> {
 
-    constructor(source: TallyTypeReadSourceFactory) {
+    constructor(source: FooReadSourceFactory) {
         super(source);
-    }
-
-    // TODO: Move to separate directive.
-    @Input()
-    public set tallyTypeLinkedKeyInput(source: SingleElementSource<TallyTypeLinkedModel>) {
-        this.readSourceKeys = source.first.map((x) => (x) ? x.tallyTypeKey : []);
     }
 
 }

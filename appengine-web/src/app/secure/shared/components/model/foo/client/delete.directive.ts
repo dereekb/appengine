@@ -1,37 +1,34 @@
 import { Host, Directive, Component } from '@angular/core';
-import { DeleteActionDirectiveEvent, AbstractDeleteActionDirective } from '../../../../shared/client/action/delete.directive';
-import { AbstractActionAnalyticDirective } from '../../../../shared/client/action/action.directive';
-
-import { TallyType } from '../../../../../tally/tally/tallytype/tallytype';
-import { TallyTypeDeleteService } from '../../../../../tally/tally/tallytype/tallytype.service';
-
-import { AnalyticsService, AnalyticsSender } from '../../../../../../shared/analytics/analytics.service';
+import { AbstractDeleteActionDirective, AbstractActionAnalyticDirective, DeleteActionDirectiveEvent } from '@gae-web/appengine-components';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { FooDeleteService } from 'src/app/secure/shared/api/model/foo/foo.service';
+import { AnalyticsService, AnalyticsSender } from '@gae-web/appengine-analytics';
 
 @Directive({
-    selector: '[appTallyTypeDeleteAction]',
-    exportAs: 'appTallyTypeDeleteAction'
+    selector: '[appFooDeleteAction]',
+    exportAs: 'appFooDeleteAction'
 })
-export class TallyTypeDeleteActionDirective extends AbstractDeleteActionDirective<TallyType> {
+export class FooDeleteActionDirective extends AbstractDeleteActionDirective<Foo> {
 
-    constructor(service: TallyTypeDeleteService) {
+    constructor(service: FooDeleteService) {
         super(service);
     }
 
 }
 
 @Directive({
-    selector: '[appTallyTypeDeleteAnalytics]'
+    selector: '[appFooDeleteAnalytics]'
 })
-export class TallyTypeDeleteActionAnalyticDirective extends AbstractActionAnalyticDirective<DeleteActionDirectiveEvent<TallyType>> {
+export class FooDeleteActionAnalyticDirective extends AbstractActionAnalyticDirective<DeleteActionDirectiveEvent<Foo>> {
 
     private static readonly ANALYTICS_EVENT_NAME = 'delete_tally_type';
 
-    constructor(@Host() action: TallyTypeDeleteActionDirective, service: AnalyticsService) {
+    constructor(@Host() action: FooDeleteActionDirective, service: AnalyticsService) {
         super(action, service);
     }
 
-    protected updateAnalyticsWithAction(event: DeleteActionDirectiveEvent<TallyType>, analytics: AnalyticsSender) {
-        analytics.sendEventData(TallyTypeDeleteActionAnalyticDirective.ANALYTICS_EVENT_NAME);
+    protected updateAnalyticsWithAction(event: DeleteActionDirectiveEvent<Foo>, analytics: AnalyticsSender) {
+        analytics.sendEventData(FooDeleteActionAnalyticDirective.ANALYTICS_EVENT_NAME);
     }
 
 }
