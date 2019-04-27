@@ -1,4 +1,4 @@
-import { Directive, Input, Output, Type, Provider } from '@angular/core';
+import { Directive, Input, Output, Type, Provider, Host, Optional, AfterViewInit } from '@angular/core';
 import { SourceComponent, ProvideSourceComponent, AbstractConversionSourceComponent } from './source.component';
 import { Observable, of } from 'rxjs';
 import { ModelKey, UniqueModel, SingleElementConversionSource, SingleElementSource } from '@gae-web/appengine-utility';
@@ -15,6 +15,7 @@ export function ProvideReadSourceComponent<S extends ReadSourceComponent<any>>(s
   return [...ProvideSourceComponent(sourceType), { provide: ReadSourceComponent, useExisting: sourceType }];
 }
 
+// TODO: Change to be a Directive instead of a Component.
 /**
  * Abstract read component that takes in an observable list of keys and retrieves models for those keys.
  *
@@ -59,33 +60,52 @@ export abstract class AbstractReadSourceComponent<T extends UniqueModel> extends
   }
 
   @Input()
-  public set readSourceKeys(keysObs: Observable<ModelKey | ModelKey[]> | undefined) {
-    this.setSourceInput(keysObs);
+  get readSourceKeys(): Observable<ModelKey | ModelKey[]> {
+    return this.source.input;
+  }
+
+  set readSourceKeys(input: Observable<ModelKey | ModelKey[]> | undefined) {
+    this.setSourceInput(input);
   }
 
 }
 
+// TODO: Rename with Gae prefix.
 /**
  * Directive for a read source that sets a single key as the source input.
- *
- * TODO: Update to use the source as a @Host() constructor instead of manually put in.
- * TODO: Rename to appReadSourceKey
  */
 @Directive({
-  selector: '[gaeReadSourceKeyInput]'
+  selector: '[gaeReadSourceKey]'
 })
-export class ReadSourceModelKeyInputDirective<T extends UniqueModel> {
+export class ReadSourceModelKeyDirective<T extends UniqueModel> {
 
-  private _source: AbstractReadSourceComponent<T>;
+  private _source: ReadSourceComponent<T>;
   private _key?: ModelKey;
 
+  constructor(@Optional() @Host() source: ReadSourceComponent<T>) {
+    this._source = source;
+  }
+
+  get source() {
+    return this._source;
+  }
+
   @Input()
-  set appReadSourceKeyInput(source) {
+  set source(source) {
     this._source = source;
     this._update();
   }
 
   @Input()
+  set gaeReadSourceKey(key: ModelKey) {
+    this.key = key;
+  }
+
+  @Input()
+  get key() {
+    return this._key;
+  }
+
   set key(key: ModelKey) {
     this._key = key;
     this._update();

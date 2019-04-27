@@ -29,7 +29,7 @@ export abstract class AbstractActionSnackbarDirective<E extends ActionEvent> ext
 @Directive({
   selector: '[gaeActionMessageSnackbar]'
 })
-export class ActionMessageSnackbarDirective extends AbstractActionSnackbarDirective<ActionEvent> {
+export class GaeActionMessageSnackbarDirective extends AbstractActionSnackbarDirective<ActionEvent> {
 
   @Input()
   public snackbarAction = 'Ok!';
@@ -47,6 +47,11 @@ export class ActionMessageSnackbarDirective extends AbstractActionSnackbarDirect
   @Input()
   public set appActionMessageSnackbar(component: TypedActionObject<ActionEvent>) {
     this.setActionObject(component);
+  }
+
+  @Input()
+  public set snackbarSeconds(seconds) {
+    this.snackbarDuration = seconds * 1000;
   }
 
   // MARK: Send/Update
