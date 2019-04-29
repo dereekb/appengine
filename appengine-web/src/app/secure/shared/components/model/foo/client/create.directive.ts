@@ -46,7 +46,7 @@ export class FooCreateActionDirective extends AbstractCreateActionDirective<Foo>
 })
 export class FooCreateActionAnalyticDirective extends AbstractActionAnalyticDirective<CreateActionDirectiveEvent<Foo>> {
 
-    private static readonly ANALYTICS_EVENT_NAME = 'create_tally_type';
+    private static readonly ANALYTICS_EVENT_NAME = 'create_foo';
 
     private _count = 0;
     private _start = new Date();
@@ -69,7 +69,7 @@ export class FooCreateActionAnalyticDirective extends AbstractActionAnalyticDire
                 break;
             case ActionState.Complete:
                 const secondsElapsed = (new Date().getTime() - this._start.getTime()) / 1000;
-                const tallyType = event.result.models[0];
+                const foo = event.result.models[0];
 
                 const data = {
                     seconds: secondsElapsed,

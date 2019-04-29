@@ -21,7 +21,7 @@ export class FooDeleteActionDirective extends AbstractDeleteActionDirective<Foo>
 })
 export class FooDeleteActionAnalyticDirective extends AbstractActionAnalyticDirective<DeleteActionDirectiveEvent<Foo>> {
 
-    private static readonly ANALYTICS_EVENT_NAME = 'delete_tally_type';
+    private static readonly ANALYTICS_EVENT_NAME = 'delete_foo';
 
     constructor(@Host() action: FooDeleteActionDirective, service: AnalyticsService) {
         super(action, service);

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, DebugElement, ViewChild } from '@angular/core';
-import { GaeModelModule } from './model.module';
+import { GaeModelComponentsModule } from './model.module';
 import { ProvideReadSourceComponent, AbstractReadSourceComponent, GaeReadSourceKeyDirective, ReadSourceComponent } from './read.component';
 import { ReadSourceFactory } from '@gae-web/appengine-client';
 import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService } from '@gae-web/appengine-api';
@@ -13,7 +13,7 @@ describe('Read Components', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [GaeModelModule],
+      imports: [GaeModelComponentsModule],
       declarations: [TestReadSourceKeyComponent, TestReadSourceComponent]
     }).compileComponents();
   }));

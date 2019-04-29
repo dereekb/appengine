@@ -1,0 +1,5 @@
+<form class="form-view" [formGroup]="form" [gaeFormGroupErrors]="controlErrorsObs" fxLayout="column" novalidate>
+    <ng-content select="[confirmHeader]"></ng-content>
+    <gae-checkbox-form-control [form]="form" field="confirm" [hint]="hint" required="true" fxFlex="100%"></gae-checkbox-form-control>
+    <ng-content select="[confirmFooter]"></ng-content>
+</form>

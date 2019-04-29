@@ -15,4 +15,4 @@ import { GaeTransformationSourceDirective } from './source.component';
     GaeTransformationSourceDirective
   ]
 })
-export class GaeModelModule { }
+export class GaeModelComponentsModule { }

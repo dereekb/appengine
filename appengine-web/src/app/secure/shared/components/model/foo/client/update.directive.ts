@@ -21,7 +21,7 @@ export class FooUpdateActionDirective extends AbstractUpdateActionDirective<Foo>
 })
 export class FooUpdateActionAnalyticDirective extends AbstractActionAnalyticDirective<UpdateActionDirectiveEvent<Foo>> {
 
-    private static readonly ANALYTICS_EVENT_NAME = 'update_tally_type';
+    private static readonly ANALYTICS_EVENT_NAME = 'update_foo';
 
     constructor(@Host() action: FooUpdateActionDirective, service: AnalyticsService) {
         super(action, service);

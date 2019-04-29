@@ -2,10 +2,19 @@
  * Public API Surface of appengine-components
  */
 
- // Anayltics
- export * from './lib/analytics/action.directive';
+// Anayltics
+export * from './lib/analytics/action.directive';
 
- // Loading
+// Form
+export * from './lib/form/confirm-form.component';
+export * from './lib/form/control.component';
+export * from './lib/form/form.component';
+export * from './lib/form/form.module';
+export * from './lib/form/input.component';
+export * from './lib/form/model.component';
+export * from './lib/form/validators';
+
+// Loading
 export * from './lib/loading/basic-loading.component';
 export * from './lib/loading/error.component';
 export * from './lib/loading/loading-progress.component';
