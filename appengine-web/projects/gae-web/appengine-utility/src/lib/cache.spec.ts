@@ -1,5 +1,5 @@
 import 'jasmine-expect';
-import { UniqueModel } from '@gae-web/appengine-utility/lib/model';
+import { UniqueModel } from '@gae-web/appengine-utility';
 import { ModelKey } from './model';
 import { AsyncModelCacheWrap, KeySafeAsyncModelCacheWrap, KeyedCacheChange } from './cache';
 import { takeUntil } from 'rxjs/operators';

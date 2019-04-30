@@ -1,10 +1,11 @@
-import { Directive, Input, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
+import { Directive, Input, OnInit, AfterContentInit, OnDestroy, Inject, Host, Optional } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 
 import { FormGroup } from '@angular/forms';
 
-import { FormErrors } from './form.component';
+import { FormErrors, FormGroupComponent } from './form.component';
 import { ThemePalette } from '@angular/material';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 @Directive({
     selector: '[gaeFormGroupErrors]'
@@ -12,13 +13,17 @@ import { ThemePalette } from '@angular/material';
 export class GaeFormGroupErrorsDirective implements OnDestroy {
 
     private _errorsSubject = new BehaviorSubject<FormErrors>({});
-    private _sub?: Subscription;
+    private _sub = new SubscriptionObject();
 
-    constructor() { }
+    constructor(@Optional() @Host() formGroupComponent: FormGroupComponent) {
+        if (formGroupComponent) {
+            this.gaeFormGroupErrors = formGroupComponent.controlErrorsObs;
+        }
+    }
 
     ngOnDestroy() {
         this._errorsSubject.complete();
-        this._clearSubject();
+        this._sub.destroy();
     }
 
     public get formErrors(): Observable<FormErrors> {
@@ -27,18 +32,9 @@ export class GaeFormGroupErrorsDirective implements OnDestroy {
 
     @Input()
     public set gaeFormGroupErrors(error: Observable<FormErrors>) {
-        this._clearSubject();
-
-        this._sub = error.subscribe((e) => {
+        this._sub.subscription = error.subscribe((e) => {
             this._errorsSubject.next(e);
         });
-    }
-
-    private _clearSubject() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-            delete this._sub;
-        }
     }
 
 }
@@ -83,21 +79,23 @@ export abstract class AbstractExtendedFormControlComponent extends AbstractFormC
 
     public error?: string;
 
-    private _errorSub?: Subscription;
+    private _errorSub = new SubscriptionObject();
 
-    constructor(private _errors: GaeFormGroupErrorsDirective) {
+    constructor(@Optional() @Inject(GaeFormGroupErrorsDirective) private _errors: GaeFormGroupErrorsDirective) {
         super();
     }
 
     ngAfterContentInit() {
-        this._errorSub = this._errors.formErrors.subscribe((errors) => {
-            const error = errors[this.field];
-            this.error = (error && error.length > 0) ? error : undefined;
-        });
+        if (this._errors) {
+            this._errorSub.subscription = this._errors.formErrors.subscribe((errors) => {
+                const error = errors[this.field];
+                this.error = (error && error.length > 0) ? error : undefined;
+            });
+        }
     }
 
     ngOnDestroy() {
-        this._clearErrorSub();
+        this._errorSub.destroy();
     }
 
     public get hasError(): boolean {
@@ -106,14 +104,6 @@ export abstract class AbstractExtendedFormControlComponent extends AbstractFormC
 
     public get hintMsg(): string | undefined {
         return this.error || this.hint;
-    }
-
-    // MARK: Internal
-    private _clearErrorSub() {
-        if (this._errorSub) {
-            this._errorSub.unsubscribe();
-            this._errorSub = undefined;
-        }
     }
 
 }

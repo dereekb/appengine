@@ -1,0 +1,14 @@
+<div class="form-container">
+    <app-foo-read-source #tallyTypeSource [readSourceKeys]="targetKey"></app-foo-read-source>
+    <app-model-loader #tallyTypeLoader [source]="tallyTypeSource"></app-model-loader>
+    <app-detail-loading-view [loader]="tallyTypeLoader">
+        <div mainView fxLayout="column">
+            <div class="form-container-form-view" fxFlex="100%" 
+                appFooDeleteAction appFooDeleteAnalytics #action="appFooDeleteAction" [appActionSegue]="action" actionSegueRef="^.^.^" [appActionMessageSnackbar]="action" snackbarMessage="Deleted Tally!" 
+                appDeleteModelFormController #control="appDeleteModelFormController" [action]="action" [form]="form" [submit]="submit">
+                <app-confirm-delete-model-form #form [input]="tallyTypeSource.first"></app-confirm-delete-model-form>
+                <app-submit-view [hidden]="true" appModelChangeFormActionLinkSubmitView #submit action="Delete" lockedText="Done!"></app-submit-view>
+            </div>
+        </div>
+    </app-detail-loading-view>
+</div>

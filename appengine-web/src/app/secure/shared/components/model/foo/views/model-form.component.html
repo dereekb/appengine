@@ -1,0 +1,21 @@
+<form class="form-view" [formGroup]="form" [appFormGroupErrors]="controlErrorsObs" fxLayout="column" novalidate>
+    <div class="form-view-tools">
+        <button md-button (click)="reset()"><md-icon>restore</md-icon> Undo Changes</button>
+    </div>
+    <md-tab-group>
+        <md-tab label="Basic Info">
+            <div class="form-view-tab-page" fxLayout="column">
+                <app-input-form-control [form]="form" field="name" placeholder="Name" required="true" fxFlex="100%"></app-input-form-control>
+                <app-textarea-form-control [form]="form" field="detail" placeholder="Description" fxFlex="100%"></app-textarea-form-control>
+                <app-input-form-control [form]="form" field="count" placeholder="Count Units" fxFlex="100%"></app-input-form-control>
+                <app-foo-unit-form [parentGroup]="form"></app-foo-unit-form>
+            </div>
+        </md-tab>
+        <md-tab label="More Options">
+            <div class="form-view-tab-page" fxLayout="column">
+                <app-input-form-control [form]="form" field="verb" title="Action Group" hint="Verb to categorize this Tally." fxFlex="100%"></app-input-form-control>
+                <app-input-form-control [form]="form" field="noun" title="Object Group" hint="Noun to categorize this Tally." fxFlex="100%"></app-input-form-control>
+            </div>
+        </md-tab>
+    </md-tab-group>
+</form>

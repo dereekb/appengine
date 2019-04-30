@@ -6,7 +6,7 @@ import { GaeConfiguredConfirmModelFormComponent, GaeConfirmModelFormComponent } 
 import { GaeFormComponentsModule } from './form.module';
 import { Observable, of } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
-import { CheckboxFormControlComponent } from './input.component';
+import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
 
 describe('GaeGatewayComponentsModule', () => {
 
@@ -21,7 +21,7 @@ describe('GaeGatewayComponentsModule', () => {
 
   let component: TestConfirmFormViewComponent;
   let formComponent: GaeConfirmModelFormComponent<UniqueModel>;
-  let checkboxComponent: CheckboxFormControlComponent;
+  let checkboxComponent: GaeCheckboxFormControlComponent;
   let fixture: ComponentFixture<TestConfirmFormViewComponent>;
 
   beforeEach(async(() => {
@@ -34,7 +34,7 @@ describe('GaeGatewayComponentsModule', () => {
       modelKey: 0
     });
 
-    checkboxComponent = fixture.debugElement.query(By.directive(CheckboxFormControlComponent)).componentInstance;
+    checkboxComponent = fixture.debugElement.query(By.directive(GaeCheckboxFormControlComponent)).componentInstance;
     fixture.detectChanges();
   }));
 
@@ -76,7 +76,7 @@ const HINT_TEXT = 'Confirmation is required.';
 class TestConfirmFormViewComponent {
 
   @Input()
-  public hintText = HINT_TEXT;
+  public hint = HINT_TEXT;
 
   @Input()
   public input: Observable<UniqueModel>;

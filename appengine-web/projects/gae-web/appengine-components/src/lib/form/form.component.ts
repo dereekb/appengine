@@ -1,4 +1,4 @@
-import { OnDestroy, AfterContentInit } from '@angular/core';
+import { OnDestroy, AfterContentInit, Provider, Type } from '@angular/core';
 
 import { FormGroup } from '@angular/forms';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -31,12 +31,23 @@ export interface FormComponentEvent {
     readonly state: FormComponentState;
 }
 
-export interface FormComponent {
-
+export class FormComponent {
     readonly isComplete: boolean;
     readonly state: FormComponentState;
     readonly stream: Observable<FormComponentEvent>;
+}
 
+export function ProvideFormComponent<S extends FormComponent>(sourceType: Type<S>): Provider[] {
+    return [{ provide: FormComponent, useExisting: sourceType }];
+}
+
+export class FormGroupComponent extends FormComponent {
+    readonly controlErrorsObs: Observable<FormErrors>;
+    readonly formErrorsObs: Observable<FormErrors>;
+}
+
+export function ProvideFormGroupComponent<S extends FormGroupComponent>(sourceType: Type<S>): Provider[] {
+    return [...ProvideFormComponent(sourceType), { provide: FormGroupComponent, useExisting: sourceType }];
 }
 
 // MARK: Validation Errors
@@ -79,7 +90,7 @@ export enum FormComponentState {
 /**
  * Base component that wraps a FormGroup and provides validation.
  */
-export abstract class AbstractFormGroupComponent implements FormComponent, OnDestroy, AfterContentInit {
+export abstract class AbstractFormGroupComponent implements FormGroupComponent, OnDestroy, AfterContentInit {
 
     private _initialized = false;
 

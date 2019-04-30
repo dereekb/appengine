@@ -1,0 +1,14 @@
+<app-list-view-wrapper>
+    <md-toolbar listViewToolbar>
+        <a md-icon-button (click)="refresh()" class="list-toolbar-item">
+            <md-icon>refresh</md-icon>
+        </a>
+        <div class="spacer"></div>
+        <span>Tallies</span>
+        <a md-icon-button disabled class="list-toolbar-item">
+            <md-icon>filter_list</md-icon>
+        </a>
+    </md-toolbar>
+    <app-foo-list-content></app-foo-list-content>
+    <ng-content noCountView select="[noCountView]"></ng-content>
+</app-list-view-wrapper>

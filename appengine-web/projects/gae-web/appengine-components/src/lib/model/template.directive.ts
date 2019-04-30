@@ -1,4 +1,4 @@
-import { UniqueModel } from '@gae-web/appengine-utility/lib/model';
+import { UniqueModel } from '@gae-web/appengine-utility';
 import { Observable } from 'rxjs';
 import { AbstractActionDirective } from '../shared/action.directive';
 import { TemplateResponse } from '@gae-web/appengine-api';

@@ -1,0 +1,24 @@
+<md-nav-list class="list-view-list"
+    appUniqueKeyReader #overviewKeysReader="appUniqueKeyReader" [models]="elements">
+
+    <!-- Read/Load the TallyOverview for each Foos -->
+    <app-tally-overview-read-source #overviewReadSource [readSourceKeys]="overviewKeysReader.keys"
+        #overviewMap="appUniqueModelMap" [appUniqueModelMap]="overviewReadSource.elements">
+    </app-tally-overview-read-source>
+
+    <!-- Display Them Below -->
+    <a class="list-item" md-list-item (click)="select(tallyType)" *ngFor="let tallyType of elements | async">
+        <div class="list-item-avatar" md-list-avatar
+            #tallyOverview="appUniqueModelMapValue" [appUniqueModelMapValue]="overviewMap" [key]="tallyType.key">
+            <span class="list-item-avatar-text">{{ tallyOverview.model?.total | shortCount:5 }}</span>
+            <app-color-image [appStringColor]="tallyType.key" class="list-item-avatar-icon" md-list-avatar></app-color-image>
+        </div>
+        <h3 class="list-item-title" md-line>{{ tallyType | tallyTypeName }}</h3>
+        <p class="list-item-detail" md-line>{{ tallyType?.detail }}</p>
+        <p class="list-item-primary" md-line>{{ tallyOverview.model?.updated | relativeDateTimeString }}</p>
+    </a>
+    <a md-list-item class="list-content-more" (click)="loadMore()" *ngIf="canLoadMore">
+        <md-icon md-list-icon>chevron_right</md-icon>
+        <p md-line>Load More</p>
+    </a>
+</md-nav-list>

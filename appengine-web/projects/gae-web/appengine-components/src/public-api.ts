@@ -10,7 +10,12 @@ export * from './lib/form/confirm-form.component';
 export * from './lib/form/control.component';
 export * from './lib/form/form.component';
 export * from './lib/form/form.module';
-export * from './lib/form/input.component';
+export * from './lib/form/input/autocomplete.component';
+export * from './lib/form/input/checkbox.component';
+export * from './lib/form/input/date.component';
+export * from './lib/form/input/input.component';
+export * from './lib/form/input/select.component';
+export * from './lib/form/input/textarea.component';
 export * from './lib/form/model.component';
 export * from './lib/form/validators';
 

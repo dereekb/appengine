@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, OnDestroy } from '@angular/core';
 
 import { FormBuilder, Validators } from '@angular/forms';
-import { FormComponentState, AbstractFormGroupComponent } from '../form/form.component';
+import { FormComponentState, AbstractFormGroupComponent, ProvideFormGroupComponent } from '../form/form.component';
 import { ModelFormComponent } from '../form/model.component';
 import { Observable } from 'rxjs';
 import { IsTruthy } from './validators';
@@ -9,7 +9,8 @@ import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 @Component({
     templateUrl: './confirm-form.component.html',
-    selector: 'gae-confirm-model-form'
+    selector: 'gae-confirm-model-form',
+    providers: [ProvideFormGroupComponent(GaeConfirmModelFormComponent)]
 })
 export class GaeConfirmModelFormComponent<T> extends AbstractFormGroupComponent implements ModelFormComponent<T>, OnDestroy {
 

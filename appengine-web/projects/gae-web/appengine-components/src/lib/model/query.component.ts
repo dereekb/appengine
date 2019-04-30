@@ -1,4 +1,4 @@
-import { UniqueModel, ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { UniqueModel, ModelKey } from '@gae-web/appengine-utility';
 import { AbstractIterableSourceComponent } from './source.component';
 import { IterableSource, WrappedIterableSource } from '@gae-web/appengine-utility';
 import { Observable } from 'rxjs';
