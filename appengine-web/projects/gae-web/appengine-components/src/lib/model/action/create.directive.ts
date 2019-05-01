@@ -2,7 +2,7 @@ import { CreateResponse, CreateRequestOptions, CreateService, CreateRequest } fr
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { Observable } from 'rxjs';
 import { TemplateActionDirectiveEvent, TemplateActionDirective, TemplateActionConfig, AbstractTemplateActionDirective } from './template.directive';
-import { ActionState } from '../shared/action';
+import { ActionState } from '../../shared/action';
 
 export interface CreateActionDirectiveEvent<T extends UniqueModel> extends TemplateActionDirectiveEvent<T> {
 

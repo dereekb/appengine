@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { LinkRequest, LinkResponse, ClientLinkService } from '@gae-web/appengine-api';
-import { AbstractActionDirective } from '../shared/action.directive';
-import { ActionFactory, ActionObject, ActionEvent, ActionState } from '../shared/action';
+import { AbstractActionDirective } from '../../shared/action.directive';
+import { ActionFactory, ActionObject, ActionEvent, ActionState } from '../../shared/action';
 
 // MARK: Link Action
 export interface LinkActionDirective extends ActionObject {

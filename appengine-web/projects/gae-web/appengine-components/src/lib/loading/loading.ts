@@ -29,6 +29,10 @@ export class SimpleLoadingContext implements LoadingContext {
     this._subject = new BehaviorSubject<LoadingEvent>({ isLoading });
   }
 
+  destroy() {
+    this._subject.complete();
+  }
+
   public get isLoading(): boolean {
     return this._subject.value.isLoading;
   }

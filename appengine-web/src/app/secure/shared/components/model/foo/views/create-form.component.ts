@@ -1,13 +1,5 @@
 import { Directive, Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 
-import { Foo } from '../../../../../tally/tally/tallytype/tallytype';
-
-import { CreateModelFormControllerDirective } from '../../../../shared/display/controller/create.directive';
-
-import { TallyNoteStateService } from '../../../../../state.service';
-
-import { Subscription } from 'rxjs/Subscription';
-
 @Component({
     selector: 'app-foo-create-view',
     templateUrl: './create-form.component.html'

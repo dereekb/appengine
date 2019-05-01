@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, DebugElement, ViewChild } from '@angular/core';
-import { GaeModelComponentsModule } from './model.module';
+import { GaeModelComponentsModule } from '../model.module';
 import { ProvideReadSourceComponent, AbstractReadSourceComponent, GaeReadSourceKeyDirective, ReadSourceComponent } from './read.component';
 import { ReadSourceFactory } from '@gae-web/appengine-client';
 import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService } from '@gae-web/appengine-api';

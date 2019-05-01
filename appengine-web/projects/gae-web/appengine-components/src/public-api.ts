@@ -28,15 +28,18 @@ export * from './lib/loading/loading.module';
 export * from './lib/loading/loading';
 
 // Model
-export * from './lib/model/create.directive';
-export * from './lib/model/delete.directive';
-export * from './lib/model/link.directive';
 export * from './lib/model/model.module';
-export * from './lib/model/query.component';
-export * from './lib/model/read.component';
-export * from './lib/model/source.component';
-export * from './lib/model/template.directive';
-export * from './lib/model/update.directive';
+export * from './lib/model/action/create.directive';
+export * from './lib/model/action/delete.directive';
+export * from './lib/model/action/link.directive';
+export * from './lib/model/action/template.directive';
+export * from './lib/model/action/update.directive';
+export * from './lib/model/loading/loading.component';
+export * from './lib/model/loading/model-loader.component';
+export * from './lib/model/loading/multi-model-loader.directive';
+export * from './lib/model/resource/query.component';
+export * from './lib/model/resource/read.component';
+export * from './lib/model/resource/source.component';
 
 // Shared
 export * from './lib/shared/action';

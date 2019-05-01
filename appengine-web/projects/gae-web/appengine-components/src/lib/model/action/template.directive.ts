@@ -1,8 +1,8 @@
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { Observable } from 'rxjs';
-import { AbstractActionDirective } from '../shared/action.directive';
+import { AbstractActionDirective } from '../../shared/action.directive';
 import { TemplateResponse } from '@gae-web/appengine-api';
-import { ActionObject, ActionEvent, ActionFactory } from '../shared/action';
+import { ActionObject, ActionEvent, ActionFactory } from '../../shared/action';
 
 export interface TemplateActionDirectiveEvent<T extends UniqueModel> extends ActionEvent {
 

@@ -1,8 +1,8 @@
 import { UniqueModel, ModelKey } from '@gae-web/appengine-utility';
 import { DeleteResponse, DeleteRequestOptions, DeleteService, DeleteRequest } from '@gae-web/appengine-api';
 import { Observable } from 'rxjs';
-import { AbstractActionDirective } from '../shared/action.directive';
-import { ActionFactory, ActionObject, ActionEvent, ActionState } from '../shared/action';
+import { AbstractActionDirective } from '../../shared/action.directive';
+import { ActionFactory, ActionObject, ActionEvent, ActionState } from '../../shared/action';
 
 export interface DeleteActionDirectiveEvent<T extends UniqueModel> extends ActionEvent {
 
