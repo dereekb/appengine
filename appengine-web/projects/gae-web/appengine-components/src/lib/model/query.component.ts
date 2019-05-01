@@ -1,10 +1,9 @@
-import { UniqueModel, ModelKey } from '@gae-web/appengine-utility';
 import { AbstractIterableSourceComponent } from './source.component';
-import { IterableSource, WrappedIterableSource } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, IterableSource, WrappedIterableSource } from '@gae-web/appengine-utility';
 import { Observable } from 'rxjs';
 import { OnDestroy, Input } from '@angular/core';
 import { QueryService } from '@gae-web/appengine-api';
-import { KeyQuerySource } from '@gae-web/appengine-client';
+import { KeyQuerySource, QuerySourceConfiguration } from '@gae-web/appengine-client';
 
 /**
  * Basic component used to wrap a KeyQuerySource or similar iterable source.
@@ -96,12 +95,12 @@ export abstract class AbstractConfigurableKeyQuerySourceComponent<T extends Uniq
     }
   }
 
-  public get config() {
+  public get config(): QuerySourceConfiguration {
     return this.source.config;
   }
 
   @Input()
-  public set config(config) {
+  public set config(config: QuerySourceConfiguration) {
     this.source.config = config;
     this.stopWaiting();
   }
