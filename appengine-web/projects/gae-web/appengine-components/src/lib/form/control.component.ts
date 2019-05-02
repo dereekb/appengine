@@ -1,4 +1,7 @@
-import { Directive, Input, OnInit, AfterContentInit, OnDestroy, Inject, Host, Optional } from '@angular/core';
+import {
+    Directive, Input, OnInit, AfterContentInit,
+    OnDestroy, Inject, Host, Optional
+} from '@angular/core';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 
 import { FormGroup } from '@angular/forms';
@@ -104,6 +107,10 @@ export abstract class AbstractExtendedFormControlComponent extends AbstractFormC
 
     public get hintMsg(): string | undefined {
         return this.error || this.hint;
+    }
+
+    public get isListeningToErrors() {
+        return this._errorSub.hasSubscription;
     }
 
 }

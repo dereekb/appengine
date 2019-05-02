@@ -114,6 +114,14 @@ export abstract class GaeConfiguredConfirmModelFormComponent<T> implements Model
         return this._form.state;
     }
 
+    public get controlErrorsObs() {
+        return this._form.controlErrorsObs;
+    }
+
+    public get formErrorsObs() {
+        return this._form.formErrorsObs;
+    }
+
     // MARK: Model Form
     public get model() {
         return this._form.model;

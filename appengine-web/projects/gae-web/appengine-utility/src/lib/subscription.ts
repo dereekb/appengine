@@ -21,6 +21,10 @@ export class SubscriptionObject implements Destroyable {
     }
   }
 
+  public get hasSubscription(): boolean {
+    return Boolean(this._subscription);
+  }
+
   public set subscription(sub: Subscription) {
     this.setSub(sub);
   }
@@ -45,8 +49,8 @@ export class SubscriptionObject implements Destroyable {
 
 /**
  * Destroyable object that wraps an array of subscriptions.
- * 
- * NOTE: In some cases it might be better to use merge(...[]) and subscribe to a single item.
+ *
+ * NOTE: In some cases it might be better to use RXJS's merge(...[]) and subscribe to a single item.
  */
 export class MultiSubscriptionObject implements Destroyable {
 
@@ -56,6 +60,10 @@ export class MultiSubscriptionObject implements Destroyable {
     if (subs) {
       this.setSubs(subs);
     }
+  }
+
+  public get hasSubscription(): boolean {
+    return Boolean(this._subscriptions.length);
   }
 
   public set subscriptions(subs: OneOrMore<Subscription>) {

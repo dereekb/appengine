@@ -7,7 +7,6 @@ import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService } from '@
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 import { ModelUtility, ModelKey, ValueUtility, SourceState } from '@gae-web/appengine-utility';
 import { By } from '@angular/platform-browser';
-import { DebugContext } from '@angular/core/src/view';
 
 describe('Read Components', () => {
 
@@ -75,8 +74,10 @@ describe('Read Components', () => {
 });
 
 export class TestModel extends AbstractDatabaseModel {
-  constructor(public modelKey: ModelKey) {
+  public modelKey: ModelKey;
+  constructor(modelKey?: ModelKey, public name?: string) {
     super();
+    this.modelKey = modelKey;
   }
 }
 

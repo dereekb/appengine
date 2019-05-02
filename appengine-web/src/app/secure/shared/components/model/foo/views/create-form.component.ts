@@ -13,7 +13,7 @@ export class FooSegueToCreatedViewDirective implements OnInit, OnDestroy {
 
     private _sub: Subscription;
 
-    constructor(private controller: CreateModelFormControllerDirective<Foo>, private _stateService: TallyNoteStateService) { }
+    constructor(private controller: GaeCreateModelFormControllerDirective<Foo>, private _stateService: TallyNoteStateService) { }
 
     ngOnInit() {
         this._sub = this.controller.responseStream.subscribe((x) => {

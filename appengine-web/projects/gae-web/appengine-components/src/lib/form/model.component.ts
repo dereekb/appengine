@@ -1,20 +1,20 @@
-import { Input, Output } from '@angular/core';
+import { Input, Output, Provider, Type } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FormComponentEvent, FormComponentState, AbstractFormGroupComponent, FormComponent } from './form.component';
+import { FormComponentEvent, FormComponentState, AbstractFormGroupComponent, FormComponent, ProvideFormGroupComponent, ProvideFormComponent, FormGroupComponent } from './form.component';
 import { Observable } from 'rxjs';
 import { UniqueModel, MutableUniqueModel } from '@gae-web/appengine-utility';
 
 export interface ModelFormComponentDelegate<T> {
-
     submit(input: T): Observable<T>;
 }
 
-export interface ModelFormComponent<T> extends FormComponent {
-
+export abstract class ModelFormComponent<T> extends FormGroupComponent {
     model: T | undefined;
+    abstract reset(): void;
+}
 
-    reset();
-
+export function ProvideModelFormComponent<S extends ModelFormComponent<any>>(sourceType: Type<S>): Provider[] {
+    return [...ProvideFormGroupComponent(sourceType), { provide: ModelFormComponent, useExisting: sourceType }];
 }
 
 /**

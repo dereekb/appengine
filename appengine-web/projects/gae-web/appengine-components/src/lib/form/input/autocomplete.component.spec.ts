@@ -35,6 +35,10 @@ describe('GaeAutoCompleteFormControlComponent', () => {
     expect(component).toBeDefined();
   });
 
+  it('should be linked with the gaeFormGroupErrors.', () => {
+    expect(component.isListeningToErrors).toBeTrue();
+  });
+
 });
 
 @Component({
