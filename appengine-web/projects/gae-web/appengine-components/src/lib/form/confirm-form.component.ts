@@ -95,6 +95,9 @@ export abstract class GaeConfiguredConfirmModelFormComponent<T> implements Model
     private _form: GaeConfirmModelFormComponent<T>;
 
     @Input()
+    public hint: string;
+
+    @Input()
     public input: Observable<T>;
 
     // MARK: Form

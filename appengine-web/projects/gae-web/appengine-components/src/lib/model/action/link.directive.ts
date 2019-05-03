@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { LinkRequest, LinkResponse, ClientLinkService } from '@gae-web/appengine-api';
+import { LinkRequest, LinkResponse, LinkService } from '@gae-web/appengine-api';
 import { AbstractActionDirective } from '../../shared/action.directive';
 import { ActionFactory, ActionObject, ActionEvent, ActionState } from '../../shared/action';
 
@@ -22,7 +22,7 @@ export interface LinkActionDirectiveEvent extends ActionEvent {
 export abstract class AbstractLinkActionDirective
   extends AbstractActionDirective<LinkActionDirectiveEvent> implements LinkActionDirective {
 
-  constructor(protected readonly service: ClientLinkService) {
+  constructor(protected readonly service: LinkService) {
     super();
   }
 

@@ -11,6 +11,7 @@ import { GaeInputFormControlComponent } from './input/input.component';
 import { GaeAutoCompleteFormControlComponent } from './input/autocomplete.component';
 import { GaeTextareaFormControlComponent } from './input/textarea.component';
 import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
+import { GaeConfirmDeleteModelFormComponent } from './confirm-delete-form.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
   declarations: [
     GaeFormGroupErrorsDirective,
     GaeConfirmModelFormComponent,
+    GaeConfirmDeleteModelFormComponent,
     GaeSelectFormControlComponent,
     GaeDateFormControlComponent,
     GaeInputFormControlComponent,
@@ -40,6 +42,7 @@ import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
     ReactiveFormsModule,
     GaeFormGroupErrorsDirective,
     GaeConfirmModelFormComponent,
+    GaeConfirmDeleteModelFormComponent,
     GaeSelectFormControlComponent,
     GaeDateFormControlComponent,
     GaeInputFormControlComponent,

@@ -1,8 +1,6 @@
 import { Output, Input, Component, ViewEncapsulation, ViewChild } from '@angular/core';
-import { UniqueModel } from '@gae-web/appengine-utility';
 import { ModelLoader, ModelLoaderLoadingContext } from './model-loader.component';
-import { SimpleLoadingContext } from '../../loading/loading';
-import { LoadingContext } from '@gae-web/appengine-components/public-api';
+import { LoadingContext } from '@gae-web/appengine-components';
 
 /**
  * Component that reads a single element from a SingleElementConversionSource.
