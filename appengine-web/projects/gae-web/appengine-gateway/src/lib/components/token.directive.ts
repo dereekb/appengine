@@ -4,6 +4,7 @@ import { UserLoginTokenService, LoginTokenPair } from '@gae-web/appengine-token'
 import { GatewaySegueService } from '../state.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 /**
  * Directive used to handle successful logins.
@@ -23,17 +24,17 @@ export class SignInGatewaySuccessDirective implements OnDestroy {
     @Input()
     public newUserLogin = false;
 
-    private _sub: Subscription;
+    private _sub = new SubscriptionObject();
 
     constructor(private _service: UserLoginTokenService, private _segueService: GatewaySegueService) {}
 
     ngOnDestroy(): void {
-        this._clearSub();
+        this._sub.destroy();
     }
 
     @Input()
     public set gaeSignInGatewaySuccess(gateway: SignInGateway) {
-        this._sub = gateway.stream.pipe(
+        this._sub.subscription = gateway.stream.pipe(
             filter((x) => x.state === SignInGatewayState.Done)
         ).subscribe((event) => {
             this.login(event.token);
@@ -60,14 +61,6 @@ export class SignInGatewaySuccessDirective implements OnDestroy {
             this._segueService.segueToOnboarding();
         } else {
             this._segueService.segueToApp();
-        }
-    }
-
-    // MARK: Internal
-    private _clearSub() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-            delete this._sub;
         }
     }
 

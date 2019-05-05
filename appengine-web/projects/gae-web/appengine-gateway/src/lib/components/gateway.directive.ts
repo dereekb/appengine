@@ -2,6 +2,7 @@ import { Directive, Input, EventEmitter, Output, OnDestroy } from '@angular/core
 import { LoginTokenPair } from '@gae-web/appengine-token';
 import { Subscription, merge } from 'rxjs';
 import { AbstractSignInGateway, SignInGateway, SignInGatewayEvent, SignInGatewayState } from './gateway';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 /**
  * Used for watching different sign in gateways.
@@ -12,7 +13,7 @@ import { AbstractSignInGateway, SignInGateway, SignInGatewayEvent, SignInGateway
 })
 export class SignInGatewayGroupDirective extends AbstractSignInGateway implements OnDestroy {
 
-    private _sub: Subscription;
+    private _sub = new SubscriptionObject();
     private _gateways: SignInGateway[];
 
     constructor() {
@@ -21,17 +22,15 @@ export class SignInGatewayGroupDirective extends AbstractSignInGateway implement
 
     ngOnDestroy() {
         super.ngOnDestroy();
-        this._clearSub();
+        this._sub.destroy();
     }
 
     // MARK: Accessors
     @Input()
     public set gaeSignInGatewayGroup(gateways: SignInGateway[]) {
-        this._clearSub();
         this._gateways = gateways;
-
         const streams = gateways.map((x) => x.stream);
-        this._sub = merge(...streams).subscribe((x: SignInGatewayEvent) => {
+        this._sub.subscription = merge(...streams).subscribe((x: SignInGatewayEvent) => {
             this.updateForGatewayEvent(x);
         });
     }
@@ -45,13 +44,6 @@ export class SignInGatewayGroupDirective extends AbstractSignInGateway implement
     public resetSignInGateway() {
         if (this._gateways) {
             this._gateways.forEach((x) => x.resetSignInGateway());
-        }
-    }
-
-    private _clearSub() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-            delete this._sub;
         }
     }
 

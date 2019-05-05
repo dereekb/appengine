@@ -1,6 +1,7 @@
 import { Observable, Subscription, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Injectable, Optional } from '@angular/core';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 export type AnalyticsEventName = string;
 export type AnalyticsUserId = string;
@@ -75,11 +76,11 @@ export abstract class AnalyticsServiceListener {
 export abstract class AbstractAnalyticsServiceListener implements AnalyticsServiceListener {
 
   protected _service: AnalyticsService;
-  protected _sub: Subscription;
+  protected _sub = new SubscriptionObject();
 
   public listenToService(service: AnalyticsService): void {
     this._service = service;
-    this._sub = service.events.pipe(filter((e) => this.filterEvent(e)))
+    this._sub.subscription = service.events.pipe(filter((e) => this.filterEvent(e)))
       .subscribe((event) => this.updateOnStreamEvent(event));
   }
 

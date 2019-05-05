@@ -2,6 +2,7 @@ import { HostListener, OnDestroy } from '@angular/core';
 import { OAuthLoginService, OAuthLoginServiceTokenResponse } from './oauth.service';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 export enum OAuthButtonState {
   Idle = 0,
@@ -28,7 +29,7 @@ export abstract class OAuthLoginServiceButton {
  */
 export abstract class AbstractOAuthLoginServiceButton implements OAuthLoginServiceButton, OnDestroy {
 
-  protected _sub: Subscription;
+  protected _sub = new SubscriptionObject();
 
   private _stream = new BehaviorSubject<OAuthButtonEvent>({
     state: OAuthButtonState.Idle
@@ -37,7 +38,7 @@ export abstract class AbstractOAuthLoginServiceButton implements OAuthLoginServi
   constructor(private _service: OAuthLoginService) { }
 
   ngOnDestroy() {
-    this._clearSub();
+    this._sub.destroy();
   }
 
   // MARK: Accessors
@@ -74,7 +75,7 @@ export abstract class AbstractOAuthLoginServiceButton implements OAuthLoginServi
       state: OAuthButtonState.Working
     });
 
-    this._sub = this._service.tokenLogin().pipe(first())
+    this._sub.subscription = this._service.tokenLogin().pipe(first())
       .subscribe((response) => {
         this._stream.next({
           state: OAuthButtonState.Done,
@@ -86,22 +87,16 @@ export abstract class AbstractOAuthLoginServiceButton implements OAuthLoginServi
           error
         });
       }, () => {
-        this._clearSub();
+        this._sub.unsub();
       });
   }
 
   // MARK: Internal
   public resetButton() {
-    this._clearSub();
+    this._sub.unsub();
     this._stream.next({
       state: OAuthButtonState.Idle
     });
-  }
-
-  private _clearSub() {
-    if (this._sub) {
-      this._sub.unsubscribe();
-    }
   }
 
 }

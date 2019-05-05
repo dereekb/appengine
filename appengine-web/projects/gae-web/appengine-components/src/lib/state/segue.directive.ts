@@ -6,7 +6,7 @@ import { ActionEvent, ActionState, TypedActionObject } from '../shared/action';
 @Directive({
   selector: '[gaeActionSegue]'
 })
-export class ActionSegueDirective extends AbstractActionWatcherDirective<ActionEvent> {
+export class GaeActionSegueDirective extends AbstractActionWatcherDirective<ActionEvent> {
 
   // State to go to.
   @Input()
@@ -17,7 +17,7 @@ export class ActionSegueDirective extends AbstractActionWatcherDirective<ActionE
   }
 
   @Input()
-  public set appActionSegue(component: TypedActionObject<ActionEvent>) {
+  public set gaeActionSegue(component: TypedActionObject<ActionEvent>) {
     this.setActionObject(component);
   }
 

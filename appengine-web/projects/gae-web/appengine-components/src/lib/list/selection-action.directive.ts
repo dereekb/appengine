@@ -1,6 +1,6 @@
 import { Directive, Input, Output, AfterViewInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SelectionListControllerDirective } from './selection-list.component';
+import { GaeSelectionListControllerDirective } from './selection-list.component';
 import { ModelKey } from '@gae-web/appengine-utility';
 import { SelectionChange } from '@angular/cdk/collections';
 import { SingleElementSource } from '@gae-web/appengine-utility';
@@ -13,7 +13,7 @@ export abstract class AbstractSelectionListControllerActionController implements
     private _hasKeyChange: boolean;
     private _keySub: Subscription;
 
-    constructor(protected readonly controller: SelectionListControllerDirective) { }
+    constructor(protected readonly controller: GaeSelectionListControllerDirective) { }
 
     ngAfterViewInit() {
         this.watchKeyChange();
@@ -63,7 +63,7 @@ export abstract class AbstractObjectSelectionListControllerActionController<T> e
     private _elementSource: SingleElementSource<T>;
     private _elementSourceSub: Subscription;
 
-    constructor(controller: SelectionListControllerDirective) {
+    constructor(controller: GaeSelectionListControllerDirective) {
         super(controller);
     }
 

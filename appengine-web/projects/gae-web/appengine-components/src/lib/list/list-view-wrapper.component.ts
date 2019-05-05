@@ -1,80 +1,68 @@
-import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation, Inject } from '@angular/core';
 
-import { ListViewComponent, ListViewSourceState } from './list-view.component';
-import { Subscription } from 'rxjs';
+import { ListViewComponent } from './list-view.component';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
+import { flatMap } from 'rxjs/operators';
+import { ListViewSourceState } from './source';
+import { SimpleLoadingContext, LoadingContext } from '../loading/loading';
 
 /**
- * Abstract list content that displays a list of items.
+ * Wraps content within a ListViewComponent implementation.
  */
 @Component({
   selector: 'gae-list-view-wrapper',
   templateUrl: './list-view-wrapper.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class ListViewWrapperComponent<T> implements OnDestroy {
+export class GaeListViewWrapperComponent<T> implements OnDestroy {
 
   private _count: number;
   private _state: ListViewSourceState;
 
-  private _showLoading = false;
-  private _showDone = false;
+  private _context = new SimpleLoadingContext();
+  private _sub = new SubscriptionObject();
 
-  private _countSubs: Subscription[] = [];
-  private _stateSub: Subscription;
+  constructor(@Inject(ListViewComponent) private _listView: ListViewComponent<T>) {
+    this._sub.subscription = _listView.stream.pipe(
+      flatMap(x => x.source)
+    ).subscribe((event) => {
+      let showLoading: boolean;
 
-  constructor(private _listView: ListViewComponent<T>) {
-    this._countSubs[0] = this._listView.elementsObs.subscribe((obs) => {
-      if (this._countSubs[1]) {
-        this._countSubs[1].unsubscribe();
-      }
-
-      this._countSubs[1] = obs.subscribe((x) => {
-        this._count = x.length;
-      });
-    });
-
-    this._stateSub = this._listView.state.subscribe((state) => {
-      let showDone = false;
-      let showLoading = false;
-
-      switch (state) {
+      switch (event.state) {
         case ListViewSourceState.Init:
         case ListViewSourceState.WaitingForSource:
         case ListViewSourceState.Loading:
           showLoading = true;
           break;
         case ListViewSourceState.Done:
-          showDone = true;
+          showLoading = false;
           break;
       }
 
-      this._showDone = showDone;
-      this._showLoading = showLoading;
+      this._state = event.state;
+      this._count = event.elements.length;
+      this._context.setLoading(showLoading);
     });
   }
 
   ngOnDestroy() {
-    this._countSubs.forEach((x) => x.unsubscribe());
-    this._stateSub.unsubscribe();
+    this._sub.destroy();
+  }
 
-    delete this._countSubs;
-    delete this._stateSub;
+  public get state() {
+    return this._state;
   }
 
   public get count() {
     return this._count;
   }
 
+  public get loadingContext(): LoadingContext {
+    return this._context;
+  }
+
   public get showControls() {
     return !this._listView.hideControls;
-  }
-
-  public get showLoading() {
-    return this._showLoading;
-  }
-
-  public get showDone() {
-    return this._showDone;
   }
 
   public get hasElements() {

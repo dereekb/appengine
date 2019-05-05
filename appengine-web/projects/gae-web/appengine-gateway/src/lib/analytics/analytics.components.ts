@@ -4,20 +4,20 @@ import { AnalyticsService, AnalyticsUser, AnalyticsSender } from '@gae-web/appen
 import { LoginTokenPair, DecodedLoginToken, LoginPointerType } from '@gae-web/appengine-token';
 import { SignInGatewayDirective } from '../components/login.directive';
 import { SignInGatewayRegisterDirective } from '../components/register.directive';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 export abstract class AbstractLoginTokenAnalyticsDirective implements OnDestroy {
 
-    private _sub: Subscription;
+    private _sub = new SubscriptionObject();
 
     constructor(protected _analytics: AnalyticsService) { }
 
     ngOnDestroy() {
-        this._clearSub();
+        this._sub.destroy();
     }
 
     protected setSub(sub: Observable<LoginTokenPair>) {
-        this._clearSub();
-        this._sub = sub.subscribe((x) => this.onTokenEvent(x));
+        this._sub.subscription = sub.subscribe((x) => this.onTokenEvent(x));
     }
 
     protected onTokenEvent(token: LoginTokenPair) {
@@ -32,13 +32,6 @@ export abstract class AbstractLoginTokenAnalyticsDirective implements OnDestroy 
     }
 
     protected abstract doTokenAnalytics(analytics: AnalyticsSender, token: DecodedLoginToken, user: AnalyticsUser);
-
-    private _clearSub() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-            delete this._sub;
-        }
-    }
 
 }
 

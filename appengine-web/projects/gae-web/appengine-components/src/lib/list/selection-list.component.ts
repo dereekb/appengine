@@ -2,36 +2,22 @@ import { Observable, Subscription } from 'rxjs';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
 import { ModelKey, UniqueModel, NamedUniqueModel, ArrayDelta, ValueUtility, ModelUtility } from '@gae-web/appengine-utility';
 import { Directive, Component, ViewEncapsulation, forwardRef, Input, AfterViewInit, OnDestroy, ViewChild, QueryList } from '@angular/core';
-import { ProvideListViewComponent, AbstractListViewComponent, ListViewSource, ConversionListViewSourceImpl } from './list-view.component';
+import { ListViewSource, ConversionListViewSource } from './source';
+import { ProvideListViewComponent, AbstractListViewComponent } from './list-view.component';
 import { AbstractListContentComponent } from './list-content.component';
 import { MatListOption, MatSelectionList } from '@angular/material';
 import { delay } from 'rxjs/operators';
 
 export interface KeyedSelectionListItem<K, T> {
-
   readonly key: K;
   readonly value: T;
   readonly name: string;
   readonly icon: string;
-
 }
 
 export abstract class KeySelection<K> {
 
-  abstract get onSelectionChange(): Observable<SelectionChange<K>>;
-
-  abstract selectKey(key: K);
-
-  abstract deselectKey(key: K);
-
-  abstract hasKeySelected(key: K): boolean;
-
-}
-
-export abstract class KeySelectionImpl<K> extends KeySelection<K> {
-
   constructor(protected readonly _selection = new SelectionModel<K>(true), private _initialKeys: K[] = []) {
-    super();
     if (this._initialKeys.length) {
       this._updateForInitialKeys();
     }
@@ -96,7 +82,7 @@ export abstract class KeySelectionImpl<K> extends KeySelection<K> {
   selector: '[gaeSelectionListController]',
   exportAs: 'gaeSelectionListController'
 })
-export class SelectionListControllerDirective extends KeySelectionImpl<string> {
+export class GaeSelectionListControllerDirective extends KeySelection<string> {
 
   constructor() {
     super();
@@ -114,11 +100,11 @@ export type SelectionListItem<T> = KeyedSelectionListItem<string, T>;
   selector: 'gae-selection-list-view',
   templateUrl: './selection-list.component.html',
   encapsulation: ViewEncapsulation.None,
-  providers: ProvideListViewComponent(SelectionListViewComponent)
+  providers: [ProvideListViewComponent(GaeSelectionListViewComponent)]
 })
-export class SelectionListViewComponent<T> extends AbstractListViewComponent<SelectionListItem<T>> {
+export class GaeSelectionListViewComponent<T> extends AbstractListViewComponent<SelectionListItem<T>> {
 
-  constructor(public readonly listController: SelectionListControllerDirective) {
+  constructor(public readonly listController: GaeSelectionListControllerDirective) {
     super();
   }
 
@@ -132,9 +118,9 @@ export abstract class SelectionListViewSourceDirectiveConversionDelegate<T exten
 
 @Directive({
   selector: '[gaeSelectionListViewNamedConversion]',
-  providers: [{ provide: SelectionListViewSourceDirectiveConversionDelegate, useExisting: forwardRef(() => SelectionListViewNamedConversionDirective) }]
+  providers: [{ provide: SelectionListViewSourceDirectiveConversionDelegate, useExisting: forwardRef(() => GaeSelectionListViewNamedConversionDirective) }]
 })
-export class SelectionListViewNamedConversionDirective<T extends NamedUniqueModel> extends SelectionListViewSourceDirectiveConversionDelegate<T> {
+export class GaeSelectionListViewNamedConversionDirective<T extends NamedUniqueModel> extends SelectionListViewSourceDirectiveConversionDelegate<T> {
 
   @Input()
   public namedItemIcons: string;
@@ -155,18 +141,18 @@ export class SelectionListViewNamedConversionDirective<T extends NamedUniqueMode
 }
 
 /**
- * Special source for SelectionListViewComponent that wraps another source and converts the input models to SelectionListItem values.
+ * Special source for GaeSelectionListViewComponent that wraps another source and converts the input models to SelectionListItem values.
  */
 @Directive({
   selector: '[gaeSelectionListViewSource]'
 })
-export class SelectionListViewSourceDirective<T extends UniqueModel> {
+export class GaeSelectionListViewSourceDirective<T extends UniqueModel> {
 
-  constructor(private _listView: SelectionListViewComponent<T>, private _delegate: SelectionListViewSourceDirectiveConversionDelegate<T>) { }
+  constructor(private _listView: GaeSelectionListViewComponent<T>, private _delegate: SelectionListViewSourceDirectiveConversionDelegate<T>) { }
 
   @Input()
   public set gaeSelectionListViewSource(source: ListViewSource<T>) {
-    this._listView.source = new ConversionListViewSourceImpl(source, this._delegate.selectionListConvertFn);
+    this._listView.source = new ConversionListViewSource(source, this._delegate.selectionListConvertFn);
   }
 
 }
@@ -176,7 +162,7 @@ export class SelectionListViewSourceDirective<T extends UniqueModel> {
   templateUrl: './selection-content.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class SelectionListContentComponent<T> extends AbstractListContentComponent<SelectionListItem<T>> implements AfterViewInit, OnDestroy {
+export class GaeSelectionListContentComponent<T> extends AbstractListContentComponent<SelectionListItem<T>> implements AfterViewInit, OnDestroy {
 
   private _optionsMap = new Map<string, MatListOption>();
 
@@ -189,7 +175,7 @@ export class SelectionListContentComponent<T> extends AbstractListContentCompone
   @ViewChild(MatSelectionList)
   public readonly selectionList: MatSelectionList;
 
-  constructor(listView: SelectionListViewComponent<T>) {
+  constructor(listView: GaeSelectionListViewComponent<T>) {
     super(listView);
   }
 
@@ -217,7 +203,7 @@ export class SelectionListContentComponent<T> extends AbstractListContentCompone
 
   // MARK: Accessors
   protected get listView() {
-    return this._listView as SelectionListViewComponent<T>;
+    return this._listView as GaeSelectionListViewComponent<T>;
   }
 
   public get keySelection() {

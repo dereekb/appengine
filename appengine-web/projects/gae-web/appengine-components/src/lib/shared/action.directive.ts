@@ -2,20 +2,21 @@ import { OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { ActionState, HandleActionResult, HandleActionError, ActionFactory, ActionEvent, TypedActionObject } from './action';
 import { filter, share } from 'rxjs/operators';
+import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 /**
  * Abstract component that provides inputs/outputs for some Observable action.
  */
 export abstract class AbstractActionDirective<E extends ActionEvent> implements TypedActionObject<E>, OnDestroy {
 
-  private _sub?: Subscription;
+  private _sub = new SubscriptionObject();
   private _stream = new BehaviorSubject<E>(this.makeResetState());
 
   constructor() { }
 
   ngOnDestroy() {
     this._stream.complete();
-    this._resetSub();
+    this._sub.destroy();
   }
 
   get stream(): Observable<E> {
@@ -36,7 +37,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> implements 
 
   // MARK: Stream
   public reset() {
-    this._resetSub();
+    this._sub.destroy();
     this.next(this.makeResetState());
   }
 
@@ -52,7 +53,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> implements 
 
       const obs = doFn().pipe(share()); // Share result so action is not re-executed multiple times.
 
-      this._sub = obs.subscribe((r) => {
+      this._sub.subscription = obs.subscribe((r) => {
         const completedState = success(r);
         this.next(completedState);
       }, (e) => {
@@ -64,7 +65,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> implements 
           throw e;    // Rethrow the error.
         }
       }).add(() => {
-        this._resetSub();
+        this._sub.unsub();
       });
 
       return obs;
@@ -92,32 +93,20 @@ export abstract class AbstractActionDirective<E extends ActionEvent> implements 
     this.next(errorState);
   }
 
-  private _resetSub() {
-    if (this._sub) {
-      this._sub.unsubscribe();
-      delete this._sub;
-    }
-  }
-
 }
 
 export abstract class AbstractActionWatcherDirective<E extends ActionEvent> implements OnDestroy {
 
-  private _actionSub: Subscription;
+  private _actionSub = new SubscriptionObject();
 
   constructor() { }
 
   ngOnDestroy() {
-    if (this._actionSub) {
-      this._actionSub.unsubscribe();
-      delete this._actionSub;
-    }
+    this._actionSub.destroy();
   }
 
   protected setActionObject(component: TypedActionObject<E>) {
-    this._clearActionSub();
-
-    this._actionSub = component.stream.pipe(
+    this._actionSub.subscription = component.stream.pipe(
       filter(e => this.filterEvent(e))
     )
       .subscribe((event) => {
@@ -131,13 +120,5 @@ export abstract class AbstractActionWatcherDirective<E extends ActionEvent> impl
   }
 
   protected abstract updateWithAction(event: E);
-
-  // MARK: Internal
-  private _clearActionSub() {
-    if (this._actionSub) {
-      this._actionSub.unsubscribe();
-      delete this._actionSub;
-    }
-  }
 
 }
