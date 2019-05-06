@@ -6,6 +6,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatSelectModule, MatIconModule, MatListModule } from '@angular/material';
 import { GaeListComponentsModule } from './list.module';
+import { GaeMaterialComponentsModule } from '../material/material.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { GaeListComponentsModule } from './list.module';
     MatSelectModule,
     MatIconModule,
     MatListModule,
-    GaeListComponentsModule
+    GaeListComponentsModule,
+    GaeMaterialComponentsModule
   ],
   declarations: [
     GaeSelectionListContentComponent,

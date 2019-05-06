@@ -21,7 +21,6 @@ export class SignInGatewayGroupDirective extends AbstractSignInGateway implement
     }
 
     ngOnDestroy() {
-        super.ngOnDestroy();
         this._sub.destroy();
     }
 

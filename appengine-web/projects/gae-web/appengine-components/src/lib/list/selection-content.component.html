@@ -1,8 +1,8 @@
 <div class="selection-content">
   <mat-selection-list class="selection-content-list">
       <mat-list-option #listOption class="list-item" (destroyed)="destroyedOption(listOption)" [disabled]="selectionItem.disabled" [value]="selectionItem" *ngFor="let selectionItem of (elements | async)">
-          <mat-icon mdListIcon appColorStyle [appStringColor]="selectionItem.key">folder</mat-icon>
-          <h4 mdLine>{{ selectionItem.name }}</h4>
+          <mat-icon matListIcon gaeColorStyle [gaeStringColor]="selectionItem.key">folder</mat-icon>
+          <h4 matLine>{{ selectionItem.name }}</h4>
       </mat-list-option>
   </mat-selection-list>
   <button mat-button class="list-content-more" (click)="loadMore()" *ngIf="canLoadMore">

@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ErrorInput, SingleElementConversionSource, ModelKey } from '@gae-web/appengine-utility';
 import { GaeModelComponentsModule } from '../model.module';
-import { TestReadSourceComponent } from '../resource/read.component.spec';
+import { TestModelReadSourceComponent } from '../resource/read.component.spec';
 import { GaeModelLoaderComponent } from './model-loader.component';
 
 describe('GaeModelLoaderComponent', () => {
@@ -11,7 +11,7 @@ describe('GaeModelLoaderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [GaeModelComponentsModule],
-      declarations: [TestGaeModelLoaderComponent, TestReadSourceComponent]
+      declarations: [TestGaeModelLoaderComponent, TestModelReadSourceComponent]
     }).compileComponents();
   }));
 
@@ -37,7 +37,7 @@ describe('GaeModelLoaderComponent', () => {
 @Component({
   template: `
   <div>
-    <gae-test-read-source #aSource [gaeReadSourceKey]="keyA"></gae-test-read-source>
+    <gae-test-model-read-source #aSource [gaeReadSourceKey]="keyA"></gae-test-model-read-source>
     <gae-model-loader #a [source]="aSource"></gae-model-loader>
   </div>
   `

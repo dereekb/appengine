@@ -4,7 +4,6 @@ import { GaeGatewayComponentsModule } from './components.module';
 import { Component } from '@angular/core';
 import { SignInGateway, AbstractSignInGateway } from './gateway';
 import { By } from '@angular/platform-browser';
-import { GaeLoadingProgressComponent } from '@gae-web/appengine-components';
 import { LoginTokenPair } from '@gae-web/appengine-token';
 
 describe('GaeGatewayComponentsModule', () => {

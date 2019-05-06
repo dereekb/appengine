@@ -99,7 +99,6 @@ export type SelectionListItem<T> = KeyedSelectionListItem<string, T>;
 @Component({
   selector: 'gae-selection-list-view',
   templateUrl: './selection-list.component.html',
-  encapsulation: ViewEncapsulation.None,
   providers: [ProvideListViewComponent(GaeSelectionListViewComponent)]
 })
 export class GaeSelectionListViewComponent<T> extends AbstractListViewComponent<SelectionListItem<T>> {
@@ -111,9 +110,7 @@ export class GaeSelectionListViewComponent<T> extends AbstractListViewComponent<
 }
 
 export abstract class SelectionListViewSourceDirectiveConversionDelegate<T extends UniqueModel> {
-
   readonly selectionListConvertFn: (i: T[]) => SelectionListItem<T>[];
-
 }
 
 @Directive({
@@ -159,8 +156,7 @@ export class GaeSelectionListViewSourceDirective<T extends UniqueModel> {
 
 @Component({
   selector: 'gae-selection-list-content',
-  templateUrl: './selection-content.component.html',
-  encapsulation: ViewEncapsulation.None,
+  templateUrl: './selection-content.component.html'
 })
 export class GaeSelectionListContentComponent<T> extends AbstractListContentComponent<SelectionListItem<T>> implements AfterViewInit, OnDestroy {
 

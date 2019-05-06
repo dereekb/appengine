@@ -5,7 +5,7 @@ import { ProvideReadSourceComponent, AbstractReadSourceComponent, GaeReadSourceK
 import { ReadSourceFactory } from '@gae-web/appengine-client';
 import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService } from '@gae-web/appengine-api';
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
-import { ModelUtility, ModelKey, ValueUtility, SourceState } from '@gae-web/appengine-utility';
+import { ModelUtility, ModelKey, ValueUtility, SourceState, NamedUniqueModel } from '@gae-web/appengine-utility';
 import { By } from '@angular/platform-browser';
 
 describe('Read Components', () => {
@@ -13,22 +13,22 @@ describe('Read Components', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [GaeModelComponentsModule],
-      declarations: [TestReadSourceKeyComponent, TestReadSourceComponent]
+      declarations: [TestViewComponent, TestModelReadSourceComponent]
     }).compileComponents();
   }));
 
   describe('GaeReadSourceKeyDirective', () => {
-    let fixture: ComponentFixture<TestReadSourceKeyComponent>;
-    let component: TestReadSourceKeyComponent;
+    let fixture: ComponentFixture<TestViewComponent>;
+    let component: TestViewComponent;
 
-    let testReadSourceComponentComponent: TestReadSourceComponent;
+    let testReadSourceComponentComponent: TestModelReadSourceComponent;
     let readSourceDirectiveComponent: GaeReadSourceKeyDirective<TestModel>;
 
     beforeEach(async(() => {
-      fixture = TestBed.createComponent(TestReadSourceKeyComponent);
+      fixture = TestBed.createComponent(TestViewComponent);
       component = fixture.componentInstance;
 
-      const testReadSourceComponentElement: DebugElement = fixture.debugElement.query(By.directive(TestReadSourceComponent));
+      const testReadSourceComponentElement: DebugElement = fixture.debugElement.query(By.directive(TestModelReadSourceComponent));
       testReadSourceComponentComponent = testReadSourceComponentElement.componentInstance;
 
       readSourceDirectiveComponent = component.gaeReadSource;
@@ -53,10 +53,10 @@ describe('Read Components', () => {
 
   describe('AbstractReadSourceComponent', () => {
 
-    let readSourceComponent: TestReadSourceComponent;
+    let readSourceComponent: TestModelReadSourceComponent;
 
     beforeEach(() => {
-      readSourceComponent = new TestReadSourceComponent();
+      readSourceComponent = new TestModelReadSourceComponent();
     });
 
     describe('with no read source keys set', () => {
@@ -73,12 +73,18 @@ describe('Read Components', () => {
 
 });
 
-export class TestModel extends AbstractDatabaseModel {
+export class TestModel extends AbstractDatabaseModel implements NamedUniqueModel {
   public modelKey: ModelKey;
+
   constructor(modelKey?: ModelKey, public name?: string) {
     super();
     this.modelKey = modelKey;
   }
+
+  get uniqueModelName() {
+    return this.name;
+  }
+
 }
 
 export class TestModelReadService implements ReadService<TestModel> {
@@ -106,10 +112,10 @@ export class TestReadSource extends ReadSourceFactory<TestModel> {
 
 @Component({
   template: '',
-  selector: 'gae-test-read-source',
-  providers: [ProvideReadSourceComponent(TestReadSourceComponent)]
+  selector: 'gae-test-model-read-source',
+  providers: [ProvideReadSourceComponent(TestModelReadSourceComponent)]
 })
-export class TestReadSourceComponent extends AbstractReadSourceComponent<TestModel> {
+export class TestModelReadSourceComponent extends AbstractReadSourceComponent<TestModel> {
 
   constructor() {
     super(new TestReadSource());
@@ -119,10 +125,10 @@ export class TestReadSourceComponent extends AbstractReadSourceComponent<TestMod
 
 @Component({
   template: `
-    <gae-test-read-source [gaeReadSourceKey]="key"></gae-test-read-source>
+    <gae-test-model-read-source [gaeReadSourceKey]="key"></gae-test-model-read-source>
   `
 })
-class TestReadSourceKeyComponent {
+class TestViewComponent {
 
   key: ModelKey = 1;
 

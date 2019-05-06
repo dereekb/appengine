@@ -4,14 +4,14 @@ import { By } from '@angular/platform-browser';
 import { ErrorInput, SingleElementConversionSource, ModelKey } from '@gae-web/appengine-utility';
 import { GaeModelComponentsModule } from '../model.module';
 import { GaeMultiModelLoaderDirective } from './multi-model-loader.directive';
-import { TestReadSourceComponent } from '../resource/read.component.spec';
+import { TestModelReadSourceComponent } from '../resource/read.component.spec';
 
 describe('GaeMultiModelLoaderDirective', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [GaeModelComponentsModule],
-      declarations: [TestMultiModelLoaderComponent, TestReadSourceComponent]
+      declarations: [TestMultiModelLoaderComponent, TestModelReadSourceComponent]
     }).compileComponents();
   }));
 
@@ -37,8 +37,8 @@ describe('GaeMultiModelLoaderDirective', () => {
 @Component({
   template: `
   <div [gaeMultiModelLoader]="[a, b]">
-    <gae-test-read-source #aSource [gaeReadSourceKey]="keyA"></gae-test-read-source>
-    <gae-test-read-source #bSource [gaeReadSourceKey]="keyB"></gae-test-read-source>
+    <gae-test-model-read-source #aSource [gaeReadSourceKey]="keyA"></gae-test-model-read-source>
+    <gae-test-model-read-source #bSource [gaeReadSourceKey]="keyB"></gae-test-model-read-source>
     <gae-model-loader #a [source]="aSource"></gae-model-loader>
     <gae-model-loader #b [source]="bSource"></gae-model-loader>
   </div>

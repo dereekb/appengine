@@ -11,7 +11,7 @@
         <div class="list-item-avatar" md-list-avatar
             #tallyOverview="appUniqueModelMapValue" [appUniqueModelMapValue]="overviewMap" [key]="tallyType.key">
             <span class="list-item-avatar-text">{{ tallyOverview.model?.total | shortCount:5 }}</span>
-            <app-color-image [appStringColor]="tallyType.key" class="list-item-avatar-icon" md-list-avatar></app-color-image>
+            <app-color-image [gaeStringColor]="tallyType.key" class="list-item-avatar-icon" md-list-avatar></app-color-image>
         </div>
         <h3 class="list-item-title" md-line>{{ tallyType | tallyTypeName }}</h3>
         <p class="list-item-detail" md-line>{{ tallyType?.detail }}</p>
