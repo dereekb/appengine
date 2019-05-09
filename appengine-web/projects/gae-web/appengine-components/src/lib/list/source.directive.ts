@@ -1,7 +1,5 @@
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { OnDestroy, Component, Input, Directive, Inject, AfterViewInit, Host, Optional } from '@angular/core';
-import { Source, SourceState, ControllableSource, UniqueModel } from '@gae-web/appengine-utility';
+import { Input, Directive, Inject, AfterViewInit, Host, Optional } from '@angular/core';
+import { ControllableSource, UniqueModel } from '@gae-web/appengine-utility';
 import { ReadSource, KeyQuerySource, MergedReadQuerySource } from '@gae-web/appengine-client';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState, AbstractListViewSource } from './source';
 import { ListViewComponent } from './list-view.component';

@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-import { Foo } from '../../../../../tally/tally/tallytype/tallytype';
-
-import { AbstractListContentComponent } from '../../../../shared/display/list/list-content.component';
-
 import { FooListViewComponent } from './list-view.component';
+import { AbstractListContentComponent } from '@gae-web/appengine-components';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 
 @Component({
     selector: 'app-foo-list-content',

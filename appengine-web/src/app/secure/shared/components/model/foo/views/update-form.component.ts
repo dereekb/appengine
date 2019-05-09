@@ -1,11 +1,6 @@
-import { Input, Component, ViewEncapsulation } from '@angular/core';
-
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
-import { ModelKeyUtility, ModelKey, ModelOrKey, UniqueModel } from '../../../../../../shared/appengine/datastore/modelkey';
-import { Foo } from '../../../../../tally/tally/tallytype/tallytype';
-import { AbstractModelChangeFormComponent } from '../../../../shared/display/model/change-form.component';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { AbstractModelChangeFormComponent } from '@gae-web/appengine-components';
 
 // MARK: Component
 @Component({

@@ -27,4 +27,4 @@ import { GaeLoadingComponent } from './loading.component';
     MatProgressBarModule
   ]
 })
-export class GaeLoadingModule { }
+export class GaeLoadingComponentsModule { }

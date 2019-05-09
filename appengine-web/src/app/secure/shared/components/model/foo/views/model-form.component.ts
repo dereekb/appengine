@@ -1,10 +1,14 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractModelFormComponent } from '@gae-web/appengine-components';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { DateTime } from 'luxon';
+import { ValueUtility, DateTimeUtility } from '@gae-web/appengine-utility';
 
 // MARK: Component
 /**
- * The Foo Foo List View. Not intended for reuse.
+ * The Foo Model Form View. Not intended for reuse.
  */
 @Component({
     selector: 'app-foo-model-form',
@@ -13,22 +17,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
 
     validationMessages = {
-        'name': {
-            'required': 'Name is required.',
-            'maxlength': 'Name must be no more than 24 characters long.'
+        name: {
+            maxlength: 'Name must be no more than 24 characters long.'
         },
-        'detail': {
-            'maxlength': 'Detail must be no more than 140 characters long.'
-        },
-        'verb': {
-            'maxlength': 'Verb must be no more than 16 characters long.'
-        },
-        'noun': {
-            'maxlength': 'Noun must be no more than 16 characters long.'
-        },
-        'count': {
-            'maxlength': 'Count must be no more than 16 characters long.'
-        }
+        date: {},
+        number: {},
+        numberList: {},
+        stringSet: {}
     };
 
     constructor(formBuilder: FormBuilder) {
@@ -38,12 +33,11 @@ export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
     // MARK: Internal
     protected makeNewFormGroup(): FormGroup {
         return this._formBuilder.group({
-            'name': ['', [Validators.required, Validators.maxLength(24)]],
-            'verb': ['', [Validators.maxLength(16)]],
-            'noun': ['', [Validators.maxLength(16)]],
-            'count': ['', [Validators.maxLength(16)]],
-            'detail': ['', [Validators.maxLength(140)]],
-            'unit': FooUnitTypeFormComponent.makeUnitTypeTargetFormGroup(this._formBuilder)
+            name: ['', [Validators.maxLength(24)]],
+            date: [DateTime.local(), []],
+            number: [0, []],
+            numberList: [[], []],
+            stringSet: [[], []],
         });
     }
 
@@ -51,14 +45,10 @@ export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
         const data: any = {};
 
         data.name = model.name;
-        data.verb = model.verb;
-        data.noun = model.noun;
-        data.detail = model.detail;
-        data.count = model.count;
-        data.unit = {
-            unit: model.unit,
-            type: String(model.type)
-        };
+        data.date = (model.date) ? model.date.toJSDate() : null;
+        data.number = model.number;
+        data.numberList = ValueUtility.normalizeArrayCopy(model.numberList);
+        data.stringSet = ValueUtility.setToArray(model.stringSet);
 
         return data;
     }
@@ -67,12 +57,10 @@ export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
         const model = new Foo();
 
         model.name = value.name;
-        model.verb = value.verb;
-        model.noun = value.noun;
-        model.detail = value.detail;
-        model.count = value.count;
-        model.unit = value.unit.unit;
-        model.type = Number(value.unit.type);
+        model.date = (value.date) ? DateTimeUtility.dateTimeFromInput(value.date) : undefined;
+        model.number = value.number;
+        model.numberList = ValueUtility.normalizeArrayCopy(value.numberList);
+        model.stringSet = ValueUtility.arrayToSet(value.stringSet);
 
         return model;
     }

@@ -9,7 +9,7 @@ import { GaeSignInGatewayViewComponent } from './gateway.component';
 import { CredentialsComponent } from './credentials.component';
 import { GaeGatewayMaterialModule } from '../material.module';
 import { CommonModule } from '@angular/common';
-import { GaeLoadingModule } from '@gae-web/appengine-components';
+import { GaeLoadingComponentsModule } from '@gae-web/appengine-components';
 
 /**
  * Shared directives and components of Appengine Gateway.
@@ -25,7 +25,7 @@ import { GaeLoadingModule } from '@gae-web/appengine-components';
     SignInGatewaySignOutDirective
   ],
   exports: [
-    GaeLoadingModule,
+    GaeLoadingComponentsModule,
     GaeGatewayMaterialModule,
     CredentialsComponent,
     GaeSignInGatewayViewComponent,
@@ -38,7 +38,7 @@ import { GaeLoadingModule } from '@gae-web/appengine-components';
   imports: [
     CommonModule,
     GaeApiModule,
-    GaeLoadingModule,
+    GaeLoadingComponentsModule,
     GaeGatewayMaterialModule
   ]
 })

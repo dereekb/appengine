@@ -1,4 +1,33 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject, Directive, Optional, OnDestroy } from '@angular/core';
+
+/**
+ * Is linked to by a child GaeSubmitViewComponent.
+ *
+ * This allows calling submit from a context higher than the SubmitView's immediate context.
+ */
+@Directive({
+    selector: '[gaeSubmitViewAction]',
+    exportAs: 'gaeSubmitViewAction'
+})
+export class GaeSubmitViewActionDirective {
+
+    private _submitView?: GaeSubmitViewComponent;
+
+    public get disabled(): boolean {
+        return (this._submitView) ? this._submitView.disabled : true;
+    }
+
+    public doSubmit() {
+        if (this._submitView) {
+            this._submitView.clicked();
+        }
+    }
+
+    public set submitView(submitView: GaeSubmitViewComponent) {
+        this._submitView = submitView;
+    }
+
+}
 
 @Component({
     templateUrl: './submit.component.html',
@@ -6,9 +35,9 @@ import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angu
     styleUrls: ['./submit.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class GaeSubmitViewComponent {
+export class GaeSubmitViewComponent implements OnDestroy {
 
-    public onClick = new EventEmitter<{}>();
+    public onClick = new EventEmitter();
 
     private _working = false;
     private _locked = false;
@@ -23,7 +52,15 @@ export class GaeSubmitViewComponent {
     @Input()
     public buttonClasses = 'button-primary-color';
 
-    constructor() { }
+    constructor(@Optional() @Inject(GaeSubmitViewActionDirective) parent: GaeSubmitViewActionDirective) {
+        if (parent) {
+            parent.submitView = this;
+        }
+    }
+
+    ngOnDestroy() {
+        this.onClick.complete();
+    }
 
     get text() {
         return (this.locked) ? this.lockedText : this.action;

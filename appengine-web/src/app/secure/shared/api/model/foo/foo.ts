@@ -10,6 +10,7 @@ export class Foo extends AbstractDescribedDatabaseModel {
 
   public date: DateTime;
 
+  public name: string;
   public number: number;
   public numberList: number[];
   public stringSet: Set<string>;

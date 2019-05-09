@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { GaeCreateModelFormControllerDirective } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
+import { AppSegueService } from 'src/app/secure/segue.service';
 
 @Component({
     selector: 'app-foo-create-view',
@@ -17,14 +18,14 @@ export class FooSegueToCreatedViewDirective implements OnInit, OnDestroy {
 
     private _sub = new SubscriptionObject();
 
-    constructor(private controller: GaeCreateModelFormControllerDirective<Foo>, private _stateService: TallyNoteStateService) { }
+    constructor(private controller: GaeCreateModelFormControllerDirective<Foo>, private _segueService: AppSegueService) { }
 
     ngOnInit() {
         this._sub.subscription = this.controller.responseStream.subscribe((x) => {
-            const tallyType = this.controller.firstResult;
+            const foo = this.controller.firstResult;
 
-            if (tallyType) {
-                this._stateService.goToFooCreatedView(tallyType);
+            if (foo) {
+                // TODO: Segue to created object.
             }
         });
     }

@@ -10,4 +10,4 @@ import { GaeActionSegueDirective } from './segue.directive';
     GaeActionSegueDirective
   ]
 })
-export class GaeSegueModule { }
+export class GaeSegueComponentsModule { }

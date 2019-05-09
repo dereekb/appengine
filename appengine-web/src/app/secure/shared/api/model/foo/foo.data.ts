@@ -1,9 +1,14 @@
-import { ModelKey } from '@gae-web/appengine-utility';
+import { ModelKey, ValueUtility } from '@gae-web/appengine-utility';
 import { AbstractDescribedDatabaseModelSerializer, DescribedDatabaseModelData } from '@gae-web/appengine-api';
 import { Foo } from './foo';
 
 // MARK: DTO
 export class FooData extends DescribedDatabaseModelData {
+
+  public name: string;
+  public number: number;
+  public numberList: number[];
+  public stringSet: string[];
 
   public static fromJson(json: any): FooData {
     const data = new FooData();
@@ -28,6 +33,11 @@ export class FooSerializer
   public convertToDto(model: Foo): FooData {
     const data = super.convertToDto(model);
 
+    data.name = model.name;
+    data.number = model.number;
+    data.numberList = model.numberList;
+    data.stringSet = ValueUtility.setToArray(model.stringSet);
+
     data.setDateValue(model.date);
 
     return data;
@@ -36,6 +46,11 @@ export class FooSerializer
   public convertToModel(dto: FooData): Foo {
     const model = super.convertToModel(dto);
     const date = dto.getDateValue();
+
+    model.name = dto.name;
+    model.number = dto.number;
+    model.numberList = dto.numberList;
+    model.stringSet = ValueUtility.arrayToSet(dto.stringSet);
 
     if (date) {
       model.date = date;

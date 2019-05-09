@@ -5,6 +5,9 @@ import { FooComponentsModule } from './foo/foo.module';
 @NgModule({
   imports: [
     FooComponentsModule
+  ],
+  exports: [
+    FooComponentsModule
   ]
 })
 export class SecureModelComponentsModule { }

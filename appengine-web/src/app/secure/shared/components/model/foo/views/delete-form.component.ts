@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Foo } from '../../../../../tally/tally/tallytype/tallytype';
-import { AbstractModelChangeFormComponent } from '../../../../shared/display/model/change-form.component';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { AbstractModelChangeFormComponent } from '@gae-web/appengine-components';
 
 // MARK: Component
 @Component({

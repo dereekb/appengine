@@ -23,6 +23,7 @@ public final class FooDataBuilder extends DatabaseModelDataBuilder<Foo, FooData>
 		FooData data = super.convertSingle(input);
 
 		// Data
+		data.setName(input.getName());
 		data.setNumber(input.getNumber());
 		data.setNumberList(input.getNumberList());
 		data.setStringSet(input.getStringSet());

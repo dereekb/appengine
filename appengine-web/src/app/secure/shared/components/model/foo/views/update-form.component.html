@@ -1,14 +1,14 @@
 <div class="form-container">
     <app-foo-read-source #tallytypeSource atomic="true" [readSourceKeys]="targetKey"></app-foo-read-source>
-    <app-model-loader #tallytypeLoader [source]="tallytypeSource"></app-model-loader>
-    <app-detail-loading-view [loader]="tallytypeLoader">
+    <gae-model-loader #tallytypeLoader [source]="tallytypeSource"></gae-model-loader>
+    <gae-model-loading-view [loader]="tallytypeLoader">
         <div mainView fxLayout="column">
             <div class="form-container-form-view" fxFlex="100%" 
                 appFooUpdateAction appFooUpdateAnalytics #action="appFooUpdateAction"
-                appUpdateModelFormController #control="appUpdateModelFormController" [model]="tallytypeSource.first" [action]="action" [form]="form" [submit]="submit">
+                gaeUpdateModelFormController #control="gaeUpdateModelFormController" [model]="tallytypeSource.first" [action]="action" [form]="form" [submit]="submit">
                 <app-foo-model-form #form hideBeforeInput="true"></app-foo-model-form>
-                <app-submit-view [hidden]="true" appModelChangeFormActionLinkSubmitView #submit action="Save" lockedText="Saved!"></app-submit-view>
+                <gae-submit-view [hidden]="true" appModelChangeFormActionLinkSubmitView #submit action="Save" lockedText="Saved!"></gae-submit-view>
             </div>
         </div>
-    </app-detail-loading-view>
+    </gae-model-loading-view>
 </div>

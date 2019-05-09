@@ -1,9 +1,9 @@
-<div class="form-container" fxLayout="column" appTallyNoteSegue #tallyNoteSegue="appTallyNoteSegue">
+<div class="form-container" fxLayout="column">
     <div class="form-container-form-view" fxFlex="100%" 
         appFooCreateAction appFooCreateAnalytics #action="appFooCreateAction"
-        appCreateModelFormController #control="appCreateModelFormController" appFooSegueToCreatedView [action]="action" [form]="form" [submit]="submit"
+        gaeCreateModelFormController #control="gaeCreateModelFormController" [action]="action" [form]="form" [submit]="submit"
         >
         <app-foo-model-form #form></app-foo-model-form>
-        <app-submit-view [hidden]="true" appModelChangeFormActionLinkSubmitView #submit action="Create Tally" lockedText="Done!"></app-submit-view>
+        <gae-submit-view [hidden]="true" appModelChangeFormActionLinkSubmitView #submit action="Create Foo" lockedText="Done!"></gae-submit-view>
     </div>
 </div>

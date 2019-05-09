@@ -45,7 +45,7 @@ export class GaeActionMessageSnackbarDirective extends AbstractActionSnackbarDir
   }
 
   @Input()
-  public set appActionMessageSnackbar(component: TypedActionObject<ActionEvent>) {
+  public set gaeActionMessageSnackbar(component: TypedActionObject<ActionEvent>) {
     this.setActionObject(component);
   }
 

@@ -6,6 +6,7 @@
 export * from './lib/analytics/action.directive';
 
 // Form
+export * from './lib/form/confirm-delete-form.component';
 export * from './lib/form/confirm-form.component';
 export * from './lib/form/control.component';
 export * from './lib/form/form.component';
@@ -27,6 +28,8 @@ export * from './lib/list/list.module';
 export * from './lib/list/selection-action.directive';
 export * from './lib/list/selection-list.component';
 export * from './lib/list/selection.module';
+export * from './lib/list/source.directive';
+export * from './lib/list/source';
 
 // Loading
 export * from './lib/loading/basic-loading.component';
@@ -38,6 +41,7 @@ export * from './lib/loading/loading';
 
 // Material
 export * from './lib/material/material.module';
+export * from './lib/material/color.component';
 export * from './lib/material/snackbar.directive';
 
 // Model
@@ -47,6 +51,7 @@ export * from './lib/model/action/link.directive';
 export * from './lib/model/action/template.directive';
 export * from './lib/model/action/update.directive';
 export * from './lib/model/form/action-submit.controller';
+export * from './lib/model/form/change-form.component';
 export * from './lib/model/form/create.directive';
 export * from './lib/model/form/delete.directive';
 export * from './lib/model/form/form-submit.controller';
@@ -67,4 +72,8 @@ export * from './lib/shared/action.directive';
 export * from './lib/shared/subscription';
 
 // Segue
-// export * from './lib/state/segue.directive';
+export * from './lib/state/segue.directive';
+export * from './lib/state/segue.module';
+
+// Module
+export * from './lib/module';

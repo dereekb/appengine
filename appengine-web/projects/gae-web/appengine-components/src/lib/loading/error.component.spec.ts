@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
-import { GaeLoadingModule } from './loading.module';
+import { GaeLoadingComponentsModule } from './loading.module';
 import { By } from '@angular/platform-browser';
 import { GaeLoadingProgressComponent } from './loading-progress.component';
 import { ErrorInput } from '@gae-web/appengine-utility';
@@ -10,7 +10,7 @@ describe('GaeErrorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [GaeLoadingModule],
+      imports: [GaeLoadingComponentsModule],
       declarations: [ErrorComponent]
     }).compileComponents();
   }));
