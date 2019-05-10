@@ -70,7 +70,7 @@ export enum SourceState {
 // MARK: Source Classes
 export class SourceEvent<T> {
 
-    constructor(public readonly state: SourceState = SourceState.Reset, public readonly elements: T[] = []) { }
+    constructor(public readonly state: SourceState = SourceState.Reset, public readonly elements: T[] = [], public readonly error?: any) { }
 
 }
 
@@ -193,8 +193,6 @@ export class EndOfSourceError extends BaseError {
 
 export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implements Source<T>, SingleElementReadSource<T> {
 
-    protected readonly _id = Math.random() * 100000;
-
     protected readonly _stream: BehaviorSubject<E>;
 
     protected readonly _streamObs: Observable<E>;
@@ -262,6 +260,10 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
         return this._stream.value.elements;
     }
 
+    protected get currentError() {
+        return this._stream.value.error;
+    }
+
     protected get initialElements(): T[] {
         return [];
     }
@@ -289,8 +291,8 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
         this.setElements(allElements, newState);
     }
 
-    protected setElements(elements: T[], newState: SourceState) {
-        this.updateStream(newState, elements);
+    protected setElements(elements: T[], newState: SourceState, error?: any) {
+        this.updateStream(newState, elements, error);
     }
 
     // MARK: Stop
@@ -313,15 +315,16 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
     /**
      * Sets a new state and updates the stream.
      */
-    protected setState(state: SourceState) {
-        this.updateStream(state);
+    protected setState(state: SourceState, error?: any) {
+        this.updateStream(state, undefined, error);
     }
 
     // MARK: Stream
-    protected updateStream(state: SourceState = this.state, elements: T[] = this.currentElements) {
+    protected updateStream(state: SourceState = this.state, elements: T[] = this.currentElements, error?: any) {
         this.nextStreamUpdate({
             state,
-            elements
+            elements,
+            error
         } as E);
     }
 
@@ -442,9 +445,10 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
             // this._refreshData = data;   // Set refresh Data???
             this.updateWithInput(data);
         }, (error) => {
-            this.updateWithError();
+            this.updateWithError(error);
         }, () => {
-            this.setState(SourceState.Done);    // No more elements from this source.
+            // No more elements from this source.
+            this.setState(SourceState.Done, this.currentError);
         });
     }
 
@@ -473,8 +477,8 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
         this.setElements(elements, SourceState.Done, failed);
     }
 
-    protected setElements(elements: T[], newState: SourceState, failed?: I[]) {
-        this.updateStream(newState, elements, failed);
+    protected setElements(elements: T[], newState: SourceState, failed?: I[], error?: any) {
+        this.updateStream(newState, elements, error, failed);
     }
 
     public refresh() {
@@ -495,11 +499,12 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
     }
 
     // MARK: Stream
-    protected updateStream(state: SourceState = this.state, elements: T[] = this.currentElements, failed: I[] = this.currentFailed) {
+    protected updateStream(state: SourceState = this.state, elements: T[] = this.currentElements, error?: any, failed: I[] = this.currentFailed) {
         this.nextStreamUpdate({
             state,
             elements,
-            failed
+            failed,
+            error
         } as any);
     }
 

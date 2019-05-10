@@ -2,18 +2,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, ViewChild, Input, Inject, forwardRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Observable, of } from 'rxjs';
-import { UniqueModel } from '@gae-web/appengine-utility';
 import { TestModel } from '../model/resource/read.component.spec';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AbstractListViewComponent, ProvideListViewComponent } from './list-view.component';
-import { AbstractListContentComponent } from './list-content.component';
 import { GaeListComponentsModule } from './list.module';
-import { ListViewSource } from './source';
+import { ListViewSource, ListViewSourceState } from './source';
+import { GaeTestModelListComponent, GaeTestModelListContentComponent } from './list-view.component.spec';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
+import { GaeListViewReadSourceDirective } from './source.directive';
+import { ReadSource } from '@gae-web/appengine-client';
+import { ReadService, ReadRequest, ReadResponse } from '@gae-web/appengine-api';
+import { Observable, throwError, of } from 'rxjs';
+import { TestListViewSourceFactory } from './source.spec';
 
-describe('ListViewComponent', () => {
+fdescribe('ListViewWrapperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,6 +27,7 @@ describe('ListViewComponent', () => {
   }));
 
   let component: GaeTestModelListComponent;
+  let wrapper: GaeListViewWrapperComponent<TestModel>;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -33,49 +35,35 @@ describe('ListViewComponent', () => {
     fixture = TestBed.createComponent(TestViewComponent);
     testComponent = fixture.componentInstance;
     component = testComponent.component;
+    wrapper = component.wrapperComponent;
     fixture.detectChanges();
   }));
 
   it('should be created', () => {
-    expect(component).toBeDefined();
+    expect(wrapper).toBeDefined();
   });
 
-  // TODO: Test when the source fails, etc.
+  describe('error state', () => {
+
+    beforeEach(async(() => {
+      testComponent.source = TestListViewSourceFactory.makeErrorSource();
+      fixture.detectChanges();
+    }));
+
+    it('should have an error.', (done) => {
+      wrapper.loadingContext.stream.subscribe((x) => {
+        expect(x.error).toBeDefined();
+        done();
+      });
+    });
+
+    it('should shown the error when the source has an error.', () => {
+      // TODO: Show
+    });
+
+  });
 
 });
-
-@Component({
-  selector: 'gae-test-model-list-content',
-  template: `
-    <div>TODO</div>
-  `
-})
-export class GaeTestModelListContentComponent extends AbstractListContentComponent<TestModel> {
-
-  constructor(@Inject(forwardRef(() => GaeTestModelListComponent)) listView: GaeTestModelListComponent) {
-    super(listView);
-  }
-
-}
-
-@Component({
-  selector: 'gae-test-model-list',
-  template: `
-  <gae-list-view-wrapper>
-    <gae-test-model-list-content></gae-test-model-list-content>
-  </gae-list-view-wrapper>
-  `,
-  providers: [ProvideListViewComponent(GaeTestModelListComponent)]
-})
-export class GaeTestModelListComponent extends AbstractListViewComponent<TestModel> {
-
-  @ViewChild(GaeTestModelListContentComponent)
-  public component: GaeTestModelListContentComponent;
-
-  @ViewChild(GaeListViewWrapperComponent)
-  public wrapperComponent: GaeListViewWrapperComponent<TestModel>;
-
-}
 
 @Component({
   template: `

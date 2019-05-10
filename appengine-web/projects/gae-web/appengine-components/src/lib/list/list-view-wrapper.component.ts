@@ -37,11 +37,14 @@ export class GaeListViewWrapperComponent<T> implements OnDestroy {
         case ListViewSourceState.Done:
           showLoading = false;
           break;
+        case ListViewSourceState.Error:
+          showLoading = false;
+          break;
       }
 
       this._state = event.state;
       this._count = event.elements.length;
-      this._context.setLoading(showLoading);
+      this._context.setError(event.error, showLoading);
     });
   }
 

@@ -8,7 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractUpdateActionDirective } from './update.directive';
 import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { UpdateService, UpdateRequest, UpdateResponse } from '@gae-web/appengine-api/public-api';
+import { UpdateService, UpdateRequest, UpdateResponse } from '@gae-web/appengine-api';
 
 
 describe('TestModelUpdateActionDirective', () => {

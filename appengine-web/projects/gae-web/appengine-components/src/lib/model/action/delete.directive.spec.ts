@@ -8,7 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractDeleteActionDirective } from './delete.directive';
 import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api/public-api';
+import { DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
 
 
 describe('TestModelDeleteActionDirective', () => {

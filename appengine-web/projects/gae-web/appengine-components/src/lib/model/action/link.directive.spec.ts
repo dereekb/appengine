@@ -8,7 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractLinkActionDirective } from './link.directive';
 import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { LinkService, LinkRequest, LinkResponse } from '@gae-web/appengine-api/public-api';
+import { LinkService, LinkRequest, LinkResponse } from '@gae-web/appengine-api';
 
 
 describe('TestModelLinkActionDirective', () => {

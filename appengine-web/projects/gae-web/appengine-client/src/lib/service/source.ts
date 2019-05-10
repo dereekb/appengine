@@ -87,7 +87,7 @@ export class ReadSource<T extends UniqueModel> extends AbstractModelKeyConversio
   }
 
   protected _updateWithReadError(keys: ModelKey[], error: any) {
-    this.setElements([], SourceState.Error, keys);
+    this.setElements([], SourceState.Error, keys, error);
   }
 
 }

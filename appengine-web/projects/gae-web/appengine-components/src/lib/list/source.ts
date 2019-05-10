@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 export interface ListViewSourceEvent<T> {
   readonly state: ListViewSourceState;
   readonly elements: T[];
+  readonly error?: any;
 }
 
 export abstract class ListViewSource<T> {
@@ -80,9 +81,9 @@ export abstract class AbstractListViewSource<T> implements OnDestroy {
             break;
         }
 
-        this.setStreamUpdate(state, next.elements);
+        this.setStreamUpdate(state, next.elements, next.error);
       }, (error) => {
-        this.setStreamError();
+        this.setStreamError(error);
       });
     }
   }
@@ -94,17 +95,19 @@ export abstract class AbstractListViewSource<T> implements OnDestroy {
     });
   }
 
-  protected setStreamUpdate(state: ListViewSourceState, elements: T[]) {
+  protected setStreamUpdate(state: ListViewSourceState, elements: T[], error?: any) {
     this._stream.next({
       state,
-      elements
+      elements,
+      error
     });
   }
 
-  protected setStreamError() {
+  protected setStreamError(error) {
     this._stream.next({
       state: ListViewSourceState.Error,
-      elements: []
+      elements: [],
+      error
     });
   }
 
@@ -149,7 +152,8 @@ export class ConversionListViewSource<I, O> extends AbstractWrappedConversionLis
       map((x) => {
         return {
           elements: this._convertFn(x.elements),
-          state: x.state
+          state: x.state,
+          error: x.error
         };
       })
     );

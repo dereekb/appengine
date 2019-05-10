@@ -1,7 +1,5 @@
 import 'jasmine-expect';
 
-describe('WrappedIterableSource', () => {
-
-  // TODO
+describe('Source', () => {
 
 });

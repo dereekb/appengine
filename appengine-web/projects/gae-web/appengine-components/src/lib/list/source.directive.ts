@@ -9,7 +9,7 @@ import { ListViewComponent } from './list-view.component';
  */
 export abstract class AbstractListViewSourceDirective<T> extends AbstractListViewSource<T> implements AfterViewInit {
 
-  constructor(@Host() @Optional() @Inject(ListViewComponent) private readonly listViewComponent: ListViewComponent<T>) {
+  constructor(@Host() @Optional() @Inject(ListViewComponent) private readonly listViewComponent?: ListViewComponent<T>) {
     super();
   }
 
