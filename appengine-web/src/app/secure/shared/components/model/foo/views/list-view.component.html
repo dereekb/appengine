@@ -1,14 +1,14 @@
 <gae-list-view-wrapper>
-    <md-toolbar listViewToolbar>
-        <a md-icon-button (click)="refresh()" class="list-toolbar-item">
-            <md-icon>refresh</md-icon>
+    <mat-toolbar listViewToolbar>
+        <a mat-icon-button (click)="refresh()" class="list-toolbar-item">
+            <mat-icon>refresh</mat-icon>
         </a>
         <div class="spacer"></div>
         <span>Tallies</span>
-        <a md-icon-button disabled class="list-toolbar-item">
-            <md-icon>filter_list</md-icon>
+        <a mat-icon-button disabled class="list-toolbar-item">
+            <mat-icon>filter_list</mat-icon>
         </a>
-    </md-toolbar>
+    </mat-toolbar>
     <app-foo-list-content></app-foo-list-content>
     <ng-content noCountView select="[noCountView]"></ng-content>
 </gae-list-view-wrapper>

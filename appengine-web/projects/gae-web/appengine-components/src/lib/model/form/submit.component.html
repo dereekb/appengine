@@ -2,7 +2,7 @@
   <ng-content select="above-view"></ng-content>
   <div class="form-submit-view-buttons">
     <span class="form-submit-view-button">
-      <button class="form-submit-view-main-button" md-raised-button [ngClass]="buttonClasses" (click)="clicked()"
+      <button class="form-submit-view-main-button" mat-raised-button [ngClass]="buttonClasses" (click)="clicked()"
         [disabled]="disabled">{{text}}</button>
       <mat-spinner *ngIf="working" class="form-submit-view-button-spinner"></mat-spinner>
     </span>

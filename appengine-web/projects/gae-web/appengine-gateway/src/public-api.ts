@@ -19,6 +19,7 @@ export * from './lib/components/gateway.directive';
 export * from './lib/components/gateway';
 export * from './lib/components/login.directive';
 export * from './lib/components/register.directive';
+export * from './lib/components/signout.directive';
 export * from './lib/components/token.directive';
 
 // Views

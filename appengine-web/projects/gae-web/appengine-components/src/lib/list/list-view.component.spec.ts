@@ -10,6 +10,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractListViewComponent, ProvideListViewComponent } from './list-view.component';
 import { AbstractListContentComponent } from './list-content.component';
 import { GaeListComponentsModule } from './list.module';
+import { ListViewSource } from './source';
 
 describe('ListViewComponent', () => {
 
@@ -37,6 +38,8 @@ describe('ListViewComponent', () => {
   it('should be created', () => {
     expect(component).toBeDefined();
   });
+
+  // TODO: Test when the source fails, etc.
 
 });
 
@@ -72,12 +75,14 @@ export class GaeTestModelListComponent extends AbstractListViewComponent<TestMod
 
 @Component({
   template: `
-    <gae-test-model-list></gae-test-model-list>
+    <gae-test-model-list [source]="source"></gae-test-model-list>
   `
 })
 class TestViewComponent {
 
   @ViewChild(GaeTestModelListComponent)
   public component: GaeTestModelListComponent;
+
+  public source: ListViewSource<TestModel>;
 
 }

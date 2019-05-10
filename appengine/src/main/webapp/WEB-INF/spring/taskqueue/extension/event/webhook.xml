@@ -9,15 +9,7 @@
     <constructor-arg index="2" ref="webHookEventSubmitter"/>
   </bean>
   <!--Event Submitter / Listener-->
-  <bean class="com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterImpl" id="webHookEventSubmitter">
-    <constructor-arg index="0" ref="webHookEventConverter"/>
-    <constructor-arg index="1" ref="webHookEventSubmitterDelegate"/>
-  </bean>
-  <bean class="com.dereekb.gae.server.event.webhook.listener.impl.WebHookEventSubmitterDelegateImpl" id="webHookEventSubmitterDelegate">
-    <constructor-arg index="0" ref="taskScheduler"/>
-    <constructor-arg index="1" ref="eventClientScheduleTaskService"/>
-  </bean>
-  <alias alias="eventClientScheduleTaskService" name="eventServiceScheduleTaskService"/>
+  <bean class="com.dereekb.gae.server.event.webhook.listener.impl.NoopWebHookEventSubmitter" id="webHookEventSubmitter"/>
   <!--Converter-->
   <bean class="com.dereekb.gae.server.event.webhook.service.impl.WebHookEventConverterImpl" id="webHookEventConverter">
     <constructor-arg index="0" ref="webHookEventSerializer"/>

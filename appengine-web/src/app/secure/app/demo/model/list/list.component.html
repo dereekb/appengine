@@ -1,4 +1,9 @@
-<div>
-
-  
+<div appHeightState appFullHeightState class="page" fxLayout="column" appSegue #segue="appSegue">
+  <div infinite-scroll [infiniteScrollDistance]="2" [immediateCheck]="true" [scrollWindow]="false"
+    (scrolled)="listSource.more()">
+    <app-foo-default-query-source #querySource></app-foo-default-query-source>
+    <app-foo-read-source #readSource [readSourceKeys]="querySource.keys"></app-foo-read-source>
+    <ng-container #listSource="gaeListViewKeyQuerySource" gaeListViewKeyQuerySource [readSource]="readSource" [querySource]="querySource"></ng-container>
+    <app-foo-list-view [source]="listSource" (onSelect)="segue.segueToFoo($event)"></app-foo-list-view>
+  </div>
 </div>

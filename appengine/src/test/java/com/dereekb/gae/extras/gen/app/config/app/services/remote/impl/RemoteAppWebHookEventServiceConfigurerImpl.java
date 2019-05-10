@@ -54,7 +54,6 @@ public class RemoteAppWebHookEventServiceConfigurerImpl
 	                                           SpringBeansXMLBuilder builder) {
 
 		String webHookEventConverterBeanId = appConfig.getAppBeans().getWebHookEventConverterBeanId();
-
 		String webHookEventSubmitterBeanId = appConfig.getAppBeans().getWebHookEventSubmitterBeanId();
 		String webHookEventSubmitterDelegateBeanId = "webHookEventSubmitterDelegate";
 

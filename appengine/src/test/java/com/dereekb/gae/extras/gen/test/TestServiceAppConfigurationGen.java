@@ -18,9 +18,9 @@ import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfig
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalAppLoginTokenSecurityConfigurerImpl;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteAppWebHookEventServiceConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.NoopAppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.RemoteServiceConfigurationImpl;
-import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.event.WebHookEventSubmitterImplEventListenerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.event.NoopAppEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.service.AbstractWebServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.AppGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.LoginGroupConfigurationGen;
@@ -68,9 +68,8 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 
 		// Configuration
 		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new LocalAppLoginTokenSecurityConfigurerImpl();
-		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new WebHookEventSubmitterImplEventListenerConfigurer();
-		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new RemoteAppWebHookEventServiceConfigurerImpl(
-		        remoteEventService);
+		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new NoopAppEventListenerConfigurer(); // new WebHookEventSubmitterImplEventListenerConfigurer();
+		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new NoopAppWebHookEventServiceConfigurer(); // new LocalAppWebHookEventServiceConfigurer(); // = new RemoteAppWebHookEventServiceConfigurerImpl(remoteEventService);
 
 		AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer = new AppModelKeyEventListenerConfigurer() {
 
@@ -104,7 +103,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		OAuthClientConfig facebookOAuthConfig = new OAuthClientConfigImpl("431391914300748", "102a10dd9bfa5e2783e57a2f09b0c2ac");
 		appSecurityBeansConfigurer.setFacebookOAuthConfig(facebookOAuthConfig);
 
-		// TODO: Add Google
+		// TODO: Add Google configuration.
 
 		configuration.setAppSecurityBeansConfigurer(appSecurityBeansConfigurer);
 

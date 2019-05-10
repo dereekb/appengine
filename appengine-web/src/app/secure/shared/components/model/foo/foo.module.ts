@@ -12,13 +12,16 @@ import { FooModelFormComponent } from './views/model-form.component';
 import { FooUpdateFormComponent } from './views/update-form.component';
 import { GaeComponentsModule } from '@gae-web/appengine-components';
 import { CommonModule } from '@angular/common';
-import { MatListModule } from '@angular/material';
+import { MatListModule, MatIconModule, MatTabsModule, MatToolbarModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
     GaeComponentsModule,
-    MatListModule
+    MatListModule,
+    MatIconModule,
+    MatTabsModule,
+    MatToolbarModule
   ],
   declarations: [
     // Client
