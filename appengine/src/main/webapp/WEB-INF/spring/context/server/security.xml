@@ -239,5 +239,5 @@
   <!--Other Security-->
   <!--Query Overrides-->
   <bean class="com.dereekb.gae.server.auth.security.model.query.task.impl.AdminOnlySecurityModelQueryTask" id="adminOnlySecurityModelQueryTask"/>
-  <bean class="com.dereekb.gae.server.auth.security.model.query.task.impl.AdminOnlySecurityModelQueryTask" id="allowAllSecurityModelQueryTask"/>
+  <bean class="com.dereekb.gae.server.auth.security.model.query.task.impl.AllowAllSecurityModelQueryTask" id="allowAllSecurityModelQueryTask"/>
 </beans>

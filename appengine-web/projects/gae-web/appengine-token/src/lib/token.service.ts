@@ -6,8 +6,8 @@ import { ExpiredTokenAuthorizationError, TokenAuthorizationError, UnavailableLog
 import { FullStorageObject } from '@gae-web/appengine-utility';
 import { AppTokenStorageService, StoredTokenUnavailableError } from './storage.service';
 
-import { Observable, BehaviorSubject, of, throwError, empty, forkJoin } from 'rxjs';
-import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from } from 'rxjs';
+import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty, share, tap, finalize } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
 import { StorageUtility } from '@gae-web/appengine-utility';
 import { BaseError } from 'make-error';
@@ -53,10 +53,11 @@ export abstract class UserLoginTokenService {
 @Injectable()
 export class LegacyAppTokenUserService implements UserLoginTokenService {
 
+  private refreshTokenLoginObsMap = new Map<string, Observable<LoginTokenPair>>();
   private _pair = new BehaviorSubject<AppTokenUserServicePair | undefined>(undefined);
   private _accessor = new AppTokenLoginAccessor();
 
-  constructor(private _storage: AppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) {}
+  constructor(private _storage: AppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) { }
 
   // MARK: Accessors
   public isAuthenticated(): Observable<boolean> {
@@ -370,7 +371,19 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
   }
 
   private refreshFullToken(refreshToken: LoginTokenPair): Observable<LoginTokenPair> {
-    return this._tokenService.loginWithRefreshToken(refreshToken.token).pipe(
+    let refreshObs = this.refreshTokenLoginObsMap.get(refreshToken.token);
+
+    if (!refreshObs) {
+      refreshObs = this._tokenService.loginWithRefreshToken(refreshToken.token).pipe(
+        finalize(() => {
+          this.refreshTokenLoginObsMap.delete(refreshToken.token);  // Delete once finished.
+        }),
+        share()
+      );
+      this.refreshTokenLoginObsMap.set(refreshToken.token, refreshObs);
+    }
+
+    return refreshObs.pipe(
       catchError((e) => {
         if (e instanceof TokenAuthorizationError) {
           if (e instanceof ExpiredTokenAuthorizationError) {

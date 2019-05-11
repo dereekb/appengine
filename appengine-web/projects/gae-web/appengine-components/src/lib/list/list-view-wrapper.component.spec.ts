@@ -43,7 +43,7 @@ fdescribe('ListViewWrapperComponent', () => {
     expect(wrapper).toBeDefined();
   });
 
-  describe('error state', () => {
+  describe('in error state', () => {
 
     beforeEach(async(() => {
       testComponent.source = TestListViewSourceFactory.makeErrorSource();
@@ -60,6 +60,8 @@ fdescribe('ListViewWrapperComponent', () => {
     it('should shown the error when the source has an error.', () => {
       // TODO: Show
     });
+
+    // TODO: If refresh is pressed again while it an error it should show the error again.
 
   });
 

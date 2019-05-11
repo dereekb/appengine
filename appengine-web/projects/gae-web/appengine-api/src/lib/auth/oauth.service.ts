@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { ApiRouteConfiguration } from '../api.config';
-import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders, HttpParams, HttpBackend } from '@angular/common/http';
 import { share, catchError, map } from 'rxjs/operators';
 import { LoginTokenPair, LoginTokenPairJson, NoLoginSetError } from '@gae-web/appengine-token';
 import { ApiJwtConfigurationError } from '../error';
@@ -16,9 +16,11 @@ export class OAuthLoginApiService {
   public static SERVICE_PATH = '/login/auth/oauth';
 
   private _servicePath: string;
+  private _httpClient: HttpClient;
 
-  constructor(private _httpClient: HttpClient, private _config: ApiRouteConfiguration) {
+  constructor(httpBackend: HttpBackend, private _config: ApiRouteConfiguration) {
     this._servicePath = this._config.root + OAuthLoginApiService.SERVICE_PATH;
+    this._httpClient = new HttpClient(httpBackend);
   }
 
   // MARK: Service

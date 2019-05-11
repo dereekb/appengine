@@ -39,6 +39,7 @@ import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.AdminOnlySecurityModelQueryTask;
+import com.dereekb.gae.server.auth.security.model.query.task.impl.AllowAllSecurityModelQueryTask;
 import com.dereekb.gae.server.auth.security.model.roles.impl.CrudModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl;
@@ -575,7 +576,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean(this.getAppConfig().getAppBeans().getUtilityBeans().getAdminOnlySecurityModelQueryTaskBeanId())
 			        .beanClass(AdminOnlySecurityModelQueryTask.class);
 			builder.bean(this.getAppConfig().getAppBeans().getUtilityBeans().getAllowAllSecurityModelQueryTaskBeanId())
-			        .beanClass(AdminOnlySecurityModelQueryTask.class);
+			        .beanClass(AllowAllSecurityModelQueryTask.class);
 
 			return builder;
 		}
