@@ -82,10 +82,13 @@ export class ClientReadService<T, O> extends AbstractCrudService<T, O> implement
         const modelKeys = request.modelKeys as string[];
         const keysParam = ModelUtility.makeModelKeysParameterWithStringArray(modelKeys);
 
-        const params = {
-            keys: keysParam,
-            atomic: request.atomic ? String(request.atomic) : undefined
+        const params: any = {
+            keys: keysParam
         };
+
+        if (request.atomic) {
+            params.atomic = String(request.atomic);
+        }
 
         const url = this.rootPath + '/' + this.type;
         const obs = this.httpClient.get<ApiResponseJson>(url, {

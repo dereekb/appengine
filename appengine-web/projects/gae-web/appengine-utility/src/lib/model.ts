@@ -114,10 +114,6 @@ export class ModelUtility {
     return result;
   }
 
-  static isInitializedModelKey(key: ModelKey | undefined) {
-    return Boolean(key);
-  }
-
   /**
    * Converts the input modelKeys to a single string that contains all input keys in a comma-separated string.
    */
@@ -283,6 +279,15 @@ export class ModelUtility {
     return result;
   }
 
+  /**
+   * Filters out any falsy (invalid) valid model keys.
+   *
+   * @param key ModelKey.
+   */
+  static isInitializedModelKey(key: ModelKey | undefined) {
+    return Boolean(key) && this.isValidModelKey(key);
+  }
+
   static isNumberModelKey(value: ModelKey | undefined): boolean {
     return (typeof value === 'number') && value !== NO_MODEL_KEY_VALUE;
   }
@@ -310,8 +315,7 @@ export class ModelUtility {
   }
 
   static isValidStringModelKey(value: StringModelKey): boolean {
-    // TODO: Validate String key.
-    return true;
+    return Boolean(value);
   }
 
   static readModelKeyString<T extends UniqueModel>(input: ModelOrKey<T> | undefined, read?: ReadModelKeyFunction<T>): string | undefined {

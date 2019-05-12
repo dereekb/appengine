@@ -26,7 +26,7 @@ export interface SearchOptions {
 }
 
 export interface LimitedSearchRequest extends SearchOptions {
-    readonly isKeysOnly: boolean;
+    readonly isKeysOnly?: boolean;
 }
 
 export interface SearchRequest extends LimitedSearchRequest {
@@ -134,8 +134,9 @@ export class AbstractSearchServiceResponse<T extends UniqueModel> extends RawCli
     // MARK: Internal
     protected get serializer(): SearchResponseDataSerializer<T> {
         if (!this._serializer) {
-            const data = this.raw.response.data.raw;
-            this._serializer = new SearchResponseDataSerializer(this._searchService, data);
+            const data = this.raw.response.data;
+            const searchResultsJson = data.data as SearchResultsJson;
+            this._serializer = new SearchResponseDataSerializer(this._searchService, searchResultsJson);
         }
 
         return this._serializer;
@@ -143,9 +144,15 @@ export class AbstractSearchServiceResponse<T extends UniqueModel> extends RawCli
 
 }
 
+interface SearchResultsJson {
+    modelType: string;
+    data: any;
+    cursor: string;
+}
+
 class SearchResponseDataSerializer<T extends UniqueModel> {
 
-    constructor(private _searchService: AbstractSearchService<T, {}>, private _json: any) { }
+    constructor(private _searchService: AbstractSearchService<T, {}>, private _json: SearchResultsJson) { }
 
     public serializeModels(): T[] {
         const data = this._json.data;
