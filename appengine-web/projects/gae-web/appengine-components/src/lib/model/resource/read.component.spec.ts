@@ -102,7 +102,7 @@ export class TestModelReadService implements ReadService<TestModel> {
 
 }
 
-export class TestReadSource extends ReadSourceFactory<TestModel> {
+export class TestReadSourceFactory extends ReadSourceFactory<TestModel> {
 
   constructor() {
     super(new TestModelReadService());
@@ -118,7 +118,7 @@ export class TestReadSource extends ReadSourceFactory<TestModel> {
 export class TestModelReadSourceComponent extends AbstractReadSourceComponent<TestModel> {
 
   constructor() {
-    super(new TestReadSource());
+    super(new TestReadSourceFactory());
   }
 
 }

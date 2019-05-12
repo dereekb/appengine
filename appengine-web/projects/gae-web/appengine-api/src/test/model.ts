@@ -1,6 +1,7 @@
 import { of, Observable } from 'rxjs';
-import { ValueUtility, ModelKey, NumberModelKey } from '@gae-web/appengine-utility';
+import { ValueUtility, ModelKey, NumberModelKey, UniqueModel, ModelUtility } from '@gae-web/appengine-utility';
 import { ReadService, ReadResponse, ReadRequest } from '../lib/model/crud/read.service';
+import { QueryService, ModelSearchResponse, SearchRequest } from '../public-api';
 
 export class TestReadService<T> implements ReadService<T> {
 
@@ -33,6 +34,62 @@ export class TestReadService<T> implements ReadService<T> {
       models,
       failed: keysSeparation.excluded
     });
+  }
+
+}
+
+export class TestQueryService<T extends UniqueModel> implements QueryService<T> {
+
+  public cursor = 'abcd=';
+
+  private _keyResults: ModelKey[];
+  private _modelResults: T[];
+
+  get keyResults() {
+    return this._keyResults;
+  }
+
+  set keyResults(keyResults) {
+    this._keyResults = keyResults;
+  }
+
+  get modelResults() {
+    return this._modelResults;
+  }
+
+  set modelResults(modelResults) {
+    this._modelResults = modelResults;
+
+    if (modelResults) {
+      this.keyResults = ModelUtility.readModelKeys(modelResults);
+    }
+  }
+
+  query(request: SearchRequest): Observable<ModelSearchResponse<T>> {
+
+    let keyResults: ModelKey[] = this._keyResults;
+    let modelResults: T[];
+
+    if (request.isKeysOnly === false) {
+      modelResults = this._modelResults;
+    }
+
+    if (request.limit) {
+      keyResults = keyResults.slice(0, request.limit);
+
+      if (modelResults) {
+        modelResults = modelResults.slice(0, request.limit);
+      }
+    }
+
+    const response: ModelSearchResponse<T> = {
+      isKeysOnlyResponse: request.isKeysOnly,
+      modelResults,
+      cursor: this.cursor,
+      keyResults
+    };
+
+    return of(response);
   }
 
 }

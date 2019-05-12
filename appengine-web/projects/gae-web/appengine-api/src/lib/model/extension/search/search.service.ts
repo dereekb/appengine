@@ -35,7 +35,7 @@ export interface SearchRequest extends LimitedSearchRequest {
 
 export interface ModelSearchResponse<T> extends SearchResponse {
     readonly isKeysOnlyResponse: boolean;
-    readonly modelResults: T[];
+    readonly modelResults?: T[];
 }
 
 export interface SearchResponse {

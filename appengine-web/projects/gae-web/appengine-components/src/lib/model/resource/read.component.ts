@@ -59,11 +59,11 @@ export abstract class AbstractReadSourceComponent<T extends UniqueModel> extends
     return this.source.failedStream;
   }
 
-  @Input()
   get readSourceKeys(): Observable<ModelKey | ModelKey[]> {
     return this.source.input;
   }
 
+  @Input()
   set readSourceKeys(input: Observable<ModelKey | ModelKey[]> | undefined) {
     this.setSourceInput(input);
   }

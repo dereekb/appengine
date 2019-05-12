@@ -1,9 +1,13 @@
-import { UniqueModel, ModelKey, ModelUtility, ConversionSource, AbstractConversionSource,
-         SourceState, SourceFactory, IterableSource, AbstractSource, ControllableSource, SourceEvent } from '@gae-web/appengine-utility';
-import { ReadService, ReadRequest, ReadResponse, SearchCursor, SearchParameters, QueryService, SearchRequest, ModelSearchResponse } from '@gae-web/appengine-api';
+import {
+  ValueUtility, UniqueModel, ModelKey, ModelUtility, ConversionSource, AbstractConversionSource,
+  SourceState, SourceFactory, IterableSource, AbstractSource, ControllableSource, SourceEvent, SubscriptionObject
+} from '@gae-web/appengine-utility';
+import {
+  ReadService, ReadRequest, ReadResponse, SearchCursor,
+  SearchParameters, QueryService, SearchRequest, ModelSearchResponse
+} from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
 import { map, share } from 'rxjs/operators';
-import { ValueUtility } from '@gae-web/appengine-utility';
 
 // MARK: Read Source
 export interface ReadSourceConfiguration {
@@ -37,7 +41,7 @@ export const DEFAULT_READ_SOURCE_CONFIG: ReadSourceConfiguration = {
 };
 
 /**
- * ReadSource that watches another observable for keys.
+ * ReadSource that watches an input observable for keys.
  */
 export class ReadSource<T extends UniqueModel> extends AbstractModelKeyConversionSource<T> implements ModelKeyReadSource<T> {
 
@@ -128,16 +132,16 @@ export interface QueryIterableSource<T> extends IterableSource<T> {
 }
 
 /**
- * IterableSource that uses queries.
+ * QueryIterableSource implementation that uses a QueryService.
  */
+// TODO: Can probably remove the typing info here, since we're only querying on keys.
 export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelKey> implements QueryIterableSource<ModelKey> {
 
   private _config: QuerySourceConfiguration = DEFAULT_CONFIG;
 
   private _result: KeyResultPair<T>;
 
-  private _nextSub?: Subscription;
-
+  private _nextSub = new SubscriptionObject();
   private _next?: Promise<ModelKey[]>;    // Next Promise.
 
   private done = false;
@@ -203,7 +207,26 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
   }
 
   private doNext(): Promise<ModelKey[]> {
-    const obs = this.makeNext();
+    const obs = this.makeNext().pipe();
+
+    // TODO: Replace this function with something like below.
+    /*
+    const nextObs = this.makeNext();
+
+    const obs = nextObs.pipe(
+      share()
+    );
+
+    this._nextSub.subscription = obs.subscribe((result) => {
+      this.updateWithResult(result);
+    }, (error) => {
+      this.updateWithError(error);
+    });
+
+    const promise = obs.pipe(
+      map((x) => x.keys)
+    ).toPromise();
+    */
 
     let promiseDone = false;
     let resolve: (keys: ModelKey[]) => void;
@@ -214,7 +237,7 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
       reject = y;
     });
 
-    this._nextSub = obs.subscribe((result) => {
+    this._nextSub.subscription = obs.subscribe((result) => {
       resolve(result.keys);
       promiseDone = true;
 
@@ -292,12 +315,7 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
   }
 
   private clearNext() {
-    if (this._nextSub) {
-      this._nextSub.unsubscribe();
-      this._nextSub = undefined;
-    }
-
-    this._nextSub = undefined;
+    this._nextSub.unsub();
     this._next = undefined;
   }
 
@@ -359,24 +377,25 @@ export class DefaultKeyResultPair<T> extends KeyResultPair<T> {
 
 // MARK: Merged
 /**
- * MergedReadQuerySource that forwards all functions to the query source,
- * but uses the read source as the element stream.
+ * Special ControllableSource implementation that wraps both a ReadSource and a KeyQuerySource,
+ * and forwards all ControllableSource requests to the KeyQuerySource.
+ *
+ * Will automatically bind the querySource's keys to the readSource's input.
  */
 export class MergedReadQuerySource<T extends UniqueModel> implements ControllableSource<T> {
 
   private _stream: Observable<SourceEvent<T>>;
 
-  /*
-  private _nextSubject = new Subject<{}>;
-  private _nextObs: Observable<{}>;
-  */
-  constructor(private _readSource?: ReadSource<T>, private _querySource?: KeyQuerySource<T>) {
-    let readUpdated = false;
+  constructor(private _readSource: ReadSource<T>, private _querySource: KeyQuerySource<T>, autoBindQuerySourceAsReadInput: boolean = true) {
+    if (autoBindQuerySourceAsReadInput) {
+      _readSource.input = _querySource.elements;
+    }
 
+    let readUpdated = false;
     this._stream = combineLatest(this._readSource.stream, this._querySource.stream).pipe(
       map(([read, query]) => {
 
-        // Whenever the query state becomes 2, and read isn't 2 yet, the read still has to catch up.
+        // Whenever the query state becomes Loading, and read isn't Loading yet, the read still has to catch up.
         // Without this, the result will sometimes return an "Idle" state before the read updates itself.
         // This issue would allow another next() to be called immediately after the query completes, but not the read source.
         if (query.state === SourceState.Loading && read.state !== SourceState.Loading) {
@@ -389,7 +408,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
 
         // Check if the read state is either idle or done, then defer to query state.
         if (state === SourceState.Idle || state === SourceState.Done) {
-          if (!readUpdated) {
+          if (readUpdated === false && query.state !== SourceState.Done) {
             state = SourceState.Loading;
           } else {
             state = query.state;
@@ -403,7 +422,8 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
           failed: read.failed,
           state
         };
-      })
+      }),
+      share()
     );
   }
 
@@ -435,6 +455,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
   reset() {
     this._querySource.reset();
     // this._readSource.reset();
+    // TODO: Uncomment?
   }
 
 }

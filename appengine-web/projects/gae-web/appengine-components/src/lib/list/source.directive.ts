@@ -1,8 +1,10 @@
 import { Input, Directive, Inject, AfterViewInit, Host, Optional } from '@angular/core';
-import { ControllableSource, UniqueModel } from '@gae-web/appengine-utility';
+import { ControllableSource, UniqueModel, SourceEvent, SourceState } from '@gae-web/appengine-utility';
 import { ReadSource, KeyQuerySource, MergedReadQuerySource } from '@gae-web/appengine-client';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState, AbstractListViewSource } from './source';
 import { ListViewComponent } from './list-view.component';
+import { Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * Abstract source directive that auto-binds to a ListViewComponent.
@@ -22,7 +24,7 @@ export abstract class AbstractListViewSourceDirective<T> extends AbstractListVie
 }
 
 /**
- * Implementation for a read source.
+ * ListViewSource implementation that uses a ReadSource.
  */
 @Directive({
   selector: '[gaeListViewReadSource]',
@@ -50,7 +52,8 @@ export class GaeListViewReadSourceDirective<T extends UniqueModel> extends Abstr
 }
 
 /**
- * Implementation for a query source.
+ * ListViewSource implementation that uses a MergedReadQuerySource
+ * to automatically bind the query and read source together, and act as the ListViewSource.
  */
 @Directive({
   selector: '[gaeListViewKeyQuerySource]',

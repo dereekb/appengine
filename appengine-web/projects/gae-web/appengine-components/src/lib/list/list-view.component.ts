@@ -2,7 +2,6 @@ import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Ty
 import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
 import { Source, SourceState, ControllableSource, SubscriptionObject } from '@gae-web/appengine-utility';
 import { UniqueModel } from '@gae-web/appengine-utility';
-import { ReadSource, KeyQuerySource, MergedReadQuerySource } from '@gae-web/appengine-client';
 import { map, flatMap, share, startWith, tap, catchError } from 'rxjs/operators';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState } from './source';
 
