@@ -2,9 +2,11 @@ import { of, Observable } from 'rxjs';
 import { ValueUtility, ModelKey, NumberModelKey, UniqueModel, ModelUtility } from '@gae-web/appengine-utility';
 import { ReadService, ReadResponse, ReadRequest } from '../lib/model/crud/read.service';
 import { QueryService, ModelSearchResponse, SearchRequest } from '../public-api';
+import { delay } from 'rxjs/operators';
 
 export class TestReadService<T> implements ReadService<T> {
 
+  public loadingTime?: number;
   private _filteredKeysSet: Set<ModelKey>;
 
   constructor(public readonly type: string, private makeFn: (key: ModelKey) => T) {
@@ -30,10 +32,18 @@ export class TestReadService<T> implements ReadService<T> {
       return foo;
     });
 
-    return of({
+    const obs = of({
       models,
       failed: keysSeparation.excluded
     });
+
+    if (this.loadingTime) {
+      return obs.pipe(
+        delay(this.loadingTime)
+      );
+    } else {
+      return obs;
+    }
   }
 
 }
@@ -80,6 +90,12 @@ export class TestQueryService<T extends UniqueModel> implements QueryService<T> 
       if (modelResults) {
         modelResults = modelResults.slice(0, request.limit);
       }
+    }
+
+    if (request.cursor) {
+      // When a cursor is passed, we're out of elements.
+      modelResults = [];
+      keyResults = [];
     }
 
     const response: ModelSearchResponse<T> = {

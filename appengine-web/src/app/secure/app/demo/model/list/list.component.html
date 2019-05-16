@@ -1,8 +1,9 @@
 <div appHeightState appFullHeightState class="page" fxLayout="column" appSegue #segue="appSegue">
+  <button mat-button (clicked)="create()">Create</button>
   <div infinite-scroll [infiniteScrollDistance]="2" [immediateCheck]="true" [scrollWindow]="false"
     (scrolled)="listSource.more()">
+    <app-foo-read-source #readSource></app-foo-read-source>
     <app-foo-default-query-source #querySource></app-foo-default-query-source>
-    <app-foo-read-source #readSource [readSourceKeys]="querySource.keys"></app-foo-read-source>
     <app-foo-list-view gaeListViewKeyQuerySource [readSource]="readSource" [querySource]="querySource" (onSelect)="segue.segueToFoo($event)"></app-foo-list-view>
   </div>
 </div>

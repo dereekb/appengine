@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewEncapsulation, Inject } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation, Inject, ChangeDetectorRef, ViewChild, AfterViewInit } from '@angular/core';
 
 import { ListViewComponent } from './list-view.component';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
@@ -14,7 +14,7 @@ import { SimpleLoadingContext, LoadingContext } from '../loading/loading';
   templateUrl: './list-view-wrapper.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class GaeListViewWrapperComponent<T> implements OnDestroy {
+export class GaeListViewWrapperComponent<T> implements AfterViewInit, OnDestroy {
 
   private _count: number;
   private _state: ListViewSourceState;
@@ -22,7 +22,13 @@ export class GaeListViewWrapperComponent<T> implements OnDestroy {
   private _context = new SimpleLoadingContext();
   private _sub = new SubscriptionObject();
 
-  constructor(@Inject(ListViewComponent) private _listView: ListViewComponent<T>) {
+  @ViewChild('toolbar') customToolbarContent;
+  @ViewChild('empty') customEmptyContent;
+
+  private _hasCustomToolbar;
+  private _hasCustomEmpty;
+
+  constructor(@Inject(ListViewComponent) private _listView: ListViewComponent<T>, private cdRef: ChangeDetectorRef) {
     this._sub.subscription = _listView.stream.pipe(
       flatMap(x => x.source)
     ).subscribe((event) => {
@@ -46,6 +52,12 @@ export class GaeListViewWrapperComponent<T> implements OnDestroy {
       this._count = event.elements.length;
       this._context.setError(event.error, showLoading);
     });
+  }
+
+  ngAfterViewInit() {
+    this._hasCustomToolbar = Boolean(this.customToolbarContent);
+    this._hasCustomEmpty = Boolean(this.customEmptyContent);
+    this.cdRef.detectChanges();
   }
 
   ngOnDestroy() {

@@ -13,6 +13,8 @@ import { ReadSource } from '@gae-web/appengine-client';
 import { ReadService, ReadRequest, ReadResponse } from '@gae-web/appengine-api';
 import { Observable, throwError, of } from 'rxjs';
 import { TestListViewSourceFactory } from './source.spec';
+import { filter } from 'rxjs/operators';
+import { GaeErrorComponent } from '../loading/error.component';
 
 fdescribe('ListViewWrapperComponent', () => {
 
@@ -43,6 +45,103 @@ fdescribe('ListViewWrapperComponent', () => {
     expect(wrapper).toBeDefined();
   });
 
+  describe('it should show the toolbar', () => {
+
+  });
+
+  describe('with hide content', () => {
+
+    describe('it should hide the toolbar', () => {
+
+    });
+
+    describe('it should hide the toolbar', () => {
+
+    });
+
+  });
+
+  describe('complete', () => {
+
+    describe('with elements', () => {
+
+      const modelKeys = [1, 2, 3];
+
+      beforeEach(async(() => {
+        testComponent.source = TestListViewSourceFactory.makeSource(modelKeys);
+        fixture.detectChanges();
+      }));
+
+      it('canLoadMore() on the component should be false', (done) => {
+        wrapper.loadingContext.stream.pipe(
+          filter((x) => x.isLoading === false)
+        ).subscribe((x) => {
+          expect(component.canLoadMore).toBe(false);
+          done();
+        });
+      });
+
+      it('should have elements', (done) => {
+        wrapper.loadingContext.stream.pipe(
+          filter((x) => x.isLoading === false)
+        ).subscribe((x) => {
+          expect(wrapper.count).toBe(modelKeys.length);
+          expect(wrapper.state).toBe(ListViewSourceState.Done);
+          done();
+        });
+      });
+
+      it('should display the list.', (done) => {
+        wrapper.loadingContext.stream.pipe(
+          filter((x) => x.isLoading === false)
+        ).subscribe((x) => {
+          const listComponentQueryResult = fixture.debugElement.query(By.directive(GaeTestModelListContentComponent));
+          expect(listComponentQueryResult).not.toBeNull();
+          done();
+        });
+      });
+
+      it('should display the list done content.', (done) => {
+        wrapper.loadingContext.stream.pipe(
+          filter((x) => x.isLoading === false)
+        ).subscribe((x) => {
+          const listComponentQueryResult = fixture.debugElement.query(By.css('.list-view-done'));
+          expect(listComponentQueryResult).not.toBeNull();
+          done();
+        });
+      });
+
+    });
+
+    describe('with no elements', () => {
+
+      beforeEach(async(() => {
+        testComponent.source = TestListViewSourceFactory.makeEmptySource();
+        fixture.detectChanges();
+      }));
+
+      it('should have no elements', (done) => {
+        wrapper.loadingContext.stream.pipe(
+          filter((x) => x.isLoading === false)
+        ).subscribe((x) => {
+          expect(wrapper.count).toBe(0);
+          expect(wrapper.state).toBe(ListViewSourceState.Done);
+          done();
+        });
+      });
+
+      // TODO: It should show no elements.
+
+    });
+
+  });
+
+  describe('incomplete', () => {
+
+    // TODO: it should show load more.
+
+  });
+
   describe('in error state', () => {
 
     beforeEach(async(() => {
@@ -57,8 +156,12 @@ fdescribe('ListViewWrapperComponent', () => {
       });
     });
 
-    it('should shown the error when the source has an error.', () => {
-      // TODO: Show
+    it('should display the error.', (done) => {
+      wrapper.loadingContext.stream.subscribe((x) => {
+        const errorComponentQueryResult = fixture.debugElement.query(By.directive(GaeErrorComponent));
+        expect(errorComponentQueryResult).not.toBeNull();
+        done();
+      });
     });
 
     // TODO: If refresh is pressed again while it an error it should show the error again.
@@ -67,9 +170,20 @@ fdescribe('ListViewWrapperComponent', () => {
 
 });
 
+
+const CUSTOM_TOOLBAR_ID = 'custom-toolbar';
+const CUSTOM_EMPTY_ID = 'custom-empty';
+
 @Component({
   template: `
-    <gae-test-model-list [source]="source"></gae-test-model-list>
+    <gae-test-model-list [source]="source">
+      <div toolbar>
+        <p id="${CUSTOM_TOOLBAR_ID}"></p>
+      </div>
+      <div empty>
+        <p id="${CUSTOM_EMPTY_ID}"></p>
+      </div>
+    </gae-test-model-list>
   `
 })
 class TestViewComponent {

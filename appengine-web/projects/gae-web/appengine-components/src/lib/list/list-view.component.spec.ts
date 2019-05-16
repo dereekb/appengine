@@ -7,13 +7,15 @@ import { UniqueModel } from '@gae-web/appengine-utility';
 import { TestModel } from '../model/resource/read.component.spec';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AbstractListViewComponent, ProvideListViewComponent } from './list-view.component';
+import { AbstractListViewComponent, ProvideListViewComponent, ListViewState } from './list-view.component';
 import { AbstractListContentComponent } from './list-content.component';
 import { GaeListComponentsModule } from './list.module';
-import { ListViewSource } from './source';
+import { ListViewSource, ListViewSourceState } from './source';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
+import { TestListViewSourceFactory } from './source.spec';
+import { filter, flatMap } from 'rxjs/operators';
 
-describe('ListViewComponent', () => {
+fdescribe('ListViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -40,6 +42,31 @@ describe('ListViewComponent', () => {
     expect(component).toBeDefined();
   });
 
+  describe('complete', () => {
+
+    describe('with elements', () => {
+
+      const modelKeys = [1, 2, 3];
+
+      beforeEach(async(() => {
+        testComponent.source = TestListViewSourceFactory.makeSource(modelKeys);
+        fixture.detectChanges();
+      }));
+
+      it('canLoadMore() on the component should be false', (done) => {
+        component.stream.pipe(
+          flatMap((x) => x.source),
+          filter((x) => x.state === ListViewSourceState.Done)
+        ).subscribe((x) => {
+          expect(component.canLoadMore).toBe(false);
+          done();
+        });
+      });
+
+    });
+
+  });
+
   // TODO: Test when the source fails, etc.
 
 });
@@ -62,7 +89,9 @@ export class GaeTestModelListContentComponent extends AbstractListContentCompone
   selector: 'gae-test-model-list',
   template: `
   <gae-list-view-wrapper>
-    <gae-test-model-list-content></gae-test-model-list-content>
+    <ng-content toolbar select="[toolbar]"></ng-content>
+    <gae-test-model-list-content list></gae-test-model-list-content>
+    <ng-content empty select="[empty]"></ng-content>
   </gae-list-view-wrapper>
   `,
   providers: [ProvideListViewComponent(GaeTestModelListComponent)]
