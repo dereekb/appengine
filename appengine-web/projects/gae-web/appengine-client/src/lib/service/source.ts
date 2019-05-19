@@ -415,7 +415,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
           }
         }
 
-        // console.log('rs: ' + read.state + ' qs: ' + query.state + 'State: ' + state);
+        console.log('rs: ' + read.state + ' qs: ' + query.state + ' state: ' + state);
 
         return {
           elements: read.elements,

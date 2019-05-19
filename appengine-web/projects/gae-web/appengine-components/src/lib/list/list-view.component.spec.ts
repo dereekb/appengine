@@ -1,11 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, ViewChild, Input, Inject, forwardRef, ChangeDetectorRef } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { Observable, of } from 'rxjs';
-import { UniqueModel } from '@gae-web/appengine-utility';
-import { TestModel } from '../model/resource/read.component.spec';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractListViewComponent, ProvideListViewComponent, ListViewState } from './list-view.component';
 import { AbstractListContentComponent } from './list-content.component';
@@ -14,6 +9,7 @@ import { ListViewSource, ListViewSourceState } from './source';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { TestListViewSourceFactory } from './source.spec';
 import { filter, flatMap } from 'rxjs/operators';
+import { TestFoo } from '@gae-web/appengine-api';
 
 describe('ListViewComponent', () => {
 
@@ -23,11 +19,11 @@ describe('ListViewComponent', () => {
         GaeListComponentsModule,
         NoopAnimationsModule
       ],
-      declarations: [GaeTestModelListComponent, GaeTestModelListContentComponent, TestViewComponent]
+      declarations: [GaeTestFooListComponent, GaeTestFooListContentComponent, TestViewComponent]
     }).compileComponents();
   }));
 
-  let component: GaeTestModelListComponent;
+  let component: GaeTestFooListComponent;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -77,9 +73,9 @@ describe('ListViewComponent', () => {
     <div>TODO</div>
   `
 })
-export class GaeTestModelListContentComponent extends AbstractListContentComponent<TestModel> {
+export class GaeTestFooListContentComponent extends AbstractListContentComponent<TestFoo> {
 
-  constructor(@Inject(forwardRef(() => GaeTestModelListComponent)) listView: GaeTestModelListComponent) {
+  constructor(@Inject(forwardRef(() => GaeTestFooListComponent)) listView: GaeTestFooListComponent) {
     super(listView);
   }
 
@@ -94,15 +90,15 @@ export class GaeTestModelListContentComponent extends AbstractListContentCompone
     <ng-content empty select="[empty]"></ng-content>
   </gae-list-view-wrapper>
   `,
-  providers: [ProvideListViewComponent(GaeTestModelListComponent)]
+  providers: [ProvideListViewComponent(GaeTestFooListComponent)]
 })
-export class GaeTestModelListComponent extends AbstractListViewComponent<TestModel> {
+export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> {
 
-  @ViewChild(GaeTestModelListContentComponent)
-  public component: GaeTestModelListContentComponent;
+  @ViewChild(GaeTestFooListContentComponent)
+  public component: GaeTestFooListContentComponent;
 
   @ViewChild(GaeListViewWrapperComponent)
-  public wrapperComponent: GaeListViewWrapperComponent<TestModel>;
+  public wrapperComponent: GaeListViewWrapperComponent<TestFoo>;
 
 }
 
@@ -113,9 +109,9 @@ export class GaeTestModelListComponent extends AbstractListViewComponent<TestMod
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestModelListComponent)
-  public component: GaeTestModelListComponent;
+  @ViewChild(GaeTestFooListComponent)
+  public component: GaeTestFooListComponent;
 
-  public source: ListViewSource<TestModel>;
+  public source: ListViewSource<TestFoo>;
 
 }

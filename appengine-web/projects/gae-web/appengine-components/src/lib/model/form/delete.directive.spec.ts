@@ -4,13 +4,13 @@ import { By } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { FormBuilder, Validators } from '@angular/forms';
-import { TestModelDeleteActionDirective } from '../action/delete.directive.spec';
+import { TestFooDeleteActionDirective } from '../action/delete.directive.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GaeDeleteModelFormControllerDirective } from './delete.directive';
-import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { GaeTestModelModelFormComponent } from '../../form/model.component.spec';
+import { GaeTestFooModelFormComponent } from '../../form/model.component.spec';
 import { GaeFormComponentsModule } from '../../form/form.module';
+import { TestFoo } from '@gae-web/appengine-api';
 
 describe('GaeDeleteModelFormControllerDirective', () => {
 
@@ -22,8 +22,8 @@ describe('GaeDeleteModelFormControllerDirective', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        TestModelDeleteActionDirective,
-        GaeTestModelModelFormComponent,
+        TestFooDeleteActionDirective,
+        GaeTestFooModelFormComponent,
         TestViewComponent
       ]
     }).compileComponents();
@@ -57,7 +57,7 @@ describe('GaeDeleteModelFormControllerDirective', () => {
 @Component({
   template: `
     <div>
-      <ng-container gaeTestModelDeleteAction #action="gaeTestModelDeleteAction"></ng-container>
+      <ng-container gaeTestFooDeleteAction #action="gaeTestFooDeleteAction"></ng-container>
       <gae-confirm-delete-model-form #form [input]=""></gae-confirm-delete-model-form>
       <gae-submit-view #submit [hidden]="true"></gae-submit-view>
       <ng-container gaeDeleteModelFormController #control="gaeDeleteModelFormController" [action]="action" [form]="form" [submit]="submit"></ng-container>
@@ -67,9 +67,9 @@ describe('GaeDeleteModelFormControllerDirective', () => {
 class TestViewComponent {
 
   @ViewChild(GaeDeleteModelFormControllerDirective)
-  public action: GaeDeleteModelFormControllerDirective<TestModel>;
+  public action: GaeDeleteModelFormControllerDirective<TestFoo>;
 
   @ViewChild(GaeDeleteModelFormControllerDirective)
-  public directive: GaeDeleteModelFormControllerDirective<TestModel>;
+  public directive: GaeDeleteModelFormControllerDirective<TestFoo>;
 
 }

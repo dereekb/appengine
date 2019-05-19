@@ -11,4 +11,6 @@ export * from './lib/service/wrapper';
 
 // Test
 export * from './test/foo.module';
+export * from './test/foo.service';
+export * from './test/foo.testing';
 // export * from './test/boo.module';

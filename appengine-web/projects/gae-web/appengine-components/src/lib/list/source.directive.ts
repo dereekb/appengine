@@ -59,12 +59,17 @@ export class GaeListViewReadSourceDirective<T extends UniqueModel> extends Abstr
   selector: '[gaeListViewKeyQuerySource]',
   exportAs: 'gaeListViewKeyQuerySource'
 })
-export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends AbstractListViewSourceDirective<T> implements ListViewSource<T> {
+export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends AbstractListViewSourceDirective<T> implements ListViewSource<T>, AfterViewInit {
+
+  private _initialized = false;
 
   private _source: ControllableSource<T>;
 
   private _readSource?: ReadSource<T>;
   private _querySource?: KeyQuerySource<T>;
+
+  @Input()
+  public autoResetQuery = true;
 
   @Input()
   public set readSource(source: ReadSource<T> | undefined) {
@@ -78,11 +83,24 @@ export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends A
     this._update();
   }
 
+  public ngAfterViewInit() {
+    this._initialized = true;
+    this._resetForUpdate();
+  }
+
   // MARK: Update
   private _update() {
     if (this._readSource && this._querySource) {
       this._source = new MergedReadQuerySource<T>(this._readSource, this._querySource);
       super.setSource(this._source);
+      this._resetForUpdate();
+    }
+  }
+
+  private _resetForUpdate() {
+    if (this._initialized && this.autoResetQuery) {
+      // Automatically reset to pull first results.
+      this._source.reset();
     }
   }
 

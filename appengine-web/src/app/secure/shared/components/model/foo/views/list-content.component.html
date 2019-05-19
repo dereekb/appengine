@@ -4,8 +4,11 @@
     <h3 class="list-item-title" mat-line>{{ foo?.name }}</h3>
     <p class="list-item-detail" mat-line>{{ foo?.number }}</p>
   </a>
-  <a mat-list-item class="list-content-more" (click)="loadMore()" *ngIf="canLoadMore">
-    <mat-icon mat-list-icon>chevron_right</mat-icon>
-    <p mat-line>Load More</p>
-  </a>
+  <ng-container>
+      <p>Can Load More: {{ canLoadMore }}</p>
+    <a mat-list-item class="list-content-more" (click)="loadMore()" *ngIf="canLoadMore">
+      <mat-icon mat-list-icon>chevron_right</mat-icon>
+      <p mat-line>Load More</p>
+    </a>
+  </ng-container>
 </mat-nav-list>

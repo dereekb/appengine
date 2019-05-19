@@ -15,7 +15,7 @@ export class TestFoo extends AbstractDatabaseModel implements DatedModel {
 
   public date: DateTime;
 
-  constructor(key?: NumberModelKey) {
+  constructor(key?: NumberModelKey, public name?: string) {
     super();
 
     if (key) {

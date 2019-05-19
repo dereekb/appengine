@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, ViewChild, Input, Inject, forwardRef } from '@angular/core';
-import { TestModel, TestModelReadSourceComponent } from '../model/resource/read.component.spec';
+import { TestFooReadSourceComponent } from '../model/resource/read.component.spec';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractListViewComponent, ProvideListViewComponent } from './list-view.component';
@@ -11,6 +11,7 @@ import { GaeSelectionListViewComponent } from './selection-list.component';
 import { GaeSelectionListComponentsModule } from './selection.module';
 import { GaeModelComponentsModule } from '../model/model.module';
 import { GaeMaterialComponentsModule } from '../material/material.module';
+import { TestFoo } from '@gae-web/appengine-api';
 
 describe('GaeSelectionListViewComponent', () => {
 
@@ -21,11 +22,11 @@ describe('GaeSelectionListViewComponent', () => {
         GaeSelectionListComponentsModule,
         NoopAnimationsModule
       ],
-      declarations: [TestModelReadSourceComponent, TestViewComponent]
+      declarations: [TestFooReadSourceComponent, TestViewComponent]
     }).compileComponents();
   }));
 
-  let component: GaeSelectionListViewComponent<TestModel>;
+  let component: GaeSelectionListViewComponent<TestFoo>;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -53,6 +54,6 @@ describe('GaeSelectionListViewComponent', () => {
 class TestViewComponent {
 
   @ViewChild(GaeSelectionListViewComponent)
-  public component: GaeSelectionListViewComponent<TestModel>;
+  public component: GaeSelectionListViewComponent<TestFoo>;
 
 }

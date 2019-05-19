@@ -6,12 +6,11 @@ import { UniqueModel, ValueUtility } from '@gae-web/appengine-utility';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractLinkActionDirective } from './link.directive';
-import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { LinkService, LinkRequest, LinkResponse } from '@gae-web/appengine-api';
+import { LinkService, LinkRequest, LinkResponse, TestFoo } from '@gae-web/appengine-api';
 
 
-describe('TestModelLinkActionDirective', () => {
+describe('TestFooLinkActionDirective', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,13 +19,13 @@ describe('TestModelLinkActionDirective', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        TestModelLinkActionDirective,
+        TestFooLinkActionDirective,
         TestViewComponent
       ]
     }).compileComponents();
   }));
 
-  let directive: TestModelLinkActionDirective;
+  let directive: TestFooLinkActionDirective;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -43,7 +42,7 @@ describe('TestModelLinkActionDirective', () => {
 
 });
 
-export class TestModelLinkService implements LinkService {
+export class TestFooLinkService implements LinkService {
 
   updateLinks(request: LinkRequest): Observable<LinkResponse> {
     const linkResponse: LinkResponse = {
@@ -58,25 +57,25 @@ export class TestModelLinkService implements LinkService {
 }
 
 @Directive({
-  selector: '[gaeTestModelLinkAction]',
-  exportAs: 'gaeTestModelLinkAction'
+  selector: '[gaeTestFooLinkAction]',
+  exportAs: 'gaeTestFooLinkAction'
 })
-export class TestModelLinkActionDirective extends AbstractLinkActionDirective {
+export class TestFooLinkActionDirective extends AbstractLinkActionDirective {
 
   constructor() {
-    super(new TestModelLinkService());
+    super(new TestFooLinkService());
   }
 
 }
 
 @Component({
   template: `
-    <ng-container gaeTestModelLinkAction #action="gaeTestModelLinkAction"></ng-container>
+    <ng-container gaeTestFooLinkAction #action="gaeTestFooLinkAction"></ng-container>
   `
 })
 class TestViewComponent {
 
-  @ViewChild(TestModelLinkActionDirective)
-  public directive: TestModelLinkActionDirective;
+  @ViewChild(TestFooLinkActionDirective)
+  public directive: TestFooLinkActionDirective;
 
 }

@@ -1,19 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Component, ViewChild, Input, Inject, forwardRef } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { Observable, of, throwError } from 'rxjs';
-import { UniqueModel, ModelKey } from '@gae-web/appengine-utility';
-import { TestModel } from '../model/resource/read.component.spec';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AbstractListViewComponent, ProvideListViewComponent } from './list-view.component';
-import { AbstractListContentComponent } from './list-content.component';
-import { GaeListComponentsModule } from './list.module';
+import { UniqueModel, ModelKey, NumberModelKey } from '@gae-web/appengine-utility';
 import { ListViewSource, AbstractListViewSource, ListViewSourceState } from './source';
-import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { ReadSource } from '@gae-web/appengine-client';
-import { ReadService, ReadRequest, ReadResponse, TestReadService } from '@gae-web/appengine-api';
+import { ReadService, ReadRequest, ReadResponse, TestReadService, TestFoo } from '@gae-web/appengine-api';
 import { delay, map } from 'rxjs/operators';
 
 describe('ListViewSource', () => {
@@ -95,9 +86,9 @@ export class TestListViewSourceFactory {
   }
 
   static makeLoadingSource(loadingTime: number = 1000): TestListViewSource {
-    const readService: ReadService<TestModel> = {
+    const readService: ReadService<TestFoo> = {
       type: 'testModel',
-      read(request: ReadRequest): Observable<ReadResponse<TestModel>> {
+      read(request: ReadRequest): Observable<ReadResponse<TestFoo>> {
         return of({
           models: []
         }).pipe(
@@ -109,7 +100,7 @@ export class TestListViewSourceFactory {
       }
     };
 
-    const readSource = new ReadSource<TestModel>(readService);
+    const readSource = new ReadSource<TestFoo>(readService);
     readSource.input = of(1);
 
     const listReadSource = new TestListViewSource();
@@ -119,11 +110,11 @@ export class TestListViewSourceFactory {
   }
 
   static makeSource(keys: ModelKey[]): TestListViewSource {
-    const readService: ReadService<TestModel> = new TestReadService<TestModel>('testModel', (x) => {
-      return new TestModel(x);
+    const readService: ReadService<TestFoo> = new TestReadService<TestFoo>('testModel', (x) => {
+      return new TestFoo(x as NumberModelKey);
     });
 
-    const readSource = new ReadSource<TestModel>(readService);
+    const readSource = new ReadSource<TestFoo>(readService);
     readSource.input = of(keys);
 
     const listReadSource = new TestListViewSource();
@@ -136,14 +127,14 @@ export class TestListViewSourceFactory {
    * Creates a source that only returns errors.
    */
   static makeErrorSource(error: any = new Error('Test')): TestListViewSource {
-    const readService: ReadService<TestModel> = {
+    const readService: ReadService<TestFoo> = {
       type: 'testModel',
-      read(request: ReadRequest): Observable<ReadResponse<TestModel>> {
+      read(request: ReadRequest): Observable<ReadResponse<TestFoo>> {
         return throwError(error);
       }
     };
 
-    const readSource = new ReadSource<TestModel>(readService);
+    const readSource = new ReadSource<TestFoo>(readService);
     readSource.input = of(1);
 
     const listReadSource = new TestListViewSource();
@@ -154,9 +145,9 @@ export class TestListViewSourceFactory {
 
 }
 
-class TestListViewSource extends AbstractListViewSource<TestModel> {
+class TestListViewSource extends AbstractListViewSource<TestFoo> {
 
-  public set readSource(source: ReadSource<TestModel> | undefined) {
+  public set readSource(source: ReadSource<TestFoo> | undefined) {
     super.setSource(source);
   }
 

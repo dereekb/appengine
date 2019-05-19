@@ -6,12 +6,11 @@ import { UniqueModel, ValueUtility } from '@gae-web/appengine-utility';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractCreateActionDirective } from './create.directive';
-import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { CreateService, CreateRequest, CreateResponse } from '@gae-web/appengine-api';
+import { CreateService, CreateRequest, CreateResponse, TestFoo } from '@gae-web/appengine-api';
 
 
-describe('TestModelCreateActionDirective', () => {
+describe('TestFooCreateActionDirective', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,13 +19,13 @@ describe('TestModelCreateActionDirective', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        TestModelCreateActionDirective,
+        TestFooCreateActionDirective,
         TestViewComponent
       ]
     }).compileComponents();
   }));
 
-  let directive: TestModelCreateActionDirective;
+  let directive: TestFooCreateActionDirective;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -43,10 +42,10 @@ describe('TestModelCreateActionDirective', () => {
 
 });
 
-export class TestModelCreateService implements CreateService<TestModel> {
+export class TestFooCreateService implements CreateService<TestFoo> {
 
-  create(request: CreateRequest<TestModel>): Observable<CreateResponse<TestModel>> {
-    const createResponse: CreateResponse<TestModel> = {
+  create(request: CreateRequest<TestFoo>): Observable<CreateResponse<TestFoo>> {
+    const createResponse: CreateResponse<TestFoo> = {
       models: ValueUtility.normalizeArray(request.templates),
       invalidTemplates: []
     };
@@ -57,25 +56,25 @@ export class TestModelCreateService implements CreateService<TestModel> {
 }
 
 @Directive({
-  selector: '[gaeTestModelCreateAction]',
-  exportAs: 'gaeTestModelCreateAction'
+  selector: '[gaeTestFooCreateAction]',
+  exportAs: 'gaeTestFooCreateAction'
 })
-export class TestModelCreateActionDirective extends AbstractCreateActionDirective<TestModel> {
+export class TestFooCreateActionDirective extends AbstractCreateActionDirective<TestFoo> {
 
   constructor() {
-    super(new TestModelCreateService());
+    super(new TestFooCreateService());
   }
 
 }
 
 @Component({
   template: `
-    <ng-container gaeTestModelCreateAction #action="gaeTestModelCreateAction"></ng-container>
+    <ng-container gaeTestFooCreateAction #action="gaeTestFooCreateAction"></ng-container>
   `
 })
 class TestViewComponent {
 
-  @ViewChild(TestModelCreateActionDirective)
-  public directive: TestModelCreateActionDirective;
+  @ViewChild(TestFooCreateActionDirective)
+  public directive: TestFooCreateActionDirective;
 
 }

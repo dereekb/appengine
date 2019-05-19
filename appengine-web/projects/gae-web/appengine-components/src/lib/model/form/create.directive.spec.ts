@@ -4,13 +4,13 @@ import { By } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { FormBuilder, Validators } from '@angular/forms';
-import { TestModelCreateActionDirective } from '../action/create.directive.spec';
+import { TestFooCreateActionDirective } from '../action/create.directive.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GaeCreateModelFormControllerDirective } from './create.directive';
-import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { GaeTestModelModelFormComponent } from '../../form/model.component.spec';
+import { GaeTestFooModelFormComponent } from '../../form/model.component.spec';
 import { GaeFormComponentsModule } from '../../form/form.module';
+import { TestFoo } from '@gae-web/appengine-api';
 
 describe('GaeCreateModelFormControllerDirective', () => {
 
@@ -22,8 +22,8 @@ describe('GaeCreateModelFormControllerDirective', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        TestModelCreateActionDirective,
-        GaeTestModelModelFormComponent,
+        TestFooCreateActionDirective,
+        GaeTestFooModelFormComponent,
         TestViewComponent
       ]
     }).compileComponents();
@@ -57,7 +57,7 @@ describe('GaeCreateModelFormControllerDirective', () => {
 @Component({
   template: `
     <div>
-      <ng-container gaeTestModelCreateAction #action="gaeTestModelCreateAction"></ng-container>
+      <ng-container gaeTestFooCreateAction #action="gaeTestFooCreateAction"></ng-container>
       <gae-test-model-model-form #form></gae-test-model-model-form>
       <gae-submit-view #submit [hidden]="true"></gae-submit-view>
       <ng-container gaeCreateModelFormController #control="gaeCreateModelFormController" [action]="action" [form]="form" [submit]="submit"></ng-container>
@@ -67,9 +67,9 @@ describe('GaeCreateModelFormControllerDirective', () => {
 class TestViewComponent {
 
   @ViewChild(GaeCreateModelFormControllerDirective)
-  public action: GaeCreateModelFormControllerDirective<TestModel>;
+  public action: GaeCreateModelFormControllerDirective<TestFoo>;
 
   @ViewChild(GaeCreateModelFormControllerDirective)
-  public directive: GaeCreateModelFormControllerDirective<TestModel>;
+  public directive: GaeCreateModelFormControllerDirective<TestFoo>;
 
 }

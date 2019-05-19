@@ -2,16 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild, Input, Directive } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
-import { UniqueModel, ValueUtility } from '@gae-web/appengine-utility';
+import { UniqueModel, ValueUtility, NumberModelKey } from '@gae-web/appengine-utility';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractDeleteActionDirective } from './delete.directive';
-import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
+import { DeleteService, DeleteRequest, DeleteResponse, TestFoo } from '@gae-web/appengine-api';
 
 
-describe('TestModelDeleteActionDirective', () => {
+describe('TestFooDeleteActionDirective', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,13 +19,13 @@ describe('TestModelDeleteActionDirective', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        TestModelDeleteActionDirective,
+        TestFooDeleteActionDirective,
         TestViewComponent
       ]
     }).compileComponents();
   }));
 
-  let directive: TestModelDeleteActionDirective;
+  let directive: TestFooDeleteActionDirective;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -43,16 +42,16 @@ describe('TestModelDeleteActionDirective', () => {
 
 });
 
-export class TestModelDeleteService implements DeleteService<TestModel> {
+export class TestFooDeleteService implements DeleteService<TestFoo> {
 
-  delete(request: DeleteRequest): Observable<DeleteResponse<TestModel>> {
+  delete(request: DeleteRequest): Observable<DeleteResponse<TestFoo>> {
     const keys = ValueUtility.normalizeArray(request.modelKeys);
 
-    const deleteResponse: DeleteResponse<TestModel> = {
+    const deleteResponse: DeleteResponse<TestFoo> = {
       keys,
       isModelsResponse: request.shouldReturnModels,
       failed: [],
-      models: (request.shouldReturnModels) ? keys.map(x => new TestModel(x)) : []
+      models: (request.shouldReturnModels) ? keys.map(x => new TestFoo(x as NumberModelKey)) : []
     };
 
     return of(deleteResponse);
@@ -61,25 +60,25 @@ export class TestModelDeleteService implements DeleteService<TestModel> {
 }
 
 @Directive({
-  selector: '[gaeTestModelDeleteAction]',
-  exportAs: 'gaeTestModelDeleteAction'
+  selector: '[gaeTestFooDeleteAction]',
+  exportAs: 'gaeTestFooDeleteAction'
 })
-export class TestModelDeleteActionDirective extends AbstractDeleteActionDirective<TestModel> {
+export class TestFooDeleteActionDirective extends AbstractDeleteActionDirective<TestFoo> {
 
   constructor() {
-    super(new TestModelDeleteService());
+    super(new TestFooDeleteService());
   }
 
 }
 
 @Component({
   template: `
-    <ng-container gaeTestModelDeleteAction #action="gaeTestModelDeleteAction"></ng-container>
+    <ng-container gaeTestFooDeleteAction #action="gaeTestFooDeleteAction"></ng-container>
   `
 })
 class TestViewComponent {
 
-  @ViewChild(TestModelDeleteActionDirective)
-  public directive: TestModelDeleteActionDirective;
+  @ViewChild(TestFooDeleteActionDirective)
+  public directive: TestFooDeleteActionDirective;
 
 }

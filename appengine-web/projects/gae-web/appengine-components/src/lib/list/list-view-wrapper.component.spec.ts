@@ -2,15 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, ViewChild, Input, Inject, forwardRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { TestModel } from '../model/resource/read.component.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GaeListComponentsModule } from './list.module';
 import { ListViewSource, ListViewSourceState } from './source';
-import { GaeTestModelListComponent, GaeTestModelListContentComponent } from './list-view.component.spec';
+import { GaeTestFooListComponent, GaeTestFooListContentComponent } from './list-view.component.spec';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { GaeListViewReadSourceDirective } from './source.directive';
-import { ReadSource } from '@gae-web/appengine-client';
-import { ReadService, ReadRequest, ReadResponse } from '@gae-web/appengine-api';
+import { ReadService, ReadRequest, ReadResponse, TestFoo } from '@gae-web/appengine-api';
 import { Observable, throwError, of } from 'rxjs';
 import { TestListViewSourceFactory } from './source.spec';
 import { filter } from 'rxjs/operators';
@@ -24,12 +22,12 @@ describe('ListViewWrapperComponent', () => {
         GaeListComponentsModule,
         NoopAnimationsModule
       ],
-      declarations: [GaeTestModelListComponent, GaeTestModelListContentComponent, TestViewComponent]
+      declarations: [GaeTestFooListComponent, GaeTestFooListContentComponent, TestViewComponent]
     }).compileComponents();
   }));
 
-  let component: GaeTestModelListComponent;
-  let wrapper: GaeListViewWrapperComponent<TestModel>;
+  let component: GaeTestFooListComponent;
+  let wrapper: GaeListViewWrapperComponent<TestFoo>;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -95,7 +93,7 @@ describe('ListViewWrapperComponent', () => {
         wrapper.loadingContext.stream.pipe(
           filter((x) => x.isLoading === false)
         ).subscribe((x) => {
-          const listComponentQueryResult = fixture.debugElement.query(By.directive(GaeTestModelListContentComponent));
+          const listComponentQueryResult = fixture.debugElement.query(By.directive(GaeTestFooListContentComponent));
           expect(listComponentQueryResult).not.toBeNull();
           done();
         });
@@ -188,9 +186,9 @@ const CUSTOM_EMPTY_ID = 'custom-empty';
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestModelListComponent)
-  public component: GaeTestModelListComponent;
+  @ViewChild(GaeTestFooListComponent)
+  public component: GaeTestFooListComponent;
 
-  public source: ListViewSource<TestModel>;
+  public source: ListViewSource<TestFoo>;
 
 }

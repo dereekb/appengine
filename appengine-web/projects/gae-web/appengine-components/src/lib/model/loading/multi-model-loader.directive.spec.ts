@@ -4,14 +4,14 @@ import { By } from '@angular/platform-browser';
 import { ErrorInput, SingleElementConversionSource, ModelKey } from '@gae-web/appengine-utility';
 import { GaeModelComponentsModule } from '../model.module';
 import { GaeMultiModelLoaderDirective } from './multi-model-loader.directive';
-import { TestModelReadSourceComponent } from '../resource/read.component.spec';
+import { TestFooReadSourceComponent } from '../resource/read.component.spec';
 
 describe('GaeMultiModelLoaderDirective', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [GaeModelComponentsModule],
-      declarations: [TestMultiModelLoaderComponent, TestModelReadSourceComponent]
+      declarations: [TestMultiModelLoaderComponent, TestFooReadSourceComponent]
     }).compileComponents();
   }));
 

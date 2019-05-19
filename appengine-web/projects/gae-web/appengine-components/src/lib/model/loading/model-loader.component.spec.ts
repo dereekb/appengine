@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ErrorInput, SingleElementConversionSource, ModelKey } from '@gae-web/appengine-utility';
 import { GaeModelComponentsModule } from '../model.module';
-import { TestModelReadSourceComponent } from '../resource/read.component.spec';
+import { TestFooReadSourceComponent } from '../resource/read.component.spec';
 import { GaeModelLoaderComponent } from './model-loader.component';
 
 describe('GaeModelLoaderComponent', () => {
@@ -11,7 +11,7 @@ describe('GaeModelLoaderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [GaeModelComponentsModule],
-      declarations: [TestGaeModelLoaderComponent, TestModelReadSourceComponent]
+      declarations: [TestGaeModelLoaderComponent, TestFooReadSourceComponent]
     }).compileComponents();
   }));
 

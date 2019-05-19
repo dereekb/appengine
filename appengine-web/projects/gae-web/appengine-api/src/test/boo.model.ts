@@ -3,9 +3,9 @@ import { DateTime } from 'luxon';
 import { AbstractDatabaseModel } from '../lib/datastore/model';
 
 /**
- * Test model TestFoo that has a number identifier and some properties.
+ * Test model TestBoo that has a string identifier and some properties.
  */
-export class BooTestModel extends AbstractDatabaseModel implements DatedModel {
+export class TestBoo extends AbstractDatabaseModel implements DatedModel {
 
   private _key: StringModelKey;
 

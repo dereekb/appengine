@@ -6,10 +6,10 @@ import { GaeFormComponentsModule } from './form.module';
 import { Observable, of } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
-import { TestModel } from '../model/resource/read.component.spec';
 import { AbstractModelFormComponent } from './model.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TestFoo } from '@gae-web/appengine-api';
 
 describe('AbstractModelFormComponent', () => {
 
@@ -19,11 +19,11 @@ describe('AbstractModelFormComponent', () => {
         GaeFormComponentsModule,
         NoopAnimationsModule
       ],
-      declarations: [GaeTestModelModelFormComponent, TestViewComponent]
+      declarations: [GaeTestFooModelFormComponent, TestViewComponent]
     }).compileComponents();
   }));
 
-  let component: GaeTestModelModelFormComponent;
+  let component: GaeTestFooModelFormComponent;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -48,7 +48,7 @@ describe('AbstractModelFormComponent', () => {
   </form>
   `
 })
-export class GaeTestModelModelFormComponent extends AbstractModelFormComponent<TestModel> {
+export class GaeTestFooModelFormComponent extends AbstractModelFormComponent<TestFoo> {
 
   public nameRequired = false;
 
@@ -76,7 +76,7 @@ export class GaeTestModelModelFormComponent extends AbstractModelFormComponent<T
     };
   }
 
-  protected convertToFormData(model: TestModel): any {
+  protected convertToFormData(model: TestFoo): any {
     const data: any = {};
 
     data.key = model.key;
@@ -85,8 +85,8 @@ export class GaeTestModelModelFormComponent extends AbstractModelFormComponent<T
     return data;
   }
 
-  protected makeForSubmission(value: any): TestModel {
-    const model = new TestModel();
+  protected makeForSubmission(value: any): TestFoo {
+    const model = new TestFoo();
 
     model.modelKey = value.key;
     model.name = value.name;
@@ -103,7 +103,7 @@ export class GaeTestModelModelFormComponent extends AbstractModelFormComponent<T
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestModelModelFormComponent)
-  public component: GaeTestModelModelFormComponent;
+  @ViewChild(GaeTestFooModelFormComponent)
+  public component: GaeTestFooModelFormComponent;
 
 }

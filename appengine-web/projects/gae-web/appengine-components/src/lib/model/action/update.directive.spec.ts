@@ -6,12 +6,11 @@ import { UniqueModel, ValueUtility } from '@gae-web/appengine-utility';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractUpdateActionDirective } from './update.directive';
-import { TestModel } from '../resource/read.component.spec';
 import { GaeModelComponentsModule } from '../model.module';
-import { UpdateService, UpdateRequest, UpdateResponse } from '@gae-web/appengine-api';
+import { UpdateService, UpdateRequest, UpdateResponse, TestFoo } from '@gae-web/appengine-api';
 
 
-describe('TestModelUpdateActionDirective', () => {
+describe('TestFooUpdateActionDirective', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,13 +19,13 @@ describe('TestModelUpdateActionDirective', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        TestModelUpdateActionDirective,
+        TestFooUpdateActionDirective,
         TestViewComponent
       ]
     }).compileComponents();
   }));
 
-  let directive: TestModelUpdateActionDirective;
+  let directive: TestFooUpdateActionDirective;
   let testComponent: TestViewComponent;
   let fixture: ComponentFixture<TestViewComponent>;
 
@@ -43,12 +42,12 @@ describe('TestModelUpdateActionDirective', () => {
 
 });
 
-export class TestModelUpdateService implements UpdateService<TestModel> {
+export class TestFooUpdateService implements UpdateService<TestFoo> {
 
-  update(request: UpdateRequest<TestModel>): Observable<UpdateResponse<TestModel>> {
+  update(request: UpdateRequest<TestFoo>): Observable<UpdateResponse<TestFoo>> {
     const templates = ValueUtility.normalizeArray(request.templates);
 
-    const updateResponse: UpdateResponse<TestModel> = {
+    const updateResponse: UpdateResponse<TestFoo> = {
       models: templates,
       missing: [],
       invalidTemplates: [],
@@ -61,25 +60,25 @@ export class TestModelUpdateService implements UpdateService<TestModel> {
 }
 
 @Directive({
-  selector: '[gaeTestModelUpdateAction]',
-  exportAs: 'gaeTestModelUpdateAction'
+  selector: '[gaeTestFooUpdateAction]',
+  exportAs: 'gaeTestFooUpdateAction'
 })
-export class TestModelUpdateActionDirective extends AbstractUpdateActionDirective<TestModel> {
+export class TestFooUpdateActionDirective extends AbstractUpdateActionDirective<TestFoo> {
 
   constructor() {
-    super(new TestModelUpdateService());
+    super(new TestFooUpdateService());
   }
 
 }
 
 @Component({
   template: `
-    <ng-container gaeTestModelUpdateAction #action="gaeTestModelUpdateAction"></ng-container>
+    <ng-container gaeTestFooUpdateAction #action="gaeTestFooUpdateAction"></ng-container>
   `
 })
 class TestViewComponent {
 
-  @ViewChild(TestModelUpdateActionDirective)
-  public directive: TestModelUpdateActionDirective;
+  @ViewChild(TestFooUpdateActionDirective)
+  public directive: TestFooUpdateActionDirective;
 
 }
