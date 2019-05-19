@@ -26,6 +26,10 @@ export abstract class AbstractListContentComponent<T> {
     return this._listView.canLoadMore;
   }
 
+  public get state() {
+    return this._listView.state;
+  }
+
   loadMore() {
     this._listView.loadMore();
   }

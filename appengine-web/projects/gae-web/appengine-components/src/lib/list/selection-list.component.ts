@@ -1,7 +1,7 @@
 import { Observable, Subscription } from 'rxjs';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
 import { ModelKey, UniqueModel, NamedUniqueModel, ArrayDelta, ValueUtility, ModelUtility } from '@gae-web/appengine-utility';
-import { Directive, Component, ViewEncapsulation, forwardRef, Input, AfterViewInit, OnDestroy, ViewChild, QueryList } from '@angular/core';
+import { Directive, Component, ViewEncapsulation, forwardRef, Input, AfterViewInit, OnDestroy, ViewChild, QueryList, ChangeDetectorRef } from '@angular/core';
 import { ListViewSource, ConversionListViewSource } from './source';
 import { ProvideListViewComponent, AbstractListViewComponent } from './list-view.component';
 import { AbstractListContentComponent } from './list-content.component';
@@ -103,8 +103,8 @@ export type SelectionListItem<T> = KeyedSelectionListItem<string, T>;
 })
 export class GaeSelectionListViewComponent<T> extends AbstractListViewComponent<SelectionListItem<T>> {
 
-  constructor(public readonly listController: GaeSelectionListControllerDirective) {
-    super();
+  constructor(public readonly listController: GaeSelectionListControllerDirective, cdRef: ChangeDetectorRef) {
+    super(cdRef);
   }
 
 }

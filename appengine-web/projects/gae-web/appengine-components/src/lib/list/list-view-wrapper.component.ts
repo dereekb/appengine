@@ -84,4 +84,12 @@ export class GaeListViewWrapperComponent<T> implements AfterViewInit, OnDestroy 
     return this._count !== 0;
   }
 
+  public get hasCustomToolbar() {
+    return this._hasCustomToolbar;
+  }
+
+  public get hasCustomEmpty() {
+    return this._hasCustomEmpty;
+  }
+
 }

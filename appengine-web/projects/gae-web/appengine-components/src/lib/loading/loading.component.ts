@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { AbstractSubscriptionComponent } from '../shared/subscription';
 import { LoadingContext } from './loading';
 
@@ -26,6 +26,10 @@ export class GaeLoadingComponent extends AbstractSubscriptionComponent {
   private _loading: boolean;
   private _error: any;
 
+  constructor(private cdRef: ChangeDetectorRef) {
+    super();
+  }
+
   get loading() {
     return this._loading;
   }
@@ -45,6 +49,7 @@ export class GaeLoadingComponent extends AbstractSubscriptionComponent {
       subscription = context.stream.subscribe((x) => {
         this._loading = x.isLoading;
         this._error = x.error;
+        this.cdRef.detectChanges();
       });
     }
 

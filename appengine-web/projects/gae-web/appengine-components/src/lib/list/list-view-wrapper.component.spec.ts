@@ -16,7 +16,7 @@ import { TestListViewSourceFactory } from './source.spec';
 import { filter } from 'rxjs/operators';
 import { GaeErrorComponent } from '../loading/error.component';
 
-fdescribe('ListViewWrapperComponent', () => {
+describe('ListViewWrapperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

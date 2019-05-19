@@ -1,6 +1,6 @@
 import { Directive, Component } from '@angular/core';
 import { AppSegueService } from '../../../segue.service';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { ModelKey } from '@gae-web/appengine-utility';
 import { Foo } from '../../api/model/foo/foo';
 
 /**

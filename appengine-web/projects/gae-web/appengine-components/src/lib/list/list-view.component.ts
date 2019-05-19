@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Type } from '@angular/core';
+import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Type, ChangeDetectorRef, Inject } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
 import { Source, SourceState, ControllableSource, SubscriptionObject } from '@gae-web/appengine-utility';
 import { UniqueModel } from '@gae-web/appengine-utility';
@@ -84,6 +84,8 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
   @Output()
   public selectionEvent = new EventEmitter<T>();
 
+  constructor(@Inject(ChangeDetectorRef) private cdRef: ChangeDetectorRef) {}
+
   ngAfterContentInit() {
     this._initialize();
   }
@@ -129,6 +131,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
       state,
       source
     });
+    this.cdRef.detectChanges();
   }
 
   // MARK: Accessors

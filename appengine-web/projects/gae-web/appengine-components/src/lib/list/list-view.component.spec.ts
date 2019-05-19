@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Component, ViewChild, Input, Inject, forwardRef } from '@angular/core';
+import { Component, ViewChild, Input, Inject, forwardRef, ChangeDetectorRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
@@ -15,7 +15,7 @@ import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { TestListViewSourceFactory } from './source.spec';
 import { filter, flatMap } from 'rxjs/operators';
 
-fdescribe('ListViewComponent', () => {
+describe('ListViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
