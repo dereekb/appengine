@@ -43,14 +43,14 @@ export abstract class AbstractAsyncLoadedService<T> {
                     // Loaded before the promise.
                     if (windowRef[this._windowKey]) {
                         // Not yet finished loading async. Intercept the function.
-                        console.log('Window key.');
+                        // console.log('Window key.');
                         return resolve(this.completeLoadingService());
                     } else if (this._callbackKey && windowRef[this._callbackKey]) {
-                        console.log('Callback key.');
+                        // console.log('Callback key.');
                         windowRef[this._callbackKey] = () => resolve(this.completeLoadingService());
                     } else if (loadTry < 10) {
                         loadTry += 1;
-                        console.log('Try reload...');
+                        // console.log('Try reload...');
                         setTimeout(() => tryLoad(), 1000);
                     } else {
                         reject(new ServiceSetupError(`Project is not setup properly for service "${this._serviceName}"`));

@@ -1,10 +1,12 @@
 import { Input, Directive, Inject, AfterViewInit, Host, Optional } from '@angular/core';
-import { ControllableSource, UniqueModel, SourceEvent, SourceState } from '@gae-web/appengine-utility';
-import { ReadSource, KeyQuerySource, MergedReadQuerySource } from '@gae-web/appengine-client';
+import { ControllableSource, UniqueModel, SourceEvent, SourceState, ModelKey, IterableSource } from '@gae-web/appengine-utility';
+import { ReadSource, KeyQuerySource, MergedReadQuerySource, QueryIterableSource } from '@gae-web/appengine-client';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState, AbstractListViewSource } from './source';
 import { ListViewComponent } from './list-view.component';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ReadSourceComponent } from '../model/resource/read.component';
+import { IterableSourceComponent } from '../model/resource/source.component';
 
 /**
  * Abstract source directive that auto-binds to a ListViewComponent.
@@ -66,10 +68,22 @@ export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends A
   private _source: ControllableSource<T>;
 
   private _readSource?: ReadSource<T>;
-  private _querySource?: KeyQuerySource<T>;
+  private _querySource?: IterableSource<ModelKey>;
 
   @Input()
-  public autoResetQuery = true;
+  public autoStartQuery = true;
+
+  @Input()
+  public set readComponent(component: ReadSourceComponent<T> | undefined) {
+    if (component) {
+      this.readSource = component.readSource;
+    }
+  }
+
+  @Input()
+  public set queryComponent(component: IterableSourceComponent<ModelKey> | undefined) {
+    this.querySource = component;
+  }
 
   @Input()
   public set readSource(source: ReadSource<T> | undefined) {
@@ -78,12 +92,13 @@ export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends A
   }
 
   @Input()
-  public set querySource(source: KeyQuerySource<T> | undefined) {
+  public set querySource(source: IterableSource<ModelKey> | undefined) {
     this._querySource = source;
     this._update();
   }
 
-  public ngAfterViewInit() {
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
     this._initialized = true;
     this._resetForUpdate();
   }
@@ -98,9 +113,9 @@ export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends A
   }
 
   private _resetForUpdate() {
-    if (this._initialized && this.autoResetQuery) {
+    if (this._initialized && this.autoStartQuery && this._source && this._querySource.state === SourceState.Reset) {
       // Automatically reset to pull first results.
-      this._source.reset();
+      this.more();
     }
   }
 

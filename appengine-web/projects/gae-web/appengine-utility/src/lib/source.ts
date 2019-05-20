@@ -1,7 +1,8 @@
 import { Type } from '@angular/core';
 import { BaseError } from 'make-error';
 import { Observable, Subscription, BehaviorSubject, of, throwError } from 'rxjs';
-import { map, flatMap, debounceTime } from 'rxjs/operators';
+import { map, flatMap, debounceTime, share } from 'rxjs/operators';
+import { SubscriptionObject } from './subscription';
 
 export interface SingleElementSource<T> {
 
@@ -81,7 +82,7 @@ export abstract class SourceFactory<T> {
 export abstract class ReadOnlySource<T> {
     readonly state: SourceState;
     readonly stream: Observable<SourceEvent<T>>;
-
+    readonly elements: Observable<T[]>;
     /**
      * Refreshes the current data, if applicable for the source.
      */
@@ -351,10 +352,10 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
     protected debounce = 200;  // 200ms debounce
 
     // Used optionally by extending classes.
-    private _sourceSub?: Subscription;
+    private _sourceSub = new SubscriptionObject();
 
     private _input?: Observable<I | I[]>;
-    private _inputSub?: Subscription;
+    private _inputSub = new SubscriptionObject();
 
     private _refreshData: I[];
 
@@ -420,7 +421,7 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
         this.clearAllInputSubs();
 
         if (input) {
-            this._inputSub = this.subToInput(input);
+            this._inputSub.subscription = this.subToInput(input);
         } else {
             this.updateWithNothing();
         }
@@ -510,28 +511,13 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
 
     // MARK: Internal Input Sub
     protected clearAllInputSubs() {
-        this.clearInputSub();
-        this.clearSourceSub();
-    }
-
-    protected clearInputSub() {
-        if (this._inputSub) {
-            this._inputSub.unsubscribe();
-            this._inputSub = undefined;
-        }
+        this._sourceSub.unsub();
+        this._inputSub.unsub();
     }
 
     // MARK: Internal Source Sub
     protected setSourceSub(sub: Subscription) {
-        this.clearSourceSub();
-        this._sourceSub = sub;
-    }
-
-    protected clearSourceSub() {
-        if (this._sourceSub) {
-            this._sourceSub.unsubscribe();
-            this._sourceSub = undefined;
-        }
+        this._sourceSub.subscription = sub;
     }
 
 }
@@ -588,6 +574,10 @@ export abstract class WrappedSource<T> implements Source<T> {
 
     get stream(): Observable<SourceEvent<T>> {
         return this._stream.asObservable();
+    }
+
+    get elements(): Observable<T[]> {
+        return this._stream.pipe(map(x => x.elements));
     }
 
     public refresh() {

@@ -4,10 +4,107 @@ import { MergedReadQuerySource, ReadSource } from './source';
 import { SourceState } from '@gae-web/appengine-utility';
 import { filter, first } from 'rxjs/operators';
 import { TestFooTestReadSourceFactory, TestFooTestKeyQuerySource } from '../../test/foo.testing';
+import { of } from 'rxjs';
 
-describe('Source', () => {
+fdescribe('Source', () => {
 
-  // TODO: Do KeyQuerySource
+  describe('ReadSource', () => {
+
+    let testReadSource: ReadSource<TestFoo>;
+
+    beforeEach(() => {
+      testReadSource = TestFooTestReadSourceFactory.makeReadSource();
+    });
+
+    describe('with empty input', () => {
+
+      beforeEach(() => {
+        testReadSource.input = of([]);
+      });
+
+      it('should hit done state', (done) => {
+
+        // Wait for the stream to complete.
+        testReadSource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe((x) => {
+          expect(x.elements.length).toBe(0);
+          done();
+        });
+
+      });
+
+      it('should update if the input changes', (done) => {
+
+        // Wait for the stream to complete.
+        testReadSource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe(() => {
+          const items = [1, 2, 3];
+
+          testReadSource.input = of(items);
+
+          // Wait for the stream to complete with the new items.
+          testReadSource.stream.pipe(
+            filter((x) => {
+              return x.state === SourceState.Done;
+            }),
+            first()
+          ).subscribe((x) => {
+            expect(x.elements.length).toBe(items.length);
+            done();
+          });
+        });
+
+      });
+
+    });
+
+    describe('with input with keys', () => {
+
+    });
+
+    describe('changing input', () => {
+
+      it('should load the new items', (done) => {
+
+        const testInputA = [];
+        const testInputB = [3, 4, 5];
+
+        testReadSource.input = of(testInputA);
+
+        // Wait for the initial stream to complete.
+        testReadSource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe((x) => {
+          expect(x.elements.length).toBe(0);
+
+          testReadSource.input = of(testInputB);
+
+          testReadSource.stream.pipe(
+            filter((y) => {
+              return y.state === SourceState.Done;
+            }),
+            first()
+          ).subscribe((y) => {
+            expect(y.elements.length).toBe(testInputB.length);
+            done();
+          });
+        });
+      });
+
+    });
+
+  });
 
   describe('KeyQuerySource', () => {
 
@@ -39,6 +136,92 @@ describe('Source', () => {
           expect(x.elements.length).toBe(0);
           done();
         });
+      });
+
+    });
+
+    describe('with query results', () => {
+      const testKeyResults = [1, 2, 3, 4, 5];
+
+      beforeEach(() => {
+        testQuerySource.testQueryService.keyResults = testKeyResults;
+      });
+
+      it('should hit done state when the query returns items less than the limit.', (done) => {
+
+        // Load next elements.
+        testQuerySource.next();
+
+        // Wait for the stream to complete.
+        testQuerySource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe((x) => {
+          expect(x.elements.length).toBe(testKeyResults.length);
+          done();
+        });
+      });
+
+      it('should send messages to all listeners.', (done) => {
+
+        const eventsA = [];
+        const eventsB = [];
+
+        // Wait for the stream to complete.
+        testQuerySource.stream.subscribe((x) => {
+          eventsA.push(x);
+        });
+
+        testQuerySource.stream.subscribe((x) => {
+          eventsB.push(x);
+        });
+
+        // Load next elements.
+        testQuerySource.next();
+
+        // Wait for the stream to complete.
+        testQuerySource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe((x) => {
+          expect(eventsA.length).toBe(eventsB.length);
+          done();
+        });
+
+      });
+
+      it('should send elements to.', (done) => {
+
+        const eventsA = [];
+        const eventsB = [];
+
+        // Subscribe to elements.
+        testQuerySource.elements.subscribe((x) => {
+          eventsA.push(x);
+        });
+
+        testQuerySource.elements.subscribe((x) => {
+          eventsB.push(x);
+        });
+
+        // Load next elements.
+        testQuerySource.next();
+
+        // Wait for the stream to complete.
+        testQuerySource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe((x) => {
+          expect(eventsA.length).toBe(eventsB.length);
+          done();
+        });
+
       });
 
     });

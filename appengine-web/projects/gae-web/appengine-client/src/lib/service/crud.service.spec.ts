@@ -140,7 +140,7 @@ describe('Crud Model Services', () => {
 
       });
 
-      it('should suceed if models are re-read and not found.', (done) => {
+      it('should succeed if models are re-read and not found.', (done) => {
 
         let updates = 0;
         let lastReadResult: ModelServiceResponse<TestFoo>;
@@ -177,7 +177,7 @@ describe('Crud Model Services', () => {
 
       });
 
-      it('should suceed if cache is cleared and models are not found on reload.', (done) => {
+      it('should succeed if cache is cleared and models are not found on reload.', (done) => {
 
         let updates = 0;
         let lastReadResult: ModelServiceResponse<TestFoo>;

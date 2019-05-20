@@ -5,8 +5,9 @@ import { ModelKey, UniqueModel, SingleElementConversionSource, SingleElementSour
 import { ReadSourceFactory, ReadSource } from '@gae-web/appengine-client';
 import { map, share } from 'rxjs/operators';
 
-export abstract class ReadSourceComponent<T> extends SourceComponent<T> {
+export abstract class ReadSourceComponent<T extends UniqueModel> extends SourceComponent<T> {
 
+  public readonly readSource: ReadSource<T>;
   public abstract set readSourceKeys(keysObs: Observable<ModelKey | ModelKey[]> | undefined);
 
 }
@@ -28,6 +29,10 @@ export abstract class AbstractReadSourceComponent<T extends UniqueModel> extends
 
   constructor(factory: ReadSourceFactory<T>) {
     super(factory.makeSource());
+  }
+
+  get readSource(): ReadSource<T> {
+    return this.source;
   }
 
   protected get source() {

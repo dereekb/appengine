@@ -133,6 +133,8 @@ export interface QueryIterableSource<T> extends IterableSource<T> {
 
 /**
  * QueryIterableSource implementation that uses a QueryService.
+ *
+ * When reset, does not automatically pull new items.
  */
 // TODO: Can probably remove the typing info here, since we're only querying on keys.
 export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelKey> implements QueryIterableSource<ModelKey> {
@@ -386,7 +388,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
 
   private _stream: Observable<SourceEvent<T>>;
 
-  constructor(private _readSource: ReadSource<T>, private _querySource: KeyQuerySource<T>, autoBindQuerySourceAsReadInput: boolean = true) {
+  constructor(private _readSource: ReadSource<T>, private _querySource: IterableSource<ModelKey>, autoBindQuerySourceAsReadInput: boolean = true) {
     if (autoBindQuerySourceAsReadInput) {
       _readSource.input = _querySource.elements;
     }
@@ -415,7 +417,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
           }
         }
 
-        console.log('rs: ' + read.state + ' qs: ' + query.state + ' state: ' + state);
+        // console.log('rs: ' + read.state + ' qs: ' + query.state + ' state: ' + state);
 
         return {
           elements: read.elements,
@@ -433,6 +435,10 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
 
   get stream(): Observable<SourceEvent<T>> {
     return this._stream;
+  }
+
+  get elements(): Observable<T[]> {
+    return this._stream.pipe(map(x => x.elements));
   }
 
   hasNext() {
