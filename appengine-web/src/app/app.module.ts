@@ -7,6 +7,7 @@ import { ROOT_STATES } from './root.states';
 import { AnalyticsService, AnalyticsServiceConfiguration, AnalyticsServiceListener, GaeAnalyticsModule } from '@gae-web/appengine-analytics';
 import { GaeGoogleModule, FacebookAnalyticsListenerService, FacebookApiService, GaeFacebookModule, FacebookApiServiceConfig, GoogleOAuthServiceConfig } from '@gae-web/appengine-services';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatProgressButtonsModule } from 'mat-progress-buttons';
 
 export function routerConfigFn(router: UIRouter, injector: Injector, module: StatesModule): any {
   const transitionService = router.transitionService;
@@ -57,6 +58,7 @@ FACEBOOK_CONFIG.logging = true;
     // Imports
     BrowserModule,
     BrowserAnimationsModule,
+    MatProgressButtonsModule.forRoot(),
     UIRouterModule.forRoot({
       states: ROOT_STATES,
       useHash: false,

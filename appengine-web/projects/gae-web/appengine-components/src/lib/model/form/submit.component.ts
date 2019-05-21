@@ -1,9 +1,14 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject, Directive, Optional, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject, Directive, Optional, OnDestroy, Type } from '@angular/core';
+
+import { MatProgressButtonOptions } from 'mat-progress-buttons';
+import { ProgressSpinnerMode } from '@angular/material';
 
 /**
  * Is linked to by a child GaeSubmitViewComponent.
  *
  * This allows calling submit from a context higher than the SubmitView's immediate context.
+ *
+ * This component can only remotely hit submit though, and does not have access to the result of the submit.
  */
 @Directive({
     selector: '[gaeSubmitViewAction]',
@@ -11,33 +16,41 @@ import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject, Dire
 })
 export class GaeSubmitViewActionDirective {
 
-    private _submitView?: GaeSubmitViewComponent;
+    private _submitView?: GaeSubmitComponent;
 
     public get disabled(): boolean {
-        return (this._submitView) ? this._submitView.disabled : true;
+        return (this._submitView) ? this._submitView.isDisabled : true;
     }
 
     public doSubmit() {
         if (this._submitView) {
-            this._submitView.clicked();
+            this._submitView.submit();
         }
     }
 
-    public set submitView(submitView: GaeSubmitViewComponent) {
+    public set submitView(submitView: GaeSubmitComponent) {
         this._submitView = submitView;
     }
 
 }
 
-@Component({
-    templateUrl: './submit.component.html',
-    selector: 'gae-submit-view',
-    styleUrls: ['./submit.component.scss'],
-    encapsulation: ViewEncapsulation.None
-})
-export class GaeSubmitViewComponent implements OnDestroy {
+export abstract class GaeSubmitComponent {
+    isDisabled: boolean;
+    isWorking: boolean;
+    isLocked: boolean;
 
-    public onClick = new EventEmitter();
+    readonly text: string;
+    readonly submitClicked: EventEmitter<{}>;
+    abstract submit(): boolean;
+}
+
+export function ProvideGaeSubmitComponent<S extends GaeSubmitComponent>(listViewType: Type<S>) {
+    return [{ provide: GaeSubmitComponent, useExisting: listViewType }];
+  }
+
+export abstract class GaeAbstractSubmitComponent implements OnDestroy {
+
+    public readonly submitClicked = new EventEmitter<{}>();
 
     private _working = false;
     private _locked = false;
@@ -49,9 +62,6 @@ export class GaeSubmitViewComponent implements OnDestroy {
     @Input()
     public lockedText = 'Locked!';
 
-    @Input()
-    public buttonClasses = 'button-primary-color';
-
     constructor(@Optional() @Inject(GaeSubmitViewActionDirective) parent: GaeSubmitViewActionDirective) {
         if (parent) {
             parent.submitView = this;
@@ -59,56 +69,104 @@ export class GaeSubmitViewComponent implements OnDestroy {
     }
 
     ngOnDestroy() {
-        this.onClick.complete();
+        this.submitClicked.complete();
     }
 
     get text() {
-        return (this.locked) ? this.lockedText : this.action;
+        return (this.isLocked) ? this.lockedText : this.action;
     }
 
-    get working() {
+    get isWorking() {
         return this._working;
     }
 
     @Input()
-    set working(working: boolean) {
+    set isWorking(working: boolean) {
         this._working = working;
     }
 
-    get locked() {
+    get isLocked() {
         return this._locked;
     }
 
     @Input()
-    set locked(locked: boolean) {
+    set isLocked(locked: boolean) {
         this._locked = locked;
     }
 
-    get enabled() {
-        return !this.disabled;
+    get isEnabled() {
+        return !this.isDisabled;
     }
 
-    set enabled(enabled: boolean) {
-        this.disabled = !enabled;
-    }
-
-    get disabled() {
+    get isDisabled() {
         return this._disabled || this._locked || this._working;
     }
 
     @Input()
-    set disabled(disabled: boolean) {
+    set isDisabled(disabled: boolean) {
         this._disabled = disabled;
     }
 
     // MARK: Click
-    public clicked(): boolean {
-        if (this.enabled) {
-            this.onClick.emit();
+    public submit(): boolean {
+        if (!this.isDisabled) {
+            this.submitClicked.emit();
             return true;
         }
 
         return false;
     }
+
+}
+
+export enum GaeSubmitButtonType {
+    Bar = 0,
+    Spinner = 1
+}
+
+@Component({
+    selector: 'gae-submit-button',
+    template: `
+    <ng-container [ngSwitch]="mode">
+        <mat-bar-button *ngSwitchCase="0" (btnClick)="submit()" [options]="btnOptions"></mat-bar-button>
+        <mat-spinner-button *ngSwitchCase="1" (btnClick)="submit()" [options]="btnOptions"></mat-spinner-button>
+    </ng-container>
+    `,
+    providers: [ProvideGaeSubmitComponent(GaeSubmitButtonComponent)]
+})
+export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
+
+    @Input()
+    public raised = false;
+
+    @Input()
+    public mode: ProgressSpinnerMode = 'indeterminate';
+
+    public get btnOptions(): MatProgressButtonOptions {
+        return {
+            active: this.isWorking,
+            text: this.text,
+            buttonColor: 'accent',
+            barColor: 'accent',
+            raised: this.raised,
+            stroked: true,
+            flat: false,
+            mode: this.mode,
+            disabled: this.isDisabled
+        };
+    }
+
+}
+
+// DEPRECATED?
+@Component({
+    templateUrl: './submit.component.html',
+    selector: 'gae-submit-view',
+    providers: [ProvideGaeSubmitComponent(GaeSubmitViewComponent)]
+})
+export class GaeSubmitViewComponent extends GaeAbstractSubmitComponent {
+
+    @Input()
+    public buttonClasses = 'button-primary-color';
 
 }

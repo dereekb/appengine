@@ -10,6 +10,7 @@ import { GaeGatewayModule, secureGatewayHook, GaeGatewayViewsModule, GatewaySegu
 import { HttpClientModule } from '@angular/common/http';
 import { SecureComponentsModule } from './shared/components/components.module';
 import { SecureApiModule } from './shared/api/api.module';
+import { GaeComponentsModule } from '@gae-web/appengine-components';
 
 export function routerConfigFn(router: UIRouter) {
   const transitionService = router.transitionService;
@@ -31,6 +32,7 @@ export const ROUTER_CONFIG: StatesModule = {
     // GAE Configurations
     HttpClientModule,
     GaeApiModule.makeJwtModuleForRoot(),
+    ...GaeComponentsModule.allComponentsApp(),
     GaeGatewayViewsModule.forRoot({
       logoUrl: 'https://via.placeholder.com/350x150'
     }),

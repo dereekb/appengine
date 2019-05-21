@@ -37,7 +37,7 @@ describe('GaeListViewKeyQuerySourceDirective', () => {
     fixture.detectChanges();
   }));
 
-  fdescribe('with query and read source', () => {
+  describe('with query and read source', () => {
 
     let testReadSource: ReadSource<TestFoo>;
     let testQuerySource: TestFooTestKeyQuerySource;

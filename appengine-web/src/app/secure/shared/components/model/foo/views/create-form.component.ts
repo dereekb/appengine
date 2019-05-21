@@ -1,15 +1,15 @@
-import { Directive, Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { GaeCreateModelFormControllerDirective } from '@gae-web/appengine-components';
+import { Directive, Component, OnInit, OnDestroy, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { GaeCreateModelFormControllerDirective, GaeSubmitViewComponent } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { AppSegueService } from 'src/app/secure/segue.service';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'app-foo-create-view',
     templateUrl: './create-form.component.html'
 })
-export class FooCreateFormComponent { }
+export class FooCreateFormComponent {}
 
 @Directive({
     selector: '[appFooSegueToCreatedView]'

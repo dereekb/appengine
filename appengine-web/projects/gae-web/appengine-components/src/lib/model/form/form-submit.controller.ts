@@ -54,7 +54,7 @@ export abstract class AbstractFormActionSubmitController<T> extends AbstractActi
     }
 
     protected updateForFormEvent(event: FormComponentEvent) {
-        this.submit.enabled = event.isComplete;
+        this.submit.isDisabled = !event.isComplete;
 
         if (event.state === FormComponentState.Reset) {
             this.resetAction(); // Reset the action if the model is reset.

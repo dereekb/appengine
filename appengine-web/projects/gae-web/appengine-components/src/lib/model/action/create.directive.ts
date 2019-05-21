@@ -1,8 +1,9 @@
 import { CreateResponse, CreateRequestOptions, CreateService, CreateRequest } from '@gae-web/appengine-api';
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { Observable } from 'rxjs';
-import { TemplateActionDirectiveEvent, TemplateActionDirective, TemplateActionConfig, AbstractTemplateActionDirective } from './template.directive';
+import { TemplateActionDirectiveEvent, TemplateActionDirective, TemplateActionConfig, AbstractTemplateActionDirective, ProvideTemplateActionDirective } from './template.directive';
 import { ActionState } from '../../shared/action';
+import { Type, Provider } from '@angular/core';
 
 export interface CreateActionDirectiveEvent<T extends UniqueModel> extends TemplateActionDirectiveEvent<T> {
 
@@ -11,12 +12,13 @@ export interface CreateActionDirectiveEvent<T extends UniqueModel> extends Templ
 
 }
 
-export interface CreateActionDirective<T extends UniqueModel> extends TemplateActionDirective<T> {
+export function ProvideCreateActionDirective<S extends CreateActionDirective<any>>(directiveType: Type<S>): Provider[] {
+  return [...ProvideTemplateActionDirective(directiveType), { provide: CreateActionDirective, useExisting: directiveType }];
+}
 
+export abstract class CreateActionDirective<T extends UniqueModel> extends TemplateActionDirective<T> {
   readonly stream: Observable<CreateActionDirectiveEvent<T>>;
-
-  doCreate(config: CreateActionConfig<T>): Observable<CreateResponse<T>>;
-
+  abstract doCreate(config: CreateActionConfig<T>): Observable<CreateResponse<T>>;
 }
 
 export interface CreateActionConfig<T> extends TemplateActionConfig<T> {

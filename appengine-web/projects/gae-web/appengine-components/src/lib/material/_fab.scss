@@ -1,0 +1,18 @@
+
+.page-button {
+  position: absolute !important;
+  bottom: 20px;
+  right: 20px;
+  margin-bottom: 0;
+  z-index: 100;
+}
+
+.page-fab {
+  @extend .page-button;
+  // background-color: mat-color($tallynote-app-warn, 500);
+  // color: mat-contrast($tallynote-app-warn, 500);
+}
+
+.page-fab-disabled {
+  color: grey;
+}

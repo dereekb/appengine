@@ -1,5 +1,6 @@
 <div appHeightState appFullHeightState class="page" fxLayout="column" appSegue #segue="appSegue">
   <button mat-button (clicked)="create()">Create</button>
+  <gae-page-fab icon="note_add" [disabled]="isWorking" appTallyEventCreateAction></gae-page-fab>
   <div infinite-scroll [infiniteScrollDistance]="2" [immediateCheck]="true" [scrollWindow]="false"
     (scrolled)="listSource.more()">
     <app-foo-read-source #readSource></app-foo-read-source>

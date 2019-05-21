@@ -7,7 +7,7 @@
                 appFooDeleteAction appFooDeleteAnalytics #action="appFooDeleteAction" [gaeActionSegue]="action" actionSegueRef="^.^.^" [gaeActionMessageSnackbar]="action" snackbarMessage="Deleted Tally!" 
                 gaeDeleteModelFormController #control="gaeDeleteModelFormController" [action]="action" [form]="form" [submit]="submit">
                 <gae-confirm-delete-model-form #form [input]="fooSource.first"></gae-confirm-delete-model-form>
-                <gae-submit-view [hidden]="true" appModelChangeFormActionLinkSubmitView #submit action="Delete" lockedText="Done!"></gae-submit-view>
+                <gae-submit-view [hidden]="true" gaeModelChangeFormActionLinkSubmitView #submit action="Delete" lockedText="Done!"></gae-submit-view>
             </div>
         </div>
     </gae-model-loading-view>

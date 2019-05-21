@@ -1,7 +1,7 @@
 import { Observable, of, empty } from 'rxjs';
 import { Input } from '@angular/core';
 import { UniqueModel, ModelOrKey, ModelKey, ModelUtility } from '@gae-web/appengine-utility';
-import { defaultIfEmpty, map, filter } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 /**
  * Abstract update component that takes in either a model or a key and

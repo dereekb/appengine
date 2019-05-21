@@ -1,0 +1,15 @@
+<ng-container appFooCreateAction appFooCreateAnalytics #action="appFooCreateAction">
+  <ng-container #control="gaeCreateModelFormController" gaeCreateModelFormController [action]="action" [form]="form"
+    [submit]="submit"></ng-container>
+  <h1 mat-dialog-title>Create Foo</h1>
+  <div mat-dialog-content>
+    <app-foo-model-form #form></app-foo-model-form>
+  </div>
+  <div mat-dialog-actions>
+    <gae-submit-button #submit></gae-submit-button>
+    <button mat-button (click)="onCancelClick()">Cancel</button>
+    <div>
+      <gae-error [error]="error"></gae-error>
+    </div>
+  </div>
+</ng-container>

@@ -40,11 +40,14 @@ export * from './lib/loading/loading.module';
 export * from './lib/loading/loading';
 
 // Material
-export * from './lib/material/material.module';
 export * from './lib/material/color.component';
+export * from './lib/material/fab.component';
 export * from './lib/material/snackbar.directive';
+export * from './lib/material/title.component';
+export * from './lib/material/material.module';
 
 // Model
+export * from './lib/model/action/create.component';
 export * from './lib/model/action/create.directive';
 export * from './lib/model/action/delete.directive';
 export * from './lib/model/action/link.directive';
@@ -67,8 +70,9 @@ export * from './lib/model/resource/source.component';
 export * from './lib/model/model.module';
 
 // Shared
-export * from './lib/shared/action';
+export * from './lib/shared/action.component';
 export * from './lib/shared/action.directive';
+export * from './lib/shared/action';
 export * from './lib/shared/subscription';
 
 // Segue

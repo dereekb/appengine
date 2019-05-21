@@ -25,26 +25,22 @@ export enum ActionState {
 }
 
 export type ActionFactory<O> = () => Observable<O>;
-
 export type HandleActionResult<O, E> = (result: O) => E;
-
 export type HandleActionError = (error: any) => void;
 
 /**
  * Event passed by an ActionObject.
  */
 export interface ActionEvent {
-
   readonly state: ActionState;
-
+  readonly result?: any;
   readonly error?: Error;
-
 }
 
 /**
  * Object that has a primary action, and a single active state.
  */
-export interface ActionObject {
+export abstract class ActionObject {
 
   /**
    * ActionEvent stream for this ActionObject.
@@ -69,15 +65,13 @@ export interface ActionObject {
   /**
    * Resets the ActionObject back to it's initial state.
    */
-  reset(): void;
+  abstract reset(): void;
 
 }
 
 /**
  * ActionObject with a typed event.
  */
-export interface TypedActionObject<E extends ActionEvent> extends ActionObject {
-
+export abstract class TypedActionObject<E extends ActionEvent> extends ActionObject {
   readonly stream: Observable<E>;
-
 }

@@ -21,7 +21,7 @@ export class GaeDeleteModelFormControllerDirective<T extends UniqueModel> extend
     protected resetAction() {
         delete this._response;
         this._response = undefined;
-        this.submit.locked = false; // Unlock.
+        this.submit.isLocked = false; // Unlock.
         super.resetAction();
     }
 
@@ -40,7 +40,7 @@ export class GaeDeleteModelFormControllerDirective<T extends UniqueModel> extend
     }
 
     protected setResult(result: DeleteResponse<T>) {
-        this.submit.locked = true;
+        this.submit.isLocked = true;
         this._response = result;
     }
 

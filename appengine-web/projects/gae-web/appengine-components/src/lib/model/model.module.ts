@@ -7,18 +7,20 @@ import { GaeLoadingComponentsModule } from '../loading/loading.module';
 import { GaeModelLoadingViewComponent } from './loading/loading.component';
 import { GaeFormComponentsModule } from '../form/form.module';
 import { GaeCreateModelFormControllerDirective } from './form/create.directive';
-import { GaeSubmitViewComponent, GaeSubmitViewActionDirective } from './form/submit.component';
+import { GaeSubmitViewComponent, GaeSubmitViewActionDirective, GaeSubmitButtonComponent } from './form/submit.component';
 import { GaeUpdateModelFormControllerDirective } from './form/update.directive';
 import { GaeDeleteModelFormControllerDirective } from './form/delete.directive';
 import { MatProgressSpinnerModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
+import { MatProgressButtonsModule } from 'mat-progress-buttons';
 
 @NgModule({
   imports: [
     CommonModule,
     GaeLoadingComponentsModule,
     GaeFormComponentsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatProgressButtonsModule
   ],
   declarations: [
     GaeReadSourceKeyDirective,
@@ -30,6 +32,7 @@ import { CommonModule } from '@angular/common';
     GaeUpdateModelFormControllerDirective,
     GaeDeleteModelFormControllerDirective,
     GaeSubmitViewActionDirective,
+    GaeSubmitButtonComponent,
     GaeSubmitViewComponent
   ],
   exports: [
@@ -42,6 +45,7 @@ import { CommonModule } from '@angular/common';
     GaeUpdateModelFormControllerDirective,
     GaeDeleteModelFormControllerDirective,
     GaeSubmitViewActionDirective,
+    GaeSubmitButtonComponent,
     GaeSubmitViewComponent
   ]
 })

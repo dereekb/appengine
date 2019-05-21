@@ -1,5 +1,5 @@
 import { Input, OnDestroy } from '@angular/core';
-import { GaeSubmitViewComponent } from './submit.component';
+import { GaeSubmitViewComponent, GaeSubmitComponent } from './submit.component';
 import { ActionState, ActionObject, ActionEvent } from '../../shared/action';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 
@@ -8,11 +8,13 @@ import { SubscriptionObject } from '@gae-web/appengine-utility';
  */
 export abstract class AbstractActionSubmitController implements OnDestroy {
 
-    private _submit: GaeSubmitViewComponent;
+    private _submit: GaeSubmitComponent;
     private _submitSub = new SubscriptionObject();
 
     private _action: ActionObject;
     private _actionSub = new SubscriptionObject();
+
+    private _error?: any;
 
     constructor() { }
 
@@ -22,15 +24,19 @@ export abstract class AbstractActionSubmitController implements OnDestroy {
     }
 
     // MARK: Accessors
-    public get submit() {
+    public get error() {
+        return this._error;
+    }
+
+    public get submit(): GaeSubmitComponent {
         return this._submit;
     }
 
     @Input()
-    public set submit(submit: GaeSubmitViewComponent) {
+    public set submit(submit: GaeSubmitComponent) {
         if (submit) {
             this._submit = submit;
-            this._submitSub.subscription = this._submit.onClick.subscribe(() => this.submitClicked());
+            this._submitSub.subscription = this._submit.submitClicked.subscribe(() => this.submitClicked());
         }
     }
 
@@ -59,12 +65,14 @@ export abstract class AbstractActionSubmitController implements OnDestroy {
     }
 
     protected updateForActionEvent(event: ActionEvent) {
+        this._error = event.error;
+
         switch (event.state) {
             case ActionState.Working:
-                this._submit.working = true;
+                this._submit.isWorking = true;
                 break;
             default:
-                this._submit.working = false;
+                this._submit.isWorking = false;
                 break;
         }
     }

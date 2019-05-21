@@ -3,10 +3,12 @@ import { AbstractCreateActionDirective, CreateActionDirectiveEvent, AbstractActi
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { FooCreateService } from 'src/app/secure/shared/api/model/foo/foo.service';
 import { AnalyticsService, AnalyticsSender } from '@gae-web/appengine-analytics';
+import { ProvideCreateActionDirective } from 'projects/gae-web/appengine-components/src/public-api';
 
 @Directive({
     selector: '[appFooCreateAction]',
-    exportAs: 'appFooCreateAction'
+    exportAs: 'appFooCreateAction',
+    providers: ProvideCreateActionDirective(FooCreateActionDirective)
 })
 export class FooCreateActionDirective extends AbstractCreateActionDirective<Foo> {
 

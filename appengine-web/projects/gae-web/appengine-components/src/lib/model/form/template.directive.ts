@@ -53,7 +53,7 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
 
     protected resetAction() {
         this._response.next(undefined);
-        this.submit.locked = false; // Unlock.
+        this.submit.isLocked = false; // Unlock.
         super.resetAction();
     }
 
@@ -67,6 +67,8 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
 
             obs.subscribe((result) => {
                 this.setResult(result as R);
+            }, (error) => {
+                this.setError(error);
             });
         } else {
             throw new Error('No model is available on the current form.');
@@ -74,9 +76,14 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
     }
 
     protected setResult(result: R | undefined) {
-        this.submit.locked = true;
+        this.submit.isLocked = true;
         this._response.next(result);
         this.resultSet.next(result);
+    }
+
+    protected setError(error: any) {
+        this.submit.isLocked = false;
+        this._response.error(error);
     }
 
 }

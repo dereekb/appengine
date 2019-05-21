@@ -1,18 +1,22 @@
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Type, Provider } from '@angular/core';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { ActionState, HandleActionResult, HandleActionError, ActionFactory, ActionEvent, TypedActionObject } from './action';
 import { filter, share } from 'rxjs/operators';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 
+export function ProvideActionDirective<S extends ActionDirective<any>>(directiveType: Type<S>): Provider[] {
+  return [{ provide: ActionDirective, useExisting: directiveType }];
+}
+
+export abstract class ActionDirective<E extends ActionEvent> extends TypedActionObject<E> {}
+
 /**
  * Abstract component that provides inputs/outputs for some Observable action.
  */
-export abstract class AbstractActionDirective<E extends ActionEvent> implements TypedActionObject<E>, OnDestroy {
+export abstract class AbstractActionDirective<E extends ActionEvent> extends ActionDirective<E> implements OnDestroy {
 
   private _sub = new SubscriptionObject();
   private _stream = new BehaviorSubject<E>(this.makeResetState());
-
-  constructor() { }
 
   ngOnDestroy() {
     this._stream.complete();

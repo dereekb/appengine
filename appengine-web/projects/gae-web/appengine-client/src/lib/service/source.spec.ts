@@ -6,7 +6,7 @@ import { filter, first } from 'rxjs/operators';
 import { TestFooTestReadSourceFactory, TestFooTestKeyQuerySource } from '../../test/foo.testing';
 import { of } from 'rxjs';
 
-fdescribe('Source', () => {
+describe('Source', () => {
 
   describe('ReadSource', () => {
 

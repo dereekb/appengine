@@ -4,6 +4,6 @@
         gaeCreateModelFormController #control="gaeCreateModelFormController" [action]="action" [form]="form" [submit]="submit"
         >
         <app-foo-model-form #form></app-foo-model-form>
-        <gae-submit-view [hidden]="true" appModelChangeFormActionLinkSubmitView #submit action="Create Foo" lockedText="Done!"></gae-submit-view>
+        <gae-submit-view #submit [hidden]="true" gaeModelChangeFormActionLinkSubmitView action="Create Foo" lockedText="Done!"></gae-submit-view>
     </div>
 </div>

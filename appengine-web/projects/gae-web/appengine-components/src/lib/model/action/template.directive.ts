@@ -1,21 +1,21 @@
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { Observable } from 'rxjs';
-import { AbstractActionDirective } from '../../shared/action.directive';
+import { AbstractActionDirective, ProvideActionDirective } from '../../shared/action.directive';
 import { TemplateResponse } from '@gae-web/appengine-api';
 import { ActionObject, ActionEvent, ActionFactory } from '../../shared/action';
+import { Type, Provider } from '@angular/core';
 
 export interface TemplateActionDirectiveEvent<T extends UniqueModel> extends ActionEvent {
-
   readonly result?: TemplateResponse<T>;
-
 }
 
-export interface TemplateActionDirective<T extends UniqueModel> extends ActionObject {
+export function ProvideTemplateActionDirective<S extends TemplateActionDirective<any>>(directiveType: Type<S>): Provider[] {
+  return [...ProvideActionDirective(directiveType), { provide: TemplateActionDirective, useExisting: directiveType }];
+}
 
+export abstract class TemplateActionDirective<T extends UniqueModel> extends ActionObject {
   readonly stream: Observable<TemplateActionDirectiveEvent<T>>;
-
-  doTemplateAction(config: TemplateActionConfig<T>): Observable<TemplateResponse<T>>;
-
+  abstract doTemplateAction(config: TemplateActionConfig<T>): Observable<TemplateResponse<T>>;
 }
 
 export interface TemplateActionConfig<T> {

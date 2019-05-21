@@ -6,7 +6,7 @@
 
 // Gateway Styles
 @import '../projects/gae-web/appengine-gateway/src/styles';
-
+@import '../projects/gae-web/appengine-components/src/styles';
 
 // Include non-theme styles for core.
 @include mat-core();

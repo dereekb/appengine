@@ -2,9 +2,9 @@
   <ng-content select="above-view"></ng-content>
   <div class="form-submit-view-buttons">
     <span class="form-submit-view-button">
-      <button class="form-submit-view-main-button" mat-raised-button [ngClass]="buttonClasses" (click)="clicked()"
-        [disabled]="disabled">{{text}}</button>
-      <mat-spinner *ngIf="working" class="form-submit-view-button-spinner"></mat-spinner>
+      <button class="form-submit-view-main-button" mat-raised-button [ngClass]="buttonClasses" (click)="submit()"
+        [disabled]="isDisabled">{{text}}</button>
+      <mat-spinner *ngIf="isWorking" class="form-submit-view-button-spinner"></mat-spinner>
     </span>
     <ng-content select="[buttons]"></ng-content>
   </div>
