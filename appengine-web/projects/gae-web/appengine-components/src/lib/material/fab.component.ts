@@ -23,10 +23,10 @@ export abstract class GaePageButton {
   public text: string;
 
   @Output()
-  public readonly fabClicked = new EventEmitter<{}>();
+  public readonly buttonClicked = new EventEmitter<{}>();
 
-  public clickFab() {
-    this.fabClicked.emit();
+  public clickButton() {
+    this.buttonClicked.emit();
   }
 
 }
@@ -85,7 +85,7 @@ export class PageFabService {
 @Component({
   selector: 'gae-page-fab',
   template: `
-      <a (click)="clickFab()" [fxHide]="isHidden" [disabled]="disabled" mat-fab class="page-fab" [ngClass]="{ 'page-fab-disabled': disabled }">
+      <a (click)="clickButton()" [fxHide]="isHidden" [disabled]="disabled" mat-fab class="page-fab" [ngClass]="{ 'page-fab-disabled': disabled }">
           <mat-icon>{{icon}}</mat-icon>
       </a>
   `,
@@ -138,7 +138,7 @@ export class GaePageFabComponent extends GaePageButton implements OnInit, OnDest
 @Component({
   selector: 'gae-page-button',
   template: `
-      <a (click)="clickFab()" [disabled]="disabled" mat-button class="page-button">
+      <a (click)="clickButton()" [disabled]="disabled" mat-button class="page-button">
           <mat-icon *ngIf="icon">{{icon}}</mat-icon><span *ngIf="text">{{text}}</span>
       </a>
   `,
@@ -172,7 +172,7 @@ export class GaePageButtonSegueDirective implements OnInit, OnDestroy {
   constructor(private _fab: GaePageButton, private _state: StateService) { }
 
   ngOnInit() {
-    this._sub.subscription = this._fab.fabClicked.pipe(
+    this._sub.subscription = this._fab.buttonClicked.pipe(
       throttleTime(this.throttle)
     ).subscribe(() => {
       this.performSegue();

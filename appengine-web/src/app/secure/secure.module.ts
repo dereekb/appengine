@@ -14,9 +14,7 @@ import { GaeComponentsModule } from '@gae-web/appengine-components';
 
 export function routerConfigFn(router: UIRouter) {
   const transitionService = router.transitionService;
-
   secureGatewayHook(transitionService);
-
   router.trace.enable(Category.TRANSITION);
 }
 

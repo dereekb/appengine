@@ -63,7 +63,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
 
   private _elementsStream = this._stream.pipe(flatMap((x) => {
     if (x.source) {
-      return x.source.pipe(flatMap(y => y.elements || []));
+      return x.source.pipe(map(y => y.elements || []));
     } else {
       return [];
     }

@@ -46,7 +46,7 @@ export abstract class GaeSubmitComponent {
 
 export function ProvideGaeSubmitComponent<S extends GaeSubmitComponent>(listViewType: Type<S>) {
     return [{ provide: GaeSubmitComponent, useExisting: listViewType }];
-  }
+}
 
 export abstract class GaeAbstractSubmitComponent implements OnDestroy {
 
@@ -127,7 +127,7 @@ export enum GaeSubmitButtonType {
 @Component({
     selector: 'gae-submit-button',
     template: `
-    <ng-container [ngSwitch]="mode">
+    <ng-container [ngSwitch]="buttonType">
         <mat-bar-button *ngSwitchCase="0" (btnClick)="submit()" [options]="btnOptions"></mat-bar-button>
         <mat-spinner-button *ngSwitchCase="1" (btnClick)="submit()" [options]="btnOptions"></mat-spinner-button>
     </ng-container>
@@ -138,6 +138,9 @@ export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
 
     @Input()
     public raised = false;
+
+    @Input()
+    public spinner = false;
 
     @Input()
     public mode: ProgressSpinnerMode = 'indeterminate';
@@ -154,6 +157,10 @@ export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
             mode: this.mode,
             disabled: this.isDisabled
         };
+    }
+
+    public get buttonType(): GaeSubmitButtonType {
+        return this.spinner ? GaeSubmitButtonType.Spinner : GaeSubmitButtonType.Bar;
     }
 
 }

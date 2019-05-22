@@ -3,7 +3,7 @@ package com.dereekb.gae.utilities.time.model;
 import java.util.Date;
 
 import com.dereekb.gae.utilities.time.SafeIsoTimeConverter;
-import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
+import com.dereekb.gae.utilities.time.impl.JavaTimeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * Basic DTO that contains a date.
  * <p>
  * The date value is encoded to a string for JSON serialization.
- * 
+ *
  * @author dereekb
  *
  */
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DatedModelData {
 
-	public static final SafeIsoTimeConverter DATE_CONVERTER = ThreeTenIsoTimeConverter.SAFE_SINGLETON;
+	public static final SafeIsoTimeConverter DATE_CONVERTER = JavaTimeConverter.SAFE_SINGLETON;
 
 	/**
 	 * Date for the model. For JSON serialization it is converted

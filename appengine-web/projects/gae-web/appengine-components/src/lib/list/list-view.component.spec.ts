@@ -49,6 +49,16 @@ describe('ListViewComponent', () => {
         fixture.detectChanges();
       }));
 
+      it('should load the elements.', (done) => {
+        component.elements.pipe(
+          filter((x) => x && x.length > 0)
+        ).subscribe((elements) => {
+          expect(elements).toBeArray();
+          expect(elements.length).toBe(modelKeys.length);
+          done();
+        });
+      });
+
       it('canLoadMore() on the component should be false', (done) => {
         component.stream.pipe(
           flatMap((x) => x.source),

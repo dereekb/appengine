@@ -10,9 +10,11 @@ public class FooAttributeUpdater
 	@Override
 	public void updateTarget(Foo target,
 	                         Foo template) throws InvalidAttributeException {
-
-		// TODO
-
+		target.setName(template.getName());
+		target.setNumber(template.getNumber());
+		target.setNumberList(template.getNumberList());
+		target.setStringSet(template.getStringSet());
+		target.setDescriptor(template.getDescriptor());
 	}
 
 }

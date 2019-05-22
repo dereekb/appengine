@@ -12,7 +12,8 @@ import { FooModelFormComponent } from './views/model-form.component';
 import { FooUpdateFormComponent } from './views/update-form.component';
 import { GaeComponentsModule } from '@gae-web/appengine-components';
 import { CommonModule } from '@angular/common';
-import { MatListModule, MatIconModule, MatTabsModule, MatToolbarModule } from '@angular/material';
+import { MatListModule, MatIconModule, MatTabsModule, MatToolbarModule, MatDialogModule, MatButtonModule } from '@angular/material';
+import { FooCreateDialogComponent } from './views/create-modal.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,9 @@ import { MatListModule, MatIconModule, MatTabsModule, MatToolbarModule } from '@
     MatListModule,
     MatIconModule,
     MatTabsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatDialogModule,
+    MatButtonModule
   ],
   declarations: [
     // Client
@@ -36,6 +39,7 @@ import { MatListModule, MatIconModule, MatTabsModule, MatToolbarModule } from '@
     FooUpdateActionAnalyticDirective,
     // Views
     FooCreateFormComponent,
+    FooCreateDialogComponent,
     FooSegueToCreatedViewDirective,
     FooDeleteFormComponent,
     FooListContentComponent,
@@ -56,12 +60,14 @@ import { MatListModule, MatIconModule, MatTabsModule, MatToolbarModule } from '@
     FooUpdateActionAnalyticDirective,
     // Views
     FooCreateFormComponent,
+    FooCreateDialogComponent,
     FooSegueToCreatedViewDirective,
     FooDeleteFormComponent,
     FooListContentComponent,
     FooListViewComponent,
     FooModelFormComponent,
     FooUpdateFormComponent
-  ]
+  ],
+  entryComponents: [FooCreateDialogComponent]
 })
 export class FooComponentsModule { }

@@ -280,24 +280,31 @@ export class ValueUtility {
   }
 
   /**
-   * Converts a set to an array.
+   * Converts a set to an array. If the set is undefined, returns an empty array.
    */
-  static setToArray<T>(input: Set<T>): T[] {
+  static setToArray<T>(input: Set<T> | undefined): T[] {
     const array: T[] = [];
 
-    input.forEach((item) => {
-      array.push(item);
-    });
+    if (input) {
+      input.forEach((item) => {
+        array.push(item);
+      });
+    }
 
     return array;
   }
 
-  static arrayToSet<T>(input: T[]): Set<T> {
+  /**
+   * Converts an array to a set. If the array is undefined, returns an empty set.
+   */
+  static arrayToSet<T>(input: T[] | undefined): Set<T> {
     const set = new Set<T>();
 
-    input.forEach((x) => {
-      set.add(x);
-    });
+    if (input) {
+      input.forEach((x) => {
+        set.add(x);
+      });
+    }
 
     return set;
   }

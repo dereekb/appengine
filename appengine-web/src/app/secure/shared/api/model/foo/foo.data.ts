@@ -7,8 +7,8 @@ export class FooData extends DescribedDatabaseModelData {
 
   public name: string;
   public number: number;
-  public numberList: number[];
-  public stringSet: string[];
+  public numberList: number[] = [];
+  public stringSet: string[] = [];
 
   public static fromJson(json: any): FooData {
     const data = new FooData();

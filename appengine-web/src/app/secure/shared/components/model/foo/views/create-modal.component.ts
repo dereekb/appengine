@@ -1,11 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
-import { FooCreateFormComponent } from './create-form.component';
-import { FooCreateActionDirective } from '../client/create.directive';
+import { Component } from '@angular/core';
 import { AbstractCreateActionDialogCompoment } from '@gae-web/appengine-components';
-import { TestFoo } from 'projects/gae-web/appengine-api/src/public-api';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 
 @Component({
   templateUrl: 'create-modal.component.html',
 })
-export class FooCreateDialogComponent extends AbstractCreateActionDialogCompoment<TestFoo> {}
+export class FooCreateDialogComponent extends AbstractCreateActionDialogCompoment<Foo> {}

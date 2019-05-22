@@ -3,7 +3,7 @@ import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { ActionEvent, ActionState } from './action';
 import { AbstractActionDirective, ActionDirective } from './action.directive';
 import { filter } from 'rxjs/operators';
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Inject } from '@angular/core';
 
 /**
  * Abstract action dialog for a MatDialogRef.
@@ -16,7 +16,7 @@ export abstract class AbstractActionDialogCompoment<E extends ActionEvent> imple
   private _actionDirective: ActionDirective<E>;
   private _actionSub = new SubscriptionObject();
 
-  constructor(public readonly dialogRef: MatDialogRef<AbstractActionDialogCompoment<E>>) { }
+  constructor(@Inject(MatDialogRef) public readonly dialogRef: MatDialogRef<AbstractActionDialogCompoment<E>>) { }
 
   ngOnDestroy() {
     this._actionSub.destroy();

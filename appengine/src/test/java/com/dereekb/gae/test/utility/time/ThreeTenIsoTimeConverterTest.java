@@ -1,12 +1,14 @@
 package com.dereekb.gae.test.utility.time;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
 
+@Deprecated
 public class ThreeTenIsoTimeConverterTest {
 
 	@Test
@@ -37,6 +39,16 @@ public class ThreeTenIsoTimeConverterTest {
 		String dateString = ThreeTenIsoTimeConverter.LOCAL_TIME_CONVERTER.convertToString(dateConvert);
 
 		assertTrue(dateString.equals(timeWithTimeZone));
+	}
+
+	@Test
+	public void testFromConversionWithLocalTimezoneInfo() {
+		String timeWithTimeZone = "2019-05-22T00:19:50.345-05:00";
+
+		Date dateConvert = ThreeTenIsoTimeConverter.SAFE_SINGLETON.convertFromString(timeWithTimeZone);
+		assertTrue(dateConvert != null);
+
+		// assertTrue(dateString.equals(timeWithTimeZone));
 	}
 
 }

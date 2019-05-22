@@ -97,11 +97,19 @@ export abstract class AbstractDescribedDatabaseModel extends AbstractSearchableD
     this._descriptorId = descriptorId;
   }
 
-  get descriptor() {
-    return {
-      descriptorType: this._descriptorType,
-      descriptorId: this._descriptorId
-    };
+  get hasDescriptor(): boolean {
+    return Boolean(this._descriptorType && this._descriptorId);
+  }
+
+  get descriptor(): Descriptor {
+    if (this.hasDescriptor) {
+      return {
+        descriptorType: this._descriptorType,
+        descriptorId: this._descriptorId
+      };
+    } else {
+      return undefined;
+    }
   }
 
   set descriptor(descriptor: Descriptor) {

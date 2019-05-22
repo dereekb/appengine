@@ -1,5 +1,5 @@
 import { OnDestroy, Type, Provider } from '@angular/core';
-import { Subscription, BehaviorSubject, Observable } from 'rxjs';
+import { Subscription, BehaviorSubject, Observable, throwError } from 'rxjs';
 import { ActionState, HandleActionResult, HandleActionError, ActionFactory, ActionEvent, TypedActionObject } from './action';
 import { filter, share } from 'rxjs/operators';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
@@ -36,7 +36,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> extends Act
   }
 
   get isWorking() {
-    return Boolean(this._sub);
+    return this._sub.hasSubscription;
   }
 
   // MARK: Stream
@@ -51,7 +51,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> extends Act
 
   protected doAction<O>(doFn: ActionFactory<O>, success: HandleActionResult<O, E>, error?: HandleActionError): Observable<O> {
     if (this.isWorking) {
-      return Observable.throw(new Error('Action is currently running.'));
+      return throwError(new Error('Action is currently running.'));
     } else {
       this.next(this.makeWorkingState());
 

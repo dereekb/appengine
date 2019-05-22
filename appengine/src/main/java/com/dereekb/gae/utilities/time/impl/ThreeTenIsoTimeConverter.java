@@ -12,6 +12,12 @@ import org.threeten.bp.format.DateTimeParseException;
 import com.dereekb.gae.utilities.time.IsoTimeConverter;
 import com.dereekb.gae.utilities.time.SafeIsoTimeConverter;
 
+/**
+ * @author dereekb
+ * @deprecated Replaced by {@link JavaTimeConverter}
+ *
+ */
+@Deprecated
 public final class ThreeTenIsoTimeConverter {
 
 	public static final IsoTimeConverter INSTANT_CONVERTER = new InstantConverter();
@@ -23,6 +29,7 @@ public final class ThreeTenIsoTimeConverter {
 	private static class InstantConverter
 	        implements IsoTimeConverter {
 
+		private static final DateTimeFormatter fromStringTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 		private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_INSTANT;
 
 		@Override
@@ -34,7 +41,7 @@ public final class ThreeTenIsoTimeConverter {
 			Instant instant = null;
 
 			try {
-				instant = Instant.from(timeFormatter.parse(isoString));
+				instant = Instant.from(fromStringTimeFormatter.parse(isoString));
 			} catch (DateTimeParseException e) {
 				throw new IllegalArgumentException(e);
 			}
@@ -58,7 +65,7 @@ public final class ThreeTenIsoTimeConverter {
 	/**
 	 * @deprecated Is locked to the UTC timezone only, compared to
 	 *             {@link InstantConverter}.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */

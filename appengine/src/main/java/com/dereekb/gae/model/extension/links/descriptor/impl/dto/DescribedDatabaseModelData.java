@@ -7,6 +7,7 @@ import com.dereekb.gae.model.extension.search.document.search.dto.SearchableData
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Abstract Data Transfer Object class for {@link DescribedDatabaseModel}
@@ -26,8 +27,15 @@ public abstract class DescribedDatabaseModelData extends SearchableDatabaseModel
 		return this.descriptor;
 	}
 
+	@JsonDeserialize(as = DescriptorData.class)
 	public void setDescriptor(Descriptor descriptor) {
-		this.descriptor = DescriptorImpl.withValue(descriptor);
+		DescriptorData data = DescriptorData.withValue(descriptor);
+
+		if (data != null && data.isValid()) {
+			this.descriptor = DescriptorImpl.withValue(descriptor);
+		} else {
+			this.descriptor = null;
+		}
 	}
 
 }
