@@ -7,6 +7,7 @@ import { ModelDemoComponent } from './model.component';
 import { ModelViewComponent } from './view/view.component';
 import { SecureComponentsModule } from 'src/app/secure/shared/components/components.module';
 import { MatButtonModule } from '@angular/material';
+import { ModelInfoViewComponent } from './view/info.component';
 
 export const ROUTER_CONFIG: StatesModule = {
   states: MODEL_DEMO_STATES
@@ -16,6 +17,7 @@ export const ROUTER_CONFIG: StatesModule = {
   declarations: [
     ModelDemoComponent,
     ModelViewComponent,
+    ModelInfoViewComponent,
     ModelListComponent
   ],
   imports: [

@@ -1,5 +1,5 @@
 import { GatewaySegueService } from '@gae-web/appengine-gateway';
-import { ModelUtility, ModelKey } from '@gae-web/appengine-utility';
+import { ModelUtility, ModelKey, ModelOrKey } from '@gae-web/appengine-utility';
 import { StateService } from '@uirouter/core';
 import { Injectable } from '@angular/core';
 import { Foo } from './shared/api/model/foo/foo';
@@ -32,10 +32,10 @@ export class AppSegueService implements GatewaySegueService {
     return this._stateService.go(MODEL_DEMO_LIST_STATE);
   }
 
-  segueToFoo(target: Foo | ModelKey) {
+  segueToFoo(target: ModelOrKey<Foo>) {
     const name: string = MODEL_DEMO_VIEW_STATE;
     const params = {
-        tallyTypeKey: ModelUtility.readModelKeyString(target)
+        fooKey: ModelUtility.readModelKeyString(target)
     };
 
     return this._stateService.go(name, params);

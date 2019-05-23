@@ -1,7 +1,7 @@
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { Component, ViewEncapsulation, AfterContentInit, OnDestroy, Input } from '@angular/core';
 import {
-    SingleElementConversionSource, ConversionSourceEvent,
+    SingleElementReadSource, ConversionSourceEvent,
     SourceState, ModelKey, SubscriptionObject
 } from '@gae-web/appengine-utility';
 import { LoadingContext, LoadingEvent } from '../../loading/loading';
@@ -66,7 +66,7 @@ export abstract class AbstractModelLoaderStateComponent {
 }
 
 /**
- * Component that reads a single element from a SingleElementConversionSource.
+ * Component that reads a single element from a SingleElementReadSource.
  */
 @Component({
     template: '',
@@ -86,7 +86,11 @@ export class GaeModelLoaderComponent<T> extends AbstractModelLoaderStateComponen
 
     // MARK: Accessors
     get state(): ModelLoaderState {
-        return this._modelSourceWrapper.stateNow;
+        return this._modelSourceWrapper.state;
+    }
+
+    get m() {
+        return this.model;
     }
 
     get model(): T | undefined {
@@ -104,14 +108,14 @@ export class GaeModelLoaderComponent<T> extends AbstractModelLoaderStateComponen
 
     // MARK: Source
     @Input()
-    public set source(source: SingleElementConversionSource<ModelKey, T>) {
+    public set source(source: SingleElementReadSource<T>) {
         this._modelSourceWrapper.source = source;
     }
 
 }
 
 // MARK: Detail Component
-export class ModelLoaderSourceWrapper<T> {
+export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
 
     private _optional = true;   // TODO: Update to throw an error when all requested elements are not returned (atomic failure).
 
@@ -119,10 +123,14 @@ export class ModelLoaderSourceWrapper<T> {
         state: ModelLoaderState.Init
     });
 
-    private _source: SingleElementConversionSource<ModelKey, T>;
+    private _source: SingleElementReadSource<T>;
     private _sub = new SubscriptionObject();
 
-    constructor() { }
+    constructor(source?: SingleElementReadSource<T>) {
+        if (source) {
+            this.source = source;
+        }
+    }
 
     destroy() {
         this._sub.destroy();
@@ -133,7 +141,7 @@ export class ModelLoaderSourceWrapper<T> {
         return this._stream.asObservable();
     }
 
-    get stateNow(): ModelLoaderState {
+    get state(): ModelLoaderState {
         return this._stream.value.state;
     }
 
@@ -152,15 +160,15 @@ export class ModelLoaderSourceWrapper<T> {
     /**
      * Model Source. Provided by the parent or resolved via the router.
      */
-    set source(source: SingleElementConversionSource<ModelKey, T>) {
+    set source(source: SingleElementReadSource<T>) {
         this._source = source;
-        if (this.stateNow !== ModelLoaderState.Init) {
+        if (this.state !== ModelLoaderState.Init) {
             this._bindToSource();
         }
     }
 
     public initialize() {
-        if (this.stateNow === ModelLoaderState.Init) {
+        if (this.state === ModelLoaderState.Init) {
             this._bindToSource();
         }
     }

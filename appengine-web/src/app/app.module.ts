@@ -29,6 +29,7 @@ export function analyticsServiceConfigurationFactory(facebookApi: FacebookApiSer
   const facebookListener: AnalyticsServiceListener = new FacebookAnalyticsListenerService(facebookApi);
 
   const config: AnalyticsServiceConfiguration = {
+    hostnames: ['demo.com'],
     listeners: [
       // TODO: Add Google listener.
       facebookListener

@@ -82,7 +82,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
   public hideControls = false;
 
   @Output()
-  public selectionEvent = new EventEmitter<T>();
+  public itemSelected = new EventEmitter<T>();
 
   constructor(@Inject(ChangeDetectorRef) private cdRef: ChangeDetectorRef) {}
 
@@ -161,7 +161,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
 
   // MARK: Component Functions
   public select(selected: T) {
-    this.selectionEvent.emit(selected);
+    this.itemSelected.emit(selected);
     this._selected = selected;
   }
 

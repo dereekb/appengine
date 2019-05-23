@@ -1,29 +1,58 @@
-import { Ng2StateDeclaration } from '@uirouter/angular';
+import { Ng2StateDeclaration, Transition } from '@uirouter/angular';
 import { ModelDemoComponent } from './model.component';
 import { ModelListComponent } from './list/list.component';
 import { ModelViewComponent } from './view/view.component';
+import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { Observable, of } from 'rxjs';
+import { FooReadSourceFactory } from 'src/app/secure/shared/api/model/foo/foo.service';
+import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { SingleElementReadSource } from '@gae-web/appengine-utility/lib/source';
+import { ModelInfoViewComponent } from './view/info.component';
+import { delay } from 'rxjs/operators';
 
 export const modelDemoState: Ng2StateDeclaration = {
-  url: '/model',
   name: 'demo.model',
   redirectTo: 'demo.model.list',
+  url: '/model',
   component: ModelDemoComponent
 };
 
 export const modelDemoListState: Ng2StateDeclaration = {
-  url: '/list',
   name: 'demo.model.list',
+  url: '/list',
   component: ModelListComponent
 };
 
+export function getFooModelKey(transition: Transition) {
+  return transition.params().fooKey;
+}
+
+export function makeFooSource(fooKey: ModelKey, readSourceFactory: FooReadSourceFactory): SingleElementReadSource<Foo> {
+  const source = readSourceFactory.makeSource();
+  source.input = of(fooKey);
+  return source;
+}
+
 export const modelDemoViewState: Ng2StateDeclaration = {
-  url: '/view',
   name: 'demo.model.view',
+  redirectTo: 'demo.model.view.info',
+  url: '/{fooKey:int}',
+  resolve: [
+    { token: 'fooKey', deps: [Transition], resolveFn: getFooModelKey },
+    { token: 'fooSource', deps: ['fooKey', FooReadSourceFactory], resolveFn: makeFooSource }
+  ],
   component: ModelViewComponent
+};
+
+export const modelDemoViewInfoState: Ng2StateDeclaration = {
+  url: '/info',
+  name: 'demo.model.view.info',
+  component: ModelInfoViewComponent
 };
 
 export const MODEL_DEMO_STATES: Ng2StateDeclaration[] = [
   modelDemoState,
   modelDemoListState,
-  modelDemoViewState
+  modelDemoViewState,
+  modelDemoViewInfoState
 ];
