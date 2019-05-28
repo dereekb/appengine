@@ -1,0 +1,12 @@
+<mat-sidenav-container fxFill gaeSidenavController>
+  <mat-sidenav #sidenav mode="over">
+    <!-- Inject the sidenav using ui-view. -->
+    <ng-container ui-view="sidenav">SIDENAV</ng-container>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <!-- Content contained within a page toobar-->
+    <gae-app-page-toolbar gaePageToolbarSidenavLink>
+      <ui-view content></ui-view>
+    </gae-app-page-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>

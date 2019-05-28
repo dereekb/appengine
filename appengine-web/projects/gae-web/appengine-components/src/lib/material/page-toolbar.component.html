@@ -1,0 +1,19 @@
+<div>
+  <!-- Creates a layout with a left-positioned sidenav and explicit content. -->
+  <mat-toolbar fxLayout="column" fxFlex="noshrink">
+    <gae-page-toolbar-nav-button *ng-if="leftNav" [link]="leftNav"></gae-page-toolbar-nav-button>
+    <!--
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    -->
+    <span>{{ title }}</span>
+    <span fxFlex="grow"></span>
+    <ng-container fxFlex="noshrink" *ngIf="rightNavs">
+      <!-- TODO: Shrink and show ... as last button-->
+      <gae-page-toolbar-nav-button *ngFor="let nav of rightNavs" [link]="nav"></gae-page-toolbar-nav-button>
+    </ng-container>
+  </mat-toolbar>
+  <!---->
+  <ng-content select="[content]"></ng-content>
+</div>

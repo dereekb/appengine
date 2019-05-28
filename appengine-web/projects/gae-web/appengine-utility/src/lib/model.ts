@@ -315,7 +315,11 @@ export class ModelUtility {
   }
 
   static isValidStringModelKey(value: StringModelKey): boolean {
-    return Boolean(value);
+    if (typeof value === 'string') {
+      return Boolean(value);
+    } else {
+      return false;
+    }
   }
 
   static readModelKeyString<T extends UniqueModel>(input: ModelOrKey<T> | undefined, read?: ReadModelKeyFunction<T>): string | undefined {

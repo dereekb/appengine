@@ -3,7 +3,6 @@ import { ModelUtility } from './model';
 
 describe('ModelUtility', () => {
 
-  // TODO
   describe('isInitializedModelKey()', () => {
 
     it('should return false for a passed model.', () => {

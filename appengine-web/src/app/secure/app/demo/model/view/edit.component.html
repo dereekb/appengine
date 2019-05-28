@@ -1,0 +1,8 @@
+<div>
+  <gae-model-loader #fooLoader [source]="fooSource"></gae-model-loader>
+  <gae-model-loading-view [loader]="fooLoader">
+    <ng-container content>
+      <p>Foo: {{ fooLoader.m?.name }} - #{{ fooLoader.m?.number }}</p>
+    </ng-container>
+  </gae-model-loading-view>
+</div>

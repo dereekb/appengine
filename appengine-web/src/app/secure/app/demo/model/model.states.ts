@@ -9,6 +9,7 @@ import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { SingleElementReadSource } from '@gae-web/appengine-utility/lib/source';
 import { ModelInfoViewComponent } from './view/info.component';
 import { delay } from 'rxjs/operators';
+import { ModelEditViewComponent } from './view/edit.component';
 
 export const modelDemoState: Ng2StateDeclaration = {
   name: 'demo.model',
@@ -50,9 +51,16 @@ export const modelDemoViewInfoState: Ng2StateDeclaration = {
   component: ModelInfoViewComponent
 };
 
+export const modelDemoEditInfoState: Ng2StateDeclaration = {
+  url: '/edit',
+  name: 'demo.model.view.edit',
+  component: ModelEditViewComponent
+};
+
 export const MODEL_DEMO_STATES: Ng2StateDeclaration[] = [
   modelDemoState,
   modelDemoListState,
   modelDemoViewState,
-  modelDemoViewInfoState
+  modelDemoViewInfoState,
+  modelDemoEditInfoState
 ];
