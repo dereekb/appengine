@@ -1,7 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { GaeMaterialComponentsModule } from './material.module';
-import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageToolbarConfiguration, GaePageToolbarConfigurationProvider, ToolbarButtonNavType, GaePageToolbarNavButtonComponent } from './page-toolbar.component';
+import {
+  GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageToolbarConfiguration,
+  GaePageToolbarConfigurationProvider, ToolbarButtonNavType, GaePageToolbarNavButtonComponent
+} from './page-toolbar.component';
 import { filter, first } from 'rxjs/operators';
 import { By } from '@angular/platform-browser';
 

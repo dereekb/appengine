@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { GaeActionMessageSnackbarDirective } from './snackbar.directive';
-import { MatSnackBarModule, MatButtonModule, MatIconModule, MatToolbarModule } from '@angular/material';
+import { MatSnackBarModule, MatButtonModule, MatIconModule, MatToolbarModule, MatSidenavModule } from '@angular/material';
 import { GaeColorImageComponent, GaeColorStyleDirective, GaeBackgroundColorStyleDirective, GaeStringColorDirective } from './color.component';
 import { CommonModule } from '@angular/common';
 import { GaePageTitleDirective, PageTitleService } from './title.component';
@@ -8,6 +8,7 @@ import { GaePageFabComponent, GaePageButtonSegueDirective, PageFabService, GaePa
 import { UIRouterModule } from '@uirouter/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageToolbarNavButtonComponent } from './page-toolbar.component';
+import { GaeAppPageComponent } from './page.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageT
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatSidenavModule,
     FlexLayoutModule
   ],
   declarations: [
@@ -26,6 +28,7 @@ import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageT
     GaeBackgroundColorStyleDirective,
     GaeStringColorDirective,
     GaePageTitleDirective,
+    GaeAppPageComponent,
     GaePageFabComponent,
     GaePageButtonSegueDirective,
     GaePageButtonComponent,
@@ -40,6 +43,7 @@ import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageT
     GaeBackgroundColorStyleDirective,
     GaeStringColorDirective,
     GaePageTitleDirective,
+    GaeAppPageComponent,
     GaePageFabComponent,
     GaePageButtonSegueDirective,
     GaePageButtonComponent,

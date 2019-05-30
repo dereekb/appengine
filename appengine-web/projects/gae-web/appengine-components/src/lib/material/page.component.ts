@@ -7,6 +7,6 @@ import { Component, Input, ViewChild } from '@angular/core';
   selector: 'gae-app-page',
   templateUrl: 'page.component.html'
 })
-export class GaePageComponent {
+export class GaeAppPageComponent {
 
 }
