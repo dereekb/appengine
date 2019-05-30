@@ -1,8 +1,9 @@
-import { Component, Input, ViewChild, Inject, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Inject, AfterViewInit, OnDestroy, ChangeDetectorRef, ViewRef } from '@angular/core';
 import { ClickableButton } from './nav.component';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { AbstractSubscriptionComponent } from '../shared/subscription';
-import { map, flatMap } from 'rxjs/operators';
+import { map, flatMap, tap, shareReplay } from 'rxjs/operators';
+import { Destroyable } from '@gae-web/appengine-utility/public-api';
 
 /**
  * Links a GaePageToolbarComponent to the Sidenav.
@@ -18,10 +19,11 @@ export class GaePageToolbarSidenav {
   selector: 'gae-page-toolbar',
   templateUrl: 'page-toolbar.component.html'
 })
-export class GaePageToolbarComponent extends AbstractSubscriptionComponent implements AfterViewInit {
+export class GaePageToolbarComponent extends AbstractSubscriptionComponent implements OnDestroy, AfterViewInit {
 
   private _defaultConfiguration: GaePageToolbarConfiguration;
-  private _configurations = new BehaviorSubject<Observable<GaePageToolbarConfiguration>[]>([]);
+  private _providers = new BehaviorSubject<GaePageToolbarConfigurationProvider[]>([]);
+  private _configurationObs: Observable<GaePageToolbarConfiguration>;
   private _configuration: GaePageToolbarConfiguration = {};
 
   constructor(private cdRef: ChangeDetectorRef) {
@@ -29,57 +31,95 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
   }
 
   ngAfterViewInit(): void {
-    this.sub = this._configurations.pipe(
+    const obs = this._providers.pipe(
+      map((x) => {
+        return x.filter(y => Boolean(y)).map(y => y.stream);
+      }),
       flatMap((x: Observable<GaePageToolbarConfiguration>[]) => {
-        return combineLatest(...x).pipe(
-          map((y: GaePageToolbarConfiguration[]) => {
-            const validConfigs = y.filter((config) => Boolean(config));
-            return validConfigs[validConfigs.length - 1];
-          })
-        );
-      })
-    ).subscribe((x) => {
-      this._configuration = {
-        ...this._defaultConfiguration,
-        ...x
-      };
-      this.cdRef.detectChanges();
+        if (x.length > 0) {
+          return combineLatest(...x).pipe(
+            map((y: GaePageToolbarConfiguration[]) => {
+              const validConfigs = y.filter((config) => Boolean(config));
+              return validConfigs[validConfigs.length - 1];
+            })
+          );
+        } else {
+          return undefined;
+        }
+      }),
+      map((x) => {
+        return {
+          ...this._defaultConfiguration,
+          ...x
+        };
+      }),
+      tap((x) => this._configuration = x),
+      shareReplay()
+    );
+
+    this._configurationObs = obs.pipe();
+    this.sub = obs.subscribe(() => {
+      if (!(this.cdRef as ViewRef).destroyed) {
+        this.cdRef.detectChanges();
+      }
     });
   }
 
-  public get activeConfig() {
+  ngOnDestroy() {
+    this._providers.complete();
+    super.ngOnDestroy();
+  }
+
+  public get configuration() {
     return this._configuration;
   }
 
+  public get stream() {
+    return this._configurationObs;
+  }
+
+  public get left() {
+    return this.configuration.left;
+  }
+
+  public get title() {
+    return this.configuration.title;
+  }
+
+  public get right() {
+    return this.configuration.right;
+  }
+
+  // MARK: Configurations
   public get defaultConfiguration() {
     return this._defaultConfiguration;
   }
 
   public set defaultConfiguration(defaultConfiguration) {
     this._defaultConfiguration = defaultConfiguration;
+    this.refresh();
   }
 
-  // MARK: Configurations
-  protected get configurations() {
-    return this._configurations.value.slice();
+  protected get providers() {
+    return this._providers.value.slice();
   }
 
-  public addConfiguration(configuration: Observable<GaePageToolbarConfiguration>) {
-    const newConfigurations = this.configurations;
-    newConfigurations.push(configuration);
-    this._configurations.next(newConfigurations);
+  public addProvider(provider: GaePageToolbarConfigurationProvider) {
+    const newConfigurations = this.providers;
+    newConfigurations.push(provider);
+    this._providers.next(newConfigurations);
   }
 
-  public removeConfiguration(configuration: Observable<GaePageToolbarConfiguration>) {
-    const index = this.configurations.indexOf(configuration);
+  public removeProvider(provider: GaePageToolbarConfigurationProvider) {
+    const index = this.providers.indexOf(provider);
 
     if (index !== -1) {
-      this._configurations.next(this.configurations.splice(index, 1));
+      this._providers.next(this.providers.splice(index, 1));
     }
   }
 
   protected refresh() {
-    this._configurations.next(this.configurations);
+    this._providers.next(this.providers);
   }
 
 }
@@ -91,6 +131,35 @@ export interface GaePageToolbarConfiguration {
 }
 
 /**
+ * Provider for a stream of GaePageToolbarConfiguration values.
+ */
+export class GaePageToolbarConfigurationProvider implements Destroyable {
+
+  private readonly _configuration: BehaviorSubject<GaePageToolbarConfiguration>;
+
+  constructor(configuration: GaePageToolbarConfiguration = {}) {
+    this._configuration = new BehaviorSubject<GaePageToolbarConfiguration>(configuration);
+  }
+
+  public destroy() {
+    this._configuration.complete();
+  }
+
+  public get stream(): Observable<GaePageToolbarConfiguration> {
+    return this._configuration.asObservable();
+  }
+
+  public get currentConfiguration() {
+    return this._configuration.value;
+  }
+
+  public setConfiguration(configuration) {
+    this._configuration.next(configuration);
+  }
+
+}
+
+/**
  * Component used to pass configurations to a GaePageToolbarComponent.
  */
 @Component({
@@ -99,35 +168,36 @@ export interface GaePageToolbarConfiguration {
 })
 export class GaePageToolbarConfigurationComponent implements AfterViewInit, OnDestroy {
 
-  private _configuration = new BehaviorSubject<GaePageToolbarConfiguration>(undefined);
+  private readonly _provider = new GaePageToolbarConfigurationProvider();
 
   constructor(@Inject(GaePageToolbarComponent) private readonly toolbarComponent: GaePageToolbarComponent) { }
 
   ngAfterViewInit() {
-    this.toolbarComponent.addConfiguration(this._configuration);
+    this.toolbarComponent.addProvider(this._provider);
   }
 
   ngOnDestroy() {
-    this.toolbarComponent.removeConfiguration(this._configuration);
+    this.toolbarComponent.removeProvider(this._provider);
+    this._provider.destroy();
   }
 
   @Input()
   public get configuration() {
-    return this._configuration.value;
+    return this._provider.currentConfiguration;
   }
 
   public set configuration(configuration) {
-    this._configuration.next(configuration);
+    this._provider.setConfiguration(configuration);
   }
 
 }
 
 // MARK: Nav Buttons
 export interface GaePageToolbarButtonNav extends ClickableButton {
-  type: ButtonType;
+  type: ToolbarButtonNavType;
 }
 
-enum ButtonType {
+export enum ToolbarButtonNavType {
   Hidden = 0,
   Basic = 1,
   Stroked = 2,
@@ -142,9 +212,9 @@ enum ButtonType {
   selector: 'gae-page-toolbar-nav-button',
   template: `
     <ng-container [ngSwitch]="type">
-      <button mat-button (click)="onNavClick()" *ngSwitchCase="1" [disabled]="disabled"></button>
-      <button mat-stroked-button (click)="onNavClick()" *ngSwitchCase="2" [disabled]="disabled"></button>
-      <button mat-raised-button (click)="onNavClick()" *ngSwitchCase="3" [disabled]="disabled"></button>
+      <button mat-button (click)="onNavClick()" *ngSwitchCase="1" [disabled]="disabled">{{text}}</button>
+      <button mat-stroked-button (click)="onNavClick()" *ngSwitchCase="2" [disabled]="disabled">{{text}}</button>
+      <button mat-raised-button (click)="onNavClick()" *ngSwitchCase="3" [disabled]="disabled">{{text}}</button>
       <button mat-icon-button (click)="onNavClick()" *ngSwitchCase="4" [disabled]="disabled">
         <mat-icon>{{icon}}</mat-icon>
       </button>
@@ -154,12 +224,12 @@ enum ButtonType {
 export class GaePageToolbarNavButtonComponent {
 
   private _nav: GaePageToolbarButtonNav = {
-    type: ButtonType.Hidden
+    type: ToolbarButtonNavType.Hidden
   };
 
-  private _type: ButtonType = ButtonType.Basic;
+  private _type: ToolbarButtonNavType = ToolbarButtonNavType.Basic;
 
-  public get type(): ButtonType {
+  public get type(): ToolbarButtonNavType {
     return this._type;
   }
 
@@ -182,7 +252,7 @@ export class GaePageToolbarNavButtonComponent {
   @Input()
   public set nav(nav: GaePageToolbarButtonNav | ClickableButton) {
     this._nav = {
-      type: (nav) ? ((nav.text) ? ButtonType.Basic : ButtonType.Icon) : ButtonType.Hidden,
+      type: (nav) ? ((nav.text) ? ToolbarButtonNavType.Basic : ToolbarButtonNavType.Icon) : ToolbarButtonNavType.Hidden,
       ...nav
     };
   }
