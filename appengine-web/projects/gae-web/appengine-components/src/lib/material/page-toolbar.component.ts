@@ -7,31 +7,6 @@ import { Destroyable } from '@gae-web/appengine-utility';
 import { GaeSidenavControllerDirective } from './sidenav.component';
 
 /**
- * Links a GaePageToolbarComponent to a SidenavController and sets the override configuration to drive the sidenav.
- */
-@Directive({
-  selector: '[gaePageToolbarSidenavController]',
-  exportAs: 'gaePageToolbarSidenavController'
-})
-export class GaePageToolbarSidenavControllerLinkDirective implements AfterViewInit {
-
-  constructor(private _sidenavController: GaeSidenavControllerDirective, @Host() private _toolbar: GaePageToolbarComponent) { }
-
-  ngAfterViewInit(): void {
-    this._toolbar.overrideConfiguration = {
-      left: {
-        icon: 'menu',
-        type: ToolbarButtonNavType.Icon,
-        onClick: () => {
-          this._sidenavController.open();
-        }
-      }
-    };
-  }
-
-}
-
-/**
  * Wraps a sidenav and a page-toolbar within that.
  */
 @Component({
@@ -257,10 +232,8 @@ export class GaePageToolbarNavButtonComponent {
     type: ToolbarButtonNavType.Hidden
   };
 
-  private _type: ToolbarButtonNavType = ToolbarButtonNavType.Basic;
-
   public get type(): ToolbarButtonNavType {
-    return this._type;
+    return this._nav.type;
   }
 
   public get icon() {
@@ -295,3 +268,28 @@ export class GaePageToolbarNavButtonComponent {
 
 }
 
+/**
+ * Links a GaePageToolbarComponent to a SidenavController and sets the override configuration to drive the sidenav.
+ */
+@Directive({
+  selector: '[gaePageToolbarSidenavControllerLink]',
+  exportAs: 'gaePageToolbarSidenavControllerLink'
+})
+export class GaePageToolbarSidenavControllerLinkDirective implements AfterViewInit {
+
+  constructor(@Inject(GaeSidenavControllerDirective) private _sidenavController: GaeSidenavControllerDirective, @Host() @Inject(GaePageToolbarComponent) private _toolbar: GaePageToolbarComponent) { }
+
+  ngAfterViewInit(): void {
+    this._toolbar.overrideConfiguration = {
+      left: {
+        icon: 'menu',
+        text: 'menu',
+        type: ToolbarButtonNavType.Icon,
+        onClick: () => {
+          this._sidenavController.open();
+        }
+      }
+    };
+  }
+
+}

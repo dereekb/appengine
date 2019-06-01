@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIRouterModule, UIRouter, Ng2StateDeclaration, UIView } from '@uirouter/angular';
 import { By } from '@angular/platform-browser';
 
-fdescribe('GaeAppPageComponent', () => {
+describe('GaeAppPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

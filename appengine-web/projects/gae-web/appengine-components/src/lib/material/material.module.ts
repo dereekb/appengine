@@ -7,8 +7,9 @@ import { GaePageTitleDirective, PageTitleService } from './title.component';
 import { GaePageFabComponent, GaePageButtonSegueDirective, PageFabService, GaePageButtonComponent } from './fab.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageToolbarNavButtonComponent } from './page-toolbar.component';
+import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageToolbarNavButtonComponent, GaePageToolbarSidenavControllerLinkDirective } from './page-toolbar.component';
 import { GaeAppPageComponent } from './page.component';
+import { GaeSidenavControllerDirective } from './sidenav.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,9 @@ import { GaeAppPageComponent } from './page.component';
     GaePageButtonComponent,
     GaePageToolbarComponent,
     GaePageToolbarConfigurationComponent,
-    GaePageToolbarNavButtonComponent
+    GaePageToolbarNavButtonComponent,
+    GaeSidenavControllerDirective,
+    GaePageToolbarSidenavControllerLinkDirective
   ],
   exports: [
     GaeActionMessageSnackbarDirective,
@@ -48,7 +51,9 @@ import { GaeAppPageComponent } from './page.component';
     GaePageButtonSegueDirective,
     GaePageButtonComponent,
     GaePageToolbarComponent,
-    GaePageToolbarConfigurationComponent
+    GaePageToolbarConfigurationComponent,
+    GaeSidenavControllerDirective,
+    GaePageToolbarSidenavControllerLinkDirective
   ]
 })
 export class GaeMaterialComponentsModule {

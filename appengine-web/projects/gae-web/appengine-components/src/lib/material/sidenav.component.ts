@@ -2,7 +2,7 @@ import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { MatSidenav, MatSidenavContainer, MatDrawerToggleResult } from '@angular/material';
 import { TransitionService } from '@uirouter/core';
 import { Subject, Subscription } from 'rxjs';
-import { Directive, AfterContentInit, OnDestroy } from '@angular/core';
+import { Directive, AfterContentInit, OnDestroy, Input, Host, Inject } from '@angular/core';
 
 @Directive({
   selector: '[gaeSidenavController]',
@@ -10,9 +10,12 @@ import { Directive, AfterContentInit, OnDestroy } from '@angular/core';
 })
 export class GaeSidenavControllerDirective implements AfterContentInit, OnDestroy {
 
+  @Input()
+  public readonly sidenav: MatSidenav;
+
   private _transitionUnsub: () => void;
 
-  constructor(public readonly sideNav: MatSidenav, public readonly container: MatSidenavContainer, private _transitionService: TransitionService) { }
+  constructor(@Inject(MatSidenavContainer) @Host() public readonly container: MatSidenavContainer, private _transitionService: TransitionService) { }
 
   ngAfterContentInit() {
     this._transitionUnsub = this._transitionService.onSuccess({}, () => {
@@ -28,11 +31,11 @@ export class GaeSidenavControllerDirective implements AfterContentInit, OnDestro
 
   // MARK: Public
   public close(): Promise<MatDrawerToggleResult> {
-    return this.sideNav.close();
+    return this.sidenav.close();
   }
 
   public open(): Promise<MatDrawerToggleResult> {
-    return this.sideNav.open();
+    return this.sidenav.open();
   }
 
 }
