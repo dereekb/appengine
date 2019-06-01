@@ -1,14 +1,33 @@
-import { Component, Input, Inject, AfterViewInit, OnDestroy, ChangeDetectorRef, ViewRef } from '@angular/core';
+import { Component, Input, Inject, AfterViewInit, OnDestroy, ChangeDetectorRef, ViewRef, Directive, Host } from '@angular/core';
 import { ClickableButton } from './nav.component';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { AbstractSubscriptionComponent } from '../shared/subscription';
 import { map, flatMap, tap, shareReplay } from 'rxjs/operators';
-import { Destroyable } from '@gae-web/appengine-utility/public-api';
+import { Destroyable } from '@gae-web/appengine-utility';
+import { GaeSidenavControllerDirective } from './sidenav.component';
 
 /**
- * Links a GaePageToolbarComponent to the Sidenav.
+ * Links a GaePageToolbarComponent to a SidenavController and sets the override configuration to drive the sidenav.
  */
-export class GaePageToolbarSidenav {
+@Directive({
+  selector: '[gaePageToolbarSidenavController]',
+  exportAs: 'gaePageToolbarSidenavController'
+})
+export class GaePageToolbarSidenavControllerLinkDirective implements AfterViewInit {
+
+  constructor(private _sidenavController: GaeSidenavControllerDirective, @Host() private _toolbar: GaePageToolbarComponent) { }
+
+  ngAfterViewInit(): void {
+    this._toolbar.overrideConfiguration = {
+      left: {
+        icon: 'menu',
+        type: ToolbarButtonNavType.Icon,
+        onClick: () => {
+          this._sidenavController.open();
+        }
+      }
+    };
+  }
 
 }
 
@@ -21,6 +40,7 @@ export class GaePageToolbarSidenav {
 })
 export class GaePageToolbarComponent extends AbstractSubscriptionComponent implements OnDestroy, AfterViewInit {
 
+  private _overrideConfiguration: GaePageToolbarConfiguration;
   private _defaultConfiguration: GaePageToolbarConfiguration;
   private _providers = new BehaviorSubject<GaePageToolbarConfigurationProvider[]>([]);
   private _configurationObs: Observable<GaePageToolbarConfiguration>;
@@ -44,13 +64,14 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
             })
           );
         } else {
-          return undefined;
+          return of(undefined);
         }
       }),
       map((x) => {
         return {
           ...this._defaultConfiguration,
-          ...x
+          ...x,
+          ...this._overrideConfiguration
         };
       }),
       tap((x) => this._configuration = x),
@@ -91,6 +112,15 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
   }
 
   // MARK: Configurations
+  public get overrideConfiguration() {
+    return this._overrideConfiguration;
+  }
+
+  public set overrideConfiguration(overrideConfiguration) {
+    this._overrideConfiguration = overrideConfiguration;
+    this.refresh();
+  }
+
   public get defaultConfiguration() {
     return this._defaultConfiguration;
   }
