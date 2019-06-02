@@ -9,6 +9,7 @@ import { SecureComponentsModule } from 'src/app/secure/shared/components/compone
 import { MatButtonModule } from '@angular/material/button';
 import { ModelInfoViewComponent } from './view/info.component';
 import { ModelEditViewComponent } from './view/edit.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 export const ROUTER_CONFIG: StatesModule = {
   states: MODEL_DEMO_STATES
@@ -25,6 +26,7 @@ export const ROUTER_CONFIG: StatesModule = {
   imports: [
     CommonModule,
     SecureComponentsModule,
+    FlexLayoutModule,
     MatButtonModule,
     UIRouterModule.forChild(ROUTER_CONFIG)
   ]

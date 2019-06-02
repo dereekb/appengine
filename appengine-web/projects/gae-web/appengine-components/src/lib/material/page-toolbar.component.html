@@ -1,4 +1,4 @@
-<div class="gae-page-toolbar-view" fxFill>
+<div class="gae-page-toolbar-view">
   <!-- Creates a layout with a left-positioned sidenav and explicit content. -->
   <mat-toolbar class="gae-page-toolbar" fxLayout="row" fxLayoutGap="8px">
     <gae-page-toolbar-nav-button *ngIf="left" [nav]="left"></gae-page-toolbar-nav-button>
@@ -17,8 +17,6 @@
   </mat-toolbar>
   <!---->
   <div class="gae-page-toolbar-content">
-    <div fxFill>
-      <ng-content select="[content]"></ng-content>
-    </div>
+    <ng-content select="[content]"></ng-content>
   </div>
 </div>

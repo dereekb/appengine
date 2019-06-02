@@ -1,3 +1,8 @@
+@import './lib/list/list';
 @import './lib/loading/loading';
 @import './lib/material/material';
 @import './lib/model/model.component';
+
+.no-overflow {
+  overflow: hidden;
+}

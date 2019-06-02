@@ -1,9 +1,9 @@
-<div appHeightState appFullHeightState class="page" fxLayout="column" appSegue #segue="appSegue">
+<ng-container appSegue #segue="appSegue">
   <gae-page-fab icon="note_add" (buttonClicked)="openCreateDialog()"></gae-page-fab>
-  <div infinite-scroll [infiniteScrollDistance]="2" [immediateCheck]="true" [scrollWindow]="false"
+  <div class="gae-model-list" infinite-scroll [infiniteScrollDistance]="2" [immediateCheck]="true" [scrollWindow]="false"
     (scrolled)="listSource.more()">
     <app-foo-read-source #readSource></app-foo-read-source>
     <app-foo-default-query-source #querySource></app-foo-default-query-source>
     <app-foo-list-view (itemSelected)="segue.segueToFoo($event)" #listSource="gaeListViewKeyQuerySource" gaeListViewKeyQuerySource [readComponent]="readSource" [queryComponent]="querySource"></app-foo-list-view>
   </div>
-</div>
+</ng-container>

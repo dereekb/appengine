@@ -1,10 +1,10 @@
 
 .page-button {
-  position: absolute !important;
+  position: fixed !important;
   bottom: 20px;
   right: 20px;
   margin-bottom: 0;
-  z-index: 100;
+  z-index: 800;
 }
 
 .page-fab {

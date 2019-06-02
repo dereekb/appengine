@@ -1,12 +1,12 @@
-<mat-sidenav-container fxFill gaeSidenavController [sidenav]="sidenav">
+<mat-sidenav-container class="fill-content" gaeSidenavController [sidenav]="sidenav">
   <mat-sidenav #sidenav mode="over">
     <!-- Inject the sidenav using ui-view. -->
-    <div ui-view="sidenav">SIDENAV</div>
+    <div class="fill-content" ui-view="sidenav">SIDENAV</div>
   </mat-sidenav>
   <mat-sidenav-content>
     <!-- Content contained within a page toobar-->
     <gae-page-toolbar gaePageToolbarSidenavControllerLink>
-      <div ui-view="content" content></div>
+      <div class="fill-content" ui-view="content" content></div>
     </gae-page-toolbar>
   </mat-sidenav-content>
 </mat-sidenav-container>
