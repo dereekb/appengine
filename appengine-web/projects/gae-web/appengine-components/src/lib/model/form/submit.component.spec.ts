@@ -49,7 +49,7 @@ describe('GaeSubmitComponents', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaeSubmitButtonComponent)
+  @ViewChild(GaeSubmitButtonComponent, {static: false})
   public submitButton: GaeSubmitButtonComponent;
 
 }

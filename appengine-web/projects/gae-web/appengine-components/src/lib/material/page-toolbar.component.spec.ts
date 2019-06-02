@@ -172,10 +172,10 @@ describe('GaePageToolbarComponent', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaePageToolbarComponent)
+  @ViewChild(GaePageToolbarComponent, {static: false})
   public toolbarComponent: GaePageToolbarComponent;
 
-  @ViewChild(GaePageToolbarConfigurationComponent)
+  @ViewChild(GaePageToolbarConfigurationComponent, {static: false})
   public toolbarConfigurationComponent: GaePageToolbarConfigurationComponent;
 
 }

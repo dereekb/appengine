@@ -49,7 +49,7 @@ class TestMultiModelLoaderComponent {
   keyA: ModelKey = 1;
   keyB: ModelKey = 1;
 
-  @ViewChild(GaeMultiModelLoaderDirective)
+  @ViewChild(GaeMultiModelLoaderDirective, {static: false})
   public directive: GaeMultiModelLoaderDirective;
 
 }

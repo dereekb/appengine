@@ -81,7 +81,7 @@ class TestConfirmFormViewComponent {
   @Input()
   public input: Observable<UniqueModel>;
 
-  @ViewChild(GaeConfirmModelFormComponent)
+  @ViewChild(GaeConfirmModelFormComponent, { static: false })
   public formComponent: GaeConfirmModelFormComponent<UniqueModel>;
 
 }

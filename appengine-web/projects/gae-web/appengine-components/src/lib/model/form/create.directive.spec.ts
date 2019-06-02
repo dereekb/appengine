@@ -66,10 +66,10 @@ describe('GaeCreateModelFormControllerDirective', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaeCreateModelFormControllerDirective)
+  @ViewChild(GaeCreateModelFormControllerDirective, {static: false})
   public action: GaeCreateModelFormControllerDirective<TestFoo>;
 
-  @ViewChild(GaeCreateModelFormControllerDirective)
+  @ViewChild(GaeCreateModelFormControllerDirective, {static: false})
   public directive: GaeCreateModelFormControllerDirective<TestFoo>;
 
 }

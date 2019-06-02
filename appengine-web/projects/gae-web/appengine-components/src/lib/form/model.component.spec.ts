@@ -103,7 +103,7 @@ export class GaeTestFooModelFormComponent extends AbstractModelFormComponent<Tes
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestFooModelFormComponent)
+  @ViewChild(GaeTestFooModelFormComponent, {static: false})
   public component: GaeTestFooModelFormComponent;
 
 }

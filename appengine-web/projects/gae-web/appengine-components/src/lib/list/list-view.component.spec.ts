@@ -104,10 +104,10 @@ export class GaeTestFooListContentComponent extends AbstractListContentComponent
 })
 export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> {
 
-  @ViewChild(GaeTestFooListContentComponent)
+  @ViewChild(GaeTestFooListContentComponent, {static: false})
   public component: GaeTestFooListContentComponent;
 
-  @ViewChild(GaeListViewWrapperComponent)
+  @ViewChild(GaeListViewWrapperComponent, {static: false})
   public wrapperComponent: GaeListViewWrapperComponent<TestFoo>;
 
 }
@@ -119,7 +119,7 @@ export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> 
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestFooListComponent)
+  @ViewChild(GaeTestFooListComponent, {static: false})
   public component: GaeTestFooListComponent;
 
   public source: ListViewSource<TestFoo>;

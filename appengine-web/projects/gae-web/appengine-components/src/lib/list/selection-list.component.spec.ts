@@ -53,7 +53,7 @@ describe('GaeSelectionListViewComponent', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaeSelectionListViewComponent)
+  @ViewChild(GaeSelectionListViewComponent, {static: false})
   public component: GaeSelectionListViewComponent<TestFoo>;
 
 }

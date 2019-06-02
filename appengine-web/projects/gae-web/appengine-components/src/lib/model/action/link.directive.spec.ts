@@ -75,7 +75,7 @@ export class TestFooLinkActionDirective extends AbstractLinkActionDirective {
 })
 class TestViewComponent {
 
-  @ViewChild(TestFooLinkActionDirective)
+  @ViewChild(TestFooLinkActionDirective, {static: false})
   public directive: TestFooLinkActionDirective;
 
 }

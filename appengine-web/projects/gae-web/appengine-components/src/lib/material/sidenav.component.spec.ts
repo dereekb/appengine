@@ -6,7 +6,7 @@ import { GaeSidenavControllerDirective } from './sidenav.component';
 import { MatSidenavModule } from '@angular/material';
 import { UIRouterModule } from '@uirouter/angular';
 
-fdescribe('GaeSideNavComponent', () => {
+describe('GaeSideNavComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -44,7 +44,7 @@ fdescribe('GaeSideNavComponent', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaeSidenavControllerDirective)
+  @ViewChild(GaeSidenavControllerDirective, {static: false})
   public sidenavController: GaeSidenavControllerDirective;
 
 }

@@ -53,7 +53,7 @@ describe('GaeAppPageComponent', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaeAppPageComponent)
+  @ViewChild(GaeAppPageComponent, {static: false})
   public pageComponent: GaeAppPageComponent;
 
 }

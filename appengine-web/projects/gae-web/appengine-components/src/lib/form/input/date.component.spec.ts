@@ -49,7 +49,7 @@ describe('GaeDateFormControlComponent', () => {
 })
 class TestDateFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeDateFormControlComponent)
+  @ViewChild(GaeDateFormControlComponent, {static: false})
   public component: GaeDateFormControlComponent;
 
   validationMessages = {

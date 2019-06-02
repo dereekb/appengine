@@ -186,7 +186,7 @@ const CUSTOM_EMPTY_ID = 'custom-empty';
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestFooListComponent)
+  @ViewChild(GaeTestFooListComponent, {static: false})
   public component: GaeTestFooListComponent;
 
   public source: ListViewSource<TestFoo>;

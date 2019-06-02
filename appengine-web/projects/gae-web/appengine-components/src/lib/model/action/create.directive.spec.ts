@@ -74,7 +74,7 @@ export class TestFooCreateActionDirective extends AbstractCreateActionDirective<
 })
 class TestViewComponent {
 
-  @ViewChild(TestFooCreateActionDirective)
+  @ViewChild(TestFooCreateActionDirective, {static: false})
   public directive: TestFooCreateActionDirective;
 
 }

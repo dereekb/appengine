@@ -53,7 +53,7 @@ class TestGaeModelLoadingViewComponent {
 
   keyA: ModelKey = 1;
 
-  @ViewChild(GaeModelLoadingViewComponent)
+  @ViewChild(GaeModelLoadingViewComponent, {static: false})
   public component: GaeModelLoadingViewComponent;
 
 }

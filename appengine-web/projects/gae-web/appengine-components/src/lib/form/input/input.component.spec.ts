@@ -46,7 +46,7 @@ describe('GaeInputFormControlComponent', () => {
 })
 class TestInputFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeInputFormControlComponent)
+  @ViewChild(GaeInputFormControlComponent, {static: false})
   public component: GaeInputFormControlComponent;
 
   validationMessages = {

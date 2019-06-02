@@ -49,7 +49,7 @@ describe('GaeTextareaFormControlComponent', () => {
 })
 class TestTextAreaFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeTextareaFormControlComponent)
+  @ViewChild(GaeTextareaFormControlComponent, {static: false})
   public component: GaeTextareaFormControlComponent;
 
   validationMessages = {
