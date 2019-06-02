@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, Input, ViewChild, Optional } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } from '../control.component';
-import { MatSelect } from '@angular/material';
+import { MatSelect } from '@angular/material/select';
 
 export interface SelectOption {
   readonly label: string;

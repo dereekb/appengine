@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 
-import {
-  MatInputModule,
-  MatRippleModule,
-  MatProgressSpinnerModule,
-  MatButtonModule,
-  MatProgressBarModule
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PlatformModule } from '@angular/cdk/platform';
 import { ObserversModule } from '@angular/cdk/observers';

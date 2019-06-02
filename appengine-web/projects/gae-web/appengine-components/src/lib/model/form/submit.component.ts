@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject, Directive, Optional, OnDestroy, Type } from '@angular/core';
 
 import { MatProgressButtonOptions } from 'mat-progress-buttons';
-import { ProgressSpinnerMode } from '@angular/material';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 /**
  * Is linked to by a child GaeSubmitViewComponent.

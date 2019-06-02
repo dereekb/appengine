@@ -3,7 +3,9 @@ import { GaeListViewReadSourceDirective, GaeListViewKeyQuerySourceDirective } fr
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { CommonModule } from '@angular/common';
 import { GaeLoadingComponentsModule } from '../loading/loading.module';
-import { MatListModule, MatIconModule, MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   imports: [

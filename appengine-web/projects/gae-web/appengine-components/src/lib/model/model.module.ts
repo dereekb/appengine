@@ -10,7 +10,7 @@ import { GaeCreateModelFormControllerDirective } from './form/create.directive';
 import { GaeSubmitViewComponent, GaeSubmitViewActionDirective, GaeSubmitButtonComponent } from './form/submit.component';
 import { GaeUpdateModelFormControllerDirective } from './form/update.directive';
 import { GaeDeleteModelFormControllerDirective } from './form/delete.directive';
-import { MatProgressSpinnerModule } from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatProgressButtonsModule } from 'mat-progress-buttons';
 

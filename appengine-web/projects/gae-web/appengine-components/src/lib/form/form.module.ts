@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GaeFormGroupErrorsDirective } from './control.component';
-import { MatCheckboxModule, MatSelectModule, MatOptionModule, MatInputModule,
-  MatDatepickerModule, MatAutocompleteModule, MatNativeDateModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { GaeConfirmModelFormComponent } from './confirm-form.component';
 import { CommonModule } from '@angular/common';
 import { GaeSelectFormControlComponent } from './input/select.component';

@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FooCreateDialogComponent } from 'src/app/secure/shared/components/model/foo/views/create-modal.component';
 import { GaeListViewKeyQuerySourceDirective } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';

@@ -1,4 +1,4 @@
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { ActionEvent, ActionState } from './action';
 import { AbstractActionDirective, ActionDirective } from './action.directive';

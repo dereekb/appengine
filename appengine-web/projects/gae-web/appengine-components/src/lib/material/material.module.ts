@@ -1,6 +1,10 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { GaeActionMessageSnackbarDirective } from './snackbar.directive';
-import { MatSnackBarModule, MatButtonModule, MatIconModule, MatToolbarModule, MatSidenavModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { GaeColorImageComponent, GaeColorStyleDirective, GaeBackgroundColorStyleDirective, GaeStringColorDirective } from './color.component';
 import { CommonModule } from '@angular/common';
 import { GaePageTitleDirective, PageTitleService } from './title.component';

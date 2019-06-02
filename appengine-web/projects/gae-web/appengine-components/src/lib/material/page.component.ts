@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { MatSidenav, MatSidenavContainer } from '@angular/material';
+import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
 
 /**
  * Wraps a sidenav and a page-toolbar within that.

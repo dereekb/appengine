@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, ViewChild, Input, Optional } from '@angular/core';
-import { MatDatepicker } from '@angular/material';
+import { MatDatepicker } from '@angular/material/datepicker';
 import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } from '../control.component';
 
 @Component({

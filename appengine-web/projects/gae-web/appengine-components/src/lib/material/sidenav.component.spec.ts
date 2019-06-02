@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { GaeMaterialComponentsModule } from './material.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GaeSidenavControllerDirective } from './sidenav.component';
-import { MatSidenavModule } from '@angular/material';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { UIRouterModule } from '@uirouter/angular';
 
 describe('GaeSideNavComponent', () => {

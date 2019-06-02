@@ -4,7 +4,9 @@ import {
   GaeSelectionListViewComponent, GaeSelectionListViewNamedConversionDirective, GaeSelectionListViewSourceDirective
 } from './selection-list.component';
 import { CommonModule } from '@angular/common';
-import { MatSelectModule, MatIconModule, MatListModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
 import { GaeListComponentsModule } from './list.module';
 import { GaeMaterialComponentsModule } from '../material/material.module';
 

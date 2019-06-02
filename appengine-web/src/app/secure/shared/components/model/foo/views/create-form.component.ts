@@ -3,7 +3,7 @@ import { GaeCreateModelFormControllerDirective, GaeSubmitViewComponent } from '@
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { AppSegueService } from 'src/app/secure/segue.service';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-foo-create-view',

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, Input, ViewChild, Optional } from '@angular/core';
 import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } from '../control.component';
-import { MatCheckbox } from '@angular/material';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   template: `

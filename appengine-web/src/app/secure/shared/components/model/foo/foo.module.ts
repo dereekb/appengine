@@ -12,7 +12,12 @@ import { FooModelFormComponent } from './views/model-form.component';
 import { FooUpdateFormComponent } from './views/update-form.component';
 import { GaeComponentsModule } from '@gae-web/appengine-components';
 import { CommonModule } from '@angular/common';
-import { MatListModule, MatIconModule, MatTabsModule, MatToolbarModule, MatDialogModule, MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { FooCreateDialogComponent } from './views/create-modal.component';
 
 @NgModule({

@@ -5,7 +5,7 @@ import { Directive, Component, ViewEncapsulation, forwardRef, Input, AfterViewIn
 import { ListViewSource, ConversionListViewSource } from './source';
 import { ProvideListViewComponent, AbstractListViewComponent } from './list-view.component';
 import { AbstractListContentComponent } from './list-content.component';
-import { MatListOption, MatSelectionList } from '@angular/material';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { delay } from 'rxjs/operators';
 
 export interface KeyedSelectionListItem<K, T> {

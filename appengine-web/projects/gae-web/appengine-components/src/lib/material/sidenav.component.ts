@@ -1,5 +1,5 @@
 import { SubscriptionObject } from '@gae-web/appengine-utility';
-import { MatSidenav, MatSidenavContainer, MatDrawerToggleResult } from '@angular/material';
+import { MatSidenav, MatSidenavContainer, MatDrawerToggleResult } from '@angular/material/sidenav';
 import { TransitionService } from '@uirouter/core';
 import { Subject, Subscription } from 'rxjs';
 import { Directive, AfterContentInit, OnDestroy, Input, Host, Inject } from '@angular/core';

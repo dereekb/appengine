@@ -7,7 +7,7 @@ import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 
 import { FormErrors, FormGroupComponent } from './form.component';
-import { ThemePalette } from '@angular/material';
+import { ThemePalette } from '@angular/material/core';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 @Directive({

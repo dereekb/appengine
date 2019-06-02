@@ -1,6 +1,6 @@
 import { Input, Directive } from '@angular/core';
 
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActionEvent, ActionState, TypedActionObject } from '../shared/action';
 import { AbstractActionWatcherDirective } from '../shared/action.directive';
 

@@ -6,7 +6,7 @@ import { ModelListComponent } from './list/list.component';
 import { ModelDemoComponent } from './model.component';
 import { ModelViewComponent } from './view/view.component';
 import { SecureComponentsModule } from 'src/app/secure/shared/components/components.module';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 import { ModelInfoViewComponent } from './view/info.component';
 import { ModelEditViewComponent } from './view/edit.component';
 
