@@ -12,7 +12,7 @@ export class OAuthSignInGatewayComponent implements SignInGateway {
     @Input()
     public disabled = false;
 
-    @ViewChild(forwardRef(() => OAuthButtonSignInDirective))
+    @ViewChild(forwardRef(() => OAuthButtonSignInDirective), {static: false})
     public readonly buttonHandler: OAuthButtonSignInDirective;
 
     constructor() { }

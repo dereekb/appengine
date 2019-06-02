@@ -10,7 +10,7 @@ import { ViewChild } from '@angular/core';
  */
 export abstract class AbstractCreateActionDialogCompoment<T extends UniqueModel> extends AbstractActionDialogCompoment<CreateActionDirectiveEvent<T>> {
 
-  @ViewChild(CreateActionDirective)
+  @ViewChild(CreateActionDirective, {static: false})
   set createActionDirective(directive: CreateActionDirective<T>) {
     super.setActionDirective(directive);
   }

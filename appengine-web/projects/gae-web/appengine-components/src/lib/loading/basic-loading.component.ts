@@ -34,8 +34,8 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
   @Input()
   public error: ErrorInput;
 
-  @ViewChild('error') customErrorContent;
-  @ViewChild('loading') customLoadingContent;
+  @ViewChild('error', {static: false}) customErrorContent;
+  @ViewChild('loading', {static: false}) customLoadingContent;
 
   private _hasCustomError;
   private _hasCustomLoading;

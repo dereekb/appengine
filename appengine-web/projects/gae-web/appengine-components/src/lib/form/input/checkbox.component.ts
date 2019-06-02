@@ -16,7 +16,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 })
 export class GaeCheckboxFormControlComponent extends AbstractExtendedFormControlComponent {
 
-  @ViewChild(MatCheckbox)
+  @ViewChild(MatCheckbox, {static: false})
   private _checkbox: MatCheckbox;
 
   @Input()

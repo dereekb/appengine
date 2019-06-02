@@ -15,7 +15,7 @@ export class GaeSignInGatewayViewComponent extends AbstractSubscriptionComponent
     private _gateway: SignInGateway;
     private _token: LoginTokenPair;
 
-    @ViewChild('success') customSuccessContent;
+    @ViewChild('success', {static: false}) customSuccessContent;
 
     private _hasCustomSuccess;
 
