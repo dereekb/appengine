@@ -3,3 +3,12 @@
   height: 100%;
   overflow-y: scroll;
 }
+
+.gae-list-view-toolbar {
+  position: absolute;
+  z-index: 300;
+}
+
+.gae-list-view-content {
+  padding-top: 64px;
+}

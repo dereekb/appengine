@@ -1,13 +1,15 @@
-<div class="list-view">
-  <div class="list-view-toolbar" *ngIf="showControls">
+<div class="gae-list-view">
+  <div class="gae-list-view-toolbar" *ngIf="showControls">
     <ng-content name="toolbar" select="[toolbar]"></ng-content>
   </div>
   <!-- List Content -->
-  <ng-content select="[list]"></ng-content>
+  <div class="gae-list-view-content">
+    <ng-content select="[list]"></ng-content>
+  </div>
   <!-- Loading Info -->
   <gae-loading [context]="loadingContext" linear="true">
     <div content>
-      <div class="list-view-done" *ngIf="showControls && hasElements">
+      <div class="gae-list-view-done" *ngIf="showControls && hasElements">
         <p>That's all {{ count }} of them!</p>
       </div>
       <div *ngIf="!hasElements">
