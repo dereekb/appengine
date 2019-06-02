@@ -95,7 +95,7 @@ class TestViewComponent {
 
   key: ModelKey = 1;
 
-  @ViewChild(GaeReadSourceKeyDirective, {static: false})
+  @ViewChild(GaeReadSourceKeyDirective, {static: true})
   public gaeReadSource: GaeReadSourceKeyDirective<TestFoo>;
 
 }

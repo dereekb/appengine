@@ -168,7 +168,7 @@ export class GaeSelectionListContentComponent<T> extends AbstractListContentComp
   private _selection: KeySelection<string>;
   private _selectionSub: Subscription;
 
-  @ViewChild(MatSelectionList, {static: false})
+  @ViewChild(MatSelectionList, {static: true})
   public readonly selectionList: MatSelectionList;
 
   constructor(listView: GaeSelectionListViewComponent<T>) {

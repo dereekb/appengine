@@ -10,10 +10,10 @@ import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
 })
 export class GaeAppPageComponent {
 
-  @ViewChild(MatSidenav, {static: false})
+  @ViewChild(MatSidenav, {static: true})
   public readonly sidenav: MatSidenav;
 
-  @ViewChild(MatSidenavContainer, {static: false})
+  @ViewChild(MatSidenavContainer, {static: true})
   public readonly sidenavContainer: MatSidenavContainer;
 
 }

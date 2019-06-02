@@ -78,7 +78,7 @@ export class TestFooUpdateActionDirective extends AbstractUpdateActionDirective<
 })
 class TestViewComponent {
 
-  @ViewChild(TestFooUpdateActionDirective, {static: false})
+  @ViewChild(TestFooUpdateActionDirective, {static: true})
   public directive: TestFooUpdateActionDirective;
 
 }

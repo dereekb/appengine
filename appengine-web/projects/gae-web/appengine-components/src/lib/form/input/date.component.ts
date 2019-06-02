@@ -17,7 +17,7 @@ import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } fro
 })
 export class GaeDateFormControlComponent extends AbstractExtendedFormControlComponent {
 
-  @ViewChild(MatDatepicker, {static: false})
+  @ViewChild(MatDatepicker, {static: true})
   public readonly picker: MatDatepicker<Date>;
 
   @Input()

@@ -11,7 +11,7 @@ import { CreateResponse } from '@gae-web/appengine-api';
 })
 export class ModelListComponent {
 
-  @ViewChild(GaeListViewKeyQuerySourceDirective, {static: false})
+  @ViewChild(GaeListViewKeyQuerySourceDirective, {static: true})
   private readonly _querySource: GaeListViewKeyQuerySourceDirective<Foo>;
 
   private _ref: MatDialogRef<FooCreateDialogComponent>;

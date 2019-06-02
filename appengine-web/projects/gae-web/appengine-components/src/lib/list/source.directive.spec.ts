@@ -121,10 +121,10 @@ describe('GaeListViewKeyQuerySourceDirective', () => {
 })
 class GaeListViewReadSourceDirectiveTestViewComponent {
 
-  @ViewChild(GaeTestFooListComponent, {static: false})
+  @ViewChild(GaeTestFooListComponent, {static: true})
   public component: GaeTestFooListComponent;
 
-  @ViewChild(GaeListViewKeyQuerySourceDirective, {static: false})
+  @ViewChild(GaeListViewKeyQuerySourceDirective, {static: true})
   public sourceDirective: GaeListViewKeyQuerySourceDirective<TestFoo>;
 
   public source: ListViewSource<TestFoo>;

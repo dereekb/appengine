@@ -23,7 +23,7 @@ export interface SelectOption {
 })
 export class GaeSelectFormControlComponent extends AbstractExtendedFormControlComponent {
 
-  @ViewChild(MatSelect, {static: false})
+  @ViewChild(MatSelect, {static: true})
   private _select: MatSelect;
 
   @Input()

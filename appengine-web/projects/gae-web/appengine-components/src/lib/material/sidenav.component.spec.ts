@@ -44,7 +44,7 @@ describe('GaeSideNavComponent', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaeSidenavControllerDirective, {static: false})
+  @ViewChild(GaeSidenavControllerDirective, {static: true})
   public sidenavController: GaeSidenavControllerDirective;
 
 }

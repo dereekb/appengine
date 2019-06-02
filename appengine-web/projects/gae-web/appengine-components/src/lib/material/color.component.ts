@@ -90,7 +90,7 @@ export class GaeColorImageComponent extends Colored {
     @Input()
     public src: string | undefined;
 
-    @ViewChild(GaeBackgroundColorStyleDirective, {static: false})
+    @ViewChild(GaeBackgroundColorStyleDirective, {static: true})
     public readonly bgStyle: GaeBackgroundColorStyleDirective;
 
     public clearColor() {

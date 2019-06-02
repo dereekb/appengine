@@ -91,7 +91,7 @@ export class GaeConfirmModelFormComponent<T> extends AbstractFormGroupComponent 
  */
 export abstract class GaeConfiguredConfirmModelFormComponent<T> implements ModelFormComponent<T> {
 
-    @ViewChild(GaeConfirmModelFormComponent, {static: false})
+    @ViewChild(GaeConfirmModelFormComponent, {static: true})
     private _form: GaeConfirmModelFormComponent<T>;
 
     @Input()

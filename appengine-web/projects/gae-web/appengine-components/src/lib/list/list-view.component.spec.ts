@@ -85,7 +85,7 @@ describe('ListViewComponent', () => {
 })
 export class GaeTestFooListContentComponent extends AbstractListContentComponent<TestFoo> {
 
-  constructor(@Inject(forwardRef(() => GaeTestFooListComponent)) listView: GaeTestFooListComponent) {
+  constructor(@Inject(forwardRef(() => GaeTestFooListComponent)) listView: any) {
     super(listView);
   }
 
@@ -104,10 +104,10 @@ export class GaeTestFooListContentComponent extends AbstractListContentComponent
 })
 export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> {
 
-  @ViewChild(GaeTestFooListContentComponent, {static: false})
+  @ViewChild(GaeTestFooListContentComponent, {static: true})
   public component: GaeTestFooListContentComponent;
 
-  @ViewChild(GaeListViewWrapperComponent, {static: false})
+  @ViewChild(GaeListViewWrapperComponent, {static: true})
   public wrapperComponent: GaeListViewWrapperComponent<TestFoo>;
 
 }
@@ -119,8 +119,8 @@ export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> 
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestFooListComponent, {static: false})
-  public component: GaeTestFooListComponent;
+  @ViewChild(GaeTestFooListComponent, {static: true})
+  public component?: GaeTestFooListComponent;
 
   public source: ListViewSource<TestFoo>;
 

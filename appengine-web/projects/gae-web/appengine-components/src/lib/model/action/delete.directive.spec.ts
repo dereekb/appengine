@@ -78,7 +78,7 @@ export class TestFooDeleteActionDirective extends AbstractDeleteActionDirective<
 })
 class TestViewComponent {
 
-  @ViewChild(TestFooDeleteActionDirective, {static: false})
+  @ViewChild(TestFooDeleteActionDirective, {static: true})
   public directive: TestFooDeleteActionDirective;
 
 }

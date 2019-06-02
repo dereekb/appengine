@@ -50,7 +50,6 @@ describe('GaeBasicLoadingComponent', () => {
 
     });
 
-
     describe('and error', () => {
 
       beforeEach(() => {

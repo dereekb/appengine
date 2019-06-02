@@ -22,8 +22,8 @@ export class GaeListViewWrapperComponent<T> implements AfterViewInit, OnDestroy 
   private _context = new SimpleLoadingContext();
   private _sub = new SubscriptionObject();
 
-  @ViewChild('toolbar', {static: false}) customToolbarContent;
-  @ViewChild('empty', {static: false}) customEmptyContent;
+  @ViewChild('toolbar', {static: true}) customToolbarContent;
+  @ViewChild('empty', {static: true}) customEmptyContent;
 
   private _hasCustomToolbar;
   private _hasCustomEmpty;

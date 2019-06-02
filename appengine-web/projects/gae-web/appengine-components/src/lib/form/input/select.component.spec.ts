@@ -49,7 +49,7 @@ describe('Select Component', () => {
 })
 class TestSelectFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeSelectFormControlComponent, {static: false})
+  @ViewChild(GaeSelectFormControlComponent, {static: true})
   public component: GaeSelectFormControlComponent;
 
   validationMessages = {

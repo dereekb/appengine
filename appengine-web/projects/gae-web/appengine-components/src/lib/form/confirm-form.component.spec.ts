@@ -2,13 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, ViewChild, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { GaeConfiguredConfirmModelFormComponent, GaeConfirmModelFormComponent } from './confirm-form.component';
+import { GaeConfirmModelFormComponent } from './confirm-form.component';
 import { GaeFormComponentsModule } from './form.module';
 import { Observable, of } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
 
-describe('GaeGatewayComponentsModule', () => {
+describe('GaeConfirmModelFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -81,7 +81,7 @@ class TestConfirmFormViewComponent {
   @Input()
   public input: Observable<UniqueModel>;
 
-  @ViewChild(GaeConfirmModelFormComponent, { static: false })
+  @ViewChild(GaeConfirmModelFormComponent, {static: true})
   public formComponent: GaeConfirmModelFormComponent<UniqueModel>;
 
 }

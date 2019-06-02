@@ -46,7 +46,7 @@ class TestGaeModelLoaderComponent {
 
   keyA: ModelKey = 1;
 
-  @ViewChild(GaeModelLoaderComponent, {static: false})
+  @ViewChild(GaeModelLoaderComponent, {static: true})
   public component: GaeModelLoaderComponent<any>;
 
 }

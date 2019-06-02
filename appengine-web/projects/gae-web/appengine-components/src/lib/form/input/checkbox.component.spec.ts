@@ -53,7 +53,7 @@ describe('GaeCheckboxFormControlComponent', () => {
 })
 class TestCheckboxFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeCheckboxFormControlComponent, {static: false})
+  @ViewChild(GaeCheckboxFormControlComponent, {static: true})
   public component: GaeCheckboxFormControlComponent;
 
   validationMessages = {

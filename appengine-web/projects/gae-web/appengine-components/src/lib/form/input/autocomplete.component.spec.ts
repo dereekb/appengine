@@ -50,7 +50,7 @@ describe('GaeAutoCompleteFormControlComponent', () => {
 })
 class TestAutoCompleteViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeAutoCompleteFormControlComponent, {static: false})
+  @ViewChild(GaeAutoCompleteFormControlComponent, {static: true})
   public component: GaeAutoCompleteFormControlComponent;
 
   validationMessages = {
