@@ -3,7 +3,7 @@ import { SourceComponent, ProvideSourceComponent, AbstractConversionSourceCompon
 import { Observable, of } from 'rxjs';
 import { ModelKey, UniqueModel, SingleElementConversionSource, SingleElementSource } from '@gae-web/appengine-utility';
 import { ReadSourceFactory, ReadSource } from '@gae-web/appengine-client';
-import { map, share } from 'rxjs/operators';
+import { map, share, shareReplay } from 'rxjs/operators';
 
 export abstract class ReadSourceComponent<T extends UniqueModel> extends SourceComponent<T> {
 
@@ -142,7 +142,7 @@ export abstract class AbstractSingleElementSourceKeysProvider<T extends UniqueMo
     if (source) {
       this._source.readSourceKeys = source.first.pipe(
         map((x) => ((x) ? this.mapToKeys(x) || [] : [])),
-        share()
+        shareReplay()
       );
     } else {
       this._source.readSourceKeys = undefined;

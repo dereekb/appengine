@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { ApiRouteConfiguration } from '../api.config';
 import { HttpClient, HttpResponse, HttpHeaders, HttpParams, HttpBackend } from '@angular/common/http';
-import { share, catchError, map } from 'rxjs/operators';
+import { share, catchError, map, shareReplay } from 'rxjs/operators';
 import { LoginTokenPair, LoginTokenPairJson, NoLoginSetError } from '@gae-web/appengine-token';
 import { ApiJwtConfigurationError } from '../error';
 
@@ -65,7 +65,7 @@ export class OAuthLoginApiService {
     return responseObs.pipe(
       map(LoginTokenPair.fromResponse),
       catchError(this.handleRequestError),
-      share()
+      shareReplay()
     );
   }
 

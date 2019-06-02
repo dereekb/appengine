@@ -4,7 +4,7 @@ import { ApiRouteConfiguration } from '../api.config';
 import { HttpClient } from '@angular/common/http';
 import { EncodedToken, LoginTokenPair, LoginTokenPairJson } from '@gae-web/appengine-token';
 import { AuthUtility } from './auth.utility';
-import { map, share } from 'rxjs/operators';
+import { map, share, shareReplay } from 'rxjs/operators';
 
 
 /**
@@ -33,7 +33,7 @@ export class RegisterApiService {
       headers
     }).pipe(
       map(LoginTokenPair.fromResponse),
-      share()
+      shareReplay()
     );
 
   }

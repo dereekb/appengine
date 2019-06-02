@@ -7,9 +7,7 @@ import { GaeListComponentsModule } from './list.module';
 import { ListViewSource, ListViewSourceState } from './source';
 import { GaeTestFooListComponent, GaeTestFooListContentComponent } from './list-view.component.spec';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
-import { GaeListViewReadSourceDirective } from './source.directive';
-import { ReadService, ReadRequest, ReadResponse, TestFoo } from '@gae-web/appengine-api';
-import { Observable, throwError, of } from 'rxjs';
+import { TestFoo } from '@gae-web/appengine-api';
 import { TestListViewSourceFactory } from './source.spec';
 import { filter } from 'rxjs/operators';
 import { GaeErrorComponent } from '../loading/error.component';
@@ -103,7 +101,7 @@ describe('ListViewWrapperComponent', () => {
         wrapper.loadingContext.stream.pipe(
           filter((x) => x.isLoading === false)
         ).subscribe((x) => {
-          const listComponentQueryResult = fixture.debugElement.query(By.css('.list-view-done'));
+          const listComponentQueryResult = fixture.debugElement.query(By.css('.gae-list-view-done'));
           expect(listComponentQueryResult).not.toBeNull();
           done();
         });

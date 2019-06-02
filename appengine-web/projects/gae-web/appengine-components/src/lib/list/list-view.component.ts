@@ -2,7 +2,7 @@ import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Ty
 import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
 import { Source, SourceState, ControllableSource, SubscriptionObject } from '@gae-web/appengine-utility';
 import { UniqueModel } from '@gae-web/appengine-utility';
-import { map, flatMap, share, startWith, tap, catchError } from 'rxjs/operators';
+import { map, flatMap, share, startWith, tap, catchError, shareReplay } from 'rxjs/operators';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState } from './source';
 
 // MARK: List View Component
@@ -67,7 +67,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
     } else {
       return [];
     }
-  }), share());
+  }), shareReplay());
 
   private _lastSourceState = ListViewSourceState.Init;
   private _selected?: T;

@@ -9,6 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { GaeListComponentsModule } from './list.module';
 import { GaeMaterialComponentsModule } from '../material/material.module';
+import { GaeLoadingComponentsModule } from '../loading/loading.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { GaeMaterialComponentsModule } from '../material/material.module';
     MatSelectModule,
     MatIconModule,
     MatListModule,
+    GaeLoadingComponentsModule,
     GaeListComponentsModule,
     GaeMaterialComponentsModule
   ],

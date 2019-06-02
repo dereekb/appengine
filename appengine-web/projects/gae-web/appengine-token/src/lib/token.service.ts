@@ -7,7 +7,7 @@ import { FullStorageObject } from '@gae-web/appengine-utility';
 import { AppTokenStorageService, StoredTokenUnavailableError } from './storage.service';
 
 import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from } from 'rxjs';
-import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty, share, tap, finalize } from 'rxjs/operators';
+import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty, share, tap, finalize, shareReplay } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
 import { StorageUtility } from '@gae-web/appengine-utility';
 import { BaseError } from 'make-error';
@@ -378,7 +378,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
         finalize(() => {
           this.refreshTokenLoginObsMap.delete(refreshToken.token);  // Delete once finished.
         }),
-        share()
+        shareReplay()
       );
       this.refreshTokenLoginObsMap.set(refreshToken.token, refreshObs);
     }

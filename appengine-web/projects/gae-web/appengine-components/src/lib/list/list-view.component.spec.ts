@@ -8,8 +8,9 @@ import { GaeListComponentsModule } from './list.module';
 import { ListViewSource, ListViewSourceState } from './source';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { TestListViewSourceFactory } from './source.spec';
-import { filter, flatMap } from 'rxjs/operators';
+import { filter, flatMap, tap } from 'rxjs/operators';
 import { TestFoo } from '@gae-web/appengine-api';
+import { GaeListLoadMoreButtonComponent } from './load-more.component';
 
 describe('ListViewComponent', () => {
 
@@ -51,6 +52,9 @@ describe('ListViewComponent', () => {
 
       it('should load the elements.', (done) => {
         component.elements.pipe(
+          tap((x) => {
+            console.log(x);
+          }),
           filter((x) => x && x.length > 0)
         ).subscribe((elements) => {
           expect(elements).toBeArray();
@@ -59,14 +63,26 @@ describe('ListViewComponent', () => {
         });
       });
 
-      it('canLoadMore() on the component should be false', (done) => {
-        component.stream.pipe(
-          flatMap((x) => x.source),
-          filter((x) => x.state === ListViewSourceState.Done)
-        ).subscribe((x) => {
-          expect(component.canLoadMore).toBe(false);
-          done();
+      describe('and cannot load more', () => {
+
+        it('canLoadMore() on the component should be false', (done) => {
+          component.stream.pipe(
+            flatMap((x) => x.source),
+            filter((x) => x.state === ListViewSourceState.Done)
+          ).subscribe((x) => {
+            expect(component.canLoadMore).toBe(false);
+            done();
+          });
         });
+
+        describe('GaeListLoadMoreButton', () => {
+
+          it('should not be able to load more.', () => {
+            expect(component.contentComponent.loadMoreButtonComponent.canLoadMore).toBe(false);
+          });
+
+        });
+
       });
 
     });
@@ -80,10 +96,14 @@ describe('ListViewComponent', () => {
 @Component({
   selector: 'gae-test-model-list-content',
   template: `
-    <div>TODO</div>
+    <div>LIST</div>
+    <gae-list-load-more></gae-list-load-more>
   `
 })
 export class GaeTestFooListContentComponent extends AbstractListContentComponent<TestFoo> {
+
+  @ViewChild(GaeListLoadMoreButtonComponent, { static: true })
+  public loadMoreButtonComponent: GaeListLoadMoreButtonComponent;
 
   constructor(@Inject(forwardRef(() => GaeTestFooListComponent)) listView: any) {
     super(listView);
@@ -104,10 +124,10 @@ export class GaeTestFooListContentComponent extends AbstractListContentComponent
 })
 export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> {
 
-  @ViewChild(GaeTestFooListContentComponent, {static: true})
-  public component: GaeTestFooListContentComponent;
+  @ViewChild(GaeTestFooListContentComponent, { static: true })
+  public contentComponent: GaeTestFooListContentComponent;
 
-  @ViewChild(GaeListViewWrapperComponent, {static: true})
+  @ViewChild(GaeListViewWrapperComponent, { static: true })
   public wrapperComponent: GaeListViewWrapperComponent<TestFoo>;
 
 }
@@ -119,7 +139,7 @@ export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> 
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestFooListComponent, {static: true})
+  @ViewChild(GaeTestFooListComponent, { static: true })
   public component?: GaeTestFooListComponent;
 
   public source: ListViewSource<TestFoo>;

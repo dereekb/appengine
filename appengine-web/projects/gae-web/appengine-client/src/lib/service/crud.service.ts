@@ -3,7 +3,7 @@ import { ReadSourceFactory, ReadSourceConfiguration, ReadSource } from './source
 import { ModelServiceWrapper } from './model.service';
 import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
 import { throwError, of, Observable } from 'rxjs';
-import { flatMap, map, catchError, first, share, tap, skip } from 'rxjs/operators';
+import { flatMap, map, catchError, first, share, tap, skip, shareReplay } from 'rxjs/operators';
 import { WrapperEventType } from './wrapper';
 
 // MARK: Read
@@ -123,7 +123,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
     } else {
       return this.continuousRead(request, 0).pipe(
         first(),  // Read only once.
-        share()   // Share the single result with all subscribers.
+        shareReplay()   // Share the single result with all subscribers.
       );
     }
   }
@@ -191,7 +191,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
           this._parent.cache.removeAll(response.failed);  // Remove "missing" models from cache.
           this._working.delete(hash);  // Remove from working.
         }),
-        share()
+        shareReplay()
       );
 
       this._working.set(hash, obs);

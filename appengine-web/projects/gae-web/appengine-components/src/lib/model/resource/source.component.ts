@@ -3,7 +3,7 @@ import { Directive, Inject, Input, Output, OnDestroy, SkipSelf, AfterViewInit, T
 import { BaseError } from 'make-error';
 import { Source, ReadOnlySource, SourceState, ConversionSource, ConversionSourceEvent, ControllableSource, IterableSource, SourceEvent } from '@gae-web/appengine-utility';
 import { Observable, of, throwError } from 'rxjs';
-import { map, flatMap, catchError, share } from 'rxjs/operators';
+import { map, flatMap, catchError, share, shareReplay } from 'rxjs/operators';
 
 // Declarations
 export abstract class ReadOnlySourceComponent<T> extends ReadOnlySource<T> { }
@@ -411,7 +411,7 @@ export class GaeTransformationSourceDirective<I, O> extends AbstractTransformati
         console.error('Transformation error: ' + x);
         return throwError(x);
       }),
-      share()
+      shareReplay()
     );
   }
 

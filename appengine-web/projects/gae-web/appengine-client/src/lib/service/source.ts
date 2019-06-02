@@ -7,7 +7,7 @@ import {
   SearchParameters, QueryService, SearchRequest, ModelSearchResponse
 } from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
-import { map, share } from 'rxjs/operators';
+import { map, share, shareReplay } from 'rxjs/operators';
 
 // MARK: Read Source
 export interface ReadSourceConfiguration {
@@ -275,7 +275,7 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
       map((response: ModelSearchResponse<T>) => {
         return new KeyResultPair<T>(request, response);
       }),
-      share()
+      shareReplay()
     );
 
     return obs;
@@ -425,7 +425,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
           state
         };
       }),
-      share()
+      shareReplay()
     );
   }
 
