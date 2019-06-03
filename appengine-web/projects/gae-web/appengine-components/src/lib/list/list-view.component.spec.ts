@@ -10,7 +10,7 @@ import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { TestListViewSourceFactory } from './source.spec';
 import { filter, flatMap, tap } from 'rxjs/operators';
 import { TestFoo } from '@gae-web/appengine-api';
-import { GaeListLoadMoreButtonComponent } from './load-more.component';
+import { GaeListLoadMoreComponent } from './load-more.component';
 
 describe('ListViewComponent', () => {
 
@@ -102,8 +102,8 @@ describe('ListViewComponent', () => {
 })
 export class GaeTestFooListContentComponent extends AbstractListContentComponent<TestFoo> {
 
-  @ViewChild(GaeListLoadMoreButtonComponent, { static: true })
-  public loadMoreButtonComponent: GaeListLoadMoreButtonComponent;
+  @ViewChild(GaeListLoadMoreComponent, { static: true })
+  public loadMoreButtonComponent: GaeListLoadMoreComponent;
 
   constructor(@Inject(forwardRef(() => GaeTestFooListComponent)) listView: any) {
     super(listView);

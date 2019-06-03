@@ -6,7 +6,7 @@ import { GaeLoadingComponentsModule } from '../loading/loading.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { GaeListLoadMoreButtonComponent } from './load-more.component';
+import { GaeListLoadMoreComponent } from './load-more.component';
 
 @NgModule({
   imports: [
@@ -20,13 +20,13 @@ import { GaeListLoadMoreButtonComponent } from './load-more.component';
     GaeListViewWrapperComponent,
     GaeListViewReadSourceDirective,
     GaeListViewKeyQuerySourceDirective,
-    GaeListLoadMoreButtonComponent
+    GaeListLoadMoreComponent
   ],
   exports: [
     GaeListViewWrapperComponent,
     GaeListViewReadSourceDirective,
     GaeListViewKeyQuerySourceDirective,
-    GaeListLoadMoreButtonComponent
+    GaeListLoadMoreComponent
   ]
 })
 export class GaeListComponentsModule { }

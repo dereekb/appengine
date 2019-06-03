@@ -1,4 +1,4 @@
-import { Inject, Component, ChangeDetectorRef, Input, ViewRef, AfterViewInit } from '@angular/core';
+import { Inject, Component, ChangeDetectorRef, Input, ViewRef, AfterViewInit, ViewChild } from '@angular/core';
 import { ListViewComponent } from './list-view.component';
 import { AbstractSubscriptionComponent } from '../shared/subscription';
 
@@ -9,7 +9,7 @@ import { AbstractSubscriptionComponent } from '../shared/subscription';
   selector: 'gae-list-load-more',
   templateUrl: './load-more.component.html'
 })
-export class GaeListLoadMoreButtonComponent extends AbstractSubscriptionComponent implements AfterViewInit {
+export class GaeListLoadMoreComponent extends AbstractSubscriptionComponent implements AfterViewInit {
 
   @Input()
   public icon = 'chevron_right';
@@ -17,6 +17,9 @@ export class GaeListLoadMoreButtonComponent extends AbstractSubscriptionComponen
   @Input()
   public text = 'Load More';
 
+  @ViewChild('content', { static: false }) customContent;
+
+  private _hasCustomContent;
   private _canLoadMore: boolean;
 
   constructor(@Inject(ListViewComponent) private readonly _listView: ListViewComponent<any>, private _cdRef: ChangeDetectorRef) {
@@ -24,16 +27,21 @@ export class GaeListLoadMoreButtonComponent extends AbstractSubscriptionComponen
   }
 
   ngAfterViewInit(): void {
+    this._hasCustomContent = Boolean(this.customContent);
     this.sub = this._listView.elements.subscribe(() => {
       this._refresh();
     });
   }
 
-  get canLoadMore() {
+  public get hasCustomContent() {
+    return this._hasCustomContent;
+  }
+
+  public get canLoadMore() {
     return this._canLoadMore;
   }
 
-  loadMore() {
+  public loadMore() {
     this._listView.loadMore();
   }
 
