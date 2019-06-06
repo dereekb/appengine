@@ -42,7 +42,7 @@ export class ServiceError extends BaseError {
 
 }
 
-export class ServiceSetupError extends BaseError {
+export class ServiceSetupError extends ServiceError {
 
   constructor(message) {
     super(message);
@@ -50,9 +50,17 @@ export class ServiceSetupError extends BaseError {
 
 }
 
-export class ServiceLoadingError extends BaseError {
+export class ServiceLoadingError extends ServiceError {
 
   constructor(message) {
+    super(message);
+  }
+
+}
+
+export class ServiceUnavailableError extends ServiceError {
+
+  constructor(message = 'This service is currently unavaiable.') {
     super(message);
   }
 

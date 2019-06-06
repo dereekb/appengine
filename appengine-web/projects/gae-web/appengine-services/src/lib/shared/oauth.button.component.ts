@@ -3,6 +3,7 @@ import { OAuthLoginService, OAuthLoginServiceTokenResponse } from './oauth.servi
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
+import { ServiceError, ServiceUnavailableError } from './error';
 
 export enum OAuthButtonState {
   Idle = 0,
@@ -82,6 +83,11 @@ export abstract class AbstractOAuthLoginServiceButton implements OAuthLoginServi
           response
         });
       }, (error) => {
+
+        if (error instanceof ServiceError) {
+          error = new ServiceUnavailableError();
+        }
+
         this._stream.next({
           state: OAuthButtonState.Error,
           error

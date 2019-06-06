@@ -7,6 +7,7 @@ import { StateService } from '@uirouter/angular';
 import { Subject } from 'rxjs';
 import { ValueUtility, SubscriptionObject } from '@gae-web/appengine-utility';
 import { throttleTime } from 'rxjs/operators';
+import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 /**
  * Abstract page button component.
@@ -82,20 +83,27 @@ export class PageFabService {
 
 }
 
+/*
+ <a (click)="clickButton()" [fxHide]="isHidden" [disabled]="disabled" mat-fab class="page-fab" [ngClass]="{ 'page-fab-disabled': disabled }">
+    <mat-icon>{{icon}}</mat-icon>
+  </a>
+ */
+
 @Component({
   selector: 'gae-page-fab',
   template: `
-      <a (click)="clickButton()" [fxHide]="isHidden" [disabled]="disabled" mat-fab class="page-fab" [ngClass]="{ 'page-fab-disabled': disabled }">
-          <mat-icon>{{icon}}</mat-icon>
-      </a>
+      <mat-spinner-button class="page-fab" (btnClick)="clickButton()" [options]="btnOptions"></mat-spinner-button>
   `,
   providers: ProvidePageButton(GaePageFabComponent)
 })
 export class GaePageFabComponent extends GaePageButton implements OnInit, OnDestroy {
 
-  private _forcedHidden = false;
+  @Input()
+  public working: boolean;
 
+  private _forcedHidden = false;
   private _isHidden = false;
+
   private _sub = new SubscriptionObject();
 
   constructor(private readonly _fabService: PageFabService) {
@@ -131,6 +139,19 @@ export class GaePageFabComponent extends GaePageButton implements OnInit, OnDest
       this._forcedHidden = hidden;
       this._fabService.updateForFabChange(this);
     }
+  }
+
+  public get btnOptions(): MatProgressButtonOptions {
+      return {
+          active: this.working,
+          icon: this.icon,
+          text: this.text,
+          buttonColor: 'accent',
+          barColor: 'accent',
+          fab: true,
+          mode: 'indeterminate',
+          disabled: this.disabled
+      };
   }
 
 }

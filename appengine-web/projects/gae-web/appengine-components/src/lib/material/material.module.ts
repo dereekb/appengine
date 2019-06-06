@@ -14,6 +14,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { GaePageToolbarComponent, GaePageToolbarConfigurationComponent, GaePageToolbarNavButtonComponent, GaePageToolbarSidenavControllerLinkDirective } from './page-toolbar.component';
 import { GaeAppPageComponent } from './page.component';
 import { GaeSidenavControllerDirective } from './sidenav.component';
+import { MatProgressButtonsModule } from 'mat-progress-buttons';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { GaeSidenavControllerDirective } from './sidenav.component';
     MatToolbarModule,
     MatIconModule,
     MatSidenavModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatProgressButtonsModule
   ],
   declarations: [
     GaeActionMessageSnackbarDirective,
