@@ -16,30 +16,27 @@ export class FooCreateActionDirective extends AbstractCreateActionDirective<Foo>
         super(service);
     }
 
-    /*
-    // DEBUGGING
-    public testCreate() {
+    public testCreate(count = 10) {
         const templates: Foo[] = [];
         let i: number;
 
-        for (i = 0; i < 10; i += 1) {
+        for (i = 0; i < count; i += 1) {
             templates.push(this.makeJunk());
         }
 
-        this.doCreate({
-            templates: templates
+        return this.doCreate({
+            templates
         });
     }
 
-    private makeJunk() {
+    private makeJunk(value = Math.floor((Math.random() * 10000))) {
         const template: Foo = new Foo();
 
-        template.verb = 'Test';
-        template.noun = String(Math.random()).substring(0, 15);
+        template.name = value + ' Junk';
+        template.number = value;
 
         return template;
     }
-    */
 
 }
 

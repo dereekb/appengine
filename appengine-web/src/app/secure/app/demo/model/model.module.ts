@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ModelInfoViewComponent } from './view/info.component';
 import { ModelEditViewComponent } from './view/edit.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatProgressButtonsModule } from 'mat-progress-buttons';
 
 export const ROUTER_CONFIG: StatesModule = {
   states: MODEL_DEMO_STATES
@@ -28,6 +29,7 @@ export const ROUTER_CONFIG: StatesModule = {
     SecureComponentsModule,
     FlexLayoutModule,
     MatButtonModule,
+    MatProgressButtonsModule,
     UIRouterModule.forChild(ROUTER_CONFIG)
   ]
 })

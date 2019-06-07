@@ -1,7 +1,7 @@
 import { OnDestroy, Type, Provider } from '@angular/core';
 import { Subscription, BehaviorSubject, Observable, throwError } from 'rxjs';
 import { ActionState, HandleActionResult, HandleActionError, ActionFactory, ActionEvent, TypedActionObject } from './action';
-import { filter, share } from 'rxjs/operators';
+import { filter, share, shareReplay } from 'rxjs/operators';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 export function ProvideActionDirective<S extends ActionDirective<any>>(directiveType: Type<S>): Provider[] {
@@ -49,13 +49,14 @@ export abstract class AbstractActionDirective<E extends ActionEvent> extends Act
     this._stream.next(event);
   }
 
+  // TODO: Consider restructuring this doAction to only execute once the observable is subscribed to.
   protected doAction<O>(doFn: ActionFactory<O>, success: HandleActionResult<O, E>, error?: HandleActionError): Observable<O> {
     if (this.isWorking) {
       return throwError(new Error('Action is currently running.'));
     } else {
       this.next(this.makeWorkingState());
 
-      const obs = doFn().pipe(share()); // Share result so action is not re-executed multiple times.
+      const obs = doFn().pipe(shareReplay()); // Share result so action is not re-executed multiple times.
 
       this._sub.subscription = obs.subscribe((r) => {
         const completedState = success(r);
