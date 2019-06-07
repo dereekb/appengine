@@ -25,19 +25,23 @@ describe('GaeSubmitComponents', () => {
     }).compileComponents();
   }));
 
-  let component: GaeSubmitButtonComponent;
-  let testComponent: TestViewComponent;
-  let fixture: ComponentFixture<TestViewComponent>;
+  describe('Submit Button', () => {
 
-  beforeEach(async(() => {
-    fixture = TestBed.createComponent(TestViewComponent);
-    testComponent = fixture.componentInstance;
-    component = testComponent.submitButton;
-    fixture.detectChanges();
-  }));
+    let component: GaeSubmitButtonComponent;
+    let testComponent: TestViewComponent;
+    let fixture: ComponentFixture<TestViewComponent>;
 
-  it('should be created', () => {
-    expect(component).toBeDefined();
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(TestViewComponent);
+      testComponent = fixture.componentInstance;
+      component = testComponent.submitButton;
+      fixture.detectChanges();
+    }));
+
+    it('should be created', () => {
+      expect(component).toBeDefined();
+    });
+
   });
 
 });
@@ -49,7 +53,7 @@ describe('GaeSubmitComponents', () => {
 })
 class TestViewComponent {
 
-  @ViewChild(GaeSubmitButtonComponent, {static: true})
+  @ViewChild(GaeSubmitButtonComponent, { static: true })
   public submitButton: GaeSubmitButtonComponent;
 
 }

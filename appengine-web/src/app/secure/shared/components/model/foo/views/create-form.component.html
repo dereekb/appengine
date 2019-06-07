@@ -1,9 +1,8 @@
 <div class="form-container" fxLayout="column">
     <div class="form-container-form-view" fxFlex="100%" 
         appFooCreateAction appFooCreateAnalytics #action="appFooCreateAction"
-        gaeCreateModelFormController #control="gaeCreateModelFormController" [action]="action" [form]="form" [submit]="submit"
-        >
+        gaeCreateModelFormController #control="gaeCreateModelFormController" [action]="action" [form]="form" [submit]="submit">
         <app-foo-model-form #form></app-foo-model-form>
-        <gae-submit-view #submit [hidden]="true" gaeModelChangeFormActionLinkSubmitView action="Create Foo" lockedText="Done!"></gae-submit-view>
+        <gae-submit-button #submit gaeModelChangeFormActionLinkSubmitView action="Create Foo"></gae-submit-button>
     </div>
 </div>

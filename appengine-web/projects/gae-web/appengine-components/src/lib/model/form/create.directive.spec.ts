@@ -59,7 +59,7 @@ describe('GaeCreateModelFormControllerDirective', () => {
     <div>
       <ng-container gaeTestFooCreateAction #action="gaeTestFooCreateAction"></ng-container>
       <gae-test-model-model-form #form></gae-test-model-model-form>
-      <gae-submit-view #submit [hidden]="true"></gae-submit-view>
+      <gae-submit-button #submit [hidden]="true"></gae-submit-button>
       <ng-container gaeCreateModelFormController #control="gaeCreateModelFormController" [action]="action" [form]="form" [submit]="submit"></ng-container>
     </div>
   `

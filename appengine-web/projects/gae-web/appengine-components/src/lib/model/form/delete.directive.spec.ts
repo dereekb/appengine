@@ -59,7 +59,7 @@ describe('GaeDeleteModelFormControllerDirective', () => {
     <div>
       <ng-container gaeTestFooDeleteAction #action="gaeTestFooDeleteAction"></ng-container>
       <gae-confirm-delete-model-form #form [input]=""></gae-confirm-delete-model-form>
-      <gae-submit-view #submit [hidden]="true"></gae-submit-view>
+      <gae-submit-button #submit [hidden]="true"></gae-submit-button>
       <ng-container gaeDeleteModelFormController #control="gaeDeleteModelFormController" [action]="action" [form]="form" [submit]="submit"></ng-container>
     </div>
   `

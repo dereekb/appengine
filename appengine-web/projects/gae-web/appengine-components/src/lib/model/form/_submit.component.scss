@@ -1,25 +1,7 @@
-.form-submit-view {
-    $submit-button-height: 36px;
-    $form-submit-view-margin: 4px;
+.gae-action-done-view {
+  text-align: center;
 
-    margin-bottom: $form-submit-view-margin;
-
-    .form-submit-view-button {
-        text-align: center;
-        display: block;
-        width: 100%;
-    }
-
-    .form-submit-view-main-button {
-        width: 70%;
-    }
-
-    .form-submit-view-button-spinner {
-        margin: -13px;
-        margin-left: 10px;
-        height: $submit-button-height;
-        width: $submit-button-height;
-        display: inline-block;
-    }
-
+  mat-icon {
+    font-size: 36px;
+  }
 }

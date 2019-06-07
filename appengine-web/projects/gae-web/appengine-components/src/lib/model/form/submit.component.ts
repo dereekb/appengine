@@ -57,6 +57,15 @@ export abstract class GaeAbstractSubmitComponent implements OnDestroy {
     private _disabled = false;
 
     @Input()
+    public raised = false;
+
+    @Input()
+    public spinner = false;
+
+    @Input()
+    public mode: ProgressSpinnerMode = 'indeterminate';
+
+    @Input()
     public action = 'Submit';
 
     @Input()
@@ -162,18 +171,5 @@ export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
     public get buttonType(): GaeSubmitButtonType {
         return this.spinner ? GaeSubmitButtonType.Spinner : GaeSubmitButtonType.Bar;
     }
-
-}
-
-// DEPRECATED?
-@Component({
-    templateUrl: './submit.component.html',
-    selector: 'gae-submit-view',
-    providers: [ProvideGaeSubmitComponent(GaeSubmitViewComponent)]
-})
-export class GaeSubmitViewComponent extends GaeAbstractSubmitComponent {
-
-    @Input()
-    public buttonClasses = 'button-primary-color';
 
 }

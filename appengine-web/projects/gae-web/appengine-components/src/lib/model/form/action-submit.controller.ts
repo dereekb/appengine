@@ -1,12 +1,12 @@
 import { Input, OnDestroy } from '@angular/core';
-import { GaeSubmitViewComponent, GaeSubmitComponent } from './submit.component';
+import { GaeSubmitComponent } from './submit.component';
 import { ActionState, ActionObject, ActionEvent } from '../../shared/action';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 
 /**
  * Abstract controller used to direct an action and submit button.
  */
-export abstract class AbstractActionSubmitController implements OnDestroy {
+export abstract class ActionSubmitController implements OnDestroy {
 
     private _submit: GaeSubmitComponent;
     private _submitSub = new SubscriptionObject();
@@ -79,7 +79,7 @@ export abstract class AbstractActionSubmitController implements OnDestroy {
 
     // MARK: Functions
     protected resetAction() {
-        if (this._action) {
+        if (this._action && this._action.state !== ActionState.Reset) {
             this._action.reset();
         }
     }
@@ -87,13 +87,13 @@ export abstract class AbstractActionSubmitController implements OnDestroy {
 }
 
 /**
- * Abstract component that wraps/contains a AbstractActionSubmitController.
+ * Abstract component that wraps/contains a ActionSubmitController.
  */
 export abstract class AbstractActionObject {
 
     protected abstract get _controller();
 
-    public get controller(): AbstractActionSubmitController {
+    public get controller(): ActionSubmitController {
         return this._controller;
     }
 

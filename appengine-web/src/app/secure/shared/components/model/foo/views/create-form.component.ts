@@ -1,5 +1,5 @@
 import { Directive, Component, OnInit, OnDestroy, ViewEncapsulation, Input, ViewChild } from '@angular/core';
-import { GaeCreateModelFormControllerDirective, GaeSubmitViewComponent } from '@gae-web/appengine-components';
+import { GaeCreateModelFormControllerDirective } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { AppSegueService } from 'src/app/secure/segue.service';

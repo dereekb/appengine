@@ -1,17 +1,18 @@
 import { Input, OnDestroy, Optional, Host, Inject } from '@angular/core';
-import { AbstractActionSubmitController, AbstractActionObject } from './action-submit.controller';
+import { ActionSubmitController, AbstractActionObject } from './action-submit.controller';
 import { Subscription } from 'rxjs';
 import { ModelFormComponent } from '../../form/model.component';
 import { distinct } from 'rxjs/operators';
 import { FormComponentEvent, FormComponentState } from '../../form/form.component';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
+import { ActionEvent, ActionState } from '../../shared/action';
 
 /**
- * AbstractActionSubmitController used for sending data from a ModelFormComponent.
+ * ActionSubmitController used for sending data from a ModelFormComponent.
  *
  * Will enable/disable the submit button based on the current form state.
  */
-export abstract class AbstractFormActionSubmitController<T> extends AbstractActionSubmitController implements OnDestroy {
+export abstract class AbstractFormActionSubmitController<T> extends ActionSubmitController implements OnDestroy {
 
     private _form: ModelFormComponent<T>;
     private _formSub = new SubscriptionObject();
@@ -61,8 +62,18 @@ export abstract class AbstractFormActionSubmitController<T> extends AbstractActi
         }
     }
 
+    protected updateForActionEvent(event: ActionEvent) {
+        super.updateForActionEvent(event);
+
+        switch (event.state) {
+            case ActionState.Reset:
+                this.resetForm();
+                break;
+        }
+    }
+
     public resetForm() {
-        if (this._form) {
+        if (this._form && this._form.state !== FormComponentState.Reset) {
             this._form.reset();
         }
     }
