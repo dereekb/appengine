@@ -4,7 +4,7 @@
     <gae-model-loading-view [loader]="fooLoader">
         <div content fxLayout="column">
             <div class="gae-form-container-form-view" fxFlex="100%" 
-                appFooDeleteAction appFooDeleteAnalytics #action="appFooDeleteAction" [gaeActionSegue]="action" actionSegueRef="^.^.^" [gaeActionSnackbar]="action" snackbarMessage="Deleted Tally!" 
+                appFooDeleteAction appFooDeleteAnalytics #action="appFooDeleteAction" [gaeActionSegue]="action" actionSegueRef="^.^.^" gaeActionSnackbarMessage snackbarMessage="Deleted Tally!" 
                 gaeDeleteModelFormController #control="gaeDeleteModelFormController" [action]="action" [form]="form" [submit]="submit">
                 <gae-confirm-delete-model-form #form [input]="fooSource.first"></gae-confirm-delete-model-form>
                 <gae-submit-button [hidden]="true" gaeModelChangeFormActionLinkSubmitView #submit action="Delete" lockedText="Done!"></gae-submit-button>

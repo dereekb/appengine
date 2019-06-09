@@ -2,8 +2,7 @@ import { Input, Directive, Host, Inject, Optional, OnInit } from '@angular/core'
 
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { ActionEvent, ActionState, TypedActionObject } from '../shared/action';
-import { AbstractActionWatcherDirective } from '../shared/action.directive';
-import { ActionDirective } from '@gae-web/appengine-components/public-api';
+import { AbstractActionWatcherDirective, ActionDirective } from '../shared/action.directive';
 
 /**
  * Abstract action directive that uses the Material Snackbar.
@@ -38,7 +37,8 @@ export interface GaeActionSnackbarDelegate<E extends ActionEvent> {
  * Directive that listens to an ActionObject/ActionDirective and shows a snackbar based on it's delegate's configuration.
  */
 @Directive({
-  selector: '[gaeActionSnackbar]'
+  selector: '[gaeActionSnackbar]',
+  exportAs: 'gaeActionSnackbar'
 })
 export class GaeActionSnackbarDirective<E extends ActionEvent> extends AbstractActionSnackbarDirective<E> {
 
@@ -79,7 +79,8 @@ export class GaeActionSnackbarDirective<E extends ActionEvent> extends AbstractA
  * Pre-configured GaeActionSnackbarDirective that listens to an ActionObject/ActionDirective and shows a simple message.
  */
 @Directive({
-  selector: '[gaeActionSnackbarMessage]'
+  selector: '[gaeActionSnackbarMessage]',
+  exportAs: 'gaeActionSnackbarMessage'
 })
 export class GaeActionSnackbarMessageDirective extends GaeActionSnackbarDirective<ActionEvent> implements OnInit, GaeActionSnackbarDelegate<ActionEvent> {
 
