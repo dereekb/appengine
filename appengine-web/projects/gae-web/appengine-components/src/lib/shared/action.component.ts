@@ -1,8 +1,7 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { ActionEvent, ActionState } from './action';
-import { AbstractActionDirective, ActionDirective } from './action.directive';
-import { filter } from 'rxjs/operators';
+import { AbstractActionDirectiveWatcherDirective } from './action.directive';
 import { OnDestroy, Inject } from '@angular/core';
 
 /**
@@ -11,42 +10,23 @@ import { OnDestroy, Inject } from '@angular/core';
  * Automatically listens to the action events and once a complete event
  * is recieved this will close itself and return the result.
  */
-export abstract class AbstractActionDialogCompoment<E extends ActionEvent> implements OnDestroy {
+export abstract class AbstractActionDialogCompoment<E extends ActionEvent> extends AbstractActionDirectiveWatcherDirective<E> {
 
-  private _actionDirective: ActionDirective<E>;
-  private _actionSub = new SubscriptionObject();
-
-  constructor(@Inject(MatDialogRef) public readonly dialogRef: MatDialogRef<AbstractActionDialogCompoment<E>>) { }
-
-  ngOnDestroy() {
-    this._actionSub.destroy();
-  }
-
-  // MARK: Directive
-  get directive() {
-    return this._actionDirective;
-  }
-
-  set directive(directive) {
-    this.setActionDirective(directive);
-  }
-
-  protected setActionDirective(directive: ActionDirective<E>) {
-    if (directive) {
-      this._actionDirective = directive;
-      this._actionSub.subscription = directive.stream.pipe(
-        filter((e) => {
-          return e.state === ActionState.Complete;
-        })
-      ).subscribe((x) => {
-        this.onActionCompleted(x.result);
-      });
-    }
+  constructor(@Inject(MatDialogRef) public readonly dialogRef: MatDialogRef<AbstractActionDialogCompoment<E>>) {
+    super();
   }
 
   // MARK: Actions
   onCancelClick(): void {
     this.dialogRef.close();
+  }
+
+  protected filterEvent(e: E) {
+    return e.state === ActionState.Complete;
+  }
+
+  protected updateForActionEvent(event: E) {
+    this.onActionCompleted(event.result);
   }
 
   protected onActionCompleted(result: any) {

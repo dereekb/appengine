@@ -1,8 +1,9 @@
 import { UniqueModel, ModelKey } from '@gae-web/appengine-utility';
 import { DeleteResponse, DeleteRequestOptions, DeleteService, DeleteRequest } from '@gae-web/appengine-api';
 import { Observable } from 'rxjs';
-import { AbstractActionDirective } from '../../shared/action.directive';
+import { AbstractActionDirective, ProvideActionDirective } from '../../shared/action.directive';
 import { ActionFactory, ActionObject, ActionEvent, ActionState } from '../../shared/action';
+import { Type, Provider } from '@angular/core';
 
 export interface DeleteActionDirectiveEvent<T extends UniqueModel> extends ActionEvent {
 
@@ -11,12 +12,13 @@ export interface DeleteActionDirectiveEvent<T extends UniqueModel> extends Actio
 
 }
 
-export interface DeleteActionDirective<T extends UniqueModel> extends ActionObject {
+export function ProvideDeleteActionDirective<S extends DeleteActionDirective<any>>(directiveType: Type<S>): Provider[] {
+  return [...ProvideActionDirective(directiveType), { provide: DeleteActionDirective, useExisting: directiveType }];
+}
 
+export abstract class DeleteActionDirective<T extends UniqueModel> extends ActionObject {
   readonly stream: Observable<DeleteActionDirectiveEvent<T>>;
-
-  doDelete(config: DeleteActionConfig<T>): Observable<DeleteResponse<T>>;
-
+  abstract doDelete(config: DeleteActionConfig<T>): Observable<DeleteResponse<T>>;
 }
 
 export interface DeleteActionConfig<T> {

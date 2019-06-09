@@ -42,6 +42,10 @@ export * from './lib/loading/loading';
 // Material
 export * from './lib/material/color.component';
 export * from './lib/material/fab.component';
+export * from './lib/material/nav.component';
+export * from './lib/material/page-toolbar.component';
+export * from './lib/material/page.component';
+export * from './lib/material/sidenav.component';
 export * from './lib/material/snackbar.directive';
 export * from './lib/material/title.component';
 export * from './lib/material/material.module';
@@ -49,11 +53,15 @@ export * from './lib/material/material.module';
 // Model
 export * from './lib/model/action/create.component';
 export * from './lib/model/action/create.directive';
+export * from './lib/model/action/delete.component';
 export * from './lib/model/action/delete.directive';
 export * from './lib/model/action/link.directive';
 export * from './lib/model/action/template.directive';
+export * from './lib/model/action/update.component';
 export * from './lib/model/action/update.directive';
+
 export * from './lib/model/form/action-submit.controller';
+export * from './lib/model/form/action.component';
 export * from './lib/model/form/change-form.component';
 export * from './lib/model/form/create.directive';
 export * from './lib/model/form/delete.directive';
@@ -61,12 +69,15 @@ export * from './lib/model/form/form-submit.controller';
 export * from './lib/model/form/submit.component';
 export * from './lib/model/form/template.directive';
 export * from './lib/model/form/update.directive';
+
 export * from './lib/model/loading/loading.component';
 export * from './lib/model/loading/model-loader.component';
 export * from './lib/model/loading/multi-model-loader.directive';
+
 export * from './lib/model/resource/query.component';
 export * from './lib/model/resource/read.component';
 export * from './lib/model/resource/source.component';
+
 export * from './lib/model/model.module';
 
 // Shared

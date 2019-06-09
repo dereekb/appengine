@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AbstractModelFormComponent } from '@gae-web/appengine-components';
+import { AbstractModelFormComponent, ProvideModelFormComponent } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { DateTime } from 'luxon';
 import { ValueUtility, DateTimeUtility } from '@gae-web/appengine-utility';
@@ -12,7 +12,8 @@ import { ValueUtility, DateTimeUtility } from '@gae-web/appengine-utility';
  */
 @Component({
     selector: 'app-foo-model-form',
-    templateUrl: './model-form.component.html'
+    templateUrl: './model-form.component.html',
+    providers: ProvideModelFormComponent(FooModelFormComponent)
 })
 export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
 
@@ -37,7 +38,7 @@ export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
             date: [DateTime.local(), []],
             number: [0, []],
             numberList: [[], []],
-            stringSet: [[], []],
+            stringSet: [[], []]
         });
     }
 

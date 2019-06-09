@@ -3,7 +3,7 @@ import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } fro
 
 @Component({
   template: `
-  <mat-form-field class="form-view-control" [formGroup]="form" [ngClass]="{ warning: hasError, required: required }" [color]="color">
+  <mat-form-field class="gae-form-view-control" [formGroup]="form" [ngClass]="{ warning: hasError, required: required }" [color]="color">
       <textarea matInput [formControlName]="field" [placeholder]="placeholder"></textarea>
       <mat-hint *ngIf="hintMsg">{{ hintMsg }}</mat-hint>
   </mat-form-field>

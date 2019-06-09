@@ -4,7 +4,7 @@ import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } fro
 
 @Component({
   template: `
-  <mat-form-field class="form-view-control date-form-control" [formGroup]="form"
+  <mat-form-field class="gae-form-view-control date-form-control" [formGroup]="form"
       [ngClass]="{ warning: hasError, required: required }" [color]="color">
       <mat-datepicker #picker [touchUi]="touch"></mat-datepicker>
       <input matInput [formControlName]="field" [matDatepicker]="picker" [placeholder]="placeholder"/>

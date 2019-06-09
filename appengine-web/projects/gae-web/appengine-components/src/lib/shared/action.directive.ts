@@ -8,7 +8,7 @@ export function ProvideActionDirective<S extends ActionDirective<any>>(directive
   return [{ provide: ActionDirective, useExisting: directiveType }];
 }
 
-export abstract class ActionDirective<E extends ActionEvent> extends TypedActionObject<E> {}
+export abstract class ActionDirective<E extends ActionEvent> extends TypedActionObject<E> { }
 
 /**
  * Abstract component that provides inputs/outputs for some Observable action.
@@ -100,6 +100,9 @@ export abstract class AbstractActionDirective<E extends ActionEvent> extends Act
 
 }
 
+/**
+ * Watches an ActionObject for events.
+ */
 export abstract class AbstractActionWatcherDirective<E extends ActionEvent> implements OnDestroy {
 
   private _actionSub = new SubscriptionObject();
@@ -111,19 +114,51 @@ export abstract class AbstractActionWatcherDirective<E extends ActionEvent> impl
   }
 
   protected setActionObject(component: TypedActionObject<E>) {
-    this._actionSub.subscription = component.stream.pipe(
+    let subscription: Subscription;
+
+    if (component) {
+      subscription = this.makeActionSubscription(component.stream);
+    }
+
+    this._actionSub.subscription = subscription;
+  }
+
+  protected makeActionSubscription(stream: Observable<E>): Subscription {
+    return stream.pipe(
       filter(e => this.filterEvent(e))
-    )
-      .subscribe((event) => {
-        this.updateWithAction(event);
-      });
+    ).subscribe((event) => {
+      this.updateForActionEvent(event);
+    });
   }
 
   // MARK: Event
-  public filterEvent(_: E) {
+  protected filterEvent(_: E) {
     return true;
   }
 
-  protected abstract updateWithAction(event: E);
+  protected abstract updateForActionEvent(event: E);
+
+}
+
+/**
+ * Watches an ActionDirective for events.
+ */
+export abstract class AbstractActionDirectiveWatcherDirective<E extends ActionEvent> extends AbstractActionWatcherDirective<E> {
+
+  private _actionDirective: ActionDirective<E>;
+
+  // MARK: Directive
+  get actionDirective() {
+    return this._actionDirective;
+  }
+
+  set actionDirective(actionDirective) {
+    this.setActionDirective(actionDirective);
+  }
+
+  protected setActionDirective(actionDirective: ActionDirective<E>) {
+    this._actionDirective = actionDirective;
+    super.setActionObject(actionDirective);
+  }
 
 }

@@ -3,7 +3,7 @@ import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } fro
 
 @Component({
   template: `
-  <mat-form-field class="form-view-control" [formGroup]="form" [color]="color">
+  <mat-form-field class="gae-form-view-control" [formGroup]="form" [color]="color">
       <input type="{{type}}" matInput [formControlName]="field" [required]="required" [placeholder]="placeholder"/>
       <mat-hint *ngIf="hintMsg">{{ hintMsg }}</mat-hint>
       <span matPrefix><ng-content select="[inputPrefix]"></ng-content></span>

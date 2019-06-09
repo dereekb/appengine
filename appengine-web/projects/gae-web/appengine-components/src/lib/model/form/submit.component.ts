@@ -22,6 +22,14 @@ export class GaeSubmitViewActionDirective {
         return (this._submitView) ? this._submitView.isDisabled : true;
     }
 
+    public get locked(): boolean {
+        return (this._submitView) ? this._submitView.isLocked : true;
+    }
+
+    public get working(): boolean {
+        return (this._submitView) ? this._submitView.isWorking : false;
+    }
+
     public doSubmit() {
         if (this._submitView) {
             this._submitView.submit();

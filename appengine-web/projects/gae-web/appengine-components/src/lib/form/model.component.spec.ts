@@ -43,7 +43,7 @@ describe('AbstractModelFormComponent', () => {
 @Component({
   selector: 'gae-test-model-model-form',
   template: `
-  <form class="form-view" [formGroup]="form" [gaeFormGroupErrors]="controlErrorsObs" fxLayout="column" novalidate>
+  <form class="gae-form-view" [formGroup]="form" [gaeFormGroupErrors]="controlErrorsObs" fxLayout="column" novalidate>
     <gae-input-form-control [form]="form" field="name" placeholder="Name" [required]="nameRequired" fxFlex="100%"></gae-input-form-control>
   </form>
   `

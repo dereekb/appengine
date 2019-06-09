@@ -1,22 +1,22 @@
 import { Observable } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
-import { TemplateActionDirectiveEvent, TemplateActionDirective, TemplateActionConfig, AbstractTemplateActionDirective } from './template.directive';
+import { TemplateActionDirectiveEvent, TemplateActionDirective, TemplateActionConfig, AbstractTemplateActionDirective, ProvideTemplateActionDirective } from './template.directive';
 import { UpdateResponse, UpdateRequestOptions, UpdateService, UpdateRequest } from '@gae-web/appengine-api';
 import { ActionState } from '../../shared/action';
+import { Type, Provider } from '@angular/core';
 
 export interface UpdateActionDirectiveEvent<T extends UniqueModel> extends TemplateActionDirectiveEvent<T> {
-
   // Update response, only available on complete.
   readonly result?: UpdateResponse<T>;
-
 }
 
-export interface UpdateActionDirective<T extends UniqueModel> extends TemplateActionDirective<T> {
+export function ProvideUpdateActionDirective<S extends UpdateActionDirective<any>>(directiveType: Type<S>): Provider[] {
+  return [...ProvideTemplateActionDirective(directiveType), { provide: UpdateActionDirective, useExisting: directiveType }];
+}
 
+export abstract class UpdateActionDirective<T extends UniqueModel> extends TemplateActionDirective<T> {
   readonly stream: Observable<UpdateActionDirectiveEvent<T>>;
-
-  doUpdate(config: UpdateActionConfig<T>): Observable<UpdateResponse<T>>;
-
+  abstract doUpdate(config: UpdateActionConfig<T>): Observable<UpdateResponse<T>>;
 }
 
 export interface UpdateActionConfig<T> extends TemplateActionConfig<T> {

@@ -5,7 +5,7 @@ import { GaeFormGroupErrorsDirective } from '../control.component';
 
 @Component({
   template: `
-  <mat-form-field class="form-view-control" [formGroup]="form" [ngClass]="{ warning: hasError, required: required }" [color]="color">
+  <mat-form-field class="gae-form-view-control" [formGroup]="form" [ngClass]="{ warning: hasError, required: required }" [color]="color">
       <input type="{{type}}" matInput [formControlName]="field" [matAutocomplete]="autoCompleteView" [placeholder]="placeholder"/>
       <mat-autocomplete #autoCompleteView="matAutocomplete">
           <mat-option *ngFor="let option of autoCompleteOptions | async" [value]="option">{{ option }}</mat-option>

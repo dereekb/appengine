@@ -26,7 +26,7 @@ export class GaeActionSegueDirective extends AbstractActionWatcherDirective<Acti
     return event.state === ActionState.Complete;
   }
 
-  protected updateWithAction(_: ActionEvent) {
+  protected updateForActionEvent(_: ActionEvent) {
     this._state.go(this.actionSegueRef);
   }
 

@@ -1,9 +1,9 @@
-<div class="form-container">
+<div class="gae-form-container">
     <app-foo-read-source #fooSource atomic="true" [readSourceKeys]="targetKey"></app-foo-read-source>
     <gae-model-loader #fooLoader [source]="fooSource"></gae-model-loader>
     <gae-model-loading-view [loader]="fooLoader">
         <div content fxLayout="column">
-            <div class="form-container-form-view" fxFlex="100%" 
+            <div class="gae-form-container-form-view" fxFlex="100%" 
                 appFooUpdateAction appFooUpdateAnalytics #action="appFooUpdateAction"
                 gaeUpdateModelFormController #control="gaeUpdateModelFormController" [model]="fooSource.first" [action]="action" [form]="form" [submit]="submit">
                 <app-foo-model-form #form hideBeforeInput="true"></app-foo-model-form>

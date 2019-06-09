@@ -21,7 +21,7 @@ export abstract class AbstractActionAnalyticDirective<E extends ActionEvent> ext
     return event.state === ActionState.Complete;
   }
 
-  protected updateWithAction(event: E) {
+  protected updateForActionEvent(event: E) {
     this.updateAnalyticsWithAction(event, this._analytics);
   }
 

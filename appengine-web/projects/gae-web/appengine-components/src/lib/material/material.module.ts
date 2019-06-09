@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { GaeActionMessageSnackbarDirective } from './snackbar.directive';
+import { GaeActionSnackbarDirective } from './snackbar.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -29,7 +29,7 @@ import { MatProgressButtonsModule } from 'mat-progress-buttons';
     MatProgressButtonsModule
   ],
   declarations: [
-    GaeActionMessageSnackbarDirective,
+    GaeActionSnackbarDirective,
     GaeColorImageComponent,
     GaeColorStyleDirective,
     GaeBackgroundColorStyleDirective,
@@ -46,7 +46,7 @@ import { MatProgressButtonsModule } from 'mat-progress-buttons';
     GaePageToolbarSidenavControllerLinkDirective
   ],
   exports: [
-    GaeActionMessageSnackbarDirective,
+    GaeActionSnackbarDirective,
     GaeColorImageComponent,
     GaeColorStyleDirective,
     GaeBackgroundColorStyleDirective,

@@ -12,7 +12,7 @@ export interface SelectOption {
   template: `
   <div class="mat-form-field select-form-control">
       <div class="mat-input-wrapper" [formGroup]="form" [ngClass]="{ warning: hasError, required: required }">
-          <mat-select class="form-view-control" [formControlName]="field" [placeholder]="placeholder">
+          <mat-select class="gae-form-view-control" [formControlName]="field" [placeholder]="placeholder">
               <mat-option *ngFor="let option of options | async" [value]="option.value">{{ option.label }}</mat-option>
           </mat-select>
       </div>

@@ -4,11 +4,11 @@ import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   template: `
-  <div class="form-view-control form-view-checkbox-control" [formGroup]="form" [ngClass]="{ warning: hasError, required: required }">
-      <mat-checkbox class="form-view-checkbox" [formControlName]="field" [labelPosition]="labelPosition" [color]="color">
+  <div class="gae-form-view-control gae-form-view-checkbox-control" [formGroup]="form" [ngClass]="{ warning: hasError, required: required }">
+      <mat-checkbox class="gae-form-view-checkbox" [formControlName]="field" [labelPosition]="labelPosition" [color]="color">
       {{ placeholder }}
       </mat-checkbox>
-      <p class="form-view-hint" *ngIf="hintMsg">{{ hintMsg }}</p>
+      <p class="gae-form-view-hint" *ngIf="hintMsg">{{ hintMsg }}</p>
   </div>
   `,
   selector: 'gae-checkbox-form-control',

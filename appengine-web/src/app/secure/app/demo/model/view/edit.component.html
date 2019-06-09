@@ -1,4 +1,4 @@
 <ng-container gaeSubmitViewAction #action="gaeSubmitViewAction">
-  <gae-page-fab icon="save" [working]="action.disabled" (buttonClicked)="action.doSubmit()"></gae-page-fab>
+  <gae-page-fab icon="save" [disabled]="action.disabled" [working]="action.working" (buttonClicked)="action.doSubmit()"></gae-page-fab>
   <app-foo-update-view #updateView [target]="fooKey"></app-foo-update-view>
 </ng-container>
