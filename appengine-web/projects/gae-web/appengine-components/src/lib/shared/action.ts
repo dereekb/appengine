@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { Type, Provider } from '@angular/core';
 
 export enum ActionState {
 
@@ -37,6 +38,10 @@ export interface ActionEvent {
   readonly error?: Error;
 }
 
+export function ProvideActionObject<S extends ActionObject>(objectType: Type<S>): Provider[] {
+  return [{ provide: ActionObject, useExisting: objectType }];
+}
+
 /**
  * Object that has a primary action, and a single active state.
  */
@@ -67,6 +72,10 @@ export abstract class ActionObject {
    */
   abstract reset(): void;
 
+}
+
+export function ProvideTypedActionObject<S extends TypedActionObject<any>>(objectType: Type<S>): Provider[] {
+  return [...ProvideActionObject(objectType), { provide: TypedActionObject, useExisting: objectType }];
 }
 
 /**

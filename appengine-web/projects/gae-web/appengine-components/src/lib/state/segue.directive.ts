@@ -1,23 +1,28 @@
-import { Input, Directive } from '@angular/core';
-import { AbstractActionWatcherDirective } from '../shared/action.directive';
-import { StateService } from '@uirouter/core';
-import { ActionEvent, ActionState, TypedActionObject } from '../shared/action';
+import { Input, Directive, Optional, Inject } from '@angular/core';
+import { AbstractActionWatcherDirective, ActionDirective } from '../shared/action.directive';
+import { StateService, StateOrName } from '@uirouter/core';
+import { ActionEvent, ActionState, TypedActionObject, ActionObject } from '../shared/action';
 
 @Directive({
-  selector: '[gaeActionSegue]'
+  selector: '[gaeActionSegue]',
+  exportAs: 'gaeActionSegue'
 })
 export class GaeActionSegueDirective extends AbstractActionWatcherDirective<ActionEvent> {
 
-  // State to go to.
-  @Input()
-  public actionSegueRef: string;
+  private _to: StateOrName;
 
-  constructor(private _state: StateService) {
-    super();
+  // State to go to.
+  constructor(@Optional() @Inject(ActionDirective) actionObject: ActionDirective<ActionEvent>, private _state: StateService) {
+    super(actionObject);
   }
 
   @Input()
-  public set gaeActionSegue(component: TypedActionObject<ActionEvent>) {
+  public set gaeActionSegue(to: StateOrName) {
+    this._to = to;
+  }
+
+  @Input()
+  public set action(component: TypedActionObject<ActionEvent>) {
     this.setActionObject(component);
   }
 
@@ -27,7 +32,7 @@ export class GaeActionSegueDirective extends AbstractActionWatcherDirective<Acti
   }
 
   protected updateForActionEvent(_: ActionEvent) {
-    this._state.go(this.actionSegueRef);
+    this._state.go(this._to);
   }
 
 }

@@ -91,6 +91,11 @@ export class GaeActionSnackbarMessageDirective extends GaeActionSnackbarDirectiv
   public snackbarMessage = 'Success!';
 
   @Input()
+  public set gaeActionSnackbarMessage(snackbarMessage) {
+    this.snackbarMessage = snackbarMessage;
+  }
+
+  @Input()
   public snackbarDuration = 10000;    // 10 seconds.
 
   @Input()

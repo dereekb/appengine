@@ -19,6 +19,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FooCreateDialogComponent } from './views/create-modal.component';
+import { FooDeleteDialogComponent } from './views/delete-modal.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { FooCreateDialogComponent } from './views/create-modal.component';
     FooCreateDialogComponent,
     FooSegueToCreatedViewDirective,
     FooDeleteFormComponent,
+    FooDeleteDialogComponent,
     FooListContentComponent,
     FooListViewComponent,
     FooModelFormComponent,
@@ -68,11 +70,12 @@ import { FooCreateDialogComponent } from './views/create-modal.component';
     FooCreateDialogComponent,
     FooSegueToCreatedViewDirective,
     FooDeleteFormComponent,
+    FooDeleteDialogComponent,
     FooListContentComponent,
     FooListViewComponent,
     FooModelFormComponent,
     FooUpdateFormComponent
   ],
-  entryComponents: [FooCreateDialogComponent]
+  entryComponents: [FooCreateDialogComponent, FooDeleteDialogComponent]
 })
 export class FooComponentsModule { }

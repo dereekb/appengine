@@ -1,14 +1,19 @@
-<ng-container appFooCreateAction appFooCreateAnalytics #action="appFooCreateAction">
-  <ng-container #control="gaeCreateModelFormController" gaeCreateModelFormController [action]="action" [form]="form"
+<ng-container #action="appFooDeleteAction" appFooDeleteAction [gaeActionSegue]="segueRef" appFooDeleteAnalytics
+  gaeActionSnackbarMessage="Deleted Foo!">
+  <ng-container #control="gaeDeleteModelFormController" gaeDeleteModelFormController [action]="action" [form]="form"
     [submit]="submit"></ng-container>
-  <h1 mat-dialog-title>Delete {{}}</h1>
+  <app-foo-read-source #fooSource [gaeReadSourceKey]="targetKey"></app-foo-read-source>
+  <gae-model-loader #fooLoader [source]="fooSource"></gae-model-loader>
+  <h1 mat-dialog-title>Confirm Delete Foo</h1>
   <gae-action-view [action]="action">
     <div content>
       <div mat-dialog-content>
-        <app-foo-model-form #form></app-foo-model-form>
+        <gae-model-loading-view [loader]="fooLoader">
+          <gae-confirm-delete-model-form content #form [input]="fooSource.first"></gae-confirm-delete-model-form>
+        </gae-model-loading-view>
       </div>
       <div mat-dialog-actions>
-        <gae-submit-button #submit></gae-submit-button>
+        <gae-submit-button action="Delete" #submit></gae-submit-button>
         <button mat-button (click)="onCancelClick()">Cancel</button>
         <div>
           <gae-error [error]="error"></gae-error>
@@ -18,9 +23,6 @@
     <div done>
       <div mat-dialog-content>
         <gae-action-done-view></gae-action-done-view>
-      </div>
-      <div mat-dialog-actions>
-        <gae-action-reset-view></gae-action-reset-view>
       </div>
     </div>
   </gae-action-view>

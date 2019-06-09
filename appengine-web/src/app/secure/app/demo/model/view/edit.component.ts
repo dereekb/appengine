@@ -4,4 +4,7 @@ import { AbstractModelViewComponent } from './view.component';
 @Component({
   templateUrl: './edit.component.html',
 })
-export class ModelEditViewComponent extends AbstractModelViewComponent {}
+export class ModelEditViewComponent extends AbstractModelViewComponent {
+
+
+}

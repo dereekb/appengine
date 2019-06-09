@@ -74,7 +74,7 @@ export abstract class GaeAbstractSubmitComponent implements OnDestroy {
     public mode: ProgressSpinnerMode = 'indeterminate';
 
     @Input()
-    public action = 'Submit';
+    public text = 'Submit';
 
     @Input()
     public lockedText = 'Locked!';
@@ -89,8 +89,8 @@ export abstract class GaeAbstractSubmitComponent implements OnDestroy {
         this.submitClicked.complete();
     }
 
-    get text() {
-        return (this.isLocked) ? this.lockedText : this.action;
+    get buttonText() {
+        return (this.isLocked) ? this.lockedText : this.text;
     }
 
     get isWorking() {
@@ -165,7 +165,7 @@ export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
     public get btnOptions(): MatProgressButtonOptions {
         return {
             active: this.isWorking,
-            text: this.text,
+            text: this.buttonText,
             buttonColor: 'accent',
             barColor: 'accent',
             raised: this.raised,

@@ -1,12 +1,13 @@
 import { Host, Directive, Component } from '@angular/core';
-import { AbstractDeleteActionDirective, AbstractActionAnalyticDirective, DeleteActionDirectiveEvent } from '@gae-web/appengine-components';
+import { AbstractDeleteActionDirective, AbstractActionAnalyticDirective, DeleteActionDirectiveEvent, ProvideDeleteActionDirective } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { FooDeleteService } from 'src/app/secure/shared/api/model/foo/foo.service';
 import { AnalyticsService, AnalyticsSender } from '@gae-web/appengine-analytics';
 
 @Directive({
     selector: '[appFooDeleteAction]',
-    exportAs: 'appFooDeleteAction'
+    exportAs: 'appFooDeleteAction',
+    providers: [ProvideDeleteActionDirective(FooDeleteActionDirective)]
 })
 export class FooDeleteActionDirective extends AbstractDeleteActionDirective<Foo> {
 

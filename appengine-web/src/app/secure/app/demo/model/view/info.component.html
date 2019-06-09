@@ -5,6 +5,7 @@
       <h4>Info</h4>
       <p>Foo: {{ fooLoader.m?.name }} - #{{ fooLoader.m?.number }}</p>
       <button mat-button uiSref="^.edit">Edit</button>
+      <button mat-button (click)="openDeleteDialog()">Delete</button>
     </ng-container>
   </gae-model-loading-view>
 </div>

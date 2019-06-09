@@ -7,7 +7,7 @@
                 appFooUpdateAction appFooUpdateAnalytics #action="appFooUpdateAction"
                 gaeUpdateModelFormController #control="gaeUpdateModelFormController" [model]="fooSource.first" [action]="action" [form]="form" [submit]="submit">
                 <app-foo-model-form #form hideBeforeInput="true"></app-foo-model-form>
-                <gae-submit-button [hidden]="true" gaeModelChangeFormActionLinkSubmitView #submit action="Save" lockedText="Saved!"></gae-submit-button>
+                <gae-submit-button [hidden]="true"  #submit action="Save" lockedText="Saved!"></gae-submit-button>
             </div>
         </div>
     </gae-model-loading-view>

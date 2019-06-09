@@ -1,14 +1,15 @@
 <div class="gae-form-container">
-    <app-foo-read-source #fooSource [readSourceKeys]="targetKey"></app-foo-read-source>
-    <gae-model-loader #fooLoader [source]="fooSource"></gae-model-loader>
-    <gae-model-loading-view [loader]="fooLoader">
-        <div content fxLayout="column">
-            <div class="gae-form-container-form-view" fxFlex="100%" 
-                appFooDeleteAction appFooDeleteAnalytics #action="appFooDeleteAction" [gaeActionSegue]="action" actionSegueRef="^.^.^" gaeActionSnackbarMessage snackbarMessage="Deleted Tally!" 
-                gaeDeleteModelFormController #control="gaeDeleteModelFormController" [action]="action" [form]="form" [submit]="submit">
-                <gae-confirm-delete-model-form #form [input]="fooSource.first"></gae-confirm-delete-model-form>
-                <gae-submit-button [hidden]="true" gaeModelChangeFormActionLinkSubmitView #submit action="Delete" lockedText="Done!"></gae-submit-button>
-            </div>
-        </div>
-    </gae-model-loading-view>
+  <app-foo-read-source #fooSource [readSourceKeys]="targetKey"></app-foo-read-source>
+  <gae-model-loader #fooLoader [source]="fooSource"></gae-model-loader>
+  <gae-model-loading-view [loader]="fooLoader">
+    <div content fxLayout="column">
+      <div class="gae-form-container-form-view" fxFlex="100%" appFooDeleteAction appFooDeleteAnalytics
+        #action="appFooDeleteAction" [gaeActionSegue]="action" actionSegueRef="^.^.^" gaeActionSnackbarMessage
+        snackbarMessage="Deleted Tally!" gaeDeleteModelFormController #control="gaeDeleteModelFormController"
+        [action]="action" [form]="form" [submit]="submit">
+        <gae-confirm-delete-model-form #form [input]="fooSource.first"></gae-confirm-delete-model-form>
+        <gae-submit-button [hidden]="true" #submit action="Delete" lockedText="Done!"></gae-submit-button>
+      </div>
+    </div>
+  </gae-model-loading-view>
 </div>

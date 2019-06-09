@@ -107,17 +107,21 @@ export abstract class AbstractActionWatcherDirective<E extends ActionEvent> impl
 
   private _actionSub = new SubscriptionObject();
 
-  constructor() { }
+  constructor(actionObject?: TypedActionObject<E>) {
+    if (actionObject) {
+      this.setActionObject(actionObject);
+    }
+  }
 
   ngOnDestroy() {
     this._actionSub.destroy();
   }
 
-  protected setActionObject(component: TypedActionObject<E>) {
+  protected setActionObject(actionObject: TypedActionObject<E>) {
     let subscription: Subscription;
 
-    if (component) {
-      subscription = this.makeActionSubscription(component.stream);
+    if (actionObject) {
+      subscription = this.makeActionSubscription(actionObject.stream);
     }
 
     this._actionSub.subscription = subscription;

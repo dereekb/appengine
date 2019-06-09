@@ -1,12 +1,13 @@
 import { Host, Directive, Component } from '@angular/core';
-import { AbstractUpdateActionDirective, AbstractActionAnalyticDirective, UpdateActionDirectiveEvent } from '@gae-web/appengine-components';
+import { AbstractUpdateActionDirective, AbstractActionAnalyticDirective, UpdateActionDirectiveEvent, ProvideUpdateActionDirective } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { FooUpdateService } from 'src/app/secure/shared/api/model/foo/foo.service';
 import { AnalyticsService, AnalyticsSender } from '@gae-web/appengine-analytics';
 
 @Directive({
     selector: '[appFooUpdateAction]',
-    exportAs: 'appFooUpdateAction'
+    exportAs: 'appFooUpdateAction',
+    providers: ProvideUpdateActionDirective(FooUpdateActionDirective)
 })
 export class FooUpdateActionDirective extends AbstractUpdateActionDirective<Foo> {
 
