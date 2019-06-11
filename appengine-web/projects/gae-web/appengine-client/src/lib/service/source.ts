@@ -1,6 +1,6 @@
 import {
   ValueUtility, UniqueModel, ModelKey, ModelUtility, ConversionSource, AbstractConversionSource,
-  SourceState, SourceFactory, IterableSource, AbstractSource, ControllableSource, SourceEvent, SubscriptionObject
+  SourceState, SourceFactory, IterableSource, AbstractSource, ControllableSource, SourceEvent, SubscriptionObject, ConversionSourceInputResult
 } from '@gae-web/appengine-utility';
 import {
   ReadService, ReadRequest, ReadResponse, SearchCursor,
@@ -22,17 +22,12 @@ export interface ModelKeyReadSource<T extends UniqueModel> extends ConversionSou
 export abstract class AbstractModelKeyConversionSource<T extends UniqueModel> extends AbstractConversionSource<ModelKey, T> {
 
   // MARK: AbstractConversionSource
-  protected updateWithInput(keys: ModelKey[]) {
+  protected convertInputData(keys: ModelKey[]) {
     keys = ModelUtility.filterInitializedModelKeys(keys);
-
-    if (keys.length === 0) {
-      this.updateWithNothing();
-    } else {
-      this.updateWithKeys(keys);
-    }
+    return this.convertInputKeys(keys);
   }
 
-  protected abstract updateWithKeys(keys: ModelKey[]);
+  protected abstract convertInputKeys(keys: ModelKey[]): Observable<ConversionSourceInputResult<ModelKey, T>>;
 
 }
 
@@ -63,18 +58,9 @@ export class ReadSource<T extends UniqueModel> extends AbstractModelKeyConversio
   }
 
   // MARK: Update
-  protected updateWithKeys(keys: ModelKey[]) {
-    this.setState(SourceState.Loading);
-
+  protected convertInputKeys(keys: ModelKey[]): Observable<ConversionSourceInputResult<ModelKey, T>> {
     const readRequest: ReadRequest = this.makeReadRequest(keys);
-
-    const sub = this._service.read(readRequest).subscribe((response: ReadResponse<T>) => {
-      this._updateWithReadResponse(response);
-    }, (error: any) => {
-      this._updateWithReadError(keys, error);
-    });
-
-    this.setSourceSub(sub);
+    return this._service.read(readRequest);
   }
 
   protected makeReadRequest(keys: ModelKey[]) {
@@ -84,14 +70,6 @@ export class ReadSource<T extends UniqueModel> extends AbstractModelKeyConversio
     };
 
     return readRequest;
-  }
-
-  protected _updateWithReadResponse(response: ReadResponse<T>) {
-    this.setElements(response.models, SourceState.Idle, response.failed);
-  }
-
-  protected _updateWithReadError(keys: ModelKey[], error: any) {
-    this.setElements([], SourceState.Error, keys, error);
   }
 
 }

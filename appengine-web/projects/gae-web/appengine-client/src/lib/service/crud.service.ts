@@ -1,4 +1,4 @@
-import { UniqueModel, ModelKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult } from '@gae-web/appengine-utility';
 import { ReadSourceFactory, ReadSourceConfiguration, ReadSource } from './source';
 import { ModelServiceWrapper } from './model.service';
 import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
@@ -28,13 +28,13 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
   }
 
   // MARK: Update
-  protected updateWithKeys(keys: ModelKey[]) {
+  protected convertInputKeys(keys: ModelKey[]): Observable<ConversionSourceInputResult<ModelKey, T>> {
     this.setState(SourceState.Loading);
 
     // Watch for the cache to change.
 
     // TODO: Move this to the read service later.
-    const sub = this._parent.cache
+    return this._parent.cache
       .asyncRead(keys, { debounce: this._debounce })
       .pipe(
         flatMap((result: KeyedCacheLoad<ModelKey, T>) => {
@@ -63,18 +63,14 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
           } else {
             return of(result);
           }
+        }),
+        map((result: KeyedCacheLoad<ModelKey, T>) => {
+          return {
+            models: result.hits,
+            failed: result.misses
+          };
         })
-      ).subscribe((result) => {
-        this._updateWithReadResult(result);
-      }, (error) => {
-        this._updateWithReadError(keys, error);
-      });
-
-    this.setSourceSub(sub);
-  }
-
-  protected _updateWithReadResult(result: KeyedCacheLoad<ModelKey, T>) {
-    this.setConvertedElements(result.hits, result.misses);
+      );
   }
 
 }

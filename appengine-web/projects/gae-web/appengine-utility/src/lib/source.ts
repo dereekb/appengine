@@ -1,8 +1,9 @@
 import { Type } from '@angular/core';
 import { BaseError } from 'make-error';
-import { Observable, Subscription, BehaviorSubject, of, throwError } from 'rxjs';
-import { map, flatMap, debounceTime, share } from 'rxjs/operators';
+import { Observable, Subscription, BehaviorSubject, of, throwError, EMPTY } from 'rxjs';
+import { map, flatMap, debounceTime, share, catchError, tap } from 'rxjs/operators';
 import { SubscriptionObject } from './subscription';
+import { ValueUtility } from './value';
 
 export interface SingleElementSource<T> {
 
@@ -57,7 +58,7 @@ export enum SourceState {
     Done = 3,
 
     /**
-     * Encountered an error.
+     * Encountered an error. More elements may come through if the input is updated.
      */
     Error = 4,
 
@@ -148,6 +149,15 @@ export function ProvideIterableSource<S extends Source<any>>(type: Type<S>) {
 }
 
 // MARK: Conversion Source Classes
+export interface ConversionSourceInputResult<I, T> {
+    models: T[];
+    failed?: I[];
+}
+
+export interface ConversionSourceInputConversionResult<I, T> extends ConversionSourceInputResult<I, T> {
+    input: I[];
+}
+
 export class ConversionSourceEvent<I, T> extends SourceEvent<T> {
 
     constructor(state?: SourceState, elements?: T[], public readonly failed: I[] = []) {
@@ -163,9 +173,7 @@ export abstract class ReadOnlyConversionSource<I, T> extends Source<T> {
 }
 
 export abstract class ConversionSource<I, T> extends ReadOnlyConversionSource<I, T> {
-
     input: Observable<I | I[]> | undefined;
-
 }
 
 export function ProvideConversionSource<S extends ConversionSource<any, any>>(type: Type<S>) {
@@ -313,6 +321,14 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
     }
 
     // MARK: Internal
+    protected setLoading() {
+        this.setState(SourceState.Loading);
+    }
+
+    protected setError(error) {
+        this.setState(SourceState.Error, error);
+    }
+
     /**
      * Sets a new state and updates the stream.
      */
@@ -351,13 +367,8 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
      */
     protected debounce = 200;  // 200ms debounce
 
-    // Used optionally by extending classes.
-    private _sourceSub = new SubscriptionObject();
-
     private _input?: Observable<I | I[]>;
     private _inputSub = new SubscriptionObject();
-
-    private _refreshData: I[];
 
     private _failedStream: Observable<I[]>;
 
@@ -429,34 +440,90 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
 
     // MARK: Internal
     protected subToInput(input: Observable<I | I[]>): Subscription {
-        this.setElements([], SourceState.Loading, []);
-        // debounce to prevent too many conversion requests too fast.
-        return input.pipe(debounceTime(this.debounce)).subscribe((data) => {
-            // console.log('Data: ' + data);
 
-            if (Array.isArray(data)) {
+        // Update for the new input observable.
+        this.updateForNewInputObs();
+
+        return input.pipe(
+            // debounce to prevent too many conversion requests too fast.
+            debounceTime(this.debounce),
+            map((x) => {
+                // Always convert to an array.
+                return ValueUtility.normalizeArray(x);
+            }),
+            tap((x) => {
+                // set loading each time new data comes in.
+                this.updateForNewInputData(x);
+            }),
+            flatMap((data) => {
                 if (data.length === 0) {
-                    this.updateWithNothing();
-                    return;
+                    return this.convertNothing();
+                } else {
+                    return this._convertInputData(data);
                 }
-            } else {
-                data = [data];
+            }),
+            // TODO: Decide if errors should be caught, or kill the entire source.
+            // May alternatively allow the source to specify, but a design choice is better.
+            /*
+            catchError((error) => {
+                return EMPTY;   // Do nothing.
+            })
+             */
+        ).subscribe({
+            next: (result) => {
+                this.updateWithResult(result);
+            },
+            error: (error) => {
+                this.updateWithError(error);
+            },
+            complete: () => {
+                // No more elements from this source.
+                this.setState(SourceState.Done, this.currentError);
             }
-
-            // this._refreshData = data;   // Set refresh Data???
-            this.updateWithInput(data);
-        }, (error) => {
-            this.updateWithError(error);
-        }, () => {
-            // No more elements from this source.
-            this.setState(SourceState.Done, this.currentError);
         });
     }
 
-    protected abstract updateWithInput(data: I[]);
+    /**
+     * Update when a new input is set.
+     *
+     * By default will clear all existing elements and set the loading state.
+     */
+    protected updateForNewInputObs() {
+        this.setElements([], SourceState.Loading, []);
+    }
 
-    protected updateWithError(failed?: I[]) {
-        this.setElements([], SourceState.Error, failed);
+    /**
+     * Update when new input data is recieved.
+     *
+     * By default will set the loading state.
+     */
+    protected updateForNewInputData(data: I[]) {
+        this.setLoading();
+    }
+
+    private _convertInputData(inputData: I[]): Observable<ConversionSourceInputConversionResult<I, T>> {
+        return this.convertInputData(inputData).pipe(
+            map((x) => {
+                return {
+                    ...x,
+                    input: inputData
+                };
+            })
+        );
+    }
+
+    protected abstract convertInputData(inputData: I[]): Observable<ConversionSourceInputResult<I, T>>;
+
+    protected convertNothing(): Observable<ConversionSourceInputConversionResult<I, T>> {
+        return of({ input: [], models: [] });
+    }
+
+    protected updateWithResult(results: ConversionSourceInputConversionResult<I, T>) {
+        this.setElements(results.models, SourceState.Idle, results.failed);
+    }
+
+    protected updateWithError(failed?: I[], error?: any) {
+        this.setElements([], SourceState.Error, failed, error);
     }
 
     protected updateWithNothing() {
@@ -464,11 +531,17 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
     }
 
     // MARK: Elements and State
+    /**
+     * Utility function that adds the incoming elements to the beginning of the current elements.
+     */
     protected prependElements(elements: T[], newState: SourceState, failed?: I[]) {
         const allElements = elements.concat(this.currentElements);
         this.setElements(allElements, newState, failed);
     }
 
+    /**
+     * Utility function that adds the incoming elements to the end of the current elements.
+     */
     protected addElements(elements: T[], newState: SourceState, failed?: I[]) {
         const allElements = this.currentElements.concat(elements);
         this.setElements(allElements, newState, failed);
@@ -483,8 +556,9 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
     }
 
     public refresh() {
-        if (this._refreshData) {
-            this.updateWithInput(this._refreshData);
+        if (this.input) {
+            // Set the input obs again to restart the input stream.
+            this.input = this.input;
         }
     }
 
@@ -506,18 +580,12 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
             elements,
             failed,
             error
-        } as any);
+        });
     }
 
     // MARK: Internal Input Sub
     protected clearAllInputSubs() {
-        this._sourceSub.unsub();
         this._inputSub.unsub();
-    }
-
-    // MARK: Internal Source Sub
-    protected setSourceSub(sub: Subscription) {
-        this._sourceSub.subscription = sub;
     }
 
 }

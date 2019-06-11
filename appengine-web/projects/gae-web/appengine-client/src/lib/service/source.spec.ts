@@ -1,5 +1,5 @@
 import 'jasmine-expect';
-import { TestFoo } from '@gae-web/appengine-api';
+import { TestFoo, TestFooReadService } from '@gae-web/appengine-api';
 import { MergedReadQuerySource, ReadSource } from './source';
 import { SourceState } from '@gae-web/appengine-utility';
 import { filter, first } from 'rxjs/operators';
@@ -11,9 +11,11 @@ describe('Source', () => {
   describe('ReadSource', () => {
 
     let testReadSource: ReadSource<TestFoo>;
+    let testReadService: TestFooReadService;
 
     beforeEach(() => {
       testReadSource = TestFooTestReadSourceFactory.makeReadSource();
+      testReadService = (testReadSource as any)._service as TestFooReadService;
     });
 
     describe('with empty input', () => {
@@ -67,6 +69,26 @@ describe('Source', () => {
     });
 
     describe('with input with keys', () => {
+
+      it('should hit the loading state.', (done) => {
+
+        testReadService.loadingTime = 100000; // Simulate loading time.
+
+        const testInputA = [3, 4, 5];
+
+        testReadSource.input = of(testInputA);
+
+        // Wait for the initial stream to complete.
+        testReadSource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Loading;
+          }),
+          first()
+        ).subscribe((x) => {
+          done();
+        });
+
+      });
 
     });
 

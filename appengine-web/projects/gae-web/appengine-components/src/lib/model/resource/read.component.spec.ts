@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, DebugElement, ViewChild } from '@angular/core';
 import { GaeModelComponentsModule } from '../model.module';
 import { ProvideReadSourceComponent, AbstractReadSourceComponent, GaeReadSourceKeyDirective, ReadSourceComponent } from './read.component';
-import { ReadSourceFactory, TestFooTestReadSourceFactory } from '@gae-web/appengine-client';
-import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService, TestFoo } from '@gae-web/appengine-api';
+import { ReadSourceFactory, TestFooTestReadSourceFactory, ReadSource } from '@gae-web/appengine-client';
+import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService, TestFoo, TestFooReadService } from '@gae-web/appengine-api';
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 import { ModelUtility, ModelKey, ValueUtility, SourceState, NamedUniqueModel } from '@gae-web/appengine-utility';
 import { By } from '@angular/platform-browser';
@@ -84,6 +84,10 @@ export class TestFooReadSourceComponent extends AbstractReadSourceComponent<Test
     super(new TestFooTestReadSourceFactory());
   }
 
+  get testFooReadService() {
+    return (this._source as any | ReadSource<TestFoo>)._service as TestFooReadService;
+  }
+
 }
 
 @Component({
@@ -95,7 +99,7 @@ class TestViewComponent {
 
   key: ModelKey = 1;
 
-  @ViewChild(GaeReadSourceKeyDirective, {static: true})
+  @ViewChild(GaeReadSourceKeyDirective, { static: true })
   public gaeReadSource: GaeReadSourceKeyDirective<TestFoo>;
 
 }

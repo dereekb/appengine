@@ -129,6 +129,7 @@ export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
     constructor(source?: SingleElementReadSource<T>) {
         if (source) {
             this.source = source;
+            this.initialize();
         }
     }
 
