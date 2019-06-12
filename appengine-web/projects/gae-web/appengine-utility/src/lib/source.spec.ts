@@ -21,6 +21,7 @@ describe('ConversionSource', () => {
 
       it('should enter the error state.', () => {
         expect(source.state).toBe(SourceState.Error);
+        expect(source.currentEvent.error).toBeDefined();
       });
 
     });
@@ -33,6 +34,7 @@ describe('ConversionSource', () => {
 
       it('should enter the error state.', (done) => {
         expect(source.state).toBe(SourceState.Error);
+        expect(source.currentEvent.error).toBeDefined();
         done();
       });
 
@@ -47,6 +49,7 @@ describe('ConversionSource', () => {
 
       it('should enter the error state.', (done) => {
         expect(source.state).toBe(SourceState.Error);
+        expect(source.currentEvent.error).toBeDefined();
         done();
       });
 

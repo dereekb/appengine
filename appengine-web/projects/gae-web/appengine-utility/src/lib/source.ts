@@ -325,7 +325,7 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
         this.setState(SourceState.Loading);
     }
 
-    protected setError(error) {
+    protected setError(error: Error) {
         this.setState(SourceState.Error, error);
     }
 
@@ -473,7 +473,7 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
             next: (result) => {
                 this.updateWithResult(result);
             },
-            error: (error) => {
+            error: (error: Error | any) => {
                 this.updateWithError(error);
             },
             complete: () => {
@@ -522,7 +522,7 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
         this.setElements(results.models, SourceState.Idle, results.failed);
     }
 
-    protected updateWithError(failed?: I[], error?: any) {
+    protected updateWithError(error?: any, failed?: I[]) {
         this.setElements([], SourceState.Error, failed, error);
     }
 

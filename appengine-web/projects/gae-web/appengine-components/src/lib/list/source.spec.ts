@@ -5,7 +5,7 @@ import { UniqueModel, ModelKey, NumberModelKey } from '@gae-web/appengine-utilit
 import { ListViewSource, AbstractListViewSource, ListViewSourceState } from './source';
 import { ReadSource } from '@gae-web/appengine-client';
 import { ReadService, ReadRequest, ReadResponse, TestReadService, TestFoo } from '@gae-web/appengine-api';
-import { delay, map } from 'rxjs/operators';
+import { delay, map, filter, first } from 'rxjs/operators';
 
 describe('ListViewSource', () => {
 
@@ -18,7 +18,10 @@ describe('ListViewSource', () => {
     });
 
     it('should be loading in the loading state', (done) => {
-      testListViewSource.stream.subscribe((x) => {
+      testListViewSource.stream.pipe(
+        filter((x) => x.state === ListViewSourceState.Loading),
+        first()
+      ).subscribe((x) => {
         expect(x.state === ListViewSourceState.Loading);
         done();
       });
@@ -35,7 +38,10 @@ describe('ListViewSource', () => {
     });
 
     it('should have elements', (done) => {
-      testListViewSource.stream.subscribe((x) => {
+      testListViewSource.stream.pipe(
+        filter((x) => x.state === ListViewSourceState.Done),
+        first()
+      ).subscribe((x) => {
         expect(x.elements).toBeDefined();
         expect(x.elements).toBeArrayOfObjects();
         expect(x.elements.length).toBe(keys.length);
@@ -53,7 +59,10 @@ describe('ListViewSource', () => {
     });
 
     it('should have no elements', (done) => {
-      testListViewSource.stream.subscribe((x) => {
+      testListViewSource.stream.pipe(
+        filter((x) => x.state === ListViewSourceState.Done),
+        first()
+      ).subscribe((x) => {
         expect(x.elements).toBeDefined();
         expect(x.state === ListViewSourceState.Done);
         done();
@@ -69,7 +78,10 @@ describe('ListViewSource', () => {
     });
 
     it('should have an error.', (done) => {
-      testListViewSource.stream.subscribe((x) => {
+      testListViewSource.stream.pipe(
+        filter((x) => x.state === ListViewSourceState.Error),
+        first()
+      ).subscribe((x) => {
         expect(x.error).toBeDefined();
         done();
       });

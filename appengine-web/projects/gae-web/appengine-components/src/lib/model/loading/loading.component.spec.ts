@@ -7,7 +7,7 @@ import { TestFooReadSourceComponent } from '../resource/read.component.spec';
 import { GaeModelLoadingViewComponent } from './loading.component';
 import { TestFoo } from '@gae-web/appengine-api';
 import { ModelLoader } from './model-loader.component';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { filter, delay } from 'rxjs/operators';
 
 describe('GaeModelLoadingViewComponent', () => {
@@ -108,17 +108,32 @@ describe('GaeModelLoadingViewComponent', () => {
 
     });
 
+    // TODO: With failed loading.
+
     describe('with error', () => {
+
+      beforeEach(() => {
+        source.readSourceKeys = throwError(new Error());
+      });
+
+      it('should show the error content', (done) => {
+        expect(source.hasError).toBeTrue();
+
+        source.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Error;
+          })
+        ).subscribe(() => {
+          assertShowsErrorContent();
+          done();
+        });
+      });
 
     });
 
   });
 
   describe('with model loader', () => {
-
-    it('', () => {
-
-    });
 
   });
 

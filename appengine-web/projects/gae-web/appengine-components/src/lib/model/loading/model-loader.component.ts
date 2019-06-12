@@ -180,41 +180,53 @@ export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
                 state: ModelLoaderState.Loading
             });
 
-            this._sub.subscription = this._source.stream.subscribe((event: ConversionSourceEvent<ModelKey, T>) => {
-                const model = event.elements[0];
-                const failed = event.failed[0];
-                const sourceState: SourceState = event.state;
+            this._sub.subscription = this._source.stream.subscribe({
+                next: (event: ConversionSourceEvent<ModelKey, T>) => {
+                    const model = event.elements[0];
+                    const failed = event.failed[0];
+                    const error = event.error;
+                    const sourceState: SourceState = event.state;
 
-                if (model) {
-                    this._stream.next({
-                        state: ModelLoaderState.Data,
-                        model
-                    });
-                } else {
-                    let newState: ModelLoaderState;
-
-                    if (failed) {
-                        newState = ModelLoaderState.Failed;
+                    if (model) {
+                        this._stream.next({
+                            state: ModelLoaderState.Data,
+                            model
+                        });
                     } else {
-                        switch (sourceState) {
-                            case SourceState.Done:
-                                newState = ModelLoaderState.Data;
-                                break;
-                            default:
-                                newState = ModelLoaderState.Loading;
-                                break;
+                        let newState: ModelLoaderState;
+
+                        if (sourceState === SourceState.Error) {
+                            this._stream.next({
+                                state: ModelLoaderState.Error,
+                                error
+                            });
+                        } else {
+                            switch (sourceState) {
+                                case SourceState.Done:
+                                    if (failed) {
+                                        newState = ModelLoaderState.Failed;
+                                    } else {
+                                        newState = ModelLoaderState.Data;
+                                    }
+
+                                    break;
+                                default:
+                                    newState = ModelLoaderState.Loading;
+                                    break;
+                            }
+
+                            this._stream.next({
+                                state: newState
+                            });
                         }
                     }
-
+                },
+                error: (error) => {
                     this._stream.next({
-                        state: newState
+                        state: ModelLoaderState.Error,
+                        error
                     });
                 }
-            }, (error) => {
-                this._stream.next({
-                    state: ModelLoaderState.Error,
-                    error
-                });
             });
         }
     }
