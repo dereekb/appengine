@@ -68,6 +68,34 @@ describe('Source', () => {
 
     });
 
+    describe('with only unavailable content', () => {
+
+      const FAILED_KEY = 1;
+      const TEST_KEYS = [FAILED_KEY];
+
+      beforeEach(() => {
+        testReadService.filteredKeysSet.add(FAILED_KEY);
+      });
+
+      it('should succeed with the unavailable items in fail.', (done) => {
+        testReadSource.input = of(TEST_KEYS);
+
+        // Wait for the stream to complete.
+        testReadSource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe((x) => {
+          expect(x.elements).toBeEmptyArray();
+          expect(x.failed).toContain(FAILED_KEY);
+          done();
+        });
+
+      });
+
+    });
+
     describe('with input with keys', () => {
 
       it('should hit the loading state.', (done) => {

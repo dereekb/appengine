@@ -478,7 +478,7 @@ export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Keye
 
   // MARK: Cache Stream
   public get events(): Observable<KeyedCacheEvent<K>> {
-    return this._subject;
+    return this._subject.asObservable();
   }
 
 }

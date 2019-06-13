@@ -5,10 +5,12 @@ import { ModelKey, SingleElementReadSource, SourceState } from '@gae-web/appengi
 import { GaeModelComponentsModule } from '../model.module';
 import { TestFooReadSourceComponent } from '../resource/read.component.spec';
 import { GaeModelLoadingViewComponent } from './loading.component';
-import { TestFoo } from '@gae-web/appengine-api';
+import { TestFoo, TEST_FOO_MODEL_TYPE } from '@gae-web/appengine-api';
 import { ModelLoader } from './model-loader.component';
 import { of, throwError } from 'rxjs';
-import { filter, delay } from 'rxjs/operators';
+import { filter, delay, first } from 'rxjs/operators';
+import { ModelServiceWrapperSet, ModelServiceWrapper, TestFooTestReadSourceFactory, ReadSourceFactory, ModelReadService } from '@gae-web/appengine-client';
+import { TestFooReadService } from '@gae-web/appengine-api';
 
 describe('GaeModelLoadingViewComponent', () => {
 
@@ -62,6 +64,8 @@ describe('GaeModelLoadingViewComponent', () => {
     expect(testContent.innerText).toBe(TEST_ERROR_CONTENT);
   }
 
+  const TEST_KEY = 1;
+
   describe('with source', () => {
 
     let source: TestFooReadSourceComponent;
@@ -76,7 +80,7 @@ describe('GaeModelLoadingViewComponent', () => {
 
       beforeEach(() => {
         source.testFooReadService.loadingTime = 5000;
-        source.readSourceKeys = of([1]).pipe(delay(10000));
+        source.readSourceKeys = of([TEST_KEY]).pipe(delay(10000));
       });
 
       it('should show the loading', (done) => {
@@ -98,7 +102,7 @@ describe('GaeModelLoadingViewComponent', () => {
     describe('with elements', () => {
 
       beforeEach(() => {
-        source.readSourceKeys = of([1]);
+        source.readSourceKeys = of([TEST_KEY]);
       });
 
       it('should show the content', (done) => {
@@ -134,6 +138,132 @@ describe('GaeModelLoadingViewComponent', () => {
   });
 
   describe('with model loader', () => {
+
+  });
+
+  describe('with Client ModelReadSource', () => {
+
+    let source: TestFooReadSourceComponent;
+    let testReadService: TestFooReadService;
+    let wrappedReadService: ModelReadService<TestFoo>;
+    let fooModelServiceWrapper: ModelServiceWrapper<TestFoo>;
+
+    beforeEach(() => {
+      const modelServiceWrapperSet = new ModelServiceWrapperSet();
+      fooModelServiceWrapper = modelServiceWrapperSet.initWrapper<TestFoo>({
+        type: TEST_FOO_MODEL_TYPE
+      });
+
+      testReadService = new TestFooReadService();
+      wrappedReadService = fooModelServiceWrapper.wrapReadService(testReadService);
+      const testReadSourceFactory = new TestFooTestReadSourceFactory(wrappedReadService as any);
+
+      source = new TestFooReadSourceComponent(testReadSourceFactory);
+      testComponent.source = source;
+      fixture.detectChanges();
+    });
+
+    describe('while loading', () => {
+
+      beforeEach(() => {
+        source.testFooReadService.loadingTime = 5000;
+        source.readSourceKeys = of([TEST_KEY]).pipe(delay(10000));
+      });
+
+      it('should show the loading', (done) => {
+        expect(source.isLoading).toBeTrue();
+        expect(component.context.isLoading).toBe(true);
+
+        source.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Loading;
+          })
+        ).subscribe(() => {
+          assertShowsLoadingContent();
+          done();
+        });
+      });
+
+    });
+
+    describe('with elements', () => {
+
+      beforeEach(() => {
+        source.readSourceKeys = of([TEST_KEY]);
+      });
+
+      it('should show the content', (done) => {
+        source.stream.pipe(
+          filter((x) => {
+            return x.elements.length > 0;
+          })
+        ).subscribe(() => {
+          assertShowsContent();
+          done();
+        });
+      });
+
+      fdescribe('and then the element is deleted', () => {
+
+        it('should show the content then show an error once the item is removed and is unavailable.', (done) => {
+
+          source.stream.pipe(
+            filter((x) => {
+              return x.elements.length > 0;
+            }),
+            first()
+          ).subscribe(() => {
+            assertShowsContent();
+
+            fooModelServiceWrapper.cache.asyncRead(TEST_KEY, {}).subscribe((x) => {
+              console.log(x);
+              fooModelServiceWrapper.cache.remove(TEST_KEY);
+            });
+
+            // Then simulate/trigger the delete
+            testReadService.filteredKeysSet.add(TEST_KEY);
+            fooModelServiceWrapper.cache.remove(TEST_KEY);
+
+            /*
+            source.stream.pipe(
+              filter((x) => {
+                return Boolean(x.failed.find((key) => key === TEST_KEY));
+              }),
+              first()
+            ).subscribe(() => {
+              assertShowsErrorContent();
+              done();
+            });
+            */
+          });
+        });
+
+      });
+
+    });
+
+    // TODO: With failed loading.
+
+    describe('with error', () => {
+
+      beforeEach(() => {
+        source.readSourceKeys = throwError(new Error());
+      });
+
+      it('should show the error content', (done) => {
+        expect(source.hasError).toBeTrue();
+
+        source.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Error;
+          })
+        ).subscribe(() => {
+          assertShowsErrorContent();
+          done();
+        });
+      });
+
+    });
 
   });
 

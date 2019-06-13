@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input, DebugElement, ViewChild } from '@angular/core';
+import { Component, Input, DebugElement, ViewChild, Optional } from '@angular/core';
 import { GaeModelComponentsModule } from '../model.module';
 import { ProvideReadSourceComponent, AbstractReadSourceComponent, GaeReadSourceKeyDirective, ReadSourceComponent } from './read.component';
 import { ReadSourceFactory, TestFooTestReadSourceFactory, ReadSource } from '@gae-web/appengine-client';
@@ -80,8 +80,8 @@ describe('Read Components', () => {
 })
 export class TestFooReadSourceComponent extends AbstractReadSourceComponent<TestFoo> {
 
-  constructor() {
-    super(new TestFooTestReadSourceFactory());
+  constructor(@Optional() factory?: ReadSourceFactory<TestFoo>) {
+    super(factory || new TestFooTestReadSourceFactory());
   }
 
   get testFooReadService() {

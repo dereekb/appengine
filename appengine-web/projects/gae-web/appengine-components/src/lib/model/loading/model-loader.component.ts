@@ -2,10 +2,11 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { Component, ViewEncapsulation, AfterContentInit, OnDestroy, Input } from '@angular/core';
 import {
     SingleElementReadSource, ConversionSourceEvent,
-    SourceState, ModelKey, SubscriptionObject
+    SourceState, ModelKey, SubscriptionObject, CodedError, ErrorCode, ErrorMessage
 } from '@gae-web/appengine-utility';
 import { LoadingContext, LoadingEvent } from '../../loading/loading';
 import { map } from 'rxjs/operators';
+import { BaseError } from 'make-error';
 
 export enum ModelLoaderState {
 
@@ -25,7 +26,7 @@ export enum ModelLoaderState {
     Data = 1,
 
     /**
-     * No error occured, but loading the model failed.
+     * No error occured, but loading one or more models failed.
      */
     Failed = 2,
 
@@ -43,6 +44,10 @@ export interface ModelLoaderEvent<T> {
 }
 
 export abstract class ModelLoader<T> {
+    /**
+     * Whether or not this loader should have a success state without a model if the model fails to load.
+     */
+    optional: boolean;
     readonly state: ModelLoaderState;
     readonly model: T | undefined;
     readonly stream: Observable<ModelLoaderEvent<T>>;
@@ -117,7 +122,7 @@ export class GaeModelLoaderComponent<T> extends AbstractModelLoaderStateComponen
 // MARK: Detail Component
 export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
 
-    private _optional = true;   // TODO: Update to throw an error when all requested elements are not returned (atomic failure).
+    private _optional = false;   // TODO: Update to throw an error when all requested elements are not returned (atomic failure).
 
     private _stream = new BehaviorSubject<ModelLoaderEvent<T>>({
         state: ModelLoaderState.Init
@@ -154,6 +159,10 @@ export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
         return this._stream.pipe(map(x => x.model));
     }
 
+    get optional() {
+        return this._optional;
+    }
+
     set optional(optional: boolean) {
         this._optional = optional;
     }
@@ -183,8 +192,8 @@ export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
             this._sub.subscription = this._source.stream.subscribe({
                 next: (event: ConversionSourceEvent<ModelKey, T>) => {
                     const model = event.elements[0];
-                    const failed = event.failed[0];
-                    const error = event.error;
+                    const failed = event.failed;
+                    let error = event.error;
                     const sourceState: SourceState = event.state;
 
                     if (model) {
@@ -203,8 +212,12 @@ export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
                         } else {
                             switch (sourceState) {
                                 case SourceState.Done:
-                                    if (failed) {
+                                    if (failed.length > 0) {
                                         newState = ModelLoaderState.Failed;
+
+                                        if (!this.optional) {
+                                            error = new ModelLoaderFailedLoadingError();
+                                        }
                                     } else {
                                         newState = ModelLoaderState.Data;
                                     }
@@ -216,7 +229,8 @@ export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
                             }
 
                             this._stream.next({
-                                state: newState
+                                state: newState,
+                                error
                             });
                         }
                     }
@@ -259,4 +273,10 @@ export class ModelLoaderLoadingContext implements LoadingContext {
         );
     }
 
+}
+
+// MARK: Error
+export class ModelLoaderFailedLoadingError extends BaseError implements CodedError {
+    public code: ErrorCode = 'FAILED_LOADING';
+    public message: ErrorMessage = 'The model failed to load.';
 }

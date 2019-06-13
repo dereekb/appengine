@@ -12,9 +12,9 @@ import { SingleElementReadSource } from '@gae-web/appengine-utility/lib/source';
 })
 export class GaeModelLoadingViewComponent {
 
-    private _context: LoadingContext;
+    private _context: ModelLoaderLoadingContext;
 
-    public get context() {
+    public get context(): ModelLoaderLoadingContext {
         return this._context;
     }
 
@@ -31,7 +31,7 @@ export class GaeModelLoadingViewComponent {
 
     @Input()
     public set loader(loader: ModelLoader<any>) {
-        let context: LoadingContext;
+        let context: ModelLoaderLoadingContext;
 
         if (loader) {
             context = new ModelLoaderLoadingContext(loader);

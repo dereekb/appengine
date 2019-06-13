@@ -6,9 +6,10 @@ import { Foo } from './foo';
 import { FooData } from './foo.data';
 import {
   ModelServiceWrapper, ModelQueryService, ModelCreateService,
-  ModelReadService, ModelUpdateService, ModelDeleteService, ReadSourceFactory,
+  ModelReadService, ModelUpdateService, ModelDeleteService,
   QuerySourceConfiguration, CachedKeySourceCache, KeyedPredictiveOrderedQueryDelegate,
-  KeyQuerySource
+  KeyQuerySource,
+  ReadServiceReadSourceFactory
 } from '@gae-web/appengine-client';
 
 export class FooClientQueryService extends ClientQueryService<Foo, FooData> { }
@@ -33,7 +34,7 @@ export class FooUpdateService extends ModelUpdateService<Foo> { }
 
 export class FooDeleteService extends ModelDeleteService<Foo> { }
 
-export class FooReadSourceFactory extends ReadSourceFactory<Foo> { }
+export class FooReadSourceFactory extends ReadServiceReadSourceFactory<Foo> { }
 
 // MARK: Query Cache
 export class FooDefaultQueryConfiguration implements QuerySourceConfiguration {

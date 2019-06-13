@@ -2,7 +2,7 @@ import { TestFoo, TestFooData, ClientQueryService, ClientCreateService, ClientRe
 import { ModelServiceWrapper, ModelCreateService } from '../lib/service/model.service';
 import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate } from '../lib/service/query.service';
 import { ModelReadService, ModelUpdateService, ModelDeleteService } from '../lib/service/crud.service';
-import { ReadSourceFactory, QuerySourceConfiguration, CachedKeySourceCache, KeyQuerySource } from '../lib/service/source';
+import { QuerySourceConfiguration, CachedKeySourceCache, KeyQuerySource, ReadServiceReadSourceFactory } from '../lib/service/source';
 
 export class TestFooClientQueryService extends ClientQueryService<TestFoo, TestFooData> { }
 
@@ -26,7 +26,7 @@ export class TestFooUpdateService extends ModelUpdateService<TestFoo> { }
 
 export class TestFooDeleteService extends ModelDeleteService<TestFoo> { }
 
-export class TestFooReadSourceFactory extends ReadSourceFactory<TestFoo> { }
+export class TestFooReadSourceFactory extends ReadServiceReadSourceFactory<TestFoo> { }
 
 // MARK: Query Cache
 export class TestFooDefaultQueryConfiguration implements QuerySourceConfiguration {

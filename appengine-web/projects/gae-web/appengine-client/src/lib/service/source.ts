@@ -7,7 +7,7 @@ import {
   SearchParameters, QueryService, SearchRequest, ModelSearchResponse
 } from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
-import { map, share, shareReplay } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 
 // MARK: Read Source
 export interface ReadSourceConfiguration {
@@ -77,9 +77,18 @@ export class ReadSource<T extends UniqueModel> extends AbstractModelKeyConversio
 /**
  *  ReadSource Factory.
  */
-export class ReadSourceFactory<T extends UniqueModel> implements SourceFactory<T> {
+export abstract class ReadSourceFactory<T extends UniqueModel> implements SourceFactory<T> {
+  public abstract makeSource(): ReadSource<T>;
+}
 
-  constructor(protected readonly _readService: ReadService<T>) { }
+/**
+ * ReadSource Factory implementation that uses a ReadService.
+ */
+export class ReadServiceReadSourceFactory<T extends UniqueModel> extends ReadSourceFactory<T> {
+
+  constructor(protected readonly _readService: ReadService<T>) {
+    super();
+  }
 
   public makeSource(): ReadSource<T> {
     return new ReadSource<T>(this._readService);
