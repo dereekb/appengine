@@ -49,9 +49,8 @@ export abstract class AbstractFormActionSubmitController<T> extends ActionSubmit
     @Input()
     public set form(form: ModelFormComponent<T>) {
         this._form = form;
-        this._formSub.subscription = this._form.stream.pipe(
-            distinct()
-        ).subscribe((event) => this.updateForFormEvent(event));
+        this._formSub.subscription = this._form.stream
+            .subscribe((event) => this.updateForFormEvent(event));
     }
 
     protected updateForFormEvent(event: FormComponentEvent) {

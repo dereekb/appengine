@@ -150,7 +150,8 @@ export class GaePageFabComponent extends GaePageButton implements OnInit, OnDest
           barColor: 'accent',
           fab: true,
           mode: 'indeterminate',
-          disabled: this.disabled
+          // Only disabled if we're not working, in order to show the animation.
+          disabled: !this.working && this.disabled
       };
   }
 

@@ -1,6 +1,7 @@
 import { Inject, Component, ChangeDetectorRef, Input, ViewRef, AfterViewInit, ViewChild } from '@angular/core';
 import { ListViewComponent } from './list-view.component';
 import { AbstractSubscriptionComponent } from '../shared/subscription';
+import { GaeViewUtility } from '../shared/utility';
 
 /**
  * Simple load-more list item.
@@ -50,9 +51,7 @@ export class GaeListLoadMoreComponent extends AbstractSubscriptionComponent impl
     if (this._canLoadMore !== canLoadMore) {
       this._canLoadMore = canLoadMore;
 
-      if (!(this._cdRef as ViewRef).destroyed) {
-        this._cdRef.detectChanges();
-      }
+      GaeViewUtility.safeDetectChanges(this._cdRef);
     }
   }
 

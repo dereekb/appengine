@@ -24,7 +24,7 @@ export class ModelInfoViewComponent extends AbstractModelViewComponent {
       const deleteComponent = this._ref.componentInstance;
 
       deleteComponent.targetKey = this.fooKey;
-      deleteComponent.segueRef = '^';
+      deleteComponent.segueRef = '^.^';
     }
   }
 

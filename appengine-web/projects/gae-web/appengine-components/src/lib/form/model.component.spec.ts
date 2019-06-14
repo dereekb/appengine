@@ -58,13 +58,9 @@ export class GaeTestFooModelFormComponent extends AbstractModelFormComponent<Tes
     }
   };
 
-  constructor(formBuilder: FormBuilder) {
-    super(formBuilder);
-  }
-
   // MARK: Internal
-  protected makeNewFormGroup(): FormGroup {
-    return this._formBuilder.group({
+  protected buildFormGroup(formBuilder: FormBuilder) {
+    return formBuilder.group({
       key: [0],
       name: ['', [Validators.maxLength(24)]]
     });

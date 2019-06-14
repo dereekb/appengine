@@ -49,7 +49,7 @@ describe('GaeTextareaFormControlComponent', () => {
 })
 class TestTextAreaFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeTextareaFormControlComponent, {static: true})
+  @ViewChild(GaeTextareaFormControlComponent, { static: true })
   public component: GaeTextareaFormControlComponent;
 
   validationMessages = {
@@ -58,12 +58,10 @@ class TestTextAreaFormControlViewComponent extends AbstractFormGroupComponent {
     }
   };
 
-  constructor(private _formBuilder: FormBuilder) {
-    super();
-
-    this.setFormGroup(this._formBuilder.group({
+  buildFormGroup(formBuilder: FormBuilder) {
+    return formBuilder.group({
       testField: ['', [Validators.required]]
-    }));
+    });
   }
 
 }

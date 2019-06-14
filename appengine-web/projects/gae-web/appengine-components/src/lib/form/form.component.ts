@@ -1,9 +1,10 @@
-import { OnDestroy, AfterContentInit, Provider, Type } from '@angular/core';
+import { OnDestroy, AfterContentInit, Provider, Type, Inject, ChangeDetectorRef, OnInit } from '@angular/core';
 
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { delay, debounceTime, startWith } from 'rxjs/operators';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
+import { GaeViewUtility } from '../shared/utility';
 
 export interface FormErrors {
     [key: string]: string;
@@ -90,7 +91,7 @@ export enum FormComponentState {
 /**
  * Base component that wraps a FormGroup and provides validation.
  */
-export abstract class AbstractFormGroupComponent implements FormGroupComponent, OnDestroy, AfterContentInit {
+export abstract class AbstractFormGroupComponent implements FormGroupComponent, OnDestroy, OnInit, AfterContentInit {
 
     private _initialized = false;
 
@@ -109,7 +110,11 @@ export abstract class AbstractFormGroupComponent implements FormGroupComponent, 
 
     protected validationMessages: ValidationMessagesSet = {};
 
-    constructor() { }
+    constructor(@Inject(FormBuilder) private _formBuilder: FormBuilder, @Inject(ChangeDetectorRef) protected readonly _cdRef: ChangeDetectorRef) {}
+
+    ngOnInit() {
+        this.resetFormGroup();
+    }
 
     ngAfterContentInit() {
         this._initialize();
@@ -178,6 +183,13 @@ export abstract class AbstractFormGroupComponent implements FormGroupComponent, 
     }
 
     // MARK: Initialization
+    protected resetFormGroup() {
+        const formGroup = this.buildFormGroup(this._formBuilder);
+        this.setFormGroup(formGroup);
+    }
+
+    protected abstract buildFormGroup(formBuilder: FormBuilder): FormGroup;
+
     protected get initialized() {
         return this._initialized;
     }
@@ -214,6 +226,7 @@ export abstract class AbstractFormGroupComponent implements FormGroupComponent, 
     protected updateForChange() {
         this.refreshValidation();
         this.next(this._nextUpdateEvent());
+        GaeViewUtility.safeDetectChanges(this._cdRef);
     }
 
     protected next(event: FormComponentEvent) {

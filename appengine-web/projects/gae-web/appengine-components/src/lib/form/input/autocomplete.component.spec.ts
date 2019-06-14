@@ -59,12 +59,11 @@ class TestAutoCompleteViewComponent extends AbstractFormGroupComponent {
     }
   };
 
-  constructor(private _formBuilder: FormBuilder) {
-    super();
 
-    this.setFormGroup(this._formBuilder.group({
+  buildFormGroup(formBuilder: FormBuilder) {
+    return formBuilder.group({
       testField: [null, [Validators.required]]
-    }));
+    });
   }
 
 }

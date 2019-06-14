@@ -46,7 +46,7 @@ describe('GaeInputFormControlComponent', () => {
 })
 class TestInputFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeInputFormControlComponent, {static: true})
+  @ViewChild(GaeInputFormControlComponent, { static: true })
   public component: GaeInputFormControlComponent;
 
   validationMessages = {
@@ -55,12 +55,10 @@ class TestInputFormControlViewComponent extends AbstractFormGroupComponent {
     }
   };
 
-  constructor(private _formBuilder: FormBuilder) {
-    super();
-
-    this.setFormGroup(this._formBuilder.group({
+  buildFormGroup(formBuilder: FormBuilder) {
+    return formBuilder.group({
       testField: ['', [Validators.required]]
-    }));
+    });
   }
 
 }

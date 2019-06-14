@@ -3,7 +3,7 @@ import { ModelServiceWrapper, ModelServiceWrapperSet, ModelWrapperInitializedErr
 import { TestFoo, TEST_FOO_MODEL_TYPE, TestFooReadService, ModelServiceResponse } from '@gae-web/appengine-api';
 import { ModelUtility } from '@gae-web/appengine-utility';
 import { ModelReadService } from './crud.service';
-import { take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil, first } from 'rxjs/operators';
 import { timer } from 'rxjs';
 
 
@@ -38,20 +38,24 @@ describe('Crud Model Services', () => {
 
     describe('#read()', () => {
 
-      it('should return the requested models.', async () => {
+      it('should return the requested models.', (done) => {
         const testKeys = [1, 2, 3];
 
-        const readResult = await modelReadService.read({
+        modelReadService.read({
           modelKeys: testKeys
-        }).toPromise();
+        }).pipe(
+          first()
+        ).subscribe((readResult) => {
 
-        expect(readResult.failed).toBeEmptyArray();
-        expect(readResult.models).toBeNonEmptyArray();
+          expect(readResult.failed).toBeEmptyArray();
+          expect(readResult.models).toBeNonEmptyArray();
 
-        testKeys.forEach((testKey) => {
-          expect(ModelUtility.readModelKeys(readResult.models)).toContain(testKey);
+          testKeys.forEach((testKey) => {
+            expect(ModelUtility.readModelKeys(readResult.models)).toContain(testKey);
+          });
+
+          done();
         });
-
       });
 
       it('should return the failed models.', (done) => {

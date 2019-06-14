@@ -1,4 +1,4 @@
-import { Input, Output, Provider, Type } from '@angular/core';
+import { Input, Output, Provider, Type, ChangeDetectorRef, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormComponentEvent, FormComponentState, AbstractFormGroupComponent, FormComponent, ProvideFormGroupComponent, ProvideFormComponent, FormGroupComponent } from './form.component';
 import { Observable } from 'rxjs';
@@ -27,19 +27,6 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
 
     private _inputModel?: T;
     private _cachedModel?: T;
-
-    constructor(protected _formBuilder: FormBuilder) {
-        super();
-        this.resetFormGroup();
-    }
-
-    // MARK: Form
-    protected resetFormGroup() {
-        const formGroup = this.makeNewFormGroup();
-        this.setFormGroup(formGroup);
-    }
-
-    protected abstract makeNewFormGroup(): FormGroup;
 
     // MARK: View
     public show() {

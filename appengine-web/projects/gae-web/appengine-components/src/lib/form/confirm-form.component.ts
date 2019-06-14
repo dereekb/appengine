@@ -28,12 +28,10 @@ export class GaeConfirmModelFormComponent<T> extends AbstractFormGroupComponent 
     private _input: Observable<T>;
     private _sub = new SubscriptionObject();
 
-    constructor(private _formBuilder: FormBuilder) {
-        super();
-
-        this.setFormGroup(this._formBuilder.group({
+    buildFormGroup(formBuilder: FormBuilder) {
+        return formBuilder.group({
             confirm: [false, [IsTruthy(), Validators.required]]
-        }));
+        });
     }
 
     ngOnDestroy() {
@@ -91,7 +89,7 @@ export class GaeConfirmModelFormComponent<T> extends AbstractFormGroupComponent 
  */
 export abstract class GaeConfiguredConfirmModelFormComponent<T> implements ModelFormComponent<T> {
 
-    @ViewChild(GaeConfirmModelFormComponent, {static: true})
+    @ViewChild(GaeConfirmModelFormComponent, { static: true })
     private _form: GaeConfirmModelFormComponent<T>;
 
     @Input()

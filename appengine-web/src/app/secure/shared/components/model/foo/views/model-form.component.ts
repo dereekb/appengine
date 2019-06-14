@@ -19,7 +19,8 @@ export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
 
     validationMessages = {
         name: {
-            maxlength: 'Name must be no more than 24 characters long.'
+            maxlength: 'Name must be no more than 24 characters long.',
+            required: 'Name is required'
         },
         date: {},
         number: {},
@@ -27,13 +28,9 @@ export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
         stringSet: {}
     };
 
-    constructor(formBuilder: FormBuilder) {
-        super(formBuilder);
-    }
-
     // MARK: Internal
-    protected makeNewFormGroup(): FormGroup {
-        return this._formBuilder.group({
+    protected buildFormGroup(formBuilder: FormBuilder) {
+        return formBuilder.group({
             name: ['', [Validators.maxLength(24)]],
             date: [DateTime.local(), []],
             number: [0, []],

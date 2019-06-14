@@ -2,6 +2,7 @@ import { Component, Input, ViewRef, Inject, ChangeDetectorRef, ViewChild, AfterV
 
 import { ActionEvent, ActionObject, ActionState } from '../../shared/action';
 import { AbstractSubscriptionComponent } from '../../shared/subscription';
+import { GaeViewUtility } from '../../shared/utility';
 
 /**
  * Action view that changes what is displayed based on the action of the state.
@@ -70,10 +71,8 @@ export class GaeActionViewComponent extends AbstractSubscriptionComponent implem
   }
 
   protected updateForActionEvent(event: ActionEvent) {
-    if (!(this.cdRef as ViewRef).destroyed) {
-      this._error = event.error;
-      this.cdRef.detectChanges();
-    }
+    this._error = event.error;
+    GaeViewUtility.safeDetectChanges(this.cdRef);
   }
 
   public reset() {

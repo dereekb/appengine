@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, ViewChild, Input } from '@angular/core';
+import { Component, ViewChild, Input, ChangeDetectorRef, Inject } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { GaeFormComponentsModule } from '../form.module';
 import { Observable } from 'rxjs';
@@ -7,7 +7,7 @@ import { UniqueModel } from '@gae-web/appengine-utility';
 import { GaeDateFormControlComponent } from './date.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbstractFormGroupComponent } from '../form.component';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 describe('GaeDateFormControlComponent', () => {
 
@@ -49,7 +49,7 @@ describe('GaeDateFormControlComponent', () => {
 })
 class TestDateFormControlViewComponent extends AbstractFormGroupComponent {
 
-  @ViewChild(GaeDateFormControlComponent, {static: true})
+  @ViewChild(GaeDateFormControlComponent, { static: true })
   public component: GaeDateFormControlComponent;
 
   validationMessages = {
@@ -58,12 +58,10 @@ class TestDateFormControlViewComponent extends AbstractFormGroupComponent {
     }
   };
 
-  constructor(private _formBuilder: FormBuilder) {
-    super();
-
-    this.setFormGroup(this._formBuilder.group({
+  buildFormGroup(formBuilder: FormBuilder) {
+    return formBuilder.group({
       testField: [new Date(), [Validators.required]]
-    }));
+    });
   }
 
 }

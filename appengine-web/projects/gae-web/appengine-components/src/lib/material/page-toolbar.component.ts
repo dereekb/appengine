@@ -5,6 +5,7 @@ import { AbstractSubscriptionComponent } from '../shared/subscription';
 import { map, flatMap, tap, shareReplay } from 'rxjs/operators';
 import { Destroyable } from '@gae-web/appengine-utility';
 import { GaeSidenavControllerDirective } from './sidenav.component';
+import { GaeViewUtility } from '../shared/utility';
 
 /**
  * Wraps a sidenav and a page-toolbar within that.
@@ -55,9 +56,7 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
 
     this._configurationObs = obs.pipe();
     this.sub = obs.subscribe(() => {
-      if (!(this.cdRef as ViewRef).destroyed) {
-        this.cdRef.detectChanges();
-      }
+      GaeViewUtility.safeDetectChanges(this.cdRef);
     });
   }
 
