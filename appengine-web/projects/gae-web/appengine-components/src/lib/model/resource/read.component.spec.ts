@@ -7,6 +7,7 @@ import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService, TestFoo,
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 import { ModelUtility, ModelKey, ValueUtility, SourceState, NamedUniqueModel } from '@gae-web/appengine-utility';
 import { By } from '@angular/platform-browser';
+import { filter } from 'rxjs/operators';
 
 describe('Read Components', () => {
 
@@ -54,15 +55,69 @@ describe('Read Components', () => {
   describe('AbstractReadSourceComponent', () => {
 
     let readSourceComponent: TestFooReadSourceComponent;
+    let testReadService: TestFooReadService;
 
     beforeEach(() => {
       readSourceComponent = new TestFooReadSourceComponent();
+      testReadService = readSourceComponent.testFooReadService;
     });
 
     describe('with no read source keys set', () => {
 
       it('should be in a reset state.', () => {
         expect(readSourceComponent.state).toBe(SourceState.Reset);
+      });
+
+    });
+
+    const TEST_KEY = 1;
+    const SECOND_TEST_KEY = 2;
+
+    describe('with simple input observable', () => {
+
+      beforeEach(() => {
+        readSourceComponent.readSourceKeys = of([TEST_KEY]);
+        testReadService.loadingTime = 100;
+      });
+
+      it('should be in the done state when the input source completes and elements are finished loading.', (done) => {
+        readSourceComponent.stream.pipe(
+          filter((x) => {
+            return x.elements.length > 0;
+          })
+        ).subscribe((x) => {
+          expect(x.state).toBe(SourceState.Done);
+          done();
+        });
+      });
+
+      describe('in the done state', () => {
+
+        beforeEach((done) => {
+          readSourceComponent.stream.pipe(
+            filter((x) => {
+              return x.state === SourceState.Done;
+            })
+          ).subscribe((x) => {
+            done();
+          });
+        });
+
+        it('should update when the input is changed.', (done) => {
+          readSourceComponent.readSourceKeys = of([SECOND_TEST_KEY]);
+          expect(readSourceComponent.state).toBe(SourceState.Loading);
+
+          readSourceComponent.stream.pipe(
+            filter((x) => {
+              return x.state === SourceState.Done;
+            })
+          ).subscribe((x) => {
+            expect(x.elements.length).toBe(1);
+            expect(x.elements[0].key).toBe(SECOND_TEST_KEY);
+            done();
+          });
+        });
+
       });
 
     });

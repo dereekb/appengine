@@ -23,7 +23,16 @@ export interface ReadRequest {
 export type ReadResponse<T> = ModelServiceResponse<T>;
 
 export abstract class ReadService<T> {
+    /**
+     * Model type
+     */
     readonly type: string;
+
+    /**
+     * Returns an observable that returns a stream of the requested models.
+     *
+     * Some implementations may have multiple responses, or never complete.
+     */
     abstract read(request: ReadRequest): Observable<ReadResponse<T>>;
 }
 
@@ -113,9 +122,7 @@ export class ClientReadService<T, O> extends AbstractCrudService<T, O> implement
 
 }
 
-export interface ClientReadResponse<T> extends ReadResponse<T> {
-
-}
+export interface ClientReadResponse<T> extends ReadResponse<T> {}
 
 export class ClientReadServiceResponse<T> extends ClientModelResponse<T> implements ReadResponse<T> {
 

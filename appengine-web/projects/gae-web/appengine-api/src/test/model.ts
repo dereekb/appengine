@@ -4,9 +4,19 @@ import { ReadService, ReadResponse, ReadRequest } from '../lib/model/crud/read.s
 import { QueryService, ModelSearchResponse, SearchRequest } from '../public-api';
 import { delay } from 'rxjs/operators';
 
+export interface TestReadServiceDelegate<T> {
+  handleRead(service: TestReadService<T>, modelKeys: ModelKey[], atomic?: boolean): Observable<ReadResponse<T>>;
+}
+
 export class TestReadService<T> implements ReadService<T> {
 
   public loadingTime?: number;
+
+  /**
+   * Custom delegate that is asked to provide an observable that returns results, instead of the default.
+   */
+  public customReadDelegate?: TestReadServiceDelegate<T>;
+
   private _filteredKeysSet: Set<ModelKey>;
 
   constructor(public readonly type: string, private makeFn: (key: ModelKey) => T) {
@@ -24,18 +34,9 @@ export class TestReadService<T> implements ReadService<T> {
   // ReadService
   read(request: ReadRequest): Observable<ReadResponse<T>> {
     const modelKeys = ValueUtility.normalizeArray(request.modelKeys);
-    const keysSeparation = ValueUtility.separateValues(modelKeys, (x) => !this._filteredKeysSet.has(x));
 
-    const models = keysSeparation.included.map((x: NumberModelKey) => {
-      const foo = this.makeFn(x);
-
-      return foo;
-    });
-
-    const obs = of({
-      models,
-      failed: keysSeparation.excluded
-    });
+    const delegate = this.readDelegate;
+    const obs = delegate.handleRead(this, modelKeys, request.atomic);
 
     if (this.loadingTime) {
       return obs.pipe(
@@ -44,6 +45,27 @@ export class TestReadService<T> implements ReadService<T> {
     } else {
       return obs;
     }
+  }
+
+  protected get readDelegate(): TestReadServiceDelegate<T> {
+    return this.customReadDelegate || {
+      handleRead: (service, modelKeys: ModelKey[], atomic?: boolean) => {
+
+        // Filters out keys that are excluded by the filtered keys set.
+        const keysSeparation = ValueUtility.separateValues(modelKeys, (x) => !this._filteredKeysSet.has(x));
+        const models = keysSeparation.included.map((x: NumberModelKey) => {
+          const foo = this.makeFn(x);
+          return foo;
+        });
+
+        const obs = of({
+          models,
+          failed: keysSeparation.excluded
+        });
+
+        return obs;
+      }
+    };
   }
 
 }

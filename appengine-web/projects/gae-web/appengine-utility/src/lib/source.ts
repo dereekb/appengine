@@ -419,6 +419,10 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
         return this.currentEvent.failed;
     }
 
+    public get inputDone() {
+        return this._inputDone;
+    }
+
     // MARK: Input
     public get input() {
         return this._input;
@@ -435,6 +439,7 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
 
     protected update(input: Observable<I | I[]> | undefined) {
         this.clearAllInputSubs();
+        this.updateForNewInputObs();
 
         if (input) {
             this._inputSub.subscription = this.subToInput(input);
@@ -445,10 +450,6 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
 
     // MARK: Internal
     protected subToInput(input: Observable<I | I[]>): Subscription {
-
-        // Update for the new input observable.
-        this.updateForNewInputObs();
-
         /**
          * Sets the next conversion subscription.
          */

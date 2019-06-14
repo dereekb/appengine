@@ -203,7 +203,7 @@ describe('GaeModelLoadingViewComponent', () => {
         });
       });
 
-      fdescribe('and then the element is deleted', () => {
+      describe('and then the element is deleted', () => {
 
         it('should show the content then show an error once the item is removed and is unavailable.', (done) => {
 
@@ -215,27 +215,23 @@ describe('GaeModelLoadingViewComponent', () => {
           ).subscribe(() => {
             assertShowsContent();
 
-            fooModelServiceWrapper.cache.asyncRead(TEST_KEY, {}).subscribe((x) => {
-              console.log(x);
-              fooModelServiceWrapper.cache.remove(TEST_KEY);
-            });
-
             // Then simulate/trigger the delete
             testReadService.filteredKeysSet.add(TEST_KEY);
             fooModelServiceWrapper.cache.remove(TEST_KEY);
 
-            /*
             source.stream.pipe(
               filter((x) => {
                 return Boolean(x.failed.find((key) => key === TEST_KEY));
               }),
               first()
-            ).subscribe(() => {
-              assertShowsErrorContent();
-              done();
+            ).subscribe({
+              next: (x) => {
+                assertShowsErrorContent();
+                done();
+              }
             });
-            */
           });
+
         });
 
       });

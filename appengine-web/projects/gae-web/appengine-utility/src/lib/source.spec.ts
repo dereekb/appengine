@@ -2,7 +2,8 @@ import 'jasmine-expect';
 import { SourceState, AbstractConversionSource, ConversionSourceInputResult } from './source';
 import { ModelKey } from './model';
 import { of, Observable, throwError, Subject, BehaviorSubject } from 'rxjs';
-import { delay, filter, first } from 'rxjs/operators';
+import { delay, filter, first, map } from 'rxjs/operators';
+import { AsyncKeyedCache, KeySafeAsyncModelCacheWrap, AsyncCacheWrap } from './cache';
 
 describe('ConversionSource', () => {
 
@@ -187,6 +188,94 @@ describe('ConversionSource', () => {
 
     let complexSource: ComplexTestConversionSource;
 
+    describe('where the conversion source uses an async cache', () => {
+
+      let asyncCache: AsyncCacheWrap<number, string>;
+
+      beforeEach((done) => {
+        asyncCache = new AsyncCacheWrap<number, string>();
+        complexSource = new ComplexTestConversionSource();
+
+        // Setup the source to use the cache.
+        complexSource.overrideTestResultsSubject = asyncCache.asyncRead([1], {}).pipe(
+          map((x) => {
+            return {
+              models: x.hits,
+              failed: x.misses
+            };
+          })
+        );
+
+        // Set the input.
+        complexSource.input = of([1]);
+
+        // Finish the initial loading.
+        complexSource.stream.pipe(
+          filter((x) => {
+            return x.state === SourceState.Done;
+          }),
+          first()
+        ).subscribe({
+          complete: () => done()
+        });
+      });
+
+      describe('that is empty', () => {
+
+        it('should update the stream elements when an item is added to the cache', (done) => {
+          expect(complexSource.state).toBe(SourceState.Done);
+          expect(complexSource.currentFailed).not.toBeEmptyArray();
+
+          asyncCache.put(1, '1');
+
+          complexSource.stream.pipe(
+            filter((x) => {
+              return x.elements.length > 0;
+            }),
+            first()
+          ).subscribe({
+            complete: () => done()
+          });
+        });
+
+      });
+
+      describe('that has the element', () => {
+
+        beforeEach((done) => {
+          asyncCache.put(1, '1');
+
+          // wait for the source to complete
+          complexSource.stream.pipe(
+            filter((x) => {
+              return x.elements.length > 0;
+            }),
+            first()
+          ).subscribe({
+            complete: () => done()
+          });
+        });
+
+        it('should update the stream elements when an item is removed from the cache', (done) => {
+          expect(complexSource.state).toBe(SourceState.Done);
+          expect(complexSource.currentFailed).toBeEmptyArray();
+
+          asyncCache.remove(1);
+
+          complexSource.stream.pipe(
+            filter((x) => {
+              return x.failed.length > 0;
+            }),
+            first()
+          ).subscribe({
+            complete: () => done()
+          });
+        });
+
+      });
+
+    });
+
     describe(`where the input observable completes, but the conversion source does not`, () => {
 
       beforeEach(() => {
@@ -225,6 +314,9 @@ describe('ConversionSource', () => {
           failed: [1]
         });
 
+        // Should be loading now.
+        expect(complexSource.state).toBe(SourceState.Loading);
+
         complexSource.stream.pipe(
           filter((x) => {
             return x.state === SourceState.Done;
@@ -236,6 +328,19 @@ describe('ConversionSource', () => {
           done();
         });
 
+      });
+
+      it('it should revert to loading when the input changes', () => {
+        expect(complexSource.inputDone).toBeTruthy();
+
+        complexSource.input = of([2]);
+        complexSource.testResultsSubject.next({
+          models: ['2']
+        });
+
+        // Simple input will hit done immediately.
+        expect(complexSource.inputDone).toBeTruthy();
+        expect(complexSource.state).toBe(SourceState.Loading);
       });
 
     });
@@ -290,11 +395,13 @@ class TestConversionSource extends AbstractConversionSource<number, string> {
  */
 class ComplexTestConversionSource extends TestConversionSource {
 
-  public testResultsSubject = new BehaviorSubject<ConversionSourceInputResult<number, string>>({ models: [] });
+  public readonly testResultsSubject = new BehaviorSubject<ConversionSourceInputResult<number, string>>({ models: [] });
+  public overrideTestResultsSubject?: Observable<ConversionSourceInputResult<number, string>>;
 
   // MARK: AbstractConversionSource
   protected _buildTestObs(inputData: number[]) {
-    return this.testResultsSubject.asObservable();
+    const obs = this.overrideTestResultsSubject || this.testResultsSubject.asObservable();
+    return obs;
   }
 
 }

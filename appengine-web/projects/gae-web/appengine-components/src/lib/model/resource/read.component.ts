@@ -16,7 +16,7 @@ export function ProvideReadSourceComponent<S extends ReadSourceComponent<any>>(s
   return [...ProvideSourceComponent(sourceType), { provide: ReadSourceComponent, useExisting: sourceType }];
 }
 
-// TODO: Change to be a Directive instead of a Component.
+// TODO: Change to be a Directive instead of a Component?
 /**
  * Abstract read component that takes in an observable list of keys and retrieves models for those keys.
  *

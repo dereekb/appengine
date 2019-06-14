@@ -76,29 +76,13 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
 }
 
 /**
- * ReadService extension that also allows continously watching/reading the requested models.
- */
-export abstract class ContinousReadService<T> extends ReadService<T> {
-
-  /**
-   * Acts as continuous read source for the requested models.
-   *
-   * If models are updated or deleted, the stream will update to reflect the changes.
-   */
-  abstract continuousRead(request: ReadRequest): Observable<ReadResponse<T>>;
-
-}
-
-/**
  * ReadService extension that gives notion of a cache, and can skip the cacbe for reads.
  */
 export abstract class CachedReadService<T> extends ReadService<T> {
-
   abstract read(request: ReadRequest, skipCache?: boolean): Observable<ReadResponse<T>>;
-
 }
 
-export class ModelReadService<T extends UniqueModel> implements CachedReadService<T>, ContinousReadService<T> {
+export class ModelReadService<T extends UniqueModel> implements CachedReadService<T> {
 
   // Used as a sort of buffer to prevent multiple of the same request from being sent.
   private _working = new Map<string, Observable<ReadResponse<T>>>();
@@ -118,7 +102,6 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
       return this._read(request);
     } else {
       return this.continuousRead(request, 0).pipe(
-        first(),  // Read only once.
         shareReplay()   // Share the single result with all subscribers.
       );
     }
