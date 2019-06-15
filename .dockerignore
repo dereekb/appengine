@@ -1,0 +1,5 @@
+.vscode
+docker
+bin
+target
+appengine-web/node_modules

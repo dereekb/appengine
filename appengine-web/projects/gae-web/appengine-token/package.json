@@ -1,0 +1,13 @@
+{
+  "name": "@gae-web/appengine-token",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "rxjs": "*",
+    "luxon": "*",
+    "make-error": "*",
+    "@auth0/angular-jwt": "*",
+    "@gae-web/appengine-utility": "*",
+    "@angular/common": "^7.2.0",
+    "@angular/core": "^7.2.0"
+  }
+}

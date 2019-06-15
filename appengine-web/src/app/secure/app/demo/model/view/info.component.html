@@ -1,0 +1,11 @@
+<div>
+  <gae-model-loader #fooLoader [source]="fooSource"></gae-model-loader>
+  <gae-model-loading-view [loader]="fooLoader">
+    <ng-container content>
+      <h4>Info</h4>
+      <p>Foo: {{ fooLoader.m?.name }} - #{{ fooLoader.m?.number }}</p>
+      <button mat-button uiSref="^.edit">Edit</button>
+      <button mat-button (click)="openDeleteDialog()">Delete</button>
+    </ng-container>
+  </gae-model-loading-view>
+</div>

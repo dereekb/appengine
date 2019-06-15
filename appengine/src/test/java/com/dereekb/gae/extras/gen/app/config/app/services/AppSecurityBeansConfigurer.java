@@ -3,6 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services;
 import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationService;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
  * Used for configuring a user token bean.
@@ -43,5 +44,9 @@ public interface AppSecurityBeansConfigurer
 
 	public void configureTokenUserDetailsBuilder(AppConfiguration appConfig,
 	                                             SpringBeansXMLBeanBuilder<?> beanBuilder);
+
+	public void configureOAuthServiceManagerMap(AppConfiguration appConfig,
+	                                            SpringBeansXMLBuilder builder,
+	                                            String oAuthLoginServiceMapId);
 
 }

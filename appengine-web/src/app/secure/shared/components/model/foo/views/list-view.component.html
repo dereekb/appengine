@@ -1,0 +1,14 @@
+<gae-list-view-wrapper>
+    <mat-toolbar toolbar>
+        <a mat-icon-button (click)="refresh()" class="list-toolbar-item">
+            <mat-icon>refresh</mat-icon>
+        </a>
+        <div class="spacer"></div>
+        <span>Tallies</span>
+        <a mat-icon-button disabled class="list-toolbar-item">
+            <mat-icon>filter_list</mat-icon>
+        </a>
+    </mat-toolbar>
+    <app-foo-list-content list></app-foo-list-content>
+    <ng-content empty select="[empty]"></ng-content>
+</gae-list-view-wrapper>

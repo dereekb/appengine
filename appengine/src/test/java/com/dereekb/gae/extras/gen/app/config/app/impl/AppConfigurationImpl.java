@@ -31,7 +31,9 @@ public class AppConfigurationImpl
 	private String appTaskQueueName = "app";
 	private String appSecret = null;
 	private String appAdminEmail = "dereekb@gmail.com";
-	private String appDevelopmentProxyUrl = "http://development:8080";
+
+	// TODO: This should point to the nginx docker container.
+	private String appDevelopmentProxyUrl = "http://localhost:8080";
 
 	private AppServicesConfigurer appServicesConfigurer;
 	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");

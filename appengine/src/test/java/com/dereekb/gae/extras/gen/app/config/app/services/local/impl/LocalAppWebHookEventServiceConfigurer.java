@@ -5,7 +5,8 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventService
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
- * {@link AppWebHookEventServiceConfigurer} implementation.
+ * {@link AppWebHookEventServiceConfigurer} implementation for the EventService
+ * microservice.
  *
  * @author dereekb
  *
@@ -17,15 +18,11 @@ public class LocalAppWebHookEventServiceConfigurer
 	@Override
 	public void configureWebHookEventSubmitter(AppConfiguration appConfig,
 	                                           SpringBeansXMLBuilder builder) {
+		// TODO: This will only be used by the EventService class.
 
-		// TODO: Do nothing?
-
-		/*
-		String webHookEventConverterBeanId = appConfig.getAppBeans().getWebHookEventConverterBeanId();
-
-		String webHookEventSubmitterBeanId = appConfig.getAppBeans().getWebHookEventSubmitterBeanId();
-		String webHookEventSubmitterDelegatåeBeanId = "webHookEventSubmitterDelegate";
-		*/
+		// String webHookEventSubmitterBeanId =
+		// appConfig.getAppBeans().getWebHookEventSubmitterBeanId();
+		// builder.bean(webHookEventSubmitterBeanId).beanClass(beanClass);
 	}
 
 }

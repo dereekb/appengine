@@ -33,6 +33,7 @@ import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.impl.EncodedLoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterService;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
+import com.dereekb.gae.server.initialize.ServerInitializeService;
 import com.dereekb.gae.test.app.mock.client.crud.MockClientRequestSender;
 import com.dereekb.gae.test.app.mock.web.WebServiceTester;
 import com.dereekb.gae.test.app.mock.web.builder.ServletAwareWebServiceRequestBuilder;
@@ -41,7 +42,6 @@ import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.test.server.auth.impl.TestAuthenticationContext;
 import com.dereekb.gae.test.utility.mock.MockHttpServletRequestBuilderUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
-import com.dereekb.gae.web.api.server.initialize.ApiInitializeServerController;
 import com.google.appengine.api.taskqueue.dev.LocalTaskQueueCallback;
 import com.google.appengine.api.urlfetch.URLFetchServicePb.URLFetchRequest;
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
@@ -90,8 +90,8 @@ public class AbstractAppTestingContext extends AbstractAppContextOnlyTestingCont
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
 
-	@Autowired
-	protected ApiInitializeServerController initializeServerController;
+	@Autowired(required = false)
+	protected ServerInitializeService serverInitializer;
 
 	@Autowired(required = false)
 	protected TestAuthenticationContext authContext;
@@ -174,8 +174,12 @@ public class AbstractAppTestingContext extends AbstractAppContextOnlyTestingCont
 	}
 
 	protected void initializeServer() {
-		if (this.initializeServerController != null) {
-			this.initializeServerController.initialize();
+		if (this.serverInitializer != null) {
+			try {
+				this.serverInitializer.initializeServer();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

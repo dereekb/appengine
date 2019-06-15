@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Abstract edit request type
- * 
+ *
  * @author dereekb
  *
  * @param <I>
@@ -20,13 +20,18 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public abstract class ApiEditRequest<I> extends ApiRequest<I> {
 
 	protected boolean atomic = true;
-	
+
 	public ApiEditRequest() {
 		super();
 	}
 
 	public ApiEditRequest(List<I> data) {
 		super(data);
+	}
+
+	public ApiEditRequest(List<I> data, boolean atomic) {
+		super(data);
+		this.setAtomic(atomic);
 	}
 
 	public boolean isAtomic() {

@@ -2,6 +2,7 @@ package com.dereekb.gae.server.taskqueue.scheduler;
 
 import java.util.Collection;
 
+import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -45,5 +46,7 @@ public interface MutableTaskRequest
 	                           String data);
 
 	public void setTimings(TaskRequestTiming timings);
+
+	public void setHost(TaskRequestHost host);
 
 }

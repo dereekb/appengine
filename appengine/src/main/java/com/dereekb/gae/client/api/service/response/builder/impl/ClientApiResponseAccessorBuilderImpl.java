@@ -228,7 +228,6 @@ public class ClientApiResponseAccessorBuilderImpl
 		@Override
 		public String getDataType() {
 			return this.type;
-			// return this.dataNode.get(DATA_TYPE_KEY).asText();
 		}
 
 		@Override

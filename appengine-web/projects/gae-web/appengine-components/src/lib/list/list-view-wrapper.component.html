@@ -1,0 +1,20 @@
+<div class="gae-list-view">
+  <div class="gae-list-view-toolbar" *ngIf="showControls">
+    <ng-content name="toolbar" select="[toolbar]"></ng-content>
+  </div>
+  <!-- List Content -->
+  <div class="gae-list-view-content">
+    <ng-content select="[list]"></ng-content>
+  </div>
+  <!-- Loading Info -->
+  <gae-loading [context]="loadingContext" linear="true">
+    <div content>
+      <div class="gae-list-view-done" *ngIf="showControls && hasElements">
+        <p>That's all {{ count }} of them!</p>
+      </div>
+      <div *ngIf="!hasElements">
+        <ng-content select="[empty]"></ng-content>
+      </div>
+    </div>
+  </gae-loading>
+</div>

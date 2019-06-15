@@ -1,0 +1,15 @@
+<div class="gae-action-view">
+  <!-- Content View -->
+  <ng-container *ngIf="showContent">
+    <ng-content select="[content]"></ng-content>
+  </ng-container>
+  <!-- Done View -->
+  <ng-container *ngIf="showDone">
+    <ng-content select="[done]"></ng-content>
+  </ng-container>
+  <!-- Error Views -->
+  <ng-container *ngIf="showError">
+    <gae-error *ngIf="!hasCustomError" [error]="error"></gae-error>
+    <ng-content select="[error]"></ng-content>
+  </ng-container>
+</div>

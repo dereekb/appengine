@@ -22,6 +22,7 @@ public final class FooDataReader extends DatabaseModelDataReader<Foo, FooData> {
 		Foo model = super.convertSingle(input);
 
 		// Data
+		model.setName(input.getName());
 		model.setNumber(input.getNumber());
 		model.setNumberList(input.getNumberList());
 		model.setStringSet(input.getStringSet());

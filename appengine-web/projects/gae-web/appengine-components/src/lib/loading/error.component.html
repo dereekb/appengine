@@ -1,0 +1,5 @@
+<div *ngIf="errorData" class="gae-error-view text-warn">
+  <h4>An error occured.</h4>
+  <p class="gae-error-code" *ngIf="errorData.code">{{ errorData.code }}</p>
+  <p class="gae-error-message" *ngIf="errorData.message">{{ errorData.message }}</p>
+</div>

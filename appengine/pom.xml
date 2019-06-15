@@ -11,6 +11,9 @@
 	<artifactId>gae-core</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 
+	<!-- Declared WAR for appengine:devserver, but only JAR values are published. -->
+  <packaging>war</packaging>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<appengine.target.version>1.9.71</appengine.target.version>
@@ -309,6 +312,7 @@
 				</configuration>
 			</plugin>
 
+			<!-- Maven Build Plugins -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -402,6 +406,52 @@
 				</executions>
 			</plugin>
 
+			<!-- Devserver -->
+
+			<!-- War Generation (Only For Development) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<version>7</version>
+					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+					<archiveClasses>true</archiveClasses>
+					<webResources>
+						<!-- Copy Resources from webapp/WEB-INF to the created WAR file. -->
+						<resource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<filtering>false</filtering>
+							<targetPath>WEB-INF</targetPath>
+						</resource>
+						<!-- Include Test Classes -->
+            <resource>
+                <directory>${basedir}/target/test-classes</directory>
+                <targetPath>WEB-INF/classes</targetPath>
+            </resource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+			<!-- Maven Appengine Plugin -->
+			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>${appengine.target.version}</version>
+				<!-- Default Development Server Config -->
+				<configuration>
+					<enableJarClasses>false</enableJarClasses>
+					<fullScanSeconds>10</fullScanSeconds>
+					<port>8080</port>
+					<address>0.0.0.0</address>
+					<jvmFlags>
+						<jvmFlag>-Xdebug</jvmFlag>
+						<jvmFlag>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8888</jvmFlag>
+					</jvmFlags>
+					<disableUpdateCheck>true</disableUpdateCheck>
+				</configuration>
+			</plugin>
+
 			<!-- Artifactory Deploy -->
 			<plugin>
 				<groupId>org.jfrog.buildinfo</groupId>
@@ -417,16 +467,18 @@
 						<configuration>
 							<artifactory>
 								<includeEnvVars>true</includeEnvVars>
-								<envVarsExcludePatterns>*ARTIFACTORY_CREDS*,*ARTIFACTORY_CREDS_USR*,*ARTIFACTORY_CREDS_PSW*</envVarsExcludePatterns>
+								<envVarsExcludePatterns>*MAVEN_CREDS*,*MAVEN_CREDS_USR*,*MAVEN_CREDS_PSW*</envVarsExcludePatterns>
 								<timeoutSec>20</timeoutSec>
 							</artifactory>
 							<publisher>
 								<contextUrl>{{ARTIFACTORY_CONTEXT_URL|"https://dev.dereekb.com:10000/artifactory"}}</contextUrl>
-								<username>{{ARTIFACTORY_CREDS_USR}}</username>
-								<password>{{ARTIFACTORY_CREDS_PSW}}</password>
+								<username>{{MAVEN_CREDS_USR}}</username>
+								<password>{{MAVEN_CREDS_PSW}}</password>
 								<repoKey>libs-release-local</repoKey>
 								<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
 								<publishBuildInfo>true</publishBuildInfo>
+								<!-- Don't include WAR for deployment. -->
+                <excludePatterns>*.war</excludePatterns>
 							</publisher>
 							<buildInfo>
 								<buildName>appengine</buildName>

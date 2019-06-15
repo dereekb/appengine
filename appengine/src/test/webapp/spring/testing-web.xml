@@ -4,7 +4,7 @@
     <constructor-arg index="0" ref="productionApiServletPath"/>
   </bean>
   <bean class="java.lang.String" id="productionApiServletPath">
-    <constructor-arg index="0" value="/api/foo/v1"/>
+    <constructor-arg index="0" value="/api/test/v1"/>
   </bean>
   <bean class="java.lang.String" id="productionTaskqueueServletPath">
     <constructor-arg index="0" value="/taskqueue"/>

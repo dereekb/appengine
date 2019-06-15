@@ -1,0 +1,43 @@
+version: "3.6"
+services:
+  gae-app:
+    build: 
+      context: ../
+      dockerfile: ./jenkins/node/Dockerfile
+      args:
+        - NPM_TOKEN=${NPM_TOKEN}
+    working_dir: /code
+    volumes:
+      - ../appengine-web:/code
+      - ../jenkins/node/proxy.conf.json:/code/proxy.conf.json   # Override proxy.conf.json for server.
+      - ./.tmp/node_modules:/code/node_modules            # Expose node_modules through .tmp
+    ports:
+      - "4200:4200"
+    networks:
+      - appengine-net
+    command: '/code/serve.sh'
+  gae-server:
+    build:
+      context: ../
+      dockerfile: ./jenkins/maven/Dockerfile
+    ports:
+      - "4201:8080"
+      - "4202:8888"
+      - "4203:8181"
+    working_dir: /code
+    environment:
+      - DATASTORE_EMULATOR_HOST=0.0.0.0:8181
+      - CLOUDSDK_CORE_PROJECT=gae-web-app-237603
+      - MAVEN_CREDS_USR=${MAVEN_USR}  # Pass at runtime
+      - MAVEN_CREDS_PSW=${MAVEN_PSW}  
+    volumes:
+      - ../appengine:/code
+      - ./.tmp/target:/code/target                   # Expose target through .tmp
+      - ./.tmp/.m2/repository:/root/.m2/repository   # Cache .m2/repository in .tmp
+      - /code/target                                 # Mask target
+    networks:
+      - appengine-net
+    command: '/code/serve.sh' # skip tests and doc gen
+networks:
+  appengine-net:
+    driver: bridge

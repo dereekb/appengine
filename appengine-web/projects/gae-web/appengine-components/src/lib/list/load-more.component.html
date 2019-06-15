@@ -1,0 +1,7 @@
+<a mat-list-item class="gae-list-content-more" (click)="loadMore()" *ngIf="canLoadMore">
+  <ng-container *ngIf="!hasCustomContent">
+    <mat-icon mat-list-icon>{{icon}}</mat-icon>
+    <p mat-line>{{text}}</p>
+  </ng-container>
+  <ng-content select="[content]"></ng-content>
+</a>

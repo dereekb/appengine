@@ -9,7 +9,7 @@ import com.googlecode.objectify.condition.IfEmpty;
 import com.googlecode.objectify.condition.IfNotNull;
 
 /**
- * {@link SearchableDatabaseModel} extension that
+ * {@link SearchableDatabaseModel} extension for models that are described by another model.
  *
  * @author dereekb
  *

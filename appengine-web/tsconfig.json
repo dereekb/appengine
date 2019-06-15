@@ -5,12 +5,12 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",
+    "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -19,11 +19,53 @@
       "dom"
     ],
     "paths": {
+      "@gae-web/appengine-api": [
+        "dist/gae-web/appengine-api"
+      ],
+      "@gae-web/appengine-api/*": [
+        "dist/gae-web/appengine-api/*"
+      ],
       "@gae-web/appengine-client": [
         "dist/gae-web/appengine-client"
       ],
       "@gae-web/appengine-client/*": [
         "dist/gae-web/appengine-client/*"
+      ],
+      "@gae-web/appengine-utility": [
+        "dist/gae-web/appengine-utility"
+      ],
+      "@gae-web/appengine-utility/*": [
+        "dist/gae-web/appengine-utility/*"
+      ],
+      "@gae-web/appengine-token": [
+        "dist/gae-web/appengine-token"
+      ],
+      "@gae-web/appengine-token/*": [
+        "dist/gae-web/appengine-token/*"
+      ],
+      "@gae-web/appengine-analytics": [
+        "dist/gae-web/appengine-analytics"
+      ],
+      "@gae-web/appengine-analytics/*": [
+        "dist/gae-web/appengine-analytics/*"
+      ],
+      "@gae-web/appengine-services": [
+        "dist/gae-web/appengine-services"
+      ],
+      "@gae-web/appengine-services/*": [
+        "dist/gae-web/appengine-services/*"
+      ],
+      "@gae-web/appengine-gateway": [
+        "dist/gae-web/appengine-gateway"
+      ],
+      "@gae-web/appengine-gateway/*": [
+        "dist/gae-web/appengine-gateway/*"
+      ],
+      "@gae-web/appengine-components": [
+        "dist/gae-web/appengine-components"
+      ],
+      "@gae-web/appengine-components/*": [
+        "dist/gae-web/appengine-components/*"
       ]
     }
   }

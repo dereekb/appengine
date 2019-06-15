@@ -1,0 +1,18 @@
+<form class="gae-form-view" [formGroup]="form" [gaeFormGroupErrors]="controlErrorsObs" fxLayout="column" novalidate>
+    <div class="gae-form-view-tools">
+        <button mat-button (click)="reset()"><mat-icon>restore</mat-icon> Undo Changes</button>
+    </div>
+    <mat-tab-group>
+        <mat-tab label="Basic Info">
+            <div class="gae-form-view-tab-page" fxLayout="column">
+                <gae-input-form-control [form]="form" field="name" placeholder="Name" required="true" fxFlex="100%"></gae-input-form-control>
+                <gae-input-form-control [form]="form" field="number" type="number" placeholder="Number" fxFlex="100%"></gae-input-form-control>
+            </div>
+        </mat-tab>
+        <mat-tab label="More Options">
+            <div class="gae-form-view-tab-page" fxLayout="column">
+                <p>Other options go here!</p>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</form>

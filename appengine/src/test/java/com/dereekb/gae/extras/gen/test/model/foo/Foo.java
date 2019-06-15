@@ -50,6 +50,13 @@ public class Foo extends DescribedDatabaseModel
 	private Date date = new Date();
 
 	/**
+	 * String name
+	 */
+	@Index({ IfNotEmpty.class })
+	@IgnoreSave({ IfEmpty.class })
+	private String name;
+
+	/**
 	 * Number group identifier
 	 */
 	@Index({ IfNotDefault.class })
@@ -82,6 +89,14 @@ public class Foo extends DescribedDatabaseModel
 
 	public void setIdentifier(Long identifier) {
 		this.identifier = identifier;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Date getDate() {

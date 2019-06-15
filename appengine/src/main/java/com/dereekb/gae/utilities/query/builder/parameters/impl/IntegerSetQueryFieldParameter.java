@@ -3,7 +3,6 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 import java.util.Collection;
 import java.util.Set;
 
-import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.data.NumberUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 
@@ -30,16 +29,17 @@ public class IntegerSetQueryFieldParameter extends AbstractSetQueryFieldParamete
 		super(field, parameter);
 	}
 
-	public IntegerSetQueryFieldParameter(String field, Collection<Integer> value) throws IllegalArgumentException {
-		super(field, value);
-	}
-
 	public IntegerSetQueryFieldParameter(String field, String parameterString) throws IllegalArgumentException {
 		super(field, parameterString);
 	}
 
 	public IntegerSetQueryFieldParameter(String field, Integer value) throws IllegalArgumentException {
-		super(field, SetUtility.wrap(value));
+		super(field, value);
+	}
+
+	@Deprecated
+	public IntegerSetQueryFieldParameter(String field, Collection<Integer> value) throws IllegalArgumentException {
+		super(field, value);
 	}
 
 	public static IntegerSetQueryFieldParameter make(String field,

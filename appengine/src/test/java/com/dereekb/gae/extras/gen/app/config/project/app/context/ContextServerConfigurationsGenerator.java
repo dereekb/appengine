@@ -14,6 +14,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
@@ -38,6 +39,7 @@ import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.model.context.service.impl.LoginTokenModelContextServiceImpl;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.AdminOnlySecurityModelQueryTask;
+import com.dereekb.gae.server.auth.security.model.query.task.impl.AllowAllSecurityModelQueryTask;
 import com.dereekb.gae.server.auth.security.model.roles.impl.CrudModelRole;
 import com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService;
 import com.dereekb.gae.server.auth.security.roles.authority.impl.GrantedAuthorityDecoderImpl;
@@ -95,6 +97,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		GenFolderImpl folder = new GenFolderImpl(this.serverFolderName);
 
 		// Server Files
+		folder.addFile(new StartupConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new DatabaseConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new MailConfigurationGenerator().generateConfigurationFile());
@@ -149,6 +152,26 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 	// MARK: Server Files
 	public static final String OBJECTIFY_DATABASE_ENTITIES_KEY = "objectifyDatabaseEntities";
+
+	public class StartupConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public StartupConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("startup");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppServerInitializationConfigurer configurer = appConfig.getAppServicesConfigurer().getAppServerInitializationConfigurer();
+			configurer.configureContextInitializationComponents(appConfig, builder);
+
+			return builder;
+		}
+
+	}
 
 	public class DatabaseConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
@@ -394,12 +417,17 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			String securedModelReadPatternMatcherBeanId = "securedModelReadPatternMatcher";
 			String securedModelResourcePatternMatcherBeanId = "securedModelResourcePatternMatcher";
 
+			String serviceApiPath = this.getServiceApiPath();
+
 			List<LocalModelConfiguration> secureLocalModelConfigs = AppConfigurationUtility
 			        .readLocalModelConfigurations(this.getAppConfig());
 			boolean hasSecureLocalModelConfigs = (secureLocalModelConfigs.isEmpty() == false);
 
 			builder.comment("No HTTP Security For Google App Engine Test Server");
 			builder.httpSecurity().pattern("/_ah/**").security("none");
+
+			builder.comment("Allow anyone to initialize the server via GET.");
+			builder.httpSecurity().pattern(serviceApiPath + "/server/initialize").security("none");
 
 			// TODO: Add custom pattern matching components.
 
@@ -415,8 +443,6 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			http.getRawXMLBuilder().c("Only allow this service to access the taskqueue.");
 			http.intercept("/taskqueue/**", HasRoleConfig.make("ROLE_LOGINTYPE_SYSTEM"));
-
-			String serviceApiPath = this.getServiceApiPath();
 
 			if (this.getAppConfig().isLoginServer()) {
 				http.getRawXMLBuilder().c("LoginKey Auth Requests rejected for some roles.");
@@ -550,7 +576,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean(this.getAppConfig().getAppBeans().getUtilityBeans().getAdminOnlySecurityModelQueryTaskBeanId())
 			        .beanClass(AdminOnlySecurityModelQueryTask.class);
 			builder.bean(this.getAppConfig().getAppBeans().getUtilityBeans().getAllowAllSecurityModelQueryTaskBeanId())
-			        .beanClass(AdminOnlySecurityModelQueryTask.class);
+			        .beanClass(AllowAllSecurityModelQueryTask.class);
 
 			return builder;
 		}
@@ -576,6 +602,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			http.intercept(serviceApiPath + "/login/auth/system/token", RoleConfigImpl.make("permitAll"),
 			        HttpMethod.POST);
 			http.intercept(serviceApiPath + "/login/auth/token/**", RoleConfigImpl.make("permitAll"), HttpMethod.POST);
+
 			http.intercept(serviceApiPath + "/**", RoleConfigImpl.make("denyAll"));
 
 			http.accessDeniedHandlerRef("accessDeniedHandler").anonymous(true).noCsrf();

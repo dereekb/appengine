@@ -6,6 +6,12 @@ import com.dereekb.gae.extras.gen.app.config.app.services.SystemLoginTokenFactor
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalSystemLoginTokenFactoryConfigurerImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook.FacebookOAuthService;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.google.GoogleOAuthService;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
@@ -24,6 +30,9 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	private String loginTokenSignatureFactoryBeanId = "loginTokenSignatureFactory";
 	private String refreshTokenSignatureFactoryBeanId = "refreshTokenSignatureFactory";
 	private String clientLoginTokenValidationServiceBeanId = "clientLoginTokenValidationService";
+
+	private OAuthClientConfig googleOAuthConfig;
+	private OAuthClientConfig facebookOAuthConfig;
 
 	private Class<?> loginTokenEncoderDecoderClass = LoginTokenEncoderDecoderImpl.class;
 	private Class<?> loginTokenBuilderClass = LoginTokenBuilderImpl.class;
@@ -80,6 +89,30 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		}
 
 		this.clientLoginTokenValidationServiceBeanId = clientLoginTokenValidationServiceBeanId;
+	}
+
+	public OAuthClientConfig getGoogleOAuthConfig() {
+		return this.googleOAuthConfig;
+	}
+
+	public void setGoogleOAuthConfig(OAuthClientConfig googleOAuthConfig) {
+		if (googleOAuthConfig == null) {
+			throw new IllegalArgumentException("googleOAuthConfig cannot be null.");
+		}
+
+		this.googleOAuthConfig = googleOAuthConfig;
+	}
+
+	public OAuthClientConfig getFacebookOAuthConfig() {
+		return this.facebookOAuthConfig;
+	}
+
+	public void setFacebookOAuthConfig(OAuthClientConfig facebookOAuthConfig) {
+		if (facebookOAuthConfig == null) {
+			throw new IllegalArgumentException("facebookOAuthConfig cannot be null.");
+		}
+
+		this.facebookOAuthConfig = facebookOAuthConfig;
 	}
 
 	public Class<?> getLoginTokenEncoderDecoderClass() {
@@ -184,6 +217,46 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	                                             SpringBeansXMLBuilder beanBuilder) {
 		SystemLoginTokenFactoryConfigurer configurer = this.systemLoginTokenFactoryConfigurer;
 		configurer.configureSystemLoginTokenFactory(appConfig, beanBuilder);
+	}
+
+	@Override
+	public void configureOAuthServiceManagerMap(AppConfiguration appConfig,
+	                                            SpringBeansXMLBuilder builder,
+	                                            String oAuthLoginServiceMapId) {
+
+		SpringBeansXMLMapBuilder<SpringBeansXMLBuilder> map = builder.map(oAuthLoginServiceMapId);
+
+		if (this.facebookOAuthConfig != null) {
+			String facebookOAuthPointerTypeBeanId = "facebookOAuthPointerType";
+			String facebookOAuthServiceBeanId = "facebookOAuthService";
+			String facebookOAuthConfigBeanId = "facebookOAuthConfig";
+
+			builder.bean(facebookOAuthConfigBeanId).beanClass(OAuthClientConfigImpl.class).c()
+			        .value(this.facebookOAuthConfig.getClientId()).value(this.facebookOAuthConfig.getClientSecret());
+
+			builder.bean(facebookOAuthServiceBeanId).beanClass(FacebookOAuthService.class).c()
+			        .ref(facebookOAuthConfigBeanId);
+
+			builder.enumBean(facebookOAuthPointerTypeBeanId, LoginPointerType.OAUTH_FACEBOOK);
+
+			map.keyRefValueRefEntry(facebookOAuthPointerTypeBeanId, facebookOAuthServiceBeanId);
+		}
+
+		if (this.googleOAuthConfig != null) {
+			String googleOAuthPointerTypeBeanId = "googleOAuthPointerType";
+			String googleOAuthServiceBeanId = "googleOAuthService";
+			String googleOAuthConfigBeanId = "googleOAuthConfig";
+
+			builder.bean(googleOAuthConfigBeanId).beanClass(OAuthClientConfigImpl.class).c()
+			        .value(this.googleOAuthConfig.getClientId()).value(this.googleOAuthConfig.getClientSecret());
+
+			builder.bean(googleOAuthServiceBeanId).beanClass(GoogleOAuthService.class).c().ref(googleOAuthConfigBeanId);
+
+			builder.enumBean(googleOAuthPointerTypeBeanId, LoginPointerType.OAUTH_GOOGLE);
+
+			map.keyRefValueRefEntry(googleOAuthPointerTypeBeanId, googleOAuthServiceBeanId);
+		}
+
 	}
 
 }

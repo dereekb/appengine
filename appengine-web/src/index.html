@@ -1,14 +1,53 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <title>AppengineWeb</title>
+  <title>Appengine Web</title>
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Google -->
+  <meta name="google-signin-client_id"
+    content="1024160984968-8sttok8g09s8roffd0sbkvjprgubv939.apps.googleusercontent.com">
+
 </head>
+
 <body>
-  <app-root></app-root>
+  <ui-view class="app-root-view">
+    <div class="loading-view-wrapper">
+      <div class="loading-view">
+        <img src="/assets/loading/background.png" draggable="false">
+      </div>
+    </div>
+  </ui-view>
+
+  <!-- Google Sign In -->
+  <script>
+    window.___gcfg = {
+      parsetags: 'onload'
+    };
+
+    function googleOnLoadCallback() {}
+
+  </script>
+
+  <script src="https://apis.google.com/js/platform.js?onload=googleOnLoadCallback" async defer></script>
+
+  <!-- Facebook -->
+  <div id="fb-root"></div>
+  <script>
+    // Called when facebook is done loading.
+    window.fbAsyncInit = function () {
+      window.FBReady = true;
+    };
+
+  </script>
+  <script async defer src="https://connect.facebook.net/en_US/sdk/debug.js"></script>
+
 </body>
+
 </html>

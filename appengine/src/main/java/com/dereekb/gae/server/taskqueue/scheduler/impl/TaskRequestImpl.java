@@ -8,6 +8,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.MutableTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestDataType;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
+import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
@@ -46,6 +47,8 @@ public class TaskRequestImpl
 	private String requestData;
 
 	private TaskRequestTiming timings;
+
+	private TaskRequestHost host;
 
 	public TaskRequestImpl() {}
 
@@ -207,6 +210,16 @@ public class TaskRequestImpl
 	}
 
 	@Override
+	public TaskRequestHost getHost() {
+		return this.host;
+	}
+
+	@Override
+	public void setHost(TaskRequestHost host) {
+		this.host = host;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -218,6 +231,7 @@ public class TaskRequestImpl
 		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
 		result = prime * result + ((this.requestData == null) ? 0 : this.requestData.hashCode());
 		result = prime * result + ((this.timings == null) ? 0 : this.timings.hashCode());
+		result = prime * result + ((this.host == null) ? 0 : this.host.hashCode());
 		return result;
 	}
 
@@ -279,6 +293,13 @@ public class TaskRequestImpl
 				return false;
 			}
 		} else if (!this.timings.equals(other.timings)) {
+			return false;
+		}
+		if (this.host == null) {
+			if (other.host != null) {
+				return false;
+			}
+		} else if (!this.host.equals(other.host)) {
 			return false;
 		}
 		return true;

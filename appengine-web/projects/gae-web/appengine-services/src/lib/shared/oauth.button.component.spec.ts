@@ -1,0 +1,8 @@
+
+describe('AbstractOAuthLoginServiceButton', () => {
+
+  it('todo', () => {
+
+  });
+
+});

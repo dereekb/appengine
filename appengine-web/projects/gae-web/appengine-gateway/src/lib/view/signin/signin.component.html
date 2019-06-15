@@ -1,0 +1,19 @@
+<gae-gateway-box-view title="Sign In">
+  <ng-container content>
+    <ng-container #loginHandler="gaeSignInGateway" [gaeSignInGateway]="loginTokenHandler" gaeLoginSignInAnalytics>
+    </ng-container>
+    <ng-container #loginTokenHandler="gaeSignInGatewayGroup" [gaeSignInGatewayGroup]="[oauthLogin]"></ng-container>
+    <ng-container [gaeSignInGatewaySuccess]="loginHandler"></ng-container>
+    <gae-sign-in-gateway-view [gateway]="loginHandler">
+      <div class="login" signin>
+        <gae-oauth-sign-in-gateway #oauthLogin [disabled]="loginHandler.disableLogins"></gae-oauth-sign-in-gateway>
+        <hr class="login-divider" />
+        <gae-credentials-login-view></gae-credentials-login-view>
+      </div>
+    </gae-sign-in-gateway-view>
+  </ng-container>
+  <ng-container footer *ngIf="!loginHandler.isDone">
+    <p>Need an account?</p>
+    <button class="link-button" mat-button uiSref="signup">Sign Up</button>
+  </ng-container>
+</gae-gateway-box-view>

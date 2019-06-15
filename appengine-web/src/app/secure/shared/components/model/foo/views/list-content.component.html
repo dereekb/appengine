@@ -1,0 +1,8 @@
+<mat-nav-list class="gae-list-view-list">
+  <!-- Display Them Below -->
+  <a class="gae-list-item" mat-list-item (click)="select(foo)" *ngFor="let foo of elements | async">
+    <h3 class="gae-list-item-title" mat-line>{{ foo?.name }}</h3>
+    <p class="gae-list-item-detail" mat-line>{{ foo?.number }}</p>
+  </a>
+  <gae-list-load-more></gae-list-load-more>
+</mat-nav-list>

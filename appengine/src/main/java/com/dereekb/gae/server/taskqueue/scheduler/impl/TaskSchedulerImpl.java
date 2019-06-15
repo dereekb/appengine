@@ -28,6 +28,8 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 public class TaskSchedulerImpl
         implements TaskScheduler {
 
+	// private static final Logger LOGGER = Logger.getLogger(TaskSchedulerImpl.class.getName());
+
 	private Context context;
 	private TaskSchedulerAuthenticator authenticator;
 
@@ -243,7 +245,6 @@ public class TaskSchedulerImpl
 				try {
 					TaskRequestConverter converter = this.getContextConverter();
 					List<TaskOptions> options = converter.convert(filtered);
-
 					options = this.authenticateOptions(options);
 
 					Queue queue = this.getTaskQueue();

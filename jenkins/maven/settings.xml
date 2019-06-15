@@ -8,13 +8,13 @@
   </pluginGroups>
   <servers>
     <server>
-      <username>${ARTIFACTORY_CREDS_USR}</username>
-      <password>${ARTIFACTORY_CREDS_PSW}</password>
+      <username>${env.MAVEN_CREDS_USR}</username>
+      <password>${env.MAVEN_CREDS_PSW}</password>
       <id>central</id>
     </server>
     <server>
-      <username>${ARTIFACTORY_CREDS_USR}</username>
-      <password>${ARTIFACTORY_CREDS_PSW}</password>
+      <username>${env.MAVEN_CREDS_USR}</username>
+      <password>${env.MAVEN_CREDS_PSW}</password>
       <id>snapshots</id>
     </server>
   </servers>

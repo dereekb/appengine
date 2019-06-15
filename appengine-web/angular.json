@@ -62,7 +62,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "appengine-web:build"
+            "browserTarget": "appengine-web:build",
+            "host": "0.0.0.0",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
@@ -139,7 +141,12 @@
       "root": "projects/gae-web/appengine-client",
       "sourceRoot": "projects/gae-web/appengine-client/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "gae",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -162,6 +169,266 @@
             "tsConfig": [
               "projects/gae-web/appengine-client/tsconfig.lib.json",
               "projects/gae-web/appengine-client/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-utility": {
+      "root": "projects/gae-web/appengine-utility",
+      "sourceRoot": "projects/gae-web/appengine-utility/src",
+      "projectType": "library",
+      "prefix": "gae",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-utility/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-utility/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-utility/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-utility/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-utility/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-utility/tsconfig.lib.json",
+              "projects/gae-web/appengine-utility/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-token": {
+      "root": "projects/gae-web/appengine-token",
+      "sourceRoot": "projects/gae-web/appengine-token/src",
+      "projectType": "library",
+      "prefix": "gae",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-token/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-token/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-token/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-token/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-token/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-token/tsconfig.lib.json",
+              "projects/gae-web/appengine-token/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-api": {
+      "root": "projects/gae-web/appengine-api",
+      "sourceRoot": "projects/gae-web/appengine-api/src",
+      "projectType": "library",
+      "prefix": "gae",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-api/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-api/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-api/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-api/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-api/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-api/tsconfig.lib.json",
+              "projects/gae-web/appengine-api/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-analytics": {
+      "root": "projects/gae-web/appengine-analytics",
+      "sourceRoot": "projects/gae-web/appengine-analytics/src",
+      "projectType": "library",
+      "prefix": "gae",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-analytics/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-analytics/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-analytics/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-analytics/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-analytics/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-analytics/tsconfig.lib.json",
+              "projects/gae-web/appengine-analytics/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-services": {
+      "root": "projects/gae-web/appengine-services",
+      "sourceRoot": "projects/gae-web/appengine-services/src",
+      "projectType": "library",
+      "prefix": "gae",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-services/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-services/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-services/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-services/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-services/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-services/tsconfig.lib.json",
+              "projects/gae-web/appengine-services/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-gateway": {
+      "root": "projects/gae-web/appengine-gateway",
+      "sourceRoot": "projects/gae-web/appengine-gateway/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-gateway/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-gateway/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-gateway/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-gateway/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-gateway/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-gateway/tsconfig.lib.json",
+              "projects/gae-web/appengine-gateway/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@gae-web/appengine-components": {
+      "root": "projects/gae-web/appengine-components",
+      "sourceRoot": "projects/gae-web/appengine-components/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/gae-web/appengine-components/tsconfig.lib.json",
+            "project": "projects/gae-web/appengine-components/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gae-web/appengine-components/src/test.ts",
+            "tsConfig": "projects/gae-web/appengine-components/tsconfig.spec.json",
+            "karmaConfig": "projects/gae-web/appengine-components/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gae-web/appengine-components/tsconfig.lib.json",
+              "projects/gae-web/appengine-components/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

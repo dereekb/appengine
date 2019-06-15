@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.impl.FilterImpl;
 
 /**
- * {@link EventServiceListener} implementation that
+ * {@link EventServiceListener} implementation that submits events to a remote service using a delegate.
  *
  * @author dereekb
  *

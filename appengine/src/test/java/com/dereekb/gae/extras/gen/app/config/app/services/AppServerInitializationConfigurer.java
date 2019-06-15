@@ -12,6 +12,15 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 public interface AppServerInitializationConfigurer {
 
 	/**
+	 * Configures the context initialization beans.
+	 *
+	 * @param appConfig
+	 * @param builder
+	 */
+	public void configureContextInitializationComponents(AppConfiguration appConfig,
+	                                                    SpringBeansXMLBuilder builder);
+
+	/**
 	 * Configures the server initialization beans.
 	 *
 	 * @param appConfig

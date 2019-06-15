@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.extras.gen.test.model.foo.Foo;
-import com.dereekb.gae.server.datastore.models.dto.DatabaseModelData;
+import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -16,9 +16,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FooData extends DatabaseModelData {
+public class FooData extends DescribedDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
+
+	private String name;
 
 	private Integer number;
 
@@ -27,6 +29,14 @@ public class FooData extends DatabaseModelData {
 	private Set<String> stringSet;
 
 	public FooData() {}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public Integer getNumber() {
 		return this.number;

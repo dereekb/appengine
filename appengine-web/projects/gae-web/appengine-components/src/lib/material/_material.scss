@@ -1,0 +1,11 @@
+@import './color';
+@import './fab';
+@import './page';
+@import './snackbar';
+
+.fill-content {
+  height: 100%; 
+  min-height: 100%; 
+  width: 100%;
+  min-width: 100%;
+}

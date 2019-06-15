@@ -14,7 +14,6 @@
   <!--Event Listener-->
   <util:list id="eventServiceListeners">
     <ref bean="modelKeyEventServiceListener"/>
-    <ref bean="webHookEventSubmitter"/>
   </util:list>
   <!--Multi-event Listener-->
   <bean class="com.dereekb.gae.server.event.model.shared.event.service.listener.impl.MultiTypeModelKeyEventServiceListener" id="modelKeyEventServiceListener">

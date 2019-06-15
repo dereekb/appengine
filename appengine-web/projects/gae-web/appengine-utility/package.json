@@ -1,0 +1,9 @@
+{
+  "name": "@gae-web/appengine-utility",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "make-error": "*",
+    "luxon": "*",
+    "rxjs": "*"
+  }
+}

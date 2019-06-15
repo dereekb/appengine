@@ -2,7 +2,7 @@
   <!--App Info-->
   <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl" id="productionAppServiceInfo">
     <constructor-arg index="0" value="gae-test"/>
-    <constructor-arg index="1" value="foo"/>
+    <constructor-arg index="1" value="test"/>
     <constructor-arg index="2" value="v1"/>
   </bean>
   <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl" id="productionAppInfo">
@@ -28,9 +28,10 @@
   </bean>
   <!--Development-->
   <bean class="java.lang.String" id="appDevelopmentProxyUrl">
-    <constructor-arg index="0" value="http://development:8080"/>
+    <constructor-arg index="0" value="http://localhost:8080"/>
   </bean>
   <!--Import-->
+  <import resource="/startup.xml"/>
   <import resource="/database.xml"/>
   <import resource="/key.xml"/>
   <import resource="/mail.xml"/>

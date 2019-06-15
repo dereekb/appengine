@@ -48,11 +48,22 @@
   <bean class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.OAuthLoginServiceImpl" id="oAuthLoginService">
     <constructor-arg index="0" ref="loginPointerService"/>
   </bean>
+  <util:map id="oAuthLoginServiceMap" key-type="java.lang.String">
+    <entry key-ref="facebookOAuthPointerType" value-ref="facebookOAuthService"/>
+  </util:map>
+  <bean class="com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl" id="facebookOAuthConfig">
+    <constructor-arg index="0" value="431391914300748"/>
+    <constructor-arg index="1" value="102a10dd9bfa5e2783e57a2f09b0c2ac"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook.FacebookOAuthService" id="facebookOAuthService">
+    <constructor-arg index="0" ref="facebookOAuthConfig"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.model.pointer.LoginPointerType" factory-method="valueOf" id="facebookOAuthPointerType">
+    <constructor-arg index="0" value="OAUTH_FACEBOOK"/>
+  </bean>
   <bean class="com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl" id="oAuthServiceManager">
     <constructor-arg index="0" ref="oAuthLoginService"/>
-    <constructor-arg index="1">
-      <map key-type="com.dereekb.gae.server.auth.model.pointer.LoginPointerType"/>
-    </constructor-arg>
+    <constructor-arg index="1" ref="oAuthLoginServiceMap"/>
   </bean>
   <!--KeyLogin Service-->
   <bean class="com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginStatusServiceManagerImpl" id="keyLoginStatusServiceManager">

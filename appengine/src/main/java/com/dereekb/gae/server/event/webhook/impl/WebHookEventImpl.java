@@ -33,6 +33,10 @@ public class WebHookEventImpl
 	private String type;
 	private Object data;
 
+	public WebHookEventImpl(EventType eventType) {
+		this(null, eventType);
+	}
+
 	public WebHookEventImpl(String scope, EventType eventType) {
 		this(scope, eventType.getEventGroupCode(), eventType.getEventTypeCode(), null);
 	}
@@ -43,6 +47,7 @@ public class WebHookEventImpl
 
 	public WebHookEventImpl(String scope, String group, String type, Object data) throws IllegalArgumentException {
 		super();
+		this.setScope(scope);
 		this.setGroup(group);
 		this.setType(type);
 		this.setData(data);
@@ -54,10 +59,6 @@ public class WebHookEventImpl
 	}
 
 	public void setScope(String scope) {
-		if (scope == null) {
-			throw new IllegalArgumentException("scope cannot be null.");
-		}
-
 		this.scope = scope;
 	}
 

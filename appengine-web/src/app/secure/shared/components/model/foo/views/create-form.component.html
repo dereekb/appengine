@@ -1,0 +1,8 @@
+<div class="gae-form-container" fxLayout="column">
+    <div class="gae-form-container-form-view" fxFlex="100%" 
+        appFooCreateAction appFooCreateAnalytics #action="appFooCreateAction"
+        gaeCreateModelFormController #control="gaeCreateModelFormController" [action]="action" [form]="form" [submit]="submit">
+        <app-foo-model-form #form></app-foo-model-form>
+        <gae-submit-button #submit text="Create Foo"></gae-submit-button>
+    </div>
+</div>

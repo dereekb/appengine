@@ -7,7 +7,6 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityC
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
-import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl;
 import com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl;
 import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
@@ -89,8 +88,11 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		builder.comment("OAuth Service");
 		builder.bean("oAuthLoginService").beanClass(OAuthLoginServiceImpl.class).c().ref("loginPointerService");
 
-		builder.bean("oAuthServiceManager").beanClass(OAuthServiceManagerImpl.class).c().ref("oAuthLoginService").map()
-		        .keyType(LoginPointerType.class);
+
+		String oAuthLoginServiceMapId = "oAuthLoginServiceMap";
+		appSecurityBeansConfigurer.configureOAuthServiceManagerMap(appConfig, builder, oAuthLoginServiceMapId);
+
+		builder.bean("oAuthServiceManager").beanClass(OAuthServiceManagerImpl.class).c().ref("oAuthLoginService").ref(oAuthLoginServiceMapId);
 
 		builder.comment("KeyLogin Service");
 		builder.bean("keyLoginStatusServiceManager").beanClass(KeyLoginStatusServiceManagerImpl.class).c()

@@ -1,0 +1,4 @@
+<div class="login-buttons" [gaeOAuthButtonSignIn]="[google, facebook]">
+    <button gaeGoogleSignInButton #google="gaeGoogleSignInButton" [disabled]="disabled" mat-raised-button class="google-button">Sign in with Google</button>
+    <button gaeFacebookSignInButton #facebook="gaeFacebookSignInButton" [disabled]="disabled" mat-raised-button class="facebook-button">Login with Facebook</button>
+</div>

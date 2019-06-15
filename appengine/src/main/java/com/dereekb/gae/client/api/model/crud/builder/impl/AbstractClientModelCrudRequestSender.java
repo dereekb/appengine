@@ -16,6 +16,7 @@ import com.dereekb.gae.model.extension.data.conversion.TypedBidirectionalConvert
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
+import com.dereekb.gae.web.api.model.crud.controller.EditModelController;
 
 /**
  * Abstract client model request sender for all types.
@@ -34,6 +35,8 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConve
  *            serialized response type
  */
 public abstract class AbstractClientModelCrudRequestSender<T extends UniqueModel, O, R, S> extends AbstractConfiguredClientModelRequestSender<T, O, R, S> {
+
+	public static final Integer MAX_ATOMIC_EDIT_SIZE = EditModelController.MAX_ATOMIC_EDIT_SIZE;
 
 	private ClientAtomicOperationExceptionUtility atomicOperationUtility;
 

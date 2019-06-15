@@ -1,8 +1,5 @@
 FROM node:11-alpine
 
-## Install NPM Dependencies
-RUN npm install -g karma -g typescript -g @angular/cli
-
 ## Install Chromium for running tests via Karma
 # https://github.com/karma-runner/karma-chrome-launcher/issues/189
 # Installs latest Chromium package
@@ -22,3 +19,15 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # Telling node-sass which pre-built binary to fetch.
 # This way we don't need rebuilding node-sass each time!
 ENV SASS_BINARY_NAME=linux-x64-67
+
+## NPM Configuration and Initialization
+# Args
+ARG NPM_TOKEN
+ARG NPM_REGISTRY_URL=dev.dereekb.com:10000/verdaccio/
+
+# Login To Verdaccio Repository by writing to .npmrc
+RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN" >> ~/.npmrc
+RUN echo "registry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
+
+## Install NPM Dependencies
+RUN npm install -g karma typescript @angular/cli --loglevel info

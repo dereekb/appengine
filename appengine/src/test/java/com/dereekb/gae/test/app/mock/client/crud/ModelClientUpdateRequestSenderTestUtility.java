@@ -76,7 +76,7 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
 
-		int count = EditModelController.DEFAULT_MAX_ELEMENTS;
+		int count = EditModelController.MAX_ATOMIC_EDIT_SIZE;
 
 		List<T> models = this.testModelGenerator.generate(count);
 

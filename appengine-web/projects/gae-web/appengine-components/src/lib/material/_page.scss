@@ -1,0 +1,38 @@
+gae-app-page,
+gae-page-toolbar,
+.gae-page-toolbar-view,
+.gae-page-toolbar-content {
+  display: block;
+  overflow: hidden;
+
+  // Should Fill VW
+  height: 100%;
+  max-height: 100%;
+  width: 100%;
+  max-width: 100%;
+}
+
+.gae-page-toolbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 500;
+}
+
+.gae-page-toolbar-view {
+  // Height Changes
+  --toolbar-height: 64px;
+  --view-height: calc(100% - var(--toolbar-height));
+
+  @media (max-width: 600px) {
+    --toolbar-height: 56px;
+  }
+
+  // Set Padding for Toolbar's Height
+  padding-top: var(--toolbar-height);
+
+  // Set Remaining Content Height
+  height: var(--view-height);
+  max-height: var(--view-height);
+}

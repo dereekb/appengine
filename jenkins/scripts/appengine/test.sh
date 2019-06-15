@@ -1,2 +1,3 @@
 #!/bin/sh
-mvn -f appengine test
+cd "./appengine"
+sh -c "mvn test"
