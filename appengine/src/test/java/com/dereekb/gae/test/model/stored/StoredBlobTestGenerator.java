@@ -3,14 +3,14 @@ package com.dereekb.gae.test.model.stored;
 import java.io.IOException;
 import java.util.List;
 
+import com.dereekb.gae.model.deprecated.stored.blob.StoredBlob;
+import com.dereekb.gae.model.deprecated.stored.blob.StoredBlobType;
 import com.dereekb.gae.model.extension.generation.GeneratorArg;
 import com.dereekb.gae.model.extension.generation.ModelGenerator;
-import com.dereekb.gae.model.stored.blob.StoredBlob;
-import com.dereekb.gae.model.stored.blob.StoredBlobType;
 import com.dereekb.gae.server.datastore.ForceSetter;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.storage.accessor.StorageSystem;
-import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
+import com.dereekb.gae.server.deprecated.storage.accessor.StorageSystem;
+import com.dereekb.gae.server.deprecated.storage.object.file.impl.StorableContentImpl;
 import com.dereekb.gae.test.model.extension.generator.data.TestByteDataGenerator;
 import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerator;
 import com.dereekb.gae.test.model.extension.generator.impl.TestModelGeneratorImpl;

@@ -22,7 +22,7 @@ import com.dereekb.gae.web.api.model.exception.resolver.AtomicOperationFailureRe
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchReadRequestImpl;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchUpdateRequestImpl;
 import com.dereekb.gae.web.api.shared.response.ApiResponse;
-import com.google.appengine.api.datastore.DatastoreNeedIndexException;
+import com.google.cloud.datastore.DatastoreException;
 
 /**
  * Controller for the Search API components.
@@ -169,8 +169,8 @@ public class SearchExtensionApiController {
 			throw e;
 		} catch (IllegalArgumentException e) {
 			throw new ApiIllegalArgumentException(e);
-		} catch (DatastoreNeedIndexException e) {
-			throw e;
+		} catch (DatastoreException e) {
+			RuntimeExceptionResolver.resolve(e);
 		} catch (RuntimeException e) {
 			RuntimeExceptionResolver.resolve(e);
 		}

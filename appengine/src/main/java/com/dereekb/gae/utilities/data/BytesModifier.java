@@ -1,6 +1,6 @@
 package com.dereekb.gae.utilities.data;
 
-import com.dereekb.gae.server.storage.exception.InvalidFileDataException;
+import com.dereekb.gae.utilities.data.exception.InvalidBytesException;
 
 /**
  * Used to modify {@code byte[]} data.
@@ -15,8 +15,8 @@ public interface BytesModifier {
 	 *
 	 * @param bytes
 	 * @return
-	 * @throws InvalidFileDataException
+	 * @throws InvalidBytesException
 	 */
-	public byte[] modifyBytesContent(byte[] bytes) throws InvalidFileDataException;
+	public byte[] modifyBytesContent(byte[] bytes) throws InvalidBytesException;
 
 }

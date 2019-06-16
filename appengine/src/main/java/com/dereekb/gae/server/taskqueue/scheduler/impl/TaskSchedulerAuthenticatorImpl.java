@@ -8,9 +8,7 @@ import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterBuilder;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskSchedulerAuthenticator;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.TaskOptionsUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
-import com.google.appengine.api.taskqueue.TaskOptions;
 
 /**
  * {@link TaskSchedulerAuthenticator} implementation that uses a

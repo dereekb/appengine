@@ -1,7 +1,7 @@
 package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.misc.parameters.ConfigurableEncodedParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedValueExpressionOperatorPair;

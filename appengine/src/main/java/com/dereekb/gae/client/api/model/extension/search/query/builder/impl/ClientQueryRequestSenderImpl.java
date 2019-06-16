@@ -29,7 +29,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.conversion.TypeModelKeyConverter;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
-import com.dereekb.gae.server.search.model.impl.SearchRequestImpl;
+import com.dereekb.gae.utilities.model.search.request.impl.SearchRequestImpl;
 import com.dereekb.gae.utilities.misc.parameters.impl.ParametersImpl;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.googlecode.objectify.Key;

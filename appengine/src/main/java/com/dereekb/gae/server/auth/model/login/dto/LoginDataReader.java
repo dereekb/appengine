@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.search.document.dto.DescribedModelDataReader;
+import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelDataReader;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.utilities.factory.Factory;
 
@@ -14,7 +14,7 @@ import com.dereekb.gae.utilities.factory.Factory;
  *
  * @author dereekb
  */
-public final class LoginDataReader extends DescribedModelDataReader<Login, LoginData> {
+public final class LoginDataReader extends DescribedDatabaseModelDataReader<Login, LoginData> {
 
 	public LoginDataReader() {
 		super(Login.class);

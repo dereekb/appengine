@@ -17,7 +17,9 @@ public interface ApiSearchDelegateEntry {
 	 * @param request
 	 *            {@link ApiSearchReadRequest}. Never {@code null}.
 	 * @return {@link ApiResponse} to the request. Never {@code null}.
+	 * @deprecated
 	 */
+	@Deprecated
 	public ApiSearchResponseData search(ApiSearchReadRequest request);
 
 	/**

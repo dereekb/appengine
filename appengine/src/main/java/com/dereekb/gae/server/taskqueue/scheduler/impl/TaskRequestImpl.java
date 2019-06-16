@@ -15,7 +15,6 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
 import com.dereekb.gae.utilities.misc.path.impl.SimplePathImpl;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * {@link TaskRequest} implementation.
@@ -26,21 +25,15 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 public class TaskRequestImpl
         implements MutableTaskRequest {
 
-	private static final Method DEFAULT_METHOD = Method.PUT;
-
 	private TaskRequestDataType dataType = TaskRequestDataType.PARAMETERS;
 
 	private String name;
 
-	/**
-	 * Task request method. Should avoid using POST, due to potential confusion
-	 * between payload and parameters.
-	 */
-	private Method method;
-
 	private SimplePath path;
 
 	private Collection<KeyedEncodedParameter> headers;
+
+	private Collection<KeyedEncodedParameter> securityHeaders;
 
 	private Collection<KeyedEncodedParameter> parameters;
 
@@ -56,33 +49,22 @@ public class TaskRequestImpl
 		this(path, null);
 	}
 
-	public TaskRequestImpl(String path, Method method) {
-		this(path, method, null);
-	}
-
-	public TaskRequestImpl(String path, Method method, TaskRequestTiming timings) {
-		this(path, method, timings, null);
-	}
-
-	public TaskRequestImpl(String path, TaskRequestTiming timings, Collection<KeyedEncodedParameter> headers) {
-		this(path, DEFAULT_METHOD, timings, headers);
+	public TaskRequestImpl(String path, TaskRequestTiming timings) {
+		this(path, timings, null);
 	}
 
 	public TaskRequestImpl(String path,
-	        Method method,
 	        TaskRequestTiming timings,
 	        Collection<KeyedEncodedParameter> headers) {
-		this(null, method, path, timings, headers, null);
+		this(null, path, timings, headers, null);
 	}
 
 	public TaskRequestImpl(String name,
-	        Method method,
 	        String path,
 	        TaskRequestTiming timings,
 	        Collection<KeyedEncodedParameter> headers,
 	        Collection<KeyedEncodedParameter> parameters) {
 		this.setName(name);
-		this.setMethod(method);
 		this.setPath(path);
 		this.setTimings(timings);
 		this.setHeaders(headers);
@@ -97,20 +79,6 @@ public class TaskRequestImpl
 	@Override
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public Method getMethod() {
-		return this.method;
-	}
-
-	@Override
-	public void setMethod(Method method) {
-		if (method == null) {
-			method = DEFAULT_METHOD;
-		}
-
-		this.method = method;
 	}
 
 	@Override
@@ -138,11 +106,21 @@ public class TaskRequestImpl
 
 	@Override
 	public void setHeaders(Collection<? extends KeyedEncodedParameter> headers) {
-		this.parameters = ListUtility.safeCopy(headers);
+		this.headers = ListUtility.safeCopy(headers);
 	}
 
 	public void replaceHeader(KeyedEncodedParameter replacement) {
 		this.headers = KeyedEncodedParameterImpl.replaceInCollection(this.headers, replacement);
+	}
+
+	@Override
+	public Collection<KeyedEncodedParameter> getSecurityHeaders() {
+		return this.securityHeaders;
+	}
+
+	@Override
+	public void setSecurityHeaders(Collection<? extends KeyedEncodedParameter> headers) {
+		this.securityHeaders = ListUtility.safeCopy(headers);
 	}
 
 	@Override
@@ -225,7 +203,6 @@ public class TaskRequestImpl
 		int result = 1;
 		result = prime * result + ((this.dataType == null) ? 0 : this.dataType.hashCode());
 		result = prime * result + ((this.headers == null) ? 0 : this.headers.hashCode());
-		result = prime * result + ((this.method == null) ? 0 : this.method.hashCode());
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.parameters == null) ? 0 : this.parameters.hashCode());
 		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
@@ -255,9 +232,6 @@ public class TaskRequestImpl
 				return false;
 			}
 		} else if (!this.headers.equals(other.headers)) {
-			return false;
-		}
-		if (this.method != other.method) {
 			return false;
 		}
 		if (this.name == null) {
@@ -307,7 +281,7 @@ public class TaskRequestImpl
 
 	@Override
 	public String toString() {
-		return "TaskRequestImpl [name=" + this.name + ", method=" + this.method + ", path=" + this.path + ", headers="
+		return "TaskRequestImpl [name=" + this.name + ", path=" + this.path + ", headers="
 		        + this.headers + ", parameters=" + this.parameters + ", timings=" + this.timings + "]";
 	}
 

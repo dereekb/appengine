@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
-import com.dereekb.gae.server.search.model.impl.SearchRequestImpl;
+import com.dereekb.gae.utilities.model.search.request.impl.SearchRequestImpl;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 

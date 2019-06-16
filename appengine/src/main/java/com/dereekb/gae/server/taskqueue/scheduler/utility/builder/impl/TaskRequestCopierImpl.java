@@ -3,13 +3,13 @@ package com.dereekb.gae.server.taskqueue.scheduler.utility.builder.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTimingType;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskRequestTimingImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestCopier;
+import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 
 
 /**
@@ -50,7 +50,6 @@ public class TaskRequestCopierImpl
 		TaskRequestImpl copy = new TaskRequestImpl();
 
 		copy.setPath(request.getPath());
-		copy.setMethod(request.getMethod());
 
 		TaskRequestTiming timing = copy.getTimings();
 		if (timing != null) {

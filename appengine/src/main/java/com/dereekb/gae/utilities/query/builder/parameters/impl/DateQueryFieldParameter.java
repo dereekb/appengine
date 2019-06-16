@@ -2,7 +2,7 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 import com.dereekb.gae.utilities.time.DateUtility;
 import com.dereekb.gae.utilities.time.IsoTimeConverter;

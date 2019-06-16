@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.extension.search.query.parameters.AbstractDateModelQuery;
 import com.dereekb.gae.server.datastore.objectify.model.MutableDatedObjectifyModel;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 import com.dereekb.gae.utilities.time.model.DatedModelAscendingComparator;
 

@@ -5,6 +5,8 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+import com.dereekb.gae.model.deprecated.general.time.search.WeekTimeSearchTag;
+import com.dereekb.gae.model.deprecated.general.time.search.impl.WeekTimeSearchTagsConverterImpl;
 import com.dereekb.gae.model.general.time.Day;
 import com.dereekb.gae.model.general.time.DaySpan;
 import com.dereekb.gae.model.general.time.Time;
@@ -16,8 +18,6 @@ import com.dereekb.gae.model.general.time.impl.HourImpl;
 import com.dereekb.gae.model.general.time.impl.TimeImpl;
 import com.dereekb.gae.model.general.time.impl.TimeSpanImpl;
 import com.dereekb.gae.model.general.time.impl.WeekTimeImpl;
-import com.dereekb.gae.model.general.time.search.WeekTimeSearchTag;
-import com.dereekb.gae.model.general.time.search.impl.WeekTimeSearchTagsConverterImpl;
 import com.dereekb.gae.model.general.time.util.impl.TimeValueConverterImpl;
 import com.dereekb.gae.model.general.time.util.impl.WeekTimeConverterImpl;
 import com.dereekb.gae.utilities.misc.bit.BitIndex;

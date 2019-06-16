@@ -16,7 +16,7 @@ import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.server.datastore.objectify.query.ExecutableObjectifyQuery;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.test.app.mock.context.AbstractAppContextOnlyTestingContext;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 import com.dereekb.gae.utilities.collections.list.ListUtility;

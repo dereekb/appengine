@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.data.storage.importer;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.storage.object.file.StorableFile;
+import com.dereekb.gae.server.deprecated.storage.object.file.StorableFile;
 
 /**
  * Imports models from saved data.

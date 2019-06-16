@@ -1,8 +1,8 @@
 package com.dereekb.gae.model.extension.links.descriptor.impl;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
-import com.dereekb.gae.model.extension.search.document.SearchableDescribedModel;
-import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
+import com.dereekb.gae.model.extension.links.descriptor.UniqueDescribedModel;
+import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfEmpty;
@@ -14,8 +14,7 @@ import com.googlecode.objectify.condition.IfNotNull;
  * @author dereekb
  *
  */
-public abstract class DescribedDatabaseModel extends SearchableDatabaseModel
-        implements SearchableDescribedModel {
+public abstract class DescribedDatabaseModel extends OwnedDatabaseModel implements UniqueDescribedModel {
 
 	private static final long serialVersionUID = 1L;
 

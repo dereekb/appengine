@@ -1,9 +1,9 @@
 package com.dereekb.gae.server.datastore.models.query.impl;
 
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestOptions;
-import com.dereekb.gae.server.search.model.impl.SearchOptionsImpl;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.request.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.impl.SearchOptionsImpl;
 
 /**
  * {@link IndexedModelQueryRequestOptions} implementation.

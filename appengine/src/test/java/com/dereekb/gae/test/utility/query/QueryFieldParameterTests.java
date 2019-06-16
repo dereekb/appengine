@@ -5,7 +5,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;

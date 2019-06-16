@@ -7,11 +7,11 @@ import com.dereekb.gae.model.extension.data.storage.exporter.ExportException;
 import com.dereekb.gae.model.extension.data.storage.exporter.Exporter;
 import com.dereekb.gae.model.extension.data.storage.importer.ImportException;
 import com.dereekb.gae.model.extension.data.storage.importer.Importer;
-import com.dereekb.gae.server.storage.accessor.StorageSystem;
-import com.dereekb.gae.server.storage.object.file.StorableData;
-import com.dereekb.gae.server.storage.object.file.StorableFile;
-import com.dereekb.gae.server.storage.object.file.impl.StorableContentImpl;
-import com.dereekb.gae.server.storage.object.file.impl.StorableFileImpl;
+import com.dereekb.gae.server.deprecated.storage.accessor.StorageSystem;
+import com.dereekb.gae.server.deprecated.storage.object.file.StorableData;
+import com.dereekb.gae.server.deprecated.storage.object.file.StorableFile;
+import com.dereekb.gae.server.deprecated.storage.object.file.impl.StorableContentImpl;
+import com.dereekb.gae.server.deprecated.storage.object.file.impl.StorableFileImpl;
 
 public class DefaultImporterExporter<T>
         implements Exporter<T>, Importer<T> {

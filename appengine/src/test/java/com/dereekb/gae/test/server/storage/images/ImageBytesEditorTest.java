@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.dereekb.gae.server.storage.services.images.ImageBytesEditor;
+import com.dereekb.gae.server.deprecated.storage.services.images.ImageBytesEditor;
 import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerator;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig;

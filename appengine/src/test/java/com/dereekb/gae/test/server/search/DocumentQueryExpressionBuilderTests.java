@@ -9,15 +9,15 @@ import java.util.Date;
 import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.geo.impl.PointImpl;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
-import com.dereekb.gae.server.search.document.query.expression.builder.ExpressionBuilder;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.AtomField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.DateField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.ExpressionWrap;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.GeoDistanceField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.NumberField;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.SimpleExpression;
-import com.dereekb.gae.server.search.document.query.expression.builder.impl.field.TextField;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.ExpressionBuilder;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.AtomField;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.DateField;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.ExpressionWrap;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.GeoDistanceField;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.NumberField;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.SimpleExpression;
+import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.TextField;
 
 
 public class DocumentQueryExpressionBuilderTests {

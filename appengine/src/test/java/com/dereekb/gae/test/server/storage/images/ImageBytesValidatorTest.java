@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.dereekb.gae.server.storage.upload.data.image.ImageBytesValidator;
+import com.dereekb.gae.server.deprecated.storage.upload.data.image.ImageBytesValidator;
 import com.dereekb.gae.test.model.extension.generator.data.TestImageByteGenerator;
 import com.dereekb.gae.test.model.extension.generator.data.TestRandomByteGenerator;
 import com.google.appengine.api.images.Image.Format;
