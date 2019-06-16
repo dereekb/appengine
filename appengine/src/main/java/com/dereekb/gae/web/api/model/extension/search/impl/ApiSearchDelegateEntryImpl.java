@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
-import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchResponse;
-import com.dereekb.gae.model.extension.search.document.search.service.model.ModelDocumentSearchService;
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryService;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
@@ -30,10 +28,6 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	private String type;
 
 	private ModelQueryService<T> queryService;
-	private ModelDocumentSearchService<T, R> searchService;
-
-	// TODO: Abstract the requestBuilder/requestConverter away into a new
-	// interface that extends or contains ModelDocumentSearchService
 
 	private SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder;
 	private DirectionalConverter<T, ? extends Object> resultConverter;
@@ -41,24 +35,15 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	public ApiSearchDelegateEntryImpl(String type,
 	        ModelQueryService<T> queryService,
 	        DirectionalConverter<T, ? extends Object> resultConverter) {
-		this(type, queryService, null, null, resultConverter);
-	}
-
-	public ApiSearchDelegateEntryImpl(String type,
-	        ModelDocumentSearchService<T, R> searchService,
-	        SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder,
-	        DirectionalConverter<T, ? extends Object> resultConverter) {
-		this(type, null, searchService, requestBuilder, resultConverter);
+		this(type, queryService, null, resultConverter);
 	}
 
 	public ApiSearchDelegateEntryImpl(String type,
 	        ModelQueryService<T> queryService,
-	        ModelDocumentSearchService<T, R> searchService,
 	        SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder,
 	        DirectionalConverter<T, ? extends Object> resultConverter) {
 		this.setType(type);
 		this.setQueryService(queryService);
-		this.setSearchService(searchService);
 		this.setRequestBuilder(requestBuilder);
 		this.setResultConverter(resultConverter);
 	}
@@ -77,14 +62,6 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 
 	public void setQueryService(ModelQueryService<T> queryService) {
 		this.queryService = queryService;
-	}
-
-	public ModelDocumentSearchService<T, R> getSearchService() {
-		return this.searchService;
-	}
-
-	public void setSearchService(ModelDocumentSearchService<T, R> searchService) {
-		this.searchService = searchService;
 	}
 
 	public SingleDirectionalConverter<ApiSearchReadRequest, R> getRequestBuilder() {
@@ -106,13 +83,7 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	// MARK: ApiSearchDelegateEntry
 	@Override
 	public ApiSearchResponseData search(ApiSearchReadRequest request) {
-		if (this.searchService == null) {
-			throw new UnsupportedOperationException("Searching is unsupported for this type.");
-		}
-
-		R searchRequest = this.requestBuilder.convertSingle(request);
-		ModelDocumentSearchResponse<T> response = this.searchService.search(searchRequest);
-		return this.buildResponseForResult(response);
+		throw new UnsupportedOperationException("Searching is unsupported for this type.");
 	}
 
 	@Override
@@ -128,15 +99,10 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 
 	@Override
 	public void updateSearchIndex(ApiSearchUpdateRequest request) {
-		// TODO Queue up indexing requests.
 		throw new UnsupportedOperationException("Unsupported function.");
 	}
 
 	// MARK: Internal
-	private ApiSearchResponseData buildResponseForResult(ModelDocumentSearchResponse<T> response) {
-		return this.buildModelDataResponse(response);
-	}
-
 	private ApiSearchResponseData buildResponseForResult(ModelQueryResponse<T> response) {
 		return this.buildModelDataResponse(response);
 	}

@@ -20,16 +20,16 @@ import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.exceptions.OAuthException;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuth2AccessTokenErrorResponse;
-import com.github.scribejava.core.model.OAuth2AccessTokenErrorResponse.ErrorCode;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import com.github.scribejava.core.oauth2.OAuth2Error;
 import com.google.common.base.Joiner;
 
 /**
  * {@link OAuthService} implementation using ScribeJava.
- * 
+ *
  * @author dereekb
  *
  */
@@ -87,12 +87,10 @@ public abstract class AbstractScribeOAuthService
 	}
 
 	protected OAuth20Service buildScribeService() {
-		ServiceBuilder builder = new ServiceBuilder();
+		ServiceBuilder builder = new ServiceBuilder(this.clientConfig.getClientId());
 
-		builder.apiKey(this.clientConfig.getClientId());
 		builder.apiSecret(this.clientConfig.getClientSecret());
-		builder.state(this.stateSecret);
-		builder.scope(this.getScopesString());
+		builder.withScope(this.getScopesString());
 
 		return this.buildScribeService(builder);
 	}
@@ -109,7 +107,7 @@ public abstract class AbstractScribeOAuthService
 
 	@Override
 	public String getAuthorizationCodeRequestUrl() {
-		return this.scribeService.getAuthorizationUrl();
+		return this.scribeService.getAuthorizationUrl(this.stateSecret);
 	}
 
 	@Override
@@ -159,11 +157,11 @@ public abstract class AbstractScribeOAuthService
 
 			String rawResponse = tokenError.getRawResponse();
 
-			ErrorCode errorCode = tokenError.getErrorCode();
+			OAuth2Error error = tokenError.getError();
 			String errorDescription = tokenError.getErrorDescription();
 
-			switch (errorCode) {
-				case unauthorized_client:
+			switch (error) {
+				case UNAUTHORIZED_CLIENT:
 					throw new OAuthUnauthorizedClientException(errorDescription, rawResponse);
 				default:
 					throw new OAuthAuthorizationTokenRequestException(errorDescription, rawResponse);
@@ -217,7 +215,7 @@ public abstract class AbstractScribeOAuthService
 
 	/**
 	 * {@link OAuthAccessToken} implementation for ScribeJava.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 */

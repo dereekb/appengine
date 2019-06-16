@@ -5,7 +5,7 @@ import java.util.Set;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.AbstractSecurityModelQueryTaskOverrideDelegate;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.datastore.models.keys.exception.NoModelKeyException;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.QueryFieldParameter;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 

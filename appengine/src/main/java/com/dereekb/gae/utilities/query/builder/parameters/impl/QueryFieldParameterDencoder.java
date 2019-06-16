@@ -3,7 +3,7 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedValueExpressionOperatorPair;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;

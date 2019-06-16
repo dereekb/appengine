@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestLimitedBuilder;
 import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRequestLimitedConfigurer;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.AbstractQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;

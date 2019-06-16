@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
-import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
 import com.dereekb.gae.model.stored.image.set.StoredImageSet;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class StoredImageSetData extends SearchableDatabaseModelData {
+public final class StoredImageSetData extends OwnedDatabaseModelData {
 
     private static final long serialVersionUID = 1L;
 
@@ -83,7 +83,7 @@ public final class StoredImageSetData extends SearchableDatabaseModelData {
 	@Override
 	public String toString() {
 		return "StoredImageSetData [label=" + this.label + ", detail=" + this.detail + ", tags=" + this.tags
-		        + ", icon=" + this.icon + ", images=" + this.images + ", searchIdentifier=" + this.searchId
+		        + ", icon=" + this.icon + ", images=" + this.images
 		        + ", identifier=" + this.key + ", created=" + this.date + "]";
 	}
 

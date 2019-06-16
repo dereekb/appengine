@@ -1,6 +1,6 @@
 package com.dereekb.gae.utilities.query.builder.parameters;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 
 /**
  * Value and {@link ExpressionOperator} pair.

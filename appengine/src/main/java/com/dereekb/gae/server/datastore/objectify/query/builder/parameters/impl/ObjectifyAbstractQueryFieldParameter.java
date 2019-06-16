@@ -5,7 +5,7 @@ import com.dereekb.gae.server.datastore.objectify.query.builder.ObjectifyQueryRe
 import com.dereekb.gae.server.datastore.objectify.query.impl.ObjectifyConditionQueryFilter;
 import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrdering;
 import com.dereekb.gae.server.datastore.objectify.query.order.impl.ObjectifyQueryOrderingImpl;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.ValueExpressionOperatorPair;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.AbstractQueryFieldParameter;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;

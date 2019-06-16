@@ -40,8 +40,8 @@ public final class StoredBlobData extends DescribedDatabaseModelData {
 
 	@Override
 	public String toString() {
-		return "StoredBlobData [download=" + this.download + ", descriptor=" + this.descriptor + ", searchIdentifier="
-		        + this.searchId + ", identifier=" + this.key + ", created=" + this.date + "]";
+		return "StoredBlobData [download=" + this.download + ", descriptor=" + this.descriptor
+		        + ", identifier=" + this.key + ", created=" + this.date + "]";
 	}
 
 }
