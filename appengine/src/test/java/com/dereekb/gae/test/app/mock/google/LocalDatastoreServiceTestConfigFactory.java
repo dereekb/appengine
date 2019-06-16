@@ -1,7 +1,6 @@
 package com.dereekb.gae.test.app.mock.google;
 
 import com.dereekb.gae.utilities.factory.Factory;
-import com.google.appengine.api.datastore.dev.LocalDatastoreService.AutoIdAllocationPolicy;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 
 /**
@@ -20,9 +19,6 @@ public class LocalDatastoreServiceTestConfigFactory
 
 	private boolean highRepJobPolicy = true;
 
-	// Used scattered identifiers
-	private AutoIdAllocationPolicy idPolicy = AutoIdAllocationPolicy.SCATTERED;
-
 	@Override
 	public LocalDatastoreServiceTestConfig make() {
 		LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
@@ -33,8 +29,6 @@ public class LocalDatastoreServiceTestConfigFactory
 
 		config = config.setNoStorage(true);
 		config = config.setNoIndexAutoGen(true);
-
-		config = config.setAutoIdAllocationPolicy(this.idPolicy);
 
 		if (this.applyAllHighRepJobPolicy) {
 			config = config.setApplyAllHighRepJobPolicy();
@@ -67,18 +61,6 @@ public class LocalDatastoreServiceTestConfigFactory
 		this.noIndexAutoGen = noIndexAutoGen;
 	}
 
-	public AutoIdAllocationPolicy getIdPolicy() {
-		return this.idPolicy;
-	}
-
-	public void setIdPolicy(AutoIdAllocationPolicy idPolicy) {
-		if (idPolicy == null) {
-			throw new IllegalArgumentException("idPolicy cannot be null.");
-		}
-
-		this.idPolicy = idPolicy;
-	}
-
 	public boolean isHighRepJobPolicy() {
 		return this.highRepJobPolicy;
 	}
@@ -91,7 +73,7 @@ public class LocalDatastoreServiceTestConfigFactory
 	public String toString() {
 		return "LocalDatastoreServiceTestConfigFactory [applyAllHighRepJobPolicy=" + this.applyAllHighRepJobPolicy
 		        + ", noStorage=" + this.noStorage + ", noIndexAutoGen=" + this.noIndexAutoGen + ", highRepJobPolicy="
-		        + this.highRepJobPolicy + ", idPolicy=" + this.idPolicy + "]";
+		        + this.highRepJobPolicy + "]";
 	}
 
 }

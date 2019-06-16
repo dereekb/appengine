@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.appengine.api.datastore.GeoPt;
+import com.google.cloud.datastore.LatLng;
 
 /**
  * Represents a geographical point in the world.
@@ -50,7 +50,7 @@ public final class PointImpl
 		this(location.getLatitude(), location.getLongitude());
 	}
 
-	public static PointImpl fromGeoPt(GeoPt pt) {
+	public static PointImpl fromLatLng(LatLng pt) {
 		if (pt != null) {
 			return new PointImpl(pt.getLatitude(), pt.getLongitude());
 		} else {
@@ -68,18 +68,18 @@ public final class PointImpl
 		return isOrigin;
 	}
 
-	public static GeoPt makeGeoPt(Point point) {
+	public static LatLng makeLatLng(Point point) {
 		if (point != null) {
 			Double lat = point.getLatitude();
 			Double lon = point.getLongitude();
-			return new GeoPt(lat.floatValue(), lon.floatValue());
+			return LatLng.of(lat, lon);
 		} else {
 			return null;
 		}
 	}
 
-	public GeoPt toGeoPt() {
-		return PointImpl.makeGeoPt(this);
+	public LatLng toLatLng() {
+		return PointImpl.makeLatLng(this);
 	}
 
 	@JsonIgnore

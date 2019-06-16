@@ -2,18 +2,18 @@ package com.dereekb.gae.model.general.geo.annotation;
 
 import java.lang.reflect.Field;
 
-import com.google.appengine.api.datastore.GeoPt;
+import com.google.cloud.datastore.LatLng;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.condition.InitializeIf;
 import com.googlecode.objectify.condition.ValueIf;
 
 /**
- * Returns true if the input {@link GeoPt} has a latitude and longitude of 0.
- * 
+ * Returns true if the input {@link LatLng} has a latitude and longitude of 0.
+ *
  * @author dereekb
  *
  */
-public class IfDefaultGeoPt extends ValueIf<GeoPt>
+public class IfDefaultLatLng extends ValueIf<LatLng>
         implements InitializeIf {
 
 	@Override
@@ -21,7 +21,7 @@ public class IfDefaultGeoPt extends ValueIf<GeoPt>
 	                 Field field) {}
 
 	@Override
-	public boolean matchesValue(GeoPt value) {
+	public boolean matchesValue(LatLng value) {
 		return value != null && value.getLatitude() == 0 && value.getLongitude() == 0;
 	}
 

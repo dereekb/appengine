@@ -7,7 +7,6 @@ import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFil
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController;
-import com.dereekb.gae.web.api.model.extension.search.exception.ApiSearchExceptionHandler;
 
 public class ApiLinkConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
@@ -22,9 +21,6 @@ public class ApiLinkConfigurationGenerator extends AbstractSingleConfigurationFi
 	@Override
 	public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
-
-		builder.comment("Link Exception Handler");
-		builder.bean("apiLinkExceptionHandler").beanClass(ApiSearchExceptionHandler.class);
 
 		builder.comment("Link Controller");
 		builder.bean("linkExtensionApiController").beanClass(LinkExtensionApiController.class).c()

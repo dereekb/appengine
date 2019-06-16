@@ -10,7 +10,6 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.web.api.model.extension.search.SearchExtensionApiController;
-import com.dereekb.gae.web.api.model.extension.search.exception.ApiSearchExceptionHandler;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateImpl;
 
 public class ApiSearchConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
@@ -26,9 +25,6 @@ public class ApiSearchConfigurationGenerator extends AbstractSingleConfiguration
 	@Override
 	public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 		SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
-
-		builder.comment("Search Exception Handler");
-		builder.bean("apiSearchExceptionHandler").beanClass(ApiSearchExceptionHandler.class);
 
 		builder.comment("Search Controller");
 		builder.bean("searchExtensionApiController").beanClass(SearchExtensionApiController.class).c()
