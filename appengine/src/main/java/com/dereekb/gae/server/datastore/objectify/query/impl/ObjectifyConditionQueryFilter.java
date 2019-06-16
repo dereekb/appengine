@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.objectify.query.impl;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryFilter;
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.googlecode.objectify.cmd.Query;
 
 /**

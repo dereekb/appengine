@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.stored.image.StoredImage;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.googlecode.objectify.Key;
@@ -27,7 +27,7 @@ import com.googlecode.objectify.condition.IfNull;
  */
 @Cache
 @Entity
-public final class StoredImageSet extends SearchableDatabaseModel
+public final class StoredImageSet extends OwnedDatabaseModel
         implements ObjectifyModel<StoredImageSet> {
 
 	private static final long serialVersionUID = 1L;
@@ -64,7 +64,7 @@ public final class StoredImageSet extends SearchableDatabaseModel
 
 	/**
 	 * {@link Image} in this gallery.
-	 * 
+	 *
 	 * Images are indexed to allow querying all image sets that contain a given
 	 * image, at a later time.
 	 */

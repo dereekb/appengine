@@ -2,9 +2,9 @@ package com.dereekb.gae.model.stored.image.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.search.document.dto.SearchableModelDataReader;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelDataReader;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
@@ -14,7 +14,7 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
  * @author dereekb
  *
  */
-public class StoredImageDataReader extends SearchableModelDataReader<StoredImage, StoredImageData> {
+public class StoredImageDataReader extends OwnedDatabaseModelDataReader<StoredImage, StoredImageData> {
 
 	public StoredImageDataReader() {
 		super(StoredImage.class);

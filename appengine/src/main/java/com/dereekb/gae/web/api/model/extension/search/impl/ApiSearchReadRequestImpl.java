@@ -3,7 +3,7 @@ package com.dereekb.gae.web.api.model.extension.search.impl;
 import java.util.Collections;
 import java.util.Map;
 
-import com.dereekb.gae.server.search.model.impl.SearchRequestImpl;
+import com.dereekb.gae.utilities.model.search.request.impl.SearchRequestImpl;
 import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 
 /**

@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;

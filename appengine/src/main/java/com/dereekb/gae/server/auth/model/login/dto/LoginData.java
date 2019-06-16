@@ -88,7 +88,7 @@ public class LoginData extends DescribedDatabaseModelData {
 	@Override
 	public String toString() {
 		return "LoginData [group=" + this.group + ", roles=" + this.roles + ", pointers=" + this.pointers
-		        + ", searchIdentifier=" + this.searchId + ", key=" + this.key + ", created=" + this.date + "]";
+		        + ", key=" + this.key + ", created=" + this.date + "]";
 	}
 
 }

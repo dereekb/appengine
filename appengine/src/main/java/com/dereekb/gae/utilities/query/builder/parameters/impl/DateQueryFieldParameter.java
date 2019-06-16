@@ -2,11 +2,11 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 import com.dereekb.gae.utilities.time.DateUtility;
 import com.dereekb.gae.utilities.time.IsoTimeConverter;
-import com.dereekb.gae.utilities.time.impl.ThreeTenIsoTimeConverter;
+import com.dereekb.gae.utilities.time.impl.JavaTimeConverter;
 
 /**
  * {@link AbstractQueryFieldParameter} used for {@link Date} query parameters.
@@ -18,11 +18,11 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 
 	public static final String DEFAULT_DATE_FIELD = "date";
 
-	private static final IsoTimeConverter DATE_CONVERTER = ThreeTenIsoTimeConverter.SINGLETON;
+	private static final IsoTimeConverter DATE_CONVERTER = JavaTimeConverter.SINGLETON;
 
 	/**
 	 * New Query that returns for all dates.
-	 * 
+	 *
 	 * @param field
 	 *            {@link String}. Never {@code null}.
 	 */
@@ -91,7 +91,7 @@ public class DateQueryFieldParameter extends AbstractQueryFieldParameter<Date> {
 
 	/**
 	 * Search originating from now in descending order.
-	 * 
+	 *
 	 * @param field
 	 *            Field. Never {@code null}.
 	 * @return {@link DateQueryFieldParameter}. Never {@code null}.

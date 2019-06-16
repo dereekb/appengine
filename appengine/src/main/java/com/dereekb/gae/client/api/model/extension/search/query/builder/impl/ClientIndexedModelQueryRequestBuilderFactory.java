@@ -17,12 +17,12 @@ import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestBui
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestOptions;
 import com.dereekb.gae.server.datastore.models.query.iterator.ExecutableIndexedModelQuery;
 import com.dereekb.gae.server.datastore.objectify.query.exception.InvalidQuerySortingException;
-import com.dereekb.gae.server.search.model.impl.SearchRequestImpl;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
+import com.dereekb.gae.utilities.model.search.request.impl.SearchRequestImpl;
 import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 
 /**

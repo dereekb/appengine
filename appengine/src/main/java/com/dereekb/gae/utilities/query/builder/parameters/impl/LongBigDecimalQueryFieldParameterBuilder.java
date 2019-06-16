@@ -2,9 +2,9 @@ package com.dereekb.gae.utilities.query.builder.parameters.impl;
 
 import java.math.BigDecimal;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
 import com.dereekb.gae.utilities.misc.numbers.LongBigDecimalUtility;
 import com.dereekb.gae.utilities.misc.numbers.impl.LongBigDecimalUtilityImpl;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 
 /**
  * Builder for {@link LongBigDecimalQueryFieldParameter} values.

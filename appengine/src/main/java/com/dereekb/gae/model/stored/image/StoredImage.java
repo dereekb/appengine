@@ -2,10 +2,10 @@ package com.dereekb.gae.model.stored.image;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescriptorImpl;
-import com.dereekb.gae.model.extension.search.document.search.SearchableDatabaseModel;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 import com.dereekb.gae.model.stored.blob.StoredBlobInfoType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -26,7 +26,7 @@ import com.googlecode.objectify.condition.IfNotNull;
  */
 @Cache
 @Entity
-public final class StoredImage extends SearchableDatabaseModel
+public final class StoredImage extends OwnedDatabaseModel
         implements ObjectifyModel<StoredImage>, StoredBlobInfoType, Descriptor {
 
 	public static final String DESCRIPTOR_TYPE = "StoredImage";
@@ -164,6 +164,7 @@ public final class StoredImage extends SearchableDatabaseModel
 		return ModelKey.safe(this.identifier);
 	}
 
+	@Override
 	public void setModelKey(ModelKey key) {
 		this.identifier = ModelKey.readIdentifier(key);
 	}
@@ -200,7 +201,7 @@ public final class StoredImage extends SearchableDatabaseModel
 	public String toString() {
 		return "StoredImage [identifier=" + this.identifier + ", name=" + this.name + ", summary=" + this.summary
 		        + ", tags=" + this.tags + ", type=" + this.type + ", storedBlob=" + this.storedBlob
-		        + ", searchIdentifier=" + this.searchIdentifier + "]";
+		        + "]";
 	}
 
 }

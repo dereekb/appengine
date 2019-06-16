@@ -2,8 +2,8 @@ package com.dereekb.gae.model.stored.image.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.search.document.dto.SearchableModelDataBuilder;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelDataBuilder;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 
 /**
@@ -12,7 +12,7 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
  *
  * @author dereekb
  */
-public class StoredImageDataBuilder extends SearchableModelDataBuilder<StoredImage, StoredImageData> {
+public class StoredImageDataBuilder extends OwnedDatabaseModelDataBuilder<StoredImage, StoredImageData> {
 
 	public StoredImageDataBuilder() throws IllegalArgumentException {
 		super(StoredImageData.class);

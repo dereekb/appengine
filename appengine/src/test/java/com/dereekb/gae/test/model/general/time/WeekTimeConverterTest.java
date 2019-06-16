@@ -1,8 +1,8 @@
 package com.dereekb.gae.test.model.general.time;
 
-import java.util.Set;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.model.general.time.Day;
@@ -12,12 +12,9 @@ import com.dereekb.gae.model.general.time.TimeAmPm;
 import com.dereekb.gae.model.general.time.TimeSpan;
 import com.dereekb.gae.model.general.time.WeekTime;
 import com.dereekb.gae.model.general.time.impl.DaySpanBitImpl;
-import com.dereekb.gae.model.general.time.impl.HourImpl;
 import com.dereekb.gae.model.general.time.impl.TimeImpl;
 import com.dereekb.gae.model.general.time.impl.TimeSpanImpl;
 import com.dereekb.gae.model.general.time.impl.WeekTimeImpl;
-import com.dereekb.gae.model.general.time.search.WeekTimeSearchTag;
-import com.dereekb.gae.model.general.time.search.impl.WeekTimeSearchTagsConverterImpl;
 import com.dereekb.gae.model.general.time.util.impl.TimeValueConverterImpl;
 import com.dereekb.gae.model.general.time.util.impl.WeekTimeConverterImpl;
 import com.dereekb.gae.utilities.misc.bit.BitIndex;
@@ -93,36 +90,6 @@ public class WeekTimeConverterTest {
 
 		assertTrue(convertedDaySpan.equals(daySpan));
 		assertTrue(convertedTimeSpan.equals(timeSpan));
-	}
-
-	@Test
-	public void testTagsConversion() {
-		WeekTimeSearchTagsConverterImpl converter = WeekTimeSearchTagsConverterImpl.CONVERTER;
-
-		Day day = Day.MONDAY;
-		DaySpanBitImpl daySpan = new DaySpanBitImpl();
-		daySpan.add(day);
-
-		Time startTime = new TimeImpl(0, 0);
-		Time endTime = new TimeImpl(23, 59);
-
-		TimeSpan timeSpan = new TimeSpanImpl(startTime, endTime);
-		WeekTimeImpl weekTime = new WeekTimeImpl(daySpan, timeSpan);
-
-		Set<String> tags = converter.buildTags(weekTime);
-		assertNotNull(tags);
-		assertTrue(tags.contains(WeekTimeSearchTag.buildTag(day, new HourImpl(23))));
-
-		// Multiple Days
-		daySpan = new DaySpanBitImpl(0xFF);
-		converter.buildTags(weekTime);
-		assertNotNull(tags);
-		assertTrue(tags.size() == 24); // 23 hour entries, 0-
-
-		// Encoded
-		tags = converter.buildTagsForEncoded(WeekTimeConverterImpl.CONVERTER.weekTimeToNumber(weekTime));
-		assertNotNull(tags);
-
 	}
 
 }

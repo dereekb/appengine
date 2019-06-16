@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
-import com.dereekb.gae.model.extension.search.document.search.dto.SearchableDatabaseModelData;
 import com.dereekb.gae.model.stored.image.StoredImage;
+import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class StoredImageData extends SearchableDatabaseModelData {
+public final class StoredImageData extends OwnedDatabaseModelData {
 
 	public static final int MAX_NAME_LENGTH = 50;
 	public static final int MAX_SUMMARY_LENGTH = 250;
@@ -105,7 +105,7 @@ public final class StoredImageData extends SearchableDatabaseModelData {
 	public String toString() {
 		return "StoredImageData [name=" + this.name + ", summary=" + this.summary + ", tags=" + this.tags + ", type="
 		        + this.type + ", blob=" + this.blob + ", geoPlace=" + this.geoPlace + ", imageSets=" + this.imageSets
-		        + ", searchIdentifier=" + this.searchId + ", identifier=" + this.key + ", created="
+		        + ", identifier=" + this.key + ", created="
 		        + this.date + "]";
 	}
 

@@ -2,7 +2,7 @@ package com.dereekb.gae.model.extension.search.query.parameters;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.search.document.query.expression.ExpressionOperator;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
 

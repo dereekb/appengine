@@ -2,7 +2,7 @@ package com.dereekb.gae.model.stored.blob.dto;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
-import com.dereekb.gae.model.extension.search.document.dto.DescribedModelDataReader;
+import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelDataReader;
 import com.dereekb.gae.model.stored.blob.StoredBlob;
 
 /**
@@ -11,7 +11,7 @@ import com.dereekb.gae.model.stored.blob.StoredBlob;
  *
  * @author dereekb
  */
-public final class StoredBlobDataReader extends DescribedModelDataReader<StoredBlob, StoredBlobData> {
+public final class StoredBlobDataReader extends DescribedDatabaseModelDataReader<StoredBlob, StoredBlobData> {
 
 	public StoredBlobDataReader() {
 		super(StoredBlob.class);
