@@ -18,13 +18,13 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appengine.target.version>1.9.71</appengine.target.version>
-		<appengine-cloud.target.version>1.65.0</appengine-cloud.target.version>
+		<appengine.target.version>1.9.75</appengine.target.version>
+		<appengine-cloud.target.version>1.78.0</appengine-cloud.target.version>
 		<google-cloud.target.version>2.0.0</google-cloud.target.version>
-		<spring.target.version>5.1.4.RELEASE</spring.target.version>
-		<spring-security.target.version>5.1.3.RELEASE</spring-security.target.version>
+		<spring.target.version>5.1.8.RELEASE</spring.target.version>
+		<spring-security.target.version>5.1.5.RELEASE</spring-security.target.version>
 		<junit.target.version>5.4.0</junit.target.version>
-		<jackson.target.version>2.9.8</jackson.target.version>
+		<jackson.target.version>2.9.9</jackson.target.version>
 	</properties>
 
 	<dependencies>
@@ -89,21 +89,14 @@
 		<dependency>
 			<groupId>com.github.scribejava</groupId>
 			<artifactId>scribejava-apis</artifactId>
-			<version>4.0.0</version>
+			<version>6.6.3</version>
 		</dependency>
 
 		<!-- Objectify -->
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
-			<version>6.0.3</version>
-		</dependency>
-
-		<!-- Dates -->
-		<dependency>
-			<groupId>org.threeten</groupId>
-			<artifactId>threetenbp</artifactId>
-			<version>1.3.3</version>
+			<version>6.0.4</version>
 		</dependency>
 
 		<!-- Jackson -->
