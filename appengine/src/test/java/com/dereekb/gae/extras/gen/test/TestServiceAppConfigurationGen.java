@@ -13,6 +13,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConf
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
@@ -67,6 +68,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		RemoteServiceConfigurationImpl remoteEventService = remoteEventServiceGen.make();
 
 		// Configuration
+		AppServerInitializationConfigurer appServerInitializationConfigurer = new LoginServerAppServerInitializationConfigurerImpl();
 		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new LocalAppLoginTokenSecurityConfigurerImpl();
 		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new NoopAppEventListenerConfigurer(); // new WebHookEventSubmitterImplEventListenerConfigurer();
 		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new NoopAppWebHookEventServiceConfigurer(); // new LocalAppWebHookEventServiceConfigurer(); // = new RemoteAppWebHookEventServiceConfigurerImpl(remoteEventService);
@@ -81,12 +83,9 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 
 		};
 
-		AppServicesConfigurerImpl appServicesConfigurer = new AppServicesConfigurerImpl(appLoginTokenSecurityConfigurer,
+		AppServicesConfigurerImpl appServicesConfigurer = new AppServicesConfigurerImpl(appServerInitializationConfigurer, appLoginTokenSecurityConfigurer,
 		        appEventServiceListenersConfigurer, appWebHookEventServiceConfigurer,
 		        appModelKeyEventListenerConfigurer);
-
-		appServicesConfigurer
-		        .setAppServerInitializationConfigurer(new LoginServerAppServerInitializationConfigurerImpl());
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);

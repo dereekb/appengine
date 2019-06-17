@@ -22,17 +22,20 @@ public class AppServicesConfigurerImpl
 	private AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer;
 	private AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer;
 
-	public AppServicesConfigurerImpl(AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
+	public AppServicesConfigurerImpl(AppServerInitializationConfigurer appServerInitializationConfigurer,
+	        AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
 	        AppEventServiceListenersConfigurer appEventServiceListenersConfigurer,
 	        AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer,
 	        AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer) {
 		super();
+		this.setAppServerInitializationConfigurer(appServerInitializationConfigurer);
 		this.setAppLoginTokenSecurityConfigurer(appLoginTokenSecurityConfigurer);
 		this.setAppEventServiceListenersConfigurer(appEventServiceListenersConfigurer);
 		this.setAppWebHookEventServiceConfigurer(appWebHookEventServiceConfigurer);
 		this.setAppModelKeyEventListenerConfigurer(appModelKeyEventListenerConfigurer);
 	}
 
+	@Override
 	public AppServerInitializationConfigurer getAppServerInitializationConfigurer() {
 		return this.appServerInitializationConfigurer;
 	}
