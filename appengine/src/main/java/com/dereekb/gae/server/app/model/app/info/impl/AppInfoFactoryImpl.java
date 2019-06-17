@@ -37,7 +37,7 @@ public class AppInfoFactoryImpl extends GoogleAppEngineContextualFactoryImpl<App
 			 * Creates a hash of the app-key, which gives it a unique ID each
 			 * time.
 			 */
-			Integer hash = HashUtility.simpleHash(appInfo.getAppName());
+			Integer hash = Math.abs(HashUtility.simpleHash(appInfo.getAppName()));
 
 			AppInfoImpl info = new AppInfoImpl(appInfo);
 			info.setModelKey(new ModelKey(hash));
