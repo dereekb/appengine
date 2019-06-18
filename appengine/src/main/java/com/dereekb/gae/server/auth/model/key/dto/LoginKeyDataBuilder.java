@@ -36,6 +36,7 @@ public final class LoginKeyDataBuilder extends OwnedDatabaseModelDataBuilder<Log
 		data.setExpiration(input.getExpiration());
 
 		// Links
+		data.setLogin(ObjectifyKeyUtility.idFromKey(input.getLogin()));
 		data.setPointer(ObjectifyKeyUtility.nameFromKey(input.getLoginPointer()));
 
 		return data;

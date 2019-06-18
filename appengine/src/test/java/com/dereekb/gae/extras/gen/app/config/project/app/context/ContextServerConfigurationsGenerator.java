@@ -58,6 +58,7 @@ import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializer
 import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.appengine.AppEngineTaskSchedulerEnqueuer;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -646,14 +647,21 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 			builder.comment("Task Queue");
-			builder.stringBean(this.getAppConfig().getAppBeans().getTaskQueueNameId(),
-			        this.getAppConfig().getAppTaskQueueName());
+
+			String taskQueueNameBeanId = this.getAppConfig().getAppBeans().getTaskQueueNameId();
+			String appEngineEnqueuerBeanId = "taskEnqueuer";
+			String authenticatorBeanId = "taskAuthenticator";
+
+			builder.stringBean(taskQueueNameBeanId, this.getAppConfig().getAppTaskQueueName());
+
+			builder.bean(appEngineEnqueuerBeanId).beanClass(AppEngineTaskSchedulerEnqueuer.class)
+					.property("queue").ref(taskQueueNameBeanId);
 
 			builder.bean("taskScheduler").beanClass(TaskSchedulerImpl.class).c()
-			        .ref(this.getAppConfig().getAppBeans().getTaskQueueNameId()).up().property("authenticator")
-			        .ref("taskSchedulerAuthenticator");
+			        .ref(appEngineEnqueuerBeanId)
+			        .ref(authenticatorBeanId);
 
-			builder.bean("taskSchedulerAuthenticator").beanClass(TaskSchedulerAuthenticatorImpl.class).c()
+			builder.bean(authenticatorBeanId).beanClass(TaskSchedulerAuthenticatorImpl.class).c()
 			        .ref(this.getAppConfig().getAppBeans().getSystemLoginTokenFactoryBeanId());
 
 			return builder;

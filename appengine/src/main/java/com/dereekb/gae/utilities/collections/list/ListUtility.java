@@ -89,24 +89,46 @@ public class ListUtility {
 	/**
 	 * Adds the elements from an array to the input list.
 	 *
-	 * @param list
-	 *            {@link List} or {@code null}.
+	 * @param collection
+	 *            {@link Collection} or {@code null}.
 	 * @param elements
 	 *            Array of elements to add.
 	 * @return {@link Collection}. Never {@code null}.
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> addElements(Collection<T> list,
+	public static <T> Collection<T> addElements(Collection<T> collection,
 	                                            T... elements) {
-		if (list == null) {
-			list = new ArrayList<T>();
+		if (collection == null) {
+			collection = new ArrayList<T>();
 		}
 
 		for (T element : elements) {
-			list.add(element);
+			collection.add(element);
 		}
 
-		return list;
+		return collection;
+	}
+
+	/**
+	 * Adds the elements from another collection. Always returns a collection.
+	 *
+	 * @param collection
+	 *            {@link Collection} or {@code null}.
+	 * @param newElements
+	 *            {@link Collection} or {@code null}.
+	 * @return {@link Collection}. Never {@code null}.
+	 */
+	public static <T> Collection<T> addElements(Collection<T> collection,
+	                                            Collection<T> newElements) {
+		if (collection == null) {
+			collection = new ArrayList<T>();
+		}
+
+		if (newElements != null) {
+			collection.addAll(newElements);
+		}
+
+		return collection;
 	}
 
 	/**

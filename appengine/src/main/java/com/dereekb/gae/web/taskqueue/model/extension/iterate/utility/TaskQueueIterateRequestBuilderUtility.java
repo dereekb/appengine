@@ -15,7 +15,6 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Used for building {@link TaskRequest} for {@link TaskQueueIterateController}.
@@ -24,8 +23,6 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  *
  */
 public class TaskQueueIterateRequestBuilderUtility {
-
-	private static final Method ITERATE_REQUEST_METHOD = Method.PUT;
 
 	public static final TaskQueueIterateRequestBuilderUtility SINGLETON = new TaskQueueIterateRequestBuilderUtility();
 
@@ -207,7 +204,7 @@ public class TaskQueueIterateRequestBuilderUtility {
 
 		public TaskRequestImpl makeRequest() {
 			String url = this.iterateType.pathForTask(this.modelType, this.taskName);
-			TaskRequestImpl request = new TaskRequestImpl(url, ITERATE_REQUEST_METHOD);
+			TaskRequestImpl request = new TaskRequestImpl(url);
 
 			Collection<? extends KeyedEncodedParameter> parameters = this.getParameters();
 

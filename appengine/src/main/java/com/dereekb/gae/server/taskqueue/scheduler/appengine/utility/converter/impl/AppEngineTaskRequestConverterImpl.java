@@ -1,16 +1,20 @@
-package com.dereekb.gae.server.taskqueue.scheduler.utility.converter.impl;
+package com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
+import com.dereekb.gae.server.taskqueue.scheduler.SecuredTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
+import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.AppEngineTaskRequestConverter;
+import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.TaskRequestHost;
+import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.TaskRequestReader;
+import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.exception.TaskRequestConversionException;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.TaskOptionsUtility;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestConverter;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestReader;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.exception.TaskRequestConversionException;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
@@ -24,8 +28,8 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  * @author dereekb
  *
  */
-public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskRequest, TaskOptions>
-        implements TaskRequestConverter {
+public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConverter<SecuredTaskRequest, TaskOptions>
+        implements AppEngineTaskRequestConverter {
 
 	private static final SimplePath DEFAULT_RESOURCE = new SimplePathImpl("/taskqueue");
 	private static final String HOST_HEADER = "Host";
@@ -42,7 +46,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 	 * <p>
 	 * Is used only if the input request does not have a type specified.
 	 */
-	private Method method;
+	private Method method = Method.PUT;
 
 	/**
 	 * (Optional) Default timings to use if the request does not specify
@@ -55,23 +59,23 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 	 */
 	private TaskRequestHost host;
 
-	public TaskRequestConverterImpl() {
+	public AppEngineTaskRequestConverterImpl() {
 		this(DEFAULT_RESOURCE, null, null);
 	}
 
-	public TaskRequestConverterImpl(String url) {
+	public AppEngineTaskRequestConverterImpl(String url) {
 		this(new SimplePathImpl(url), null, null);
 	}
 
-	public TaskRequestConverterImpl(SimplePath resource) {
+	public AppEngineTaskRequestConverterImpl(SimplePath resource) {
 		this(resource, null, null);
 	}
 
-	public TaskRequestConverterImpl(SimplePath resource, Method method, TaskRequestTiming timings) {
+	public AppEngineTaskRequestConverterImpl(SimplePath resource, Method method, TaskRequestTiming timings) {
 		this(resource, method, timings, null);
 	}
 
-	public TaskRequestConverterImpl(SimplePath resource,
+	public AppEngineTaskRequestConverterImpl(SimplePath resource,
 	        Method method,
 	        TaskRequestTiming timings,
 	        TaskRequestHost host) {
@@ -126,14 +130,13 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 	}
 
 	@Override
-	public TaskOptions convertSingle(TaskRequest input) throws ConversionFailureException {
+	public TaskOptions convertSingle(SecuredTaskRequest input) throws ConversionFailureException {
 		TaskRequestReaderImpl reader = this.makeReader(input);
 		TaskOptionBuilder builder = new TaskOptionBuilder(reader);
 		return builder.buildTaskOptions();
 	}
 
-	@Override
-	public TaskRequestReaderImpl makeReader(TaskRequest request) {
+	public TaskRequestReaderImpl makeReader(SecuredTaskRequest request) {
 		return new TaskRequestReaderImpl(request);
 	}
 
@@ -141,9 +144,11 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 	        implements TaskRequestReader {
 
 		private final TaskRequest request;
+		private final SecuredTaskRequest securedRequest;
 
-		public TaskRequestReaderImpl(TaskRequest request) {
-			this.request = request;
+		public TaskRequestReaderImpl(SecuredTaskRequest securedRequest) {
+			this.securedRequest = securedRequest;
+			this.request = securedRequest.getTaskRequest();
 		}
 
 		@Override
@@ -160,22 +165,11 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 		public String getFullRequestUri() {
 			SimplePath path = this.request.getPath();
 
-			if (TaskRequestConverterImpl.this.resource != null) {
-				path = TaskRequestConverterImpl.this.resource.append(path);
+			if (AppEngineTaskRequestConverterImpl.this.resource != null) {
+				path = AppEngineTaskRequestConverterImpl.this.resource.append(path);
 			}
 
 			return path.getPath();
-		}
-
-		@Override
-		public Method getMethod() {
-			Method method = this.request.getMethod();
-
-			if (method == null) {
-				method = TaskRequestConverterImpl.this.method;
-			}
-
-			return method;
 		}
 
 		@Override
@@ -183,7 +177,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			TaskRequestTiming timing = this.request.getTimings();
 
 			if (timing == null) {
-				timing = TaskRequestConverterImpl.this.timings;
+				timing = AppEngineTaskRequestConverterImpl.this.timings;
 			}
 
 			return timing;
@@ -191,7 +185,14 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 
 		@Override
 		public Collection<KeyedEncodedParameter> getHeaders() {
-			return this.request.getHeaders();
+			List<KeyedEncodedParameter> allHeaders = new ArrayList<KeyedEncodedParameter>();
+			Collection<KeyedEncodedParameter> headers = this.request.getHeaders();
+			Collection<KeyedEncodedParameter> securityHeaders = this.securedRequest.getSecurityHeaders();
+
+			ListUtility.addElements(allHeaders, headers);
+			ListUtility.addElements(allHeaders, securityHeaders);
+
+			return allHeaders;
 		}
 
 		@Override
@@ -220,7 +221,7 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			TaskRequestHost host = this.request.getHost();
 
 			if (host == null) {
-				host = TaskRequestConverterImpl.this.host;
+				host = AppEngineTaskRequestConverterImpl.this.host;
 			}
 
 			return host;
@@ -249,13 +250,13 @@ public class TaskRequestConverterImpl extends AbstractDirectionalConverter<TaskR
 			String url = this.buildUrl();
 			String name = this.reader.getName();
 
-			Method method = this.reader.getMethod();
+			Method method = AppEngineTaskRequestConverterImpl.this.method;
 			TaskOptions options = TaskOptions.Builder.withUrl(url).method(method).taskName(name);
 			return options;
 		}
 
 		private String buildUrl() {
-			if (TaskRequestConverterImpl.this.shouldAssertPathNotEmpty) {
+			if (AppEngineTaskRequestConverterImpl.this.shouldAssertPathNotEmpty) {
 				SimplePath taskPath = this.reader.request.getPath();
 
 				if (taskPath.getPathComponents().isEmpty()) {

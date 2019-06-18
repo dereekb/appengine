@@ -6,33 +6,35 @@ import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
 import com.dereekb.gae.server.taskqueue.scheduler.exception.TaskAlreadyExistsException;
 
 /**
- * Used for scheduling tasks.
+ * Enqueues the input tasks into the taskqueue system.
+ * <p>
+ * Generally used directly by {@link TaskScheduler} implementations as the last step of enqueuing tasks.
  *
  * @author dereekb
  *
  */
-public interface TaskScheduler {
+public interface TaskSchedulerEnqueuer {
 
 	/**
 	 * Schedules a new task at the specified request.
 	 *
 	 * @param request
-	 *            {@link TaskRequest}. Never {@code null}.
+	 *            {@link SecuredTaskRequest}. Never {@code null}.
 	 * @throws SubmitTaskException
 	 * @throws TaskAlreadyExistsException
 	 */
-	public void schedule(TaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException;
+	public void enqueue(SecuredTaskRequest request) throws SubmitTaskException, TaskAlreadyExistsException;
 
 	/**
-	 * Schedules multiple tasks.
+	 * Enqueues multiple tasks.
 	 *
 	 * @param requests
-	 *            Collection of {@link TaskRequest} instances. Never
+	 *            Collection of {@link SecuredTaskRequest} instances. Never
 	 *            {@code null}.
 	 * @throws SubmitTaskException
 	 * @throws TaskAlreadyExistsException
 	 */
-	public void schedule(Collection<? extends TaskRequest> requests)
+	public void enqueue(Collection<? extends SecuredTaskRequest> requests)
 	        throws SubmitTaskException,
 	            TaskAlreadyExistsException;
 

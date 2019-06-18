@@ -2,10 +2,9 @@ package com.dereekb.gae.server.taskqueue.scheduler;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
+import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.TaskRequestHost;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Represents a request that can be sent by a {@link TaskScheduler}.
@@ -26,15 +25,6 @@ public interface TaskRequest {
 	 * @return {@link String} request name.
 	 */
 	public String getName();
-
-	/**
-	 * Returns the method type.
-	 * <p>
-	 * Generally should not be {@code null}.
-	 *
-	 * @return {@link Method} type.
-	 */
-	public Method getMethod();
 
 	/**
 	 * Returns relative target's path.

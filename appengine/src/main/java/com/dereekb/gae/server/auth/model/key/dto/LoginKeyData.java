@@ -17,6 +17,7 @@ public class LoginKeyData extends OwnedDatabaseModelData {
 
 	private static final long serialVersionUID = 1L;
 
+	private Long login;
 	private String pointer;
 
 	private String name;
@@ -28,6 +29,14 @@ public class LoginKeyData extends OwnedDatabaseModelData {
 	private Long expiration;
 
 	public LoginKeyData() {}
+
+	public Long getLogin() {
+		return this.login;
+	}
+
+	public void setLogin(Long login) {
+		this.login = login;
+	}
 
 	public String getPointer() {
 		return this.pointer;

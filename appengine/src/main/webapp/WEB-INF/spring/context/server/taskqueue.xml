@@ -3,11 +3,14 @@
   <bean class="java.lang.String" id="taskQueueName">
     <constructor-arg index="0" value="app"/>
   </bean>
-  <bean class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl" id="taskScheduler">
-    <constructor-arg index="0" ref="taskQueueName"/>
-    <property name="authenticator" ref="taskSchedulerAuthenticator"/>
+  <bean class="com.dereekb.gae.server.taskqueue.scheduler.appengine.AppEngineTaskSchedulerEnqueuer" id="taskEnqueuer">
+    <property name="queue" ref="taskQueueName"/>
   </bean>
-  <bean class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl" id="taskSchedulerAuthenticator">
+  <bean class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl" id="taskScheduler">
+    <constructor-arg index="0" ref="taskEnqueuer"/>
+    <constructor-arg index="1" ref="taskAuthenticator"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl" id="taskAuthenticator">
     <constructor-arg index="0" ref="systemLoginTokenFactory"/>
   </bean>
 </beans>

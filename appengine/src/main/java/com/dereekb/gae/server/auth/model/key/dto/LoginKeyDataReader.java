@@ -3,6 +3,7 @@ package com.dereekb.gae.server.auth.model.key.dto;
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.server.auth.model.key.LoginKey;
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.datastore.models.dto.OwnedDatabaseModelDataReader;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
@@ -17,6 +18,8 @@ import com.googlecode.objectify.Key;
  */
 public final class LoginKeyDataReader extends OwnedDatabaseModelDataReader<LoginKey, LoginKeyData> {
 
+	private static final ObjectifyKeyUtility<Login> LOGIN_KEY_UTIL = ObjectifyKeyUtility
+	        .make(Login.class);
 	private static final ObjectifyKeyUtility<LoginPointer> LOGIN_POINTER_KEY_UTIL = ObjectifyKeyUtility
 	        .make(LoginPointer.class);
 
@@ -40,6 +43,12 @@ public final class LoginKeyDataReader extends OwnedDatabaseModelDataReader<Login
 		model.setExpiration(input.getExpiration());
 
 		// Links
+		Key<Login> login = LOGIN_KEY_UTIL.keyFromId(input.getLogin());
+
+		if (login != null) {
+			model.setLogin(login);
+		}
+
 		Key<LoginPointer> loginPointer = LOGIN_POINTER_KEY_UTIL.keyFromString(input.getPointer());
 
 		if (loginPointer != null) {

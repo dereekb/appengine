@@ -1,7 +1,8 @@
-package com.dereekb.gae.server.taskqueue.scheduler.utility.converter;
+package com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
 import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
+import com.dereekb.gae.server.taskqueue.scheduler.SecuredTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.google.appengine.api.taskqueue.TaskOptions;
 
@@ -12,9 +13,9 @@ import com.google.appengine.api.taskqueue.TaskOptions;
  * @author dereekb
  *
  */
-public interface TaskRequestConverter
-        extends DirectionalConverter<TaskRequest, TaskOptions>, SingleDirectionalConverter<TaskRequest, TaskOptions> {
+public interface AppEngineTaskRequestConverter
+        extends DirectionalConverter<SecuredTaskRequest, TaskOptions>, SingleDirectionalConverter<SecuredTaskRequest, TaskOptions> {
 
-	public TaskRequestReader makeReader(TaskRequest request);
+	public TaskRequestReader makeReader(SecuredTaskRequest request);
 
 }

@@ -57,7 +57,7 @@ public class LoginKeyCreateAttributeUpdater extends AbstractChainedUpdateTaskDel
 		template.setLogin(login);
 	}
 
-	// TODO: Need to update.
+	// TODO: Need to update. Should load the specified login pointer first and validate the login matches, or override the login if an admin.
 
 	private Key<Login> loadLoginKeyWithTemplate(LoginKey template) throws InvalidAttributeException {
 

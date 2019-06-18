@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.taskqueue.scheduler.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,10 +8,10 @@ import com.dereekb.gae.server.auth.security.system.SystemLoginTokenFactory;
 import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.parameter.AuthenticationParameterBuilder;
 import com.dereekb.gae.server.auth.security.token.parameter.impl.AuthenticationParameterServiceImpl;
+import com.dereekb.gae.server.taskqueue.scheduler.SecuredTaskRequest;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskSchedulerAuthenticator;
-import com.dereekb.gae.server.taskqueue.scheduler.utility.TaskOptionsUtility;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
-import com.google.appengine.api.taskqueue.TaskOptions;
 
 /**
  * {@link TaskSchedulerAuthenticator} implementation that uses a
@@ -58,15 +59,19 @@ public class TaskSchedulerAuthenticatorImpl
 
 	// MARK: TaskSchedulerAuthenticator
 	@Override
-	public List<TaskOptions> authenticateOptions(List<TaskOptions> options) {
+	public List<SecuredTaskRequest> authenticateRequests(List<TaskRequest> requests) {
 
 		SignedEncodedLoginToken systemToken = this.systemLoginTokenFactory.makeSystemToken();
 		Collection<KeyedEncodedParameter> headers = this.authParameterBuilder
 		        .buildAuthenticationParameters(systemToken);
 
-		options = TaskOptionsUtility.appendHeaders(options, headers);
+		List<SecuredTaskRequest> securedRequests = new ArrayList<SecuredTaskRequest>();
 
-		return options;
+		for (TaskRequest request : requests) {
+			securedRequests.add(new SecuredTaskRequestImpl(request, headers));
+		}
+
+		return securedRequests;
 	}
 
 	@Override

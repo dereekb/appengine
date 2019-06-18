@@ -16,7 +16,6 @@ import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.web.taskqueue.server.webhook.TaskQueueWebHookController;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * {@link WebHookEventSubmitterDelegate} implementation.
@@ -90,7 +89,7 @@ public abstract class AbstractWebHookEventSubmitterDelegate
 	 */
 	protected static class RescheduleWebHookEventTaskRequestBuilder extends AbstractIndividualTaskRequestBuilder<WebHookEvent> {
 
-		private static TaskRequest DEFAULT_TASK_REQUEST = new TaskRequestImpl(TaskQueueWebHookController.WEBHOOK_SUBMIT_RETRY_PATH, Method.POST);
+		private static TaskRequest DEFAULT_TASK_REQUEST = new TaskRequestImpl(TaskQueueWebHookController.WEBHOOK_SUBMIT_RETRY_PATH);
 
 		public RescheduleWebHookEventTaskRequestBuilder() throws IllegalArgumentException {
 			super(DEFAULT_TASK_REQUEST);

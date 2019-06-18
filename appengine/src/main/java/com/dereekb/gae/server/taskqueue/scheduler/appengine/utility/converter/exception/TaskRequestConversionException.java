@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.taskqueue.scheduler.utility.converter.exception;
+package com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.exception;
 
 /**
  * {@link TaskRequestConversionException}
