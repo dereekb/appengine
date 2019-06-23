@@ -47,6 +47,11 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		String appProjectService = "test";
 		String appProjectVersion = "v1";
 
+		String appName = "GAE Core Test App";
+		String developmentProxy = "http://gae-nginx:8080";	// Unused
+		String developmentHost = "localhost:8080";
+		Long appId = 1L;
+
 		// Models
 		// Login
 		LocalModelConfigurationGroupImpl loginGroup = LoginGroupConfigurationGen.makeLocalLoginGroupConfig();
@@ -90,11 +95,14 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
 
-		configuration.setAppName("GAE Core Test App");
+		configuration.setAppName(appName);
+		configuration.setAppTaskQueueName(appProjectService);
+		configuration.setAppId(appId);
+
+		configuration.setAppDevelopmentProxyUrl(developmentProxy);
+		configuration.setAppDevelopmentServerHostUrl(developmentHost);
 
 		configuration.setIsLoginServer(true);
-		configuration.setAppId(1L);
-
 		configuration.setRemoteServices(remoteEventService);
 
 		LoginTokenAppSecurityBeansConfigurerImpl appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();

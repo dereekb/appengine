@@ -23,6 +23,7 @@ public class AppBeansConfigurationImpl
 	public static final String LINK_SERVICE_BEAN_ID = "linkService";
 	public static final String TASK_SCHEDULER_BEAN_ID = "taskScheduler";
 	public static final String TASK_QUEUE_NAME_BEAN_ID = "taskQueueName";
+	public static final String TASK_SCHEDULER_ENQUEUER_BEAN_ID = "taskEnqueuer";
 	public static final String MODEL_KEY_TYPE_CONVERTER_ID = "modelKeyTypeConverter";
 	public static final String SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID = "systemLoginTokenService";
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
@@ -63,6 +64,7 @@ public class AppBeansConfigurationImpl
 	private String linkServiceId = LINK_SERVICE_BEAN_ID;
 	private String taskSchedulerId = TASK_SCHEDULER_BEAN_ID;
 	private String taskQueueNameId = TASK_QUEUE_NAME_BEAN_ID;
+	private String taskSchedulerEnqueurerBeanId = TASK_SCHEDULER_ENQUEUER_BEAN_ID;
 	private String modelKeyTypeConverterId = MODEL_KEY_TYPE_CONVERTER_ID;
 	private String systemLoginTokenServiceBeanId = SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
@@ -325,6 +327,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.taskQueueNameId = taskQueueNameId;
+	}
+
+	@Override
+	public String getTaskSchedulerEnqueurerBeanId() {
+		return this.taskSchedulerEnqueurerBeanId;
+	}
+
+	public void setTaskSchedulerEnqueurerBeanId(String taskSchedulerEnqueurerBeanId) {
+		if (taskSchedulerEnqueurerBeanId == null) {
+			throw new IllegalArgumentException("taskSchedulerEnqueurerBeanId cannot be null.");
+		}
+
+		this.taskSchedulerEnqueurerBeanId = taskSchedulerEnqueurerBeanId;
 	}
 
 	@Override

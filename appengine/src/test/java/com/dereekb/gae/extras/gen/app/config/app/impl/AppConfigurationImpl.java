@@ -32,8 +32,8 @@ public class AppConfigurationImpl
 	private String appSecret = null;
 	private String appAdminEmail = "dereekb@gmail.com";
 
-	// TODO: This should point to the nginx docker container.
-	private String appDevelopmentProxyUrl = "http://localhost:8080";
+	private String appDevelopmentProxyUrl = "http://gae-nginx:8080";
+	private String appDevelopmentServerHostUrl = "http://localhost:4400";
 
 	private AppServicesConfigurer appServicesConfigurer;
 	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");
@@ -137,6 +137,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appDevelopmentProxyUrl = appDevelopmentProxyUrl;
+	}
+
+	@Override
+	public String getAppDevelopmentServerHostUrl() {
+		return this.appDevelopmentServerHostUrl;
+	}
+
+	public void setAppDevelopmentServerHostUrl(String appDevelopmentServerHostUrl) {
+		if (appDevelopmentServerHostUrl == null) {
+			throw new IllegalArgumentException("appDevelopmentServerHostUrl cannot be null.");
+		}
+
+		this.appDevelopmentServerHostUrl = appDevelopmentServerHostUrl;
 	}
 
 	@Override

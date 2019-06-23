@@ -60,6 +60,13 @@ public interface AppConfiguration {
 	 */
 	public String getAppDevelopmentProxyUrl();
 
+	/**
+	 * Returns the app's host URL for development.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppDevelopmentServerHostUrl();
+
 	public AppServiceConfigurationInfo getAppServiceConfigurationInfo();
 
 	public AppBeansConfiguration getAppBeans();

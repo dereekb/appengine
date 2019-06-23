@@ -15,6 +15,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigu
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
@@ -58,7 +59,6 @@ import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializer
 import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
-import com.dereekb.gae.server.taskqueue.scheduler.appengine.AppEngineTaskSchedulerEnqueuer;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -645,20 +645,21 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		@Override
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+			AppConfiguration appConfig = this.getAppConfig();
 
 			builder.comment("Task Queue");
 
-			String taskQueueNameBeanId = this.getAppConfig().getAppBeans().getTaskQueueNameId();
-			String appEngineEnqueuerBeanId = "taskEnqueuer";
+			String taskQueueNameBeanId = appConfig.getAppBeans().getTaskQueueNameId();
+
 			String authenticatorBeanId = "taskAuthenticator";
 
 			builder.stringBean(taskQueueNameBeanId, this.getAppConfig().getAppTaskQueueName());
 
-			builder.bean(appEngineEnqueuerBeanId).beanClass(AppEngineTaskSchedulerEnqueuer.class)
-					.property("queue").ref(taskQueueNameBeanId);
+			AppTaskSchedulerEnqueuerConfigurer taskSchedulerEnqueuerConfigurer = this.getAppConfig().getAppServicesConfigurer().getAppTaskSchedulerEnqueuerConfigurer();
+			taskSchedulerEnqueuerConfigurer.configureTaskSchedulerEnqueuerComponents(appConfig, builder);
 
 			builder.bean("taskScheduler").beanClass(TaskSchedulerImpl.class).c()
-			        .ref(appEngineEnqueuerBeanId)
+			        .ref(appConfig.getAppBeans().getTaskSchedulerEnqueurerBeanId())
 			        .ref(authenticatorBeanId);
 
 			builder.bean(authenticatorBeanId).beanClass(TaskSchedulerAuthenticatorImpl.class).c()

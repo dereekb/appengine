@@ -34,6 +34,8 @@ public interface AppBeansConfiguration {
 
 	public String getTaskQueueNameId();
 
+	public String getTaskSchedulerEnqueurerBeanId();
+
 	public String getSystemLoginTokenServiceBeanId();
 
 	public String getSystemLoginTokenFactoryBeanId();

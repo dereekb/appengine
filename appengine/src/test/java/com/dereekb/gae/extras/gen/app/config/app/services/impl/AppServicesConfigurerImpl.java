@@ -5,6 +5,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityC
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 
 /**
@@ -21,6 +22,19 @@ public class AppServicesConfigurerImpl
 	private AppEventServiceListenersConfigurer appEventServiceListenersConfigurer;
 	private AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer;
 	private AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer;
+	private AppTaskSchedulerEnqueuerConfigurer appTaskSchedulerEnqueuerConfigurer = new AppTaskSchedulerEnqueuerConfigurerImpl();
+
+	public AppServicesConfigurerImpl(AppServerInitializationConfigurer appServerInitializationConfigurer,
+	        AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
+	        AppEventServiceListenersConfigurer appEventServiceListenersConfigurer,
+	        AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer,
+	        AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer,
+	        AppTaskSchedulerEnqueuerConfigurer appTaskSchedulerEnqueuerConfigurer) {
+		this(appServerInitializationConfigurer, appLoginTokenSecurityConfigurer,
+				appEventServiceListenersConfigurer, appWebHookEventServiceConfigurer,
+				appModelKeyEventListenerConfigurer);
+		this.setAppTaskSchedulerEnqueuerConfigurer(appTaskSchedulerEnqueuerConfigurer);
+	}
 
 	public AppServicesConfigurerImpl(AppServerInitializationConfigurer appServerInitializationConfigurer,
 	        AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
@@ -68,6 +82,19 @@ public class AppServicesConfigurerImpl
 		}
 
 		this.appEventServiceListenersConfigurer = appEventServiceListenersConfigurer;
+	}
+
+	@Override
+	public AppTaskSchedulerEnqueuerConfigurer getAppTaskSchedulerEnqueuerConfigurer() {
+		return this.appTaskSchedulerEnqueuerConfigurer;
+	}
+
+	public void setAppTaskSchedulerEnqueuerConfigurer(AppTaskSchedulerEnqueuerConfigurer appTaskSchedulerEnqueuerConfigurer) {
+		if (appTaskSchedulerEnqueuerConfigurer == null) {
+			throw new IllegalArgumentException("appTaskSchedulerEnqueuerConfigurer cannot be null.");
+		}
+
+		this.appTaskSchedulerEnqueuerConfigurer = appTaskSchedulerEnqueuerConfigurer;
 	}
 
 	@Override

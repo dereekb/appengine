@@ -125,6 +125,14 @@ public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConver
 		return this.host;
 	}
 
+	public void setHostTarget(String hostTarget) {
+		if (hostTarget != null) {
+			this.setHost(new TaskRequestHostImpl(hostTarget));
+		} else {
+			this.host = null;
+		}
+	}
+
 	public void setHost(TaskRequestHost host) {
 		this.host = host;
 	}
@@ -136,6 +144,7 @@ public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConver
 		return builder.buildTaskOptions();
 	}
 
+	@Override
 	public TaskRequestReaderImpl makeReader(SecuredTaskRequest request) {
 		return new TaskRequestReaderImpl(request);
 	}
