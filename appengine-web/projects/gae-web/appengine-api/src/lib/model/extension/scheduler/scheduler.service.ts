@@ -8,6 +8,10 @@ import { HttpResponse } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { ClientApiResponse } from '../../client';
 
+export abstract class SchedulerService {
+    abstract schedule(request: ScheduleRequest): Observable<ScheduleResponse>;
+}
+
 export interface ScheduleRequest {
     readonly taskEntryName: string;
 }
@@ -16,8 +20,11 @@ export interface ScheduleResponse {
     readonly success: boolean;
 }
 
+/**
+ * SchedulerService implementation
+ */
 @Injectable()
-export class ClientSchedulerService extends AbstractClientService {
+export class ClientSchedulerService extends AbstractClientService implements SchedulerService {
 
     constructor(config: ClientServiceConfig) {
         super(config);

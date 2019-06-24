@@ -1,4 +1,4 @@
-import { ApiRouteConfiguration, ApiModuleInfo, ApiConfiguration } from '../lib/api.config';
+import { ApiModuleInfo, GaeApiModuleTypesConfiguration, GaeApiModuleRouteConfiguration, GaeApiModuleConfiguration } from '../lib/api.config';
 
 export class TestUtility {
 
@@ -9,13 +9,18 @@ export class TestUtility {
     };
   }
 
-  static testApiRouteConfig(): ApiRouteConfiguration {
-    const result = ApiRouteConfiguration.makeWithInfo(this.testModuleInfo());
+  static testApiRouteConfig(): GaeApiModuleRouteConfiguration {
+    const result = GaeApiModuleRouteConfiguration.makeWithInfo(this.testModuleInfo());
     return result;
   }
 
-  static testApiConfiguration(): ApiConfiguration {
-    const result = new ApiConfiguration(this.testModuleInfo(), this.testApiRouteConfig());
+  static testApiTypesConfig(): GaeApiModuleTypesConfiguration {
+    const result = new GaeApiModuleTypesConfiguration(['foo']);
+    return result;
+  }
+
+  static testApiModuleConfiguration(): GaeApiModuleConfiguration {
+    const result = new GaeApiModuleConfiguration(this.testModuleInfo(), this.testApiTypesConfig());
     return result;
   }
 

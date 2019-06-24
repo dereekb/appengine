@@ -4,7 +4,7 @@ export type ObjectAttribute = string;
 export type ExistingObject = string | number | boolean | symbol | object | any;
 export type PropertyKey = string | number;
 export type MakePropertyKeyFunction<T> = (input: T) => PropertyKey;
-export type MakeMapKeyFunction<K, T> = (input: T) => K | undefined;
+export type MakeMapKeysFunction<K, T> = (input: T) => K | K[] | undefined;
 export type IterateFunction<T> = (x: T, index: number) => any | undefined;
 
 export interface SeparateResult<T> {
@@ -240,17 +240,20 @@ export class ValueUtility {
   }
 
   /**
-   * Creates a new map from the input array and key function.
+   * Creates a new map from the input array and make keys function.
    */
-  static mapFromArray<K, T>(input: T[], makeKeyFn: MakeMapKeyFunction<K, T>): Map<K, T> {
+  static mapFromArray<K, T>(input: T[], makeKeysFn: MakeMapKeysFunction<K, T>): Map<K, T> {
     const map: Map<K, T> = new Map();
 
     input.forEach((value: T) => {
-      const key: K | undefined = makeKeyFn(value);
+      const keys: K | K[] | undefined = makeKeysFn(value);
+      const normalizedKeys: K[] | undefined = ValueUtility.normalizeArray(keys);
 
-      if (key !== undefined) {
-        map.set(key, value);
-      }
+      normalizedKeys.forEach((x) => {
+        if (x !== undefined) {
+          map.set(x, value);
+        }
+      });
     });
 
     return map;

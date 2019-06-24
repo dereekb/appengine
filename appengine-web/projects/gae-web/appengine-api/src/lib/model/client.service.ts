@@ -4,11 +4,11 @@ import { HttpResponse, HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ModelKey } from '@gae-web/appengine-utility';
-import { ApiRouteConfiguration } from '../api.config';
+import { ApiModuleRouteConfiguration } from '../api.config';
 
 export abstract class ClientServiceConfig {
     readonly httpClient: HttpClient;
-    readonly routeConfig: ApiRouteConfiguration;
+    readonly routeConfig: ApiModuleRouteConfiguration;
 }
 
 export abstract class ClientModelServiceConfig<T, O> extends ClientServiceConfig {
