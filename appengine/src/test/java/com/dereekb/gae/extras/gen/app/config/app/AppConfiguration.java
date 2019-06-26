@@ -40,11 +40,18 @@ public interface AppConfiguration {
 	public String getAppTaskQueueName();
 
 	/**
-	 * Returns the app secret. Is only required for remote apps.
+	 * Returns the app secret. Is only used by remote apps.
 	 *
 	 * @return {@link String}. Never {@code null}.
 	 */
 	public String getAppSecret();
+
+	/**
+	 * Returns the app system key.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppSystemKey();
 
 	/**
 	 * Returns the app's admin email account.

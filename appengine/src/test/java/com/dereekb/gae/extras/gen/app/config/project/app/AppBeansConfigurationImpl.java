@@ -14,6 +14,7 @@ public class AppBeansConfigurationImpl
 	public static final String APP_NAME_BEAN_ID = "serverAppName";
 	public static final String APP_ID_BEAN_ID = "serverAppId";
 	public static final String APP_SECRET_BEAN_ID = "serverAppSecret";
+	public static final String APP_SYSTEM_KEY_BEAN_ID = "serverAppSystemKey";
 
 	public static final String OBJECTIFY_INITIALIZER_BEAN_ID = "objectifyInitializer";
 	public static final String OBJECTIFY_DATABASE_BEAN_ID = "objectifyDatabase";
@@ -54,6 +55,7 @@ public class AppBeansConfigurationImpl
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
 	private String appNameBeanId = APP_NAME_BEAN_ID;
 	private String appIdBeanId = APP_ID_BEAN_ID;
+	private String appSystemKeyBeanId = APP_SYSTEM_KEY_BEAN_ID;
 	private String appSecretBeanId = APP_SECRET_BEAN_ID;
 
 	private String objectifyInitializerId = OBJECTIFY_INITIALIZER_BEAN_ID;
@@ -223,6 +225,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.appSecretBeanId = appSecretBeanId;
+	}
+
+	@Override
+	public String getAppSystemKeyBeanId() {
+		return this.appSystemKeyBeanId;
+	}
+
+	public void setAppSystemKeyBeanId(String appSystemKeyBeanId) {
+		if (appSystemKeyBeanId == null) {
+			throw new IllegalArgumentException("appSystemKeyBeanId cannot be null.");
+		}
+
+		this.appSystemKeyBeanId = appSystemKeyBeanId;
 	}
 
 	@Override

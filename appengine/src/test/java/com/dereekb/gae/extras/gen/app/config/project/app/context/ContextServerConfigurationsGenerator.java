@@ -33,8 +33,8 @@ import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasAnyRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
-import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
+import com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoImpl;
 import com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl;
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
@@ -128,8 +128,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppServiceName())
 		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppVersion());
 
-		builder.bean("productionAppInfo").beanClass(AppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
-		        .ref(appBeans.getAppNameBeanId()).ref(productionAppServiceInfoBeanId);
+		builder.bean("productionAppInfo").beanClass(SystemAppInfoImpl.class).c()
+				.ref(appBeans.getAppKeyBeanId())
+		        .ref(appBeans.getAppNameBeanId())
+		        .ref(appBeans.getAppSystemKeyBeanId())
+		        .ref(productionAppServiceInfoBeanId);
 
 		String appInfoFactoryBeanId = "appInfoFactory";
 		builder.bean(appInfoFactoryBeanId).beanClass(AppInfoFactoryImpl.class).property("productionSingleton")
@@ -141,6 +144,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		builder.longBean(appBeans.getAppIdBeanId(), this.getAppConfig().getAppId());
 		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());
 		builder.stringBean(appBeans.getAppSecretBeanId(), this.getAppConfig().getAppSecret());
+		builder.stringBean(appBeans.getAppSystemKeyBeanId(), this.getAppConfig().getAppSystemKey());
 
 		builder.comment("Development");
 		builder.stringBean(appBeans.getAppDevelopmentProxyUrlBeanId(), this.getAppConfig().getAppDevelopmentProxyUrl());
@@ -166,7 +170,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 			AppConfiguration appConfig = this.getAppConfig();
-			AppServerInitializationConfigurer configurer = appConfig.getAppServicesConfigurer().getAppServerInitializationConfigurer();
+			AppServerInitializationConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppServerInitializationConfigurer();
 			configurer.configureContextInitializationComponents(appConfig, builder);
 
 			return builder;
@@ -655,12 +660,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			builder.stringBean(taskQueueNameBeanId, this.getAppConfig().getAppTaskQueueName());
 
-			AppTaskSchedulerEnqueuerConfigurer taskSchedulerEnqueuerConfigurer = this.getAppConfig().getAppServicesConfigurer().getAppTaskSchedulerEnqueuerConfigurer();
+			AppTaskSchedulerEnqueuerConfigurer taskSchedulerEnqueuerConfigurer = this.getAppConfig()
+			        .getAppServicesConfigurer().getAppTaskSchedulerEnqueuerConfigurer();
 			taskSchedulerEnqueuerConfigurer.configureTaskSchedulerEnqueuerComponents(appConfig, builder);
 
 			builder.bean("taskScheduler").beanClass(TaskSchedulerImpl.class).c()
-			        .ref(appConfig.getAppBeans().getTaskSchedulerEnqueurerBeanId())
-			        .ref(authenticatorBeanId);
+			        .ref(appConfig.getAppBeans().getTaskSchedulerEnqueurerBeanId()).ref(authenticatorBeanId);
 
 			builder.bean(authenticatorBeanId).beanClass(TaskSchedulerAuthenticatorImpl.class).c()
 			        .ref(this.getAppConfig().getAppBeans().getSystemLoginTokenFactoryBeanId());

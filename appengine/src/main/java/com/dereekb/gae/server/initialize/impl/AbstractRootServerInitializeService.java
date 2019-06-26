@@ -5,8 +5,9 @@ import java.util.logging.Level;
 
 import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.server.app.model.app.AppLoginSecurityLevel;
-import com.dereekb.gae.server.app.model.app.info.AppInfo;
+import com.dereekb.gae.server.app.model.app.info.SystemAppInfo;
 import com.dereekb.gae.server.app.model.app.search.query.AppQueryInitializer.ObjectifyAppQuery;
+import com.dereekb.gae.server.auth.security.app.service.AppLoginSecretGenerator;
 import com.dereekb.gae.server.auth.security.app.service.impl.AppLoginSecretGeneratorImpl;
 import com.dereekb.gae.server.datastore.ForceGetterSetter;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
@@ -22,8 +23,9 @@ import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBui
 public abstract class AbstractRootServerInitializeService extends AbstractServerInitializeService {
 
 	private ObjectifyQueryService<App> appQueryService;
+	private AppLoginSecretGenerator appLoginSecretGenerator = AppLoginSecretGeneratorImpl.SINGLETON;
 
-	public AbstractRootServerInitializeService(AppInfo appInfo,
+	public AbstractRootServerInitializeService(SystemAppInfo appInfo,
 	        ForceGetterSetter<App> appGetterSetter,
 	        ObjectifyQueryService<App> appQueryService) {
 		super(appInfo, appGetterSetter);
@@ -40,6 +42,18 @@ public abstract class AbstractRootServerInitializeService extends AbstractServer
 		}
 
 		this.appQueryService = appQueryService;
+	}
+
+	public AppLoginSecretGenerator getAppLoginSecretGenerator() {
+		return this.appLoginSecretGenerator;
+	}
+
+	public void setAppLoginSecretGenerator(AppLoginSecretGenerator appLoginSecretGenerator) {
+		if (appLoginSecretGenerator == null) {
+			throw new IllegalArgumentException("appLoginSecretGenerator cannot be null.");
+		}
+
+		this.appLoginSecretGenerator = appLoginSecretGenerator;
 	}
 
 	@Override
@@ -116,7 +130,7 @@ public abstract class AbstractRootServerInitializeService extends AbstractServer
 		app.setLevel(AppLoginSecurityLevel.ROOT);
 
 		// Generate Secret
-		app.setSecret(AppLoginSecretGeneratorImpl.SINGLETON.generateSecret());
+		app.setSecret(this.appLoginSecretGenerator.generateSecret());
 
 		// Don't initialize yet though.
 		app.setInitialized(false);

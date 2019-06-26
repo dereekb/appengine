@@ -34,6 +34,15 @@ public class AppAttributeUpdater
 		// Only an admin can change the level and secret of an app.
 		if (LoginSecurityContext.safeIsAdministrator()) {
 
+			// System
+			String systemKey = template.getSystemKey();
+
+			if (systemKey != null && systemKey != target.getSystemKey()) {
+				target.setSystemKey(systemKey);
+				LOGGER.warning("Admin just changed the system key of App '" + target.getModelKey() + "' to: "
+				        + target.getSystemKey());
+			}
+
 			// Level
 			Integer levelCode = template.getLevelCode();
 
@@ -48,8 +57,7 @@ public class AppAttributeUpdater
 
 			if (secret != null && secret != target.getSecret()) {
 				target.setSecret(secret);
-				LOGGER.warning("Admin just changed the secret of App '" + target.getModelKey() + "' to: "
-				        + target.getAppLoginSecurityLevel());
+				LOGGER.warning("Admin just changed the secret of App '" + target.getModelKey());
 			}
 
 		}

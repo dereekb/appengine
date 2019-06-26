@@ -54,6 +54,15 @@ public class App extends DatedDatabaseModel
 	private Long identifier;
 
 	/**
+	 * System identifier that is indexed and used for querying.
+	 *
+	 * This should only be used for system applications.
+	 */
+	@Index
+	@IgnoreSave({ IfEmpty.class })
+	private String systemKey;
+
+	/**
 	 * Application name.
 	 */
 	private String name;
@@ -106,6 +115,14 @@ public class App extends DatedDatabaseModel
 
 	public void setIdentifier(Long identifier) {
 		this.identifier = identifier;
+	}
+
+	public String getSystemKey() {
+		return this.systemKey;
+	}
+
+	public void setSystemKey(String systemKey) {
+		this.systemKey = systemKey;
 	}
 
 	public String getName() {

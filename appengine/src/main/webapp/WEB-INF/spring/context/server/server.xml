@@ -5,10 +5,11 @@
     <constructor-arg index="1" value="test"/>
     <constructor-arg index="2" value="v1"/>
   </bean>
-  <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl" id="productionAppInfo">
+  <bean class="com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoImpl" id="productionAppInfo">
     <constructor-arg index="0" ref="serverAppKey"/>
     <constructor-arg index="1" ref="serverAppName"/>
-    <constructor-arg index="2" ref="productionAppServiceInfo"/>
+    <constructor-arg index="2" ref="serverAppSystemKey"/>
+    <constructor-arg index="3" ref="productionAppServiceInfo"/>
   </bean>
   <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl" id="appInfoFactory">
     <property name="productionSingleton" ref="productionAppInfo"/>
@@ -24,6 +25,9 @@
     <constructor-arg index="0" value="GAE Core Test App"/>
   </bean>
   <bean class="java.lang.String" id="serverAppSecret">
+    <constructor-arg index="0" value=""/>
+  </bean>
+  <bean class="java.lang.String" id="serverAppSystemKey">
     <constructor-arg index="0" value=""/>
   </bean>
   <!--Development-->

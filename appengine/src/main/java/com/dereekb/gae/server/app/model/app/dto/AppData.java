@@ -18,6 +18,7 @@ public class AppData extends DatabaseModelData {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
+	private String systemKey;
 	private String secret;
 	private Integer level;
 
@@ -39,6 +40,14 @@ public class AppData extends DatabaseModelData {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSystemKey() {
+		return this.systemKey;
+	}
+
+	public void setSystemKey(String systemKey) {
+		this.systemKey = systemKey;
 	}
 
 	public String getSecret() {

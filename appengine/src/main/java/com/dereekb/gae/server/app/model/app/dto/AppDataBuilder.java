@@ -30,6 +30,7 @@ public final class AppDataBuilder extends DatedDatabaseModelDataBuilder<App, App
 		// Info
 		data.setName(input.getName());
 		data.setSecret(input.getSecret());
+		data.setSystemKey(input.getSystemKey());
 		data.setLevel(input.getLevelCode());
 
 		// Links

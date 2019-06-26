@@ -33,6 +33,7 @@ public final class AppDataReader extends DatedDatabaseModelDataReader<App, AppDa
 		// Info
 		model.setName(input.getName());
 		model.setSecret(input.getSecret());
+		model.setSystemKey(input.getSystemKey());
 		model.setLevelCode(input.getLevel());
 
 		// Links

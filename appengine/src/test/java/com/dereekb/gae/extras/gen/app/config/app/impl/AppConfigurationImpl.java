@@ -30,6 +30,7 @@ public class AppConfigurationImpl
 	private String appName = "app";
 	private String appTaskQueueName = "app";
 	private String appSecret = null;
+	private String appSystemKey = null;
 	private String appAdminEmail = "dereekb@gmail.com";
 
 	private String appDevelopmentProxyUrl = "http://gae-nginx:8080";
@@ -111,6 +112,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appSecret = appSecret;
+	}
+
+	@Override
+	public String getAppSystemKey() {
+		return this.appSystemKey;
+	}
+
+	public void setAppSystemKey(String appSystemKey) {
+		if (appSystemKey == null) {
+			throw new IllegalArgumentException("appSystemKey cannot be null.");
+		}
+
+		this.appSystemKey = appSystemKey;
 	}
 
 	@Override

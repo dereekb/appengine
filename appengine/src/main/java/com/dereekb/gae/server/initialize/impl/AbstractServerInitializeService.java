@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 
 import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.app.model.app.App;
-import com.dereekb.gae.server.app.model.app.info.AppInfo;
 import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfoUtility;
+import com.dereekb.gae.server.app.model.app.info.SystemAppInfo;
 import com.dereekb.gae.server.app.model.app.info.exception.AppInequalityException;
 import com.dereekb.gae.server.datastore.GetterSetter;
 import com.dereekb.gae.server.initialize.ServerInitializeService;
@@ -29,19 +29,19 @@ public abstract class AbstractServerInitializeService
 	/**
 	 * App Info for the current app.
 	 */
-	private AppInfo appInfo;
+	private SystemAppInfo appInfo;
 	private GetterSetter<App> appGetterSetter;
 
-	public AbstractServerInitializeService(AppInfo appInfo, GetterSetter<App> appGetterSetter) {
+	public AbstractServerInitializeService(SystemAppInfo appInfo, GetterSetter<App> appGetterSetter) {
 		this.setAppInfo(appInfo);
 		this.setAppGetterSetter(appGetterSetter);
 	}
 
-	public AppInfo getAppInfo() {
+	public SystemAppInfo getAppInfo() {
 		return this.appInfo;
 	}
 
-	public void setAppInfo(AppInfo appInfo) {
+	public void setAppInfo(SystemAppInfo appInfo) {
 		if (appInfo == null) {
 			throw new IllegalArgumentException("appInfo cannot be null.");
 		}
@@ -166,8 +166,6 @@ public abstract class AbstractServerInitializeService
 
 	/**
 	 * Attempt to find the app using another method.
-	 * <p>
-	 * Is only used in production for the root app.
 	 *
 	 * @return {@link App}, or {@code null} if not found.
 	 */
