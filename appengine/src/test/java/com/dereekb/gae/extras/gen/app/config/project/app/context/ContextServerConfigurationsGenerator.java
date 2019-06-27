@@ -32,8 +32,8 @@ import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLHttpB
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasAnyRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
-import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
+import com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoImpl;
 import com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl;
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
@@ -135,7 +135,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		        .ref(productionAppServiceInfoBeanId);
 
 		String appInfoFactoryBeanId = "appInfoFactory";
-		builder.bean(appInfoFactoryBeanId).beanClass(AppInfoFactoryImpl.class).property("productionSingleton")
+		builder.bean(appInfoFactoryBeanId).beanClass(SystemAppInfoFactoryImpl.class).property("productionSingleton")
 		        .ref("productionAppInfo");
 
 		builder.bean(appBeans.getAppInfoBeanId()).factoryBean(appInfoFactoryBeanId).factoryMethod("make");

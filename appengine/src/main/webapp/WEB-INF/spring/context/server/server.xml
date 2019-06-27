@@ -11,7 +11,7 @@
     <constructor-arg index="2" ref="serverAppSystemKey"/>
     <constructor-arg index="3" ref="productionAppServiceInfo"/>
   </bean>
-  <bean class="com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl" id="appInfoFactory">
+  <bean class="com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoFactoryImpl" id="appInfoFactory">
     <property name="productionSingleton" ref="productionAppInfo"/>
   </bean>
   <bean factory-bean="appInfoFactory" factory-method="make" id="serverAppInfo"/>
