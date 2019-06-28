@@ -1,4 +1,4 @@
 #!/bin/sh
 echo "Deploying to Artifactory."
 cd "./appengine"
-sh -c "mvn deploy -DskipTests=true"
+sh -c "mvn deploy -DskipTests=true -Pdeploy"
