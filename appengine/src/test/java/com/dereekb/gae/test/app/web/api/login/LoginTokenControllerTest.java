@@ -1,8 +1,11 @@
-package com.dereekb.gae.test.applications.api.api.login.token;
+package com.dereekb.gae.test.app.web.api.login;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,12 +19,11 @@ import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.utilities.time.DateUtility;
 import com.dereekb.gae.web.api.auth.controller.token.impl.TokenValidationRequestImpl;
 
-public class LoginTokenControllerTest extends ApiApplicationTestContext {
+public class LoginTokenControllerTest extends AbstractAppTestingContext {
 
 	private static final String TEST_USERNAME = "tokenUsername";
 	private static final String TEST_PASSWORD = "tokenPassword";

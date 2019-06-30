@@ -1,10 +1,12 @@
-package com.dereekb.gae.test.applications.api.api.login.token;
+package com.dereekb.gae.test.app.web.api.login;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,12 +21,13 @@ import com.dereekb.gae.client.api.auth.token.exception.ClientLoginTokenValidatio
 import com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationRequestImpl;
 import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
+import com.dereekb.gae.server.app.model.app.info.SystemAppInfo;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityService;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.utilities.time.DateUtility;
 
 import io.jsonwebtoken.Claims;
@@ -36,7 +39,11 @@ import io.jsonwebtoken.Jwts;
  * @author dereekb
  *
  */
-public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiApplicationTestContext {
+public class ClientLoginTokenValidationServiceRequestSenderTest extends AbstractAppTestingContext {
+
+	@Autowired
+	@Qualifier("serverAppInfo")
+	private SystemAppInfo serverAppInfo;
 
 	@Autowired
 	@Qualifier("loginTokenService")
@@ -115,7 +122,41 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 	}
 
 	@Test
-	public void testValidateTokenWithInvalidSignature()
+	public void testValidateTokenWithUnknownAppThrowsException()
+	        throws ClientLoginTokenExpiredException,
+	            ClientLoginTokenInvalidException,
+	            ClientLoginTokenInvalidSignatureException,
+	            ClientIllegalArgumentException,
+	            ClientRequestFailureException {
+
+		String UNKNOWN_APP_ID = "1234";
+
+		LoginTokenImpl loginToken = new LoginTokenImpl();
+		loginToken.setLogin(1L);
+		loginToken.setLoginPointer("pointer");
+		loginToken.setExpiration(DateUtility.getDateIn(60 * 1000L));
+		loginToken.setIssued(new Date());
+		loginToken.setRefreshAllowed(true);
+		loginToken.setApp(UNKNOWN_APP_ID);
+
+		String encodedToken = this.loginTokenService.encodeLoginToken(loginToken);
+		String signature = "signatureDoesNotMatter";
+		ClientLoginTokenValidationRequest request = new ClientLoginTokenValidationRequestImpl(encodedToken,
+		        signature);
+
+		try {
+			this.sender.validateToken(request);
+			fail("Should have failed.");
+		} catch (ClientLoginTokenInvalidException e) {
+			// Success
+		} catch (ClientLoginTokenValidationException e) {
+			e.printStackTrace();
+			fail("Should have not failed for this reason: " + e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void testValidateTokenWithInvalidSignatureThrowsException()
 	        throws ClientLoginTokenExpiredException,
 	            ClientLoginTokenInvalidException,
 	            ClientLoginTokenInvalidSignatureException,
@@ -128,7 +169,7 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 		loginToken.setExpiration(DateUtility.getDateIn(60 * 1000L));
 		loginToken.setIssued(new Date());
 		loginToken.setRefreshAllowed(true);
-		loginToken.setApp("1234");
+		loginToken.setApp(this.serverAppInfo.getModelKey().toString());
 
 		String encodedToken = this.loginTokenService.encodeLoginToken(loginToken);
 		String invalidSignature = "INVALID_SIGNATURE";
@@ -141,7 +182,8 @@ public class ClientLoginTokenValidationServiceRequestSenderTest extends ApiAppli
 		} catch (ClientLoginTokenInvalidSignatureException e) {
 			// Success
 		} catch (ClientLoginTokenValidationException e) {
-			fail("Should have not failed for this reason.");
+			e.printStackTrace();
+			fail("Should have not failed for this reason: " + e.getLocalizedMessage());
 		}
 	}
 

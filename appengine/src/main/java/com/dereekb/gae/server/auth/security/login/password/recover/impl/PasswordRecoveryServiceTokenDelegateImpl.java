@@ -89,7 +89,7 @@ public class PasswordRecoveryServiceTokenDelegateImpl
 	}
 
 	@Override
-	public void verifyLoginTokenEmail(String verificationToken) {
+	public void verifyLoginTokenEmail(String verificationToken) throws PasswordRecoveryVerificationExpiredException, PasswordRecoveryVerificationException {
 
 		try {
 			DecodedLoginToken<LoginToken> decoded = this.loginTokenService.decodeLoginToken(verificationToken);

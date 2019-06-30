@@ -1,6 +1,9 @@
-package com.dereekb.gae.test.applications.api.api.login.oauth;
+package com.dereekb.gae.test.app.web.api.login;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -13,8 +16,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthServiceManager;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAuthorizationInfoImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthLoginInfoImpl;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginController;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,7 +30,7 @@ import com.google.gson.JsonSyntaxException;
  *
  * @see OAuthLoginController
  */
-public class OAuthLoginControllerTest extends ApiApplicationTestContext {
+public class OAuthLoginControllerTest extends AbstractAppTestingContext {
 
 	private JsonParser parser = new JsonParser();
 
@@ -61,7 +63,7 @@ public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
-		assertTrue("Expected 400 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 400);
+		assertTrue(loginResponse.getStatus() == 400, "Expected 400 but got " + loginResponse.getStatus() + ".");
 		assertNotNull(loginResponseData);
 
 		this.waitForTaskQueueToComplete();
@@ -81,8 +83,7 @@ public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
-		assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
-		        loginResponse.getStatus() == 400);
+		assertTrue(loginResponse.getStatus() == 400, "Expected a bad request but got: " + loginResponse.getStatus());
 		assertNotNull(loginResponseData);
 	}
 
@@ -91,8 +92,7 @@ public class OAuthLoginControllerTest extends ApiApplicationTestContext {
 		MvcResult loginResult = this.loginTestUtility.sendCreateOAuthLoginWithToken("google", null);
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 
-		assertTrue("Expected a bad request but got: " + loginResponse.getStatus(),
-		        loginResponse.getStatus() == 400);
+		assertTrue(loginResponse.getStatus() == 400, "Expected a bad request but got: " + loginResponse.getStatus());
 	}
 
 }

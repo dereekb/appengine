@@ -202,7 +202,7 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 		Login admin = this.makeAdminLogin(isProduction);
 		ListUtility.addElements(logins, admin);
 
-		if (this.generateUserLoginsInProduction) {
+		if (this.generateUserLoginsInProduction && isProduction) {
 			Collection<Login> developmentLogins = this.makeUserLogins(isProduction);
 			ListUtility.addElements(logins, developmentLogins);
 		}

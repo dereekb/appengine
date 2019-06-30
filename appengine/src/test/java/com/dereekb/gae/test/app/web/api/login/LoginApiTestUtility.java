@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.app.mock.web.api.auth;
+package com.dereekb.gae.test.app.web.api.login;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -1,6 +1,9 @@
-package com.dereekb.gae.test.applications.api.api.login.password;
+package com.dereekb.gae.test.app.web.api.login;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +19,7 @@ import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.dereekb.gae.test.applications.api.api.login.LoginApiTestUtility;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.web.api.auth.controller.password.PasswordLoginController;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
@@ -31,7 +33,7 @@ import com.google.gson.JsonParser;
  * @author dereekb
  *
  */
-public class PasswordLoginControllerTest extends ApiApplicationTestContext {
+public class PasswordLoginControllerTest extends AbstractAppTestingContext {
 
 	private static final String TEST_USERNAME = "pUsername";
 	private static final String TEST_PASSWORD = "pPassword";
@@ -120,8 +122,7 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse createResponse = createResult.getResponse();
 		String createResponseData = createResponse.getContentAsString();
 
-		assertTrue("Expected 200 but got " + createResponse.getStatus() + ".",
-		        createResponse.getStatus() == 200);
+		assertTrue(createResponse.getStatus() == 200, "Expected 200 but got " + createResponse.getStatus() + ".");
 		assertNotNull(createResponseData);
 
 		this.waitForTaskQueueToComplete();
@@ -143,7 +144,7 @@ public class PasswordLoginControllerTest extends ApiApplicationTestContext {
 		MockHttpServletResponse loginResponse = loginResult.getResponse();
 		String loginResponseData = loginResponse.getContentAsString();
 
-		assertTrue("Expected 200 but got " + loginResponse.getStatus() + ".", loginResponse.getStatus() == 200);
+		assertTrue(loginResponse.getStatus() == 200, "Expected 200 but got " + loginResponse.getStatus() + ".");
 		assertNotNull(loginResponseData);
 	}
 

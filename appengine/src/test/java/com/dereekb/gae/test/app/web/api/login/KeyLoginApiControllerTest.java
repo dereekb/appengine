@@ -1,8 +1,13 @@
-package com.dereekb.gae.test.applications.api.api.login.key;
+package com.dereekb.gae.test.app.web.api.login;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -16,8 +21,8 @@ import com.dereekb.gae.server.auth.security.login.key.KeyLoginAuthenticationServ
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusService;
 import com.dereekb.gae.server.auth.security.login.key.KeyLoginStatusServiceManager;
 import com.dereekb.gae.server.auth.security.login.key.exception.KeyLoginUnavailableException;
-import com.dereekb.gae.test.applications.api.ApiApplicationTestContext;
-import com.dereekb.gae.test.mock.auth.MockKeyLoginControllerUtility;
+import com.dereekb.gae.test.app.mock.auth.MockKeyLoginControllerUtility;
+import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 import com.dereekb.gae.web.api.auth.controller.key.KeyLoginController;
 import com.dereekb.gae.web.api.model.crud.request.ApiCreateRequest;
@@ -32,7 +37,8 @@ import com.google.gson.JsonParser;
  * @author dereekb
  *
  */
-public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
+@Disabled
+public class KeyLoginApiControllerTest extends AbstractAppTestingContext {
 
 	private Gson gson = new GsonBuilder().create();
 	private JsonParser parser = new JsonParser();
@@ -121,7 +127,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		        .andReturn();
 		MockHttpServletResponse tryApiKeyResponse = tryApiKeyResult.getResponse();
 
-		assertTrue("LoginKey API should be forbidden to API keys.", tryApiKeyResponse.getStatus() == 403);
+		assertTrue(tryApiKeyResponse.getStatus() == 403, "LoginKey API should be forbidden to API keys.");
 
 		// Test API Key
 
@@ -130,13 +136,13 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 	@Test
 	public void testIncompleteAPIAuthLogin() throws Exception {
 		MockHttpServletResponse response = this.mockLoginUtil.mockApiLoginRequest(null, "NONE");
-		assertTrue("API Key Authentication should fail.", response.getStatus() == 400);
+		assertTrue(response.getStatus() == 400, "API Key Authentication should fail.");
 	}
 
 	@Test
 	public void testNonexistantAPIAuthLogin() throws Exception {
 		MockHttpServletResponse response = this.mockLoginUtil.mockApiLoginRequest("101010101", "NONE");
-		assertTrue("API Key Authentication should fail.", response.getStatus() == 403);
+		assertTrue(response.getStatus() == 403, "API Key Authentication should fail.");
 	}
 
 	@Test
@@ -150,12 +156,10 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		String apiKeyId = this.createApiKey(name, verification, true);
 
 		MockHttpServletResponse response = this.mockLoginUtil.mockApiLoginRequest(apiKeyId, "INVALID VERIFICATION");
-		assertTrue("API Key Authentication should fail.",
-		        response.getStatus() == HttpServletResponse.SC_FORBIDDEN);
+		assertTrue(response.getStatus() == HttpServletResponse.SC_FORBIDDEN, "API Key Authentication should fail.");
 
 		response = this.mockLoginUtil.mockApiLoginRequest(apiKeyId, null);
-		assertTrue("API Key Authentication should fail.",
-		        response.getStatus() == HttpServletResponse.SC_BAD_REQUEST);
+		assertTrue(response.getStatus() == HttpServletResponse.SC_BAD_REQUEST, "API Key Authentication should fail.");
 	}
 
 	private String createApiKey(String name,
@@ -167,7 +171,7 @@ public class KeyLoginApiControllerTest extends ApiApplicationTestContext {
 		boolean success = response.getStatus() == 200;
 
 		if (assertSuccess) {
-			assertTrue("Creating API Key Failed.", success);
+			assertTrue(success, "Creating API Key Failed.");
 		}
 
 		String apiKeyId = null;
