@@ -6,6 +6,7 @@
     <property name="mailService" ref="mailService"/>
     <property name="passwordLoginService" ref="passwordLoginService"/>
     <property name="loginRegisterService" ref="loginRegisterService"/>
+    <property name="loginRolesService" ref="loginRolesService"/>
   </bean>
   <bean class="com.dereekb.gae.utilities.spring.initializer.impl.SpringInitializerImpl" id="springInitializer">
     <constructor-arg index="0">

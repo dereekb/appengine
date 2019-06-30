@@ -83,6 +83,10 @@
     <constructor-arg index="0" ref="loginRegistry"/>
     <constructor-arg index="1" ref="loginScheduleCreateReview"/>
   </bean>
+  <bean class="com.dereekb.gae.server.auth.security.login.impl.LoginRolesServiceImpl" id="loginRolesService">
+    <constructor-arg index="0" ref="loginRegistry"/>
+    <constructor-arg index="1" ref="loginAdminRoles"/>
+  </bean>
   <!--Refresh Token Service-->
   <bean class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl" id="refreshTokenService">
     <constructor-arg index="0" ref="loginRegistry"/>

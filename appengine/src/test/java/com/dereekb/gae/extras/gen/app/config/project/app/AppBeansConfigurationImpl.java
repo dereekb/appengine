@@ -44,6 +44,8 @@ public class AppBeansConfigurationImpl
 	public static final String CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID = "clientLoginTokenModelContextServiceEntryFactory";
 	public static final String PASSWORD_LOGIN_SERVICE_BEAN_ID = "passwordLoginService";
 	public static final String LOGIN_REGISTER_SERVICE_BEAN_ID = "loginRegisterService";
+	public static final String LOGIN_ADMIN_ROLES_BEAN_ID = "loginAdminRoles";
+	public static final String LOGIN_ROLES_SERVICE_BEAN_ID = "loginRolesService";
 	public static final String LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID = "loginTokenUserDetailsBuilder";
 
 	public static final String ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "adminOnlySecurityModelQueryTask";
@@ -93,6 +95,8 @@ public class AppBeansConfigurationImpl
 		private String clientLoginTokenModelContextServiceEntryFactoryBeanId = CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID;
 		private String passwordLoginServiceBeanId = PASSWORD_LOGIN_SERVICE_BEAN_ID;
 		private String loginRegisterServiceBeanId = LOGIN_REGISTER_SERVICE_BEAN_ID;
+		private String loginAdminRolesBeanId = LOGIN_ADMIN_ROLES_BEAN_ID;
+		private String loginRolesServiceBeanId = LOGIN_ROLES_SERVICE_BEAN_ID;
 		private String loginTokenUserDetailsBuilderBeanId = LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID;
 
 		// MARK: AppUtilityBeansConfiguration
@@ -121,6 +125,32 @@ public class AppBeansConfigurationImpl
 			}
 
 			this.passwordLoginServiceBeanId = passwordLoginServiceBeanId;
+		}
+
+		@Override
+		public String getLoginAdminRolesBeanId() {
+			return this.loginAdminRolesBeanId;
+		}
+
+		public void setLoginAdminRolesBeanId(String loginAdminRolesBeanId) {
+			if (loginAdminRolesBeanId == null) {
+				throw new IllegalArgumentException("loginAdminRolesBeanId cannot be null.");
+			}
+
+			this.loginAdminRolesBeanId = loginAdminRolesBeanId;
+		}
+
+		@Override
+		public String getLoginRolesServiceBeanId() {
+			return this.loginRolesServiceBeanId;
+		}
+
+		public void setLoginRolesServiceBeanId(String loginRolesServiceBeanId) {
+			if (loginRolesServiceBeanId == null) {
+				throw new IllegalArgumentException("loginRolesServiceBeanId cannot be null.");
+			}
+
+			this.loginRolesServiceBeanId = loginRolesServiceBeanId;
 		}
 
 		@Override

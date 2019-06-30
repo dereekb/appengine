@@ -58,7 +58,8 @@ public class LoginServerAppServerInitializationConfigurerImpl extends AbstractAp
         .property("adminEmail").value(appConfig.getAppAdminEmail()).up()
         .property("mailService").ref(appConfig.getAppBeans().getMailServiceBeanId()).up()
         .property("passwordLoginService").ref(appConfig.getAppBeans().getUtilityBeans().getPasswordLoginServiceBeanId()).up()
-        .property("loginRegisterService").ref(appConfig.getAppBeans().getUtilityBeans().getLoginRegisterServiceBeanId());
+        .property("loginRegisterService").ref(appConfig.getAppBeans().getUtilityBeans().getLoginRegisterServiceBeanId()).up()
+        .property("loginRolesService").ref(appConfig.getAppBeans().getUtilityBeans().getLoginRolesServiceBeanId());
 
 	}
 

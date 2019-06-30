@@ -558,9 +558,13 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .value("ROLE_USER").up().up().up().bean().beanClass(SimpleGrantedAuthority.class).c()
 			        .value("ROLE_ANON");
 
+			// TODO: Configure this better so the decoder can also generate the admin roles that are sent to the XML.
+
 			builder.bean("loginGrantedAuthorityDecoder").beanClass(GrantedAuthorityDecoderImpl.class)
 			        .factoryMethod("withStringMap").c().map().keyType(Integer.class).valueType(String.class)
 			        .value("0", "ROLE_ADMIN");
+
+			builder.longBean(this.getAppConfig().getAppBeans().getUtilityBeans().getLoginAdminRolesBeanId(), 0x1L);
 
 			builder.comment("Login Token System Factory");
 			this.getAppConfig().getAppSecurityBeansConfigurer().configureSystemLoginTokenFactory(this.getAppConfig(),

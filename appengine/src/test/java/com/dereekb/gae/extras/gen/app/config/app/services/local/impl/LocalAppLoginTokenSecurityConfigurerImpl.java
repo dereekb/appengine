@@ -9,6 +9,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl;
 import com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl;
+import com.dereekb.gae.server.auth.security.login.impl.LoginRolesServiceImpl;
 import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
 import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginAuthenticationServiceImpl;
 import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginStatusServiceManagerImpl;
@@ -41,7 +42,7 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		AppSecurityBeansConfigurer appSecurityBeansConfigurer = appConfig.getAppSecurityBeansConfigurer();
 
 		// TODO: Update to pull signatures from JSON file or similar file
-		// not included in git.
+		// not included in git, or from ENV
 
 		builder.comment("Local Login Service");
 		builder.comment("Signatures");
@@ -88,11 +89,11 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		builder.comment("OAuth Service");
 		builder.bean("oAuthLoginService").beanClass(OAuthLoginServiceImpl.class).c().ref("loginPointerService");
 
-
 		String oAuthLoginServiceMapId = "oAuthLoginServiceMap";
 		appSecurityBeansConfigurer.configureOAuthServiceManagerMap(appConfig, builder, oAuthLoginServiceMapId);
 
-		builder.bean("oAuthServiceManager").beanClass(OAuthServiceManagerImpl.class).c().ref("oAuthLoginService").ref(oAuthLoginServiceMapId);
+		builder.bean("oAuthServiceManager").beanClass(OAuthServiceManagerImpl.class).c().ref("oAuthLoginService")
+		        .ref(oAuthLoginServiceMapId);
 
 		builder.comment("KeyLogin Service");
 		builder.bean("keyLoginStatusServiceManager").beanClass(KeyLoginStatusServiceManagerImpl.class).c()
@@ -108,6 +109,11 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 
 		builder.bean("newLoginGenerator").beanClass(NewLoginGeneratorImpl.class).c().ref("loginRegistry")
 		        .ref("loginScheduleCreateReview");
+
+		builder.bean(appConfig.getAppBeans().getUtilityBeans().getLoginRolesServiceBeanId())
+		        .beanClass(LoginRolesServiceImpl.class).c()
+		        .ref("loginRegistry")
+		        .ref(appConfig.getAppBeans().getUtilityBeans().getLoginAdminRolesBeanId());
 
 		builder.comment("Refresh Token Service");
 		builder.bean("refreshTokenService").beanClass(RefreshTokenServiceImpl.class).c().ref("loginRegistry")

@@ -196,6 +196,9 @@
       </map>
     </constructor-arg>
   </bean>
+  <bean class="java.lang.Long" id="loginAdminRoles">
+    <constructor-arg index="0" value="1"/>
+  </bean>
   <!--Login Token System Factory-->
   <!--Login Token System-->
   <bean class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenServiceImpl" id="systemLoginTokenService">
