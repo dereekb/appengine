@@ -80,7 +80,7 @@ public class ClientApiResponseAccessorBuilderImpl
 		try {
 			return this.buildAccessorWithData(jsonData, response.getStatus());
 		} catch (IOException e) {
-			throw new NotClientApiResponseException(null, "Client Json Response parsing failed.", e);
+			throw new NotClientApiResponseException(response, "Client Json Response parsing failed.", e);
 		}
 	}
 
