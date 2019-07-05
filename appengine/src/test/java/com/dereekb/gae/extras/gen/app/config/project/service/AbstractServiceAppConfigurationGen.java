@@ -2,6 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.project.service;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
@@ -14,6 +15,8 @@ import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 
 public abstract class AbstractServiceAppConfigurationGen {
 
+	public static final String GENERATOR_JUNIT_TEST_FLAG = "appgen";
+
 	public static final String DEFAULT_APP_WEB_INF_PATH = "src/main/webapp/WEB-INF";
 	public static final String DEFAULT_APP_TEST_SPRING_PATH = "src/test/webapp";
 
@@ -25,6 +28,7 @@ public abstract class AbstractServiceAppConfigurationGen {
 
 	// MARK: Configurations
 	@Test
+	@Tag(GENERATOR_JUNIT_TEST_FLAG)
 	public final void makeConfigurations() throws IOException {
 		AppConfiguration configuration = this.makeAppSpringConfiguration();
 		this.generateWebInfConfigurations(configuration);

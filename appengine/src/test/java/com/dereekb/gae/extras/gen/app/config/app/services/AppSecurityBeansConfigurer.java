@@ -49,4 +49,8 @@ public interface AppSecurityBeansConfigurer
 	                                            SpringBeansXMLBuilder builder,
 	                                            String oAuthLoginServiceMapId);
 
+	public void configureNewLoginGenerator(AppConfiguration appConfig,
+	                                       SpringBeansXMLBuilder builder,
+	                                       String newLoginGeneratorId);
+
 }

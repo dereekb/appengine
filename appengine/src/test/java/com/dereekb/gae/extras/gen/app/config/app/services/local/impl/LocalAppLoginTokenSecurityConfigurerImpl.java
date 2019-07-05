@@ -10,7 +10,6 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.security.login.impl.LoginPointerServiceImpl;
 import com.dereekb.gae.server.auth.security.login.impl.LoginRegisterServiceImpl;
 import com.dereekb.gae.server.auth.security.login.impl.LoginRolesServiceImpl;
-import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
 import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginAuthenticationServiceImpl;
 import com.dereekb.gae.server.auth.security.login.key.impl.KeyLoginStatusServiceManagerImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.manager.OAuthServiceManagerImpl;
@@ -107,8 +106,8 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		        .beanClass(LoginRegisterServiceImpl.class).c().ref("newLoginGenerator").ref("loginRegistry")
 		        .ref("loginPointerRegistry");
 
-		builder.bean("newLoginGenerator").beanClass(NewLoginGeneratorImpl.class).c().ref("loginRegistry")
-		        .ref("loginScheduleCreateReview");
+		String newLoginGeneratorId = "newLoginGenerator";
+		appSecurityBeansConfigurer.configureNewLoginGenerator(appConfig, builder, newLoginGeneratorId);
 
 		builder.bean(appConfig.getAppBeans().getUtilityBeans().getLoginRolesServiceBeanId())
 		        .beanClass(LoginRolesServiceImpl.class).c()

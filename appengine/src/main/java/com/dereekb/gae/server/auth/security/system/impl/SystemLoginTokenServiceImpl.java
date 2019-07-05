@@ -6,7 +6,7 @@ import com.dereekb.gae.server.auth.security.system.SystemLoginTokenResponse;
 import com.dereekb.gae.server.auth.security.system.SystemLoginTokenService;
 import com.dereekb.gae.server.auth.security.system.exception.NoAppSpecifiedSystemLoginTokenServiceException;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
-import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoder;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.data.ValueUtility;
@@ -14,6 +14,8 @@ import com.dereekb.gae.utilities.misc.bit.impl.LongBitContainer;
 
 /**
  * {@link SystemLoginTokenService} implementation.
+ * <p>
+ * Used only by a local login system.
  *
  * @author dereekb
  *
@@ -36,15 +38,15 @@ public class SystemLoginTokenServiceImpl
 	 */
 	private Long rolesMask;
 
-	private LoginTokenEncoder<LoginToken> encoder;
+	private LoginTokenEncoderDecoder<LoginToken> dencoder;
 
-	public SystemLoginTokenServiceImpl(LoginTokenEncoder<LoginToken> encoder) {
-		this(DEFAULT_ROLES, encoder);
+	public SystemLoginTokenServiceImpl(LoginTokenEncoderDecoder<LoginToken> dencoder) {
+		this(DEFAULT_ROLES, dencoder);
 	}
 
-	public SystemLoginTokenServiceImpl(Long rolesMask, LoginTokenEncoder<LoginToken> encoder) {
+	public SystemLoginTokenServiceImpl(Long rolesMask, LoginTokenEncoderDecoder<LoginToken> dencoder) {
 		this.setRolesMask(rolesMask);
-		this.setEncoder(encoder);
+		this.setDencoder(dencoder);
 	}
 
 	public Long getExpirationTime() {
@@ -83,22 +85,23 @@ public class SystemLoginTokenServiceImpl
 		this.rolesMask = rolesMask;
 	}
 
-	public LoginTokenEncoder<LoginToken> getEncoder() {
-		return this.encoder;
+	public LoginTokenEncoderDecoder<LoginToken> getDencoder() {
+		return this.dencoder;
 	}
 
-	public void setEncoder(LoginTokenEncoder<LoginToken> encoder) {
-		if (encoder == null) {
-			throw new IllegalArgumentException("encoder cannot be null.");
+	public void setDencoder(LoginTokenEncoderDecoder<LoginToken> dencoder) {
+		if (dencoder == null) {
+			throw new IllegalArgumentException("dencoder cannot be null.");
 		}
 
-		this.encoder = encoder;
+		this.dencoder = dencoder;
 	}
 
 	// MARK: SystemLoginTokenService
 	@Override
 	public SystemLoginTokenResponse makeSystemToken(SystemLoginTokenRequest request) {
-		LoginTokenImpl token = new LoginTokenImpl(SYSTEM_POINTER_TYPE);
+
+		LoginTokenImpl templateToken = new LoginTokenImpl(SYSTEM_POINTER_TYPE);
 
 		String appId = request.getAppId();
 		Long roles = this.maskRoles(request.getRoles());
@@ -108,11 +111,13 @@ public class SystemLoginTokenServiceImpl
 			throw new NoAppSpecifiedSystemLoginTokenServiceException();
 		}
 
-		token.setApp(appId);
-		token.setRoles(roles);
-		token.setExpiration(expiresIn);
-		token.setRefreshAllowed(false);
+		templateToken.setApp(appId);
+		templateToken.setRoles(roles);
+		templateToken.setExpiration(expiresIn);
+		templateToken.setRefreshAllowed(false);
 
+
+		LoginToken token = this.dencoder.makeToken(templateToken);
 		return new SystemTokenResponseImpl(token);
 	}
 
@@ -146,7 +151,7 @@ public class SystemLoginTokenServiceImpl
 		@Override
 		public String getEncodedLoginToken() {
 			if (this.encodedLoginToken == null) {
-				this.encodedLoginToken = SystemLoginTokenServiceImpl.this.encoder.encodeLoginToken(this.loginToken);
+				this.encodedLoginToken = SystemLoginTokenServiceImpl.this.dencoder.encodeLoginToken(this.loginToken);
 			}
 
 			return this.encodedLoginToken;

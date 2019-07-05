@@ -40,6 +40,8 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  */
 public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigurationGen {
 
+	public static final OAuthClientConfig TEST_FACEBOOK_OAUTH_CONFIG = new OAuthClientConfigImpl("431391914300748", "102a10dd9bfa5e2783e57a2f09b0c2ac");
+
 	@Override
 	public AppConfiguration makeAppSpringConfiguration() {
 
@@ -107,8 +109,8 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 
 		LoginTokenAppSecurityBeansConfigurerImpl appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 
-		OAuthClientConfig facebookOAuthConfig = new OAuthClientConfigImpl("431391914300748", "102a10dd9bfa5e2783e57a2f09b0c2ac");
-		appSecurityBeansConfigurer.setFacebookOAuthConfig(facebookOAuthConfig);
+
+		appSecurityBeansConfigurer.setFacebookOAuthConfig(TEST_FACEBOOK_OAUTH_CONFIG);
 
 		// TODO: Add Google configuration.
 
