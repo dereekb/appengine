@@ -40,9 +40,9 @@ public interface AppConfiguration {
 	public String getAppTaskQueueName();
 
 	/**
-	 * Returns the app secret. Is only used by remote apps.
+	 * Returns the app secret. Only used by remote apps for login purposes.
 	 *
-	 * @return {@link String}. Never {@code null}.
+	 * @return {@link String} or {@code null} if not defined.
 	 */
 	public String getAppSecret();
 

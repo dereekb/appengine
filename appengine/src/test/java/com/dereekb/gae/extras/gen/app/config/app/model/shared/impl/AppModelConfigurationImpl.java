@@ -20,6 +20,7 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
         implements AppModelConfiguration {
 
 	private boolean localModel;
+	private boolean isInternalModelOnly = false;
 
 	private String modelType;
 	private ModelKeyType modelKeyType;
@@ -127,6 +128,15 @@ public abstract class AppModelConfigurationImpl<C extends AppModelCrudsConfigura
 
 	public void setLocalModel(boolean localModel) {
 		this.localModel = localModel;
+	}
+
+	@Override
+	public boolean isInternalModelOnly() {
+		return this.isInternalModelOnly;
+	}
+
+	public void setInternalModelOnly(boolean isInternalModelOnly) {
+		this.isInternalModelOnly = isInternalModelOnly;
 	}
 
 	@Override

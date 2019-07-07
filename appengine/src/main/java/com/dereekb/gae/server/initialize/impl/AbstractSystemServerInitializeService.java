@@ -16,8 +16,11 @@ import com.dereekb.gae.utilities.model.search.request.impl.SearchRequestImpl;
  * {@link AbstractServerInitializeService} implementation.
  *
  * @author dereekb
- *
+ * @deprecated design problem where if we don't know what App this is, and this
+ *             isn't the root login server, then client authentication is
+ *             impossible.
  */
+@Deprecated
 public abstract class AbstractSystemServerInitializeService extends AbstractServerInitializeService {
 
 	private ClientQueryService<App> appQueryService;

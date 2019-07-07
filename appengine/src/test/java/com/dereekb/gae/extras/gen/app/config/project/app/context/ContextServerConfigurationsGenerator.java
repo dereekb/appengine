@@ -13,6 +13,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
@@ -58,6 +59,7 @@ import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImp
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializerImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.web.matcher.MultiRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher;
@@ -287,7 +289,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
-				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+				List<LocalModelConfiguration> modelConfigs = ListUtility.filter(group.getModelConfigurations(), NotInternalModelConfigurationFilter.make());
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
 					entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
 				}
@@ -411,8 +413,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			String serviceApiPath = this.getServiceApiPath();
 
-			List<LocalModelConfiguration> secureLocalModelConfigs = AppConfigurationUtility
-			        .readLocalModelConfigurations(this.getAppConfig());
+			List<LocalModelConfiguration> secureLocalModelConfigs = this.loadSecureLocalModelConfigs();
 			boolean hasSecureLocalModelConfigs = (secureLocalModelConfigs.isEmpty() == false);
 
 			builder.comment("No HTTP Security For Google App Engine Test Server");
@@ -576,6 +577,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .beanClass(AllowAllSecurityModelQueryTask.class);
 
 			return builder;
+		}
+
+		private List<LocalModelConfiguration> loadSecureLocalModelConfigs() {
+			List<LocalModelConfiguration> allLocalModelConfigs = AppConfigurationUtility.readLocalModelConfigurations(this.getAppConfig());
+			return ListUtility.filter(allLocalModelConfigs, NotInternalModelConfigurationFilter.make());
 		}
 
 		/**

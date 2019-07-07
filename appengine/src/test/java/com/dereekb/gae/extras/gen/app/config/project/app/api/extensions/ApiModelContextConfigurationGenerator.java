@@ -11,6 +11,12 @@ import com.dereekb.gae.web.api.auth.controller.model.LoginTokenModelContextContr
 import com.dereekb.gae.web.api.auth.controller.model.impl.LimitedLoginTokenModelContextControllerDelegateImpl;
 import com.dereekb.gae.web.api.auth.controller.model.impl.LoginTokenModelContextControllerDelegateImpl;
 
+/**
+ * Sets up the API model context security.
+ *
+ * @author dereekb
+ *
+ */
 public class ApiModelContextConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
 	public static final String ROLES_FILE_NAME = "roles";

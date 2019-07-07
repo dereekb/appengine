@@ -12,6 +12,12 @@ import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
 import com.dereekb.gae.web.api.model.extension.search.SearchExtensionApiController;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateImpl;
 
+/**
+ * Configures the {@link SearchExtensionApiController} for an app.
+ *
+ * @author dereekb
+ *
+ */
 public class ApiSearchConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
 	public static final String SEARCH_FILE_NAME = "search";
@@ -35,8 +41,10 @@ public class ApiSearchConfigurationGenerator extends AbstractSingleConfiguration
 
 		for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
 			for (LocalModelConfiguration model : group.getModelConfigurations()) {
-				searchMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
-				        model.getModelBeanPrefix() + "SearchDelegateEntry");
+				if (model.isInternalModelOnly() == false) {
+					searchMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
+					        model.getModelBeanPrefix() + "SearchDelegateEntry");
+				}
 			}
 		}
 

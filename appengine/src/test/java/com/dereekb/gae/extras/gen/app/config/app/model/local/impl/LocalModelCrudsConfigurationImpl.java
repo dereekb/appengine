@@ -24,6 +24,13 @@ public class LocalModelCrudsConfigurationImpl extends AppModelCrudsConfiguration
 		this.inferClasses(configuration);
 	}
 
+	public static LocalModelCrudsConfigurationImpl makeReadOnlyConfiguration(AppModelConfiguration configuration)
+	{
+		LocalModelCrudsConfigurationImpl config = new LocalModelCrudsConfigurationImpl(configuration);
+		config.setIsReadOnly();
+		return config;
+	}
+
 	@SuppressWarnings("unchecked")
 	private void inferClasses(AppModelConfiguration configuration) {
 

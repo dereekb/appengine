@@ -31,7 +31,8 @@ import com.dereekb.gae.web.taskqueue.server.webhook.TaskQueueWebHookController;
 import com.dereekb.gae.web.taskqueue.server.webhook.impl.TaskQueueWebHookControllerDelegateImpl;
 
 /**
- * {@link AbstractRemoteModelConfigurationGenerator} for taskqueue events and webhook configurations.
+ * {@link AbstractRemoteModelConfigurationGenerator} for taskqueue events and
+ * webhook configurations.
  *
  * @author dereekb
  *
@@ -49,6 +50,7 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		this.setSplitByRemote(true);
 		this.setIgnoreRemote(false);
 		this.setMakeImportFiles(true);
+		this.setIgnoreInternalOnly(true);
 		this.setResultsFolderName(EVENT_FOLDER_NAME);
 	}
 
@@ -126,7 +128,8 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 		String modelKeyEventServiceListenerBeanId = "modelKeyEventServiceListener";
 
 		// Web Hooks Event
-		SpringBeansXMLListBuilder<SpringBeansXMLBuilder> eventListenersList = builder.list(eventServiceListenersBeanId).ref(modelKeyEventServiceListenerBeanId);
+		SpringBeansXMLListBuilder<SpringBeansXMLBuilder> eventListenersList = builder.list(eventServiceListenersBeanId)
+		        .ref(modelKeyEventServiceListenerBeanId);
 
 		List<String> eventListenerBeanIds = this.getAppConfig().getAppServicesConfigurer()
 		        .getAppEventServiceListenersConfigurer().configureEventServiceListeners(this.getAppConfig(), builder);
@@ -206,15 +209,17 @@ public class TaskQueueEventConfigurationGenerator extends AbstractModelConfigura
 
 		// Make Typed Serializers
 		for (AppModelConfiguration model : this.getAllApplicableModelConfigurations()) {
+			if (model.isInternalModelOnly() == false) {
 
-			// Only Add Serializers for local models.
-			if (model.isLocalModel()) {
-				String serializerId = model.getModelBeanPrefix() + "WebHookEventSerializer";
-				serializerMapper.keyRefValueRefEntry(model.getModelTypeBeanId(), serializerId);
+				// Only Add Serializers for local models.
+				if (model.isLocalModel()) {
+					String serializerId = model.getModelBeanPrefix() + "WebHookEventSerializer";
+					serializerMapper.keyRefValueRefEntry(model.getModelTypeBeanId(), serializerId);
+				}
+
+				String deserializerId = model.getModelBeanPrefix() + "WebHookEventDeserializer";
+				deserializerMapper.keyRefValueRefEntry(model.getModelTypeBeanId(), deserializerId);
 			}
-
-			String deserializerId = model.getModelBeanPrefix() + "WebHookEventDeserializer";
-			deserializerMapper.keyRefValueRefEntry(model.getModelTypeBeanId(), deserializerId);
 		}
 
 		return this.makeFileWithXML(WEBHOOK_FILE_NAME, builder);

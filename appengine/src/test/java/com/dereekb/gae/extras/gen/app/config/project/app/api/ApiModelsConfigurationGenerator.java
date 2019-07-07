@@ -17,6 +17,12 @@ import com.dereekb.gae.web.api.model.crud.controller.impl.EditModelControllerDel
 import com.dereekb.gae.web.api.model.crud.controller.impl.ReadControllerEntryImpl;
 import com.dereekb.gae.web.api.model.extension.search.impl.ApiSearchDelegateEntryImpl;
 
+/**
+ * Used for generating configuration for all local model's CRUD services.
+ *
+ * @author dereekb
+ *
+ */
 public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationGenerator {
 
 	public static final String MODELS_FOLDER_NAME = "model";
@@ -25,6 +31,7 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 		super(appConfig, outputProperties);
 		this.setResultsFolderName(MODELS_FOLDER_NAME);
 		this.setIgnoreRemote(true);
+		this.setIgnoreInternalOnly(true);
 	}
 
 	// MARK: AbstractModelConfigurationGenerator

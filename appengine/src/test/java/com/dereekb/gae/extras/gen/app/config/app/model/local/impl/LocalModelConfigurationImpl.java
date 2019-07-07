@@ -9,7 +9,6 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelCrudsConf
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelContextConfigurerImpl;
-import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 
@@ -36,22 +35,12 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	private Class<Object> modelOwnedModelQuerySecurityDelegateClass;
 
 	public LocalModelConfigurationImpl(Class<?> modelClass) {
+		this(modelClass, false);
+	}
+
+	public LocalModelConfigurationImpl(Class<?> modelClass, boolean isInternalModelOnly) {
 		super(modelClass);
-	}
-
-	public LocalModelConfigurationImpl(Class<?> modelClass, ModelKeyType modelKeyType) {
-		super(modelClass, modelKeyType);
-	}
-
-	public LocalModelConfigurationImpl(Class<?> modelClass, ModelKeyType modelKeyType, boolean localModel) {
-		super(modelClass, modelKeyType, localModel);
-	}
-
-	public LocalModelConfigurationImpl(Class<?> modelClass,
-	        ModelKeyType modelKeyType,
-	        String modelType,
-	        boolean localModel) {
-		super(modelClass, modelKeyType, modelType, localModel);
+		this.setInternalModelOnly(isInternalModelOnly);
 	}
 
 	@Override
@@ -117,18 +106,34 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	}
 
 	@Override
-	protected LocalModelCrudsConfiguration inferCrudsConfiguration() {
+	protected LocalModelCrudsConfigurationImpl inferCrudsConfiguration() {
 		return new LocalModelCrudsConfigurationImpl(this);
 	}
 
 	@Override
-	protected LocalModelBeansConfiguration makeModelBeansConfiguration() {
+	protected LocalModelBeansConfigurationImpl makeModelBeansConfiguration() {
 		return new LocalModelBeansConfigurationImpl(this.getModelType(), this.getModelKeyType());
 	}
 
 	@Override
 	protected LocalModelContextConfigurer makeCustomModelContextConfigurer() {
 		return new LocalModelContextConfigurerImpl();
+	}
+
+	public void setInternalModelOnly(boolean isInternalModelOnly,
+	                                 boolean setIsReadOnly) {
+		this.setInternalModelOnly(isInternalModelOnly);
+
+		if (setIsReadOnly) {
+			this.setIsReadOnly();
+		}
+	}
+
+	/**
+	 * Updates the CRUDs configuration to be read-only.
+	 */
+	public void setIsReadOnly() {
+		this.setCrudsConfiguration(LocalModelCrudsConfigurationImpl.makeReadOnlyConfiguration(this));
 	}
 
 	@Override

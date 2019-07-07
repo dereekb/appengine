@@ -15,6 +15,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSec
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationImpl;
+import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
@@ -29,7 +30,7 @@ public class AppConfigurationImpl
 	private Long appId = 1L;
 	private String appName = "app";
 	private String appTaskQueueName = "app";
-	private String appSecret = null;
+	private String appSecret = App.DEFAULT_DEVELOPMENT_SECRET;
 	private String appSystemKey = null;
 	private String appAdminEmail = "dereekb@gmail.com";
 

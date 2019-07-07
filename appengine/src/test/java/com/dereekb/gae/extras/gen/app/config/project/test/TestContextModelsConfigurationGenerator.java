@@ -73,6 +73,7 @@ public class TestContextModelsConfigurationGenerator extends AbstractConfigurati
 			                               	// instead of created here.
 			this.setResultsFolderName(SHARED_MODEL_FILE_NAME);
 			this.setSplitByGroup(false);
+			this.setIgnoreInternalOnly(true);
 		}
 
 		// MARK: Client Configurations
