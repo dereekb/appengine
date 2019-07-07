@@ -12,6 +12,7 @@ import com.dereekb.gae.server.mail.service.MailRecipient;
 import com.dereekb.gae.server.mail.service.MailService;
 import com.dereekb.gae.server.mail.service.MailServiceRequest;
 import com.dereekb.gae.server.mail.service.MailServiceRequestBody;
+import com.dereekb.gae.server.mail.service.MailServiceRequestBodyType;
 import com.dereekb.gae.server.mail.service.MailUser;
 import com.dereekb.gae.server.mail.service.exception.InvalidMailRequestException;
 import com.dereekb.gae.server.mail.service.exception.MailSendFailureException;
@@ -162,7 +163,21 @@ public abstract class AbstractMailServiceProviderImpl<I extends MailServiceProvi
 			builder.append("-- Development Environment Mail --\n\n");
 			builder.append("To: " + request.getRecipients() + "\n\n");
 			builder.append("Subject: " + request.getBody().getSubject() + "\n\n");
-			builder.append("Content: " + request.getBody().getBodyContent() + "\n");
+
+			MailServiceRequestBody body = request.getBody();
+			MailServiceRequestBodyType bodyType = body.getBodyType();
+
+			switch (bodyType)
+			{
+				case PLAIN_TEXT:
+				case HTML:
+					builder.append("Content: " + body.getBodyContent() + "\n");
+					break;
+				case TEMPLATE:
+					builder.append("Template: " + body.getBodyContent() + "\n");
+					builder.append("Template Params: " + body.getParameters() + "\n");
+					break;
+			}
 
 			String message = builder.toString();
 			LOGGER.info(message);
