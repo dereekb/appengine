@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
@@ -50,7 +51,8 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 		SpringBeansXMLMapBuilder<?> readControllerMap = builder.bean("readController").beanClass(ReadController.class)
 		        .lazy(false).c().ref(this.getAppConfig().getAppBeans().getModelKeyTypeConverterId()).map();
 
-		for (LocalModelConfiguration model : this.getAllLocalConfigurations()) {
+		for (LocalModelConfiguration model : this
+		        .getAllLocalConfigurations(NotInternalModelConfigurationFilter.make())) {
 			readControllerMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 			        model.getModelBeanPrefix() + "ReadControllerEntry");
 		}
