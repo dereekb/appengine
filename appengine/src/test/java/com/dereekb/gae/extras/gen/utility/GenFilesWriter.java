@@ -11,6 +11,14 @@ import java.io.IOException;
 public interface GenFilesWriter {
 
 	/**
+	 * Deletes the folder.
+	 *
+	 * @param folder
+	 * @throws IOException
+	 */
+	public void deleteFolder(GenFolder folder) throws IOException;
+
+	/**
 	 * Writes the input folder (and contained files within the folder).
 	 *
 	 * @param folder
