@@ -59,7 +59,7 @@ public class SpringBeansXMLBuilderImpl
 		XMLBuilder2 builder = XMLBuilder2.create(ROOT_BEANS_ELEMENT)
 		        .attr("xmlns", "http://www.springframework.org/schema/beans")
 		        .attr("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-		        .attr("xmlns:p", "http://www.springframework.org/schema/p")
+		        // .attr("xmlns:p", "http://www.springframework.org/schema/p")
 		        .attr("xmlns:context", "http://www.springframework.org/schema/context")
 		        .attr("xmlns:mvc", "http://www.springframework.org/schema/mvc")
 		        .attr("xmlns:security", "http://www.springframework.org/schema/security")

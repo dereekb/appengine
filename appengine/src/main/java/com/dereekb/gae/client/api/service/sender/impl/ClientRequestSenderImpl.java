@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -62,7 +63,7 @@ public class ClientRequestSenderImpl
 		Parameters parameters = request.getParameters();
 		ClientRequestData data = request.getData();
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
 		int statusCode;
 		String responseData;

@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -112,7 +113,7 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 			MultiValueMap<String, String> map = this.makeMapForRequest();
 
 			// Send Request
-			RestTemplate restTemplate = new RestTemplate();
+			RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 			String url = String.format(MAILGUN_MESSAGE_POST_URL_FORMAT, MailgunMailServiceImpl.this.getDomain());
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(map,
 			        headers);
