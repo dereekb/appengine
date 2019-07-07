@@ -56,9 +56,6 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongMo
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializerImpl;
-import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
-import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
-import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -128,10 +125,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppServiceName())
 		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppVersion());
 
-		builder.bean("productionAppInfo").beanClass(SystemAppInfoImpl.class).c()
-				.ref(appBeans.getAppKeyBeanId())
-		        .ref(appBeans.getAppNameBeanId())
-		        .ref(appBeans.getAppSystemKeyBeanId())
+		builder.bean("productionAppInfo").beanClass(SystemAppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
+		        .ref(appBeans.getAppNameBeanId()).ref(appBeans.getAppSystemKeyBeanId())
 		        .ref(productionAppServiceInfoBeanId);
 
 		String appInfoFactoryBeanId = "appInfoFactory";
@@ -330,17 +325,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-			builder.comment("Mail");
-			String mailgunMailServiceConfigurationBeanId = "mailServiceConfiguration";
-
-			builder.bean("mailService").beanClass(MailgunMailServiceImpl.class).c().ref("serverMailUser")
-			        .ref(mailgunMailServiceConfigurationBeanId);
-
-			builder.bean("serverMailUser").beanClass(MailUserImpl.class).c().value("demo@test.com")
-			        .value("test service");
-
-			builder.bean(mailgunMailServiceConfigurationBeanId).beanClass(MailgunMailServiceConfigurationImpl.class).c()
-			        .value("API_KEY").value("test.com");
+			AppConfiguration appConfig = this.getAppConfig();
+			appConfig.getAppServicesConfigurer().getAppMailServiceConfigurer().configureMailService(appConfig, builder);
 
 			return builder;
 		}
@@ -558,7 +544,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .value("ROLE_USER").up().up().up().bean().beanClass(SimpleGrantedAuthority.class).c()
 			        .value("ROLE_ANON");
 
-			// TODO: Configure this better so the decoder can also generate the admin roles that are sent to the XML.
+			// TODO: Configure this better so the decoder can also generate the
+			// admin roles that are sent to the XML.
 
 			builder.bean("loginGrantedAuthorityDecoder").beanClass(GrantedAuthorityDecoderImpl.class)
 			        .factoryMethod("withStringMap").c().map().keyType(Integer.class).valueType(String.class)

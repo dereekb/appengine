@@ -61,6 +61,15 @@ public interface AppConfiguration {
 	public String getAppAdminEmail();
 
 	/**
+	 * Returns the app's domain name.
+	 * <p>
+	 * I.E. dereekb.com
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppDomain();
+
+	/**
 	 * Returns the app's proxy URL for development.
 	 *
 	 * @return {@link String}. Never {@code null}.
@@ -73,6 +82,8 @@ public interface AppConfiguration {
 	 * @return {@link String}. Never {@code null}.
 	 */
 	public String getAppDevelopmentServerHostUrl();
+
+	// public AppGenEnvConfiguration getAppGenEnvConfiguration();
 
 	public AppServiceConfigurationInfo getAppServiceConfigurationInfo();
 

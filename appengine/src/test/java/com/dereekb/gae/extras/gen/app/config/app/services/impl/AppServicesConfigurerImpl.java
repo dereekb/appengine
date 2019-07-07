@@ -2,6 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppMailServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
@@ -22,6 +23,7 @@ public class AppServicesConfigurerImpl
 	private AppEventServiceListenersConfigurer appEventServiceListenersConfigurer;
 	private AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer;
 	private AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer;
+	private AppMailServiceConfigurer appMailServiceConfigurer;
 	private AppTaskSchedulerEnqueuerConfigurer appTaskSchedulerEnqueuerConfigurer = new AppTaskSchedulerEnqueuerConfigurerImpl();
 
 	public AppServicesConfigurerImpl(AppServerInitializationConfigurer appServerInitializationConfigurer,
@@ -29,10 +31,10 @@ public class AppServicesConfigurerImpl
 	        AppEventServiceListenersConfigurer appEventServiceListenersConfigurer,
 	        AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer,
 	        AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer,
+	        AppMailServiceConfigurer appMailServiceConfigurer,
 	        AppTaskSchedulerEnqueuerConfigurer appTaskSchedulerEnqueuerConfigurer) {
-		this(appServerInitializationConfigurer, appLoginTokenSecurityConfigurer,
-				appEventServiceListenersConfigurer, appWebHookEventServiceConfigurer,
-				appModelKeyEventListenerConfigurer);
+		this(appServerInitializationConfigurer, appLoginTokenSecurityConfigurer, appEventServiceListenersConfigurer,
+		        appWebHookEventServiceConfigurer, appModelKeyEventListenerConfigurer, appMailServiceConfigurer);
 		this.setAppTaskSchedulerEnqueuerConfigurer(appTaskSchedulerEnqueuerConfigurer);
 	}
 
@@ -40,13 +42,15 @@ public class AppServicesConfigurerImpl
 	        AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
 	        AppEventServiceListenersConfigurer appEventServiceListenersConfigurer,
 	        AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer,
-	        AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer) {
+	        AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer,
+	        AppMailServiceConfigurer appMailServiceConfigurer) {
 		super();
 		this.setAppServerInitializationConfigurer(appServerInitializationConfigurer);
 		this.setAppLoginTokenSecurityConfigurer(appLoginTokenSecurityConfigurer);
 		this.setAppEventServiceListenersConfigurer(appEventServiceListenersConfigurer);
 		this.setAppWebHookEventServiceConfigurer(appWebHookEventServiceConfigurer);
 		this.setAppModelKeyEventListenerConfigurer(appModelKeyEventListenerConfigurer);
+		this.setAppMailServiceConfigurer(appMailServiceConfigurer);
 	}
 
 	@Override
@@ -123,6 +127,17 @@ public class AppServicesConfigurerImpl
 		this.appModelKeyEventListenerConfigurer = appModelKeyEventListenerConfigurer;
 	}
 
+	@Override
+	public AppMailServiceConfigurer getAppMailServiceConfigurer() {
+		return this.appMailServiceConfigurer;
+	}
 
+	public void setAppMailServiceConfigurer(AppMailServiceConfigurer appMailServiceConfigurer) {
+		if (appMailServiceConfigurer == null) {
+			throw new IllegalArgumentException("appMailServiceConfigurer cannot be null.");
+		}
+
+		this.appMailServiceConfigurer = appMailServiceConfigurer;
+	}
 
 }

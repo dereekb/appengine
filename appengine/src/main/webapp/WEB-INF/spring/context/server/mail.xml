@@ -5,11 +5,11 @@
     <constructor-arg index="1" ref="mailServiceConfiguration"/>
   </bean>
   <bean class="com.dereekb.gae.server.mail.service.impl.MailUserImpl" id="serverMailUser">
-    <constructor-arg index="0" value="demo@test.com"/>
-    <constructor-arg index="1" value="test service"/>
+    <constructor-arg index="0" value="test@gae.dereekb.com"/>
+    <constructor-arg index="1" value="Test Server"/>
   </bean>
   <bean class="com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl" id="mailServiceConfiguration">
-    <constructor-arg index="0" value="API_KEY"/>
-    <constructor-arg index="1" value="test.com"/>
+    <constructor-arg index="0" value="MISSING_API_KEY"/>
+    <constructor-arg index="1" value="dereekb.com"/>
   </bean>
 </beans>

@@ -24,4 +24,6 @@ public interface AppServicesConfigurer {
 
 	public AppTaskSchedulerEnqueuerConfigurer getAppTaskSchedulerEnqueuerConfigurer();
 
+	public AppMailServiceConfigurer getAppMailServiceConfigurer();
+
 }

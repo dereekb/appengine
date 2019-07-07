@@ -26,7 +26,6 @@ public class MailgunMailServiceTests {
 	private static final String AUTHORIZED_EMAIL = "dereekb@gmail.com";
 	private static final String API_KEY = "key-d7e36a9ead3fdb61983587832bd75b42";
 
-
 	public static final String SPLITTER = "\\.";
 
 	@Test
@@ -79,5 +78,7 @@ public class MailgunMailServiceTests {
 
 		}
 	}
+
+	// TODO: Test templates!
 
 }

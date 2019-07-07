@@ -33,6 +33,7 @@ public class AppConfigurationImpl
 	private String appSystemKey = null;
 	private String appAdminEmail = "dereekb@gmail.com";
 
+	private String appDomain = "dereekb.com";
 	private String appDevelopmentProxyUrl = "http://gae-nginx:8080";
 	private String appDevelopmentServerHostUrl = "http://localhost:4400";
 
@@ -138,6 +139,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appAdminEmail = appAdminEmail;
+	}
+
+	@Override
+	public String getAppDomain() {
+		return this.appDomain;
+	}
+
+	public void setAppDomain(String appDomain) {
+		if (appDomain == null) {
+			throw new IllegalArgumentException("appDomain cannot be null.");
+		}
+
+		this.appDomain = appDomain;
 	}
 
 	@Override
