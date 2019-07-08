@@ -30,4 +30,4 @@ RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN" >> ~/.npmrc
 RUN echo "registry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
 
 ## Install NPM Dependencies
-RUN npm install -g core-js@3.1.4 typescript@3.4.2 @angular/cli@8.1.0 --loglevel info
+RUN npm install -g typescript@3.4.2 @angular/cli@8.1.0 --loglevel info
