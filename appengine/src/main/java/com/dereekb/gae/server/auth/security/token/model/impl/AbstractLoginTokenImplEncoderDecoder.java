@@ -15,7 +15,6 @@ import com.dereekb.gae.utilities.data.NumberUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * {@link AbstractBasicLoginTokenImplEncoderDecoder} implementation for
@@ -35,16 +34,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 	public static final String ANONYMOUS_KEY = "anon";
 
 	public static final String ROLES_KEY = "r";
-
-	@Deprecated
-	public AbstractLoginTokenImplEncoderDecoder(String secret) {
-		super(secret);
-	}
-
-	@Deprecated
-	public AbstractLoginTokenImplEncoderDecoder(String secret, SignatureAlgorithm algorithm) {
-		super(secret, algorithm);
-	}
 
 	public AbstractLoginTokenImplEncoderDecoder() {
 		this((SignatureConfiguration) null);
