@@ -30,4 +30,4 @@ RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN" >> ~/.npmrc
 RUN echo "registry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
 
 ## Install NPM Dependencies
-RUN npm install -g karma typescript @angular/cli --loglevel info
+RUN npm install -g karma typescript@~3.4.2 @angular/cli@~8.1.0 --loglevel info
