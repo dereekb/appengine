@@ -164,7 +164,14 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.12</version>
 		</dependency>
-
+		
+		<dependency>
+			<!-- Used for Spring -->
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.9</version>
+		</dependency>
+		
 		<!-- Jersey -->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>

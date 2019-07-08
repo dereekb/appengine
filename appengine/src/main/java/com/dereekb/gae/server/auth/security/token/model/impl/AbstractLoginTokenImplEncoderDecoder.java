@@ -46,6 +46,10 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		super(secret, algorithm);
 	}
 
+	public AbstractLoginTokenImplEncoderDecoder() {
+		this((SignatureConfiguration) null);
+	}
+
 	public AbstractLoginTokenImplEncoderDecoder(SignatureConfiguration signature) {
 		super(signature);
 	}

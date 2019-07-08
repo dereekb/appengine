@@ -7,15 +7,17 @@ import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
  *
  * @author dereekb
  *
- * @param <T> Output type
+ * @param <T>
+ *            Output type
  */
 public interface Factory<T> {
 
 	/**
 	 * Makes a new instance of the model.
 	 *
-	 * @return Model. Never {@code null}.
-	 * @throws FactoryMakeFailureException thrown if the model cannot be created.Ï
+	 * @return Model. May be {@code null} in some cases.
+	 * @throws FactoryMakeFailureException
+	 *             thrown if the model cannot be created.
 	 */
 	public T make() throws FactoryMakeFailureException;
 
