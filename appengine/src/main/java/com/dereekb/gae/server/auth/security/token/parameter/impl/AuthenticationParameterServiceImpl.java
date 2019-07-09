@@ -26,7 +26,7 @@ public class AuthenticationParameterServiceImpl
 	public static final String DEFAULT_BEARER_PREFIX = "Bearer ";
 	public static final String DEFAULT_HEADER_KEY = "Authorization";
 
-	public static final String DEFAULT_SIGNATURE_HEADER = "app_proof";
+	public static final String DEFAULT_SIGNATURE_HEADER = "AppProof";
 
 	public static final AuthenticationParameterService SINGLETON = new AuthenticationParameterServiceImpl();
 
