@@ -20,12 +20,15 @@ public enum LoginPointerType implements IndexCoded {
 
 	REFRESH_TOKEN(3, LoginType.REFRESH, "R", true),
 
+	@Deprecated
+	REMOTE_SYSTEM(4, LoginType.SYSTEM, "X", true),
+
     // External
-	PASSWORD(4, LoginType.PASSWORD, "P", false),
+	PASSWORD(5, LoginType.PASSWORD, "P", false),
 
-	OAUTH_GOOGLE(5, LoginType.OAUTH, "G", false),
+	OAUTH_GOOGLE(7, LoginType.OAUTH, "G", false),
 
-	OAUTH_FACEBOOK(6, LoginType.OAUTH, "F", false);
+	OAUTH_FACEBOOK(8, LoginType.OAUTH, "F", false);
 
 	/**
 	 * Login type/category.
@@ -35,6 +38,9 @@ public enum LoginPointerType implements IndexCoded {
 	public static enum LoginType {
 
 		SYSTEM,
+
+		@Deprecated
+		REMOTE_SYSTEM,
 
 		NONE,
 
@@ -82,7 +88,7 @@ public enum LoginPointerType implements IndexCoded {
 	/**
 	 * Whether or not this login pointer type is a special, internally generated
 	 * type.
-	 * 
+	 *
 	 * @return {@code true} if internal pointer type.
 	 */
 	public boolean isInternalType() {
@@ -111,12 +117,15 @@ public enum LoginPointerType implements IndexCoded {
 				type = LoginPointerType.REFRESH_TOKEN;
 				break;
 			case 4:
-				type = LoginPointerType.PASSWORD;
+				type = LoginPointerType.REMOTE_SYSTEM;
 				break;
 			case 5:
-				type = LoginPointerType.OAUTH_GOOGLE;
+				type = LoginPointerType.PASSWORD;
 				break;
 			case 6:
+				type = LoginPointerType.OAUTH_GOOGLE;
+				break;
+			case 7:
 				type = LoginPointerType.OAUTH_FACEBOOK;
 				break;
 		}

@@ -475,7 +475,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			// Server Scheduler Routes
 			http.getRawXMLBuilder().c("Scheduling Pattern");
-			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_USER"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_ADMIN"), HttpMethod.POST);
 
 			http.getRawXMLBuilder().c("Everything Else Is Denied");
 			http.intercept("/**", RoleConfigImpl.make("denyAll"));
