@@ -139,6 +139,7 @@ public class LoginTokenControllerDelegateImpl
 			response.setData(data);
 		}
 
+		// Add error notice
 		if (request.getSignature() != null && loginToken.getLoginToken().getApp() == null) {
 			response.addError(new ApiResponseErrorImpl("UNUSED_SIGNATURE", "Unused Signature",
 			        "Token has no app association. Signature unnecessary."));

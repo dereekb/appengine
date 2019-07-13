@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.auth.controller.token.impl;
 
+import com.dereekb.gae.server.auth.security.token.model.SignedEncodedLoginToken;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.web.api.auth.controller.token.TokenValidationRequest;
 
@@ -16,6 +17,18 @@ public class TokenValidationRequestImpl
 	private String content;
 	private String signature;
 	private Boolean quick;
+
+	public TokenValidationRequestImpl(SignedEncodedLoginToken signedToken) {
+		this(signedToken, true);
+	}
+
+	public TokenValidationRequestImpl(SignedEncodedLoginToken signedToken, Boolean quick) {
+		this(signedToken, null, quick);
+	}
+
+	public TokenValidationRequestImpl(SignedEncodedLoginToken signedToken, String content, Boolean quick) {
+		this(signedToken.getEncodedLoginToken(), content, signedToken.getTokenSignature(), quick);
+	}
 
 	public TokenValidationRequestImpl(String token) {
 		this(token, true);

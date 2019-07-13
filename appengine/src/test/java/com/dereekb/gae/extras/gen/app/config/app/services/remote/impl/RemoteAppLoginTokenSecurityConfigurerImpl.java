@@ -51,7 +51,7 @@ public class RemoteAppLoginTokenSecurityConfigurerImpl
 		builder.comment("Login Token Signature");
 
 		String loginTokenSignatureFactoryId = appSecurityBeansConfigurer.getLoginTokenSignatureFactoryBeanId();
-		builder.bean(loginTokenSignatureFactoryId).beanClass(NullFactoryImpl.class); // Signature factory is not needed on remote apps.
+		builder.bean(loginTokenSignatureFactoryId).beanClass(NullFactoryImpl.class); // Signature factory is not needed on remote apps, but must still be configured.
 
 		builder.comment("Login Token Validation Service");
 		builder.bean(clientLoginTokenValidationServiceBeanId)

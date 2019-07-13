@@ -47,6 +47,7 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 	// MARK: Mock Tests
 	@Test
 	public void testLoginRequests() throws Exception {
+
 		// Create a password LoginPointer/Token
 		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
 		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
@@ -85,7 +86,6 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 		} catch (AssertionError e) {
 			// Don't throw assertion error.
 		}
-
 	}
 
 	@Test
