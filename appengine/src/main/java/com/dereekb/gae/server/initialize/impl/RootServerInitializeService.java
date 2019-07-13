@@ -242,7 +242,7 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 			login = this.loginRolesService.makeAdmin(login.getModelKey());
 
 			// Log Credentials
-			LOGGER.log(Level.WARNING, "Created root admin: A: " + email + " P: " + password + " - CHANGE ASAP!");
+			LOGGER.info("Created root admin: A: " + email + " P: " + password + " - CHANGE ASAP!");
 
 			// Send Email
 			MailRecipient recipient = new MailRecipientImpl(email);
@@ -290,7 +290,7 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 			login = this.loginRegisterService.register(pointer);
 
 			// Log Credentials
-			LOGGER.log(Level.WARNING, "Created user account: A: " + email + " P: " + password);
+			LOGGER.info("Created user account: A: " + email + " P: " + password + " - CHANGE ASAP!");
 
 		} catch (LoginExistsException e) {
 			throw new RuntimeException("The admin login already exists.", e);
@@ -312,6 +312,7 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 
 		for (SystemAppInfo appInfo : this.defaultSystemApps) {
 			App app = this.makeDefaultAppFromAppInfo(appInfo, isProduction);
+			LOGGER.info("Generating default app: " + app.getAppName() + " (" + app.getModelKey() +  ")");
 			apps.add(app);
 		}
 
