@@ -99,6 +99,8 @@ public class ClientRequestSenderImpl
 
 			if (data != null) {
 				entity = new HttpEntity<String>(data.getDataString(), httpHeaders);
+			} else {
+				entity = new HttpEntity<String>(httpHeaders);
 			}
 
 			// Send Request
