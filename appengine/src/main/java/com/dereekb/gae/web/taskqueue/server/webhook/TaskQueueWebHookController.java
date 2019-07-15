@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.taskqueue.server.webhook;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dereekb.gae.server.event.webhook.WebHookEvent;
 import com.dereekb.gae.server.event.webhook.impl.JsonWebHookEventImpl;
 import com.dereekb.gae.server.event.webhook.listener.WebHookEventSubmitter;
+import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
 import com.dereekb.gae.web.api.exception.ApiIllegalArgumentException;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -64,9 +66,8 @@ public class TaskQueueWebHookController {
 	 *            Request parameters. Never {@code null}.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = EVENT_PATH, method = RequestMethod.POST, consumes = "application/octet-stream")
+	@RequestMapping(value = EVENT_PATH, method = RequestMethod.PUT)
 	public void processEvent(@Valid @RequestBody JsonNode jsonEventData) {
-
 		WebHookEvent webHookEvent = this.deserializeEvent(jsonEventData);
 
 		try {
@@ -87,7 +88,7 @@ public class TaskQueueWebHookController {
 	 *            Raw {@link JsonNode} request body.
 	 */
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = SUBMIT_RETRY_PATH, method = RequestMethod.POST, consumes = "application/octet-stream")
+	@RequestMapping(value = SUBMIT_RETRY_PATH, method = RequestMethod.PUT)
 	public void retrySendEvent(@Valid @RequestBody JsonNode jsonEventData) {
 		WebHookEvent webHookEvent = this.deserializeEvent(jsonEventData);
 
@@ -100,7 +101,18 @@ public class TaskQueueWebHookController {
 	}
 
 	// MARK: Internal
-	private WebHookEvent deserializeEvent(@Valid JsonNode jsonEventData) throws ApiIllegalArgumentException {
+	@SuppressWarnings("unused")
+	private WebHookEvent deserializeEvent(String json) throws ApiIllegalArgumentException {
+
+		try {
+			JsonNode jsonEventData = ObjectMapperUtilityBuilderImpl.MAPPER.readTree(json);
+			return this.deserializeEvent(jsonEventData);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private WebHookEvent deserializeEvent(JsonNode jsonEventData) throws ApiIllegalArgumentException {
 		try {
 			return new JsonWebHookEventImpl(jsonEventData);
 		} catch (IllegalArgumentException e) {

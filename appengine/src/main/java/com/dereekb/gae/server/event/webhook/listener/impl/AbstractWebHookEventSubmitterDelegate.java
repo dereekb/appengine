@@ -32,7 +32,7 @@ public abstract class AbstractWebHookEventSubmitterDelegate
 		this(makeDefaultTaskRequestSender(scheduler));
 	}
 
-	public AbstractWebHookEventSubmitterDelegate(TaskRequestSender<WebHookEvent> rescheduleTaskSender) {
+	protected AbstractWebHookEventSubmitterDelegate(TaskRequestSender<WebHookEvent> rescheduleTaskSender) {
 		this.setRescheduleTaskSender(rescheduleTaskSender);
 	}
 

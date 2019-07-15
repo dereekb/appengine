@@ -1,5 +1,7 @@
 package com.dereekb.gae.client.api.service.request.impl;
 
+import org.springframework.http.MediaType;
+
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.request.ClientRequestData;
 import com.dereekb.gae.client.api.service.request.ClientRequestMethod;
@@ -31,6 +33,11 @@ public class ClientRequestImpl
 		this.setMethod(method);
 	}
 
+	public ClientRequestImpl(ClientRequestUrl url, ClientRequestMethod method, MediaType contentType) throws IllegalArgumentException {
+		this(url, method);
+		this.setContentType(contentType);
+	}
+
 	@Override
 	public ClientRequestUrl getUrl() {
 		return this.url;
@@ -57,6 +64,7 @@ public class ClientRequestImpl
 		this.method = method;
 	}
 
+	@Override
 	public String getContentType() {
 		if (this.headers != null) {
 			return this.headers.getParameters().get(CONTENT_TYPE_HEADER);
@@ -65,22 +73,40 @@ public class ClientRequestImpl
 		}
 	}
 
+	/**
+	 * Utility function for setting the content type to {@link MediaType.APPLICATION_FORM_URLENCODED}.
+	 */
+	@Deprecated
+	public void setFormUrlEncodedContentType() {
+		this.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+	}
+
+	public void setContentType(MediaType mediaType) {
+		String contentType = null;
+
+		if (mediaType != null) {
+			contentType = mediaType.toString();
+		}
+
+		this.setContentType(contentType);
+	}
+
 	public void setContentType(String contentType) {
-		ParametersImpl newParameters = null;
+		ParametersImpl newHeaders = null;
 
 		if (this.headers != null) {
-			newParameters = new ParametersImpl(this.headers);
+			newHeaders = new ParametersImpl(this.headers);
 		} else {
-			newParameters = new ParametersImpl();
+			newHeaders = new ParametersImpl();
 		}
 
 		if (contentType == null) {
-			newParameters.removeEntry(CONTENT_TYPE_HEADER);
+			newHeaders.removeEntry(CONTENT_TYPE_HEADER);
 		} else {
-			newParameters.addEntry(CONTENT_TYPE_HEADER, contentType);
+			newHeaders.addEntry(CONTENT_TYPE_HEADER, contentType);
 		}
 
-		this.setHeaders(newParameters);
+		this.setHeaders(newHeaders);
 	}
 
 	@Override

@@ -1,13 +1,17 @@
 package com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.http.MediaType;
 
 import com.dereekb.gae.model.extension.data.conversion.exception.ConversionFailureException;
 import com.dereekb.gae.model.extension.data.conversion.impl.AbstractDirectionalConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.SecuredTaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
+import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestDataType;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequestTiming;
 import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.AppEngineTaskRequestConverter;
 import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.TaskRequestHost;
@@ -33,6 +37,7 @@ public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConver
 
 	private static final SimplePath DEFAULT_RESOURCE = new SimplePathImpl("/taskqueue");
 	private static final String HOST_HEADER = "Host";
+	private static final String JSON_PARAMETER = "json";
 
 	private boolean shouldAssertPathNotEmpty = true;
 
@@ -204,6 +209,10 @@ public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConver
 			return allHeaders;
 		}
 
+		public TaskRequestDataType getDataType() {
+			return this.request.getDataType();
+		}
+
 		@Override
 		public Collection<KeyedEncodedParameter> getParameters() {
 			switch (this.request.getDataType()) {
@@ -215,6 +224,12 @@ public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConver
 			}
 		}
 
+		public String getRequestData()
+		{
+			return this.request.getRequestData();
+		}
+
+		@Deprecated
 		@Override
 		public String getPayload() {
 			switch (this.request.getDataType()) {
@@ -327,11 +342,55 @@ public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConver
 			return options;
 		}
 
+		private TaskOptions appendBody(TaskOptions options) {
+
+			// Payload changed.
+
+			String requestData = this.reader.getRequestData();
+
+			if (requestData != null) {
+
+				switch (this.reader.getDataType()) {
+					case JSON:
+						options = options.param(JSON_PARAMETER, requestData);
+						break;
+					case PARAMETERS:
+					default:
+						// Do nothing...
+						break;
+				}
+
+			}
+
+			return options;
+		}
+
 		private TaskOptions appendPayload(TaskOptions options) {
 			String payload = this.reader.getPayload();
 
 			if (payload != null) {
-				options = options.payload(payload);
+
+				switch (this.reader.getDataType()) {
+					case JSON:
+						// Set Payload
+						byte[] jsonBytes;
+
+						try {
+							jsonBytes = payload.getBytes("UTF-8");
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+							throw new RuntimeException(e);
+						}
+
+						// Set
+						options = options.payload(jsonBytes, MediaType.APPLICATION_JSON_VALUE);
+						break;
+					case PARAMETERS:
+					default:
+						// Set Payload Normally
+						break;
+				}
+
 			}
 
 			return options;
