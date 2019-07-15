@@ -33,7 +33,8 @@ public class ClientRequestImpl
 		this.setMethod(method);
 	}
 
-	public ClientRequestImpl(ClientRequestUrl url, ClientRequestMethod method, MediaType contentType) throws IllegalArgumentException {
+	public ClientRequestImpl(ClientRequestUrl url, ClientRequestMethod method, MediaType contentType)
+	        throws IllegalArgumentException {
 		this(url, method);
 		this.setContentType(contentType);
 	}
@@ -74,7 +75,8 @@ public class ClientRequestImpl
 	}
 
 	/**
-	 * Utility function for setting the content type to {@link MediaType.APPLICATION_FORM_URLENCODED}.
+	 * Utility function for setting the content type to
+	 * {@link MediaType.APPLICATION_FORM_URLENCODED}.
 	 */
 	@Deprecated
 	public void setFormUrlEncodedContentType() {
@@ -134,6 +136,11 @@ public class ClientRequestImpl
 
 	public void setData(ClientRequestData data) {
 		this.data = data;
+
+		// Automatically set JSON content type.
+		if (this.getContentType() == null) {
+			this.setContentType(MediaType.APPLICATION_JSON);
+		}
 	}
 
 	@Override
