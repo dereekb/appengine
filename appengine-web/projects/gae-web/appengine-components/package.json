@@ -9,5 +9,8 @@
     "@gae-web/appengine-utility": "*",
     "@angular/common": "~8.1.0",
     "@angular/core": "~8.1.0"
-  }
+  },
+  "files": [
+    "styles.scss"
+  ]
 }
