@@ -80,6 +80,11 @@ pipeline {
                                 }
                             }
                         }
+                        stage('Publish') {
+                            steps {
+                                sh './jenkins/scripts/appengine/publish.sh'
+                            }
+                        }
                     }
                 }
             }
