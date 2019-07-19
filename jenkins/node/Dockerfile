@@ -30,6 +30,6 @@ RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN" >> ~/.npmrc
 RUN echo "registry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
 
 ## Install NPM Dependencies (Build Python)
-RUN apk add --no-cache --virtual .build-deps alpine-sdk python \
+RUN apk add --no-cache --virtual .build-deps make gcc g++ python \
  && npm install -g scss-bundle typescript@3.4.2 @angular/cli@8.1.0 --loglevel info --production \
  && apk del .build-deps

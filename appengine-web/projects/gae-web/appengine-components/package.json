@@ -8,7 +8,8 @@
     "@gae-web/appengine-analytics": "*",
     "@gae-web/appengine-utility": "*",
     "@angular/common": "~8.1.0",
-    "@angular/core": "~8.1.0"
+    "@angular/core": "~8.1.0",
+    "@angular/flex-layout": "^8.0.0-beta.26"
   },
   "files": [
     "styles.scss"
