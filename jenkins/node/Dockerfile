@@ -1,4 +1,4 @@
-FROM node:11-alpine
+FROM node:12-alpine
 
 ## Install Chromium for running tests via Karma
 # https://github.com/karma-runner/karma-chrome-launcher/issues/189
@@ -30,6 +30,7 @@ RUN echo "//$NPM_REGISTRY_URL:_authToken=$NPM_TOKEN" >> ~/.npmrc
 RUN echo "registry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
 
 ## Install NPM Dependencies (Build Python)
-RUN apk add --no-cache --virtual .build-deps make gcc g++ python \
- && npm install -g scss-bundle typescript@3.4.2 @angular/cli@8.1.0 --loglevel info --production \
- && apk del .build-deps
+RUN apk --no-cache --update upgrade musl
+RUN apk add --no-cache make gcc g++ python && \
+  npm install -g --unsafe-perm node-gyp node-sass scss-bundle typescript@3.4.2 @angular/cli@8.1.0 --loglevel info --production && \
+  apk del --force-broken-world make gcc g++ python
