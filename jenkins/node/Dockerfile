@@ -32,7 +32,7 @@ RUN echo "registry=https://$NPM_REGISTRY_URL" >> ~/.npmrc
 ## Install NPM Dependencies (Build Python)
 RUN apk --no-cache --update upgrade musl
 RUN apk add --no-cache make gcc g++ python && \
-  npm install -g --unsafe-perm node-gyp node-sass@4.11.0 scss-bundle typescript@3.4.2 @angular/cli@8.1.0 --loglevel info --production && \
-  apk del --force-broken-world make gcc g++
+  npm install -g --unsafe-perm node-gyp@3.8.0 node-sass@4.11.0 scss-bundle typescript@3.4.2 @angular/cli@8.1.0 --loglevel info --production 
+  ##&& \ apk del --force-broken-world make gcc g++
 
 ##python
