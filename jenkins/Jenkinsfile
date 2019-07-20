@@ -82,7 +82,7 @@ pipeline {
                         }
                         stage('Publish') {
                             steps {
-                                sh './jenkins/scripts/appengine/publish.sh'
+                                sh './jenkins/scripts/appengine-web/publish.sh'
                             }
                         }
                     }
