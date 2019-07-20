@@ -5,8 +5,8 @@
 branch=$GIT_BRANCH
 releaseId=${BUILD_NUMBER:?no build number was available in the environment}     # Comes from Jenkins
 
-# Publish Each Project at projects path
-cd ./appengine-web/projects/gae-web
+# Publish each project under dist/gae-web
+cd ./appengine-web/dist/gae-web
 for libName in *; do
 
   # Set the version number based on the buildId
