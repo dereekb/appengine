@@ -26,9 +26,9 @@ public enum LoginPointerType implements IndexCoded {
     // External
 	PASSWORD(5, LoginType.PASSWORD, "P", false),
 
-	OAUTH_GOOGLE(7, LoginType.OAUTH, "G", false),
+	OAUTH_GOOGLE(6, LoginType.OAUTH, "G", false),
 
-	OAUTH_FACEBOOK(8, LoginType.OAUTH, "F", false);
+	OAUTH_FACEBOOK(7, LoginType.OAUTH, "F", false);
 
 	/**
 	 * Login type/category.

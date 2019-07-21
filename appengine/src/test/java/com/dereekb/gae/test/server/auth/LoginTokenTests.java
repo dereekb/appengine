@@ -13,6 +13,7 @@ import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.SignatureConfigurationImpl;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.time.DateUtility;
 
 public class LoginTokenTests {
@@ -152,6 +153,16 @@ public class LoginTokenTests {
 		LoginToken decodedToken = decoder.decodeLoginToken(encodedToken).getLoginToken();
 		assertTrue(decodedToken.getApp().equals(invalidAppId), "Should atleast match...");
 
+	}
+
+	@Test
+	public void testLoginPointerValueOf()
+	{
+		for (LoginPointerType type : ListUtility.toList(LoginPointerType.values())) {
+			int code = type.code;
+			LoginPointerType value = LoginPointerType.valueOf(code);
+			assertTrue(value.equals(type), "Type should have matched valueOf.");
+		}
 	}
 
 }

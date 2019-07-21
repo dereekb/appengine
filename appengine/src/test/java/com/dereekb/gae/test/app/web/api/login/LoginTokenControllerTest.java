@@ -92,7 +92,7 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 	public void testValidateTokenWithNoSignature() throws Exception {
 		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
 
-		LoginTokenImpl loginToken = new LoginTokenImpl();
+		LoginTokenImpl loginToken = (LoginTokenImpl) this.loginTokenService.makeToken();
 		loginToken.setLogin(1L);
 		loginToken.setLoginPointer("pointer");
 		loginToken.setExpiration(DateUtility.getDateIn(60 * 1000L));
