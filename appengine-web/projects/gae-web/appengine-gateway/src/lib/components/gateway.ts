@@ -29,7 +29,7 @@ export abstract class SignInGateway {
 /**
  * Abstract SignInGateway
  */
-export abstract class AbstractSignInGateway extends AbstractSubscriptionComponent implements SignInGateway, OnDestroy {
+export abstract class AbstractSignInGateway extends AbstractSubscriptionComponent implements SignInGateway {
 
   private _stream = new BehaviorSubject<SignInGatewayEvent>({
     state: SignInGatewayState.Idle
