@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ClientServiceConfig } from './model/client.service';
 import { GaeApiModuleConfiguration } from './api.config';
 import { HttpClient } from '@angular/common/http';
-import { ModelType } from '@gae-web/appengine-utility/lib/model';
+import { ModelType } from '@gae-web/appengine-utility';
 
 /**
  * Exposes API-module-wide services.

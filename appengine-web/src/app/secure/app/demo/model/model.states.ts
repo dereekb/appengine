@@ -2,13 +2,11 @@ import { Ng2StateDeclaration, Transition } from '@uirouter/angular';
 import { ModelDemoComponent } from './model.component';
 import { ModelListComponent } from './list/list.component';
 import { ModelViewComponent } from './view/view.component';
-import { ModelKey } from '@gae-web/appengine-utility/lib/model';
+import { SingleElementReadSource , ModelKey } from '@gae-web/appengine-utility';
 import { Observable, of } from 'rxjs';
 import { FooReadSourceFactory } from 'src/app/secure/shared/api/model/foo/foo.service';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
-import { SingleElementReadSource } from '@gae-web/appengine-utility/lib/source';
 import { ModelInfoViewComponent } from './view/info.component';
-import { delay } from 'rxjs/operators';
 import { ModelEditViewComponent } from './view/edit.component';
 
 export const modelDemoState: Ng2StateDeclaration = {
