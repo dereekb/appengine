@@ -9,7 +9,7 @@
 
 	<groupId>com.dereekb.gae</groupId>
 	<artifactId>gae-core</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.2-SNAPSHOT</version>
 
 	<properties>
 		<packaging.type>war</packaging.type>
@@ -489,6 +489,13 @@
 			            </configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<!-- Versioning -->
+			<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>2.7</version>
 			</plugin>
 
 			<!-- Artifactory Deploy -->

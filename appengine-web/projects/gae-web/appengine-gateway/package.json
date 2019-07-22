@@ -1,6 +1,6 @@
 {
   "name": "@gae-web/appengine-gateway",
-  "version": "0.0.1",
+  "version": "2.0.2",
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
