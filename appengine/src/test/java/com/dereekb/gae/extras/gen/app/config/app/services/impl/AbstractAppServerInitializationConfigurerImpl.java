@@ -107,7 +107,6 @@ public abstract class AbstractAppServerInitializationConfigurerImpl
 		builder.comment("Initialize Server Controller");
 		builder.bean(this.serverBeanId).beanClass(ApiInitializeServerController.class).c()
 		        .ref(this.serverInitializerBeanId);
-
 	}
 
 }

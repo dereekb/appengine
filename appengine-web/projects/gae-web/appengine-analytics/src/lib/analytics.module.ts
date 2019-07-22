@@ -3,7 +3,12 @@ import { AnalyticsService } from './analytics.service';
 
 
 export interface GaeAnalyticsModuleOptions {
+
+  /**
+   * Provides a AnalyticsServiceConfiguration value.
+   */
   analyticsConfigurationProvider?: Provider;
+
 }
 
 @NgModule()

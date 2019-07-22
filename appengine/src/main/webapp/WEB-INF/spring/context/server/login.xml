@@ -1,4 +1,4 @@
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
   <!--Local Login Service-->
   <!--Signatures-->
   <bean class="com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory" id="loginTokenSignatureFactory">
@@ -83,6 +83,10 @@
     <constructor-arg index="0" ref="loginRegistry"/>
     <constructor-arg index="1" ref="loginScheduleCreateReview"/>
   </bean>
+  <bean class="com.dereekb.gae.server.auth.security.login.impl.LoginRolesServiceImpl" id="loginRolesService">
+    <constructor-arg index="0" ref="loginRegistry"/>
+    <constructor-arg index="1" ref="loginAdminRoles"/>
+  </bean>
   <!--Refresh Token Service-->
   <bean class="com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl" id="refreshTokenService">
     <constructor-arg index="0" ref="loginRegistry"/>
@@ -105,12 +109,12 @@
   <bean class="com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService" id="securityContextAnonymousModelRoleSetContextService"/>
   <util:list id="loginTokenModelContextServiceEntries">
     <!--login-->
-    <ref bean="loginSecurityContextServiceEntry"/>
     <ref bean="loginPointerSecurityContextServiceEntry"/>
+    <ref bean="loginSecurityContextServiceEntry"/>
     <ref bean="loginKeySecurityContextServiceEntry"/>
     <!--app-->
-    <ref bean="appSecurityContextServiceEntry"/>
     <ref bean="appHookSecurityContextServiceEntry"/>
+    <ref bean="appSecurityContextServiceEntry"/>
     <!--foo-->
     <ref bean="fooSecurityContextServiceEntry"/>
     <!--Remote-->

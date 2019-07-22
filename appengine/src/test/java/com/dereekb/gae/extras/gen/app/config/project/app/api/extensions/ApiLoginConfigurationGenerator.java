@@ -31,9 +31,19 @@ public class ApiLoginConfigurationGenerator extends AbstractSingleConfigurationF
 
 	public static final String LOGIN_FILE_NAME = "login";
 
+	private boolean disallowPasswordOnProduction = true;
+
 	public ApiLoginConfigurationGenerator(AppConfiguration appConfig, Properties outputProperties) {
 		super(appConfig, outputProperties);
 		this.setFileName(LOGIN_FILE_NAME);
+	}
+
+	public boolean isDisallowPasswordOnProduction() {
+		return this.disallowPasswordOnProduction;
+	}
+
+	public void setDisallowPasswordOnProduction(boolean disallowPasswordOnProduction) {
+		this.disallowPasswordOnProduction = disallowPasswordOnProduction;
 	}
 
 	// MARK: AbstractConfigurationFileGenerator
@@ -80,6 +90,8 @@ public class ApiLoginConfigurationGenerator extends AbstractSingleConfigurationF
 		builder.bean(passwordLoginControllerDelegateBeanId).beanClass(PasswordLoginControllerDelegateImpl.class).c()
 		        .ref("passwordLoginService").ref("passwordRecoveryService")
 		        .ref(this.getAppConfig().getAppBeans().getLoginTokenServiceBeanId());
+
+		// TODO: Add disallowPasswordOnProduction to restrict password in development
 
 		builder.comment("OAuth");
 		String oAuthLoginControllerDelegateBeanId = "oAuthLoginControllerDelegate";

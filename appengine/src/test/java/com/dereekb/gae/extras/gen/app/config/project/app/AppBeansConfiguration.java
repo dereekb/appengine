@@ -19,6 +19,8 @@ public interface AppBeansConfiguration {
 
 	public String getAppIdBeanId();
 
+	public String getAppSystemKeyBeanId();
+
 	public String getAppSecretBeanId();
 
 	// Context
@@ -33,6 +35,8 @@ public interface AppBeansConfiguration {
 	public String getTaskSchedulerId();
 
 	public String getTaskQueueNameId();
+
+	public String getTaskSchedulerEnqueurerBeanId();
 
 	public String getSystemLoginTokenServiceBeanId();
 

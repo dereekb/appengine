@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import com.dereekb.gae.model.extension.data.conversion.json.JsonByteDataConverter;
 import com.dereekb.gae.model.extension.data.conversion.json.JsonByteDataConverterDelegate;
 import com.dereekb.gae.utilities.json.JsonConverter;
+import com.dereekb.gae.utilities.json.impl.JsonConverterImpl;
 import com.google.gson.reflect.TypeToken;
 
 public class JsonByteDataConverterTest {
@@ -18,7 +19,7 @@ public class JsonByteDataConverterTest {
 		Integer value = 1;
 		TestConversionTarget<Integer> target = new TestConversionTarget<Integer>(value);
 
-		JsonConverter jsonConverter = new JsonConverter();
+		JsonConverter jsonConverter = new JsonConverterImpl();
 		TestConversionIntegerTargetDelegate delegate = new TestConversionIntegerTargetDelegate();
 
 		JsonByteDataConverter<TestConversionTarget<Integer>> byteConverter = new JsonByteDataConverter<TestConversionTarget<Integer>>(

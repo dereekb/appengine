@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.utilities.collections.IteratorUtility;
+import com.dereekb.gae.utilities.filters.FilterResults;
+import com.dereekb.gae.utilities.filters.SingleObjectFilter;
+import com.dereekb.gae.utilities.filters.impl.FilterUtility;
 
 public class ListUtility {
 
@@ -27,7 +30,6 @@ public class ListUtility {
 			return null;
 		}
 	}
-
 
 	public static <T> List<T> newList(Collection<T> input) {
 		List<T> list = new ArrayList<T>();
@@ -89,24 +91,46 @@ public class ListUtility {
 	/**
 	 * Adds the elements from an array to the input list.
 	 *
-	 * @param list
-	 *            {@link List} or {@code null}.
+	 * @param collection
+	 *            {@link Collection} or {@code null}.
 	 * @param elements
 	 *            Array of elements to add.
 	 * @return {@link Collection}. Never {@code null}.
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> addElements(Collection<T> list,
+	public static <T> Collection<T> addElements(Collection<T> collection,
 	                                            T... elements) {
-		if (list == null) {
-			list = new ArrayList<T>();
+		if (collection == null) {
+			collection = new ArrayList<T>();
 		}
 
 		for (T element : elements) {
-			list.add(element);
+			collection.add(element);
 		}
 
-		return list;
+		return collection;
+	}
+
+	/**
+	 * Adds the elements from another collection. Always returns a collection.
+	 *
+	 * @param collection
+	 *            {@link Collection} or {@code null}.
+	 * @param newElements
+	 *            {@link Collection} or {@code null}.
+	 * @return {@link Collection}. Never {@code null}.
+	 */
+	public static <T> Collection<T> addElements(Collection<T> collection,
+	                                            Collection<T> newElements) {
+		if (collection == null) {
+			collection = new ArrayList<T>();
+		}
+
+		if (newElements != null) {
+			collection.addAll(newElements);
+		}
+
+		return collection;
 	}
 
 	/**
@@ -297,13 +321,28 @@ public class ListUtility {
 	}
 
 	public static boolean isLastElementIndex(int index,
-	                                    String[] array) {
+	                                         String[] array) {
 		return index == array.length - 1;
 	}
 
 	public static boolean isLastElement(int index,
 	                                    List<?> list) {
 		return index == list.size() - 1;
+	}
+
+	/**
+	 * Filters the iterables to a list using the input filter.
+	 *
+	 * @param iterable
+	 *            Iterable. Never {@code null}.
+	 * @param filter
+	 *            Filter. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public static <T> List<T> filter(Iterable<? extends T> iterable,
+	                                 SingleObjectFilter<T> filter) {
+		FilterResults<T> results = FilterUtility.filterObjects(filter, iterable);
+		return results.getPassingObjects();
 	}
 
 }

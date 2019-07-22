@@ -1,7 +1,8 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { GaeApiModule, ClientLinkService } from '@gae-web/appengine-api';
+import { ClientLinkService } from '@gae-web/appengine-api';
 import { ModelLinkService } from './service/link.service';
 import { ModelServiceWrapperSet } from './service/model.service';
+import { GaeApiModule, GaeApiLinkService } from '@gae-web/appengine-api';
 
 export function modelLinkServiceFactory(wrapperSet: ModelServiceWrapperSet, clientService: ClientLinkService) {
   return new ModelLinkService(wrapperSet, clientService);
@@ -24,7 +25,7 @@ export class GaeClientModule {
         {
           provide: ModelLinkService,
           useFactory: modelLinkServiceFactory,
-          deps: [ModelServiceWrapperSet, ClientLinkService]
+          deps: [ModelServiceWrapperSet, GaeApiLinkService]
         }
       ]
     };

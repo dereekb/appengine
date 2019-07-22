@@ -26,7 +26,6 @@ import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.parameters.impl.KeyedEncodedParameterImpl;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.exception.UnregisteredIterateTypeException;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.impl.IterateTaskInputImpl;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * Task Queue controller used for performing custom tasks over input models.
@@ -208,7 +207,7 @@ public class TaskQueueIterateController extends CaseInsensitiveEntryContainerImp
 			Collection<KeyedEncodedParameter> headers = this.getContinuationHeaders(cursor);
 			Collection<KeyedEncodedParameter> parameters = this.getContinuationParameters();
 
-			TaskRequestImpl request = new TaskRequestImpl(path, Method.PUT);
+			TaskRequestImpl request = new TaskRequestImpl(path);
 			request.setHeaders(headers);
 			request.setParameters(parameters);
 

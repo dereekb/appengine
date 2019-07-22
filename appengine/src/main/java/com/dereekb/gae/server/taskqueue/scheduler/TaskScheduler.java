@@ -3,7 +3,7 @@ package com.dereekb.gae.server.taskqueue.scheduler;
 import java.util.Collection;
 
 import com.dereekb.gae.server.taskqueue.scheduler.exception.SubmitTaskException;
-import com.google.appengine.api.taskqueue.TaskAlreadyExistsException;
+import com.dereekb.gae.server.taskqueue.scheduler.exception.TaskAlreadyExistsException;
 
 /**
  * Used for scheduling tasks.

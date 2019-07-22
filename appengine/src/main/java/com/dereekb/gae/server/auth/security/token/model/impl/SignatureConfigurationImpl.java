@@ -32,6 +32,10 @@ public class SignatureConfigurationImpl
 		return new SignatureConfigurationImpl(DEFAULT_SECRET);
 	}
 
+	public static SignatureConfiguration nullSignature() {
+		return null;
+	}
+
 	@Override
 	public String getSecret() {
 		return this.secret;

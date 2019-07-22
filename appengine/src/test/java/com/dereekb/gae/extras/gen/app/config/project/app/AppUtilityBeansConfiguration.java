@@ -20,6 +20,10 @@ public interface AppUtilityBeansConfiguration {
 
 	public String getLoginRegisterServiceBeanId();
 
+	public String getLoginAdminRolesBeanId();
+
+	public String getLoginRolesServiceBeanId();
+
 	// MARK: Login Token Services
 	public String getLoginTokenUserDetailsBuilderBeanId();
 
@@ -27,5 +31,6 @@ public interface AppUtilityBeansConfiguration {
 	public String getAdminOnlySecurityModelQueryTaskBeanId();
 
 	public String getAllowAllSecurityModelQueryTaskBeanId();
+
 
 }

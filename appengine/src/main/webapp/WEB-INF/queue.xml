@@ -5,8 +5,8 @@
 	<!-- Queue for API -->
 	<queue>
 		<mode>push</mode>
-		<name>app</name>
-		<target>app</target>
+		<name>test</name>
+		<target>test</target>
 		<rate>5/s</rate>
 	</queue>
 </queue-entries>

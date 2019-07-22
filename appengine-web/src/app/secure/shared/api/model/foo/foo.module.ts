@@ -1,4 +1,4 @@
-import { TEST_FOO_MODEL_TYPE, ApiRouteConfiguration } from '@gae-web/appengine-api';
+import { TEST_FOO_MODEL_TYPE, ApiModuleRouteConfiguration } from '@gae-web/appengine-api';
 import { HttpClient } from '@angular/common/http';
 import {
   FooClientCreateService, FooClientReadService, FooClientUpdateService, FooClientDeleteService,
@@ -13,9 +13,10 @@ import {
 } from '@gae-web/appengine-client';
 import { FooSerializer } from './foo.data';
 import { Foo } from './foo';
+import { TEST_API_ROUTE_CONFIGURATION_TOKEN, TestApiModule } from '../test.api';
 
 export function fooServiceFactory(make: (config: any) => any) {
-  return (s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) => {
+  return (s: FooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) => {
     return make({
       type: TEST_FOO_MODEL_TYPE,
       serializer: s,
@@ -34,23 +35,23 @@ export function fooServiceWrapperFactory(set: ModelServiceWrapperSet): ModelServ
   });
 }
 
-export function fooClientCreateServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientCreateServiceFactory(s: FooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new FooClientCreateService(c)).apply(null, arguments);
 }
 
-export function fooClientReadServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientReadServiceFactory(s: FooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new FooClientReadService(c)).apply(null, arguments);
 }
 
-export function fooClientUpdateServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientUpdateServiceFactory(s: FooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new FooClientUpdateService(c)).apply(null, arguments);
 }
 
-export function fooClientDeleteServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientDeleteServiceFactory(s: FooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new FooClientDeleteService(c)).apply(null, arguments);
 }
 
-export function fooClientQueryServiceFactory(s: FooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientQueryServiceFactory(s: FooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new FooClientQueryService(c)).apply(null, arguments);
 }
 
@@ -83,7 +84,7 @@ export function fooCachedKeySourceCacheFactoryFn(wrapper: FooServiceWrapper, que
 }
 
 @NgModule({
-  imports: [GaeClientModule]
+  imports: [GaeClientModule, TestApiModule]
 })
 export class FooClientModule {
 
@@ -103,27 +104,27 @@ export class FooClientModule {
         {
           provide: FooClientCreateService,
           useFactory: fooClientCreateServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [FooSerializer, HttpClient, TEST_API_ROUTE_CONFIGURATION_TOKEN]
         },
         {
           provide: FooClientReadService,
           useFactory: fooClientReadServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [FooSerializer, HttpClient, TEST_API_ROUTE_CONFIGURATION_TOKEN]
         },
         {
           provide: FooClientUpdateService,
           useFactory: fooClientUpdateServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [FooSerializer, HttpClient, TEST_API_ROUTE_CONFIGURATION_TOKEN]
         },
         {
           provide: FooClientDeleteService,
           useFactory: fooClientDeleteServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [FooSerializer, HttpClient, TEST_API_ROUTE_CONFIGURATION_TOKEN]
         },
         {
           provide: FooClientQueryService,
           useFactory: fooClientQueryServiceFactory,
-          deps: [FooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [FooSerializer, HttpClient, TEST_API_ROUTE_CONFIGURATION_TOKEN]
         },
         {
           provide: FooReadSourceFactory,

@@ -1,13 +1,13 @@
 {
   "name": "@gae-web/appengine-api",
-  "version": "0.0.1",
+  "version": "2.0.2",
   "peerDependencies": {
     "rxjs": "*",
     "luxon": "*",
     "make-error": "*",
     "@auth0/angular-jwt": "*",
-    "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0",
+    "@angular/common": "~8.1.0",
+    "@angular/core": "~8.1.0",
     "@gae-web/appengine-token": "*",
     "@gae-web/appengine-utility": "*"
   }

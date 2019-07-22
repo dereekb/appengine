@@ -52,6 +52,7 @@ public class WebServiceRequestBuilderImpl
 	public MockHttpServletRequestBuilder request(HttpMethod method,
 	                                             String urlTemplate,
 	                                             Object... uriVars) {
+
 		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.request(method, urlTemplate, uriVars);
 		builder.secure(this.secure);
 		return builder;

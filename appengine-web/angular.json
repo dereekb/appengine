@@ -63,8 +63,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "appengine-web:build",
+            "proxyConfig": "proxy.conf.json",
             "host": "0.0.0.0",
-            "proxyConfig": "proxy.conf.json"
+            "sslKey": "/node_modules/browser-sync/lib/server/certs/server.key",
+            "sslCert": "/node_modules/browser-sync/lib/server/certs/server.crt",
+            "ssl": true
           },
           "configurations": {
             "production": {

@@ -1,4 +1,4 @@
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
   <!--No HTTP Security For Google App Engine Test Server-->
   <security:http pattern="/_ah/**" security="none"/>
   <!--Allow anyone to initialize the server via GET.-->
@@ -80,7 +80,7 @@
     <security:intercept-url access="hasRole('ROLE_USER')" method="POST" pattern="/api/test/v1/login/auth/token/reset"/>
     <security:intercept-url access="hasRole('ROLE_ADMIN')" method="POST" pattern="/api/test/v1/login/auth/token/reset/*"/>
     <!--Scheduling Pattern-->
-    <security:intercept-url access="hasRole('ROLE_USER')" method="POST" pattern="/api/test/v1/scheduler/schedule"/>
+    <security:intercept-url access="hasRole('ROLE_ADMIN')" method="POST" pattern="/api/test/v1/scheduler/schedule"/>
     <!--Everything Else Is Denied-->
     <security:intercept-url access="denyAll" pattern="/**"/>
     <security:access-denied-handler ref="accessDeniedHandler"/>
@@ -196,6 +196,9 @@
       </map>
     </constructor-arg>
   </bean>
+  <bean class="java.lang.Long" id="loginAdminRoles">
+    <constructor-arg index="0" value="1"/>
+  </bean>
   <!--Login Token System Factory-->
   <!--Login Token System-->
   <bean class="com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenServiceImpl" id="systemLoginTokenService">
@@ -226,12 +229,12 @@
   </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
-    <ref bean="loginType"/>
-    <ref bean="loginPointerType"/>
-    <ref bean="loginKeyType"/>
-    <ref bean="appType"/>
     <ref bean="appHookType"/>
     <ref bean="fooType"/>
+    <ref bean="loginPointerType"/>
+    <ref bean="loginType"/>
+    <ref bean="appType"/>
+    <ref bean="loginKeyType"/>
   </util:list>
   <!--Exception Handler-->
   <bean class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler" id="loginTokenExceptionHandler"/>

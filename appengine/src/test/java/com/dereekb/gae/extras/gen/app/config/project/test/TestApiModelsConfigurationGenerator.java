@@ -34,6 +34,7 @@ public class TestApiModelsConfigurationGenerator extends AbstractModelConfigurat
 	public TestApiModelsConfigurationGenerator(AbstractConfigurationFileGenerator generator) {
 		super(generator);
 		this.setResultsFolderName(CLIENT_FOLDER_NAME);
+		this.setIgnoreInternalOnly(true);
 	}
 
 	// MARK: Client Configurations

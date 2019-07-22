@@ -33,4 +33,11 @@ public interface AppModelConfiguration
 	 */
 	public boolean isLocalModel();
 
+	/**
+	 * Whether or not this model is an internal server model only.
+	 * <p>
+	 * Currently this means that the model is a read-only model.
+	 */
+	public boolean isInternalModelOnly();
+
 }

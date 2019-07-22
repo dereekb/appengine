@@ -56,16 +56,17 @@ public class ClientAppLoginSecurityVerifierServiceImpl extends AbstractAppLoginS
 		try {
 			this.clientLoginTokenValidationService.validateToken(new ClientLoginTokenValidationRequestImpl(request));
 		} catch (ClientLoginTokenExpiredException e) {
-			throw new TokenExpiredException();
+			throw new TokenExpiredException(e);
 		} catch (ClientLoginTokenInvalidException e) {
-			throw new TokenUnauthorizedException();
+			throw new TokenUnauthorizedException(e);
 		} catch (ClientLoginTokenInvalidSignatureException e) {
-			throw new TokenSignatureInvalidException();
+			throw new TokenSignatureInvalidException(e);
 		} catch (ClientIllegalArgumentException e) {
 			LOGGER.log(Level.WARNING, "Illegal argument while checking token.", e);
 			throw new TokenUnauthorizedException();
 		} catch (ClientRequestFailureException e) {
-			throw new TokenUnauthorizedException();
+			LOGGER.log(Level.WARNING, "The client request failed while attempting to authorize the token.", e);
+			throw new TokenUnauthorizedException(e);
 		}
 	}
 

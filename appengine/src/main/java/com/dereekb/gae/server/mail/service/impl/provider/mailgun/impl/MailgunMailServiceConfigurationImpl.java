@@ -2,6 +2,12 @@ package com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl;
 
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.MailgunMailServiceConfiguration;
 
+/**
+ * {@link MailgunMailServiceConfiguration} implementation
+ *
+ * @author dereekb
+ *
+ */
 public class MailgunMailServiceConfigurationImpl
         implements MailgunMailServiceConfiguration {
 
@@ -46,6 +52,7 @@ public class MailgunMailServiceConfigurationImpl
 		return "MailgunMailServiceConfigurationImpl [apiKey=" + this.apiKey + ", domain=" + this.domain + "]";
 	}
 
+	@Override
 	public boolean isTestMode() {
 		return this.testMode;
 	}

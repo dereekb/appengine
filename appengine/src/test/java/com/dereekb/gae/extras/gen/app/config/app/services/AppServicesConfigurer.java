@@ -22,4 +22,8 @@ public interface AppServicesConfigurer {
 
 	public AppWebHookEventServiceConfigurer getAppWebHookEventServiceConfigurer();
 
+	public AppTaskSchedulerEnqueuerConfigurer getAppTaskSchedulerEnqueuerConfigurer();
+
+	public AppMailServiceConfigurer getAppMailServiceConfigurer();
+
 }

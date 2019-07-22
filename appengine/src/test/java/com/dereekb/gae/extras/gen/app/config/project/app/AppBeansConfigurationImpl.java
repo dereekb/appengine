@@ -14,6 +14,7 @@ public class AppBeansConfigurationImpl
 	public static final String APP_NAME_BEAN_ID = "serverAppName";
 	public static final String APP_ID_BEAN_ID = "serverAppId";
 	public static final String APP_SECRET_BEAN_ID = "serverAppSecret";
+	public static final String APP_SYSTEM_KEY_BEAN_ID = "serverAppSystemKey";
 
 	public static final String OBJECTIFY_INITIALIZER_BEAN_ID = "objectifyInitializer";
 	public static final String OBJECTIFY_DATABASE_BEAN_ID = "objectifyDatabase";
@@ -23,6 +24,7 @@ public class AppBeansConfigurationImpl
 	public static final String LINK_SERVICE_BEAN_ID = "linkService";
 	public static final String TASK_SCHEDULER_BEAN_ID = "taskScheduler";
 	public static final String TASK_QUEUE_NAME_BEAN_ID = "taskQueueName";
+	public static final String TASK_SCHEDULER_ENQUEUER_BEAN_ID = "taskEnqueuer";
 	public static final String MODEL_KEY_TYPE_CONVERTER_ID = "modelKeyTypeConverter";
 	public static final String SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID = "systemLoginTokenService";
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
@@ -42,6 +44,8 @@ public class AppBeansConfigurationImpl
 	public static final String CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID = "clientLoginTokenModelContextServiceEntryFactory";
 	public static final String PASSWORD_LOGIN_SERVICE_BEAN_ID = "passwordLoginService";
 	public static final String LOGIN_REGISTER_SERVICE_BEAN_ID = "loginRegisterService";
+	public static final String LOGIN_ADMIN_ROLES_BEAN_ID = "loginAdminRoles";
+	public static final String LOGIN_ROLES_SERVICE_BEAN_ID = "loginRolesService";
 	public static final String LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID = "loginTokenUserDetailsBuilder";
 
 	public static final String ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "adminOnlySecurityModelQueryTask";
@@ -53,6 +57,7 @@ public class AppBeansConfigurationImpl
 	private String appKeyBeanId = APP_KEY_BEAN_ID;
 	private String appNameBeanId = APP_NAME_BEAN_ID;
 	private String appIdBeanId = APP_ID_BEAN_ID;
+	private String appSystemKeyBeanId = APP_SYSTEM_KEY_BEAN_ID;
 	private String appSecretBeanId = APP_SECRET_BEAN_ID;
 
 	private String objectifyInitializerId = OBJECTIFY_INITIALIZER_BEAN_ID;
@@ -63,6 +68,7 @@ public class AppBeansConfigurationImpl
 	private String linkServiceId = LINK_SERVICE_BEAN_ID;
 	private String taskSchedulerId = TASK_SCHEDULER_BEAN_ID;
 	private String taskQueueNameId = TASK_QUEUE_NAME_BEAN_ID;
+	private String taskSchedulerEnqueurerBeanId = TASK_SCHEDULER_ENQUEUER_BEAN_ID;
 	private String modelKeyTypeConverterId = MODEL_KEY_TYPE_CONVERTER_ID;
 	private String systemLoginTokenServiceBeanId = SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
@@ -89,6 +95,8 @@ public class AppBeansConfigurationImpl
 		private String clientLoginTokenModelContextServiceEntryFactoryBeanId = CLIENT_LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_ENTRY_FACTORY_BEAN_ID;
 		private String passwordLoginServiceBeanId = PASSWORD_LOGIN_SERVICE_BEAN_ID;
 		private String loginRegisterServiceBeanId = LOGIN_REGISTER_SERVICE_BEAN_ID;
+		private String loginAdminRolesBeanId = LOGIN_ADMIN_ROLES_BEAN_ID;
+		private String loginRolesServiceBeanId = LOGIN_ROLES_SERVICE_BEAN_ID;
 		private String loginTokenUserDetailsBuilderBeanId = LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID;
 
 		// MARK: AppUtilityBeansConfiguration
@@ -117,6 +125,32 @@ public class AppBeansConfigurationImpl
 			}
 
 			this.passwordLoginServiceBeanId = passwordLoginServiceBeanId;
+		}
+
+		@Override
+		public String getLoginAdminRolesBeanId() {
+			return this.loginAdminRolesBeanId;
+		}
+
+		public void setLoginAdminRolesBeanId(String loginAdminRolesBeanId) {
+			if (loginAdminRolesBeanId == null) {
+				throw new IllegalArgumentException("loginAdminRolesBeanId cannot be null.");
+			}
+
+			this.loginAdminRolesBeanId = loginAdminRolesBeanId;
+		}
+
+		@Override
+		public String getLoginRolesServiceBeanId() {
+			return this.loginRolesServiceBeanId;
+		}
+
+		public void setLoginRolesServiceBeanId(String loginRolesServiceBeanId) {
+			if (loginRolesServiceBeanId == null) {
+				throw new IllegalArgumentException("loginRolesServiceBeanId cannot be null.");
+			}
+
+			this.loginRolesServiceBeanId = loginRolesServiceBeanId;
 		}
 
 		@Override
@@ -224,6 +258,19 @@ public class AppBeansConfigurationImpl
 	}
 
 	@Override
+	public String getAppSystemKeyBeanId() {
+		return this.appSystemKeyBeanId;
+	}
+
+	public void setAppSystemKeyBeanId(String appSystemKeyBeanId) {
+		if (appSystemKeyBeanId == null) {
+			throw new IllegalArgumentException("appSystemKeyBeanId cannot be null.");
+		}
+
+		this.appSystemKeyBeanId = appSystemKeyBeanId;
+	}
+
+	@Override
 	public String getObjectifyInitializerId() {
 		return this.objectifyInitializerId;
 	}
@@ -325,6 +372,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.taskQueueNameId = taskQueueNameId;
+	}
+
+	@Override
+	public String getTaskSchedulerEnqueurerBeanId() {
+		return this.taskSchedulerEnqueurerBeanId;
+	}
+
+	public void setTaskSchedulerEnqueurerBeanId(String taskSchedulerEnqueurerBeanId) {
+		if (taskSchedulerEnqueurerBeanId == null) {
+			throw new IllegalArgumentException("taskSchedulerEnqueurerBeanId cannot be null.");
+		}
+
+		this.taskSchedulerEnqueurerBeanId = taskSchedulerEnqueurerBeanId;
 	}
 
 	@Override

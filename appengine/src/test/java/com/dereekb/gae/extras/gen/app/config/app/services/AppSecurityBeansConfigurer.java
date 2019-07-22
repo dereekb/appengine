@@ -35,6 +35,9 @@ public interface AppSecurityBeansConfigurer
 	public void configureTokenEncoderDecoder(AppConfiguration appConfig,
 	                                         SpringBeansXMLBeanBuilder<?> beanBuilder);
 
+	/**
+	 * NOTE: Is only used by the login server.
+	 */
 	public void configureTokenBuilder(AppConfiguration appConfig,
 	                                  SpringBeansXMLBeanBuilder<?> beanBuilder);
 
@@ -48,5 +51,9 @@ public interface AppSecurityBeansConfigurer
 	public void configureOAuthServiceManagerMap(AppConfiguration appConfig,
 	                                            SpringBeansXMLBuilder builder,
 	                                            String oAuthLoginServiceMapId);
+
+	public void configureNewLoginGenerator(AppConfiguration appConfig,
+	                                       SpringBeansXMLBuilder builder,
+	                                       String newLoginGeneratorId);
 
 }

@@ -33,11 +33,21 @@ public class WebHookEventDataImpl
 		this.setType(type);
 	}
 
+	@JsonInclude(Include.ALWAYS)
 	public String getType() {
 		return this.type;
 	}
 
 	public void setType(String type) {
+		if (type == null) {
+			throw new IllegalArgumentException("type cannot be null.");
+		}
+
+		this.safeSetType(type);
+	}
+
+	@JsonIgnore
+	public void safeSetType(String type) {
 		this.type = type;
 	}
 

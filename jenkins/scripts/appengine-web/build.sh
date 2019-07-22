@@ -2,4 +2,4 @@
 
 # Build
 cd "./appengine-web"
-sh -c "./build-libs.sh"
+sh -c "./build.sh"

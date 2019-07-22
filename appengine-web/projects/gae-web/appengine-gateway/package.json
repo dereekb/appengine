@@ -1,6 +1,6 @@
 {
   "name": "@gae-web/appengine-gateway",
-  "version": "0.0.1",
+  "version": "2.0.2",
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
@@ -10,7 +10,8 @@
     "@gae-web/appengine-utility": "*",
     "@gae-web/appengine-components": "*",
     "@gae-web/appengine-services": "*",
-    "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0"
+    "@angular/common": "~8.1.0",
+    "@angular/core": "~8.1.0",
+    "@angular/flex-layout": "^8.0.0-beta.26"
   }
 }

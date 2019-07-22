@@ -13,8 +13,10 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
@@ -31,9 +33,9 @@ import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLHttpB
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasAnyRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
-import com.dereekb.gae.server.app.model.app.info.impl.AppInfoFactoryImpl;
-import com.dereekb.gae.server.app.model.app.info.impl.AppInfoImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
+import com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoFactoryImpl;
+import com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoImpl;
 import com.dereekb.gae.server.auth.security.app.token.filter.LoginTokenAuthenticationFilterAppLoginSecurityVerifierImpl;
 import com.dereekb.gae.server.auth.security.misc.AccessDeniedHandlerImpl;
 import com.dereekb.gae.server.auth.security.model.context.encoded.impl.LoginTokenModelContextSetEncoderDecoderImpl;
@@ -55,11 +57,9 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongMo
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializerImpl;
-import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
-import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
-import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.web.matcher.MultiRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher;
@@ -127,11 +127,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppServiceName())
 		        .value(this.getAppConfig().getAppServiceConfigurationInfo().getAppVersion());
 
-		builder.bean("productionAppInfo").beanClass(AppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
-		        .ref(appBeans.getAppNameBeanId()).ref(productionAppServiceInfoBeanId);
+		builder.bean("productionAppInfo").beanClass(SystemAppInfoImpl.class).c().ref(appBeans.getAppKeyBeanId())
+		        .ref(appBeans.getAppNameBeanId()).ref(appBeans.getAppSystemKeyBeanId())
+		        .ref(productionAppServiceInfoBeanId);
 
 		String appInfoFactoryBeanId = "appInfoFactory";
-		builder.bean(appInfoFactoryBeanId).beanClass(AppInfoFactoryImpl.class).property("productionSingleton")
+		builder.bean(appInfoFactoryBeanId).beanClass(SystemAppInfoFactoryImpl.class).property("productionSingleton")
 		        .ref("productionAppInfo");
 
 		builder.bean(appBeans.getAppInfoBeanId()).factoryBean(appInfoFactoryBeanId).factoryMethod("make");
@@ -140,6 +141,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		builder.longBean(appBeans.getAppIdBeanId(), this.getAppConfig().getAppId());
 		builder.stringBean(appBeans.getAppNameBeanId(), this.getAppConfig().getAppName());
 		builder.stringBean(appBeans.getAppSecretBeanId(), this.getAppConfig().getAppSecret());
+		builder.stringBean(appBeans.getAppSystemKeyBeanId(), this.getAppConfig().getAppSystemKey());
 
 		builder.comment("Development");
 		builder.stringBean(appBeans.getAppDevelopmentProxyUrlBeanId(), this.getAppConfig().getAppDevelopmentProxyUrl());
@@ -165,7 +167,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 			AppConfiguration appConfig = this.getAppConfig();
-			AppServerInitializationConfigurer configurer = appConfig.getAppServicesConfigurer().getAppServerInitializationConfigurer();
+			AppServerInitializationConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppServerInitializationConfigurer();
 			configurer.configureContextInitializationComponents(appConfig, builder);
 
 			return builder;
@@ -286,7 +289,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
-				List<LocalModelConfiguration> modelConfigs = group.getModelConfigurations();
+				List<LocalModelConfiguration> modelConfigs = ListUtility.filter(group.getModelConfigurations(), NotInternalModelConfigurationFilter.make());
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
 					entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
 				}
@@ -324,17 +327,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
-			builder.comment("Mail");
-			String mailgunMailServiceConfigurationBeanId = "mailServiceConfiguration";
-
-			builder.bean("mailService").beanClass(MailgunMailServiceImpl.class).c().ref("serverMailUser")
-			        .ref(mailgunMailServiceConfigurationBeanId);
-
-			builder.bean("serverMailUser").beanClass(MailUserImpl.class).c().value("demo@test.com")
-			        .value("test service");
-
-			builder.bean(mailgunMailServiceConfigurationBeanId).beanClass(MailgunMailServiceConfigurationImpl.class).c()
-			        .value("API_KEY").value("test.com");
+			AppConfiguration appConfig = this.getAppConfig();
+			appConfig.getAppServicesConfigurer().getAppMailServiceConfigurer().configureMailService(appConfig, builder);
 
 			return builder;
 		}
@@ -419,8 +413,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			String serviceApiPath = this.getServiceApiPath();
 
-			List<LocalModelConfiguration> secureLocalModelConfigs = AppConfigurationUtility
-			        .readLocalModelConfigurations(this.getAppConfig());
+			List<LocalModelConfiguration> secureLocalModelConfigs = this.loadSecureLocalModelConfigs();
 			boolean hasSecureLocalModelConfigs = (secureLocalModelConfigs.isEmpty() == false);
 
 			builder.comment("No HTTP Security For Google App Engine Test Server");
@@ -482,7 +475,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			// Server Scheduler Routes
 			http.getRawXMLBuilder().c("Scheduling Pattern");
-			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_USER"), HttpMethod.POST);
+			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_ADMIN"), HttpMethod.POST);
 
 			http.getRawXMLBuilder().c("Everything Else Is Denied");
 			http.intercept("/**", RoleConfigImpl.make("denyAll"));
@@ -552,9 +545,14 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .value("ROLE_USER").up().up().up().bean().beanClass(SimpleGrantedAuthority.class).c()
 			        .value("ROLE_ANON");
 
+			// TODO: Configure this better so the decoder can also generate the
+			// admin roles that are sent to the XML.
+
 			builder.bean("loginGrantedAuthorityDecoder").beanClass(GrantedAuthorityDecoderImpl.class)
 			        .factoryMethod("withStringMap").c().map().keyType(Integer.class).valueType(String.class)
 			        .value("0", "ROLE_ADMIN");
+
+			builder.longBean(this.getAppConfig().getAppBeans().getUtilityBeans().getLoginAdminRolesBeanId(), 0x1L);
 
 			builder.comment("Login Token System Factory");
 			this.getAppConfig().getAppSecurityBeansConfigurer().configureSystemLoginTokenFactory(this.getAppConfig(),
@@ -579,6 +577,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			        .beanClass(AllowAllSecurityModelQueryTask.class);
 
 			return builder;
+		}
+
+		private List<LocalModelConfiguration> loadSecureLocalModelConfigs() {
+			List<LocalModelConfiguration> allLocalModelConfigs = AppConfigurationUtility.readLocalModelConfigurations(this.getAppConfig());
+			return ListUtility.filter(allLocalModelConfigs, NotInternalModelConfigurationFilter.make());
 		}
 
 		/**
@@ -644,16 +647,24 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		@Override
 		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+			AppConfiguration appConfig = this.getAppConfig();
 
 			builder.comment("Task Queue");
-			builder.stringBean(this.getAppConfig().getAppBeans().getTaskQueueNameId(),
-			        this.getAppConfig().getAppTaskQueueName());
+
+			String taskQueueNameBeanId = appConfig.getAppBeans().getTaskQueueNameId();
+
+			String authenticatorBeanId = "taskAuthenticator";
+
+			builder.stringBean(taskQueueNameBeanId, this.getAppConfig().getAppTaskQueueName());
+
+			AppTaskSchedulerEnqueuerConfigurer taskSchedulerEnqueuerConfigurer = this.getAppConfig()
+			        .getAppServicesConfigurer().getAppTaskSchedulerEnqueuerConfigurer();
+			taskSchedulerEnqueuerConfigurer.configureTaskSchedulerEnqueuerComponents(appConfig, builder);
 
 			builder.bean("taskScheduler").beanClass(TaskSchedulerImpl.class).c()
-			        .ref(this.getAppConfig().getAppBeans().getTaskQueueNameId()).up().property("authenticator")
-			        .ref("taskSchedulerAuthenticator");
+			        .ref(appConfig.getAppBeans().getTaskSchedulerEnqueurerBeanId()).ref(authenticatorBeanId);
 
-			builder.bean("taskSchedulerAuthenticator").beanClass(TaskSchedulerAuthenticatorImpl.class).c()
+			builder.bean(authenticatorBeanId).beanClass(TaskSchedulerAuthenticatorImpl.class).c()
 			        .ref(this.getAppConfig().getAppBeans().getSystemLoginTokenFactoryBeanId());
 
 			return builder;

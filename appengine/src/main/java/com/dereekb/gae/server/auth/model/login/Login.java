@@ -20,6 +20,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
 import com.googlecode.objectify.condition.IfNotDefault;
+import com.googlecode.objectify.condition.IfNull;
 
 /**
  * Default login model.
@@ -35,6 +36,8 @@ public final class Login extends DescribedDatabaseModel
         implements ObjectifyModel<Login>, EncodedRolesBearer {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final Long DEFAULT_ROLES = 0L;
 
 	/**
 	 * Database identifier.
@@ -71,10 +74,12 @@ public final class Login extends DescribedDatabaseModel
 	 * A {@link Long} that encodes all roles.
 	 * <p>
 	 * The roles identifiers will differ between systems.
+	 * <p>
+	 * Should never be null.
 	 */
 	@Index({ IfNotDefault.class })
-	@IgnoreSave({ IfDefault.class })
-	private Long roles = 0L;
+	@IgnoreSave({ IfDefault.class, IfNull.class })
+	private Long roles = DEFAULT_ROLES;
 
 	/**
 	 * Parent Logins that have access to this login.

@@ -12,10 +12,13 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppMailServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.impl.MailgunAppMailServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.LocalAppLoginTokenSecurityConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.impl.NoopAppWebHookEventServiceConfigurer;
@@ -29,6 +32,8 @@ import com.dereekb.gae.extras.gen.test.app.gae.local.TestModelGroupConfiguration
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
+import com.dereekb.gae.server.mail.service.MailUser;
+import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
@@ -39,12 +44,22 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  */
 public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigurationGen {
 
+	public static final OAuthClientConfig TEST_FACEBOOK_OAUTH_CONFIG = new OAuthClientConfigImpl("431391914300748",
+	        "102a10dd9bfa5e2783e57a2f09b0c2ac");
+
 	@Override
 	public AppConfiguration makeAppSpringConfiguration() {
 
 		String appProjectId = "gae-test";
 		String appProjectService = "test";
 		String appProjectVersion = "v1";
+
+		String appName = "GAE Core Test App";
+		String developmentProxy = "http://gae-nginx:8080";	// Unused
+		String developmentHost = "localhost:8080";
+		Long appId = 1L;
+
+		MailUser systemMailUser =  new MailUserImpl("test@gae.dereekb.com", "Test Server");
 
 		// Models
 		// Login
@@ -56,8 +71,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		// Foo
 		LocalModelConfigurationGroupImpl fooGroup = TestModelGroupConfigurationGen.makeLocalTestGroupConfig();
 
-		List<LocalModelConfigurationGroup> modelConfigurations = ListUtility
-		        .toList(loginGroup, appGroup, fooGroup);
+		List<LocalModelConfigurationGroup> modelConfigurations = ListUtility.toList(loginGroup, appGroup, fooGroup);
 
 		AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl(appProjectId,
 		        appProjectService, appProjectVersion);
@@ -67,9 +81,16 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		RemoteServiceConfigurationImpl remoteEventService = remoteEventServiceGen.make();
 
 		// Configuration
+		AppServerInitializationConfigurer appServerInitializationConfigurer = new LoginServerAppServerInitializationConfigurerImpl();
 		AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer = new LocalAppLoginTokenSecurityConfigurerImpl();
-		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new NoopAppEventListenerConfigurer(); // new WebHookEventSubmitterImplEventListenerConfigurer();
-		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new NoopAppWebHookEventServiceConfigurer(); // new LocalAppWebHookEventServiceConfigurer(); // = new RemoteAppWebHookEventServiceConfigurerImpl(remoteEventService);
+		AppEventServiceListenersConfigurer appEventServiceListenersConfigurer = new NoopAppEventListenerConfigurer(); // new
+		                                                                                                              // WebHookEventSubmitterImplEventListenerConfigurer();
+		AppWebHookEventServiceConfigurer appWebHookEventServiceConfigurer = new NoopAppWebHookEventServiceConfigurer(); // new
+		                                                                                                                // LocalAppWebHookEventServiceConfigurer();
+		                                                                                                                // //
+		                                                                                                                // =
+		                                                                                                                // new
+		                                                                                                                // RemoteAppWebHookEventServiceConfigurerImpl(remoteEventService);
 
 		AppModelKeyEventListenerConfigurer appModelKeyEventListenerConfigurer = new AppModelKeyEventListenerConfigurer() {
 
@@ -81,27 +102,28 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 
 		};
 
-		AppServicesConfigurerImpl appServicesConfigurer = new AppServicesConfigurerImpl(appLoginTokenSecurityConfigurer,
-		        appEventServiceListenersConfigurer, appWebHookEventServiceConfigurer,
-		        appModelKeyEventListenerConfigurer);
+		AppMailServiceConfigurer appMailServiceConfigurer = new MailgunAppMailServiceConfigurerImpl(systemMailUser);
 
-		appServicesConfigurer
-		        .setAppServerInitializationConfigurer(new LoginServerAppServerInitializationConfigurerImpl());
+		AppServicesConfigurerImpl appServicesConfigurer = new AppServicesConfigurerImpl(
+		        appServerInitializationConfigurer, appLoginTokenSecurityConfigurer, appEventServiceListenersConfigurer,
+		        appWebHookEventServiceConfigurer, appModelKeyEventListenerConfigurer, appMailServiceConfigurer);
 
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
 
-		configuration.setAppName("GAE Core Test App");
+		configuration.setAppName(appName);
+		configuration.setAppTaskQueueName(appProjectService);
+		configuration.setAppId(appId);
+
+		configuration.setAppDevelopmentProxyUrl(developmentProxy);
+		configuration.setAppDevelopmentServerHostUrl(developmentHost);
 
 		configuration.setIsLoginServer(true);
-		configuration.setAppId(1L);
-
 		configuration.setRemoteServices(remoteEventService);
 
 		LoginTokenAppSecurityBeansConfigurerImpl appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 
-		OAuthClientConfig facebookOAuthConfig = new OAuthClientConfigImpl("431391914300748", "102a10dd9bfa5e2783e57a2f09b0c2ac");
-		appSecurityBeansConfigurer.setFacebookOAuthConfig(facebookOAuthConfig);
+		appSecurityBeansConfigurer.setFacebookOAuthConfig(TEST_FACEBOOK_OAUTH_CONFIG);
 
 		// TODO: Add Google configuration.
 

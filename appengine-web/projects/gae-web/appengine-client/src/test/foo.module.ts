@@ -1,4 +1,4 @@
-import { TEST_FOO_MODEL_TYPE, ApiRouteConfiguration, TestFooSerializer, TestFoo, QueryService } from '@gae-web/appengine-api';
+import { TEST_FOO_MODEL_TYPE, ApiModuleRouteConfiguration, TestFooSerializer, TestFoo, QueryService } from '@gae-web/appengine-api';
 import { HttpClient } from '@angular/common/http';
 import {
   TestFooClientCreateService, TestFooClientReadService, TestFooClientUpdateService, TestFooClientDeleteService,
@@ -13,7 +13,7 @@ import { ModelReadService, ModelDeleteService, ModelUpdateService } from '../lib
 import { ModelQueryService } from '../lib/service/query.service';
 
 export function fooServiceFactory(make: (config: any) => any) {
-  return (s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) => {
+  return (s: TestFooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) => {
     return make({
       type: TEST_FOO_MODEL_TYPE,
       serializer: s,
@@ -32,23 +32,23 @@ export function fooServiceWrapperFactory(set: ModelServiceWrapperSet): ModelServ
   });
 }
 
-export function fooClientCreateServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientCreateServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new TestFooClientCreateService(c)).apply(null, arguments);
 }
 
-export function fooClientReadServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientReadServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new TestFooClientReadService(c)).apply(null, arguments);
 }
 
-export function fooClientUpdateServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientUpdateServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new TestFooClientUpdateService(c)).apply(null, arguments);
 }
 
-export function fooClientDeleteServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientDeleteServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new TestFooClientDeleteService(c)).apply(null, arguments);
 }
 
-export function fooClientQueryServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiRouteConfiguration) {
+export function fooClientQueryServiceFactory(s: TestFooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) {
   return fooServiceFactory((c) => new TestFooClientQueryService(c)).apply(null, arguments);
 }
 
@@ -95,27 +95,27 @@ export class TestFooClientModule {
         {
           provide: TestFooClientCreateService,
           useFactory: fooClientCreateServiceFactory,
-          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiModuleRouteConfiguration]
         },
         {
           provide: TestFooClientReadService,
           useFactory: fooClientReadServiceFactory,
-          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiModuleRouteConfiguration]
         },
         {
           provide: TestFooClientUpdateService,
           useFactory: fooClientUpdateServiceFactory,
-          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiModuleRouteConfiguration]
         },
         {
           provide: TestFooClientDeleteService,
           useFactory: fooClientDeleteServiceFactory,
-          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiModuleRouteConfiguration]
         },
         {
           provide: TestFooClientQueryService,
           useFactory: fooClientQueryServiceFactory,
-          deps: [TestFooSerializer, HttpClient, ApiRouteConfiguration]
+          deps: [TestFooSerializer, HttpClient, ApiModuleRouteConfiguration]
         },
         {
           provide: TestFooReadSourceFactory,

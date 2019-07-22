@@ -8,6 +8,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook.FacebookOAuthService;
@@ -50,6 +51,15 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	public LoginTokenAppSecurityBeansConfigurerImpl(
 	        SystemLoginTokenFactoryConfigurer systemLoginTokenFactoryConfigurer) {
 		this.setSystemLoginTokenFactoryConfigurer(systemLoginTokenFactoryConfigurer);
+		this.initializeDefaultClasses();
+	}
+
+	protected void initializeDefaultClasses() {
+		this.setLoginTokenEncoderDecoderClass(LoginTokenEncoderDecoderImpl.class);
+		this.setLoginTokenBuilderClass(LoginTokenBuilderImpl.class);
+		this.setLoginTokenAuthenticationProviderClass(LoginTokenAuthenticationProviderImpl.class);
+		this.setLoginTokenUserDetailsBuilderClass(LoginTokenUserDetailsBuilderImpl.class);
+		this.setLoginSecurityModelQueryTaskOverrideClass(LoginSecurityModelQueryTaskOverrideImpl.class);
 	}
 
 	@Override
@@ -208,7 +218,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	@Override
 	public void configureTokenUserDetailsBuilder(AppConfiguration appConfig,
 	                                             SpringBeansXMLBeanBuilder<?> beanBuilder) {
-		beanBuilder.beanClass(LoginTokenUserDetailsBuilderImpl.class).c().ref("loginTokenModelContextSetDencoder")
+		beanBuilder.beanClass(this.loginTokenUserDetailsBuilderClass).c().ref("loginTokenModelContextSetDencoder")
 		        .ref("loginTokenGrantedAuthorityBuilder").ref("loginGetter").ref("loginPointerGetter");
 	}
 
@@ -217,6 +227,14 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	                                             SpringBeansXMLBuilder beanBuilder) {
 		SystemLoginTokenFactoryConfigurer configurer = this.systemLoginTokenFactoryConfigurer;
 		configurer.configureSystemLoginTokenFactory(appConfig, beanBuilder);
+	}
+
+	@Override
+	public void configureNewLoginGenerator(AppConfiguration appConfig,
+	                                       SpringBeansXMLBuilder builder,
+	                                       String newLoginGeneratorId) {
+		builder.bean(newLoginGeneratorId).beanClass(NewLoginGeneratorImpl.class).c().ref("loginRegistry")
+		        .ref("loginScheduleCreateReview");
 	}
 
 	@Override

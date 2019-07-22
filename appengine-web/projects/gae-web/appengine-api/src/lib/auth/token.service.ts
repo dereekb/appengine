@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map, share } from 'rxjs/operators';
 import { HttpClient, HttpResponse, HttpParams, HttpHeaders, HttpBackend } from '@angular/common/http';
-import { ApiRouteConfiguration } from '../api.config';
+import { ApiModuleRouteConfiguration } from '../api.config';
 import {
   LoginTokenPairJson, EncodedToken, LoginTokenPair, ExpiredTokenAuthorizationError,
   InvalidTokenAuthorizationError, UserLoginTokenAuthenticator, EncodedRefreshToken
@@ -38,7 +38,7 @@ export class PublicLoginTokenApiService {
   private _servicePath: string;
   private _httpClient: HttpClient;
 
-  constructor(httpBackend: HttpBackend, private _config: ApiRouteConfiguration) {
+  constructor(httpBackend: HttpBackend, private _config: ApiModuleRouteConfiguration) {
     this._servicePath = this._config.root + PublicLoginTokenApiService.SERVICE_PATH;
     this._httpClient = new HttpClient(httpBackend);
   }

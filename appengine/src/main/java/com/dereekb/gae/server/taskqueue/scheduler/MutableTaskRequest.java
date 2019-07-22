@@ -2,10 +2,9 @@ package com.dereekb.gae.server.taskqueue.scheduler;
 
 import java.util.Collection;
 
-import com.dereekb.gae.server.taskqueue.scheduler.utility.converter.TaskRequestHost;
+import com.dereekb.gae.server.taskqueue.scheduler.appengine.utility.converter.TaskRequestHost;
 import com.dereekb.gae.utilities.misc.parameters.KeyedEncodedParameter;
 import com.dereekb.gae.utilities.misc.path.SimplePath;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * {@link TaskRequest} that can be modified.
@@ -17,8 +16,6 @@ public interface MutableTaskRequest
         extends TaskRequest {
 
 	public void setName(String name);
-
-	public void setMethod(Method method);
 
 	public void setPath(SimplePath path) throws IllegalArgumentException;
 

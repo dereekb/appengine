@@ -3,6 +3,8 @@ import { Keyed } from './collection';
 import { PropertyDescriptorUtility, DescriptorAssertionOptions } from './assert';
 
 // MARK: ModelKey
+export type ModelType = string;
+
 /**
  * Number key for models.
  */

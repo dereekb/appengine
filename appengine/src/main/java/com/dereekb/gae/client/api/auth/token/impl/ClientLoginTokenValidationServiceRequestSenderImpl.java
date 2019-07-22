@@ -2,6 +2,8 @@ package com.dereekb.gae.client.api.auth.token.impl;
 
 import java.util.Map;
 
+import org.springframework.http.MediaType;
+
 import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationRequest;
 import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationResponse;
 import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationService;
@@ -111,9 +113,7 @@ public class ClientLoginTokenValidationServiceRequestSenderImpl extends Abstract
 	@Override
 	public ClientRequest buildClientRequest(ClientLoginTokenValidationRequest request) {
 		ClientRequestUrl url = new ClientRequestUrlImpl(this.path);
-		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.POST);
-
-		clientRequest.setContentType("application/x-www-form-urlencoded");
+		ClientRequestImpl clientRequest = new ClientRequestImpl(url, ClientRequestMethod.POST, MediaType.APPLICATION_FORM_URLENCODED);
 
 		// URL-encoded parameters
 		ParametersImpl parameters = new ParametersImpl();

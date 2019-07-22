@@ -8,6 +8,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.SystemLoginTokenFactor
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.server.auth.security.app.impl.AppLoginSecurityDetailsImpl;
+import com.dereekb.gae.server.auth.security.app.impl.LocalQueryAppLoginSecurityDetailsImpl;
 import com.dereekb.gae.server.auth.security.app.service.impl.PreConfiguredAppLoginSecuritySigningServiceImpl;
 import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -22,10 +23,17 @@ import com.dereekb.gae.utilities.data.StringUtility;
 public class RemoteSystemLoginTokenFactoryConfigurerImpl
         implements SystemLoginTokenFactoryConfigurer {
 
+	private boolean hasAppAvailableLocally;
 	private RemoteServiceConfiguration remoteLoginService;
 
 	public RemoteSystemLoginTokenFactoryConfigurerImpl(RemoteServiceConfiguration remoteLoginService) {
+		this(remoteLoginService, false);
+	}
+
+	public RemoteSystemLoginTokenFactoryConfigurerImpl(RemoteServiceConfiguration remoteLoginService,
+	        boolean hasAppAvailableLocally) {
 		this.setRemoteLoginService(remoteLoginService);
+		this.setHasAppAvailableLocally(hasAppAvailableLocally);
 	}
 
 	public RemoteServiceConfiguration getRemoteLoginService() {
@@ -38,6 +46,14 @@ public class RemoteSystemLoginTokenFactoryConfigurerImpl
 		}
 
 		this.remoteLoginService = remoteLoginService;
+	}
+
+	public boolean hasAppAvailableLocally() {
+		return this.hasAppAvailableLocally;
+	}
+
+	public void setHasAppAvailableLocally(boolean hasAppAvailableLocally) {
+		this.hasAppAvailableLocally = hasAppAvailableLocally;
 	}
 
 	// MARK: SystemLoginTokenFactoryConfigurer
@@ -60,8 +76,13 @@ public class RemoteSystemLoginTokenFactoryConfigurerImpl
 		builder.comment("App Security");
 		String appLoginSecurityDetailsBeanId = "appLoginSecurityDetails";
 
-		builder.bean(appLoginSecurityDetailsBeanId).beanClass(AppLoginSecurityDetailsImpl.class).c()
-		        .ref(appConfig.getAppBeans().getAppInfoBeanId()).ref(appConfig.getAppBeans().getAppSecretBeanId());
+		if (this.hasAppAvailableLocally) {
+			builder.bean(appLoginSecurityDetailsBeanId).beanClass(LocalQueryAppLoginSecurityDetailsImpl.class).c()
+			        .ref(appConfig.getAppBeans().getAppInfoBeanId()).ref("appRegistry");
+		} else {
+			builder.bean(appLoginSecurityDetailsBeanId).beanClass(AppLoginSecurityDetailsImpl.class).c()
+			        .ref(appConfig.getAppBeans().getAppInfoBeanId()).ref(appConfig.getAppBeans().getAppSecretBeanId());
+		}
 
 		String appLoginSecurityVerifierServiceId = appConfig.getAppBeans().getAppLoginSecurityVerifierServiceBeanId();
 		String appLoginSecuritySigningServiceId = appConfig.getAppBeans().getAppLoginSecuritySigningServiceBeanId();

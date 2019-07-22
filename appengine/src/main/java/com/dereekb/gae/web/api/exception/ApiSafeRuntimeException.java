@@ -3,7 +3,7 @@ package com.dereekb.gae.web.api.exception;
 /**
  * {@link RuntimeException} extension that also implements
  * {@link ApiSafeRuntimeException}, allowing the exceptions to
- * 
+ *
  * @author dereekb
  *
  */

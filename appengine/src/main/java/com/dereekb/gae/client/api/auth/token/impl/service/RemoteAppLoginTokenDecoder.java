@@ -30,9 +30,13 @@ import io.jsonwebtoken.Jwts;
  *
  * @author dereekb
  *
+ * @deprecated Does not fit into the system properly as a
+ *             {@link LoginTokenDecoder} does not have access to the signature
+ *             to properly validate remotely.
  * @param <T>
  *            model type
  */
+@Deprecated
 public class RemoteAppLoginTokenDecoder<T extends LoginToken>
         implements LoginTokenDecoder<T>, AuthenticationLoginTokenDecoder<T> {
 
@@ -89,7 +93,8 @@ public class RemoteAppLoginTokenDecoder<T extends LoginToken>
 	        throws TokenExpiredException,
 	            TokenUnauthorizedException {
 
-		ClientLoginTokenValidationRequest validationRequest = new ClientLoginTokenValidationRequestImpl(token, true);
+		ClientLoginTokenValidationRequestImpl validationRequest = new ClientLoginTokenValidationRequestImpl(token,
+		        true);
 		return this.validateToken(validationRequest);
 	}
 

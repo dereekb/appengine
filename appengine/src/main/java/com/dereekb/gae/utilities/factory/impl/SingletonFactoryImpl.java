@@ -8,14 +8,15 @@ import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
  *
  * @author dereekb
  *
- * @param <T> Value type
+ * @param <T>
+ *            Value type
  */
 public class SingletonFactoryImpl<T>
         implements Factory<T> {
 
 	private T value;
 
-	private SingletonFactoryImpl(T value) {
+	public SingletonFactoryImpl(T value) {
 		super();
 		this.value = value;
 	}
@@ -29,7 +30,7 @@ public class SingletonFactoryImpl<T>
 		return this.value;
 	}
 
-	public void setValue(T value) throws NullPointerException {
+	public void setValue(T value) {
 		this.value = value;
 	}
 

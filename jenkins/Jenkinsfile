@@ -9,7 +9,7 @@ pipeline {
         NPM_EMAIL_ADDRESS = "jenkins@dereekb.com"
     }
     stages {
-        stage('Build') {
+        stage('Test And Deploy') {
             failFast false
             parallel {
                 stage('Server') {
@@ -78,6 +78,11 @@ pipeline {
                                 always {
                                     junit 'appengine-web/tests/**/*.xml'
                                 }
+                            }
+                        }
+                        stage('Publish') {
+                            steps {
+                                sh './jenkins/scripts/appengine-web/publish.sh'
                             }
                         }
                     }

@@ -113,6 +113,7 @@ describe('Source', () => {
           }),
           first()
         ).subscribe((x) => {
+          expect(x.state).toBe(SourceState.Loading);
           done();
         });
 

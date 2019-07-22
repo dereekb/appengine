@@ -28,8 +28,8 @@ services:
     environment:
       - DATASTORE_EMULATOR_HOST=0.0.0.0:8181
       - CLOUDSDK_CORE_PROJECT=gae-web-app-237603
-      - MAVEN_CREDS_USR=${MAVEN_USR}  # Pass at runtime
-      - MAVEN_CREDS_PSW=${MAVEN_PSW}  
+      - MAVEN_CREDS_USR=${MAVEN_CREDS_USR:?maven user creds are required}  # Required. Pass at runtime
+      - MAVEN_CREDS_PSW=${MAVEN_CREDS_PSW:?maven user creds are required}
     volumes:
       - ../appengine:/code
       - ./.tmp/target:/code/target                   # Expose target through .tmp

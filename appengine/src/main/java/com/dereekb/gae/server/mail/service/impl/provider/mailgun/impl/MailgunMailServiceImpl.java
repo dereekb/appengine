@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -26,6 +27,9 @@ import com.dereekb.gae.server.mail.service.impl.provider.mailgun.MailgunMailServ
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.MailgunMailServiceRequest;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.MailgunMailServiceResponse;
 import com.dereekb.gae.utilities.filters.Filter;
+import com.dereekb.gae.utilities.json.JsonConverter;
+import com.dereekb.gae.utilities.json.impl.JsonConverterImpl;
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 
 /**
  * {@link MailService} configured for Mailgun.
@@ -40,6 +44,9 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 
 	private static final String MAILGUN_AUTH_HEADER_USER = "api";
 	private static final String MAILGUN_MESSAGE_POST_URL_FORMAT = "https://api.mailgun.net/v3/%s/messages";
+
+	private static final String MAILGUN_TEMPLATE_KEY_PARAMETER = "template";
+	private static final String MAILGUN_TEMPLATE_VARIABLES_PARAMETER = "h:X-Mailgun-Variable";
 
 	private MailgunMailServiceConfiguration configuration;
 
@@ -106,7 +113,7 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 			MultiValueMap<String, String> map = this.makeMapForRequest();
 
 			// Send Request
-			RestTemplate restTemplate = new RestTemplate();
+			RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 			String url = String.format(MAILGUN_MESSAGE_POST_URL_FORMAT, MailgunMailServiceImpl.this.getDomain());
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(map,
 			        headers);
@@ -123,9 +130,10 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 			MailServiceRequest request = this.input.getMailServiceRequest();
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 
-			// Add To/From
+			// Add From
 			map.add("from", this.getSenderString());
 
+			// Add To
 			Set<MailRecipient> recipients = request.getRecipients();
 			for (MailRecipient recipient : recipients) {
 				MailRecipientType type = recipient.getRecipientType();
@@ -137,12 +145,30 @@ public class MailgunMailServiceImpl extends AbstractMailServiceProviderImpl<Mail
 			MailServiceRequestBody body = request.getBody();
 			String subject = body.getSubject();
 
-			MailServiceRequestBodyType contentType = body.getBodyType();
-			String content = body.getBodyContent();
-			String contentTypeKey = (contentType == MailServiceRequestBodyType.PLAIN_TEXT) ? "text" : "html";
+			MailServiceRequestBodyType bodyType = body.getBodyType();
 
 			map.add("subject", subject);
-			map.add(contentTypeKey, content);
+
+			switch (bodyType)
+			{
+				case PLAIN_TEXT:
+				case HTML:
+					String content = body.getBodyContent();
+					String contentTypeKey = (bodyType == MailServiceRequestBodyType.PLAIN_TEXT) ? "text" : "html";
+					map.add(contentTypeKey, content);
+					break;
+				case TEMPLATE:
+					String template = body.getBodyContent();
+					map.add(MAILGUN_TEMPLATE_KEY_PARAMETER, template);
+
+					Parameters parameters = body.getParameters();
+					JsonConverter jsonConverter = new JsonConverterImpl();
+
+					String jsonParameters = jsonConverter.convertToJson(parameters);
+					map.add(MAILGUN_TEMPLATE_VARIABLES_PARAMETER, jsonParameters);
+
+					break;
+			}
 
 			// TODO: Add Attachments
 

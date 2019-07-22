@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
@@ -27,6 +28,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 		super(appConfig, outputProperties);
 		this.setResultsFolderName(MODELS_FOLDER_NAME);
 		this.setIgnoreRemote(true);
+		this.setIgnoreInternalOnly(true);
 	}
 
 	public TaskQueueModelsConfigurationGenerator(AppConfiguration appConfig) {
@@ -51,7 +53,7 @@ public class TaskQueueModelsConfigurationGenerator extends AbstractModelConfigur
 		        .beanClass(TaskQueueIterateController.class).c().ref("taskScheduler").ref("modelKeyTypeConverter")
 		        .map();
 
-		for (LocalModelConfiguration model : this.getAllLocalConfigurations()) {
+		for (LocalModelConfiguration model : this.getAllLocalConfigurations(NotInternalModelConfigurationFilter.make())) {
 			if (model.getCustomModelContextConfigurer().hasIterateControllerEntry()) {
 				iterateEntryMap.keyRefValueRefEntry(model.getModelTypeBeanId(),
 				        model.getModelBeanPrefix() + "TaskQueueIterateControllerEntry");

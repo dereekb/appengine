@@ -4,6 +4,7 @@ import com.dereekb.gae.utilities.filters.Filter;
 import com.dereekb.gae.utilities.filters.FilterDelegate;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.filters.FilterResults;
+import com.dereekb.gae.utilities.filters.SingleObjectFilter;
 
 public class FilterUtility {
 
@@ -14,7 +15,7 @@ public class FilterUtility {
 	 *            Objects to filter.
 	 * @return {@link FilterResults} mapping of the results.
 	 */
-	public static <T> FilterResults<T> filterObjects(Filter<T> filter,
+	public static <T> FilterResults<T> filterObjects(SingleObjectFilter<T> filter,
 	                                                 Iterable<? extends T> objects) {
 		FilterResults<T> results = new FilterResults<T>();
 

@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.ServletException;
 
+import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -355,28 +356,43 @@ public class AbstractAppTestingContext extends AbstractAppContextOnlyTestingCont
 
 			// Start Objectify service for the thread.
 			Closeable ofy = ObjectifyService.begin();
+			int status = -1;
+			MockHttpServletResponse response = null;
 
 			try {
 				ResultActions resultActions = mockMvc.perform(requestBuilder);
-				MockHttpServletResponse response = resultActions.andReturn().getResponse();
-				int status = response.getStatus();
-				// String error = response.getErrorMessage();
-				return status;
+				response = resultActions.andReturn().getResponse();
+				status = response.getStatus();
 			} catch (ServletException e) {
 				e.printStackTrace();
-				return 500;
+				status = HttpStatus.INTERNAL_SERVER_ERROR_500;
 			} catch (Exception e) {
 				System.out.println(String.format("Exception occured while executing TQ task %s.", arg0.getUrl()));
 				e.printStackTrace();
-				return 0;
+				status = 0;
 			} finally {
 				if (LOG_EVENTS) {
-					System.out.println(String.format("Finished TQ task at %s.", arg0.getUrl()));
+					System.out.println(String.format("Finished TQ task (w/status %s) at %s.", status, arg0.getUrl()));
+
+					if (status != HttpStatus.OK_200 && response != null)
+					{
+						String errorContent = null;
+
+						try {
+							errorContent = response.getContentAsString();
+						} catch (UnsupportedEncodingException e) {
+
+						}
+
+						System.out.println(String.format("Error Message: %s", errorContent));
+					}
 				}
 
 				ofy.close();
 				decreaseLatchCounter();
 			}
+
+			return status;
 		}
 
 		private MockHttpServletRequestBuilder buildRequest(URLFetchRequest arg0) throws UnsupportedEncodingException {

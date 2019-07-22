@@ -1,8 +1,8 @@
 package com.dereekb.gae.server.mail.service.exception;
 
 /**
- * {@link InvalidMailRequestException} thrown when the request has no recipients.
- * 
+ * {@link InvalidMailRequestException} thrown when the request has no body.
+ *
  * @author dereekb
  *
  */

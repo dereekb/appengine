@@ -40,11 +40,18 @@ public interface AppConfiguration {
 	public String getAppTaskQueueName();
 
 	/**
-	 * Returns the app secret. Is only required for remote apps.
+	 * Returns the app secret. Only used by remote apps for login purposes.
+	 *
+	 * @return {@link String} or {@code null} if not defined.
+	 */
+	public String getAppSecret();
+
+	/**
+	 * Returns the app system key.
 	 *
 	 * @return {@link String}. Never {@code null}.
 	 */
-	public String getAppSecret();
+	public String getAppSystemKey();
 
 	/**
 	 * Returns the app's admin email account.
@@ -54,11 +61,29 @@ public interface AppConfiguration {
 	public String getAppAdminEmail();
 
 	/**
+	 * Returns the app's domain name.
+	 * <p>
+	 * I.E. dereekb.com
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppDomain();
+
+	/**
 	 * Returns the app's proxy URL for development.
 	 *
 	 * @return {@link String}. Never {@code null}.
 	 */
 	public String getAppDevelopmentProxyUrl();
+
+	/**
+	 * Returns the app's host URL for development.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public String getAppDevelopmentServerHostUrl();
+
+	// public AppGenEnvConfiguration getAppGenEnvConfiguration();
 
 	public AppServiceConfigurationInfo getAppServiceConfigurationInfo();
 

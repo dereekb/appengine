@@ -78,7 +78,7 @@ public class LoginRegisterController {
 	 * <p>
 	 * Returns a new {@link LoginTokenPair}.
 	 */
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(path = "/tokens", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public final void registerTokensWithLogin(@RequestBody @NotEmpty @Min(2) List<String> tokens) {
 

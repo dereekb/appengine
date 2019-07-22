@@ -9,12 +9,10 @@
 
 	<groupId>com.dereekb.gae</groupId>
 	<artifactId>gae-core</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
-
-	<!-- Declared WAR for appengine:run, but only JAR values are published. -->
-  <packaging>war</packaging>
+	<version>2.0.2-SNAPSHOT</version>
 
 	<properties>
+		<packaging.type>war</packaging.type>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,6 +24,19 @@
 		<junit.target.version>5.4.0</junit.target.version>
 		<jackson.target.version>2.9.9</jackson.target.version>
 	</properties>
+	
+	<!-- Declared WAR by default (above) for appengine:run. JAR values are published. -->
+	<packaging>${packaging.type}</packaging>
+	
+	<profiles>
+		<!--  Deploy Profile turns this into a JAR package. -->
+		<profile>
+			<id>deploy</id>
+			<properties>
+				<packaging.type>jar</packaging.type>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencies>
 
@@ -47,7 +58,7 @@
 			<artifactId>google-cloud-datastore</artifactId>
 			<version>${appengine-cloud.target.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
@@ -153,7 +164,14 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.12</version>
 		</dependency>
-
+		
+		<dependency>
+			<!-- Used for Spring -->
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.9</version>
+		</dependency>
+		
 		<!-- Jersey -->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
@@ -327,6 +345,13 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>make-jar</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
 						<goals>
 							<goal>test-jar</goal>
 						</goals>
@@ -360,10 +385,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.1</version>
-		        <configuration>
-		            <parallel>methods</parallel>
-		            <useUnlimitedThreads>true</useUnlimitedThreads>
-		        </configuration>
+				<configuration>
+					<parallel>methods</parallel>
+					<useUnlimitedThreads>true</useUnlimitedThreads>
+				</configuration>
 			</plugin>
 
 			<!-- Clean/Delete the generated WEB-INF folder after install. -->
@@ -402,6 +427,9 @@
 					<version>7</version>
 					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
 					<archiveClasses>true</archiveClasses>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+					</archive>
 					<webResources>
 						<!-- Copy Resources from webapp/WEB-INF to the created WAR file. -->
 						<resource>
@@ -410,35 +438,66 @@
 							<targetPath>WEB-INF</targetPath>
 						</resource>
 						<!-- Include Test Classes -->
-            <resource>
-                <directory>${basedir}/target/test-classes</directory>
-                <targetPath>WEB-INF/classes</targetPath>
-            </resource>
+						<resource>
+							<directory>${basedir}/target/test-classes</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+						</resource>
 					</webResources>
 				</configuration>
 			</plugin>
 
 			<!-- Maven Appengine Plugin -->
 			<plugin>
-	            <groupId>com.google.cloud.tools</groupId>
-	            <artifactId>appengine-maven-plugin</artifactId>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
 				<version>${google-cloud.target.version}</version>
-	            <configuration>
-	                <projectId>gae-test</projectId>
-	                <version>1</version>
-	                <!-- Development Server -->
-	                <enableJarClasses>false</enableJarClasses>
+				<configuration>
+					<projectId>gae-test</projectId>
+					<version>1</version>
+					<!-- Development Server -->
+					<enableJarClasses>false</enableJarClasses>
 					<host>0.0.0.0</host>
 					<port>8080</port>
-	                <jvmFlags>
+					<jvmFlags>
 						<jvmFlag>-Xmx1024m</jvmFlag>
-					  	<jvmFlag>-Xms256m</jvmFlag>
+						<jvmFlag>-Xms256m</jvmFlag>
 						<jvmFlag>-Xdebug</jvmFlag>
 						<jvmFlag>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8888</jvmFlag>
 					</jvmFlags>
-	            </configuration>
-	        </plugin>
- 
+				</configuration>
+			</plugin>
+
+			<!-- Local Install -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<!-- Since the pom is declared as a WAR, the JAR is not saved locally to the default. -->
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+			            <configuration>
+			                <packaging>jar</packaging>
+			                <artifactId>${project.artifactId}</artifactId>
+			                <groupId>${project.groupId}</groupId>
+			                <version>${project.version}</version>
+			                <file>
+			                    ${project.build.directory}/${project.artifactId}-${project.version}.jar
+			                </file>
+			            </configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Versioning -->
+			<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>2.7</version>
+			</plugin>
+
 			<!-- Artifactory Deploy -->
 			<plugin>
 				<groupId>org.jfrog.buildinfo</groupId>
@@ -464,8 +523,10 @@
 								<repoKey>libs-release-local</repoKey>
 								<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
 								<publishBuildInfo>true</publishBuildInfo>
+								<!-- Include the JAR files. -->
+								<includePatterns>*.jar,*.pom</includePatterns>
 								<!-- Don't include WAR for deployment. -->
-                <excludePatterns>*.war</excludePatterns>
+								<excludePatterns>*.war</excludePatterns>
 							</publisher>
 							<buildInfo>
 								<buildName>appengine</buildName>

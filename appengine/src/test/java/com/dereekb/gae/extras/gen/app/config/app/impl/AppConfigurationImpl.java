@@ -15,6 +15,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSec
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfigurationImpl;
+import com.dereekb.gae.server.app.model.app.App;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
@@ -29,11 +30,13 @@ public class AppConfigurationImpl
 	private Long appId = 1L;
 	private String appName = "app";
 	private String appTaskQueueName = "app";
-	private String appSecret = null;
+	private String appSecret = App.DEFAULT_DEVELOPMENT_SECRET;
+	private String appSystemKey = null;
 	private String appAdminEmail = "dereekb@gmail.com";
 
-	// TODO: This should point to the nginx docker container.
-	private String appDevelopmentProxyUrl = "http://localhost:8080";
+	private String appDomain = "dereekb.com";
+	private String appDevelopmentProxyUrl = "http://gae-nginx:8080";
+	private String appDevelopmentServerHostUrl = "http://localhost:4400";
 
 	private AppServicesConfigurer appServicesConfigurer;
 	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");
@@ -114,6 +117,19 @@ public class AppConfigurationImpl
 	}
 
 	@Override
+	public String getAppSystemKey() {
+		return this.appSystemKey;
+	}
+
+	public void setAppSystemKey(String appSystemKey) {
+		if (appSystemKey == null) {
+			throw new IllegalArgumentException("appSystemKey cannot be null.");
+		}
+
+		this.appSystemKey = appSystemKey;
+	}
+
+	@Override
 	public String getAppAdminEmail() {
 		return this.appAdminEmail;
 	}
@@ -127,6 +143,19 @@ public class AppConfigurationImpl
 	}
 
 	@Override
+	public String getAppDomain() {
+		return this.appDomain;
+	}
+
+	public void setAppDomain(String appDomain) {
+		if (appDomain == null) {
+			throw new IllegalArgumentException("appDomain cannot be null.");
+		}
+
+		this.appDomain = appDomain;
+	}
+
+	@Override
 	public String getAppDevelopmentProxyUrl() {
 		return this.appDevelopmentProxyUrl;
 	}
@@ -137,6 +166,19 @@ public class AppConfigurationImpl
 		}
 
 		this.appDevelopmentProxyUrl = appDevelopmentProxyUrl;
+	}
+
+	@Override
+	public String getAppDevelopmentServerHostUrl() {
+		return this.appDevelopmentServerHostUrl;
+	}
+
+	public void setAppDevelopmentServerHostUrl(String appDevelopmentServerHostUrl) {
+		if (appDevelopmentServerHostUrl == null) {
+			throw new IllegalArgumentException("appDevelopmentServerHostUrl cannot be null.");
+		}
+
+		this.appDevelopmentServerHostUrl = appDevelopmentServerHostUrl;
 	}
 
 	@Override

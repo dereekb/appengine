@@ -49,6 +49,10 @@ public class GenFilesWriterImpl
 	}
 
 	// MARK: GenFilesWriter
+	public void deleteFolder(GenFolder folder) throws IOException {
+		new GenFolderWriterImpl(folder, this.rootFolder.getFolderFile()).deleteFolder();
+	}
+
 	@Override
 	public void writeFiles(GenFolder folder) throws IOException {
 		new GenFolderWriterImpl(folder, this.rootFolder).writeFilesAndFolders();
@@ -122,6 +126,14 @@ public class GenFilesWriterImpl
 			super();
 			this.folder = folder;
 			this.outputFolder = new WriteFolder(folderFile);
+		}
+
+		public void deleteFolder() throws IOException {
+			File file = this.outputFolder.getFolderFile();
+
+			if (file.isDirectory() && file.exists()) {
+				file.delete();
+			}
 		}
 
 		public void writeFilesAndFolders() throws IOException {

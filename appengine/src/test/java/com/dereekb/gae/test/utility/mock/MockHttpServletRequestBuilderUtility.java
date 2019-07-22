@@ -113,6 +113,10 @@ public class MockHttpServletRequestBuilderUtility {
 		Parameters headers = getHeaderParameters(arg0);
 		addHeaders(requestBuilder, headers);
 
+		if (arg0.getPayload() != null) {
+			requestBuilder.content(arg0.getPayload().toByteArray());
+		}
+
 		return requestBuilder;
 	}
 

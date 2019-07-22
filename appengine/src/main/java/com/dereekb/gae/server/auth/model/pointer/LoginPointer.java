@@ -37,6 +37,11 @@ public class LoginPointer extends OwnedDatabaseModel
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * While not actually set as the default, this value is used in development.
+	 */
+	public static final String DEFAULT_DEVELOPMENT_PASSWORD = "password";
+
+	/**
 	 * Identifier for logging in.
 	 *
 	 * Is generally the username or an email address.

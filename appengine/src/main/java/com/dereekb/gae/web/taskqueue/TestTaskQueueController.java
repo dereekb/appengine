@@ -13,7 +13,7 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 
 /**
  * Controller use for testing to see if the taskqueue is accessible.
- * 
+ *
  * @author dereekb
  *
  */
@@ -22,19 +22,8 @@ import com.dereekb.gae.web.api.shared.response.impl.ApiResponseImpl;
 public class TestTaskQueueController {
 
 	@ResponseBody
-	@RequestMapping(path = "/test", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(path = "/test", method = { RequestMethod.GET, RequestMethod.PUT }, produces = "application/json")
 	public final ApiResponse getStatus() throws ApiCaughtRuntimeException {
-		ApiResponseImpl response = new ApiResponseImpl();
-
-		ApiResponseData data = new ApiResponseDataImpl("Success", "Success");
-		response.setData(data);
-
-		return response;
-	}
-
-	@ResponseBody
-	@RequestMapping(path = "/test", method = RequestMethod.PUT, produces = "application/json")
-	public final ApiResponse putStatus() throws ApiCaughtRuntimeException {
 		ApiResponseImpl response = new ApiResponseImpl();
 
 		ApiResponseData data = new ApiResponseDataImpl("Success", "Success");

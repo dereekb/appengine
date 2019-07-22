@@ -11,6 +11,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQue
 import com.dereekb.gae.utilities.query.builder.parameters.impl.IntegerQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFieldParameterBuilder.ModelKeyQueryFieldParameter;
+import com.dereekb.gae.utilities.query.builder.parameters.impl.StringQueryFieldParameter;
 
 /**
  * Utility used for querying an {@link App}.
@@ -23,11 +24,13 @@ public class AppQuery extends AbstractOwnedModelQuery
 
 	public static final String LOGIN_FIELD = "login";
 	public static final String LEVEL_FIELD = "level";
+	public static final String SYSTEM_KEY_FIELD = "system";
 
 	private static final ModelKeyQueryFieldParameterBuilder LOGIN_FIELD_BUILDER = ModelKeyQueryFieldParameterBuilder.NUMBER_SINGLETON;
 
 	private ModelKeyQueryFieldParameter login;
 	private IntegerQueryFieldParameter level;
+	private StringQueryFieldParameter systemKey;
 
 	public AppQuery() {
 		super();
@@ -79,6 +82,18 @@ public class AppQuery extends AbstractOwnedModelQuery
 		this.level = IntegerQueryFieldParameter.make(LEVEL_FIELD, level);
 	}
 
+	public StringQueryFieldParameter getSystemKey() {
+		return this.systemKey;
+	}
+
+	public void setSystemKey(String systemKey) throws IllegalArgumentException {
+		this.systemKey = StringQueryFieldParameter.make(SYSTEM_KEY_FIELD, systemKey);
+	}
+
+	public void setSystemKey(StringQueryFieldParameter systemKey) throws IllegalArgumentException {
+		this.systemKey = StringQueryFieldParameter.make(SYSTEM_KEY_FIELD, systemKey);
+	}
+
 	// MARK: ConfigurableQueryParameters
 	@Override
 	public Map<String, String> getParameters() {
@@ -86,6 +101,7 @@ public class AppQuery extends AbstractOwnedModelQuery
 
 		ParameterUtility.put(parameters, this.login);
 		ParameterUtility.put(parameters, this.level);
+		ParameterUtility.put(parameters, this.systemKey);
 
 		return parameters;
 	}
@@ -95,6 +111,7 @@ public class AppQuery extends AbstractOwnedModelQuery
 		super.setParameters(parameters);
 		this.setLogin(parameters.get(LOGIN_FIELD));
 		this.setLevel(parameters.get(LEVEL_FIELD));
+		this.setSystemKey(parameters.get(SYSTEM_KEY_FIELD));
 	}
 
 }

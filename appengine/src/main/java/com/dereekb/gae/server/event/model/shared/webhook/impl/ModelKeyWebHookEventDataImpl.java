@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.event.model.shared.webhook.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -25,7 +26,7 @@ public class ModelKeyWebHookEventDataImpl extends ModelTypedWebHookEventDataImpl
 	private List<String> keys;
 
 	public ModelKeyWebHookEventDataImpl() {
-		super();
+		this(null, Collections.emptyList());
 	}
 
 	public ModelKeyWebHookEventDataImpl(String modelType, List<String> keys) {

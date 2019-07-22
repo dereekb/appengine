@@ -16,7 +16,7 @@ public class JsonWebHookEventDataImpl extends WebHookEventDataImpl {
 	private JsonNode jsonNode;
 
 	public JsonWebHookEventDataImpl(JsonNode dataRoot) throws IllegalArgumentException {
-		this.setJsonNode(this.jsonNode);
+		this.setJsonNode(dataRoot);
 
 		JsonNode type = this.jsonNode.get(WebHookEventDataImpl.TYPE_FIELD);
 
@@ -29,7 +29,7 @@ public class JsonWebHookEventDataImpl extends WebHookEventDataImpl {
 				throw new IllegalArgumentException("Data type string cannot be empty.");
 			}
 
-			this.setType(type.asText());
+			this.setType(typeText);
 		}
 	}
 

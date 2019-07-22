@@ -49,6 +49,10 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		this(new SignatureConfigurationImpl(secret, algorithm));
 	}
 
+	public AbstractBasicLoginTokenImplEncoderDecoder() {
+		this((SignatureConfiguration) null);
+	}
+
 	public AbstractBasicLoginTokenImplEncoderDecoder(SignatureConfiguration signature) {
 		this.resetTokenStringDencoder(signature);
 	}

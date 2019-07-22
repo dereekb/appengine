@@ -1,17 +1,14 @@
 package com.dereekb.gae.extras.gen.app.config.app.services.remote.impl;
 
 import com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationServiceRequestSenderImpl;
-import com.dereekb.gae.client.api.auth.token.impl.service.RemoteAppLoginTokenDecoder;
 import com.dereekb.gae.client.api.service.sender.security.impl.NoneSecuredClientApiRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
-import com.dereekb.gae.server.auth.security.token.model.impl.SignatureConfigurationImpl;
-import com.dereekb.gae.utilities.factory.impl.SingletonFactoryImpl;
+import com.dereekb.gae.utilities.factory.impl.NullFactoryImpl;
 
 /**
  * {@link AppLoginTokenSecurityConfigurer} implementation for a remote login
@@ -52,10 +49,9 @@ public class RemoteAppLoginTokenSecurityConfigurerImpl
 
 		builder.comment("Remote Login Service");
 		builder.comment("Login Token Signature");
-		String loginTokenSignatureFactoryId = appSecurityBeansConfigurer.getLoginTokenSignatureFactoryBeanId();
 
-		builder.bean(loginTokenSignatureFactoryId).beanClass(SingletonFactoryImpl.class).c().bean()
-		        .beanClass(SignatureConfigurationImpl.class).factoryMethod("defaultSignature");
+		String loginTokenSignatureFactoryId = appSecurityBeansConfigurer.getLoginTokenSignatureFactoryBeanId();
+		builder.bean(loginTokenSignatureFactoryId).beanClass(NullFactoryImpl.class); // Signature factory is not needed on remote apps, but must still be configured.
 
 		builder.comment("Login Token Validation Service");
 		builder.bean(clientLoginTokenValidationServiceBeanId)
@@ -63,22 +59,14 @@ public class RemoteAppLoginTokenSecurityConfigurerImpl
 				.bean().beanClass(NoneSecuredClientApiRequestSenderImpl.class).c().ref(this.remoteLoginService.getServiceBeansConfiguration().getClientApiRequestSenderBeanId());
 
 		builder.comment("Login Token Decoder");
-		SpringBeansXMLBeanConstructorBuilder<?> decoderBuilder = builder
-		        .bean(appConfig.getAppBeans().getLoginTokenDecoderBeanId()).beanClass(RemoteAppLoginTokenDecoder.class)
-		        .c();
 
-		// Configure the dencoder
-		SpringBeansXMLBeanBuilder<?> dencoderBean = decoderBuilder.bean();
+		// Configure the decoder
+		SpringBeansXMLBeanBuilder<?> decoderBean = builder.bean(appConfig.getAppBeans().getLoginTokenDecoderBeanId());
+		appConfig.getAppSecurityBeansConfigurer().configureTokenEncoderDecoder(appConfig, decoderBean);
 
-		appConfig.getAppSecurityBeansConfigurer().configureTokenEncoderDecoder(appConfig, dencoderBean);
-		decoderBuilder.ref(clientLoginTokenValidationServiceBeanId);
-
-		SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean("loginTokenBuilder");
-		appSecurityBeansConfigurer.configureTokenBuilder(appConfig, loginTokenBuilderBuilder);
-
-		// TODO: For Testing there is only the decoder component.
-		// TODO: For Prod, send requests to the prod login service.
-
+		// TODO: Unneeded by the remote server and can probably be removed.
+		// SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean("loginTokenBuilder");
+		// appSecurityBeansConfigurer.configureTokenBuilder(appConfig, loginTokenBuilderBuilder);
 	}
 
 }

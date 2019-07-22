@@ -1,6 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.app.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
+import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfo;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 
 /**
@@ -18,6 +19,11 @@ public class AppServiceConfigurationInfoImpl
 
 	public AppServiceConfigurationInfoImpl(String appProjectId, String appServiceName) {
 		this(appProjectId, appServiceName, "v1");
+	}
+
+	public AppServiceConfigurationInfoImpl(AppServiceVersionInfo serviceVersionInfo) {
+		this(serviceVersionInfo.getAppProjectId(), serviceVersionInfo.getAppService(),
+		        serviceVersionInfo.getAppVersion().getMajorVersion());
 	}
 
 	public AppServiceConfigurationInfoImpl(String appProjectId, String appServiceName, String appVersion) {

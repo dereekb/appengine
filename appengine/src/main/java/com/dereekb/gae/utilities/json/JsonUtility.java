@@ -6,6 +6,13 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+/**
+ * Utility for parsing JSON.
+ *
+ * @author dereekb
+ *
+ * @see JsonConverter
+ */
 public class JsonUtility {
 
 	public static final JsonParser PARSER = new JsonParser();

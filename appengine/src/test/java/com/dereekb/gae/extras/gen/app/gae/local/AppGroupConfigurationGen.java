@@ -35,6 +35,17 @@ public class AppGroupConfigurationGen {
 		return appGroup;
 	}
 
+	public static LocalModelConfigurationGroupImpl makeInternalLocalAppGroupConfig() {
+
+		// App
+		LocalModelConfigurationImpl appModel = makeInternalAppModelConfig();
+
+		LocalModelConfigurationGroupImpl appGroup = new LocalModelConfigurationGroupImpl("app",
+		        ListUtility.toList(appModel));
+
+		return appGroup;
+	}
+
 	public static LocalModelConfigurationImpl makeAppModelConfig() {
 		LocalModelConfigurationImpl appModel = new LocalModelConfigurationImpl(App.class);
 
@@ -45,6 +56,15 @@ public class AppGroupConfigurationGen {
 		appModel.setCustomModelContextConfigurer(customLocalModelContextConfigurer);
 
 		return appModel;
+	}
+
+	public static LocalModelConfigurationImpl makeInternalAppModelConfig() {
+		LocalModelConfigurationImpl readOnlyAppModel = new LocalModelConfigurationImpl(App.class);
+
+		readOnlyAppModel.setInternalModelOnly(true);
+		readOnlyAppModel.setIsReadOnly();
+
+		return readOnlyAppModel;
 	}
 
 	public static LocalModelConfigurationImpl makeAppHookModelConfig() {

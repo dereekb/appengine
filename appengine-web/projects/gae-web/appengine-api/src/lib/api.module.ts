@@ -1,143 +1,76 @@
-import { NgModule, ModuleWithProviders, Injector } from '@angular/core';
-import { ApiRouteConfiguration, ApiModuleInfo, ApiConfiguration } from './api.config';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ClientLinkService } from './model/extension/link/link.service';
-import { ClientSchedulerService } from './model/extension/scheduler/scheduler.service';
-import { PublicLoginTokenApiService, ApiUserLoginTokenAuthenticator } from './auth/token.service';
-import { GaeTokenModule, UserLoginTokenService, UserLoginTokenAuthenticator } from '@gae-web/appengine-token';
-import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { RegisterApiService } from './auth/register.service';
-import { OAuthLoginApiService } from './auth/oauth.service';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { NgModule, ModuleWithProviders, Injectable, Inject, InjectionToken } from '@angular/core';
+import { Provider } from '@angular/compiler/src/compiler_facade_interface';
+import { ApiModuleService } from './api.service';
+import { LinkService } from './model/extension/link/link.service';
+import { ModelType, ValueUtility } from '@gae-web/appengine-utility';
+import { Observable, throwError } from 'rxjs';
+import { ApiModuleUnavailableException } from './error';
+import { LinkResponse, LinkRequest } from './model/extension/link/link';
 
-export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: ApiConfiguration) {
-  const throwNoTokenError = false;
-  const skipWhenExpired = false;
-  const whitelistedDomains = [];
+export class GaeApiConfiguration {
 
-  function makeRouteRegex(route: string, openEnd = true, addRoot = true) {
-    let prefix = '.*';
+  private _typesMap: Map<ModelType, ApiModuleService>;
 
-    if (addRoot) {
-      prefix = prefix + apiConfig.routeConfig.root;
-    }
-
-    route = prefix + route;
-
-    // Escape all route slashes
-    route = route.replace(/\//g, '\\/');
-
-    if (openEnd) {
-      route = route + '.*';
-    }
-
-    return new RegExp(route, 'i');
+  constructor(public readonly apiServices: ApiModuleService[]) {
+    this._typesMap = ValueUtility.mapFromArray(apiServices, (x) => x.types);
   }
 
-  const blacklistedRoutes = [
-    makeRouteRegex(OAuthLoginApiService.SERVICE_PATH),
-    makeRouteRegex(PublicLoginTokenApiService.SERVICE_PATH),
-  ];
+  getServiceForType(type: ModelType): ApiModuleService {
+    const service: ApiModuleService = this._typesMap.get(type.toLowerCase());
 
-  // TODO: Add black/white list parameters using the module's info.
+    if (!service) {
+      throw new ApiModuleUnavailableException(`The service for model type "${type}" is unavailable. Check that it is requested.`);
+    }
 
-  return {
-    tokenGetter: () => {
-      const obs = userLoginTokenService.getEncodedLoginToken().pipe(
-        catchError(() => of(null))
-      );
+    return service;
+  }
 
-      return obs.toPromise() as Promise<string | null>;
-    },
-    throwNoTokenError,
-    skipWhenExpired,
-    whitelistedDomains,
-    blacklistedRoutes
-  };
 }
 
-export function apiRouteConfigurationFactory(moduleInfo: ApiModuleInfo) {
-  return ApiRouteConfiguration.makeWithInfo(moduleInfo);
+/**
+ * Unified LinkService implementation that switches handlers based off of the type being addressed.
+ */
+@Injectable()
+export class GaeApiLinkService implements LinkService {
+
+  constructor(private readonly _apiConfiguration: GaeApiConfiguration) { }
+
+  // MARK: LinkService
+  updateLinks(request: LinkRequest): Observable<LinkResponse> {
+    const service: ApiModuleService = this._apiConfiguration.getServiceForType(request.type);
+
+    if (!service) {
+      return throwError(new Error(`The specified model type ${request.type} is not registered with any API service.`));
+    }
+
+    return service.updateLinks(request);
+  }
+
 }
 
-export function clientLinkServiceFactory(routeConfig: ApiRouteConfiguration, httpClient: HttpClient) {
-  return new ClientLinkService({
-    httpClient,
-    routeConfig
-  });
+export interface GaeApiModuleOptions {
+
+  /**
+   * Provides a GaeApiConfiguration value.
+   */
+  gaeApiConfigurationProvider: Provider;
+
 }
 
-export function clientSchedulerServiceFactory(routeConfig: ApiRouteConfiguration, httpClient: HttpClient) {
-  return new ClientSchedulerService({
-    httpClient,
-    routeConfig
-  });
-}
-
-@NgModule({
-  imports: [
-    GaeTokenModule
-  ]
-})
+/**
+ * Configuration for the API.
+ */
+@NgModule()
 export class GaeApiModule {
 
-  static makeJwtModuleForRoot(): ModuleWithProviders {
-    return JwtModule.forRoot({
-      jwtOptionsProvider: {
-        provide: JWT_OPTIONS,
-        useFactory: jwtOptionsFactory,
-        deps: [UserLoginTokenService, ApiConfiguration]
-      }
-    });
-  }
-
-  static forTest(): ModuleWithProviders {
-    const testModule = this.forApp({
-      version: 'test',
-      name: 'test'
-    });
-
-    return testModule;
-  }
-
-  static forApp(config: ApiModuleInfo): ModuleWithProviders {
+  static forApp(options: GaeApiModuleOptions): ModuleWithProviders {
     return {
       ngModule: GaeApiModule,
       providers: [
-        // Configurations
-        ApiConfiguration,
-        {
-          provide: ApiModuleInfo,
-          useValue: config
-        },
-        {
-          provide: ApiRouteConfiguration,
-          useFactory: apiRouteConfigurationFactory,
-          deps: [ApiModuleInfo]
-        },
-        // Link Service
-        {
-          provide: ClientLinkService,
-          useFactory: clientLinkServiceFactory,
-          deps: [ApiRouteConfiguration, HttpClient]
-        },
-        // Scheduler
-        {
-          provide: ClientSchedulerService,
-          useFactory: clientSchedulerServiceFactory,
-          deps: [ApiRouteConfiguration, HttpClient]
-        },
-        // Tokens and Auth
-        PublicLoginTokenApiService,
-        OAuthLoginApiService,
-        RegisterApiService,
-        // ApiUserLoginTokenAuthenticator
-        {
-          provide: UserLoginTokenAuthenticator,
-          useClass: ApiUserLoginTokenAuthenticator,
-          deps: [PublicLoginTokenApiService]
-        }
+        // Configuration
+        options.gaeApiConfigurationProvider,
+        // GaeApiLinkService
+        GaeApiLinkService
       ]
     };
   }
